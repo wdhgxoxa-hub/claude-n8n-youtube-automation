@@ -16,7 +16,7 @@ CRED_GEMINI = {'httpHeaderAuth': {'id': 'FabCredGemini001', 'name': 'Gemini (Veo
 CRED_EPIDEMIC = {'httpHeaderAuth': {'id': 'FabCredEpidemic1', 'name': 'Epidemic Sound'}}
 CRED_PEXELS = {'httpHeaderAuth': {'id': 'FabCredPexels001', 'name': 'Pexels'}}
 CRED_PIXABAY = {'httpQueryAuth': {'id': 'FabCredPixabay01', 'name': 'Pixabay'}}
-CRED_CREATOMATE = {'httpHeaderAuth': {'id': 'FabCredCreatoma1', 'name': 'Creatomate'}}
+CRED_CREATOMATE = {'httpHeaderAuth': {'id': 'mtHyTqYtuZSQYGWN', 'name': 'Creatomate'}}
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
@@ -201,7 +201,6 @@ return [{ json: {
   presupuestoLargoUsd: 5,
   presupuestoShortUsd: 1.5,
   maxIntentosPlano: 2,
-  creatomatePlantillaId: '',
   driveCarpetaRaizId: '',
 }}];
 """ % (ROUTINE, BASE))
@@ -543,7 +542,7 @@ if (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');
 if (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
 if (!aj.allowVoz) faltan.push('voz (Gemini TTS)');
 if (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');
-if (!aj.allowMontaje || !aj.creatomatePlantillaId) faltan.push('montaje (Creatomate y su plantilla)');
+if (!aj.allowMontaje) faltan.push('montaje (Creatomate)');
 const presupuesto = Number(e.presupuesto_usd) || aj.presupuestoLargoUsd;
 if (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);
 return [{ json: { ...e, planos, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,
@@ -673,9 +672,9 @@ return [{ json: { source: { output_format: 'mp4', width: vertical ? 1080 : 1920,
   video_id: e.video_id, canal_id: e.canal_id, planos: listos.length, esperados: orden.length, duracion_estimada_s: Math.round(total),
   creditos: [son.musica?.credito, ...planos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)].filter(Boolean) } }];
 """)
-http(f, 'Renderizar', 'POST', 'https://api.creatomate.com/v2/renders', body='={{ { source: $json.source } }}', timeout=60000)  # credencial «Creatomate»: se enlaza al crearla
+http(f, 'Renderizar', 'POST', 'https://api.creatomate.com/v2/renders', body='={{ { source: $json.source } }}', timeout=60000, cred=CRED_CREATOMATE)
 wait(f, 'Esperar render', 45)
-http(f, 'Consultar render', 'GET', "={{ 'https://api.creatomate.com/v2/renders/' + ($('Renderizar').first().json.id || $('Renderizar').first().json[0]?.id) }}", timeout=30000)
+http(f, 'Consultar render', 'GET', "={{ 'https://api.creatomate.com/v2/renders/' + ($('Renderizar').first().json.id || $('Renderizar').first().json[0]?.id) }}", timeout=30000, cred=CRED_CREATOMATE)
 iff(f, '¿Render listo?', "$json.status === 'succeeded'")
 code(f, 'Encargo de calidad', r"""
 const c = $('Composición Creatomate').first().json;
