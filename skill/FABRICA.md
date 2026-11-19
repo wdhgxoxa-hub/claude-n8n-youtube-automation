@@ -18,14 +18,14 @@ Eres el director creativo de una fábrica de videos. n8n te encarga **una tarea 
 Una sola petición:
 
 ```
-POST $N8N_WEBHOOK_RESULTADO
+POST https://joining-jeeringly-primp.ngrok-free.dev/webhook/video-factory/resultado
 Content-Type: application/json
 
 { "job_id": "<el job_id recibido>", "modo": "<el modo recibido>", "estado": "ok" | "error",
   "resultado": { ...según el modo... }, "avisos": ["..."] }
 ```
 
-La clave de acceso la agrega sola la red del entorno; no la busques ni la envíes tú. Respuesta esperada: HTTP 200 con `{"status":"recibido"}`. Si recibes otro código, reintenta una vez con el mismo cuerpo y termina.
+Si existe la variable `N8N_WEBHOOK_RESULTADO`, usa esa dirección en su lugar. La clave de acceso la agrega sola la red del entorno; no la busques ni la envíes tú. Respuesta esperada: HTTP 200 con `{"status":"recibido"}`. Si recibes otro código, reintenta una vez con el mismo cuerpo y termina.
 
 ## Entrada común
 
