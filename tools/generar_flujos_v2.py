@@ -11,6 +11,8 @@ OUT = os.path.join(os.path.dirname(__file__), '..', 'workflows', 'v2')
 # --- Identificadores reales de la instancia -------------------------------------------
 CRED_TG = {'telegramApi': {'id': 'MOSawTRQa5BzV3pt', 'name': 'Telegram account'}}
 CRED_ROUTINE = {'httpHeaderAuth': {'id': 'EbZbO2zRt0RXWkfA', 'name': 'Claude Routine'}}
+CRED_OPENAI = {'httpHeaderAuth': {'id': 'FabCredOpenAI001', 'name': 'OpenAI'}}
+CRED_GEMINI = {'httpHeaderAuth': {'id': 'FabCredGemini001', 'name': 'Gemini (Veo)'}}
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
@@ -556,7 +558,7 @@ switch(f, 'Según tipo de plano', 3)
 # Imagen con referencias vía Responses API (herramienta de imagen). Requiere credencial "OpenAI" (Header Auth: Authorization: Bearer ...).
 http(f, 'Generar imagen', 'POST', 'https://api.openai.com/v1/responses',
      body="={{ { model: " + A.replace("$('Ajustes')", "$('Leer ajustes')") + ".modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
-     timeout=180000)
+     timeout=180000, cred=CRED_OPENAI)
 code(f, 'Extraer imagen', r"""
 const out = ($json.output || []).find(o => o.type === 'image_generation_call');
 if (!out?.result) throw new Error('Sin imagen en la respuesta');
@@ -577,7 +579,7 @@ return [{ json: { ...prev, url: 'https://drive.google.com/uc?export=download&id=
 iff(f, '¿Revisión visual activa?', "$('Leer ajustes').first().json.allowRevisionVisual === true")
 http(f, 'Revisar plano', 'POST', 'https://api.openai.com/v1/responses',
      body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Revisa si la imagen coincide con las referencias (rostro, vestuario, paleta) y con la escena: ' + $json.plano.texto_narrado + '. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
-     timeout=120000)
+     timeout=120000, cred=CRED_OPENAI)
 code(f, 'Veredicto', r"""
 const prev = $('URL del plano').item.json; let v = { aprobado: true };
 try { v = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '{}'); } catch (e) { v = { aprobado: false, problemas: ['respuesta ilegible'] }; }
@@ -591,9 +593,9 @@ code(f, 'Plano aprobado', "return [{ json: { video_id: $json.video_id, plano_id:
 http(f, 'Generar clip (Veo)', 'POST',
      "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVeo + ':predictLongRunning' }}",
      body="={{ { instances: [{ prompt: $json.prompt + ' Movimiento: ' + ($json.plano.prompt_movimiento || $json.plano.movimiento) }], parameters: { aspectRatio: '16:9', durationSeconds: 8 } } }}",
-     timeout=60000)
+     timeout=60000, cred=CRED_GEMINI)
 wait(f, 'Esperar Veo', 60)
-http(f, 'Consultar Veo', 'GET', "={{ 'https://generativelanguage.googleapis.com/v1beta/' + $('Generar clip (Veo)').item.json.name }}", timeout=30000)
+http(f, 'Consultar Veo', 'GET', "={{ 'https://generativelanguage.googleapis.com/v1beta/' + $('Generar clip (Veo)').item.json.name }}", timeout=30000, cred=CRED_GEMINI)
 iff(f, '¿Clip listo?', '$json.done === true')
 code(f, 'Clip aprobado', r"""
 const prev = $('Un ítem por plano').item.json;
