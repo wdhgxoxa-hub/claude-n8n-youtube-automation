@@ -725,41 +725,60 @@ f = Flow(W['sonido'], 'M5 · Sonido y emoción')
 trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
 code(f, 'Textos de voz', r"""
-// Un ítem por plano con su texto narrable y la dirección de actuación.
+// Un ítem por plano. Gemini TTS lee el texto al pie de la letra: la actuación va aparte, en «style»
+// (emoción y ritmo de todo el plano) y en etiquetas <short pause>/<long pause>; el énfasis, en MAYÚSCULAS.
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
 const b = e.biblia || {}; const voz = b.voz || {};
-const base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join('. ') || 'narrador de documental, voz grave y cercana';
-const MARCAS = { 'énfasis': 'remarca con intensidad', 'enfasis': 'remarca con intensidad', 'susurro': 'en voz baja, casi un susurro',
-  'suspenso': 'con suspenso contenido', 'pausa': '' };
+const base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join(', ') || 'narrador de documental, voz grave y cercana, ritmo ágil';
+const ESTILO = { 'susurro': 'en voz baja, casi un susurro', 'suspenso': 'con suspenso contenido', 'urgencia': 'con urgencia' };
 const planos = (e.planos || []).filter(p => p.plano?.texto_narrado);
 return planos.map(p => {
   const t = String(p.plano.texto_narrado);
-  const marcas = [...t.matchAll(/\[([^\]]{1,30})\]/g)].map(m => MARCAS[m[1].toLowerCase()]).filter(Boolean);
-  const limpio = t.replace(/\[pausa\]/gi, '… ').replace(/\[[^\]]{1,30}\]/g, '').replace(/\s{2,}/g, ' ').trim();
-  const direccion = [base, p.plano.emocion ? 'emoción: ' + p.plano.emocion : '', ...marcas].filter(Boolean).join('; ');
-  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto: limpio,
-    prompt: `Narra en ${b.idioma || 'español latino neutro'}. Dirección: ${direccion}. Lee exactamente este texto, sin añadir nada:\n${limpio}`,
-    voz: voz.gemini_voice || aj.vozGemini } };
+  const extra = [...t.matchAll(/\[([^\]]{1,30})\]/g)].map(m => ESTILO[m[1].toLowerCase()]).filter(Boolean);
+  const texto = t
+    .replace(/\[(?:énfasis|enfasis)\]\s*([^\s.,;:!?…]+)/gi, (_, w) => w.toLocaleUpperCase('es'))
+    .replace(/\[pausa larga\]/gi, ' <long pause> ').replace(/\[pausa\]/gi, ' <short pause> ')
+    .replace(/\[[^\]]{1,30}\]/g, '').replace(/\s{2,}/g, ' ').trim();
+  const estilo = [base, p.plano.emocion ? 'con ' + p.plano.emocion : '', ...extra, `en ${b.idioma || 'español latino neutro'}`].filter(Boolean).join(', ');
+  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: voz.gemini_voice || aj.vozGemini } };
 });
 """)
-http(f, 'Voz (Gemini TTS)', 'POST', "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVoz + ':generateContent' }}",
-     body="={{ { contents: [{ parts: [{ text: $json.prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: $json.voz } } } } } }}",
+http(f, 'Voz (Gemini TTS)', 'POST', 'https://generativelanguage.googleapis.com/v1beta/interactions',
+     body="={{ { model: $('Leer ajustes').first().json.modeloVoz, store: false, input: [{ type: 'user_input', content: [{ type: 'text', text: $json.texto, annotations: [{ type: 'speech_metadata', style: $json.estilo }] }] }], response_format: { type: 'audio' }, generation_config: { speech_config: [{ voice: $json.voz }] } } }}",
      cred=CRED_GEMINI, timeout=180000)
 f.nodes[-1].update({'retryOnFail': True, 'maxTries': 3, 'waitBetweenTries': 5000})
 code(f, 'WAV', r"""
-// Gemini entrega PCM 16 bits mono 24 kHz: se le pone cabecera WAV y se mide la duración exacta.
+// Gemini TTS entrega WAV (o PCM crudo 16 bits mono): se lee el formato, se recortan los silencios
+// del principio y del final (dejan respiros artificiales) y se mide la duración exacta.
 const prev = $('Textos de voz').item.json;
-const part = ($json.candidates?.[0]?.content?.parts || []).find(x => x.inlineData?.data);
-if (!part) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);
-const rate = Number((part.inlineData.mimeType || '').match(/rate=(\d+)/)?.[1] || 24000);
-const pcm = Buffer.from(part.inlineData.data, 'base64');
+const audio = ($json.steps || []).filter(x => x.type === 'model_output').flatMap(x => x.content || []).filter(c => c.type === 'audio' && c.data).pop();
+if (!audio) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);
+const raw = Buffer.from(audio.data, 'base64');
+let rate = Number((audio.mime_type || '').match(/rate=(\d+)/)?.[1] || 24000), canales = 1, bits = 16, pcm = raw;
+if (raw.toString('ascii', 0, 4) === 'RIFF') {
+  let o = 12;
+  while (o + 8 <= raw.length) {
+    const id = raw.toString('ascii', o, o + 4), sz = raw.readUInt32LE(o + 4);
+    if (id === 'fmt ') { canales = raw.readUInt16LE(o + 10); rate = raw.readUInt32LE(o + 12); bits = raw.readUInt16LE(o + 22); }
+    if (id === 'data') { pcm = raw.subarray(o + 8, Math.min(raw.length, o + 8 + sz)); break; }
+    o += 8 + sz + (sz % 2);
+  }
+}
+if (bits !== 16) throw new Error('Formato de audio no soportado: ' + bits + ' bits');
+const paso = 2 * canales, n = Math.floor(pcm.length / paso), UMBRAL = 600, MARGEN = Math.round(rate * 0.12);
+let ini = 0, fin = n - 1;
+while (ini < n && Math.abs(pcm.readInt16LE(ini * paso)) < UMBRAL) ini++;
+while (fin > ini && Math.abs(pcm.readInt16LE(fin * paso)) < UMBRAL) fin--;
+if (ini >= fin) throw new Error('El audio de ' + prev.plano_id + ' está en silencio');
+const recorte = pcm.subarray(Math.max(0, ini - MARGEN) * paso, Math.min(n, fin + MARGEN) * paso);
 const h = Buffer.alloc(44);
-h.write('RIFF', 0); h.writeUInt32LE(36 + pcm.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);
-h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(rate, 24);
-h.writeUInt32LE(rate * 2, 28); h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(pcm.length, 40);
-const wav = Buffer.concat([h, pcm]);
-return [{ json: { ...prev, duracion_s: Math.round(pcm.length / (rate * 2) * 100) / 100 },
-  binary: { archivo: { data: wav.toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } }];
+h.write('RIFF', 0); h.writeUInt32LE(36 + recorte.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);
+h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(canales, 22); h.writeUInt32LE(rate, 24);
+h.writeUInt32LE(rate * paso, 28); h.writeUInt16LE(paso, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(recorte.length, 40);
+const segundos = recorte.length / (rate * paso);
+const palabras = prev.texto.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
+return [{ json: { ...prev, duracion_s: Math.round(segundos * 100) / 100, palabras_por_minuto: Math.round(palabras / segundos * 60) },
+  binary: { archivo: { data: Buffer.concat([h, recorte]).toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } }];
 """)
 gapi(f, 'Subir voz a Drive', 'POST', 'https://www.googleapis.com/upload/drive/v3/files', 'googleDriveOAuth2Api',
      binary_field='archivo', query={'uploadType': 'media'})

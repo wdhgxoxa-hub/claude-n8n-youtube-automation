@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "8ada03a3-1226-4642-b8c9-4eedc8e07306",
+      "id": "6a8066d3-0325-4f5e-aeb5-217f17121610",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "025e63a1-4758-4eff-87d2-59b5a5ef2194",
+      "id": "9712c7c1-f65b-4c35-a0e0-fe0c8f92b487",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -46,9 +46,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Un ítem por plano con su texto narrable y la dirección de actuación.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst b = e.biblia || {}; const voz = b.voz || {};\nconst base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join('. ') || 'narrador de documental, voz grave y cercana';\nconst MARCAS = { 'énfasis': 'remarca con intensidad', 'enfasis': 'remarca con intensidad', 'susurro': 'en voz baja, casi un susurro',\n  'suspenso': 'con suspenso contenido', 'pausa': '' };\nconst planos = (e.planos || []).filter(p => p.plano?.texto_narrado);\nreturn planos.map(p => {\n  const t = String(p.plano.texto_narrado);\n  const marcas = [...t.matchAll(/\\[([^\\]]{1,30})\\]/g)].map(m => MARCAS[m[1].toLowerCase()]).filter(Boolean);\n  const limpio = t.replace(/\\[pausa\\]/gi, '… ').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/\\s{2,}/g, ' ').trim();\n  const direccion = [base, p.plano.emocion ? 'emoción: ' + p.plano.emocion : '', ...marcas].filter(Boolean).join('; ');\n  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto: limpio,\n    prompt: `Narra en ${b.idioma || 'español latino neutro'}. Dirección: ${direccion}. Lee exactamente este texto, sin añadir nada:\\n${limpio}`,\n    voz: voz.gemini_voice || aj.vozGemini } };\n});\n"
+        "jsCode": "\n// Un ítem por plano. Gemini TTS lee el texto al pie de la letra: la actuación va aparte, en «style»\n// (emoción y ritmo de todo el plano) y en etiquetas <short pause>/<long pause>; el énfasis, en MAYÚSCULAS.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst b = e.biblia || {}; const voz = b.voz || {};\nconst base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join(', ') || 'narrador de documental, voz grave y cercana, ritmo ágil';\nconst ESTILO = { 'susurro': 'en voz baja, casi un susurro', 'suspenso': 'con suspenso contenido', 'urgencia': 'con urgencia' };\nconst planos = (e.planos || []).filter(p => p.plano?.texto_narrado);\nreturn planos.map(p => {\n  const t = String(p.plano.texto_narrado);\n  const extra = [...t.matchAll(/\\[([^\\]]{1,30})\\]/g)].map(m => ESTILO[m[1].toLowerCase()]).filter(Boolean);\n  const texto = t\n    .replace(/\\[(?:énfasis|enfasis)\\]\\s*([^\\s.,;:!?…]+)/gi, (_, w) => w.toLocaleUpperCase('es'))\n    .replace(/\\[pausa larga\\]/gi, ' <long pause> ').replace(/\\[pausa\\]/gi, ' <short pause> ')\n    .replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/\\s{2,}/g, ' ').trim();\n  const estilo = [base, p.plano.emocion ? 'con ' + p.plano.emocion : '', ...extra, `en ${b.idioma || 'español latino neutro'}`].filter(Boolean).join(', ');\n  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: voz.gemini_voice || aj.vozGemini } };\n});\n"
       },
-      "id": "1acf4f73-0f41-4d40-9b81-506001dba8d5",
+      "id": "c2e315fe-f545-45d3-bf52-17a92c93ebea",
       "name": "Textos de voz",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -60,7 +60,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVoz + ':generateContent' }}",
+        "url": "https://generativelanguage.googleapis.com/v1beta/interactions",
         "options": {
           "timeout": 180000
         },
@@ -68,9 +68,9 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { contents: [{ parts: [{ text: $json.prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: $json.voz } } } } } }}"
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloVoz, store: false, input: [{ type: 'user_input', content: [{ type: 'text', text: $json.texto, annotations: [{ type: 'speech_metadata', style: $json.estilo }] }] }], response_format: { type: 'audio' }, generation_config: { speech_config: [{ voice: $json.voz }] } } }}"
       },
-      "id": "2d03c9a7-8623-4310-9d18-06eb4eac0f3b",
+      "id": "1db217db-eef2-4a4a-ac12-3688f612e931",
       "name": "Voz (Gemini TTS)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -90,9 +90,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Gemini entrega PCM 16 bits mono 24 kHz: se le pone cabecera WAV y se mide la duración exacta.\nconst prev = $('Textos de voz').item.json;\nconst part = ($json.candidates?.[0]?.content?.parts || []).find(x => x.inlineData?.data);\nif (!part) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);\nconst rate = Number((part.inlineData.mimeType || '').match(/rate=(\\d+)/)?.[1] || 24000);\nconst pcm = Buffer.from(part.inlineData.data, 'base64');\nconst h = Buffer.alloc(44);\nh.write('RIFF', 0); h.writeUInt32LE(36 + pcm.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);\nh.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(rate, 24);\nh.writeUInt32LE(rate * 2, 28); h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(pcm.length, 40);\nconst wav = Buffer.concat([h, pcm]);\nreturn [{ json: { ...prev, duracion_s: Math.round(pcm.length / (rate * 2) * 100) / 100 },\n  binary: { archivo: { data: wav.toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } }];\n"
+        "jsCode": "\n// Gemini TTS entrega WAV (o PCM crudo 16 bits mono): se lee el formato, se recortan los silencios\n// del principio y del final (dejan respiros artificiales) y se mide la duración exacta.\nconst prev = $('Textos de voz').item.json;\nconst audio = ($json.steps || []).filter(x => x.type === 'model_output').flatMap(x => x.content || []).filter(c => c.type === 'audio' && c.data).pop();\nif (!audio) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);\nconst raw = Buffer.from(audio.data, 'base64');\nlet rate = Number((audio.mime_type || '').match(/rate=(\\d+)/)?.[1] || 24000), canales = 1, bits = 16, pcm = raw;\nif (raw.toString('ascii', 0, 4) === 'RIFF') {\n  let o = 12;\n  while (o + 8 <= raw.length) {\n    const id = raw.toString('ascii', o, o + 4), sz = raw.readUInt32LE(o + 4);\n    if (id === 'fmt ') { canales = raw.readUInt16LE(o + 10); rate = raw.readUInt32LE(o + 12); bits = raw.readUInt16LE(o + 22); }\n    if (id === 'data') { pcm = raw.subarray(o + 8, Math.min(raw.length, o + 8 + sz)); break; }\n    o += 8 + sz + (sz % 2);\n  }\n}\nif (bits !== 16) throw new Error('Formato de audio no soportado: ' + bits + ' bits');\nconst paso = 2 * canales, n = Math.floor(pcm.length / paso), UMBRAL = 600, MARGEN = Math.round(rate * 0.12);\nlet ini = 0, fin = n - 1;\nwhile (ini < n && Math.abs(pcm.readInt16LE(ini * paso)) < UMBRAL) ini++;\nwhile (fin > ini && Math.abs(pcm.readInt16LE(fin * paso)) < UMBRAL) fin--;\nif (ini >= fin) throw new Error('El audio de ' + prev.plano_id + ' está en silencio');\nconst recorte = pcm.subarray(Math.max(0, ini - MARGEN) * paso, Math.min(n, fin + MARGEN) * paso);\nconst h = Buffer.alloc(44);\nh.write('RIFF', 0); h.writeUInt32LE(36 + recorte.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);\nh.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(canales, 22); h.writeUInt32LE(rate, 24);\nh.writeUInt32LE(rate * paso, 28); h.writeUInt16LE(paso, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(recorte.length, 40);\nconst segundos = recorte.length / (rate * paso);\nconst palabras = prev.texto.replace(/<[^>]+>/g, '').split(/\\s+/).filter(Boolean).length;\nreturn [{ json: { ...prev, duracion_s: Math.round(segundos * 100) / 100, palabras_por_minuto: Math.round(palabras / segundos * 60) },\n  binary: { archivo: { data: Buffer.concat([h, recorte]).toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } }];\n"
       },
-      "id": "fdc47e48-617c-492c-aa40-e0e639d99d21",
+      "id": "e04beb2a-9aad-4a9e-9b06-ecfcb8e7cf52",
       "name": "WAV",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -123,7 +123,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "archivo"
       },
-      "id": "8b525882-2ac2-49ad-bc15-de2ae3774059",
+      "id": "a2c56668-7759-4049-aa9b-7f612d590e76",
       "name": "Subir voz a Drive",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -154,7 +154,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: $('WAV').item.json.video_id + '-' + $('WAV').item.json.plano_id + '-voz.wav' } }}"
       },
-      "id": "63e90186-5cf6-4f78-81da-8507e5264d7a",
+      "id": "271bbb40-6e78-40ae-a616-91e8aff09384",
       "name": "Nombrar voz",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -176,7 +176,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "c75c2779-456c-44db-af76-596d85c30b4d",
+      "id": "a605041e-6220-4367-8f03-63884c007fcd",
       "name": "Compartir voz",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -189,7 +189,7 @@
       "parameters": {
         "jsCode": "const w = $('WAV').item.json; return [{ json: { plano_id: w.plano_id, duracion_s: w.duracion_s, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir voz a Drive').item.json.id } }];"
       },
-      "id": "8c966f7a-80f8-41ab-af5d-6eb22a66589f",
+      "id": "ef5b22f4-8998-4248-9ca5-9ac57857deb8",
       "name": "Voz lista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -204,7 +204,7 @@
         "destinationFieldName": "voces",
         "options": {}
       },
-      "id": "1ab5231a-d6be-45ab-b8a7-14d0cdcdc681",
+      "id": "321cd54b-27e3-4486-ad32-03c6df38798d",
       "name": "Juntar voces",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -224,7 +224,7 @@
           },
           "conditions": [
             {
-              "id": "d180fa1b-13f0-41f9-8d23-fe48c738a755",
+              "id": "2ccbec77-3b4c-4a21-9a90-e1d0e01567be",
               "leftValue": "={{ $('Leer ajustes').first().json.allowMusica === true }}",
               "rightValue": "",
               "operator": {
@@ -238,7 +238,7 @@
         },
         "options": {}
       },
-      "id": "c7c526b5-6360-4325-adc7-dbee270b6d33",
+      "id": "3731bfa7-260d-46f6-a233-94da8ccfd8b3",
       "name": "¿Música activa?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -251,7 +251,7 @@
       "parameters": {
         "jsCode": "\n// Términos a partir de la biblia (estilo musical del canal) y del storyboard (estilo e intensidad).\nconst e = $('Inicio').first().json; const b = e.biblia || {};\nconst termino = [e.musica?.estilo, b.musica?.estilo, b.musica?.mood].filter(Boolean).join(' ') || 'cinematic documentary suspense';\nconst total = $json.voces.reduce((a, v) => a + v.duracion_s, 0);\nreturn [{ json: { termino: termino.slice(0, 120), total_s: Math.round(total) } }];\n"
       },
-      "id": "f0c73006-8de3-4ce1-92c2-90e6e1b630ee",
+      "id": "9c50818d-ba65-4908-a122-5aa098227242",
       "name": "Búsqueda de música",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -288,7 +288,7 @@
         "specifyBody": "json",
         "jsonBody": "={\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-03-26\",\"capabilities\":{},\"clientInfo\":{\"name\":\"fabrica-n8n\",\"version\":\"1\"}}}"
       },
-      "id": "e365b9d2-d7fc-4dbc-8c09-0fd4ef1eac03",
+      "id": "97e55724-6c83-44c4-baf9-25639661a67c",
       "name": "Iniciar Epidemic",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -335,7 +335,7 @@
         "specifyBody": "json",
         "jsonBody": "={\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\",\"params\":{}}"
       },
-      "id": "5c91c1da-3d67-47c0-b4e5-4edc08014a63",
+      "id": "ca7e28de-d15e-4bb0-a103-5b887c767064",
       "name": "Epidemic listo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -382,7 +382,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'SearchRecordings', arguments: { query: { term: $('Búsqueda de música').first().json.termino }, first: 15 } } }) }}"
       },
-      "id": "1a98733c-6a1c-4114-a9c7-802f8d32b2cd",
+      "id": "47c602d5-d183-4934-ae49-f0d82c1b80bd",
       "name": "Buscar música",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -401,7 +401,7 @@
       "parameters": {
         "jsCode": "\n// Respuesta MCP por SSE con GraphQL dentro: primera pista instrumental y lo bastante larga.\nconst sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst m = JSON.parse(sse($json.data)); const txt = (m.result?.content || []).find(c => c.type === 'text')?.text || '{}';\nconst d = JSON.parse(txt); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message);\nconst nodos = (Object.values(d.data || {})[0]?.nodes || []).map(n => n.recording).filter(Boolean);\nconst total = $('Búsqueda de música').first().json.total_s;\nconst sinVoz = r => !JSON.stringify(r).toLowerCase().includes('\"vocals\"');\nconst dur = r => Number(r.durationInSeconds || r.duration || r.lengthInSeconds || 0);\nconst pista = nodos.find(r => sinVoz(r) && (!dur(r) || dur(r) >= Math.min(total, 120))) || nodos[0];\nif (!pista) throw new Error('Epidemic no devolvió pistas para: ' + $('Búsqueda de música').first().json.termino);\nreturn [{ json: { id: pista.id, titulo: pista.title || pista.name || '', artista: (pista.mainArtists || pista.artists || []).map(a => a.name).join(', ') } }];\n"
       },
-      "id": "57d75251-47a0-48c7-93ee-5b5717dba41f",
+      "id": "53f5e5be-f5f9-4a73-b9d6-fbc752c65efe",
       "name": "Elegir pista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -442,7 +442,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'DownloadRecording', arguments: { id: $json.id, options: { fileType: 'MP3', stemType: 'FULL' } } } }) }}"
       },
-      "id": "b81987f4-0cf7-444a-91e4-e0b05c95eb6f",
+      "id": "acff4745-6ab9-4f7a-974d-e01eafe908c0",
       "name": "Pedir descarga",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -461,7 +461,7 @@
       "parameters": {
         "jsCode": "\nconst sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst m = JSON.parse(sse($json.data)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}');\nconst url = Object.values(d.data || {})[0]?.assetUrl;\nif (!url) throw new Error('Epidemic no dio URL de descarga');\nconst p = $('Elegir pista').first().json;\n// La URL firmada caduca: se usa en el render de inmediato. El crédito va a la descripción del video.\nreturn [{ json: { voces: $('Juntar voces').first().json.voces, musica: { url, titulo: p.titulo, credito: `Música: «${p.titulo}» de ${p.artista || 'Epidemic Sound'}, cortesía de Epidemic Sound (www.epidemicsound.com)` } } }];\n"
       },
-      "id": "077ed387-2c1d-49e6-a555-ac202ceabf9d",
+      "id": "7e62f94d-a81f-4951-8de7-b751975b525f",
       "name": "Música lista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -474,7 +474,7 @@
       "parameters": {
         "jsCode": "return [{ json: { voces: $json.voces, musica: null } }];"
       },
-      "id": "8625526e-690c-416a-aecd-d670fd59e6a5",
+      "id": "408848b7-4603-40d1-b624-70183a44e6fd",
       "name": "Sin música",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

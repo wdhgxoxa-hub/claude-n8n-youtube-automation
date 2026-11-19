@@ -108,26 +108,37 @@ test('producción: composición sigue el storyboard, dura lo que la voz y pone l
 });
 
 const SON = wf('FabSonido0000001');
-test('sonido: el texto narrado va limpio y las marcas se vuelven dirección de actuación', () => {
+test('sonido: la actuación va en «style» y en etiquetas; el texto no lleva instrucciones', () => {
   const items = run(codeOf(SON, 'Textos de voz'), { nodes: { Inicio: { video_id: 'v', biblia: { voz: { descripcion: 'grave' } },
-    planos: [{ plano_id: 'p01', plano: { texto_narrado: '[énfasis] 1901. [pausa] Abramos el expediente.', emocion: 'intriga' } }] }, 'Leer ajustes': aj } });
+    planos: [{ plano_id: 'p01', plano: { texto_narrado: '[énfasis] 1901. [pausa] Abramos el [énfasis] expediente. [susurro]', emocion: 'intriga' } }] }, 'Leer ajustes': aj } });
   const j = items[0].json;
-  assert.strictEqual(j.texto, '1901. … Abramos el expediente.');
-  assert.match(j.prompt, /remarca con intensidad/);
-  assert.match(j.prompt, /emoción: intriga/);
-  assert.doesNotMatch(j.prompt.split('\n')[1], /\[/);
+  assert.strictEqual(j.texto, '1901. <short pause> Abramos el EXPEDIENTE.');
+  assert.match(j.estilo, /grave, con intriga, en voz baja, casi un susurro, en español latino neutro/);
   assert.strictEqual(j.voz, aj.vozGemini);
 });
 
-test('sonido: el PCM de Gemini se vuelve WAV válido con su duración exacta', () => {
-  const pcm = Buffer.alloc(48000 * 2); // 2 s a 24 kHz, 16 bits
-  const out = run(codeOf(SON, 'WAV'), { json: { candidates: [{ content: { parts: [{ inlineData: { mimeType: 'audio/L16;codec=pcm;rate=24000', data: pcm.toString('base64') } }] } }] },
-    nodes: { 'Textos de voz': { plano_id: 'p01', video_id: 'v' } } })[0];
-  assert.strictEqual(out.json.duracion_s, 2);
+function wavDe(muestras, rate = 24000) {
+  const pcm = Buffer.alloc(muestras.length * 2); muestras.forEach((m, i) => pcm.writeInt16LE(m, i * 2));
+  const h = Buffer.alloc(44); h.write('RIFF', 0); h.writeUInt32LE(36 + pcm.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);
+  h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(rate, 24); h.writeUInt32LE(rate * 2, 28);
+  h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(pcm.length, 40); return Buffer.concat([h, pcm]);
+}
+test('sonido: el WAV de Gemini se lee, se recortan silencios y se mide la duración', () => {
+  // 1 s de silencio + 2 s de voz + 1 s de silencio, a 24 kHz
+  const m = [...Array(24000).fill(0), ...Array(48000).fill(3000), ...Array(24000).fill(0)];
+  const out = run(codeOf(SON, 'WAV'), { json: { steps: [{ type: 'model_output', content: [{ type: 'audio', mime_type: 'audio/wav', data: wavDe(m).toString('base64') }] }] },
+    nodes: { 'Textos de voz': { plano_id: 'p01', video_id: 'v', texto: 'uno dos tres cuatro cinco seis' } } })[0];
+  assert.ok(Math.abs(out.json.duracion_s - 2.24) < 0.02, String(out.json.duracion_s)); // 2 s + márgenes de 0,12 s
   const wav = Buffer.from(out.binary.archivo.data, 'base64');
   assert.strictEqual(wav.toString('ascii', 0, 4), 'RIFF');
   assert.strictEqual(wav.readUInt32LE(24), 24000);
-  assert.strictEqual(wav.length, 44 + pcm.length);
+  assert.strictEqual(wav.readUInt32LE(40), wav.length - 44);
+});
+test('sonido: también acepta PCM crudo', () => {
+  const pcm = Buffer.alloc(24000 * 2); for (let i = 0; i < 24000; i++) pcm.writeInt16LE(2000, i * 2);
+  const out = run(codeOf(SON, 'WAV'), { json: { steps: [{ type: 'model_output', content: [{ type: 'audio', mime_type: 'audio/l16;rate=24000', data: pcm.toString('base64') }] }] },
+    nodes: { 'Textos de voz': { plano_id: 'p01', video_id: 'v', texto: 'hola' } } })[0];
+  assert.ok(Math.abs(out.json.duracion_s - 1) < 0.01);
 });
 
 test('producción: de Pexels elige un video en la orientación del formato', () => {
