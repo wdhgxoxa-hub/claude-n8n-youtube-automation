@@ -1,125 +1,22 @@
-# The Four Workflows
+# Flujos de la fábrica de videos
 
-> **Before you push:** the four JSON files go in this folder. Export each workflow from n8n, then run through `../SANITIZE.md` before committing. An n8n export contains your bot token references, chat IDs, spreadsheet IDs and webhook URLs.
+Los cuatro JSON se importan como borradores en n8n 2.47.4. Cada flujo tiene un nodo **Factory Settings** para los datos de la instalación. Las credenciales se guardan en n8n y se asignan al nodo que las usa.
 
-Import order matters. Do 1, 2, 3, then 4, because later workflows reference webhook URLs produced by earlier ones.
-
----
-
-## Workflow 1: Telegram idea intake
-
-**File:** `01-telegram-idea-intake.json`
-**Trigger:** Telegram bot message
-**Talks to:** Claude Code routine
-
-### What it does
-
-Listens to your Telegram bot. Runs a two-keyword conversation.
-
-| You send | Bot asks for | Result |
+| Flujo | Entrada | Resultado |
 |---|---|---|
-| `topic` or `idea` | Your video topic | Full pipeline with script approval |
-| `script` | A ready-made script | Treated as approved, straight to production |
+| 01 · Telegram | Mensaje del chat privado autorizado | Solicitud con modo topic o script para Claude |
+| 02 · Revisión de guion | POST autenticado en /webhook/video-factory/script-approval | Aviso breve en Telegram y formulario con el guion completo. Respuesta aprobada, revisión o cancelación |
+| 03 · Registro en Sheets | POST autenticado en /webhook/video-factory/log-video-row | Fila identificada por video_id y acuse HTTP |
+| 04 · HeyGen y YouTube | POST firmado en /webhook/video-factory/heygen-callback | Registro del render y, si se autoriza, subida privada y aviso |
 
-A chat ID filter sits on the front. Only your chat ID gets through. This replaces any password or passphrase, and it is why the launcher web page is now optional.
+En el flujo 01, escribe **topic** o **idea** antes del tema y **script** antes de enviar un guion final. Usa [angle: ...] y [cta: ...] para las opciones de tema. La consulta de vidIQ se solicita con (use vidiq).
 
-The bot confirms receipt so you know it landed.
+En el flujo 02, el formulario usa autenticación básica y vence después de 24 horas. Para pedir cambios, incluye comentarios. Cada decisión se envía a Claude como una nueva ejecución con el contexto del guion.
 
-### Topic format
+En el flujo 03, un nuevo registro obtiene HTTP 201 después de guardar la fila. Un reintento obtiene HTTP 200 y conserva la fila. Si hay filas duplicadas con el mismo ID, devuelve 409 para revisión.
 
-```
-<topic> [angle: ...] [cta: ...] (use vidiq | no vidiq)
-```
+En el flujo 04, se procesan eventos video_agent.success y video_agent.fail con firma válida. Los eventos que traen session_id se completan con consultas de lectura. El flujo devuelve HTTP 503 si el registro aún no existe, de modo que HeyGen puede reintentar. Con la subida deshabilitada, un render correcto se registra como ready. La ruta de subida utiliza uploading y uploaded con una URL privada de YouTube.
 
-Only the topic is required.
+Los contratos de entrada, revisión, registro y entrega son independientes. Para integrar otro renderizador, conserva el registro por video_id y adapta la validación del evento y la obtención del archivo en el flujo 04.
 
-### Nodes to reconnect after import
-
-- Telegram Trigger credential
-- Telegram Send Message credential
-- Your chat ID in the filter node
-- The Claude Code routine API trigger URL
-
----
-
-## Workflow 2: Script review and approval
-
-**File:** `02-script-review-approval.json`
-**Trigger:** Called by Claude when a script is ready
-**Talks to:** Telegram, n8n Form, Claude Code routine
-
-### What it does
-
-Claude sends the script, title and description here. The workflow then splits the notification in two:
-
-1. **Telegram gets a short message.** Topic, title, and a link to the form.
-2. **The n8n form page shows the full script**, the title and the description, with an Approve button and a Request Changes textarea.
-
-This split exists because Telegram caps a message at 4096 characters and a full script is longer than that. Chunking across multiple Telegram messages was tried and it is worse to read on a phone.
-
-### The loop
-
-Approve, and the payload goes to production.
-Request changes, and your notes go back to Claude. Claude rewrites and calls this workflow again with a fresh script. Repeat until you approve.
-
-### Nodes to reconnect after import
-
-- Telegram credential
-- Form Trigger, note the new public form URL
-- The Claude Code routine API trigger URL, used in both the approve and the revise branches
-
----
-
-## Workflow 3: Log to tracking sheet
-
-**File:** `03-log-to-spreadsheet.json`
-**Trigger:** Webhook, called by Claude after the HeyGen video is submitted
-**Talks to:** Google Sheets
-
-### What it does
-
-Writes one row per video the moment production starts.
-
-Columns are defined in `../templates/tracking-sheet.md`. The important one is `heygen_video_id`, which is the key Workflow 4 uses to match the finished render back to its title and description.
-
-This workflow is deliberately dumb. One webhook, one append row. It exists so that Claude can hand off and stop rather than sitting there waiting for a render.
-
-### Nodes to reconnect after import
-
-- Google Sheets OAuth credential
-- Spreadsheet ID
-- Sheet name
-
----
-
-## Workflow 4: HeyGen webhook to YouTube upload
-
-**File:** `04-heygen-webhook-youtube-upload.json`
-**Trigger:** HeyGen webhook, fires when a render completes
-**Talks to:** Google Sheets, YouTube Data API, Telegram
-
-### What it does
-
-This is the only workflow that does not involve Claude at all. Once it is set up, it runs on its own forever.
-
-1. HeyGen fires the webhook with a video ID and a download URL
-2. Look up the matching row in the tracking sheet by `heygen_video_id`
-3. Download the video file
-4. Upload to YouTube with the title and description from the sheet, set to **unlisted**
-5. Write the YouTube URL back to the sheet
-6. Send a Telegram message with the link
-
-### Why unlisted
-
-So you watch it before the world does. HeyGen is good, not perfect. Flip the privacy field to `public` in the YouTube node if you want to skip the check.
-
-### Nodes to reconnect after import
-
-- Webhook node, copy the production URL and register it in HeyGen
-- Google Sheets OAuth credential and spreadsheet ID
-- YouTube OAuth credential
-- Telegram credential and chat ID
-
-### Registering the webhook in HeyGen
-
-HeyGen needs to know where to send the callback. Add the production webhook URL from this workflow in your HeyGen webhook settings, subscribed to the video completion event. See `../docs/04-heygen-setup.md`.
+La configuración y las pruebas están en [docs/03-n8n-setup.md](../docs/03-n8n-setup.md).

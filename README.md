@@ -1,6 +1,6 @@
 # Claude + n8n + HeyGen YouTube Automation
 
-Send a topic to a Telegram bot. Get a finished YouTube video uploaded to your channel. No editing, no recording, no manual steps in between.
+Send a topic to Telegram, review the script, and hand it off to HeyGen. This checkout imports as four drafts. Claude calls and YouTube uploads come disabled. Follow the [n8n setup](docs/03-n8n-setup.md) to connect your accounts and verify each workflow.
 
 This repo has the four n8n workflows, the Claude skill file, and the setup docs for the AI video automation system I built and run on my own channel.
 
@@ -64,11 +64,11 @@ Two ways to run it:
                         ┌───────────────────────────────────────────────┐
                         │ WORKFLOW 4  (runs without Claude)             │
                         │ HeyGen webhook → match sheet row → download    │
-                        │ → upload to YouTube (unlisted) → Telegram ping │
+                        │ → optional private YouTube upload → Telegram ping │
                         └───────────────────────────────────────────────┘
 ```
 
-Workflows 1, 2 and 3 all talk to the Claude Code routine. Workflow 4 is fully independent. That matters, because HeyGen can take a long time to render and you do not want a Claude session sitting there waiting.
+Workflows 1 and 2 call the Claude Code routine. The routine calls Workflows 2 and 3. Workflow 4 is fully independent. That matters, because HeyGen can take a long time to render and you do not want a Claude session sitting there waiting.
 
 ---
 
@@ -118,7 +118,7 @@ Workflows 1, 2 and 3 all talk to the Claude Code routine. Workflow 4 is fully in
 4. Replace `skill/reference/example-scripts.md` with two or three of your own scripts.
 5. Import the four JSON files into n8n. Reconnect every credential.
 6. Set up the Claude Code routine following `docs/07-claude-routine-setup.md`.
-7. Message your Telegram bot the word `topic`. Send an idea. Watch it run.
+7. Run the offline workflow tests, then verify connections with your test accounts.
 
 Do not skip step 4. The example scripts are what make the output sound like you instead of sounding like a chatbot.
 
@@ -146,8 +146,8 @@ Append one of these to your topic text:
 
 | Flag | Effect |
 |---|---|
-| `(use vidiq)` | Runs keyword research. Default behaviour. |
-| `(no vidiq)` or `(skip vidiq)` | Skips research entirely. |
+| `(use vidiq)` | Requests keyword research. |
+| `(no vidiq)` or `(skip vidiq)` | Skips keyword research. This is the default. |
 
 Use `(no vidiq)` for personal stories, opinion videos and build logs. There is no keyword angle on those and vidIQ credits are not free.
 
@@ -179,7 +179,7 @@ Two things to know:
 
 If you are on a HeyGen web plan (Creator, Team), your plan credits and your API credits are two separate wallets. An API key bills the API wallet, which is empty unless you top it up, and web plans cannot buy one-time API packs.
 
-**Use the HeyGen MCP connector, not a raw API key.** MCP bills your web plan credits. This one detail saves you from paying twice.
+Use the HeyGen MCP connector for generation against your web plan credits. n8n uses the HeyGen API for webhook registration and completion reads.
 
 ---
 
@@ -190,7 +190,7 @@ If you are on a HeyGen web plan (Creator, Team), your plan credits and your API 
 | Claude | Pro or Max (Claude Code routines) | $20 to $100 |
 | HeyGen | Creator or above | $29+ |
 | n8n | Cloud starter, or self-hosted free | $0 to $24 |
-| vidIQ | Any paid tier with MCP access | $10+ |
+| vidIQ | Optional MCP in all plans | See current plan |
 | Telegram Bot API | Free | $0 |
 | Google Sheets + YouTube Data API | Free | $0 |
 
@@ -226,10 +226,10 @@ Read `SANITIZE.md` before your first push. There is a checklist and a prompt you
 No. You import JSON, click through credential screens, and edit markdown files.
 
 **Can I use a different avatar tool?**
-The four workflows are HeyGen-specific in workflow 4 only. Swap the download step and it works with anything that returns a video URL.
+The renderer integrates with the Claude routine and Workflow 4. Adapt the callback authentication, event normalization, and file retrieval. Preserve video_id as the tracking key.
 
 **Does it upload publicly?**
-No. Workflow 4 uploads as **unlisted** on purpose. You check the video, then publish manually. Change one field if you want it public.
+Uploads are disabled by default. When enabled, Workflow 4 uploads as **private**, with subscriber notifications disabled.
 
 **How long does one video take?**
 About 3 to 6 minutes of your attention. Send topic, read script, approve. The rendering happens without you.

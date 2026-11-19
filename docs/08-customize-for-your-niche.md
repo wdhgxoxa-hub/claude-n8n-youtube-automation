@@ -55,9 +55,9 @@ Keep the structure. The two entry modes, the approval loop, and above all the ru
 
 Two things people do change:
 
-**Upload privacy.** Workflow 4 uploads as unlisted so you can check before publishing. Change the privacy field to `public` if you want it fully hands-off.
+**Upload privacy.** Workflow 4 keeps uploads disabled by default. Authorized uploads use private visibility.
 
-**The avatar tool.** Only Workflow 4 is HeyGen-specific, and only in the download step. Swap that for any service that returns a video URL and the rest of the chain works.
+**The avatar tool.** Replace the renderer in Claude and adapt callback authentication, event normalization and file retrieval in Workflow 4. Keep the tracking record keyed by video_id.
 
 ## For a team or agency setup
 

@@ -26,7 +26,7 @@ If you change devices or accounts, the chat ID changes. Update it in the workflo
 
 ## 4. Add the credential in n8n
 
-n8n, Credentials, New, Telegram. Paste the token. Name it something you will recognize.
+Create a Telegram credential in n8n and enter the token there. Set telegramChatId in Factory Settings in Workflows 1, 2 and 4. The trigger accepts the configured private chat and sender.
 
 Every Telegram node across all four workflows uses this same credential.
 
@@ -35,7 +35,7 @@ Every Telegram node across all four workflows uses this same credential.
 Send your bot `topic`. It should ask for your topic.
 Send your bot `script`. It should ask for a ready-made script.
 
-If nothing happens, check that Workflow 1 is active and that the chat ID filter matches yours.
+For a real trigger test, use a dedicated bot and its HTTPS test webhook. Keep allowClaude disabled and verify the private chat ID.
 
 ## Message limits
 

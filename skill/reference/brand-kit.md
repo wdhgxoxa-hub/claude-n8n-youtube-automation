@@ -39,5 +39,5 @@ Channel name:  <name>
 Niche:         <niche>
 Audience:      <who watches>
 Default CTA:   <your usual CTA>
-Upload privacy: unlisted
+Upload privacy: private
 ```

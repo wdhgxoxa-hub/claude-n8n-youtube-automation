@@ -36,13 +36,13 @@ Almost always one of three things:
 
 1. The HeyGen webhook is registered with the **test** URL instead of the production URL
 2. Workflow 4 is not active
-3. The `heygen_video_id` in the sheet does not match what the webhook sends, so the row lookup returns nothing
+3. The `video_id` in the sheet does not match the video ID resolved from the webhook
 
 Check Workflow 4's execution list. If there are no executions at all, it is the webhook. If there are executions that fail at the lookup step, it is the ID matching.
 
 ## YouTube upload fails with quota exceeded
 
-Each upload costs 1600 of your 10,000 daily quota units. That is 6 per day. Wait for the reset at midnight Pacific, or request a quota increase.
+Check the Videos Uploads quota bucket for your project in Google Cloud. [Current limits](https://developers.google.com/youtube/data/determine_quota_cost)
 
 ## YouTube upload fails with access blocked
 

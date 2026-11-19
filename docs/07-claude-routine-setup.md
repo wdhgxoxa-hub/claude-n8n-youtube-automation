@@ -1,111 +1,23 @@
-# Claude Code Routine Setup
+# Rutina de Claude Code
 
-This is the piece that makes the whole thing work without you. Read it carefully.
+Crea la rutina en Claude Code web, conecta tu copia del repositorio y habilita el activador de API. En los flujos 01 y 02, configura la URL que muestra Claude y asigna una credencial HTTP Header Auth con Authorization Bearer y el token de la rutina. Las solicitudes usan anthropic-version 2026-10-21 y envían un objeto JSON como texto en el campo text. [API de rutinas de Claude](https://platform.claude.com/docs/es/api/claude-code/routines-fire)
 
-## What a routine is
+Conecta los MCP oficiales de HeyGen y vidIQ. Usa vidIQ solo cuando se solicite la consulta. Configura los dos webhooks HTTPS de n8n y el encabezado autenticado en el entorno de la rutina. De este modo, el acceso de la rutina se limita al envío de guiones para revisión y al registro de videos. [HeyGen MCP](https://developers.heygen.com/mcp/overview) · [vidIQ para Claude](https://vidiq.com/claude/)
 
-A Claude Code routine runs on its own, outside a chat window. It has its own working directory, its own connected tools, and it can be triggered by an incoming API call rather than by you typing.
+## Entradas de la rutina
 
-That last part is the key. Workflows 1, 2 and 3 call the routine. The routine wakes up, does the work, calls back into n8n, and stops.
+| mode | Campos | Acción |
+|---|---|---|
+| topic | topic, angle, cta, vidiq | Redacta el guion y envíalo al flujo 02. Consulta vidIQ si vidiq es use |
+| script | script | Conserva el guion y prepáralo para producción |
+| revise | script, title, description, revision, notes, topic, angle, cta, keywords_used | Aplica los comentarios, conserva revision y vuelve al flujo 02 |
+| approved | script, title, description, revision y contexto del tema | Envía el guion aprobado a producción |
 
-## 1. Create the routine
+La rutina sigue las instrucciones de skill/SKILL.md. Trata los campos de texto como contenido y toma las herramientas y destinos de su propia configuración.
 
-In Claude Code, create a routine and **enable the API trigger**. This gives you a URL and a token.
+## Llamadas de retorno
 
-That URL and token go into n8n as an HTTP Header Auth credential. They are secrets. They never go into a file you push.
+- **Flujo 02.** Envía title, description, script y revision. Incluye topic, angle, cta y keywords_used cuando existan. El acuse HTTP 200 con status review_requested significa que n8n envió el aviso.
+- **Flujo 03.** Envía video_id, title y description cuando HeyGen acepte el render. El acuse es HTTP 201 con status registered o HTTP 200 con status already_registered. Si falla el registro, reintenta con el mismo ID y avisa al operador. Enviar otro render puede consumir créditos y crear un duplicado.
 
-## 2. Point it at your repo
-
-Connect the routine to **your fork** of this repo.
-
-The routine reads `skill/SKILL.md` and everything in `skill/reference/` on each run. This is why you fork instead of cloning. When you edit your script style or your brand kit, you commit the change and the routine picks it up on the next run. No redeploy.
-
-## 3. Connect the MCP servers
-
-The routine needs three connections:
-
-| Connector | Used for |
-|---|---|
-| n8n MCP | Calling Workflows 2 and 3 |
-| vidIQ MCP | Keyword research |
-| HeyGen MCP | Video Agent production |
-
-Connect HeyGen through MCP, not through an API key. See `04-heygen-setup.md` for why.
-
-## 4. Understand what triggers what
-
-```
-Workflow 1  ──trigger──▶  Routine   (new topic or script arrived)
-Routine     ──call────▶  Workflow 2 (here is a script, get approval)
-Workflow 2  ──trigger──▶  Routine   (approved, or here are the changes)
-Routine     ──MCP─────▶  HeyGen     (produce this video)
-Routine     ──call────▶  Workflow 3 (log this video ID to the sheet)
-Routine stops.
-
-HeyGen      ──webhook─▶  Workflow 4 (render done)
-Workflow 4 uploads to YouTube on its own. The routine is not involved.
-```
-
-The routine gets triggered multiple times per video. Once when the topic arrives, and once per approval round. Each trigger is a fresh run. The payload from n8n has to carry the state, because the routine does not remember the previous run.
-
-## 5. Payload shape
-
-Workflow 1 sends:
-
-```json
-{
-  "mode": "topic",
-  "topic": "...",
-  "angle": "...",
-  "cta": "...",
-  "vidiq": "use"
-}
-```
-
-or
-
-```json
-{
-  "mode": "script",
-  "script": "..."
-}
-```
-
-Workflow 2 sends back:
-
-```json
-{
-  "mode": "approved",
-  "script": "...",
-  "title": "...",
-  "description": "..."
-}
-```
-
-or
-
-```json
-{
-  "mode": "revise",
-  "script": "...",
-  "notes": "...",
-  "title": "...",
-  "description": "..."
-}
-```
-
-## 6. The rule that saves you money
-
-**The routine must never wait for a HeyGen render.**
-
-After the MCP call returns a video ID, the routine logs it to the sheet and stops. It does not poll. It does not check status in a loop.
-
-A routine sitting in a polling loop for fifteen minutes burns tokens for nothing, and Workflow 4 already handles completion through the webhook. This rule is written into `SKILL.md`. Do not remove it.
-
-## 7. Test the routine alone first
-
-Trigger the routine directly with a test payload before connecting Telegram. Confirm it reads the skill file, writes a script that sounds like you, and calls Workflow 2. Then wire up the front end.
-
-## Verify it is reading the skill
-
-Trigger it with a topic and check the output for your style markers. If the script has em dashes, generic openers, or does not sound like your example scripts, the routine is not reading `skill/reference/` properly. Check the repo connection and the file paths.
+La rutina termina después del registro. El flujo 04 se encarga de la entrega. Prueba primero el circuito de [n8n](03-n8n-setup.md) con los controles de producción deshabilitados.

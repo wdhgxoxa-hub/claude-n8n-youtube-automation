@@ -1,21 +1,98 @@
 {
-  "name": "Workflow 4: Download, Fix MIME Type, Upload to YouTube",
+  "name": "04 · Fábrica de videos · HeyGen y YouTube",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "heygen-callback",
-        "options": {}
+        "path": "video-factory/heygen-callback",
+        "authentication": "none",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
       },
-      "id": "9494fe7e-d712-429c-9e25-3e19c7d58c26",
+      "id": "29b48b6c-e55d-48b2-8949-9cd626639d2b",
       "name": "HeyGen Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -448,
-        112
+        0,
+        0
       ],
-      "webhookId": "961e6b87-25db-4549-954f-4a8325d92bc7"
+      "webhookId": "43e7cf62-2f79-44fb-a2b7-7ecb13b31ff7"
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "type": "SHA256",
+        "encoding": "hex",
+        "dataPropertyName": "expectedSignature"
+      },
+      "id": "412f1ef7-3dec-4a38-8e1c-84231f6277a3",
+      "name": "Calculate HeyGen Signature",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const { headers, body, expectedSignature } = $input.first().json;\nconst signature = headers?.signature;\nconst respond = (httpStatus, receipt) => [{ json: { httpStatus, receipt } }];\nif (typeof signature !== 'string' || !/^[a-fA-F0-9]{64}$/.test(signature)\n    || typeof expectedSignature !== 'string' || expectedSignature.length !== 64) {\n  return respond(401, 'invalid_signature');\n}\n\n// Compare equal-length hex digests without a data-dependent early exit.\nconst actual = signature.toLowerCase();\nlet difference = 0;\nfor (let index = 0; index < 64; index++) {\n  difference |= actual.charCodeAt(index) ^ expectedSignature.charCodeAt(index);\n}\nif (difference !== 0) return respond(401, 'invalid_signature');\n\nconst event = body?.event_type;\nif (typeof event !== 'string') return respond(400, 'invalid_event');\nif (!['video_agent.success', 'video_agent.fail'].includes(event)) return respond(200, 'event_ignored');\n\nconst data = body.event_data ?? {};\nconst readId = (value) => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value) ? value : '';\nconst videoId = readId(data.video_id);\nconst sessionId = readId(data.session_id);\nif (!videoId && !sessionId) return respond(400, 'missing_render_id');\n\nreturn [{ json: {\n  event,\n  video_id: videoId,\n  sessionId,\n  video_url: data.video_url || data.url || '',\n} }];"
+      },
+      "id": "c8a13674-092c-4f67-af7d-9e317b4fa9fe",
+      "name": "Parse Signed Callback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "141d3fc7-3b34-48b3-b343-e533530ba2c1",
+              "name": "telegramChatId",
+              "value": "__YOUR_TELEGRAM_CHAT_ID__",
+              "type": "string"
+            },
+            {
+              "id": "9d07b09a-b2c9-4b1e-9855-3f40ad50001d",
+              "name": "spreadsheetId",
+              "value": "__YOUR_SPREADSHEET_ID__",
+              "type": "string"
+            },
+            {
+              "id": "40412c0b-8585-4c1b-8298-a1d8fddf8032",
+              "name": "sheetName",
+              "value": "Videos",
+              "type": "string"
+            },
+            {
+              "id": "b9f110d7-8117-47a3-9549-213d07a2eeda",
+              "name": "allowYoutubeUpload",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "1d0aba48-dae8-4a09-8517-5eb890a5ef85",
+      "name": "Factory Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        0
+      ]
     },
     {
       "parameters": {
@@ -28,138 +105,297 @@
           },
           "conditions": [
             {
-              "leftValue": "={{ $json.body.event_type }}",
-              "rightValue": "video_agent.success",
+              "id": "2fcc4673-b323-4d2a-b38a-841dd3b0a3ae",
+              "leftValue": "={{ !!($json.event && !$json.video_id && $json.sessionId) }}",
+              "rightValue": "",
               "operator": {
-                "type": "string",
-                "operation": "equals"
-              },
-              "id": "be6f3cda-943e-4895-8905-14a80437734d"
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
-          "combinator": "or"
+          "combinator": "and"
         },
         "options": {}
       },
-      "id": "6b95045a-9428-4bcf-adcf-381288ea4ece",
-      "name": "Video Success?",
+      "id": "e17fea54-de05-4a92-8552-fa521bdbfb17",
+      "name": "Resolve Session?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -224,
-        112
+        960,
+        0
       ]
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1yHG5TiiaVZ2gHUcdUfgwvOu5_J9vkCVn3HguIdNobNA",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yHG5TiiaVZ2gHUcdUfgwvOu5_J9vkCVn3HguIdNobNA/edit#gid=0"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "video_id",
-              "lookupValue": "={{ $json.body.event_data.video_id }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "2d5998e2-1201-4e5a-974b-cb728a8b46e9",
-      "name": "Find Video Row",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
-      "position": [
-        0,
-        0
-      ],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "7tJwEMgog9YlgIXk",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "url": "={{ $('HeyGen Webhook').item.json.body.event_data.url }}",
+        "method": "GET",
+        "url": "={{ 'https://api.heygen.com/v3/video-agents/' + encodeURIComponent($json.sessionId) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "timeout": 6500,
           "response": {
             "response": {
-              "responseFormat": "file"
+              "responseFormat": "json"
             }
           }
         }
       },
-      "id": "e6351565-e7ac-4d2b-a9e6-93981a4a51d3",
-      "name": "Download Video File",
+      "id": "86da7870-123c-422a-b5fe-8ba77bf0baec",
+      "name": "Get Video Agent Session",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        224,
+        1200,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const event = $('Factory Settings').first().json;\nconst data = $input.first().json.data ?? {};\nconst videoId = data.video_id;\nif (typeof videoId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(videoId)) {\n  return [{ json: { httpStatus: 503, receipt: 'render_id_unavailable' } }];\n}\nreturn [{ json: { ...event, video_id: videoId } }];"
+      },
+      "id": "49ab40b4-28ae-4e04-9da3-a289ffbc1b30",
+      "name": "Read Session Video ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "e726f44e-b3d0-4155-9c9a-5d80b493e45f",
+              "leftValue": "={{ $json.event === 'video_agent.success' && !!$json.video_id && !$json.video_url }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "21ce3524-f481-4f3b-a4d3-57a6cedcc5dd",
+      "name": "Resolve Render URL?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1680,
         0
       ]
     },
     {
       "parameters": {
-        "resource": "video",
-        "operation": "upload",
-        "title": "={{ $('Find Video Row').item.json.title }}",
-        "regionCode": "IN",
-        "categoryId": "28",
+        "method": "GET",
+        "url": "={{ 'https://api.heygen.com/v3/videos/' + encodeURIComponent($json.video_id) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "options": {
-          "description": "={{ $('Find Video Row').item.json.description }}",
-          "privacyStatus": "unlisted"
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "timeout": 6500,
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
         }
       },
-      "id": "844b553d-d339-4ab5-8909-85191b09992c",
-      "name": "Upload To YouTube",
-      "type": "n8n-nodes-base.youTube",
-      "typeVersion": 1,
+      "id": "fa7455c7-0896-40b5-a418-479a3b741967",
+      "name": "Get HeyGen Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        656,
-        0
-      ],
-      "credentials": {
-        "youTubeOAuth2Api": {
-          "id": "VmxjrIg9lQn7ru2M",
-          "name": "YouTube account"
-        }
-      }
+        1920,
+        -112
+      ]
     },
     {
       "parameters": {
-        "operation": "update",
+        "jsCode": "const event = $('Resolve Render URL?').first().json;\nconst video = $input.first().json.data ?? {};\nif (video.id !== event.video_id || video.status !== 'completed' || !video.video_url) {\n  return [{ json: { httpStatus: 503, receipt: 'render_url_unavailable' } }];\n}\nreturn [{ json: { ...event, video_url: video.video_url } }];"
+      },
+      "id": "39080bdc-840e-4b73-9e7f-354fcad06737",
+      "name": "Read Render URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nif (data.httpStatus) return [{ json: data }];\n\nconst allowedMedia = /^https:\\/\\/(?:files[0-9]*|resource)\\.heygen\\.ai\\/[^\\s\\\\#]+$/i;\nif (data.event === 'video_agent.success' && (typeof data.video_url !== 'string' || !allowedMedia.test(data.video_url))) {\n  return [{ json: { httpStatus: 422, receipt: 'unsupported_render_url' } }];\n}\nif (!/^[A-Za-z0-9_-]{20,}$/.test(data.spreadsheetId) || data.spreadsheetId.startsWith('__YOUR_')) {\n  return [{ json: { httpStatus: 503, receipt: 'spreadsheet_not_configured' } }];\n}\nreturn [{ json: data }];"
+      },
+      "id": "f53bc2bf-d239-4965-bb40-74a50df72aee",
+      "name": "Validate Render",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "6bb9fea1-dfff-4a5b-9b57-679de82b7228",
+              "leftValue": "={{ !$json.httpStatus }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2126307-2e9e-437f-b305-3f730275b95c",
+      "name": "Find Video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
         "documentId": {
           "__rl": true,
-          "value": "1yHG5TiiaVZ2gHUcdUfgwvOu5_J9vkCVn3HguIdNobNA",
+          "value": "={{ $('Factory Settings').first().json.spreadsheetId }}",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yHG5TiiaVZ2gHUcdUfgwvOu5_J9vkCVn3HguIdNobNA/edit#gid=0"
+          "value": "={{ $('Factory Settings').first().json.sheetName }}",
+          "mode": "name"
         },
+        "operation": "read",
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "video_id",
+              "lookupValue": "={{ $json.video_id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "id": "571868a9-afbd-4f1a-ba26-e288fa6aa27b",
+      "name": "Find Video Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2880,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const event = $('Validate Render').first().json;\nconst matches = $input.all().filter(({ json }) => json.video_id === event.video_id);\nconst respond = (httpStatus, receipt) => [{ json: { httpStatus, receipt } }];\nif (matches.length === 0) return respond(503, 'video_not_registered');\nif (matches.length > 1) return respond(409, 'duplicate_video_id');\n\nconst row = matches[0].json;\nif (row.youtube_url || ['uploading', 'uploaded', 'published', 'failed'].includes(row.status)) {\n  return respond(200, 'already_handled');\n}\nif (!['generating', 'ready'].includes(row.status)) return respond(409, 'unknown_video_status');\n\nconst success = event.event === 'video_agent.success';\nif (!success && row.status === 'ready') return respond(200, 'already_handled');\nif (success && row.status === 'ready' && event.allowYoutubeUpload !== true) return respond(200, 'already_handled');\n\nlet status = success ? 'ready' : 'failed';\nif (success && event.allowYoutubeUpload === true) {\n  if (typeof row.title !== 'string' || !row.title.trim() || row.title.length > 100 || /[<>]/.test(row.title)\n      || typeof row.description !== 'string' || Buffer.byteLength(row.description, 'utf8') > 5000 || /[<>]/.test(row.description)) {\n    return respond(422, 'invalid_youtube_metadata');\n  }\n  status = 'uploading';\n}\nreturn [{ json: {\n  update: true,\n  video_id: event.video_id,\n  video_url: success ? event.video_url : (row.video_url || ''),\n  title: row.title,\n  description: row.description,\n  status,\n} }];"
+      },
+      "id": "38d94d9a-e49d-4d81-b1c9-c9e1e75c0553",
+      "name": "Choose Video Transition",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3120,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "2d025ace-1f85-4d24-9cc3-4dca229d1f46",
+              "leftValue": "={{ $json.update === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9f0ed5e3-a6dc-413c-b396-ea9eeb2f3cd2",
+      "name": "Update Video Status?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3360,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.sheetName }}",
+          "mode": "name"
+        },
+        "operation": "update",
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "video_id": "={{ $('HeyGen Webhook').item.json.body.event_data.video_id }}",
-            "status": "published",
-            "video_url": "={{ $('HeyGen Webhook').item.json.body.event_data.url }}",
-            "youtube_url": "=https://youtu.be/{{ $json.uploadId }}",
-            "row_number": 0,
-            "created_at": "="
+            "video_id": "={{ $json.video_id }}",
+            "video_url": "={{ $json.video_url }}",
+            "status": "={{ $json.status }}"
           },
           "matchingColumns": [
             "video_id"
@@ -181,8 +417,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
+              "canBeUsedToMatch": true
             },
             {
               "id": "description",
@@ -191,8 +426,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
+              "canBeUsedToMatch": true
             },
             {
               "id": "status",
@@ -228,122 +462,380 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": false
+              "canBeUsedToMatch": true
             }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         },
-        "options": {}
+        "options": {
+          "cellFormat": "RAW"
+        }
       },
-      "id": "ed7637df-6648-46c5-8900-49a3e9b3fbc5",
-      "name": "Mark Published",
+      "id": "6a0540b1-a870-48f8-8cde-93c2b748680e",
+      "name": "Save Video Status",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        880,
-        0
+        3600,
+        -112
       ],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "7tJwEMgog9YlgIXk",
-          "name": "Google Sheets account"
-        }
-      }
+      "alwaysOutputData": true
     },
     {
       "parameters": {
-        "fromEmail": "shubhojitdey36@gmail.com",
-        "toEmail": "shubhojitdey46@gmail.com",
-        "subject": "=HeyGen video FAILED: {{ $json.body.event_data.video_id }}",
-        "emailFormat": "text",
-        "text": "=HeyGen reported a failure.\n\nVideo ID: {{ $json.body.event_data.video_id }}\nMessage: {{ $json.body.event_data.msg }}",
-        "options": {}
+        "jsCode": "const expected = $('Choose Video Transition').first().json;\nconst stored = $input.first().json;\nif (stored.video_id !== expected.video_id || stored.status !== expected.status) {\n  return [{ json: { httpStatus: 503, receipt: 'spreadsheet_write_unconfirmed' } }];\n}\nreturn [{ json: { ...expected, httpStatus: 200, receipt: expected.status } }];"
       },
-      "id": "a637a284-ec5a-49d7-b1c0-73eeb8b49531",
-      "name": "Email Failure Alert",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2.1,
-      "position": [
-        0,
-        240
-      ],
-      "webhookId": "f3c1e08e-29c2-4fd2-b3b3-8684f4132ba1",
-      "credentials": {
-        "smtp": {
-          "id": "j0QVTlWBDVO8A5hN",
-          "name": "SMTP account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\nfor (let i = 0; i < items.length; i++) {\n  const buffer = await this.helpers.getBinaryDataBuffer(i, 'data');\n  const fileName = items[i].binary.data.fileName || 'video.mp4';\n  items[i].binary.data = await this.helpers.prepareBinaryData(buffer, fileName, 'video/mp4');\n}\nreturn items;"
-      },
+      "id": "35e41db9-c93a-45c7-966b-1612db7f76fe",
+      "name": "Confirm Video Status",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        432,
-        0
-      ],
-      "id": "2939c852-fea9-47dd-979c-29d11e5ad7b9",
-      "name": "Code in JavaScript"
+        3840,
+        -112
+      ]
     },
     {
       "parameters": {
-        "chatId": "5180685658",
-        "text": "=HeyGen reported a failure.\n\nVideo ID: {{ $json.body.event_data.video_id }}\nMessage: {{ $json.body.event_data.msg }}",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        208,
-        240
-      ],
-      "id": "f75b4693-e9d8-4840-bf93-94ec879ec397",
-      "name": "Send a text message",
-      "webhookId": "d9bcb36a-be19-4bf9-861b-b31daaff9e90",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
+        "respondWith": "json",
+        "responseBody": "={{ { status: $json.receipt } }}",
+        "options": {
+          "responseCode": "={{ $json.httpStatus }}"
         }
-      }
+      },
+      "id": "78f173f5-d316-4fde-aacb-e7251bb5424a",
+      "name": "Respond To HeyGen",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        4080,
+        16
+      ]
     },
     {
       "parameters": {
-        "chatId": "5180685658",
-        "text": "=🎬 Your video is ready!\n\nUploaded as Unlisted on YouTube.\n\n{{ $json.youtube_url }}\n\n",
-        "additionalFields": {}
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "d596862a-99ef-45a2-9f5e-31f4ee87827c",
+              "leftValue": "={{ $json.httpStatus === 200 && $json.update === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
+      "id": "b799f2a3-6769-4d33-9b29-002bf51d2dc3",
+      "name": "Status Was Saved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4320,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "7ff9df7e-bfc7-4e51-ac14-d68699abc06a",
+              "leftValue": "={{ $json.status === 'uploading' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "85a5c1d8-708f-422d-8793-9346bdb54eec",
+      "name": "Begin Private Upload?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4560,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.video_url }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "timeout": 90000,
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "97095244-45d3-4b83-9b19-80f687f7a7b8",
+      "name": "Download Video File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4800,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst file = await this.helpers.getBinaryDataBuffer(0, 'data');\nif (file.length < 16 || file.toString('ascii', 4, 8) !== 'ftyp') {\n  throw new Error('HeyGen did not return an MP4 file.');\n}\nitem.binary.data = await this.helpers.prepareBinaryData(file, 'video.mp4', 'video/mp4');\nreturn [item];"
+      },
+      "id": "6e53db86-df5e-4825-964f-764fa01b6d07",
+      "name": "Validate MP4",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5040,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "binaryProperty": "data",
+        "regionCode": "PE",
+        "categoryId": "28",
+        "title": "={{ $('Choose Video Transition').first().json.title }}",
+        "options": {
+          "description": "={{ $('Choose Video Transition').first().json.description }}",
+          "privacyStatus": "private",
+          "notifySubscribers": false
+        }
+      },
+      "id": "45f6a6e0-8af9-4e8a-9d31-edce8c0471d3",
+      "name": "Upload Privately To YouTube",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        5280,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const id = $input.first().json.uploadId;\nif (typeof id !== 'string' || !/^[A-Za-z0-9_-]{11}$/.test(id)) {\n  throw new Error('No valid YouTube video ID. Check the channel before retrying this upload.');\n}\nconst video = $('Choose Video Transition').first().json;\nreturn [{ json: { video_id: video.video_id, status: 'uploaded', youtube_url: 'https://youtu.be/' + id } }];"
+      },
+      "id": "9bf1d7e3-0b10-4559-ba0d-f0422fba5bb2",
+      "name": "Verify YouTube Receipt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5520,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.sheetName }}",
+          "mode": "name"
+        },
+        "operation": "update",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $json.video_id }}",
+            "status": "={{ $json.status }}",
+            "youtube_url": "={{ $json.youtube_url }}"
+          },
+          "matchingColumns": [
+            "video_id"
+          ],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "youtube_url",
+              "displayName": "youtube_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "f17f36ef-4355-4e08-819e-483d23a9fdaf",
+      "name": "Record Private Upload",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        5760,
+        -224
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "faf4090d-a7b7-4110-a41f-e42df6eddce9",
+              "leftValue": "={{ $json.status === 'uploaded' && !!$json.youtube_url }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5dc7fa0a-40f2-47a4-a92f-d70db53082f4",
+      "name": "Upload Was Recorded?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        6000,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Factory Settings').first().json.telegramChatId }}",
+        "text": "={{ 'El video se subió como privado. ' + $json.youtube_url }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "8cd05618-52ea-40d1-afda-ff7d7d26f0d8",
+      "name": "Notify Private Upload",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1088,
-        0
-      ],
-      "id": "bccec520-6ab5-416e-8f97-6fe6212e50a4",
-      "name": "Send a text message1",
-      "webhookId": "a325cfcc-3671-49fb-97e7-9fd84d95ccb4",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
+        6240,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Factory Settings').first().json.telegramChatId }}",
+        "text": "={{ ($json.status === 'ready' ? 'Render listo. La subida está deshabilitada. ' : 'HeyGen reportó un fallo de render. ') + $json.video_id }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
         }
-      }
+      },
+      "id": "5306e6f5-83fa-4235-b37d-5e34fe786b9d",
+      "name": "Notify Render Status",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4800,
+        96
+      ]
     }
   ],
   "pinData": {},
@@ -352,14 +844,138 @@
       "main": [
         [
           {
-            "node": "Video Success?",
+            "node": "Calculate HeyGen Signature",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Video Success?": {
+    "Calculate HeyGen Signature": {
+      "main": [
+        [
+          {
+            "node": "Parse Signed Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Signed Callback": {
+      "main": [
+        [
+          {
+            "node": "Factory Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Factory Settings": {
+      "main": [
+        [
+          {
+            "node": "Resolve Session?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Session?": {
+      "main": [
+        [
+          {
+            "node": "Get Video Agent Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resolve Render URL?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video Agent Session": {
+      "main": [
+        [
+          {
+            "node": "Read Session Video ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Session Video ID": {
+      "main": [
+        [
+          {
+            "node": "Resolve Render URL?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Render URL?": {
+      "main": [
+        [
+          {
+            "node": "Get HeyGen Video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get HeyGen Video": {
+      "main": [
+        [
+          {
+            "node": "Read Render URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Render URL": {
+      "main": [
+        [
+          {
+            "node": "Validate Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Render": {
+      "main": [
+        [
+          {
+            "node": "Find Video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Video?": {
       "main": [
         [
           {
@@ -370,7 +986,7 @@
         ],
         [
           {
-            "node": "Email Failure Alert",
+            "node": "Respond To HeyGen",
             "type": "main",
             "index": 0
           }
@@ -381,7 +997,99 @@
       "main": [
         [
           {
+            "node": "Choose Video Transition",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Choose Video Transition": {
+      "main": [
+        [
+          {
+            "node": "Update Video Status?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Video Status?": {
+      "main": [
+        [
+          {
+            "node": "Save Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond To HeyGen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Video Status": {
+      "main": [
+        [
+          {
+            "node": "Confirm Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm Video Status": {
+      "main": [
+        [
+          {
+            "node": "Respond To HeyGen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond To HeyGen": {
+      "main": [
+        [
+          {
+            "node": "Status Was Saved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Was Saved?": {
+      "main": [
+        [
+          {
+            "node": "Begin Private Upload?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Begin Private Upload?": {
+      "main": [
+        [
+          {
             "node": "Download Video File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Render Status",
             "type": "main",
             "index": 0
           }
@@ -392,72 +1100,75 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "Validate MP4",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Upload To YouTube": {
+    "Validate MP4": {
       "main": [
         [
           {
-            "node": "Mark Published",
+            "node": "Upload Privately To YouTube",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code in JavaScript": {
+    "Upload Privately To YouTube": {
       "main": [
         [
           {
-            "node": "Upload To YouTube",
+            "node": "Verify YouTube Receipt",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Email Failure Alert": {
+    "Verify YouTube Receipt": {
       "main": [
         [
           {
-            "node": "Send a text message",
+            "node": "Record Private Upload",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Mark Published": {
+    "Record Private Upload": {
       "main": [
         [
           {
-            "node": "Send a text message1",
+            "node": "Upload Was Recorded?",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "Upload Was Recorded?": {
+      "main": [
+        [
+          {
+            "node": "Notify Private Upload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
       ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": true,
-    "timeSavedMode": "fixed",
-    "timezone": "Asia/Kolkata",
-    "callerPolicy": "workflowsFromSameOwner"
+    "timezone": "America/Lima",
+    "availableInMCP": false
   },
-  "versionId": "bcb36f78-6c2f-4dd8-9438-9d8530cfbd4c",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "33081bb771ef161086c7c46479d86cf3fe146810b09d5a31cda00224754bad76"
-  },
-  "id": "j6cgoIVt5o0oKs5M",
   "tags": []
 }

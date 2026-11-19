@@ -11,6 +11,7 @@ console.cloud.google.com, new project, name it something you will recognize.
 APIs and Services, Library. Enable:
 
 - Google Sheets API
+- Google Drive API for the n8n Sheets credential
 - YouTube Data API v3
 
 ## 3. Configure the OAuth consent screen
@@ -39,9 +40,7 @@ Copy the client ID and client secret into n8n.
 
 ## 5. Quota warning
 
-YouTube Data API gives you 10,000 quota units per day by default. A video upload costs **1600 units**.
-
-That is 6 uploads per day. Plenty for a normal channel, but worth knowing before you wonder why the seventh one failed.
+YouTube allocates a separate daily uploads quota. Verify your project’s actual quota in Google Cloud. [YouTube quota calculator](https://developers.google.com/youtube/data/determine_quota_cost)
 
 Sheets API quota is generous and you will not hit it.
 
@@ -55,4 +54,4 @@ Put it in Workflow 3 and Workflow 4. Both need it.
 
 ## 7. Test the upload separately
 
-Before running the full pipeline, run Workflow 4 manually with a test video URL. YouTube OAuth is the most fragile piece of this setup and you want to find problems there in isolation, not at the end of a chain.
+Verify Google authorization and the intended channel first. Keep allowYoutubeUpload disabled for the dry run. A real upload is private and requires operator approval.

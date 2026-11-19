@@ -1,59 +1,13 @@
-# HeyGen Setup
+# Integración con HeyGen
 
-## Use MCP, not the API key
+La rutina usa el conector MCP oficial de HeyGen para generar con Video Agent. La generación usa los créditos premium de la cuenta web. Conecta la cuenta del proyecto desde Claude y completa el avatar y la voz en el kit de marca. [HeyGen MCP](https://developers.heygen.com/mcp/overview)
 
-This is the most important thing in this document.
+Antes del primer render real, confirma qué herramienta de Video Agent está disponible y qué identificador devuelve al enviar el trabajo. El flujo 03 registra el video_id. Si el conector devuelve solo un ID de sesión, la rutina debe resolver su video_id antes del registro.
 
-HeyGen web plans and the HeyGen API bill from two separate credit wallets. A Creator plan gives you monthly web plan credits. An API key draws from an API wallet, which starts empty, and web plans cannot buy one-time API credit packs to fill it.
+## Webhook de entrega
 
-So: connect the **HeyGen MCP connector** inside Claude. MCP calls bill your web plan credits. That is the whole trick.
+Registra la URL HTTPS de producción del flujo 04 para video_agent.success y video_agent.fail. La API de registro requiere una clave y devuelve un secreto de firma. Guárdalo como HMAC Secret en la credencial Crypto usada por Calculate HeyGen Signature. El flujo verifica HMAC SHA-256 sobre el cuerpo original del evento con el encabezado signature. [Webhooks de HeyGen](https://developers.heygen.com/docs/webhooks)
 
-The only place an API key is still needed is nowhere in this pipeline. Workflow 4 downloads the finished video from the URL HeyGen provides in its webhook payload.
+Cuando el evento trae session_id o requiere resolver el enlace, el flujo usa consultas de lectura a la API v3 con el encabezado x-api-key. El archivo se descarga por HTTPS desde los hosts de archivos conocidos de HeyGen. La primera prueba real verifica el host utilizado por tu cuenta. [Eventos de HeyGen](https://developers.heygen.com/docs/webhook-events)
 
-## Set up your avatar
-
-Create your avatar in HeyGen. Video avatar or photo avatar, either works.
-
-Record or upload against a clean real background. This matters, because the pipeline explicitly forbids the Video Agent from replacing that background with brand colors. A good real studio background is what makes the output look like a real video.
-
-Copy the avatar ID into `skill/reference/brand-kit.md`.
-
-## Pick a voice
-
-Browse HeyGen voices and pick one. Copy the voice ID into `brand-kit.md`.
-
-### Why you cannot use ElevenLabs or Fish Audio
-
-You will be tempted. I was. I cloned my voice in ElevenLabs, then later bought a Fish Audio subscription and connected the Fish MCP, and built an entire n8n workflow to upload the generated audio to HeyGen as an asset.
-
-It does not work with the Video Agent.
-
-The Video Agent endpoint accepts exactly four things: `prompt`, `avatarId`, `voiceId` and `files`. `voiceId` must be a HeyGen TTS voice. There is no audio asset input. You cannot hand it an external voiceover file.
-
-The external voice path only works with the plain avatar render endpoint, and plain avatar renders are why the output looked cheap in the first place.
-
-Use a HeyGen voice. Pick a good one.
-
-## Video Agent, not plain avatar
-
-Plain talking-head renders look low quality. Video Agent generates captions, motion graphics and B-roll around the avatar, so it looks like something a person made deliberately.
-
-It costs more credits per video. Accept that trade.
-
-## Prompting rules
-
-One shot. Send the entire script and every visual instruction in a single prompt. Do not open a conversation with the agent and refine over several turns. Each turn costs credits and drifts from the script.
-
-The template is in `skill/reference/video-agent-prompt.md`.
-
-## Do not attach assets
-
-The `files` parameter exists. I built an entire Telegram asset upload bot around it: send an image with a caption, n8n downloads it from Telegram and uploads it to HeyGen assets, then Claude maps each asset to a specific script line in the prompt.
-
-The agent did not place them reliably. The whole asset path was removed. Let the agent generate its own visuals.
-
-## Register the webhook
-
-HeyGen, Settings, Webhooks. Add the **production** webhook URL from Workflow 4. Subscribe to the video completion event.
-
-Without this, videos render and then sit there. Nothing reaches YouTube.
+Usa el guion aprobado completo, el avatar y la voz de HeyGen en una sola solicitud. Los enlaces de descarga caducan. Para retomar una entrega, obtén un enlace vigente desde HeyGen. [Plantilla de Video Agent](../skill/reference/video-agent-prompt.md)

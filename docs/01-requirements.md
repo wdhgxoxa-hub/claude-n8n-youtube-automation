@@ -7,7 +7,7 @@
 | Claude | Runs the routine that writes scripts and drives the pipeline | Pro or Max, routines with API trigger enabled | $20 to $100 / mo |
 | HeyGen | Renders the video | Creator or higher | $29+ / mo |
 | n8n | Runs the four workflows | Cloud Starter, or self-hosted | $0 to $24 / mo |
-| vidIQ | Keyword validation, optional | Any tier with MCP access | $10+ / mo |
+| vidIQ | Keyword validation, optional | MCP in all plans | See current plan |
 | Telegram | Intake and notifications | Free Bot API | Free |
 | Google Cloud | Sheets API and YouTube Data API | Free tier | Free |
 | GitHub | Holds your skill file and reference scripts | Free | Free |
@@ -18,7 +18,7 @@ Read this before you buy anything.
 
 HeyGen web plans (Creator, Team) and the HeyGen API bill from **two separate credit wallets**. A web plan cannot buy one-time API credit packs. So if you connect a raw API key, your calls hit an empty API wallet and fail, or you end up paying for credits twice.
 
-**Solution:** use the HeyGen MCP connector in Claude, not an API key. MCP calls bill your web plan credits.
+Use the HeyGen MCP connector in Claude for generation. The webhook registration and read-only fallback in n8n use the HeyGen API.
 
 ## Credit budgeting
 

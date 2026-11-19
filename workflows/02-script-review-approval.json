@@ -1,140 +1,437 @@
 {
-  "name": "Workflow 3: Log Video Row",
+  "name": "02 · Fábrica de videos · Revisión de guion",
   "nodes": [
     {
       "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1yHG5TiiaVZ2gHUcdUfgwvOu5_J9vkCVn3HguIdNobNA",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yHG5TiiaVZ2gHUcdUfgwvOu5_J9vkCVn3HguIdNobNA/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "video_id": "={{ $json.body?.video_id || $json.video_id }}",
-            "title": "={{ $json.body?.title || $json.title }}",
-            "description": "={{ $json.body?.description || $json.description }}",
-            "status": "={{ $json.body?.status || $json.status || 'generating' }}",
-            "created_at": "={{ $now.toISO() }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "video_id",
-              "displayName": "video_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "title",
-              "displayName": "title",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "description",
-              "displayName": "description",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "status",
-              "displayName": "status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "video_url",
-              "displayName": "video_url",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "youtube_url",
-              "displayName": "youtube_url",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "created_at",
-              "displayName": "created_at",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "id": "68f2bba7-d6a0-4399-b868-7c6c0274e670",
-      "name": "Append Video Row",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
-      "position": [
-        208,
-        0
-      ],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "7tJwEMgog9YlgIXk",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "httpMethod": "POST",
-        "path": "log-video-row",
+        "path": "video-factory/script-approval",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
-      "id": "39bb4d4b-8fd1-4201-b3e2-ef1ce6750fd3",
-      "name": "Log Row Webhook",
+      "id": "2bca93c9-fba2-4fc6-b861-db389189c974",
+      "name": "Script Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        16,
+        0,
         0
       ],
-      "webhookId": "ada1611f-644e-4395-91a4-6022fecd472b"
+      "webhookId": "7fe4839b-efd5-418e-a066-01a7dfced93a"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f4b32f3-8d66-455c-b79f-6d12fb5b0064",
+              "name": "telegramChatId",
+              "value": "__YOUR_TELEGRAM_CHAT_ID__",
+              "type": "string"
+            },
+            {
+              "id": "1d8518fa-958f-4afb-a5db-2b236169f756",
+              "name": "claudeRoutineUrl",
+              "value": "__YOUR_CLAUDE_ROUTINE_URL__",
+              "type": "string"
+            },
+            {
+              "id": "7eba0ba9-97e9-474b-8f65-50fe7d4eab8b",
+              "name": "allowClaude",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "893dbf82-6b23-48e2-a50e-2d90b5bc7215",
+      "name": "Factory Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst job = input.body ?? {};\nconst reject = (httpStatus, receipt) => [{ json: { httpStatus, receipt } }];\nif (!/^[1-9]\\d*$/.test(input.telegramChatId)) return reject(503, 'review_not_configured');\n\nconst { script, title, description, revision = 0 } = job;\nif (typeof script !== 'string' || !script.trim() || script.length > 45000\n    || typeof title !== 'string' || !title.trim() || title.length > 100 || /[<>]/.test(title)\n    || typeof description !== 'string' || Buffer.byteLength(description, 'utf8') > 5000 || /[<>]/.test(description)\n    || !Number.isSafeInteger(revision) || revision < 0) {\n  return reject(400, 'invalid_script_metadata');\n}\nconst topic = typeof job.topic === 'string' ? job.topic.slice(0, 600) : '';\nconst angle = typeof job.angle === 'string' ? job.angle.slice(0, 600) : '';\nconst cta = typeof job.cta === 'string' ? job.cta.slice(0, 600) : '';\nconst keywords = Array.isArray(job.keywords_used)\n  ? job.keywords_used.filter((word) => typeof word === 'string').slice(0, 10).map((word) => word.slice(0, 80))\n  : [];\nconst escape = (value) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');\nconst formHtml = 'Revisión ' + revision + '\\n\\n<strong>Guion completo</strong>\\n'\n  + escape(script) + '\\n\\n<strong>Descripción de YouTube</strong>\\n' + escape(description);\nreturn [{ json: {\n  httpStatus: 200,\n  receipt: 'review_requested',\n  chatId: input.telegramChatId,\n  formHtml,\n  job: { title, description, script, revision, topic, angle, cta, keywords_used: keywords },\n} }];"
+      },
+      "id": "91e26620-5f5e-4d9c-b156-9b4a3f0c4370",
+      "name": "Prepare Review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "ef405952-259e-487e-9315-25e837b17869",
+              "leftValue": "={{ $json.httpStatus === 200 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "519e8b00-d23a-41f8-98df-4ad21d5c6ab9",
+      "name": "Review Payload Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ 'Guion para revisar: ' + $json.job.title + '\\n\\n' + $execution.resumeFormUrl }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "0f1a3fd2-76ec-4a8c-a8a3-2112be60e7ec",
+      "name": "Telegram Notify",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'review_requested' } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "2ee59af8-c255-43d4-8e95-87eff6847415",
+      "name": "Review Accepted",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1200,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: $json.receipt } }}",
+        "options": {
+          "responseCode": "={{ $json.httpStatus }}"
+        }
+      },
+      "id": "fe88f421-e574-4948-910d-e188c7548873",
+      "name": "Review Rejected",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "incomingAuthentication": "basicAuth",
+        "formTitle": "={{ $('Prepare Review').first().json.job.title }}",
+        "formDescription": "={{ $('Prepare Review').first().json.formHtml }}",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Decision",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Approve"
+                  },
+                  {
+                    "option": "Request changes"
+                  },
+                  {
+                    "option": "Abort"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Feedback",
+              "fieldType": "textarea",
+              "placeholder": "Comentarios para solicitar cambios"
+            }
+          ]
+        },
+        "responseMode": "onReceived",
+        "limitWaitTime": true,
+        "limitType": "afterTimeInterval",
+        "resumeAmount": 24,
+        "resumeUnit": "hours",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cbd078ec-f55e-4926-9381-523df2f63701",
+      "name": "Wait For My Decision",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        -112
+      ],
+      "webhookId": "b9ea46a0-8fcb-4443-b78b-48ad4dbd6852"
+    },
+    {
+      "parameters": {
+        "jsCode": "const decision = $input.first().json;\nconst review = $('Prepare Review').first().json;\nconst { allowClaude, claudeRoutineUrl } = $('Factory Settings').first().json;\nconst reply = (message) => [{ json: { callClaude: false, chatId: review.chatId, reply: message } }];\nif (decision.Decision === 'Abort') return reply('Revisión cancelada. ' + review.job.title);\nif (!['Approve', 'Request changes'].includes(decision.Decision)) {\n  return reply('La revisión venció o quedó sin decisión. ' + review.job.title);\n}\n\nconst revise = decision.Decision === 'Request changes';\nconst notes = typeof decision.Feedback === 'string' ? decision.Feedback.trim() : '';\nif (revise && (!notes || notes.length > 2000)) {\n  return reply('Los cambios requieren comentarios de 1 a 2000 caracteres. Solicita una nueva revisión.');\n}\nconst payload = { ...review.job, mode: revise ? 'revise' : 'approved' };\nif (revise) {\n  payload.revision += 1;\n  payload.notes = notes;\n}\nconst callClaude = allowClaude === true\n  && /^https:\\/\\/api\\.anthropic\\.com\\/v1\\/claude_code\\/routines\\/trig_[A-Za-z0-9_-]+\\/fire$/.test(claudeRoutineUrl);\nconst summary = (revise ? 'Cambios solicitados. ' : 'Guion aprobado. ') + review.job.title;\nreturn [{ json: { callClaude, chatId: review.chatId, payload, reply: callClaude ? summary : 'Modo de prueba. ' + summary } }];"
+      },
+      "id": "4ba44912-93a5-47d9-b25e-fa6408d49210",
+      "name": "Prepare Decision",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "dee4661d-f92a-4479-84eb-3db240c84a72",
+              "leftValue": "={{ $json.callClaude === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e1915fc2-c8a7-4f55-8a53-f2292ed5f270",
+      "name": "Fire Claude?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Factory Settings').first().json.claudeRoutineUrl }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2026-10-21"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: JSON.stringify($json.payload) } }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "timeout": 15000
+        }
+      },
+      "id": "a3a55202-b588-4071-b305-05707131c42e",
+      "name": "Fire Claude Routine",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Prepare Decision').first().json.chatId }}",
+        "text": "={{ $('Prepare Decision').first().json.reply }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "a698174e-95f7-4e05-be3f-49f5ddcd02bc",
+      "name": "Notify Decision",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2400,
+        -112
+      ]
     }
   ],
   "pinData": {},
   "connections": {
-    "Log Row Webhook": {
+    "Script Webhook": {
       "main": [
         [
           {
-            "node": "Append Video Row",
+            "node": "Factory Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Factory Settings": {
+      "main": [
+        [
+          {
+            "node": "Prepare Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Review": {
+      "main": [
+        [
+          {
+            "node": "Review Payload Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review Payload Valid?": {
+      "main": [
+        [
+          {
+            "node": "Telegram Notify",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Review Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Notify": {
+      "main": [
+        [
+          {
+            "node": "Review Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review Accepted": {
+      "main": [
+        [
+          {
+            "node": "Wait For My Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait For My Decision": {
+      "main": [
+        [
+          {
+            "node": "Prepare Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Decision": {
+      "main": [
+        [
+          {
+            "node": "Fire Claude?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fire Claude?": {
+      "main": [
+        [
+          {
+            "node": "Fire Claude Routine",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fire Claude Routine": {
+      "main": [
+        [
+          {
+            "node": "Notify Decision",
             "type": "main",
             "index": 0
           }
@@ -142,17 +439,11 @@
       ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": true
+    "timezone": "America/Lima",
+    "availableInMCP": false
   },
-  "versionId": "c9e3d726-d1a4-40c9-94b9-2788fadeee02",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "33081bb771ef161086c7c46479d86cf3fe146810b09d5a31cda00224754bad76"
-  },
-  "id": "nsv4FO06oaGb8W9E",
   "tags": []
 }

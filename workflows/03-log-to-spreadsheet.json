@@ -1,408 +1,430 @@
 {
-  "name": "Workflow 2: Script Review & Approval",
+  "name": "03 · Fábrica de videos · Registro en Sheets",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "script-approval",
+        "path": "video-factory/log-video-row",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
-      "id": "13fc383d-aff9-4e27-af0b-963a74327bf4",
-      "name": "Script Webhook",
+      "id": "f5c9ca0f-5ae4-4af2-85db-0b100293a924",
+      "name": "Log Row Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -2512,
-        1808
+        0,
+        0
       ],
-      "webhookId": "e856a6e6-3f5b-448c-8531-a29ef0e7df5f"
+      "webhookId": "62802499-8e01-4bbf-a110-a556f4a755d3"
     },
     {
       "parameters": {
-        "chatId": "5180685658",
-        "text": "={{ ($json.body.mode === 'revise' ? '🔁 <b>REVISED script v' + $json.body.revision + '</b>' : '🎬 <b>New video script</b>') + '\\n\\n<b>' + $json.body.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</b>\\n\\n<b>Keywords:</b> ' + ($json.body.keywords_used || []).join(', ') + '\\n\\n📜 <b>Script:</b>\\n\\n' + $json.body.script.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').slice(0, 3600) + ($json.body.script.length > 3600 ? '\\n\\n…(truncated)' : '') + '\\n\\n<a href=\"' + $execution.resumeFormUrl + '\">✅ Approve / Request changes / Abort</a>' }}",
-        "additionalFields": {
-          "disable_web_page_preview": true,
-          "parse_mode": "HTML"
-        }
-      },
-      "id": "4b97138f-441d-4a61-8ca3-b4224d752572",
-      "name": "Telegram Notify",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -2288,
-        1808
-      ],
-      "webhookId": "be2113d1-9e1d-4c80-a8c6-1ce6932d60ce",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resume": "form",
-        "formTitle": "={{ $('Script Webhook').item.json.body.title }}",
-        "formDescription": "={{ 'Revision: ' + ($('Script Webhook').item.json.body.revision || 0) + '. The full script is in the Telegram message. Approve it, request changes with feedback, or Abort to stop this video entirely (nothing is sent to Claude).' }}",
-        "formFields": {
-          "values": [
+        "assignments": {
+          "assignments": [
             {
-              "fieldLabel": "Decision",
-              "fieldType": "dropdown",
-              "fieldOptions": {
-                "values": [
-                  {
-                    "option": "Approve"
-                  },
-                  {
-                    "option": "Request changes"
-                  },
-                  {
-                    "option": "Abort"
-                  }
-                ]
-              },
-              "requiredField": true
+              "id": "18a217c3-9162-40b8-9a05-f5354ddf666b",
+              "name": "spreadsheetId",
+              "value": "__YOUR_SPREADSHEET_ID__",
+              "type": "string"
             },
             {
-              "fieldLabel": "Feedback",
-              "fieldType": "textarea"
+              "id": "7a4f2764-db25-4acc-976a-4a50dab4467c",
+              "name": "sheetName",
+              "value": "Videos",
+              "type": "string"
             }
           ]
         },
+        "includeOtherFields": true,
         "options": {}
       },
-      "id": "df2c8c5d-a07b-4f92-a5f2-ffc767ffd05e",
-      "name": "Wait For My Decision",
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
+      "id": "977ef7cd-62f7-4f28-ad35-41b11f80d0b1",
+      "name": "Factory Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
       "position": [
-        -2064,
-        1808
-      ],
-      "webhookId": "cec16383-0365-434f-8091-07901f8ba78e"
-    },
-    {
-      "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.Decision }}",
-                    "rightValue": "Approve",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "a1000000-0000-0000-0000-000000000001"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Approve"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.Decision }}",
-                    "rightValue": "Request changes",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "a1000000-0000-0000-0000-000000000002"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Revise"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.Decision }}",
-                    "rightValue": "Abort",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "a1000000-0000-0000-0000-000000000003"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Abort"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "cbcd5903-c33a-40c7-b989-b8ae08cc7ef3",
-      "name": "Decision Router",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        -1840,
-        1808
+        240,
+        0
       ]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01UDg82TkNEFAcGVPJci3id2/fire",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "jsCode": "const input = $input.first().json;\nconst row = input.body ?? {};\nconst { video_id, title, description } = row;\nif (typeof video_id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(video_id)\n    || typeof title !== 'string' || !title.trim() || title.length > 100 || /[<>]/.test(title)\n    || typeof description !== 'string' || Buffer.byteLength(description, 'utf8') > 5000 || /[<>]/.test(description)) {\n  return [{ json: { httpStatus: 400, receipt: 'invalid_video_metadata' } }];\n}\nif (!/^[A-Za-z0-9_-]{20,}$/.test(input.spreadsheetId) || input.spreadsheetId.startsWith('__YOUR_')) {\n  return [{ json: { httpStatus: 503, receipt: 'spreadsheet_not_configured' } }];\n}\n\nreturn [{ json: { httpStatus: 200, video_id, title, description, status: 'generating', created_at: new Date().toISOString() } }];"
+      },
+      "id": "b3fba972-ba6d-4bfe-ad7a-a481632ddae0",
+      "name": "Validate Video Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
             {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
+              "id": "1eb8ddf0-e40c-4876-9da4-5d4ce61a1668",
+              "leftValue": "={{ $json.httpStatus === 200 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7f79105a-c09f-49ec-bcfe-f5cda1f644f8",
+      "name": "Video Row Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.sheetName }}",
+          "mode": "name"
+        },
+        "operation": "read",
+        "filtersUI": {
+          "values": [
             {
-              "name": "anthropic-version",
-              "value": "2023-06-01"
-            },
-            {
-              "name": "anthropic-beta",
-              "value": "experimental-cc-routine-2026-04-01"
+              "lookupColumn": "video_id",
+              "lookupValue": "={{ $json.video_id }}"
             }
           ]
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: \"MODE: revise\\nREVISION: \" + (($('Script Webhook').item.json.body.revision || 0) + 1) + \"\\nFEEDBACK: \" + $json.Feedback + \"\\nTITLE: \" + $('Script Webhook').item.json.body.title + \"\\nDESCRIPTION: \" + $('Script Webhook').item.json.body.description + \"\\nKEYWORDS: \" + ($('Script Webhook').item.json.body.keywords_used || []).join(\", \") + \"\\nAVATAR_ID: \" + $('Script Webhook').item.json.body.avatar_id + \"\\nVOICE_ID: \" + $('Script Webhook').item.json.body.voice_id + \"\\nSCRIPT:\\n\" + $('Script Webhook').item.json.body.script }) }}",
-        "options": {}
-      },
-      "id": "637a9e32-71fd-4be3-a96b-5e1ecd78647f",
-      "name": "Wake Claude To Revise",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1616,
-        1808
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "0sVrNDe8JNdobggm",
-          "name": "Claude Routine Trigger"
+        "options": {
+          "returnFirstMatch": false
         }
-      }
+      },
+      "id": "3f071e46-3f05-4f4d-85fa-f33a7ac7c2a9",
+      "name": "Find Video Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        -112
+      ],
+      "alwaysOutputData": true
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01UDg82TkNEFAcGVPJci3id2/fire",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "jsCode": "const video = $('Validate Video Row').first().json;\nconst matches = $input.all().filter(({ json }) => json.video_id === video.video_id);\nif (matches.length > 1) return [{ json: { httpStatus: 409, receipt: 'duplicate_video_id' } }];\nif (matches.length === 1) return [{ json: { httpStatus: 200, receipt: 'already_registered', video_id: video.video_id } }];\nreturn [{ json: { ...video, shouldAppend: true } }];"
+      },
+      "id": "b4f8d4cc-c9b1-4564-96ab-cd39f749dfa8",
+      "name": "Check Existing Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
             {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "anthropic-version",
-              "value": "2023-06-01"
-            },
-            {
-              "name": "anthropic-beta",
-              "value": "experimental-cc-routine-2026-04-01"
+              "id": "dec0adca-49d7-40d2-9da0-65758250392c",
+              "leftValue": "={{ $json.shouldAppend === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: \"MODE: produce\\nTITLE: \" + $('Script Webhook').item.json.body.title + \"\\nDESCRIPTION: \" + $('Script Webhook').item.json.body.description + \"\\nSCRIPT:\\n\" + $('Script Webhook').item.json.body.script }) }}",
         "options": {}
       },
-      "id": "3672abc8-d633-49f6-9bc4-78a4a84c5a76",
-      "name": "Wake Claude To Produce",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "21c33e28-2283-4b10-8944-f0db357d6ff8",
+      "name": "Append New Video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
       "position": [
-        -1616,
-        1616
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "0sVrNDe8JNdobggm",
-          "name": "Claude Routine Trigger"
-        }
-      }
+        1440,
+        -112
+      ]
     },
     {
       "parameters": {
-        "chatId": "5180685658",
-        "text": "={{ '🎬 Sent to Claude for video production:\\n\\n' + $('Script Webhook').item.json.body.title + '\\n\\nI will ping you here once it is uploaded to YouTube.' }}",
-        "additionalFields": {}
-      },
-      "id": "4203b954-7e3f-4908-9a78-2be14d6a3fc8",
-      "name": "Notify: Sent To Produce",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -1392,
-        1616
-      ],
-      "webhookId": "26105d7a-9944-4b9b-9f9c-4a7193f365aa",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
+        "resource": "sheet",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Factory Settings').first().json.sheetName }}",
+          "mode": "name"
+        },
+        "operation": "append",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_id": "={{ $json.video_id }}",
+            "title": "={{ $json.title }}",
+            "description": "={{ $json.description }}",
+            "status": "={{ $json.status }}",
+            "created_at": "={{ $json.created_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "youtube_url",
+              "displayName": "youtube_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW"
         }
-      }
+      },
+      "id": "a4a6a0e1-f538-4b85-bcf8-ede17e7ad6c6",
+      "name": "Append Video Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1680,
+        -224
+      ],
+      "alwaysOutputData": true
     },
     {
       "parameters": {
-        "chatId": "5180685658",
-        "text": "={{ '✏️ Revision #' + (($('Script Webhook').item.json.body.revision || 0) + 1) + ' requested for:\\n\\n' + $('Script Webhook').item.json.body.title + '\\n\\nClaude is rewriting the script now — you\\'ll get it back for review shortly.' }}",
-        "additionalFields": {}
+        "jsCode": "const expected = $('Validate Video Row').first().json.video_id;\nconst stored = $input.first().json.video_id === expected;\nreturn [{ json: stored\n  ? { httpStatus: 201, receipt: 'registered', video_id: expected }\n  : { httpStatus: 503, receipt: 'spreadsheet_write_unconfirmed' } }];"
       },
-      "id": "4542c197-0e55-4ed6-9de9-7d7d8c3c1056",
-      "name": "Notify: Sent To Revise",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      "id": "66a753d5-ff57-4de1-820d-db85067b8df4",
+      "name": "Confirm Stored Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        -1392,
-        1808
-      ],
-      "webhookId": "3bf91570-90ee-41f5-b27c-2500a6b75e3d",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
-        }
-      }
+        1920,
+        -224
+      ]
     },
     {
       "parameters": {
-        "chatId": "5180685658",
-        "text": "={{ '🛑 Aborted:\\n\\n' + $('Script Webhook').item.json.body.title + '\\n\\nNothing was sent to Claude. No script revision, no video, no credits used. This execution is finished.' }}",
-        "additionalFields": {}
-      },
-      "id": "c00b91bf-4d46-40d1-9cf9-219727c19311",
-      "name": "Notify: Aborted",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -1616,
-        2000
-      ],
-      "webhookId": "3bf91570-90ee-41f5-b27c-2500a6b75e3e",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
+        "respondWith": "json",
+        "responseBody": "={{ { status: $json.receipt, video_id: $json.video_id } }}",
+        "options": {
+          "responseCode": "={{ $json.httpStatus }}"
         }
-      }
+      },
+      "id": "289756e8-5990-4200-8264-abe98418c1eb",
+      "name": "Respond To Claude",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2160,
+        16
+      ]
     }
   ],
   "pinData": {},
   "connections": {
-    "Script Webhook": {
+    "Log Row Webhook": {
       "main": [
         [
           {
-            "node": "Telegram Notify",
+            "node": "Factory Settings",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Telegram Notify": {
+    "Factory Settings": {
       "main": [
         [
           {
-            "node": "Wait For My Decision",
+            "node": "Validate Video Row",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait For My Decision": {
+    "Validate Video Row": {
       "main": [
         [
           {
-            "node": "Decision Router",
+            "node": "Video Row Valid?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Decision Router": {
+    "Video Row Valid?": {
       "main": [
         [
           {
-            "node": "Wake Claude To Produce",
+            "node": "Find Video Row",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Wake Claude To Revise",
+            "node": "Respond To Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Video Row": {
+      "main": [
+        [
+          {
+            "node": "Check Existing Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Existing Row": {
+      "main": [
+        [
+          {
+            "node": "Append New Video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append New Video?": {
+      "main": [
+        [
+          {
+            "node": "Append Video Row",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Notify: Aborted",
+            "node": "Respond To Claude",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wake Claude To Produce": {
+    "Append Video Row": {
       "main": [
         [
           {
-            "node": "Notify: Sent To Produce",
+            "node": "Confirm Stored Row",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wake Claude To Revise": {
+    "Confirm Stored Row": {
       "main": [
         [
           {
-            "node": "Notify: Sent To Revise",
+            "node": "Respond To Claude",
             "type": "main",
             "index": 0
           }
@@ -410,20 +432,11 @@
       ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": true,
-    "timeSavedMode": "fixed",
-    "timezone": "Asia/Kolkata",
-    "callerPolicy": "workflowsFromSameOwner"
+    "timezone": "America/Lima",
+    "availableInMCP": false
   },
-  "versionId": "fa32e1c2-1c4c-4b62-bd62-91860500c53d",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "33081bb771ef161086c7c46479d86cf3fe146810b09d5a31cda00224754bad76"
-  },
-  "id": "c3JMcwhx8ksQ6HLG",
   "tags": []
 }

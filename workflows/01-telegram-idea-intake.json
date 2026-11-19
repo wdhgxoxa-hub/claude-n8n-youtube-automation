@@ -1,5 +1,5 @@
 {
-  "name": "Workflow 1: Idea Intake via Telegram (v2 Conversational)",
+  "name": "01 · Fábrica de videos · Telegram",
   "nodes": [
     {
       "parameters": {
@@ -8,68 +8,50 @@
         ],
         "additionalFields": {}
       },
-      "id": "6abd3f55-d35e-43ef-8334-463bb73cb640",
+      "id": "d1360b64-af38-4fb9-a295-b38a48687999",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.1,
+      "typeVersion": 1.5,
       "position": [
-        -3216,
-        1088
+        0,
+        0
       ],
-      "webhookId": "a1b2c3d4-e5f6-4708-9a0b-1c2d3e4f5a6b",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
-        }
-      }
+      "webhookId": "be623ff7-244f-46c8-a4bf-4f4281fbdc81"
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "loose",
-            "version": 1
-          },
-          "conditions": [
+        "assignments": {
+          "assignments": [
             {
-              "leftValue": "={{ $json.message.chat.id }}",
-              "rightValue": "5180685658",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              },
-              "id": "1b2c3d4e-5f60-4718-9a2b-3c4d5e6f7a8b"
+              "id": "a474baf3-6028-4194-b4f3-dee76bad821a",
+              "name": "telegramChatId",
+              "value": "__YOUR_TELEGRAM_CHAT_ID__",
+              "type": "string"
+            },
+            {
+              "id": "f5b1aecb-44b1-4113-ad8c-0e5cd5608e88",
+              "name": "claudeRoutineUrl",
+              "value": "__YOUR_CLAUDE_ROUTINE_URL__",
+              "type": "string"
+            },
+            {
+              "id": "6bd28812-77e0-42e5-ac29-8e5ff1434e51",
+              "name": "allowClaude",
+              "value": false,
+              "type": "boolean"
             }
-          ],
-          "combinator": "and"
+          ]
         },
-        "options": {
-          "looseTypeValidation": true
-        }
+        "includeOtherFields": true,
+        "options": {}
       },
-      "id": "a879a115-5b28-4661-ba92-629b0893adf1",
-      "name": "Is It Me?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
+      "id": "7921c8ad-b3bf-43f2-a86b-fca348e6b3a7",
+      "name": "Factory Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
       "position": [
-        -2992,
-        1088
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "const msg = $input.first().json.message;\nconst chatId = msg.chat.id;\nconst text = (msg.text || '').trim();\nconst lower = text.toLowerCase();\nconst state = $getWorkflowStaticData('global');\n\nconst out = (action, reply, payload) => [{ json: { action, reply: reply || '', payload: payload || '', chatId } }];\n\n// Non-text messages (photos, stickers, etc.) are not handled here\nif (!text) {\n  return out('reply', '🤖 This bot only takes text. Send \"topic\" to start a new video idea, or \"script\" to submit a ready-made script.');\n}\n\n// Cancel resets everything, at any step\nif (['cancel', 'stop', 'reset'].includes(lower)) {\n  state.pending = null;\n  return out('reply', '❌ Cancelled. Nothing was sent to Claude.\\n\\nSend \"topic\" or \"script\" whenever you are ready.');\n}\n\n// Keyword: start topic flow\nif (['topic', 'idea'].includes(lower)) {\n  state.pending = 'topic';\n  return out('reply', '📝 Send me your topic or idea now.\\n\\nYou can include an angle or CTA in the same message if you have one. Add (no vidiq) at the end for personal or opinion content that should not use keyword research.\\n\\nType \"cancel\" to abort.');\n}\n\n// Keyword: start script flow\nif (lower === 'script') {\n  state.pending = 'script';\n  return out('reply', '📜 Send me your final script now, as ONE message.\\n\\n⚠️ It will be treated as ALREADY APPROVED, no review step. Production starts as soon as you send it.\\n\\nType \"cancel\" to abort.');\n}\n\n// Pending: this message IS the topic\nif (state.pending === 'topic') {\n  state.pending = null;\n  return out(\n    'fire',\n    '✅ Got it! Working on:\\n\\n' + text + '\\n\\nYou will get the script here for review once it is ready.',\n    'MODE: new\\nTOPIC: ' + text\n  );\n}\n\n// Pending: this message IS the approved script, fire straight to production\nif (state.pending === 'script') {\n  state.pending = null;\n  return out(\n    'fire',\n    '🎬 Script received and treated as approved.\\n\\nSending it to HeyGen for video production now. You will get a ping here once it is on YouTube.',\n    'MODE: direct\\nSCRIPT:\\n' + text\n  );\n}\n\n// No pending state and not a keyword, guide the user, never fire accidentally\nreturn out('reply', '🤖 What do you want to do?\\n\\n• Send \"topic\" (or \"idea\") → Claude writes a script and sends it for your approval.\\n• Send \"script\" → you paste a ready-made script, it skips approval and goes straight to video production.\\n• Send \"cancel\" anytime to reset.');"
-      },
-      "id": "bf332c22-d223-421b-9270-987a3bd39568",
-      "name": "Conversation Router",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2768,
-        1024
+        240,
+        0
       ]
     },
     {
@@ -83,141 +65,167 @@
           },
           "conditions": [
             {
-              "leftValue": "={{ $json.action }}",
-              "rightValue": "fire",
+              "id": "9caf11f4-5be7-44f7-97e4-cee375605d7c",
+              "leftValue": "={{ $json.message?.chat?.type === 'private' && /^[1-9]\\d*$/.test($json.telegramChatId) && String($json.message.chat.id) === $json.telegramChatId && String($json.message.from?.id) === $json.telegramChatId }}",
+              "rightValue": "",
               "operator": {
-                "type": "string",
-                "operation": "equals"
-              },
-              "id": "c1d2e3f4-0002-4a2b-9c3d-000000000002"
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
         },
         "options": {}
       },
-      "id": "2edbec97-83b6-4f09-acfc-f3c131bf2d00",
+      "id": "01acba6a-ccf1-4fde-935b-26cc29ebb877",
+      "name": "Is It Me?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst text = typeof input.message.text === 'string' ? input.message.text.trim() : '';\nconst command = text.toLowerCase();\nconst state = $getWorkflowStaticData('global');\nconst reply = (message) => [{ json: { callClaude: false, reply: message, chatId: input.telegramChatId } }];\n\nif (Number.isInteger(input.update_id)) {\n  if (state.lastUpdate === input.update_id) return [];\n  state.lastUpdate = input.update_id;\n}\n\nif (!text) return reply('Envía texto. Escribe topic para una idea o script para un guion.');\nif (['cancel', 'stop', 'reset', 'cancelar'].includes(command)) {\n  state.pending = null;\n  return reply('Solicitud cancelada. Puedes iniciar otra con topic o script.');\n}\nif (['topic', 'idea'].includes(command)) {\n  state.pending = 'topic';\n  return reply('Envíame el tema. Puedes incluir [angle: ...], [cta: ...] y (use vidiq) si autorizas esa consulta.');\n}\nif (['script', 'guion', 'guión'].includes(command)) {\n  state.pending = 'script';\n  return reply('Envía tu guion final en un mensaje. Ese guion cuenta como aprobado cuando la producción esté habilitada.');\n}\nif (!['topic', 'script'].includes(state.pending)) {\n  return reply('Escribe topic para empezar con una idea, script para entregar un guion o cancelar para salir.');\n}\n\nconst mode = state.pending;\nlet payload = { mode, script: text };\nif (mode === 'topic') {\n  const researchFlag = text.match(/\\((use|no|skip)\\s+vidiq\\)\\s*$/i);\n  const idea = text.replace(/\\((use|no|skip)\\s+vidiq\\)\\s*$/i, '');\n  const angle = idea.match(/\\[angle:\\s*([^\\]]+)\\]/i)?.[1].trim() ?? '';\n  const cta = idea.match(/\\[cta:\\s*([^\\]]+)\\]/i)?.[1].trim() ?? '';\n  const topic = idea.replace(/\\[(angle|cta):[^\\]]+\\]/gi, '').trim();\n  if (!topic) return reply('Envía el tema junto con sus opciones.');\n  payload = { mode, topic, angle, cta, vidiq: researchFlag?.[1].toLowerCase() === 'use' ? 'use' : 'skip' };\n}\nstate.pending = null;\nconst callClaude = input.allowClaude === true\n  && /^https:\\/\\/api\\.anthropic\\.com\\/v1\\/claude_code\\/routines\\/trig_[A-Za-z0-9_-]+\\/fire$/.test(input.claudeRoutineUrl);\nreturn [{ json: {\n  chatId: input.telegramChatId,\n  callClaude,\n  payload,\n  reply: callClaude ? 'Recibido. Claude ya tiene tu solicitud.' : 'Modo de prueba. Registré tu solicitud localmente.',\n} }];"
+      },
+      "id": "cb366970-cd47-48ad-9f26-f97f3e826665",
+      "name": "Conversation Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "5fb962b2-164c-4129-99d0-7c3fcc68985a",
+              "leftValue": "={{ $json.callClaude === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "09896dac-af35-4277-b19e-6b131a76b9c7",
       "name": "Fire Claude?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -2544,
-        1024
+        960,
+        0
       ]
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01UDg82TkNEFAcGVPJci3id2/fire",
+        "url": "={{ $('Factory Settings').first().json.claudeRoutineUrl }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
               "name": "anthropic-version",
-              "value": "2023-06-01"
-            },
-            {
-              "name": "anthropic-beta",
-              "value": "experimental-cc-routine-2026-04-01"
+              "value": "2026-10-21"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: $json.payload }) }}",
-        "options": {}
+        "jsonBody": "={{ { text: JSON.stringify($json.payload) } }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "timeout": 15000
+        }
       },
-      "id": "be135c80-eda2-4db3-8038-69ce1f9da7cb",
+      "id": "92b5b717-4df9-43ab-8a96-d581a6d8696d",
       "name": "Fire Claude Routine",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2320,
-        928
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "0sVrNDe8JNdobggm",
-          "name": "Claude Routine Trigger"
-        }
-      }
+        1200,
+        -96
+      ]
     },
     {
       "parameters": {
-        "chatId": "={{ $('Conversation Router').item.json.chatId }}",
-        "text": "={{ $('Conversation Router').item.json.reply }}",
-        "additionalFields": {}
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Conversation Router').first().json.chatId }}",
+        "text": "={{ $('Conversation Router').first().json.reply }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
       },
-      "id": "0e725e8d-06b8-4fe8-8209-eeedf719c7f2",
+      "id": "bc93e259-2213-4c26-b9e6-9072a71be8d0",
       "name": "Confirm Fired",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -2096,
-        928
-      ],
-      "webhookId": "48e11410-5331-4957-bb39-8e9765716836",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
-        }
-      }
+        1440,
+        -96
+      ]
     },
     {
       "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
         "chatId": "={{ $json.chatId }}",
         "text": "={{ $json.reply }}",
-        "additionalFields": {}
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
       },
-      "id": "43392ecc-fd94-4f85-8d98-cc5d33c18b50",
+      "id": "ca7d754b-d811-467a-a2d0-167aadd56cab",
       "name": "Send Prompt / Help",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -2320,
-        1136
-      ],
-      "webhookId": "c1d2e3f4-0005-4a2b-9c3d-000000000005",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "⛔ Error: Unauthorized user. Your request was not sent to Claude.",
-        "additionalFields": {}
-      },
-      "id": "7e698a55-bdeb-48b2-9d13-06171fe89b0f",
-      "name": "Report Error",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -2768,
-        1248
-      ],
-      "webhookId": "5dc739f3-eb0f-40e3-be90-1cc66570444c",
-      "credentials": {
-        "telegramApi": {
-          "id": "nsuZXl8Og799TUyG",
-          "name": "VideoBot Studio"
-        }
-      }
+        1200,
+        96
+      ]
     }
   ],
   "pinData": {},
   "connections": {
     "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Factory Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Factory Settings": {
       "main": [
         [
           {
@@ -237,13 +245,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "Report Error",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Conversation Router": {
@@ -287,17 +289,11 @@
       ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
+    "timezone": "America/Lima",
     "availableInMCP": false
   },
-  "versionId": "6618d0d0-ce04-4358-9b2e-073e3030725d",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "33081bb771ef161086c7c46479d86cf3fe146810b09d5a31cda00224754bad76"
-  },
-  "id": "g5xHsJl71DSZ7e7f",
   "tags": []
 }

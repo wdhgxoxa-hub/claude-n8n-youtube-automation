@@ -16,8 +16,8 @@ Append a flag to your topic text when you send it to the Telegram bot:
 
 | Flag | Behaviour |
 |---|---|
-| `(use vidiq)` | Runs research. This is the default when no flag is present. |
-| `(no vidiq)` or `(skip vidiq)` | Skips research entirely. |
+| `(use vidiq)` | Requests keyword research. |
+| `(no vidiq)` or `(skip vidiq)` | Skips research. This is the default. |
 
 Example:
 
