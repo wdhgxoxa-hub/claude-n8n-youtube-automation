@@ -9,7 +9,7 @@
         ],
         "additionalFields": {}
       },
-      "id": "3eba1bc5-f186-4ddd-a327-101020f49b6d",
+      "id": "aae75e05-574a-4732-8a04-343e8c23f3f7",
       "name": "Telegram",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
@@ -23,7 +23,7 @@
           "name": "Telegram account"
         }
       },
-      "webhookId": "be585282-e06b-4259-8969-a097428802e3"
+      "webhookId": "f1320ad1-10e9-4c9e-8472-99930405c737"
     },
     {
       "parameters": {
@@ -36,7 +36,7 @@
           },
           "conditions": [
             {
-              "id": "3c836295-7d52-4467-b7a4-519fcf0a9233",
+              "id": "046bc756-7604-4b28-9b6c-8b584e30e6df",
               "leftValue": "={{ String($json.message?.from?.id) === '8667738444' && $json.message?.chat?.type === 'private' }}",
               "rightValue": "",
               "operator": {
@@ -50,7 +50,7 @@
         },
         "options": {}
       },
-      "id": "90096963-003d-46ba-b0c3-d992dad4deda",
+      "id": "7bf6b37d-6f71-444c-8147-ff1631906bfd",
       "name": "¿Eres tú?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -67,7 +67,7 @@
           "systemMessage": "Eres el operador de una fábrica de videos. Respondes en español, breve. Solo actúas con tus herramientas: crear_canal, crear_video, estado. Nunca prometes publicar sin aprobación. Si falta un dato (canal o tema), pregunta una sola cosa."
         }
       },
-      "id": "48bae029-3488-4704-b02f-4f9008cc86ae",
+      "id": "4d71cb51-4c7c-441c-8225-87fc0eaa1038",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -85,7 +85,7 @@
         },
         "options": {}
       },
-      "id": "f004198f-eb1b-4384-a976-5cb51d251bc1",
+      "id": "41730167-12dd-46d7-b399-54e65056c335",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -100,7 +100,7 @@
         "sessionKey": "={{ String($('Telegram').first().json.message.chat.id) }}",
         "contextWindowLength": 20
       },
-      "id": "bbf398db-4a47-43f0-abc1-736ca5fdeaa9",
+      "id": "a1d94dc5-3f6e-4bee-ab45-fd5d7e1d9217",
       "name": "Memoria",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -129,7 +129,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "6e00f093-c5b9-418a-9fa1-38a319f976e6",
+      "id": "71c415c2-800e-4eb8-86f9-decc267e516b",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -160,7 +160,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "303eccbc-51cb-4950-b7f8-bc927aa45d9e",
+      "id": "c9a201e3-9595-45f3-9389-b9cefef2c13d",
       "name": "crear_video",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -186,7 +186,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "216ff606-4de8-4bd0-b154-bf7ebf8ba4ff",
+      "id": "d1454567-ebc6-4fd5-bfc2-4272326e69cc",
       "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -206,7 +206,7 @@
           "appendAttribution": false
         }
       },
-      "id": "3a67af41-9fa1-45c1-b12e-5a0012cf84d1",
+      "id": "90ce003f-0c35-4a94-bd42-d16880582148",
       "name": "Responder",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

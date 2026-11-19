@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "77c4ac81-f43a-4f0d-973e-a602ae475a26",
+      "id": "7c7029b7-f8f9-4a52-8d09-bb06f83255d5",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -32,7 +32,7 @@
         "orderByColumn": "createdAt",
         "orderByDirection": "DESC"
       },
-      "id": "eaf5486b-c62e-40d6-ae00-cd2f1b293c4f",
+      "id": "af5b6a38-57f4-4221-8b7b-8ddae0e2832b",
       "name": "Últimos videos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -46,7 +46,7 @@
       "parameters": {
         "jsCode": "\nconst filas = $input.all().map(i => i.json).filter(v => v.video_id);\nreturn [{ json: { resumen: filas.length ? filas.map(v => `${v.video_id} · ${v.canal_id} · ${v.etapa} · ${v.estado} · US$${v.costo_usd}`).join('\\n') : 'Sin videos todavía.' } }];\n"
       },
-      "id": "686d9017-d19a-4f67-8ee4-d9945b773c56",
+      "id": "c227b5c2-3a08-4266-9342-d8c1d55077f9",
       "name": "Resumen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

@@ -17,6 +17,7 @@ CRED_EPIDEMIC = {'httpHeaderAuth': {'id': 'FabCredEpidemic1', 'name': 'Epidemic 
 CRED_PEXELS = {'httpHeaderAuth': {'id': 'FabCredPexels001', 'name': 'Pexels'}}
 CRED_PIXABAY = {'httpQueryAuth': {'id': 'FabCredPixabay01', 'name': 'Pixabay'}}
 CRED_CREATOMATE = {'httpHeaderAuth': {'id': 'mtHyTqYtuZSQYGWN', 'name': 'Creatomate'}}
+CRED_GOOGLE = {'googleDriveOAuth2Api': {'id': '5fXmeNSyBH0EFFf7', 'name': 'Google Drive account'}}  # YouTube: pendiente de iniciar sesión
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
@@ -159,7 +160,8 @@ def gapi(f, name, method, url, cred_type, json_body=None, binary_field=None, que
         p.update({'sendBody': True, 'contentType': 'binaryData', 'inputDataFieldName': binary_field})
     if full:
         p['options']['response'] = {'response': {'fullResponse': True}}
-    return f.add(name, 'n8n-nodes-base.httpRequest', 4.2, p)
+    extra = {'credentials': {cred_type: CRED_GOOGLE[cred_type]}} if cred_type in CRED_GOOGLE else {}
+    return f.add(name, 'n8n-nodes-base.httpRequest', 4.2, p, **extra)
 
 
 def wait(f, name, seconds):
@@ -201,7 +203,7 @@ return [{ json: {
   presupuestoLargoUsd: 5,
   presupuestoShortUsd: 1.5,
   maxIntentosPlano: 2,
-  driveCarpetaRaizId: '',
+  driveCarpetaRaizId: '1Asm7vpt16gjt7uSp5FxaNO1Nfnb4fp1k', // carpeta «Fabrica de Videos» en tu Drive
 }}];
 """ % (ROUTINE, BASE))
 f.chain('Inicio', 'Ajustes')
