@@ -636,3 +636,64 @@ test('redes: «Subir a redes» usa el multipart nativo de n8n con tantas casilla
   cas.forEach((c, i) => { assert.strictEqual(c.parameterType, 'formData'); assert.strictEqual(c.name, `={{ $json.pares[${i}][0] }}`); assert.strictEqual(c.value, `={{ $json.pares[${i}][1] }}`); });
   assert.match(codeOf(RED, 'Plan de publicación'), /const CASILLAS = 24;/);
 });
+
+// ---------- Control desde la computadora: un solo formulario de decisión, chat web y pendientes ----------
+const APB = wf('FabAprobacion001'), PEN = wf('FabPendientes001'), CHT = wf('FabChatWeb000001'), PRO2 = wf('FabProduccion001'), AGT = wf('FabAgenteTelegr1');
+const nodo = (w, n) => w.nodes.find(x => x.name === n);
+
+test('aprobación: un formulario firmado de n8n sirve para Telegram y para la computadora (sin sendAndWait)', () => {
+  for (const w of [APB, PRO2]) assert.ok(!w.nodes.some(n => n.parameters?.operation === 'sendAndWait'), w.name + ' aún usa sendAndWait');
+  const esp = nodo(APB, 'Aprobación · esperar'); assert.strictEqual(esp.type, 'n8n-nodes-base.wait'); assert.strictEqual(esp.parameters.resume, 'form');
+  assert.deepStrictEqual(esp.parameters.formFields.values.map(v => v.fieldLabel), ['Decisión', 'Cambios']);
+  const boton = nodo(APB, 'Aprobación · avisar').parameters.inlineKeyboard.rows[0].row.buttons[0];
+  assert.match(boton.additionalFields.url, /Aprobación · preparar/); assert.strictEqual(nodo(APB, 'Aprobación · avisar').onError, 'continueRegularOutput');
+  assert.match(codeOf(APB, 'Aprobación · preparar'), /\$execution\.resumeFormUrl/);
+});
+
+test('aprobación: la decisión del formulario se convierte en el evento correcto', () => {
+  const corre = (decision, cambios) => run(codeOf(APB, 'Aprobación · decisión'), { json: { 'Decisión': decision, Cambios: cambios }, nodes: { 'Aprobación · preparar': { aprobacion_id: 'ap-1' } } })[0].json;
+  assert.deepStrictEqual((({ estado, cambios, aprobacion_id }) => ({ estado, cambios, aprobacion_id }))(corre('Aprobar', '')), { estado: 'aprobado', cambios: '', aprobacion_id: 'ap-1' });
+  assert.strictEqual(corre('Pedir cambios', 'más tensión').estado, 'cambios'); assert.strictEqual(corre('Pedir cambios', 'más tensión').cambios, 'más tensión');
+  assert.strictEqual(corre('algo raro', '').estado, 'cambios');   // ante lo desconocido, nunca aprueba
+  const ev = run(codeOf(APB, 'Evento cambios'), { nodes: { Inicio: { etapa: 'guion', video_id: 'v', mensaje: 'm' }, 'Aprobación · decisión': { cambios: '' } } })[0].json;
+  assert.strictEqual(ev.evento, 'cambios'); assert.ok(ev.cambios.length > 0); assert.strictEqual(ev.mensaje, undefined);
+  const g = run(codeOf(PRO2, 'Permiso de gasto · decisión'), { json: { 'Decisión': 'Detener' }, nodes: { 'Permiso de gasto · preparar': { aprobacion_id: 'g' } } })[0].json;
+  assert.strictEqual(g.estado, 'detenido');
+});
+
+test('pendientes: lista cada decisión con su enlace, la más antigua primero', () => {
+  const filas = [{ etapa: 'guion', video_id: 'v2', canal_id: 'c', resumen: 'Guion de v2\nmás', url: 'https://x/form-waiting/2?signature=b', estado: 'pendiente', createdAt: '2026-11-19T10:00:00Z' },
+    { etapa: 'gasto', video_id: 'v1', canal_id: 'c', resumen: 'gastó', url: 'https://x/form-waiting/1?signature=a', estado: 'pendiente', createdAt: '2026-11-19T09:00:00Z' },
+    { etapa: 'final', video_id: 'v3', url: 'https://x/3', estado: 'aprobado' }];
+  const t = run(codeOf(PEN, 'Lista'), { all: { $input: filas } })[0].json.texto;
+  assert.match(t, /Esperan tu decisión \(2\)/); assert.ok(t.indexOf('Permiso de gasto · v1') < t.indexOf('Guion · v2'));
+  assert.ok(t.includes('Decidir: https://x/form-waiting/1?signature=a') && !t.includes('v3'));
+  assert.strictEqual(run(codeOf(PEN, 'Lista'), { all: { $input: [] } })[0].json.texto, 'No hay nada esperando tu decisión.');
+});
+
+test('chat web: público pero con usuario y clave, y llama al mismo agente que Telegram', () => {
+  const c = nodo(CHT, 'Chat'); assert.strictEqual(c.parameters.public, true); assert.strictEqual(c.parameters.authentication, 'basicAuth');
+  assert.ok(c.credentials.httpBasicAuth.id); assert.strictEqual(c.parameters.options.responseMode, 'lastNode');
+  const a = run(codeOf(CHT, 'A agente'), { json: { chatInput: 'hola', sessionId: 'abc' } })[0].json;
+  assert.deepStrictEqual(a, { texto: 'hola', chatId: 'web-abc' });
+  assert.strictEqual(nodo(CHT, 'Agente').parameters.workflowId.value, 'FabAgenteTelegr1');
+  assert.ok(nodo(AGT, 'pendientes') && AGT.connections.pendientes.ai_tool[0][0].node === 'Agente');
+});
+
+test('agente: el modelo usa la API Responses (gpt-6-astra no acepta herramientas por chat/completions)', () => {
+  const m = nodo(AGT, 'Modelo'); assert.ok(m.typeVersion >= 1.3); assert.strictEqual(m.parameters.responsesApiEnabled, true); assert.ok(nodo(AGT, 'Agente').typeVersion >= 3.1);
+});
+
+test('agente: cada herramienta declara su esquema (sin él n8n solo pasa un texto «query» y el orquestador no recibe el evento)', () => {
+  const tools = AGT.nodes.filter(n => n.type === '@n8n/n8n-nodes-langchain.toolWorkflow');
+  assert.ok(tools.length >= 11);
+  for (const t of tools) { const wi = t.parameters.workflowInputs;
+    assert.deepStrictEqual(wi.schema.map(c => c.id).sort(), Object.keys(wi.value).sort(), t.name);
+    assert.ok(wi.schema.every(c => c.type === 'string' && c.removed === false && c.display === true), t.name); }
+  assert.strictEqual(nodo(AGT, 'crear_video').parameters.workflowInputs.value.evento, 'nuevo_video');
+});
+
+test('crear_video: las indicaciones del operador llegan al pedido de guion', () => {
+  assert.ok('indicaciones' in nodo(AGT, 'crear_video').parameters.workflowInputs.value);
+  assert.match(codeOf(ORQ, 'Nuevo video'), /indicaciones: String\(e\.indicaciones \|\| ''\)\.slice\(0, 2000\)/);
+});

@@ -1,0 +1,102 @@
+{
+  "id": "FabPendientes001",
+  "name": "FX · Pendientes",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "211f4029-acc7-40eb-a496-46c9545f0d19",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "XrPPyzBaFxJwT5O3"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "pendiente"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "14b383de-ccb9-444a-b197-8a21206d9805",
+      "name": "Pendientes",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst filas = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente')\n  .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));\nif (!filas.length) return [{ json: { texto: 'No hay nada esperando tu decisión.' } }];\nconst nombre = { canal: 'Canal propuesto', guion: 'Guion', storyboard: 'Storyboard', final: 'Video final', gasto: 'Permiso de gasto' };\nconst lineas = filas.map((r, i) => `${i + 1}. ${nombre[r.etapa] || r.etapa}${r.video_id ? ' · ' + r.video_id : ''}${r.canal_id ? ' (' + r.canal_id + ')' : ''}\\n   ${String(r.resumen || '').split('\\n')[0].slice(0, 140)}\\n   Decidir: ${r.url}`);\nreturn [{ json: { texto: `Esperan tu decisión (${filas.length}):\\n\\n` + lineas.join('\\n\\n') } }];\n"
+      },
+      "id": "eff018bd-78f6-40fe-827c-4a06cbcdd9c3",
+      "name": "Lista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pendientes": {
+      "main": [
+        [
+          {
+            "node": "Lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

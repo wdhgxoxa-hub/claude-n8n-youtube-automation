@@ -60,7 +60,7 @@ Escribe la biblia completa siguiendo `canales/_plantilla/biblia.json`. Incluye e
 
 ### `guion`
 
-`datos`: `tema`, `formato`, `biblia`, `duracion_objetivo_s`, `vidiq` (`use`, `skip` o `datos`). Con `datos`, llega `investigacion_vidiq` (palabras clave con su volumen y videos que destacan en el tema): úsala para el ángulo, el gancho y el título, sin copiar títulos ajenos.
+`datos`: `tema`, `formato`, `biblia`, `duracion_objetivo_s`, `vidiq` (`use`, `skip` o `datos`), `indicaciones` (lo que pidió el operador para este video: gancho, tono, emoción, estructura, cierre; síguelas siempre que no contradigan la biblia ni la exactitud, y si alguna no se puede cumplir con datos verificables, dilo en `notas`). Con `datos`, llega `investigacion_vidiq` (palabras clave con su volumen y videos que destacan en el tema): úsala para el ángulo, el gancho y el título, sin copiar títulos ajenos.
 
 Haz, en este orden:
 1. Tres ganchos distintos (pregunta, dato sorprendente, escena). Elige el mejor según `biblioteca/reglas-generales.md` y explica por qué en una línea.

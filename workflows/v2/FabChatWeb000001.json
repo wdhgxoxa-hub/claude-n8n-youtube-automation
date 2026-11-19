@@ -1,0 +1,141 @@
+{
+  "id": "FabChatWeb000001",
+  "name": "F · Chat de la fábrica (computadora)",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "hostedChat",
+        "authentication": "basicAuth",
+        "initialMessages": "Hola, soy el operador de la fábrica. Pídeme un video, el estado, un reporte o «¿qué hay pendiente?» para aprobar desde aquí.",
+        "options": {
+          "title": "Fábrica de videos",
+          "subtitle": "Control desde la computadora · lo mismo que Telegram",
+          "inputPlaceholder": "Escribe una orden…",
+          "responseMode": "lastNode",
+          "loadPreviousSession": "notSupported"
+        }
+      },
+      "id": "8002f275-af69-45a5-bd0a-ba02c94f1828",
+      "name": "Chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "wnLsVw4Y1BOf86wy",
+          "name": "Operador Formulario"
+        }
+      },
+      "webhookId": "fabrica-chat-web-0001"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { texto: String($json.chatInput || '').slice(0, 4000), chatId: 'web-' + String($json.sessionId || 'computadora').slice(0, 60) } }];"
+      },
+      "id": "7000ec17-d657-4f5b-8414-518b2c8e3f1b",
+      "name": "A agente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAgenteTelegr1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "038965ce-4619-45fa-ac1e-85a2196df2d3",
+      "name": "Agente",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { output: String($json.respuesta || 'Listo.') } }];"
+      },
+      "id": "36d8f716-bfdd-4c09-a2e6-65da1808ec3f",
+      "name": "Respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "A agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "A agente": {
+      "main": [
+        [
+          {
+            "node": "Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente": {
+      "main": [
+        [
+          {
+            "node": "Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

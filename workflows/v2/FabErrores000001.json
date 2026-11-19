@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "ed5d52c2-ee94-422e-aa94-4fac0e623718",
+      "id": "1521eb70-cf47-45a7-9d98-dd9123b7a78e",
       "name": "Error en un flujo",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
@@ -17,7 +17,7 @@
       "parameters": {
         "jsCode": "\n// Un aviso corto y útil: qué flujo, en qué nodo, qué pasó y el enlace para abrir la ejecución.\nconst e = $json; const ex = e.execution || {}; const wf = e.workflow || {};\nconst msg = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\\s+/g, ' ').slice(0, 400);\nconst nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';\nreturn [{ json: { texto: `⚠️ Falló «${wf.name || wf.id}» en el nodo «${nodo}»:\\n${msg}` + (ex.url ? `\\n${ex.url}` : '') + (ex.retryOf ? '\\n(era un reintento)' : '') } }];\n"
       },
-      "id": "d4a64f65-d6f7-4b24-b816-29dbe8eaae91",
+      "id": "7b71454a-b9ac-41c1-aadc-db2520facd70",
       "name": "Mensaje de error",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -37,7 +37,7 @@
           "appendAttribution": false
         }
       },
-      "id": "1548f188-d76b-4229-a86f-7add955d08a7",
+      "id": "75ac1712-7a82-461c-aedf-ab84574e51f5",
       "name": "Avisar error",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

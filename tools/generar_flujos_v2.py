@@ -24,12 +24,14 @@ CRED_GOOGLE_CLIENTE = {'httpCustomAuth': {'id': 'FabCredGoogleCli', 'name': 'Goo
 CRED_VIDIQ = {'httpHeaderAuth': {'id': 'rbcIrn1tnyNe0OE1', 'name': 'vidIQ'}}            # Authorization: Bearer <clave de vidIQ>
 CRED_UPLOADPOST = {'httpHeaderAuth': {'id': 'PpoAcczNUlZgLCwe', 'name': 'Upload-Post'}}  # Authorization: Apikey <clave de Upload-Post>
 CRED_OPENAI_CHAT = {'openAiApi': {'id': 'FabCredOpenAIch1', 'name': 'OpenAI (chat)'}}  # la crea tools/crear_credencial_chat.py
+CRED_OPERADOR = {'httpBasicAuth': {'id': 'wnLsVw4Y1BOf86wy', 'name': 'Operador Formulario'}}  # usuario y clave del chat web
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
     'eventos': 'FE0Mjte3k2UOEbbE', 'costos': 'vk7TvbIvNcTbmkVv', 'trabajos': 'BIHxr4bhuShuU9pS',
     'youtube': 'Uez0VV0bdzTX2FnE',  # conexión de cada canal con su canal de YouTube
     'publicaciones': 'OMPWHAVyhbtekML0',  # cada subida a redes (Upload-Post) con su request_id
+    'aprobaciones': 'XrPPyzBaFxJwT5O3',   # decisiones pendientes y tomadas (Telegram y web usan el mismo formulario)
 }
 W = {  # flujos
     'ajustes': 'FabAjustes000001', 'claude': 'FabLlamarClaude1', 'retorno': 'FabRetornoClaud1',
@@ -37,7 +39,7 @@ W = {  # flujos
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
     'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001', 'refs': 'FabReferencias01',
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
-    'errores': 'FabErrores000001',
+    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -122,6 +124,40 @@ def tg(f, name, chat, text):
                  {'resource': 'message', 'operation': 'sendMessage', 'chatId': chat, 'text': text,
                   'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
                  credentials=CRED_TG)
+
+
+def decision(f, p, etapa, titulo, mensaje, opciones, ids, con_cambios):
+    """Una decisión del operador con UN formulario firmado de n8n.
+    El mismo enlace se abre desde el botón de Telegram y desde la computadora (chat web: «pendientes»).
+    Deja la fila en fab_aprobaciones (pendiente → decidida). Devuelve el nombre del nodo con {estado, cambios}.
+    opciones: [(etiqueta del formulario, estado)], p. ej. [('Aprobar', 'aprobado'), ('Pedir cambios', 'cambios')]."""
+    n = lambda x: f'{p} · {x}'
+    code(f, n('preparar'), f"""const ids = {ids};
+return [{{ json: {{ aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: {etapa},
+  video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),
+  resumen: String({mensaje} || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '' }} }}];""")
+    dt_insert(f, n('registrar'), 'aprobaciones')
+    f.add(n('avisar'), 'n8n-nodes-base.telegram', 1.2,
+          {'resource': 'message', 'operation': 'sendMessage', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
+           'text': '={{ String(' + mensaje + ').slice(0, 3800) }}', 'replyMarkup': 'inlineKeyboard',
+           'inlineKeyboard': {'rows': [{'row': {'buttons': [{'text': '📝 Revisar y decidir', 'additionalFields': {
+               'url': "={{ $('" + n('preparar') + "').first().json.url }}"}}]}}]},
+           'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
+          credentials=CRED_TG, onError='continueRegularOutput')   # si Telegram falla, la decisión sigue disponible desde la computadora
+    campos = [{'fieldLabel': 'Decisión', 'fieldType': 'dropdown', 'requiredField': True,
+               'fieldOptions': {'values': [{'option': o} for o, _ in opciones]}}]
+    if con_cambios:
+        campos.append({'fieldLabel': 'Cambios', 'fieldType': 'textarea', 'placeholder': 'Qué cambiar (solo si pides cambios)'})
+    f.add(n('esperar'), 'n8n-nodes-base.wait', 1.1,
+          {'resume': 'form', 'formTitle': '={{ ' + titulo + ' }}', 'formDescription': '={{ String(' + mensaje + ').slice(0, 3800) }}',
+           'formFields': {'values': campos}, 'options': {}}, webhookId=nid())
+    mapa = json.dumps({o: e for o, e in opciones}, ensure_ascii=False)
+    code(f, n('decisión'), f"""const mapa = {mapa}; const d = $json['Decisión'];
+const estado = mapa[d] || '{opciones[-1][1]}';
+return [{{ json: {{ aprobacion_id: $('{n('preparar')}').first().json.aprobacion_id, estado, cambios: String($json['Cambios'] || '').slice(0, 4000), decidido_en: new Date().toISOString() }} }}];""")
+    dt_update(f, n('cerrar'), 'aprobaciones', 'aprobacion_id', "={{ $json.aprobacion_id }}")
+    f.chain(n('preparar'), n('registrar'), n('avisar'), n('esperar'), n('decisión'), n('cerrar'))
+    return n('preparar'), n('cerrar'), n('decisión')
 
 
 def rl(table):
@@ -343,32 +379,23 @@ RETORNO = f.dump()
 # ======================================================================================
 # F · Aprobación por Telegram: aprobar con un botón o pedir cambios por escrito
 # ======================================================================================
-f = Flow(W['aprob'], 'F · Aprobación por Telegram')
+f = Flow(W['aprob'], 'F · Aprobación (Telegram y computadora)')
 trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
-f.add('Pedir aprobación', 'n8n-nodes-base.telegram', 1.2,
-      {'resource': 'message', 'operation': 'sendAndWait', 'chatId': "={{ $json.chatId }}",
-       'message': "={{ $('Inicio').first().json.mensaje }}", 'responseType': 'approval',
-       'approvalOptions': {'values': {'approvalType': 'double', 'approveLabel': 'Aprobar',
-                                      'disapproveLabel': 'Pedir cambios'}},
-       'options': {'appendAttribution': False}}, credentials=CRED_TG, webhookId=nid())
-iff(f, '¿Aprobado?', '$json.data?.approved === true')
-f.add('Pedir cambios', 'n8n-nodes-base.telegram', 1.2,
-      {'resource': 'message', 'operation': 'sendAndWait', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
-       'message': "={{ '¿Qué cambio quieres en ' + $('Inicio').first().json.etapa + '?' }}",
-       'responseType': 'freeText',
-       'options': {'messageButtonLabel': 'Escribir cambios', 'responseFormTitle': 'Cambios',
-                   'responseFormButtonLabel': 'Enviar', 'appendAttribution': False}},
-      credentials=CRED_TG, webhookId=nid())
+ini = "$('Inicio').first().json"
+primero, ultimo, dec = decision(f, 'Aprobación', ini + ".etapa", "'Aprobar: ' + " + ini + ".etapa + (" + ini + ".video_id ? ' · ' + " + ini + ".video_id : '')",
+                               ini + ".mensaje", [('Aprobar', 'aprobado'), ('Pedir cambios', 'cambios')], ini, True)
+iff(f, '¿Aprobado?', "$('" + dec + "').first().json.estado === 'aprobado'")
 code(f, 'Evento aprobado', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'aprobado', mensaje: undefined } }];")
-code(f, 'Evento cambios', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: String($json.data?.text || '').slice(0, 4000), mensaje: undefined } }];")
+code(f, 'Evento cambios', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: $('" + dec + "').first().json.cambios || 'Revísalo de nuevo y mejóralo.', mensaje: undefined } }];")
 call(f, 'Seguir (aprobado)', W['orq'], wait=False)
 call(f, 'Seguir (cambios)', W['orq'], wait=False)
-f.chain('Inicio', 'Leer ajustes', 'Pedir aprobación', '¿Aprobado?')
+f.chain('Inicio', 'Leer ajustes', primero)
+f.link(ultimo, '¿Aprobado?')
 f.link('¿Aprobado?', 'Evento aprobado', 0)
 f.link('Evento aprobado', 'Seguir (aprobado)')
-f.link('¿Aprobado?', 'Pedir cambios', 1)
-f.chain('Pedir cambios', 'Evento cambios', 'Seguir (cambios)')
+f.link('¿Aprobado?', 'Evento cambios', 1)
+f.link('Evento cambios', 'Seguir (cambios)')
 APROB = f.dump()
 
 # ======================================================================================
@@ -467,7 +494,8 @@ const presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.pr
 return [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',
   version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },
   pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: e.tema, formato, biblia,
-    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip' } } } }];
+    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',
+    indicaciones: String(e.indicaciones || '').slice(0, 2000) } } } }];
 """)
 f.add('Fila del video', 'n8n-nodes-base.set', 3.4, {'mode': 'raw', 'jsonOutput': '={{ $json.fila }}', 'includeOtherFields': False, 'options': {}})
 dt_insert(f, 'Guardar video', 'videos')
@@ -1019,13 +1047,11 @@ const pct = usd / (e.presupuesto || 1);
 return [{ json: { imagenes, clips, revisiones, usd: Math.round(usd * 100) / 100, pct: Math.round(pct * 100) / 100, aviso: pct >= aj.avisoGastoPct } }];
 """)
 iff(f, '¿Pasa el aviso de gasto?', '$json.aviso === true')
-f.add('Permiso de gasto', 'n8n-nodes-base.telegram', 1.2,
-      {'resource': 'message', 'operation': 'sendAndWait', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
-       'message': "={{ 'El video ' + $('Plan de producción').first().json.video_id + ' ya gastó ~US$' + $json.usd + ' (' + Math.round($json.pct * 100) + ' % del tope de US$' + $('Plan de producción').first().json.presupuesto + ') solo en imágenes y clips. ¿Sigo con voz, música y montaje?' }}",
-       'responseType': 'approval',
-       'approvalOptions': {'values': {'approvalType': 'double', 'approveLabel': 'Seguir', 'disapproveLabel': 'Detener'}},
-       'options': {'appendAttribution': False}}, credentials=CRED_TG, webhookId=nid())
-iff(f, '¿Sigo?', '$json.data?.approved === true')
+pe = "$('Plan de producción').first().json"
+gasto_ini, gasto_fin, gasto_dec = decision(f, 'Permiso de gasto', "'gasto'", "'Permiso de gasto · ' + " + pe + ".video_id",
+    "'El video ' + " + pe + ".video_id + ' ya gastó ~US$' + $('Gasto de planos').first().json.usd + ' (' + Math.round($('Gasto de planos').first().json.pct * 100) + ' % del tope de US$' + " + pe + ".presupuesto + ') solo en imágenes y clips. ¿Sigo con voz, música y montaje?'",
+    [('Seguir', 'seguir'), ('Detener', 'detenido')], pe, False)
+iff(f, '¿Sigo?', "$('" + gasto_dec + "').first().json.estado === 'seguir'")
 code(f, 'Producción detenida', "return [{ json: { etapa: 'produccion', estado: 'detenido', error: 'detenido por el operador al pasar el aviso de gasto' } }];")
 dt_update(f, 'Video detenido', 'videos', 'video_id', "={{ $('Plan de producción').first().json.video_id }}")
 
@@ -1135,9 +1161,9 @@ f.link('Avatar pendiente', 'Juntar planos')
 f.chain('Juntar planos', 'Filas de planos', 'Guardar planos')
 f.link('Juntar planos', 'Gasto de planos')
 f.link('Gasto de planos', '¿Pasa el aviso de gasto?')
-f.link('¿Pasa el aviso de gasto?', 'Permiso de gasto', 0)
+f.link('¿Pasa el aviso de gasto?', gasto_ini, 0)
 f.link('¿Pasa el aviso de gasto?', 'Encargo de sonido', 1)
-f.link('Permiso de gasto', '¿Sigo?')
+f.link(gasto_fin, '¿Sigo?')
 f.link('¿Sigo?', 'Encargo de sonido', 0)
 f.link('¿Sigo?', 'Producción detenida', 1)
 f.link('Producción detenida', 'Video detenido')
@@ -1592,18 +1618,20 @@ REFS = f.dump()
 # ======================================================================================
 f = Flow(W['agente'], 'F · Agente de Telegram')
 trigger(f)
-f.add('Agente', '@n8n/n8n-nodes-langchain.agent', 2.2,
+f.add('Agente', '@n8n/n8n-nodes-langchain.agent', 3.1,
       {'promptType': 'define', 'text': '={{ $json.texto }}',
        'options': {'systemMessage': (
            "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}"
            'Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. '
            'Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. '
-           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes. '
+           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes. '
+           'Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). '
            'Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. '
-           'Nunca publicas ni gastas: la fábrica pide aprobación con botones. Si falta un dato (canal, video, tema, fecha), pregunta solo eso. '
+           'Nunca publicas ni gastas: la fábrica pide aprobación con un enlace «Revisar y decidir» (en Telegram y en pendientes). Si falta un dato (canal, video, tema, fecha), pregunta solo eso. '
            'Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta.')}})
-f.add('Modelo', '@n8n/n8n-nodes-langchain.lmChatOpenAi', 1.2,
-      {'model': {'__rl': True, 'mode': 'id', 'value': 'gpt-6-astra'}, 'options': {}}, credentials=CRED_OPENAI_CHAT)
+# gpt-6-astra solo acepta herramientas por la API Responses (por chat/completions responde 400): nodo 1.3 con Responses activado
+f.add('Modelo', '@n8n/n8n-nodes-langchain.lmChatOpenAi', 1.3,
+      {'model': {'__rl': True, 'mode': 'id', 'value': 'gpt-6-astra'}, 'responsesApiEnabled': True, 'options': {}}, credentials=CRED_OPENAI_CHAT)
 f.add('Memoria', '@n8n/n8n-nodes-langchain.memoryBufferWindow', 1.3,
       {'sessionIdType': 'customKey', 'sessionKey': "={{ 'fabrica-' + $('Inicio').first().json.chatId }}", 'contextWindowLength': 20})
 
@@ -1611,14 +1639,18 @@ f.add('Memoria', '@n8n/n8n-nodes-langchain.memoryBufferWindow', 1.3,
 def tool(name, desc, values, wid=None):
     return f.add(name, '@n8n/n8n-nodes-langchain.toolWorkflow', 2.2,
                  {'description': desc, 'workflowId': {'__rl': True, 'mode': 'id', 'value': wid or W['orq']},
-                  'workflowInputs': {'mappingMode': 'defineBelow', 'value': values, 'matchingColumns': [], 'schema': [],
+                  # Sin esquema, n8n trata la herramienta como de un solo texto («query») y el sub-flujo no recibe evento, canal ni tema.
+                  'workflowInputs': {'mappingMode': 'defineBelow', 'value': values, 'matchingColumns': [],
+                                     'schema': [{'id': k, 'displayName': k, 'required': False, 'defaultMatch': False, 'display': True,
+                                                 'canBeUsedToMatch': True, 'type': 'string', 'removed': False} for k in values],
                                      'attemptToConvertTypes': False, 'convertFieldsToString': False}})
 
 
 AI = lambda k, d: "={{ $fromAI('" + k + "', '" + d + "', 'string') }}"
 tool('crear_canal', 'Investiga nichos y propone un canal nuevo para aprobar.', {'evento': 'nuevo_canal', 'criterios': AI('criterios', 'preferencias del operador; puede ir vacío')})
 tool('crear_video', 'Crea un video en un canal activo: escribe el guion y lo manda a aprobar.',
-     {'evento': 'nuevo_video', 'canal_id': AI('canal_id', 'id del canal'), 'tema': AI('tema', 'tema del video'), 'formato': AI('formato', 'largo o short')})
+     {'evento': 'nuevo_video', 'canal_id': AI('canal_id', 'id del canal'), 'tema': AI('tema', 'tema del video, corto'), 'formato': AI('formato', 'largo o short'),
+      'indicaciones': AI('indicaciones', 'todo lo demás que pidió el operador para este video, con sus palabras: gancho, tono, emoción, estructura, competencia, cierre; vacío si no pidió nada')})
 tool('estado', 'Muestra los últimos videos con su etapa, estado y costo.', {'tipo': 'estado'}, W['estado'])
 tool('reporte', 'Resume por canal lo producido, publicado y gastado en un periodo.',
      {'tipo': 'reporte', 'canal_id': AI('canal_id', 'id del canal o vacío para todos'), 'dias': AI('dias', 'número de días hacia atrás, p. ej. 30')}, W['estado'])
@@ -1635,11 +1667,13 @@ tool('configurar_redes', 'Fija dónde publica un canal: su perfil de Upload-Post
       'zona': AI('zona', 'zona horaria IANA del público del canal, p. ej. America/Lima o America/Mexico_City; vacío = la de Ajustes')})
 tool('conectar_youtube', 'Da el enlace para conectar un canal de la fábrica a su canal de YouTube (una vez por canal). Devuelve el enlace tal cual al operador.',
      {'accion': 'enlace', 'canal_id': AI('canal_id', 'id del canal de la fábrica')}, W['yt'])
+tool('pendientes', 'Lista lo que espera la decisión del operador (canal, guion, storyboard, video final, permiso de gasto) con el enlace para decidir. Devuelve los enlaces tal cual.',
+     {'tipo': 'pendientes'}, W['pendientes'])
 code(f, 'Respuesta', "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];")
 f.chain('Inicio', 'Agente', 'Respuesta')
 f.ai('Modelo', 'Agente', 'ai_languageModel')
 f.ai('Memoria', 'Agente', 'ai_memory')
-for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes'):
+for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes'):
     f.ai(t, 'Agente', 'ai_tool')
 AGENTE = f.dump()
 
@@ -2167,6 +2201,43 @@ ERRORES = f.dump()
 # Con muchos canales a la vez, cada nodo por-ítem respeta los límites de cada API en lugar de dispararlo todo junto.
 # (tamaño de lote, pausa en ms, reintentos). Reintentos solo donde repetir no duplica gasto ni publicaciones.
 # ======================================================================================
+# ======================================================================================
+# FX · Pendientes: decisiones que esperan al operador, con su enlace (para el chat web y Telegram)
+# ======================================================================================
+f = Flow(W['pendientes'], 'FX · Pendientes')
+trigger(f)
+f.add('Pendientes', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('aprobaciones'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'pendiente'}]},
+       'returnAll': True}, alwaysOutputData=True)
+code(f, 'Lista', r"""
+const filas = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente')
+  .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+if (!filas.length) return [{ json: { texto: 'No hay nada esperando tu decisión.' } }];
+const nombre = { canal: 'Canal propuesto', guion: 'Guion', storyboard: 'Storyboard', final: 'Video final', gasto: 'Permiso de gasto' };
+const lineas = filas.map((r, i) => `${i + 1}. ${nombre[r.etapa] || r.etapa}${r.video_id ? ' · ' + r.video_id : ''}${r.canal_id ? ' (' + r.canal_id + ')' : ''}\n   ${String(r.resumen || '').split('\n')[0].slice(0, 140)}\n   Decidir: ${r.url}`);
+return [{ json: { texto: `Esperan tu decisión (${filas.length}):\n\n` + lineas.join('\n\n') } }];
+""")
+f.chain('Inicio', 'Pendientes', 'Lista')
+PEND = f.dump()
+
+# ======================================================================================
+# F · Chat de la fábrica: el mismo agente de Telegram, desde la computadora (página de chat de n8n con usuario y clave)
+# ======================================================================================
+f = Flow(W['chat'], 'F · Chat de la fábrica (computadora)')
+f.add('Chat', '@n8n/n8n-nodes-langchain.chatTrigger', 1.4,
+      {'public': True, 'mode': 'hostedChat', 'authentication': 'basicAuth',
+       'initialMessages': 'Hola, soy el operador de la fábrica. Pídeme un video, el estado, un reporte o «¿qué hay pendiente?» para aprobar desde aquí.',
+       'options': {'title': 'Fábrica de videos', 'subtitle': 'Control desde la computadora · lo mismo que Telegram',
+                   'inputPlaceholder': 'Escribe una orden…', 'responseMode': 'lastNode', 'loadPreviousSession': 'notSupported'}},
+      credentials=CRED_OPERADOR, webhookId='fabrica-chat-web-0001')
+code(f, 'A agente', "return [{ json: { texto: String($json.chatInput || '').slice(0, 4000), chatId: 'web-' + String($json.sessionId || 'computadora').slice(0, 60) } }];")
+call(f, 'Agente', W['agente'])
+code(f, 'Respuesta', "return [{ json: { output: String($json.respuesta || 'Listo.') } }];")
+f.chain('Chat', 'A agente', 'Agente', 'Respuesta')
+CHAT = f.dump()
+
+
 RITMO = {
     'FabProduccion001': {'Buscar en Pexels': (5, 1000, 3), 'Buscar en Pixabay': (5, 1200, 3), 'Generar imagen': (4, 1500, 2),
                          'Animar (Gemini Omni)': (2, 3000, 2), 'Subir a Drive': (5, 500, 3), 'Nombrar en Drive': (5, 300, 3),
@@ -2203,11 +2274,12 @@ assert not faltan, faltan
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
 TIEMPO = {'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
           'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600}
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, AGENTE]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, AGENTE, PEND, CHAT]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
                            'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, ERRORES, AGENTE]
+
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, ERRORES, AGENTE, PEND, CHAT]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
