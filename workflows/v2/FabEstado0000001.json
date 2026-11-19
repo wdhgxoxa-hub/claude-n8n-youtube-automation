@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "62bfafea-4a13-43f9-90d1-0bff79029ac6",
+      "id": "d4ee1333-d307-4cce-a578-410474b3c3d7",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -25,10 +25,18 @@
           "value": "VIfMDnjzrrw1p2EA"
         },
         "matchType": "allConditions",
-        "filters": {},
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "createdAt",
+              "condition": "gte",
+              "keyValue": "={{ new Date(Date.now() - Math.max(Number($('Inicio').first().json.dias) || 30, 30) * 86400000).toISOString() }}"
+            }
+          ]
+        },
         "returnAll": true
       },
-      "id": "2df854d0-bae8-4cb2-a52a-3fd3061c4132",
+      "id": "b8eba911-a495-4945-8c51-1916dac0d20b",
       "name": "Videos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -36,7 +44,8 @@
         440,
         0
       ],
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -48,10 +57,18 @@
           "value": "vk7TvbIvNcTbmkVv"
         },
         "matchType": "allConditions",
-        "filters": {},
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "createdAt",
+              "condition": "gte",
+              "keyValue": "={{ new Date(Date.now() - Math.max(Number($('Inicio').first().json.dias) || 30, 30) * 86400000).toISOString() }}"
+            }
+          ]
+        },
         "returnAll": true
       },
-      "id": "852660b4-7f67-47b9-ac8b-8f381bd0aa8c",
+      "id": "853cbb5f-b9bb-46ba-af74-c30d811a8b62",
       "name": "Costos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -73,7 +90,7 @@
           },
           "conditions": [
             {
-              "id": "8aa84af9-dfcf-4b93-8b96-535bbb58f4f5",
+              "id": "f21187ea-b952-498c-9bd7-97af6f0b1461",
               "leftValue": "={{ $('Inicio').first().json.tipo === 'reporte' }}",
               "rightValue": "",
               "operator": {
@@ -87,7 +104,7 @@
         },
         "options": {}
       },
-      "id": "84339830-876d-4573-89a4-faff85b298e4",
+      "id": "0655fa14-2f50-483a-a485-db9d204f7198",
       "name": "¿Es reporte?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -117,7 +134,7 @@
         },
         "returnAll": true
       },
-      "id": "03310c45-6ef3-4de8-ba38-bac04aa33296",
+      "id": "534ab4b7-dce5-45cb-b1eb-8f602bedcf97",
       "name": "Conexiones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -131,7 +148,7 @@
       "parameters": {
         "jsCode": "\nconst p = $('Inicio').first().json;\nconst cs = $input.all().map(i => i.json).filter(c => c.canal_id && (!p.canal_id || c.canal_id === p.canal_id));\nreturn cs.length ? cs.map(c => ({ json: { accion: 'estadisticas', canal_id: c.canal_id } })) : [{ json: { nada: true } }];\n"
       },
-      "id": "205012b1-a274-491b-b18b-d8a6e5fcc33d",
+      "id": "2b0fc632-f50a-4e9d-b594-94827c09ca1f",
       "name": "Pedir estadísticas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -151,7 +168,7 @@
           },
           "conditions": [
             {
-              "id": "1cd6bdd8-c2d0-4be9-9bf3-1b39665bd66d",
+              "id": "265af656-6fd4-4e4a-b116-c2ee2872f4bf",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -165,7 +182,7 @@
         },
         "options": {}
       },
-      "id": "5357857f-85c4-42e0-b018-ae112f31349b",
+      "id": "6e4dc6b6-f27b-4ebb-b562-61bca3fbc371",
       "name": "¿Hay canales conectados?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -194,7 +211,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "cb13e72e-81e6-43e6-9dc3-a91aab011447",
+      "id": "3f7c9ab7-66c4-4185-bd34-2d688bcd47ae",
       "name": "Estadísticas de YouTube",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -207,7 +224,7 @@
       "parameters": {
         "jsCode": "\n// «estado»: los 10 videos más recientes. «reporte»: por canal, cuánto se produjo, publicó y gastó.\nconst pedido = $('Inicio').first().json;\nconst videos = $('Videos').all().map(i => i.json).filter(v => v.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));\nconst costos = $('Costos').all().map(i => i.json).filter(c => c.video_id);\nif (pedido.tipo !== 'reporte') {\n  const ult = videos.slice(0, 10);\n  return [{ json: { resumen: ult.length ? ult.map(v => `${v.video_id} · ${v.canal_id} · ${v.etapa} · ${v.estado} · US$${v.costo_usd || 0}`).join('\\n') : 'Sin videos todavía.' } }];\n}\nconst desde = pedido.dias ? Date.now() - Number(pedido.dias) * 86400000 : 0;\nconst vs = videos.filter(v => (!pedido.canal_id || v.canal_id === pedido.canal_id) && Date.parse(v.createdAt || 0) >= desde);\nconst porCanal = {};\nfor (const v of vs) { const c = (porCanal[v.canal_id] ||= { videos: 0, publicados: 0, gasto: 0, etapas: {} });\n  c.videos++; if (v.estado === 'publicado') c.publicados++; c.etapas[v.etapa] = (c.etapas[v.etapa] || 0) + 1;\n  c.gasto += costos.filter(x => x.video_id === v.video_id).reduce((a, x) => a + (x.usd || 0), 0); }\nconst yt = {}; if ($('Estadísticas de YouTube').isExecuted) for (const i of $('Estadísticas de YouTube').all()) if (i.json.ok) yt[i.json.canal_id] = i.json;\nfor (const id of Object.keys(yt)) porCanal[id] ||= { videos: 0, publicados: 0, gasto: 0, etapas: {} };\nconst lineas = Object.entries(porCanal).map(([id, c]) => (yt[id] ? `${id} (YouTube «${yt[id].canal_youtube}»: ${yt[id].ocultos ? 'suscriptores ocultos' : yt[id].suscriptores + ' suscriptores'}, ${yt[id].vistas} vistas, ${yt[id].videos} videos) — ` : `${id}: `) + `${c.videos} videos, ${c.publicados} publicados, US$${Math.round(c.gasto * 100) / 100} (prom. US$${c.videos ? Math.round(c.gasto / c.videos * 100) / 100 : 0}) · etapas: ${Object.entries(c.etapas).map(([k, n]) => k + ' ' + n).join(', ')}`);\nreturn [{ json: { resumen: lineas.length ? `Reporte${pedido.dias ? ' de ' + pedido.dias + ' días' : ''}:\\n` + lineas.join('\\n') : 'Sin videos en ese periodo.' } }];\n"
       },
-      "id": "5e6a0b2c-1b65-4a88-a710-f943538344f4",
+      "id": "af01b6dd-0ced-43f2-8b41-427a0953d636",
       "name": "Resumen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -325,7 +342,11 @@
   "settings": {
     "executionOrder": "v1",
     "timezone": "America/Lima",
-    "callerPolicy": "workflowsFromSameOwner"
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   },
   "pinData": {},
   "meta": {

@@ -37,6 +37,7 @@ W = {  # flujos
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
     'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001', 'refs': 'FabReferencias01',
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
+    'errores': 'FabErrores000001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -234,11 +235,22 @@ return [{ json: {
   costoVozUsdPorPlano: 0.002, // Gemini TTS por plano, estimado
   avisoGastoPct: 0.8,         // al pasar esta fracción del tope, pide permiso por Telegram antes de seguir
   presupuestoLargoUsd: 5,
+  maxVideosDiaPorCanal: 3,    // videos nuevos por canal en 24 h (protege gasto y evita contenido repetitivo)
+  maxVideosDiaTotal: 40,      // videos nuevos de toda la fábrica en 24 h
   presupuestoShortUsd: 1.5,
   maxIntentosPlano: 2,
   driveCarpetaRaizId: '1Asm7vpt16gjt7uSp5FxaNO1Nfnb4fp1k', // carpeta «Fabrica de Videos» en tu Drive
   costoMiniaturaUsd: 0.06,    // una imagen de GPT Image por miniatura, estimado
   idioma: 'es',               // idioma de los canales (vidIQ, títulos)
+  // Calendario de publicación (hora local del público). Base: estudios 2026 de Buffer, Metricool y Sprout;
+  // se corrige con los datos propios de cada canal. Ver skill/biblioteca/distribucion.md.
+  calendario: {
+    zona: 'America/Lima',
+    horas: { youtube: 11, youtube_shorts: 16, tiktok: 19, instagram: 20, facebook: 21 },
+    diasEntreLargos: 2,       // un video largo cada 2 días como mínimo por canal (2–4 por semana)
+    cortesDias: [1, 3, 5],    // los cortes salen 1, 3 y 5 días después del largo, no todos el mismo día
+    maxPorRedDia: 2,          // tope por canal, red y día (TikTok limita ~15 posts/día por cuenta)
+  },
   baseUrl: '%s',
   googleClientId: '405080624452-o72pmo2ti4ofdhm9seje5nfb27l11kdr.apps.googleusercontent.com', // público; el secreto vive en una credencial
 }}];
@@ -473,7 +485,25 @@ tg(f, 'Aviso: escribiendo', "={{ $('Leer ajustes').first().json.chatId }}", "={{
 tg(f, 'Aviso: canal no listo', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'No encuentro un canal activo con id ' + $('Inicio').first().json.canal_id + '.' }}")
 f.link('Según evento', 'Buscar canal', 5)
 f.link('Buscar canal', '¿Canal activo?')
-f.link('¿Canal activo?', 'Buscar biblia', 0)
+f.add('Videos de las últimas 24 h', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 1 * 86400000).toISOString() }}"}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+code(f, 'Revisar topes', r"""
+// Topes de 24 h: por canal y de toda la fábrica. Si se pasan, el video no se crea y te avisa.
+const aj = $('Leer ajustes').first().json; const canal = $('Buscar canal').first().json.canal_id;
+const v = $input.all().map(i => i.json).filter(x => x.video_id);
+const delCanal = v.filter(x => x.canal_id === canal).length;
+const motivo = delCanal >= aj.maxVideosDiaPorCanal ? `el canal ${canal} ya tiene ${delCanal} videos nuevos en 24 h (tope ${aj.maxVideosDiaPorCanal})`
+  : v.length >= aj.maxVideosDiaTotal ? `la fábrica ya creó ${v.length} videos en 24 h (tope ${aj.maxVideosDiaTotal})` : '';
+return [{ json: { ok: !motivo, motivo } }];
+""")
+iff(f, '¿Dentro de los topes?', '$json.ok === true')
+tg(f, 'Aviso: tope diario', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'No creé el video «' + String($('Inicio').first().json.tema || '').slice(0, 80) + '»: ' + $json.motivo + '. Cambia el tope en Ajustes si lo necesitas.' }}")
+f.link('¿Canal activo?', 'Videos de las últimas 24 h', 0)
+f.link('Videos de las últimas 24 h', 'Revisar topes')
+f.link('Revisar topes', '¿Dentro de los topes?')
+f.link('¿Dentro de los topes?', 'Buscar biblia', 0)
+f.link('¿Dentro de los topes?', 'Aviso: tope diario', 1)
 f.link('¿Canal activo?', 'Aviso: canal no listo', 1)
 f.chain('Buscar biblia', 'Nuevo video', 'Fila del video', 'Guardar video', '¿Investigar con vidIQ?')
 f.link('¿Investigar con vidIQ?', 'Pedido a vidIQ', 0)
@@ -631,7 +661,7 @@ iff(f, '¿Publicar con Upload-Post?', "$('Leer ajustes').first().json.allowRedes
 code(f, 'Encargo de redes', r"""
 const e = $('Inicio').first().json; const v = $('Video (publicar)').first().json; const c = $('Canal (publicar)').first().json;
 return [{ json: { video_id: v.video_id, canal_id: v.canal_id, tema: v.tema, formato: v.formato, publicar_en: v.publicar_en || '',
-  perfil: c.uploadpost_perfil, redes: c.redes || 'youtube,tiktok,instagram,facebook', contexto: e.contexto || {} } }];
+  perfil: c.uploadpost_perfil, redes: c.redes || 'youtube,tiktok,instagram,facebook', zona: c.zona || '', contexto: e.contexto || {} } }];
 """)
 call(f, 'Publicar en redes', W['redes'], wait=False)
 tg(f, 'Aviso: publicando', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Publicando ' + $('Video (publicar)').first().json.video_id + ' en ' + ($('Canal (publicar)').first().json.redes || 'todas las redes') + ' con Upload-Post. Te aviso el resultado en unos minutos.' }}")
@@ -737,16 +767,18 @@ const e = $('Inicio').first().json;
 const perfil = String(e.perfil || '').trim(); const redes = String(e.redes || '').toLowerCase().split(/[\s,]+/).filter(Boolean);
 const validas = ['youtube', 'tiktok', 'instagram', 'facebook'];
 const malas = redes.filter(r => !validas.includes(r));
-const ok = /^[A-Za-z0-9_.-]{2,60}$/.test(perfil) && redes.length > 0 && !malas.length;
-return [{ json: { ok, fila: { uploadpost_perfil: perfil, redes: [...new Set(redes)].join(',') },
-  motivo: !/^[A-Za-z0-9_.-]{2,60}$/.test(perfil) ? 'perfil de Upload-Post inválido: ' + perfil : malas.length ? 'redes desconocidas: ' + malas.join(', ') + ' (válidas: ' + validas.join(', ') + ')' : 'falta la lista de redes' } }];
+let zona = String(e.zona || '').trim(); let zonaMala = false;
+if (zona) { try { new Intl.DateTimeFormat('en', { timeZone: zona }); } catch (err) { zonaMala = true; } }
+const ok = /^[A-Za-z0-9_.-]{2,60}$/.test(perfil) && redes.length > 0 && !malas.length && !zonaMala;
+return [{ json: { ok, fila: { uploadpost_perfil: perfil, redes: [...new Set(redes)].join(','), ...(zona && !zonaMala ? { zona } : {}) },
+  motivo: zonaMala ? 'zona horaria desconocida: ' + zona + ' (ej.: America/Lima, America/Mexico_City, Europe/Madrid)' : !/^[A-Za-z0-9_.-]{2,60}$/.test(perfil) ? 'perfil de Upload-Post inválido: ' + perfil : malas.length ? 'redes desconocidas: ' + malas.join(', ') + ' (válidas: ' + validas.join(', ') + ')' : 'falta la lista de redes' } }];
 """)
 iff(f, '¿Redes válidas?', '$json.ok === true')
 dt_get(f, 'Canal (redes)', 'canales', 'canal_id', "={{ $('Inicio').first().json.canal_id }}")
 iff(f, '¿Existe el canal?', '!!$json.canal_id')
 code(f, 'Fila de redes', "return [{ json: $('Validar redes').first().json.fila }];")
 dt_update(f, 'Guardar redes', 'canales', 'canal_id', "={{ $('Inicio').first().json.canal_id }}")
-tg(f, 'Aviso: redes guardadas', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Canal ' + $('Inicio').first().json.canal_id + ': publica con el perfil «' + $('Validar redes').first().json.fila.uploadpost_perfil + '» de Upload-Post en ' + $('Validar redes').first().json.fila.redes + '.' }}")
+tg(f, 'Aviso: redes guardadas', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Canal ' + $('Inicio').first().json.canal_id + ': publica con el perfil «' + $('Validar redes').first().json.fila.uploadpost_perfil + '» de Upload-Post en ' + $('Validar redes').first().json.fila.redes + ($('Validar redes').first().json.fila.zona ? ', a la hora de ' + $('Validar redes').first().json.fila.zona : '') + '.' }}")
 tg(f, 'Aviso: redes inválidas', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'No guardé las redes: ' + ($json.motivo || ('no existe el canal ' + $('Inicio').first().json.canal_id)) }}")
 f.link('Según evento', 'Validar redes', 19)
 f.link('Validar redes', '¿Redes válidas?')
@@ -1345,7 +1377,7 @@ call(f, 'Leer ajustes', W['ajustes'])
 iff(f, '¿Analytics activo?', '$json.allowAnalytics === true')
 f.add('Videos publicados', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
-       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'publicado'}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'publicado'}, {'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 45 * 86400000).toISOString() }}"}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
 code(f, 'Toca medir', r"""
 // Solo los videos que cumplen hoy 2 o 7 días de publicados.
 const hoy = Date.now(); const dia = 86400000;
@@ -1374,7 +1406,7 @@ f.add('Retención', 'n8n-nodes-base.httpRequest', 4.2,
        'options': {}}, onError='continueRegularOutput')
 f.add('Publicaciones', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('publicaciones'), 'matchType': 'allConditions',
-       'filters': {}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 15 * 86400000).toISOString() }}"}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
 code(f, 'Toca medir en redes', r"""
 // Envíos a TikTok, Instagram, Facebook y YouTube (Upload-Post) que cumplen hoy 2 o 7 días.
 const hoy = Date.now(); const dia = 86400000;
@@ -1423,10 +1455,10 @@ f = Flow(W['estado'], 'F · Estado y reportes')
 trigger(f)
 f.add('Videos', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
-       'filters': {}, 'returnAll': True}, alwaysOutputData=True)
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - Math.max(Number($('Inicio').first().json.dias) || 30, 30) * 86400000).toISOString() }}"}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
 f.add('Costos', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('costos'), 'matchType': 'allConditions',
-       'filters': {}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - Math.max(Number($('Inicio').first().json.dias) || 30, 30) * 86400000).toISOString() }}"}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
 iff(f, '¿Es reporte?', "$('Inicio').first().json.tipo === 'reporte'")
 f.add('Conexiones', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('youtube'), 'matchType': 'allConditions',
@@ -1599,7 +1631,8 @@ tool('programar', 'Fija fecha y hora de publicación de un video ya aprobado.',
 tool('referencias', 'Genera las imágenes de referencia de personajes y escenarios de un canal.',
      {'evento': 'referencias', 'canal_id': AI('canal_id', 'id del canal')})
 tool('configurar_redes', 'Fija dónde publica un canal: su perfil de Upload-Post y la lista de redes (youtube, tiktok, instagram, facebook).',
-     {'evento': 'configurar_redes', 'canal_id': AI('canal_id', 'id del canal'), 'perfil': AI('perfil', 'nombre del perfil en Upload-Post'), 'redes': AI('redes', 'lista separada por comas: youtube, tiktok, instagram, facebook')})
+     {'evento': 'configurar_redes', 'canal_id': AI('canal_id', 'id del canal'), 'perfil': AI('perfil', 'nombre del perfil en Upload-Post'), 'redes': AI('redes', 'lista separada por comas: youtube, tiktok, instagram, facebook'),
+      'zona': AI('zona', 'zona horaria IANA del público del canal, p. ej. America/Lima o America/Mexico_City; vacío = la de Ajustes')})
 tool('conectar_youtube', 'Da el enlace para conectar un canal de la fábrica a su canal de YouTube (una vez por canal). Devuelve el enlace tal cual al operador.',
      {'accion': 'enlace', 'canal_id': AI('canal_id', 'id del canal de la fábrica')}, W['yt'])
 code(f, 'Respuesta', "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];")
@@ -1862,7 +1895,7 @@ return [{ json: { cortes: final.filter(c => c.ok), fallidos: final.filter(c => !
 """)
 code(f, 'Sin cortes', "return [{ json: { cortes: [], fallidos: [] } }];")
 # --- Miniatura -----------------------------------------------------------------------------
-iff(f, '¿Hace miniatura?', "$('Leer ajustes').first().json.allowMiniaturas === true && !!$('Inicio').first().json.plan.storyboard?.miniatura")
+iff(f, '¿Hace miniatura?', "$('Leer ajustes').first().json.allowMiniaturas === true && $('Inicio').first().json.plan.formato !== 'short' && !!$('Inicio').first().json.plan.storyboard?.miniatura")
 code(f, 'Pedido de miniatura', r"""
 const e = $('Inicio').first().json; const mi = e.plan.storyboard.miniatura || {}; const b = e.plan.biblia || {};
 // Sin texto en la imagen: el texto lo monta Creatomate (letra nítida y estilo del canal).
@@ -1947,55 +1980,90 @@ call(f, 'Leer ajustes', W['ajustes'])
 iff(f, '¿Puntuar títulos?', "$('Leer ajustes').first().json.allowVidiq === true && ($('Inicio').first().json.contexto?.publicacion?.youtube?.titulos || []).length > 1")
 code(f, 'Pedido de títulos', "const e = $('Inicio').first().json; return [{ json: { accion: 'titulos', titulos: e.contexto.publicacion.youtube.titulos, formato: e.formato } }];")
 call(f, 'vidIQ: títulos', W['vidiq'])
+f.add('Agenda del canal', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('publicaciones'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'canal_id', 'condition': 'eq', 'keyValue': "={{ $('Inicio').first().json.canal_id }}"}, {'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 30 * 86400000).toISOString() }}"}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
 code(f, 'Plan de publicación', r"""
-// Arma un envío por video (principal y cada corte) con el texto propio de cada red.
+// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo
+// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};
-const redes = String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\s,]+/).filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));
-const vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null;
-const yt = pub.youtube || {};
+const cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};
+const redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));
+if (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];
+// --- horas locales sin librerías (Intl) ---
+const partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));
+const diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };
+const aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;
+  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };
+const sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };
+const ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba
+// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---
+const agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);
+const ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }
+const largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));
+const maxDia = cal.maxPorRedDia || 2;
+const hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura
+  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }
+  return null; };
+// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---
+let diaBase = diaLocal(ahora);
+if (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));
+else if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }
+const horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;
+// --- textos ---
+const vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};
 const tituloYt = String((vq?.ok && vq.mejor) || (yt.titulos || [])[0] || e.tema || '').slice(0, 100);
 const creditos = (c.creditos || []).join('\n');
 const descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\n\n').slice(0, 4900);
-const tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15);
+const tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');
 const hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\s+/g, '')).join(' ');
 const texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\n\n').slice(0, 2100); };
-const programado = Date.parse(e.publicar_en || '') > Date.now() + 3600000 ? new Date(e.publicar_en).toISOString().slice(0, 19) : '';
-const base = { user: e.perfil, is_ai_generated: 'true', containsSyntheticMedia: 'true', async_upload: 'true',
-  youtube_title: tituloYt, youtube_description: descYt, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma,
-  privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false',
-  tiktok_title: texto('tiktok', tituloYt), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true',
-  instagram_title: texto('instagram', tituloYt), media_type: 'REELS', share_to_feed: 'true',
-  facebook_title: String(pub.facebook?.titulo || tituloYt).slice(0, 250), facebook_description: texto('facebook', tituloYt), facebook_media_type: 'REELS',
-  title: tituloYt, ...(programado ? { scheduled_date: programado, timezone: 'UTC' } : {}) };
-const envios = [];
+const comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };
+const campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({
+  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Video completo en el canal.', creditos].filter(Boolean).join('\n\n').slice(0, 4900) : descYt,
+    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },
+  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },
+  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },
+  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },
+}[red]), ...extra });
+const envios = []; const sinCupo = [];
+const agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {
+  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }
+  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };
 if (e.formato === 'short') {
-  if (redes.length) envios.push({ tipo: 'principal', video: c.render_url, plataformas: redes, campos: { ...base } });
+  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);
 } else {
-  const largo = redes.filter(r => ['youtube', 'facebook'].includes(r));
-  if (largo.length) envios.push({ tipo: 'principal', video: c.render_url, plataformas: largo,
-    campos: { ...base, facebook_media_type: 'VIDEO', ...(c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {}) } });
-  for (const k of c.cortes || []) {
-    const verticales = redes.filter(r => ['tiktok', 'instagram', 'youtube', 'facebook'].includes(r));
-    const t = String(k.titulo || tituloYt).slice(0, 95);
-    if (verticales.length && k.url) envios.push({ tipo: 'corte ' + k.corte, video: k.url, plataformas: verticales,
-      campos: { ...base, youtube_title: (t + ' #Shorts').slice(0, 100), youtube_description: [t, 'Video completo en el canal.', creditos].filter(Boolean).join('\n\n').slice(0, 4900),
-        title: t, tiktok_title: texto('tiktok', t), instagram_title: texto('instagram', t), facebook_title: t, facebook_description: texto('facebook', t) } });
-  }
+  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))
+    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});
+  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)
+  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;
+  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);
+    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);
+    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });
 }
-if (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];
-if (!envios.length) return [{ json: { nada: true, motivo: 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];
-// multipart/form-data armado a mano: así cada envío lleva solo sus redes (platform[] repetido).
+if (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];
+// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).
+// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).
+const CASILLAS = 24;
 return envios.map((v, i) => {
-  const limite = '----fabrica' + Date.now().toString(36) + i;
-  const campos = [['video', v.video], ...v.plataformas.map(p => ['platform[]', p]), ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== '')];
-  const cuerpo = campos.map(([k, x]) => `--${limite}\r\nContent-Disposition: form-data; name="${k}"\r\n\r\n${String(x)}\r\n`).join('') + `--${limite}--\r\n`;
-  return { json: { tipo: v.tipo, plataformas: v.plataformas.join(','), titulo: v.campos.title, url_video: v.video, limite, cuerpo, programado } };
+  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo
+  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;
+  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),
+    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];
+  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);
+  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);
+  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,
+    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };
 });
 """)
 iff(f, '¿Hay envíos?', '$json.nada !== true')
+CASILLAS_UPLOADPOST = 24   # igual que CASILLAS en «Plan de publicación»
 f.add('Subir a redes', 'n8n-nodes-base.httpRequest', 4.2,
       {'method': 'POST', 'url': 'https://api.upload-post.com/api/upload', 'authentication': 'genericCredentialType', 'genericAuthType': 'httpHeaderAuth',
-       'sendBody': True, 'contentType': 'raw', 'rawContentType': "={{ 'multipart/form-data; boundary=' + $json.limite }}", 'body': '={{ $json.cuerpo }}',
+       'sendBody': True, 'contentType': 'multipart-form-data', 'bodyParameters': {'parameters': [
+           {'parameterType': 'formData', 'name': f'={{{{ $json.pares[{i}][0] }}}}', 'value': f'={{{{ $json.pares[{i}][1] }}}}'} for i in range(CASILLAS_UPLOADPOST)]},
        'options': {'timeout': 120000}},
       credentials=CRED_UPLOADPOST, onError='continueRegularOutput', retryOnFail=True, maxTries=2, waitBetweenTries=5000)
 code(f, 'Filas de publicación', r"""
@@ -2005,7 +2073,7 @@ return $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];
   return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),
     url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',
     resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),
-    publicado_en: p.programado ? new Date(p.programado + 'Z').toISOString() : new Date().toISOString() } }; });
+    publicado_en: p.programado || new Date().toISOString() } }; });
 """)
 dt_insert(f, 'Guardar publicaciones', 'publicaciones')
 code(f, 'Video publicado', r"""
@@ -2020,12 +2088,12 @@ http(f, 'Estado en redes', 'GET', "={{ 'https://api.upload-post.com/api/uploadpo
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code(f, 'Resumen de publicación', r"""
 // Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).
-const filas = $('Filas de publicación').all().map(i => i.json);
+const filas = $('Filas de publicación').all().map(i => i.json); const pedidos = $('Plan de publicación').all().map(i => i.json);
 const estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];
 const enviados = filas.filter(f => f.request_id && f.estado === 'enviado');
 const lineas = filas.map(f => {
   if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;
-  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas} (programado ${new Date(f.publicado_en).toLocaleString('es-PE', { timeZone: 'America/Lima' })})`;
+  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas}: ${pedidos[filas.indexOf(f)]?.hora_local || f.publicado_en}`;
   const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];
   const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')
     : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';
@@ -2036,8 +2104,8 @@ tg(f, 'Aviso: publicado', "={{ $('Leer ajustes').first().json.chatId }}", "={{ $
 tg(f, 'Aviso: nada que publicar', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'No publiqué ' + $('Inicio').first().json.video_id + ': ' + $json.motivo }}")
 f.chain('Inicio', 'Leer ajustes', '¿Puntuar títulos?')
 f.link('¿Puntuar títulos?', 'Pedido de títulos', 0)
-f.link('¿Puntuar títulos?', 'Plan de publicación', 1)
-f.chain('Pedido de títulos', 'vidIQ: títulos', 'Plan de publicación', '¿Hay envíos?')
+f.link('¿Puntuar títulos?', 'Agenda del canal', 1)
+f.chain('Pedido de títulos', 'vidIQ: títulos', 'Agenda del canal', 'Plan de publicación', '¿Hay envíos?')
 f.link('¿Hay envíos?', 'Subir a redes', 0)
 f.link('¿Hay envíos?', 'Aviso: nada que publicar', 1)
 f.chain('Subir a redes', 'Filas de publicación', 'Guardar publicaciones')
@@ -2045,7 +2113,101 @@ f.link('Filas de publicación', 'Video publicado')
 f.chain('Video publicado', 'Marcar publicado', 'Esperar a las redes', 'Pedidos de estado', 'Estado en redes', 'Resumen de publicación', 'Aviso: publicado')
 REDES = f.dump()
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, AGENTE]
+# ======================================================================================
+# F · Rutina diaria: videos atascados (cada día) y reporte semanal (lunes), sin que lo pidas.
+# ======================================================================================
+f = Flow('FabRutina0000001', 'F · Rutina diaria y reporte semanal')
+f.add('Cada mañana', 'n8n-nodes-base.scheduleTrigger', 1.2, {'rule': {'interval': [{'field': 'days', 'triggerAtHour': 8, 'triggerAtMinute': 10}]}})
+call(f, 'Leer ajustes', W['ajustes'])
+f.add('Videos en curso', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 30 * 86400000).toISOString() }}"}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+code(f, 'Atascados', r"""
+// Un video está atascado si sigue «en proceso» y su fila no cambió en 24 h (las aprobaciones pendientes también cuentan:
+// te recuerda lo que espera tu respuesta).
+const hace = Date.now() - 24 * 3600000;
+const a = $input.all().map(i => i.json).filter(v => v.video_id && ['en_proceso', 'detenido', 'con_fallas', 'error_publicacion'].includes(v.estado)
+  && Date.parse(v.updatedAt || v.createdAt || 0) < hace);
+if (!a.length) return [{ json: { nada: true } }];
+const l = a.slice(0, 20).map(v => `• ${v.video_id} (${v.canal_id}) en «${v.etapa}», ${v.estado}${v.error ? ': ' + String(v.error).slice(0, 80) : ''}`);
+return [{ json: { texto: `Videos sin avanzar hace más de 24 h (${a.length}):\n` + l.join('\n') + (a.length > 20 ? '\n…' : '') + '\n\nUsa «estado» o pídeme corregir.' } }];
+""")
+iff(f, '¿Hay atascados?', '$json.nada !== true')
+tg(f, 'Aviso: atascados', "={{ $('Leer ajustes').first().json.chatId }}", '={{ $json.texto.slice(0, 3900) }}')
+iff(f, '¿Es lunes?', "new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Lima' }) === 'Mon'")
+code(f, 'Pedido de reporte', "return [{ json: { tipo: 'reporte', dias: 7 } }];")
+call(f, 'Reporte de 7 días', W['estado'])
+tg(f, 'Enviar reporte semanal', "={{ $('Leer ajustes').first().json.chatId }}", "={{ ('Reporte semanal de la fábrica\\n' + $json.resumen).slice(0, 3900) }}")
+f.chain('Cada mañana', 'Leer ajustes', 'Videos en curso', 'Atascados', '¿Hay atascados?')
+f.link('¿Hay atascados?', 'Aviso: atascados', 0)
+f.link('Atascados', '¿Es lunes?')
+f.link('¿Es lunes?', 'Pedido de reporte', 0)
+f.chain('Pedido de reporte', 'Reporte de 7 días', 'Enviar reporte semanal')
+RUTINA = f.dump()
+
+# ======================================================================================
+# F · Vigilante de errores: cualquier flujo que falle te avisa por Telegram (flujo, nodo, error y enlace).
+# ======================================================================================
+f = Flow(W['errores'], 'F · Vigilante de errores')
+f.add('Error en un flujo', 'n8n-nodes-base.errorTrigger', 1, {})
+code(f, 'Mensaje de error', r"""
+// Un aviso corto y útil: qué flujo, en qué nodo, qué pasó y el enlace para abrir la ejecución.
+const e = $json; const ex = e.execution || {}; const wf = e.workflow || {};
+const msg = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\s+/g, ' ').slice(0, 400);
+const nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';
+return [{ json: { texto: `⚠️ Falló «${wf.name || wf.id}» en el nodo «${nodo}»:\n${msg}` + (ex.url ? `\n${ex.url}` : '') + (ex.retryOf ? '\n(era un reintento)' : '') } }];
+""")
+tg(f, 'Avisar error', '8667738444', '={{ $json.texto.slice(0, 3900) }}')
+f.chain('Error en un flujo', 'Mensaje de error', 'Avisar error')
+ERRORES = f.dump()
+
+# ======================================================================================
+# Escala: ritmo (lotes) y reintentos en las llamadas que salen en masa.
+# Con muchos canales a la vez, cada nodo por-ítem respeta los límites de cada API en lugar de dispararlo todo junto.
+# (tamaño de lote, pausa en ms, reintentos). Reintentos solo donde repetir no duplica gasto ni publicaciones.
+# ======================================================================================
+RITMO = {
+    'FabProduccion001': {'Buscar en Pexels': (5, 1000, 3), 'Buscar en Pixabay': (5, 1200, 3), 'Generar imagen': (4, 1500, 2),
+                         'Animar (Gemini Omni)': (2, 3000, 2), 'Subir a Drive': (5, 500, 3), 'Nombrar en Drive': (5, 300, 3),
+                         'Compartir enlace': (5, 300, 3), 'Revisar plano': (4, 1000, 2), 'Consultar render': (1, 0, 3),
+                         'Carpeta del canal: buscar': (1, 0, 3), 'Encargo: nombrar': (3, 300, 3)},
+    'FabSonido0000001': {'Voz (Gemini TTS)': (5, 1000, 3), 'Subir voz a Drive': (5, 500, 3), 'Nombrar voz': (5, 300, 3),
+                         'Compartir voz': (5, 300, 3), 'Buscar efecto': (3, 800, 3), 'Pedir efecto': (3, 800, 3)},
+    'FabDerivados0001': {'Renderizar corte': (3, 1000, 0), 'Consultar cortes': (3, 300, 3), 'Consultar otra vez': (3, 300, 3),
+                         'Nombrar base': (1, 0, 3), 'Compartir base': (1, 0, 3)},
+    'FabReferencias01': {'Generar principal': (4, 1500, 2), 'Generar vista': (4, 1500, 2), 'Subir principal': (5, 500, 3),
+                         'Subir vista': (5, 500, 3), 'Nombrar principal': (5, 300, 3), 'Nombrar vista': (5, 300, 3),
+                         'Compartir principal': (5, 300, 3), 'Compartir vista': (5, 300, 3)},
+    'FabRedes00000001': {'Subir a redes': (3, 1500, 2), 'Estado en redes': (5, 500, 3)},
+    'FabAprendizaje01': {'Retención': (5, 1000, 3), 'Métricas en redes': (5, 1000, 3)},
+    'FabVidiq00000001': {'Puntuar título': (2, 500, 2)},
+    'FabYouTube000001': {'Canal en YouTube': (1, 0, 3), 'Qué canal es': (1, 0, 2)},
+}
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, AGENTE]:
+    for n in wf['nodes']:
+        if n['type'].endswith('httpRequest'):
+            n['parameters'].setdefault('options', {}).setdefault('timeout', 60000)   # ninguna llamada queda colgada
+        r = RITMO.get(wf['id'], {}).get(n['name'])
+        if not r:
+            continue
+        lote, pausa, intentos = r
+        assert n['type'].endswith('httpRequest'), n['name']
+        if lote > 1 or pausa:
+            n['parameters'].setdefault('options', {})['batching'] = {'batch': {'batchSize': lote, 'batchInterval': pausa}}
+        if intentos:
+            n.update({'retryOnFail': True, 'maxTries': max(n.get('maxTries', 0), intentos), 'waitBetweenTries': max(n.get('waitBetweenTries', 0), 3000)})
+faltan = [(w, x) for w, d in RITMO.items() for x in d if x not in {n['name'] for wf in [PROD, SONIDO, DERIV, REFS, REDES, APRENDE, VIDIQ, YT] if wf['id'] == w for n in wf['nodes']}]
+assert not faltan, faltan
+
+# Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
+TIEMPO = {'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
+          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600}
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, AGENTE]:
+    wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
+                           'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
+
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, ERRORES, AGENTE]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)

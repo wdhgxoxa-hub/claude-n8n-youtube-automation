@@ -45,4 +45,36 @@ Para producción, habilita los controles después de la aprobación del operador
 
 ## Concurrencia y recuperación
 
-Sheets ejecuta la lectura y la actualización en operaciones independientes. Antes de habilitar la subida en esta instancia dedicada, serializa las ejecuciones de producción con N8N_CONCURRENCY_PRODUCTION_LIMIT=1. Esto evita que dos entregas simultáneas reserven la misma fila. Si una subida queda en uploading, verifica el canal y la ejecución antes de cambiar la fila y reintentar. Conserva el ID de YouTube si la subida llegó a completarse. [Concurrencia de n8n](https://docs.n8n.io/hosting/scaling/concurrency-control/)
+**Fábrica v2 (tablas de n8n): sube el límite a 10.** El límite de 1 venía de la versión con Google Sheets. Medido el 19-11-2026: con `N8N_CONCURRENCY_PRODUCTION_LIMIT=1`, 4 esperas de 5 s tardaron 21 s, porque corren en fila; un video en producción frena Telegram, aprobaciones y publicaciones de todos los canales. Con 10, los flujos largos (producción, cortes, publicación) avanzan en paralelo y los topes de Ajustes (`maxVideosDiaPorCanal`, `maxVideosDiaTotal`) y el ritmo por lotes de cada API evitan los excesos. Ver «Cambiar la concurrencia» abajo. [Concurrencia de n8n](https://docs.n8n.io/hosting/scaling/concurrency-control/)
+
+### Cambiar la concurrencia (Podman)
+
+1. Ver con qué comando se creó el contenedor: `podman inspect videos-n8n --format '{{.Config.CreateCommand}}'`
+2. Detenerlo y renombrarlo (queda como respaldo): `podman stop videos-n8n && podman rename videos-n8n videos-n8n-respaldo`
+3. Volver a crearlo con el **mismo** comando del paso 1, añadiendo `-e N8N_CONCURRENCY_PRODUCTION_LIMIT=10` antes del nombre de la imagen.
+4. Comprobar que n8n abre y los flujos están activos; luego borrar el respaldo: `podman rm videos-n8n-respaldo`.
+
+Los datos viven en el volumen del contenedor (mismo `-v` del comando original), así que no se pierden flujos, credenciales ni tablas.
+
+### Escala medida (19-11-2026, n8n 2.47.4 en un solo equipo)
+
+| Prueba | Resultado |
+| --- | --- |
+| 60 llamadas simultáneas a «FX · YouTube por canal» | 60/60 correctas, 11 s de mediana, 20 s el máximo (en fila por el límite de 1) |
+| Tabla de 5000 filas (100 canales × 50 envíos) | Lectura filtrada por canal 23 ms; completa 144 ms |
+| Calendario: 60 canales × 3 largos (2520 envíos) | Sin choques ni topes excedidos; < 5 s |
+
+Para más de ~20 canales activos conviene un servidor (VPS) con n8n en modo cola (Postgres + Redis + varios workers).
+
+## Pruebas en un n8n real (antes de importar)
+
+`tools/motor/` ejecuta los nodos Code de la fábrica dentro de un n8n de **prueba** (nunca el de producción), con datos simulados:
+
+- `casos.py`: 10 casos clave (ajustes, calendario, cortes, montaje, zona horaria, enlace de YouTube, topes, atascados, vigilante y el envío multipart a Upload-Post contra un receptor local).
+- `barrido.py`: ejecuta los 134 nodos Code para detectar errores de sintaxis o funciones que el entorno de n8n no tiene.
+
+```bash
+MOTOR_URL=http://127.0.0.1:5680 MOTOR_USUARIO=<correo de prueba> MOTOR_CLAVE=<clave de prueba> python3 tools/motor/casos.py
+```
+
+Hallazgo que motivó esto: un cuerpo `multipart/form-data` armado a mano (modo *raw* o binario) n8n lo reempaqueta letra por letra. «Subir a redes» usa el multipart nativo con 24 casillas `[nombre, valor]`.

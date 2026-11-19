@@ -1,0 +1,91 @@
+{
+  "id": "FabErrores000001",
+  "name": "F · Vigilante de errores",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ed5d52c2-ee94-422e-aa94-4fac0e623718",
+      "name": "Error en un flujo",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Un aviso corto y útil: qué flujo, en qué nodo, qué pasó y el enlace para abrir la ejecución.\nconst e = $json; const ex = e.execution || {}; const wf = e.workflow || {};\nconst msg = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\\s+/g, ' ').slice(0, 400);\nconst nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';\nreturn [{ json: { texto: `⚠️ Falló «${wf.name || wf.id}» en el nodo «${nodo}»:\\n${msg}` + (ex.url ? `\\n${ex.url}` : '') + (ex.retryOf ? '\\n(era un reintento)' : '') } }];\n"
+      },
+      "id": "d4a64f65-d6f7-4b24-b816-29dbe8eaae91",
+      "name": "Mensaje de error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "8667738444",
+        "text": "={{ $json.texto.slice(0, 3900) }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "1548f188-d76b-4229-a86f-7add955d08a7",
+      "name": "Avisar error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error en un flujo": {
+      "main": [
+        [
+          {
+            "node": "Mensaje de error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje de error": {
+      "main": [
+        [
+          {
+            "node": "Avisar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "7717d343-e939-45a3-bbaa-37f44b5961ef",
+      "id": "06a74891-6ff1-423c-aa63-53fdb2d0f598",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -23,7 +23,7 @@
           "systemMessage": "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes. Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. Nunca publicas ni gastas: la fábrica pide aprobación con botones. Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
         }
       },
-      "id": "3bfd8164-2e21-4b7c-8079-575c576b13cd",
+      "id": "16e1c817-8da3-43b7-ae23-abf37252d737",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -41,7 +41,7 @@
         },
         "options": {}
       },
-      "id": "3cc05a64-ecd2-4285-b428-b373a2d74464",
+      "id": "37004308-4bb2-49f5-b56b-3808a884136e",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
         "sessionKey": "={{ 'fabrica-' + $('Inicio').first().json.chatId }}",
         "contextWindowLength": 20
       },
-      "id": "2f20b853-bd04-48a5-8d72-30bf87d256ed",
+      "id": "3c3f92c1-7e1c-4c69-b966-2872ccf4582c",
       "name": "Memoria",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -91,7 +91,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "b9b67d95-57c2-4391-b17d-959fd15585af",
+      "id": "2b743edb-3776-4f23-bb7a-5eac2fd51118",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -122,7 +122,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "8253fe0d-6201-42b0-b843-28cfd78ae2c8",
+      "id": "f5038baa-c333-440d-b360-c410b61cfaa7",
       "name": "crear_video",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -150,7 +150,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "9331d566-fcfc-46be-ac59-0cd519c11281",
+      "id": "befa1a8a-504c-4aef-a6df-c7de0fcf5738",
       "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -180,7 +180,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "049fd094-8935-42e1-8a63-974070c71029",
+      "id": "8065f6a6-5006-4048-bf6f-a8d4e1255729",
       "name": "reporte",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -211,7 +211,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "19980fc0-a021-413a-8693-2286969cc16f",
+      "id": "4a182ba3-3fd7-4f3b-a78d-0c59838067af",
       "name": "corregir",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -242,7 +242,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "414f85fc-ed76-4168-aa66-95b23ca67401",
+      "id": "43e60490-a8c3-4770-9e3a-f83196c1e948",
       "name": "ajustar_biblia",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -272,7 +272,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "903ade69-990e-4d0c-ac0e-d3321f384776",
+      "id": "d5b65ce2-f6dd-4d96-92bd-68f99e691db9",
       "name": "programar",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -301,7 +301,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "5875825a-f031-4993-bf2b-a371bbe1badd",
+      "id": "26ac9105-8bbf-4b93-8b65-215fdcad5161",
       "name": "referencias",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -324,7 +324,8 @@
             "evento": "configurar_redes",
             "canal_id": "={{ $fromAI('canal_id', 'id del canal', 'string') }}",
             "perfil": "={{ $fromAI('perfil', 'nombre del perfil en Upload-Post', 'string') }}",
-            "redes": "={{ $fromAI('redes', 'lista separada por comas: youtube, tiktok, instagram, facebook', 'string') }}"
+            "redes": "={{ $fromAI('redes', 'lista separada por comas: youtube, tiktok, instagram, facebook', 'string') }}",
+            "zona": "={{ $fromAI('zona', 'zona horaria IANA del público del canal, p. ej. America/Lima o America/Mexico_City; vacío = la de Ajustes', 'string') }}"
           },
           "matchingColumns": [],
           "schema": [],
@@ -332,7 +333,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "34d5037c-4717-42e1-bb59-b0d0e899d5f2",
+      "id": "e1222e1d-d8ae-4c1a-928b-a48beed7e90a",
       "name": "configurar_redes",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -361,7 +362,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "7766dda3-063b-473f-961f-4aaaba67e231",
+      "id": "05b5212e-51d3-4bf7-b800-891c5f843f2f",
       "name": "conectar_youtube",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -374,7 +375,7 @@
       "parameters": {
         "jsCode": "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];"
       },
-      "id": "5d6e75a5-46f4-4c96-bc04-39052d5a7a50",
+      "id": "af7995e6-1b92-4524-8e15-187e38b692a8",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -544,7 +545,11 @@
   "settings": {
     "executionOrder": "v1",
     "timezone": "America/Lima",
-    "callerPolicy": "workflowsFromSameOwner"
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   },
   "pinData": {},
   "meta": {

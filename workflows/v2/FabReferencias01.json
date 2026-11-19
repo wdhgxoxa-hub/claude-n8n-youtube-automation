@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "c7366281-43f5-441c-9541-3ba5a14a64ef",
+      "id": "1dfaaeb0-4be6-46e7-babe-e92af0ed86ce",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "e4950bfe-a287-4648-93a7-d348aaea6fb0",
+      "id": "7e33a971-ffbd-4306-907d-ec150a1af8c1",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -66,7 +66,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "008e5845-848c-4a32-9117-a12bbd3f44f3",
+      "id": "63209da9-495e-450d-8a8e-fd3aa6ab394b",
       "name": "Canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -98,7 +98,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "bfc9e951-bdbc-4f0d-96f1-80bdc2b46dba",
+      "id": "59f5689b-c7d9-46e2-9f87-5e6d7c06f878",
       "name": "Biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -112,7 +112,7 @@
       "parameters": {
         "jsCode": "\n// Pasada 1: una imagen principal por personaje (frente) y por escenario (plano general), con el estilo del canal.\nconst aj = $('Leer ajustes').first().json; const b = (JSON.parse($json.resultado || '{}').resultado) || {};\nconst ev = b.estilo_visual || {};\nconst estilo = [ev.descripcion, ev.luz, ev.lente, ev.textura, (ev.paleta_hex || []).length ? 'paleta ' + ev.paleta_hex.join(' ') : ''].filter(Boolean).join('. ');\nconst personajes = (b.personajes || []).filter(p => p.id && !(p.referencias_urls || []).length);\nconst escenarios = (b.escenarios || []).filter(p => p.id && !(p.referencias_urls || []).length);\nconst pedidos = [\n  ...personajes.map(p => ({ id: p.id, clase: 'personaje', vista: 'frente', prompt: `Retrato de referencia de ${p.nombre || p.id}: ${p.descripcion || ''}. De frente, plano medio, fondo neutro liso. Estilo: ${estilo}. Sin texto.` })),\n  ...escenarios.map(p => ({ id: p.id, clase: 'escenario', vista: 'general', prompt: `Imagen de referencia del escenario ${p.nombre || p.id}: ${p.descripcion || ''}. Plano general, sin personas. Estilo: ${estilo}. Sin texto.` })),\n].slice(0, 12);\nconst costo = Math.round((pedidos.length + personajes.length * 2) * aj.costoImagenUsd * 100) / 100;\nif (!aj.allowReferencias || !pedidos.length) return [{ json: { nada: true, pendientes: pedidos.length, costo } }];\nreturn pedidos.map(p => ({ json: { ...p, costo } }));\n"
       },
-      "id": "e481e281-3dda-4fa7-b4ed-00f96d28d705",
+      "id": "a00e178d-3e79-433b-9d03-f265e2a801ff",
       "name": "Pedidos principales",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -132,7 +132,7 @@
           },
           "conditions": [
             {
-              "id": "f545df86-b8a0-465f-8db7-c03ec51f3900",
+              "id": "1d89c1f3-089c-45be-bd9b-19c9c85f0f9f",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -146,7 +146,7 @@
         },
         "options": {}
       },
-      "id": "87a1ee57-69ee-4c18-9e52-ad599274ee67",
+      "id": "8f00fb4a-9c8f-4bae-9f24-2395f5be175e",
       "name": "¿Generar referencias?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -160,7 +160,13 @@
         "method": "POST",
         "url": "https://api.openai.com/v1/responses",
         "options": {
-          "timeout": 180000
+          "timeout": 180000,
+          "batching": {
+            "batch": {
+              "batchSize": 4,
+              "batchInterval": 1500
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -168,7 +174,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1024x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...($json.referencia ? [{ type: 'input_image', image_url: $json.referencia }] : [])] }] } }}"
       },
-      "id": "37209912-f3bb-4cc3-9af4-09cbb36f3e1f",
+      "id": "fff75f7e-0d08-414b-b64a-3e3489211cfb",
       "name": "Generar principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -191,7 +197,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst p = $('Pedidos principales').item.json;\nif (!out?.result) throw new Error('Sin imagen de referencia para ' + p.id);\nreturn { json: p, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: p.id + '-' + p.vista + '.png' } } };\n"
       },
-      "id": "eba5af56-df73-4b71-8ce9-b00b9eb3e492",
+      "id": "486bf233-dde7-4604-9f09-07def82d96b5",
       "name": "Extraer principal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -207,7 +213,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 300000
+          "timeout": 300000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 500
+            }
+          }
         },
         "sendQuery": true,
         "queryParameters": {
@@ -222,7 +234,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "imagen"
       },
-      "id": "6555d102-1976-40e6-855f-c8ac66c16036",
+      "id": "682dc545-d93c-4f0c-9431-5ce094170c94",
       "name": "Subir principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -235,7 +247,10 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
@@ -244,7 +259,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 300
+            }
+          }
         },
         "sendQuery": true,
         "queryParameters": {
@@ -263,7 +284,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: 'ref-' + $('Inicio').first().json.canal_id + '-' + $('Extraer principal').item.json.id + '-' + $('Extraer principal').item.json.vista + '.png' } }}"
       },
-      "id": "6373986f-eb37-4180-be71-f42141424ae9",
+      "id": "fdf56e53-e619-45b9-a65c-d04bcfeb526e",
       "name": "Nombrar principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -276,7 +297,10 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
@@ -285,13 +309,19 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 300
+            }
+          }
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "7c1db4c7-00e2-4f60-9e95-a441b2f605bd",
+      "id": "edb4e585-732c-4dd0-a57f-7b581c75bfa3",
       "name": "Compartir principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -304,14 +334,17 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
         "jsCode": "const p = $('Extraer principal').item.json; return { json: { id: p.id, clase: p.clase, vista: p.vista, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir principal').item.json.id } };"
       },
-      "id": "5e33728d-e596-464c-913c-c6cdc0dbd67e",
+      "id": "4f7cb438-44e7-470e-b173-d174682d4ca2",
       "name": "URL principal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -326,7 +359,7 @@
         "destinationFieldName": "refs",
         "options": {}
       },
-      "id": "63f92b07-f87e-4c54-a1a6-81de2089b96a",
+      "id": "624e299a-4acb-4b26-be69-0fd6b4234f0f",
       "name": "Juntar principal",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -339,7 +372,7 @@
       "parameters": {
         "jsCode": "\n// Pasada 2: perfil y cuerpo entero de cada personaje, usando su imagen principal como referencia (misma cara y vestuario).\nconst principales = $('Juntar principal').first().json.refs.filter(r => r.clase === 'personaje');\nconst pedidos = principales.flatMap(r => [\n  { id: r.id, clase: 'personaje', vista: 'perfil', referencia: r.url, prompt: 'El mismo personaje de la imagen de referencia, idéntico rostro, peinado y vestuario, de perfil, plano medio, fondo neutro liso. Sin texto.' },\n  { id: r.id, clase: 'personaje', vista: 'cuerpo entero', referencia: r.url, prompt: 'El mismo personaje de la imagen de referencia, idéntico rostro, peinado y vestuario, de cuerpo entero, de pie, fondo neutro liso. Sin texto.' },\n]);\nreturn pedidos.length ? pedidos.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
       },
-      "id": "21a31f52-ce9a-4fd0-9d11-f4e83f412359",
+      "id": "25fd07cd-a2d8-4fd5-9100-9d3a001702cd",
       "name": "Pedidos de vistas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -359,7 +392,7 @@
           },
           "conditions": [
             {
-              "id": "af8a7d7f-14f0-42be-be89-b50e4e186740",
+              "id": "4c2a001e-495c-466c-9094-1820f484c727",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -373,7 +406,7 @@
         },
         "options": {}
       },
-      "id": "400db026-92a4-4ebc-a1f1-ace662670425",
+      "id": "944ec55a-78c0-42fc-8b6e-9ba8c362d993",
       "name": "¿Hay vistas?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -387,7 +420,13 @@
         "method": "POST",
         "url": "https://api.openai.com/v1/responses",
         "options": {
-          "timeout": 180000
+          "timeout": 180000,
+          "batching": {
+            "batch": {
+              "batchSize": 4,
+              "batchInterval": 1500
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -395,7 +434,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1024x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...($json.referencia ? [{ type: 'input_image', image_url: $json.referencia }] : [])] }] } }}"
       },
-      "id": "0c7e4490-e6ed-4021-bcfb-b755649ff55e",
+      "id": "489c9392-3358-46ee-8e22-c07ace1cac4f",
       "name": "Generar vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -418,7 +457,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst p = $('Pedidos de vistas').item.json;\nif (!out?.result) throw new Error('Sin imagen de referencia para ' + p.id);\nreturn { json: p, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: p.id + '-' + p.vista + '.png' } } };\n"
       },
-      "id": "8dbfcc5a-3816-4afa-a9fb-d45ff0c3ca36",
+      "id": "9f9e4752-1893-4c52-8349-b6cf536e128e",
       "name": "Extraer vista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -434,7 +473,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 300000
+          "timeout": 300000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 500
+            }
+          }
         },
         "sendQuery": true,
         "queryParameters": {
@@ -449,7 +494,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "imagen"
       },
-      "id": "70677d62-149c-4882-b546-9801b28c88a6",
+      "id": "38e4601c-108a-445b-9d20-4e55ecedcc42",
       "name": "Subir vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -462,7 +507,10 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
@@ -471,7 +519,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 300
+            }
+          }
         },
         "sendQuery": true,
         "queryParameters": {
@@ -490,7 +544,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: 'ref-' + $('Inicio').first().json.canal_id + '-' + $('Extraer vista').item.json.id + '-' + $('Extraer vista').item.json.vista + '.png' } }}"
       },
-      "id": "2a0535d3-82b0-4550-ac0c-c193c94207f5",
+      "id": "c7d4885e-df66-456a-929c-5f8f501ab5ed",
       "name": "Nombrar vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -503,7 +557,10 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
@@ -512,13 +569,19 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 300
+            }
+          }
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "9bd50d05-6630-43b3-bfd0-b211ee90f173",
+      "id": "89941b1c-c3ca-4d67-bb68-1d2b70cff53a",
       "name": "Compartir vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -531,14 +594,17 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
         "jsCode": "const p = $('Extraer vista').item.json; return { json: { id: p.id, clase: p.clase, vista: p.vista, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir vista').item.json.id } };"
       },
-      "id": "4e89ff6f-928f-4246-8255-c64d0243fb04",
+      "id": "b7ee5eef-3882-4f34-92d2-5a0cfa1a4b7a",
       "name": "URL vista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -553,7 +619,7 @@
         "destinationFieldName": "refs",
         "options": {}
       },
-      "id": "eeb31345-3c95-4715-a308-7db6145a0e05",
+      "id": "552f8336-94ae-438b-a554-d1f0d71d46ba",
       "name": "Juntar vista",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -566,7 +632,7 @@
       "parameters": {
         "jsCode": "\n// Las URL se guardan en la biblia (personajes[].referencias_urls, escenarios[].referencias_urls); producción ya las usa.\nconst fila = $('Biblia').first().json; const env = JSON.parse(fila.resultado || '{}'); const b = env.resultado || {};\nconst refs = [...$('Juntar principal').first().json.refs, ...($('Juntar vista').isExecuted ? $('Juntar vista').first().json.refs : [])];\nfor (const lista of [b.personajes || [], b.escenarios || []]) for (const x of lista) {\n  const urls = refs.filter(r => r.id === x.id).map(r => r.url); if (urls.length) x.referencias_urls = [...(x.referencias_urls || []), ...urls]; }\nenv.resultado = b;\nreturn [{ json: { resultado: JSON.stringify(env), total: refs.length } }];\n"
       },
-      "id": "5c02087f-0736-4199-88fd-3a004e9f3bb6",
+      "id": "2f9f70ff-072c-4eac-bf04-0eb3843eb10b",
       "name": "Biblia con referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -604,7 +670,7 @@
         },
         "options": {}
       },
-      "id": "81a90e5e-9a72-4d5e-9903-e975fb014f91",
+      "id": "ab97d5fe-0f6f-4da4-97e2-7eed5a8cf2ff",
       "name": "Guardar biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -617,7 +683,7 @@
       "parameters": {
         "jsCode": "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: 'canal:' + $('Inicio').first().json.canal_id, concepto: 'referencias del canal', servicio: 'OpenAI', usd: Math.round($('Biblia con referencias').first().json.total * aj.costoImagenUsd * 1000) / 1000 } }];"
       },
-      "id": "fcd69e50-24ff-4185-a137-ec778cd7687e",
+      "id": "ce190673-18eb-4800-bbe6-bac380dc40b0",
       "name": "Costo de referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -645,7 +711,7 @@
         },
         "options": {}
       },
-      "id": "900ebc49-a6ba-4bfa-bad1-7441c5753c6d",
+      "id": "2e96f03d-32fa-45c2-bae8-63f7fd7b4d7a",
       "name": "Guardar costo de referencias",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -665,7 +731,7 @@
           "appendAttribution": false
         }
       },
-      "id": "a52d1abb-23a9-4333-918b-4d40673e6e81",
+      "id": "6ee7aa6a-9ae3-40ff-852f-690cad52f301",
       "name": "Aviso: referencias listas",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -691,7 +757,7 @@
           "appendAttribution": false
         }
       },
-      "id": "ef2bfbfe-e92f-403f-a685-acab51be321a",
+      "id": "edf0c6a3-4403-48de-8164-01fdafe2df6b",
       "name": "Aviso: referencias pendientes",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1007,7 +1073,11 @@
   "settings": {
     "executionOrder": "v1",
     "timezone": "America/Lima",
-    "callerPolicy": "workflowsFromSameOwner"
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 1800,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   },
   "pinData": {},
   "meta": {

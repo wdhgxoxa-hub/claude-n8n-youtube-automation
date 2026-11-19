@@ -13,7 +13,7 @@
           ]
         }
       },
-      "id": "fb597a88-3278-4a3c-9a71-adae95d21a7e",
+      "id": "9978143f-0b36-41ca-9a17-90ca9e34d9da",
       "name": "Cada día",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -42,7 +42,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "5e00779c-dac9-43f3-92e2-b0b5595dfb16",
+      "id": "97750d8e-ba76-4df2-88c4-dd20a286606a",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
           },
           "conditions": [
             {
-              "id": "43712ce4-5ce9-4267-b11b-d7905bc059fb",
+              "id": "85c44553-126a-488d-96b0-e74e350d6d67",
               "leftValue": "={{ $json.allowAnalytics === true }}",
               "rightValue": "",
               "operator": {
@@ -76,7 +76,7 @@
         },
         "options": {}
       },
-      "id": "5ff9c0f8-c1be-490d-bf77-ca2be8f3c07a",
+      "id": "9470e53d-72a3-4217-a075-f83504429d8f",
       "name": "¿Analytics activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -101,12 +101,17 @@
               "keyName": "estado",
               "condition": "eq",
               "keyValue": "publicado"
+            },
+            {
+              "keyName": "createdAt",
+              "condition": "gte",
+              "keyValue": "={{ new Date(Date.now() - 45 * 86400000).toISOString() }}"
             }
           ]
         },
         "returnAll": true
       },
-      "id": "a0e01dfb-3d47-4aec-9bcc-c778373e82bd",
+      "id": "03dfe7cc-a164-4c5c-a70d-adb2b4e4ae30",
       "name": "Videos publicados",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -121,7 +126,7 @@
       "parameters": {
         "jsCode": "\n// Solo los videos que cumplen hoy 2 o 7 días de publicados.\nconst hoy = Date.now(); const dia = 86400000;\nconst toca = $input.all().map(i => i.json).filter(v => v.youtube_id && v.publicado_en).filter(v => {\n  const d = Math.floor((hoy - Date.parse(v.publicado_en)) / dia); return d === 2 || d === 7; });\nreturn toca.length ? toca.map(v => ({ json: { ...v, dias: Math.floor((hoy - Date.parse(v.publicado_en)) / dia), desde: v.publicado_en.slice(0, 10) } })) : [{ json: { nada: true } }];\n"
       },
-      "id": "84d96d1e-938b-4cb0-8376-6867f7c5ee9c",
+      "id": "5eb63805-2e3e-46d7-a025-60ea2e73a397",
       "name": "Toca medir",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -141,7 +146,7 @@
           },
           "conditions": [
             {
-              "id": "044d1e7a-f488-4b12-b866-a8868b1c85bc",
+              "id": "70986e2b-9c7b-4f1a-ab83-780cfd5f49eb",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -155,7 +160,7 @@
         },
         "options": {}
       },
-      "id": "c3debf78-e2a3-4cb9-a17e-b6d43320d1b8",
+      "id": "ae672a44-774f-4165-adda-296010328db8",
       "name": "¿Hay que medir?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -168,7 +173,7 @@
       "parameters": {
         "jsCode": "return $input.all().map(i => ({ json: { accion: 'token', canal_id: i.json.canal_id } }));"
       },
-      "id": "36128d4f-abc3-4555-b6ab-1430bfba2d32",
+      "id": "e699f441-7ab9-4f37-aeae-1da4b67db896",
       "name": "Pedir tokens",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -197,7 +202,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "ef8d0fa5-f281-489f-a99b-c9dd925a242b",
+      "id": "b6e66c6c-2230-4458-bfbb-ee6bc6be9ca3",
       "name": "Tokens de los canales",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -210,7 +215,7 @@
       "parameters": {
         "jsCode": "\n// Une cada video con el token de su canal (mismo orden). Los canales sin conexión se saltan.\nconst vids = $('Toca medir').all().map(i => i.json); const toks = $input.all().map(i => i.json);\nconst out = vids.map((v, i) => ({ ...v, token: toks[i]?.ok ? toks[i].access_token : '' })).filter(v => v.token);\nreturn out.length ? out.map(v => ({ json: v })) : [{ json: { nada: true } }];\n"
       },
-      "id": "a65a975b-c5b5-409d-ac88-f8bbfc8017ae",
+      "id": "9ec42842-6c9c-46bd-b1bb-fa9a88e314fe",
       "name": "Pedidos de retención",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -230,7 +235,7 @@
           },
           "conditions": [
             {
-              "id": "a56d185a-0841-4b41-b5b5-7e12879b1eb8",
+              "id": "fd7d4e9c-8df0-4842-a6d7-1d3cae47078f",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -244,7 +249,7 @@
         },
         "options": {}
       },
-      "id": "31d71c5f-870c-4651-bb12-15ba8fd215d1",
+      "id": "35b05cdf-cec0-4654-8259-c6c1f26509b4",
       "name": "¿Algún canal conectado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -295,9 +300,17 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 60000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 1000
+            }
+          }
+        }
       },
-      "id": "49e57385-c149-4776-a94e-5e15e96f2507",
+      "id": "2ba1b2f5-28f2-4c60-baec-b947c289ac3f",
       "name": "Retención",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -305,7 +318,10 @@
         2420,
         0
       ],
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
@@ -317,10 +333,18 @@
           "value": "OMPWHAVyhbtekML0"
         },
         "matchType": "allConditions",
-        "filters": {},
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "createdAt",
+              "condition": "gte",
+              "keyValue": "={{ new Date(Date.now() - 15 * 86400000).toISOString() }}"
+            }
+          ]
+        },
         "returnAll": true
       },
-      "id": "bf75ca5f-3ab1-43ce-a8ff-f81747dfc39d",
+      "id": "79a13d6b-4387-492e-8ebe-350b288f524f",
       "name": "Publicaciones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -335,7 +359,7 @@
       "parameters": {
         "jsCode": "\n// Envíos a TikTok, Instagram, Facebook y YouTube (Upload-Post) que cumplen hoy 2 o 7 días.\nconst hoy = Date.now(); const dia = 86400000;\nconst toca = $input.all().map(i => i.json).filter(p => p.request_id && p.publicado_en && p.estado !== 'error')\n  .map(p => ({ ...p, dias: Math.floor((hoy - Date.parse(p.publicado_en)) / dia) })).filter(p => p.dias === 2 || p.dias === 7);\nreturn toca.length ? toca.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
       },
-      "id": "530dcce5-a651-4d01-a14d-bfb57dcae0f4",
+      "id": "4e200467-a70a-447e-9878-d86b37f201e7",
       "name": "Toca medir en redes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -355,7 +379,7 @@
           },
           "conditions": [
             {
-              "id": "55104522-7737-46e9-b49c-c3b0ab72ad2e",
+              "id": "b8daafef-71a0-4261-9cc5-3dba6d110d52",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -369,7 +393,7 @@
         },
         "options": {}
       },
-      "id": "b5582249-4ba7-4d88-a84c-967e8adaeccd",
+      "id": "a2aada96-3972-4728-8780-99956e792945",
       "name": "¿Hay en redes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -383,12 +407,18 @@
         "method": "GET",
         "url": "={{ 'https://api.upload-post.com/api/uploadposts/post-analytics/' + encodeURIComponent($json.request_id) }}",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 1000
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "fdad8700-1639-47c4-a2d6-8624f424e39a",
+      "id": "6c600a3c-e07f-472d-a48f-7e57fba3f3ad",
       "name": "Métricas en redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -402,13 +432,16 @@
           "name": "Upload-Post"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
     },
     {
       "parameters": {
         "jsCode": "\n// YouTube: curva de retención. Redes: vistas, likes, comentarios, compartidos y guardados por red (Upload-Post).\n// Todo va a Claude (modo «aprender») por canal; una lección solo entra a la biblia si se repite en 3 videos.\nconst yt = $('Pedidos de retención').isExecuted ? $('Pedidos de retención').all().map(i => i.json).filter(v => v.video_id) : [];\nconst ret = $('Retención').isExecuted ? $('Retención').all().map(i => i.json) : [];\nconst vids = yt.map((v, i) => ({ video_id: v.video_id, canal_id: v.canal_id, dias: v.dias, retencion: ret[i]?.rows || [] }));\nconst env = $('Métricas en redes').isExecuted ? $('Toca medir en redes').all().map(i => i.json) : [];\nconst met = $('Métricas en redes').isExecuted ? $('Métricas en redes').all().map(i => i.json) : [];\nconst redes = env.map((p, i) => ({ video_id: p.video_id, canal_id: p.canal_id, tipo: p.tipo, titulo: p.titulo, plataformas: p.plataformas, dias: p.dias,\n  metricas: met[i]?.error || JSON.stringify(met[i] || {}).length > 6000 ? null : met[i] }));\nconst porCanal = {};\nfor (const v of vids) (porCanal[v.canal_id] ||= { videos: [], redes: [] }).videos.push(v);\nfor (const r of redes) (porCanal[r.canal_id] ||= { videos: [], redes: [] }).redes.push(r);\nreturn Object.entries(porCanal).map(([canal_id, d]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos: d.videos, redes: d.redes } } }));\n"
       },
-      "id": "52a7cba4-38d7-4695-9a28-4383745c457f",
+      "id": "a200cba4-bd17-4419-9af0-3a845e9943f9",
       "name": "Pedir lecciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -437,7 +470,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "045927b6-7cc1-48cf-859e-5e7a611f9a54",
+      "id": "a081ea6e-8dcc-4d4b-8419-64be7b24ca2b",
       "name": "Claude: aprender",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -650,7 +683,11 @@
   "settings": {
     "executionOrder": "v1",
     "timezone": "America/Lima",
-    "callerPolicy": "workflowsFromSameOwner"
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 1800,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   },
   "pinData": {},
   "meta": {

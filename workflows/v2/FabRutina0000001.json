@@ -1,0 +1,373 @@
+{
+  "id": "FabRutina0000001",
+  "name": "F · Rutina diaria y reporte semanal",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 8,
+              "triggerAtMinute": 10
+            }
+          ]
+        }
+      },
+      "id": "93e16ca2-2b30-467e-a0ff-4460feb030c9",
+      "name": "Cada mañana",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "a75edfff-d1b4-4170-809e-3a8e2ac3dfac",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "createdAt",
+              "condition": "gte",
+              "keyValue": "={{ new Date(Date.now() - 30 * 86400000).toISOString() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "e63047bb-678a-4643-9a19-70a0364e611e",
+      "name": "Videos en curso",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Un video está atascado si sigue «en proceso» y su fila no cambió en 24 h (las aprobaciones pendientes también cuentan:\n// te recuerda lo que espera tu respuesta).\nconst hace = Date.now() - 24 * 3600000;\nconst a = $input.all().map(i => i.json).filter(v => v.video_id && ['en_proceso', 'detenido', 'con_fallas', 'error_publicacion'].includes(v.estado)\n  && Date.parse(v.updatedAt || v.createdAt || 0) < hace);\nif (!a.length) return [{ json: { nada: true } }];\nconst l = a.slice(0, 20).map(v => `• ${v.video_id} (${v.canal_id}) en «${v.etapa}», ${v.estado}${v.error ? ': ' + String(v.error).slice(0, 80) : ''}`);\nreturn [{ json: { texto: `Videos sin avanzar hace más de 24 h (${a.length}):\\n` + l.join('\\n') + (a.length > 20 ? '\\n…' : '') + '\\n\\nUsa «estado» o pídeme corregir.' } }];\n"
+      },
+      "id": "7a018b0d-8958-4511-bbfe-89ed33675719",
+      "name": "Atascados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4b90c769-a2cc-4d8c-8558-1d4b5cd7e404",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5a1716fb-2db8-484d-8960-8440a4f7cf28",
+      "name": "¿Hay atascados?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ $json.texto.slice(0, 3900) }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "7dc34546-0b7b-4ce5-81fc-746018ec8224",
+      "name": "Aviso: atascados",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d4a5430f-37db-4771-9592-2f94ace66a22",
+              "leftValue": "={{ new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Lima' }) === 'Mon' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "15b2c1da-9445-4638-9815-94a508cbf332",
+      "name": "¿Es lunes?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { tipo: 'reporte', dias: 7 } }];"
+      },
+      "id": "9fb9a349-efc6-4739-a214-6c77f5ec2686",
+      "name": "Pedido de reporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabEstado0000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "7c0f51a2-177f-4487-aebb-b07094ecf8e0",
+      "name": "Reporte de 7 días",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ ('Reporte semanal de la fábrica\\n' + $json.resumen).slice(0, 3900) }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "07af1040-1381-4451-8b41-85be5c11d37b",
+      "name": "Enviar reporte semanal",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cada mañana": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Videos en curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Videos en curso": {
+      "main": [
+        [
+          {
+            "node": "Atascados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atascados": {
+      "main": [
+        [
+          {
+            "node": "¿Hay atascados?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "¿Es lunes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay atascados?": {
+      "main": [
+        [
+          {
+            "node": "Aviso: atascados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es lunes?": {
+      "main": [
+        [
+          {
+            "node": "Pedido de reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido de reporte": {
+      "main": [
+        [
+          {
+            "node": "Reporte de 7 días",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte de 7 días": {
+      "main": [
+        [
+          {
+            "node": "Enviar reporte semanal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

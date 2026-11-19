@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "1a58661f-4733-4742-a1c0-d68cea69d7c0",
+      "id": "51f31110-75d9-4eb9-93cb-1f65f4d54caa",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "50ee40cc-5cdd-46fe-a2a1-83de8a65e280",
+      "id": "34a3e247-c47a-4a6d-8ac3-401581e1de68",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
           "appendAttribution": false
         }
       },
-      "id": "055fa9dc-2a0e-49b5-9d26-6cac78ab30a2",
+      "id": "0fd352a1-1676-474e-861c-8bbb7c5cf692",
       "name": "Pedir aprobación",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -76,7 +76,7 @@
           "name": "Telegram account"
         }
       },
-      "webhookId": "0de20fd6-337a-43a1-be82-24f003d4dcbe"
+      "webhookId": "6fcff1ab-a104-4928-986e-7e0d125295ca"
     },
     {
       "parameters": {
@@ -89,7 +89,7 @@
           },
           "conditions": [
             {
-              "id": "ebe1e045-e2c8-4f02-9913-75d8c266c8be",
+              "id": "f2dac706-8cd9-4e96-9411-aa7e47bb6c2a",
               "leftValue": "={{ $json.data?.approved === true }}",
               "rightValue": "",
               "operator": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "7f31dbae-5b6d-43f0-b25d-b487eb6fb5df",
+      "id": "ca137f01-c4ec-4a25-a42a-e0652763cfa2",
       "name": "¿Aprobado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -126,7 +126,7 @@
           "appendAttribution": false
         }
       },
-      "id": "7a456f77-a21f-416c-8b82-32913f1107c3",
+      "id": "5db88212-e77a-48a8-83ea-087a412f61b3",
       "name": "Pedir cambios",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -140,13 +140,13 @@
           "name": "Telegram account"
         }
       },
-      "webhookId": "43e7793b-5d7b-4850-a72b-e4d3cf248ff3"
+      "webhookId": "5a60a69d-e1cf-4795-8662-e4ddf9d9b490"
     },
     {
       "parameters": {
         "jsCode": "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'aprobado', mensaje: undefined } }];"
       },
-      "id": "4a154df1-7235-4ecb-bb5f-0506fd883d18",
+      "id": "a06efa51-c54f-4d17-aa8b-17c4ed5515cc",
       "name": "Evento aprobado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -159,7 +159,7 @@
       "parameters": {
         "jsCode": "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: String($json.data?.text || '').slice(0, 4000), mensaje: undefined } }];"
       },
-      "id": "d22955fc-f3fc-4599-b1f9-38e7f920a2ab",
+      "id": "65747fa6-f37d-458f-b01f-f32cefd0d21d",
       "name": "Evento cambios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -188,7 +188,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "501868ac-6e3b-40d4-8687-a782353cf408",
+      "id": "bec3e707-a7f4-404b-947c-214fb939e639",
       "name": "Seguir (aprobado)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -217,7 +217,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "23190c1b-d60a-46e5-b274-70461f5b84bb",
+      "id": "5f83aa0c-fd3e-4973-9079-e451184f1a8f",
       "name": "Seguir (cambios)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -317,7 +317,11 @@
   "settings": {
     "executionOrder": "v1",
     "timezone": "America/Lima",
-    "callerPolicy": "workflowsFromSameOwner"
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   },
   "pinData": {},
   "meta": {

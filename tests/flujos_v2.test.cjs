@@ -23,6 +23,9 @@ const ORQ = wf('FabOrquestador01'), CL = wf('FabLlamarClaude1'), RET = wf('FabRe
 const PROD = wf('FabProduccion001'), PUB = wf('FabPublicacion01'), AJ = wf('FabAjustes000001');
 const aj = run(codeOf(AJ, 'Ajustes'))[0].json;
 
+// Formulario tal como lo arma n8n en «Subir a redes» (mismo texto que un multipart, para comprobar campos).
+const cuerpoDe = o => o.pares.map(([k, x]) => `name="${k}"\r\n\r\n${x}\r\n`).join('');
+
 test('ajustes: todo lo que gasta empieza apagado', () => {
   for (const k of ['allowImagenes', 'allowRevisionVisual', 'allowClips', 'allowAvatar', 'allowMontaje', 'allowDrive', 'allowYoutube', 'allowAnalytics'])
     assert.strictEqual(aj[k], false, k);
@@ -435,31 +438,76 @@ test('derivados: estado de los renders y resultado final con miniatura', () => {
   assert.deepStrictEqual([nada.cortes, nada.miniatura_url, nada.costo_usd], [[], '', 0]);
 });
 
-test('redes: un Short va igual a todas las redes del canal, con su texto y la etiqueta de IA', () => {
+const hl = (iso, zona = 'America/Lima') => new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(iso));
+const dias = (a, b) => Math.round((Date.parse(hl(b).slice(0, 10)) - Date.parse(hl(a).slice(0, 10))) / 86400000);
+
+test('redes: un Short sale a cada red por separado, a la hora fuerte de cada una, con su texto y etiqueta de IA', () => {
   const pub = { youtube: { titulos: ['T1', 'T2'], descripcion: 'desc', tags: ['#historia', 'misterio'] }, tiktok: { texto: 'tt', hashtags: ['fyp', 'historia'] }, instagram: { texto: 'ig' } };
   const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'short', perfil: 'expediente', redes: 'tiktok, youtube,instagram', contexto: { render_url: 'https://r.mp4', creditos: ['Música: X'], publicacion: pub } };
-  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj, 'vidIQ: títulos': { ok: true, mejor: 'T2' } } }).map(i => i.json);
-  assert.strictEqual(out.length, 1); assert.strictEqual(out[0].plataformas, 'tiktok,youtube,instagram');
-  const c = out[0].cuerpo;
-  assert.match(c, new RegExp('boundary|' + out[0].limite)); assert.ok(c.endsWith(`--${out[0].limite}--\r\n`));
-  assert.ok(c.includes('name="video"\r\n\r\nhttps://r.mp4')); assert.strictEqual((c.match(/name="platform\[\]"/g) || []).length, 3);
-  assert.ok(c.includes('name="youtube_title"\r\n\r\nT2'));                         // ganó el título de vidIQ
-  assert.ok(c.includes('name="is_ai_generated"\r\n\r\ntrue') && c.includes('name="containsSyntheticMedia"\r\n\r\ntrue'));
-  assert.ok(c.includes('tt\n\n#fyp #historia')); assert.ok(c.includes('Música: X')); assert.ok(!c.includes('scheduled_date'));
-  assert.ok(c.includes('name="privacyStatus"\r\n\r\npublic'));
+  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj, 'vidIQ: títulos': { ok: true, mejor: 'T2' } }, all: { 'Agenda del canal': [] } }).map(i => i.json);
+  assert.deepStrictEqual(out.map(o => o.plataformas), ['tiktok', 'youtube', 'instagram']);   // un envío por red
+  const por = Object.fromEntries(out.map(o => [o.plataformas, o]));
+  assert.ok(por.tiktok.programado && hl(por.tiktok.programado).endsWith(', 19:00'));          // TikTok 19:00 hora de Lima
+  assert.ok(hl(por.youtube.programado).endsWith(', 16:00')); assert.ok(hl(por.instagram.programado).endsWith(', 20:00'));
+  for (const o of out) { assert.ok(Date.parse(o.programado) > Date.now()); assert.strictEqual(o.pares.length, 24); assert.ok(o.pares.every(([k, x]) => typeof k === 'string' && k && typeof x === 'string'));
+    assert.strictEqual((cuerpoDe(o).match(/name="platform\[\]"/g) || []).length, 1); assert.ok(cuerpoDe(o).includes('name="timezone"\r\n\r\nAmerica/Lima')); }
+  const t = cuerpoDe(por.tiktok), y = cuerpoDe(por.youtube);
+  assert.ok(t.includes('tt\n\n#fyp #historia') && t.includes('name="is_aigc"\r\n\r\ntrue') && !t.includes('youtube_title'));
+  assert.ok(y.includes('name="youtube_title"\r\n\r\nT2 #Shorts') && y.includes('name="containsSyntheticMedia"\r\n\r\ntrue') && y.includes('name="tags"\r\n\r\nhistoria,misterio'));
+  assert.ok(y.includes('name="video"\r\n\r\nhttps://r.mp4'));
 });
 
-test('redes: un largo va a YouTube con miniatura y cada corte a TikTok/Reels/Shorts; programado si hay fecha', () => {
-  const futuro = new Date(Date.now() + 5 * 86400000).toISOString();
-  const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'largo', perfil: 'p', redes: 'youtube,tiktok,instagram,facebook', publicar_en: futuro,
-    contexto: { render_url: 'https://largo.mp4', miniatura_url: 'https://mini.jpg', cortes: [{ corte: 1, titulo: 'Corte uno', url: 'https://c1.mp4' }, { corte: 2, titulo: 'x', url: '' }], publicacion: { youtube: { titulos: ['Título largo'] } } } };
-  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj } }).map(i => i.json);
-  assert.deepStrictEqual(out.map(o => o.tipo + ':' + o.plataformas), ['principal:youtube,facebook', 'corte 1:youtube,tiktok,instagram,facebook']);
-  assert.ok(out[0].cuerpo.includes('name="thumbnail_url"\r\n\r\nhttps://mini.jpg')); assert.ok(out[0].cuerpo.includes('name="facebook_media_type"\r\n\r\nVIDEO'));
-  assert.ok(out[1].cuerpo.includes('Corte uno #Shorts')); assert.ok(!out[1].cuerpo.includes('thumbnail_url'));
-  assert.ok(out[0].cuerpo.includes('name="scheduled_date"')); assert.ok(out[0].programado);
-  const sinPerfil = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...inicio, perfil: '' }, 'Leer ajustes': aj } })[0].json;
+test('redes: un largo sale de mañana a YouTube con miniatura y los cortes en días distintos (1, 3, 5) por red', () => {
+  const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'largo', perfil: 'p', redes: 'youtube,tiktok,instagram,facebook',
+    contexto: { render_url: 'https://largo.mp4', miniatura_url: 'https://mini.jpg', cortes: [{ corte: 1, titulo: 'Corte uno', url: 'https://c1.mp4' }, { corte: 2, titulo: 'Dos', url: 'https://c2.mp4' }, { corte: 3, titulo: 'x', url: '' }], publicacion: { youtube: { titulos: ['Título largo'] } } } };
+  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj }, all: { 'Agenda del canal': [] } }).map(i => i.json);
+  assert.deepStrictEqual(out.map(o => o.tipo + ':' + o.plataformas), ['principal:youtube', 'principal:facebook',
+    'corte 1:youtube', 'corte 1:tiktok', 'corte 1:instagram', 'corte 1:facebook', 'corte 2:youtube', 'corte 2:tiktok', 'corte 2:instagram', 'corte 2:facebook']);
+  const p = out[0];
+  assert.ok(cuerpoDe(p).includes('name="thumbnail_url"\r\n\r\nhttps://mini.jpg') && hl(p.programado).endsWith(', 11:00'));
+  assert.ok(cuerpoDe(out[1]).includes('name="facebook_media_type"\r\n\r\nVIDEO') && !cuerpoDe(out[1]).includes('thumbnail_url'));
+  const c1 = out.find(o => o.tipo === 'corte 1' && o.plataformas === 'tiktok'), c2 = out.find(o => o.tipo === 'corte 2' && o.plataformas === 'tiktok');
+  assert.strictEqual(dias(p.programado, c1.programado), 1); assert.strictEqual(dias(p.programado, c2.programado), 3);
+  assert.ok(cuerpoDe(out.find(o => o.tipo === 'corte 1' && o.plataformas === 'youtube')).includes('Corte uno #Shorts'));
+  const sinPerfil = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...inicio, perfil: '' }, 'Leer ajustes': aj }, all: { 'Agenda del canal': [] } })[0].json;
   assert.strictEqual(sinPerfil.nada, true); assert.match(sinPerfil.motivo, /perfil/);
+});
+
+test('redes: respeta la fecha que programaste y la separación entre largos; no pasa del tope por red y día', () => {
+  const futuro = new Date(Date.now() + 6 * 86400000); futuro.setUTCHours(23, 30, 0, 0);   // 18:30 en Lima
+  const base = { video_id: 'v', canal_id: 'c', tema: 'T', perfil: 'p', redes: 'youtube,tiktok', contexto: { render_url: 'r', cortes: [] } };
+  const prog = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...base, formato: 'largo', publicar_en: futuro.toISOString() }, 'Leer ajustes': aj }, all: { 'Agenda del canal': [] } })[0].json;
+  assert.strictEqual(prog.programado, futuro.toISOString());                                  // tu fecha y hora exactas
+  // ya hubo un largo hace unas horas: el siguiente espera 2 días
+  const ayer = [{ request_id: 'x', tipo: 'principal', plataformas: 'youtube', publicado_en: new Date(Date.now() - 3600000).toISOString(), estado: 'enviado' }];
+  const sep = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...base, formato: 'largo' }, 'Leer ajustes': aj }, all: { 'Agenda del canal': ayer } })[0].json;
+  assert.ok(dias(new Date().toISOString(), sep.programado) >= 2);
+  // TikTok lleno los próximos 2 días (2 por día): el Short pasa al tercer día
+  const lleno = [0, 1].flatMap(d => [0, 1].map(k => ({ request_id: 'r' + d + k, tipo: 'principal', plataformas: 'tiktok', estado: 'programado',
+    publicado_en: new Date(Date.now() + (d * 24 + 2) * 3600000).toISOString() })));
+  const corto = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...base, formato: 'short', redes: 'tiktok' }, 'Leer ajustes': aj }, all: { 'Agenda del canal': lleno } })[0].json;
+  const ocupados = new Set(lleno.map(r => hl(r.publicado_en).slice(0, 10)));
+  assert.ok(!ocupados.has(hl(corto.programado).slice(0, 10)));
+});
+
+test('redes: escala — 60 canales con 3 largos cada uno se agendan sin pasar topes ni chocar', () => {
+  const t0 = Date.now(); let total = 0;
+  for (let c = 0; c < 60; c++) {
+    const agenda = [];
+    for (let v = 0; v < 3; v++) {
+      const inicio = { video_id: 'v' + v, canal_id: 'c' + c, tema: 'T', formato: 'largo', perfil: 'p' + c, redes: 'youtube,tiktok,instagram,facebook',
+        contexto: { render_url: 'r', cortes: [1, 2, 3].map(k => ({ corte: k, titulo: 'k' + k, url: 'u' + k })) } };
+      const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj }, all: { 'Agenda del canal': agenda } }).map(i => i.json);
+      assert.strictEqual(out.length, 14);
+      for (const o of out) agenda.push({ request_id: 'x', tipo: o.tipo, plataformas: o.plataformas, publicado_en: o.programado, estado: 'programado' });
+      total += out.length;
+    }
+    const cuenta = {}; for (const r of agenda) { const k = r.plataformas + '|' + hl(r.publicado_en).slice(0, 10); cuenta[k] = (cuenta[k] || 0) + 1; }
+    assert.ok(Object.values(cuenta).every(n => n <= aj.calendario.maxPorRedDia), 'tope por red y día');
+    const largos = agenda.filter(r => r.tipo === 'principal' && r.plataformas === 'youtube').map(r => Date.parse(r.publicado_en)).sort();
+    for (let i = 1; i < largos.length; i++) assert.ok(largos[i] - largos[i - 1] >= 2 * 86400000 - 3600000, 'separación entre largos');
+  }
+  assert.strictEqual(total, 60 * 3 * 14); assert.ok(Date.now() - t0 < 5000);
 });
 
 test('redes: filas por envío, estado del video y resumen por red', () => {
@@ -468,7 +516,7 @@ test('redes: filas por envío, estado del video y resumen por red', () => {
   assert.strictEqual(filas[0].estado, 'enviado'); assert.strictEqual(filas[1].estado, 'error'); assert.match(filas[1].resultado, /cuota/);
   const v = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': filas } })[0].json;
   assert.strictEqual(v.estado, 'publicado'); assert.match(v.error, /corte 1/);
-  const r = run(codeOf(RED, 'Resumen de publicación'), { nodes: { Inicio: { video_id: 'v' } }, all: { 'Filas de publicación': filas, 'Estado en redes': [{ status: 'completed', results: [{ platform: 'youtube', success: true, url: 'https://youtu.be/x' }] }] } })[0].json.texto;
+  const r = run(codeOf(RED, 'Resumen de publicación'), { nodes: { Inicio: { video_id: 'v' } }, all: { 'Plan de publicación': pedidos, 'Filas de publicación': filas, 'Estado en redes': [{ status: 'completed', results: [{ platform: 'youtube', success: true, url: 'https://youtu.be/x' }] }] } })[0].json.texto;
   assert.match(r, /✓ principal → youtube \(completed\)\n   youtube: https:\/\/youtu\.be\/x/); assert.match(r, /✗ corte 1: cuota/);
 });
 
@@ -505,4 +553,86 @@ test('producción y calidad: el costo de la miniatura se suma y la aprobación f
     cortes: [{ corte: 1, duracion_s: 40, url: 'c1' }], miniatura_url: 'm', publicacion: { youtube: { titulos: ['A', 'B'] } }, formato: 'largo' } })[0].json;
   assert.match(m.mensaje, /Miniatura: m/); assert.match(m.mensaje, /Corte 1 \(40 s\): c1/); assert.match(m.mensaje, /1\. A\n2\. B/); assert.match(m.mensaje, /publicarlo/);
   assert.deepStrictEqual(m.contexto.cortes.length, 1); assert.strictEqual(m.contexto.miniatura_url, 'm');
+});
+
+test('escala: topes de 24 h por canal y de toda la fábrica', () => {
+  const v = (canal, n) => Array.from({ length: n }, (_, i) => ({ video_id: canal + i, canal_id: canal }));
+  const r = (filas, canal = 'c1') => run(codeOf(ORQ, 'Revisar topes'), { nodes: { 'Leer ajustes': aj, 'Buscar canal': { canal_id: canal } }, all: { $input: filas } })[0].json;
+  assert.strictEqual(r(v('c1', aj.maxVideosDiaPorCanal - 1)).ok, true);
+  assert.match(r(v('c1', aj.maxVideosDiaPorCanal)).motivo, /canal c1/);
+  assert.match(r(v('otro', aj.maxVideosDiaTotal)).motivo, /fábrica/);
+  assert.strictEqual(r([{}]).ok, true);                        // tabla vacía (alwaysOutputData)
+});
+
+test('escala: todo flujo es válido — nodos únicos, conexiones existentes, sin huérfanos, HTTP con tiempo límite', () => {
+  for (const id of ['FabAjustes000001', 'FabLlamarClaude1', 'FabRetornoClaud1', 'FabAprobacion001', 'FabOrquestador01', 'FabProduccion001', 'FabSonido0000001',
+    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1']) {
+    const w = wf(id); const nombres = w.nodes.map(n => n.name);
+    assert.strictEqual(new Set(nombres).size, nombres.length, id + ': nombres repetidos');
+    const destinos = new Set(Object.values(w.connections).flatMap(c => Object.values(c).flat(2)).map(x => x.node));
+    for (const d of destinos) assert.ok(nombres.includes(d), id + ': conexión a ' + d);
+    for (const n of w.nodes) {
+      assert.ok(destinos.has(n.name) || w.connections[n.name], id + ': huérfano ' + n.name);
+      if (n.type.endsWith('httpRequest')) assert.ok(n.parameters.options?.timeout, id + ': sin timeout ' + n.name);
+      if (n.type.endsWith('.code')) {   // el entorno de Code de n8n no trae estas funciones (verificado en vivo)
+        const sinComentarios = n.parameters.jsCode.split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
+        assert.doesNotMatch(sinComentarios, /\bnew URL\(|URLSearchParams|TextEncoder|TextDecoder|structuredClone|\batob\(|\bbtoa\(|\bfetch\(|setTimeout|require\(/, id + ': función no disponible en ' + n.name);
+      }
+      if (n.type.endsWith('.code')) assert.doesNotThrow(() => new Function('$', '$json', '$input', '$now', '$binary', 'crypto', n.parameters.jsCode), id + ': JS inválido en ' + n.name);
+    }
+  }
+});
+
+test('vigilante: el aviso de error dice flujo, nodo, mensaje y enlace', () => {
+  const ERR = wf('FabErrores000001');
+  const m = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'M8 · Publicación en redes' }, execution: { lastNodeExecuted: 'Subir a redes', url: 'https://n8n/x/1', error: { message: '429  demasiadas\n peticiones' } } } })[0].json.texto;
+  assert.match(m, /«M8 · Publicación en redes» en el nodo «Subir a redes»/); assert.match(m, /429 demasiadas peticiones/); assert.match(m, /https:\/\/n8n\/x\/1/);
+  const vacio = run(codeOf(ERR, 'Mensaje de error'), { json: {} })[0].json.texto;
+  assert.match(vacio, /error sin mensaje/);
+  for (const id of ['FabProduccion001', 'FabRedes00000001', 'FabOrquestador01']) { const s = wf(id).settings;
+    assert.strictEqual(s.errorWorkflow, 'FabErrores000001'); assert.ok(s.executionTimeout > 0 && s.executionTimeout <= 3600); }
+});
+
+test('rutina: avisa los videos que llevan más de 24 h sin avanzar, y solo esos', () => {
+  const RUT = wf('FabRutina0000001'); const viejo = new Date(Date.now() - 30 * 3600000).toISOString(), nuevo = new Date().toISOString();
+  const filas = [{ video_id: 'a', canal_id: 'c', etapa: 'guion', estado: 'en_proceso', updatedAt: viejo }, { video_id: 'b', canal_id: 'c', etapa: 'guion', estado: 'en_proceso', updatedAt: nuevo },
+    { video_id: 'p', canal_id: 'c', etapa: 'publicado', estado: 'publicado', updatedAt: viejo }, { video_id: 'e', canal_id: 'c', etapa: 'publicado', estado: 'error_publicacion', error: 'cuota', updatedAt: viejo }];
+  const t = run(codeOf(RUT, 'Atascados'), { all: { $input: filas } })[0].json.texto;
+  assert.match(t, /\(2\)/); assert.match(t, /• a \(c\) en «guion»/); assert.match(t, /• e .*cuota/); assert.doesNotMatch(t, /• b|• p/);
+  assert.strictEqual(run(codeOf(RUT, 'Atascados'), { all: { $input: [{}] } })[0].json.nada, true);
+});
+
+test('redes: zona horaria por canal (válida o rechazada) y calendario en la hora de ese público', () => {
+  const v = x => run(codeOf(ORQ, 'Validar redes'), { nodes: { Inicio: x } })[0].json;
+  assert.deepStrictEqual(v({ perfil: 'mx', redes: 'tiktok', zona: 'America/Mexico_City' }).fila, { uploadpost_perfil: 'mx', redes: 'tiktok', zona: 'America/Mexico_City' });
+  assert.match(v({ perfil: 'mx', redes: 'tiktok', zona: 'Marte/Olympus' }).motivo, /zona horaria desconocida/);
+  const inicio = { video_id: 'v', canal_id: 'c', tema: 'T', formato: 'short', perfil: 'p', redes: 'tiktok', zona: 'Europe/Madrid', contexto: { render_url: 'r' } };
+  const o = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj }, all: { 'Agenda del canal': [] } })[0].json;
+  assert.ok(hl(o.programado, 'Europe/Madrid').endsWith(', 19:00')); assert.ok(cuerpoDe(o).includes('name="timezone"\r\n\r\nEurope/Madrid'));
+});
+
+test('redes: el calendario es correcto a cualquier hora del día (24 horas simuladas)', () => {
+  const real = Date.now; const base = Date.parse('2026-11-19T05:00:00Z');   // 00:00 en Lima
+  try {
+    for (let k = 0; k < 24; k++) {
+      const ahora = base + k * 3600000 + 7 * 60000; Date.now = () => ahora;
+      const inicio = { video_id: 'v', canal_id: 'c', tema: 'T', formato: 'largo', perfil: 'p', redes: 'youtube,tiktok,instagram,facebook',
+        contexto: { render_url: 'r', cortes: [1, 2, 3].map(i => ({ corte: i, titulo: 't', url: 'u' + i })) } };
+      const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj }, all: { 'Agenda del canal': [] } }).map(i => i.json);
+      assert.strictEqual(out.length, 14, 'hora ' + k);
+      const p = out.find(o => o.tipo === 'principal' && o.plataformas === 'youtube');
+      for (const o of out) {
+        assert.ok(Date.parse(o.programado) > ahora + 15 * 60000, `futuro ${k} ${o.tipo}`);
+        if (o.tipo !== 'principal') assert.strictEqual(dias(p.programado, o.programado), { 'corte 1': 1, 'corte 2': 3, 'corte 3': 5 }[o.tipo], `${k} ${o.tipo}`);
+      }
+    }
+  } finally { Date.now = real; }
+});
+
+test('redes: «Subir a redes» usa el multipart nativo de n8n con tantas casillas como pares arma el plan', () => {
+  const n = RED.nodes.find(x => x.name === 'Subir a redes'); const p = n.parameters;
+  assert.strictEqual(p.contentType, 'multipart-form-data'); assert.ok(!('body' in p) && !('rawContentType' in p));
+  const cas = p.bodyParameters.parameters; assert.strictEqual(cas.length, 24);
+  cas.forEach((c, i) => { assert.strictEqual(c.parameterType, 'formData'); assert.strictEqual(c.name, `={{ $json.pares[${i}][0] }}`); assert.strictEqual(c.value, `={{ $json.pares[${i}][1] }}`); });
+  assert.match(codeOf(RED, 'Plan de publicación'), /const CASILLAS = 24;/);
 });
