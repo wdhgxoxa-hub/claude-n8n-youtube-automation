@@ -72,7 +72,10 @@ def code(f, name, js, **kw):
 
 
 def call(f, name, wid, wait=True, each=False):
-    p = {'workflowId': {'__rl': True, 'mode': 'id', 'value': wid},
+    # Las llamadas de vuelta al orquestador van por expresión: así el ciclo
+    # orquestador → producción → publicación → aprobación → orquestador no bloquea la publicación en n8n.
+    ref = "={{ '" + wid + "' }}" if wid == W['orq'] else wid
+    p = {'workflowId': {'__rl': True, 'mode': 'id', 'value': ref},
          'workflowInputs': {'mappingMode': 'defineBelow', 'value': {}, 'matchingColumns': [], 'schema': [],
                             'attemptToConvertTypes': False, 'convertFieldsToString': True},
          'mode': 'each' if each else 'once', 'options': {'waitForSubWorkflow': wait}}
@@ -136,6 +139,21 @@ def http(f, name, method, url, body=None, cred=None, auth=True, headers=None, ti
         p.update({'sendBody': True, 'specifyBody': 'json', 'jsonBody': body})
     extra = {'credentials': cred} if cred else {}
     return f.add(name, 'n8n-nodes-base.httpRequest', 4.2, p, **extra)
+
+
+def gapi(f, name, method, url, cred_type, json_body=None, binary_field=None, query=None, full=False, timeout=300000):
+    """HTTP a Google con credencial OAuth predefinida: se publica sin credencial y se conecta luego."""
+    p = {'method': method, 'url': url, 'authentication': 'predefinedCredentialType', 'nodeCredentialType': cred_type,
+         'options': {'timeout': timeout}}
+    if query:
+        p.update({'sendQuery': True, 'queryParameters': {'parameters': [{'name': k, 'value': v} for k, v in query.items()]}})
+    if json_body is not None:
+        p.update({'sendBody': True, 'specifyBody': 'json', 'jsonBody': json_body})
+    if binary_field:
+        p.update({'sendBody': True, 'contentType': 'binaryData', 'inputDataFieldName': binary_field})
+    if full:
+        p['options']['response'] = {'response': {'fullResponse': True}}
+    return f.add(name, 'n8n-nodes-base.httpRequest', 4.2, p)
 
 
 def wait(f, name, seconds):
@@ -461,19 +479,20 @@ iff(f, '¿YouTube encendido?', "$('Leer ajustes').first().json.allowYoutube === 
 f.add('Descargar render', 'n8n-nodes-base.httpRequest', 4.2,
       {'method': 'GET', 'url': "={{ $('Inicio').first().json.contexto.render_url }}",
        'options': {'response': {'response': {'responseFormat': 'file'}}, 'timeout': 300000}})
-f.add('Subir a YouTube', 'n8n-nodes-base.youTube', 1,
-      {'resource': 'video', 'operation': 'upload', 'title': "={{ $('Video (publicar)').first().json.tema.slice(0, 95) }}",
-       'regionCode': 'PE', 'categoryId': '27', 'binaryProperty': 'data',
-       'options': {'privacyStatus': 'private', 'notifySubscribers': False, 'selfDeclaredMadeForKids': False}})
-code(f, 'Video publicado', "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || $json.uploadId || '' } }];")
+gapi(f, 'Abrir subida YouTube', 'POST', 'https://www.googleapis.com/upload/youtube/v3/videos', 'youTubeOAuth2Api',
+     query={'uploadType': 'resumable', 'part': 'snippet,status'}, full=True, timeout=30000,
+     json_body="={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), categoryId: '27', defaultLanguage: 'es' }, status: { privacyStatus: 'private', selfDeclaredMadeForKids: false } } }}")
+gapi(f, 'Subir a YouTube', 'PUT', "={{ $('Abrir subida YouTube').first().json.headers.location }}", 'youTubeOAuth2Api',
+     binary_field='data', timeout=600000)
+code(f, 'Video publicado', "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || '' } }];")
 dt_update(f, 'Marcar publicado', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
 tg(f, 'Aviso: subido', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Subido en privado: https://youtu.be/' + $('Video publicado').first().json.youtube_id }}")
 tg(f, 'Aviso: YouTube apagado', "={{ $('Leer ajustes').first().json.chatId }}", "Aprobado. Para subirlo, enciende YouTube en F · Ajustes.")
 f.link('Según evento', 'Video (publicar)', 13)
 f.link('Video (publicar)', '¿YouTube encendido?')
-f.link('¿YouTube encendido?', 'Descargar render', 0)
+f.link('¿YouTube encendido?', 'Abrir subida YouTube', 0)
 f.link('¿YouTube encendido?', 'Aviso: YouTube apagado', 1)
-f.chain('Descargar render', 'Subir a YouTube', 'Video publicado', 'Marcar publicado', 'Aviso: subido')
+f.chain('Abrir subida YouTube', 'Descargar render', 'Subir a YouTube', 'Video publicado', 'Marcar publicado', 'Aviso: subido')
 
 # 14 cambios en el video final
 tg(f, 'Aviso: cambios finales', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Anotado para ' + $json.video_id + ': ' + $json.cambios + '. En la v1, los cambios finales se aplican rehaciendo el storyboard.' }}")
@@ -531,13 +550,13 @@ if (!out?.result) throw new Error('Sin imagen en la respuesta');
 const prev = $('Un ítem por plano').item.json;
 return [{ json: { ...prev }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: prev.plano.id + '.png' } } }];
 """)
-f.add('Subir a Drive', 'n8n-nodes-base.googleDrive', 3,
-      {'operation': 'upload', 'inputDataFieldName': 'imagen', 'name': "={{ $json.video_id + '-' + $json.plano.id + '.png' }}",
-       'driveId': {'__rl': True, 'mode': 'list', 'value': 'My Drive'},
-       'folderId': {'__rl': True, 'mode': 'id', 'value': "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"}, 'options': {}})
-f.add('Compartir enlace', 'n8n-nodes-base.googleDrive', 3,
-      {'operation': 'share', 'fileId': {'__rl': True, 'mode': 'id', 'value': '={{ $json.id }}'},
-       'permissionsUi': {'permissionsValues': {'role': 'reader', 'type': 'anyone'}}, 'options': {}})
+gapi(f, 'Subir a Drive', 'POST', 'https://www.googleapis.com/upload/drive/v3/files', 'googleDriveOAuth2Api',
+     binary_field='imagen', query={'uploadType': 'media'})
+gapi(f, 'Nombrar en Drive', 'PATCH', "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}", 'googleDriveOAuth2Api',
+     json_body="={{ { name: $('Extraer imagen').item.json.video_id + '-' + $('Extraer imagen').item.json.plano.id + '.png' } }}",
+     query={'addParents': "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"}, timeout=30000)
+gapi(f, 'Compartir enlace', 'POST', "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir a Drive').item.json.id + '/permissions' }}",
+     'googleDriveOAuth2Api', json_body='={{ { role: "reader", type: "anyone" } }}', timeout=30000)
 code(f, 'URL del plano', r"""
 const prev = $('Extraer imagen').item.json; const id = $('Subir a Drive').item.json.id;
 return [{ json: { ...prev, url: 'https://drive.google.com/uc?export=download&id=' + id } }];
@@ -605,7 +624,7 @@ f.link('Un ítem por plano', 'Según tipo de plano')
 f.link('Según tipo de plano', 'Generar imagen', 0)
 f.link('Según tipo de plano', 'Generar clip (Veo)', 1)
 f.link('Según tipo de plano', 'Avatar pendiente', 2)
-f.chain('Generar imagen', 'Extraer imagen', 'Subir a Drive', 'Compartir enlace', 'URL del plano', '¿Revisión visual activa?')
+f.chain('Generar imagen', 'Extraer imagen', 'Subir a Drive', 'Nombrar en Drive', 'Compartir enlace', 'URL del plano', '¿Revisión visual activa?')
 f.link('¿Revisión visual activa?', 'Revisar plano', 0)
 f.link('¿Revisión visual activa?', 'Plano aprobado', 1)
 f.chain('Revisar plano', 'Veredicto', '¿Repetir plano?')

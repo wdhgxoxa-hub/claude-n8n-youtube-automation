@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "797ee7ca-319d-486a-b9fd-fb9fbdcf9d08",
+      "id": "8cb579d7-b017-46dc-9fa8-9943a56e3883",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "a56ee364-6492-4be9-bf27-48e6cc0eb3fa",
+      "id": "8974468a-feab-4cd1-b7b9-b621127ae529",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
           "appendAttribution": false
         }
       },
-      "id": "1012dfa2-36c3-4253-8079-4568dad6b32e",
+      "id": "66042a69-13f0-4e13-b374-91a91f958090",
       "name": "Pedir aprobación",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -76,7 +76,7 @@
           "name": "Telegram account"
         }
       },
-      "webhookId": "f295ce71-f6f4-45c2-89cd-3e4f3b8e4063"
+      "webhookId": "111fd101-7f42-4763-b0df-1561e2e8e926"
     },
     {
       "parameters": {
@@ -89,7 +89,7 @@
           },
           "conditions": [
             {
-              "id": "7e55cecf-5b9b-4c7a-965c-3cc28f1c887a",
+              "id": "19dd1694-32de-4460-9571-bf88012250e9",
               "leftValue": "={{ $json.data?.approved === true }}",
               "rightValue": "",
               "operator": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "c7639165-eecf-4ef0-99bc-54a7b04a23b2",
+      "id": "40391679-6f65-4f2e-9207-b6d1d3bd612d",
       "name": "¿Aprobado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -126,7 +126,7 @@
           "appendAttribution": false
         }
       },
-      "id": "5b22f868-c06f-4933-8629-ed8e3a849103",
+      "id": "0fc710bd-8b44-40c7-a0c5-19c985af8bca",
       "name": "Pedir cambios",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -140,13 +140,13 @@
           "name": "Telegram account"
         }
       },
-      "webhookId": "fd924be3-06b1-43d2-81ad-47f288cfbbe7"
+      "webhookId": "92991e83-c0ff-420d-8b48-b0ae09cec321"
     },
     {
       "parameters": {
         "jsCode": "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'aprobado', mensaje: undefined } }];"
       },
-      "id": "06f845ce-c04e-4118-b7db-23eff06a2bd1",
+      "id": "cf2653e4-6a57-4277-9c6f-31aa749a4520",
       "name": "Evento aprobado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -159,7 +159,7 @@
       "parameters": {
         "jsCode": "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: String($json.data?.text || '').slice(0, 4000), mensaje: undefined } }];"
       },
-      "id": "1736ce70-5e6e-4c41-9dc6-00c644398442",
+      "id": "63deb2c9-28a9-40e3-9661-eff60c7db09c",
       "name": "Evento cambios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -173,7 +173,7 @@
         "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "FabOrquestador01"
+          "value": "={{ 'FabOrquestador01' }}"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -188,7 +188,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "2edf36e8-0b46-40db-a9b5-5f804a644146",
+      "id": "8cd4ed1c-653c-412b-bdeb-feaebebaa6ef",
       "name": "Seguir (aprobado)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -202,7 +202,7 @@
         "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "FabOrquestador01"
+          "value": "={{ 'FabOrquestador01' }}"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -217,7 +217,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "959114d2-6e0f-4fcd-b212-2ed8b947d3ed",
+      "id": "a0a9aec3-7229-4861-9229-4a608b92e1b1",
       "name": "Seguir (cambios)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,

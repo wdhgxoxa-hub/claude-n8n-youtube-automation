@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "dce560f4-43a4-462d-9036-f0183fa4c3b0",
+      "id": "8151f2b2-aa74-49c2-b231-9b0ca891b4ea",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -19,7 +19,7 @@
       "parameters": {
         "jsCode": "\n// Único lugar para encender servicios. Todo lo que gasta dinero empieza apagado.\nreturn [{ json: {\n  chatId: '8667738444',\n  routineUrl: 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire',\n  retornoUrl: 'https://joining-jeeringly-primp.ngrok-free.dev/webhook/video-factory/resultado',\n  allowClaude: true,          // usa tu plan de Claude, sin costo por uso\n  allowImagenes: false,       // OpenAI imágenes (pago por uso)\n  allowRevisionVisual: false, // OpenAI con visión para revisar planos (pago por uso)\n  allowVeo: false,            // Veo 3.1 (pago por segundo)\n  allowAvatar: false,         // HeyGen\n  allowMontaje: false,        // Creatomate (incluye voz ElevenLabs integrada)\n  allowDrive: false,          // Google Drive para alojar y archivar\n  allowYoutube: false,        // subida privada a YouTube\n  allowAnalytics: false,      // YouTube Analytics para aprender\n  modeloTexto: 'gpt-6-astra',\n  modeloImagen: 'gpt-image-2.6-sunburst',\n  modeloVeo: 'veo-3.1-fast-generate-preview',\n  costoImagenUsd: 0.06,       // estimado, se corrige con facturas reales\n  costoClipSegUsd: 0.12,      // Veo 3.1 Fast 1080p, estimado\n  presupuestoLargoUsd: 5,\n  presupuestoShortUsd: 1.5,\n  maxIntentosPlano: 2,\n  creatomatePlantillaId: '',\n  elevenVoiceId: '',\n  driveCarpetaRaizId: '',\n}}];\n"
       },
-      "id": "b84f71a1-a8f8-4344-8725-b727bb3d5601",
+      "id": "7cd589bb-155a-410a-922a-5f66e79c06c1",
       "name": "Ajustes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
