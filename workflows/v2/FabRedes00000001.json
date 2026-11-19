@@ -1,0 +1,612 @@
+{
+  "id": "FabRedes00000001",
+  "name": "M8 · Publicación en redes",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "173eadad-16cc-4032-afe8-e33b91411c7d",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "b1cdb46f-d43e-4ee7-a424-6c5c963230b4",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2a159e1e-299c-48b1-b547-442448cd0dac",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowVidiq === true && ($('Inicio').first().json.contexto?.publicacion?.youtube?.titulos || []).length > 1 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dbb9038e-ce25-4907-a5a5-612c7ca6c2be",
+      "name": "¿Puntuar títulos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e = $('Inicio').first().json; return [{ json: { accion: 'titulos', titulos: e.contexto.publicacion.youtube.titulos, formato: e.formato } }];"
+      },
+      "id": "fd7603c1-61fe-4aaa-ac86-982dd395fe01",
+      "name": "Pedido de títulos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabVidiq00000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "a4a8f93b-d829-4c8a-b491-a8cf795c925e",
+      "name": "vidIQ: títulos",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Arma un envío por video (principal y cada corte) con el texto propio de cada red.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst redes = String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/).filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null;\nconst yt = pub.youtube || {};\nconst tituloYt = String((vq?.ok && vq.mejor) || (yt.titulos || [])[0] || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15);\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst programado = Date.parse(e.publicar_en || '') > Date.now() + 3600000 ? new Date(e.publicar_en).toISOString().slice(0, 19) : '';\nconst base = { user: e.perfil, is_ai_generated: 'true', containsSyntheticMedia: 'true', async_upload: 'true',\n  youtube_title: tituloYt, youtube_description: descYt, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma,\n  privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false',\n  tiktok_title: texto('tiktok', tituloYt), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true',\n  instagram_title: texto('instagram', tituloYt), media_type: 'REELS', share_to_feed: 'true',\n  facebook_title: String(pub.facebook?.titulo || tituloYt).slice(0, 250), facebook_description: texto('facebook', tituloYt), facebook_media_type: 'REELS',\n  title: tituloYt, ...(programado ? { scheduled_date: programado, timezone: 'UTC' } : {}) };\nconst envios = [];\nif (e.formato === 'short') {\n  if (redes.length) envios.push({ tipo: 'principal', video: c.render_url, plataformas: redes, campos: { ...base } });\n} else {\n  const largo = redes.filter(r => ['youtube', 'facebook'].includes(r));\n  if (largo.length) envios.push({ tipo: 'principal', video: c.render_url, plataformas: largo,\n    campos: { ...base, facebook_media_type: 'VIDEO', ...(c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {}) } });\n  for (const k of c.cortes || []) {\n    const verticales = redes.filter(r => ['tiktok', 'instagram', 'youtube', 'facebook'].includes(r));\n    const t = String(k.titulo || tituloYt).slice(0, 95);\n    if (verticales.length && k.url) envios.push({ tipo: 'corte ' + k.corte, video: k.url, plataformas: verticales,\n      campos: { ...base, youtube_title: (t + ' #Shorts').slice(0, 100), youtube_description: [t, 'Video completo en el canal.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900),\n        title: t, tiktok_title: texto('tiktok', t), instagram_title: texto('instagram', t), facebook_title: t, facebook_description: texto('facebook', t) } });\n  }\n}\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\nif (!envios.length) return [{ json: { nada: true, motivo: 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// multipart/form-data armado a mano: así cada envío lleva solo sus redes (platform[] repetido).\nreturn envios.map((v, i) => {\n  const limite = '----fabrica' + Date.now().toString(36) + i;\n  const campos = [['video', v.video], ...v.plataformas.map(p => ['platform[]', p]), ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== '')];\n  const cuerpo = campos.map(([k, x]) => `--${limite}\\r\\nContent-Disposition: form-data; name=\"${k}\"\\r\\n\\r\\n${String(x)}\\r\\n`).join('') + `--${limite}--\\r\\n`;\n  return { json: { tipo: v.tipo, plataformas: v.plataformas.join(','), titulo: v.campos.title, url_video: v.video, limite, cuerpo, programado } };\n});\n"
+      },
+      "id": "94719d75-0ad2-4344-8503-546b81002176",
+      "name": "Plan de publicación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6ccbbf34-303f-4399-aa10-502542bf465c",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bb5d9270-7336-469b-aa78-3419dd766bb6",
+      "name": "¿Hay envíos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "={{ 'multipart/form-data; boundary=' + $json.limite }}",
+        "body": "={{ $json.cuerpo }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "c5632ba0-c720-46bc-9403-8eba9d12d50a",
+      "name": "Subir a redes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PpoAcczNUlZgLCwe",
+          "name": "Upload-Post"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Inicio').first().json; const pedidos = $('Plan de publicación').all().map(i => i.json);\nreturn $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];\n  const id = r.request_id || r.job_id || r.data?.request_id || '';\n  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),\n    url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',\n    resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),\n    publicado_en: p.programado ? new Date(p.programado + 'Z').toISOString() : new Date().toISOString() } }; });\n"
+      },
+      "id": "c81be6d7-671b-4373-8c64-1e0ddd29726f",
+      "name": "Filas de publicación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "OMPWHAVyhbtekML0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1e13fb58-a0c8-45f3-a221-0534bd8455ad",
+      "name": "Guardar publicaciones",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst filas = $('Filas de publicación').all().map(i => i.json); const ok = filas.filter(f => f.request_id);\nreturn [{ json: { estado: ok.length ? 'publicado' : 'error_publicacion', etapa: 'publicado',\n  publicado_en: ok[0]?.publicado_en || '', error: ok.length === filas.length ? '' : filas.filter(f => !f.request_id).map(f => f.tipo + ': ' + f.resultado).join('; ').slice(0, 500) } }];\n"
+      },
+      "id": "f2aacb34-795c-416d-886c-96beee9516bb",
+      "name": "Video publicado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d52f55c8-b02e-4937-bae7-c2dbc687f49d",
+      "name": "Marcar publicado",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 120,
+        "unit": "seconds"
+      },
+      "id": "e9567184-3b6c-46b9-8142-f310182ce6bd",
+      "name": "Esperar a las redes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        0
+      ],
+      "webhookId": "31a32a7c-d5f2-4392-b51a-e74272a10387"
+    },
+    {
+      "parameters": {
+        "jsCode": "const l = $('Filas de publicación').all().filter(i => i.json.request_id && i.json.estado === 'enviado').map(i => ({ json: i.json })); return l.length ? l : [{ json: { request_id: 'ninguno' } }];"
+      },
+      "id": "66e754ec-29ce-41a4-95dd-3644a7050f1a",
+      "name": "Pedidos de estado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.upload-post.com/api/uploadposts/status?request_id=' + encodeURIComponent($json.request_id) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "9f98a080-907b-4148-bf83-e45d21b2f7c8",
+      "name": "Estado en redes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3300,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PpoAcczNUlZgLCwe",
+          "name": "Upload-Post"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).\nconst filas = $('Filas de publicación').all().map(i => i.json);\nconst estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];\nconst enviados = filas.filter(f => f.request_id && f.estado === 'enviado');\nconst lineas = filas.map(f => {\n  if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;\n  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas} (programado ${new Date(f.publicado_en).toLocaleString('es-PE', { timeZone: 'America/Lima' })})`;\n  const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];\n  const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')\n    : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';\n  return `✓ ${f.tipo} → ${f.plataformas}${st.status ? ' (' + st.status + ')' : ''}${det ? '\\n   ' + det : ''}`; });\nreturn [{ json: { texto: `Publicación de ${$('Inicio').first().json.video_id}:\\n` + lineas.join('\\n') } }];\n"
+      },
+      "id": "c49ce701-fcbf-41db-9e4c-cc061a594985",
+      "name": "Resumen de publicación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ $json.texto.slice(0, 3900) }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "bb54fb11-8730-4f95-98a1-e1b48b21c41f",
+      "name": "Aviso: publicado",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3740,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ 'No publiqué ' + $('Inicio').first().json.video_id + ': ' + $json.motivo }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "6bf08f86-0655-488c-b4f0-e21260009936",
+      "name": "Aviso: nada que publicar",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3960,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "¿Puntuar títulos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Puntuar títulos?": {
+      "main": [
+        [
+          {
+            "node": "Pedido de títulos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plan de publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido de títulos": {
+      "main": [
+        [
+          {
+            "node": "vidIQ: títulos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vidIQ: títulos": {
+      "main": [
+        [
+          {
+            "node": "Plan de publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan de publicación": {
+      "main": [
+        [
+          {
+            "node": "¿Hay envíos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay envíos?": {
+      "main": [
+        [
+          {
+            "node": "Subir a redes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aviso: nada que publicar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir a redes": {
+      "main": [
+        [
+          {
+            "node": "Filas de publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filas de publicación": {
+      "main": [
+        [
+          {
+            "node": "Guardar publicaciones",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Video publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video publicado": {
+      "main": [
+        [
+          {
+            "node": "Marcar publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar publicado": {
+      "main": [
+        [
+          {
+            "node": "Esperar a las redes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar a las redes": {
+      "main": [
+        [
+          {
+            "node": "Pedidos de estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos de estado": {
+      "main": [
+        [
+          {
+            "node": "Estado en redes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado en redes": {
+      "main": [
+        [
+          {
+            "node": "Resumen de publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumen de publicación": {
+      "main": [
+        [
+          {
+            "node": "Aviso: publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

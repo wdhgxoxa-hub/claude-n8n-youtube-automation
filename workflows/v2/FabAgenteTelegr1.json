@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "4b3566ac-afa6-4793-8aeb-e442fae19c53",
+      "id": "7717d343-e939-45a3-bbaa-37f44b5961ef",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -20,10 +20,10 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias. Nunca publicas ni gastas: la fábrica pide aprobación con botones. Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
+          "systemMessage": "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes. Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. Nunca publicas ni gastas: la fábrica pide aprobación con botones. Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
         }
       },
-      "id": "d55d9147-e33a-4bbb-a81b-a38f439adffc",
+      "id": "3bfd8164-2e21-4b7c-8079-575c576b13cd",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -41,7 +41,7 @@
         },
         "options": {}
       },
-      "id": "5e5552b9-acae-49bf-82ed-388264e41836",
+      "id": "3cc05a64-ecd2-4285-b428-b373a2d74464",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
         "sessionKey": "={{ 'fabrica-' + $('Inicio').first().json.chatId }}",
         "contextWindowLength": 20
       },
-      "id": "4ec8952b-4739-4ee0-8022-3b379b3334a4",
+      "id": "2f20b853-bd04-48a5-8d72-30bf87d256ed",
       "name": "Memoria",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -91,7 +91,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "e1f6d8ec-e826-4601-9a1d-7c189f88906f",
+      "id": "b9b67d95-57c2-4391-b17d-959fd15585af",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -122,7 +122,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "248b3bcb-3c79-4a17-b0fb-690ad2829b5a",
+      "id": "8253fe0d-6201-42b0-b843-28cfd78ae2c8",
       "name": "crear_video",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -150,7 +150,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "c8dc21a7-1f56-4168-9609-90f4a50e1440",
+      "id": "9331d566-fcfc-46be-ac59-0cd519c11281",
       "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -180,7 +180,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "7d54ca05-6389-4be8-a434-eee1301688a9",
+      "id": "049fd094-8935-42e1-8a63-974070c71029",
       "name": "reporte",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -211,7 +211,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "d69ac439-e456-47cb-a36f-e1ff21e8d05e",
+      "id": "19980fc0-a021-413a-8693-2286969cc16f",
       "name": "corregir",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -242,7 +242,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "a38d04fb-6f8d-4dbd-9519-4da75cd93165",
+      "id": "414f85fc-ed76-4168-aa66-95b23ca67401",
       "name": "ajustar_biblia",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -272,7 +272,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "d698ddc6-2908-40fe-9742-75198dba63b7",
+      "id": "903ade69-990e-4d0c-ac0e-d3321f384776",
       "name": "programar",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -301,12 +301,43 @@
           "convertFieldsToString": false
         }
       },
-      "id": "a94585d5-7e94-404c-a802-29b1f845cf18",
+      "id": "5875825a-f031-4993-bf2b-a371bbe1badd",
       "name": "referencias",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
         2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Fija dónde publica un canal: su perfil de Upload-Post y la lista de redes (youtube, tiktok, instagram, facebook).",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "configurar_redes",
+            "canal_id": "={{ $fromAI('canal_id', 'id del canal', 'string') }}",
+            "perfil": "={{ $fromAI('perfil', 'nombre del perfil en Upload-Post', 'string') }}",
+            "redes": "={{ $fromAI('redes', 'lista separada por comas: youtube, tiktok, instagram, facebook', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "34d5037c-4717-42e1-bb59-b0d0e899d5f2",
+      "name": "configurar_redes",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2860,
         0
       ]
     },
@@ -330,12 +361,12 @@
           "convertFieldsToString": false
         }
       },
-      "id": "82ba4fe7-3651-4263-8549-34603bf4066d",
+      "id": "7766dda3-063b-473f-961f-4aaaba67e231",
       "name": "conectar_youtube",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        2860,
+        3080,
         0
       ]
     },
@@ -343,12 +374,12 @@
       "parameters": {
         "jsCode": "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];"
       },
-      "id": "5a4d1c2e-bf77-4ef4-ac34-7dfcaefb4b25",
+      "id": "5d6e75a5-46f4-4c96-bc04-39052d5a7a50",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3080,
+        3300,
         0
       ]
     }
@@ -487,6 +518,17 @@
       ]
     },
     "conectar_youtube": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "configurar_redes": {
       "ai_tool": [
         [
           {

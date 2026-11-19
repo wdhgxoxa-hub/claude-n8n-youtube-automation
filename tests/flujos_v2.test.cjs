@@ -224,9 +224,9 @@ test('calidad: sincronía, subtítulos de Short y ritmo de voz', () => {
 
 test('crítico: pasa con ≥8 en todo, pide reescritura si no, y no bloquea si responde mal', () => {
   const resp = k => ({ output: [{ content: [{ type: 'output_text', text: JSON.stringify(k) }] }] });
-  const bien = run(codeOf(ORQ, 'Veredicto del crítico'), { json: resp({ gancho: 9, promesa: 8, claridad: 9, emocion: 8, exactitud: 10 }) })[0].json;
+  const bien = run(codeOf(ORQ, 'Veredicto del crítico'), { json: resp({ gancho: 9, promesa: 8, claridad: 9, emocion: 8, exactitud: 10, originalidad: 9 }) })[0].json;
   assert.strictEqual(bien.pasa, true);
-  const flojo = run(codeOf(ORQ, 'Veredicto del crítico'), { json: resp({ gancho: 6, promesa: 8, claridad: 9, emocion: 8, exactitud: 9, instrucciones: 'abre con una pregunta' }) })[0].json;
+  const flojo = run(codeOf(ORQ, 'Veredicto del crítico'), { json: resp({ gancho: 6, promesa: 8, claridad: 9, emocion: 8, exactitud: 9, originalidad: 9, instrucciones: 'abre con una pregunta' }) })[0].json;
   assert.strictEqual(flojo.pasa, false); assert.match(flojo.instrucciones, /pregunta/);
   const roto = run(codeOf(ORQ, 'Veredicto del crítico'), { json: { error: 'x' } })[0].json;
   assert.strictEqual(roto.pasa, true); assert.strictEqual(roto.leido, false);
@@ -381,4 +381,128 @@ test('reporte: incluye suscriptores y vistas de cada canal conectado, aunque no 
     all: { Videos: vids, Costos: [], 'Estadísticas de YouTube': [{ ok: true, canal_id: 'c1', canal_youtube: 'Margen Real', suscriptores: 5, vistas: 99, videos: 1 }, { ok: true, canal_id: 'c9', canal_youtube: 'Otro', suscriptores: 0, vistas: 0, videos: 0, ocultos: true }] } })[0].json.resumen;
   assert.match(r, /c1 \(YouTube «Margen Real»: 5 suscriptores, 99 vistas, 1 videos\) — 1 videos, 1 publicados/);
   assert.match(r, /c9 \(YouTube «Otro»: suscriptores ocultos/);
+});
+
+// ---------------------------------------------------------------------------------------
+// Redes, cortes, miniatura y vidIQ
+// ---------------------------------------------------------------------------------------
+const VQ = wf('FabVidiq00000001'), DER = wf('FabDerivados0001'), RED = wf('FabRedes00000001');
+const mcpTexto = (txt, extra = {}) => ({ data: 'event: message\ndata: ' + JSON.stringify({ result: { content: [{ type: 'text', text: txt }], ...extra } }) });
+
+test('ajustes: todo lo nuevo que gasta empieza apagado', () => {
+  for (const k of ['allowVidiq', 'allowMiniaturas', 'allowCortes', 'allowRedes']) assert.strictEqual(aj[k], false, k);
+  assert.strictEqual(aj.idioma, 'es');
+});
+
+test('vidIQ: elige el título con mejor puntaje y sobrevive a errores', () => {
+  const titulos = [{ titulo: 'A' }, { titulo: 'B' }, { titulo: 'C' }];
+  const r = run(codeOf(VQ, 'Mejor título'), { all: { 'Un ítem por título': titulos, $input: [mcpTexto('{"score": 61}'), mcpTexto('Score: 78/100'), { data: 'event: message\ndata: {"error":{"message":"sin créditos"}}' }] } })[0].json;
+  assert.strictEqual(r.ok, true); assert.strictEqual(r.mejor, 'B'); assert.strictEqual(r.puntaje, 78);
+  assert.match(r.notas[2].error, /créditos/); assert.strictEqual(r.creditos, 10);
+  const nada = run(codeOf(VQ, 'Mejor título'), { all: { 'Un ítem por título': titulos, $input: [{ data: 'x' }, { data: 'x' }, { data: 'x' }] } })[0].json;
+  assert.strictEqual(nada.ok, false); assert.strictEqual(nada.mejor, 'A');
+  const inv = run(codeOf(VQ, 'Resumen de investigación'), { json: mcpTexto('videos…'), nodes: { 'Palabras clave': mcpTexto('kw…') } })[0].json;
+  assert.strictEqual(inv.ok, true); assert.strictEqual(inv.palabras_clave, 'kw…'); assert.strictEqual(inv.creditos, 10);
+  const err = run(codeOf(VQ, 'Resumen de investigación'), { json: mcpTexto('x', { isError: true }), nodes: { 'Palabras clave': { data: 'roto' } } })[0].json;
+  assert.strictEqual(err.ok, false);
+});
+
+test('derivados: cortes verticales con los planos elegidos, subtítulos y máximo 60 s', () => {
+  const pl = id => ({ id, tipo: 'imagen', texto_narrado: 'uno dos tres cuatro cinco' });
+  const plan = { formato: 'largo', planos: ['p1', 'p2', 'p3'].map(pl), biblia: {}, storyboard: { cortes: [{ titulo: 'El hallazgo', planos: ['p2', 'p3', 'zz'] }, { titulo: 'Largo', planos: ['p1'] }, { titulo: 'Vacío', planos: ['zz'] }] } };
+  const planos = ['p1', 'p2', 'p3'].map(id => ({ plano_id: id, url: 'https://i/' + id, plano: pl(id) }));
+  const son = { voces: [{ plano_id: 'p1', url: 'v1', duracion_s: 70 }, { plano_id: 'p2', url: 'v2', duracion_s: 10 }, { plano_id: 'p3', url: 'v3', duracion_s: 12 }], musica: { url: 'm' } };
+  const out = run(codeOf(DER, 'Composiciones de cortes'), { nodes: { Inicio: { plan, planos, son } } }).map(i => i.json);
+  assert.strictEqual(out.length, 1);                                  // el de 70 s y el vacío se descartan
+  assert.strictEqual(out[0].titulo, 'El hallazgo'); assert.strictEqual(out[0].source.width, 1080); assert.strictEqual(out[0].source.height, 1920);
+  const escenas = out[0].source.elements.filter(e => e.type === 'composition');
+  assert.deepStrictEqual(escenas.map(e => e.name), ['p2', 'p3']);
+  assert.ok(escenas[0].elements.some(e => e.type === 'text'));         // subtítulos forzados
+  assert.strictEqual(out[0].source.elements.find(e => e.track === 2).duration, out[0].duracion_s); // música cortada al corte
+});
+
+test('derivados: estado de los renders y resultado final con miniatura', () => {
+  const pedidos = [{ corte: 1, titulo: 'a', duracion_s: 30, source: {} }, { corte: 2, titulo: 'b', duracion_s: 40, source: {} }];
+  const est = run(codeOf(DER, 'Estado de cortes'), { all: { 'Composiciones de cortes': pedidos, 'Renderizar corte': [{ id: 'r1' }, { id: 'r2' }], $input: [{ id: 'r1', status: 'succeeded', url: 'u1' }, { id: 'r2', status: 'rendering' }] } }).map(i => i.json);
+  assert.strictEqual(est[0].pendientes, true); assert.strictEqual(est[1].id, 'r2'); assert.strictEqual(est[0].source, undefined);
+  const fin = run(codeOf(DER, 'Cortes listos'), { all: { 'Estado de cortes': est, 'Consultar otra vez': [{ status: 'succeeded', url: 'u1' }, { status: 'failed' }] } })[0].json;
+  assert.deepStrictEqual(fin.cortes.map(c => c.url), ['u1']); assert.match(fin.fallidos[0], /corte 2: failed/);
+  const res = run(codeOf(DER, 'Resultado'), { nodes: { 'Leer ajustes': aj, 'Cortes listos': fin, 'Imagen de miniatura': {}, 'Consultar miniatura': { status: 'succeeded', url: 'mini.jpg' }, 'Composición de miniatura': { base_url: 'base.png' } } })[0].json;
+  assert.strictEqual(res.miniatura_url, 'mini.jpg'); assert.strictEqual(res.costo_usd, aj.costoMiniaturaUsd); assert.strictEqual(res.cortes.length, 1);
+  const sinTexto = run(codeOf(DER, 'Resultado'), { nodes: { 'Leer ajustes': aj, 'Imagen de miniatura': {}, 'Consultar miniatura': { status: 'failed' }, 'Composición de miniatura': { base_url: 'base.png' } } })[0].json;
+  assert.strictEqual(sinTexto.miniatura_url, 'base.png'); assert.match(sinTexto.avisos.join(), /sin texto/);
+  const nada = run(codeOf(DER, 'Resultado'), { nodes: { 'Leer ajustes': aj } })[0].json;
+  assert.deepStrictEqual([nada.cortes, nada.miniatura_url, nada.costo_usd], [[], '', 0]);
+});
+
+test('redes: un Short va igual a todas las redes del canal, con su texto y la etiqueta de IA', () => {
+  const pub = { youtube: { titulos: ['T1', 'T2'], descripcion: 'desc', tags: ['#historia', 'misterio'] }, tiktok: { texto: 'tt', hashtags: ['fyp', 'historia'] }, instagram: { texto: 'ig' } };
+  const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'short', perfil: 'expediente', redes: 'tiktok, youtube,instagram', contexto: { render_url: 'https://r.mp4', creditos: ['Música: X'], publicacion: pub } };
+  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj, 'vidIQ: títulos': { ok: true, mejor: 'T2' } } }).map(i => i.json);
+  assert.strictEqual(out.length, 1); assert.strictEqual(out[0].plataformas, 'tiktok,youtube,instagram');
+  const c = out[0].cuerpo;
+  assert.match(c, new RegExp('boundary|' + out[0].limite)); assert.ok(c.endsWith(`--${out[0].limite}--\r\n`));
+  assert.ok(c.includes('name="video"\r\n\r\nhttps://r.mp4')); assert.strictEqual((c.match(/name="platform\[\]"/g) || []).length, 3);
+  assert.ok(c.includes('name="youtube_title"\r\n\r\nT2'));                         // ganó el título de vidIQ
+  assert.ok(c.includes('name="is_ai_generated"\r\n\r\ntrue') && c.includes('name="containsSyntheticMedia"\r\n\r\ntrue'));
+  assert.ok(c.includes('tt\n\n#fyp #historia')); assert.ok(c.includes('Música: X')); assert.ok(!c.includes('scheduled_date'));
+  assert.ok(c.includes('name="privacyStatus"\r\n\r\npublic'));
+});
+
+test('redes: un largo va a YouTube con miniatura y cada corte a TikTok/Reels/Shorts; programado si hay fecha', () => {
+  const futuro = new Date(Date.now() + 5 * 86400000).toISOString();
+  const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'largo', perfil: 'p', redes: 'youtube,tiktok,instagram,facebook', publicar_en: futuro,
+    contexto: { render_url: 'https://largo.mp4', miniatura_url: 'https://mini.jpg', cortes: [{ corte: 1, titulo: 'Corte uno', url: 'https://c1.mp4' }, { corte: 2, titulo: 'x', url: '' }], publicacion: { youtube: { titulos: ['Título largo'] } } } };
+  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj } }).map(i => i.json);
+  assert.deepStrictEqual(out.map(o => o.tipo + ':' + o.plataformas), ['principal:youtube,facebook', 'corte 1:youtube,tiktok,instagram,facebook']);
+  assert.ok(out[0].cuerpo.includes('name="thumbnail_url"\r\n\r\nhttps://mini.jpg')); assert.ok(out[0].cuerpo.includes('name="facebook_media_type"\r\n\r\nVIDEO'));
+  assert.ok(out[1].cuerpo.includes('Corte uno #Shorts')); assert.ok(!out[1].cuerpo.includes('thumbnail_url'));
+  assert.ok(out[0].cuerpo.includes('name="scheduled_date"')); assert.ok(out[0].programado);
+  const sinPerfil = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...inicio, perfil: '' }, 'Leer ajustes': aj } })[0].json;
+  assert.strictEqual(sinPerfil.nada, true); assert.match(sinPerfil.motivo, /perfil/);
+});
+
+test('redes: filas por envío, estado del video y resumen por red', () => {
+  const pedidos = [{ tipo: 'principal', plataformas: 'youtube', titulo: 'T', url_video: 'u', programado: '' }, { tipo: 'corte 1', plataformas: 'tiktok', titulo: 'C', url_video: 'u2', programado: '' }];
+  const filas = run(codeOf(RED, 'Filas de publicación'), { nodes: { Inicio: { video_id: 'v', canal_id: 'c' } }, all: { 'Plan de publicación': pedidos, $input: [{ request_id: 'r1', status: 'processing' }, { error: { message: 'cuota' } }] } }).map(i => i.json);
+  assert.strictEqual(filas[0].estado, 'enviado'); assert.strictEqual(filas[1].estado, 'error'); assert.match(filas[1].resultado, /cuota/);
+  const v = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': filas } })[0].json;
+  assert.strictEqual(v.estado, 'publicado'); assert.match(v.error, /corte 1/);
+  const r = run(codeOf(RED, 'Resumen de publicación'), { nodes: { Inicio: { video_id: 'v' } }, all: { 'Filas de publicación': filas, 'Estado en redes': [{ status: 'completed', results: [{ platform: 'youtube', success: true, url: 'https://youtu.be/x' }] }] } })[0].json.texto;
+  assert.match(r, /✓ principal → youtube \(completed\)\n   youtube: https:\/\/youtu\.be\/x/); assert.match(r, /✗ corte 1: cuota/);
+});
+
+test('orquestador: configurar redes valida perfil y lista', () => {
+  const v = x => run(codeOf(ORQ, 'Validar redes'), { nodes: { Inicio: x } })[0].json;
+  const ok = v({ canal_id: 'c', perfil: 'expediente', redes: 'TikTok, youtube youtube' });
+  assert.strictEqual(ok.ok, true); assert.deepStrictEqual(ok.fila, { uploadpost_perfil: 'expediente', redes: 'tiktok,youtube' });
+  assert.match(v({ perfil: 'pp', redes: 'myspace' }).motivo, /myspace/);
+  assert.strictEqual(v({ perfil: 'a b', redes: 'tiktok' }).ok, false);
+});
+
+test('orquestador: el guion recibe la investigación de vidIQ solo si se usó', () => {
+  const pedido = { modo: 'guion', datos: { tema: 'x', formato: 'largo' } };
+  const con = run(codeOf(ORQ, 'Pedir guion'), { nodes: { 'Nuevo video': { pedido }, 'vidIQ: investigar': { ok: true, palabras_clave: 'kw', videos_destacados: 'vd' } } })[0].json;
+  assert.deepStrictEqual(con.datos.investigacion_vidiq, { palabras_clave: 'kw', videos_destacados: 'vd' });
+  const sin = run(codeOf(ORQ, 'Pedir guion'), { nodes: { 'Nuevo video': { pedido } } })[0].json;
+  assert.strictEqual(sin.datos.investigacion_vidiq, undefined);
+});
+
+test('aprendizaje: también mide los envíos a redes a los 2 y 7 días', () => {
+  const hace = d => new Date(Date.now() - d * 86400000 - 3600000).toISOString();
+  const pubs = [{ request_id: 'a', publicado_en: hace(2), canal_id: 'c', video_id: 'v' }, { request_id: 'b', publicado_en: hace(4) }, { request_id: '', publicado_en: hace(2) }, { request_id: 'e', estado: 'error', publicado_en: hace(7) }];
+  const t = run(codeOf(APR, 'Toca medir en redes'), { all: { $input: pubs } });
+  assert.deepStrictEqual(t.map(i => i.json.request_id), ['a']);
+  const lec = run(codeOf(APR, 'Pedir lecciones'), { all: { 'Toca medir en redes': [{ request_id: 'a', canal_id: 'c', video_id: 'v', tipo: 'principal', dias: 2 }], 'Métricas en redes': [{ tiktok: { views: 900 } }] } }).map(i => i.json);
+  assert.strictEqual(lec.length, 1); assert.deepStrictEqual(lec[0].datos.redes[0].metricas, { tiktok: { views: 900 } }); assert.deepStrictEqual(lec[0].datos.videos, []);
+});
+
+test('producción y calidad: el costo de la miniatura se suma y la aprobación final muestra cortes, miniatura y títulos', () => {
+  const filas = run(codeOf(PROD, 'Costo de derivados'), { json: { costo_usd: 0.06, cortes: [{}, {}] }, nodes: { 'Plan de producción': { video_id: 'v' } } }).map(i => i.json);
+  assert.deepStrictEqual(filas.map(f => f.concepto), ['miniatura', 'cortes verticales (2)']);
+  assert.strictEqual(run(codeOf(PROD, 'Costo de derivados'), { json: { costo_usd: 0, cortes: [] }, nodes: { 'Plan de producción': { video_id: 'v' } } })[0].json.nada, true);
+  const m = run(codeOf(PUB, 'Mensaje final'), { json: { video_id: 'v', canal_id: 'c', render_url: 'r', duracion_s: 300, costo_usd: 2, carpeta: 'k', avisos: [],
+    cortes: [{ corte: 1, duracion_s: 40, url: 'c1' }], miniatura_url: 'm', publicacion: { youtube: { titulos: ['A', 'B'] } }, formato: 'largo' } })[0].json;
+  assert.match(m.mensaje, /Miniatura: m/); assert.match(m.mensaje, /Corte 1 \(40 s\): c1/); assert.match(m.mensaje, /1\. A\n2\. B/); assert.match(m.mensaje, /publicarlo/);
+  assert.deepStrictEqual(m.contexto.cortes.length, 1); assert.strictEqual(m.contexto.miniatura_url, 'm');
 });

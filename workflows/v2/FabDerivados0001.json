@@ -1,0 +1,975 @@
+{
+  "id": "FabDerivados0001",
+  "name": "M6 · Derivados (cortes y miniatura)",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "08312a18-b25f-4dfa-9348-0825c40d595e",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "2da64577-7441-4eb2-848a-f57e9cd61ed9",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a6d827f4-e4df-4924-9a06-d17f74ae5d3e",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowCortes === true && $('Inicio').first().json.plan.formato !== 'short' && ($('Inicio').first().json.plan.storyboard?.cortes || []).length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d19faf17-ac97-4622-b11d-bb05437c4ec4",
+      "name": "¿Hace cortes?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// componer(): arma la composición de Creatomate. La usan el video principal y los cortes verticales.\n// Cada escena dura lo que su voz (+ un respiro). Encima: subtítulos (Shorts, cortes o si la biblia lo pide), título de\n// capítulo en los largos y efectos del storyboard; debajo, la música hasta el final. Estilo desde biblia.montaje.\nfunction componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {\n  const m = plan.biblia?.montaje || {};\n  const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));\n  const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);\n  const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));\n  const listos = planos.filter(p => p.url && voces[p.plano_id]?.url && orden.includes(p.plano_id))\n    .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\n  const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);\n  const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';\n  const RESPIRO = 0.35;\n  const limpio = t => String(t || '').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/<[^>]+>/g, '').replace(/\\s{2,}/g, ' ').trim();\n  // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).\n  const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };\n  let total = 0;\n  const escenas = listos.map((p, i) => {\n    const voz = voces[p.plano_id];\n    const dur = Math.round((voz.duracion_s + RESPIRO) * 100) / 100; total += dur;\n    const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';\n    const mov = p.plano.movimiento || '';\n    const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]\n      : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;\n    const els = [\n      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },\n      { type: 'audio', source: voz.url },\n    ];\n    if (subtitulos) {\n      const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;\n      let t = 0;\n      for (const x of partes) { const d = Math.round(voz.duracion_s * x.length / letras * 100) / 100;\n        els.push({ type: 'text', text: x, time: Math.round(t * 100) / 100, duration: d, y: vertical ? '72%' : '86%', width: '86%', x_alignment: '50%',\n          font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });\n        t += d; }\n    }\n    if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',\n      font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',\n      animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });\n    for (const x of efectos[p.plano_id] || []) els.push({ type: 'audio', source: x.url, time: 0, duration: Math.min(dur, x.duracion_s || dur), volume: m.efectos_volumen || '35%', audio_fade_out: 0.4 });\n    return { type: 'composition', track: 1, name: p.plano_id, duration: dur,\n      transition: i && (p.plano.transicion || m.transicion) === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined, elements: els };\n  });\n  total = Math.round(total * 100) / 100;\n  const elementos = [...escenas];\n  if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: total, source: son.musica.url,\n    volume: m.musica_volumen || '16%', audio_fade_in: 1, audio_fade_out: 2.5 });\n  const creditos = [son.musica?.credito, ...(son.efectos || []).map(x => x && x.credito), ...listos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)]\n    .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);\n  return { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },\n    listos: listos.length, esperados: orden.length, total, subtitulos, creditos };\n}\n\n// Cada corte: los planos que eligió el storyboard, en vertical, con subtítulos; máximo 3 cortes de hasta 60 s.\nconst e = $('Inicio').first().json; const ids = new Set((e.plan.planos || []).map(p => p.id));\nconst cortes = (e.plan.storyboard?.cortes || []).slice(0, 3)\n  .map((c, i) => ({ i, titulo: String(c.titulo || '').slice(0, 100), planos: (c.planos || []).filter(id => ids.has(id)) })).filter(c => c.planos.length);\nconst out = [];\nfor (const c of cortes) {\n  const r = componer({ plan: e.plan, planos: e.planos, son: e.son, vertical: true, soloIds: c.planos, forzarSubtitulos: true });\n  if (r.listos && r.total <= 61) out.push({ json: { corte: c.i + 1, titulo: c.titulo, duracion_s: r.total, source: r.source } });\n}\nreturn out.length ? out : [{ json: { ninguno: true } }];\n"
+      },
+      "id": "98738239-cd44-458c-a383-6bc6fe389bd3",
+      "name": "Composiciones de cortes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4f12ed07-4e54-419a-aa53-7892aaef0027",
+              "leftValue": "={{ $json.ninguno !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8fc546d1-56fa-4bf5-aa19-a2e77ad81b64",
+      "name": "¿Hay cortes válidos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v2/renders",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { source: $json.source } }}"
+      },
+      "id": "6d76d4c8-82c0-4cb2-be29-a7b62c84fd60",
+      "name": "Renderizar corte",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mtHyTqYtuZSQYGWN",
+          "name": "Creatomate"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 60,
+        "unit": "seconds"
+      },
+      "id": "584d2d93-2065-44ad-a6b1-723158a3e90c",
+      "name": "Esperar cortes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        0
+      ],
+      "webhookId": "c2f0dbc3-ca6b-4061-95c5-e2cffc50888b"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.creatomate.com/v2/renders/' + ($json.id || $json[0]?.id || 'x') }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "94fea185-81ec-4a02-920c-de49fa4ce481",
+      "name": "Consultar cortes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mtHyTqYtuZSQYGWN",
+          "name": "Creatomate"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst pedidos = $('Composiciones de cortes').all().map(i => i.json);\nconst r = $input.all().map((i, k) => ({ ...pedidos[k], id: i.json.id || $('Renderizar corte').all()[k]?.json?.id, status: i.json.status, url: i.json.url || '' }));\nconst pendientes = r.some(x => !['succeeded', 'failed'].includes(x.status) && x.id);\nreturn r.map(x => ({ json: { ...x, source: undefined, pendientes } }));\n"
+      },
+      "id": "1b759966-27c1-49f3-87f1-5b30df9c8ff7",
+      "name": "Estado de cortes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "48d14eb4-9fc9-4ebc-ade5-d9d9255e42c8",
+              "leftValue": "={{ $json.pendientes === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0de45f18-199d-45b3-8822-a2cd8bd264e1",
+      "name": "¿Faltan cortes?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 90,
+        "unit": "seconds"
+      },
+      "id": "4eb37768-26ac-42e9-b808-d3f23fef3ddf",
+      "name": "Esperar más",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2420,
+        0
+      ],
+      "webhookId": "05bcb326-96c2-46ae-8c7e-b050d6093fdf"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.creatomate.com/v2/renders/' + ($json.id || 'x') }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "c852b2e3-56a7-454d-bb36-19d934be899d",
+      "name": "Consultar otra vez",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mtHyTqYtuZSQYGWN",
+          "name": "Creatomate"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Junta los cortes terminados; los que fallaron o tardaron demasiado se omiten y se avisan.\nconst base = $('Estado de cortes').all().map(i => i.json);\nconst otra = $('Consultar otra vez').isExecuted ? $('Consultar otra vez').all().map(i => i.json) : [];\nconst final = base.map((c, k) => { const o = otra[k]; const st = o?.status || c.status; const url = o?.url || c.url;\n  return { corte: c.corte, titulo: c.titulo, duracion_s: c.duracion_s, ok: st === 'succeeded' && !!url, url: st === 'succeeded' ? url : '', estado: st || 'sin respuesta' }; });\nreturn [{ json: { cortes: final.filter(c => c.ok), fallidos: final.filter(c => !c.ok).map(c => `corte ${c.corte}: ${c.estado}`) } }];\n"
+      },
+      "id": "e9cbfe95-151f-43ba-8496-139f678dd3ec",
+      "name": "Cortes listos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { cortes: [], fallidos: [] } }];"
+      },
+      "id": "ed759525-c99a-4dbe-a75a-f3484184aca5",
+      "name": "Sin cortes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "66e343f4-547c-4c3c-b26b-6c9b3b7126fc",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowMiniaturas === true && !!$('Inicio').first().json.plan.storyboard?.miniatura }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "002012ed-7ad4-4d20-a640-3c99e5ba26d4",
+      "name": "¿Hace miniatura?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Inicio').first().json; const mi = e.plan.storyboard.miniatura || {}; const b = e.plan.biblia || {};\n// Sin texto en la imagen: el texto lo monta Creatomate (letra nítida y estilo del canal).\nconst prompt = [`Miniatura de YouTube, 16:9, ${mi.prompt_imagen || mi.concepto || e.plan.tema}.`, b.estilo_visual?.descripcion ? 'Estilo: ' + b.estilo_visual.descripcion + '.' : '',\n  'Un solo sujeto claro, alto contraste, fondo simple, espacio libre a la izquierda para texto. Sin texto, sin letras, sin logos.'].filter(Boolean).join(' ');\nconst refs = (b.personajes || []).filter(p => (mi.personajes || []).includes(p.id)).flatMap(p => p.referencias_urls || []).slice(0, 3);\nreturn [{ json: { prompt, refs, texto: String(mi.texto || '').toUpperCase().slice(0, 32) } }];\n"
+      },
+      "id": "c1d3dc1d-980b-4d8c-a306-f7e1a3536d27",
+      "name": "Pedido de miniatura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.refs.map(u => ({ type: 'input_image', image_url: u }))] }] } }}"
+      },
+      "id": "c93ef83a-23f6-46cf-b007-0f21137ef3d7",
+      "name": "Imagen de miniatura",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3740,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredOpenAI001",
+          "name": "OpenAI"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nif (!out?.result) return [{ json: { ok: false, error: 'sin imagen de miniatura' } }];\nreturn [{ json: { ok: true }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: 'miniatura-base.png' } } }];\n"
+      },
+      "id": "45a6bead-9615-49ed-86d7-db8f7f367e0b",
+      "name": "Archivo de miniatura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "398a2aae-a15d-40c5-aec9-c078a2a7ef18",
+              "leftValue": "={{ $json.ok === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "be53df34-f2c0-4812-880c-87e5d6bbb7a3",
+      "name": "¿Hay imagen?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 300000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "uploadType",
+              "value": "media"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "imagen"
+      },
+      "id": "333c29e2-eb30-4f16-933f-8e94822cf5fe",
+      "name": "Subir base",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "addParents",
+              "value": "={{ $('Inicio').first().json.carpeta || $('Leer ajustes').first().json.driveCarpetaRaizId }}"
+            },
+            {
+              "name": "removeParents",
+              "value": "root"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { name: \"miniatura-base.png\" } }}"
+      },
+      "id": "21c64093-5742-46ce-9e95-d923772cbc6d",
+      "name": "Nombrar base",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4620,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir base').first().json.id + '/permissions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
+      },
+      "id": "33b1468d-b2d4-4020-8f49-7b29c7d9ee6b",
+      "name": "Compartir base",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4840,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// 1280x720 JPG: la imagen a pantalla completa y el texto corto grande, con contorno, en el estilo del canal.\nconst e = $('Inicio').first().json; const m = e.plan.biblia?.montaje || {}; const texto = $('Pedido de miniatura').first().json.texto;\nconst url = 'https://drive.google.com/uc?export=download&id=' + $('Subir base').first().json.id;\nconst els = [{ type: 'image', source: url, fit: 'cover' }];\nif (texto) els.push({ type: 'text', text: texto, x: '27%', y: '50%', width: '48%', height: '70%', x_alignment: '0%', y_alignment: '50%',\n  font_family: m.fuente || 'Montserrat', font_weight: '900', font_size_maximum: '18 vmin', fill_color: m.color_texto || '#FFFFFF',\n  stroke_color: '#000000', stroke_width: '1.6 vmin', shadow_color: 'rgba(0,0,0,0.6)', shadow_blur: '2 vmin' });\nreturn [{ json: { source: { output_format: 'jpg', width: 1280, height: 720, elements: els }, base_url: url } }];\n"
+      },
+      "id": "2e748557-3df8-470d-b8d2-cb0867638789",
+      "name": "Composición de miniatura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v2/renders",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { source: $json.source } }}"
+      },
+      "id": "74cb3654-ee92-4acd-9f71-3944afa81aa8",
+      "name": "Renderizar miniatura",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5280,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mtHyTqYtuZSQYGWN",
+          "name": "Creatomate"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 20,
+        "unit": "seconds"
+      },
+      "id": "9302a909-c654-4939-acbf-beb7722b5ce9",
+      "name": "Esperar miniatura",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        5500,
+        0
+      ],
+      "webhookId": "eaa11c58-24f0-4977-a692-364bde42e191"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.creatomate.com/v2/renders/' + ($('Renderizar miniatura').first().json.id || $('Renderizar miniatura').first().json[0]?.id || 'x') }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "652f90ec-48e2-4b2f-9eec-39c6fe1c36df",
+      "name": "Consultar miniatura",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5720,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mtHyTqYtuZSQYGWN",
+          "name": "Creatomate"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Lo que vuelve a Producción: cortes listos, miniatura (o la imagen base si Creatomate falló) y su costo.\nconst aj = $('Leer ajustes').first().json;\nconst c = $('Cortes listos').isExecuted ? $('Cortes listos').first().json : { cortes: [], fallidos: [] };\nlet miniatura_url = '', avisos = [...(c.fallidos || [])], costo_usd = 0;\nif ($('Imagen de miniatura').isExecuted) {\n  costo_usd += aj.costoMiniaturaUsd;\n  const r = $('Consultar miniatura').isExecuted ? $('Consultar miniatura').first().json : {};\n  miniatura_url = r.status === 'succeeded' && r.url ? r.url : ($('Composición de miniatura').isExecuted ? $('Composición de miniatura').first().json.base_url : '');\n  if (!miniatura_url) avisos.push('no se pudo crear la miniatura');\n  else if (r.status !== 'succeeded') avisos.push('la miniatura salió sin texto (Creatomate no terminó)');\n}\nreturn [{ json: { cortes: c.cortes || [], miniatura_url, costo_usd, avisos } }];\n"
+      },
+      "id": "a203109e-f21c-43e5-b774-7007c512d312",
+      "name": "Resultado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5940,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "¿Hace cortes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hace cortes?": {
+      "main": [
+        [
+          {
+            "node": "Composiciones de cortes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin cortes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Composiciones de cortes": {
+      "main": [
+        [
+          {
+            "node": "¿Hay cortes válidos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay cortes válidos?": {
+      "main": [
+        [
+          {
+            "node": "Renderizar corte",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin cortes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Renderizar corte": {
+      "main": [
+        [
+          {
+            "node": "Esperar cortes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar cortes": {
+      "main": [
+        [
+          {
+            "node": "Consultar cortes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar cortes": {
+      "main": [
+        [
+          {
+            "node": "Estado de cortes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado de cortes": {
+      "main": [
+        [
+          {
+            "node": "¿Faltan cortes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Faltan cortes?": {
+      "main": [
+        [
+          {
+            "node": "Esperar más",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cortes listos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar más": {
+      "main": [
+        [
+          {
+            "node": "Consultar otra vez",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar otra vez": {
+      "main": [
+        [
+          {
+            "node": "Cortes listos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cortes listos": {
+      "main": [
+        [
+          {
+            "node": "¿Hace miniatura?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin cortes": {
+      "main": [
+        [
+          {
+            "node": "¿Hace miniatura?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hace miniatura?": {
+      "main": [
+        [
+          {
+            "node": "Pedido de miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido de miniatura": {
+      "main": [
+        [
+          {
+            "node": "Imagen de miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagen de miniatura": {
+      "main": [
+        [
+          {
+            "node": "Archivo de miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archivo de miniatura": {
+      "main": [
+        [
+          {
+            "node": "¿Hay imagen?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay imagen?": {
+      "main": [
+        [
+          {
+            "node": "Subir base",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir base": {
+      "main": [
+        [
+          {
+            "node": "Nombrar base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nombrar base": {
+      "main": [
+        [
+          {
+            "node": "Compartir base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartir base": {
+      "main": [
+        [
+          {
+            "node": "Composición de miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Composición de miniatura": {
+      "main": [
+        [
+          {
+            "node": "Renderizar miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Renderizar miniatura": {
+      "main": [
+        [
+          {
+            "node": "Esperar miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar miniatura": {
+      "main": [
+        [
+          {
+            "node": "Consultar miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar miniatura": {
+      "main": [
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

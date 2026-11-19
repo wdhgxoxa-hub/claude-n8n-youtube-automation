@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "80b78383-2675-43dd-9401-fd19bdabbfad",
+      "id": "4ef9acb3-c701-48ed-a7bb-48a3b718019a",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "362eb3d0-b00c-4b9a-ba57-10b9c7e4c19f",
+      "id": "2b44bd5b-4e8f-405e-b232-827f37f7e361",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -46,9 +46,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json;\nconst clave = e.evento === 'claude_ok' ? 'claude_ok:' + (e.modo === 'corregir_guion' ? 'guion' : e.modo)\n  : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;\nconst rutas = [\"nuevo_canal\", \"claude_ok:investigar_nichos\", \"aprobado:canal\", \"cambios:canal\", \"claude_ok:crear_biblia\", \"nuevo_video\", \"claude_ok:guion\", \"aprobado:guion\", \"cambios:guion\", \"claude_ok:storyboard\", \"aprobado:storyboard\", \"cambios:storyboard\", \"claude_ok:aprender\", \"aprobado:final\", \"cambios:final\", \"corregir\", \"ajustar_biblia\", \"programar\", \"referencias\", \"otro\"];\nconst i = rutas.indexOf(clave);\nreturn [{ json: { ...e, clave, salida: i === -1 ? rutas.length - 1 : i } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json;\nconst clave = e.evento === 'claude_ok' ? 'claude_ok:' + (e.modo === 'corregir_guion' ? 'guion' : e.modo)\n  : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;\nconst rutas = [\"nuevo_canal\", \"claude_ok:investigar_nichos\", \"aprobado:canal\", \"cambios:canal\", \"claude_ok:crear_biblia\", \"nuevo_video\", \"claude_ok:guion\", \"aprobado:guion\", \"cambios:guion\", \"claude_ok:storyboard\", \"aprobado:storyboard\", \"cambios:storyboard\", \"claude_ok:aprender\", \"aprobado:final\", \"cambios:final\", \"corregir\", \"ajustar_biblia\", \"programar\", \"referencias\", \"configurar_redes\", \"otro\"];\nconst i = rutas.indexOf(clave);\nreturn [{ json: { ...e, clave, salida: i === -1 ? rutas.length - 1 : i } }];\n"
       },
-      "id": "c9eceede-e819-4718-81a0-b57f671943aa",
+      "id": "67c692bd-7b33-42e8-a6d0-0b2329ebcdd8",
       "name": "Ruta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -60,10 +60,10 @@
     {
       "parameters": {
         "mode": "expression",
-        "numberOutputs": 20,
+        "numberOutputs": 21,
         "output": "={{ $json.salida }}"
       },
-      "id": "df2a3519-5dc3-4ea2-9bac-98c2a735c96e",
+      "id": "2dce146d-aad3-410a-a8e7-2d4ed7aac103",
       "name": "Según evento",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -76,7 +76,7 @@
       "parameters": {
         "jsCode": "const e=$json; return [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.criterios || '', rechazos: e.rechazos || [] } } }];"
       },
-      "id": "c5e1cae6-942c-48cf-a655-4d566a35742b",
+      "id": "02ac2aba-f6e2-454c-bd33-fccb10ca013a",
       "name": "Pedir nichos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -105,7 +105,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "ce560e70-9027-49bc-aa1f-e1541e260adf",
+      "id": "52a620ca-5da6-488c-9848-6bcfd2e67b72",
       "name": "Claude: nichos",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -125,7 +125,7 @@
           "appendAttribution": false
         }
       },
-      "id": "44c5fd4d-e999-4c05-b93e-35beca60857d",
+      "id": "021fb625-dcfe-430f-b0e0-9c9c7fa800b8",
       "name": "Aviso: investigando",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -151,7 +151,7 @@
           },
           "conditions": [
             {
-              "id": "de2554de-43a3-4e9a-b6c8-6f2591940a13",
+              "id": "f5484a21-f3ff-407c-a800-9054d9a44caa",
               "leftValue": "={{ $('Leer ajustes').first().json.allowCritico === true }}",
               "rightValue": "",
               "operator": {
@@ -165,7 +165,7 @@
         },
         "options": {}
       },
-      "id": "ec412521-1ec9-4c7b-a0fd-16af465965b2",
+      "id": "72b90f72-390c-4ffc-a991-4e77a6a91840",
       "name": "¿Criticar nichos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -187,7 +187,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Eres un crítico escéptico de investigación de mercado para YouTube. Revisa esta propuesta de canal y marca cada afirmación sin fuente o con datos dudosos (cifras de búsquedas, mercados, competidores). Responde JSON {\"sin_fuente\": [\"…\"], \"riesgos\": [\"…\"], \"veredicto\": \"una frase\"}.\n\n' + JSON.stringify($('Inicio').first().json.resultado).slice(0, 12000) }] }] } }}"
       },
-      "id": "51284c79-e27b-4dc0-98a1-60ba8ac57e6f",
+      "id": "611d7c95-93a6-4d91-8a27-217c5ed1439d",
       "name": "Crítico de nichos",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -207,7 +207,7 @@
       "parameters": {
         "jsCode": "\nconst r = $('Inicio').first().json.resultado || {}; const c = r.canal || {};\nlet critica = '';\nif ($('Crítico de nichos').isExecuted) { try { const k = JSON.parse(($('Crítico de nichos').first().json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}');\n  critica = `\\n\\nCrítico (GPT-6 Astra): ${k.veredicto || ''}` + ((k.sin_fuente || []).length ? '\\nSin fuente: ' + k.sin_fuente.slice(0, 4).join('; ') : ''); } catch (e) { critica = ''; } }\nconst ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\\n');\nconst temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\\n');\nconst mensaje = `Propuesta de canal: ${c.nombre_propuesto}\\nNicho: ${c.nicho}\\nPúblico: ${c.publico}\\nPromesa: ${c.promesa}\\n\\nEvidencia:\\n${ev}\\n\\nPrimeros temas:\\n${temas}${critica}`;\nreturn [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), contexto: r, job_id: $('Inicio').first().json.job_id } }];\n"
       },
-      "id": "abf22d1a-c8bb-40b6-9ab0-e9cf5595ccc7",
+      "id": "8c477766-3c13-4e1d-92f8-4c3a59d9fba8",
       "name": "Mensaje de canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -236,7 +236,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "03705e40-8ff5-4c95-a723-40b2f2693ac8",
+      "id": "c32399d4-5b81-41a0-a22d-09fa7affab10",
       "name": "Aprobar canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -249,7 +249,7 @@
       "parameters": {
         "jsCode": "\nconst c = ($json.contexto || {}).canal || {};\nconst canal_id = (c.nombre_propuesto || 'canal').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) + '-' + Date.now().toString(36).slice(-4);\nreturn [{ json: { canal_id, nombre: c.nombre_propuesto || '', nicho: c.nicho || '', estado: 'creando_biblia', biblia_ruta: '',\n  presupuesto_largo_usd: $('Leer ajustes').first().json.presupuestoLargoUsd, presupuesto_short_usd: $('Leer ajustes').first().json.presupuestoShortUsd,\n  plataformas: 'youtube', formato_defecto: (c.formatos || ['largo'])[0] } }];\n"
       },
-      "id": "9bc346da-b074-4819-9b85-e24463898dfe",
+      "id": "90ad5152-0d04-46d0-b83f-62c9eb8e9a6f",
       "name": "Nuevo canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -277,7 +277,7 @@
         },
         "options": {}
       },
-      "id": "dfea4a9b-c8a0-4cde-ad0b-16eab3c2335e",
+      "id": "186df86a-1e50-4472-a07e-30140e860303",
       "name": "Guardar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -290,7 +290,7 @@
       "parameters": {
         "jsCode": "const ctx = $('Según evento').first().json.contexto; return [{ json: { modo:'crear_biblia', canal_id: $('Nuevo canal').first().json.canal_id, video_id:'', datos:{ canal: ctx.canal, evidencia: ctx.evidencia, notas: '' } } }];"
       },
-      "id": "f5ba8cb0-8be7-45c9-a143-6c06a94fe0e1",
+      "id": "a066946a-8493-4f97-919d-a092595e6fb7",
       "name": "Pedir biblia",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -319,7 +319,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "0151f4db-8a70-44e9-adca-68f7ae9342b4",
+      "id": "d51ef1fc-7f89-4bd1-b7ac-7bdee7279391",
       "name": "Claude: biblia",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -332,7 +332,7 @@
       "parameters": {
         "jsCode": "\nconst e = $json; const c = (e.contexto || {}).canal || {};\nreturn [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.cambios || '', rechazos:[{ nombre: c.nombre_propuesto, nicho: c.nicho, motivo: e.cambios || '' }] } } }];\n"
       },
-      "id": "ef088594-ad95-4fa8-a662-a8ac298b309d",
+      "id": "a87b98c7-7882-46ff-84ec-9412c44fc6b8",
       "name": "Reinvestigar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -361,7 +361,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "9bc671b0-b986-4926-8b1b-5c3be77b2c20",
+      "id": "30e216e4-cb8e-4222-aa8a-b3909b86dfdc",
       "name": "Claude: nichos otra vez",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -374,7 +374,7 @@
       "parameters": {
         "jsCode": "return [{ json: { estado:'activo', biblia_ruta: 'trabajo:' + $json.job_id } }];"
       },
-      "id": "ece3544c-de19-4d60-9c24-e0fe9932c95b",
+      "id": "e407f3f9-0fe2-40e3-92df-627247c90d84",
       "name": "Canal activo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -412,7 +412,7 @@
         },
         "options": {}
       },
-      "id": "01dd971d-a8c0-464f-a899-56302df0837b",
+      "id": "53d86553-55c1-492c-bb44-563aeed887b6",
       "name": "Activar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -432,7 +432,7 @@
           "appendAttribution": false
         }
       },
-      "id": "a89f35dc-e230-46e4-b109-2438e420f7d8",
+      "id": "7149d940-2aa8-47c1-97b7-05ff436a48f6",
       "name": "Aviso: canal listo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -451,7 +451,7 @@
       "parameters": {
         "jsCode": "return [{ json: { canal_id: $('Inicio').first().json.canal_id } }];"
       },
-      "id": "48d171d7-56ac-4783-830c-db0cfe0fb6a1",
+      "id": "dc189885-2dc8-4acb-8c02-181bae5f9f45",
       "name": "Encargo de referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -480,7 +480,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "ecf7847c-292e-423b-b3a2-d7b8f1e0a3cf",
+      "id": "08793812-07bc-4ea5-b90e-4f3309c0db1a",
       "name": "Referencias del canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -511,7 +511,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "f737d926-9e6b-4d7e-af6a-ad7ce86459b5",
+      "id": "1d7ec276-b756-4d75-896c-94cdf7b351f0",
       "name": "Buscar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -532,7 +532,7 @@
           },
           "conditions": [
             {
-              "id": "a0deea02-2bfe-42af-acf0-8ca738bae760",
+              "id": "baa02a68-c687-49c1-9630-15b0e61528d0",
               "leftValue": "={{ $json.estado === 'activo' && String($json.biblia_ruta).startsWith('trabajo:') }}",
               "rightValue": "",
               "operator": {
@@ -546,7 +546,7 @@
         },
         "options": {}
       },
-      "id": "3cf4faaa-a02c-4392-8e82-aab09e9d6bf1",
+      "id": "d46d105a-979e-45fd-ad18-9326f4239698",
       "name": "¿Canal activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -577,7 +577,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "3a49fd98-2fc5-446e-ba5a-0561e1e5ce1c",
+      "id": "ac2e46a3-8b12-433d-aedf-42f565fbcc13",
       "name": "Buscar biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -591,7 +591,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;\nconst biblia = (JSON.parse($json.resultado || '{}').resultado) || {};\nconst formato = e.formato || canal.formato_defecto || 'largo';\nconst video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);\nconst presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;\nreturn [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',\n  version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },\n  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: e.tema, formato, biblia,\n    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip' } } } }];\n"
       },
-      "id": "8ab2e0c6-8ce6-4e73-9163-753b43e24378",
+      "id": "dbb4db7b-bf27-4adc-8c3b-ba67bc59ce5b",
       "name": "Nuevo video",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -607,7 +607,7 @@
         "includeOtherFields": false,
         "options": {}
       },
-      "id": "c341b6a5-6fcf-41d9-b7bd-e6939adf6916",
+      "id": "ecbdd9a6-1eaf-4c22-b3f4-54b60d4627aa",
       "name": "Fila del video",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -635,7 +635,7 @@
         },
         "options": {}
       },
-      "id": "12b4f154-246b-432a-8a9a-e2d9bc0febb6",
+      "id": "cd687724-ed06-4c9d-91b9-9ecc4701598c",
       "name": "Guardar video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -646,14 +646,90 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{ json: $('Nuevo video').first().json.pedido }];"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5297f2ce-b43a-4861-94d5-9346823bcdd0",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowVidiq === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
-      "id": "1f7e09d0-a4c5-4594-9e7b-15abdbfc03b4",
+      "id": "2a6989bb-9984-41a1-8b7d-6e7be6be1cb7",
+      "name": "¿Investigar con vidIQ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        6380,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $('Nuevo video').first().json.pedido; return [{ json: { accion: 'investigar', tema: p.datos.tema, formato: p.datos.formato, idioma: $('Leer ajustes').first().json.idioma } }];"
+      },
+      "id": "58380d03-3820-456b-8247-d3003ceb1721",
+      "name": "Pedido a vidIQ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabVidiq00000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "1a07477a-3c58-4185-b90d-d9a43ebff46f",
+      "name": "vidIQ: investigar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6820,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// El guion recibe lo que encontró vidIQ (palabras clave y videos que destacan) como contexto, si se usó.\nconst p = $('Nuevo video').first().json.pedido;\nconst vq = $('vidIQ: investigar').isExecuted ? $('vidIQ: investigar').first().json : null;\nreturn [{ json: { ...p, datos: { ...p.datos, ...(vq?.ok ? { vidiq: 'datos', investigacion_vidiq: { palabras_clave: vq.palabras_clave, videos_destacados: vq.videos_destacados } } : {}) } } }];\n"
+      },
+      "id": "4e49d310-fee2-43ff-b1b1-62137dabb171",
       "name": "Pedir guion",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6380,
+        7040,
         0
       ]
     },
@@ -677,12 +753,12 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "e9206f8a-6f3d-4c14-adf3-8ebf38757b37",
+      "id": "457435aa-de67-40af-b072-00b7bf2a5d69",
       "name": "Claude: guion",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6600,
+        7260,
         0
       ]
     },
@@ -697,12 +773,12 @@
           "appendAttribution": false
         }
       },
-      "id": "5934692f-82d5-4656-8a23-c210dc90bccd",
+      "id": "a4486b98-1b0b-4041-b3d2-e5dac23f7615",
       "name": "Aviso: escribiendo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        6820,
+        7480,
         0
       ],
       "credentials": {
@@ -723,12 +799,12 @@
           "appendAttribution": false
         }
       },
-      "id": "c4fbdc73-e2b9-43f5-9b57-4e20bae591c5",
+      "id": "ea151690-a3de-4f87-a43c-128a71154d53",
       "name": "Aviso: canal no listo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        7040,
+        7700,
         0
       ],
       "credentials": {
@@ -760,12 +836,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "e7974f1a-0264-48ca-82f6-c16420a9582f",
+      "id": "c764fa19-da98-4f8c-8fd3-c0aae1ad1222",
       "name": "Video (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        7260,
+        7920,
         0
       ],
       "alwaysOutputData": true
@@ -781,7 +857,7 @@
           },
           "conditions": [
             {
-              "id": "182d3350-ae6b-46ae-9cc4-93a6ce5a9d8b",
+              "id": "8844af30-a939-4471-9834-cffa42c5b861",
               "leftValue": "={{ $('Leer ajustes').first().json.allowCritico === true && Number($json.intentos || 0) < 2 }}",
               "rightValue": "",
               "operator": {
@@ -795,12 +871,12 @@
         },
         "options": {}
       },
-      "id": "8f1ca0d1-d2df-4875-a0e3-d6c3017b1c18",
+      "id": "ef61a84c-908c-4364-8ad4-051ed93d244f",
       "name": "¿Criticar guion?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        7480,
+        8140,
         0
       ]
     },
@@ -815,14 +891,14 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Eres el crítico de guiones de un canal de YouTube. Puntúa de 1 a 10: gancho (abre una pregunta concreta), promesa (el inicio cumple el título), claridad, emocion (asombro o tensión, no tristeza plana) y exactitud (cada dato tiene fuente en «fuentes»). Si alguna nota es menor que 8, da instrucciones concretas de reescritura. Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes }).slice(0, 14000) }] }] } }}"
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Eres el crítico de guiones de un canal de YouTube. Puntúa de 1 a 10: gancho (abre una pregunta concreta), promesa (el inicio cumple el título), claridad, emocion (asombro o tensión, no tristeza plana), exactitud (cada dato tiene fuente en «fuentes») y originalidad (no repite el enfoque, la estructura ni el gancho de los temas recientes del canal; YouTube no monetiza contenido repetitivo o de plantilla). Si alguna nota es menor que 8, da instrucciones concretas de reescritura. Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}"
       },
-      "id": "d61e6575-5bcf-48f7-8d0a-9bafb632cc52",
+      "id": "6c1f0171-346d-4136-a833-46225b6d169d",
       "name": "Crítico del guion",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7700,
+        8360,
         0
       ],
       "credentials": {
@@ -835,14 +911,14 @@
     },
     {
       "parameters": {
-        "jsCode": "\nlet k = {}; try { k = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); } catch (e) { k = {}; }\nconst dims = ['gancho', 'promesa', 'claridad', 'emocion', 'exactitud'];\nconst notas = Object.fromEntries(dims.map(d => [d, Number(k[d]) || 0]));\nconst leido = dims.some(d => notas[d] > 0);\n// Si el crítico no respondió bien, no se bloquea: el guion pasa a tu aprobación con la nota de Claude.\nreturn [{ json: { notas, pasa: !leido || dims.every(d => notas[d] >= 8), problemas: k.problemas || [], instrucciones: String(k.instrucciones || '').slice(0, 2000), leido } }];\n"
+        "jsCode": "\nlet k = {}; try { k = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); } catch (e) { k = {}; }\nconst dims = ['gancho', 'promesa', 'claridad', 'emocion', 'exactitud', 'originalidad'];\nconst notas = Object.fromEntries(dims.map(d => [d, Number(k[d]) || 0]));\nconst leido = dims.some(d => notas[d] > 0);\n// Si el crítico no respondió bien, no se bloquea: el guion pasa a tu aprobación con la nota de Claude.\nreturn [{ json: { notas, pasa: !leido || dims.every(d => notas[d] >= 8), problemas: k.problemas || [], instrucciones: String(k.instrucciones || '').slice(0, 2000), leido } }];\n"
       },
-      "id": "7fe6523c-da5d-4b85-8393-9a7c627fa309",
+      "id": "35924e7d-cd26-41ff-ac7d-430e1ff279fe",
       "name": "Veredicto del crítico",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        7920,
+        8580,
         0
       ]
     },
@@ -857,7 +933,7 @@
           },
           "conditions": [
             {
-              "id": "62c04da7-787c-4d6d-9b07-807740caea33",
+              "id": "9539e30c-cc11-4b1d-9fd0-e5d922c48601",
               "leftValue": "={{ $json.pasa === true }}",
               "rightValue": "",
               "operator": {
@@ -871,12 +947,12 @@
         },
         "options": {}
       },
-      "id": "696d51af-8439-41bd-8e24-4e07af1ebd0b",
+      "id": "66d4c49c-f391-47ca-9002-5dd40ce71c00",
       "name": "¿Pasa el crítico?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        8140,
+        8800,
         0
       ]
     },
@@ -884,12 +960,12 @@
       "parameters": {
         "jsCode": "return [{ json: { intentos: Number($('Video (crítico)').first().json.intentos || 0) + 1, etapa: 'guion' } }];"
       },
-      "id": "9ac7b674-b105-44c0-96ee-d8000de50d3c",
+      "id": "3830438c-4f08-4d26-a459-1ce5a33d9673",
       "name": "Contar revisión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        8360,
+        9020,
         0
       ]
     },
@@ -922,12 +998,12 @@
         },
         "options": {}
       },
-      "id": "6c7bf326-c7de-433d-8a1b-cdce9ddb4182",
+      "id": "aea58c45-b90e-4ea0-9fbf-6b733ec7183d",
       "name": "Revisión en la tabla",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        8580,
+        9240,
         0
       ]
     },
@@ -953,12 +1029,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "99bc8caa-4f75-4634-820f-17ee863bda67",
+      "id": "aa7ae627-f4eb-4fbc-b67e-531885381e7c",
       "name": "Canal (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        8800,
+        9460,
         0
       ],
       "alwaysOutputData": true
@@ -985,12 +1061,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "e1f2cea4-4e67-49a3-918c-ff89db4111fe",
+      "id": "dc1a9eff-0c3a-4036-b28b-55c718c39aca",
       "name": "Biblia (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        9020,
+        9680,
         0
       ],
       "alwaysOutputData": true
@@ -999,12 +1075,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Veredicto del crítico').first().json;\nconst biblia = (JSON.parse($('Biblia (crítico)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.resultado, biblia, cambios: `Crítica automática (notas ${JSON.stringify(v.notas)}): ${v.instrucciones} ${v.problemas.join('; ')}`.slice(0, 3000) } } }];\n"
       },
-      "id": "242cad5a-0d0c-4986-9f67-3b1a70b01107",
+      "id": "f747b02e-3b1c-431b-aab6-c60a31f44edf",
       "name": "Pedir corrección (crítico)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        9240,
+        9900,
         0
       ]
     },
@@ -1028,12 +1104,12 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "0ab9c0fb-7768-48a4-a024-71fa2766e598",
+      "id": "36a1840f-950c-4c8f-90cd-07ad6e2610d8",
       "name": "Claude: corregir (crítico)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9460,
+        10120,
         0
       ]
     },
@@ -1041,12 +1117,12 @@
       "parameters": {
         "jsCode": "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'crítico del guion', servicio: 'OpenAI', usd: aj.costoCriticoUsd } }];"
       },
-      "id": "bad38f62-fdb5-4cf8-a91b-40da8e414b2a",
+      "id": "b6e73860-d122-45e5-b301-fa4c92d56358",
       "name": "Fila de costo (crítico)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        9680,
+        10340,
         0
       ]
     },
@@ -1069,12 +1145,12 @@
         },
         "options": {}
       },
-      "id": "3e78c815-c20b-4199-9a43-b7ae7507bc4d",
+      "id": "2a0c14eb-5c0f-46a1-8123-6da6d18b28b9",
       "name": "Guardar costo (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        9900,
+        10560,
         0
       ]
     },
@@ -1082,12 +1158,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const r = e.resultado || {}; const rb = r.rubrica || {};\nconst nota = Object.entries(rb).map(([k, v]) => k + ' ' + v).join(' · ');\nlet critica = '';\nif ($('Veredicto del crítico').isExecuted && $('Veredicto del crítico').first().json.leido) {\n  const n = $('Veredicto del crítico').first().json.notas; critica = '\\nCrítico (GPT-6 Astra): ' + Object.entries(n).map(([k, v]) => k + ' ' + v).join(' · '); }\nconst mensaje = `Guion: ${r.titulo}\\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\\nRúbrica: ${nota}${critica}\\n\\n${String(r.guion || '').slice(0, 3000)}`;\nreturn [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];\n"
       },
-      "id": "bf2d4bdd-492d-4d0e-afa3-c2182346eed4",
+      "id": "2171155d-5cf9-43c5-b8fc-1ddff782d7d3",
       "name": "Mensaje de guion",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10120,
+        10780,
         0
       ]
     },
@@ -1111,14 +1187,46 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "668941bb-26c0-4824-a9fe-755eb521f4c6",
+      "id": "3975b999-1b39-453b-8698-70f35c2a1c98",
       "name": "Aprobar guion",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        10340,
+        11000,
         0
       ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "426d82c8-84e7-4895-a2cb-8bb0aff632b4",
+      "name": "Temas del canal",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        11220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -1142,12 +1250,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "af6c6cac-4b18-482d-ab5e-73106393c101",
+      "id": "51dc70b4-8beb-4f18-9eb1-f97be8ad89cf",
       "name": "Canal del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        10560,
+        11440,
         0
       ],
       "alwaysOutputData": true
@@ -1174,12 +1282,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "1890e009-e3f1-447e-a859-1d360f55f0a4",
+      "id": "afd040bc-8fda-4bc9-ab89-07b445c7bd97",
       "name": "Biblia del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        10780,
+        11660,
         0
       ],
       "alwaysOutputData": true
@@ -1206,12 +1314,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "f081221c-6f24-4bca-91cd-c3f91e8cce24",
+      "id": "565d2188-466d-43ec-9b7e-dfde7921f8ba",
       "name": "Video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        11000,
+        11880,
         0
       ],
       "alwaysOutputData": true
@@ -1220,12 +1328,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '',\n    presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
       },
-      "id": "6acfab86-69b3-4372-9d0b-8d545fa8edfd",
+      "id": "cfc66f4c-a0b1-4d9a-aba1-72d7ee4fabc6",
       "name": "Pedir storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        11220,
+        12100,
         0
       ]
     },
@@ -1249,12 +1357,12 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "b91f6a0d-379d-46df-95e1-31efe9fb287b",
+      "id": "ef888ee4-2020-4585-b6de-54e388f7cba1",
       "name": "Claude: storyboard",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        11440,
+        12320,
         0
       ]
     },
@@ -1262,12 +1370,12 @@
       "parameters": {
         "jsCode": "return [{ json: { etapa: 'storyboard' } }];"
       },
-      "id": "48844a18-2490-46b3-8e8a-37b024239c40",
+      "id": "9f679e1e-1dcf-4841-b07e-7addeb26954e",
       "name": "Etapa storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        11660,
+        12540,
         0
       ]
     },
@@ -1300,12 +1408,12 @@
         },
         "options": {}
       },
-      "id": "decb0287-dacd-446a-9f51-1155a1bb4bf8",
+      "id": "09aea207-6aa3-408b-bdec-82ff1d43563c",
       "name": "Video en storyboard",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        11880,
+        12760,
         0
       ]
     },
@@ -1331,12 +1439,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "49a43047-4114-4ce7-90b4-30b5ff77ebc6",
+      "id": "66f6fd3d-089e-4bda-99a0-cc1d0c329d23",
       "name": "Canal (corrección)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        12100,
+        12980,
         0
       ],
       "alwaysOutputData": true
@@ -1363,12 +1471,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "57fefd3e-5385-4908-aebe-75127d3e5681",
+      "id": "f17faace-4cc7-4c96-8d75-c47275977236",
       "name": "Biblia (corrección)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        12320,
+        13200,
         0
       ],
       "alwaysOutputData": true
@@ -1377,12 +1485,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (corrección)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.video_id, datos: { guion: e.contexto, cambios: e.cambios || '', biblia } } }];\n"
       },
-      "id": "de37a87b-b896-4cf6-8ec6-be00060850a4",
+      "id": "ca04a753-bdac-47e2-8f56-69ca4749136b",
       "name": "Pedir corrección",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        12540,
+        13420,
         0
       ]
     },
@@ -1406,12 +1514,12 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "45f40683-3eab-4c5a-8cea-c9a29aab5b06",
+      "id": "b32c3661-20cd-4c8d-bd84-cbd1276e2239",
       "name": "Claude: corregir",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        12760,
+        13640,
         0
       ]
     },
@@ -1419,12 +1527,12 @@
       "parameters": {
         "jsCode": "\nconst r = $json.resultado || {}; const p = r.planos || [];\nconst cuenta = p.reduce((a, x) => (a[x.tipo] = (a[x.tipo] || 0) + 1, a), {});\nconst mensaje = `Storyboard listo: ${p.length} planos (${Object.entries(cuenta).map(([k, v]) => v + ' ' + k).join(', ')}).\\nCosto estimado: US$${r.costo_estimado_usd ?? '?'}\\n\\n` +\n  p.slice(0, 25).map(x => `${x.id} [${x.tipo}, ${x.encuadre}] ${String(x.texto_narrado).slice(0, 90)}`).join('\\n');\nreturn [{ json: { etapa: 'storyboard', mensaje: mensaje.slice(0, 3900), contexto: r, video_id: $json.video_id, canal_id: $json.canal_id } }];\n"
       },
-      "id": "8a8894ed-53af-4dc5-9168-e11a2e83c8eb",
+      "id": "8dfc4d8f-5fc1-4b6d-83ad-1daaa553dafc",
       "name": "Mensaje de storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        12980,
+        13860,
         0
       ]
     },
@@ -1448,12 +1556,12 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "cada0d2e-21ff-4a01-8bc4-1a8b90b358f5",
+      "id": "a2891271-c8fc-49c9-a1b0-bb34218e50b2",
       "name": "Aprobar storyboard",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        13200,
+        14080,
         0
       ]
     },
@@ -1479,12 +1587,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "1004daf2-8482-4d68-956a-8c6e07859aa0",
+      "id": "f856522f-89f7-438f-9f09-5b36ffa0a99b",
       "name": "Canal (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        13420,
+        14300,
         0
       ],
       "alwaysOutputData": true
@@ -1511,12 +1619,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "5ec1c3c3-5b76-468a-a131-e216df468ec4",
+      "id": "3beaa068-57c3-4519-b375-01746af2c52e",
       "name": "Biblia (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        13640,
+        14520,
         0
       ],
       "alwaysOutputData": true
@@ -1543,12 +1651,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "8e25c8ee-6fd5-43a8-8a91-6b5a440aaac3",
+      "id": "fd297ab0-61a1-4e70-8e58-1bd2634d3881",
       "name": "Video (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        13860,
+        14740,
         0
       ],
       "alwaysOutputData": true
@@ -1574,12 +1682,12 @@
         },
         "returnAll": true
       },
-      "id": "e0243504-7a85-4279-b10b-e56118280ae5",
+      "id": "22c03784-4ac1-4d4c-ab2d-bec17b0ff4dc",
       "name": "Trabajos (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        14080,
+        14960,
         0
       ],
       "alwaysOutputData": true,
@@ -1589,12 +1697,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Video (producción)').first().json;\nconst biblia = (JSON.parse($('Biblia (producción)').first().json.resultado || '{}').resultado) || {};\n// El guion aprobado es el último resultado listo de «guion» o «corregir_guion»: viaja con el video a su carpeta.\nconst guiones = $('Trabajos (producción)').all().map(i => i.json).filter(t => t.estado === 'listo' && ['guion', 'corregir_guion'].includes(t.modo));\nconst ultimo = guiones.sort((a, b) => String(a.createdAt || a.id).localeCompare(String(b.createdAt || b.id))).pop();\nconst guion = ultimo ? (JSON.parse(ultimo.resultado || '{}').resultado || {}) : {};\nreturn [{ json: { video_id: e.video_id, canal_id: e.canal_id, tema: v.tema, version: v.version || 1, formato: v.formato, presupuesto_usd: v.presupuesto_usd,\n  storyboard: e.contexto, guion, biblia, notas: '' } }];\n"
       },
-      "id": "53d53d8c-6d05-4677-8dc4-68052fa51db4",
+      "id": "a6ec2dd7-3a65-417e-8fa8-24ff1a329d7c",
       "name": "Encargo de producción",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        14300,
+        15180,
         0
       ]
     },
@@ -1618,12 +1726,12 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "c5ac215c-a1d3-4b5a-90b7-15c6240ed5f9",
+      "id": "284d147d-4775-40ea-9282-192c230eb276",
       "name": "Producir",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        14520,
+        15400,
         0
       ]
     },
@@ -1649,12 +1757,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "018e89ed-802c-42af-a09a-e03d5534c367",
+      "id": "b26a2c9c-4f62-40d8-9b54-9f173a59d627",
       "name": "Canal (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        14740,
+        15620,
         0
       ],
       "alwaysOutputData": true
@@ -1681,12 +1789,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "b55cbe34-c595-4aa4-bf07-a3a4de7d6b10",
+      "id": "2fbbaf8a-f492-4524-b540-61047c28685e",
       "name": "Biblia (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        14960,
+        15840,
         0
       ],
       "alwaysOutputData": true
@@ -1713,12 +1821,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "ba27bde6-3849-4591-949c-3eebada80a56",
+      "id": "5edf87f7-af1e-4f28-b892-73f285efa1a0",
       "name": "Video (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        15180,
+        16060,
         0
       ],
       "alwaysOutputData": true
@@ -1727,12 +1835,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '',\n    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
       },
-      "id": "0a083f99-98fd-45be-b2ff-a6fb571dfc53",
+      "id": "9008dc0b-a9a0-4bde-a4ce-3fd6cc6bbf05",
       "name": "Pedir storyboard corregido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        15400,
+        16280,
         0
       ]
     },
@@ -1756,12 +1864,12 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "91087524-9ae0-4add-a7b3-6c97ac3496b0",
+      "id": "8f4fc307-2278-4407-a02e-99b9c10a8ad9",
       "name": "Claude: storyboard corregido",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        15620,
+        16500,
         0
       ]
     },
@@ -1776,12 +1884,12 @@
           "appendAttribution": false
         }
       },
-      "id": "c4d3fb85-43a1-4b3f-9a72-a4e263844a47",
+      "id": "fbbc69fd-6b4f-48b7-a9af-ce5f8cbb1b7f",
       "name": "Resumen de aprendizaje",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        15840,
+        16720,
         0
       ],
       "credentials": {
@@ -1813,12 +1921,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "ec2d65eb-e3f5-43f2-822b-d6f4420d8e78",
+      "id": "2ef13c22-087a-4221-9d8f-6db4969504db",
       "name": "Video (publicar)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        16060,
+        16940,
         0
       ],
       "alwaysOutputData": true
@@ -1834,7 +1942,7 @@
           },
           "conditions": [
             {
-              "id": "dd94d225-c697-461e-82cd-e0fc7d1edecb",
+              "id": "81d891d0-095d-41de-bcff-786f1bd31117",
               "leftValue": "={{ $('Leer ajustes').first().json.allowYoutube === true }}",
               "rightValue": "",
               "operator": {
@@ -1848,12 +1956,12 @@
         },
         "options": {}
       },
-      "id": "323b7e82-a364-47ba-b5ec-076596258a90",
+      "id": "c6c611ae-35ce-4e5e-9c60-78425f7ed7ee",
       "name": "¿YouTube encendido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        16280,
+        17160,
         0
       ]
     },
@@ -1870,12 +1978,12 @@
           "timeout": 300000
         }
       },
-      "id": "754403cc-ee7d-4065-bc7e-27e036e14430",
+      "id": "859884de-509b-4d79-a98b-c414274b5d1b",
       "name": "Descargar render",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        16500,
+        17380,
         0
       ]
     },
@@ -1917,12 +2025,12 @@
         "specifyBody": "json",
         "jsonBody": "={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), description: ($('Inicio').first().json.contexto.creditos || []).join('\n'), categoryId: '27', defaultLanguage: 'es' }, status: Object.assign({ privacyStatus: 'private', selfDeclaredMadeForKids: false, containsSyntheticMedia: true }, Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() + 3600000 ? { publishAt: new Date($('Video (publicar)').first().json.publicar_en).toISOString() } : {}) } }}"
       },
-      "id": "3fa22eee-a0f7-420f-9879-0f51bcc6b9a7",
+      "id": "02ea8dbc-d145-4e34-9bb3-7f712e12fe5f",
       "name": "Abrir subida YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        16720,
+        17600,
         0
       ]
     },
@@ -1946,12 +2054,12 @@
         "contentType": "binaryData",
         "inputDataFieldName": "data"
       },
-      "id": "2d23c31a-4c5e-4a89-b659-63f58b1a196b",
+      "id": "720cddb5-feb3-4d6d-b2d4-20031dc412b0",
       "name": "Subir a YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        16940,
+        17820,
         0
       ]
     },
@@ -1959,12 +2067,12 @@
       "parameters": {
         "jsCode": "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || '', publicado_en: (Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() ? new Date($('Video (publicar)').first().json.publicar_en) : new Date()).toISOString() } }];"
       },
-      "id": "a472936e-eb84-4467-ae14-9547008bf259",
+      "id": "76e9169e-d418-45c3-a943-cf7c173ad800",
       "name": "Video publicado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        17160,
+        18040,
         0
       ]
     },
@@ -1997,12 +2105,12 @@
         },
         "options": {}
       },
-      "id": "53a96393-5e53-46d9-a89a-df20d4f2a3b3",
+      "id": "e6e81037-9197-4302-bed0-6cfe2cd812a5",
       "name": "Marcar publicado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        17380,
+        18260,
         0
       ]
     },
@@ -2017,12 +2125,12 @@
           "appendAttribution": false
         }
       },
-      "id": "deb337e4-75f8-4de2-a55b-5ce7c812e475",
+      "id": "90772e7c-4fe3-4327-b975-0de7f6f68352",
       "name": "Aviso: subido",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        17600,
+        18480,
         0
       ],
       "credentials": {
@@ -2043,12 +2151,146 @@
           "appendAttribution": false
         }
       },
-      "id": "e4e33b1f-ab55-4061-aec5-87fdb528b3a8",
+      "id": "bc8e7f29-8628-4871-9fc9-caa12e93d8c5",
       "name": "Aviso: YouTube apagado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        17820,
+        18700,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Video (publicar)').first().json.canal_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "c3e4039e-97e7-4a8c-a5f5-3c7c1ee8b42a",
+      "name": "Canal (publicar)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        18920,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ea30b19c-f553-4aba-a5fb-8f29186e1e00",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowRedes === true && !!$json.uploadpost_perfil }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cd496324-3003-420d-b25a-667779090968",
+      "name": "¿Publicar con Upload-Post?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        19140,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Video (publicar)').first().json; const c = $('Canal (publicar)').first().json;\nreturn [{ json: { video_id: v.video_id, canal_id: v.canal_id, tema: v.tema, formato: v.formato, publicar_en: v.publicar_en || '',\n  perfil: c.uploadpost_perfil, redes: c.redes || 'youtube,tiktok,instagram,facebook', contexto: e.contexto || {} } }];\n"
+      },
+      "id": "08a7a0da-ecf2-413b-80ee-2b1e02b7b26e",
+      "name": "Encargo de redes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        19360,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabRedes00000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "id": "c3397d53-a0dc-4d8a-a479-b735fdad296f",
+      "name": "Publicar en redes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        19580,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ 'Publicando ' + $('Video (publicar)').first().json.video_id + ' en ' + ($('Canal (publicar)').first().json.redes || 'todas las redes') + ' con Upload-Post. Te aviso el resultado en unos minutos.' }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "f41e361a-7709-483e-a6ca-651c3682206c",
+      "name": "Aviso: publicando",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        19800,
         0
       ],
       "credentials": {
@@ -2062,12 +2304,12 @@
       "parameters": {
         "jsCode": "return [{ json: { accion: 'token', canal_id: $('Video (publicar)').first().json.canal_id } }];"
       },
-      "id": "3657bfcd-7100-4a76-a049-cd4006011b02",
+      "id": "175d818f-621d-404c-b535-4e5848eb4171",
       "name": "Pedir token del canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        18040,
+        20020,
         0
       ]
     },
@@ -2091,12 +2333,12 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "980fbf6d-c58f-485d-b44d-de8e5179ec50",
+      "id": "e18e19f5-9674-4bc3-a3e2-ba4a769badd4",
       "name": "Token del canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        18260,
+        20240,
         0
       ]
     },
@@ -2111,7 +2353,7 @@
           },
           "conditions": [
             {
-              "id": "853bc42e-b146-499d-8b89-afd2591f7fc8",
+              "id": "7db084fb-d6ec-404c-b89f-1576cf56aa87",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -2125,12 +2367,12 @@
         },
         "options": {}
       },
-      "id": "823a910c-c75d-4a77-888a-45f655301311",
+      "id": "02277af2-ebdc-4c37-8ea5-b51dfda6e4c2",
       "name": "¿Canal conectado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        18480,
+        20460,
         0
       ]
     },
@@ -2145,12 +2387,12 @@
           "appendAttribution": false
         }
       },
-      "id": "a22edaf7-14e2-4637-ac62-77b84a0e3b28",
+      "id": "310d0fd4-4d2a-45e2-9b2c-5bd65dc45c42",
       "name": "Aviso: canal sin YouTube",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        18700,
+        20680,
         0
       ],
       "credentials": {
@@ -2164,12 +2406,12 @@
       "parameters": {
         "jsCode": "const e = $json; return [{ json: { evento: 'corregir', video_id: e.video_id, canal_id: e.canal_id, etapa: 'storyboard', instruccion: e.cambios || '' } }];"
       },
-      "id": "a6171255-44c0-44ac-a052-69f2e53f671b",
+      "id": "1c7352e5-edea-4a80-b29f-ce312ea65a09",
       "name": "Cambio final a corrección",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        18920,
+        20900,
         0
       ]
     },
@@ -2193,12 +2435,12 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "70ae2be1-642a-4608-932d-60a8a6b39a7a",
+      "id": "564e3fe8-ec5e-4b36-a222-ba68b9a3fa77",
       "name": "Orquestar corrección final",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        19140,
+        21120,
         0
       ]
     },
@@ -2223,12 +2465,12 @@
         },
         "returnAll": true
       },
-      "id": "8cf03ddc-86c4-43be-ab49-f5e344d8bc60",
+      "id": "c71fd2e9-d7e1-40d2-9266-c1a8b4646ff0",
       "name": "Trabajos del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        19360,
+        21340,
         0
       ],
       "alwaysOutputData": true
@@ -2237,12 +2479,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const etapa = /story/i.test(e.etapa || '') ? 'storyboard' : 'guion';\nconst modos = etapa === 'guion' ? ['guion', 'corregir_guion'] : ['storyboard'];\nconst t = $input.all().map(i => i.json).filter(x => x.job_id && x.estado === 'listo' && modos.includes(x.modo))\n  .sort((a, b) => String(a.createdAt || a.id).localeCompare(String(b.createdAt || b.id))).pop();\nif (!t) return [{ json: { hay: false, video_id: e.video_id, etapa } }];\nreturn [{ json: { hay: true, evento: 'cambios', etapa, video_id: e.video_id, canal_id: t.canal_id || e.canal_id,\n  contexto: JSON.parse(t.resultado || '{}').resultado || {}, cambios: String(e.instruccion || '').slice(0, 4000) } }];\n"
       },
-      "id": "d45c0761-9796-4081-a6ae-8f6cde0f5db5",
+      "id": "05809dcd-6be2-4dc0-be19-58b23acdff07",
       "name": "Última versión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        19580,
+        21560,
         0
       ]
     },
@@ -2257,7 +2499,7 @@
           },
           "conditions": [
             {
-              "id": "c8b043f6-4e3e-4a90-ba8d-9e1a57da6ab1",
+              "id": "10816a87-5a3d-4420-a638-0bebceeb40fd",
               "leftValue": "={{ $json.hay === true }}",
               "rightValue": "",
               "operator": {
@@ -2271,12 +2513,12 @@
         },
         "options": {}
       },
-      "id": "8f0093c4-813f-4342-b9f7-6efc33755f8d",
+      "id": "f30d3b59-36fa-46ec-834e-6f39e1d6c491",
       "name": "¿Hay versión?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        19800,
+        21780,
         0
       ]
     },
@@ -2300,12 +2542,12 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "a7b79cde-3b66-4295-8010-9f5d01d2f481",
+      "id": "0613b1d6-e362-4a46-9cd1-29b793d314b1",
       "name": "Volver a orquestar",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        20020,
+        22000,
         0
       ]
     },
@@ -2320,12 +2562,12 @@
           "appendAttribution": false
         }
       },
-      "id": "89d4cd9f-f9b4-4b65-8ec8-fd209e5b72c3",
+      "id": "e35d21f6-3c6c-4435-b87a-91a1d6815579",
       "name": "Aviso: corrigiendo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        20240,
+        22220,
         0
       ],
       "credentials": {
@@ -2346,12 +2588,12 @@
           "appendAttribution": false
         }
       },
-      "id": "0510cb26-17fe-4f65-a788-b875b25894cf",
+      "id": "efff4e8b-2ba2-4438-9dbf-4fe4b186703a",
       "name": "Aviso: sin versión",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        20460,
+        22440,
         0
       ],
       "credentials": {
@@ -2383,12 +2625,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "901e559a-77fd-45df-ad75-91281ec996db",
+      "id": "f1282b48-9bce-4939-9437-f3ac7db29ee3",
       "name": "Canal (ajuste)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        20680,
+        22660,
         0
       ],
       "alwaysOutputData": true
@@ -2415,12 +2657,12 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "dbe286a5-93ef-4523-be86-dcdad2319fed",
+      "id": "a892c53e-cb9b-4959-88e1-fa1ea559cd13",
       "name": "Biblia (ajuste)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        20900,
+        22880,
         0
       ],
       "alwaysOutputData": true
@@ -2429,12 +2671,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const fila = $json;\nconst campo = String(e.campo || '').trim();\nif (!fila.job_id || !/^[a-z_]+(\\.[a-z_0-9]+){0,3}$/.test(campo) || ['canal_id', 'nombre'].includes(campo.split('.')[0]) || campo.split('.').some(k => ['__proto__', 'constructor', 'prototype'].includes(k)))\n  return [{ json: { ok: false, motivo: !fila.job_id ? 'no encuentro la biblia de ' + e.canal_id : 'campo no válido: ' + campo } }];\nlet valor = e.valor; try { valor = JSON.parse(e.valor); } catch (err) { /* texto */ }\nconst env = JSON.parse(fila.resultado || '{}'); const b = env.resultado || (env.resultado = {});\nconst partes = campo.split('.'); let o = b;\nfor (const k of partes.slice(0, -1)) o = (o[k] && typeof o[k] === 'object') ? o[k] : (o[k] = {});\nconst ultimo = partes[partes.length - 1];\nif (Array.isArray(o[ultimo]) && !Array.isArray(valor)) o[ultimo].push(valor); else o[ultimo] = valor;\nreturn [{ json: { ok: true, resultado: JSON.stringify(env), resumen: `${campo} = ${JSON.stringify(valor).slice(0, 200)}` } }];\n"
       },
-      "id": "dbf2b221-de62-42c1-b397-d9a979f8277b",
+      "id": "14177096-9f59-42bb-bdd7-8bbb2e771123",
       "name": "Aplicar ajuste",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        21120,
+        23100,
         0
       ]
     },
@@ -2449,7 +2691,7 @@
           },
           "conditions": [
             {
-              "id": "d9a6ed9d-a9ea-4a3c-b929-488e55d07cde",
+              "id": "bb97c21f-c579-4793-aaf0-3651f1edc5a2",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -2463,12 +2705,12 @@
         },
         "options": {}
       },
-      "id": "4fbbc23b-6869-469d-8b8a-1bcc1e94df42",
+      "id": "f8db6711-3cee-471a-a413-752184920e83",
       "name": "¿Ajuste válido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        21340,
+        23320,
         0
       ]
     },
@@ -2476,12 +2718,12 @@
       "parameters": {
         "jsCode": "return [{ json: { resultado: $json.resultado } }];"
       },
-      "id": "b956907c-6c4e-4c6b-ad05-e4b5c2712171",
+      "id": "9ca44597-5814-489b-9b48-1f8c1e1b251f",
       "name": "Fila de biblia",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        21560,
+        23540,
         0
       ]
     },
@@ -2514,12 +2756,12 @@
         },
         "options": {}
       },
-      "id": "32264787-c7b6-492b-8bc3-2808381e22ee",
+      "id": "1ae39d44-1d4e-412f-b942-fc7e54e2ab14",
       "name": "Guardar ajuste",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        21780,
+        23760,
         0
       ]
     },
@@ -2534,12 +2776,12 @@
           "appendAttribution": false
         }
       },
-      "id": "9c482553-1eea-4353-8ccc-952963ed982e",
+      "id": "2fe4a1cd-bea7-4e1c-8b98-44a17316b207",
       "name": "Aviso: ajuste guardado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        22000,
+        23980,
         0
       ],
       "credentials": {
@@ -2560,12 +2802,12 @@
           "appendAttribution": false
         }
       },
-      "id": "bfa6be96-b41b-4fdf-9af0-17e1286737be",
+      "id": "742bfc4e-44ce-444f-a465-b25e3238b321",
       "name": "Aviso: ajuste inválido",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        22220,
+        24200,
         0
       ],
       "credentials": {
@@ -2579,12 +2821,12 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const t = Date.parse(e.fecha || '');\nconst ok = !isNaN(t) && t > Date.now() + 3600000 && t < Date.now() + 180 * 86400000;\nreturn [{ json: { ok, publicar_en: ok ? new Date(t).toISOString() : '', motivo: isNaN(t) ? 'fecha ilegible: ' + e.fecha : 'la fecha debe estar entre 1 hora y 6 meses desde ahora' } }];\n"
       },
-      "id": "dc1039ac-e43c-4758-b507-a1dfdf38a3ca",
+      "id": "da1be18f-d5c0-4530-812d-d6021098e3ec",
       "name": "Validar fecha",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22440,
+        24420,
         0
       ]
     },
@@ -2599,7 +2841,7 @@
           },
           "conditions": [
             {
-              "id": "6f872cde-1862-4984-b89a-a13370290f10",
+              "id": "c8cdd23f-d11b-4c24-bb5d-3b9386b50e73",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -2613,12 +2855,12 @@
         },
         "options": {}
       },
-      "id": "367ef93a-502c-4f30-afd4-65e08b01f654",
+      "id": "a4ba57ec-8319-445d-a9b8-e221005bd4e4",
       "name": "¿Fecha válida?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        22660,
+        24640,
         0
       ]
     },
@@ -2626,12 +2868,12 @@
       "parameters": {
         "jsCode": "return [{ json: { publicar_en: $json.publicar_en } }];"
       },
-      "id": "68e49a04-1998-4477-ab27-992d20ab599b",
+      "id": "d048236b-d175-4897-83d7-933aecef43ab",
       "name": "Fila de fecha",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        22880,
+        24860,
         0
       ]
     },
@@ -2664,12 +2906,12 @@
         },
         "options": {}
       },
-      "id": "1461089f-007d-4879-8244-06d6e080780b",
+      "id": "54d422d9-4f5f-419f-a074-66fd5a90717a",
       "name": "Guardar fecha",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        23100,
+        25080,
         0
       ]
     },
@@ -2684,12 +2926,12 @@
           "appendAttribution": false
         }
       },
-      "id": "3e6300f8-76a2-478a-802f-c4ce17a3858e",
+      "id": "2d0691e2-cb7c-47d1-aff9-a7a3c613bdd8",
       "name": "Aviso: programado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        23320,
+        25300,
         0
       ],
       "credentials": {
@@ -2710,12 +2952,12 @@
           "appendAttribution": false
         }
       },
-      "id": "f3f63048-e9d7-4c08-a3b9-048e9e213540",
+      "id": "df310441-3295-4f55-bf08-c2b2b88fa330",
       "name": "Aviso: fecha inválida",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        23540,
+        25520,
         0
       ],
       "credentials": {
@@ -2729,12 +2971,12 @@
       "parameters": {
         "jsCode": "return [{ json: { canal_id: $json.canal_id } }];"
       },
-      "id": "05cb0cc0-6414-4e43-869e-160b2425e746",
+      "id": "01cf8301-9ed4-431f-a699-4b8cec2ca21b",
       "name": "Pedir referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        23760,
+        25740,
         0
       ]
     },
@@ -2758,14 +3000,230 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "d0f994e4-08a1-4802-bf7e-7a36c5d25cd0",
+      "id": "7c33a6d0-0037-494c-a44a-7053558dd7e5",
       "name": "Referencias a pedido",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        23980,
+        25960,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Inicio').first().json;\nconst perfil = String(e.perfil || '').trim(); const redes = String(e.redes || '').toLowerCase().split(/[\\s,]+/).filter(Boolean);\nconst validas = ['youtube', 'tiktok', 'instagram', 'facebook'];\nconst malas = redes.filter(r => !validas.includes(r));\nconst ok = /^[A-Za-z0-9_.-]{2,60}$/.test(perfil) && redes.length > 0 && !malas.length;\nreturn [{ json: { ok, fila: { uploadpost_perfil: perfil, redes: [...new Set(redes)].join(',') },\n  motivo: !/^[A-Za-z0-9_.-]{2,60}$/.test(perfil) ? 'perfil de Upload-Post inválido: ' + perfil : malas.length ? 'redes desconocidas: ' + malas.join(', ') + ' (válidas: ' + validas.join(', ') + ')' : 'falta la lista de redes' } }];\n"
+      },
+      "id": "bcdc73c5-4be2-4382-acaf-c9f8f6899b11",
+      "name": "Validar redes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        26180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1e253ebf-99fc-4389-88d9-bdcf2f1c20bc",
+              "leftValue": "={{ $json.ok === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bdfb04bf-b50f-402e-ae41-2b9160638d93",
+      "name": "¿Redes válidas?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        26400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "bcfc7ad8-e89e-4963-877e-c7c23a2bc46c",
+      "name": "Canal (redes)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        26620,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a070b6e7-c65e-4d54-bff3-f564cb0c9f5d",
+              "leftValue": "={{ !!$json.canal_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "85d8f3ab-e793-4075-8560-a47078e8e160",
+      "name": "¿Existe el canal?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        26840,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: $('Validar redes').first().json.fila }];"
+      },
+      "id": "10c52713-7e02-42f3-a5b9-1021e5ac6d21",
+      "name": "Fila de redes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        27060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "eb93ec36-4536-4d90-8392-6badbb6066e6",
+      "name": "Guardar redes",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        27280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ 'Canal ' + $('Inicio').first().json.canal_id + ': publica con el perfil «' + $('Validar redes').first().json.fila.uploadpost_perfil + '» de Upload-Post en ' + $('Validar redes').first().json.fila.redes + '.' }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "e6a240fb-f90b-4ce7-88ba-1410aa0caf35",
+      "name": "Aviso: redes guardadas",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        27500,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ 'No guardé las redes: ' + ($json.motivo || ('no existe el canal ' + $('Inicio').first().json.canal_id)) }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "b49a1351-52e2-46dd-b383-a393dc8a48de",
+      "name": "Aviso: redes inválidas",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        27720,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
     },
     {
       "parameters": {
@@ -2778,12 +3236,12 @@
           "appendAttribution": false
         }
       },
-      "id": "9a159b2c-d147-4517-8c12-83c777c4f36b",
+      "id": "f78c0c8e-af19-44ea-9e4d-1ede075acc91",
       "name": "Aviso: evento",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        24200,
+        27940,
         0
       ],
       "credentials": {
@@ -2959,6 +3417,13 @@
         [
           {
             "node": "Pedir referencias",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validar redes",
             "type": "main",
             "index": 0
           }
@@ -3188,6 +3653,46 @@
       "main": [
         [
           {
+            "node": "¿Investigar con vidIQ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Investigar con vidIQ?": {
+      "main": [
+        [
+          {
+            "node": "Pedido a vidIQ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedir guion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido a vidIQ": {
+      "main": [
+        [
+          {
+            "node": "vidIQ: investigar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vidIQ: investigar": {
+      "main": [
+        [
+          {
             "node": "Pedir guion",
             "type": "main",
             "index": 0
@@ -3232,7 +3737,7 @@
       "main": [
         [
           {
-            "node": "Crítico del guion",
+            "node": "Temas del canal",
             "type": "main",
             "index": 0
           }
@@ -3240,6 +3745,17 @@
         [
           {
             "node": "Mensaje de guion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Temas del canal": {
+      "main": [
+        [
+          {
+            "node": "Crítico del guion",
             "type": "main",
             "index": 0
           }
@@ -3581,7 +4097,58 @@
       "main": [
         [
           {
+            "node": "Canal (publicar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canal (publicar)": {
+      "main": [
+        [
+          {
+            "node": "¿Publicar con Upload-Post?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Publicar con Upload-Post?": {
+      "main": [
+        [
+          {
+            "node": "Encargo de redes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "¿YouTube encendido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encargo de redes": {
+      "main": [
+        [
+          {
+            "node": "Publicar en redes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publicar en redes": {
+      "main": [
+        [
+          {
+            "node": "Aviso: publicando",
             "type": "main",
             "index": 0
           }
@@ -3892,6 +4459,86 @@
         [
           {
             "node": "Referencias a pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar redes": {
+      "main": [
+        [
+          {
+            "node": "¿Redes válidas?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Redes válidas?": {
+      "main": [
+        [
+          {
+            "node": "Canal (redes)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aviso: redes inválidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canal (redes)": {
+      "main": [
+        [
+          {
+            "node": "¿Existe el canal?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Existe el canal?": {
+      "main": [
+        [
+          {
+            "node": "Fila de redes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aviso: redes inválidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fila de redes": {
+      "main": [
+        [
+          {
+            "node": "Guardar redes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar redes": {
+      "main": [
+        [
+          {
+            "node": "Aviso: redes guardadas",
             "type": "main",
             "index": 0
           }

@@ -60,19 +60,19 @@ Escribe la biblia completa siguiendo `canales/_plantilla/biblia.json`. Incluye e
 
 ### `guion`
 
-`datos`: `tema`, `formato`, `biblia`, `duracion_objetivo_s`, `vidiq` (`use` o `skip`).
+`datos`: `tema`, `formato`, `biblia`, `duracion_objetivo_s`, `vidiq` (`use`, `skip` o `datos`). Con `datos`, llega `investigacion_vidiq` (palabras clave con su volumen y videos que destacan en el tema): úsala para el ángulo, el gancho y el título, sin copiar títulos ajenos.
 
 Haz, en este orden:
 1. Tres ganchos distintos (pregunta, dato sorprendente, escena). Elige el mejor según `biblioteca/reglas-generales.md` y explica por qué en una línea.
 2. El guion completo con estructura de historia: gancho, promesa, desarrollo con tensión creciente, giro o revelación, cierre que cumple la promesa.
 3. Marcas de interpretación entre corchetes para la voz: `[pausa]`, `[énfasis]`, `[susurro]`, `[emocionado]`, sin abusar (máx. 1 cada 2 frases).
-4. Autocrítica con la rúbrica (1–10): gancho, cumplimiento de la promesa, claridad, emoción, exactitud. Si algo queda < 8, reescribe esa parte una vez.
+4. Autocrítica con la rúbrica (1–10): gancho, cumplimiento de la promesa, claridad, emoción, exactitud y originalidad (no repetir el enfoque ni la estructura de los videos anteriores del canal: YouTube no monetiza contenido repetitivo o de plantilla). Si algo queda < 8, reescribe esa parte una vez.
 
 `resultado`:
 ```
 { "titulo": "", "descripcion": "", "ganchos": ["", "", ""], "gancho_elegido": 0, "motivo_gancho": "",
   "guion": "", "capitulos": [ { "t": "0:00", "titulo": "" } ], "fuentes": [ { "afirmacion": "", "url": "" } ],
-  "rubrica": { "gancho": 0, "promesa": 0, "claridad": 0, "emocion": 0, "exactitud": 0 },
+  "rubrica": { "gancho": 0, "promesa": 0, "claridad": 0, "emocion": 0, "exactitud": 0, "originalidad": 0 },
   "duracion_estimada_s": 0 }
 ```
 
@@ -106,8 +106,21 @@ Cada plano lleva `emocion` (una o dos palabras: intriga, asombro, calma, tensió
                 "prompt_imagen": "", "prompt_movimiento": "", "transicion": "corte|fundido", "emocion": "", "capitulo": "" } ],
   "musica": { "estilo": "", "intensidad_por_seccion": [""] },
   "efectos": [ { "plano": "p01", "efecto": "" } ],
+  "miniatura": { "concepto": "", "texto": "", "prompt_imagen": "", "personajes": ["id"] },
+  "cortes": [ { "titulo": "", "planos": ["p03", "p04"] } ],
+  "publicacion": {
+    "youtube": { "titulos": ["", "", ""], "descripcion": "", "tags": [""] },
+    "tiktok": { "texto": "", "hashtags": [""] },
+    "instagram": { "texto": "", "hashtags": [""] },
+    "facebook": { "titulo": "", "texto": "", "hashtags": [""] } },
   "costo_estimado_usd": 0 }
 ```
+
+**Miniatura:** una sola idea visual que cumpla la promesa del título; `texto` de 2 a 4 palabras en mayúsculas que **no repita** el título; `prompt_imagen` sin texto (el texto lo monta la fábrica).
+
+**Cortes** (solo videos largos; en Shorts, `[]`): 2 o 3 momentos que se entienden solos, de 20 a 55 s sumando la voz de sus planos, cada uno con su propio gancho en el primer plano. `planos` son ids consecutivos del mismo storyboard. Van a TikTok, Reels y Shorts.
+
+**Publicación:** tres títulos de YouTube distintos (≤ 70 caracteres, la palabra clave principal al inicio; la fábrica los puntúa con vidIQ y usa el mejor). Descripción de 2–4 frases con la promesa y las fuentes principales. TikTok e Instagram: 1–2 frases que abran curiosidad, 3–5 hashtags en español. Facebook: título y texto algo más largos. Nada de afirmaciones sin fuente ni clickbait que el video no cumpla.
 
 El `prompt_imagen` describe solo la escena; la identidad de personajes y el estilo los aportan las referencias de la biblia, no el texto.
 
@@ -119,6 +132,6 @@ Compara la imagen con sus referencias y con el texto narrado. `resultado`: `{ "a
 
 ### `aprender`
 
-`datos`: `canal_id`, `videos` (cada uno con su retención por tramo y su shotlist).
+`datos`: `canal_id`, `videos` (cada uno con su retención por tramo y su shotlist) y `redes` (cada envío a TikTok, Instagram, Facebook o YouTube con sus métricas a los 2 o 7 días: vistas, likes, comentarios, compartidos y guardados).
 
-Busca caídas de retención y crúzalas con planos, frases y tipo de gancho. Solo propone una lección si el patrón aparece en 3 o más videos. `resultado`: `{ "lecciones": [ { "regla": "", "evidencia": "", "nivel": "H" } ], "resumen": "" }`.
+Busca caídas de retención y crúzalas con planos, frases y tipo de gancho. En `redes`, compara qué cortes, textos y redes rinden mejor. Solo propone una lección si el patrón aparece en 3 o más videos. `resultado`: `{ "lecciones": [ { "regla": "", "evidencia": "", "nivel": "H" } ], "resumen": "" }`.
