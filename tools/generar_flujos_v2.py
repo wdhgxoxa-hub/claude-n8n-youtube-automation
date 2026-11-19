@@ -1497,11 +1497,13 @@ if (!/^[a-z0-9-]{3,60}$/.test(canal_id)) return [{ json: { valido: false, respue
 const bytes = new Uint8Array(16);
 if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(bytes); else for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
 const nonce = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
-const q = new URLSearchParams({ client_id: aj.googleClientId, redirect_uri: aj.baseUrl + '/webhook/youtube-callback', response_type: 'code',
+const params = { client_id: aj.googleClientId, redirect_uri: aj.baseUrl + '/webhook/youtube-callback', response_type: 'code',
   access_type: 'offline', prompt: 'consent select_account', include_granted_scopes: 'false', state: canal_id + '.' + nonce,
-  scope: ['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/yt-analytics.readonly'].join(' ') });
+  scope: ['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/yt-analytics.readonly'].join(' ') };
+// El entorno de Code de n8n no trae URLSearchParams: se codifica a mano.
+const q = Object.entries(params).map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
 return [{ json: { valido: true, existe: !!$json.canal_id, canal_id, nonce, estado: 'pendiente',
-  url: 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString() } }];
+  url: 'https://accounts.google.com/o/oauth2/v2/auth?' + q } }];
 """)
 iff(f, '¿Canal válido?', '$json.valido === true')
 iff(f, '¿Ya existe?', '$json.existe === true')
