@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "a5a6dc57-d54b-46b2-9c48-e4a4ad466b8a",
+      "id": "c8685999-c9d6-4335-be83-5ba0956a3f29",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "bdd3047c-7267-4779-a99d-87d63c202ee8",
+      "id": "7700f6c9-fbe6-4cd9-a37f-3980ce97ca15",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -46,9 +46,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json;\nconst fallas = [];\nif (!e.render_url) fallas.push('sin archivo de render');\nif (e.planos < e.esperados) fallas.push(`faltan planos: ${e.esperados - e.planos}`);\nconst d = Number(e.duracion_s) || 0;\nif (e.formato === 'short' ? (d < 15 || d > 60) : (d < 180)) fallas.push(`duración fuera de rango: ${d}s`);\nreturn [{ json: { ...e, fallas, aprobado_qc: fallas.length === 0 } }];\n"
+        "jsCode": "\n// Fallas bloquean (el video no te llega); avisos acompañan al video para que decidas.\nconst e = $('Inicio').first().json; const fallas = []; const avisos = [];\nif (!e.render_url) fallas.push('sin archivo de render');\nif (e.planos < e.esperados) fallas.push(`faltan planos: ${e.esperados - e.planos} de ${e.esperados}`);\nconst d = Number(e.duracion_s) || 0; const corto = e.formato === 'short';\nif (corto ? (d < 15 || d > 90) : d < 180) fallas.push(`duración fuera de rango: ${Math.round(d)} s`);\nif (e.duracion_estimada_s && Math.abs(d - e.duracion_estimada_s) > 1.5) fallas.push(`desfase de sincronía: render ${d} s vs. voz ${e.duracion_estimada_s} s`);\nconst esperado = corto ? [1080, 1920] : [1920, 1080];\nif (e.ancho && e.alto && (e.ancho !== esperado[0] || e.alto !== esperado[1])) fallas.push(`resolución ${e.ancho}x${e.alto}, se esperaba ${esperado.join('x')}`);\nif (corto && !e.subtitulos) fallas.push('un Short necesita subtítulos (se ve sin sonido)');\nif (e.usa_musica && !(e.creditos || []).some(c => /Epidemic/.test(c))) fallas.push('falta el crédito de la música');\nconst lentos = (e.voces || []).filter(v => v.ppm && v.ppm < 100).map(v => v.plano_id);\nconst rapidos = (e.voces || []).filter(v => v.ppm && v.ppm > 200).map(v => v.plano_id);\nif (lentos.length) avisos.push(`voz lenta (<100 palabras/min) en ${lentos.join(', ')}`);\nif (rapidos.length) avisos.push(`voz rápida (>200 palabras/min) en ${rapidos.join(', ')}`);\nif (e.presupuesto && e.costo_usd > e.presupuesto) avisos.push(`costó US$${e.costo_usd}, por encima del tope de US$${e.presupuesto}`);\nreturn [{ json: { ...e, fallas, avisos, aprobado_qc: fallas.length === 0 } }];\n"
       },
-      "id": "f7b2e554-fe34-4d1c-ac33-77b2db49e1af",
+      "id": "935ce5c5-e6fa-43ef-b9f3-817cddc9a0e8",
       "name": "Chequeos objetivos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -68,7 +68,7 @@
           },
           "conditions": [
             {
-              "id": "070e9b40-ed16-4a91-bc2d-706cd54cf712",
+              "id": "e1c34ccf-022e-4a98-ae97-eea69a2c224e",
               "leftValue": "={{ $json.aprobado_qc === true }}",
               "rightValue": "",
               "operator": {
@@ -82,7 +82,7 @@
         },
         "options": {}
       },
-      "id": "87bb0677-8df9-41d4-bbde-ce4721eb00b5",
+      "id": "0e125d1a-3d83-44f6-ae9d-4b34d44ad479",
       "name": "¿Pasa calidad?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -93,9 +93,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $json; return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, contexto: { render_url: e.render_url, creditos: e.creditos || [] },\n  mensaje: `Video ${e.video_id} listo (${Math.round(e.duracion_s)} s).\\nRevísalo: ${e.render_url}\\n\\n¿Lo apruebo para subirlo en privado?` } }];\n"
+        "jsCode": "\nconst e = $json;\nconst extra = e.avisos.length ? '\\n\\nAvisos:\\n• ' + e.avisos.join('\\n• ') : '';\nreturn [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, contexto: { render_url: e.render_url, creditos: e.creditos || [] },\n  mensaje: `Video ${e.video_id} listo (${Math.round(e.duracion_s)} s, ~US$${e.costo_usd}).\\nRevísalo: ${e.render_url}\\nCarpeta: https://drive.google.com/drive/folders/${e.carpeta}${extra}\\n\\n¿Lo apruebo para subirlo a YouTube en privado?` } }];\n"
       },
-      "id": "49892b91-6929-436d-812b-ac39df1ed7b8",
+      "id": "5ea355c0-560d-402a-b3ae-4be48cc9a029",
       "name": "Mensaje final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -124,7 +124,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "1ff4abc5-ed42-457d-ab56-8f3ff9681cb9",
+      "id": "59338675-9d47-4049-83f3-6e9b607d24b3",
       "name": "Aprobación final",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -135,21 +135,72 @@
     },
     {
       "parameters": {
+        "jsCode": "return [{ json: { etapa: 'calidad', estado: 'con_fallas', error: $json.fallas.join('; ').slice(0, 500) } }];"
+      },
+      "id": "c0220afa-8345-4164-973d-f797fb71864a",
+      "name": "Video rechazado por calidad",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "eae77cbc-aeb5-46d7-841b-ecfc64882659",
+      "name": "Marcar fallas",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "resource": "message",
         "operation": "sendMessage",
         "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
-        "text": "={{ 'El video ' + $json.video_id + ' no pasó calidad: ' + $json.fallas.join('; ') }}",
+        "text": "={{ 'El video ' + $('Inicio').first().json.video_id + ' no pasó calidad: ' + $('Chequeos objetivos').first().json.fallas.join('; ') + '. Render: ' + ($('Inicio').first().json.render_url || '—') }}",
         "additionalFields": {
           "disable_web_page_preview": true,
           "appendAttribution": false
         }
       },
-      "id": "d5f2f319-1a9a-4b8d-9c93-d7aeb2ab3944",
+      "id": "9719c704-bd54-4607-b294-0c28fa4cc365",
       "name": "Aviso: no pasó calidad",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1540,
+        1980,
         0
       ],
       "credentials": {
@@ -205,7 +256,7 @@
         ],
         [
           {
-            "node": "Aviso: no pasó calidad",
+            "node": "Video rechazado por calidad",
             "type": "main",
             "index": 0
           }
@@ -217,6 +268,28 @@
         [
           {
             "node": "Aprobación final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video rechazado por calidad": {
+      "main": [
+        [
+          {
+            "node": "Marcar fallas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar fallas": {
+      "main": [
+        [
+          {
+            "node": "Aviso: no pasó calidad",
             "type": "main",
             "index": 0
           }

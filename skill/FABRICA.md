@@ -95,13 +95,15 @@ Divide el guion en planos según las reglas del formato. Cada plano es una idea 
 
 Cada plano lleva `emocion` (una o dos palabras: intriga, asombro, calma, tensión…): la voz se actúa con ella. Las marcas `[énfasis]`, `[pausa]`, `[susurro]`, `[suspenso]` del texto narrado también dirigen la voz y nunca se leen en voz alta.
 `musica.estilo`: 3–6 palabras **en inglés** para buscar la pista en Epidemic Sound (p. ej. `dark ambient documentary suspense`).
+`efectos`: solo donde suman (máx. 1 cada 3 planos), `{ "plano": "p04", "efecto": "2–4 palabras en inglés" }` (p. ej. `heavy stone door`); se buscan en Epidemic Sound.
+`capitulo` (solo videos largos): título corto del capítulo en el **primer** plano de cada sección; se muestra en pantalla. En Shorts, vacío.
 
 `resultado`:
 ```
 { "planos": [ { "id": "p01", "texto_narrado": "", "tipo": "imagen|clip|archivo|avatar", "busqueda_archivo": "",
                 "encuadre": "plano general|medio|primer plano|detalle", "angulo": "", "movimiento": "estatico|paneo|zoom lento|travelling",
                 "luz": "", "personajes": ["id"], "escenario": "", "referencias": ["ref-id"],
-                "prompt_imagen": "", "prompt_movimiento": "", "transicion": "corte|fundido", "emocion": "" } ],
+                "prompt_imagen": "", "prompt_movimiento": "", "transicion": "corte|fundido", "emocion": "", "capitulo": "" } ],
   "musica": { "estilo": "", "intensidad_por_seccion": [""] },
   "efectos": [ { "plano": "p01", "efecto": "" } ],
   "costo_estimado_usd": 0 }

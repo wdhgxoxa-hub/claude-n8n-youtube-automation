@@ -1,78 +1,34 @@
 {
   "id": "FabAgenteTelegr1",
-  "name": "F · Agente de Telegram (inactivo)",
+  "name": "F · Agente de Telegram",
   "nodes": [
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
+        "inputSource": "passthrough"
       },
-      "id": "aae75e05-574a-4732-8a04-343e8c23f3f7",
-      "name": "Telegram",
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
+      "id": "29241258-cc89-48a1-aa72-358982b9c3a8",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
       "position": [
         220,
-        0
-      ],
-      "credentials": {
-        "telegramApi": {
-          "id": "MOSawTRQa5BzV3pt",
-          "name": "Telegram account"
-        }
-      },
-      "webhookId": "f1320ad1-10e9-4c9e-8472-99930405c737"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "loose",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "046bc756-7604-4b28-9b6c-8b584e30e6df",
-              "leftValue": "={{ String($json.message?.from?.id) === '8667738444' && $json.message?.chat?.type === 'private' }}",
-              "rightValue": "",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "7bf6b37d-6f71-444c-8147-ff1631906bfd",
-      "name": "¿Eres tú?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        440,
         0
       ]
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.message.text }}",
+        "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "Eres el operador de una fábrica de videos. Respondes en español, breve. Solo actúas con tus herramientas: crear_canal, crear_video, estado. Nunca prometes publicar sin aprobación. Si falta un dato (canal o tema), pregunta una sola cosa."
+          "systemMessage": "Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias. Nunca publicas ni gastas: la fábrica pide aprobación con botones. Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
         }
       },
-      "id": "4d71cb51-4c7c-441c-8225-87fc0eaa1038",
+      "id": "acdbc258-84d3-4156-83eb-2803e432b11a",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        660,
+        440,
         0
       ]
     },
@@ -85,10 +41,31 @@
         },
         "options": {}
       },
-      "id": "41730167-12dd-46d7-b399-54e65056c335",
+      "id": "efcb8b21-6f36-4561-b5a2-bf6e2413d49e",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "FabCredOpenAIch1",
+          "name": "OpenAI (chat)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ 'fabrica-' + $('Inicio').first().json.chatId }}",
+        "contextWindowLength": 20
+      },
+      "id": "c9a3c526-039a-46e3-a219-c3282253b9ad",
+      "name": "Memoria",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
       "position": [
         880,
         0
@@ -96,22 +73,7 @@
     },
     {
       "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ String($('Telegram').first().json.message.chat.id) }}",
-        "contextWindowLength": 20
-      },
-      "id": "a1d94dc5-3f6e-4bee-ab45-fd5d7e1d9217",
-      "name": "Memoria",
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        1100,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "description": "Investiga nichos y propone un canal nuevo. Usa cuando pidan crear o buscar un canal.",
+        "description": "Investiga nichos y propone un canal nuevo para aprobar.",
         "workflowId": {
           "__rl": true,
           "mode": "id",
@@ -121,7 +83,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "evento": "nuevo_canal",
-            "criterios": "={{ $fromAI('criterios', 'preferencias del operador, puede ir vacío', 'string') }}"
+            "criterios": "={{ $fromAI('criterios', 'preferencias del operador; puede ir vacío', 'string') }}"
           },
           "matchingColumns": [],
           "schema": [],
@@ -129,18 +91,18 @@
           "convertFieldsToString": false
         }
       },
-      "id": "71c415c2-800e-4eb8-86f9-decc267e516b",
+      "id": "7fdac19e-2bb8-4404-93e9-886b148cbd01",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        1320,
+        1100,
         0
       ]
     },
     {
       "parameters": {
-        "description": "Crea un video en un canal activo.",
+        "description": "Crea un video en un canal activo: escribe el guion y lo manda a aprobar.",
         "workflowId": {
           "__rl": true,
           "mode": "id",
@@ -160,8 +122,36 @@
           "convertFieldsToString": false
         }
       },
-      "id": "c9a201e3-9595-45f3-9389-b9cefef2c13d",
+      "id": "352c1c79-87fa-4159-981a-81b46f9c38fe",
       "name": "crear_video",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Muestra los últimos videos con su etapa, estado y costo.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabEstado0000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tipo": "estado"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "f56d3a65-2bb7-4e56-87ce-9a25a40e3603",
+      "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
@@ -171,7 +161,7 @@
     },
     {
       "parameters": {
-        "description": "Muestra los últimos videos con su etapa y costo.",
+        "description": "Resume por canal lo producido, publicado y gastado en un periodo.",
         "workflowId": {
           "__rl": true,
           "mode": "id",
@@ -179,15 +169,19 @@
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "tipo": "reporte",
+            "canal_id": "={{ $fromAI('canal_id', 'id del canal o vacío para todos', 'string') }}",
+            "dias": "={{ $fromAI('dias', 'número de días hacia atrás, p. ej. 30', 'string') }}"
+          },
           "matchingColumns": [],
           "schema": [],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         }
       },
-      "id": "d1454567-ebc6-4fd5-bfc2-4272326e69cc",
-      "name": "estado",
+      "id": "e01f37b0-6688-4e61-aedf-ef804b3831f7",
+      "name": "reporte",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
@@ -197,44 +191,141 @@
     },
     {
       "parameters": {
-        "resource": "message",
-        "operation": "sendMessage",
-        "chatId": "={{ String($('Telegram').first().json.message.chat.id) }}",
-        "text": "={{ $json.output }}",
-        "additionalFields": {
-          "disable_web_page_preview": true,
-          "appendAttribution": false
+        "description": "Rehace el guion o el storyboard de un video con una instrucción del operador.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "corregir",
+            "video_id": "={{ $fromAI('video_id', 'id del video', 'string') }}",
+            "etapa": "={{ $fromAI('etapa', 'guion o storyboard', 'string') }}",
+            "instruccion": "={{ $fromAI('instruccion', 'qué cambiar', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         }
       },
-      "id": "90ce003f-0c35-4a94-bd42-d16880582148",
-      "name": "Responder",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      "id": "4073d302-169e-4e95-aea9-49d3a7610431",
+      "name": "corregir",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
       "position": [
         1980,
         0
-      ],
-      "credentials": {
-        "telegramApi": {
-          "id": "MOSawTRQa5BzV3pt",
-          "name": "Telegram account"
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Cambia un campo de la biblia de un canal (voz, estilo, montaje…) para los videos siguientes.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "ajustar_biblia",
+            "canal_id": "={{ $fromAI('canal_id', 'id del canal', 'string') }}",
+            "campo": "={{ $fromAI('campo', 'ruta del campo, p. ej. voz.descripcion o montaje.musica_volumen', 'string') }}",
+            "valor": "={{ $fromAI('valor', 'valor nuevo', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         }
-      }
+      },
+      "id": "5b397334-b2c1-48ab-bc54-c08ff28293f4",
+      "name": "ajustar_biblia",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Fija fecha y hora de publicación de un video ya aprobado.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "programar",
+            "video_id": "={{ $fromAI('video_id', 'id del video', 'string') }}",
+            "fecha": "={{ $fromAI('fecha', 'fecha y hora ISO 8601 con zona, p. ej. 2026-11-27T18:00:00-05:00', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "574f714d-a214-4693-bf87-0a84f1c93a03",
+      "name": "programar",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Genera las imágenes de referencia de personajes y escenarios de un canal.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "referencias",
+            "canal_id": "={{ $fromAI('canal_id', 'id del canal', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "a472b903-bc1d-4141-a390-622d7ba02395",
+      "name": "referencias",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];"
+      },
+      "id": "d9d135d8-636f-4174-8798-546e6304efc6",
+      "name": "Respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        0
+      ]
     }
   ],
   "connections": {
-    "Telegram": {
-      "main": [
-        [
-          {
-            "node": "¿Eres tú?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "¿Eres tú?": {
+    "Inicio": {
       "main": [
         [
           {
@@ -249,7 +340,7 @@
       "main": [
         [
           {
-            "node": "Responder",
+            "node": "Respuesta",
             "type": "main",
             "index": 0
           }
@@ -301,6 +392,61 @@
       ]
     },
     "estado": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reporte": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "corregir": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ajustar_biblia": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "programar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "referencias": {
       "ai_tool": [
         [
           {

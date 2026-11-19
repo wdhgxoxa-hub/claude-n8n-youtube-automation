@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "027b4e82-9d1e-4db2-8be0-a0ada9ef299a",
+      "id": "7e36ce2b-5ee7-4845-a97f-3c24deaa902c",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "af01fd6d-6740-4553-9d2b-e47f53090dd8",
+      "id": "f208bd85-5220-4ab7-bf08-57ea3803c56b",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\nconst pedido = $('Inicio').first().json;\nconst aj = $('Leer ajustes').first().json;\nconst modos = ['investigar_nichos','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];\nif (!modos.includes(pedido.modo)) throw new Error('Modo desconocido: ' + pedido.modo);\nconst job_id = pedido.modo + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);\nconst payload = { contrato: 'fabrica-v2', modo: pedido.modo, job_id,\n  video_id: pedido.video_id || '', canal_id: pedido.canal_id || '', datos: pedido.datos || {} };\nreturn [{ json: { job_id, payload, permitido: aj.allowClaude === true, routineUrl: aj.routineUrl,\n  fila: { job_id, video_id: payload.video_id, canal_id: payload.canal_id, modo: pedido.modo,\n          estado: aj.allowClaude === true ? 'enviado' : 'bloqueado', resultado: '' } } }];\n"
       },
-      "id": "a0c2267c-da12-4a44-ab5d-b7520b7ffe55",
+      "id": "f7d7748c-e9a1-4033-8931-cf77fde36a22",
       "name": "Preparar trabajo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -64,7 +64,7 @@
         "includeOtherFields": false,
         "options": {}
       },
-      "id": "bb72cd43-aace-48b4-82e2-8b6b3bdbb044",
+      "id": "f6ecde83-7073-47c8-9089-d327ba5fa154",
       "name": "Fila del trabajo",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -92,7 +92,7 @@
         },
         "options": {}
       },
-      "id": "1ccfd6d1-51be-46d4-ab56-88548d66e53b",
+      "id": "daee28bb-95a9-4df6-b47c-975feaa2486b",
       "name": "Registrar trabajo",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -112,7 +112,7 @@
           },
           "conditions": [
             {
-              "id": "ed0b1a4e-0e4a-4da3-8180-43edc987ea48",
+              "id": "824547d0-dfd5-4276-a576-ce64fe8abaed",
               "leftValue": "={{ $('Preparar trabajo').first().json.permitido === true }}",
               "rightValue": "",
               "operator": {
@@ -126,7 +126,7 @@
         },
         "options": {}
       },
-      "id": "6ae5d74b-32f0-4fb0-8921-713a2a8f952b",
+      "id": "d288352a-7537-4819-83c1-c84087131356",
       "name": "¿Claude permitido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -157,7 +157,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { text: JSON.stringify($('Preparar trabajo').first().json.payload) } }}"
       },
-      "id": "d7e5d7a0-c16c-4cf6-85e6-b98be0cafec8",
+      "id": "2c789451-2458-49c1-92bf-ab7f73996c68",
       "name": "Despertar routine",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -180,7 +180,7 @@
       "parameters": {
         "jsCode": "return [{ json: { job_id: $('Preparar trabajo').first().json.job_id, enviado: true } }];"
       },
-      "id": "cd3341c6-5ded-4ae3-b695-c33994139e3f",
+      "id": "507fc4af-2a94-426b-98e3-0e1d41ff6c34",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -193,7 +193,7 @@
       "parameters": {
         "jsCode": "return [{ json: { estado: 'error', resultado: JSON.stringify({ error: String($json.error?.message || $json.error || 'sin detalle').slice(0, 500) }) } }];"
       },
-      "id": "a7d5c15c-45d9-4542-99d7-752046b9e341",
+      "id": "86e5af4a-e35e-40c5-9067-9f0cb05ffa1f",
       "name": "Fallo al despertar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -231,7 +231,7 @@
         },
         "options": {}
       },
-      "id": "02b71227-16cb-4813-b12c-9a91beca0482",
+      "id": "ef9b694b-eb45-4f4b-8672-c156efe6559f",
       "name": "Marcar trabajo fallido",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -251,7 +251,7 @@
           "appendAttribution": false
         }
       },
-      "id": "9fd3ada5-c730-4bca-90b1-f64d54587e7d",
+      "id": "de517517-5d78-4746-a1ac-47dee42871d7",
       "name": "Aviso: Claude no respondió",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -270,7 +270,7 @@
       "parameters": {
         "jsCode": "return [{ json: { job_id: $('Preparar trabajo').first().json.job_id, enviado: false } }];"
       },
-      "id": "ec27e756-9d11-47fa-a16b-4b22b60addb1",
+      "id": "e95c76e8-3995-4db1-a5fe-4b870628a386",
       "name": "Bloqueado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

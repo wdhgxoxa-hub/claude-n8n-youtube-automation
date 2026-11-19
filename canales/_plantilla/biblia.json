@@ -43,7 +43,12 @@
       "largo": 5,
       "short": 2
     },
-    "subtitulos": true
+    "_subtitulos": "Omitir = automático (sí en Shorts, no en largos). true/false para forzar.",
+    "fuente": "Montserrat",
+    "color_texto": "#FFFFFF",
+    "musica_volumen": "15%",
+    "efectos_volumen": "60%",
+    "transicion": "fundido"
   },
   "formatos": [
     "largo",

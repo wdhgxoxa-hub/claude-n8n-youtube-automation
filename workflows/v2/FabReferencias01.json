@@ -1,0 +1,1017 @@
+{
+  "id": "FabReferencias01",
+  "name": "M1 · Referencias del canal",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "f339213d-70c4-4e5a-8d57-48193c5cade2",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "73bc7fc7-8fc2-4fa2-9459-f170d4c97252",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "5bc646c2-62a8-4866-8ef8-7a393a1d2aff",
+      "name": "Canal",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "BIHxr4bhuShuU9pS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "job_id",
+              "condition": "eq",
+              "keyValue": "={{ String($('Canal').first().json.biblia_ruta).replace('trabajo:','') }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "73ce888b-21a1-4ad1-a5a5-6eac1c46e43c",
+      "name": "Biblia",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Pasada 1: una imagen principal por personaje (frente) y por escenario (plano general), con el estilo del canal.\nconst aj = $('Leer ajustes').first().json; const b = (JSON.parse($json.resultado || '{}').resultado) || {};\nconst ev = b.estilo_visual || {};\nconst estilo = [ev.descripcion, ev.luz, ev.lente, ev.textura, (ev.paleta_hex || []).length ? 'paleta ' + ev.paleta_hex.join(' ') : ''].filter(Boolean).join('. ');\nconst personajes = (b.personajes || []).filter(p => p.id && !(p.referencias_urls || []).length);\nconst escenarios = (b.escenarios || []).filter(p => p.id && !(p.referencias_urls || []).length);\nconst pedidos = [\n  ...personajes.map(p => ({ id: p.id, clase: 'personaje', vista: 'frente', prompt: `Retrato de referencia de ${p.nombre || p.id}: ${p.descripcion || ''}. De frente, plano medio, fondo neutro liso. Estilo: ${estilo}. Sin texto.` })),\n  ...escenarios.map(p => ({ id: p.id, clase: 'escenario', vista: 'general', prompt: `Imagen de referencia del escenario ${p.nombre || p.id}: ${p.descripcion || ''}. Plano general, sin personas. Estilo: ${estilo}. Sin texto.` })),\n].slice(0, 12);\nconst costo = Math.round((pedidos.length + personajes.length * 2) * aj.costoImagenUsd * 100) / 100;\nif (!aj.allowReferencias || !pedidos.length) return [{ json: { nada: true, pendientes: pedidos.length, costo } }];\nreturn pedidos.map(p => ({ json: { ...p, costo } }));\n"
+      },
+      "id": "e26d1910-6776-4f25-be0d-52e8a2d9c0fe",
+      "name": "Pedidos principales",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "df389b8a-958c-4146-9ac5-a9789a49019a",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a690f3f5-41e3-4e1c-9eec-89be0a524bcb",
+      "name": "¿Generar referencias?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1024x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...($json.referencia ? [{ type: 'input_image', image_url: $json.referencia }] : [])] }] } }}"
+      },
+      "id": "3e6d2ced-ddf6-4277-bbdd-e3946ca82486",
+      "name": "Generar principal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredOpenAI001",
+          "name": "OpenAI"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst p = $('Pedidos principales').item.json;\nif (!out?.result) throw new Error('Sin imagen de referencia para ' + p.id);\nreturn { json: p, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: p.id + '-' + p.vista + '.png' } } };\n"
+      },
+      "id": "e67d2935-97f7-4e6c-a0e0-feda5178d9c1",
+      "name": "Extraer principal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 300000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "uploadType",
+              "value": "media"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "imagen"
+      },
+      "id": "f74af5f5-603a-41c9-a33f-42738ee5af9a",
+      "name": "Subir principal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1980,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "addParents",
+              "value": "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"
+            },
+            {
+              "name": "removeParents",
+              "value": "root"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { name: 'ref-' + $('Inicio').first().json.canal_id + '-' + $('Extraer principal').item.json.id + '-' + $('Extraer principal').item.json.vista + '.png' } }}"
+      },
+      "id": "6b23cfe1-5e54-4315-b26f-5e8b093108e4",
+      "name": "Nombrar principal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir principal').item.json.id + '/permissions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
+      },
+      "id": "ad5ca7a9-2509-4532-9cdf-483179ede6b8",
+      "name": "Compartir principal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const p = $('Extraer principal').item.json; return { json: { id: p.id, clase: p.clase, vista: p.vista, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir principal').item.json.id } };"
+      },
+      "id": "fe9b9160-715e-4f10-82cb-990100ae5222",
+      "name": "URL principal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "refs",
+        "options": {}
+      },
+      "id": "a8d10090-af71-44e2-8de3-290c206624ba",
+      "name": "Juntar principal",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Pasada 2: perfil y cuerpo entero de cada personaje, usando su imagen principal como referencia (misma cara y vestuario).\nconst principales = $('Juntar principal').first().json.refs.filter(r => r.clase === 'personaje');\nconst pedidos = principales.flatMap(r => [\n  { id: r.id, clase: 'personaje', vista: 'perfil', referencia: r.url, prompt: 'El mismo personaje de la imagen de referencia, idéntico rostro, peinado y vestuario, de perfil, plano medio, fondo neutro liso. Sin texto.' },\n  { id: r.id, clase: 'personaje', vista: 'cuerpo entero', referencia: r.url, prompt: 'El mismo personaje de la imagen de referencia, idéntico rostro, peinado y vestuario, de cuerpo entero, de pie, fondo neutro liso. Sin texto.' },\n]);\nreturn pedidos.length ? pedidos.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
+      },
+      "id": "986eed94-42b9-4d7d-8b0b-f269cdb28815",
+      "name": "Pedidos de vistas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6ef264d6-52e0-4cd8-b818-502e051838a6",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d0c59599-1a48-4dfe-b35c-1151630775dd",
+      "name": "¿Hay vistas?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1024x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...($json.referencia ? [{ type: 'input_image', image_url: $json.referencia }] : [])] }] } }}"
+      },
+      "id": "95c8ea96-54e6-4a87-859e-7dc600faf90b",
+      "name": "Generar vista",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredOpenAI001",
+          "name": "OpenAI"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst p = $('Pedidos de vistas').item.json;\nif (!out?.result) throw new Error('Sin imagen de referencia para ' + p.id);\nreturn { json: p, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: p.id + '-' + p.vista + '.png' } } };\n"
+      },
+      "id": "b51f9a8b-8967-4148-ab2a-dadae252e47b",
+      "name": "Extraer vista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3740,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 300000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "uploadType",
+              "value": "media"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "imagen"
+      },
+      "id": "d98e9b64-2b26-4eb2-8f4c-ba252e0f1162",
+      "name": "Subir vista",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3960,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "addParents",
+              "value": "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"
+            },
+            {
+              "name": "removeParents",
+              "value": "root"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { name: 'ref-' + $('Inicio').first().json.canal_id + '-' + $('Extraer vista').item.json.id + '-' + $('Extraer vista').item.json.vista + '.png' } }}"
+      },
+      "id": "613407e2-032b-4105-acdd-5107fe4d4c99",
+      "name": "Nombrar vista",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4180,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir vista').item.json.id + '/permissions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
+      },
+      "id": "b0bc481e-f64f-4f9b-8786-5cca15992778",
+      "name": "Compartir vista",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "5fXmeNSyBH0EFFf7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const p = $('Extraer vista').item.json; return { json: { id: p.id, clase: p.clase, vista: p.vista, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir vista').item.json.id } };"
+      },
+      "id": "54b76b31-0981-4d2a-8527-ee3d0c35bb01",
+      "name": "URL vista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4620,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "refs",
+        "options": {}
+      },
+      "id": "78cad344-ec3c-4e2a-bd27-8da2df5bba03",
+      "name": "Juntar vista",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        4840,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Las URL se guardan en la biblia (personajes[].referencias_urls, escenarios[].referencias_urls); producción ya las usa.\nconst fila = $('Biblia').first().json; const env = JSON.parse(fila.resultado || '{}'); const b = env.resultado || {};\nconst refs = [...$('Juntar principal').first().json.refs, ...($('Juntar vista').isExecuted ? $('Juntar vista').first().json.refs : [])];\nfor (const lista of [b.personajes || [], b.escenarios || []]) for (const x of lista) {\n  const urls = refs.filter(r => r.id === x.id).map(r => r.url); if (urls.length) x.referencias_urls = [...(x.referencias_urls || []), ...urls]; }\nenv.resultado = b;\nreturn [{ json: { resultado: JSON.stringify(env), total: refs.length } }];\n"
+      },
+      "id": "55cc06d9-afa0-4fb3-8dd1-8ce67468abad",
+      "name": "Biblia con referencias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "BIHxr4bhuShuU9pS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "job_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Biblia').first().json.job_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a46b6ef6-72bc-4b94-b152-67220384d528",
+      "name": "Guardar biblia",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        5280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: 'canal:' + $('Inicio').first().json.canal_id, concepto: 'referencias del canal', servicio: 'OpenAI', usd: Math.round($('Biblia con referencias').first().json.total * aj.costoImagenUsd * 1000) / 1000 } }];"
+      },
+      "id": "4bde9e34-0927-4412-b4aa-3cca66af23ca",
+      "name": "Costo de referencias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "vk7TvbIvNcTbmkVv"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a9ffa148-335a-417b-b7bc-0c438e76e019",
+      "name": "Guardar costo de referencias",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        5720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ 'Referencias del canal ' + $('Inicio').first().json.canal_id + ' listas: ' + $('Biblia con referencias').first().json.total + ' imágenes. Desde ahora cada plano las usa para mantener caras, vestuario y estilo.' }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "9b0922a4-7611-4fcd-b76c-379c5e070ebf",
+      "name": "Aviso: referencias listas",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5940,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ $json.pendientes ? 'El canal ' + $('Inicio').first().json.canal_id + ' tiene ' + $json.pendientes + ' personajes o escenarios sin imágenes de referencia (~US$' + $json.costo + '). Enciende allowReferencias en Ajustes y escribe: referencias ' + $('Inicio').first().json.canal_id : 'El canal ' + $('Inicio').first().json.canal_id + ' ya tiene todas sus referencias.' }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "8ac90d96-7f34-454e-b2fd-5d4d9c9838a4",
+      "name": "Aviso: referencias pendientes",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        6160,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canal": {
+      "main": [
+        [
+          {
+            "node": "Biblia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Biblia": {
+      "main": [
+        [
+          {
+            "node": "Pedidos principales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos principales": {
+      "main": [
+        [
+          {
+            "node": "¿Generar referencias?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Generar referencias?": {
+      "main": [
+        [
+          {
+            "node": "Generar principal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aviso: referencias pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar principal": {
+      "main": [
+        [
+          {
+            "node": "Extraer principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer principal": {
+      "main": [
+        [
+          {
+            "node": "Subir principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir principal": {
+      "main": [
+        [
+          {
+            "node": "Nombrar principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nombrar principal": {
+      "main": [
+        [
+          {
+            "node": "Compartir principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartir principal": {
+      "main": [
+        [
+          {
+            "node": "URL principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL principal": {
+      "main": [
+        [
+          {
+            "node": "Juntar principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntar principal": {
+      "main": [
+        [
+          {
+            "node": "Pedidos de vistas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos de vistas": {
+      "main": [
+        [
+          {
+            "node": "¿Hay vistas?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay vistas?": {
+      "main": [
+        [
+          {
+            "node": "Generar vista",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Biblia con referencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar vista": {
+      "main": [
+        [
+          {
+            "node": "Extraer vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer vista": {
+      "main": [
+        [
+          {
+            "node": "Subir vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir vista": {
+      "main": [
+        [
+          {
+            "node": "Nombrar vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nombrar vista": {
+      "main": [
+        [
+          {
+            "node": "Compartir vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartir vista": {
+      "main": [
+        [
+          {
+            "node": "URL vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL vista": {
+      "main": [
+        [
+          {
+            "node": "Juntar vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntar vista": {
+      "main": [
+        [
+          {
+            "node": "Biblia con referencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Biblia con referencias": {
+      "main": [
+        [
+          {
+            "node": "Guardar biblia",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Costo de referencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar biblia": {
+      "main": [
+        [
+          {
+            "node": "Aviso: referencias listas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo de referencias": {
+      "main": [
+        [
+          {
+            "node": "Guardar costo de referencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

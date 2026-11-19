@@ -1,23 +1,20 @@
 {
   "id": "FabAprendizaje01",
-  "name": "M7 · Aprendizaje semanal",
+  "name": "M7 · Aprendizaje (2 y 7 días)",
   "nodes": [
     {
       "parameters": {
         "rule": {
           "interval": [
             {
-              "field": "weeks",
-              "triggerAtDay": [
-                1
-              ],
+              "field": "days",
               "triggerAtHour": 8
             }
           ]
         }
       },
-      "id": "36ca827a-6731-4574-b8cf-dea6cd781803",
-      "name": "Cada lunes",
+      "id": "51b50cfe-9573-472d-a818-fb8be9047289",
+      "name": "Cada día",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
@@ -45,7 +42,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "25d309a8-15a3-41ed-a4f4-4bb14356c49d",
+      "id": "df5a4281-9758-41cf-8930-b0f84805e7f0",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -65,7 +62,7 @@
           },
           "conditions": [
             {
-              "id": "b4c20acb-1062-4ad4-bef1-8e546c365ff2",
+              "id": "da665751-778e-48c2-935b-0da9c7464748",
               "leftValue": "={{ $json.allowAnalytics === true }}",
               "rightValue": "",
               "operator": {
@@ -79,7 +76,7 @@
         },
         "options": {}
       },
-      "id": "a673a414-e96a-45fe-b0ea-e55fe98adfef",
+      "id": "1c39c0f6-0299-43fc-8dac-d831ffaf7e5a",
       "name": "¿Analytics activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -109,12 +106,60 @@
         },
         "returnAll": true
       },
-      "id": "91ece836-bd7e-4e0d-b1e9-5466d5668d46",
+      "id": "ae07e999-1780-4d1a-be74-2b48f2955c2a",
       "name": "Videos publicados",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
         880,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Solo los videos que cumplen hoy 2 o 7 días de publicados.\nconst hoy = Date.now(); const dia = 86400000;\nconst toca = $input.all().map(i => i.json).filter(v => v.youtube_id && v.publicado_en).filter(v => {\n  const d = Math.floor((hoy - Date.parse(v.publicado_en)) / dia); return d === 2 || d === 7; });\nreturn toca.length ? toca.map(v => ({ json: { ...v, dias: Math.floor((hoy - Date.parse(v.publicado_en)) / dia), desde: v.publicado_en.slice(0, 10) } })) : [{ json: { nada: true } }];\n"
+      },
+      "id": "313465d8-ae6d-4886-a622-bc2a4f26cfe0",
+      "name": "Toca medir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6aecb3ee-cb8c-4b63-852d-da38a25abafc",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5781b917-b117-4e66-a3dc-7809972b3d0c",
+      "name": "¿Hay que medir?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
         0
       ]
     },
@@ -145,7 +190,7 @@
             },
             {
               "name": "startDate",
-              "value": "2026-01-01"
+              "value": "={{ $json.desde }}"
             },
             {
               "name": "endDate",
@@ -155,25 +200,26 @@
         },
         "options": {}
       },
-      "id": "c4f2be39-15fc-40d6-8ecc-fe0671e9f8ed",
+      "id": "c4a271c1-ee93-43e0-aded-3998a7b314d2",
       "name": "Retención",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1100,
+        1540,
         0
-      ]
+      ],
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "\nconst vids = $('Videos publicados').all().map((v, i) => ({ video_id: v.json.video_id, canal_id: v.json.canal_id, retencion: $('Retención').all()[i]?.json?.rows || [] }));\nconst porCanal = {}; for (const v of vids) (porCanal[v.canal_id] ||= []).push(v);\nreturn Object.entries(porCanal).map(([canal_id, videos]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos } } }));\n"
+        "jsCode": "\n// La curva se cruza con el storyboard en Claude (modo «aprender»); una lección solo entra a la biblia si se repite en 3 videos.\nconst vids = $('Toca medir').all().map((v, i) => ({ video_id: v.json.video_id, canal_id: v.json.canal_id, dias: v.json.dias, retencion: $('Retención').all()[i]?.json?.rows || [] }));\nconst porCanal = {}; for (const v of vids) (porCanal[v.canal_id] ||= []).push(v);\nreturn Object.entries(porCanal).map(([canal_id, videos]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos } } }));\n"
       },
-      "id": "bc301d3b-619f-42ec-a3db-1fbd78ea8860",
+      "id": "dd0c51aa-ff37-4d83-878a-a7fc66df85f5",
       "name": "Pedir lecciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1320,
+        1760,
         0
       ]
     },
@@ -197,18 +243,18 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "dad4b1dd-adb1-4b52-b087-99eeed4707a8",
+      "id": "b5580f3a-cfba-4001-a087-be5fca47b1e2",
       "name": "Claude: aprender",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        1540,
+        1980,
         0
       ]
     }
   ],
   "connections": {
-    "Cada lunes": {
+    "Cada día": {
       "main": [
         [
           {
@@ -242,6 +288,28 @@
       ]
     },
     "Videos publicados": {
+      "main": [
+        [
+          {
+            "node": "Toca medir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Toca medir": {
+      "main": [
+        [
+          {
+            "node": "¿Hay que medir?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay que medir?": {
       "main": [
         [
           {
