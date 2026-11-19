@@ -84,9 +84,10 @@ Aplica solo los cambios pedidos, conserva lo demás y devuelve el mismo formato 
 
 ### `storyboard`
 
-`datos`: `guion`, `biblia`, `formato`, `notas` (opcional).
+`datos`: `guion`, `biblia`, `formato`, `notas` (opcional), `presupuesto_usd`, `costos` (`imagen_usd` por imagen, `clip_seg_usd` por segundo de clip; cada clip dura 8 s), `storyboard_anterior` (opcional, al corregir).
 
-Divide el guion en planos según las reglas del formato. Cada plano es una idea visual. Asigna `tipo`:
+Divide el guion en planos según las reglas del formato. Cada plano es una idea visual.
+**Presupuesto obligatorio:** `costo_estimado_usd` = imágenes × `imagen_usd` + clips × 8 × `clip_seg_usd`, y debe quedar **por debajo** de `presupuesto_usd`. Si no alcanza, usa menos planos (una imagen puede durar varias frases con zoom lento o paneo) o quita clips. Nunca devuelvas un storyboard que lo supere. Asigna `tipo`:
 - `imagen`: por defecto.
 - `clip`: solo en momentos de máxima emoción o movimiento indispensable; como máximo `biblia.presupuesto.clips_max` por video.
 - `avatar`: solo si `formato` es `avatar`.

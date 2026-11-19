@@ -65,7 +65,7 @@ test('mensajes de Telegram nunca pasan el límite de 4096', () => {
 });
 
 const storyboard = { planos: [
-  { id: 'p01', tipo: 'imagen', texto_narrado: 'Hola', prompt_imagen: 'un faro', encuadre: 'general', luz: 'dorada', personajes: ['ana'], escenario: 'faro', movimiento: 'zoom lento', transicion: 'corte' },
+  { id: 'p01', tipo: 'imagen', texto_narrado: '[énfasis] Hola [pausa] mundo', prompt_imagen: 'un faro', encuadre: 'general', luz: 'dorada', personajes: ['ana'], escenario: 'faro', movimiento: 'zoom lento', transicion: 'corte' },
   { id: 'p02', tipo: 'clip', texto_narrado: 'Ola', prompt_imagen: 'ola', encuadre: 'detalle', luz: 'fría', personajes: [], escenario: 'faro', movimiento: 'paneo', transicion: 'fundido' }] };
 const biblia = { estilo_visual: { descripcion: 'óleo', paleta_hex: ['#112233'] }, personajes: [{ id: 'ana', referencias_urls: ['https://r/ana.png'] }], escenarios: [{ id: 'faro', referencias_urls: ['https://r/faro.png'] }], voz: { eleven_voice_id: 'V1' } };
 
@@ -96,6 +96,7 @@ test('producción: composición en el orden del storyboard y con voz por escena'
   assert.strictEqual(out.source.elements[1].elements[0].type, 'video');
   assert.match(out.source.elements[0].elements[1].provider, /voice_id=V1/);
   assert.strictEqual(out.source.width, 1920);
+  assert.strictEqual(out.source.elements[0].elements[1].source, 'Hola … mundo');
 });
 
 test('calidad: detecta planos faltantes y duración corta', () => {

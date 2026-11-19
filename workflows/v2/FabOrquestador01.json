@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "347248d6-d50b-4dde-a8d0-0fe56e0830a8",
+      "id": "1704bdfc-ce16-4bb1-adef-992f531e4663",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "cccc0066-b4e5-45e2-b225-1c3693afece7",
+      "id": "0ea288de-accd-4a17-b8f9-9f050f270a4a",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json;\nconst clave = e.evento === 'claude_ok' ? 'claude_ok:' + (e.modo === 'corregir_guion' ? 'guion' : e.modo)\n  : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;\nconst rutas = [\"nuevo_canal\", \"claude_ok:investigar_nichos\", \"aprobado:canal\", \"cambios:canal\", \"claude_ok:crear_biblia\", \"nuevo_video\", \"claude_ok:guion\", \"aprobado:guion\", \"cambios:guion\", \"claude_ok:storyboard\", \"aprobado:storyboard\", \"cambios:storyboard\", \"claude_ok:aprender\", \"aprobado:final\", \"cambios:final\", \"otro\"];\nconst i = rutas.indexOf(clave);\nreturn [{ json: { ...e, clave, salida: i === -1 ? rutas.length - 1 : i } }];\n"
       },
-      "id": "a7e22b53-7141-406c-926b-22476dff06cc",
+      "id": "e16713e2-86e9-49de-b322-0dfb0e1706a0",
       "name": "Ruta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -63,7 +63,7 @@
         "numberOutputs": 16,
         "output": "={{ $json.salida }}"
       },
-      "id": "9a9826e9-a35f-4854-a01f-6d129bb6b18e",
+      "id": "a86cbcd6-ba2f-41ef-a62d-d16bf3ce494d",
       "name": "Según evento",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -76,7 +76,7 @@
       "parameters": {
         "jsCode": "const e=$json; return [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.criterios || '', rechazos: e.rechazos || [] } } }];"
       },
-      "id": "ce82c940-0315-4da6-82c5-7d6d47ac7bf7",
+      "id": "b6d2bcc4-a633-4037-8aa6-b81797ddb3c6",
       "name": "Pedir nichos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -105,7 +105,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "5636b733-d648-4c87-910b-f05515b86a4b",
+      "id": "73586f04-ac9e-4240-b5d2-faebfac7ceca",
       "name": "Claude: nichos",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -125,7 +125,7 @@
           "appendAttribution": false
         }
       },
-      "id": "6c79f9d7-580f-4ee7-840d-dfa179b644d3",
+      "id": "2157350f-2791-489a-9e7c-7bda72a49aec",
       "name": "Aviso: investigando",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -144,7 +144,7 @@
       "parameters": {
         "jsCode": "\nconst r = $json.resultado || {}; const c = r.canal || {};\nconst ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\\n');\nconst temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\\n');\nconst mensaje = `Propuesta de canal: ${c.nombre_propuesto}\\nNicho: ${c.nicho}\\nPúblico: ${c.publico}\\nPromesa: ${c.promesa}\\n\\nEvidencia:\\n${ev}\\n\\nPrimeros temas:\\n${temas}`;\nreturn [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), contexto: r, job_id: $json.job_id } }];\n"
       },
-      "id": "5f623ca5-d08e-4cce-b949-8878cee4a038",
+      "id": "39c64e92-9839-4285-ac17-79a4b4b908fd",
       "name": "Mensaje de canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -173,7 +173,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "bfb4b10e-7b06-4b2c-ad54-14ab2d88ad20",
+      "id": "3d8be37f-1c59-4163-b1c0-c1b61a4617f0",
       "name": "Aprobar canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -186,7 +186,7 @@
       "parameters": {
         "jsCode": "\nconst c = ($json.contexto || {}).canal || {};\nconst canal_id = (c.nombre_propuesto || 'canal').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) + '-' + Date.now().toString(36).slice(-4);\nreturn [{ json: { canal_id, nombre: c.nombre_propuesto || '', nicho: c.nicho || '', estado: 'creando_biblia', biblia_ruta: '',\n  presupuesto_largo_usd: $('Leer ajustes').first().json.presupuestoLargoUsd, presupuesto_short_usd: $('Leer ajustes').first().json.presupuestoShortUsd,\n  plataformas: 'youtube', formato_defecto: (c.formatos || ['largo'])[0] } }];\n"
       },
-      "id": "9a75aa08-c276-4c56-a217-c80a6b81cb7a",
+      "id": "4ff40ed6-14c4-4884-89af-ac098c547b37",
       "name": "Nuevo canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -214,7 +214,7 @@
         },
         "options": {}
       },
-      "id": "176e39f3-3b68-48b6-b565-6c22d3d97586",
+      "id": "d7e529e3-cd83-493d-8530-dcfa99711a01",
       "name": "Guardar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -227,7 +227,7 @@
       "parameters": {
         "jsCode": "const ctx = $('Según evento').first().json.contexto; return [{ json: { modo:'crear_biblia', canal_id: $('Nuevo canal').first().json.canal_id, video_id:'', datos:{ canal: ctx.canal, evidencia: ctx.evidencia, notas: '' } } }];"
       },
-      "id": "501517a5-2781-45b5-a93d-444ce88b2e2c",
+      "id": "6005511e-764a-4ebe-bc80-02922361863c",
       "name": "Pedir biblia",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -256,7 +256,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "85050bee-0178-45e2-96a3-2ad13728afe2",
+      "id": "02c1d593-9975-4970-b474-42cecd5817d4",
       "name": "Claude: biblia",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -269,7 +269,7 @@
       "parameters": {
         "jsCode": "\nconst e = $json; const c = (e.contexto || {}).canal || {};\nreturn [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.cambios || '', rechazos:[{ nombre: c.nombre_propuesto, nicho: c.nicho, motivo: e.cambios || '' }] } } }];\n"
       },
-      "id": "702f5902-dcc5-498c-9358-9eaffddfb085",
+      "id": "dc0c17d9-3fb9-412d-a3d3-20f53a88858d",
       "name": "Reinvestigar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -298,7 +298,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "c25f2068-7c38-4209-a8e8-151d903e70f3",
+      "id": "317f53d4-ac85-412c-899d-ffcee82146ce",
       "name": "Claude: nichos otra vez",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -311,7 +311,7 @@
       "parameters": {
         "jsCode": "return [{ json: { estado:'activo', biblia_ruta: 'trabajo:' + $json.job_id } }];"
       },
-      "id": "565433bc-c931-45fe-bf9e-24401e18a62f",
+      "id": "60f21b19-e79c-4e45-910c-a0736fb91fcd",
       "name": "Canal activo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -349,7 +349,7 @@
         },
         "options": {}
       },
-      "id": "c5727744-e0f1-4280-a01e-216fd1e89ad5",
+      "id": "1cb043e8-04bb-4b5a-8ff7-b3940ace432c",
       "name": "Activar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -369,7 +369,7 @@
           "appendAttribution": false
         }
       },
-      "id": "084ede54-16b7-454a-a9b7-e39bb7da69b5",
+      "id": "691b9907-836f-4b5b-887f-ad26a1ebfa0a",
       "name": "Aviso: canal listo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -406,7 +406,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "cc9d09bc-3b15-459c-9c87-00cf8f12c7ac",
+      "id": "cb1c568b-4bb1-4935-aec2-1632c887f845",
       "name": "Buscar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -427,7 +427,7 @@
           },
           "conditions": [
             {
-              "id": "2676779e-0e8c-4a9a-b949-9f3517c0b0ef",
+              "id": "414b1a42-bd0d-4e3b-aa1c-910bd416c65c",
               "leftValue": "={{ $json.estado === 'activo' && String($json.biblia_ruta).startsWith('trabajo:') }}",
               "rightValue": "",
               "operator": {
@@ -441,7 +441,7 @@
         },
         "options": {}
       },
-      "id": "3554f21f-372c-48e3-b290-a4e1a4eb573e",
+      "id": "7a3bfaa2-3013-406a-9a77-24ccf009e4b3",
       "name": "¿Canal activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -472,7 +472,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "f5f302af-8565-4287-a0b6-5f33541e15dc",
+      "id": "5e9db769-11b1-4ec9-a2e2-5cf043b2840b",
       "name": "Buscar biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -486,7 +486,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;\nconst biblia = (JSON.parse($json.resultado || '{}').resultado) || {};\nconst formato = e.formato || canal.formato_defecto || 'largo';\nconst video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);\nconst presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;\nreturn [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',\n  version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },\n  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: e.tema, formato, biblia,\n    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip' } } } }];\n"
       },
-      "id": "d87741d2-bbda-4659-8d14-b10d11125188",
+      "id": "2292372e-a5a1-4166-bf3e-51440b1d46d3",
       "name": "Nuevo video",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -502,7 +502,7 @@
         "includeOtherFields": false,
         "options": {}
       },
-      "id": "b4101d09-e6d3-4f1c-97c7-54cf4a2f73e9",
+      "id": "1ee83ecb-8806-47a9-ac35-737c28574329",
       "name": "Fila del video",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -530,7 +530,7 @@
         },
         "options": {}
       },
-      "id": "15f6907f-186c-457a-b9e7-ddba3dd3f4ad",
+      "id": "cd5fcb7a-d973-40a0-983b-9b250d26815c",
       "name": "Guardar video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -543,7 +543,7 @@
       "parameters": {
         "jsCode": "return [{ json: $('Nuevo video').first().json.pedido }];"
       },
-      "id": "f96943e7-db61-4ce1-9734-ec10f5f74506",
+      "id": "8c98c5d1-c157-4972-b2da-86fe6ebd478c",
       "name": "Pedir guion",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -572,7 +572,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "a0a6fa96-b13c-4eb4-8be7-d414e57a6226",
+      "id": "93d8bb98-107e-48a2-b568-93fb010b78e1",
       "name": "Claude: guion",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -592,7 +592,7 @@
           "appendAttribution": false
         }
       },
-      "id": "d05a34bd-5b5d-4427-992f-66143d665e38",
+      "id": "791576ca-2a3f-44f8-8fd2-4c3b687ecdfc",
       "name": "Aviso: escribiendo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -618,7 +618,7 @@
           "appendAttribution": false
         }
       },
-      "id": "4852a0b0-30a1-49a9-8538-3e5cd80b6c4e",
+      "id": "00daee91-e174-4be4-82c3-17f70c92bd66",
       "name": "Aviso: canal no listo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -637,7 +637,7 @@
       "parameters": {
         "jsCode": "\nconst r = $json.resultado || {}; const rb = r.rubrica || {};\nconst nota = Object.entries(rb).map(([k, v]) => k + ' ' + v).join(' · ');\nconst mensaje = `Guion: ${r.titulo}\\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\\nRúbrica: ${nota}\\n\\n${String(r.guion || '').slice(0, 3000)}`;\nreturn [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), contexto: r, video_id: $json.video_id, canal_id: $json.canal_id } }];\n"
       },
-      "id": "44a3bd15-c1a7-463e-a963-109c1268fd1f",
+      "id": "746acead-980c-4d22-a359-fb0695d14de9",
       "name": "Mensaje de guion",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -666,7 +666,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "b4539df0-4fc5-45f1-aada-1a1280fdcc8b",
+      "id": "8f31553e-c28a-466c-85e9-07b9f1a2823c",
       "name": "Aprobar guion",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -697,7 +697,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "0246c490-f9cc-4e00-bd41-e05bd6b8f719",
+      "id": "30f2b935-d88c-4b6c-9c8c-a8a11dbaf531",
       "name": "Canal del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -729,7 +729,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "e7f805f7-a40b-4269-876a-66aa10acde50",
+      "id": "7f4b5185-4b19-45b1-a296-4a315fc8cb2d",
       "name": "Biblia del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -761,7 +761,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "4ee64ba5-0d66-4cc5-8df9-438910c06645",
+      "id": "e266b01d-f433-46ac-a195-836b4b8318b1",
       "name": "Video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -773,9 +773,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '' } } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '',\n    presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
       },
-      "id": "8528b22e-15b5-44d3-89f0-79da59063b5b",
+      "id": "f6fb2f62-2a29-4efa-b886-3bf66dc8e7bf",
       "name": "Pedir storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -804,7 +804,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "8bc490d4-dad8-4ead-9249-83bda240c071",
+      "id": "cbd13f06-dae8-416c-b9c3-28852dbc537f",
       "name": "Claude: storyboard",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -817,7 +817,7 @@
       "parameters": {
         "jsCode": "return [{ json: { etapa: 'storyboard' } }];"
       },
-      "id": "489fbc51-9046-4a61-ba37-c8bcfa687e47",
+      "id": "1c3c7956-110e-4e2e-a61c-7902305009a1",
       "name": "Etapa storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -855,7 +855,7 @@
         },
         "options": {}
       },
-      "id": "5d32dcdc-66b7-48ba-947b-f68f371870c9",
+      "id": "3019ce92-1e9c-4acd-be62-b3189e8cee94",
       "name": "Video en storyboard",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -886,7 +886,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "61513348-89eb-4234-92cf-d95a2037d03b",
+      "id": "5d97453b-406d-4dff-977f-cd65b591b0ab",
       "name": "Canal (corrección)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -918,7 +918,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "c67ce132-5de3-4d85-982a-a41c4e453641",
+      "id": "9c7f8e7c-e1a1-4dc3-8fca-657840677f35",
       "name": "Biblia (corrección)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -932,7 +932,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (corrección)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.video_id, datos: { guion: e.contexto, cambios: e.cambios || '', biblia } } }];\n"
       },
-      "id": "3edc0802-3ed2-4265-a8a7-e1f207cb46a1",
+      "id": "940e09ee-091d-4d82-907d-2eb880c65876",
       "name": "Pedir corrección",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -961,7 +961,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "f057e342-bc19-43e3-ae44-da206e9049ae",
+      "id": "adb85db9-f362-4d24-ad84-e55b07dbfda3",
       "name": "Claude: corregir",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -974,7 +974,7 @@
       "parameters": {
         "jsCode": "\nconst r = $json.resultado || {}; const p = r.planos || [];\nconst cuenta = p.reduce((a, x) => (a[x.tipo] = (a[x.tipo] || 0) + 1, a), {});\nconst mensaje = `Storyboard listo: ${p.length} planos (${Object.entries(cuenta).map(([k, v]) => v + ' ' + k).join(', ')}).\\nCosto estimado: US$${r.costo_estimado_usd ?? '?'}\\n\\n` +\n  p.slice(0, 25).map(x => `${x.id} [${x.tipo}, ${x.encuadre}] ${String(x.texto_narrado).slice(0, 90)}`).join('\\n');\nreturn [{ json: { etapa: 'storyboard', mensaje: mensaje.slice(0, 3900), contexto: r, video_id: $json.video_id, canal_id: $json.canal_id } }];\n"
       },
-      "id": "e250be66-0f97-412e-aefa-1a3fe2fcd543",
+      "id": "ca08e746-8bc7-4aa9-9160-34337032a8e4",
       "name": "Mensaje de storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1003,7 +1003,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "809b83d8-b1a0-47ab-b4ae-4538d58141ff",
+      "id": "3cd474be-ef1d-4b93-a115-62be7bd1e87d",
       "name": "Aprobar storyboard",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1034,7 +1034,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "e6f76461-1d43-45f4-b377-79a854f03ca6",
+      "id": "4052be68-9e03-4a32-b607-3ef4c93d6689",
       "name": "Canal (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1066,7 +1066,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "f9955518-7d1e-4ea5-866a-0282bef081f7",
+      "id": "2a5f284e-cff0-440e-a743-671f985adb55",
       "name": "Biblia (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1098,7 +1098,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "6cef7383-4f13-437e-aaad-b90adab8dec9",
+      "id": "d9b39012-fe23-43bb-b3fb-663581c762cd",
       "name": "Video (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1112,7 +1112,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Video (producción)').first().json;\nconst biblia = (JSON.parse($('Biblia (producción)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { video_id: e.video_id, canal_id: e.canal_id, formato: v.formato, presupuesto_usd: v.presupuesto_usd, storyboard: e.contexto, biblia, notas: '' } }];\n"
       },
-      "id": "aef85353-7075-4427-9d5a-240622dbb87a",
+      "id": "1292d111-4ed4-444a-822f-d7bec9989ef1",
       "name": "Encargo de producción",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1141,7 +1141,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "3566cab2-c35e-4227-966c-347ed6c13920",
+      "id": "0c57df6e-7aeb-40bc-af85-bf30d26384e9",
       "name": "Producir",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1172,7 +1172,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "d115257c-27a3-4e99-aee4-ab652c5422d3",
+      "id": "8401513b-48b1-40b1-90a5-bce31bdca7c4",
       "name": "Canal (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1204,7 +1204,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "93676129-9e9a-440f-bf72-2edc3e0a0293",
+      "id": "bae99b91-d841-4c2f-aa59-4743efdbc4f1",
       "name": "Biblia (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1236,7 +1236,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "22a5b24a-ceaf-4b83-86c7-5cf07ccdbd34",
+      "id": "c367a0ae-c6a0-4d4c-b4df-b7c65089d800",
       "name": "Video (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1248,9 +1248,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '' } } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '',\n    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
       },
-      "id": "b6f950d3-8d14-4674-8c0f-c00390f69363",
+      "id": "eec4ac55-ace1-4a93-b801-62a1671866c0",
       "name": "Pedir storyboard corregido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1279,7 +1279,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "390a1cb8-cc0d-48a2-835f-f623d0559514",
+      "id": "83b7a15a-6d9a-4ac7-a808-d3e775391193",
       "name": "Claude: storyboard corregido",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1299,7 +1299,7 @@
           "appendAttribution": false
         }
       },
-      "id": "bc7360b0-e47c-4f40-a5b8-3f3893fe9750",
+      "id": "f64da6c1-ea2d-4e5f-9a76-2a2b694c2ae8",
       "name": "Resumen de aprendizaje",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1336,7 +1336,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "a44c45bc-ce42-45ec-a1ed-ce27e8196710",
+      "id": "7ec70fbf-d5f9-45cc-813a-9c9d6b5fc4c3",
       "name": "Video (publicar)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1357,7 +1357,7 @@
           },
           "conditions": [
             {
-              "id": "8efca92e-6a77-4477-b156-9e6e05f702f5",
+              "id": "1c2fba62-da92-43fa-a852-21a280051134",
               "leftValue": "={{ $('Leer ajustes').first().json.allowYoutube === true }}",
               "rightValue": "",
               "operator": {
@@ -1371,7 +1371,7 @@
         },
         "options": {}
       },
-      "id": "5ac8d3fb-d893-44a8-b775-8c1db70c2cd3",
+      "id": "1c4278d8-6a0e-4ed8-a190-ac730f184e3a",
       "name": "¿YouTube encendido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1393,7 +1393,7 @@
           "timeout": 300000
         }
       },
-      "id": "c7bb3c3a-bff5-42a6-9e15-ddf7a8347938",
+      "id": "8a4e7b63-8936-4f87-b7c8-b508bc0e3086",
       "name": "Descargar render",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1433,7 +1433,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), categoryId: '27', defaultLanguage: 'es' }, status: { privacyStatus: 'private', selfDeclaredMadeForKids: false } } }}"
       },
-      "id": "dc68e2a1-b381-4270-9434-185ba3a915ed",
+      "id": "f3c78e02-3d0f-4569-ba38-6f2aa4dc0581",
       "name": "Abrir subida YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1455,7 +1455,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "data"
       },
-      "id": "440716e6-6364-4497-a24e-4ea0050b0e04",
+      "id": "25034004-a08b-4aaf-ad53-81d4617aba24",
       "name": "Subir a YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1468,7 +1468,7 @@
       "parameters": {
         "jsCode": "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || '' } }];"
       },
-      "id": "7c9c8dbc-b6a0-43b4-9928-7dd2f8d04c80",
+      "id": "0c160734-758b-4288-a570-422cd6203a8d",
       "name": "Video publicado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1506,7 +1506,7 @@
         },
         "options": {}
       },
-      "id": "a7dbc98f-911c-499a-95a1-d81f7c969d87",
+      "id": "796d2710-324c-4a94-a474-10d58b3f2568",
       "name": "Marcar publicado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1526,7 +1526,7 @@
           "appendAttribution": false
         }
       },
-      "id": "aff702be-663a-421d-951e-991df8c59333",
+      "id": "b75ebf0e-2a2f-41ac-b58c-ba703fe691ad",
       "name": "Aviso: subido",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1552,7 +1552,7 @@
           "appendAttribution": false
         }
       },
-      "id": "bb95453d-22d1-4c9d-950a-2653d9f1257c",
+      "id": "fec8ab10-15c7-4a3f-ad52-61914beadf55",
       "name": "Aviso: YouTube apagado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1578,7 +1578,7 @@
           "appendAttribution": false
         }
       },
-      "id": "3ad8386b-af4a-4dfc-925e-46a20f18d135",
+      "id": "8ed99a6e-89d7-428a-8ed6-42e0eae8f6cc",
       "name": "Aviso: cambios finales",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1604,7 +1604,7 @@
           "appendAttribution": false
         }
       },
-      "id": "2e4874a2-57ea-46dc-8dc1-2f5889320f50",
+      "id": "62c491ed-d40f-4a70-b645-4a42ffe67cc3",
       "name": "Aviso: evento",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

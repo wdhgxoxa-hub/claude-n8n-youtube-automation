@@ -223,11 +223,19 @@ iff(f, '¿Claude permitido?', "$('Preparar trabajo').first().json.permitido === 
 http(f, 'Despertar routine', 'POST', "={{ $('Preparar trabajo').first().json.routineUrl }}",
      body="={{ { text: JSON.stringify($('Preparar trabajo').first().json.payload) } }}",
      cred=CRED_ROUTINE, headers={'anthropic-version': '2026-10-21'}, timeout=15000)
+# Fallos de red pasajeros (p. ej. DNS EAI_AGAIN): reintenta y, si sigue fallando, marca el trabajo y avisa.
+f.nodes[-1].update({'retryOnFail': True, 'maxTries': 4, 'waitBetweenTries': 5000, 'onError': 'continueErrorOutput'})
 code(f, 'Respuesta', "return [{ json: { job_id: $('Preparar trabajo').first().json.job_id, enviado: true } }];")
+code(f, 'Fallo al despertar', "return [{ json: { estado: 'error', resultado: JSON.stringify({ error: String($json.error?.message || $json.error || 'sin detalle').slice(0, 500) }) } }];")
+dt_update(f, 'Marcar trabajo fallido', 'trabajos', 'job_id', "={{ $('Preparar trabajo').first().json.job_id }}")
+tg(f, 'Aviso: Claude no respondió', "={{ $('Leer ajustes').first().json.chatId }}",
+   "={{ 'No pude despertar a Claude (' + $('Preparar trabajo').first().json.payload.modo + '). Reintenté 4 veces. Vuelve a enviar el pedido en un momento.' }}")
 code(f, 'Bloqueado', "return [{ json: { job_id: $('Preparar trabajo').first().json.job_id, enviado: false } }];")
 f.chain('Inicio', 'Leer ajustes', 'Preparar trabajo', 'Fila del trabajo', 'Registrar trabajo', '¿Claude permitido?')
 f.link('¿Claude permitido?', 'Despertar routine', 0)
 f.link('Despertar routine', 'Respuesta')
+f.link('Despertar routine', 'Fallo al despertar', 1)
+f.chain('Fallo al despertar', 'Marcar trabajo fallido', 'Aviso: Claude no respondió')
 f.link('¿Claude permitido?', 'Bloqueado', 1)
 CLAUDE = f.dump()
 
@@ -417,7 +425,9 @@ dt_get(f, 'Video', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id 
 code(f, 'Pedir storyboard', r"""
 const e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};
 return [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,
-  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '' } } }];
+  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '',
+    presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,
+    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];
 """)
 call(f, 'Claude: storyboard', W['claude'])
 code(f, 'Etapa storyboard', "return [{ json: { etapa: 'storyboard' } }];")
@@ -464,7 +474,9 @@ dt_get(f, 'Video (rehacer)', 'videos', 'video_id', "={{ $('Inicio').first().json
 code(f, 'Pedir storyboard corregido', r"""
 const e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};
 return [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,
-  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '' } } }];
+  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '',
+    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,
+    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];
 """)
 call(f, 'Claude: storyboard corregido', W['claude'])
 route(11, 'Canal (rehacer)', 'Biblia (rehacer)', 'Video (rehacer)', 'Pedir storyboard corregido', 'Claude: storyboard corregido')
@@ -521,6 +533,7 @@ if (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
 if (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');
 if (!aj.allowMontaje || !aj.creatomatePlantillaId) faltan.push('montaje (Creatomate y su plantilla)');
 const presupuesto = Number(e.presupuesto_usd) || aj.presupuestoLargoUsd;
+if (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);
 return [{ json: { ...e, planos, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,
   dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];
 """)
@@ -595,12 +608,14 @@ const orden = e.planos.map(p => p.id);
 const listos = $json.planos.filter(p => p.url).sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));
 const voz = aj.elevenVoiceId || e.biblia?.voz?.eleven_voice_id || '';
 const vertical = e.formato === 'short';
+// Las marcas de dirección del guion no se leen en voz alta: [pausa] -> pausa natural, el resto se quita.
+const narrable = t => String(t || '').replace(/\[pausa\]/gi, '…').replace(/\[[^\]]{1,30}\]/g, '').replace(/\s{2,}/g, ' ').trim();
 const escenas = listos.map((p, i) => ({ type: 'composition', track: 1, name: p.plano_id,
   transition: i && p.plano.transicion === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined,
   elements: [
     { type: p.url.match(/\.(mp4|mov)/) || p.plano.tipo === 'clip' ? 'video' : 'image', source: p.url, fit: 'cover',
       animations: p.plano.movimiento === 'zoom lento' ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '110%', easing: 'linear' }] : undefined },
-    { type: 'audio', source: p.plano.texto_narrado, provider: 'elevenlabs model_id=eleven_v4 voice_id=' + voz },
+    { type: 'audio', source: narrable(p.plano.texto_narrado), provider: 'elevenlabs model_id=eleven_v4 voice_id=' + voz },
   ] }));
 return [{ json: { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, elements: escenas },
   video_id: e.video_id, canal_id: e.canal_id, planos: listos.length, esperados: orden.length } }];
