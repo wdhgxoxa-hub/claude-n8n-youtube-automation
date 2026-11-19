@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "c3b199f2-35df-49ff-b0db-85e123107454",
+      "id": "7a66ec01-7d38-449b-8a6f-4ed150f4b4e5",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "959ddc1b-ad2f-4695-92e3-ae2caf5ecb6b",
+      "id": "c62b7590-de8a-4b72-8ed2-20ad82160182",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json;\nconst fallas = [];\nif (!e.render_url) fallas.push('sin archivo de render');\nif (e.planos < e.esperados) fallas.push(`faltan planos: ${e.esperados - e.planos}`);\nconst d = Number(e.duracion_s) || 0;\nif (e.formato === 'short' ? (d < 15 || d > 60) : (d < 180)) fallas.push(`duración fuera de rango: ${d}s`);\nreturn [{ json: { ...e, fallas, aprobado_qc: fallas.length === 0 } }];\n"
       },
-      "id": "63a851f2-4f8c-4235-b58b-2d8e98bb3fe1",
+      "id": "158855df-cdd3-400f-9344-07e37287db3e",
       "name": "Chequeos objetivos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -68,7 +68,7 @@
           },
           "conditions": [
             {
-              "id": "335c37b6-7b96-4f38-8fdc-57688ceaab18",
+              "id": "5948587e-954f-4ae7-a345-4c4a19caa208",
               "leftValue": "={{ $json.aprobado_qc === true }}",
               "rightValue": "",
               "operator": {
@@ -82,7 +82,7 @@
         },
         "options": {}
       },
-      "id": "c9f77b5f-73ab-4b0e-abd2-2aee484a15ca",
+      "id": "58ce60e9-bfb3-4e73-a30b-e313a45cae93",
       "name": "¿Pasa calidad?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -95,7 +95,7 @@
       "parameters": {
         "jsCode": "\nconst e = $json; return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, contexto: { render_url: e.render_url },\n  mensaje: `Video ${e.video_id} listo (${Math.round(e.duracion_s)} s).\\nRevísalo: ${e.render_url}\\n\\n¿Lo apruebo para subirlo en privado?` } }];\n"
       },
-      "id": "5b9dd67c-d729-4b37-8dc0-1090e9f6cf38",
+      "id": "3ba14892-b24f-41ee-9425-2a4f89ec949a",
       "name": "Mensaje final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -124,7 +124,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "5ddbca5c-2bda-48bf-8962-c42ce838e3d2",
+      "id": "d91e060d-0508-49a4-ab71-cd61407b59fe",
       "name": "Aprobación final",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -144,7 +144,7 @@
           "appendAttribution": false
         }
       },
-      "id": "464c0c17-77ba-4d40-b13d-1317ac7ecca6",
+      "id": "3265c6fc-e1ef-4886-b67e-8a6e9a5d8c87",
       "name": "Aviso: no pasó calidad",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

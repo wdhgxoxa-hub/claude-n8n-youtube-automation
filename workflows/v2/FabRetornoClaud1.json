@@ -10,7 +10,7 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "20d8892e-1e36-44af-8882-a4d8eba7ea93",
+      "id": "a9a3be62-1341-439c-8c09-c86b2cc25f76",
       "name": "Resultado de Claude",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -24,13 +24,13 @@
           "name": "Clave Fábrica"
         }
       },
-      "webhookId": "d90408e2-0634-4162-81a7-c5f3f6a6a57c"
+      "webhookId": "bb5b4f02-89bc-4aaf-945b-87881e7f4b95"
     },
     {
       "parameters": {
         "jsCode": "\nconst b = $json.body || {};\nconst ok = typeof b.job_id === 'string' && /^[a-z_]+-[a-z0-9]+-[a-z0-9]+$/.test(b.job_id)\n  && typeof b.modo === 'string' && ['ok','error'].includes(b.estado);\nreturn [{ json: { valido: ok, job_id: b.job_id, modo: b.modo, estado: b.estado,\n  resultado: b.resultado ?? null, avisos: Array.isArray(b.avisos) ? b.avisos.slice(0, 20) : [] } }];\n"
       },
-      "id": "a314f4ff-8528-48cd-968a-e1a273ef4b79",
+      "id": "c7087c5d-f5aa-42ed-99d1-761adb931588",
       "name": "Validar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           },
           "conditions": [
             {
-              "id": "e3821ccd-4604-4d0c-89a8-8825a1c25ffe",
+              "id": "cc2ef236-f119-4866-939b-319c2dd854e2",
               "leftValue": "={{ $json.valido === true }}",
               "rightValue": "",
               "operator": {
@@ -64,7 +64,7 @@
         },
         "options": {}
       },
-      "id": "eea49402-d70b-49b6-aa8f-a81ffe7f664a",
+      "id": "48b0c4bf-3a8f-4e66-8e2e-3b91ff73871b",
       "name": "¿Válido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -95,7 +95,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "0c81c56d-6587-4d85-9260-591b3f65e742",
+      "id": "bdafb8aa-f58d-4d41-a2b6-3ca612529e9b",
       "name": "Buscar trabajo",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -116,7 +116,7 @@
           },
           "conditions": [
             {
-              "id": "16bb66e3-7f74-4142-8ea8-e359f3a804fa",
+              "id": "f240d8b4-7015-4dbf-96a8-f45fb9087cf5",
               "leftValue": "={{ $json.job_id === $('Validar').first().json.job_id && $json.estado === 'enviado' }}",
               "rightValue": "",
               "operator": {
@@ -130,7 +130,7 @@
         },
         "options": {}
       },
-      "id": "58365821-3c91-4383-a54f-8e0cb3cd3c26",
+      "id": "ffc28833-aaef-44b4-a60e-e26faa298371",
       "name": "¿Trabajo pendiente?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -143,7 +143,7 @@
       "parameters": {
         "jsCode": "\nconst v = $('Validar').first().json;\nreturn [{ json: { estado: v.estado === 'ok' ? 'listo' : 'error', resultado: JSON.stringify({ resultado: v.resultado, avisos: v.avisos }) } }];\n"
       },
-      "id": "c31bb852-782f-4def-a255-b21f7a0c9f93",
+      "id": "4c4fc644-8f3c-481e-b333-040328342a34",
       "name": "Fila actualizada",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -181,7 +181,7 @@
         },
         "options": {}
       },
-      "id": "604af8fe-f9b1-49d3-81a8-4f5e13a93c96",
+      "id": "4268e942-dd49-4def-96b8-d04ce020026f",
       "name": "Guardar resultado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -198,7 +198,7 @@
           "responseCode": 200
         }
       },
-      "id": "1bd28dca-8f7e-495b-a13e-171566231fd5",
+      "id": "958684fc-c5a2-41fa-a94d-3a7affc4108d",
       "name": "Responder recibido",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
@@ -211,7 +211,7 @@
       "parameters": {
         "jsCode": "\nconst v = $('Validar').first().json; const t = $('Buscar trabajo').first().json;\nreturn [{ json: { evento: v.estado === 'ok' ? 'claude_ok' : 'claude_error', modo: v.modo, job_id: v.job_id,\n  video_id: t.video_id || '', canal_id: t.canal_id || '', resultado: v.resultado, avisos: v.avisos } }];\n"
       },
-      "id": "e52d7fb7-f291-422b-8e0c-ec7aefa1291c",
+      "id": "f0847e39-4c40-426f-a751-7d8e99eed01f",
       "name": "Evento",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -240,7 +240,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "49565a6f-541e-445e-b900-7a56058056fd",
+      "id": "166438e4-dca3-416e-85f8-b286df62bb33",
       "name": "Avisar al orquestador",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -257,7 +257,7 @@
           "responseCode": 409
         }
       },
-      "id": "a9c06214-83e8-4118-8d2b-34bb10f78048",
+      "id": "3e5f3d4f-8ec0-43d4-81a1-afed808ba6e8",
       "name": "Responder rechazo",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,

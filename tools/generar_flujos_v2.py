@@ -12,7 +12,7 @@ OUT = os.path.join(os.path.dirname(__file__), '..', 'workflows', 'v2')
 CRED_TG = {'telegramApi': {'id': 'MOSawTRQa5BzV3pt', 'name': 'Telegram account'}}
 CRED_ROUTINE = {'httpHeaderAuth': {'id': 'EbZbO2zRt0RXWkfA', 'name': 'Claude Routine'}}
 CRED_OPENAI = {'httpHeaderAuth': {'id': 'FabCredOpenAI001', 'name': 'OpenAI'}}
-CRED_GEMINI = {'httpHeaderAuth': {'id': 'FabCredGemini001', 'name': 'Gemini (Veo)'}}
+CRED_GEMINI = {'httpHeaderAuth': {'id': 'FabCredGemini001', 'name': 'Gemini (Veo)'}}  # también sirve para Gemini Omni
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
@@ -178,7 +178,7 @@ return [{ json: {
   allowClaude: true,          // usa tu plan de Claude, sin costo por uso
   allowImagenes: false,       // OpenAI imágenes (pago por uso)
   allowRevisionVisual: false, // OpenAI con visión para revisar planos (pago por uso)
-  allowVeo: false,            // Veo 3.1 (pago por segundo)
+  allowClips: false,          // clips animados con Gemini Omni (pago por segundo)
   allowAvatar: false,         // HeyGen
   allowMontaje: false,        // Creatomate (incluye voz ElevenLabs integrada)
   allowDrive: false,          // Google Drive para alojar y archivar
@@ -186,9 +186,9 @@ return [{ json: {
   allowAnalytics: false,      // YouTube Analytics para aprender
   modeloTexto: 'gpt-6-astra',
   modeloImagen: 'gpt-image-2.6-sunburst',
-  modeloVeo: 'veo-3.1-fast-generate-preview',
+  modeloClip: 'gemini-omni-1.2-flash', // Veo quedó obsoleto el 22-10-2026; su reemplazo es Gemini Omni
   costoImagenUsd: 0.06,       // estimado, se corrige con facturas reales
-  costoClipSegUsd: 0.12,      // Veo 3.1 Fast 1080p, estimado
+  costoClipSegUsd: 0.12,      // estimado prudente; corregir con la primera factura real
   presupuestoLargoUsd: 5,
   presupuestoShortUsd: 1.5,
   maxIntentosPlano: 2,
@@ -530,7 +530,7 @@ const n = t => planos.filter(p => p.tipo === t).length;
 const costo = n('imagen') * aj.costoImagenUsd + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1;
 const faltan = [];
 if (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');
-if (n('clip') && !aj.allowVeo) faltan.push('clips (Veo)');
+if (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');
 if (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
 if (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');
 if (!aj.allowMontaje || !aj.creatomatePlantillaId) faltan.push('montaje (Creatomate y su plantilla)');
@@ -552,23 +552,34 @@ const estilo = [b.estilo_visual?.descripcion, b.estilo_visual?.luz, b.estilo_vis
 const refs = id => [...(b.personajes || []), ...(b.escenarios || [])].filter(x => (id || []).includes(x.id)).flatMap(x => x.referencias_urls || []).slice(0, 6);
 return e.planos.map(p => ({ json: { video_id: e.video_id, plano: p, intento: 1,
   prompt: `${p.prompt_imagen}. Encuadre ${p.encuadre}, ángulo ${p.angulo || 'a la altura de los ojos'}, luz ${p.luz}. Estilo: ${estilo}. Sin texto ni logos.`,
-  referencias: refs([...(p.personajes || []), p.escenario]), salida: p.tipo === 'clip' ? 1 : p.tipo === 'avatar' ? 2 : 0 } }));
+  referencias: refs([...(p.personajes || []), p.escenario]), salida: p.tipo === 'avatar' ? 1 : 0 } }));
 """)
-switch(f, 'Según tipo de plano', 3)
+switch(f, 'Según tipo de plano', 2)
 # Imagen con referencias vía Responses API (herramienta de imagen). Requiere credencial "OpenAI" (Header Auth: Authorization: Bearer ...).
 http(f, 'Generar imagen', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: " + A.replace("$('Ajustes')", "$('Leer ajustes')") + ".modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
+     body="={{ { model: " + A.replace("$('Ajustes')", "$('Leer ajustes')") + ".modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: $('Plan de producción').first().json.formato === 'short' ? '1024x1536' : '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
      timeout=180000, cred=CRED_OPENAI)
 code(f, 'Extraer imagen', r"""
 const out = ($json.output || []).find(o => o.type === 'image_generation_call');
 if (!out?.result) throw new Error('Sin imagen en la respuesta');
 const prev = $('Un ítem por plano').item.json;
-return [{ json: { ...prev }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: prev.plano.id + '.png' } } }];
+return [{ json: { ...prev, ext: 'png' }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: prev.plano.id + '.png' } } }];
+""")
+iff(f, '¿Es clip?', "$json.plano.tipo === 'clip'")
+# Clip: la imagen ya generada (con las referencias de la biblia) es el primer fotograma; Gemini Omni la anima.
+http(f, 'Animar (Gemini Omni)', 'POST', 'https://generativelanguage.googleapis.com/v1beta/interactions',
+     body="={{ { model: $('Leer ajustes').first().json.modeloClip, store: false, input: [{ type: 'image', data: $('Generar imagen').item.json.output.find(o => o.type === 'image_generation_call').result, mime_type: 'image/png' }, { type: 'text', text: '<FIRST_FRAME> [0-8s] ' + ($json.plano.prompt_movimiento || $json.plano.movimiento || 'movimiento de cámara lento') + '. ' + $json.plano.prompt_imagen + '. Use this image as the starting frame. Sin texto ni logos. Sin diálogo.' }], generation_config: { video_config: { task: 'image_to_video' } }, response_format: { type: 'video', aspect_ratio: $('Plan de producción').first().json.formato === 'short' ? '9:16' : '16:9', resolution: '720p' } } }}",
+     timeout=600000, cred=CRED_GEMINI)
+code(f, 'Extraer clip', r"""
+const prev = $('Extraer imagen').item.json;
+const v = ($json.steps || []).filter(s => s.type === 'model_output').flatMap(s => s.content || []).find(c => c.type === 'video');
+if (!v?.data) throw new Error(v?.uri ? 'Gemini Omni devolvió el video por URI (más de 4 MB); falta soportar esa entrega' : 'Sin video en la respuesta de Gemini Omni');
+return [{ json: { ...prev, ext: 'mp4' }, binary: { imagen: { data: v.data, mimeType: v.mime_type || 'video/mp4', fileName: prev.plano.id + '.mp4' } } }];
 """)
 gapi(f, 'Subir a Drive', 'POST', 'https://www.googleapis.com/upload/drive/v3/files', 'googleDriveOAuth2Api',
      binary_field='imagen', query={'uploadType': 'media'})
 gapi(f, 'Nombrar en Drive', 'PATCH', "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}", 'googleDriveOAuth2Api',
-     json_body="={{ { name: $('Extraer imagen').item.json.video_id + '-' + $('Extraer imagen').item.json.plano.id + '.png' } }}",
+     json_body="={{ { name: $('Extraer imagen').item.json.video_id + '-' + $('Extraer imagen').item.json.plano.id + ($('Extraer imagen').item.json.plano.tipo === 'clip' ? '.mp4' : '.png') } }}",
      query={'addParents': "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"}, timeout=30000)
 gapi(f, 'Compartir enlace', 'POST', "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir a Drive').item.json.id + '/permissions' }}",
      'googleDriveOAuth2Api', json_body='={{ { role: "reader", type: "anyone" } }}', timeout=30000)
@@ -576,7 +587,7 @@ code(f, 'URL del plano', r"""
 const prev = $('Extraer imagen').item.json; const id = $('Subir a Drive').item.json.id;
 return [{ json: { ...prev, url: 'https://drive.google.com/uc?export=download&id=' + id } }];
 """)
-iff(f, '¿Revisión visual activa?', "$('Leer ajustes').first().json.allowRevisionVisual === true")
+iff(f, '¿Revisión visual activa?', "$('Leer ajustes').first().json.allowRevisionVisual === true && $json.plano.tipo !== 'clip'")
 http(f, 'Revisar plano', 'POST', 'https://api.openai.com/v1/responses',
      body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Revisa si la imagen coincide con las referencias (rostro, vestuario, paleta) y con la escena: ' + $json.plano.texto_narrado + '. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
      timeout=120000, cred=CRED_OPENAI)
@@ -589,19 +600,6 @@ return [{ json: { ...prev, veredicto: v, repetir, intento: prev.intento + (repet
 """)
 iff(f, '¿Repetir plano?', '$json.repetir === true')
 code(f, 'Plano aprobado', "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano } }];")
-# Clip con Veo: imagen de referencia + movimiento. Requiere credencial "Gemini" (Header Auth: x-goog-api-key).
-http(f, 'Generar clip (Veo)', 'POST',
-     "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVeo + ':predictLongRunning' }}",
-     body="={{ { instances: [{ prompt: $json.prompt + ' Movimiento: ' + ($json.plano.prompt_movimiento || $json.plano.movimiento) }], parameters: { aspectRatio: '16:9', durationSeconds: 8 } } }}",
-     timeout=60000, cred=CRED_GEMINI)
-wait(f, 'Esperar Veo', 60)
-http(f, 'Consultar Veo', 'GET', "={{ 'https://generativelanguage.googleapis.com/v1beta/' + $('Generar clip (Veo)').item.json.name }}", timeout=30000, cred=CRED_GEMINI)
-iff(f, '¿Clip listo?', '$json.done === true')
-code(f, 'Clip aprobado', r"""
-const prev = $('Un ítem por plano').item.json;
-const uri = $json.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri || '';
-return [{ json: { video_id: prev.video_id, plano_id: prev.plano.id, url: uri, plano: prev.plano, requiereClave: true } }];
-""")
 code(f, 'Avatar pendiente', "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, nota: 'avatar: definir ruta HeyGen' } }];")
 f.add('Juntar planos', 'n8n-nodes-base.aggregate', 1, {'aggregate': 'aggregateAllItemData', 'destinationFieldName': 'planos', 'options': {}})
 code(f, 'Composición Creatomate', r"""
@@ -639,19 +637,18 @@ f.link('¿Dentro del presupuesto?', 'Un ítem por plano', 0)
 f.link('¿Dentro del presupuesto?', 'Aviso: sobre presupuesto', 1)
 f.link('Un ítem por plano', 'Según tipo de plano')
 f.link('Según tipo de plano', 'Generar imagen', 0)
-f.link('Según tipo de plano', 'Generar clip (Veo)', 1)
-f.link('Según tipo de plano', 'Avatar pendiente', 2)
-f.chain('Generar imagen', 'Extraer imagen', 'Subir a Drive', 'Nombrar en Drive', 'Compartir enlace', 'URL del plano', '¿Revisión visual activa?')
+f.link('Según tipo de plano', 'Avatar pendiente', 1)
+f.chain('Generar imagen', 'Extraer imagen', '¿Es clip?')
+f.link('¿Es clip?', 'Animar (Gemini Omni)', 0)
+f.chain('Animar (Gemini Omni)', 'Extraer clip', 'Subir a Drive')
+f.link('¿Es clip?', 'Subir a Drive', 1)
+f.chain('Subir a Drive', 'Nombrar en Drive', 'Compartir enlace', 'URL del plano', '¿Revisión visual activa?')
 f.link('¿Revisión visual activa?', 'Revisar plano', 0)
 f.link('¿Revisión visual activa?', 'Plano aprobado', 1)
 f.chain('Revisar plano', 'Veredicto', '¿Repetir plano?')
 f.link('¿Repetir plano?', 'Generar imagen', 0)
 f.link('¿Repetir plano?', 'Plano aprobado', 1)
-f.chain('Generar clip (Veo)', 'Esperar Veo', 'Consultar Veo', '¿Clip listo?')
-f.link('¿Clip listo?', 'Clip aprobado', 0)
-f.link('¿Clip listo?', 'Esperar Veo', 1)
 f.link('Plano aprobado', 'Juntar planos')
-f.link('Clip aprobado', 'Juntar planos')
 f.link('Avatar pendiente', 'Juntar planos')
 f.chain('Juntar planos', 'Composición Creatomate', 'Renderizar', 'Esperar render', 'Consultar render', '¿Render listo?')
 f.link('¿Render listo?', 'Encargo de calidad', 0)

@@ -16,7 +16,7 @@
           ]
         }
       },
-      "id": "db5a4cb8-6364-4585-87c0-76a599a29350",
+      "id": "4218245d-7dbf-4cae-873f-19dd0ce1eca6",
       "name": "Cada lunes",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -45,7 +45,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "0046a82a-29eb-4307-adde-f61f6d70393a",
+      "id": "b7212bf6-9001-4c19-bb2b-8bb82a6be86e",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -65,7 +65,7 @@
           },
           "conditions": [
             {
-              "id": "046f1044-5592-4802-874b-fd10541e656c",
+              "id": "77c526e9-a44e-480e-899f-88c4e86fd05e",
               "leftValue": "={{ $json.allowAnalytics === true }}",
               "rightValue": "",
               "operator": {
@@ -79,7 +79,7 @@
         },
         "options": {}
       },
-      "id": "7428d8e0-b250-4893-8d0c-b45228736c8a",
+      "id": "acac600c-4028-4098-84ac-ce4f4287159e",
       "name": "¿Analytics activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -109,7 +109,7 @@
         },
         "returnAll": true
       },
-      "id": "2421d717-8cde-448e-b4ba-768cb43b711b",
+      "id": "93336ec5-0a51-48a0-bafb-5242e6e405a3",
       "name": "Videos publicados",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -155,7 +155,7 @@
         },
         "options": {}
       },
-      "id": "2e788a5c-98a7-47b4-85eb-5f0b3721c193",
+      "id": "09482e8c-ab2d-4ec1-a4bd-2f647a0f0bda",
       "name": "Retención",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -168,7 +168,7 @@
       "parameters": {
         "jsCode": "\nconst vids = $('Videos publicados').all().map((v, i) => ({ video_id: v.json.video_id, canal_id: v.json.canal_id, retencion: $('Retención').all()[i]?.json?.rows || [] }));\nconst porCanal = {}; for (const v of vids) (porCanal[v.canal_id] ||= []).push(v);\nreturn Object.entries(porCanal).map(([canal_id, videos]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos } } }));\n"
       },
-      "id": "8e8f069a-82a5-44fa-b0bf-ef37294c8818",
+      "id": "a064d137-24ea-4191-8e9f-ecb20311e7a9",
       "name": "Pedir lecciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -197,7 +197,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "46324c33-aeaa-4eef-8cc3-bc4b23feafd9",
+      "id": "187c8054-47c6-4577-b9c1-6cde954ca77e",
       "name": "Claude: aprender",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,

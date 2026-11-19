@@ -21,7 +21,7 @@ const PROD = wf('FabProduccion001'), PUB = wf('FabPublicacion01'), AJ = wf('FabA
 const aj = run(codeOf(AJ, 'Ajustes'))[0].json;
 
 test('ajustes: todo lo que gasta empieza apagado', () => {
-  for (const k of ['allowImagenes', 'allowRevisionVisual', 'allowVeo', 'allowAvatar', 'allowMontaje', 'allowDrive', 'allowYoutube', 'allowAnalytics'])
+  for (const k of ['allowImagenes', 'allowRevisionVisual', 'allowClips', 'allowAvatar', 'allowMontaje', 'allowDrive', 'allowYoutube', 'allowAnalytics'])
     assert.strictEqual(aj[k], false, k);
   assert.match(aj.routineUrl, /^https:\/\/api\.anthropic\.com\/v1\/claude_code\/routines\/trig_[A-Za-z0-9]+\/fire$/);
 });
@@ -84,7 +84,7 @@ test('producción: freno de presupuesto', () => {
 test('producción: cada plano lleva sus referencias de la biblia', () => {
   const items = run(codeOf(PROD, 'Un ítem por plano'), { nodes: { 'Plan de producción': { video_id: 'v', planos: storyboard.planos, biblia } } });
   assert.deepStrictEqual(items[0].json.referencias, ['https://r/ana.png', 'https://r/faro.png']);
-  assert.strictEqual(items[1].json.salida, 1);
+  assert.strictEqual(items[1].json.salida, 0); // el clip parte de una imagen
   assert.match(items[0].json.prompt, /Sin texto ni logos/);
 });
 
