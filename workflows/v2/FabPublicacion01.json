@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "c8685999-c9d6-4335-be83-5ba0956a3f29",
+      "id": "a586b3a4-29fb-4e59-a6eb-4b92ff6e7600",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "7700f6c9-fbe6-4cd9-a37f-3980ce97ca15",
+      "id": "4b70425d-f65f-4b40-98de-d25a425e1a09",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\n// Fallas bloquean (el video no te llega); avisos acompañan al video para que decidas.\nconst e = $('Inicio').first().json; const fallas = []; const avisos = [];\nif (!e.render_url) fallas.push('sin archivo de render');\nif (e.planos < e.esperados) fallas.push(`faltan planos: ${e.esperados - e.planos} de ${e.esperados}`);\nconst d = Number(e.duracion_s) || 0; const corto = e.formato === 'short';\nif (corto ? (d < 15 || d > 90) : d < 180) fallas.push(`duración fuera de rango: ${Math.round(d)} s`);\nif (e.duracion_estimada_s && Math.abs(d - e.duracion_estimada_s) > 1.5) fallas.push(`desfase de sincronía: render ${d} s vs. voz ${e.duracion_estimada_s} s`);\nconst esperado = corto ? [1080, 1920] : [1920, 1080];\nif (e.ancho && e.alto && (e.ancho !== esperado[0] || e.alto !== esperado[1])) fallas.push(`resolución ${e.ancho}x${e.alto}, se esperaba ${esperado.join('x')}`);\nif (corto && !e.subtitulos) fallas.push('un Short necesita subtítulos (se ve sin sonido)');\nif (e.usa_musica && !(e.creditos || []).some(c => /Epidemic/.test(c))) fallas.push('falta el crédito de la música');\nconst lentos = (e.voces || []).filter(v => v.ppm && v.ppm < 100).map(v => v.plano_id);\nconst rapidos = (e.voces || []).filter(v => v.ppm && v.ppm > 200).map(v => v.plano_id);\nif (lentos.length) avisos.push(`voz lenta (<100 palabras/min) en ${lentos.join(', ')}`);\nif (rapidos.length) avisos.push(`voz rápida (>200 palabras/min) en ${rapidos.join(', ')}`);\nif (e.presupuesto && e.costo_usd > e.presupuesto) avisos.push(`costó US$${e.costo_usd}, por encima del tope de US$${e.presupuesto}`);\nreturn [{ json: { ...e, fallas, avisos, aprobado_qc: fallas.length === 0 } }];\n"
       },
-      "id": "935ce5c5-e6fa-43ef-b9f3-817cddc9a0e8",
+      "id": "b91f8d62-6206-481b-9d74-a1302c2a7577",
       "name": "Chequeos objetivos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -68,7 +68,7 @@
           },
           "conditions": [
             {
-              "id": "e1c34ccf-022e-4a98-ae97-eea69a2c224e",
+              "id": "92340b7d-2a9b-4f34-97cc-6696fb4513ac",
               "leftValue": "={{ $json.aprobado_qc === true }}",
               "rightValue": "",
               "operator": {
@@ -82,7 +82,7 @@
         },
         "options": {}
       },
-      "id": "0e125d1a-3d83-44f6-ae9d-4b34d44ad479",
+      "id": "fbfe6652-3150-45f8-b9a9-7ac7e83c1f07",
       "name": "¿Pasa calidad?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -95,7 +95,7 @@
       "parameters": {
         "jsCode": "\nconst e = $json;\nconst extra = e.avisos.length ? '\\n\\nAvisos:\\n• ' + e.avisos.join('\\n• ') : '';\nreturn [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, contexto: { render_url: e.render_url, creditos: e.creditos || [] },\n  mensaje: `Video ${e.video_id} listo (${Math.round(e.duracion_s)} s, ~US$${e.costo_usd}).\\nRevísalo: ${e.render_url}\\nCarpeta: https://drive.google.com/drive/folders/${e.carpeta}${extra}\\n\\n¿Lo apruebo para subirlo a YouTube en privado?` } }];\n"
       },
-      "id": "5ea355c0-560d-402a-b3ae-4be48cc9a029",
+      "id": "25b177cc-f369-48d2-bc6c-dfad020e87de",
       "name": "Mensaje final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -124,7 +124,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "59338675-9d47-4049-83f3-6e9b607d24b3",
+      "id": "045d61b9-b14c-469a-828b-1848552641fd",
       "name": "Aprobación final",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -137,7 +137,7 @@
       "parameters": {
         "jsCode": "return [{ json: { etapa: 'calidad', estado: 'con_fallas', error: $json.fallas.join('; ').slice(0, 500) } }];"
       },
-      "id": "c0220afa-8345-4164-973d-f797fb71864a",
+      "id": "a56c2c9e-d411-4aad-91ef-8afde4512a66",
       "name": "Video rechazado por calidad",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -175,7 +175,7 @@
         },
         "options": {}
       },
-      "id": "eae77cbc-aeb5-46d7-841b-ecfc64882659",
+      "id": "10bb3f45-8052-4871-a379-13f5d3960708",
       "name": "Marcar fallas",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -195,7 +195,7 @@
           "appendAttribution": false
         }
       },
-      "id": "9719c704-bd54-4607-b294-0c28fa4cc365",
+      "id": "d72f9e60-6ab0-432d-96db-bf993e5f6186",
       "name": "Aviso: no pasó calidad",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "29241258-cc89-48a1-aa72-358982b9c3a8",
+      "id": "4b3566ac-afa6-4793-8aeb-e442fae19c53",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -23,7 +23,7 @@
           "systemMessage": "Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias. Nunca publicas ni gastas: la fábrica pide aprobación con botones. Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
         }
       },
-      "id": "acdbc258-84d3-4156-83eb-2803e432b11a",
+      "id": "d55d9147-e33a-4bbb-a81b-a38f439adffc",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -41,7 +41,7 @@
         },
         "options": {}
       },
-      "id": "efcb8b21-6f36-4561-b5a2-bf6e2413d49e",
+      "id": "5e5552b9-acae-49bf-82ed-388264e41836",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
         "sessionKey": "={{ 'fabrica-' + $('Inicio').first().json.chatId }}",
         "contextWindowLength": 20
       },
-      "id": "c9a3c526-039a-46e3-a219-c3282253b9ad",
+      "id": "4ec8952b-4739-4ee0-8022-3b379b3334a4",
       "name": "Memoria",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -91,7 +91,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "7fdac19e-2bb8-4404-93e9-886b148cbd01",
+      "id": "e1f6d8ec-e826-4601-9a1d-7c189f88906f",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -122,7 +122,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "352c1c79-87fa-4159-981a-81b46f9c38fe",
+      "id": "248b3bcb-3c79-4a17-b0fb-690ad2829b5a",
       "name": "crear_video",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -150,7 +150,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "f56d3a65-2bb7-4e56-87ce-9a25a40e3603",
+      "id": "c8dc21a7-1f56-4168-9609-90f4a50e1440",
       "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -180,7 +180,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "e01f37b0-6688-4e61-aedf-ef804b3831f7",
+      "id": "7d54ca05-6389-4be8-a434-eee1301688a9",
       "name": "reporte",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -211,7 +211,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "4073d302-169e-4e95-aea9-49d3a7610431",
+      "id": "d69ac439-e456-47cb-a36f-e1ff21e8d05e",
       "name": "corregir",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -242,7 +242,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "5b397334-b2c1-48ab-bc54-c08ff28293f4",
+      "id": "a38d04fb-6f8d-4dbd-9519-4da75cd93165",
       "name": "ajustar_biblia",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -272,7 +272,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "574f714d-a214-4693-bf87-0a84f1c93a03",
+      "id": "d698ddc6-2908-40fe-9742-75198dba63b7",
       "name": "programar",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -301,7 +301,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "a472b903-bc1d-4141-a390-622d7ba02395",
+      "id": "a94585d5-7e94-404c-a802-29b1f845cf18",
       "name": "referencias",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -312,14 +312,43 @@
     },
     {
       "parameters": {
+        "description": "Da el enlace para conectar un canal de la fábrica a su canal de YouTube (una vez por canal). Devuelve el enlace tal cual al operador.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabYouTube000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "accion": "enlace",
+            "canal_id": "={{ $fromAI('canal_id', 'id del canal de la fábrica', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "82ba4fe7-3651-4263-8549-34603bf4066d",
+      "name": "conectar_youtube",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];"
       },
-      "id": "d9d135d8-636f-4174-8798-546e6304efc6",
+      "id": "5a4d1c2e-bf77-4ef4-ac34-7dfcaefb4b25",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2860,
+        3080,
         0
       ]
     }
@@ -447,6 +476,17 @@
       ]
     },
     "referencias": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conectar_youtube": {
       "ai_tool": [
         [
           {

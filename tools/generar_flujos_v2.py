@@ -17,18 +17,23 @@ CRED_EPIDEMIC = {'httpHeaderAuth': {'id': 'FabCredEpidemic1', 'name': 'Epidemic 
 CRED_PEXELS = {'httpHeaderAuth': {'id': 'FabCredPexels001', 'name': 'Pexels'}}
 CRED_PIXABAY = {'httpQueryAuth': {'id': 'FabCredPixabay01', 'name': 'Pixabay'}}
 CRED_CREATOMATE = {'httpHeaderAuth': {'id': 'mtHyTqYtuZSQYGWN', 'name': 'Creatomate'}}
-CRED_GOOGLE = {'googleDriveOAuth2Api': {'id': '5fXmeNSyBH0EFFf7', 'name': 'Google Drive account'}}  # YouTube: pendiente de iniciar sesión
+CRED_GOOGLE = {'googleDriveOAuth2Api': {'id': '5fXmeNSyBH0EFFf7', 'name': 'Google Drive account'}}
+# YouTube: cada canal guarda su propio permiso en la tabla «youtube»; aquí solo va el cliente OAuth de Google
+# (client_id y client_secret, para renovar tokens). La crea tools/crear_credencial_google_cliente.py.
+CRED_GOOGLE_CLIENTE = {'httpCustomAuth': {'id': 'FabCredGoogleCli', 'name': 'Google cliente (OAuth)'}}
 CRED_OPENAI_CHAT = {'openAiApi': {'id': 'FabCredOpenAIch1', 'name': 'OpenAI (chat)'}}  # la crea tools/crear_credencial_chat.py
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
     'eventos': 'FE0Mjte3k2UOEbbE', 'costos': 'vk7TvbIvNcTbmkVv', 'trabajos': 'BIHxr4bhuShuU9pS',
+    'youtube': 'Uez0VV0bdzTX2FnE',  # conexión de cada canal con su canal de YouTube
 }
 W = {  # flujos
     'ajustes': 'FabAjustes000001', 'claude': 'FabLlamarClaude1', 'retorno': 'FabRetornoClaud1',
     'orq': 'FabOrquestador01', 'aprob': 'FabAprobacion001', 'prod': 'FabProduccion001',
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
     'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001', 'refs': 'FabReferencias01',
+    'yt': 'FabYouTube000001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -156,8 +161,12 @@ def http(f, name, method, url, body=None, cred=None, auth=True, headers=None, ti
 
 def gapi(f, name, method, url, cred_type, json_body=None, binary_field=None, query=None, full=False, timeout=300000):
     """HTTP a Google con credencial OAuth predefinida: se publica sin credencial y se conecta luego."""
-    p = {'method': method, 'url': url, 'authentication': 'predefinedCredentialType', 'nodeCredentialType': cred_type,
-         'options': {'timeout': timeout}}
+    if cred_type == 'youtube':  # token del canal del video, pedido a «FX · YouTube por canal»
+        p = {'method': method, 'url': url, 'options': {'timeout': timeout}, 'sendHeaders': True,
+             'headerParameters': {'parameters': [{'name': 'Authorization', 'value': "={{ 'Bearer ' + $('Token del canal').first().json.access_token }}"}]}}
+    else:
+        p = {'method': method, 'url': url, 'authentication': 'predefinedCredentialType', 'nodeCredentialType': cred_type,
+             'options': {'timeout': timeout}}
     if query:
         p.update({'sendQuery': True, 'queryParameters': {'parameters': [{'name': k, 'value': v} for k, v in query.items()]}})
     if json_body is not None:
@@ -167,6 +176,8 @@ def gapi(f, name, method, url, cred_type, json_body=None, binary_field=None, que
     if full:
         p['options']['response'] = {'response': {'fullResponse': True}}
     extra = {'credentials': {cred_type: CRED_GOOGLE[cred_type]}} if cred_type in CRED_GOOGLE else {}
+    if cred_type == 'youtube':
+        extra = {}
     return f.add(name, 'n8n-nodes-base.httpRequest', 4.2, p, **extra)
 
 
@@ -218,8 +229,10 @@ return [{ json: {
   presupuestoShortUsd: 1.5,
   maxIntentosPlano: 2,
   driveCarpetaRaizId: '1Asm7vpt16gjt7uSp5FxaNO1Nfnb4fp1k', // carpeta «Fabrica de Videos» en tu Drive
+  baseUrl: '%s',
+  googleClientId: '405080624452-o72pmo2ti4ofdhm9seje5nfb27l11kdr.apps.googleusercontent.com', // público; el secreto vive en una credencial
 }}];
-""" % (ROUTINE, BASE))
+""" % (ROUTINE, BASE, BASE))
 f.chain('Inicio', 'Ajustes')
 AJUSTES = f.dump()
 
@@ -578,19 +591,26 @@ iff(f, '¿YouTube encendido?', "$('Leer ajustes').first().json.allowYoutube === 
 f.add('Descargar render', 'n8n-nodes-base.httpRequest', 4.2,
       {'method': 'GET', 'url': "={{ $('Inicio').first().json.contexto.render_url }}",
        'options': {'response': {'response': {'responseFormat': 'file'}}, 'timeout': 300000}})
-gapi(f, 'Abrir subida YouTube', 'POST', 'https://www.googleapis.com/upload/youtube/v3/videos', 'youTubeOAuth2Api',
+gapi(f, 'Abrir subida YouTube', 'POST', 'https://www.googleapis.com/upload/youtube/v3/videos', 'youtube',
      query={'uploadType': 'resumable', 'part': 'snippet,status'}, full=True, timeout=30000,
      json_body="={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), description: ($('Inicio').first().json.contexto.creditos || []).join('\n'), categoryId: '27', defaultLanguage: 'es' }, status: Object.assign({ privacyStatus: 'private', selfDeclaredMadeForKids: false, containsSyntheticMedia: true }, Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() + 3600000 ? { publishAt: new Date($('Video (publicar)').first().json.publicar_en).toISOString() } : {}) } }}")
-gapi(f, 'Subir a YouTube', 'PUT', "={{ $('Abrir subida YouTube').first().json.headers.location }}", 'youTubeOAuth2Api',
+gapi(f, 'Subir a YouTube', 'PUT', "={{ $('Abrir subida YouTube').first().json.headers.location }}", 'youtube',
      binary_field='data', timeout=600000)
 code(f, 'Video publicado', "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || '', publicado_en: (Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() ? new Date($('Video (publicar)').first().json.publicar_en) : new Date()).toISOString() } }];")
 dt_update(f, 'Marcar publicado', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
-tg(f, 'Aviso: subido', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Subido en privado: https://youtu.be/' + $('Video publicado').first().json.youtube_id + (Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() ? '. Se publicará el ' + $('Video (publicar)').first().json.publicar_en : '') + '. Marcado como contenido sintético.' }}")
+tg(f, 'Aviso: subido', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Subido en privado a ' + ($('Token del canal').first().json.canal_youtube || 'YouTube') + ': https://youtu.be/' + $('Video publicado').first().json.youtube_id + (Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() ? '. Se publicará el ' + $('Video (publicar)').first().json.publicar_en : '') + '. Marcado como contenido sintético.' }}")
 tg(f, 'Aviso: YouTube apagado', "={{ $('Leer ajustes').first().json.chatId }}", "Aprobado. Para subirlo, enciende YouTube en F · Ajustes.")
 f.link('Según evento', 'Video (publicar)', 13)
 f.link('Video (publicar)', '¿YouTube encendido?')
-f.link('¿YouTube encendido?', 'Abrir subida YouTube', 0)
+code(f, 'Pedir token del canal', "return [{ json: { accion: 'token', canal_id: $('Video (publicar)').first().json.canal_id } }];")
+call(f, 'Token del canal', W['yt'])
+iff(f, '¿Canal conectado?', '$json.ok === true')
+tg(f, 'Aviso: canal sin YouTube', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Aprobado, pero no lo subí: ' + $json.error }}")
+f.link('¿YouTube encendido?', 'Pedir token del canal', 0)
 f.link('¿YouTube encendido?', 'Aviso: YouTube apagado', 1)
+f.chain('Pedir token del canal', 'Token del canal', '¿Canal conectado?')
+f.link('¿Canal conectado?', 'Abrir subida YouTube', 0)
+f.link('¿Canal conectado?', 'Aviso: canal sin YouTube', 1)
 f.chain('Abrir subida YouTube', 'Descargar render', 'Subir a YouTube', 'Video publicado', 'Marcar publicado', 'Aviso: subido')
 
 # 14 cambios en el video final
@@ -1232,9 +1252,18 @@ const toca = $input.all().map(i => i.json).filter(v => v.youtube_id && v.publica
 return toca.length ? toca.map(v => ({ json: { ...v, dias: Math.floor((hoy - Date.parse(v.publicado_en)) / dia), desde: v.publicado_en.slice(0, 10) } })) : [{ json: { nada: true } }];
 """)
 iff(f, '¿Hay que medir?', '$json.nada !== true')
+code(f, 'Pedir tokens', "return $input.all().map(i => ({ json: { accion: 'token', canal_id: i.json.canal_id } }));")
+call(f, 'Tokens de los canales', W['yt'], each=True)
+code(f, 'Pedidos de retención', r"""
+// Une cada video con el token de su canal (mismo orden). Los canales sin conexión se saltan.
+const vids = $('Toca medir').all().map(i => i.json); const toks = $input.all().map(i => i.json);
+const out = vids.map((v, i) => ({ ...v, token: toks[i]?.ok ? toks[i].access_token : '' })).filter(v => v.token);
+return out.length ? out.map(v => ({ json: v })) : [{ json: { nada: true } }];
+""")
+iff(f, '¿Algún canal conectado?', '$json.nada !== true')
 f.add('Retención', 'n8n-nodes-base.httpRequest', 4.2,
       {'method': 'GET', 'url': 'https://youtubeanalytics.googleapis.com/v2/reports',
-       'authentication': 'predefinedCredentialType', 'nodeCredentialType': 'youTubeOAuth2Api',
+       'sendHeaders': True, 'headerParameters': {'parameters': [{'name': 'Authorization', 'value': "={{ 'Bearer ' + $json.token }}"}]},
        'sendQuery': True, 'queryParameters': {'parameters': [
            {'name': 'ids', 'value': 'channel==MINE'}, {'name': 'dimensions', 'value': 'elapsedVideoTimeRatio'},
            {'name': 'metrics', 'value': 'audienceWatchRatio,relativeRetentionPerformance'},
@@ -1243,7 +1272,7 @@ f.add('Retención', 'n8n-nodes-base.httpRequest', 4.2,
        'options': {}}, onError='continueRegularOutput')
 code(f, 'Pedir lecciones', r"""
 // La curva se cruza con el storyboard en Claude (modo «aprender»); una lección solo entra a la biblia si se repite en 3 videos.
-const vids = $('Toca medir').all().map((v, i) => ({ video_id: v.json.video_id, canal_id: v.json.canal_id, dias: v.json.dias, retencion: $('Retención').all()[i]?.json?.rows || [] }));
+const vids = $('Pedidos de retención').all().map((v, i) => ({ video_id: v.json.video_id, canal_id: v.json.canal_id, dias: v.json.dias, retencion: $('Retención').all()[i]?.json?.rows || [] }));
 const porCanal = {}; for (const v of vids) (porCanal[v.canal_id] ||= []).push(v);
 return Object.entries(porCanal).map(([canal_id, videos]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos } } }));
 """)
@@ -1251,7 +1280,9 @@ call(f, 'Claude: aprender', W['claude'], each=True)
 f.chain('Cada día', 'Leer ajustes', '¿Analytics activo?')
 f.link('¿Analytics activo?', 'Videos publicados', 0)
 f.chain('Videos publicados', 'Toca medir', '¿Hay que medir?')
-f.link('¿Hay que medir?', 'Retención', 0)
+f.link('¿Hay que medir?', 'Pedir tokens', 0)
+f.chain('Pedir tokens', 'Tokens de los canales', 'Pedidos de retención', '¿Algún canal conectado?')
+f.link('¿Algún canal conectado?', 'Retención', 0)
 f.chain('Retención', 'Pedir lecciones', 'Claude: aprender')
 APRENDE = f.dump()
 
@@ -1266,6 +1297,17 @@ f.add('Videos', 'n8n-nodes-base.dataTable', 1.1,
 f.add('Costos', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('costos'), 'matchType': 'allConditions',
        'filters': {}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+iff(f, '¿Es reporte?', "$('Inicio').first().json.tipo === 'reporte'")
+f.add('Conexiones', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('youtube'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'conectado'}]}, 'returnAll': True}, alwaysOutputData=True)
+code(f, 'Pedir estadísticas', r"""
+const p = $('Inicio').first().json;
+const cs = $input.all().map(i => i.json).filter(c => c.canal_id && (!p.canal_id || c.canal_id === p.canal_id));
+return cs.length ? cs.map(c => ({ json: { accion: 'estadisticas', canal_id: c.canal_id } })) : [{ json: { nada: true } }];
+""")
+iff(f, '¿Hay canales conectados?', '$json.nada !== true')
+call(f, 'Estadísticas de YouTube', W['yt'], each=True)
 code(f, 'Resumen', r"""
 // «estado»: los 10 videos más recientes. «reporte»: por canal, cuánto se produjo, publicó y gastó.
 const pedido = $('Inicio').first().json;
@@ -1281,10 +1323,18 @@ const porCanal = {};
 for (const v of vs) { const c = (porCanal[v.canal_id] ||= { videos: 0, publicados: 0, gasto: 0, etapas: {} });
   c.videos++; if (v.estado === 'publicado') c.publicados++; c.etapas[v.etapa] = (c.etapas[v.etapa] || 0) + 1;
   c.gasto += costos.filter(x => x.video_id === v.video_id).reduce((a, x) => a + (x.usd || 0), 0); }
-const lineas = Object.entries(porCanal).map(([id, c]) => `${id}: ${c.videos} videos, ${c.publicados} publicados, US$${Math.round(c.gasto * 100) / 100} (prom. US$${c.videos ? Math.round(c.gasto / c.videos * 100) / 100 : 0}) · etapas: ${Object.entries(c.etapas).map(([k, n]) => k + ' ' + n).join(', ')}`);
+const yt = {}; if ($('Estadísticas de YouTube').isExecuted) for (const i of $('Estadísticas de YouTube').all()) if (i.json.ok) yt[i.json.canal_id] = i.json;
+for (const id of Object.keys(yt)) porCanal[id] ||= { videos: 0, publicados: 0, gasto: 0, etapas: {} };
+const lineas = Object.entries(porCanal).map(([id, c]) => (yt[id] ? `${id} (YouTube «${yt[id].canal_youtube}»: ${yt[id].ocultos ? 'suscriptores ocultos' : yt[id].suscriptores + ' suscriptores'}, ${yt[id].vistas} vistas, ${yt[id].videos} videos) — ` : `${id}: `) + `${c.videos} videos, ${c.publicados} publicados, US$${Math.round(c.gasto * 100) / 100} (prom. US$${c.videos ? Math.round(c.gasto / c.videos * 100) / 100 : 0}) · etapas: ${Object.entries(c.etapas).map(([k, n]) => k + ' ' + n).join(', ')}`);
 return [{ json: { resumen: lineas.length ? `Reporte${pedido.dias ? ' de ' + pedido.dias + ' días' : ''}:\n` + lineas.join('\n') : 'Sin videos en ese periodo.' } }];
 """)
-f.chain('Inicio', 'Videos', 'Costos', 'Resumen')
+f.chain('Inicio', 'Videos', 'Costos', '¿Es reporte?')
+f.link('¿Es reporte?', 'Conexiones', 0)
+f.link('¿Es reporte?', 'Resumen', 1)
+f.chain('Conexiones', 'Pedir estadísticas', '¿Hay canales conectados?')
+f.link('¿Hay canales conectados?', 'Estadísticas de YouTube', 0)
+f.link('¿Hay canales conectados?', 'Resumen', 1)
+f.link('Estadísticas de YouTube', 'Resumen')
 ESTADO = f.dump()
 
 # ======================================================================================
@@ -1416,15 +1466,155 @@ tool('programar', 'Fija fecha y hora de publicación de un video ya aprobado.',
      {'evento': 'programar', 'video_id': AI('video_id', 'id del video'), 'fecha': AI('fecha', 'fecha y hora ISO 8601 con zona, p. ej. 2026-11-27T18:00:00-05:00')})
 tool('referencias', 'Genera las imágenes de referencia de personajes y escenarios de un canal.',
      {'evento': 'referencias', 'canal_id': AI('canal_id', 'id del canal')})
+tool('conectar_youtube', 'Da el enlace para conectar un canal de la fábrica a su canal de YouTube (una vez por canal). Devuelve el enlace tal cual al operador.',
+     {'accion': 'enlace', 'canal_id': AI('canal_id', 'id del canal de la fábrica')}, W['yt'])
 code(f, 'Respuesta', "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];")
 f.chain('Inicio', 'Agente', 'Respuesta')
 f.ai('Modelo', 'Agente', 'ai_languageModel')
 f.ai('Memoria', 'Agente', 'ai_memory')
-for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias'):
+for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube'):
     f.ai(t, 'Agente', 'ai_tool')
 AGENTE = f.dump()
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, AGENTE]
+# ======================================================================================
+# FX · YouTube por canal: cada canal de la fábrica se conecta a su propio canal de YouTube.
+#   - accion 'enlace': arma el enlace de Google para conectar (lo pide «conectar <canal>» en Telegram).
+#   - accion 'token': da un token de acceso del canal (subir, medir).
+#   - accion 'estadisticas': suscriptores, vistas y videos del canal (reporte).
+#   - webhook /webhook/youtube-callback: Google vuelve aquí; se guarda el permiso del canal.
+# El permiso (refresh token) vive en la tabla «youtube»; el cliente OAuth, en la credencial «Google cliente».
+# ======================================================================================
+f = Flow(W['yt'], 'FX · YouTube por canal')
+trigger(f)
+call(f, 'Leer ajustes', W['ajustes'])
+switch(f, 'Según acción', 3, "({ enlace: 0, token: 1, estadisticas: 1 })[$('Inicio').first().json.accion] ?? 1")
+# --- enlace ---
+dt_get(f, 'Conexión (enlace)', 'youtube', 'canal_id', "={{ String($('Inicio').first().json.canal_id || '').toLowerCase() }}")
+code(f, 'Preparar enlace', r"""
+const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
+const canal_id = String(e.canal_id || '').toLowerCase().trim();
+if (!/^[a-z0-9-]{3,60}$/.test(canal_id)) return [{ json: { valido: false, respuesta: 'Formato: conectar <id-del-canal>' } }];
+const bytes = new Uint8Array(16);
+if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(bytes); else for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
+const nonce = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+const q = new URLSearchParams({ client_id: aj.googleClientId, redirect_uri: aj.baseUrl + '/webhook/youtube-callback', response_type: 'code',
+  access_type: 'offline', prompt: 'consent select_account', include_granted_scopes: 'false', state: canal_id + '.' + nonce,
+  scope: ['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/yt-analytics.readonly'].join(' ') });
+return [{ json: { valido: true, existe: !!$json.canal_id, canal_id, nonce, estado: 'pendiente',
+  url: 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString() } }];
+""")
+iff(f, '¿Canal válido?', '$json.valido === true')
+iff(f, '¿Ya existe?', '$json.existe === true')
+code(f, 'Fila pendiente', "return [{ json: { canal_id: $json.canal_id, nonce: $json.nonce, estado: 'pendiente' } }];")
+dt_update(f, 'Guardar pendiente', 'youtube', 'canal_id', "={{ $('Preparar enlace').first().json.canal_id }}")
+code(f, 'Fila nueva', "return [{ json: { canal_id: $json.canal_id, nonce: $json.nonce, estado: 'pendiente' } }];")
+dt_insert(f, 'Crear pendiente', 'youtube')
+code(f, 'Respuesta enlace', r"""
+const p = $('Preparar enlace').first().json;
+return [{ json: { ok: true, respuesta: `Para conectar «${p.canal_id}» a YouTube abre este enlace, elige el canal (o su cuenta de marca) y acepta:\n${p.url}\n\nEl enlace sirve una vez. Te aviso aquí cuando quede conectado.` } }];
+""")
+code(f, 'Respuesta inválida', "return [{ json: { ok: false, respuesta: $json.respuesta } }];")
+f.link('Inicio', 'Leer ajustes')
+f.link('Leer ajustes', 'Según acción')
+f.link('Según acción', 'Conexión (enlace)', 0)
+f.chain('Conexión (enlace)', 'Preparar enlace', '¿Canal válido?')
+f.link('¿Canal válido?', '¿Ya existe?', 0)
+f.link('¿Canal válido?', 'Respuesta inválida', 1)
+f.link('¿Ya existe?', 'Fila pendiente', 0)
+f.link('¿Ya existe?', 'Fila nueva', 1)
+f.chain('Fila pendiente', 'Guardar pendiente', 'Respuesta enlace')
+f.chain('Fila nueva', 'Crear pendiente', 'Respuesta enlace')
+
+# --- token / estadísticas ---
+dt_get(f, 'Conexión', 'youtube', 'canal_id', "={{ String($('Inicio').first().json.canal_id || '').toLowerCase() }}")
+iff(f, '¿Conectado?', "$json.estado === 'conectado' && !!$json.refresh_token")
+http(f, 'Renovar token', 'POST', 'https://oauth2.googleapis.com/token', auth=False, timeout=30000,
+     body="={{ { grant_type: 'refresh_token', refresh_token: $json.refresh_token } }}")
+f.nodes[-1]['parameters'].update({'authentication': 'genericCredentialType', 'genericAuthType': 'httpCustomAuth'})
+f.nodes[-1].update({'credentials': CRED_GOOGLE_CLIENTE, 'onError': 'continueRegularOutput', 'retryOnFail': True, 'maxTries': 3, 'waitBetweenTries': 2000})
+code(f, 'Token', r"""
+const r = $json; const c = $('Conexión').first().json;
+if (!r.access_token) return [{ json: { ok: false, error: 'Google no renovó el permiso de «' + c.canal_id + '»' + (r.error ? ' (' + JSON.stringify(r.error).slice(0, 120) + ')' : '') + '. Vuelve a conectarlo: conectar ' + c.canal_id } }];
+return [{ json: { ok: true, access_token: r.access_token, canal_id: c.canal_id, canal_youtube: c.canal_youtube, canal_youtube_id: c.canal_youtube_id } }];
+""")
+code(f, 'Sin conexión', "const id = $('Inicio').first().json.canal_id; return [{ json: { ok: false, error: `El canal «${id}» no está conectado a YouTube. Escribe en Telegram: conectar ${id}` } }];")
+iff(f, '¿Pide estadísticas?', "$('Inicio').first().json.accion === 'estadisticas' && $json.ok === true")
+http(f, 'Canal en YouTube', 'GET', 'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', auth=False, timeout=30000,
+     headers={'Authorization': "={{ 'Bearer ' + $json.access_token }}"})
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+code(f, 'Estadísticas', r"""
+const t = $('Token').first().json; const it = ($json.items || [])[0];
+if (!it) return [{ json: { ok: false, canal_id: t.canal_id, error: 'YouTube no devolvió el canal' } }];
+const s = it.statistics || {};
+return [{ json: { ok: true, canal_id: t.canal_id, canal_youtube: it.snippet?.title || t.canal_youtube,
+  suscriptores: Number(s.subscriberCount || 0), vistas: Number(s.viewCount || 0), videos: Number(s.videoCount || 0), ocultos: !!s.hiddenSubscriberCount } }];
+""")
+f.link('Según acción', 'Conexión', 1)
+f.link('Conexión', '¿Conectado?')
+f.link('¿Conectado?', 'Renovar token', 0)
+f.link('¿Conectado?', 'Sin conexión', 1)
+f.chain('Renovar token', 'Token', '¿Pide estadísticas?')
+code(f, 'Devolver token', 'return [{ json: $json }];')
+f.link('¿Pide estadísticas?', 'Canal en YouTube', 0)
+f.link('¿Pide estadísticas?', 'Devolver token', 1)
+f.link('Canal en YouTube', 'Estadísticas')
+
+# --- vuelta de Google ---
+f.add('Vuelta de Google', 'n8n-nodes-base.webhook', 2,
+      {'httpMethod': 'GET', 'path': 'youtube-callback', 'responseMode': 'responseNode', 'options': {}},
+      webhookId='fab-youtube-callback')
+call(f, 'Ajustes (vuelta)', W['ajustes'])
+code(f, 'Leer vuelta', r"""
+const q = $('Vuelta de Google').first().json.query || {};
+const [canal_id, nonce] = String(q.state || '').split('.');
+return [{ json: { canal_id: String(canal_id || '').toLowerCase(), nonce: nonce || '', code: q.code || '', error: q.error || '' } }];
+""")
+dt_get(f, 'Conexión pendiente', 'youtube', 'canal_id', "={{ $('Leer vuelta').first().json.canal_id || '-' }}")
+code(f, 'Validar vuelta', r"""
+const v = $('Leer vuelta').first().json; const fila = $json;
+const motivo = v.error ? 'Google respondió: ' + v.error
+  : !fila.canal_id ? 'no reconozco el canal'
+  : fila.estado !== 'pendiente' || !fila.nonce || fila.nonce !== v.nonce ? 'el enlace ya se usó o caducó; pide otro con «conectar ' + v.canal_id + '»'
+  : !v.code ? 'falta el código de Google' : '';
+return [{ json: { ok: !motivo, motivo, canal_id: v.canal_id, code: v.code } }];
+""")
+iff(f, '¿Vuelta válida?', '$json.ok === true')
+http(f, 'Canjear código', 'POST', 'https://oauth2.googleapis.com/token', auth=False, timeout=30000,
+     body="={{ { grant_type: 'authorization_code', code: $json.code, redirect_uri: $('Ajustes (vuelta)').first().json.baseUrl + '/webhook/youtube-callback' } }}")
+f.nodes[-1]['parameters'].update({'authentication': 'genericCredentialType', 'genericAuthType': 'httpCustomAuth'})
+f.nodes[-1].update({'credentials': CRED_GOOGLE_CLIENTE, 'onError': 'continueRegularOutput'})
+http(f, 'Qué canal es', 'GET', 'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true', auth=False, timeout=30000,
+     headers={'Authorization': "={{ 'Bearer ' + ($json.access_token || '-') }}"})
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+code(f, 'Fila conectada', r"""
+const t = $('Canjear código').first().json; const it = ($json.items || [])[0];
+if (!t.refresh_token || !it) return [{ json: { ok: false, motivo: !t.refresh_token ? 'Google no entregó un permiso duradero (' + JSON.stringify(t.error || 'sin refresh_token').slice(0, 120) + ')' : 'esa cuenta no tiene canal de YouTube' } }];
+return [{ json: { ok: true, estado: 'conectado', nonce: '', refresh_token: t.refresh_token, canal_youtube: it.snippet?.title || '', canal_youtube_id: it.id, conectado_en: new Date().toISOString() } }];
+""")
+iff(f, '¿Conexión lista?', '$json.ok === true')
+code(f, 'Datos de conexión', "const { ok, ...fila } = $json; return [{ json: fila }];")
+dt_update(f, 'Guardar conexión', 'youtube', 'canal_id', "={{ $('Leer vuelta').first().json.canal_id }}")
+tg(f, 'Aviso: conectado', "={{ $('Ajustes (vuelta)').first().json.chatId }}",
+   "={{ 'Canal «' + $('Leer vuelta').first().json.canal_id + '» conectado a YouTube: ' + $('Fila conectada').first().json.canal_youtube + '. Desde ahora sus videos se suben y miden ahí.' }}")
+f.add('Página: listo', 'n8n-nodes-base.respondToWebhook', 1.1,
+      {'respondWith': 'text', 'responseBody': "={{ '<!doctype html><meta charset=utf-8><body style=\"font-family:sans-serif;padding:40px\"><h2>Listo</h2><p>«' + $('Leer vuelta').first().json.canal_id + '» quedó conectado a ' + $('Fila conectada').first().json.canal_youtube + '. Ya puedes cerrar esta ventana.</p>' }}",
+       'options': {'responseCode': 200, 'responseHeaders': {'entries': [{'name': 'Content-Type', 'value': 'text/html; charset=utf-8'}]}}})
+code(f, 'Motivo del fallo', "return [{ json: { motivo: $json.motivo || 'error desconocido' } }];")
+tg(f, 'Aviso: no conectado', "={{ $('Ajustes (vuelta)').first().json.chatId }}", "={{ 'No pude conectar YouTube: ' + $json.motivo }}")
+f.add('Página: error', 'n8n-nodes-base.respondToWebhook', 1.1,
+      {'respondWith': 'text', 'responseBody': "={{ '<!doctype html><meta charset=utf-8><body style=\"font-family:sans-serif;padding:40px\"><h2>No se conectó</h2><p>' + $('Motivo del fallo').first().json.motivo + '</p>' }}",
+       'options': {'responseCode': 400, 'responseHeaders': {'entries': [{'name': 'Content-Type', 'value': 'text/html; charset=utf-8'}]}}})
+f.chain('Vuelta de Google', 'Ajustes (vuelta)', 'Leer vuelta', 'Conexión pendiente', 'Validar vuelta', '¿Vuelta válida?')
+f.link('¿Vuelta válida?', 'Canjear código', 0)
+f.link('¿Vuelta válida?', 'Motivo del fallo', 1)
+f.chain('Canjear código', 'Qué canal es', 'Fila conectada', '¿Conexión lista?')
+f.link('¿Conexión lista?', 'Datos de conexión', 0)
+f.link('¿Conexión lista?', 'Motivo del fallo', 1)
+f.chain('Datos de conexión', 'Guardar conexión', 'Aviso: conectado', 'Página: listo')
+f.chain('Motivo del fallo', 'Aviso: no conectado', 'Página: error')
+YT = f.dump()
+
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, AGENTE]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)

@@ -316,3 +316,69 @@ test('aprendizaje: solo mide los videos que cumplen 2 o 7 días', () => {
   assert.deepStrictEqual(out.map(i => i.json.video_id), ['a', 'c']);
   assert.strictEqual(run(codeOf(APR, 'Toca medir'), { all: { $input: [] } })[0].json.nada, true);
 });
+
+// ---------------------------------------------------------------------------------------
+// Varios canales de YouTube: cada canal de la fábrica con su propio permiso
+// ---------------------------------------------------------------------------------------
+const YT = wf('FabYouTube000001');
+const ajYT = { ...aj, baseUrl: 'https://n8n.test', googleClientId: 'cli.apps.googleusercontent.com' };
+
+test('youtube: el enlace lleva cliente, retorno, permisos, estado único y valida el id', () => {
+  const a = run(codeOf(YT, 'Preparar enlace'), { json: {}, nodes: { Inicio: { canal_id: 'Expediente-Abierto-cjhz' }, 'Leer ajustes': ajYT } })[0].json;
+  assert.strictEqual(a.valido, true); assert.strictEqual(a.canal_id, 'expediente-abierto-cjhz'); assert.strictEqual(a.existe, false);
+  const u = new URL(a.url);
+  assert.strictEqual(u.searchParams.get('client_id'), 'cli.apps.googleusercontent.com');
+  assert.strictEqual(u.searchParams.get('redirect_uri'), 'https://n8n.test/webhook/youtube-callback');
+  assert.strictEqual(u.searchParams.get('access_type'), 'offline');
+  assert.match(u.searchParams.get('scope'), /youtube\.upload.*yt-analytics\.readonly/);
+  assert.strictEqual(u.searchParams.get('state'), 'expediente-abierto-cjhz.' + a.nonce); assert.strictEqual(a.nonce.length, 32);
+  const b = run(codeOf(YT, 'Preparar enlace'), { json: { canal_id: 'x' }, nodes: { Inicio: { canal_id: 'expediente-abierto-cjhz' }, 'Leer ajustes': ajYT } })[0].json;
+  assert.notStrictEqual(a.nonce, b.nonce); assert.strictEqual(b.existe, true);
+  assert.strictEqual(run(codeOf(YT, 'Preparar enlace'), { json: {}, nodes: { Inicio: { canal_id: 'a b<script>' }, 'Leer ajustes': ajYT } })[0].json.valido, false);
+});
+
+test('youtube: la vuelta de Google solo vale con el estado pendiente y el nonce exacto (una vez)', () => {
+  const vuelta = q => run(codeOf(YT, 'Leer vuelta'), { nodes: { 'Vuelta de Google': { query: q } } })[0].json;
+  const v = vuelta({ state: 'canal-1.abc', code: 'C' });
+  assert.deepStrictEqual([v.canal_id, v.nonce, v.code], ['canal-1', 'abc', 'C']);
+  const val = (fila, vv = v) => run(codeOf(YT, 'Validar vuelta'), { json: fila, nodes: { 'Leer vuelta': vv } })[0].json;
+  assert.strictEqual(val({ canal_id: 'canal-1', estado: 'pendiente', nonce: 'abc' }).ok, true);
+  assert.strictEqual(val({ canal_id: 'canal-1', estado: 'pendiente', nonce: 'otro' }).ok, false);
+  assert.strictEqual(val({ canal_id: 'canal-1', estado: 'conectado', nonce: '' }).ok, false);      // enlace ya usado
+  assert.strictEqual(val({ canal_id: 'canal-1', estado: 'pendiente', nonce: '' }, { ...v, nonce: '' }).ok, false); // nonce vacío nunca vale
+  assert.strictEqual(val({}).ok, false);
+  assert.match(val({ canal_id: 'canal-1', estado: 'pendiente', nonce: 'abc' }, vuelta({ state: 'canal-1.abc', error: 'access_denied' })).motivo, /access_denied/);
+});
+
+test('youtube: guarda permiso duradero y canal; sin refresh_token o sin canal no conecta', () => {
+  const fila = (tok, ch) => run(codeOf(YT, 'Fila conectada'), { json: ch, nodes: { 'Canjear código': tok } })[0].json;
+  const ok = fila({ access_token: 'a', refresh_token: 'r' }, { items: [{ id: 'UC1', snippet: { title: 'Margen Real' } }] });
+  assert.strictEqual(ok.ok, true); assert.strictEqual(ok.refresh_token, 'r'); assert.strictEqual(ok.canal_youtube_id, 'UC1'); assert.strictEqual(ok.estado, 'conectado'); assert.strictEqual(ok.nonce, '');
+  assert.strictEqual(fila({ access_token: 'a' }, { items: [{ id: 'UC1' }] }).ok, false);
+  assert.match(fila({ access_token: 'a', refresh_token: 'r' }, { items: [] }).motivo, /no tiene canal/);
+});
+
+test('youtube: token renovado o error claro con el comando para reconectar', () => {
+  const con = { canal_id: 'c1', canal_youtube: 'Margen Real', canal_youtube_id: 'UC1' };
+  const ok = run(codeOf(YT, 'Token'), { json: { access_token: 'T' }, nodes: { 'Conexión': con } })[0].json;
+  assert.strictEqual(ok.ok, true); assert.strictEqual(ok.access_token, 'T'); assert.strictEqual(ok.canal_youtube, 'Margen Real');
+  const no = run(codeOf(YT, 'Token'), { json: { error: 'invalid_grant' }, nodes: { 'Conexión': con } })[0].json;
+  assert.strictEqual(no.ok, false); assert.match(no.error, /conectar c1/); assert.ok(!('access_token' in no));
+  const est = run(codeOf(YT, 'Estadísticas'), { json: { items: [{ snippet: { title: 'MR' }, statistics: { subscriberCount: '12', viewCount: '300', videoCount: '4' } }] }, nodes: { Token: ok } })[0].json;
+  assert.deepStrictEqual([est.suscriptores, est.vistas, est.videos], [12, 300, 4]);
+});
+
+test('aprendizaje: cada video se mide con el token de su canal; los no conectados se saltan', () => {
+  const vids = [{ video_id: 'a', canal_id: 'c1', youtube_id: 'y1' }, { video_id: 'b', canal_id: 'c2', youtube_id: 'y2' }];
+  const out = run(codeOf(APR, 'Pedidos de retención'), { all: { 'Toca medir': vids, $input: [{ ok: true, access_token: 'T1' }, { ok: false, error: 'x' }] } });
+  assert.strictEqual(out.length, 1); assert.strictEqual(out[0].json.video_id, 'a'); assert.strictEqual(out[0].json.token, 'T1');
+  assert.strictEqual(run(codeOf(APR, 'Pedidos de retención'), { all: { 'Toca medir': vids, $input: [{ ok: false }, { ok: false }] } })[0].json.nada, true);
+});
+
+test('reporte: incluye suscriptores y vistas de cada canal conectado, aunque no tenga videos en el periodo', () => {
+  const vids = [{ video_id: 'a', canal_id: 'c1', etapa: 'publicado', estado: 'publicado', createdAt: new Date().toISOString() }];
+  const r = run(codeOf(EST, 'Resumen'), { nodes: { Inicio: { tipo: 'reporte', dias: 30 } },
+    all: { Videos: vids, Costos: [], 'Estadísticas de YouTube': [{ ok: true, canal_id: 'c1', canal_youtube: 'Margen Real', suscriptores: 5, vistas: 99, videos: 1 }, { ok: true, canal_id: 'c9', canal_youtube: 'Otro', suscriptores: 0, vistas: 0, videos: 0, ocultos: true }] } })[0].json.resumen;
+  assert.match(r, /c1 \(YouTube «Margen Real»: 5 suscriptores, 99 vistas, 1 videos\) — 1 videos, 1 publicados/);
+  assert.match(r, /c9 \(YouTube «Otro»: suscriptores ocultos/);
+});
