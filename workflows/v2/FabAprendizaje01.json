@@ -1,0 +1,289 @@
+{
+  "id": "FabAprendizaje01",
+  "name": "M7 · Aprendizaje semanal",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "88c48944-ac7b-47bd-9b77-8d40fc16d7ed",
+      "name": "Cada lunes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "8657011c-6b00-4462-a430-26888e3a3343",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8e80b7bc-39e2-43ae-8efb-b9a00160cb0f",
+              "leftValue": "={{ $json.allowAnalytics === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d6006bef-1747-4a5c-a493-5e8970441e83",
+      "name": "¿Analytics activo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "publicado"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "ca6bb4da-3830-430c-84c2-1febed070fb8",
+      "name": "Videos publicados",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://youtubeanalytics.googleapis.com/v2/reports",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "youTubeOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ids",
+              "value": "channel==MINE"
+            },
+            {
+              "name": "dimensions",
+              "value": "elapsedVideoTimeRatio"
+            },
+            {
+              "name": "metrics",
+              "value": "audienceWatchRatio,relativeRetentionPerformance"
+            },
+            {
+              "name": "filters",
+              "value": "={{ 'video==' + $json.youtube_id }}"
+            },
+            {
+              "name": "startDate",
+              "value": "2026-01-01"
+            },
+            {
+              "name": "endDate",
+              "value": "={{ $now.toFormat('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "47c41f72-c997-470b-a1a2-ccec17375bca",
+      "name": "Retención",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst vids = $('Videos publicados').all().map((v, i) => ({ video_id: v.json.video_id, canal_id: v.json.canal_id, retencion: $('Retención').all()[i]?.json?.rows || [] }));\nconst porCanal = {}; for (const v of vids) (porCanal[v.canal_id] ||= []).push(v);\nreturn Object.entries(porCanal).map(([canal_id, videos]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos } } }));\n"
+      },
+      "id": "dca86a8b-8fa4-48fc-bfd3-54339cefb579",
+      "name": "Pedir lecciones",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabLlamarClaude1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "a3f80cf1-69cd-48a7-aecc-605e8c935978",
+      "name": "Claude: aprender",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1540,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Cada lunes": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "¿Analytics activo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Analytics activo?": {
+      "main": [
+        [
+          {
+            "node": "Videos publicados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Videos publicados": {
+      "main": [
+        [
+          {
+            "node": "Retención",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retención": {
+      "main": [
+        [
+          {
+            "node": "Pedir lecciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir lecciones": {
+      "main": [
+        [
+          {
+            "node": "Claude: aprender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

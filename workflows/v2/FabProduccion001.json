@@ -1,0 +1,1099 @@
+{
+  "id": "FabProduccion001",
+  "name": "M4–M6 · Producción",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "3e85e2d5-aa22-4583-8850-f9c9bab699f8",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f0ae95e0-8fcb-4ffb-8579-a9acb7b39651",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst planos = (e.storyboard?.planos || []).filter(p => p && p.id);\nconst n = t => planos.filter(p => p.tipo === t).length;\nconst costo = n('imagen') * aj.costoImagenUsd + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1;\nconst faltan = [];\nif (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');\nif (n('clip') && !aj.allowVeo) faltan.push('clips (Veo)');\nif (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');\nif (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');\nif (!aj.allowMontaje || !aj.creatomatePlantillaId) faltan.push('montaje (Creatomate y su plantilla)');\nconst presupuesto = Number(e.presupuesto_usd) || aj.presupuestoLargoUsd;\nreturn [{ json: { ...e, planos, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,\n  dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];\n"
+      },
+      "id": "ef60129b-0dcf-4d60-8c07-7df564cec06d",
+      "name": "Plan de producción",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a86b7e6d-2cbd-4afd-850f-52673f4aa32e",
+              "leftValue": "={{ $json.faltan.length === 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7c1216bf-c1c4-4c52-b70b-0b1ae837597a",
+      "name": "¿Todo encendido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ 'Producción de ' + $json.video_id + ' preparada (' + $json.planos.length + ' planos, ~US$' + $json.costo_estimado_usd + '). Falta encender: ' + $json.faltan.join(', ') + '.' }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "ea8dba51-cbd9-4b8c-a037-07d9a248e6e3",
+      "name": "Aviso: falta encender",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "befbce72-9481-4ecd-919e-83c3d84756a3",
+              "leftValue": "={{ $json.dentro === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d3162e4b-84cf-42ac-8775-8456f06a87be",
+      "name": "¿Dentro del presupuesto?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ 'El video ' + $json.video_id + ' costaría ~US$' + $json.costo_estimado_usd + ' y el tope es US$' + $json.presupuesto + '. Reduce clips o sube el tope.' }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "47d56a72-4641-4e0b-aa17-abd907348921",
+      "name": "Aviso: sobre presupuesto",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1540,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Plan de producción').first().json; const b = e.biblia || {};\nconst estilo = [b.estilo_visual?.descripcion, b.estilo_visual?.luz, b.estilo_visual?.lente, b.estilo_visual?.textura,\n  (b.estilo_visual?.paleta_hex || []).length ? 'paleta ' + b.estilo_visual.paleta_hex.join(' ') : ''].filter(Boolean).join('. ');\nconst refs = id => [...(b.personajes || []), ...(b.escenarios || [])].filter(x => (id || []).includes(x.id)).flatMap(x => x.referencias_urls || []).slice(0, 6);\nreturn e.planos.map(p => ({ json: { video_id: e.video_id, plano: p, intento: 1,\n  prompt: `${p.prompt_imagen}. Encuadre ${p.encuadre}, ángulo ${p.angulo || 'a la altura de los ojos'}, luz ${p.luz}. Estilo: ${estilo}. Sin texto ni logos.`,\n  referencias: refs([...(p.personajes || []), p.escenario]), salida: p.tipo === 'clip' ? 1 : p.tipo === 'avatar' ? 2 : 0 } }));\n"
+      },
+      "id": "b823693e-2972-430b-94a6-e614fc80b651",
+      "name": "Un ítem por plano",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ $json.salida }}"
+      },
+      "id": "ff579b89-8c91-4ef7-b59f-e926ed0945d3",
+      "name": "Según tipo de plano",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}"
+      },
+      "id": "6b8c944c-2d4a-421e-a657-2baaaf87ed93",
+      "name": "Generar imagen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nif (!out?.result) throw new Error('Sin imagen en la respuesta');\nconst prev = $('Un ítem por plano').item.json;\nreturn [{ json: { ...prev }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: prev.plano.id + '.png' } } }];\n"
+      },
+      "id": "c5f1acb1-dbc1-4460-beb3-fa9e6367a982",
+      "name": "Extraer imagen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "inputDataFieldName": "imagen",
+        "name": "={{ $json.video_id + '-' + $json.plano.id + '.png' }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"
+        },
+        "options": {}
+      },
+      "id": "1e7d5ea9-37c2-4e21-9de4-6bd717fff62c",
+      "name": "Subir a Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "id": "cdc23fda-ccdc-481d-a3e3-21465d2df705",
+      "name": "Compartir enlace",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prev = $('Extraer imagen').item.json; const id = $('Subir a Drive').item.json.id;\nreturn [{ json: { ...prev, url: 'https://drive.google.com/uc?export=download&id=' + id } }];\n"
+      },
+      "id": "75223d76-9979-47ae-b5b3-92b5fa68c199",
+      "name": "URL del plano",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0a199ae9-74f3-4cf6-b04f-99efbb8d4757",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowRevisionVisual === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1edd73cc-63f8-488e-af97-ec67ba14dae0",
+      "name": "¿Revisión visual activa?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 120000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Revisa si la imagen coincide con las referencias (rostro, vestuario, paleta) y con la escena: ' + $json.plano.texto_narrado + '. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}"
+      },
+      "id": "f898b0fb-bec3-4e4a-9429-4a6dd28818c3",
+      "name": "Revisar plano",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prev = $('URL del plano').item.json; let v = { aprobado: true };\ntry { v = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '{}'); } catch (e) { v = { aprobado: false, problemas: ['respuesta ilegible'] }; }\nconst max = $('Leer ajustes').first().json.maxIntentosPlano;\nconst repetir = v.aprobado === false && prev.intento < max;\nreturn [{ json: { ...prev, veredicto: v, repetir, intento: prev.intento + (repetir ? 1 : 0), prompt: repetir && v.prompt_corregido ? v.prompt_corregido : prev.prompt } }];\n"
+      },
+      "id": "4619bc4e-21fe-4673-a396-0937e9767c88",
+      "name": "Veredicto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3740,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a2428072-9755-437d-bf49-7d1bad657c29",
+              "leftValue": "={{ $json.repetir === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0e7d1081-d454-4844-9e3b-4dda243d8362",
+      "name": "¿Repetir plano?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano } }];"
+      },
+      "id": "3d15d477-6030-48dd-bca4-e1e3d2242351",
+      "name": "Plano aprobado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVeo + ':predictLongRunning' }}",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { instances: [{ prompt: $json.prompt + ' Movimiento: ' + ($json.plano.prompt_movimiento || $json.plano.movimiento) }], parameters: { aspectRatio: '16:9', durationSeconds: 8 } } }}"
+      },
+      "id": "e0e9b343-ea56-4074-b687-584373b360b6",
+      "name": "Generar clip (Veo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 60,
+        "unit": "seconds"
+      },
+      "id": "9b0762f1-827b-4f9f-b7b3-82cc117e9fb8",
+      "name": "Esperar Veo",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4620,
+        0
+      ],
+      "webhookId": "4031f2cf-a045-4e75-ae86-75c7f6966107"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/' + $('Generar clip (Veo)').item.json.name }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "c631cffb-ad13-44ad-8346-816588ff3e28",
+      "name": "Consultar Veo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4840,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7b24ea69-0277-4d7a-a9f6-1b95b57cef30",
+              "leftValue": "={{ $json.done === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "881985d2-9395-435e-9a91-7f1607e8c8e3",
+      "name": "¿Clip listo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prev = $('Un ítem por plano').item.json;\nconst uri = $json.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri || '';\nreturn [{ json: { video_id: prev.video_id, plano_id: prev.plano.id, url: uri, plano: prev.plano, requiereClave: true } }];\n"
+      },
+      "id": "b25e122e-5545-4402-8790-a980cd6bbd81",
+      "name": "Clip aprobado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, nota: 'avatar: definir ruta HeyGen' } }];"
+      },
+      "id": "5369bebc-2d1c-470a-9dbf-1f221593830a",
+      "name": "Avatar pendiente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "planos",
+        "options": {}
+      },
+      "id": "e36134d7-b0ea-4c99-bda0-91e0c81879a0",
+      "name": "Juntar planos",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        5720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Plan de producción').first().json; const aj = $('Leer ajustes').first().json;\nconst orden = e.planos.map(p => p.id);\nconst listos = $json.planos.filter(p => p.url).sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\nconst voz = aj.elevenVoiceId || e.biblia?.voz?.eleven_voice_id || '';\nconst vertical = e.formato === 'short';\nconst escenas = listos.map((p, i) => ({ type: 'composition', track: 1, name: p.plano_id,\n  transition: i && p.plano.transicion === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined,\n  elements: [\n    { type: p.url.match(/\\.(mp4|mov)/) || p.plano.tipo === 'clip' ? 'video' : 'image', source: p.url, fit: 'cover',\n      animations: p.plano.movimiento === 'zoom lento' ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '110%', easing: 'linear' }] : undefined },\n    { type: 'audio', source: p.plano.texto_narrado, provider: 'elevenlabs model_id=eleven_v4 voice_id=' + voz },\n  ] }));\nreturn [{ json: { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, elements: escenas },\n  video_id: e.video_id, canal_id: e.canal_id, planos: listos.length, esperados: orden.length } }];\n"
+      },
+      "id": "c555405f-512c-4c77-bf78-94632f5fa53e",
+      "name": "Composición Creatomate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5940,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v2/renders",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { source: $json.source } }}"
+      },
+      "id": "1e21b216-be55-4d5f-b0f4-684c42e3c9f0",
+      "name": "Renderizar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 45,
+        "unit": "seconds"
+      },
+      "id": "9c26ea99-5295-4b71-9b8f-6a0ad4e470f1",
+      "name": "Esperar render",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        6380,
+        0
+      ],
+      "webhookId": "0ba3af91-924f-46e2-901d-a6a1adbbd927"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.creatomate.com/v2/renders/' + ($('Renderizar').first().json.id || $('Renderizar').first().json[0]?.id) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "d0d8b5cb-df0e-4b4b-bcf7-81c8bddab307",
+      "name": "Consultar render",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "23b7980e-890c-46eb-a1a1-f78254d31af5",
+              "leftValue": "={{ $json.status === 'succeeded' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "019bb345-511f-4d2d-893d-7193e47dc266",
+      "name": "¿Render listo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        6820,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst c = $('Composición Creatomate').first().json;\nreturn [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: $json.url, duracion_s: $json.duration, planos: c.planos, esperados: c.esperados,\n  formato: $('Plan de producción').first().json.formato } }];\n"
+      },
+      "id": "1711d3dc-e4e1-445e-8a1a-9c47bf9d95df",
+      "name": "Encargo de calidad",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7040,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPublicacion01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "id": "9263c27b-ab64-4209-8531-35665b070110",
+      "name": "Calidad y publicación",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        7260,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Plan de producción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan de producción": {
+      "main": [
+        [
+          {
+            "node": "¿Todo encendido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Todo encendido?": {
+      "main": [
+        [
+          {
+            "node": "¿Dentro del presupuesto?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aviso: falta encender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Dentro del presupuesto?": {
+      "main": [
+        [
+          {
+            "node": "Un ítem por plano",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aviso: sobre presupuesto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Un ítem por plano": {
+      "main": [
+        [
+          {
+            "node": "Según tipo de plano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Según tipo de plano": {
+      "main": [
+        [
+          {
+            "node": "Generar imagen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generar clip (Veo)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avatar pendiente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar imagen": {
+      "main": [
+        [
+          {
+            "node": "Extraer imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer imagen": {
+      "main": [
+        [
+          {
+            "node": "Subir a Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir a Drive": {
+      "main": [
+        [
+          {
+            "node": "Compartir enlace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartir enlace": {
+      "main": [
+        [
+          {
+            "node": "URL del plano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL del plano": {
+      "main": [
+        [
+          {
+            "node": "¿Revisión visual activa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Revisión visual activa?": {
+      "main": [
+        [
+          {
+            "node": "Revisar plano",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plano aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revisar plano": {
+      "main": [
+        [
+          {
+            "node": "Veredicto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Veredicto": {
+      "main": [
+        [
+          {
+            "node": "¿Repetir plano?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Repetir plano?": {
+      "main": [
+        [
+          {
+            "node": "Generar imagen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plano aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar clip (Veo)": {
+      "main": [
+        [
+          {
+            "node": "Esperar Veo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar Veo": {
+      "main": [
+        [
+          {
+            "node": "Consultar Veo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Veo": {
+      "main": [
+        [
+          {
+            "node": "¿Clip listo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Clip listo?": {
+      "main": [
+        [
+          {
+            "node": "Clip aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar Veo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plano aprobado": {
+      "main": [
+        [
+          {
+            "node": "Juntar planos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip aprobado": {
+      "main": [
+        [
+          {
+            "node": "Juntar planos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avatar pendiente": {
+      "main": [
+        [
+          {
+            "node": "Juntar planos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntar planos": {
+      "main": [
+        [
+          {
+            "node": "Composición Creatomate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Composición Creatomate": {
+      "main": [
+        [
+          {
+            "node": "Renderizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Renderizar": {
+      "main": [
+        [
+          {
+            "node": "Esperar render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar render": {
+      "main": [
+        [
+          {
+            "node": "Consultar render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar render": {
+      "main": [
+        [
+          {
+            "node": "¿Render listo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Render listo?": {
+      "main": [
+        [
+          {
+            "node": "Encargo de calidad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encargo de calidad": {
+      "main": [
+        [
+          {
+            "node": "Calidad y publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

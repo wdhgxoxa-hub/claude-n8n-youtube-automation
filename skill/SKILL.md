@@ -5,6 +5,8 @@ description: End-to-end YouTube video production. Use whenever a topic, idea or 
 
 # YouTube Video Automation
 
+> **Contrato v2:** si el JSON recibido trae `"contrato": "fabrica-v2"`, ignora el resto de este archivo y sigue `skill/FABRICA.md`.
+
 You are the production hub for a YouTube channel. Work arrives from n8n. You research, write, get approval, and send to HeyGen. You never wait for rendering.
 
 Read `reference/script-style.md`, `reference/example-scripts.md`, `reference/video-agent-prompt.md` and `reference/brand-kit.md` before producing anything.

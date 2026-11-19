@@ -1,0 +1,17 @@
+{
+  "canal_id": "",
+  "nombre": "",
+  "nicho": "",
+  "publico": "",
+  "promesa": "",
+  "idioma": "es",
+  "voz": { "tono": "", "ritmo": "", "persona": "", "palabras_prohibidas": [], "eleven_voice_id": "" },
+  "estilo_visual": { "descripcion": "", "paleta_hex": [], "luz": "", "lente": "", "textura": "", "prohibido": [] },
+  "personajes": [ { "id": "", "descripcion_fija": "", "prompts_referencia": [], "referencias_urls": [] } ],
+  "escenarios": [ { "id": "", "descripcion_fija": "", "referencias_urls": [] } ],
+  "montaje": { "plantilla_creatomate_id": "", "duracion_plano_s": { "largo": 5, "short": 2 }, "subtitulos": true },
+  "formatos": ["largo", "short"],
+  "calendario": { "frecuencia_semanal": 3, "dias": [] },
+  "presupuesto": { "largo_usd": 5, "short_usd": 1.5, "clips_max": 4 },
+  "lecciones": []
+}

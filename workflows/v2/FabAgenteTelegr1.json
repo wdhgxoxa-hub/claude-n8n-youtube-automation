@@ -1,0 +1,326 @@
+{
+  "id": "FabAgenteTelegr1",
+  "name": "F · Agente de Telegram (inactivo)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "9607b33d-4aec-42e3-87ac-3c72381a91ba",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      },
+      "webhookId": "7eb7a791-becb-464c-a324-b59b7af8d580"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "adb3a097-a1b9-4b48-a619-01ce38ae0abe",
+              "leftValue": "={{ String($json.message?.from?.id) === '8667738444' && $json.message?.chat?.type === 'private' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "440a447c-eec4-4cc6-9667-e39380babe8e",
+      "name": "¿Eres tú?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Eres el operador de una fábrica de videos. Respondes en español, breve. Solo actúas con tus herramientas: crear_canal, crear_video, estado. Nunca prometes publicar sin aprobación. Si falta un dato (canal o tema), pregunta una sola cosa."
+        }
+      },
+      "id": "132d8369-517b-4431-901d-ea3d1e0a84fc",
+      "name": "Agente",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-6-astra"
+        },
+        "options": {}
+      },
+      "id": "471181b4-307a-4a11-af3b-61906b4ee1f3",
+      "name": "Modelo",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ String($('Telegram').first().json.message.chat.id) }}",
+        "contextWindowLength": 20
+      },
+      "id": "fe5442c4-9f9c-4263-ac62-92ea6e26c584",
+      "name": "Memoria",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Investiga nichos y propone un canal nuevo. Usa cuando pidan crear o buscar un canal.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "nuevo_canal",
+            "criterios": "={{ $fromAI('criterios', 'preferencias del operador, puede ir vacío', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "8f156a4b-7491-4c93-acb7-ae069ce2580a",
+      "name": "crear_canal",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Crea un video en un canal activo.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabOrquestador01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "nuevo_video",
+            "canal_id": "={{ $fromAI('canal_id', 'id del canal', 'string') }}",
+            "tema": "={{ $fromAI('tema', 'tema del video', 'string') }}",
+            "formato": "={{ $fromAI('formato', 'largo o short', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "a884ddb4-e1e7-491e-957b-bafc92f2fa15",
+      "name": "crear_video",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Muestra los últimos videos con su etapa y costo.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabEstado0000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "a75c9182-36c1-40fe-ace5-a68eec844d4f",
+      "name": "estado",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ String($('Telegram').first().json.message.chat.id) }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "bce8db87-7bf2-45a5-a96c-b296d5fd9301",
+      "name": "Responder",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1980,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "¿Eres tú?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Eres tú?": {
+      "main": [
+        [
+          {
+            "node": "Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente": {
+      "main": [
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear_canal": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear_video": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estado": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
