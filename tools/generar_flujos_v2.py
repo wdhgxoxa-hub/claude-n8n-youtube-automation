@@ -13,6 +13,10 @@ CRED_TG = {'telegramApi': {'id': 'MOSawTRQa5BzV3pt', 'name': 'Telegram account'}
 CRED_ROUTINE = {'httpHeaderAuth': {'id': 'EbZbO2zRt0RXWkfA', 'name': 'Claude Routine'}}
 CRED_OPENAI = {'httpHeaderAuth': {'id': 'FabCredOpenAI001', 'name': 'OpenAI'}}
 CRED_GEMINI = {'httpHeaderAuth': {'id': 'FabCredGemini001', 'name': 'Gemini (Veo)'}}  # también sirve para Gemini Omni
+CRED_EPIDEMIC = {'httpHeaderAuth': {'id': 'FabCredEpidemic1', 'name': 'Epidemic Sound'}}
+CRED_PEXELS = {'httpHeaderAuth': {'id': 'FabCredPexels001', 'name': 'Pexels'}}
+CRED_PIXABAY = {'httpQueryAuth': {'id': 'FabCredPixabay01', 'name': 'Pixabay'}}
+CRED_CREATOMATE = {'httpHeaderAuth': {'id': 'FabCredCreatoma1', 'name': 'Creatomate'}}
 CRED_CLAVE = {'httpHeaderAuth': {'id': 'Ve0w86W7EdgFTIJi', 'name': 'Clave Fábrica'}}
 T = {  # tablas de datos
     'canales': 'dA6t0L2GGon32eFp', 'videos': 'VIfMDnjzrrw1p2EA', 'planos': 'GdWqVXaxFOEiZKQ9',
@@ -22,7 +26,7 @@ W = {  # flujos
     'ajustes': 'FabAjustes000001', 'claude': 'FabLlamarClaude1', 'retorno': 'FabRetornoClaud1',
     'orq': 'FabOrquestador01', 'aprob': 'FabAprobacion001', 'prod': 'FabProduccion001',
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
-    'estado': 'FabEstado0000001',
+    'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -179,21 +183,25 @@ return [{ json: {
   allowImagenes: false,       // OpenAI imágenes (pago por uso)
   allowRevisionVisual: false, // OpenAI con visión para revisar planos (pago por uso)
   allowClips: false,          // clips animados con Gemini Omni (pago por segundo)
+  allowVoz: false,            // voz con emoción: Gemini TTS (pago por uso, centavos)
+  allowMusica: false,         // música de Epidemic Sound (incluida en tu suscripción)
+  allowArchivo: true,         // video de archivo de Pexels/Pixabay (gratis)
   allowAvatar: false,         // HeyGen
-  allowMontaje: false,        // Creatomate (incluye voz ElevenLabs integrada)
+  allowMontaje: false,        // Creatomate: une imagen, voz y música
   allowDrive: false,          // Google Drive para alojar y archivar
   allowYoutube: false,        // subida privada a YouTube
   allowAnalytics: false,      // YouTube Analytics para aprender
   modeloTexto: 'gpt-6-astra',
   modeloImagen: 'gpt-image-2.6-sunburst',
   modeloClip: 'gemini-omni-1.2-flash', // Veo quedó obsoleto el 22-10-2026; su reemplazo es Gemini Omni
+  modeloVoz: 'gemini-3.8-flash-tts',
+  vozGemini: 'Charon',        // voz grave de narrador; cambiable por canal en la biblia (voz.gemini_voice)
   costoImagenUsd: 0.06,       // estimado, se corrige con facturas reales
   costoClipSegUsd: 0.12,      // estimado prudente; corregir con la primera factura real
   presupuestoLargoUsd: 5,
   presupuestoShortUsd: 1.5,
   maxIntentosPlano: 2,
   creatomatePlantillaId: '',
-  elevenVoiceId: '',
   driveCarpetaRaizId: '',
 }}];
 """ % (ROUTINE, BASE))
@@ -495,7 +503,7 @@ f.add('Descargar render', 'n8n-nodes-base.httpRequest', 4.2,
        'options': {'response': {'response': {'responseFormat': 'file'}}, 'timeout': 300000}})
 gapi(f, 'Abrir subida YouTube', 'POST', 'https://www.googleapis.com/upload/youtube/v3/videos', 'youTubeOAuth2Api',
      query={'uploadType': 'resumable', 'part': 'snippet,status'}, full=True, timeout=30000,
-     json_body="={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), categoryId: '27', defaultLanguage: 'es' }, status: { privacyStatus: 'private', selfDeclaredMadeForKids: false } } }}")
+     json_body="={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), description: ($('Inicio').first().json.contexto.creditos || []).join('\n'), categoryId: '27', defaultLanguage: 'es' }, status: { privacyStatus: 'private', selfDeclaredMadeForKids: false } } }}")
 gapi(f, 'Subir a YouTube', 'PUT', "={{ $('Abrir subida YouTube').first().json.headers.location }}", 'youTubeOAuth2Api',
      binary_field='data', timeout=600000)
 code(f, 'Video publicado', "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || '' } }];")
@@ -527,11 +535,13 @@ code(f, 'Plan de producción', r"""
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
 const planos = (e.storyboard?.planos || []).filter(p => p && p.id);
 const n = t => planos.filter(p => p.tipo === t).length;
-const costo = n('imagen') * aj.costoImagenUsd + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1;
+// Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.
+const costo = (n('imagen') + n('clip')) * aj.costoImagenUsd + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1;
 const faltan = [];
 if (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');
 if (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');
 if (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
+if (!aj.allowVoz) faltan.push('voz (Gemini TTS)');
 if (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');
 if (!aj.allowMontaje || !aj.creatomatePlantillaId) faltan.push('montaje (Creatomate y su plantilla)');
 const presupuesto = Number(e.presupuesto_usd) || aj.presupuestoLargoUsd;
@@ -552,9 +562,35 @@ const estilo = [b.estilo_visual?.descripcion, b.estilo_visual?.luz, b.estilo_vis
 const refs = id => [...(b.personajes || []), ...(b.escenarios || [])].filter(x => (id || []).includes(x.id)).flatMap(x => x.referencias_urls || []).slice(0, 6);
 return e.planos.map(p => ({ json: { video_id: e.video_id, plano: p, intento: 1,
   prompt: `${p.prompt_imagen}. Encuadre ${p.encuadre}, ángulo ${p.angulo || 'a la altura de los ojos'}, luz ${p.luz}. Estilo: ${estilo}. Sin texto ni logos.`,
-  referencias: refs([...(p.personajes || []), p.escenario]), salida: p.tipo === 'avatar' ? 1 : 0 } }));
+  referencias: refs([...(p.personajes || []), p.escenario]),
+  salida: p.tipo === 'avatar' ? 1 : (p.tipo === 'archivo' && $('Leer ajustes').first().json.allowArchivo) ? 2 : 0 } }));
 """)
-switch(f, 'Según tipo de plano', 2)
+switch(f, 'Según tipo de plano', 3)
+# Planos de archivo: Pexels y luego Pixabay; si ninguno tiene algo que sirva, se genera la imagen.
+http(f, 'Buscar en Pexels', 'GET', "={{ 'https://api.pexels.com/videos/search?per_page=10&size=medium&orientation=' + ($('Plan de producción').first().json.formato === 'short' ? 'portrait' : 'landscape') + '&query=' + encodeURIComponent($json.plano.busqueda_archivo || $json.plano.prompt_imagen) }}",
+     cred=CRED_PEXELS, timeout=30000)
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+code(f, 'Elegir de Pexels', r"""
+const prev = $('Un ítem por plano').item.json; const vertical = $('Plan de producción').first().json.formato === 'short';
+const ok = f => f.link && f.width && f.height && (vertical ? f.height > f.width : f.width > f.height) && Math.max(f.width, f.height) >= 1280;
+const v = ($json.videos || []).filter(x => x.duration >= 4).flatMap(x => (x.video_files || []).filter(ok).map(f => ({ ...f, autor: x.user?.name, pagina: x.url })))
+  .sort((a, b) => Math.abs(Math.max(a.width, a.height) - 1920) - Math.abs(Math.max(b.width, b.height) - 1920))[0];
+return [{ json: { ...prev, url: v?.link || '', fuente: v ? { banco: 'Pexels', autor: v.autor, pagina: v.pagina } : null } }];
+""")
+iff(f, '¿Hay en Pexels?', '!!$json.url')
+http(f, 'Buscar en Pixabay', 'GET', "={{ 'https://pixabay.com/api/videos/?per_page=10&safesearch=true&q=' + encodeURIComponent(($json.plano.busqueda_archivo || $json.plano.prompt_imagen).slice(0, 100)) }}",
+     cred=CRED_PIXABAY, timeout=30000)
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+f.nodes[-1]['parameters']['genericAuthType'] = 'httpQueryAuth'
+code(f, 'Elegir de Pixabay', r"""
+const prev = $('Un ítem por plano').item.json; const vertical = $('Plan de producción').first().json.formato === 'short';
+const hit = ($json.hits || []).filter(h => h.duration >= 4).map(h => ({ h, f: h.videos?.large?.url ? h.videos.large : h.videos?.medium }))
+  .filter(x => x.f?.url && (vertical ? x.f.height > x.f.width : x.f.width > x.f.height))[0];
+return [{ json: { ...prev, url: hit?.f.url || '', fuente: hit ? { banco: 'Pixabay', autor: hit.h.user, pagina: hit.h.pageURL } : null } }];
+""")
+iff(f, '¿Hay en Pixabay?', '!!$json.url')
+code(f, 'Archivo aprobado', "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: { ...$json.plano, tipo: 'archivo' }, fuente: $json.fuente } }];")
+code(f, 'Sin archivo: generar', "const p = $('Un ítem por plano').item.json; return [{ json: { ...p, plano: { ...p.plano, tipo: 'imagen' } } }];")
 # Imagen con referencias vía Responses API (herramienta de imagen). Requiere credencial "OpenAI" (Header Auth: Authorization: Bearer ...).
 http(f, 'Generar imagen', 'POST', 'https://api.openai.com/v1/responses',
      body="={{ { model: " + A.replace("$('Ajustes')", "$('Leer ajustes')") + ".modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: $('Plan de producción').first().json.formato === 'short' ? '1024x1536' : '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
@@ -562,7 +598,7 @@ http(f, 'Generar imagen', 'POST', 'https://api.openai.com/v1/responses',
 code(f, 'Extraer imagen', r"""
 const out = ($json.output || []).find(o => o.type === 'image_generation_call');
 if (!out?.result) throw new Error('Sin imagen en la respuesta');
-const prev = $('Un ítem por plano').item.json;
+const prev = { ...$('Un ítem por plano').item.json, plano: { ...$('Un ítem por plano').item.json.plano, tipo: $('Un ítem por plano').item.json.plano.tipo === 'archivo' ? 'imagen' : $('Un ítem por plano').item.json.plano.tipo } };
 return [{ json: { ...prev, ext: 'png' }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: prev.plano.id + '.png' } } }];
 """)
 iff(f, '¿Es clip?', "$json.plano.tipo === 'clip'")
@@ -602,31 +638,48 @@ iff(f, '¿Repetir plano?', '$json.repetir === true')
 code(f, 'Plano aprobado', "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano } }];")
 code(f, 'Avatar pendiente', "return [{ json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, nota: 'avatar: definir ruta HeyGen' } }];")
 f.add('Juntar planos', 'n8n-nodes-base.aggregate', 1, {'aggregate': 'aggregateAllItemData', 'destinationFieldName': 'planos', 'options': {}})
-code(f, 'Composición Creatomate', r"""
-const e = $('Plan de producción').first().json; const aj = $('Leer ajustes').first().json;
-const orden = e.planos.map(p => p.id);
-const listos = $json.planos.filter(p => p.url).sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));
-const voz = aj.elevenVoiceId || e.biblia?.voz?.eleven_voice_id || '';
-const vertical = e.formato === 'short';
-// Las marcas de dirección del guion no se leen en voz alta: [pausa] -> pausa natural, el resto se quita.
-const narrable = t => String(t || '').replace(/\[pausa\]/gi, '…').replace(/\[[^\]]{1,30}\]/g, '').replace(/\s{2,}/g, ' ').trim();
-const escenas = listos.map((p, i) => ({ type: 'composition', track: 1, name: p.plano_id,
-  transition: i && p.plano.transicion === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined,
-  elements: [
-    { type: p.url.match(/\.(mp4|mov)/) || p.plano.tipo === 'clip' ? 'video' : 'image', source: p.url, fit: 'cover',
-      animations: p.plano.movimiento === 'zoom lento' ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '110%', easing: 'linear' }] : undefined },
-    { type: 'audio', source: narrable(p.plano.texto_narrado), provider: 'elevenlabs model_id=eleven_v4 voice_id=' + voz },
-  ] }));
-return [{ json: { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, elements: escenas },
-  video_id: e.video_id, canal_id: e.canal_id, planos: listos.length, esperados: orden.length } }];
+code(f, 'Encargo de sonido', r"""
+const e = $('Plan de producción').first().json;
+return [{ json: { video_id: e.video_id, biblia: e.biblia || {}, musica: e.storyboard?.musica || {}, planos: $json.planos } }];
 """)
-http(f, 'Renderizar', 'POST', 'https://api.creatomate.com/v2/renders', body='={{ { source: $json.source } }}', timeout=60000)
+call(f, 'Sonido y emoción', W['sonido'])
+code(f, 'Composición Creatomate', r"""
+// Cada escena dura lo que su voz (+ un respiro); la música va debajo de todo y termina con el video.
+const e = $('Plan de producción').first().json;
+const planos = $('Juntar planos').first().json.planos;
+const son = $json; const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));
+const orden = e.planos.map(p => p.id);
+const listos = planos.filter(p => p.url && voces[p.plano_id]?.url).sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));
+const vertical = e.formato === 'short';
+const RESPIRO = 0.35;
+let total = 0;
+const escenas = listos.map((p, i) => {
+  const dur = Math.round((voces[p.plano_id].duracion_s + RESPIRO) * 100) / 100; total += dur;
+  const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';
+  const mov = p.plano.movimiento || '';
+  const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]
+    : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;
+  return { type: 'composition', track: 1, name: p.plano_id, duration: dur,
+    transition: i && p.plano.transicion === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined,
+    elements: [
+      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },
+      { type: 'audio', source: voces[p.plano_id].url },
+    ] };
+});
+const elementos = [...escenas];
+if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: Math.round(total * 100) / 100, source: son.musica.url,
+  volume: '16%', audio_fade_in: 1, audio_fade_out: 2.5 });
+return [{ json: { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },
+  video_id: e.video_id, canal_id: e.canal_id, planos: listos.length, esperados: orden.length, duracion_estimada_s: Math.round(total),
+  creditos: [son.musica?.credito, ...planos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)].filter(Boolean) } }];
+""")
+http(f, 'Renderizar', 'POST', 'https://api.creatomate.com/v2/renders', body='={{ { source: $json.source } }}', timeout=60000)  # credencial «Creatomate»: se enlaza al crearla
 wait(f, 'Esperar render', 45)
 http(f, 'Consultar render', 'GET', "={{ 'https://api.creatomate.com/v2/renders/' + ($('Renderizar').first().json.id || $('Renderizar').first().json[0]?.id) }}", timeout=30000)
 iff(f, '¿Render listo?', "$json.status === 'succeeded'")
 code(f, 'Encargo de calidad', r"""
 const c = $('Composición Creatomate').first().json;
-return [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: $json.url, duracion_s: $json.duration, planos: c.planos, esperados: c.esperados,
+return [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: $json.url, duracion_s: $json.duration, planos: c.planos, esperados: c.esperados, creditos: c.creditos,
   formato: $('Plan de producción').first().json.formato } }];
 """)
 call(f, 'Calidad y publicación', W['pub'], wait=False)
@@ -638,6 +691,15 @@ f.link('¿Dentro del presupuesto?', 'Aviso: sobre presupuesto', 1)
 f.link('Un ítem por plano', 'Según tipo de plano')
 f.link('Según tipo de plano', 'Generar imagen', 0)
 f.link('Según tipo de plano', 'Avatar pendiente', 1)
+f.link('Según tipo de plano', 'Buscar en Pexels', 2)
+f.chain('Buscar en Pexels', 'Elegir de Pexels', '¿Hay en Pexels?')
+f.link('¿Hay en Pexels?', 'Archivo aprobado', 0)
+f.link('¿Hay en Pexels?', 'Buscar en Pixabay', 1)
+f.chain('Buscar en Pixabay', 'Elegir de Pixabay', '¿Hay en Pixabay?')
+f.link('¿Hay en Pixabay?', 'Archivo aprobado', 0)
+f.link('¿Hay en Pixabay?', 'Sin archivo: generar', 1)
+f.link('Sin archivo: generar', 'Generar imagen')
+f.link('Archivo aprobado', 'Juntar planos')
 f.chain('Generar imagen', 'Extraer imagen', '¿Es clip?')
 f.link('¿Es clip?', 'Animar (Gemini Omni)', 0)
 f.chain('Animar (Gemini Omni)', 'Extraer clip', 'Subir a Drive')
@@ -650,11 +712,113 @@ f.link('¿Repetir plano?', 'Generar imagen', 0)
 f.link('¿Repetir plano?', 'Plano aprobado', 1)
 f.link('Plano aprobado', 'Juntar planos')
 f.link('Avatar pendiente', 'Juntar planos')
-f.chain('Juntar planos', 'Composición Creatomate', 'Renderizar', 'Esperar render', 'Consultar render', '¿Render listo?')
+f.chain('Juntar planos', 'Encargo de sonido', 'Sonido y emoción', 'Composición Creatomate', 'Renderizar', 'Esperar render', 'Consultar render', '¿Render listo?')
 f.link('¿Render listo?', 'Encargo de calidad', 0)
 f.link('¿Render listo?', 'Esperar render', 1)
 f.link('Encargo de calidad', 'Calidad y publicación')
 PROD = f.dump()
+
+# ======================================================================================
+# M5 · Sonido y emoción: voz con emoción (Gemini TTS) y música por intensidad (Epidemic Sound)
+# ======================================================================================
+f = Flow(W['sonido'], 'M5 · Sonido y emoción')
+trigger(f)
+call(f, 'Leer ajustes', W['ajustes'])
+code(f, 'Textos de voz', r"""
+// Un ítem por plano con su texto narrable y la dirección de actuación.
+const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
+const b = e.biblia || {}; const voz = b.voz || {};
+const base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join('. ') || 'narrador de documental, voz grave y cercana';
+const MARCAS = { 'énfasis': 'remarca con intensidad', 'enfasis': 'remarca con intensidad', 'susurro': 'en voz baja, casi un susurro',
+  'suspenso': 'con suspenso contenido', 'pausa': '' };
+const planos = (e.planos || []).filter(p => p.plano?.texto_narrado);
+return planos.map(p => {
+  const t = String(p.plano.texto_narrado);
+  const marcas = [...t.matchAll(/\[([^\]]{1,30})\]/g)].map(m => MARCAS[m[1].toLowerCase()]).filter(Boolean);
+  const limpio = t.replace(/\[pausa\]/gi, '… ').replace(/\[[^\]]{1,30}\]/g, '').replace(/\s{2,}/g, ' ').trim();
+  const direccion = [base, p.plano.emocion ? 'emoción: ' + p.plano.emocion : '', ...marcas].filter(Boolean).join('; ');
+  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto: limpio,
+    prompt: `Narra en ${b.idioma || 'español latino neutro'}. Dirección: ${direccion}. Lee exactamente este texto, sin añadir nada:\n${limpio}`,
+    voz: voz.gemini_voice || aj.vozGemini } };
+});
+""")
+http(f, 'Voz (Gemini TTS)', 'POST', "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVoz + ':generateContent' }}",
+     body="={{ { contents: [{ parts: [{ text: $json.prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: $json.voz } } } } } }}",
+     cred=CRED_GEMINI, timeout=180000)
+f.nodes[-1].update({'retryOnFail': True, 'maxTries': 3, 'waitBetweenTries': 5000})
+code(f, 'WAV', r"""
+// Gemini entrega PCM 16 bits mono 24 kHz: se le pone cabecera WAV y se mide la duración exacta.
+const prev = $('Textos de voz').item.json;
+const part = ($json.candidates?.[0]?.content?.parts || []).find(x => x.inlineData?.data);
+if (!part) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);
+const rate = Number((part.inlineData.mimeType || '').match(/rate=(\d+)/)?.[1] || 24000);
+const pcm = Buffer.from(part.inlineData.data, 'base64');
+const h = Buffer.alloc(44);
+h.write('RIFF', 0); h.writeUInt32LE(36 + pcm.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);
+h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(rate, 24);
+h.writeUInt32LE(rate * 2, 28); h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(pcm.length, 40);
+const wav = Buffer.concat([h, pcm]);
+return [{ json: { ...prev, duracion_s: Math.round(pcm.length / (rate * 2) * 100) / 100 },
+  binary: { archivo: { data: wav.toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } }];
+""")
+gapi(f, 'Subir voz a Drive', 'POST', 'https://www.googleapis.com/upload/drive/v3/files', 'googleDriveOAuth2Api',
+     binary_field='archivo', query={'uploadType': 'media'})
+gapi(f, 'Nombrar voz', 'PATCH', "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}", 'googleDriveOAuth2Api',
+     json_body="={{ { name: $('WAV').item.json.video_id + '-' + $('WAV').item.json.plano_id + '-voz.wav' } }}",
+     query={'addParents': "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"}, timeout=30000)
+gapi(f, 'Compartir voz', 'POST', "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir voz a Drive').item.json.id + '/permissions' }}",
+     'googleDriveOAuth2Api', json_body='={{ { role: "reader", type: "anyone" } }}', timeout=30000)
+code(f, 'Voz lista', "const w = $('WAV').item.json; return [{ json: { plano_id: w.plano_id, duracion_s: w.duracion_s, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir voz a Drive').item.json.id } }];")
+f.add('Juntar voces', 'n8n-nodes-base.aggregate', 1, {'aggregate': 'aggregateAllItemData', 'destinationFieldName': 'voces', 'options': {}})
+iff(f, '¿Música activa?', "$('Leer ajustes').first().json.allowMusica === true")
+code(f, 'Búsqueda de música', r"""
+// Términos a partir de la biblia (estilo musical del canal) y del storyboard (estilo e intensidad).
+const e = $('Inicio').first().json; const b = e.biblia || {};
+const termino = [e.musica?.estilo, b.musica?.estilo, b.musica?.mood].filter(Boolean).join(' ') || 'cinematic documentary suspense';
+const total = $json.voces.reduce((a, v) => a + v.duracion_s, 0);
+return [{ json: { termino: termino.slice(0, 120), total_s: Math.round(total) } }];
+""")
+EP = 'https://www.epidemicsound.com/a/mcp-service/mcp'
+H_MCP = {'Accept': 'application/json, text/event-stream'}
+def mcp(nombre, cuerpo, sesion=True):
+    hd = dict(H_MCP)
+    if sesion:
+        hd['mcp-session-id'] = "={{ $('Iniciar Epidemic').first().json.headers['mcp-session-id'] }}"
+    n = http(f, nombre, 'POST', EP, body=cuerpo, cred=CRED_EPIDEMIC, headers=hd, timeout=90000)
+    f.nodes[-1]['parameters']['options']['response'] = {'response': {'fullResponse': True, 'responseFormat': 'text'}}
+    return n
+mcp('Iniciar Epidemic', '={"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"fabrica-n8n","version":"1"}}}', sesion=False)
+mcp('Epidemic listo', '={"jsonrpc":"2.0","method":"notifications/initialized","params":{}}')
+mcp('Buscar música', "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'SearchRecordings', arguments: { query: { term: $('Búsqueda de música').first().json.termino }, first: 15 } } }) }}")
+code(f, 'Elegir pista', r"""
+// Respuesta MCP por SSE con GraphQL dentro: primera pista instrumental y lo bastante larga.
+const sse = t => { const d = String(t || '').split('\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };
+const m = JSON.parse(sse($json.data)); const txt = (m.result?.content || []).find(c => c.type === 'text')?.text || '{}';
+const d = JSON.parse(txt); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message);
+const nodos = (Object.values(d.data || {})[0]?.nodes || []).map(n => n.recording).filter(Boolean);
+const total = $('Búsqueda de música').first().json.total_s;
+const sinVoz = r => !JSON.stringify(r).toLowerCase().includes('"vocals"');
+const dur = r => Number(r.durationInSeconds || r.duration || r.lengthInSeconds || 0);
+const pista = nodos.find(r => sinVoz(r) && (!dur(r) || dur(r) >= Math.min(total, 120))) || nodos[0];
+if (!pista) throw new Error('Epidemic no devolvió pistas para: ' + $('Búsqueda de música').first().json.termino);
+return [{ json: { id: pista.id, titulo: pista.title || pista.name || '', artista: (pista.mainArtists || pista.artists || []).map(a => a.name).join(', ') } }];
+""")
+mcp('Pedir descarga', "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'DownloadRecording', arguments: { id: $json.id, options: { fileType: 'MP3', stemType: 'FULL' } } } }) }}")
+code(f, 'Música lista', r"""
+const sse = t => { const d = String(t || '').split('\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };
+const m = JSON.parse(sse($json.data)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}');
+const url = Object.values(d.data || {})[0]?.assetUrl;
+if (!url) throw new Error('Epidemic no dio URL de descarga');
+const p = $('Elegir pista').first().json;
+// La URL firmada caduca: se usa en el render de inmediato. El crédito va a la descripción del video.
+return [{ json: { voces: $('Juntar voces').first().json.voces, musica: { url, titulo: p.titulo, credito: `Música: «${p.titulo}» de ${p.artista || 'Epidemic Sound'}, cortesía de Epidemic Sound (www.epidemicsound.com)` } } }];
+""")
+code(f, 'Sin música', "return [{ json: { voces: $json.voces, musica: null } }];")
+f.chain('Inicio', 'Leer ajustes', 'Textos de voz', 'Voz (Gemini TTS)', 'WAV', 'Subir voz a Drive', 'Nombrar voz', 'Compartir voz', 'Voz lista', 'Juntar voces', '¿Música activa?')
+f.link('¿Música activa?', 'Búsqueda de música', 0)
+f.link('¿Música activa?', 'Sin música', 1)
+f.chain('Búsqueda de música', 'Iniciar Epidemic', 'Epidemic listo', 'Buscar música', 'Elegir pista', 'Pedir descarga', 'Música lista')
+SONIDO = f.dump()
 
 # ======================================================================================
 # M7 · Calidad y publicación
@@ -673,7 +837,7 @@ return [{ json: { ...e, fallas, aprobado_qc: fallas.length === 0 } }];
 """)
 iff(f, '¿Pasa calidad?', '$json.aprobado_qc === true')
 code(f, 'Mensaje final', r"""
-const e = $json; return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, contexto: { render_url: e.render_url },
+const e = $json; return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, contexto: { render_url: e.render_url, creditos: e.creditos || [] },
   mensaje: `Video ${e.video_id} listo (${Math.round(e.duracion_s)} s).\nRevísalo: ${e.render_url}\n\n¿Lo apruebo para subirlo en privado?` } }];
 """)
 call(f, 'Aprobación final', W['aprob'], wait=False)
@@ -774,7 +938,7 @@ for t in ('crear_canal', 'crear_video', 'estado'):
     f.ai(t, 'Agente', 'ai_tool')
 AGENTE = f.dump()
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, PUB, APRENDE, ESTADO, AGENTE]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, AGENTE]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)

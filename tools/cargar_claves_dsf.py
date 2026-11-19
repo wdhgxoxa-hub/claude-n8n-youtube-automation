@@ -6,7 +6,10 @@ en memoria y se lo da a `n8n import:credentials` por la entrada estándar del co
 No modifica nada de D&S Factory (solo lectura del llavero).
 
     python3 tools/cargar_claves_dsf.py          # muestra qué claves hay (solo nombres)
-    python3 tools/cargar_claves_dsf.py --cargar # las carga en n8n
+    python3 tools/cargar_claves_dsf.py --cargar PEXELS_API_KEY ...   # carga SOLO las nombradas
+
+Nunca carga todas de golpe: una credencial que ya existe en n8n con una clave más nueva
+(pegada a mano) se sobrescribiría con la del llavero, que puede estar vencida.
 """
 import json
 import shutil
@@ -42,11 +45,14 @@ def main():
     if not shutil.which('secret-tool'):
         sys.exit('Falta secret-tool (paquete libsecret).')
     cargar = '--cargar' in sys.argv
+    elegidas = {a for a in sys.argv[1:] if not a.startswith('--')}
+    if cargar and not elegidas:
+        sys.exit('Indica qué claves cargar, p. ej.: --cargar PEXELS_API_KEY PIXABAY_API_KEY')
     creds = []
     for var, (cid, nombre, tipo, cabecera, prefijo) in MAPA.items():
         valor = leer(var)
         print(f'{var:22} {"encontrada" if valor else "no está en el llavero"}')
-        if valor:
+        if valor and (not cargar or var in elegidas):
             creds.append({'id': cid, 'name': nombre, 'type': tipo,
                           'data': {'name': cabecera, 'value': prefijo + valor}})
         valor = None

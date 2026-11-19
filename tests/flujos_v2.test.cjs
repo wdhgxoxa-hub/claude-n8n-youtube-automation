@@ -72,7 +72,7 @@ const biblia = { estilo_visual: { descripcion: 'óleo', paleta_hex: ['#112233'] 
 test('producción: con todo apagado no gasta y avisa qué falta', () => {
   const out = run(codeOf(PROD, 'Plan de producción'), { nodes: { Inicio: { video_id: 'v', storyboard, biblia, presupuesto_usd: 5 }, 'Leer ajustes': aj } })[0].json;
   assert.ok(out.faltan.length >= 3);
-  assert.strictEqual(out.costo_estimado_usd, +(aj.costoImagenUsd + 8 * aj.costoClipSegUsd).toFixed(2));
+  assert.strictEqual(out.costo_estimado_usd, +(2 * aj.costoImagenUsd + 8 * aj.costoClipSegUsd).toFixed(2)); // el clip parte de una imagen
 });
 
 test('producción: freno de presupuesto', () => {
@@ -88,15 +88,57 @@ test('producción: cada plano lleva sus referencias de la biblia', () => {
   assert.match(items[0].json.prompt, /Sin texto ni logos/);
 });
 
-test('producción: composición en el orden del storyboard y con voz por escena', () => {
+test('producción: composición sigue el storyboard, dura lo que la voz y pone la música debajo', () => {
+  const planos = [{ plano_id: 'p02', url: 'https://x/clip', plano: storyboard.planos[1] }, { plano_id: 'p01', url: 'https://x/a.png', plano: storyboard.planos[0] },
+    { plano_id: 'p03', url: 'https://pexels/v.mp4', plano: { id: 'p03', tipo: 'archivo' }, fuente: { banco: 'Pexels', autor: 'Ana', pagina: 'https://pexels/1' } }];
   const out = run(codeOf(PROD, 'Composición Creatomate'), {
-    json: { planos: [{ plano_id: 'p02', url: 'https://x/clip.mp4', plano: storyboard.planos[1] }, { plano_id: 'p01', url: 'https://x/a.png', plano: storyboard.planos[0] }] },
-    nodes: { 'Plan de producción': { video_id: 'v', planos: storyboard.planos, biblia, formato: 'largo' }, 'Leer ajustes': aj } })[0].json;
-  assert.deepStrictEqual(out.source.elements.map(e => e.name), ['p01', 'p02']);
-  assert.strictEqual(out.source.elements[1].elements[0].type, 'video');
-  assert.match(out.source.elements[0].elements[1].provider, /voice_id=V1/);
-  assert.strictEqual(out.source.width, 1920);
-  assert.strictEqual(out.source.elements[0].elements[1].source, 'Hola … mundo');
+    json: { voces: [{ plano_id: 'p01', url: 'https://d/v1', duracion_s: 3 }, { plano_id: 'p02', url: 'https://d/v2', duracion_s: 4.5 }, { plano_id: 'p03', url: 'https://d/v3', duracion_s: 2 }],
+      musica: { url: 'https://epi/m.mp3', credito: 'Música: X' } },
+    nodes: { 'Plan de producción': { video_id: 'v', planos: [...storyboard.planos, { id: 'p03', tipo: 'archivo' }], biblia, formato: 'short' }, 'Juntar planos': { planos } } })[0].json;
+  const els = out.source.elements;
+  assert.deepStrictEqual(els.filter(e => e.type === 'composition').map(e => e.name), ['p01', 'p02', 'p03']);
+  assert.strictEqual(els[0].duration, 3.35);
+  assert.strictEqual(els[1].elements[0].type, 'video');
+  assert.strictEqual(els[2].elements[0].type, 'video');
+  assert.strictEqual(els[0].elements[1].source, 'https://d/v1');
+  const musica = els.find(e => e.track === 2);
+  assert.strictEqual(musica.duration, Math.round((3.35 + 4.85 + 2.35) * 100) / 100);
+  assert.strictEqual(out.source.width, 1080);
+  assert.deepStrictEqual(out.creditos, ['Música: X', 'Pexels: Ana (https://pexels/1)']);
+});
+
+const SON = wf('FabSonido0000001');
+test('sonido: el texto narrado va limpio y las marcas se vuelven dirección de actuación', () => {
+  const items = run(codeOf(SON, 'Textos de voz'), { nodes: { Inicio: { video_id: 'v', biblia: { voz: { descripcion: 'grave' } },
+    planos: [{ plano_id: 'p01', plano: { texto_narrado: '[énfasis] 1901. [pausa] Abramos el expediente.', emocion: 'intriga' } }] }, 'Leer ajustes': aj } });
+  const j = items[0].json;
+  assert.strictEqual(j.texto, '1901. … Abramos el expediente.');
+  assert.match(j.prompt, /remarca con intensidad/);
+  assert.match(j.prompt, /emoción: intriga/);
+  assert.doesNotMatch(j.prompt.split('\n')[1], /\[/);
+  assert.strictEqual(j.voz, aj.vozGemini);
+});
+
+test('sonido: el PCM de Gemini se vuelve WAV válido con su duración exacta', () => {
+  const pcm = Buffer.alloc(48000 * 2); // 2 s a 24 kHz, 16 bits
+  const out = run(codeOf(SON, 'WAV'), { json: { candidates: [{ content: { parts: [{ inlineData: { mimeType: 'audio/L16;codec=pcm;rate=24000', data: pcm.toString('base64') } }] } }] },
+    nodes: { 'Textos de voz': { plano_id: 'p01', video_id: 'v' } } })[0];
+  assert.strictEqual(out.json.duracion_s, 2);
+  const wav = Buffer.from(out.binary.archivo.data, 'base64');
+  assert.strictEqual(wav.toString('ascii', 0, 4), 'RIFF');
+  assert.strictEqual(wav.readUInt32LE(24), 24000);
+  assert.strictEqual(wav.length, 44 + pcm.length);
+});
+
+test('producción: de Pexels elige un video en la orientación del formato', () => {
+  const resp = { videos: [{ duration: 10, user: { name: 'Ana' }, url: 'https://pexels/1', video_files: [
+    { link: 'https://h.mp4', width: 1920, height: 1080 }, { link: 'https://v.mp4', width: 1080, height: 1920 }] }] };
+  const corto = run(codeOf(PROD, 'Elegir de Pexels'), { json: resp, nodes: { 'Un ítem por plano': { plano: { id: 'p1' } }, 'Plan de producción': { formato: 'short' } } })[0].json;
+  assert.strictEqual(corto.url, 'https://v.mp4');
+  const largo = run(codeOf(PROD, 'Elegir de Pexels'), { json: resp, nodes: { 'Un ítem por plano': { plano: { id: 'p1' } }, 'Plan de producción': { formato: 'largo' } } })[0].json;
+  assert.strictEqual(largo.url, 'https://h.mp4');
+  const nada = run(codeOf(PROD, 'Elegir de Pexels'), { json: { videos: [] }, nodes: { 'Un ítem por plano': { plano: { id: 'p1' } }, 'Plan de producción': { formato: 'largo' } } })[0].json;
+  assert.strictEqual(nada.url, '');
 });
 
 test('calidad: detecta planos faltantes y duración corta', () => {

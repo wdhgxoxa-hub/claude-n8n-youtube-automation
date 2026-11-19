@@ -87,14 +87,18 @@ Aplica solo los cambios pedidos, conserva lo demás y devuelve el mismo formato 
 `datos`: `guion`, `biblia`, `formato`, `notas` (opcional), `presupuesto_usd`, `costos` (`imagen_usd` por imagen, `clip_seg_usd` por segundo de clip; cada clip dura 8 s), `storyboard_anterior` (opcional, al corregir).
 
 Divide el guion en planos según las reglas del formato. Cada plano es una idea visual.
-**Presupuesto obligatorio:** `costo_estimado_usd` = imágenes × `imagen_usd` + clips × 8 × `clip_seg_usd`, y debe quedar **por debajo** de `presupuesto_usd`. Si no alcanza, usa menos planos (una imagen puede durar varias frases con zoom lento o paneo) o quita clips. Nunca devuelvas un storyboard que lo supere. Asigna `tipo`:
+**Presupuesto obligatorio:** `costo_estimado_usd` = (imágenes + clips) × `imagen_usd` + clips × 8 × `clip_seg_usd` (los planos de `archivo` no cuestan), y debe quedar **por debajo** de `presupuesto_usd`. Si no alcanza, usa menos planos (una imagen puede durar varias frases con zoom lento o paneo) o quita clips. Nunca devuelvas un storyboard que lo supere. Asigna `tipo`:
 - `imagen`: por defecto.
 - `clip`: solo en momentos de máxima emoción o movimiento indispensable; como máximo `biblia.presupuesto.clips_max` por video.
 - `avatar`: solo si `formato` es `avatar`.
+- `archivo`: plano genérico que un video de archivo real resuelve bien (mar, cielo, manos, ciudad, naturaleza, textura). **No cuesta nada**: úsalo siempre que no haga falta un personaje o un objeto concreto del caso. Lleva `busqueda_archivo`: 2–5 palabras **en inglés** para Pexels/Pixabay (p. ej. `underwater shipwreck`). Si no se encuentra nada, la fábrica genera la imagen.
+
+Cada plano lleva `emocion` (una o dos palabras: intriga, asombro, calma, tensión…): la voz se actúa con ella. Las marcas `[énfasis]`, `[pausa]`, `[susurro]`, `[suspenso]` del texto narrado también dirigen la voz y nunca se leen en voz alta.
+`musica.estilo`: 3–6 palabras **en inglés** para buscar la pista en Epidemic Sound (p. ej. `dark ambient documentary suspense`).
 
 `resultado`:
 ```
-{ "planos": [ { "id": "p01", "texto_narrado": "", "tipo": "imagen|clip|avatar",
+{ "planos": [ { "id": "p01", "texto_narrado": "", "tipo": "imagen|clip|archivo|avatar", "busqueda_archivo": "",
                 "encuadre": "plano general|medio|primer plano|detalle", "angulo": "", "movimiento": "estatico|paneo|zoom lento|travelling",
                 "luz": "", "personajes": ["id"], "escenario": "", "referencias": ["ref-id"],
                 "prompt_imagen": "", "prompt_movimiento": "", "transicion": "corte|fundido", "emocion": "" } ],

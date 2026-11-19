@@ -1,0 +1,694 @@
+{
+  "id": "FabSonido0000001",
+  "name": "M5 · Sonido y emoción",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "8ada03a3-1226-4642-b8c9-4eedc8e07306",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "025e63a1-4758-4eff-87d2-59b5a5ef2194",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Un ítem por plano con su texto narrable y la dirección de actuación.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst b = e.biblia || {}; const voz = b.voz || {};\nconst base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join('. ') || 'narrador de documental, voz grave y cercana';\nconst MARCAS = { 'énfasis': 'remarca con intensidad', 'enfasis': 'remarca con intensidad', 'susurro': 'en voz baja, casi un susurro',\n  'suspenso': 'con suspenso contenido', 'pausa': '' };\nconst planos = (e.planos || []).filter(p => p.plano?.texto_narrado);\nreturn planos.map(p => {\n  const t = String(p.plano.texto_narrado);\n  const marcas = [...t.matchAll(/\\[([^\\]]{1,30})\\]/g)].map(m => MARCAS[m[1].toLowerCase()]).filter(Boolean);\n  const limpio = t.replace(/\\[pausa\\]/gi, '… ').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/\\s{2,}/g, ' ').trim();\n  const direccion = [base, p.plano.emocion ? 'emoción: ' + p.plano.emocion : '', ...marcas].filter(Boolean).join('; ');\n  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto: limpio,\n    prompt: `Narra en ${b.idioma || 'español latino neutro'}. Dirección: ${direccion}. Lee exactamente este texto, sin añadir nada:\\n${limpio}`,\n    voz: voz.gemini_voice || aj.vozGemini } };\n});\n"
+      },
+      "id": "1acf4f73-0f41-4d40-9b81-506001dba8d5",
+      "name": "Textos de voz",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Leer ajustes').first().json.modeloVoz + ':generateContent' }}",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { contents: [{ parts: [{ text: $json.prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: $json.voz } } } } } }}"
+      },
+      "id": "2d03c9a7-8623-4310-9d18-06eb4eac0f3b",
+      "name": "Voz (Gemini TTS)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredGemini001",
+          "name": "Gemini (Veo)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Gemini entrega PCM 16 bits mono 24 kHz: se le pone cabecera WAV y se mide la duración exacta.\nconst prev = $('Textos de voz').item.json;\nconst part = ($json.candidates?.[0]?.content?.parts || []).find(x => x.inlineData?.data);\nif (!part) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);\nconst rate = Number((part.inlineData.mimeType || '').match(/rate=(\\d+)/)?.[1] || 24000);\nconst pcm = Buffer.from(part.inlineData.data, 'base64');\nconst h = Buffer.alloc(44);\nh.write('RIFF', 0); h.writeUInt32LE(36 + pcm.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);\nh.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(rate, 24);\nh.writeUInt32LE(rate * 2, 28); h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(pcm.length, 40);\nconst wav = Buffer.concat([h, pcm]);\nreturn [{ json: { ...prev, duracion_s: Math.round(pcm.length / (rate * 2) * 100) / 100 },\n  binary: { archivo: { data: wav.toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } }];\n"
+      },
+      "id": "fdc47e48-617c-492c-aa40-e0e639d99d21",
+      "name": "WAV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 300000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "uploadType",
+              "value": "media"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "archivo"
+      },
+      "id": "8b525882-2ac2-49ad-bc15-de2ae3774059",
+      "name": "Subir voz a Drive",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "addParents",
+              "value": "={{ $('Leer ajustes').first().json.driveCarpetaRaizId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { name: $('WAV').item.json.video_id + '-' + $('WAV').item.json.plano_id + '-voz.wav' } }}"
+      },
+      "id": "63e90186-5cf6-4f78-81da-8507e5264d7a",
+      "name": "Nombrar voz",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://www.googleapis.com/drive/v3/files/' + $('Subir voz a Drive').item.json.id + '/permissions' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
+      },
+      "id": "c75c2779-456c-44db-af76-596d85c30b4d",
+      "name": "Compartir voz",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const w = $('WAV').item.json; return [{ json: { plano_id: w.plano_id, duracion_s: w.duracion_s, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir voz a Drive').item.json.id } }];"
+      },
+      "id": "8c966f7a-80f8-41ab-af5d-6eb22a66589f",
+      "name": "Voz lista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "voces",
+        "options": {}
+      },
+      "id": "1ab5231a-d6be-45ab-b8a7-14d0cdcdc681",
+      "name": "Juntar voces",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d180fa1b-13f0-41f9-8d23-fe48c738a755",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowMusica === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c7c526b5-6360-4325-adc7-dbee270b6d33",
+      "name": "¿Música activa?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Términos a partir de la biblia (estilo musical del canal) y del storyboard (estilo e intensidad).\nconst e = $('Inicio').first().json; const b = e.biblia || {};\nconst termino = [e.musica?.estilo, b.musica?.estilo, b.musica?.mood].filter(Boolean).join(' ') || 'cinematic documentary suspense';\nconst total = $json.voces.reduce((a, v) => a + v.duracion_s, 0);\nreturn [{ json: { termino: termino.slice(0, 120), total_s: Math.round(total) } }];\n"
+      },
+      "id": "f0c73006-8de3-4ce1-92c2-90e6e1b630ee",
+      "name": "Búsqueda de música",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.epidemicsound.com/a/mcp-service/mcp",
+        "options": {
+          "timeout": 90000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-03-26\",\"capabilities\":{},\"clientInfo\":{\"name\":\"fabrica-n8n\",\"version\":\"1\"}}}"
+      },
+      "id": "e365b9d2-d7fc-4dbc-8c09-0fd4ef1eac03",
+      "name": "Iniciar Epidemic",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2860,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredEpidemic1",
+          "name": "Epidemic Sound"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.epidemicsound.com/a/mcp-service/mcp",
+        "options": {
+          "timeout": 90000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            },
+            {
+              "name": "mcp-session-id",
+              "value": "={{ $('Iniciar Epidemic').first().json.headers['mcp-session-id'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\",\"params\":{}}"
+      },
+      "id": "5c91c1da-3d67-47c0-b4e5-4edc08014a63",
+      "name": "Epidemic listo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3080,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredEpidemic1",
+          "name": "Epidemic Sound"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.epidemicsound.com/a/mcp-service/mcp",
+        "options": {
+          "timeout": 90000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            },
+            {
+              "name": "mcp-session-id",
+              "value": "={{ $('Iniciar Epidemic').first().json.headers['mcp-session-id'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'SearchRecordings', arguments: { query: { term: $('Búsqueda de música').first().json.termino }, first: 15 } } }) }}"
+      },
+      "id": "1a98733c-6a1c-4114-a9c7-802f8d32b2cd",
+      "name": "Buscar música",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3300,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredEpidemic1",
+          "name": "Epidemic Sound"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Respuesta MCP por SSE con GraphQL dentro: primera pista instrumental y lo bastante larga.\nconst sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst m = JSON.parse(sse($json.data)); const txt = (m.result?.content || []).find(c => c.type === 'text')?.text || '{}';\nconst d = JSON.parse(txt); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message);\nconst nodos = (Object.values(d.data || {})[0]?.nodes || []).map(n => n.recording).filter(Boolean);\nconst total = $('Búsqueda de música').first().json.total_s;\nconst sinVoz = r => !JSON.stringify(r).toLowerCase().includes('\"vocals\"');\nconst dur = r => Number(r.durationInSeconds || r.duration || r.lengthInSeconds || 0);\nconst pista = nodos.find(r => sinVoz(r) && (!dur(r) || dur(r) >= Math.min(total, 120))) || nodos[0];\nif (!pista) throw new Error('Epidemic no devolvió pistas para: ' + $('Búsqueda de música').first().json.termino);\nreturn [{ json: { id: pista.id, titulo: pista.title || pista.name || '', artista: (pista.mainArtists || pista.artists || []).map(a => a.name).join(', ') } }];\n"
+      },
+      "id": "57d75251-47a0-48c7-93ee-5b5717dba41f",
+      "name": "Elegir pista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.epidemicsound.com/a/mcp-service/mcp",
+        "options": {
+          "timeout": 90000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            },
+            {
+              "name": "mcp-session-id",
+              "value": "={{ $('Iniciar Epidemic').first().json.headers['mcp-session-id'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'DownloadRecording', arguments: { id: $json.id, options: { fileType: 'MP3', stemType: 'FULL' } } } }) }}"
+      },
+      "id": "b81987f4-0cf7-444a-91e4-e0b05c95eb6f",
+      "name": "Pedir descarga",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3740,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredEpidemic1",
+          "name": "Epidemic Sound"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst m = JSON.parse(sse($json.data)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}');\nconst url = Object.values(d.data || {})[0]?.assetUrl;\nif (!url) throw new Error('Epidemic no dio URL de descarga');\nconst p = $('Elegir pista').first().json;\n// La URL firmada caduca: se usa en el render de inmediato. El crédito va a la descripción del video.\nreturn [{ json: { voces: $('Juntar voces').first().json.voces, musica: { url, titulo: p.titulo, credito: `Música: «${p.titulo}» de ${p.artista || 'Epidemic Sound'}, cortesía de Epidemic Sound (www.epidemicsound.com)` } } }];\n"
+      },
+      "id": "077ed387-2c1d-49e6-a555-ac202ceabf9d",
+      "name": "Música lista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { voces: $json.voces, musica: null } }];"
+      },
+      "id": "8625526e-690c-416a-aecd-d670fd59e6a5",
+      "name": "Sin música",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4180,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Textos de voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Textos de voz": {
+      "main": [
+        [
+          {
+            "node": "Voz (Gemini TTS)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voz (Gemini TTS)": {
+      "main": [
+        [
+          {
+            "node": "WAV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAV": {
+      "main": [
+        [
+          {
+            "node": "Subir voz a Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir voz a Drive": {
+      "main": [
+        [
+          {
+            "node": "Nombrar voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nombrar voz": {
+      "main": [
+        [
+          {
+            "node": "Compartir voz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compartir voz": {
+      "main": [
+        [
+          {
+            "node": "Voz lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voz lista": {
+      "main": [
+        [
+          {
+            "node": "Juntar voces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntar voces": {
+      "main": [
+        [
+          {
+            "node": "¿Música activa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Música activa?": {
+      "main": [
+        [
+          {
+            "node": "Búsqueda de música",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin música",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Búsqueda de música": {
+      "main": [
+        [
+          {
+            "node": "Iniciar Epidemic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Iniciar Epidemic": {
+      "main": [
+        [
+          {
+            "node": "Epidemic listo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Epidemic listo": {
+      "main": [
+        [
+          {
+            "node": "Buscar música",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar música": {
+      "main": [
+        [
+          {
+            "node": "Elegir pista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Elegir pista": {
+      "main": [
+        [
+          {
+            "node": "Pedir descarga",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir descarga": {
+      "main": [
+        [
+          {
+            "node": "Música lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
