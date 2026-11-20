@@ -797,7 +797,8 @@ main:focus {
   min-width: 0;
   flex: 1;
 }
-.video-mini h3 {
+.video-mini :is(h2, h3) {
+  letter-spacing: normal;
   font-size: 13px;
   line-height: 1.6;
   overflow-wrap: anywhere;
@@ -1125,7 +1126,7 @@ main:focus {
 .video-list-row .video-mini {
   flex: 1;
 }
-.video-list-row .video-mini h3 {
+.video-list-row .video-mini :is(h2, h3) {
   font-size: 15px;
 }
 .video-list-row .video-mini small {
@@ -2221,7 +2222,7 @@ main:focus {
     width: 56px;
     height: 64px;
   }
-  .video-list-row .video-mini h3 {
+  .video-list-row .video-mini :is(h2, h3) {
     font-size: 13px;
   }
   .video-list-row .video-mini small {
