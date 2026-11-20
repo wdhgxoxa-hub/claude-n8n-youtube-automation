@@ -13,6 +13,7 @@ import {
 import { motion } from "framer-motion";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
 import { Recorrido, VideoMini } from "./fabrica-vista";
+import { CATALOGO } from "@/servicios/medios";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Orden } from "@/servicios/fabrica";
 export function Canales() {
@@ -217,6 +218,9 @@ export function Videos() {
         evento: "nuevo_video",
         recursoId: f.get("canal"),
         texto: f.get("titulo"),
+        avatarId: f.get("avatarId"),
+        voiceId: f.get("voiceId"),
+        avatarPlacement: f.get("avatarPlacement"),
       });
       await refresh();
       setCreating(false);
@@ -264,6 +268,39 @@ export function Videos() {
               maxLength={160}
               placeholder="Por qué el cielo es azul"
             />
+          </label>
+          <label>
+            Presentador
+            <select name="avatarId">
+              <option value="">Sin presentador</option>
+              {[...CATALOGO, ...data.assets]
+                .filter((a) => a.kind === "avatar")
+                .map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+          <label>
+            Voz
+            <select name="voiceId">
+              <option value="">Elegir según el guion</option>
+              {[...CATALOGO, ...data.assets]
+                .filter((a) => a.kind === "voz")
+                .map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+          <label>
+            Presencia del avatar
+            <select name="avatarPlacement">
+              <option value="partes">Solo en algunas partes</option>
+              <option value="completo">Durante todo el video</option>
+            </select>
           </label>
           <div className="button-row">
             <button className="button" disabled={busy}>
@@ -444,6 +481,27 @@ export function DetalleVideo({ id }: { id: string }) {
               </span>
             </div>
           </section>
+          {(video.avatarId || video.voiceId) && (
+            <div className="presenter-summary">
+              <span>
+                Presentador:{" "}
+                {[...CATALOGO, ...data.assets].find(
+                  (a) => a.id === video.avatarId,
+                )?.name ?? "Sin presentador"}
+              </span>
+              <span>
+                Voz:{" "}
+                {[...CATALOGO, ...data.assets].find(
+                  (a) => a.id === video.voiceId,
+                )?.name ?? "Según el guion"}
+              </span>
+              <span>
+                {video.avatarPlacement === "completo"
+                  ? "En todo el video"
+                  : "En algunas partes"}
+              </span>
+            </div>
+          )}
           <section className="script-panel">
             <div className="section-top">
               <h2>El guion</h2>

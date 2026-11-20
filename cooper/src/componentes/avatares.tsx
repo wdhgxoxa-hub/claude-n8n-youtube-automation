@@ -108,7 +108,7 @@ export function Avatares() {
       setPhoto("");
       setEvidence("");
       setMessage(
-        "Tu creación es privada. La verificación y la generación son simuladas en esta fase.",
+        "Tu creación es privada. La verificación y la generación son simuladas en este modo.",
       );
     } catch (e) {
       setError((e as Error).message);
@@ -160,8 +160,8 @@ export function Avatares() {
       <Notice error={error} message={message} />
       <p className="simulation-note">
         Biblioteca de demostración. Las vistas previas son ilustraciones y tonos
-        de muestra; la generación y la verificación real se conectarán en la
-        fase 3.
+        de muestra; la generación y la verificación real se conectarán más
+        adelante.
       </p>
       {creating && (
         <section className="identity-form">
@@ -247,9 +247,25 @@ export function Avatares() {
         <h2>Del estudio</h2>
         <span>Disponible para todo el equipo</span>
       </div>
-      <div className="asset-grid">
+      <motion.div
+        key={tab}
+        className="asset-grid"
+        initial="inicio"
+        animate="visible"
+        variants={{
+          inicio: {},
+          visible: { transition: { staggerChildren: 0.06 } },
+        }}
+      >
         {CATALOGO.filter((a) => a.kind === tab).map((a) => (
-          <article className="asset-card" key={a.id}>
+          <motion.article
+            className="asset-card"
+            key={a.id}
+            variants={{
+              inicio: { y: 8 },
+              visible: { y: 0, transition: { duration: 0.25 } },
+            }}
+          >
             <div className={`asset-portrait ${a.style}`}>
               {a.kind === "voz" ? (
                 <div
@@ -300,9 +316,9 @@ export function Avatares() {
                     : "Avatar ilustrado"}
               </small>
             </div>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
       <div className="library-section-title">
         <h2>Tu biblioteca y el equipo</h2>
         <span>

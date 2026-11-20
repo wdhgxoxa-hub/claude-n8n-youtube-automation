@@ -2401,3 +2401,13 @@ main:focus {
     visibility: visible;
   }
 }
+
+.presenter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 20px 0;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+}

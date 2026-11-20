@@ -42,6 +42,11 @@ export const videos = sqliteTable("videos", {
     .notNull()
     .references(() => channels.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
+  avatarId: text("avatar_id").notNull().default(""),
+  voiceId: text("voice_id").notNull().default(""),
+  avatarPlacement: text("avatar_placement", { enum: ["completo", "partes"] })
+    .notNull()
+    .default("partes"),
   stage: integer("stage").notNull().default(0),
   script: text("script").notNull(),
   feedback: text("feedback").notNull().default(""),

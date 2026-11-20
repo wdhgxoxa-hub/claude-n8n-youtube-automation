@@ -9,39 +9,45 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "node scripts/e2e.mjs",
     "db:migrate": "tsx src/db/migrar.ts"
   },
   "dependencies": {
-    "next": "^16.0.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "next-auth": "5.0.0-beta.32",
-    "drizzle-orm": "^0.45.4",
+    "@fontsource-variable/manrope": "^5.2.8",
     "better-sqlite3": "^13.2.0",
-    "zod": "^4.1.12",
+    "drizzle-orm": "^0.45.4",
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.468.0",
-    "@fontsource-variable/manrope": "^5.2.8"
+    "next": "^16.0.0",
+    "next-auth": "5.0.0-beta.32",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "@axe-core/playwright": "^4.14.0",
+    "@next/eslint-plugin-next": "^16.4.6",
+    "@playwright/test": "^1.56.1",
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@types/better-sqlite3": "^7.6.13",
-    "tailwindcss": "^4.1.17",
-    "@tailwindcss/postcss": "^4.1.17",
     "eslint": "^10.15.0",
-    "eslint-config-next": "^16.0.0",
-    "vitest": "^4.0.8",
-    "@playwright/test": "^1.56.1",
-    "tsx": "^4.20.6"
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "lighthouse": "^13.6.0",
+    "prettier": "^3.10.1",
+    "tailwindcss": "^4.1.17",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^4.0.8"
   },
   "engines": {
     "node": ">=24.0.0"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "better-sqlite3": true
   }
 }

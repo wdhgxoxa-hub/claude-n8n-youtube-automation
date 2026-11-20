@@ -91,8 +91,8 @@ export function Perfil() {
               pattern="\+[1-9][0-9]{7,14}"
             />
             <span className="helper">
-              Incluye el código del país. Los avisos por WhatsApp se conectarán
-              en la fase 4.
+              Incluye el código del país. Los avisos por WhatsApp todavía no
+              están activos.
             </span>
           </label>
           <div className="form-divider" />

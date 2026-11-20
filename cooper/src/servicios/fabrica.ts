@@ -2,8 +2,16 @@ import { randomUUID } from "node:crypto";
 import { and, eq, desc } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import { channels, videos, events, expenses, type User } from "@/db/schema";
+import {
+  channels,
+  videos,
+  events,
+  expenses,
+  assets,
+  type User,
+} from "@/db/schema";
 import { ErrorHttp, requireOwn } from "@/lib/permisos";
+import { CATALOGO } from "./medios";
 import { guionInicial, siguienteEtapa, esperaAprobacion } from "@/lib/etapas";
 export const EVENTOS = [
   "nuevo_canal",
@@ -21,6 +29,9 @@ export const ordenSchema = z.object({
   recursoId: z.string().max(100).optional(),
   texto: z.string().trim().min(1).max(6000),
   nombre: z.string().trim().max(120).optional(),
+  avatarId: z.string().max(100).optional(),
+  voiceId: z.string().max(100).optional(),
+  avatarPlacement: z.enum(["completo", "partes"]).optional(),
 });
 export type Orden = z.infer<typeof ordenSchema>;
 export interface Fabrica {
@@ -61,6 +72,25 @@ export function validarOrden(user: User, orden: Orden) {
         .where(eq(channels.id, orden.recursoId ?? ""))
         .get();
   requireOwn(user, resource);
+  if (orden.evento === "nuevo_video") {
+    for (const [id, kind] of [
+      [orden.avatarId, "avatar"],
+      [orden.voiceId, "voz"],
+    ]) {
+      if (!id || CATALOGO.some((a) => a.id === id && a.kind === kind)) continue;
+      const asset = db().select().from(assets).where(eq(assets.id, id)).get();
+      if (
+        !asset ||
+        asset.kind !== kind ||
+        !asset.verified ||
+        (asset.ownerId !== user.id && !asset.shared)
+      )
+        throw new ErrorHttp(
+          404,
+          "Ese avatar o voz no está disponible en tu biblioteca.",
+        );
+    }
+  }
   if (
     orden.evento === "programar" &&
     (!z.iso.datetime({ offset: true }).safeParse(orden.texto).success ||
@@ -112,6 +142,9 @@ export class FabricaSimulada implements Fabrica {
               ownerId: user.id,
               channelId: orden.recursoId!,
               title: orden.texto.slice(0, 160),
+              avatarId: orden.avatarId ?? "",
+              voiceId: orden.voiceId ?? "",
+              avatarPlacement: orden.avatarPlacement ?? "partes",
               script: guionInicial(orden.texto),
               createdAt: now,
               updatedAt: now,
