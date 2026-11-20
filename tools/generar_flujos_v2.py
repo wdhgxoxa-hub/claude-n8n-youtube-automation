@@ -185,10 +185,19 @@ def switch(f, name, n, expr='$json.salida'):
                  {'mode': 'expression', 'numberOutputs': n, 'output': '={{ ' + expr + ' }}'})
 
 
+def tg_texto(text):
+    # Telegram interpreta Markdown por defecto: un «_» o «*» en un id (en_proceso, margen_real) rompe el envío
+    # («can't parse entities») y detiene el flujo. Se envía en HTML con el texto escapado: llega tal cual.
+    if text.startswith('={{ ') and text.endswith(' }}'):
+        return "={{ String(" + text[4:-3] + " ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }}"
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+TG_OPC = {'disable_web_page_preview': True, 'appendAttribution': False, 'parse_mode': 'HTML'}
+
+
 def tg(f, name, chat, text):
     return f.add(name, 'n8n-nodes-base.telegram', 1.2,
-                 {'resource': 'message', 'operation': 'sendMessage', 'chatId': chat, 'text': text,
-                  'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
+                 {'resource': 'message', 'operation': 'sendMessage', 'chatId': chat, 'text': tg_texto(text),
+                  'additionalFields': dict(TG_OPC)},
                  credentials=CRED_TG)
 
 
@@ -209,10 +218,10 @@ return [{{ json: {{ aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.
     dt_insert(f, n('registrar'), 'aprobaciones')
     f.add(n('avisar'), 'n8n-nodes-base.telegram', 1.2,
           {'resource': 'message', 'operation': 'sendMessage', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
-           'text': "={{ $('" + n('preparar') + "').first().json.aviso }}", 'replyMarkup': 'inlineKeyboard',
+           'text': tg_texto("={{ $('" + n('preparar') + "').first().json.aviso }}"), 'replyMarkup': 'inlineKeyboard',
            'inlineKeyboard': {'rows': [{'row': {'buttons': [{'text': '📝 Revisar y decidir', 'additionalFields': {
                'url': "={{ $('" + n('preparar') + "').first().json.url }}"}}]}}]},
-           'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
+           'additionalFields': dict(TG_OPC)},
           credentials=CRED_TG, onError='continueRegularOutput')   # si Telegram falla, la decisión sigue disponible desde la computadora
     campos = [{'fieldLabel': 'Decisión', 'fieldType': 'dropdown', 'requiredField': True,
                'fieldOptions': {'values': [{'option': o} for o, _ in opciones]}}]
@@ -336,7 +345,7 @@ return [{ json: {
   modeloCritico: 'gpt-6-astra',
   vozGemini: 'Charon',        // voz grave de narrador; cambiable por canal en la biblia (voz.gemini_voice)
   costoImagenUsd: 0.06,       // estimado, se corrige con facturas reales
-  costoClipSegUsd: 0.12,      // estimado prudente; corregir con la primera factura real
+  costoClipSegUsd: 0.07,      // Gemini Omni 1.2 Flash a 720p (precio de lista de Google, nov-2026)
   costoRevisionUsd: 0.01,     // revisión visual de un plano, estimado
   costoCriticoUsd: 0.02,      // una crítica de investigación o guion, estimado
   costoVerificacionUsd: 0.25, // una verificación de cifras con búsqueda web (~10 búsquedas y ~75k tokens), estimado
@@ -345,7 +354,9 @@ return [{ json: {
   presupuestoLargoUsd: 5,
   maxVideosDiaPorCanal: 3,    // videos nuevos por canal en 24 h (protege gasto y evita contenido repetitivo)
   maxVideosDiaTotal: 40,      // videos nuevos de toda la fábrica en 24 h
-  presupuestoShortUsd: 1.5,
+  presupuestoShortUsd: 2.5,   // un Short con movimiento real (clips animados) cuesta más que uno de imágenes
+  movimientoMinShort: 0.6,    // fracción mínima de planos de un Short con movimiento real (archivo o clip animado)
+  clipsMaxShort: 4,           // clips animados máximos por Short (además del tope de la biblia)
   maxIntentosPlano: 2,
   driveCarpetaRaizId: '1Asm7vpt16gjt7uSp5FxaNO1Nfnb4fp1k', // carpeta «Fabrica de Videos» en tu Drive
   costoMiniaturaUsd: 0.06,    // una imagen de GPT Image por miniatura, estimado
@@ -375,7 +386,7 @@ call(f, 'Leer ajustes', W['ajustes'])
 code(f, 'Preparar trabajo', r"""
 const pedido = $('Inicio').first().json;
 const aj = $('Leer ajustes').first().json;
-const modos = ['investigar_nichos','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];
+const modos = ['investigar_nichos','adoptar_cuenta','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];
 if (!modos.includes(pedido.modo)) throw new Error('Modo desconocido: ' + pedido.modo);
 const job_id = pedido.modo + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
 const payload = { contrato: 'fabrica-v2', modo: pedido.modo, job_id,
@@ -481,10 +492,11 @@ call(f, 'Leer ajustes', W['ajustes'])
 RUTAS = ['nuevo_canal', 'claude_ok:investigar_nichos', 'aprobado:canal', 'cambios:canal',
          'claude_ok:crear_biblia', 'nuevo_video', 'claude_ok:guion', 'aprobado:guion', 'cambios:guion',
          'claude_ok:storyboard', 'aprobado:storyboard', 'cambios:storyboard', 'claude_ok:aprender',
-         'aprobado:final', 'cambios:final', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'configurar_redes', 'otro']
+         'aprobado:final', 'cambios:final', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'configurar_redes', 'metas', 'adoptar_cuenta', 'otro']
 code(f, 'Ruta', r"""
 const e = $('Inicio').first().json;
-const clave = e.evento === 'claude_ok' ? 'claude_ok:' + (e.modo === 'corregir_guion' ? 'guion' : e.modo)
+// adoptar_cuenta devuelve una propuesta de canal como investigar_nichos: pasa por la misma aprobación.
+const clave = e.evento === 'claude_ok' ? 'claude_ok:' + ({ corregir_guion: 'guion', adoptar_cuenta: 'investigar_nichos' }[e.modo] || e.modo)
   : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;
 const rutas = %s;
 const i = rutas.indexOf(clave);
@@ -516,8 +528,11 @@ if ($('Crítico de nichos').isExecuted) { try { const k = JSON.parse(($('Crític
   critica = `\n\nCrítico (GPT-6 Astra): ${k.veredicto || ''}` + ((k.sin_fuente || []).length ? '\nSin fuente: ' + k.sin_fuente.slice(0, 4).join('; ') : ''); } catch (e) { critica = ''; } }
 const ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\n');
 const temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\n');
-const mensaje = `Propuesta de canal: ${c.nombre_propuesto}\nNicho: ${c.nicho}\nPúblico: ${c.publico}\nPromesa: ${c.promesa}\n\nEvidencia:\n${ev}\n\nPrimeros temas:\n${temas}${critica}`;
-const aviso = `🧭 Propuesta de canal: ${c.nombre_propuesto}\n${String(c.nicho || '').slice(0, 200)}\n\nÁbrelo para ver la evidencia y decidir.`;
+const dg = r.diagnostico || null; const cu = r.cuenta || null; const mt = r.metas || null;
+const diag = dg ? `\n\nDiagnóstico de la cuenta (${cu?.red || ''} ${cu?.handle || ''}):\nBien: ${(dg.bien || []).slice(0, 4).join('; ')}\nCambiar: ${(dg.cambiar || []).slice(0, 5).join('; ')}\nCompetencia: ${(dg.competencia || []).slice(0, 4).map(x => x.patron || x).join('; ')}` : '';
+const metas = mt ? `\nMetas propuestas: ${mt.videos_semana} ${mt.formato || 'videos'}/semana, tope US$${mt.gasto_semana_usd}/semana` : '';
+const mensaje = `${cu ? 'Adopción de cuenta' : 'Propuesta de canal'}: ${c.nombre_propuesto}\nNicho: ${c.nicho}\nPúblico: ${c.publico}\nPromesa: ${c.promesa}${diag}${metas}\n\nEvidencia:\n${ev}\n\nPrimeros temas:\n${temas}${critica}`;
+const aviso = (cu ? `🧭 Adopción de ${cu.red} ${cu.handle}: ${c.nombre_propuesto}\n${String((dg?.cambiar || [])[0] || c.nicho || '').slice(0, 200)}` : `🧭 Propuesta de canal: ${c.nombre_propuesto}\n${String(c.nicho || '').slice(0, 200)}`) + '\n\nÁbrelo para ver la evidencia y decidir.';
 return [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, job_id: $('Inicio').first().json.job_id } }];
 """)
 call(f, 'Aprobar canal', W['aprob'], wait=False)
@@ -532,16 +547,20 @@ const c = ($json.contexto || {}).canal || {};
 const canal_id = (c.nombre_propuesto || 'canal').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) + '-' + Date.now().toString(36).slice(-4);
 return [{ json: { canal_id, nombre: c.nombre_propuesto || '', nicho: c.nicho || '', estado: 'creando_biblia', biblia_ruta: '',
   presupuesto_largo_usd: $('Leer ajustes').first().json.presupuestoLargoUsd, presupuesto_short_usd: $('Leer ajustes').first().json.presupuestoShortUsd,
-  plataformas: 'youtube', formato_defecto: (c.formatos || ['largo'])[0] } }];
+  plataformas: ($json.contexto || {}).cuenta?.red || 'youtube', formato_defecto: (c.formatos || ['largo'])[0],
+  // Metas del canal: las propone la adopción; un canal nuevo empieza sin producción automática.
+  metas: JSON.stringify({ videos_semana: 3, formato: (c.formatos || ['short']).includes('short') ? 'short' : 'largo', gasto_semana_usd: 10, retencion_min: 0.5, auto: false, ...(($json.contexto || {}).metas || {}) }),
+  cuenta: ($json.contexto || {}).cuenta ? JSON.stringify(($json.contexto || {}).cuenta) : '' } }];
 """)
 dt_insert(f, 'Guardar canal', 'canales')
-code(f, 'Pedir biblia', "const ctx = $('Según evento').first().json.contexto; return [{ json: { modo:'crear_biblia', canal_id: $('Nuevo canal').first().json.canal_id, video_id:'', datos:{ canal: ctx.canal, evidencia: ctx.evidencia, notas: '' } } }];")
+code(f, 'Pedir biblia', "const ctx = $('Según evento').first().json.contexto; return [{ json: { modo:'crear_biblia', canal_id: $('Nuevo canal').first().json.canal_id, video_id:'', datos:{ canal: ctx.canal, evidencia: ctx.evidencia, notas: ctx.cuenta ? 'Cuenta existente adoptada: la biblia debe respetar su identidad actual (tono, estilo, público) y aplicar este diagnóstico: ' + JSON.stringify({ cuenta: ctx.cuenta, diagnostico: ctx.diagnostico }).slice(0, 6000) : '' } } }];")
 call(f, 'Claude: biblia', W['claude'])
 route(2, 'Nuevo canal', 'Guardar canal', 'Pedir biblia', 'Claude: biblia')
 
 # 3 canal rechazado -> nueva investigación con el motivo
 code(f, 'Reinvestigar', r"""
-const e = $json; const c = (e.contexto || {}).canal || {};
+const e = $json; const c = (e.contexto || {}).canal || {}; const cu = (e.contexto || {}).cuenta;
+if (cu) return [{ json: { modo: 'adoptar_cuenta', canal_id: '', video_id: '', datos: { ...cu, notas: 'Cambios del operador a la propuesta anterior: ' + (e.cambios || '') + ' · Propuesta anterior: ' + JSON.stringify({ canal: c, diagnostico: e.contexto.diagnostico }).slice(0, 3000) } } }];
 return [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.cambios || '', rechazos:[{ nombre: c.nombre_propuesto, nicho: c.nicho, motivo: e.cambios || '' }] } } }];
 """)
 call(f, 'Claude: nichos otra vez', W['claude'])
@@ -931,6 +950,64 @@ code(f, 'Pedir referencias', "return [{ json: { canal_id: $json.canal_id } }];")
 call(f, 'Referencias a pedido', W['refs'], wait=False)
 route(18, 'Pedir referencias', 'Referencias a pedido')
 
+# 20 metas: lo que el canal persigue cada semana (videos, gasto, retención) y si la fábrica produce sola
+code(f, 'Validar metas', r"""
+const e = $('Inicio').first().json; const n = (x, a, b) => { if (x === '' || x === null || x === undefined) return null; const v = Number(String(x).replace(',', '.')); return Number.isFinite(v) && v >= a && v <= b ? v : null; };
+const cambios = { videos_semana: n(e.videos_semana, 0, 21), gasto_semana_usd: n(e.gasto_semana_usd, 0, 200), retencion_min: n(e.retencion_min, 0, 1),
+  formato: ['short', 'largo'].includes(String(e.formato || '')) ? e.formato : null,
+  auto: [true, 'true', 'sí', 'si'].includes(e.auto) ? true : [false, 'false', 'no'].includes(e.auto) ? false : null };
+const limpio = Object.fromEntries(Object.entries(cambios).filter(([, v]) => v !== null));
+return [{ json: { ok: !!e.canal_id && Object.keys(limpio).length > 0, cambios: limpio } }];
+""")
+iff(f, '¿Metas válidas?', '$json.ok === true')
+dt_get(f, 'Canal (metas)', 'canales', 'canal_id', "={{ $('Inicio').first().json.canal_id }}")
+iff(f, '¿Existe el canal (metas)?', '!!$json.canal_id')
+code(f, 'Fila de metas', r"""
+let antes = {}; try { antes = JSON.parse($json.metas || '{}'); } catch (x) { antes = {}; }
+const metas = { videos_semana: 3, formato: 'short', gasto_semana_usd: 10, retencion_min: 0.5, auto: false, ...antes, ...$('Validar metas').first().json.cambios };
+return [{ json: { metas: JSON.stringify(metas), _texto: `Metas de ${$json.canal_id}: ${metas.videos_semana} ${metas.formato}/semana, tope US$${metas.gasto_semana_usd}/semana, retención mínima ${Math.round(metas.retencion_min * 100)} %, producción automática ${metas.auto ? 'encendida' : 'apagada'}.` } }];
+""")
+code(f, 'Solo metas', "return [{ json: { metas: $json.metas } }];")
+dt_update(f, 'Guardar metas', 'canales', 'canal_id', "={{ $('Inicio').first().json.canal_id }}")
+tg(f, 'Aviso: metas', "={{ $('Leer ajustes').first().json.chatId }}", "={{ $('Fila de metas').first().json._texto }}")
+tg(f, 'Aviso: metas inválidas', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'No cambié las metas: falta el canal o un valor válido (videos por semana 0–21, gasto 0–200 US$, retención 0–1, formato short o largo, auto sí o no).' }}")
+f.link('Según evento', 'Validar metas', 20)
+f.link('Validar metas', '¿Metas válidas?')
+f.link('¿Metas válidas?', 'Canal (metas)', 0)
+f.link('¿Metas válidas?', 'Aviso: metas inválidas', 1)
+f.link('Canal (metas)', '¿Existe el canal (metas)?')
+f.link('¿Existe el canal (metas)?', 'Fila de metas', 0)
+f.link('¿Existe el canal (metas)?', 'Aviso: metas inválidas', 1)
+f.chain('Fila de metas', 'Solo metas', 'Guardar metas', 'Aviso: metas')
+
+# 21 adoptar_cuenta: lee una cuenta existente (YouTube, TikTok o Instagram) y su competencia, y propone cómo llevarla
+code(f, 'Leer enlace', r"""
+// Acepta enlace o @usuario. Detecta la red y el usuario; sin red clara, asume Instagram si viene con @ y la red no se dice.
+const e = $('Inicio').first().json; const u = String(e.url || e.cuenta || '').trim(); let red = String(e.red || '').toLowerCase(); let handle = '';
+const m = u.match(/(?:youtube\.com\/(?:@|c\/|channel\/)?|youtu\.be\/)([\w.\-@]+)/i) || null;
+if (/youtube\.com|youtu\.be/i.test(u)) { red = 'youtube'; handle = (u.match(/youtube\.com\/(@[\w.\-]+|channel\/[\w\-]+|c\/[\w.\-]+)/i) || [])[1] || ''; handle = handle.replace(/^c\//, '@').replace(/^channel\//, ''); }
+else if (/tiktok\.com/i.test(u)) { red = 'tiktok'; handle = (u.match(/tiktok\.com\/@([\w.\-]+)/i) || [])[1] || ''; }
+else if (/instagram\.com/i.test(u)) { red = 'instagram'; handle = (u.match(/instagram\.com\/([\w.]+)/i) || [])[1] || ''; }
+else if (/^@?[\w.\-]{2,60}$/.test(u)) { handle = u.replace(/^@/, ''); red = ['youtube', 'tiktok', 'instagram'].includes(red) ? red : 'instagram'; if (red === 'youtube') handle = '@' + handle; }
+const ok = !!handle && ['youtube', 'tiktok', 'instagram'].includes(red);
+return [{ json: { ok, accion: 'cuenta', red, handle, url: u, notas: String(e.notas || e.indicaciones || ''), motivo: ok ? '' : 'no reconocí la cuenta: manda el enlace de YouTube, TikTok o Instagram' } }];
+""")
+iff(f, '¿Cuenta reconocida?', '$json.ok === true')
+call(f, 'vidIQ: cuenta', W['vidiq'])
+code(f, 'Pedir adopción', r"""
+const c = $('Leer enlace').first().json; const v = $json || {};
+return [{ json: { modo: 'adoptar_cuenta', canal_id: '', video_id: '', datos: { red: c.red, handle: c.handle, url: c.url, notas: c.notas,
+  perfil: v.ok ? v.perfil : '', publicaciones: v.ok ? v.publicaciones : '', error_vidiq: v.ok ? '' : String(v.error || 'vidIQ no respondió') } } }];
+""")
+call(f, 'Claude: adopción', W['claude'])
+tg(f, 'Aviso: adopción en marcha', "={{ $('Leer ajustes').first().json.chatId }}", "={{ '🔎 Analizando ' + $('Leer enlace').first().json.red + ' ' + $('Leer enlace').first().json.handle + ' y su competencia. Te llegará la propuesta para aprobar.' }}")
+tg(f, 'Aviso: cuenta no reconocida', "={{ $('Leer ajustes').first().json.chatId }}", "={{ $('Leer enlace').first().json.motivo }}")
+f.link('Según evento', 'Leer enlace', 21)
+f.link('Leer enlace', '¿Cuenta reconocida?')
+f.link('¿Cuenta reconocida?', 'vidIQ: cuenta', 0)
+f.link('¿Cuenta reconocida?', 'Aviso: cuenta no reconocida', 1)
+f.chain('vidIQ: cuenta', 'Pedir adopción', 'Claude: adopción', 'Aviso: adopción en marcha')
+
 # 19 configurar_redes: perfil de Upload-Post y redes donde publica el canal
 code(f, 'Validar redes', r"""
 const e = $('Inicio').first().json;
@@ -961,7 +1038,7 @@ f.chain('Fila de redes', 'Guardar redes', 'Aviso: redes guardadas')
 
 # 20 otro / errores
 tg(f, 'Aviso: evento', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Aviso de la fábrica (' + $json.clave + '): ' + JSON.stringify($json.avisos || $json.error || '').slice(0, 500) }}")
-route(20, 'Aviso: evento')
+route(22, 'Aviso: evento')
 ORQ = f.dump()
 
 COMPONER = r"""
@@ -1032,13 +1109,38 @@ trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
 code(f, 'Plan de producción', r"""
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
-const planos = (e.storyboard?.planos || []).filter(p => p && p.id);
+const planos = (e.storyboard?.planos || []).filter(p => p && p.id).map(p => ({ ...p }));
+// Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se
+// mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el
+// storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.
+const seg = p => Math.max(4, Math.min(8, Math.round(String(p.texto_narrado || '').replace(/\[[^\]]*\]/g, '').split(/\s+/).filter(Boolean).length / 2.5)));
+const movimiento = { animados: [] };
+if (e.formato === 'short' && aj.allowClips) {
+  const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;
+  const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);
+  const mueve = p => ['clip', 'archivo'].includes(p.tipo);
+  const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)
+    + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;
+  const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))
+    .filter(x => x.p.tipo === 'imagen').sort((a, b) => b.peso - a.peso);
+  for (const x of orden) {
+    const clips = planos.filter(p => p.tipo === 'clip').length; const cuota = planos.filter(mueve).length / planos.length;
+    if (clips >= topeClips || (cuota >= aj.movimientoMinShort && mueve(planos[0]))) break;
+    const extra = seg(x.p) * aj.costoClipSegUsd;
+    if (costoActual() + extra > presupuesto0 * (aj.avisoGastoPct || 1)) continue;
+    x.p.tipo = 'clip'; x.p.duracion_clip_s = seg(x.p); movimiento.animados.push(x.p.id);
+  }
+  planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = seg(p); });
+  movimiento.cuota = Math.round(planos.filter(mueve).length / Math.max(1, planos.length) * 100) / 100;
+}
+planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = 8; });
 const n = t => planos.filter(p => p.tipo === t).length;
+const segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.duracion_clip_s, 0);
 // Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.
 // Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.
 const revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;
 const costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa
-  + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1 + planos.length * aj.costoVozUsdPorPlano;
+  + segClips * aj.costoClipSegUsd + n('avatar') * 1 + planos.length * aj.costoVozUsdPorPlano;
 const faltan = [];
 if (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');
 if (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');
@@ -1046,9 +1148,9 @@ if (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
 if (!aj.allowVoz) faltan.push('voz (Gemini TTS)');
 if (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');
 if (!aj.allowMontaje) faltan.push('montaje (Creatomate)');
-const presupuesto = Number(e.presupuesto_usd) || aj.presupuestoLargoUsd;
+const presupuesto = Number(e.presupuesto_usd) || (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd);
 if (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);
-return [{ json: { ...e, planos, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,
+return [{ json: { ...e, planos, movimiento, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,
   dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];
 """)
 iff(f, '¿Todo encendido?', '$json.faltan.length === 0')
@@ -1161,14 +1263,22 @@ return { json: pedido,
 iff(f, '¿Es clip?', "$json.plano.tipo === 'clip'")
 # Clip: la imagen ya generada (con las referencias de la biblia) es el primer fotograma; Gemini Omni la anima.
 http(f, 'Animar (Gemini Omni)', 'POST', 'https://generativelanguage.googleapis.com/v1beta/interactions',
-     body="={{ { model: $('Leer ajustes').first().json.modeloClip, store: false, input: [{ type: 'image', data: $('Generar imagen').item.json.output.find(o => o.type === 'image_generation_call').result, mime_type: 'image/png' }, { type: 'text', text: '<FIRST_FRAME> [0-8s] ' + ($json.plano.prompt_movimiento || $json.plano.movimiento || 'movimiento de cámara lento') + '. ' + $json.plano.prompt_imagen + '. Use this image as the starting frame. Sin texto ni logos. Sin diálogo.' }], generation_config: { video_config: { task: 'image_to_video' } }, response_format: { type: 'video', aspect_ratio: $('Plan de producción').first().json.formato === 'short' ? '9:16' : '16:9', resolution: '720p' } } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloClip, store: false, input: [{ type: 'image', data: $('Generar imagen').item.json.output.find(o => o.type === 'image_generation_call').result, mime_type: 'image/png' }, { type: 'text', text: '<FIRST_FRAME> [0-' + ($json.plano.duracion_clip_s || 8) + 's] ' + ($json.plano.prompt_movimiento || $json.plano.movimiento || 'movimiento de cámara lento') + '. ' + $json.plano.prompt_imagen + '. Use this image as the starting frame. Sin texto ni logos. Sin diálogo.' }], generation_config: { video_config: { task: 'image_to_video' } }, response_format: { type: 'video', aspect_ratio: $('Plan de producción').first().json.formato === 'short' ? '9:16' : '16:9', resolution: '720p' } } }}",
      timeout=600000, cred=CRED_GEMINI)
 code1(f, 'Extraer clip', r"""
+// Gemini Omni entrega el clip en base64 o, si pesa más de 4 MB, como URI que hay que descargar con la clave.
 const prev = $('Extraer imagen').item.json;
 const v = ($json.steps || []).filter(s => s.type === 'model_output').flatMap(s => s.content || []).find(c => c.type === 'video');
-if (!v?.data) throw new Error(v?.uri ? 'Gemini Omni devolvió el video por URI (más de 4 MB); falta soportar esa entrega' : 'Sin video en la respuesta de Gemini Omni');
-return { json: { ...prev }, binary: { imagen: { data: v.data, mimeType: v.mime_type || 'video/mp4', fileName: prev.plano.id + '.mp4' } } };
+if (v?.data) return { json: { ...prev, clip_uri: '' }, binary: { imagen: { data: v.data, mimeType: v.mime_type || 'video/mp4', fileName: prev.plano.id + '.mp4' } } };
+if (v?.uri) return { json: { ...prev, clip_uri: v.uri } };
+throw new Error('Sin video en la respuesta de Gemini Omni para ' + prev.plano?.id);
 """)
+iff(f, '¿Clip por URI?', "!!$json.clip_uri")
+f.add('Descargar clip', 'n8n-nodes-base.httpRequest', 4.2,
+      {'method': 'GET', 'url': '={{ $json.clip_uri }}', 'authentication': 'genericCredentialType', 'genericAuthType': 'httpHeaderAuth',
+       'options': {'timeout': 300000, 'response': {'response': {'responseFormat': 'file', 'outputPropertyName': 'imagen'}}}},
+      credentials=CRED_GEMINI, retryOnFail=True, maxTries=3, waitBetweenTries=5000)
+code1(f, 'Clip descargado', "const prev = $('Extraer imagen').item.json; const b = $binary.imagen; return { json: { ...prev, clip_uri: '' }, binary: { imagen: { ...b, mimeType: 'video/mp4', fileName: prev.plano.id + '.mp4' } } };")
 gapi(f, 'Subir a Drive', 'POST', 'https://www.googleapis.com/upload/drive/v3/files', 'googleDriveOAuth2Api',
      binary_field='imagen', query={'uploadType': 'media'})
 gapi(f, 'Nombrar en Drive', 'PATCH', "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}", 'googleDriveOAuth2Api',
@@ -1234,7 +1344,7 @@ const aj = $('Leer ajustes').first().json;
 return $('Juntar planos').first().json.planos.map(p => ({ json: { video_id: p.video_id, plano_id: p.plano_id, tipo: p.plano?.tipo || '',
   archivo_url: p.url || '', estado: p.url ? 'listo' : 'pendiente', intentos: p.intento || 0, nota_revision: String(p.nota_revision || '').slice(0, 500),
   costo_usd: Math.round(((['imagen', 'clip'].includes(p.plano?.tipo) ? (p.intento || 1) * aj.costoImagenUsd : 0)
-    + (p.plano?.tipo === 'clip' ? 8 * aj.costoClipSegUsd : 0) + (p.revisiones || 0) * aj.costoRevisionUsd) * 1000) / 1000 } }));
+    + (p.plano?.tipo === 'clip' ? (p.plano.duracion_clip_s || 8) * aj.costoClipSegUsd : 0) + (p.revisiones || 0) * aj.costoRevisionUsd) * 1000) / 1000 } }));
 """)
 dt_insert(f, 'Guardar planos', 'planos')
 code(f, 'Gasto de planos', r"""
@@ -1242,11 +1352,11 @@ code(f, 'Gasto de planos', r"""
 const aj = $('Leer ajustes').first().json; const e = $('Plan de producción').first().json;
 const planos = $('Juntar planos').first().json.planos;
 const imagenes = planos.filter(p => ['imagen', 'clip'].includes(p.plano?.tipo)).reduce((a, p) => a + (p.intento || 1), 0);
-const clips = planos.filter(p => p.plano?.tipo === 'clip').length;
+const clips = planos.filter(p => p.plano?.tipo === 'clip').length; const segClips = planos.filter(p => p.plano?.tipo === 'clip').reduce((a, p) => a + (p.plano.duracion_clip_s || 8), 0);
 const revisiones = planos.reduce((a, p) => a + (p.revisiones || 0), 0);
-const usd = imagenes * aj.costoImagenUsd + clips * 8 * aj.costoClipSegUsd + revisiones * aj.costoRevisionUsd;
+const usd = imagenes * aj.costoImagenUsd + segClips * aj.costoClipSegUsd + revisiones * aj.costoRevisionUsd;
 const pct = usd / (e.presupuesto || 1);
-return [{ json: { imagenes, clips, revisiones, usd: Math.round(usd * 100) / 100, pct: Math.round(pct * 100) / 100, aviso: pct >= aj.avisoGastoPct } }];
+return [{ json: { imagenes, clips, seg_clips: segClips, revisiones, usd: Math.round(usd * 100) / 100, pct: Math.round(pct * 100) / 100, aviso: pct >= aj.avisoGastoPct } }];
 """)
 iff(f, '¿Pasa el aviso de gasto?', '$json.aviso === true')
 pe = "$('Plan de producción').first().json"
@@ -1289,7 +1399,7 @@ const aj = $('Leer ajustes').first().json; const g = $('Gasto de planos').first(
 const son = $('Sonido y emoción').first().json; const vid = $('Plan de producción').first().json.video_id;
 const filas = [
   ['imágenes', 'OpenAI', g.imagenes * aj.costoImagenUsd],
-  ['clips', 'Gemini Omni', g.clips * 8 * aj.costoClipSegUsd],
+  ['clips', 'Gemini Omni', (g.seg_clips ?? g.clips * 8) * aj.costoClipSegUsd],
   ['revisión visual', 'OpenAI', g.revisiones * aj.costoRevisionUsd],
   ['voz', 'Gemini TTS', (son.voces || []).length * aj.costoVozUsdPorPlano],
   ['música', 'Epidemic Sound (suscripción)', 0],
@@ -1323,7 +1433,8 @@ return [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: r.url,
   voces: (son.voces || []).map(v => ({ plano_id: v.plano_id, ppm: v.palabras_por_minuto, duracion_s: v.duracion_s })),
   usa_musica: !!son.musica?.url, costo_usd: Math.round(($('Costo total').first().json.costo_usd + (d.costo_usd || 0)) * 100) / 100, presupuesto: e.presupuesto,
   formato: e.formato, carpeta: $('Carpeta del video').first().json.id, tema: e.tema,
-  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {}, miniatura_texto: e.storyboard?.miniatura?.texto || '' } }];
+  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {}, miniatura_texto: e.storyboard?.miniatura?.texto || '',
+  movimiento_real: (() => { const l = $('Juntar planos').first().json.planos; return l.length ? Math.round(l.filter(p => p.url && ['clip', 'archivo'].includes(p.plano?.tipo)).length / l.length * 100) / 100 : 1; })() } }];
 """)
 f.nodes[-1].update({'executeOnce': True})
 call(f, 'Calidad y publicación', W['pub'], wait=False)
@@ -1358,7 +1469,10 @@ f.link('Sin archivo: generar', 'Pedido de imagen')
 f.link('Archivo aprobado', 'Juntar planos')
 f.chain('Pedido de imagen', 'Generar imagen', 'Extraer imagen', '¿Es clip?')
 f.link('¿Es clip?', 'Animar (Gemini Omni)', 0)
-f.chain('Animar (Gemini Omni)', 'Extraer clip', 'Subir a Drive')
+f.chain('Animar (Gemini Omni)', 'Extraer clip', '¿Clip por URI?')
+f.link('¿Clip por URI?', 'Descargar clip', 0)
+f.chain('Descargar clip', 'Clip descargado', 'Subir a Drive')
+f.link('¿Clip por URI?', 'Subir a Drive', 1)
 f.link('¿Es clip?', 'Subir a Drive', 1)
 f.chain('Subir a Drive', 'Nombrar en Drive', 'Compartir enlace', 'URL del plano', '¿Revisión visual activa?')
 f.link('¿Revisión visual activa?', 'Revisar plano', 0)
@@ -1576,6 +1690,8 @@ const rapidos = (e.voces || []).filter(v => v.ppm && v.ppm > 200).map(v => v.pla
 if (lentos.length) avisos.push(`voz lenta (<100 palabras/min) en ${lentos.join(', ')}`);
 if (rapidos.length) avisos.push(`voz rápida (>200 palabras/min) en ${rapidos.join(', ')}`);
 if (e.presupuesto && e.costo_usd > e.presupuesto) avisos.push(`costó US$${e.costo_usd}, por encima del tope de US$${e.presupuesto}`);
+const minMov = ($('Leer ajustes').isExecuted ? $('Leer ajustes').first().json.movimientoMinShort : 0) || 0.6;
+if (corto && e.movimiento_real !== undefined && e.movimiento_real < minMov) avisos.push(`solo ${Math.round(e.movimiento_real * 100)} % de los planos tiene movimiento real (mínimo ${Math.round(minMov * 100)} %): se ve como diapositivas`);
 for (const a of e.avisos_derivados || []) avisos.push(a);
 return [{ json: { ...e, fallas, avisos, aprobado_qc: fallas.length === 0 } }];
 """)
@@ -1685,7 +1801,17 @@ f.chain('Pedir tokens', 'Tokens de los canales', 'Pedidos de retención', '¿Alg
 f.link('¿Algún canal conectado?', 'Retención', 0)
 f.link('¿Algún canal conectado?', 'Pedir lecciones', 1)
 f.link('¿Hay que medir?', 'Pedir lecciones', 1)
+code(f, 'Retención media', r"""
+// Media de la curva (audienceWatchRatio por tramo) ≈ porcentaje medio visto. La usa el freno de calidad de la rutina.
+const yt = $('Pedidos de retención').all().map(i => i.json);
+return $input.all().map((i, k) => { const rows = i.json.rows || []; const v = yt[k] || {};
+  const m = rows.length ? rows.reduce((a, r) => a + Math.min(1.5, Number(r[1]) || 0), 0) / rows.length : null;
+  return { json: { video_id: v.video_id, retencion_media: m === null ? null : Math.round(Math.min(1, m) * 1000) / 1000 } }; })
+  .filter(x => x.json.video_id && x.json.retencion_media !== null);
+""")
+dt_update(f, 'Guardar retención', 'videos', 'video_id', '={{ $json.video_id }}')
 f.chain('Retención', 'Pedir lecciones', 'Claude: aprender')
+f.chain('Retención', 'Retención media', 'Guardar retención')
 APRENDE = f.dump()
 
 # ======================================================================================
@@ -1838,7 +1964,8 @@ f.add('Agente', '@n8n/n8n-nodes-langchain.agent', 3.1,
            "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}"
            'Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. '
            'Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. '
-           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes, reenviar. '
+           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes, reenviar, metas, adoptar_cuenta. '
+           'Si el operador da una cuenta existente (enlace o @usuario) para que la fábrica la lleve, usa adoptar_cuenta. Si habla de metas, ritmo o de que la fábrica trabaje sola, usa metas. '
            'Si el operador dice que no le llegó una aprobación o que un enlace no abre, usa reenviar (nunca reintentes ejecuciones). '
            'Si el operador pide un video sin tema o que la fábrica elija el tema, usa crear_video con tema vacío: la fábrica investiga el nicho y elige. '
            'Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). '
@@ -1862,7 +1989,7 @@ def tool(name, desc, values, wid=None):
                                      'attemptToConvertTypes': False, 'convertFieldsToString': False}})
 
 
-AI = lambda k, d: "={{ $fromAI('" + k + "', '" + d + "', 'string') }}"
+AI = lambda k, d, t='string': "={{ $fromAI('" + k + "', '" + d + "', '" + t + "') }}"
 tool('crear_canal', 'Investiga nichos y propone un canal nuevo para aprobar.', {'evento': 'nuevo_canal', 'criterios': AI('criterios', 'preferencias del operador; puede ir vacío')})
 tool('crear_video', 'Crea un video en un canal activo: escribe el guion y lo manda a aprobar.',
      {'evento': 'nuevo_video', 'canal_id': AI('canal_id', 'id del canal'), 'tema': AI('tema', 'tema del video, corto; VACÍO si el operador no da tema o pide que la fábrica lo elija'), 'formato': AI('formato', 'largo o short'),
@@ -1885,13 +2012,21 @@ tool('conectar_youtube', 'Da el enlace para conectar un canal de la fábrica a s
      {'accion': 'enlace', 'canal_id': AI('canal_id', 'id del canal de la fábrica')}, W['yt'])
 tool('pendientes', 'Lista lo que espera la decisión del operador (canal, guion, storyboard, video final, permiso de gasto) con el enlace para decidir. Devuelve los enlaces tal cual.',
      {'tipo': 'pendientes'}, W['pendientes'])
+tool('metas', 'Fija las metas semanales de un canal y si la fábrica produce sola hacia ellas (videos por semana, formato, tope de gasto semanal, retención mínima, auto).',
+     {'evento': 'metas', 'canal_id': AI('canal_id', 'id del canal'), 'videos_semana': AI('videos_semana', 'videos por semana (0–21); vacío si no cambia'),
+      'formato': AI('formato', 'short o largo; vacío si no cambia'), 'gasto_semana_usd': AI('gasto_semana_usd', 'tope de gasto semanal en dólares; vacío si no cambia'),
+      'retencion_min': AI('retencion_min', 'retención media mínima de 0 a 1 (0.6 = 60 %); vacío si no cambia'),
+      'auto': AI('auto', 'true para que la fábrica produzca sola hacia la meta, false para apagarlo; vacío si no cambia')})
+tool('adoptar_cuenta', 'Adopta una cuenta existente de YouTube, TikTok o Instagram: la analiza con su competencia y propone canal, biblia, metas y plan para aprobar.',
+     {'evento': 'adoptar_cuenta', 'url': AI('url', 'enlace de la cuenta o @usuario'), 'red': AI('red', 'youtube, tiktok o instagram si el operador lo dice; vacío si viene en el enlace'),
+      'notas': AI('notas', 'lo que pidió el operador sobre la cuenta; vacío si nada')})
 tool('reenviar', 'Vuelve a mandar las aprobaciones pendientes (todas o las de un video). Si un enlace ya no funciona, rehace esa aprobación con un enlace nuevo. Devuelve el resultado tal cual.',
      {'video_id': AI('video_id', 'id del video o vacío para todas')}, W['reenviar'])
 code(f, 'Respuesta', "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];")
 f.chain('Inicio', 'Agente', 'Respuesta')
 f.ai('Modelo', 'Agente', 'ai_languageModel')
 f.ai('Memoria', 'Agente', 'ai_memory')
-for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes', 'reenviar'):
+for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes', 'reenviar', 'metas', 'adoptar_cuenta'):
     f.ai(t, 'Agente', 'ai_tool')
 AGENTE = f.dump()
 
@@ -2064,7 +2199,7 @@ const leer = r => { const t = String(r?.data ?? r?.body ?? '');
   if (m.result?.isError) return { ok: false, error: txt.slice(0, 200) };
   return { ok: true, texto: txt }; };
 """
-switch(f, 'Según acción', 2, "$('Inicio').first().json.accion === 'titulos' ? 1 : 0")
+switch(f, 'Según acción', 3, "({ titulos: 1, cuenta: 2 })[$('Inicio').first().json.accion] ?? 0")
 # investigar
 vq('Palabras clave', "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'vidiq_keyword_research', arguments: { mode: 'research', keyword: String($('Inicio').first().json.semilla || $('Inicio').first().json.tema || '').slice(0, 150), limit: 15, userGoal: 'elegir el ángulo y las palabras clave de un video nuevo para un canal en español' } } }) }}")
 vq('Videos que destacan', "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'vidiq_outliers', arguments: { keyword: String($('Inicio').first().json.tema || '').slice(0, 500), language: $('Inicio').first().json.idioma || 'es', contentType: $('Inicio').first().json.formato === 'short' ? 'short' : 'long', limit: 10, userGoal: 'ver qué videos del tema superan a su canal para inspirar el gancho y el título' } } }) }}")
@@ -2091,6 +2226,20 @@ const validas = notas.filter(n => n.puntaje !== null).sort((a, b) => b.puntaje -
 return [{ json: { ok: validas.length > 0, mejor: validas[0]?.titulo || titulos[0], puntaje: validas[0]?.puntaje ?? null, notas, creditos: notas.filter(n => !n.error).length * 5 } }];
 """)
 code(f, 'Sin títulos', "return [{ json: { ok: false, error: 'no hay títulos que puntuar' } }];")
+# cuenta: perfil y últimas publicaciones de una cuenta (YouTube, TikTok o Instagram) para adoptarla
+code(f, 'Llamadas de cuenta', r"""
+const e = $('Inicio').first().json; const h = String(e.handle || '');
+const L = { youtube: [['vidiq_channel_stats', { channelId: h }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'short' }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'long', popular: true }]],
+  tiktok: [['vidiq_tiktok_profile', { handle: h }], ['vidiq_tiktok_profile_videos', { handle: h }]],
+  instagram: [['vidiq_ig_profile', { handle: h }], ['vidiq_ig_profile_reels', { handle: h }]] }[e.red] || [];
+return L.map(([nombre, args], i) => ({ json: { nombre, args: { ...args, userGoal: 'analizar una cuenta propia para mejorar su contenido y su ritmo de publicación' }, id: 10 + i } }));
+""")
+vq('Consultar cuenta', "={{ JSON.stringify({ jsonrpc: '2.0', id: $json.id, method: 'tools/call', params: { name: $json.nombre, arguments: $json.args } }) }}")
+code(f, 'Resumen de cuenta', VQ_LEER + r"""
+const r = $input.all().map(i => leer(i.json));
+if (!r.some(x => x.ok)) return [{ json: { ok: false, error: r.map(x => x.error).filter(Boolean)[0] || 'vidIQ no respondió' } }];
+return [{ json: { ok: true, perfil: r[0]?.ok ? r[0].texto.slice(0, 4000) : '', publicaciones: r.slice(1).filter(x => x.ok).map(x => x.texto).join('\n\n').slice(0, 9000), creditos: r.filter(x => x.ok).length * 5 } }];
+""")
 f.chain('Inicio', 'Iniciar vidIQ', 'vidIQ listo', 'Según acción')
 f.link('Según acción', 'Palabras clave', 0)
 f.chain('Palabras clave', 'Videos que destacan', 'Resumen de investigación')
@@ -2099,6 +2248,8 @@ f.link('Un ítem por título', '¿Hay títulos?')
 f.link('¿Hay títulos?', 'Puntuar título', 0)
 f.link('¿Hay títulos?', 'Sin títulos', 1)
 f.link('Puntuar título', 'Mejor título')
+f.link('Según acción', 'Llamadas de cuenta', 2)
+f.chain('Llamadas de cuenta', 'Consultar cuenta', 'Resumen de cuenta')
 VIDIQ = f.dump()
 
 # ======================================================================================
@@ -2491,6 +2642,63 @@ f.link('¿Hay atascados?', 'Aviso: atascados', 0)
 f.link('Atascados', '¿Es lunes?')
 f.link('¿Es lunes?', 'Pedido de reporte', 0)
 f.chain('Pedido de reporte', 'Reporte de 7 días', 'Enviar reporte semanal')
+
+# Producción automática hacia las metas de cada canal (solo canales con metas.auto = true).
+# Cuenta lo producido y lo gastado en 7 días; si falta y cabe en el tope, pide UN video con tema elegido por la fábrica.
+# Frenos: tope semanal, un video en curso por canal a la vez, y retención media de los últimos 3 videos bajo la meta.
+# Tus aprobaciones siguen siendo la puerta: nada se publica sin tu «Aprobar».
+f.add('Canales activos', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('canales'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'activo'}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+f.add('Costos de la semana', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('costos'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 7 * 86400000).toISOString() }}"}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+code(f, 'Plan del día', r"""
+const aj = $('Leer ajustes').first().json; const hace7 = Date.now() - 7 * 86400000;
+const vids = $('Videos en curso').all().map(i => i.json).filter(v => v.video_id);
+const canalDe = Object.fromEntries(vids.map(v => [v.video_id, v.canal_id]));
+const gasto = {}; for (const c of $input.all().map(i => i.json)) if (c.video_id && canalDe[c.video_id]) gasto[canalDe[c.video_id]] = (gasto[canalDe[c.video_id]] || 0) + (Number(c.usd) || 0);
+const canales = $('Canales activos').all().map(i => i.json).filter(c => c.canal_id);
+const pedidos = [], notas = [];
+for (const c of canales) {
+  let m = {}; try { m = JSON.parse(c.metas || '{}'); } catch (x) { m = {}; }
+  if (m.auto !== true) continue;
+  const fmt = m.formato === 'largo' ? 'largo' : 'short';
+  const deCanal = vids.filter(v => v.canal_id === c.canal_id);
+  const semana = deCanal.filter(v => Date.parse(v.createdAt || 0) >= hace7 && !['cancelado', 'rechazado'].includes(v.estado)).length;
+  const enCurso = deCanal.filter(v => v.estado === 'en_proceso').length;
+  const g = Math.round((gasto[c.canal_id] || 0) * 100) / 100;
+  const unidad = fmt === 'short' ? Number(aj.presupuestoShortUsd || 2.5) : Number(aj.presupuestoLargoUsd || 8);
+  const ret = deCanal.filter(v => Number.isFinite(Number(v.retencion_media)) && v.retencion_media !== null && v.retencion_media !== '')
+    .sort((a, b) => Date.parse(b.createdAt || 0) - Date.parse(a.createdAt || 0)).slice(0, 3).map(v => Number(v.retencion_media));
+  const retMedia = ret.length === 3 ? ret.reduce((a, b) => a + b, 0) / 3 : null;
+  const meta = Number(m.videos_semana || 0), tope = Number(m.gasto_semana_usd || 0), retMin = Number(m.retencion_min || 0);
+  let motivo = '';
+  if (semana >= meta) motivo = `meta cumplida (${semana}/${meta})`;
+  else if (enCurso > 0) motivo = `ya hay ${enCurso} en curso`;
+  else if (g + unidad > tope) motivo = `tope semanal: US$${g} gastados de US$${tope}`;
+  else if (retMedia !== null && retMedia < retMin) motivo = `freno de calidad: retención ${Math.round(retMedia * 100)} % < ${Math.round(retMin * 100)} % en los últimos 3`;
+  if (motivo) { notas.push(`• ${c.canal_id}: ${motivo}`); continue; }
+  pedidos.push({ evento: 'nuevo_video', canal_id: c.canal_id, tema: '', formato: fmt, automatico: true,
+    indicaciones: `Producción automática hacia la meta semanal (${semana + 1}/${meta}). Elige el tema con más potencial según la biblia y lo aprendido.` });
+  notas.push(`• ${c.canal_id}: pido un ${fmt} (${semana + 1}/${meta} esta semana; US$${g} de US$${tope})`);
+}
+if (!notas.length) return [{ json: { nada: true } }];
+return [{ json: { pedidos, texto: '🤖 Producción automática de hoy\n' + notas.join('\n') + (pedidos.length ? '\n\nTe llegará el guion para aprobar.' : '') } }];
+""")
+iff(f, '¿Hay plan?', '$json.nada !== true')
+tg(f, 'Aviso: plan del día', "={{ $('Leer ajustes').first().json.chatId }}", '={{ $json.texto.slice(0, 3900) }}')
+code(f, 'Un pedido por canal', "const p = $('Plan del día').first().json.pedidos || []; return p.length ? p.map(x => ({ json: x })) : [{ json: { nada: true } }];")
+iff(f, '¿Pide video?', '$json.nada !== true')
+call(f, 'Pedir video automático', W['orq'], wait=False, each=True)
+f.link('Atascados', 'Canales activos')
+f.chain('Canales activos', 'Costos de la semana', 'Plan del día', '¿Hay plan?')
+f.link('¿Hay plan?', 'Aviso: plan del día', 0)
+f.link('¿Hay plan?', 'Un pedido por canal', 0)
+f.link('Un pedido por canal', '¿Pide video?')
+f.link('¿Pide video?', 'Pedir video automático', 0)
 RUTINA = f.dump()
 
 # ======================================================================================
@@ -2583,9 +2791,9 @@ return $input.all().map((it, k) => { const r = filas[k]; const cuerpo = String(i
 switch(f, 'Según diagnóstico', 3)
 f.add('Reenviar tarjeta', 'n8n-nodes-base.telegram', 1.2,
       {'resource': 'message', 'operation': 'sendMessage', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
-       'text': "={{ '🔁 ' + ($json.aviso || $json.resumen || 'Aprobación pendiente') }}", 'replyMarkup': 'inlineKeyboard',
+       'text': tg_texto("={{ '🔁 ' + ($json.aviso || $json.resumen || 'Aprobación pendiente') }}"), 'replyMarkup': 'inlineKeyboard',
        'inlineKeyboard': {'rows': [{'row': {'buttons': [{'text': '📝 Revisar y decidir', 'additionalFields': {'url': '={{ $json.url }}'}}]}}]},
-       'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
+       'additionalFields': dict(TG_OPC)},
       credentials=CRED_TG, onError='continueRegularOutput')
 code(f, 'Anular', "return $input.all().map(i => ({ json: { aprobacion_id: i.json.aprobacion_id, estado: 'anulado', decidido_en: new Date().toISOString(), cambios: 'enlace muerto: rehecha con «reenviar»' } }));")
 dt_update(f, 'Anular en la tabla', 'aprobaciones', 'aprobacion_id', '={{ $json.aprobacion_id }}')

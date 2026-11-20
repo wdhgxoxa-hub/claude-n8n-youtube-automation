@@ -24,3 +24,8 @@ Conviertes el guion en escenas que **muestran exactamente lo que dice la voz**. 
 
 ## Movimiento y transiciones
 - Zoom lento en revelaciones, paneo en lugares, corte seco en cifras.
+
+## Movimiento (regla del operador)
+- Un Short **nunca** es una sucesión de imágenes fijas. El gancho se mueve (`clip` o `archivo`) y al menos 6 de cada 10 planos tienen movimiento real.
+- Prefiere `archivo` (video real, gratis) para lo genérico, y `clip` (imagen animada) para lo que solo existe en tu historia: el personaje, el objeto del caso, la revelación.
+- Escribe `prompt_movimiento` concreto para cada clip: qué se mueve y cómo (la mano entrega el billete, el surtidor marca, la cámara se acerca a la caja).

@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "90e0b7dc-4d54-43e8-956c-32c8f66befda",
+      "id": "3aa9a738-c479-442c-829c-1426e14cbfee",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "6ee60737-efb1-48a8-a357-ee1b67447d32",
+      "id": "befa7fa1-3b48-4e6e-9d7c-fcdaab91eb18",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\n// Un ítem por plano. Gemini TTS lee el texto al pie de la letra: la actuación va aparte, en «style»\n// (emoción y ritmo de todo el plano) y en etiquetas <short pause>/<long pause>; el énfasis, en MAYÚSCULAS.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst b = e.biblia || {}; const voz = b.voz || {};\nconst base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join(', ') || 'narrador de documental, voz grave y cercana, ritmo ágil';\nconst ESTILO = { 'susurro': 'en voz baja, casi un susurro', 'suspenso': 'con suspenso contenido', 'urgencia': 'con urgencia' };\nconst planos = (e.planos || []).filter(p => p.plano?.texto_narrado);\nreturn planos.map(p => {\n  const t = String(p.plano.texto_narrado);\n  const extra = [...t.matchAll(/\\[([^\\]]{1,30})\\]/g)].map(m => ESTILO[m[1].toLowerCase()]).filter(Boolean);\n  const texto = t\n    .replace(/\\[(?:énfasis|enfasis)\\]\\s*([^\\s.,;:!?…]+)/gi, (_, w) => w.toLocaleUpperCase('es'))\n    .replace(/\\[pausa larga\\]/gi, ' <long pause> ').replace(/\\[pausa\\]/gi, ' <short pause> ')\n    .replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/\\s{2,}/g, ' ').trim();\n  const estilo = [base, p.plano.emocion ? 'con ' + p.plano.emocion : '', ...extra, `en ${b.idioma || 'español latino neutro'}`].filter(Boolean).join(', ');\n  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: voz.gemini_voice || aj.vozGemini } };\n});\n"
       },
-      "id": "5d16cde2-0ebd-4d0e-87ae-89c870382137",
+      "id": "5c433491-7394-4793-9b80-f8d804234725",
       "name": "Textos de voz",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -76,7 +76,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloVoz, store: false, input: [{ type: 'user_input', content: [{ type: 'text', text: $json.texto, annotations: [{ type: 'speech_metadata', style: $json.estilo }] }] }], response_format: { type: 'audio' }, generation_config: { speech_config: [{ voice: $json.voz }] } } }}"
       },
-      "id": "e55041af-65aa-4fe2-87d7-fef775fabdcd",
+      "id": "f5cf9e48-0fb4-48cf-93d7-3c57c03fe802",
       "name": "Voz (Gemini TTS)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -99,7 +99,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\n// Gemini TTS entrega WAV (o PCM crudo 16 bits mono): se lee el formato, se recortan los silencios\n// del principio y del final (dejan respiros artificiales) y se mide la duración exacta.\nconst prev = $('Textos de voz').item.json;\nconst audio = ($json.steps || []).filter(x => x.type === 'model_output').flatMap(x => x.content || []).filter(c => c.type === 'audio' && c.data).pop();\nif (!audio) throw new Error('Gemini TTS no devolvió audio para ' + prev.plano_id);\nconst raw = Buffer.from(audio.data, 'base64');\nlet rate = Number((audio.mime_type || '').match(/rate=(\\d+)/)?.[1] || 24000), canales = 1, bits = 16, pcm = raw;\nif (raw.toString('ascii', 0, 4) === 'RIFF') {\n  let o = 12;\n  while (o + 8 <= raw.length) {\n    const id = raw.toString('ascii', o, o + 4), sz = raw.readUInt32LE(o + 4);\n    if (id === 'fmt ') { canales = raw.readUInt16LE(o + 10); rate = raw.readUInt32LE(o + 12); bits = raw.readUInt16LE(o + 22); }\n    if (id === 'data') { pcm = raw.subarray(o + 8, Math.min(raw.length, o + 8 + sz)); break; }\n    o += 8 + sz + (sz % 2);\n  }\n}\nif (bits !== 16) throw new Error('Formato de audio no soportado: ' + bits + ' bits');\nconst paso = 2 * canales, n = Math.floor(pcm.length / paso), UMBRAL = 600, MARGEN = Math.round(rate * 0.12);\nlet ini = 0, fin = n - 1;\nwhile (ini < n && Math.abs(pcm.readInt16LE(ini * paso)) < UMBRAL) ini++;\nwhile (fin > ini && Math.abs(pcm.readInt16LE(fin * paso)) < UMBRAL) fin--;\nif (ini >= fin) throw new Error('El audio de ' + prev.plano_id + ' está en silencio');\nconst recorte = pcm.subarray(Math.max(0, ini - MARGEN) * paso, Math.min(n, fin + MARGEN) * paso);\nconst h = Buffer.alloc(44);\nh.write('RIFF', 0); h.writeUInt32LE(36 + recorte.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);\nh.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(canales, 22); h.writeUInt32LE(rate, 24);\nh.writeUInt32LE(rate * paso, 28); h.writeUInt16LE(paso, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(recorte.length, 40);\nconst segundos = recorte.length / (rate * paso);\nconst palabras = prev.texto.replace(/<[^>]+>/g, '').split(/\\s+/).filter(Boolean).length;\nreturn { json: { ...prev, duracion_s: Math.round(segundos * 100) / 100, palabras_por_minuto: Math.round(palabras / segundos * 60) },\n  binary: { archivo: { data: Buffer.concat([h, recorte]).toString('base64'), mimeType: 'audio/wav', fileName: prev.plano_id + '.wav' } } };\n"
       },
-      "id": "a2a9ff8e-b04c-4e29-95fd-f84225ddfa4e",
+      "id": "83ed8122-9990-4992-8004-2bc3b02b09d7",
       "name": "WAV",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -130,7 +130,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "archivo"
       },
-      "id": "0466dc7b-8aed-492a-80cf-ef29d41a2763",
+      "id": "e560bd45-f422-4cd4-9998-3aca42ba5ef0",
       "name": "Subir voz a Drive",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -171,7 +171,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: $('WAV').item.json.plano_id + '-voz.wav' } }}"
       },
-      "id": "0f8181f8-c52f-40df-8ab2-f805ca663885",
+      "id": "e9088394-0e04-4582-bd48-128609663646",
       "name": "Nombrar voz",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -205,7 +205,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "1e4f4927-ed86-49ae-b5ba-a38a52ab0d3e",
+      "id": "82507a4a-3bee-487a-9907-0061d2225298",
       "name": "Compartir voz",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -228,7 +228,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const w = $('WAV').item.json; return { json: { plano_id: w.plano_id, duracion_s: w.duracion_s, palabras_por_minuto: w.palabras_por_minuto, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir voz a Drive').item.json.id } };"
       },
-      "id": "11534937-09a1-46ec-8913-a33d69dfb90d",
+      "id": "e97ed619-43b7-4ead-9f01-87d986890730",
       "name": "Voz lista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -243,7 +243,7 @@
         "destinationFieldName": "voces",
         "options": {}
       },
-      "id": "4a6ab69f-8317-4a35-952a-75705017f0e7",
+      "id": "60f734df-40b9-4747-af34-9d3d0c932e1c",
       "name": "Juntar voces",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -263,7 +263,7 @@
           },
           "conditions": [
             {
-              "id": "5d97f1c1-f9d3-4635-b35d-248e4e4191e5",
+              "id": "522b2059-663b-44ec-8c30-357d579b9cc5",
               "leftValue": "={{ $('Leer ajustes').first().json.allowMusica === true || ($('Leer ajustes').first().json.allowEfectos === true && ($('Inicio').first().json.efectos || []).length > 0) }}",
               "rightValue": "",
               "operator": {
@@ -277,7 +277,7 @@
         },
         "options": {}
       },
-      "id": "b5a760e9-d002-462c-84f9-375b2db7a5bf",
+      "id": "082b3442-cb9f-481d-bda2-6cbc4080a66b",
       "name": "¿Usa Epidemic?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -314,7 +314,7 @@
         "specifyBody": "json",
         "jsonBody": "={\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-03-26\",\"capabilities\":{},\"clientInfo\":{\"name\":\"fabrica-n8n\",\"version\":\"1\"}}}"
       },
-      "id": "cb8f4f18-1939-4414-b3bd-15c0e98ecab6",
+      "id": "c077b747-f622-43db-84a5-ed8f7ee40c1e",
       "name": "Iniciar Epidemic",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -364,7 +364,7 @@
         "specifyBody": "json",
         "jsonBody": "={\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\",\"params\":{}}"
       },
-      "id": "e97cf54d-0f26-4d9a-b2d0-b23585263920",
+      "id": "4dabd054-2e72-4067-9758-f93fb3dbd975",
       "name": "Epidemic listo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -393,7 +393,7 @@
           },
           "conditions": [
             {
-              "id": "2fdda07d-76fc-4f3d-8b45-2173c6e38174",
+              "id": "28b7bd7a-e229-466e-973a-09d7795d3770",
               "leftValue": "={{ $('Leer ajustes').first().json.allowMusica === true }}",
               "rightValue": "",
               "operator": {
@@ -407,7 +407,7 @@
         },
         "options": {}
       },
-      "id": "b6aa799c-c395-454f-ae1c-3e2746c2ea1f",
+      "id": "53b7f719-6617-4047-91f7-8a26944cc451",
       "name": "¿Música activa?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -420,7 +420,7 @@
       "parameters": {
         "jsCode": "\n// Términos a partir del storyboard (estilo) y de la biblia (estilo musical del canal).\nconst e = $('Inicio').first().json; const b = e.biblia || {};\nconst termino = [e.musica?.estilo, b.musica?.estilo, b.musica?.mood].filter(Boolean).join(' ') || 'cinematic documentary suspense';\nconst total = $('Juntar voces').first().json.voces.reduce((a, v) => a + v.duracion_s, 0);\nreturn [{ json: { termino: termino.slice(0, 120), total_s: Math.round(total) } }];\n"
       },
-      "id": "2d32788f-a982-4c77-a329-e05be9719619",
+      "id": "78141fb4-0553-44b3-a400-10984c76f73a",
       "name": "Búsqueda de música",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -461,7 +461,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'SearchRecordings', arguments: { query: { term: $json.termino }, first: 15 } } }) }}"
       },
-      "id": "2febb59a-fa97-4bb1-82b6-be253eb103ea",
+      "id": "926447fd-d852-4c1a-af45-19c8f5ffbf56",
       "name": "Buscar música",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -483,7 +483,7 @@
       "parameters": {
         "jsCode": "const sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst datos = t => { const m = JSON.parse(sse(t)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}'); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message); return Object.values(d.data || {})[0]; };\n\n// Primera pista instrumental y lo bastante larga para cubrir el video.\nconst nodos = ((datos($json.data) || {}).nodes || []).map(n => n.recording).filter(Boolean);\nconst total = $('Búsqueda de música').first().json.total_s;\nconst sinVoz = r => !JSON.stringify(r).toLowerCase().includes('\"vocals\"');\nconst dur = r => Number(r.durationInSeconds || r.duration || r.lengthInSeconds || 0);\nconst pista = nodos.find(r => sinVoz(r) && (!dur(r) || dur(r) >= Math.min(total, 120))) || nodos[0];\nif (!pista) throw new Error('Epidemic no devolvió pistas para: ' + $('Búsqueda de música').first().json.termino);\nreturn [{ json: { id: pista.id, titulo: pista.title || pista.name || '', artista: (pista.mainArtists || pista.artists || []).map(a => a.name).join(', ') } }];\n"
       },
-      "id": "62b4cd0b-e9a6-4149-b3d2-64c9ebe3c754",
+      "id": "2cb7e050-eb58-481b-8325-1217b254edaf",
       "name": "Elegir pista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -524,7 +524,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'DownloadRecording', arguments: { id: $json.id, options: { fileType: 'MP3', stemType: 'FULL' } } } }) }}"
       },
-      "id": "3b4c85ac-4fd6-4f96-90ee-469e29f78a19",
+      "id": "9bd3ce28-d711-446f-b0b1-bd5aa2040358",
       "name": "Pedir descarga",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -546,7 +546,7 @@
       "parameters": {
         "jsCode": "const sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst datos = t => { const m = JSON.parse(sse(t)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}'); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message); return Object.values(d.data || {})[0]; };\n\nconst url = (datos($json.data) || {}).assetUrl;\nif (!url) throw new Error('Epidemic no dio URL de descarga');\nconst p = $('Elegir pista').first().json;\n// La URL firmada caduca: se usa en el render de inmediato. El crédito va a la descripción del video.\nreturn [{ json: { musica: { url, titulo: p.titulo, credito: `Música: «${p.titulo}» de ${p.artista || 'Epidemic Sound'}, cortesía de Epidemic Sound (www.epidemicsound.com)` } } }];\n"
       },
-      "id": "21a05edd-8b95-4a48-98fb-10c8ed8bb64b",
+      "id": "7cb298e8-e2a7-4609-a080-3255d1624e42",
       "name": "Música lista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -559,7 +559,7 @@
       "parameters": {
         "jsCode": "\n// Los efectos que pide el storyboard ({plano, efecto} con el efecto en inglés), como máximo 8 por video.\nconst aj = $('Leer ajustes').first().json; const lista = ($('Inicio').first().json.efectos || [])\n  .filter(x => x && x.plano && x.efecto).slice(0, 8);\nif (!aj.allowEfectos || !lista.length) return [{ json: { ninguno: true } }];\nreturn lista.map(x => ({ json: { plano: x.plano, termino: String(x.efecto).slice(0, 80) } }));\n"
       },
-      "id": "5bbf6f0a-f14b-46b8-b83e-d76cd3db80ea",
+      "id": "3c24fd0d-b84e-4b28-849b-c77069148b4c",
       "name": "Efectos pedidos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -579,7 +579,7 @@
           },
           "conditions": [
             {
-              "id": "a7780bc9-f9c0-44d9-9736-cc84b6e07381",
+              "id": "0b64aca6-cb71-4863-a3b3-fdc7335bb3a7",
               "leftValue": "={{ $json.ninguno !== true }}",
               "rightValue": "",
               "operator": {
@@ -593,7 +593,7 @@
         },
         "options": {}
       },
-      "id": "9b664ffe-0b8b-45d6-9273-631751f224d3",
+      "id": "1794ebdc-9f31-40fb-b617-a4d9862cdcea",
       "name": "¿Hay efectos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -640,7 +640,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'SearchSoundEffects', arguments: { query: { term: $json.termino }, first: 5 } } }) }}"
       },
-      "id": "11a5d512-0c91-4943-a84e-b8481dff4e54",
+      "id": "24994068-fac3-4ebc-b9fd-bf89b79b4801",
       "name": "Buscar efecto",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -663,7 +663,7 @@
       "parameters": {
         "jsCode": "const sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst datos = t => { const m = JSON.parse(sse(t)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}'); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message); return Object.values(d.data || {})[0]; };\n\n// Por cada efecto pedido, el primero de 1 a 15 s.\nreturn $input.all().map((it, i) => {\n  const pedido = $('Efectos pedidos').all()[i]?.json || {};\n  let nodos = []; try { nodos = ((datos(it.json.data) || {}).nodes || []).map(n => n.soundEffect).filter(Boolean); } catch (err) { nodos = []; }\n  const fx = nodos.find(x => { const ms = x.audioFile?.durationInMilliseconds || 0; return ms >= 1000 && ms <= 15000; }) || nodos[0];\n  return { json: { plano: pedido.plano, termino: pedido.termino, id: fx?.id || '', titulo: fx?.title || '', duracion_s: fx ? Math.round(fx.audioFile.durationInMilliseconds / 100) / 10 : 0 } };\n});\n"
       },
-      "id": "449457f4-a19d-4603-9168-811980bca4ca",
+      "id": "97b4c1c1-d370-49c4-befb-47fbb637c593",
       "name": "Elegir efecto",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -710,7 +710,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 5, method: 'tools/call', params: { name: 'DownloadSoundEffect', arguments: { id: $json.id || '00000000-0000-0000-0000-000000000000', options: { fileType: 'MP3' } } } }) }}"
       },
-      "id": "50fe9100-0fe8-403c-aecb-3d7250da92da",
+      "id": "12bf11c1-d103-426c-af84-a830f8b4efae",
       "name": "Pedir efecto",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -733,7 +733,7 @@
       "parameters": {
         "jsCode": "const sse = t => { const d = String(t || '').split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); return d.length ? d[d.length - 1] : String(t || ''); };\nconst datos = t => { const m = JSON.parse(sse(t)); const d = JSON.parse((m.result?.content || []).find(c => c.type === 'text')?.text || '{}'); if (d.errors?.length) throw new Error('Epidemic: ' + d.errors[0].message); return Object.values(d.data || {})[0]; };\n\n// Un efecto que no se encontró o no se pudo bajar se omite; el video sigue sin él.\nconst listos = $input.all().map((it, i) => {\n  const e = $('Elegir efecto').all()[i].json; let url = '';\n  try { url = e.id ? ((datos(it.json.data) || {}).assetUrl || '') : ''; } catch (err) { url = ''; }\n  return { json: { plano: e.plano, url, duracion_s: e.duracion_s, credito: 'Efectos de sonido: Epidemic Sound (www.epidemicsound.com)' } };\n}).filter(x => x.json.url);\nreturn listos.length ? listos : [{ json: { vacio: true } }];\n"
       },
-      "id": "2452d72b-db53-4ffa-afb7-8ddba8c86546",
+      "id": "f14b05ae-4f80-4795-b5cc-6daad725ab04",
       "name": "Efecto listo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -748,7 +748,7 @@
         "destinationFieldName": "efectos",
         "options": {}
       },
-      "id": "85a1dc80-3309-4cfe-b3a5-9a6694c227d2",
+      "id": "beb8479e-1d3f-4b62-8cda-747a1f8c8d3d",
       "name": "Juntar efectos",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -761,7 +761,7 @@
       "parameters": {
         "jsCode": "\nreturn [{ json: { voces: $('Juntar voces').first().json.voces,\n  musica: $('Música lista').isExecuted ? $('Música lista').first().json.musica : null,\n  efectos: ($('Juntar efectos').isExecuted ? $('Juntar efectos').first().json.efectos : []).filter(x => x && x.url) } }];\n"
       },
-      "id": "af66ba67-fb1b-4dee-aaf1-f4d65bf33078",
+      "id": "255fb7df-c4f1-4e9e-aaea-3c9fc6f89c60",
       "name": "Resultado sonido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

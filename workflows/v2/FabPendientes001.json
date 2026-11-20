@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "f1457421-3aac-408a-8c3e-bcbf942129d4",
+      "id": "eb78dedc-136e-4f67-9414-7c8ecc0e2901",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -36,7 +36,7 @@
         },
         "returnAll": true
       },
-      "id": "f3928add-1a17-4a99-aeb5-a51cdb05129f",
+      "id": "47032b7d-fee8-45aa-b795-8ced4479f7d1",
       "name": "Pendientes",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -50,7 +50,7 @@
       "parameters": {
         "jsCode": "\nconst filas = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente')\n  .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));\nif (!filas.length) return [{ json: { texto: 'No hay nada esperando tu decisión.' } }];\nconst nombre = { canal: 'Canal propuesto', guion: 'Guion', storyboard: 'Storyboard', final: 'Video final', gasto: 'Permiso de gasto' };\nconst lineas = filas.map((r, i) => `${i + 1}. ${nombre[r.etapa] || r.etapa}${r.video_id ? ' · ' + r.video_id : ''}${r.canal_id ? ' (' + r.canal_id + ')' : ''}\\n   ${String(r.resumen || '').split('\\n')[0].slice(0, 140)}\\n   Decidir: ${r.url}`);\nreturn [{ json: { texto: `Esperan tu decisión (${filas.length}):\\n\\n` + lineas.join('\\n\\n') } }];\n"
       },
-      "id": "f4c21081-49a7-4b28-93b4-7b5a9ce1f2ee",
+      "id": "d3f08c2a-3343-49d9-8685-eb96f0ce8f1c",
       "name": "Lista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

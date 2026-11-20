@@ -203,8 +203,8 @@ test('producción: gasto real por planos (repeticiones y revisiones) y aviso al 
   const g = run(codeOf(PROD, 'Gasto de planos'), { nodes: { 'Leer ajustes': aj, 'Plan de producción': { presupuesto: 1.5 }, 'Juntar planos': { planos } } })[0].json;
   assert.strictEqual(g.imagenes, 3); assert.strictEqual(g.clips, 1); assert.strictEqual(g.revisiones, 2);
   assert.strictEqual(g.usd, Math.round((3 * aj.costoImagenUsd + 8 * aj.costoClipSegUsd + 2 * aj.costoRevisionUsd) * 100) / 100);
-  assert.strictEqual(g.aviso, false);                                       // 1,16 de 1,5 = 77 % < 80 %
-  assert.strictEqual(run(codeOf(PROD, 'Gasto de planos'), { nodes: { 'Leer ajustes': aj, 'Plan de producción': { presupuesto: 1.4 }, 'Juntar planos': { planos } } })[0].json.aviso, true);
+  assert.strictEqual(g.aviso, false);                                       // 0,76 de 1,5 = 51 % < 80 %
+  assert.strictEqual(run(codeOf(PROD, 'Gasto de planos'), { nodes: { 'Leer ajustes': aj, 'Plan de producción': { presupuesto: 0.9 }, 'Juntar planos': { planos } } })[0].json.aviso, true);
   const barato = run(codeOf(PROD, 'Gasto de planos'), { nodes: { 'Leer ajustes': aj, 'Plan de producción': { presupuesto: 5 }, 'Juntar planos': { planos } } })[0].json;
   assert.strictEqual(barato.aviso, false);
 });
@@ -1003,4 +1003,126 @@ test('skills de YouTube: los títulos llegan a vidIQ ordenados por la revisión 
   const p = run(codeOf(R, 'Pedido de títulos'), { nodes: { Inicio: { contexto: { publicacion: { youtube: { titulos } } }, formato: 'short' } } })[0].json;
   assert.deepStrictEqual(p.titulos, ['Grifo: de tus S/ 10, ¿cuánto se queda?', 'El INCREÍBLE SECRETO QUE NADIE SABE']);
   assert.match(codeOf(R, 'Plan de publicación'), /const porRevision = /);
+});
+
+test('movimiento real: un Short no queda en diapositivas (gancho animado, cuota mínima, tope de clips y de gasto)', () => {
+  const P = wf('FabProduccion001'); const ajc = { ...aj, allowClips: true };
+  const planos = Array.from({ length: 10 }, (_, i) => ({ id: 'p' + (i + 1), tipo: i < 3 ? 'archivo' : 'imagen', texto_narrado: 'una frase de unas doce palabras para medir la duracion del clip animado aqui', emocion: i === 6 ? 'sorpresa' : 'calma' }));
+  const plan = run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { video_id: 'v', formato: 'short', storyboard: { planos }, presupuesto_usd: 2.5 }, 'Leer ajustes': ajc } })[0].json;
+  const tipo = id => plan.planos.find(p => p.id === id).tipo;
+  assert.strictEqual(tipo('p1'), 'archivo');                                   // ya se movía: no se toca
+  assert.ok(plan.movimiento.animados.length >= 1 && plan.movimiento.animados.length <= ajc.clipsMaxShort);
+  assert.ok(plan.movimiento.animados.includes('p7'), 'la escena de sorpresa se anima primero');
+  assert.ok(plan.movimiento.cuota >= ajc.movimientoMinShort, 'cuota ' + plan.movimiento.cuota);
+  assert.ok(plan.costo_estimado_usd <= 2.5 * ajc.avisoGastoPct + 1e-9, 'costo ' + plan.costo_estimado_usd);
+  assert.ok(plan.planos.filter(p => p.tipo === 'clip').every(p => p.duracion_clip_s >= 4 && p.duracion_clip_s <= 8));
+  // gancho fijo → se anima siempre
+  const g = run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { formato: 'short', storyboard: { planos: planos.map(p => ({ ...p, tipo: 'imagen' })) }, presupuesto_usd: 2.5 }, 'Leer ajustes': ajc } })[0].json;
+  assert.strictEqual(g.planos[0].tipo, 'clip');
+  // presupuesto chico: no anima lo que no cabe
+  const pobre = run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { formato: 'short', storyboard: { planos }, presupuesto_usd: 1 }, 'Leer ajustes': ajc } })[0].json;
+  assert.ok(pobre.movimiento.animados.length < plan.movimiento.animados.length);
+  // video largo y clips apagados: no cambia nada
+  const largo = run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { formato: 'largo', storyboard: { planos } }, 'Leer ajustes': ajc } })[0].json;
+  assert.strictEqual(largo.planos.filter(p => p.tipo === 'clip').length, 0);
+  assert.strictEqual(run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { formato: 'short', storyboard: { planos } }, 'Leer ajustes': { ...ajc, allowClips: false } } })[0].json.planos.filter(p => p.tipo === 'clip').length, 0);
+  // el clip se pide con su duración y, si llega por URI, se descarga
+  assert.match(nodoDe(P, 'Animar (Gemini Omni)').parameters.jsonBody, /\[0-' \+ \(\$json\.plano\.duracion_clip_s \|\| 8\) \+ 's\]/);
+  assert.strictEqual(P.connections['¿Clip por URI?'].main[0][0].node, 'Descargar clip');
+  const uri = run(codeOf(P, 'Extraer clip'), { json: { steps: [{ type: 'model_output', content: [{ type: 'video', uri: 'https://g/files/x:download' }] }] }, nodes: { 'Extraer imagen': { plano: { id: 'p1' } } } })[0].json;
+  assert.strictEqual(uri.clip_uri, 'https://g/files/x:download');
+  // calidad avisa si el Short quedó en diapositivas
+  const M = wf('FabPublicacion01');
+  const q = run(codeOf(M, 'Chequeos objetivos'), { nodes: { Inicio: { render_url: 'u', planos: 10, esperados: 10, duracion_s: 50, formato: 'short', subtitulos: true, movimiento_real: 0.3 }, 'Leer ajustes': ajc } })[0].json;
+  assert.ok(q.avisos.some(a => /diapositivas/.test(a)));
+});
+
+test('metas: valida, mezcla con las anteriores y no confunde un campo vacío con cero', () => {
+  const v = e => run(codeOf(ORQ, 'Validar metas'), { nodes: { Inicio: e } })[0].json;
+  assert.deepStrictEqual(v({ canal_id: 'mr', videos_semana: '', auto: 'sí', gasto_semana_usd: '12,5' }).cambios, { auto: true, gasto_semana_usd: 12.5 });
+  assert.strictEqual(v({ canal_id: 'mr', videos_semana: '99' }).ok, false);
+  assert.strictEqual(v({ videos_semana: 4 }).ok, false);
+  const f = run(codeOf(ORQ, 'Fila de metas'), { json: { canal_id: 'mr', metas: '{"videos_semana":3,"retencion_min":0.4}' }, nodes: { 'Validar metas': { cambios: { videos_semana: 5, auto: true } } } })[0].json;
+  const m = JSON.parse(f.metas);
+  assert.strictEqual(m.videos_semana, 5); assert.strictEqual(m.retencion_min, 0.4); assert.strictEqual(m.auto, true);
+  assert.strictEqual(run(codeOf(ORQ, 'Ruta'), { nodes: { Inicio: { evento: 'metas' } } })[0].json.salida, 20);
+});
+
+test('adoptar cuenta: reconoce enlaces y @usuario, y vuelve por la aprobación de canal', () => {
+  const l = e => run(codeOf(ORQ, 'Leer enlace'), { nodes: { Inicio: e } })[0].json;
+  assert.deepStrictEqual([l({ url: 'https://www.instagram.com/margen.real/' }).red, l({ url: 'https://www.instagram.com/margen.real/' }).handle], ['instagram', 'margen.real']);
+  assert.strictEqual(l({ url: 'https://www.tiktok.com/@margenreal?lang=es' }).handle, 'margenreal');
+  assert.strictEqual(l({ url: 'https://youtube.com/@MargenRealtv' }).handle, '@MargenRealtv');
+  assert.strictEqual(l({ url: '@MargenRealtv', red: 'youtube' }).handle, '@MargenRealtv');
+  assert.strictEqual(l({ url: 'hola mundo' }).ok, false);
+  const r = run(codeOf(ORQ, 'Ruta'), { nodes: { Inicio: { evento: 'claude_ok', modo: 'adoptar_cuenta' } } })[0].json;
+  assert.strictEqual(r.clave, 'claude_ok:investigar_nichos');
+  assert.strictEqual(run(codeOf(ORQ, 'Ruta'), { nodes: { Inicio: { evento: 'adoptar_cuenta' } } })[0].json.salida, 21);
+  run(codeOf(CL, 'Preparar trabajo'), { nodes: { Inicio: { modo: 'adoptar_cuenta', datos: {} }, 'Leer ajustes': aj } });
+  // El canal adoptado guarda la cuenta y las metas propuestas; la biblia recibe el diagnóstico.
+  const ctx = { canal: { nombre_propuesto: 'Margen Real', formatos: ['short'] }, cuenta: { red: 'instagram', handle: 'x' }, diagnostico: { cambiar: ['a'] }, metas: { videos_semana: 4, auto: true } };
+  const c = run(codeOf(ORQ, 'Nuevo canal'), { json: { contexto: ctx }, nodes: { 'Leer ajustes': aj } })[0].json;
+  assert.strictEqual(c.plataformas, 'instagram'); assert.strictEqual(JSON.parse(c.metas).videos_semana, 4); assert.strictEqual(JSON.parse(c.cuenta).handle, 'x');
+  const b = run(codeOf(ORQ, 'Pedir biblia'), { nodes: { 'Según evento': { contexto: ctx }, 'Nuevo canal': c } })[0].json;
+  assert.match(b.datos.notas, /Cuenta existente adoptada/);
+  const re = run(codeOf(ORQ, 'Reinvestigar'), { json: { contexto: ctx, cambios: 'más humor' } })[0].json;
+  assert.strictEqual(re.modo, 'adoptar_cuenta'); assert.match(re.datos.notas, /más humor/);
+  const m = run(codeOf(ORQ, 'Mensaje de canal'), { nodes: { Inicio: { resultado: { ...ctx, metas: { videos_semana: 4, gasto_semana_usd: 10 } } } } })[0].json;
+  assert.match(m.mensaje, /^Adopción de cuenta/); assert.match(m.mensaje, /Metas propuestas: 4/);
+});
+
+test('vidIQ cuenta: llamadas por red y resumen tolerante a fallos', () => {
+  const VQ = wf('FabVidiq00000001');
+  const ll = e => run(codeOf(VQ, 'Llamadas de cuenta'), { nodes: { Inicio: e } }).map(i => i.json.nombre);
+  assert.deepStrictEqual(ll({ red: 'instagram', handle: 'x' }), ['vidiq_ig_profile', 'vidiq_ig_profile_reels']);
+  assert.deepStrictEqual(ll({ red: 'tiktok', handle: 'x' }), ['vidiq_tiktok_profile', 'vidiq_tiktok_profile_videos']);
+  assert.strictEqual(ll({ red: 'youtube', handle: '@x' })[0], 'vidiq_channel_stats');
+  const ok = t => ({ data: 'data: ' + JSON.stringify({ result: { content: [{ type: 'text', text: t }] } }) });
+  const r = run(codeOf(VQ, 'Resumen de cuenta'), { all: { $input: [ok('perfil 1200 seguidores'), { data: '{"error":{"message":"x"}}' }] } })[0].json;
+  assert.strictEqual(r.ok, true); assert.match(r.perfil, /1200/); assert.strictEqual(r.creditos, 5);
+  const sw = VQ.nodes.find(n => n.name === 'Según acción');
+  assert.strictEqual(sw.parameters.numberOutputs, 3);
+});
+
+test('rutina: produce sola hacia la meta, con tope, un video a la vez y freno de calidad', () => {
+  const RU = wf('FabRutina0000001');
+  const ahora = new Date().toISOString();
+  const canal = (id, metas) => ({ canal_id: id, estado: 'activo', metas: JSON.stringify(metas) });
+  const plan = (canales, vids, costos) => run(codeOf(RU, 'Plan del día'), { nodes: { 'Leer ajustes': aj }, all: { 'Canales activos': canales, 'Videos en curso': vids, $input: costos } })[0].json;
+  const m = { videos_semana: 4, formato: 'short', gasto_semana_usd: 10, retencion_min: 0.5, auto: true };
+  // Debajo de la meta y con presupuesto: pide un Short sin tema.
+  let p = plan([canal('mr', m), canal('otro', { ...m, auto: false })], [{ video_id: 'v1', canal_id: 'mr', estado: 'publicado', createdAt: ahora }], [{ video_id: 'v1', usd: 1.6 }]);
+  assert.strictEqual(p.pedidos.length, 1); assert.strictEqual(p.pedidos[0].evento, 'nuevo_video'); assert.strictEqual(p.pedidos[0].tema, '');
+  assert.strictEqual(p.pedidos[0].formato, 'short'); assert.match(p.texto, /2\/4/);
+  // Tope: 8.5 gastados + 2.5 de un Short > 10.
+  p = plan([canal('mr', m)], [{ video_id: 'v1', canal_id: 'mr', estado: 'publicado', createdAt: ahora }], [{ video_id: 'v1', usd: 8.5 }]);
+  assert.strictEqual(p.pedidos.length, 0); assert.match(p.texto, /tope semanal/);
+  // Uno en curso: espera.
+  p = plan([canal('mr', m)], [{ video_id: 'v1', canal_id: 'mr', estado: 'en_proceso', createdAt: ahora }], []);
+  assert.strictEqual(p.pedidos.length, 0); assert.match(p.texto, /en curso/);
+  // Freno de calidad: 3 últimos con retención media bajo la meta.
+  const malos = [1, 2, 3].map(i => ({ video_id: 'v' + i, canal_id: 'mr', estado: 'publicado', createdAt: ahora, retencion_media: 0.3 }));
+  p = plan([canal('mr', m)], malos, []);
+  assert.strictEqual(p.pedidos.length, 0); assert.match(p.texto, /freno de calidad/);
+  // Meta cumplida.
+  p = plan([canal('mr', { ...m, videos_semana: 3 })], malos.map(v => ({ ...v, retencion_media: 0.7 })), []);
+  assert.match(p.texto, /meta cumplida/);
+  // Sin canales en automático: nada.
+  assert.strictEqual(plan([canal('otro', { ...m, auto: false })], [], []).nada, true);
+});
+
+test('aprender: guarda la retención media de cada video medido', () => {
+  const AP = wf('FabAprendizaje01');
+  const r = run(codeOf(AP, 'Retención media'), { all: { 'Pedidos de retención': [{ video_id: 'v1' }, { video_id: 'v2' }], $input: [{ rows: [[0.1, 0.9], [0.5, 0.5], [1, 0.1]] }, { error: 'x' }] } });
+  assert.deepStrictEqual(r.map(i => i.json), [{ video_id: 'v1', retencion_media: 0.5 }]);
+});
+
+test('telegram: todos los mensajes van en HTML escapado (un «_» o «<» ya no rompe el envío ni detiene el flujo)', () => {
+  let n = 0;
+  for (const f of fs.readdirSync(dir).filter(x => x.endsWith('.json'))) for (const nd of wf(f.replace('.json', '')).nodes.filter(x => x.type === 'n8n-nodes-base.telegram')) {
+    n++; assert.strictEqual(nd.parameters.additionalFields.parse_mode, 'HTML', f + ' · ' + nd.name);
+    const t = nd.parameters.text;
+    if (nd.name !== 'Avisar error' && t.startsWith('=')) assert.match(t, /^=\{\{ String\(.*\.replace\(\/&\/g, '&amp;'\)\.replace\(\/<\/g, '&lt;'\)\.replace\(\/>\/g, '&gt;'\) \}\}$/s, f + ' · ' + nd.name);
+  }
+  assert.ok(n > 30);
 });
