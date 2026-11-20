@@ -53,6 +53,7 @@ export function estado(user: User) {
         status: assets.status,
         simulated: assets.simulated,
         consentAt: assets.consentAt,
+        consentRevokedAt: assets.consentRevokedAt,
         syncError: assets.syncError,
         retryable:
           sql<boolean>`${assets.provider} = 'heygen' AND ${assets.providerId} = '' AND ${assets.verified} = 1`.mapWith(

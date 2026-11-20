@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Un ítem por plano. Gemini TTS lee el texto al pie de la letra: la actuación va aparte, en «style»\n// (emoción y ritmo de todo el plano) y en etiquetas <short pause>/<long pause>; el énfasis, en MAYÚSCULAS.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst b = e.biblia || {}; const voz = b.voz || {};\nconst base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join(', ') || 'narrador de documental, voz grave y cercana, ritmo ágil';\nconst ESTILO = { 'susurro': 'en voz baja, casi un susurro', 'suspenso': 'con suspenso contenido', 'urgencia': 'con urgencia' };\nconst planos = (e.planos || []).filter(p => p.plano?.texto_narrado);\nreturn planos.map(p => {\n  const t = String(p.plano.texto_narrado);\n  const extra = [...t.matchAll(/\\[([^\\]]{1,30})\\]/g)].map(m => ESTILO[m[1].toLowerCase()]).filter(Boolean);\n  const texto = t\n    .replace(/\\[(?:énfasis|enfasis)\\]\\s*([^\\s.,;:!?…]+)/gi, (_, w) => w.toLocaleUpperCase('es'))\n    .replace(/\\[pausa larga\\]/gi, ' <long pause> ').replace(/\\[pausa\\]/gi, ' <short pause> ')\n    .replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/\\s{2,}/g, ' ').trim();\n  const estilo = [base, p.plano.emocion ? 'con ' + p.plano.emocion : '', ...extra, `en ${b.idioma || 'español latino neutro'}`].filter(Boolean).join(', ');\n  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: voz.gemini_voice || aj.vozGemini } };\n});\n"
+        "jsCode": "// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n\n// Un ítem por plano. Gemini TTS lee el texto al pie de la letra: la actuación va aparte, en «style»\n// (emoción y ritmo de todo el plano) y en etiquetas <short pause>/<long pause>; el énfasis, en MAYÚSCULAS.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst b = e.biblia || {}; const voz = b.voz || {};\nconst presentacion = validarPresentacion(e.presentacion);\nif (presentacion && !aj.allowVoz) throw new Error('La voz está desactivada');\nconst base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join(', ') || 'narrador de documental, voz grave y cercana, ritmo ágil';\nconst ESTILO = { 'susurro': 'en voz baja, casi un susurro', 'suspenso': 'con suspenso contenido', 'urgencia': 'con urgencia' };\nconst planos = (e.planos || []).filter(p => p.plano?.texto_narrado);\nreturn planos.map(p => {\n  const t = String(p.plano.texto_narrado);\n  const extra = [...t.matchAll(/\\[([^\\]]{1,30})\\]/g)].map(m => ESTILO[m[1].toLowerCase()]).filter(Boolean);\n  const texto = t\n    .replace(/\\[(?:énfasis|enfasis)\\]\\s*([^\\s.,;:!?…]+)/gi, (_, w) => w.toLocaleUpperCase('es'))\n    .replace(/\\[pausa larga\\]/gi, ' <long pause> ').replace(/\\[pausa\\]/gi, ' <short pause> ')\n    .replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/\\s{2,}/g, ' ').trim();\n  const estilo = [base, p.plano.emocion ? 'con ' + p.plano.emocion : '', ...extra, `en ${b.idioma || 'español latino neutro'}`].filter(Boolean).join(', ');\n  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: presentacion?.voz?.id || voz.gemini_voice || aj.vozGemini, proveedor: presentacion?.voz?.proveedor || 'gemini', presentacion, costo_voz_usd: costoVozPresentacion(texto, presentacion, aj) } };\n});\n"
       },
       "id": "120ad781-dac8-4bf9-b84d-30ddb32b0a81",
       "name": "Textos de voz",
@@ -90,7 +90,6 @@
           "name": "Gemini (Veo)"
         }
       },
-      "retryOnFail": true,
       "maxTries": 5,
       "waitBetweenTries": 5000
     },
@@ -226,7 +225,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const w = $('WAV').item.json; return { json: { plano_id: w.plano_id, duracion_s: w.duracion_s, palabras_por_minuto: w.palabras_por_minuto, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir voz a Drive').item.json.id } };"
+        "jsCode": "const w = $('WAV').item.json; return { json: { plano_id: w.plano_id, costo_voz_usd:w.costo_voz_usd, duracion_s: w.duracion_s, palabras_por_minuto: w.palabras_por_minuto, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir voz a Drive').item.json.id } };"
       },
       "id": "af378e61-6e00-4e26-8a67-bcc9ac4444f2",
       "name": "Voz lista",
@@ -239,14 +238,12 @@
     },
     {
       "parameters": {
-        "aggregate": "aggregateAllItemData",
-        "destinationFieldName": "voces",
-        "options": {}
+        "jsCode": "\nconst ids=$('Textos de voz').all().map(i=>i.json.plano_id), voces=new Map();\nfor (const name of ['Voz lista','Voz HeyGen lista']) {\n  if (!$(name).isExecuted) continue;\n  for(let k=0;k<500;k++) { let items; try {items=$(name).all(0,k);} catch {break;} if (!items?.length) break;\n    for (const i of items) voces.set(i.json.plano_id,i.json); }\n}\nif (!ids.length || ids.some(id=>!voces.has(id))) return [];\nreturn [{json:{voces:ids.map(id=>voces.get(id))}}];\n"
       },
       "id": "c39cf5a5-d0db-4bad-aa32-9ad7ce8a5d82",
       "name": "Juntar voces",
-      "type": "n8n-nodes-base.aggregate",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         2200,
         0
@@ -772,6 +769,419 @@
     },
     {
       "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ ({gemini:0,heygen:1,elevenlabs:2})[$json.proveedor] }}"
+      },
+      "id": "fe065184-0c7f-56db-bb0d-3a0347b3af78",
+      "name": "Proveedor de voz",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heygen.com/v3/models/audio/tts",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {voice_id:$json.voz,text:$json.texto.replace(/<[^>]+>/g, ''),language:'es'} }}"
+      },
+      "id": "7522b4b5-9427-59a9-8f2a-9c5b3442b3df",
+      "name": "Voz (HeyGen)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredHeyGen001",
+          "name": "HeyGen (x-api-key)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst p=$('Textos de voz').item.json, d=$json.data;\nif (!d || !/^https:\\/\\//.test(d.audio_url) || !Number.isFinite(d.duration) || d.duration <= 0) throw new Error('HeyGen no devolvió audio válido');\nreturn {json:{plano_id:p.plano_id,url:d.audio_url,duracion_s:d.duration,costo_voz_usd:p.costo_voz_usd,\n  palabras_por_minuto:Math.round(p.texto.split(/\\s+/).length/d.duration*60)}};\n"
+      },
+      "id": "fdbcc5c6-5342-5047-a167-7cd4a9468faf",
+      "name": "Voz HeyGen lista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://api.elevenlabs.io/v1/text-to-speech/' + encodeURIComponent($json.voz) + '/with-timestamps?output_format=pcm_24000' }}",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {text:$json.texto.replace(/<[^>]+>/g, ''),model_id:'eleven_multilingual_v2'} }}"
+      },
+      "id": "44ac67ec-bc17-52cf-add5-56188bcd54eb",
+      "name": "Voz (ElevenLabs)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredEleven001",
+          "name": "ElevenLabs (xi-api-key)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nif (typeof $json.audio_base64 !== 'string' || !$json.audio_base64) throw new Error('ElevenLabs no devolvió audio');\nreturn {json:{steps:[{type:'model_output',content:[{type:'audio',mime_type:'audio/l16;rate=24000',data:$json.audio_base64}]}]}};\n"
+      },
+      "id": "2d985ada-5c36-5ea8-83c7-0e2ae52528c6",
+      "name": "PCM ElevenLabs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "73abca15-bec0-5143-8552-88b29760b846",
+      "name": "Presentación · Voz (Gemini TTS) entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"voz\"}, pairedItem:{item:k}}));"
+      },
+      "id": "ef97214b-7c73-584f-9498-1b7329216ca9",
+      "name": "Presentación · Voz (Gemini TTS) consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "2f702d65-ab1e-5d12-9b31-bc346fb449d1",
+      "name": "Presentación · Voz (Gemini TTS) validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Voz (Gemini TTS) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "5ff18f18-0217-5a73-a794-9a7c7d0a9d80",
+      "name": "Presentación · Voz (Gemini TTS) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "b07dde12-7934-5768-a4a1-3293a4d5aecc",
+      "name": "Presentación · Voz (HeyGen) entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"voz\"}, pairedItem:{item:k}}));"
+      },
+      "id": "65e59299-715e-540c-89d0-c01a5e1ec4be",
+      "name": "Presentación · Voz (HeyGen) consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "1c839786-3168-5886-9a54-b8e93d64cf63",
+      "name": "Presentación · Voz (HeyGen) validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Voz (HeyGen) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "9f64197e-e8e0-5565-9540-78083c5bd195",
+      "name": "Presentación · Voz (HeyGen) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "77939ced-cfc0-5f06-8433-9b8280c9a9a6",
+      "name": "Presentación · Voz (ElevenLabs) entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"voz\"}, pairedItem:{item:k}}));"
+      },
+      "id": "abe0f718-ffce-54ec-ba95-71ab076c7c36",
+      "name": "Presentación · Voz (ElevenLabs) consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "7efa6174-f7b4-5a70-9800-f59bfb3f3786",
+      "name": "Presentación · Voz (ElevenLabs) validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Voz (ElevenLabs) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "0ee97cea-e3e7-5179-af12-38effdba5f10",
+      "name": "Presentación · Voz (ElevenLabs) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"voz\", servicio:\"HeyGen\", usd:$('Textos de voz').itemMatching(k).json.costo_voz_usd, estimado:true, paso_id:String($execution.id)+':'+\"Voz (HeyGen)\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "0fa887c3-fcd1-5693-a02b-b872f8795e05",
+      "name": "Cooper · costo Voz (HeyGen)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "b985f0d5-9012-5232-95fc-298a93808b96",
+      "name": "Cooper · costo Voz (HeyGen) registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Voz (HeyGen)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "96537bbe-1bb8-5a74-9652-863bd6acca18",
+      "name": "Cooper · costo Voz (HeyGen) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"voz\", servicio:\"ElevenLabs\", usd:$('Textos de voz').itemMatching(k).json.costo_voz_usd, estimado:true, paso_id:String($execution.id)+':'+\"Voz (ElevenLabs)\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "f51a82b4-e20f-5562-953d-79045d4ad69b",
+      "name": "Cooper · costo Voz (ElevenLabs)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f7998788-9d8a-5706-a521-4bdc60bc9ffa",
+      "name": "Cooper · costo Voz (ElevenLabs) registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Voz (ElevenLabs)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "7e614c18-61f6-5668-8084-a0072370f624",
+      "name": "Cooper · costo Voz (ElevenLabs) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"voz\", servicio:\"Gemini TTS\", usd:aj.costoVozUsdPorPlano, estimado:true, paso_id:String($execution.id)+':'+\"Voz (Gemini TTS)\"+':'+$runIndex+':'+k }}));"
       },
       "id": "173973dd-0785-5453-93aa-a9cdf072b033",
@@ -937,6 +1347,32 @@
     },
     {
       "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Voz (HeyGen) registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "2ad53c3d-dc5e-5f40-9cc5-c8ad2a7b0439",
+      "name": "Cooper · identificar Cooper · costo Voz (HeyGen) registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Voz (ElevenLabs) registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "6ecaa0db-25c7-5ea1-a7c3-d86e05294bbe",
+      "name": "Cooper · identificar Cooper · costo Voz (ElevenLabs) registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Voz (Gemini TTS) registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
       },
       "id": "e73f787a-eacb-5588-9494-30e159ec37a4",
@@ -944,7 +1380,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        220,
+        660,
         0
       ]
     },
@@ -957,7 +1393,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
+        880,
         0
       ]
     },
@@ -970,7 +1406,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        660,
+        1100,
         0
       ]
     }
@@ -1002,7 +1438,7 @@
       "main": [
         [
           {
-            "node": "Voz (Gemini TTS)",
+            "node": "Proveedor de voz",
             "type": "main",
             "index": 0
           }
@@ -1283,6 +1719,273 @@
         ]
       ]
     },
+    "Proveedor de voz": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (Gemini TTS) entrada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Presentación · Voz (HeyGen) entrada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Presentación · Voz (ElevenLabs) entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voz (HeyGen)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (HeyGen)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voz HeyGen lista": {
+      "main": [
+        [
+          {
+            "node": "Juntar voces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voz (ElevenLabs)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (ElevenLabs)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PCM ElevenLabs": {
+      "main": [
+        [
+          {
+            "node": "WAV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (Gemini TTS) entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (Gemini TTS) consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (Gemini TTS) consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (Gemini TTS) validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (Gemini TTS) validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (Gemini TTS) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (Gemini TTS) seguir": {
+      "main": [
+        [
+          {
+            "node": "Voz (Gemini TTS)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (HeyGen) entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (HeyGen) consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (HeyGen) consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (HeyGen) validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (HeyGen) validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (HeyGen) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (HeyGen) seguir": {
+      "main": [
+        [
+          {
+            "node": "Voz (HeyGen)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (ElevenLabs) entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (ElevenLabs) consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (ElevenLabs) consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (ElevenLabs) validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (ElevenLabs) validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Voz (ElevenLabs) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Voz (ElevenLabs) seguir": {
+      "main": [
+        [
+          {
+            "node": "Voz (ElevenLabs)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (HeyGen)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Voz (HeyGen) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (HeyGen) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (HeyGen) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (HeyGen) seguir": {
+      "main": [
+        [
+          {
+            "node": "Voz HeyGen lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (ElevenLabs)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Voz (ElevenLabs) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (ElevenLabs) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (ElevenLabs) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (ElevenLabs) seguir": {
+      "main": [
+        [
+          {
+            "node": "PCM ElevenLabs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Cooper · costo Voz (Gemini TTS)": {
       "main": [
         [
@@ -1376,6 +2079,28 @@
         [
           {
             "node": "Efecto listo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Voz (HeyGen) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (HeyGen) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Voz (ElevenLabs) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (ElevenLabs) registrar",
             "type": "main",
             "index": 0
           }

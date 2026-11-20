@@ -628,6 +628,74 @@
     },
     {
       "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "64856c86-cb90-55f4-b400-8ac39343f8f4",
+      "name": "Presentación · Subir a redes entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"cola\"}, pairedItem:{item:k}}));"
+      },
+      "id": "e4d763b2-731c-54cd-9379-9be9275aa9ab",
+      "name": "Presentación · Subir a redes consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "bdcba602-d7c9-5633-a054-d4c4897fb4be",
+      "name": "Presentación · Subir a redes validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Subir a redes entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "24b8a421-cc07-5369-a367-9d752f7f1a11",
+      "name": "Presentación · Subir a redes seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Marcar publicado\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "5b2dcb41-9f91-5e55-9581-bf7f0a1b300a",
@@ -758,7 +826,7 @@
       "main": [
         [
           {
-            "node": "Subir a redes",
+            "node": "Presentación · Subir a redes entrada",
             "type": "main",
             "index": 0
           }
@@ -866,6 +934,50 @@
         [
           {
             "node": "Aviso: publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Subir a redes entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Subir a redes consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Subir a redes consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Subir a redes validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Subir a redes validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Subir a redes seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Subir a redes seguir": {
+      "main": [
+        [
+          {
+            "node": "Subir a redes",
             "type": "main",
             "index": 0
           }

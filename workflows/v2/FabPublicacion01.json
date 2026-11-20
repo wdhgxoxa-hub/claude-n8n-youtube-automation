@@ -301,6 +301,74 @@
     },
     {
       "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "dcf79458-c8ad-5f18-980f-61028251da99",
+      "name": "Presentación · Aprobación final entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"cola\"}, pairedItem:{item:k}}));"
+      },
+      "id": "1d25056b-f614-59ec-b429-5f39678ef37d",
+      "name": "Presentación · Aprobación final consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "2b52978a-03b0-5d8d-92b5-8dfdc3528421",
+      "name": "Presentación · Aprobación final validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Aprobación final entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "5ed56632-ff90-5ebd-a231-42c76b21af7b",
+      "name": "Presentación · Aprobación final seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Marcar fallas\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "47f14b6d-412e-5778-8e5a-9c3d972ac5f1",
@@ -481,6 +549,50 @@
       ]
     },
     "Cooper · Aprobación final seguir": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Aprobación final entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Aprobación final entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Aprobación final consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Aprobación final consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Aprobación final validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Aprobación final validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Aprobación final seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Aprobación final seguir": {
       "main": [
         [
           {

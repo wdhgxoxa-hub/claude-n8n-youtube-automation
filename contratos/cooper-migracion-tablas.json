@@ -2,12 +2,30 @@
   "version": "cooper-v1",
   "aplicar_automaticamente": false,
   "tablas": {
-    "fab_canales": { "dueno_email": "string", "eliminado": "boolean" },
-    "fab_videos": {
-      "dueno_email": "string", "eliminado": "boolean", "guion_cooper": "string",
-      "cooper_actualizado_en": "number", "cooper_evento_id": "string"
+    "fab_canales": {
+      "dueno_email": "string",
+      "eliminado": "boolean"
     },
-    "fab_trabajos": { "dueno_email": "string" },
-    "fab_costos": { "dueno_email": "string", "paso_id": "string", "estimado": "boolean" }
+    "fab_videos": {
+      "dueno_email": "string",
+      "eliminado": "boolean",
+      "guion_cooper": "string",
+      "cooper_actualizado_en": "number",
+      "cooper_evento_id": "string",
+      "presentacion": "string",
+      "cooper_orden_id": "string"
+    },
+    "fab_trabajos": {
+      "dueno_email": "string"
+    },
+    "fab_costos": {
+      "dueno_email": "string",
+      "paso_id": "string",
+      "estimado": "boolean"
+    },
+    "fab_planos": {
+      "presentacion": "string",
+      "usa_avatar": "boolean"
+    }
   }
 }

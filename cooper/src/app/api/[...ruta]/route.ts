@@ -33,6 +33,7 @@ import {
   eliminarMedio,
   reintentarMedio,
 } from "@/servicios/biblioteca";
+import { revocarConsentimiento } from "@/servicios/presentacion";
 import { validarArchivo } from "@/lib/archivos";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -257,6 +258,10 @@ async function handle(request: Request, context: Context) {
       }
       if (section === "activos" && !id)
         return json(await crearMedio(user, input));
+      if (section === "activos" && id && action === "revocar") {
+        revocarConsentimiento(user, id);
+        return json({ ok: true });
+      }
       if (section === "activos" && id && action === "reintentar") {
         await reintentarMedio(user, id);
         return json({ ok: true });
@@ -338,7 +343,12 @@ async function handle(request: Request, context: Context) {
           .from(assets)
           .where(eq(assets.id, id))
           .get()!;
-        if (parsed.shared && (!asset.verified || asset.status !== "listo"))
+        if (
+          parsed.shared &&
+          (!asset.verified ||
+            asset.status !== "listo" ||
+            asset.consentRevokedAt > 0)
+        )
           throw new ErrorHttp(
             409,
             "Espera a que tu creación esté lista para compartirla.",

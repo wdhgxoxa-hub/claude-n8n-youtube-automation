@@ -1,0 +1,497 @@
+{
+  "id": "FabPresentacion1",
+  "name": "FX · Validar presentación",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "c5d08029-3350-5201-b577-ffaa9c8bfaab",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "43cfbab0-5269-5850-bfaa-b7ac870ce0d9",
+      "name": "Video de presentación",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "de6e5468-e7cd-5a32-b0be-62ec0a2dbe28",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n\nconst e = $('Inicio').first().json, v = $('Video de presentación').first().json, aj = $('Leer ajustes').first().json;\nconst presentacion = validarPresentacion(JSON.parse(v.presentacion || 'null'));\nif (!v.video_id && e.presentacion) throw new Error('Falta el video persistido');\nif (!presentacion || !presentacion.avatar && !presentacion.voz) return [{json:{consultar:false}}];\nif (!v.cooper_orden_id || !v.dueno_email) throw new Error('Presentación sin orden autorizada');\nconst bloqueo = e.bloqueo || (presentacion.avatar && !aj.allowAvatar ? 'avatar_apagado' : !aj.allowVoz ? 'voz_apagada' :\n  ['medios','montaje'].includes(e.control) && (!aj.allowMontaje || !aj.allowDrive) ? 'produccion_pausada' : '');\nreturn [{json:{consultar:true, consulta:{version:'cooper-v1', tipo:'presentacion', orden_id:v.cooper_orden_id,\n  video_id:v.video_id, dueno_email:v.dueno_email, presentacion, bloqueo}}}];\n"
+      },
+      "id": "6966aac7-fa21-529a-974a-cdefbd6987a2",
+      "name": "Consulta de presentación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e541bfa2-3c46-5d7c-a2ac-8c791913e26d",
+              "leftValue": "={{ $json.consultar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cc208e7b-5021-5686-8b00-698e0893b7ef",
+      "name": "¿Consultar consentimiento?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst secret = String($env.COOPER_WEBHOOK_SECRET || '');\nif (secret.length < 32) throw new Error('Falta COOPER_WEBHOOK_SECRET');\nconst cuerpo = JSON.stringify($('Consulta de presentación').first().json.consulta), timestamp = String(Date.now());\nconst firma = require('crypto').createHmac('sha256', secret).update(timestamp + '.' + cuerpo).digest('hex');\nreturn [{ json: { cuerpo, timestamp, firma: 'sha256=' + firma } }];\n"
+      },
+      "id": "6eda64e5-2d8f-590a-91e8-76feea81eb3c",
+      "name": "Firmar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "24677950-7b09-5aa6-b838-dc9390b877d1",
+      "name": "Consultar Cooper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0c97c57e-abfd-5a4b-9d0f-61a4dd4de35b",
+              "leftValue": "={{ $json.permitido === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0f4d1243-fba8-5185-9162-6d6b128b2f5b",
+      "name": "¿Presentación permitida?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:$('Inicio').first().json}];"
+      },
+      "id": "d4167aac-bacf-5ae5-8200-a29b3721093d",
+      "name": "Conservar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$('Consultar Cooper').first().json; return [{json:{estado:r.estado === 'cancelada' ? 'cancelado' : 'detenido', error:r.aviso}}];"
+      },
+      "id": "ca82da64-c35b-592b-82ad-f18bbeafbbca",
+      "name": "Estado detenido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "63947f53-417f-5696-a18d-a433688cac76",
+      "name": "Guardar detención",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "throw new Error($('Consultar Cooper').first().json.aviso || 'Presentación detenida');"
+      },
+      "id": "2cc69893-2a84-5c28-85a4-ffafba1defe0",
+      "name": "Detener presentación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Guardar detención\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "cbe9bba4-30f6-5e2a-9929-b1e8b621823d",
+      "name": "Cooper · sello Guardar detención",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "149ac291-1f89-5b44-844d-756b2d86af90",
+      "name": "Cooper · sello Guardar detención aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Video de presentación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video de presentación": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Consulta de presentación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta de presentación": {
+      "main": [
+        [
+          {
+            "node": "¿Consultar consentimiento?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Consultar consentimiento?": {
+      "main": [
+        [
+          {
+            "node": "Firmar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Conservar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firmar consulta": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper": {
+      "main": [
+        [
+          {
+            "node": "¿Presentación permitida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Presentación permitida?": {
+      "main": [
+        [
+          {
+            "node": "Conservar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Estado detenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado detenido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Guardar detención",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar detención": {
+      "main": [
+        [
+          {
+            "node": "Guardar detención",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar detención aviso": {
+      "main": [
+        [
+          {
+            "node": "Detener presentación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar detención": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Guardar detención aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

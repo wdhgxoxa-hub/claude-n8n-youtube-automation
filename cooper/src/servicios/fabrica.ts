@@ -89,6 +89,16 @@ export function validarOrden(user: User, orden: Orden) {
         .where(eq(channels.id, orden.recursoId ?? ""))
         .get();
   requireOwn(user, resource);
+  if (
+    isVideo &&
+    resource &&
+    "productionState" in resource &&
+    resource.productionState === "cancelada"
+  )
+    throw new ErrorHttp(
+      409,
+      "El video se canceló por revocación del consentimiento.",
+    );
   if (orden.evento === "nuevo_video") {
     if (orden.avatarId) medioDisponible(user, orden.avatarId, "avatar");
     if (orden.voiceId) medioDisponible(user, orden.voiceId, "voz");
@@ -259,6 +269,7 @@ export class FabricaSimulada implements Fabrica {
             (process.env.COOPER_DEMO === "1" &&
               video.id === `demo-${user.id}-0` &&
               video.stage === 7) ||
+            video.productionState !== "activa" ||
             now - video.updatedAt < interval ||
             esperaAprobacion(video.stage) ||
             video.stage === 11
@@ -284,7 +295,11 @@ export class FabricaSimulada implements Fabrica {
       (tx) => {
         const video = tx.select().from(videos).where(eq(videos.id, id)).get();
         requireOwn(user, video);
-        if (!video || !esperaAprobacion(video.stage))
+        if (
+          !video ||
+          video.productionState === "cancelada" ||
+          !esperaAprobacion(video.stage)
+        )
           throw new ErrorHttp(
             409,
             "Este video todavía no necesita aprobación.",
@@ -397,7 +412,7 @@ export class FabricaN8n implements Fabrica {
         if (response.status === 422)
           throw new ErrorHttp(
             422,
-            "La fábrica todavía no admite ese presentador o voz. Crea el video sin presentación personalizada.",
+            "Ese avatar o voz es de demostración y aún no tiene un recurso de producción. Tu elección se conserva.",
           );
         if (!response.ok)
           throw new ErrorHttp(
@@ -494,7 +509,11 @@ export class FabricaN8n implements Fabrica {
   private async aprobarVideo(user: User, id: string) {
     const video = db().select().from(videos).where(eq(videos.id, id)).get();
     requireOwn(user, video);
-    if (!video || !esperaAprobacion(video.stage))
+    if (
+      !video ||
+      video.productionState === "cancelada" ||
+      !esperaAprobacion(video.stage)
+    )
       throw new ErrorHttp(409, "No hay una aprobación pendiente.");
     const event = video.stage === 3 ? "aprobar_guion" : "aprobar_final";
     if (

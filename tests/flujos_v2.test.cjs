@@ -6,7 +6,7 @@ const dir = path.join(__dirname, '..', 'workflows', 'v2');
 const wf = id => JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8'));
 const codeOf = (w, name) => w.nodes.find(n => n.name === name).parameters.jsCode;
 
-function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {} } = {}) {
+function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {}, runIndex = 0 } = {}) {
   // Simula el entorno de un nodo Code de n8n: $('Nodo') con first/last/item/all/isExecuted, $json, $input.
   const $ = name => ({
     first: () => ({ json: nodes[name] }), last: () => ({ json: nodes[name] }), item: { json: nodes[name] },
@@ -18,7 +18,7 @@ function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, e
   });
   const $input = { all: () => (all.$input || [json]).map(j => ({ json: j })), item: { json, binary } };
   const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', '$env', 'require', '$runIndex', js);
-  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { id:'ejecucion-prueba', resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' }, env, require, 0);
+  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { id:'ejecucion-prueba', resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' }, env, require, runIndex);
   return Array.isArray(r) ? r : [r];
 }
 
@@ -1313,13 +1313,211 @@ test('Cooper: cada clip se cobra con su duración y cada gasto conserva el ID em
   assert.strictEqual(run(stamp,{json:once})[0].json.paso_id,once.paso_id);
 });
 
-test('Integración: la fábrica rechaza una presentación que aún no puede renderizar', () => {
-  for (const proveedor of ['simulada', 'heygen']) {
+test('Integración: la fábrica sigue rechazando los recursos de demostración', () => {
+  for (const proveedor of ['simulada']) {
     const out = resolverCooper(solicitudCooper('nuevo_video', {
       id: 'video-presentador', recursoId: 'c-ana', texto: 'Ensayo',
       presentacion: { version: 1, presencia: 'completo', avatar: { proveedor, id: 'ficticio', recurso_id: 'local', tipo: 'propio' }, voz: null },
     }));
     assert.strictEqual(out.status, 422);
     assert.strictEqual(out.accion, 'responder');
+  }
+});
+
+const presentacionReal = (presencia = 'partes', proveedor = 'gemini') => ({version:1,presencia,
+  avatar:{recurso_id:'avatar-local',proveedor:'heygen',id:'look-elegido',tipo:'propio'},
+  voz:{recurso_id:'voz-local',proveedor,id:proveedor === 'gemini' ? 'Charon' : 'voz-clonada',tipo:proveedor === 'gemini' ? 'catalogo' : 'propio'}});
+const encendido = {...aj,allowAvatar:true,allowVoz:true,allowMontaje:true,allowDrive:true,allowImagenes:true};
+const planPresentacion = (p, cambios = {}, ajustes = encendido) => run(codeOf(PROD,'Plan de producción'),{nodes:{Inicio:{video_id:'v-ana',formato:'largo',presupuesto_usd:20,
+  presentacion:p,storyboard:{planos:storyboard.planos.map((p,i)=>({...p,tipo:'imagen',usa_avatar:i===0}))},...cambios},'Leer ajustes':ajustes}})[0].json;
+const expNodo = (flow,name,key,ctx) => {
+  const expr=flow.nodes.find(n=>n.name===name).parameters[key];
+  return run('return {json:('+expr.slice(3,-2)+')};',ctx)[0].json;
+};
+
+test('presentación: FX valida referencias, conserva la orden y no acepta simulados ni contratos incompletos', () => {
+  const p=presentacionReal();
+  const request=solicitudCooper('nuevo_video',{id:'v-presentacion',recursoId:'c-ana',texto:'Ensayo',presentacion:p});
+  const out=resolverCooper(request);
+  assert.strictEqual(out.status,200); assert.deepStrictEqual(out.evento.presentacion,p);
+  assert.strictEqual(out.evento.cooper_orden_id,request.id_evento);
+  for (const bad of [{...p,version:2},{...p,avatar:{...p.avatar,proveedor:'gemini'}},{...p,voz:{...p.voz,tipo:'propio'}},{...p,evidencia:'privada'}])
+    assert.strictEqual(resolverCooper({...request,datos:{...request.datos,presentacion:bad}}).status,400);
+  assert.strictEqual(resolverCooper({...request,datos:{...request.datos,presentacion:undefined,avatarId:'sin-resolver'}}).status,422);
+});
+
+test('presentación: nuevo video persiste el contrato y se recupera para storyboard, corrección y producción', () => {
+  const p=presentacionReal(),e={video_id:'v-ana',canal_id:'c-ana',tema:'Ensayo',presentacion:p,cooper_orden_id:'orden'};
+  const nuevo=run(codeOf(ORQ,'Nuevo video'),{nodes:{Inicio:e,'Buscar canal':{canal_id:'c-ana',dueno_email:'ana@example.test'},'Buscar biblia':{resultado:'{}'}}})[0].json;
+  assert.deepStrictEqual(JSON.parse(nuevo.fila.presentacion),p);assert.strictEqual(nuevo.fila.cooper_orden_id,'orden');
+  assert.deepStrictEqual(nuevo.pedido.datos.presentacion,p);
+  for (const [name,v,b,c] of [['Pedir storyboard','Video','Biblia del video','Canal del video'],['Pedir storyboard corregido','Video (rehacer)','Biblia (rehacer)','Canal (rehacer)']]) {
+    const out=run(codeOf(ORQ,name),{nodes:{Inicio:e,[v]:{presentacion:JSON.stringify(p),presupuesto_usd:5},[b]:{resultado:'{}'},[c]:{},'Leer ajustes':aj}})[0].json;
+    assert.deepStrictEqual(out.datos.presentacion,p);assert.match(out.datos.presentacion_instrucciones,/usa_avatar/);
+  }
+  const out=run(codeOf(ORQ,'Encargo de producción'),{nodes:{Inicio:e,'Video (producción)':{presentacion:JSON.stringify(p)},'Biblia (producción)':{resultado:'{}'}},all:{'Trabajos (producción)':[]}})[0].json;
+  assert.deepStrictEqual(out.presentacion,p);
+});
+
+test('presentación: completo cubre todas las narraciones; partes respeta el subconjunto del storyboard', () => {
+  const full=planPresentacion(presentacionReal('completo'));
+  assert.deepStrictEqual(full.planos.map(p=>p.tipo),['avatar','avatar']);
+  const part=planPresentacion(presentacionReal());
+  assert.deepStrictEqual(part.planos.map(p=>p.tipo),['avatar','imagen']);
+  assert.deepStrictEqual(part.planos[0].presentacion,part.presentacion);
+  assert.throws(()=>planPresentacion(presentacionReal(),{storyboard:{planos:storyboard.planos}}),/solo algunas/);
+  assert.throws(()=>planPresentacion({...presentacionReal(),avatar:null},{storyboard:{planos:[{id:'p',tipo:'avatar',texto_narrado:'Hola'}]}}),/sin presentación/);
+});
+
+test('presentación: interruptores y presupuesto cero paran sin perder la elección', () => {
+  const p=presentacionReal();
+  for (const [settings,bloqueo] of [[{allowAvatar:false},'avatar_apagado'],[{allowVoz:false},'voz_apagada'],[{allowMontaje:false},'produccion_pausada']]) {
+    const out=planPresentacion(p,{}, {...encendido,...settings});assert.strictEqual(out.bloqueo,bloqueo);assert.deepStrictEqual(out.presentacion,p);
+  }
+  const out=planPresentacion(p,{presupuesto_usd:0});assert.strictEqual(out.bloqueo,'presupuesto');assert.strictEqual(out.dentro,false);
+  assert.deepStrictEqual(out.presentacion,p);
+});
+
+test('presentación: cada voz usa su transporte y el catálogo usa Ajustes.modeloVoz', async () => {
+  const calls=[];
+  const fake=async (url,body) => {calls.push({url,body});return {data:{audio_url:'https://media.example.test/voz.wav',duration:2}};};
+  for (const proveedor of ['gemini','heygen','elevenlabs']) {
+    const p=presentacionReal('completo',proveedor),plan=planPresentacion(p);
+    const textos=run(codeOf(SON,'Textos de voz'),{nodes:{Inicio:{video_id:'v-ana',presentacion:p,planos:plan.planos.map(plano=>({plano,plano_id:plano.id}))},'Leer ajustes':encendido}});
+    assert.strictEqual(textos.length,2);
+    for (const {json:t} of textos) {assert.strictEqual(t.voz,p.voz.id);assert.strictEqual(t.proveedor,proveedor);}
+    const name={gemini:'Voz (Gemini TTS)',heygen:'Voz (HeyGen)',elevenlabs:'Voz (ElevenLabs)'}[proveedor];
+    const node=SON.nodes.find(n=>n.name===name),ctx={json:textos[0].json,nodes:{'Leer ajustes':{...encendido,modeloVoz:'modelo-configurado'}}};
+    const body=expNodo(SON,name,'jsonBody',ctx);
+    const url=node.parameters.url.startsWith('=') ? expNodo(SON,name,'url',ctx) : node.parameters.url;
+    await fake(url,body);
+    assert.ok(!node.retryOnFail,'No repetir síntesis incierta');
+    if(proveedor==='gemini'){assert.strictEqual(body.model,'modelo-configurado');assert.strictEqual(body.generation_config.speech_config[0].voice,'Charon');}
+    if(proveedor==='heygen'){assert.strictEqual(body.voice_id,'voz-clonada');assert.ok(!body.text.includes('<short pause>'));}
+    if(proveedor==='elevenlabs'){assert.match(url,/voz-clonada\/with-timestamps\?output_format=pcm_24000$/);assert.strictEqual(body.model_id,'eleven_multilingual_v2');}
+  }
+  assert.strictEqual(calls.length,3);
+});
+
+test('presentación: PCM ElevenLabs se mide como WAV y HeyGen exige duración acreditada', () => {
+  const pcm=Buffer.alloc(48000);for(let i=0;i<24000;i++)pcm.writeInt16LE(2000,i*2);
+  const normal=run(codeOf(SON,'PCM ElevenLabs'),{json:{audio_base64:pcm.toString('base64')}})[0].json;
+  const w=run(codeOf(SON,'WAV'),{json:normal,nodes:{'Textos de voz':{plano_id:'p1',texto:'Hola',proveedor:'elevenlabs'}}})[0];
+  assert.ok(Math.abs(w.json.duracion_s-1)<0.01);assert.strictEqual(w.binary.archivo.mimeType,'audio/wav');
+  assert.throws(()=>run(codeOf(SON,'Voz HeyGen lista'),{json:{data:{audio_url:'https://a'}},nodes:{'Textos de voz':{}}}),/audio válido/);
+});
+
+test('presentación: HeyGen recibe look y la voz elegida, sondeo acotado y errores sin montaje', () => {
+  const av=wf('FabAvatar0000001'),p=presentacionReal(),e={video_id:'v-ana',plano:{id:'p1',tipo:'avatar'},presentacion:p,formato:'short',voz:{url:'https://audio.example.test/elegida.wav',duracion_s:4}};
+  const request=run(codeOf(av,'Pedido de avatar'),{nodes:{Inicio:e,'Leer ajustes':encendido}})[0].json;
+  assert.deepStrictEqual(request,{type:'avatar',avatar_id:'look-elegido',audio_url:e.voz.url,resolution:'1080p',aspect_ratio:'9:16'});
+  assert.ok(!request.voice_id);assert.ok(!request.script);
+  assert.throws(()=>run(codeOf(av,'Trabajo avatar'),{json:{data:{id:'no-video-id'}}}),/trabajo/);
+  assert.strictEqual(run(codeOf(av,'Estado avatar'),{json:{data:{status:'processing'}}})[0].json.status,'processing');
+  assert.throws(()=>run(codeOf(av,'Estado avatar'),{json:{data:{status:'failed'}}}),/falló/);
+  assert.throws(()=>run(codeOf(av,'Estado avatar'),{json:{data:{status:'processing'}},runIndex:80}),/conciliar/);
+  assert.throws(()=>run(codeOf(av,'Estado avatar'),{json:{data:{status:'completed'}}}),/sin video/);
+  const result=run(codeOf(av,'Avatar listo'),{nodes:{Inicio:e,'Estado avatar':{id:'remote',video_url:'https://video.example.test/a.mp4',duration:4},'Leer ajustes':encendido}})[0].json;
+  assert.strictEqual(result.costo_avatar_usd,4*aj.costoAvatarSegUsd);assert.strictEqual(result.plano_id,'p1');
+});
+
+test('presentación: montaje usa videos solo en planos avatar y una sola voz por escena', () => {
+  for(const presencia of ['completo','partes']) {
+    const plan=planPresentacion(presentacionReal(presencia));
+    const planos=plan.planos.map(p=>({plano_id:p.id,plano:p,url:`https://media.example.test/${p.id}.${p.tipo==='avatar'?'mp4':'png'}`}));
+    const voces=plan.planos.map(p=>({plano_id:p.id,url:`https://media.example.test/${p.id}.wav`,duracion_s:3}));
+    const out=run(codeOf(PROD,'Composición Creatomate'),{json:{voces,planos},nodes:{'Plan de producción':plan}})[0].json;
+    const scenes=out.source.elements.filter(e=>e.type==='composition');assert.strictEqual(scenes.length,2);
+    assert.deepStrictEqual(scenes.map(e=>e.elements[0].type),presencia==='completo'?['video','video']:['video','image']);
+    for(const e of scenes){assert.strictEqual(e.elements.filter(x=>x.type==='audio').length,1);if(e.elements[0].type==='video'){assert.strictEqual(e.elements[0].volume,'0%');assert.strictEqual(e.elements[0].loop,false);}}
+    assert.throws(()=>run(codeOf(PROD,'Composición Creatomate'),{json:{voces,planos:planos.slice(1)},nodes:{'Plan de producción':plan}}),/Faltan/);
+  }
+});
+
+test('presentación: el costo real de la duración de voz se comprueba antes de pedir avatares', () => {
+  const plan=planPresentacion(presentacionReal('completo'),{presupuesto_usd:1});
+  const out=run(codeOf(PROD,'Preparar avatares'),{nodes:{'Plan de producción':plan,'Leer ajustes':encendido,'Gasto de planos':{usd:0},'Sonido y emoción':{voces:plan.planos.map(p=>({plano_id:p.id,url:'https://audio.example.test/a',duracion_s:20,costo_voz_usd:0.01}))}}})[0].json;
+  assert.strictEqual(out.bloqueo,'presupuesto');assert.strictEqual(out.pedidos.length,2);
+});
+
+test('presentación: consulta firmada usa la selección persistida y parada corta el grafo', () => {
+  const v=wf('FabPresentacion1'),p=presentacionReal();
+  const context={nodes:{Inicio:{video_id:'v-ana'},'Video de presentación':{video_id:'v-ana',cooper_orden_id:'orden',dueno_email:'ana@example.test',presentacion:JSON.stringify(p)},'Leer ajustes':encendido}};
+  const out=run(codeOf(v,'Consulta de presentación'),context)[0].json;
+  assert.deepStrictEqual(out.consulta.presentacion,p);assert.strictEqual(out.consulta.orden_id,'orden');
+  context.nodes['Leer ajustes']={...encendido,allowAvatar:false};
+  assert.strictEqual(run(codeOf(v,'Consulta de presentación'),context)[0].json.consulta.bloqueo,'avatar_apagado');
+  const stop=run(codeOf(v,'Estado detenido'),{nodes:{'Consultar Cooper':{estado:'cancelada',aviso:'Consentimiento revocado'}}})[0].json;
+  assert.strictEqual(stop.estado,'cancelado');
+  assert.throws(()=>run(codeOf(v,'Detener presentación'),{nodes:{'Consultar Cooper':{aviso:'Consentimiento revocado'}}}),/revocado/);
+  for (const [flow,destinos] of [[PROD,['Renderizar','¿Todo encendido?','¿Hay avatares?']],[SON,['Voz (Gemini TTS)','Voz (HeyGen)','Voz (ElevenLabs)']],[wf('FabAvatar0000001'),['Crear avatar','Consultar avatar','Avatar listo']]]) {
+    for(const destino of destinos){const p='Presentación · '+destino;assert.ok(flow.nodes.some(n=>n.name===p+' validar'));
+      const parents=Object.entries(flow.connections).filter(([,k])=>k.main?.flat().some(e=>e.node===destino)).map(([name])=>name);
+      assert.deepStrictEqual(parents,[p+' seguir']);}
+  }
+});
+
+test('presentación: gastos de avatar y cada voz se atribuyen al dueño y son idempotentes por paso', () => {
+  const av=wf('FabAvatar0000001'),cost=wf('FabCooperCosto01');
+  for(const [flow,name,extra,all] of [[av,'Crear avatar',{voz:{duracion_s:5}},{}],[SON,'Voz (HeyGen)',{}, {'Textos de voz':[{costo_voz_usd:0.2}]}],[SON,'Voz (ElevenLabs)',{}, {'Textos de voz':[{costo_voz_usd:0.3}]}]]) {
+    const ctx={nodes:{Inicio:{video_id:'v-ana',...extra},'Leer ajustes':encendido},all};
+    const c=run(codeOf(flow,'Cooper · costo '+name),ctx)[0].json;
+    assert.ok(c.usd>0);assert.strictEqual(c.paso_id,run(codeOf(flow,'Cooper · costo '+name),ctx)[0].json.paso_id);
+    const row=run(codeOf(cost,'Costo atribuido'),{nodes:{Inicio:c,'Video del costo':{dueno_email:'ana@example.test'},'Canal del costo':{dueno_email:'ana@example.test'}}})[0].json;
+    assert.strictEqual(row.dueno_email,'ana@example.test');assert.strictEqual(row.estimado,true);
+  }
+});
+
+test('presentación: contrato completo con transportes ficticios de voz, avatar y montaje', async () => {
+  const av=wf('FabAvatar0000001');
+  const pcm=Buffer.alloc(48000);for(let i=0;i<24000;i++)pcm.writeInt16LE(2000,i*2);
+  for(const presencia of ['completo','partes']) for(const proveedor of ['gemini','heygen','elevenlabs']) {
+    const plan=planPresentacion(presentacionReal(presencia,proveedor)),calls=[];
+    const transport=async (url,body) => {
+      calls.push({url,body});
+      if(url.includes('/interactions')) {assert.strictEqual(body.generation_config.speech_config[0].voice,'Charon');return {steps:[{type:'model_output',content:[{type:'audio',mime_type:'audio/l16;rate=24000',data:pcm.toString('base64')}]}]};}
+      if(url.includes('/models/audio/tts')) {assert.strictEqual(body.voice_id,'voz-clonada');return {data:{audio_url:'https://media.example.test/heygen.wav',duration:1}};}
+      if(url.includes('/with-timestamps')) {assert.match(url,/voz-clonada/);return {audio_base64:pcm.toString('base64')};}
+      if(url==='https://api.heygen.com/v3/videos') {assert.strictEqual(body.avatar_id,'look-elegido');assert.match(body.audio_url,/\.wav$/);return {data:{video_id:'render-avatar',status:'waiting'}};}
+      if(url==='https://api.heygen.com/v3/videos/render-avatar') return {data:{id:'render-avatar',status:'completed',video_url:'https://media.example.test/avatar.mp4',duration:1}};
+      if(url==='https://api.creatomate.com/v2/renders') {assert.strictEqual(body.source.elements.filter(e=>e.type==='composition').length,2);return {id:'montaje',status:'planned'};}
+      throw new Error('Transporte no autorizado en prueba: '+url);
+    };
+    const send=async(flow,name,ctx) => {
+      const n=flow.nodes.find(n=>n.name===name),p=n.parameters;
+      const url=p.url.startsWith('=') ? expNodo(flow,name,'url',ctx) : p.url;
+      return transport(url,p.jsonBody ? expNodo(flow,name,'jsonBody',ctx) : undefined);
+    };
+    const textos=run(codeOf(SON,'Textos de voz'),{nodes:{Inicio:{...plan,planos:plan.planos.map(plano=>({plano,plano_id:plano.id}))},'Leer ajustes':encendido}});
+    const voces=[];
+    for(const {json:texto} of textos) {
+      const nodes={'Textos de voz':texto,'Leer ajustes':encendido},ctx={nodes,json:texto};
+      const name={gemini:'Voz (Gemini TTS)',heygen:'Voz (HeyGen)',elevenlabs:'Voz (ElevenLabs)'}[proveedor];
+      let response=await send(SON,name,ctx),voice;
+      if(proveedor==='heygen') voice=run(codeOf(SON,'Voz HeyGen lista'),{nodes,json:response})[0].json;
+      else {
+        if(proveedor==='elevenlabs')response=run(codeOf(SON,'PCM ElevenLabs'),{json:response})[0].json;
+        const wav=run(codeOf(SON,'WAV'),{nodes,json:response})[0];
+        assert.strictEqual(wav.binary.archivo.mimeType,'audio/wav');
+        voice={...wav.json,url:'https://media.example.test/'+texto.plano_id+'.wav'};
+      }
+      voces.push(voice);
+    }
+    const planos=[];
+    for(const plano of plan.planos) {
+      if(plano.tipo!=='avatar'){planos.push({plano_id:plano.id,plano,url:'https://media.example.test/imagen.png'});continue;}
+      const entrada={...plan,plano,voz:voces.find(v=>v.plano_id===plano.id)};
+      const nodes={Inicio:entrada,'Leer ajustes':encendido};
+      const pedido=run(codeOf(av,'Pedido de avatar'),{nodes})[0].json;
+      const creado=await send(av,'Crear avatar',{nodes,json:pedido});
+      nodes['Trabajo avatar']=run(codeOf(av,'Trabajo avatar'),{json:creado})[0].json;
+      const respuesta=await send(av,'Consultar avatar',{nodes});
+      nodes['Estado avatar']=run(codeOf(av,'Estado avatar'),{json:respuesta})[0].json;
+      planos.push(run(codeOf(av,'Avatar listo'),{nodes})[0].json);
+    }
+    const composed=run(codeOf(PROD,'Composición Creatomate'),{nodes:{'Plan de producción':plan},json:{planos,voces}})[0].json;
+    const rendered=await send(PROD,'Renderizar',{json:composed});assert.strictEqual(rendered.status,'planned');
+    assert.strictEqual(calls.filter(c=>c.url==='https://api.heygen.com/v3/videos').length,presencia==='completo'?2:1);
+    assert.strictEqual(composed.planos,composed.esperados);
   }
 });

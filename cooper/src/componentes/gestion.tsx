@@ -449,6 +449,11 @@ export function DetalleVideo({ id }: { id: string }) {
         description={`${data.channels.find((c) => c.id === video.channelId)?.name ?? "Canal"} · ${ETAPAS[video.stage]}`}
       />
       <Notice error={error} message={message} />
+      {video.productionNotice && (
+        <p className="notice" role="status">
+          {video.productionNotice}
+        </p>
+      )}
       <div className="detail-layout">
         <div>
           <section className="preview" aria-label="Vista previa simulada">

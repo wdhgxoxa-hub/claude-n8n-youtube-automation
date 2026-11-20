@@ -48,6 +48,8 @@ export const videos = sqliteTable("videos", {
   avatarPlacement: text("avatar_placement", { enum: ["completo", "partes"] })
     .notNull()
     .default("partes"),
+  productionState: text("production_state").notNull().default("activa"),
+  productionNotice: text("production_notice").notNull().default(""),
   remoteUpdatedAt: integer("remote_updated_at").notNull().default(0),
   stage: integer("stage").notNull().default(0),
   script: text("script").notNull(),
@@ -94,6 +96,7 @@ export const assets = sqliteTable("assets", {
   simulated: integer("simulated", { mode: "boolean" }).notNull().default(true),
   photoIds: text("photo_ids").notNull().default("[]"),
   challengeId: text("challenge_id").notNull().default(""),
+  consentRevokedAt: integer("consent_revoked_at").notNull().default(0),
   consentAt: integer("consent_at").notNull().default(0),
   consentText: text("consent_text").notNull().default(""),
   consentVersion: text("consent_version").notNull().default(""),

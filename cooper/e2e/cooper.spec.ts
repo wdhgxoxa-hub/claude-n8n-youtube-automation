@@ -542,4 +542,39 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
   await expect(
     page.getByRole("heading", { name: "Voz de prueba" }),
   ).toBeVisible();
+  const channel = await (
+    await page.request.post("/api/orden", {
+      data: { evento: "nuevo_canal", texto: "Consentimiento de ensayo" },
+    })
+  ).json();
+  const video = await (
+    await page.request.post("/api/orden", {
+      data: {
+        evento: "nuevo_video",
+        recursoId: channel.id,
+        texto: "Mi voz elegida",
+        voiceId: own.id,
+        avatarPlacement: "partes",
+      },
+    })
+  ).json();
+  await asset.getByRole("button", { name: "Revocar consentimiento" }).click();
+  await expect(
+    asset.getByText("Consentimiento revocado. Los videos en cola se cancelan."),
+  ).toBeVisible();
+  const final = await (await page.request.get("/api/estado")).json();
+  expect(
+    final.videos.find((v: { id: string }) => v.id === video.id),
+  ).toMatchObject({ voiceId: own.id, productionState: "cancelada" });
+  await page.goto(`/videos/${video.id}`);
+  await expect(
+    page.getByRole("status").filter({ hasText: "Video cancelado" }),
+  ).toBeVisible();
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.screenshot({
+      path: `.cache/capturas-final/presentacion-revocada-${width}.png`,
+      fullPage: true,
+    });
+  }
 });

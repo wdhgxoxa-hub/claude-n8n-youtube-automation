@@ -25,8 +25,15 @@ const resource = b.evento === 'eliminar' ? (d.tipo === 'canal' ? canales : d.tip
 if (b.evento !== 'nuevo_canal' && !resource) return fail(404, 'Recurso no disponible');
 if (b.evento === 'nuevo_canal' && canales.some(c => c.canal_id === d.id) || b.evento === 'nuevo_video' && videos.some(v => v.video_id === d.id)) return fail(409, 'Identificador existente');
 if (b.evento === 'nuevo_video' && (resource.estado !== 'activo' || !String(resource.biblia_ruta).startsWith('trabajo:'))) return fail(409, 'El canal todavía se está preparando');
-// No descartar silenciosamente una selección que el montaje todavía no consume.
-if (b.evento === 'nuevo_video' && (d.presentacion?.avatar || d.presentacion?.voz || d.avatarId || d.voiceId)) return fail(422, 'La presentación seleccionada todavía no está disponible en la fábrica');
+let presentacion = null;
+if (b.evento === 'nuevo_video') {
+  try { presentacion = validarPresentacion(d.presentacion); }
+  catch (error) { return fail(error.message === 'Recurso de demostración' ? 422 : 400, error.message); }
+  if ((d.avatarId || d.voiceId) && !presentacion) return fail(422, 'Falta resolver la presentación elegida');
+  if ((d.avatarId || '') !== (presentacion?.avatar?.recurso_id || '') && d.avatarId !== undefined ||
+      (d.voiceId || '') !== (presentacion?.voz?.recurso_id || '') && d.voiceId !== undefined) return fail(400, 'Selección incompatible');
+}
+if (videoEvent && resource.estado === 'cancelado') return fail(409, 'Video cancelado por revocación');
 const e = { evento: b.evento, dueno_email: resource?.dueno_email || auth.dueno_email,
   canal_id: b.evento === 'nuevo_canal' ? d.id : resource?.canal_id,
   video_id: b.evento === 'nuevo_video' ? d.id : resource?.video_id || '', cooper: true };
@@ -35,7 +42,7 @@ const p = d.parametros && typeof d.parametros === 'object' && !Array.isArray(d.p
 if (!['aprobar_guion', 'aprobar_final', 'eliminar'].includes(b.evento) && (!text || text.length > 6000)) return fail(400, 'Texto inválido');
 switch (b.evento) {
   case 'nuevo_canal': e.criterios = text; e.nombre = String(d.nombre || text).slice(0,120); break;
-  case 'nuevo_video': e.tema = text; e.formato = ['short','largo'].includes(p.formato) ? p.formato : resource.formato_defecto; break;
+  case 'nuevo_video': e.presentacion = presentacion; e.cooper_orden_id = b.id_evento; e.tema = text; e.formato = ['short','largo'].includes(p.formato) ? p.formato : resource.formato_defecto; break;
   case 'corregir': e.instruccion = text; e.etapa = (CONTRATO.etapas[resource.etapa] ?? 0) >= 4 ? 'storyboard' : 'guion'; break;
   case 'programar': {
     const time = Date.parse(text);

@@ -49,7 +49,43 @@ export const gastosSchema = z.object({
   estimados: z.boolean(),
 });
 export const consultaSchema = z.object({ resumen: z.string().max(30000) });
+const medioPresentacion = z
+  .object({
+    recurso_id: id,
+    proveedor: z.enum(["heygen", "elevenlabs", "gemini", "simulada"]),
+    id,
+    tipo: z.enum(["propio", "catalogo"]),
+  })
+  .strict();
+export const presentacionSchema = z
+  .object({
+    version: z.literal(1),
+    presencia: z.enum(["completo", "partes"]),
+    avatar: medioPresentacion.nullable(),
+    voz: medioPresentacion.nullable(),
+  })
+  .strict();
+export const comprobacionPresentacionSchema = z
+  .object({
+    version: z.literal("cooper-v1"),
+    tipo: z.literal("presentacion"),
+    orden_id: z.uuid(),
+    video_id: id,
+    dueno_email: email,
+    presentacion: presentacionSchema,
+    bloqueo: z
+      .enum([
+        "",
+        "avatar_apagado",
+        "voz_apagada",
+        "presupuesto",
+        "produccion_pausada",
+      ])
+      .default(""),
+  })
+  .strict();
 export const webhookSchema = z.discriminatedUnion("tipo", [
+  comprobacionPresentacionSchema,
   z
     .object({
       version: z.literal("cooper-v1"),

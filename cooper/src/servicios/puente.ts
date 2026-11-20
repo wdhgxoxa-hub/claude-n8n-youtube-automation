@@ -15,6 +15,7 @@ import {
   type WebhookPuente,
   type estadoRemotoSchema,
 } from "@/contratos/puente";
+import { comprobarPresentacion } from "./presentacion";
 import { ErrorHttp } from "@/lib/permisos";
 import type { z } from "zod";
 
@@ -77,7 +78,10 @@ export function aplicarEstado(
         if (existing && existing.remoteUpdatedAt >= video.actualizado_en)
           continue;
         const fields = {
-          stage: video.stage,
+          stage:
+            existing?.productionState === "cancelada"
+              ? existing.stage
+              : video.stage,
           script: video.script,
           title: video.titulo,
           remoteUpdatedAt: video.actualizado_en,
@@ -100,6 +104,7 @@ export function aplicarEstado(
 }
 
 export function recibirWebhook(input: WebhookPuente, raw: string) {
+  if (input.tipo === "presentacion") return comprobarPresentacion(input);
   return db().transaction(
     (tx) => {
       if (input.tipo === "orden") {
@@ -165,7 +170,9 @@ export function recibirWebhook(input: WebhookPuente, raw: string) {
         video.channelId !== input.video.canal_id
       )
         throw new ErrorHttp(404, "Video no disponible.");
-      const current = video.remoteUpdatedAt < input.video.actualizado_en;
+      const current =
+        video.productionState !== "cancelada" &&
+        video.remoteUpdatedAt < input.video.actualizado_en;
       if (current) {
         tx.update(videos)
           .set({

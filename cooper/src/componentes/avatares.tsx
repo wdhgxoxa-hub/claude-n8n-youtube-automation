@@ -494,21 +494,31 @@ export function Avatares() {
                       {new Date(a.consentAt).toLocaleDateString("es-PE")}
                     </small>
                   )}
+                  {a.consentRevokedAt > 0 && (
+                    <p role="status">
+                      Consentimiento revocado. Los videos en cola se cancelan.
+                    </p>
+                  )}
                   {a.syncError && (
                     <p className="helper">
                       No se pudo actualizar el estado. Se volverá a consultar
                       automáticamente si el entrenamiento sigue en curso.
                     </p>
                   )}
-                  {a.status === "listo" && a.kind === "voz" && (
-                    <audio
-                      controls
-                      preload="none"
-                      src={`/api/muestra/${a.id}`}
-                      onError={() => setError("No se pudo reproducir la voz.")}
-                    />
-                  )}
-                  {a.status === "listo" &&
+                  {!a.consentRevokedAt &&
+                    a.status === "listo" &&
+                    a.kind === "voz" && (
+                      <audio
+                        controls
+                        preload="none"
+                        src={`/api/muestra/${a.id}`}
+                        onError={() =>
+                          setError("No se pudo reproducir la voz.")
+                        }
+                      />
+                    )}
+                  {!a.consentRevokedAt &&
+                    a.status === "listo" &&
                     a.kind === "avatar" &&
                     a.hasPreview && (
                       <video
@@ -532,6 +542,27 @@ export function Avatares() {
                   </div>
                   {a.ownerId === data.user.id && (
                     <div className="asset-actions">
+                      {a.consentAt > 0 && !a.consentRevokedAt && (
+                        <button
+                          className="button secondary small"
+                          disabled={busy}
+                          onClick={async () => {
+                            setBusy(true);
+                            setError("");
+                            try {
+                              await api(`activos/${a.id}/revocar`, {});
+                              await refresh();
+                            } catch (e) {
+                              setError((e as Error).message);
+                            } finally {
+                              setBusy(false);
+                            }
+                          }}
+                        >
+                          Revocar consentimiento
+                        </button>
+                      )}
+
                       {a.retryable &&
                         ["error", "iniciando"].includes(a.status) && (
                           <button

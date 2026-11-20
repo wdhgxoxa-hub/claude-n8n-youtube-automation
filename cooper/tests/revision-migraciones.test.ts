@@ -99,7 +99,7 @@ it("R07 preserva datos al actualizar, repite sin duplicar y revierte SQL fallido
       JSON.stringify({
         entries: [
           ...entries,
-          { ...entry, when: 1795176004000, tag: "fallida" },
+          { ...entry, when: entries.at(-1).when + 1000, tag: "fallida" },
         ],
       }),
     );

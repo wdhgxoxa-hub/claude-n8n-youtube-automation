@@ -23,6 +23,7 @@ import {
   proveedorVoz,
   proveedorCatalogoVoz,
 } from "./proveedores";
+import { revocarConsentimiento } from "./presentacion";
 import { descargar } from "./proveedores/http";
 import type { ArchivoMedio, TrabajoMedio } from "./proveedores/tipos";
 
@@ -214,7 +215,7 @@ export async function revisarIdentidad(
 ) {
   requireAdmin(user);
   const a = db().select().from(assets).where(eq(assets.id, id)).get();
-  if (!a || a.status !== "revision")
+  if (!a || a.consentRevokedAt > 0 || a.status !== "revision")
     throw new ErrorHttp(409, "No hay una identidad pendiente de revisión.");
   const result = db()
     .update(assets)
@@ -419,6 +420,7 @@ export function medioDisponible(
     !a ||
     a.kind !== kind ||
     !a.verified ||
+    a.consentRevokedAt > 0 ||
     a.status !== "listo" ||
     (!a.shared && a.ownerId !== user.id)
   )
@@ -437,6 +439,7 @@ export function activoVisible(user: User, id: string): Asset {
   const a = db().select().from(assets).where(eq(assets.id, id)).get();
   if (
     !a ||
+    a.consentRevokedAt > 0 ||
     (a.ownerId !== user.id && !(a.shared && a.verified && a.status === "listo"))
   )
     throw new ErrorHttp(404, "No encontramos ese recurso.");
@@ -512,6 +515,7 @@ export async function eliminarMedio(user: User, id: string) {
       409,
       "Walter debe conciliar el envío antes de borrar; podría existir una creación remota.",
     );
+  revocarConsentimiento(user, id);
   // Retirar acceso antes de pedir el borrado remoto; un fallo conserva la fila para reintentar.
   db()
     .update(assets)
