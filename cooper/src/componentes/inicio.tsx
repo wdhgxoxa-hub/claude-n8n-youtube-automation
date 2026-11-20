@@ -1,12 +1,15 @@
 "use client";
+import { motion } from "framer-motion";
 import { useRef, useState, useEffect, type FormEvent } from "react";
 import { ArrowUp, Paperclip, X, AudioLines, ArrowUpRight } from "lucide-react";
 import { CooperCara, type EstadoCooper } from "@/marca/CooperCara";
 import { useEspacio, api, Notice } from "./espacio";
+import { useMovimientoReducido } from "./movimiento";
 import { FabricaVista } from "./fabrica-vista";
 import { Grabador, subir } from "./grabador";
 export function Inicio() {
   const { data, refresh } = useEspacio();
+  const reduced = useMovimientoReducido();
   const [tab, setTab] = useState(data.user.home),
     [text, setText] = useState(""),
     [busy, setBusy] = useState(false),
@@ -121,7 +124,7 @@ export function Inicio() {
           >
             {data.messages.length === 0 ? (
               <div className="chat-welcome">
-                <CooperCara estado={state} size={150} />
+                <CooperCara estado={state} size={112} />
                 <h2>
                   Tú pones la idea.
                   <br />
@@ -137,7 +140,15 @@ export function Inicio() {
                     "Quiero un video: Por qué el cielo es azul",
                     "¿Qué tengo pendiente?",
                   ].map((s, i) => (
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        duration: reduced ? 0 : 0.22,
+                        delay: reduced ? 0 : i * 0.07,
+                      }}
+                      whileHover={reduced ? {} : { x: 3 }}
+                      whileTap={reduced ? {} : { scale: 0.98 }}
                       key={s}
                       onClick={() => {
                         setText(s);
@@ -147,14 +158,16 @@ export function Inicio() {
                       <span>
                         {
                           [
-                            "Crear mi primer canal",
+                            data.channels.length
+                              ? "Crear otro canal"
+                              : "Crear mi primer canal",
                             "Dar forma a una idea",
                             "Revisar mis pendientes",
                           ][i]
                         }
                       </span>
                       <ArrowUpRight size={16} />
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               </div>

@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
+import { Portada } from "./portada";
+import { useMovimientoReducido } from "./movimiento";
 import { Recorrido, VideoMini } from "./fabrica-vista";
 import { CATALOGO } from "@/servicios/medios";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
@@ -71,14 +73,14 @@ export function Canales() {
       <div className="management-layout">
         <section className="channel-list">
           {data.channels.length ? (
-            data.channels.map((c, index) => (
+            data.channels.map((c) => (
               <article className="channel-card" key={c.id}>
                 <div className="channel-heading">
                   <span className="channel-symbol">
                     <Radio size={24} />
                   </span>
                   <div>
-                    <small>Canal {String(index + 1).padStart(2, "0")}</small>
+                    <small>{c.networks || "Identidad del canal"}</small>
                     <h2>{c.name}</h2>
                   </div>
                   <button
@@ -93,7 +95,10 @@ export function Canales() {
                 <div className="channel-meta">
                   <span>
                     {data.videos.filter((v) => v.channelId === c.id).length}{" "}
-                    videos
+                    {data.videos.filter((v) => v.channelId === c.id).length ===
+                    1
+                      ? "video"
+                      : "videos"}
                   </span>
                   <Link href="/videos" className="text-link">
                     Ver producción <ArrowUpRight size={14} />
@@ -155,11 +160,15 @@ export function Canales() {
           ) : (
             <Empty
               title="Un espacio para tu primera historia"
-              description="Crea un canal y define de qué quieres hablar."
-            />
+              description="Elige un tema que te interese y a quién quieres contárselo. Cooper usará esa dirección en cada guion."
+            >
+              <a href="#nuevo-canal" className="button secondary">
+                Dar nombre a mi canal
+              </a>
+            </Empty>
           )}
         </section>
-        <aside className="form-panel">
+        <aside className="form-panel" id="nuevo-canal">
           <span className="panel-icon">
             <Plus size={23} />
           </span>
@@ -380,6 +389,7 @@ export function Videos() {
 export function DetalleVideo({ id }: { id: string }) {
   const { data, refresh } = useEspacio();
   const video = data.videos.find((v) => v.id === id);
+  const reduced = useMovimientoReducido();
   const [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
@@ -434,32 +444,11 @@ export function DetalleVideo({ id }: { id: string }) {
         <div>
           <section className="preview" aria-label="Vista previa simulada">
             <motion.div
-              className="preview-orbits"
-              animate={playing ? { rotate: 360 } : { rotate: 0 }}
-              transition={
-                playing
-                  ? { duration: 18, repeat: Infinity, ease: "linear" }
-                  : { duration: 0.3 }
-              }
+              className="preview-art"
+              animate={{ scale: playing && !reduced ? 1.08 : 1 }}
+              transition={{ duration: reduced ? 0 : 8 }}
             >
-              <svg viewBox="0 0 500 260" aria-hidden="true">
-                <circle cx="250" cy="130" r="80" />
-                <ellipse
-                  cx="250"
-                  cy="130"
-                  rx="160"
-                  ry="50"
-                  transform="rotate(-20 250 130)"
-                />
-                <ellipse
-                  cx="250"
-                  cy="130"
-                  rx="55"
-                  ry="110"
-                  transform="rotate(-20 250 130)"
-                />
-                <circle cx="387" cy="77" r="7" className="planet" />
-              </svg>
+              <Portada title={video.title} />
             </motion.div>
             <div className="preview-content">
               <span>Vista previa simulada</span>

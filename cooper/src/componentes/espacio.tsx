@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, motion, useReducedMotion } from "framer-motion";
 import {
   House,
   Clapperboard,
@@ -69,6 +69,8 @@ export function Espacio({
     [connected, setConnected] = useState(false),
     [menu, setMenu] = useState(false);
   const path = usePathname();
+  const reduced = useReducedMotion();
+  const [paused, setPaused] = useState(false);
   const refresh = useCallback(async () => {
     setData(await api<Estado>("estado", undefined, "GET"));
   }, []);
@@ -105,8 +107,8 @@ export function Espacio({
   const pending = data.videos.filter((v) => esperaAprobacion(v.stage)).length;
   return (
     <Context.Provider value={{ data, refresh, connected }}>
-      <MotionConfig reducedMotion="user">
-        <div className="workspace">
+      <MotionConfig reducedMotion={paused ? "always" : "user"}>
+        <div className="workspace" data-motion={paused ? "paused" : "playing"}>
           <a className="skip" href="#contenido">
             Saltar al contenido
           </a>
@@ -139,12 +141,26 @@ export function Espacio({
               ))}
             </nav>
             <div className="sidebar-note">
-              <span className="small-orbit" />
-              <p>
-                Las buenas ideas
-                <br />
-                merecen salir al mundo.
-              </p>
+              <p>En tu estudio</p>
+              <Link href="/videos">
+                <strong>
+                  {data.videos.filter((v) => v.stage < 11).length}
+                </strong>{" "}
+                videos en producción
+              </Link>
+              <Link href="/videos">
+                <strong>{pending}</strong> por aprobar
+              </Link>
+              <div className="sidebar-summary-track" aria-hidden="true">
+                {Array.from({ length: 12 }, (_, i) => (
+                  <i
+                    key={i}
+                    className={
+                      data.videos.some((v) => v.stage === i) ? "occupied" : ""
+                    }
+                  />
+                ))}
+              </div>
             </div>
             <nav className="bottom-nav" aria-label="Cuenta">
               {data.user.role === "admin" && (
@@ -213,15 +229,24 @@ export function Espacio({
                   <i />
                   {connected ? "En vivo" : "Reconectando"}
                 </span>
-                <span className="demo-label">Modo de prueba</span>
+                <button
+                  className="motion-toggle"
+                  aria-pressed={paused}
+                  onClick={() => setPaused(!paused)}
+                >
+                  {paused ? "Activar movimiento" : "Pausar movimiento"}
+                </button>
+                <span className="demo-label">
+                  {data.demo ? "Demostración" : "Modo de prueba"}
+                </span>
               </div>
             </header>
             <main id="contenido" tabIndex={-1}>
               <motion.div
                 key={path}
-                initial={{ y: 4 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.22 }}
+                initial={{ opacity: 0.6 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: reduced || paused ? 0 : 0.2 }}
               >
                 {children}
               </motion.div>
@@ -262,22 +287,20 @@ export function Empty({
 }) {
   return (
     <div className="empty">
-      <svg viewBox="0 0 120 80" width="120" height="80" aria-hidden="true">
-        <rect
-          x="20"
-          y="12"
-          width="64"
-          height="48"
-          rx="8"
-          fill="none"
-          stroke="currentColor"
-        />
-        <path
-          d="m84 28 18-8v32L84 44M38 70h48M49 29l19 9-19 10Z"
-          fill="none"
-          stroke="currentColor"
-        />
-      </svg>
+      <div className="empty-story" aria-hidden="true">
+        <span>
+          <i className="story-idea" />
+          Tu idea
+        </span>
+        <span>
+          <i className="story-script" />
+          Un guion
+        </span>
+        <span>
+          <i className="story-film" />
+          Tu video
+        </span>
+      </div>
       <h2>{title}</h2>
       <p>{description}</p>
       {children}
