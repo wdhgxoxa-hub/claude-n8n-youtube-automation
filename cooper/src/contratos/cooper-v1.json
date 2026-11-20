@@ -1,0 +1,11 @@
+{
+  "version": "cooper-v1",
+  "eventos": {
+    "nuevo_canal": "nuevo_canal", "nuevo_video": "nuevo_video", "corregir": "corregir",
+    "aprobar_guion": "aprobado:guion", "aprobar_final": "aprobado:final",
+    "ajustar_biblia": "ajustar_biblia", "programar": "programar", "referencias": "referencias",
+    "configurar_redes": "configurar_redes", "metas": "metas", "adoptar_cuenta": "adoptar_cuenta", "eliminar": "eliminar"
+  },
+  "consultas": ["estado", "reporte", "pendientes", "tendencias", "gastos"],
+  "etapas": {"radar": 0, "guion": 1, "verificacion": 2, "aprobacion_guion": 3, "storyboard": 4, "produccion": 5, "sonido": 6, "montaje": 7, "calidad": 8, "aprobacion_final": 9, "programado": 10, "publicado": 11}
+}

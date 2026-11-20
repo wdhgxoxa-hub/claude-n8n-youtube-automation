@@ -435,6 +435,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -620,6 +625,48 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Marcar publicado\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "5b2dcb41-9f91-5e55-9581-bf7f0a1b300a",
+      "name": "Cooper · sello Marcar publicado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "634a6b9a-1a81-5790-af3e-529e0253a3fd",
+      "name": "Cooper · sello Marcar publicado aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -756,18 +803,7 @@
       "main": [
         [
           {
-            "node": "Marcar publicado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Marcar publicado": {
-      "main": [
-        [
-          {
-            "node": "Esperar a las redes",
+            "node": "Cooper · sello Marcar publicado",
             "type": "main",
             "index": 0
           }
@@ -830,6 +866,39 @@
         [
           {
             "node": "Aviso: publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Marcar publicado": {
+      "main": [
+        [
+          {
+            "node": "Marcar publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Marcar publicado aviso": {
+      "main": [
+        [
+          {
+            "node": "Esperar a las redes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar publicado": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Marcar publicado aviso",
             "type": "main",
             "index": 0
           }

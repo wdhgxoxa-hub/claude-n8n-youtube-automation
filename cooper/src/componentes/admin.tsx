@@ -88,8 +88,12 @@ export function Admin({ initial }: { initial: Administracion }) {
           </div>
         </div>
         <p className="helper">
-          Periodos de calendario en UTC. En modo simulado, los importes son de
-          ejemplo.
+          Periodos de calendario en UTC.{" "}
+          {data.fuente === "simulada"
+            ? "Importes de ejemplo."
+            : data.fuente === "n8n_estimado"
+              ? "Gastos registrados por la fábrica; incluyen estimaciones según uso y tarifas configuradas."
+              : "Gastos registrados por la fábrica."}
         </p>
         <div className="team-table" role="table" aria-label="Gasto por usuario">
           <div className="team-row table-head" role="row">

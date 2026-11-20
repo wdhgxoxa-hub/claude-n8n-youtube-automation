@@ -102,6 +102,11 @@
               "keyName": "estado",
               "condition": "eq",
               "keyValue": "activo"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -281,6 +286,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -406,6 +416,11 @@
               "keyName": "estado",
               "condition": "eq",
               "keyValue": "activo"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -432,6 +447,61 @@
       "typeVersion": 2,
       "position": [
         3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:('canal:' + $('Encargo del analista').all()[k].json.canal_id), concepto:\"radar\", servicio:\"OpenAI\", usd:aj.costoRadarUsd, estimado:true, paso_id:String($execution.id)+':'+\"Analista de tendencias\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "f4160ff7-05ef-54cc-a1f4-8509cbd9faea",
+      "name": "Cooper · costo Analista de tendencias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "3e13c8fb-d568-594c-b8c5-c137e7d92c30",
+      "name": "Cooper · costo Analista de tendencias registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Analista de tendencias').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "6175b8da-9c0f-56d8-b825-a47c3748147d",
+      "name": "Cooper · costo Analista de tendencias seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
         0
       ]
     }
@@ -569,7 +639,7 @@
       "main": [
         [
           {
-            "node": "Radar del canal",
+            "node": "Cooper · costo Analista de tendencias",
             "type": "main",
             "index": 0
           }
@@ -608,6 +678,39 @@
         [
           {
             "node": "Aviso: radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Analista de tendencias": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Analista de tendencias registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Analista de tendencias registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Analista de tendencias seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Analista de tendencias seguir": {
+      "main": [
+        [
+          {
+            "node": "Radar del canal",
             "type": "main",
             "index": 0
           }

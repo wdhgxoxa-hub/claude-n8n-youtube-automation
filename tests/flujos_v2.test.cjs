@@ -6,7 +6,7 @@ const dir = path.join(__dirname, '..', 'workflows', 'v2');
 const wf = id => JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8'));
 const codeOf = (w, name) => w.nodes.find(n => n.name === name).parameters.jsCode;
 
-function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {} } = {}) {
+function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {} } = {}) {
   // Simula el entorno de un nodo Code de n8n: $('Nodo') con first/last/item/all/isExecuted, $json, $input.
   const $ = name => ({
     first: () => ({ json: nodes[name] }), last: () => ({ json: nodes[name] }), item: { json: nodes[name] },
@@ -17,8 +17,8 @@ function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {} } 
     isExecuted: nodes[name] !== undefined || all[name] !== undefined || pasadas[name] !== undefined,
   });
   const $input = { all: () => (all.$input || [json]).map(j => ({ json: j })), item: { json, binary } };
-  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', js);
-  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' });
+  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', '$env', 'require', '$runIndex', js);
+  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { id:'ejecucion-prueba', resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' }, env, require, 0);
   return Array.isArray(r) ? r : [r];
 }
 
@@ -1163,4 +1163,143 @@ test('radar de tendencias: consultas por canal, encargo al analista, guardado po
   // Los especialistas existen y el contrato los nombra.
   for (const red of ['tiktok', 'instagram', 'youtube']) assert.ok(fs.existsSync(path.join(__dirname, '..', 'skill', 'roles', `especialista-${red}.md`)));
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'skill', 'FABRICA.md'), 'utf8'), /especialista-tiktok\.md/);
+});
+
+const FX = wf('FabCooperAPI0001'), PROGRESO = wf('FabCooperProgr01'), COSTO = wf('FabCooperCosto01');
+const contratoCooper = require('../cooper/src/contratos/cooper-v1.json');
+const cryptoCooper = require('node:crypto');
+const tokenCooper = cryptoCooper.randomBytes(32).toString('hex');
+const envCooper = { COOPER_N8N_TOKEN: tokenCooper, COOPER_WEBHOOK_SECRET: tokenCooper, COOPER_ADMIN_EMAIL: 'admin@example.test' };
+const solicitudCooper = (evento, datos = {}, extra = {}) => ({ version: 'cooper-v1', id_evento: cryptoCooper.randomUUID(), evento, dueno_email: 'ana@example.test', admin: false, datos, ...extra });
+const canalCooper = { canal_id: 'c-ana', dueno_email: 'ana@example.test', nombre: 'Ciencia', nicho: 'Ciencia', estado: 'activo', biblia_ruta: 'trabajo:j', costo_usd: 999, presupuesto_largo_usd: 999 };
+const videoCooper = { video_id: 'v-ana', canal_id: 'c-ana', dueno_email: 'ana@example.test', tema: 'Cielo', etapa: 'aprobacion_guion', guion_cooper: 'Guion', cooper_actualizado_en: 1, costo_usd: 999 };
+function resolverCooper(b, { canales = [canalCooper], videos = [videoCooper], aprobaciones = [] } = {}) {
+  return run(codeOf(FX, 'Resolver'), { nodes: { Autenticar: { solicitud: b, admin: b.admin, dueno_email: b.dueno_email } },
+    all: { 'Canales autorizados': canales, 'Videos autorizados': videos, Aprobaciones: aprobaciones } })[0].json;
+}
+test('Cooper: token obligatorio, fallo cerrado y admin contrastado con entorno', () => {
+  const auth = (body, authorization, env = envCooper) => run(codeOf(FX, 'Autenticar'), { json: { body, headers: { authorization } }, env })[0].json;
+  assert.strictEqual(auth(solicitudCooper('estado'), '').status, 401);
+  assert.strictEqual(auth(solicitudCooper('estado'), 'Bearer ' + tokenCooper, {}).status, 401);
+  assert.strictEqual(auth(solicitudCooper('estado'), 'Bearer ' + tokenCooper).status, 200);
+  assert.strictEqual(auth(solicitudCooper('estado', {}, { admin: true }), 'Bearer ' + tokenCooper).status, 403);
+  assert.strictEqual(auth(solicitudCooper('gastos'), 'Bearer ' + tokenCooper).status, 403);
+  assert.strictEqual(auth(solicitudCooper('gastos', {}, { admin: true, dueno_email: envCooper.COOPER_ADMIN_EMAIL }), 'Bearer ' + tokenCooper).status, 200);
+  assert.strictEqual(auth(solicitudCooper('inventado'), 'Bearer ' + tokenCooper).status, 400);
+});
+test('Cooper: estado proyecta solo recursos propios y jamás columnas internas', () => {
+  const result = resolverCooper(solicitudCooper('estado'), { canales: [canalCooper, { ...canalCooper, canal_id:'otro', dueno_email:'otro@example.test' }],
+    videos: [videoCooper, { ...videoCooper, video_id:'otro', canal_id:'otro', dueno_email:'otro@example.test' }] });
+  assert.deepStrictEqual(result.respuesta.videos.map(v=>v.id), ['v-ana']);
+  assert.ok(!JSON.stringify(result.respuesta).match(/costo|presupuesto|999|servicio/));
+  assert.strictEqual(result.respuesta.videos[0].stage, 3);
+});
+test('Cooper: cada mutación de recursos rechaza al dueño ajeno', () => {
+  for (const evento of Object.keys(contratoCooper.eventos).filter(x=>x!=='nuevo_canal')) {
+    const out = resolverCooper(solicitudCooper(evento, { id:'v-ana', recursoId:'v-ana', tipo:'video', texto:'Cambio' }, { dueno_email:'otro@example.test' }));
+    assert.strictEqual(out.status, 404, evento);
+  }
+});
+test('Cooper: el administrador puede consultar todo y las filas sin dueño quedan excluidas', () => {
+  const out = resolverCooper(solicitudCooper('estado',{}, { admin:true, dueno_email:'admin@example.test' }), {
+    canales:[canalCooper, {...canalCooper, canal_id:'sin', dueno_email:''}], videos:[videoCooper] });
+  assert.strictEqual(out.respuesta.canales.length,1);
+  assert.strictEqual(out.respuesta.videos.length,1);
+});
+test('Cooper: mapea todas las órdenes al Orquestador sin aceptar identidades de datos', () => {
+  for (const evento of Object.keys(contratoCooper.eventos).filter(x=>!['aprobar_guion','aprobar_final'].includes(x))) {
+    const isVideo = ['corregir','programar','referencias'].includes(evento);
+    const datos = { id:'nuevo-id', recursoId:isVideo?'v-ana':'c-ana', texto: evento==='programar'?new Date(Date.now()+7200000).toISOString():'3 videos por semana',
+      parametros:{ perfil:'ciencia', redes:['youtube'] }, dueno_email:'falso@example.test' };
+    if(evento==='eliminar') Object.assign(datos,{id:'v-ana',tipo:'video'});
+    const out=resolverCooper(solicitudCooper(evento,datos));
+    assert.strictEqual(out.accion,'orden',evento); assert.strictEqual(out.evento.evento,evento);
+    assert.strictEqual(out.evento.dueno_email,'ana@example.test');
+  }
+});
+test('Cooper: las dos aprobaciones usan contexto persistido y exigen etapa y decisión pendientes', () => {
+  for(const etapa of ['guion','final']) {
+    const b=solicitudCooper('aprobar_'+etapa,{id:'v-ana',contexto:{falso:true}});
+    const videos=[{...videoCooper,etapa:'aprobacion_'+etapa}];
+    assert.strictEqual(resolverCooper(b,{videos}).status,409);
+    const aprobaciones=[{aprobacion_id:'ap1',video_id:'v-ana',etapa,estado:'pendiente',pedido:JSON.stringify({contexto:{verificado:true}})}];
+    const out=resolverCooper(b,{videos,aprobaciones});
+    assert.strictEqual(out.evento.evento,'aprobado'); assert.strictEqual(out.evento.etapa,etapa);
+    assert.deepStrictEqual(out.evento.contexto,{verificado:true});
+    assert.strictEqual(resolverCooper(b,{videos:[{...videoCooper,etapa:'produccion'}],aprobaciones}).status,409);
+  }
+});
+test('Cooper: validación de campos, programación y eliminación durante producción', () => {
+  for(const [evento,datos] of [
+    ['ajustar_biblia',{parametros:{campo:'constructor.prototype'}}], ['configurar_redes',{}], ['programar',{texto:'ayer'}], ['metas',{texto:'muchos'}],
+  ]) assert.strictEqual(resolverCooper(solicitudCooper(evento,{id:'x',recursoId:evento==='programar'?'v-ana':'c-ana',texto:'texto',...datos})).status,400);
+  assert.strictEqual(resolverCooper(solicitudCooper('eliminar',{id:'v-ana',tipo:'video'}),{videos:[{...videoCooper,etapa:'produccion'}]}).status,409);
+});
+test('Cooper: consultas textuales excluyen gastos y eliminados', () => {
+  for(const event of ['reporte','pendientes','tendencias']) {
+    const out=resolverCooper(solicitudCooper(event),{videos:[{...videoCooper,eliminado:true}]});
+    assert.ok(!JSON.stringify(out.respuesta).match(/999|presupuesto|costo|Cielo/));
+  }
+});
+test('Cooper: gasto por día, semana y mes con dueño y solo administrador', () => {
+  const code=codeOf(FX,'Agregar gastos');
+  assert.strictEqual(run(code,{nodes:{Autenticar:{admin:false}}})[0].json.status,403);
+  const now=new Date().toISOString();
+  const out=run(code,{nodes:{Autenticar:{admin:true}}, all:{$input:[
+    {dueno_email:'ana@example.test',usd:0.002,createdAt:now,estimado:true},
+    {dueno_email:'ana@example.test',usd:1,createdAt:now}, {dueno_email:'luis@example.test',usd:2,createdAt:now,estimado:false},
+    {dueno_email:'ana@example.test',usd:-7,createdAt:now}, {usd:50,createdAt:now},
+  ]}})[0].json.respuesta;
+  assert.deepStrictEqual(out.gastos,[{dueno_email:'ana@example.test',dia:1.002,semana:1.002,mes:1.002},{dueno_email:'luis@example.test',dia:2,semana:2,mes:2}]);
+  assert.strictEqual(out.estimados,true);
+});
+test('Cooper: HMAC firma exactamente los bytes transmitidos y no incluye costos', () => {
+  const event=run(codeOf(PROGRESO,'Progreso público'),{nodes:{Inicio:{...videoCooper,cooper_evento_id:'evento-1'}}})[0].json;
+  const signed=run(codeOf(PROGRESO,'Firmar progreso'),{nodes:{'Progreso público':event},env:envCooper})[0].json;
+  const digest=cryptoCooper.createHmac('sha256',tokenCooper).update(signed.timestamp+'.'+signed.cuerpo).digest('hex');
+  assert.strictEqual(signed.firma,'sha256='+digest);assert.deepStrictEqual(JSON.parse(signed.cuerpo),event);
+  assert.ok(!signed.cuerpo.includes('999'));
+  const http=PROGRESO.nodes.find(n=>n.name==='Avisar a Cooper');
+  assert.strictEqual(http.parameters.contentType,'raw'); assert.strictEqual(http.parameters.body,'={{ $json.cuerpo }}');
+});
+test('Cooper: atribución de costo consulta el dueño de las tablas y rechaza huérfanos', () => {
+  const args={nodes:{Inicio:{video_id:'v-ana',usd:0.1,concepto:'voz',servicio:'prueba',dueno_email:'falso'},'Video del costo':videoCooper,'Canal del costo':canalCooper}};
+  assert.strictEqual(run(codeOf(COSTO,'Costo atribuido'),args)[0].json.dueno_email,'ana@example.test');
+  assert.throws(()=>run(codeOf(COSTO,'Costo atribuido'),{nodes:{...args.nodes,'Canal del costo':{}}}),/sin dueño/);
+  assert.strictEqual(COSTO.nodes.find(n=>n.name==='Guardar costo atribuido').parameters.operation,'upsert');
+});
+test('Cooper: todas las escrituras de etapa avisan tras persistir y existen las doce etapas', () => {
+  assert.deepStrictEqual(Object.values(contratoCooper.etapas),Array.from({length:12},(_,i)=>i));
+  for(const id of ['FabOrquestador01','FabProduccion001','FabPublicacion01','FabRedes00000001','FabConfirmar0001']) {
+    const flow=wf(id);
+    for(const n of flow.nodes.filter(n=>n.type.endsWith('.dataTable') && ['insert','update'].includes(n.parameters.operation) && n.parameters.dataTableId.value==='VIfMDnjzrrw1p2EA')) {
+      const next=flow.connections[n.name].main[0][0].node;
+      assert.strictEqual(flow.nodes.find(x=>x.name===next).parameters.workflowId.value,'FabCooperProgr01',id+':'+n.name);
+    }
+  }
+});
+test('Cooper: reserva antes de despachar y confirmación antes de aceptar; no guarda tokens en ejecuciones', () => {
+  const edges=n=>FX.connections[n].main.flat().map(x=>x.node);
+  assert.deepStrictEqual(edges('Reservar orden'),['Estado de reserva']);
+  assert.deepStrictEqual(edges('Entregar al Orquestador'),['Firmar confirmación']);
+  assert.deepStrictEqual(edges('Confirmar orden'),['Aceptado']);
+  assert.strictEqual(FX.settings.saveDataErrorExecution,'none'); assert.strictEqual(FX.settings.saveDataSuccessExecution,'none');
+  for(const id of ['FabCooperAPI0001','FabCooperProgr01','FabCooperCosto01']) {
+    const flow=wf(id), names=new Set(flow.nodes.map(n=>n.name));
+    for(const [name, outputs] of Object.entries(flow.connections)) {
+      assert.ok(names.has(name)); for(const edge of outputs.main.flat()) assert.ok(names.has(edge.node),edge.node);
+    }
+  }
+});
+test('Cooper: todos los nodos Code compilan y todo el grafo apunta a nodos existentes', () => {
+  for (const filename of fs.readdirSync(dir).filter(x=>x.endsWith('.json'))) {
+    const flow = JSON.parse(fs.readFileSync(path.join(dir,filename),'utf8'));
+    const names = new Set(flow.nodes.map(n=>n.name));
+    assert.strictEqual(names.size,flow.nodes.length,filename);
+    for (const node of flow.nodes) if(node.parameters.jsCode) assert.doesNotThrow(()=>new Function(node.parameters.jsCode),filename+':'+node.name);
+    for(const [source,kinds] of Object.entries(flow.connections)) {
+      assert.ok(names.has(source),filename+':'+source);
+      for(const edges of Object.values(kinds)) for(const edge of edges.flat()) assert.ok(names.has(edge.node),filename+':'+edge.node);
+    }
+  }
 });

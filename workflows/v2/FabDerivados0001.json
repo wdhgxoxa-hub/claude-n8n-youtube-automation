@@ -666,6 +666,171 @@
         5940,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"miniatura\", servicio:\"OpenAI\", usd:aj.costoMiniaturaUsd, estimado:true, paso_id:String($execution.id)+':'+\"Imagen de miniatura\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "d1e94bf9-ec2c-5538-8f13-746de0d66d33",
+      "name": "Cooper · costo Imagen de miniatura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "5eb48fc2-2059-536f-a315-7243b08d5a49",
+      "name": "Cooper · costo Imagen de miniatura registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Imagen de miniatura').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "d1c0217d-515e-5f47-9ed7-8a45aef5736c",
+      "name": "Cooper · costo Imagen de miniatura seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"montaje de miniatura\", servicio:\"Creatomate (créditos)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Renderizar miniatura\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "40f009ef-b947-571f-8465-e5484d74c806",
+      "name": "Cooper · costo Renderizar miniatura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "6b372070-ae7d-525f-9422-77545a5a0242",
+      "name": "Cooper · costo Renderizar miniatura registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Renderizar miniatura').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "5cac41d0-5a02-5cd8-9528-9a722a71589f",
+      "name": "Cooper · costo Renderizar miniatura seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"montaje de corte\", servicio:\"Creatomate (créditos)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Renderizar corte\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "b968fc9c-03d4-5b88-8395-a5247728600f",
+      "name": "Cooper · costo Renderizar corte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "e9da2f5b-ec17-5657-874d-52ffcdf304c8",
+      "name": "Cooper · costo Renderizar corte registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Renderizar corte').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "a94d7985-f932-5e80-8272-fc778239b3f5",
+      "name": "Cooper · costo Renderizar corte seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -742,7 +907,7 @@
       "main": [
         [
           {
-            "node": "Esperar cortes",
+            "node": "Cooper · costo Renderizar corte",
             "type": "main",
             "index": 0
           }
@@ -877,7 +1042,7 @@
       "main": [
         [
           {
-            "node": "Archivo de miniatura",
+            "node": "Cooper · costo Imagen de miniatura",
             "type": "main",
             "index": 0
           }
@@ -961,7 +1126,7 @@
       "main": [
         [
           {
-            "node": "Esperar miniatura",
+            "node": "Cooper · costo Renderizar miniatura",
             "type": "main",
             "index": 0
           }
@@ -984,6 +1149,105 @@
         [
           {
             "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Imagen de miniatura": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Imagen de miniatura registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Imagen de miniatura registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Imagen de miniatura seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Imagen de miniatura seguir": {
+      "main": [
+        [
+          {
+            "node": "Archivo de miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar miniatura": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar miniatura registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar miniatura registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar miniatura seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar miniatura seguir": {
+      "main": [
+        [
+          {
+            "node": "Esperar miniatura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar corte": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar corte registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar corte registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar corte seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar corte seguir": {
+      "main": [
+        [
+          {
+            "node": "Esperar cortes",
             "type": "main",
             "index": 0
           }

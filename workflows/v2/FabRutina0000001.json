@@ -68,6 +68,11 @@
               "keyName": "createdAt",
               "condition": "gte",
               "keyValue": "={{ new Date(Date.now() - 30 * 86400000).toISOString() }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -277,6 +282,11 @@
               "keyName": "estado",
               "condition": "eq",
               "keyValue": "activo"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },

@@ -60,6 +60,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -694,27 +699,12 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+        "jsCode": "return $input.all();"
       },
       "id": "51de983a-56c3-4926-b979-9c74a8b019f4",
       "name": "Guardar costo de referencias",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         5720,
         0
@@ -773,6 +763,116 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"referencia principal\", servicio:\"OpenAI\", usd:aj.costoImagenUsd, estimado:true, paso_id:String($execution.id)+':'+\"Generar principal\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "5e0fa130-ab0f-5afc-a841-f32c4db68ce1",
+      "name": "Cooper · costo Generar principal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "4b2d37a7-3f4d-5f0f-9a9a-0497df57e9fa",
+      "name": "Cooper · costo Generar principal registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Generar principal').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "4ee30289-64f7-5175-8e03-aaa6656a1452",
+      "name": "Cooper · costo Generar principal seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"referencia vista\", servicio:\"OpenAI\", usd:aj.costoImagenUsd, estimado:true, paso_id:String($execution.id)+':'+\"Generar vista\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "87dbe27f-a7e6-5a1f-b967-85a485da5c5b",
+      "name": "Cooper · costo Generar vista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "6eb88ea0-961d-57dd-a1eb-9d6c037192a0",
+      "name": "Cooper · costo Generar vista registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Generar vista').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "4cc3a176-20f7-53ba-806d-c357e443de96",
+      "name": "Cooper · costo Generar vista seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -853,7 +953,7 @@
       "main": [
         [
           {
-            "node": "Extraer principal",
+            "node": "Cooper · costo Generar principal",
             "type": "main",
             "index": 0
           }
@@ -959,7 +1059,7 @@
       "main": [
         [
           {
-            "node": "Extraer vista",
+            "node": "Cooper · costo Generar vista",
             "type": "main",
             "index": 0
           }
@@ -1064,6 +1164,72 @@
         [
           {
             "node": "Guardar costo de referencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar principal": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar principal registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar principal registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar principal seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar principal seguir": {
+      "main": [
+        [
+          {
+            "node": "Extraer principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar vista": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar vista registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar vista registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar vista seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar vista seguir": {
+      "main": [
+        [
+          {
+            "node": "Extraer vista",
             "type": "main",
             "index": 0
           }

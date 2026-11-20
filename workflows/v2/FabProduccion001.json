@@ -439,6 +439,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1679,6 +1684,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1937,27 +1947,12 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+        "jsCode": "return $input.all();"
       },
       "id": "6050dc28-4004-478f-97b0-ec9f1d800c14",
       "name": "Guardar costos",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         16500,
         0
@@ -1992,6 +1987,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2105,27 +2105,12 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+        "jsCode": "return $input.all();"
       },
       "id": "1b4b3fc9-7c81-42cf-be7f-d39f7f0589c6",
       "name": "Guardar costo de derivados",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         18040,
         0
@@ -2171,6 +2156,657 @@
       "typeVersion": 1.2,
       "position": [
         18480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "3af2471a-af7f-5901-acc7-872f5190b96e",
+      "name": "Cooper · Sonido y emoción entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'sonido' } }];"
+      },
+      "id": "55cfe2cb-d816-5611-b1c1-fd750164294f",
+      "name": "Cooper · Sonido y emoción etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ac6a3228-04a8-59a5-951b-34722224f53a",
+      "name": "Cooper · Sonido y emoción guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Sonido y emoción entrada').all();"
+      },
+      "id": "de3ab38a-c5d2-5160-9d1d-93206c2fa4b2",
+      "name": "Cooper · Sonido y emoción seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "7fed09cd-770e-5c8f-97af-ba81aebbaeeb",
+      "name": "Cooper · Composición Creatomate entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'montaje' } }];"
+      },
+      "id": "5446c2ec-8aa5-5d0f-b51f-3ff5de94ae2c",
+      "name": "Cooper · Composición Creatomate etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "18485e66-bb17-5095-a223-94fe1ad5a0f7",
+      "name": "Cooper · Composición Creatomate guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Composición Creatomate entrada').all();"
+      },
+      "id": "b63740b4-1728-5a06-8386-96051a95b44e",
+      "name": "Cooper · Composición Creatomate seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en producción\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "d2173d60-71b0-5248-99cf-b3814d5fab0d",
+      "name": "Cooper · sello Video en producción",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c220bc60-1065-573d-b79d-2cd31926e7ee",
+      "name": "Cooper · sello Video en producción aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video detenido\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "effbcc57-c894-5d0c-b664-03a674bb2f2c",
+      "name": "Cooper · sello Video detenido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "4eda689b-53e0-5142-8b86-6eb7c29d8b5a",
+      "name": "Cooper · sello Video detenido aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Costo en la tabla\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "b98870ec-bc2b-54ea-8acb-030d673151a1",
+      "name": "Cooper · sello Costo en la tabla",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "73aeca28-d21b-5287-9233-0fb0ffa56136",
+      "name": "Cooper · sello Costo en la tabla aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Sonido y emoción guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "9ee0b027-766b-5bda-95a1-cac87f21584a",
+      "name": "Cooper · sello Cooper · Sonido y emoción guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c8046bf7-827a-5a08-beac-3089c3879af7",
+      "name": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Composición Creatomate guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "58c7a859-8e9b-542f-9f6b-be4f5b4cc16e",
+      "name": "Cooper · sello Cooper · Composición Creatomate guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "91e65c95-d4e1-5217-995c-2cf81e6a8f32",
+      "name": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"imágenes\", servicio:\"OpenAI\", usd:aj.costoImagenUsd, estimado:true, paso_id:String($execution.id)+':'+\"Generar imagen\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "6ea33e89-e9c5-599c-8676-9e4175867386",
+      "name": "Cooper · costo Generar imagen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "7b1767ad-2fba-55c3-a298-deb9e8acae72",
+      "name": "Cooper · costo Generar imagen registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Generar imagen').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "94b21fbb-98d9-521c-a021-753ced613995",
+      "name": "Cooper · costo Generar imagen seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"revisión visual\", servicio:\"OpenAI\", usd:aj.costoRevisionUsd, estimado:true, paso_id:String($execution.id)+':'+\"Revisar plano\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "4f4842d7-1d96-537c-8032-c59e3abae089",
+      "name": "Cooper · costo Revisar plano",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "8663b358-c92e-585a-8b0d-1c209c148606",
+      "name": "Cooper · costo Revisar plano registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Revisar plano').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "803fd451-c171-5892-a80c-254346012015",
+      "name": "Cooper · costo Revisar plano seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"revisión de archivo\", servicio:\"OpenAI\", usd:aj.costoRevisionUsd, estimado:true, paso_id:String($execution.id)+':'+\"Revisar archivo\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "f67def5b-fc6c-5ca2-9852-b8b478503e44",
+      "name": "Cooper · costo Revisar archivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "d4efd7de-f6a4-59bf-860a-89a0365b730f",
+      "name": "Cooper · costo Revisar archivo registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Revisar archivo').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "8493f845-39f6-529a-81cb-7e28d5200409",
+      "name": "Cooper · costo Revisar archivo seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"clips\", servicio:\"Gemini Omni\", usd:Number($('Un ítem por plano').first().json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd, estimado:true, paso_id:String($execution.id)+':'+\"Animar (Gemini Omni)\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "865533d7-dcab-5da6-baa8-c85914341737",
+      "name": "Cooper · costo Animar (Gemini Omni)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f75a9718-ec55-5d03-a3a3-98e4f087fba6",
+      "name": "Cooper · costo Animar (Gemini Omni) registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Animar (Gemini Omni)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "c4e2680b-68bb-5d8b-bc8e-a20928d1d47b",
+      "name": "Cooper · costo Animar (Gemini Omni) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"montaje\", servicio:\"Creatomate (créditos)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Renderizar\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "aef9cda0-3c72-56be-a25f-2bd165295b81",
+      "name": "Cooper · costo Renderizar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "1c86a364-190a-547a-94a8-0f589117f794",
+      "name": "Cooper · costo Renderizar registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Renderizar').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "9ac9e4ef-f50a-53b1-b68b-238253b25d12",
+      "name": "Cooper · costo Renderizar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
         0
       ]
     }
@@ -2388,18 +3024,7 @@
       "main": [
         [
           {
-            "node": "Video en producción",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Video en producción": {
-      "main": [
-        [
-          {
-            "node": "Un ítem por plano",
+            "node": "Cooper · sello Video en producción",
             "type": "main",
             "index": 0
           }
@@ -2555,7 +3180,7 @@
       "main": [
         [
           {
-            "node": "Archivo elegido",
+            "node": "Cooper · costo Revisar archivo",
             "type": "main",
             "index": 0
           }
@@ -2628,7 +3253,7 @@
       "main": [
         [
           {
-            "node": "Extraer imagen",
+            "node": "Cooper · costo Generar imagen",
             "type": "main",
             "index": 0
           }
@@ -2668,7 +3293,7 @@
       "main": [
         [
           {
-            "node": "Extraer clip",
+            "node": "Cooper · costo Animar (Gemini Omni)",
             "type": "main",
             "index": 0
           }
@@ -2792,7 +3417,7 @@
       "main": [
         [
           {
-            "node": "Veredicto",
+            "node": "Cooper · costo Revisar plano",
             "type": "main",
             "index": 0
           }
@@ -2939,7 +3564,7 @@
       "main": [
         [
           {
-            "node": "Video detenido",
+            "node": "Cooper · sello Video detenido",
             "type": "main",
             "index": 0
           }
@@ -2950,7 +3575,7 @@
       "main": [
         [
           {
-            "node": "Sonido y emoción",
+            "node": "Cooper · Sonido y emoción entrada",
             "type": "main",
             "index": 0
           }
@@ -2961,7 +3586,7 @@
       "main": [
         [
           {
-            "node": "Composición Creatomate",
+            "node": "Cooper · Composición Creatomate entrada",
             "type": "main",
             "index": 0
           }
@@ -2983,7 +3608,7 @@
       "main": [
         [
           {
-            "node": "Esperar render",
+            "node": "Cooper · costo Renderizar",
             "type": "main",
             "index": 0
           }
@@ -3068,18 +3693,7 @@
       "main": [
         [
           {
-            "node": "Costo en la tabla",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Costo en la tabla": {
-      "main": [
-        [
-          {
-            "node": "Encargo de derivados",
+            "node": "Cooper · sello Costo en la tabla",
             "type": "main",
             "index": 0
           }
@@ -3153,6 +3767,396 @@
         [
           {
             "node": "Calidad y publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Sonido y emoción guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción seguir": {
+      "main": [
+        [
+          {
+            "node": "Sonido y emoción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Composición Creatomate guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate seguir": {
+      "main": [
+        [
+          {
+            "node": "Composición Creatomate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en producción": {
+      "main": [
+        [
+          {
+            "node": "Video en producción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en producción aviso": {
+      "main": [
+        [
+          {
+            "node": "Un ítem por plano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video en producción": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video en producción aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video detenido": {
+      "main": [
+        [
+          {
+            "node": "Video detenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video detenido aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Video detenido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video detenido aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Costo en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Costo en la tabla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Costo en la tabla aviso": {
+      "main": [
+        [
+          {
+            "node": "Encargo de derivados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Costo en la tabla aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Sonido y emoción guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Sonido y emoción guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Composición Creatomate guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Composición Creatomate guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar imagen": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar imagen registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar imagen registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar imagen seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar imagen seguir": {
+      "main": [
+        [
+          {
+            "node": "Extraer imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar plano": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar plano registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar plano registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar plano seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar plano seguir": {
+      "main": [
+        [
+          {
+            "node": "Veredicto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar archivo": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar archivo registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar archivo registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar archivo seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar archivo seguir": {
+      "main": [
+        [
+          {
+            "node": "Archivo elegido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Animar (Gemini Omni)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Animar (Gemini Omni) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Animar (Gemini Omni) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Animar (Gemini Omni) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Animar (Gemini Omni) seguir": {
+      "main": [
+        [
+          {
+            "node": "Extraer clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar seguir": {
+      "main": [
+        [
+          {
+            "node": "Esperar render",
             "type": "main",
             "index": 0
           }

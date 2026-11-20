@@ -95,4 +95,23 @@ export function administracion(user: User) {
     threshold,
   };
 }
-export type Administracion = ReturnType<typeof administracion>;
+export type Administracion = Awaited<ReturnType<typeof administracionActual>>;
+
+export async function administracionActual(user: User) {
+  const local = administracion(user);
+  if (process.env.COOPER_FABRICA !== "n8n")
+    return { ...local, fuente: "simulada" };
+  const { FabricaN8n } = await import("./fabrica");
+  const remote = await new FabricaN8n().gastos(user);
+  return {
+    ...local,
+    fuente: remote.estimados ? "n8n_estimado" : "n8n",
+    users: local.users.map((u) => {
+      const cost = remote.gastos.find((c) => c.dueno_email === u.email);
+      const day = cost?.dia ?? 0,
+        week = cost?.semana ?? 0,
+        month = cost?.mes ?? 0;
+      return { ...u, day, week, month, alert: day >= local.threshold };
+    }),
+  };
+}

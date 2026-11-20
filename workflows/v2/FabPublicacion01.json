@@ -162,6 +162,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -210,6 +215,173 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "575e8c01-13ca-5774-b283-d00e80a65d90",
+      "name": "Cooper · Aprobación final entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'aprobacion_final' } }];"
+      },
+      "id": "6ed7e277-0db7-558a-9c00-d1b7d4ebd48e",
+      "name": "Cooper · Aprobación final etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b830140e-36de-5938-8e0a-6bcc84a2768f",
+      "name": "Cooper · Aprobación final guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Aprobación final entrada').all();"
+      },
+      "id": "c809f2ac-0bdd-5b3a-ad57-2aba0e730eea",
+      "name": "Cooper · Aprobación final seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Marcar fallas\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "47f14b6d-412e-5778-8e5a-9c3d972ac5f1",
+      "name": "Cooper · sello Marcar fallas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "93bc265b-c8fd-51a6-a641-b3b6bd714d40",
+      "name": "Cooper · sello Marcar fallas aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Aprobación final guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "66f372b3-e395-5e87-9450-406017394519",
+      "name": "Cooper · sello Cooper · Aprobación final guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "2c5bbbe0-17c3-507f-8704-34fc99904d52",
+      "name": "Cooper · sello Cooper · Aprobación final guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
     }
   ],
   "connections": {
@@ -268,7 +440,7 @@
       "main": [
         [
           {
-            "node": "Aprobación final",
+            "node": "Cooper · Aprobación final entrada",
             "type": "main",
             "index": 0
           }
@@ -279,7 +451,62 @@
       "main": [
         [
           {
+            "node": "Cooper · sello Marcar fallas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobación final entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Aprobación final etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobación final etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Aprobación final guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobación final seguir": {
+      "main": [
+        [
+          {
+            "node": "Aprobación final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Marcar fallas": {
+      "main": [
+        [
+          {
             "node": "Marcar fallas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Marcar fallas aviso": {
+      "main": [
+        [
+          {
+            "node": "Aviso: no pasó calidad",
             "type": "main",
             "index": 0
           }
@@ -290,7 +517,40 @@
       "main": [
         [
           {
-            "node": "Aviso: no pasó calidad",
+            "node": "Cooper · sello Marcar fallas aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Aprobación final guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Aprobación final guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Aprobación final guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Aprobación final seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobación final guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Aprobación final guardar aviso",
             "type": "main",
             "index": 0
           }

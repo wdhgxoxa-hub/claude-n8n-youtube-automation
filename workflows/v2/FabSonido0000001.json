@@ -769,6 +769,171 @@
         5940,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"voz\", servicio:\"Gemini TTS\", usd:aj.costoVozUsdPorPlano, estimado:true, paso_id:String($execution.id)+':'+\"Voz (Gemini TTS)\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "173973dd-0785-5453-93aa-a9cdf072b033",
+      "name": "Cooper · costo Voz (Gemini TTS)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f43a9bf0-8c4b-5ef9-9fea-8957429c001d",
+      "name": "Cooper · costo Voz (Gemini TTS) registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Voz (Gemini TTS)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "e4679735-5b05-5420-97f6-55803d2f50dc",
+      "name": "Cooper · costo Voz (Gemini TTS) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"música\", servicio:\"Epidemic Sound (suscripción)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Pedir descarga\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "da7a1f88-8e17-580f-9466-028bce0a669e",
+      "name": "Cooper · costo Pedir descarga",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "33ab4482-6bcc-5918-84f7-2e5a1b1eadf6",
+      "name": "Cooper · costo Pedir descarga registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Pedir descarga').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "99752d5a-2871-5b63-b89b-d0227872419b",
+      "name": "Cooper · costo Pedir descarga seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"efectos\", servicio:\"Epidemic Sound (suscripción)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Pedir efecto\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "72aca456-619e-5b8e-8ec9-47bff4afeac6",
+      "name": "Cooper · costo Pedir efecto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "d8ce7b94-9c09-59db-ae88-91bd4f3d55fa",
+      "name": "Cooper · costo Pedir efecto registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Pedir efecto').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "cb41f528-02ab-5c00-affe-cb0f209c23fc",
+      "name": "Cooper · costo Pedir efecto seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -809,7 +974,7 @@
       "main": [
         [
           {
-            "node": "WAV",
+            "node": "Cooper · costo Voz (Gemini TTS)",
             "type": "main",
             "index": 0
           }
@@ -977,7 +1142,7 @@
       "main": [
         [
           {
-            "node": "Música lista",
+            "node": "Cooper · costo Pedir descarga",
             "type": "main",
             "index": 0
           }
@@ -1050,7 +1215,7 @@
       "main": [
         [
           {
-            "node": "Efecto listo",
+            "node": "Cooper · costo Pedir efecto",
             "type": "main",
             "index": 0
           }
@@ -1073,6 +1238,105 @@
         [
           {
             "node": "Resultado sonido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (Gemini TTS)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (Gemini TTS) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (Gemini TTS) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (Gemini TTS) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Voz (Gemini TTS) seguir": {
+      "main": [
+        [
+          {
+            "node": "WAV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Pedir descarga": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Pedir descarga registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Pedir descarga registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Pedir descarga seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Pedir descarga seguir": {
+      "main": [
+        [
+          {
+            "node": "Música lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Pedir efecto": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Pedir efecto registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Pedir efecto registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Pedir efecto seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Pedir efecto seguir": {
+      "main": [
+        [
+          {
+            "node": "Efecto listo",
             "type": "main",
             "index": 0
           }

@@ -15,6 +15,13 @@
       "when": 1795176001000,
       "tag": "0001_presentadores",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1795176002000,
+      "tag": "0002_puente",
+      "breakpoints": true
     }
   ]
 }

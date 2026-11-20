@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { and, eq, desc } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
@@ -8,9 +8,25 @@ import {
   events,
   expenses,
   assets,
+  bridgeCommands,
   type User,
 } from "@/db/schema";
-import { ErrorHttp, requireOwn } from "@/lib/permisos";
+import {
+  ErrorHttp,
+  requireOwn,
+  requireOwner,
+  requireAdmin,
+} from "@/lib/permisos";
+import {
+  aceptadoSchema,
+  solicitudSchema,
+  estadoRemotoSchema,
+  gastosSchema,
+  consultaSchema,
+  type EventoPuente,
+  type ConsultaPuente,
+} from "@/contratos/puente";
+import { aplicarEstado } from "./puente";
 import { CATALOGO } from "./medios";
 import { guionInicial, siguienteEtapa, esperaAprobacion } from "@/lib/etapas";
 export const EVENTOS = [
@@ -29,6 +45,7 @@ export const ordenSchema = z.object({
   recursoId: z.string().max(100).optional(),
   texto: z.string().trim().min(1).max(6000),
   nombre: z.string().trim().max(120).optional(),
+  parametros: z.record(z.string(), z.unknown()).optional(),
   avatarId: z.string().max(100).optional(),
   voiceId: z.string().max(100).optional(),
   avatarPlacement: z.enum(["completo", "partes"]).optional(),
@@ -38,6 +55,7 @@ export interface Fabrica {
   ejecutar(user: User, orden: Orden): Promise<{ mensaje: string; id: string }>;
   sincronizar(user: User): Promise<void>;
   aprobar(user: User, id: string): Promise<void>;
+  eliminar(user: User, id: string, tipo: "canal" | "video"): Promise<void>;
 }
 export function canalesPropios(user: User) {
   return db()
@@ -163,6 +181,13 @@ export class FabricaSimulada implements Fabrica {
           resourceId = id;
           break;
         case "corregir": {
+          if (!this.registrarGasto) {
+            tx.update(videos)
+              .set({ feedback: orden.texto })
+              .where(eq(videos.id, orden.recursoId!))
+              .run();
+            break;
+          }
           const video = tx
             .select()
             .from(videos)
@@ -221,6 +246,11 @@ export class FabricaSimulada implements Fabrica {
       return { mensaje, id: resourceId };
     });
   }
+  async eliminar(user: User, id: string, tipo: "canal" | "video") {
+    const table = tipo === "canal" ? channels : videos;
+    requireOwner(user, db().select().from(table).where(eq(table.id, id)).get());
+    db().delete(table).where(eq(table.id, id)).run();
+  }
   async sincronizar(user: User) {
     const now = Date.now();
     const interval = Math.max(
@@ -269,87 +299,173 @@ export class FabricaSimulada implements Fabrica {
     });
   }
 }
-const snapshotSchema = z.object({
-  videos: z
-    .array(
-      z.object({
-        id: z.string(),
-        stage: z.number().int().min(0).max(11),
-        script: z.string().max(30000).optional(),
-      }),
-    )
-    .max(500),
-});
 export class FabricaN8n implements Fabrica {
-  private async request(user: User, event: string, payload: unknown) {
+  constructor(private opciones = { timeoutMs: 10000, backoffMs: 250 }) {}
+  private async request(
+    user: User,
+    event: EventoPuente | ConsultaPuente,
+    payload: Record<string, unknown>,
+  ) {
     const url = process.env.COOPER_N8N_URL;
     const token = process.env.COOPER_N8N_TOKEN;
     if (!url || !token)
       throw new ErrorHttp(503, "La fábrica todavía no está conectada.");
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          evento: event,
-          dueno_email: user.email,
-          usuario_id: user.id,
-          datos: payload,
-        }),
-        signal: AbortSignal.timeout(10000),
-        cache: "no-store",
-      });
-      if (!response.ok) throw new Error("respuesta");
-      return (await response.json()) as unknown;
-    } catch {
-      throw new ErrorHttp(502, "La fábrica no respondió. Inténtalo de nuevo.");
+    const approval = event === "aprobar_guion" || event === "aprobar_final";
+    const digest = createHash("sha256")
+      .update(JSON.stringify([user.id, event, payload]))
+      .digest("hex");
+    const id = approval
+      ? `${digest.slice(0, 8)}-${digest.slice(8, 12)}-4${digest.slice(13, 16)}-a${digest.slice(17, 20)}-${digest.slice(20, 32)}`
+      : randomUUID();
+    const request = solicitudSchema.parse({
+      version: "cooper-v1",
+      id_evento: id,
+      evento: event,
+      dueno_email: user.email,
+      admin: user.role === "admin",
+      datos: payload,
+    });
+    const encoded = JSON.stringify(request);
+    if (
+      !["estado", "reporte", "pendientes", "tendencias", "gastos"].includes(
+        event,
+      )
+    )
+      db()
+        .insert(bridgeCommands)
+        .values({
+          id: request.id_evento,
+          ownerId: user.id,
+          request: encoded,
+          createdAt: Date.now(),
+        })
+        .onConflictDoNothing()
+        .run();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (
+        db()
+          .select()
+          .from(bridgeCommands)
+          .where(eq(bridgeCommands.id, request.id_evento))
+          .get()?.confirmed
+      )
+        return { aceptado: true };
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: encoded,
+          signal: AbortSignal.timeout(this.opciones.timeoutMs),
+          cache: "no-store",
+          redirect: "error",
+        });
+        if ([408, 429, 500, 502, 503, 504].includes(response.status))
+          throw new Error("temporal");
+        if (!response.ok)
+          throw new ErrorHttp(
+            response.status === 409 ? 409 : 502,
+            response.status === 409
+              ? "La orden sigue pendiente de confirmación en la fábrica."
+              : "La fábrica rechazó la solicitud.",
+          );
+        return (await response.json()) as unknown;
+      } catch (error) {
+        if (error instanceof ErrorHttp) throw error;
+        if (attempt === 2)
+          throw new ErrorHttp(
+            502,
+            "La fábrica no respondió. Revisa el estado antes de repetir la orden.",
+          );
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.opciones.backoffMs * 2 ** attempt),
+        );
+      }
     }
+    throw new ErrorHttp(502, "La fábrica no respondió.");
   }
   async ejecutar(user: User, raw: Orden) {
     const orden = ordenSchema.parse(raw);
     validarOrden(user, orden);
-    // El puente debe aceptar IDs generados por Cooper y devolver confirmación antes de persistir.
     const id = randomUUID();
-    const result = z
-      .object({ aceptado: z.literal(true) })
-      .safeParse(await this.request(user, orden.evento, { ...orden, id }));
-    if (!result.success)
+    if (
+      !aceptadoSchema.safeParse(
+        await this.request(user, orden.evento, { ...orden, id }),
+      ).success
+    )
       throw new ErrorHttp(502, "La fábrica no confirmó la solicitud.");
-    return new FabricaSimulada(id, false).ejecutar(user, orden);
+    const table = orden.evento === "nuevo_canal" ? channels : videos;
+    const existing = db().select().from(table).where(eq(table.id, id)).get();
+    if (existing) requireOwn(user, existing);
+    const result = existing
+      ? { id, mensaje: "Solicitud recibida." }
+      : await new FabricaSimulada(id, false).ejecutar(user, orden);
+    if (orden.evento === "nuevo_video" && !existing)
+      db().update(videos).set({ script: "" }).where(eq(videos.id, id)).run();
+    return {
+      ...result,
+      mensaje:
+        "La fábrica recibió tu solicitud. Verás el avance en tu espacio.",
+    };
   }
   async sincronizar(user: User) {
-    const result = snapshotSchema.safeParse(
+    const result = estadoRemotoSchema.safeParse(
       await this.request(user, "estado", {}),
     );
     if (!result.success)
       throw new ErrorHttp(502, "La fábrica devolvió un estado inválido.");
-    for (const video of result.data.videos)
-      db()
-        .update(videos)
-        .set({
-          stage: video.stage,
-          ...(video.script ? { script: video.script } : {}),
-          updatedAt: Date.now(),
-        })
-        .where(and(eq(videos.id, video.id), eq(videos.ownerId, user.id)))
-        .run();
+    aplicarEstado(user, result.data);
+  }
+  async consultar(user: User, consulta: Exclude<ConsultaPuente, "gastos">) {
+    if (consulta === "estado") {
+      await this.sincronizar(user);
+      return "Estado de la fábrica actualizado.";
+    }
+    const result = consultaSchema.safeParse(
+      await this.request(user, consulta, {}),
+    );
+    if (!result.success)
+      throw new ErrorHttp(502, "La fábrica devolvió una consulta inválida.");
+    return result.data.resumen;
+  }
+  async gastos(user: User) {
+    requireAdmin(user);
+    const result = gastosSchema.safeParse(
+      await this.request(user, "gastos", {}),
+    );
+    if (!result.success)
+      throw new ErrorHttp(502, "No se pudo consultar el gasto de la fábrica.");
+    return result.data;
   }
   async aprobar(user: User, id: string) {
     const video = db().select().from(videos).where(eq(videos.id, id)).get();
     requireOwn(user, video);
     if (!video || !esperaAprobacion(video.stage))
       throw new ErrorHttp(409, "No hay una aprobación pendiente.");
-    const response = z
-      .object({ aceptado: z.literal(true) })
-      .safeParse(
-        await this.request(user, "aprobar", { id, stage: video.stage }),
-      );
-    if (!response.success)
+    const event = video.stage === 3 ? "aprobar_guion" : "aprobar_final";
+    if (
+      !aceptadoSchema.safeParse(
+        await this.request(user, event, {
+          id,
+          revision: video.remoteUpdatedAt,
+        }),
+      ).success
+    )
       throw new ErrorHttp(502, "No se confirmó la aprobación.");
-    await new FabricaSimulada().aprobar(user, id);
+    // La etapa la confirma n8n por webhook o conciliación; nunca se adelanta localmente.
+  }
+  async eliminar(user: User, id: string, tipo: "canal" | "video") {
+    const table = tipo === "canal" ? channels : videos;
+    requireOwner(user, db().select().from(table).where(eq(table.id, id)).get());
+    if (
+      !aceptadoSchema.safeParse(
+        await this.request(user, "eliminar", { id, tipo }),
+      ).success
+    )
+      throw new ErrorHttp(502, "No se confirmó la eliminación.");
+    db().delete(table).where(eq(table.id, id)).run();
   }
 }
 export function fabrica(): Fabrica {

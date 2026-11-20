@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { User } from "@/db/schema";
-import { canalesPropios, videosPropios, type Orden } from "./fabrica";
+import {
+  canalesPropios,
+  videosPropios,
+  FabricaN8n,
+  type Orden,
+} from "./fabrica";
 export const CONSULTAS = [
   "estado",
   "reporte",
@@ -62,6 +67,25 @@ export class ChatSimulado implements ProveedorChat {
       return {
         texto: "",
         orden: { evento, recursoId, texto: after, nombre: after.slice(0, 80) },
+      };
+    }
+    if (
+      process.env.COOPER_FABRICA === "n8n" &&
+      /estado|reporte|pendiente|tendencia/.test(clean)
+    ) {
+      const consulta = /pendiente/.test(clean)
+        ? "pendientes"
+        : /tendencia/.test(clean)
+          ? "tendencias"
+          : /reporte/.test(clean)
+            ? "reporte"
+            : "estado";
+      // El chat conserva el ámbito propio incluso para el administrador.
+      return {
+        texto: await new FabricaN8n().consultar(
+          { ...user, role: "usuario" },
+          consulta,
+        ),
       };
     }
     if (/pendiente/.test(clean))
