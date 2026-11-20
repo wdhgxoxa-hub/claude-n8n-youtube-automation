@@ -1,0 +1,581 @@
+{
+  "entorno": "Chromium local; laboratorio, sin métricas de campo",
+  "mediciones": [
+    {
+      "path": "/",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:19.100Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 618.152,
+        "total-blocking-time": 13.5,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:24.729Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 655.98035,
+        "total-blocking-time": 7,
+        "cumulative-layout-shift": 0.0007550902184235517
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:30.157Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 619.24415,
+        "total-blocking-time": 1.5,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos/77b90c62-b111-46f4-b316-204ad9e4b8a2",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:35.533Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 623.06175,
+        "total-blocking-time": 1,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avatares",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:40.954Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 616.70685,
+        "total-blocking-time": 13,
+        "cumulative-layout-shift": 0.00042543209876543225
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/perfil",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:46.435Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 614.05065,
+        "total-blocking-time": 14,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:51.800Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 612.8992,
+        "total-blocking-time": 1.5,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/entrar",
+      "theme": "oscuro (entrada pública)",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:32:57.208Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 626.2638,
+        "total-blocking-time": 11.5,
+        "cumulative-layout-shift": 0.009862639630816714
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:02.490Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 170.73405,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:08.058Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 166.62405,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:13.427Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.9471,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.000258911434220679
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos/77b90c62-b111-46f4-b316-204ad9e4b8a2",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:18.830Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.2267,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avatares",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:24.367Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.71275,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/perfil",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:29.829Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.61315,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:35.222Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.47585,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0004252161347817001
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/entrar",
+      "theme": "oscuro (entrada pública)",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:33:40.646Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 169.6191,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.002409554069948131
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:33:45.917Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 610.75105,
+        "total-blocking-time": 11,
+        "cumulative-layout-shift": 0.0007815827793605573
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:33:51.387Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 611.8458,
+        "total-blocking-time": 2.5,
+        "cumulative-layout-shift": 0.0007550902184235517
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:33:56.726Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 611.0675,
+        "total-blocking-time": 11.5,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos/77b90c62-b111-46f4-b316-204ad9e4b8a2",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:34:02.022Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 611.31695,
+        "total-blocking-time": 6.5,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avatares",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:34:07.438Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 619.5538,
+        "total-blocking-time": 11.5,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/perfil",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:34:12.860Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 613.4605,
+        "total-blocking-time": 11,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:34:18.151Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 644.0143701904296,
+        "total-blocking-time": 3.431467056274414,
+        "cumulative-layout-shift": 0.0001597467553023109
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/entrar",
+      "theme": "oscuro (entrada pública)",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T21:34:23.510Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 625.29215,
+        "total-blocking-time": 6.5,
+        "cumulative-layout-shift": 0.009862639630816714
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:34:28.751Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 170.6422,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:34:34.338Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 166.90265,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.00031597460837030607
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:34:39.828Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 165.35005,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.000258911434220679
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/videos/77b90c62-b111-46f4-b316-204ad9e4b8a2",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:34:45.285Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.7019,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avatares",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:34:50.824Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 169.9221,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0003411525061755187
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/perfil",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:34:56.339Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.23165,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:35:01.705Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 165.24895,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0001203703703703704
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/entrar",
+      "theme": "oscuro (entrada pública)",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T21:35:07.076Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 169.67713463745116,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    }
+  ]
+}

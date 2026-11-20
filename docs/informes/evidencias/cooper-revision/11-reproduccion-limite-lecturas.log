@@ -1,0 +1,34 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run tests/revision-seguridad.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-revision/cooper
+
+ ❯ tests/revision-seguridad.test.ts (16 tests | 1 failed) 139ms
+   × R11 limita lecturas repetidas y permite recuperarse tras la ventana 74ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R11 limita lecturas repetidas y permite recuperarse tras la ventana
+AssertionError: expected 200 to be 429 // Object.is equality
+
+- Expected
++ Received
+
+- 429
++ 200
+
+ ❯ tests/revision-seguridad.test.ts:187:26
+    185|   for (let i = 0; i < 300; i++) expect((await route("GET", "estado")).…
+    186|   const limited = await route("GET", "estado");
+    187|   expect(limited.status).toBe(429);
+       |                          ^
+    188|   expect(limited.headers.get("Retry-After")).toBe("60");
+    189|   const future = Date.now() + 61000;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  16:18:31
+   Duration  542ms (transform 73ms, setup 15ms, import 307ms, tests 139ms, environment 0ms)

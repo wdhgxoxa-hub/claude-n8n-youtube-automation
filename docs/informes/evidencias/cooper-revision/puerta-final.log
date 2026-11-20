@@ -1,0 +1,77 @@
+
+added 357 packages, and audited 364 packages in 4s
+
+found 0 vulnerabilities
+npm notice run cooper@0.1.0 lint
+npm notice run eslint . --max-warnings 0
+npm notice run cooper@0.1.0 typecheck
+npm notice run tsc --noEmit
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-revision/cooper
+
+
+ Test Files  8 passed (8)
+      Tests  65 passed (65)
+   Start at  16:31:01
+   Duration  3.07s (transform 174ms, setup 38ms, import 1.61s, tests 832ms, environment 0ms)
+
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs
+[WebServer] npm notice run cooper@0.1.0 build
+[WebServer] npm notice run next build
+
+Running 15 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/cooper.spec.ts:34:1 › entrada pública, cabeceras y protección de rutas (595ms)
+  ✓   2 [chromium] › e2e/cooper.spec.ts:82:1 › conversa, pide un video, observa SSE y aprueba las dos puertas (7.0s)
+  ✓   3 [chromium] › e2e/cooper.spec.ts:134:1 › aísla usuarios, gasto, chat, SSE y acciones de video (428ms)
+  ✓   4 [chromium] › e2e/cooper.spec.ts:178:1 › adjuntos y grabación con transcripción editable (1.3s)
+  ✓   5 [chromium] › e2e/cooper.spec.ts:212:1 › biblioteca propia, verificación simulada, privacidad y compartir (1.6s)
+  ✓   6 [chromium] › e2e/cooper.spec.ts:259:1 › perfil guarda tema, inicio y WhatsApp; móvil y teclado (1.5s)
+  ✓   7 [chromium] › e2e/cooper.spec.ts:289:1 › administración, gastos por periodo, alerta y revocación inmediata (1.8s)
+  ✓   8 [chromium] › e2e/cooper.spec.ts:335:1 › auditoría AA de todas las pantallas, anchuras y ambos temas (24.5s)
+  ✓   9 [chromium] › e2e/cooper.spec.ts:410:1 › elige avatar, voz y presencia al pedir un video desde la biblioteca (609ms)
+  ✓  10 [chromium] › e2e/revision.spec.ts:12:1 › R08 recupera SSE después de una respuesta HTTP temporal (1.4s)
+  ✓  11 [chromium] › e2e/revision.spec.ts:32:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar (274ms)
+  ✓  12 [chromium] › e2e/revision.spec.ts:50:1 › privacidad en HTML, JSON y carga de sesión Auth.js (448ms)
+  ✓  13 [chromium] › e2e/revision.spec.ts:122:1 › R12 conserva el correo de invitación cuando falla la red (447ms)
+  ✓  14 [chromium] › e2e/revision.spec.ts:142:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar (484ms)
+  ✓  15 [chromium] › e2e/revision.spec.ts:175:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras (22.0s)
+
+  15 passed (1.2m)
+npm notice run cooper@0.1.0 build
+npm notice run next build
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 16ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 243ms
+  Running TypeScript ...
+  Finished TypeScript in 871ms ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/2) ...
+✓ Generating static pages using 15 workers (2/2) in 213ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

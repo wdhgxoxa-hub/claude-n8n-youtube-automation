@@ -1,0 +1,82 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --grep R12|R13
+[WebServer] npm notice run cooper@0.1.0 build
+[WebServer] npm notice run next build
+
+Running 2 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/revision.spec.ts:122:1 › R12 conserva el correo de invitación cuando falla la red (15.6s)
+  ✘  2 [chromium] › e2e/revision.spec.ts:130:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar (562ms)
+
+
+  1) [chromium] › e2e/revision.spec.ts:122:1 › R12 conserva el correo de invitación cuando falla la red
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByLabel('Correo permitido')
+    Expected: "reintento@example.test"
+    Received: ""
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('Correo permitido') with timeout 15000ms
+      - waiting for getByLabel('Correo permitido')
+        34 × locator resolved to <input id="email" required="" type="email" name="email" maxlength="254" placeholder="persona@equipo.com"/>
+           - unexpected value ""
+
+
+      126 |   await page.getByRole("button", { name: "Invitar", exact: true }).click();
+      127 |   await expect(page.getByRole("alert").filter({ hasText: "Inténtalo de nuevo" })).toBeVisible();
+    > 128 |   await expect(page.getByLabel("Correo permitido")).toHaveValue("reintento@example.test");
+          |                                                     ^
+      129 | });
+      130 | test("R13 libera el micrófono cuando MediaRecorder no puede iniciar", async ({ page }) => {
+      131 |   await page.addInitScript(() => {
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/revision.spec.ts:128:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/revision-R12-conserva-el-c-7fbc1-itación-cuando-falla-la-red-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/revision-R12-conserva-el-c-7fbc1-itación-cuando-falla-la-red-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/revision-R12-conserva-el-c-7fbc1-itación-cuando-falla-la-red-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/revision-R12-conserva-el-c-7fbc1-itación-cuando-falla-la-red-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/revision.spec.ts:130:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      141 |   await page.getByRole("button", { name: "Grabar audio", exact: true }).click();
+      142 |   await expect(page.getByRole("alert").filter({ hasText: "Grabador no disponible" })).toHaveText("Grabador no disponible");
+    > 143 |   expect(await page.evaluate(() => (window as unknown as { grabacionEnsayo: MediaStream }).grabacionEnsayo.getTracks().every(track => track.readyState === "ended"))).toBe(true);
+          |                                                                                                                                                                       ^
+      144 | });
+      145 |
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/revision.spec.ts:143:167
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/revision-R13-libera-el-mic-3263f-iaRecorder-no-puede-iniciar-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/revision-R13-libera-el-mic-3263f-iaRecorder-no-puede-iniciar-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/revision-R13-libera-el-mic-3263f-iaRecorder-no-puede-iniciar-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/revision-R13-libera-el-mic-3263f-iaRecorder-no-puede-iniciar-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › e2e/revision.spec.ts:122:1 › R12 conserva el correo de invitación cuando falla la red
+    [chromium] › e2e/revision.spec.ts:130:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar
