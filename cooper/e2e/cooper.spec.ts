@@ -45,6 +45,9 @@ test("entrada pública, cabeceras y protección de rutas", async ({
   expect(response.headers()["content-security-policy"]).toContain(
     "frame-ancestors 'none'",
   );
+  const csp = response.headers()["content-security-policy"];
+  expect(csp.split(";").find(value => value.trim().startsWith("script-src"))).not.toContain("unsafe-inline");
+  expect(csp).toMatch(/nonce-[A-Za-z0-9+/=]+/);
   expect(response.headers()["x-content-type-options"]).toBe("nosniff");
   expect(
     (

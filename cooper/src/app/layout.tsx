@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     "De una idea a tu próximo video. Tu espacio de creación con Cooper.",
   robots: { index: false, follow: false },
 };
+export const dynamic = "force-dynamic";
 export default function RootLayout({
   children,
 }: {
