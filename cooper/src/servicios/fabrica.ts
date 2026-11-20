@@ -120,106 +120,112 @@ export class FabricaSimulada implements Fabrica {
     validarOrden(user, orden);
     const now = Date.now();
     const id = this.nuevoId ?? randomUUID();
-    return db().transaction((tx) => {
-      let resourceId = orden.recursoId ?? id;
-      switch (orden.evento) {
-        case "nuevo_canal":
-          tx.insert(channels)
-            .values({
-              id,
-              ownerId: user.id,
-              name: orden.nombre || orden.texto.slice(0, 80),
-              niche: orden.texto,
-              createdAt: now,
-            })
-            .run();
-          resourceId = id;
-          break;
-        case "nuevo_video":
-          tx.insert(videos)
-            .values({
-              id,
-              ownerId: user.id,
-              channelId: orden.recursoId!,
-              title: orden.texto.slice(0, 160),
-              avatarId: orden.avatarId ?? "",
-              voiceId: orden.voiceId ?? "",
-              avatarPlacement: orden.avatarPlacement ?? "partes",
-              script: guionInicial(orden.texto),
-              createdAt: now,
-              updatedAt: now,
-            })
-            .run();
-          if (this.registrarGasto)
-            tx.insert(expenses)
+    return db().transaction(
+      (tx) => {
+        let resourceId = orden.recursoId ?? id;
+        switch (orden.evento) {
+          case "nuevo_canal":
+            tx.insert(channels)
               .values({
-                id: randomUUID(),
+                id,
                 ownerId: user.id,
-                amount: 0.84,
-                concept: "Producción simulada",
+                name: orden.nombre || orden.texto.slice(0, 80),
+                niche: orden.texto,
                 createdAt: now,
               })
               .run();
-          resourceId = id;
-          break;
-        case "corregir": {
-          const video = tx
-            .select()
-            .from(videos)
-            .where(eq(videos.id, orden.recursoId!))
-            .get()!;
-          tx.update(videos)
-            .set({
-              feedback: orden.texto,
-              script: video.script + "\n\nREVISIÓN SOLICITADA\n" + orden.texto,
-              stage: video.stage >= 9 ? 4 : 1,
-              updatedAt: now,
-            })
-            .where(eq(videos.id, video.id))
-            .run();
-          break;
+            resourceId = id;
+            break;
+          case "nuevo_video":
+            tx.insert(videos)
+              .values({
+                id,
+                ownerId: user.id,
+                channelId: orden.recursoId!,
+                title: orden.texto.slice(0, 160),
+                avatarId: orden.avatarId ?? "",
+                voiceId: orden.voiceId ?? "",
+                avatarPlacement: orden.avatarPlacement ?? "partes",
+                script: guionInicial(orden.texto),
+                createdAt: now,
+                updatedAt: now,
+              })
+              .run();
+            if (this.registrarGasto)
+              tx.insert(expenses)
+                .values({
+                  id: randomUUID(),
+                  ownerId: user.id,
+                  amount: 0.84,
+                  concept: "Producción simulada",
+                  createdAt: now,
+                })
+                .run();
+            resourceId = id;
+            break;
+          case "corregir": {
+            const video = tx
+              .select()
+              .from(videos)
+              .where(eq(videos.id, orden.recursoId!))
+              .get()!;
+            tx.update(videos)
+              .set({
+                feedback: orden.texto,
+                script:
+                  video.script + "\n\nREVISIÓN SOLICITADA\n" + orden.texto,
+                stage: video.stage >= 9 ? 4 : 1,
+                updatedAt: now,
+              })
+              .where(eq(videos.id, video.id))
+              .run();
+            break;
+          }
+          case "programar": {
+            const date = z.iso
+              .datetime({ offset: true })
+              .safeParse(orden.texto);
+            if (!date.success || Date.parse(orden.texto) <= now)
+              throw new ErrorHttp(
+                400,
+                "Elige una fecha futura con zona horaria.",
+              );
+            tx.update(videos)
+              .set({ scheduledAt: orden.texto })
+              .where(eq(videos.id, orden.recursoId!))
+              .run();
+            break;
+          }
+          case "referencias":
+            tx.update(videos)
+              .set({ references: orden.texto })
+              .where(eq(videos.id, orden.recursoId!))
+              .run();
+            break;
+          default: {
+            const field = {
+              ajustar_biblia: "bible",
+              configurar_redes: "networks",
+              metas: "goals",
+              adoptar_cuenta: "account",
+            }[orden.evento];
+            tx.update(channels)
+              .set({ [field]: orden.texto })
+              .where(eq(channels.id, orden.recursoId!))
+              .run();
+          }
         }
-        case "programar": {
-          const date = z.iso.datetime({ offset: true }).safeParse(orden.texto);
-          if (!date.success || Date.parse(orden.texto) <= now)
-            throw new ErrorHttp(
-              400,
-              "Elige una fecha futura con zona horaria.",
-            );
-          tx.update(videos)
-            .set({ scheduledAt: orden.texto })
-            .where(eq(videos.id, orden.recursoId!))
-            .run();
-          break;
-        }
-        case "referencias":
-          tx.update(videos)
-            .set({ references: orden.texto })
-            .where(eq(videos.id, orden.recursoId!))
-            .run();
-          break;
-        default: {
-          const field = {
-            ajustar_biblia: "bible",
-            configurar_redes: "networks",
-            metas: "goals",
-            adoptar_cuenta: "account",
-          }[orden.evento];
-          tx.update(channels)
-            .set({ [field]: orden.texto })
-            .where(eq(channels.id, orden.recursoId!))
-            .run();
-        }
-      }
-      registrar(user, orden.evento, { ...orden, id: resourceId });
-      const mensaje =
-        orden.evento === "nuevo_video"
-          ? "El video ya está en Radar. Te avisaré cuando el guion necesite tu aprobación."
-          : orden.evento === "nuevo_canal"
-            ? "Tu canal está listo. Cuéntame qué video quieres crear."
-            : "Listo. Guardé los cambios en tu espacio.";
-      return { mensaje, id: resourceId };
-    });
+        registrar(user, orden.evento, { ...orden, id: resourceId });
+        const mensaje =
+          orden.evento === "nuevo_video"
+            ? "El video ya está en Radar. Te avisaré cuando el guion necesite tu aprobación."
+            : orden.evento === "nuevo_canal"
+              ? "Tu canal está listo. Cuéntame qué video quieres crear."
+              : "Listo. Guardé los cambios en tu espacio.";
+        return { mensaje, id: resourceId };
+      },
+      { behavior: "immediate" },
+    );
   }
   async sincronizar(user: User) {
     const now = Date.now();
@@ -227,46 +233,55 @@ export class FabricaSimulada implements Fabrica {
       200,
       Number(process.env.COOPER_SIMULACION_MS) || 8000,
     );
-    db().transaction((tx) => {
-      for (const video of tx
-        .select()
-        .from(videos)
-        .where(eq(videos.ownerId, user.id))
-        .all()) {
-        if (
-          now - video.updatedAt < interval ||
-          esperaAprobacion(video.stage) ||
-          video.stage === 11
-        )
-          continue;
-        if (
-          video.stage === 10 &&
-          video.scheduledAt &&
-          Date.parse(video.scheduledAt) > now
-        )
-          continue;
-        tx.update(videos)
-          .set({ stage: siguienteEtapa(video.stage), updatedAt: now })
-          .where(and(eq(videos.id, video.id), eq(videos.stage, video.stage)))
-          .run();
-      }
-    });
+    db().transaction(
+      (tx) => {
+        for (const video of tx
+          .select()
+          .from(videos)
+          .where(eq(videos.ownerId, user.id))
+          .all()) {
+          if (
+            now - video.updatedAt < interval ||
+            esperaAprobacion(video.stage) ||
+            video.stage === 11
+          )
+            continue;
+          if (
+            video.stage === 10 &&
+            video.scheduledAt &&
+            Date.parse(video.scheduledAt) > now
+          )
+            continue;
+          tx.update(videos)
+            .set({ stage: siguienteEtapa(video.stage), updatedAt: now })
+            .where(and(eq(videos.id, video.id), eq(videos.stage, video.stage)))
+            .run();
+        }
+      },
+      { behavior: "immediate" },
+    );
   }
   async aprobar(user: User, id: string) {
-    db().transaction((tx) => {
-      const video = tx.select().from(videos).where(eq(videos.id, id)).get();
-      requireOwn(user, video);
-      if (!video || !esperaAprobacion(video.stage))
-        throw new ErrorHttp(409, "Este video todavía no necesita aprobación.");
-      tx.update(videos)
-        .set({
-          stage: siguienteEtapa(video.stage, true),
-          updatedAt: Date.now(),
-        })
-        .where(eq(videos.id, id))
-        .run();
-      registrar(user, "aprobacion", { id, stage: video.stage });
-    });
+    db().transaction(
+      (tx) => {
+        const video = tx.select().from(videos).where(eq(videos.id, id)).get();
+        requireOwn(user, video);
+        if (!video || !esperaAprobacion(video.stage))
+          throw new ErrorHttp(
+            409,
+            "Este video todavía no necesita aprobación.",
+          );
+        tx.update(videos)
+          .set({
+            stage: siguienteEtapa(video.stage, true),
+            updatedAt: Date.now(),
+          })
+          .where(eq(videos.id, id))
+          .run();
+        registrar(user, "aprobacion", { id, stage: video.stage });
+      },
+      { behavior: "immediate" },
+    );
   }
 }
 const snapshotSchema = z.object({
@@ -280,6 +295,20 @@ const snapshotSchema = z.object({
     )
     .max(500),
 });
+const operaciones = new Map<string, Promise<void>>();
+function serializar<T>(id: string, task: () => Promise<T>): Promise<T> {
+  const previous = operaciones.get(id) ?? Promise.resolve();
+  const current = previous.then(task, task);
+  const settled = current.then(
+    () => {},
+    () => {},
+  );
+  operaciones.set(id, settled);
+  void settled.then(() => {
+    if (operaciones.get(id) === settled) operaciones.delete(id);
+  });
+  return current;
+}
 export class FabricaN8n implements Fabrica {
   private async request(user: User, event: string, payload: unknown) {
     const url = process.env.COOPER_N8N_URL;
@@ -308,7 +337,16 @@ export class FabricaN8n implements Fabrica {
       throw new ErrorHttp(502, "La fábrica no respondió. Inténtalo de nuevo.");
     }
   }
-  async ejecutar(user: User, raw: Orden) {
+  ejecutar(user: User, raw: Orden) {
+    return serializar(user.id, () => this.ejecutarOrden(user, raw));
+  }
+  sincronizar(user: User) {
+    return serializar(user.id, () => this.sincronizarEstado(user));
+  }
+  aprobar(user: User, id: string) {
+    return serializar(user.id, () => this.aprobarVideo(user, id));
+  }
+  private async ejecutarOrden(user: User, raw: Orden) {
     const orden = ordenSchema.parse(raw);
     validarOrden(user, orden);
     // El puente debe aceptar IDs generados por Cooper y devolver confirmación antes de persistir.
@@ -320,7 +358,7 @@ export class FabricaN8n implements Fabrica {
       throw new ErrorHttp(502, "La fábrica no confirmó la solicitud.");
     return new FabricaSimulada(id, false).ejecutar(user, orden);
   }
-  async sincronizar(user: User) {
+  private async sincronizarEstado(user: User) {
     const result = snapshotSchema.safeParse(
       await this.request(user, "estado", {}),
     );
@@ -337,7 +375,7 @@ export class FabricaN8n implements Fabrica {
         .where(and(eq(videos.id, video.id), eq(videos.ownerId, user.id)))
         .run();
   }
-  async aprobar(user: User, id: string) {
+  private async aprobarVideo(user: User, id: string) {
     const video = db().select().from(videos).where(eq(videos.id, id)).get();
     requireOwn(user, video);
     if (!video || !esperaAprobacion(video.stage))
