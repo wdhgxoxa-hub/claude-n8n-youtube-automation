@@ -11,9 +11,11 @@ import { useMovimientoReducido } from "./movimiento";
 
 export function Recorrido({
   stage,
+  productionState = "activa",
   compact = false,
 }: {
   stage: number;
+  productionState?: string;
   compact?: boolean;
 }) {
   const reduced = useMovimientoReducido();
@@ -48,15 +50,21 @@ export function Recorrido({
             <span>{name}</span>
             {index === stage && (
               <small>
-                {esperaAprobacion(stage)
-                  ? "Necesita tu mirada"
-                  : stage === 11
-                    ? "Listo para el mundo"
-                    : "En proceso"}
+                {productionState === "cancelada"
+                  ? "Cancelado"
+                  : productionState === "pausada"
+                    ? "En pausa"
+                    : esperaAprobacion(stage)
+                      ? "Necesita tu mirada"
+                      : stage === 11
+                        ? "Listo para el mundo"
+                        : "En proceso"}
               </small>
             )}
           </div>
-          {index === stage && <span className="stage-live" />}
+          {index === stage && productionState === "activa" && (
+            <span className="stage-live" />
+          )}
         </motion.li>
       ))}
     </motion.ol>
@@ -83,9 +91,13 @@ export function VideoMini({
         </small>
         <Title>{video.title}</Title>
         <span
-          className={`video-status ${esperaAprobacion(video.stage) ? "pending" : video.stage === 11 ? "finished" : ""}`}
+          className={`video-status ${video.productionState === "activa" && esperaAprobacion(video.stage) ? "pending" : video.stage === 11 ? "finished" : ""}`}
         >
-          {ETAPAS[video.stage]}
+          {video.productionState === "cancelada"
+            ? "Cancelado"
+            : video.productionState === "pausada"
+              ? "En pausa"
+              : ETAPAS[video.stage]}
         </span>
       </div>
       <ArrowUpRight size={18} />
@@ -100,7 +112,9 @@ export function FabricaVista() {
     data.videos.find((v) => v.id === selected) ??
     data.videos.find((v) => v.stage < 11) ??
     data.videos[0];
-  const pending = data.videos.filter((v) => esperaAprobacion(v.stage));
+  const pending = data.videos.filter(
+    (v) => v.productionState === "activa" && esperaAprobacion(v.stage),
+  );
   const completed = active?.stage === 11 ? 12 : (active?.stage ?? 0);
   return (
     <section className="factory-pane" aria-label="Fábrica en vivo">
@@ -148,7 +162,11 @@ export function FabricaVista() {
               transition={{ duration: reduced ? 0 : 0.65, ease: "easeOut" }}
             />
           </div>
-          <Recorrido stage={active.stage} compact />
+          <Recorrido
+            stage={active.stage}
+            productionState={active.productionState}
+            compact
+          />
           <Link
             className="text-link factory-link"
             href={`/videos/${active.id}`}
@@ -176,7 +194,13 @@ export function FabricaVista() {
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
                     </span>
                     <strong>{v.title}</strong>
-                    <small>{ETAPAS[v.stage]}</small>
+                    <small>
+                      {v.productionState === "cancelada"
+                        ? "Cancelado"
+                        : v.productionState === "pausada"
+                          ? "En pausa"
+                          : ETAPAS[v.stage]}
+                    </small>
                   </motion.button>
                 ))}
               </div>

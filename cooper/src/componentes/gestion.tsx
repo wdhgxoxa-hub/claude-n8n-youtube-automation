@@ -432,6 +432,7 @@ export function DetalleVideo({ id }: { id: string }) {
       </div>
     );
   const own = video.ownerId === data.user.id || data.user.role === "admin";
+  const cancelled = video.productionState === "cancelada";
   async function order(e: FormEvent<HTMLFormElement>, evento: Orden["evento"]) {
     e.preventDefault();
     const values = new FormData(e.currentTarget);
@@ -446,7 +447,7 @@ export function DetalleVideo({ id }: { id: string }) {
       </Link>
       <Heading
         title={video.title}
-        description={`${data.channels.find((c) => c.id === video.channelId)?.name ?? "Canal"} · ${ETAPAS[video.stage]}`}
+        description={`${data.channels.find((c) => c.id === video.channelId)?.name ?? "Canal"} · ${cancelled ? "Cancelado" : video.productionState === "pausada" ? "En pausa" : ETAPAS[video.stage]}`}
       />
       <Notice error={error} message={message} />
       {video.productionNotice && (
@@ -488,22 +489,21 @@ export function DetalleVideo({ id }: { id: string }) {
             <div className="presenter-summary">
               <span>
                 Presentador:{" "}
-                {[
-                  ...data.catalogo,
-                  ...data.assets.filter(
-                    (a) => a.verified && a.status === "listo",
-                  ),
-                ].find((a) => a.id === video.avatarId)?.name ??
-                  "Sin presentador"}
+                {[...data.catalogo, ...data.assets].find(
+                  (a) => a.id === video.avatarId,
+                )?.name ??
+                  (video.avatarId
+                    ? "Presentador elegido no disponible"
+                    : "Sin presentador")}
               </span>
               <span>
                 Voz:{" "}
-                {[
-                  ...data.catalogo,
-                  ...data.assets.filter(
-                    (a) => a.verified && a.status === "listo",
-                  ),
-                ].find((a) => a.id === video.voiceId)?.name ?? "Según el guion"}
+                {[...data.catalogo, ...data.assets].find(
+                  (a) => a.id === video.voiceId,
+                )?.name ??
+                  (video.voiceId
+                    ? "Voz elegida no disponible"
+                    : "Según el guion")}
               </span>
               <span>
                 {video.avatarPlacement === "completo"
@@ -529,7 +529,7 @@ export function DetalleVideo({ id }: { id: string }) {
               </div>
             )}
           </section>
-          {own && (
+          {own && !cancelled && (
             <details className="production-details">
               <summary>Referencias y publicación</summary>
               <p className="muted">
@@ -572,19 +572,23 @@ export function DetalleVideo({ id }: { id: string }) {
         </div>
         <aside className="review-panel">
           <h2>
-            {esperaAprobacion(video.stage)
-              ? "Tu mirada hace la diferencia."
-              : "Así va tu video."}
+            {cancelled
+              ? "Video cancelado."
+              : esperaAprobacion(video.stage)
+                ? "Tu mirada hace la diferencia."
+                : "Así va tu video."}
           </h2>
           <p>
-            {esperaAprobacion(video.stage)
-              ? "Revisa el contenido. Avanzamos cuando nos des el visto bueno."
-              : "Cada etapa prepara la siguiente. Te avisamos cuando necesitemos tu aprobación."}
+            {cancelled
+              ? "Tu elección se conserva. Esta producción ya no admite aprobaciones ni cambios."
+              : esperaAprobacion(video.stage)
+                ? "Revisa el contenido. Avanzamos cuando nos des el visto bueno."
+                : "Cada etapa prepara la siguiente. Te avisamos cuando necesitemos tu aprobación."}
           </p>
           <div className="review-actions">
             <button
               className="button"
-              disabled={busy || !esperaAprobacion(video.stage)}
+              disabled={busy || cancelled || !esperaAprobacion(video.stage)}
               onClick={() => void act(`videos/${id}/aprobar`, {})}
             >
               <Check size={17} />
@@ -592,13 +596,13 @@ export function DetalleVideo({ id }: { id: string }) {
             </button>
             <button
               className="button secondary"
-              disabled={busy || video.stage === 11}
+              disabled={busy || cancelled || video.stage === 11}
               onClick={() => setChanges(!changes)}
             >
               Pedir cambios
             </button>
           </div>
-          {changes && (
+          {changes && !cancelled && (
             <form
               className="stack changes-form"
               onSubmit={(e) => {
@@ -624,7 +628,10 @@ export function DetalleVideo({ id }: { id: string }) {
               </button>
             </form>
           )}
-          <Recorrido stage={video.stage} />
+          <Recorrido
+            stage={video.stage}
+            productionState={video.productionState}
+          />
           <button
             className="text-button danger"
             onClick={async () => {

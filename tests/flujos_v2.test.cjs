@@ -1450,7 +1450,7 @@ test('presentación: consulta firmada usa la selección persistida y parada cort
   const stop=run(codeOf(v,'Estado detenido'),{nodes:{'Consultar Cooper':{estado:'cancelada',aviso:'Consentimiento revocado'}}})[0].json;
   assert.strictEqual(stop.estado,'cancelado');
   assert.throws(()=>run(codeOf(v,'Detener presentación'),{nodes:{'Consultar Cooper':{aviso:'Consentimiento revocado'}}}),/revocado/);
-  for (const [flow,destinos] of [[PROD,['Renderizar','¿Todo encendido?','¿Hay avatares?']],[SON,['Voz (Gemini TTS)','Voz (HeyGen)','Voz (ElevenLabs)']],[wf('FabAvatar0000001'),['Crear avatar','Consultar avatar','Avatar listo']]]) {
+  for (const [flow,destinos] of [[PROD,['Renderizar','¿Todo encendido?','¿Hay avatares?']],[SON,['Textos de voz','Voz (Gemini TTS)','Voz (HeyGen)','Voz (ElevenLabs)']],[wf('FabAvatar0000001'),['Pedido de avatar','Crear avatar','Consultar avatar','Avatar listo']]]) {
     for(const destino of destinos){const p='Presentación · '+destino;assert.ok(flow.nodes.some(n=>n.name===p+' validar'));
       const parents=Object.entries(flow.connections).filter(([,k])=>k.main?.flat().some(e=>e.node===destino)).map(([name])=>name);
       assert.deepStrictEqual(parents,[p+' seguir']);}

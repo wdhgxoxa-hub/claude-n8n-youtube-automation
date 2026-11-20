@@ -157,8 +157,8 @@ guardia_presentacion(PROD,'¿Todo encendido?',extra=", bloqueo:$('Plan de produc
 guardia_presentacion(PROD,'¿Hay avatares?',extra=", bloqueo:$('Preparar avatares').first().json.bloqueo")
 for wf,destinos,control in [(PROD,['Generar imagen','Animar (Gemini Omni)'],'medios'),
     (PROD,['Renderizar','Encargo de calidad','Derivados'],'montaje'),
-    (SONIDO,['Voz (Gemini TTS)','Voz (HeyGen)','Voz (ElevenLabs)'],'voz'),
-    (AVATAR,['Crear avatar','Consultar avatar','Avatar listo'],'avatar'),
+    (SONIDO,['Textos de voz','Voz (Gemini TTS)','Voz (HeyGen)','Voz (ElevenLabs)'],'voz'),
+    (AVATAR,['Pedido de avatar','Crear avatar','Consultar avatar','Avatar listo'],'avatar'),
     (ORQ,['Pedir storyboard','Pedir storyboard corregido','Encargo de producción','Video (publicar)'],'cola'),
     (PUB,['Aprobación final'],'cola')]:
     for destino in destinos: guardia_presentacion(wf,destino,control)

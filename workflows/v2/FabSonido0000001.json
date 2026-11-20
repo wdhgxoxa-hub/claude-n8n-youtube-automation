@@ -870,6 +870,74 @@
       "parameters": {
         "jsCode": "return $input.all();"
       },
+      "id": "e2a9d201-eb72-5a14-80dc-83fb83e17470",
+      "name": "Presentación · Textos de voz entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"voz\"}, pairedItem:{item:k}}));"
+      },
+      "id": "d83b095f-6a56-5388-887c-34422c03ae29",
+      "name": "Presentación · Textos de voz consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "96b98e05-d584-5ed1-8536-0d9813814e6f",
+      "name": "Presentación · Textos de voz validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Textos de voz entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "616c4fbd-56fc-5696-9dd3-080aee1aa642",
+      "name": "Presentación · Textos de voz seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
       "id": "73abca15-bec0-5143-8552-88b29760b846",
       "name": "Presentación · Voz (Gemini TTS) entrada",
       "type": "n8n-nodes-base.code",
@@ -1427,7 +1495,7 @@
       "main": [
         [
           {
-            "node": "Textos de voz",
+            "node": "Presentación · Textos de voz entrada",
             "type": "main",
             "index": 0
           }
@@ -1782,6 +1850,50 @@
         [
           {
             "node": "WAV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Textos de voz entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Textos de voz consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Textos de voz consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Textos de voz validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Textos de voz validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Textos de voz seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Textos de voz seguir": {
+      "main": [
+        [
+          {
+            "node": "Textos de voz",
             "type": "main",
             "index": 0
           }

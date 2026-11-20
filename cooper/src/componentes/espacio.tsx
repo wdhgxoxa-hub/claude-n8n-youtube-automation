@@ -183,7 +183,9 @@ export function Espacio({
       opener?.focus();
     };
   }, [menu]);
-  const pending = data.videos.filter((v) => esperaAprobacion(v.stage)).length;
+  const pending = data.videos.filter(
+    (v) => v.productionState === "activa" && esperaAprobacion(v.stage),
+  ).length;
   return (
     <Context.Provider value={{ data, refresh, connected }}>
       <MotionConfig reducedMotion={paused ? "always" : "user"}>

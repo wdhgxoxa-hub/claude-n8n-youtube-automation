@@ -280,6 +280,74 @@
       "parameters": {
         "jsCode": "return $input.all();"
       },
+      "id": "de75a64a-d538-5848-8d62-9eff828652e0",
+      "name": "Presentación · Pedido de avatar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"avatar\"}, pairedItem:{item:k}}));"
+      },
+      "id": "5350b850-dc8d-5aa1-b223-c138c83f1d4c",
+      "name": "Presentación · Pedido de avatar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "cbc0d138-e5b9-50fc-886e-19e939d51438",
+      "name": "Presentación · Pedido de avatar validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Pedido de avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "5d68db4d-9cf5-5bbd-85a8-582b3a2aaad9",
+      "name": "Presentación · Pedido de avatar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
       "id": "a585eea8-5770-5949-85d6-bd75609f4289",
       "name": "Presentación · Crear avatar entrada",
       "type": "n8n-nodes-base.code",
@@ -565,7 +633,7 @@
       "main": [
         [
           {
-            "node": "Pedido de avatar",
+            "node": "Presentación · Pedido de avatar entrada",
             "type": "main",
             "index": 0
           }
@@ -683,6 +751,50 @@
         [
           {
             "node": "Devolver avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar seguir": {
+      "main": [
+        [
+          {
+            "node": "Pedido de avatar",
             "type": "main",
             "index": 0
           }

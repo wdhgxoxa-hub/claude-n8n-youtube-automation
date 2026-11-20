@@ -570,6 +570,17 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
   await expect(
     page.getByRole("status").filter({ hasText: "Video cancelado" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Aprobar", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Pedir cambios" }),
+  ).toBeDisabled();
+  await expect(page.locator(".presenter-summary")).toContainText(
+    "Voz de prueba",
+  );
+  await expect(page.locator(".journey .current small")).toHaveText("Cancelado");
+  await expect(page.locator(".stage-live")).toHaveCount(0);
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.screenshot({
