@@ -1,0 +1,102 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/integracion.test.ts tests/revision-seguridad.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-integracion/cooper
+
+ ❯ tests/revision-seguridad.test.ts (18 tests | 1 failed) 183ms
+   × R01 rechaza publicar un adjunto ajeno como foto de una voz 15ms
+ ❯ tests/integracion.test.ts (4 tests | 4 failed) 70ms
+   × I01 demo mantiene medios, chat y gastos simulados aunque el entorno seleccione proveedores reales 25ms
+   × I02 una voz no admite fotos aunque todas sean propias 6ms
+   × I03 conciliación del puente espera al escritor SQLite antes de leer y modificar 27ms
+   × I04 un sondeo tardío no vuelve a habilitar un activo cuyo borrado falló 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integracion.test.ts > I01 demo mantiene medios, chat y gastos simulados aunque el entorno seleccione proveedores reales
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/integracion.test.ts:25:120
+     23|   const costs = vi.spyOn(FabricaN8n.prototype, "gastos").mockResolvedV…
+     24|   const chat = vi.spyOn(FabricaN8n.prototype, "consultar").mockResolve…
+     25|   expect([proveedorAvatar(), proveedorVoz(), proveedorCatalogoVoz(), p…
+       |                                                                                                                        ^
+     26|   expect((await administracionActual(user)).fuente).toBe("simulada");
+     27|   await proveedorChat.responder(user, { texto: "reporte", adjuntos: []…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/integracion.test.ts > I02 una voz no admite fotos aunque todas sean propias
+AssertionError: promise resolved "{ …(2) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "id": "fe11922f-15f0-4c4a-9941-827b0a04ada2",
++   "simulada": true,
+  }
+
+ ❯ tests/integracion.test.ts:33:211
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/integracion.test.ts > I03 conciliación del puente espera al escritor SQLite antes de leer y modificar
+AssertionError: expected [Function] to not throw an error but 'SqliteError: database is locked' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"SqliteError: database is locked"
+
+ ❯ tests/integracion.test.ts:39:143
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/integracion.test.ts > I04 un sondeo tardío no vuelve a habilitar un activo cuyo borrado falló
+AssertionError: expected 'listo' not to be 'listo' // Object.is equality
+ ❯ tests/integracion.test.ts:59:24
+     57|   const a = db().select().from(assets).where(eq(assets.id, id)).get()!;
+     58|   expect(a.verified).toBe(false); expect(a.shared).toBe(false);
+     59|   expect(a.status).not.toBe("listo");
+       |                        ^
+     60| });
+     61|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R01 rechaza publicar un adjunto ajeno como foto de una voz
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/revision-seguridad.test.ts:82:26
+     80|     consentimiento: true,
+     81|   });
+     82|   expect(created.status).toBe(400);
+       |                          ^
+     83| });
+     84| it("R01 protege también referencias compartidas corruptas anteriores a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 17 passed (22)
+   Start at  16:42:40
+   Duration  1.09s (transform 143ms, setup 22ms, import 663ms, tests 253ms, environment 0ms)

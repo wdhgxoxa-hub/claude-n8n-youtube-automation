@@ -1,0 +1,357 @@
+[
+  {
+    "informe": "_-oscuro-desktop.html",
+    "auditoria": {
+      "id": "label-content-name-mismatch",
+      "title": "Elements with visible text labels do not have matching accessible names.",
+      "description": "Visible text labels that do not match the accessible name can result in a confusing experience for screen reader users. [Learn more about accessible names](https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch).",
+      "score": 0,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "subItemsHeading": {
+              "key": "relatedNode",
+              "valueType": "node"
+            },
+            "label": "Failing Elements"
+          }
+        ],
+        "items": [
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-0-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,0,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 807,
+                "right": 941,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"true\" aria-label=\"Ver recorrido: Por qué el cielo es azul\" tabindex=\"0\">",
+              "nodeLabel": "04\nPor qué el cielo es azul\nAprobación de guion",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-1-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,1,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 951,
+                "right": 1084,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: El mar también respira\" tabindex=\"0\">",
+              "nodeLabel": "08\nEl mar también respira\nMontaje",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-2-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,2,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 1094,
+                "right": 1228,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: ¿A qué huele la lluvia?\" tabindex=\"0\">",
+              "nodeLabel": "04\n¿A qué huele la lluvia?\nAprobación de guion",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-3-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,3,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 1238,
+                "right": 1371,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: La ciudad antes del ruido\" tabindex=\"0\">",
+              "nodeLabel": "10\nLa ciudad antes del ruido\nAprobación final",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-4-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,4,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 1054,
+                "bottom": 1181,
+                "left": 807,
+                "right": 941,
+                "width": 134,
+                "height": 126
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: Por qué el cielo cambia de color\" tabindex=\"0\">",
+              "nodeLabel": "12\nPor qué el cielo cambia de color\nPublicado",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "impact": "serious",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "informe": "_-claro-desktop.html",
+    "auditoria": {
+      "id": "errors-in-console",
+      "title": "Browser errors were logged to the console",
+      "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://developer.chrome.com/docs/lighthouse/best-practices/errors-in-console/)",
+      "score": 0,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "sourceLocation",
+            "valueType": "source-location",
+            "label": "Source"
+          },
+          {
+            "key": "description",
+            "valueType": "code",
+            "label": "Description"
+          }
+        ],
+        "items": [
+          {
+            "source": "rendering",
+            "description": "Error: <path> attribute d: Expected moveto path command ('M' or 'm'), \"undefined\".",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://127.0.0.1:40347/_next/static/chunks/0n6al72xmijsw.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 115053
+            }
+          },
+          {
+            "source": "rendering",
+            "description": "Error: <path> attribute d: Expected moveto path command ('M' or 'm'), \"undefined\".",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://127.0.0.1:40347/_next/static/chunks/0n6al72xmijsw.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 115053
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "informe": "_-claro-desktop.html",
+    "auditoria": {
+      "id": "label-content-name-mismatch",
+      "title": "Elements with visible text labels do not have matching accessible names.",
+      "description": "Visible text labels that do not match the accessible name can result in a confusing experience for screen reader users. [Learn more about accessible names](https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch).",
+      "score": 0,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "subItemsHeading": {
+              "key": "relatedNode",
+              "valueType": "node"
+            },
+            "label": "Failing Elements"
+          }
+        ],
+        "items": [
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-0-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,0,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 807,
+                "right": 941,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"true\" aria-label=\"Ver recorrido: Por qué el cielo es azul\" tabindex=\"0\">",
+              "nodeLabel": "04\nPor qué el cielo es azul\nAprobación de guion",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-1-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,1,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 951,
+                "right": 1084,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: El mar también respira\" tabindex=\"0\">",
+              "nodeLabel": "08\nEl mar también respira\nMontaje",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-2-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,2,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 1094,
+                "right": 1228,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: ¿A qué huele la lluvia?\" tabindex=\"0\">",
+              "nodeLabel": "04\n¿A qué huele la lluvia?\nAprobación de guion",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-3-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,3,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 933,
+                "bottom": 1044,
+                "left": 1238,
+                "right": 1371,
+                "width": 134,
+                "height": 111
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: La ciudad antes del ruido\" tabindex=\"0\">",
+              "nodeLabel": "10\nLa ciudad antes del ruido\nAprobación final",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "1-4-BUTTON",
+              "path": "1,HTML,1,BODY,1,DIV,2,DIV,1,MAIN,0,DIV,3,DIV,1,SECTION,7,DIV,1,DIV,4,BUTTON",
+              "selector": "section.factory-pane > div.queue > div.queue-strip > button.queue-item",
+              "boundingRect": {
+                "top": 1054,
+                "bottom": 1181,
+                "left": 807,
+                "right": 941,
+                "width": 134,
+                "height": 126
+              },
+              "snippet": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: Por qué el cielo cambia de color\" tabindex=\"0\">",
+              "nodeLabel": "12\nPor qué el cielo cambia de color\nPublicado",
+              "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "impact": "serious",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "informe": "_avatares-claro-desktop.html",
+    "auditoria": {
+      "id": "errors-in-console",
+      "title": "Browser errors were logged to the console",
+      "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://developer.chrome.com/docs/lighthouse/best-practices/errors-in-console/)",
+      "score": 0,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "sourceLocation",
+            "valueType": "source-location",
+            "label": "Source"
+          },
+          {
+            "key": "description",
+            "valueType": "code",
+            "label": "Description"
+          }
+        ],
+        "items": [
+          {
+            "source": "rendering",
+            "description": "Error: <path> attribute d: Expected moveto path command ('M' or 'm'), \"undefined\".",
+            "sourceLocation": {
+              "type": "source-location",
+              "url": "http://127.0.0.1:40347/_next/static/chunks/0n6al72xmijsw.js",
+              "urlProvider": "network",
+              "line": 0,
+              "column": 115053
+            }
+          }
+        ]
+      }
+    }
+  }
+]

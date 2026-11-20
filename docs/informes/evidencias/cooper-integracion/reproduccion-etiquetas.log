@@ -1,0 +1,178 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --project=demostracion --grep demostración: siete
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 16ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 262ms
+  Running TypeScript ...
+  Finished TypeScript in 1070ms ...
+  Collecting page data using 16 workers ...
+  Generating static pages using 16 workers (0/3) ...
+✓ Generating static pages using 16 workers (3/3) in 201ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✘  1 [demostracion] › e2e/diseno.spec.ts:33:1 › demostración: siete pantallas, dos tamaños y fábrica seleccionable (981ms)
+
+
+  1) [demostracion] › e2e/diseno.spec.ts:33:1 › demostración: siete pantallas, dos tamaños y fábrica seleccionable
+
+    Error: inicio 1440
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 100
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+    +     "help": "Elements must have their visible text as part of their accessible name",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=playwright",
+    +     "id": "label-content-name-mismatch",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "label-content-name-mismatch",
+    +             "impact": "serious",
+    +             "message": "Text inside the element is not included in the accessible name",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Text inside the element is not included in the accessible name",
+    +         "html": "<button class=\"queue-item\" aria-pressed=\"true\" aria-label=\"Ver recorrido: El mar también respira\" tabindex=\"0\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".queue-item:nth-child(1)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "label-content-name-mismatch",
+    +             "impact": "serious",
+    +             "message": "Text inside the element is not included in the accessible name",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Text inside the element is not included in the accessible name",
+    +         "html": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: ¿A qué huele la lluvia?\" tabindex=\"0\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".queue-item:nth-child(2)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "label-content-name-mismatch",
+    +             "impact": "serious",
+    +             "message": "Text inside the element is not included in the accessible name",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Text inside the element is not included in the accessible name",
+    +         "html": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: La ciudad antes del ruido\" tabindex=\"0\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".queue-item:nth-child(3)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "label-content-name-mismatch",
+    +             "impact": "serious",
+    +             "message": "Text inside the element is not included in the accessible name",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Text inside the element is not included in the accessible name",
+    +         "html": "<button class=\"queue-item\" aria-pressed=\"false\" aria-label=\"Ver recorrido: Por qué el cielo cambia de color\" tabindex=\"0\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".queue-item:nth-child(4)",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "wcag21a",
+    +       "wcag253",
+    +       "EN-301-549",
+    +       "EN-9.2.5.3",
+    +       "RGAAv4",
+    +       "RGAA-6.1.5",
+    +     ],
+    +   },
+    + ]
+
+      61 |         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"])
+      62 |         .analyze();
+    > 63 |       expect(result.violations, `${name} ${width}`).toEqual([]);
+         |                                                     ^
+      64 |       await page.screenshot({
+      65 |         path: `${dir}/${name}-${width}.png`,
+      66 |         fullPage: true,
+        at /home/david/Proyectos/cooper-wt/cooper-integracion/cooper/e2e/diseno.spec.ts:63:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/diseno-demostración-siete--8caa6-ños-y-fábrica-seleccionable-demostracion/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/diseno-demostración-siete--8caa6-ños-y-fábrica-seleccionable-demostracion/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/diseno-demostración-siete--8caa6-ños-y-fábrica-seleccionable-demostracion/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/diseno-demostración-siete--8caa6-ños-y-fábrica-seleccionable-demostracion/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [demostracion] › e2e/diseno.spec.ts:33:1 › demostración: siete pantallas, dos tamaños y fábrica seleccionable

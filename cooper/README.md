@@ -2,7 +2,7 @@
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
 
-Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica.
+Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado integrado, puerta completa, capturas y pasos manuales de Walter: [informe final de integración](../docs/informes/cooper-integracion.md).
 
 ## Arranque
 
