@@ -1,6 +1,6 @@
 # Cooper ↔ n8n · contrato y puesta en servicio de fase 2
 
-Implementación preparada en `cooper-fase2`; **no desplegada ni probada contra n8n vivo**. Los JSON se generan exclusivamente con `python3 tools/generar_flujos_v2.py`. Los identificadores de nodos existentes se conservan; dos ejecuciones consecutivas no cambian los archivos.
+Implementación integrada en `cooper-integracion`; **no desplegada ni probada contra n8n vivo**. Los JSON se generan exclusivamente con `python3 tools/generar_flujos_v2.py`. Los identificadores de nodos existentes se conservan; dos ejecuciones consecutivas no cambian los archivos.
 
 ## Componentes y autoridad
 
@@ -36,7 +36,7 @@ Cabeceras: `Content-Type: application/json`, `Authorization: Bearer <COOPER_N8N_
 | Evento | Datos y traducción al Orquestador |
 | --- | --- |
 | `nuevo_canal` | `id`, `texto`, `nombre` opcional → reserva con dueño, `criterios`. Conserva ese ID tras investigación y aprobación del canal. |
-| `nuevo_video` | `id`, `recursoId` de canal, `texto`, `parametros.formato` opcional → `canal_id`, `video_id`, `tema`. Exige canal activo con biblia. |
+| `nuevo_video` | `id`, `recursoId` de canal, `texto`, `parametros.formato` opcional → `canal_id`, `video_id`, `tema`. Exige canal activo con biblia. Avatar/voz seleccionados devuelven 422 hasta implementar el consumo de `presentacion`. |
 | `corregir` | `recursoId` de video, `texto` → instrucción y guion/storyboard según etapa actual. |
 | `aprobar_guion` | `id` de video → `aprobado:guion`; exige etapa `aprobacion_guion` y decisión pendiente. |
 | `aprobar_final` | `id` de video → `aprobado:final`; exige etapa `aprobacion_final` y decisión pendiente. |
@@ -48,7 +48,7 @@ Cabeceras: `Content-Type: application/json`, `Authorization: Bearer <COOPER_N8N_
 | `adoptar_cuenta` | `recursoId` de canal, `texto` con enlace/handle, `parametros.red` opcional. Conserva el ID/dueño durante la propuesta y aprobación. |
 | `eliminar` | `id`, `tipo: canal|video`. Marca `eliminado`; canal marca también sus videos. Solo en reposo: guion/final esperando aprobación o publicado. Con producción en curso devuelve 409. |
 
-La aceptación devuelve `200 {"aceptado":true}`: confirma **entrega al Orquestador**, no terminación del trabajo ni publicación. Los frenos y decisiones del Orquestador siguen vigentes. `400`: entrada inválida; `401`: token inválido; `403`: autoridad insuficiente; `404`: recurso ausente/ajeno; `409`: recurso no preparado, falta decisión, producción activa u orden con resultado incierto. Los errores de transporte se traducen a mensajes genéricos en Cooper.
+La aceptación devuelve `200 {"aceptado":true}`: confirma **entrega al Orquestador**, no terminación del trabajo ni publicación. Los frenos y decisiones del Orquestador siguen vigentes. `400`: entrada inválida; `401`: token inválido; `403`: autoridad insuficiente; `404`: recurso ausente/ajeno; `409`: recurso no preparado, falta decisión, producción activa u orden con resultado incierto. `422`: presentación seleccionada no soportada por el montaje actual; no se despacha ni se ignora la selección. Los errores de transporte se traducen a mensajes genéricos en Cooper.
 
 Las aprobaciones de guion y final con dueño quedan registradas sin formulario paralelo ni URL de reanudación. FX recupera el contexto de `fab_aprobaciones.pedido`, nunca del navegador, cierra la decisión y avanza. Las decisiones de **canal, storyboard y permiso de gasto** conservan el circuito del operador: no se convierten en aprobaciones automáticas.
 
@@ -111,7 +111,7 @@ No ejecutar estos pasos desde la misión de construcción. Aplicar primero en un
 4. Preparar una correspondencia revisada `canal_id → dueno_email` con Walter, en minúsculas. Rellenar **cada** `fab_canales.dueno_email` y `eliminado=false`. No inferir dueño por nombre/tema ni asignar canales de otras personas al admin para silenciar fallos.
 5. Rellenar `fab_videos.dueno_email` desde su canal; `eliminado=false`, `guion_cooper` con el último guion validado disponible (o cadena vacía), `cooper_actualizado_en` con la fecha de actualización en milisegundos y `cooper_evento_id` con un ID de migración único por fila. Revisar las etapas históricas: las decisiones abiertas de guion/final pasan a `aprobacion_guion`/`aprobacion_final` solo cuando exista su fila pendiente con `pedido` válido.
 6. Rellenar `fab_trabajos.dueno_email` por video/canal; resolver explícitamente las investigaciones sin canal. Rellenar `fab_costos.dueno_email` por video o por el prefijo `canal:`; cada fila histórica recibe `paso_id` único y `estimado=true` salvo conciliación acreditada. Las filas sin correspondencia deben resolverse antes de habilitar producción. Verificar cero huérfanos y cero recursos con dueños contradictorios.
-7. En Cooper, con su volumen persistente y entorno de ejecución correcto, aplicar `cd cooper && npm ci && npm run db:migrate`. Esto añade `bridge_commands`, `bridge_receipts` y `videos.remote_updated_at`; no elimina datos. Las migraciones se aplican también al abrir la base. Mantener **una instancia SQLite compartida por todos los procesos de Cooper**; no usar réplicas con discos independientes.
+7. En Cooper, con su volumen persistente y entorno de ejecución correcto, aplicar `cd cooper && npm ci && npm run db:migrate`. Esto aplica `0002_puente` y `0003_medios_reales`: añade órdenes/recibos, marca remota de videos y campos/tablas de medios sin eliminar datos. Una base experimental de fase 3 con el antiguo `0002_medios_reales` necesita migración específica o base de ensayo nueva; no alterar manualmente su diario. Las migraciones se aplican también al abrir la base. Mantener **una instancia SQLite compartida por todos los procesos de Cooper**; no usar réplicas con discos independientes.
 8. Configurar fuera de Git: en ambos servicios `COOPER_N8N_TOKEN` y `COOPER_WEBHOOK_SECRET` (distintos entre sí, mínimo 32 caracteres), y el mismo `COOPER_ADMIN_EMAIL`. En Cooper, `COOPER_N8N_URL=https://N8N/webhook/cooper/v1`, `COOPER_FABRICA=n8n`. En n8n, `COOPER_WEBHOOK_URL=https://COOPER/api/n8n/webhook`. No copiar valores a informes.
 9. Permitir únicamente el módulo `crypto` en los Code nodes (`NODE_FUNCTION_ALLOW_BUILTIN=crypto` en el runner si lo hay). Asegurar acceso a estas variables mediante la configuración `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` y la configuración/allowlist del runner instalado. Esta configuración implica que editores de workflows son operadores de confianza; no darles acceso a usuarios de Cooper. Comprobar que el runner recibe las variables sin imprimir sus valores. Mantener relojes sincronizados.
 10. Importar primero los tres FX nuevos y después los workflows regenerados que los llaman. Inspeccionar diferencias y asociaciones de credenciales existentes. Mantener las opciones de gasto apagadas. El FX de entrada no guarda datos de ejecuciones exitosas/fallidas; comprobar además que el proxy no registre Authorization/cuerpos.

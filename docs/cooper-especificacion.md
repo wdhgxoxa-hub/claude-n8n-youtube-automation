@@ -56,7 +56,7 @@ Añade `datos.presentacion` opcional, versión 1:
   "version": 1,
   "presencia": "partes",
   "avatar": { "recurso_id": "uuid-local", "proveedor": "heygen", "id": "look-del-proveedor", "tipo": "propio" },
-  "voz": { "recurso_id": "gemini:Charon", "proveedor": "gemini", "id": "Charon", "tipo": "catalogo" }
+  "voz": { "recurso_id": "voz-charon", "proveedor": "gemini", "id": "Charon", "tipo": "catalogo" }
 }
 ```
 
@@ -68,4 +68,4 @@ Añade `datos.presentacion` opcional, versión 1:
 - La presentación contiene referencias técnicas, nunca evidencia, fotos, grabaciones, URLs privadas ni consentimiento. Solo circula por el puente autenticado; no forma parte del estado público del navegador.
 - La retirada de compartir bloquea nuevas selecciones y vistas previas en Cooper. No cancela encargos ya aceptados. El puente necesita reconciliar la revocación si Walter exige cancelar material en cola.
 
-El consumo en n8n corresponde al puente/fábrica de fase 2 y su revisión conjunta: esta rama no modifica `tools/generar_flujos_v2.py` ni instala flujos. La base `e60ebf2` aún contiene «Avatar pendiente»; pasar el contrato no demuestra renderización en vivo.
+Estado integrado: el montaje aún contiene «Avatar pendiente» y no consume `presentacion`. FX rechaza con HTTP 422 los pedidos con avatar o voz seleccionados, incluidos los simulados, antes del despacho. Los pedidos sin selección conservan la ruta anterior. Implementar el consumo de este contrato es un pendiente técnico explícito; no se activa con claves ni implica renderización en vivo.

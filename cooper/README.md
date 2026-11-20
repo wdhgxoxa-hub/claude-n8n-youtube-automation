@@ -1,6 +1,6 @@
 # Cooper — fases 1, 2 y 3
 
-Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente preparado en `cooper-fase2` está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
+Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
 
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica.
 
@@ -52,7 +52,7 @@ El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.c
 
 ## Chat y contratos
 
-`ProveedorChat` permite sustituir `ChatSimulado`. El simulador es determinista, no envía datos a servicios externos y selecciona una herramienta por solicitud. La selección de canal en el chat permite dirigir nuevos videos; sin selección usa el último canal propio. Para acciones sobre videos usa el último propio o `videoId` explícito en el contrato. El detalle ofrece controles inequívocos por video.
+`ProveedorChat` permite sustituir `ChatSimulado`. El chat interpreta expresiones de forma determinista y selecciona una herramienta por solicitud. En modo n8n ejecuta órdenes y consultas a través del puente; en modo simulado no usa servicios externos. La selección de canal en el chat permite dirigir nuevos videos; sin selección usa el último canal propio. Para acciones sobre videos usa el último propio o `videoId` explícito en el contrato. El detalle ofrece controles inequívocos por video.
 
 | Evento             | Ejemplo                                               |
 | ------------------ | ----------------------------------------------------- |
@@ -66,7 +66,7 @@ El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.c
 | `metas`            | Metas: Dos videos por semana                          |
 | `adoptar_cuenta`   | Adopta cuenta: @ciencia                               |
 
-Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expresiones concretas; no es un modelo de lenguaje general ni consulta tendencias reales. Incluso el chat del administrador opera solo sobre sus recursos. En las pantallas de gestión, el administrador sí puede ver y actuar sobre los recursos del equipo.
+Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expresiones concretas; no es un modelo de lenguaje general. En modo n8n consulta el radar guardado; en modo simulado ofrece ejemplos. Incluso el chat del administrador opera solo sobre sus recursos. En las pantallas de gestión, el administrador sí puede ver y actuar sobre los recursos del equipo.
 
 `Fabrica` separa producción e interfaz. `FabricaSimulada` persiste operaciones y avanza con los pulsos SSE mientras hay un estudio abierto; no produce archivos audiovisuales reales. El detalle muestra una maqueta animada, no un video renderizado. Las fechas programadas se respetan después de las dos aprobaciones.
 
@@ -74,7 +74,7 @@ Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expre
 
 El receptor `/api/n8n/webhook` valida firma sobre bytes, tiempo, dueño, ID y digest persistidos. SSE reemite progreso del dueño y concilia el estado cada minuto. `COOPER_WEBHOOK_SECRET` debe coincidir con n8n y tener al menos 32 caracteres. En modo n8n, el panel administrativo usa los gastos registrados en `fab_costos`, indicando las estimaciones de las tarifas configuradas. No se mezcla el gasto simulado. El contrato completo, variables de n8n, migración de dueños y pasos para Claude/Walter están en [la guía del puente](../docs/cooper-puente-n8n.md).
 
-El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md).
+El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md). El montaje todavía no consume esa selección: FX devuelve 422 si se pide avatar o voz personalizados, con mensaje recuperable en Cooper. Un video sin selección conserva la voz según guion. No se descarta silenciosamente el presentador.
 
 `ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` tienen implementaciones reales y simuladas seleccionables por entorno. La identidad real pasa por revisión humana de Walter; no hay verificación biométrica automática. Las creaciones y simuladores heredados permanecen etiquetados como tales. Detalles de las APIs actuales, estados, consentimiento fechado, privacidad y límites en [MEDIOS.md](MEDIOS.md).
 
@@ -84,7 +84,7 @@ Cada API obtiene la sesión y valida entradas con Zod. Las páginas privadas usa
 
 Mutaciones con control de origen y límite de 90 solicitudes por minuto por usuario/proceso; lecturas API limitadas a 300. Hay un máximo de cuatro conexiones SSE por usuario/proceso, con cola acotada y liberación al cerrar. Archivo máximo 5 MB, cuerpo JSON máximo 8 MB, hasta cinco adjuntos por mensaje y lista cerrada de MIME. Descarga privada con `nosniff`, sin SVG/HTML de usuario. Cabeceras CSP, HSTS, frame denial y permisos de micrófono limitados al origen. La CSP genera un nonce por respuesta para los scripts y fuerza renderizado dinámico. Solo los estilos conservan `unsafe-inline` por las animaciones. Los adjuntos llevan una CSP `sandbox` propia y se verifica su firma de formato; esto no sustituye el análisis antivirus.
 
-La aplicación solo acepta sesiones Auth.js. Se retiraron la ruta de autenticación de ensayo y las variables `COOPER_TEST_MODE`/`COOPER_TEST_SECRET`: configurarlas no permite entrar, tampoco con host loopback. El ejecutor E2E inicia un emisor separado en `127.0.0.1:33172`, limitado a correos ficticios, base temporal y credencial efímera; emite cookies Auth.js cifradas sin OAuth. Nunca se importa desde `src/` ni se inicia con `npm start`. La revocación se revalida antes y después de cada sincronización SSE. La reconexión de navegador usa espera exponencial hasta 30 segundos y vuelve a entrada si la sesión expira. Los límites y la serialización de operaciones HTTP son locales al proceso; varias réplicas necesitan coordinación compartida.
+La aplicación solo acepta sesiones Auth.js. Se retiraron la ruta de autenticación de ensayo y las variables `COOPER_TEST_MODE`/`COOPER_TEST_SECRET`: configurarlas no permite entrar, tampoco con host loopback. El ejecutor E2E inicia un emisor separado en otro puerto libre de `127.0.0.1`, limitado a correos ficticios, base temporal y credencial efímera; emite cookies Auth.js cifradas sin OAuth. Nunca se importa desde `src/` ni se inicia con `npm start`. La revocación se revalida antes y después de cada sincronización SSE. La reconexión de navegador usa espera exponencial hasta 30 segundos y vuelve a entrada si la sesión expira. Los límites y la serialización de operaciones HTTP son locales al proceso; varias réplicas necesitan coordinación compartida.
 
 Los adjuntos quedan en SQLite; no hay análisis antivirus ni limpieza automática de archivos huérfanos en esta fase. No introducir evidencias personales reales en el modo simulado. Los datos de pruebas son ficticios y quedan en `.cache/`, fuera de Git.
 
@@ -129,4 +129,11 @@ OAuth real requiere las credenciales del equipo; las pruebas automatizadas usan 
 
 Arranca con `COOPER_DEMO=1 npm run dev` (o `COOPER_DEMO=1 npm start` tras compilar). Conserva la autenticación habitual y añade dos canales y cuatro videos de ejemplo a cada cuenta autorizada, una sola vez. Usa un archivo separado: añade `.demo` a `COOPER_DATABASE_PATH` (por defecto `data/cooper.sqlite.demo`). Apagar la variable recupera la base habitual. Las invitaciones del equipo se gestionan por separado en cada base.
 
-La demostración fuerza la fábrica simulada aunque esté configurado n8n. El ejemplo de montaje permanece en esa etapa para poder inspeccionar el diseño; las dos aprobaciones siguen siendo manuales y los videos nuevos conservan el recorrido habitual. Los ejemplos eliminados no reaparecen al volver a entrar. La etiqueta «Demostración» permanece visible también en móvil.
+La demostración fuerza fábrica, medios, transcripción, consultas de chat y gastos simulados aunque el entorno seleccione servicios reales. El ejemplo de montaje permanece en esa etapa para poder inspeccionar el diseño; las dos aprobaciones siguen siendo manuales y los videos nuevos conservan el recorrido habitual. Los ejemplos eliminados no reaparecen al volver a entrar. La etiqueta «Demostración» permanece visible también en móvil.
+
+
+## Integración verificada
+
+Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
+
+`npm run test:e2e` genera 72 PNG finales en `.cache/capturas-final/`, 18 pantallas/estados a 1440 y 390 px en dos temas, con manifiesto. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
