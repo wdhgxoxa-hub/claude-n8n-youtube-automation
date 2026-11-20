@@ -235,9 +235,10 @@ export function Avatares() {
               />
             </label>
             {tab === "avatar" && (
-              <label>
+              <label className="file-picker">
                 Fotos tuyas (hasta tres)
                 <input
+                  className="sr-only"
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   required
@@ -262,6 +263,12 @@ export function Avatares() {
                     }
                   }}
                 />
+                <span
+                  className="file-choice button secondary small"
+                  aria-hidden="true"
+                >
+                  Seleccionar fotos
+                </span>
                 {photos.length > 0 && (
                   <span className="helper">
                     {photos.length} fotos recibidas. La primera se usará como
@@ -270,9 +277,10 @@ export function Avatares() {
                 )}
               </label>
             )}
-            <label>
+            <label className="file-picker">
               Grabación de identidad
               <input
+                className="sr-only"
                 type="file"
                 accept={
                   tab === "voz"
@@ -284,6 +292,12 @@ export function Avatares() {
                     void upload(e.target.files[0], "evidence");
                 }}
               />
+              <span
+                className="file-choice button secondary small"
+                aria-hidden="true"
+              >
+                Seleccionar grabación
+              </span>
             </label>
             <div className="record-identity">
               <Grabador

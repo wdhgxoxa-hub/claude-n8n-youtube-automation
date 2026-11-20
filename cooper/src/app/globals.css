@@ -2433,11 +2433,21 @@ main:focus {
 }
 .identity-review {
   padding: 24px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
 }
 .identity-reviews {
   margin-block: 32px;
 }
 .identity-form blockquote {
   overflow-wrap: anywhere;
+}
+
+.file-picker .file-choice {
+  display: flex;
+  margin-top: 8px;
+  cursor: pointer;
+}
+.file-picker:focus-within .file-choice {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }

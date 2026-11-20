@@ -429,6 +429,7 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
     await noOverflow(page);
+    await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({
       path: `test-results/visual/identidad-${width}.png`,
       fullPage: true,
