@@ -1312,3 +1312,14 @@ test('Cooper: cada clip se cobra con su duración y cada gasto conserva el ID em
   const once=run(stamp,{json:{usd:0.02}})[0].json;
   assert.strictEqual(run(stamp,{json:once})[0].json.paso_id,once.paso_id);
 });
+
+test('Integración: la fábrica rechaza una presentación que aún no puede renderizar', () => {
+  for (const proveedor of ['simulada', 'heygen']) {
+    const out = resolverCooper(solicitudCooper('nuevo_video', {
+      id: 'video-presentador', recursoId: 'c-ana', texto: 'Ensayo',
+      presentacion: { version: 1, presencia: 'completo', avatar: { proveedor, id: 'ficticio', recurso_id: 'local', tipo: 'propio' }, voz: null },
+    }));
+    assert.strictEqual(out.status, 422);
+    assert.strictEqual(out.accion, 'responder');
+  }
+});

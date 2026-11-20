@@ -25,6 +25,8 @@ const resource = b.evento === 'eliminar' ? (d.tipo === 'canal' ? canales : d.tip
 if (b.evento !== 'nuevo_canal' && !resource) return fail(404, 'Recurso no disponible');
 if (b.evento === 'nuevo_canal' && canales.some(c => c.canal_id === d.id) || b.evento === 'nuevo_video' && videos.some(v => v.video_id === d.id)) return fail(409, 'Identificador existente');
 if (b.evento === 'nuevo_video' && (resource.estado !== 'activo' || !String(resource.biblia_ruta).startsWith('trabajo:'))) return fail(409, 'El canal todavía se está preparando');
+// No descartar silenciosamente una selección que el montaje todavía no consume.
+if (b.evento === 'nuevo_video' && (d.presentacion?.avatar || d.presentacion?.voz || d.avatarId || d.voiceId)) return fail(422, 'La presentación seleccionada todavía no está disponible en la fábrica');
 const e = { evento: b.evento, dueno_email: resource?.dueno_email || auth.dueno_email,
   canal_id: b.evento === 'nuevo_canal' ? d.id : resource?.canal_id,
   video_id: b.evento === 'nuevo_video' ? d.id : resource?.video_id || '', cooper: true };

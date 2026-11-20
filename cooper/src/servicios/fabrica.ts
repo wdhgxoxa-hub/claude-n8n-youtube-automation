@@ -394,6 +394,11 @@ export class FabricaN8n implements Fabrica {
         });
         if ([408, 429, 500, 502, 503, 504].includes(response.status))
           throw new Error("temporal");
+        if (response.status === 422)
+          throw new ErrorHttp(
+            422,
+            "La fábrica todavía no admite ese presentador o voz. Crea el video sin presentación personalizada.",
+          );
         if (!response.ok)
           throw new ErrorHttp(
             response.status === 409 ? 409 : 502,
