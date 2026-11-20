@@ -4,11 +4,14 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import * as schema from "./schema";
+import { rutaBase } from "@/lib/demo";
 function connect() {
   // La base es un archivo de ejecución, no un recurso que deba incluirse en el bundle.
   const path = resolve(
-    /* turbopackIgnore: true */ process.env.COOPER_DATABASE_PATH ??
-      "./data/cooper.sqlite",
+    /* turbopackIgnore: true */ rutaBase(
+      process.env.COOPER_DATABASE_PATH ?? "./data/cooper.sqlite",
+      process.env.COOPER_DEMO === "1",
+    ),
   );
   mkdirSync(dirname(path), { recursive: true });
   const sqlite = new Database(path);

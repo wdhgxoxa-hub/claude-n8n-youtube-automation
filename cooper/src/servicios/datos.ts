@@ -13,6 +13,7 @@ import {
 import { requireAdmin } from "@/lib/permisos";
 export function estado(user: User) {
   return {
+    demo: process.env.COOPER_DEMO === "1",
     user,
     channels: db()
       .select()

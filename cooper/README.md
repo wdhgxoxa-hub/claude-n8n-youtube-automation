@@ -135,3 +135,9 @@ Tras construir, `node scripts/auditoria.mjs` mide el inicio autenticado en una i
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.
 
 OAuth real requiere las credenciales del equipo; las pruebas automatizadas usan sesiones locales firmadas y no automatizan una cuenta Google. No se ha desplegado, conectado a proveedores de producción ni publicado videos reales.
+
+## Demostración de diseño
+
+Arranca con `COOPER_DEMO=1 npm run dev` (o `COOPER_DEMO=1 npm start` tras compilar). Conserva la autenticación habitual y añade dos canales y cuatro videos de ejemplo a cada cuenta autorizada, una sola vez. Usa un archivo separado: añade `.demo` a `COOPER_DATABASE_PATH` (por defecto `data/cooper.sqlite.demo`). Apagar la variable recupera la base habitual. Las invitaciones del equipo se gestionan por separado en cada base.
+
+La demostración fuerza la fábrica simulada aunque esté configurado n8n. El ejemplo de montaje permanece en esa etapa para poder inspeccionar el diseño; las dos aprobaciones siguen siendo manuales y los videos nuevos conservan el recorrido habitual. Los ejemplos eliminados no reaparecen al volver a entrar. La etiqueta «Demostración» permanece visible también en móvil.

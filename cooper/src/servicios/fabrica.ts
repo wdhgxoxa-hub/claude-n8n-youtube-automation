@@ -234,6 +234,9 @@ export class FabricaSimulada implements Fabrica {
         .where(eq(videos.ownerId, user.id))
         .all()) {
         if (
+          (process.env.COOPER_DEMO === "1" &&
+            video.id === `demo-${user.id}-0` &&
+            video.stage === 7) ||
           now - video.updatedAt < interval ||
           esperaAprobacion(video.stage) ||
           video.stage === 11
@@ -353,7 +356,10 @@ export class FabricaN8n implements Fabrica {
   }
 }
 export function fabrica(): Fabrica {
-  const mode = process.env.COOPER_FABRICA ?? "simulada";
+  const mode =
+    process.env.COOPER_DEMO === "1"
+      ? "simulada"
+      : (process.env.COOPER_FABRICA ?? "simulada");
   if (!["simulada", "n8n"].includes(mode))
     throw new ErrorHttp(503, "Configuración de fábrica inválida.");
   return mode === "n8n" ? new FabricaN8n() : new FabricaSimulada();

@@ -3,11 +3,12 @@ import { randomUUID } from "node:crypto";
 import { db } from "@/db";
 import { users, allowedEmails } from "@/db/schema";
 import { ErrorHttp } from "./permisos";
+import { prepararDemo } from "@/servicios/demo";
 export function loginGoogle(email: string, name: string, image = "") {
   email = email.trim().toLowerCase();
   const adminEmail = process.env.COOPER_ADMIN_EMAIL?.trim().toLowerCase();
   const database = db();
-  return database.transaction((tx) => {
+  const result = database.transaction((tx) => {
     const existing = tx
       .select()
       .from(users)
@@ -47,4 +48,6 @@ export function loginGoogle(email: string, name: string, image = "") {
         .run();
     return tx.select().from(users).where(eq(users.id, user.id)).get()!;
   });
+  prepararDemo(result);
+  return result;
 }
