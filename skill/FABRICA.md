@@ -61,7 +61,7 @@ Escribe la biblia completa siguiendo `canales/_plantilla/biblia.json`. Incluye e
 
 ### `guion`
 
-`datos`: `tema`, `formato`, `biblia`, `duracion_objetivo_s`, `vidiq` (`use`, `skip` o `datos`), `documental_url` (enlace del documental largo del mismo tema si ya existe; vacío si no: entonces el cierre no lo menciona), `indicaciones` (lo que pidió el operador para este video: gancho, tono, emoción, estructura, cierre; síguelas siempre que no contradigan la biblia ni la exactitud, y si alguna no se puede cumplir con datos verificables, dilo en `notas`). Con `datos`, llega `investigacion_vidiq` (palabras clave con su volumen y videos que destacan en el tema): úsala para el ángulo, el gancho y el título, sin copiar títulos ajenos.
+`datos`: `tema`, `formato`, `biblia`, `duracion_objetivo_s`, `vidiq` (`use`, `skip` o `datos`), `documental_url` (enlace del documental largo del mismo tema si ya existe; vacío si no: entonces el cierre no lo menciona), `indicaciones` (lo que pidió el operador para este video: gancho, tono, emoción, estructura, cierre; síguelas siempre que no contradigan la biblia ni la exactitud, y si alguna no se puede cumplir con datos verificables, dilo en `notas`). **Si `elegir_tema` es `true`** (`tema` vacío): elige tú el tema. Usa `investigacion_vidiq` (videos que más destacan en el nicho y palabras clave), la biblia y `nicho`; descarta lo que ya esté en `temas_recientes` o se parezca mucho. Prefiere el tema con el contraste más fuerte y una cuenta que se pueda explicar con números verificables. Devuelve `tema_elegido` y `motivo_tema` (una frase con la evidencia: qué video o palabra clave lo respalda). Con `datos`, llega `investigacion_vidiq` (palabras clave con su volumen y videos que destacan en el tema): úsala para el ángulo, el gancho y el título, sin copiar títulos ajenos.
 
 Haz, en este orden:
 1. Tres ganchos distintos (pregunta, dato sorprendente, escena). Elige el mejor según `biblioteca/reglas-generales.md` y explica por qué en una línea.
@@ -74,7 +74,7 @@ Haz, en este orden:
 { "titulo": "", "descripcion": "", "ganchos": ["", "", ""], "gancho_elegido": 0, "motivo_gancho": "",
   "guion": "", "capitulos": [ { "t": "0:00", "titulo": "" } ], "fuentes": [ { "afirmacion": "", "url": "" } ],
   "rubrica": { "gancho": 0, "promesa": 0, "claridad": 0, "emocion": 0, "exactitud": 0, "originalidad": 0 },
-  "duracion_estimada_s": 0, "palabras": 0, "notas": "" }
+  "duracion_estimada_s": 0, "palabras": 0, "notas": "", "tema_elegido": "", "motivo_tema": "" }
 ```
 `notas`: incluye la comprobación de la aritmética si hay cuentas (p. ej. «1 + 4 + 4 + 1 = 10»).
 

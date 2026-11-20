@@ -794,3 +794,17 @@ test('todas las expresiones {{ }} de todos los flujos son JavaScript válido (el
     for (const n of w.nodes) ver(n.parameters, n); }
   assert.ok(total > 300); assert.deepStrictEqual(malos, []);
 });
+
+test('tema elegido por la fábrica: sin tema, investiga el nicho, pasa los temas recientes y guarda el tema que eligió el guionista', () => {
+  const canal = { canal_id: 'm', nicho: 'Cómo ganan dinero realmente los negocios: márgenes, costos y estrategias', formato_defecto: 'largo', presupuesto_short_usd: 1.5 };
+  const corre = tema => run(codeOf(ORQ, 'Nuevo video'), { nodes: { Inicio: { canal_id: 'm', tema, formato: 'short' }, 'Buscar canal': canal, 'Buscar biblia': { resultado: '{"resultado":{"tono":"x"}}' } },
+    all: { $input: [{ video_id: 'a', tema: 'Pollería en Lima', createdAt: '2026-11-19' }, { video_id: 'b', tema: 'Gasolineras', createdAt: '2026-11-18' }] } })[0].json;
+  const sin = corre(''); assert.strictEqual(sin.pedido.datos.elegir_tema, true); assert.strictEqual(sin.pedido.datos.tema, '');
+  assert.deepStrictEqual(sin.pedido.datos.temas_recientes, ['Pollería en Lima', 'Gasolineras']); assert.match(sin.fila.tema, /la fábrica elige/);
+  const con = corre('Cuánto gana una gasolinera'); assert.strictEqual(con.pedido.datos.elegir_tema, false); assert.strictEqual(con.pedido.datos.tema, 'Cuánto gana una gasolinera');
+  const vq = run(codeOf(ORQ, 'Pedido a vidIQ'), { nodes: { 'Nuevo video': { pedido: sin.pedido }, 'Leer ajustes': aj } })[0].json;
+  assert.strictEqual(vq.semilla, 'dinero negocios márgenes'); assert.strictEqual(vq.tema, vq.semilla);   // outliers y palabras clave del nicho
+  assert.deepStrictEqual(run(codeOf(ORQ, 'Tema elegido'), { nodes: { Inicio: { resultado: { tema_elegido: 'Cuánto gana un chifa' } } } })[0].json, { tema: 'Cuánto gana un chifa' });
+  assert.strictEqual(run(codeOf(ORQ, 'Tema elegido'), { nodes: { Inicio: { resultado: {} } } }).length, 0);   // con tema dado, no toca la ficha
+  assert.match(nodo(AGT, 'crear_video').parameters.workflowInputs.value.tema, /VACÍO si el operador no da tema/);
+});

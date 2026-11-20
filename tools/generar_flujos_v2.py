@@ -502,13 +502,17 @@ iff(f, '¿Canal activo?', "$json.estado === 'activo' && String($json.biblia_ruta
 dt_get(f, 'Buscar biblia', 'trabajos', 'job_id', "={{ $('Buscar canal').first().json.biblia_ruta.replace('trabajo:','') }}")
 code(f, 'Nuevo video', r"""
 const e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;
-const biblia = (JSON.parse($json.resultado || '{}').resultado) || {};
+const biblia = (JSON.parse($('Buscar biblia').first().json.resultado || '{}').resultado) || {};
+// Sin tema: la fábrica lo elige (vidIQ investiga el nicho y el guionista elige sin repetir los temas recientes).
+const elegir = !String(e.tema || '').trim();
+const recientes = $input.all().map(i => i.json).filter(v => v.video_id && v.tema).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 30).map(v => v.tema);
 const formato = e.formato || canal.formato_defecto || 'largo';
 const video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
 const presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;
-return [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',
+return [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',
   version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },
-  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: e.tema, formato, biblia,
+  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,
+    nicho: canal.nicho || '', formato, biblia,
     duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',
     indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];
 """)
@@ -518,9 +522,9 @@ iff(f, '¿Investigar con vidIQ?', "$('Leer ajustes').first().json.allowVidiq ===
 code(f, 'Pedido a vidIQ', r"""
 // La investigación de palabras clave necesita una semilla corta (2–4 palabras); con la frase entera vidIQ devolvía volumen nulo.
 const p = $('Nuevo video').first().json.pedido;
-const vacias = new Set('a al como con cuanto cuánto de del el en es la las lo los mas más para por que qué se su sus un una uno y o verdad realmente gana ganan cuesta hoy'.split(' '));
-const semilla = String(p.datos.tema || '').toLowerCase().normalize('NFC').replace(/[¿?¡!.,:;«»"()]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !vacias.has(w)).slice(0, 3).join(' ');
-return [{ json: { accion: 'investigar', tema: p.datos.tema, semilla: semilla || p.datos.tema, formato: p.datos.formato, idioma: $('Leer ajustes').first().json.idioma } }];
+const vacias = new Set('a al como cómo con cuanto cuánto de del el en es la las lo los mas más para por que qué se su sus un una uno y o verdad realmente gana ganan cuesta hoy'.split(' '));
+const semilla = String(p.datos.tema || p.datos.nicho || '').toLowerCase().normalize('NFC').replace(/[¿?¡!.,:;«»"()]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !vacias.has(w)).slice(0, 3).join(' ');
+return [{ json: { accion: 'investigar', tema: p.datos.tema || semilla, semilla: semilla || p.datos.tema, formato: p.datos.formato, idioma: $('Leer ajustes').first().json.idioma } }];
 """)
 call(f, 'vidIQ: investigar', W['vidiq'])
 code(f, 'Pedir guion', r"""
@@ -530,7 +534,7 @@ const vq = $('vidIQ: investigar').isExecuted ? $('vidIQ: investigar').first().js
 return [{ json: { ...p, datos: { ...p.datos, ...(vq?.ok ? { vidiq: 'datos', investigacion_vidiq: { palabras_clave: vq.palabras_clave, videos_destacados: vq.videos_destacados } } : {}) } } }];
 """)
 call(f, 'Claude: guion', W['claude'])
-tg(f, 'Aviso: escribiendo', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'Escribiendo el guion de ' + $('Nuevo video').first().json.fila.video_id + '.' }}")
+tg(f, 'Aviso: escribiendo', "={{ $('Leer ajustes').first().json.chatId }}", "={{ ($('Nuevo video').first().json.pedido.datos.elegir_tema ? '🔎 Investigando el nicho para elegir el tema y escribiendo el guion de ' : '✍️ Escribiendo el guion de ') + $('Nuevo video').first().json.fila.video_id + '.' }}")
 tg(f, 'Aviso: canal no listo', "={{ $('Leer ajustes').first().json.chatId }}", "={{ 'No encuentro un canal activo con id ' + $('Inicio').first().json.canal_id + '.' }}")
 f.link('Según evento', 'Buscar canal', 5)
 f.link('Buscar canal', '¿Canal activo?')
@@ -554,7 +558,11 @@ f.link('Revisar topes', '¿Dentro de los topes?')
 f.link('¿Dentro de los topes?', 'Buscar biblia', 0)
 f.link('¿Dentro de los topes?', 'Aviso: tope diario', 1)
 f.link('¿Canal activo?', 'Aviso: canal no listo', 1)
-f.chain('Buscar biblia', 'Nuevo video', 'Fila del video', 'Guardar video', '¿Investigar con vidIQ?')
+f.add('Temas recientes del canal', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'canal_id', 'condition': 'eq', 'keyValue': "={{ $('Buscar canal').first().json.canal_id }}"}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+f.chain('Buscar biblia', 'Temas recientes del canal', 'Nuevo video', 'Fila del video', 'Guardar video', '¿Investigar con vidIQ?')
 f.link('¿Investigar con vidIQ?', 'Pedido a vidIQ', 0)
 f.link('¿Investigar con vidIQ?', 'Pedir guion', 1)
 f.chain('Pedido a vidIQ', 'vidIQ: investigar', 'Pedir guion', 'Claude: guion', 'Aviso: escribiendo')
@@ -596,12 +604,16 @@ if ($('Veredicto del crítico').isExecuted && $('Veredicto del crítico').first(
   const n = $('Veredicto del crítico').first().json.notas; critica = '\nCrítico (GPT-6 Astra): ' + Object.entries(n).map(([k, v]) => k + ' ' + v).join(' · '); }
 const mensaje = `Guion: ${r.titulo}\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\nRúbrica: ${nota}${critica}\n\n${String(r.guion || '').slice(0, 3000)}`;
 const prom = Object.values(rb).length ? Math.round(Object.values(rb).reduce((a, b) => a + Number(b || 0), 0) / Object.values(rb).length * 10) / 10 : null;
-const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
+const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}` + (r.tema_elegido ? `\n🔎 Tema elegido por la fábrica: ${String(r.motivo_tema || '').slice(0, 160)}` : '') + `\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
 return [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];
 """)
 call(f, 'Aprobar guion', W['aprob'], wait=False)
 f.link('Según evento', 'Video (crítico)', 6)
 f.link('Video (crítico)', '¿Criticar guion?')
+code(f, 'Tema elegido', "const r = $('Inicio').first().json.resultado || {}; const t = String(r.tema_elegido || '').trim(); return t ? [{ json: { tema: t.slice(0, 500) } }] : [];")
+dt_update(f, 'Guardar tema elegido', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
+f.link('Video (crítico)', 'Tema elegido')
+f.link('Tema elegido', 'Guardar tema elegido')
 f.add('Temas del canal', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
        'filters': {'conditions': [{'keyName': 'canal_id', 'condition': 'eq', 'keyValue': "={{ $('Inicio').first().json.canal_id }}"}]}, 'returnAll': True},
@@ -1700,6 +1712,7 @@ f.add('Agente', '@n8n/n8n-nodes-langchain.agent', 3.1,
            'Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. '
            'Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. '
            'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes. '
+           'Si el operador pide un video sin tema o que la fábrica elija el tema, usa crear_video con tema vacío: la fábrica investiga el nicho y elige. '
            'Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). '
            'Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. '
            'Nunca publicas ni gastas: la fábrica pide aprobación con un enlace «Revisar y decidir» (en Telegram y en pendientes). Si falta un dato (canal, video, tema, fecha), pregunta solo eso. '
@@ -1724,7 +1737,7 @@ def tool(name, desc, values, wid=None):
 AI = lambda k, d: "={{ $fromAI('" + k + "', '" + d + "', 'string') }}"
 tool('crear_canal', 'Investiga nichos y propone un canal nuevo para aprobar.', {'evento': 'nuevo_canal', 'criterios': AI('criterios', 'preferencias del operador; puede ir vacío')})
 tool('crear_video', 'Crea un video en un canal activo: escribe el guion y lo manda a aprobar.',
-     {'evento': 'nuevo_video', 'canal_id': AI('canal_id', 'id del canal'), 'tema': AI('tema', 'tema del video, corto'), 'formato': AI('formato', 'largo o short'),
+     {'evento': 'nuevo_video', 'canal_id': AI('canal_id', 'id del canal'), 'tema': AI('tema', 'tema del video, corto; VACÍO si el operador no da tema o pide que la fábrica lo elija'), 'formato': AI('formato', 'largo o short'),
       'indicaciones': AI('indicaciones', 'todo lo demás que pidió el operador para este video, con sus palabras: gancho, tono, emoción, estructura, competencia, cierre; vacío si no pidió nada')})
 tool('estado', 'Muestra los últimos videos con su etapa, estado y costo.', {'tipo': 'estado'}, W['estado'])
 tool('reporte', 'Resume por canal lo producido, publicado y gastado en un periodo.',

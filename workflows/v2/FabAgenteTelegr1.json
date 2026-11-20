@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "cdbea081-87f4-4060-bd95-5c4ac5e50d08",
+      "id": "795b6ae7-02ec-49fd-9b1e-58dcaa92eb94",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -20,10 +20,10 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes. Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. Nunca publicas ni gastas: la fábrica pide aprobación con un enlace «Revisar y decidir» (en Telegram y en pendientes). Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
+          "systemMessage": "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes. Si el operador pide un video sin tema o que la fábrica elija el tema, usa crear_video con tema vacío: la fábrica investiga el nicho y elige. Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. Nunca publicas ni gastas: la fábrica pide aprobación con un enlace «Revisar y decidir» (en Telegram y en pendientes). Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
         }
       },
-      "id": "5529c7f6-189b-4283-a10d-5715a6f300ed",
+      "id": "95cec273-6700-4a94-8a7c-87a0e0c017a4",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
@@ -42,7 +42,7 @@
         "responsesApiEnabled": true,
         "options": {}
       },
-      "id": "75c6367a-4541-4f4c-a710-bb844f1c9251",
+      "id": "31c0f6c9-3450-4b56-a9fb-fbbf066e0e61",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
@@ -63,7 +63,7 @@
         "sessionKey": "={{ 'fabrica-' + $('Inicio').first().json.chatId }}",
         "contextWindowLength": 20
       },
-      "id": "bcf3ea04-9d8b-4701-965d-8aaac90cc7a0",
+      "id": "4a1e7b4d-d3ad-413b-8822-a69cea8fdcaa",
       "name": "Memoria",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -113,7 +113,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "cc46ac55-5b10-4417-b7f5-e055203cd731",
+      "id": "2412659e-99e2-485b-9aed-b090f12a217f",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -135,7 +135,7 @@
           "value": {
             "evento": "nuevo_video",
             "canal_id": "={{ $fromAI('canal_id', 'id del canal', 'string') }}",
-            "tema": "={{ $fromAI('tema', 'tema del video, corto', 'string') }}",
+            "tema": "={{ $fromAI('tema', 'tema del video, corto; VACÍO si el operador no da tema o pide que la fábrica lo elija', 'string') }}",
             "formato": "={{ $fromAI('formato', 'largo o short', 'string') }}",
             "indicaciones": "={{ $fromAI('indicaciones', 'todo lo demás que pidió el operador para este video, con sus palabras: gancho, tono, emoción, estructura, competencia, cierre; vacío si no pidió nada', 'string') }}"
           },
@@ -196,7 +196,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "701cd028-abc3-4383-bee8-021f1ef7ba25",
+      "id": "d3cc6af9-fd8e-489a-b428-d3c327ccd039",
       "name": "crear_video",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -235,7 +235,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "f8cb3940-e079-41dc-b61e-efea0eef87e6",
+      "id": "3501214f-4968-4091-8a48-23260a361e17",
       "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -296,7 +296,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "388e59ce-2031-4a33-8640-8a1ce60711b0",
+      "id": "93236df7-de05-49b4-8ff2-ad457fd67263",
       "name": "reporte",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -368,7 +368,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "b9ef1420-7944-42f9-ba7a-9f24333a6941",
+      "id": "1e7ea1c4-a6c0-4bbc-981f-f3ed5508f382",
       "name": "corregir",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -440,7 +440,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "12c9ff49-5994-4d6d-94ad-e6f6458c805e",
+      "id": "192b09f7-eec6-4ad2-bf6a-4369f07d87a7",
       "name": "ajustar_biblia",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -501,7 +501,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "e513175d-27d4-4650-aed0-c8a04ee81085",
+      "id": "dfb97416-6802-4cd3-b4d8-83f94fcf27f3",
       "name": "programar",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -551,7 +551,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "6290ed33-a10e-493a-8981-7ea13b5ecfa2",
+      "id": "67b551fa-2be9-4551-9485-6b0c48ca6741",
       "name": "referencias",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -634,7 +634,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "9968d48b-d9e1-46a0-b578-9d682e94435e",
+      "id": "3221978d-3891-46ba-8cf2-6345f5939c02",
       "name": "configurar_redes",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -684,7 +684,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "dc568951-674a-4b44-82ed-b12ae796c780",
+      "id": "b1187ed7-aa18-4297-b96b-a3d7a65e4bbd",
       "name": "conectar_youtube",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -723,7 +723,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "896eef0f-5d0b-43f1-92c1-d23cee59c646",
+      "id": "a31d700c-295d-48a8-9f78-1e81d75358d2",
       "name": "pendientes",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -736,7 +736,7 @@
       "parameters": {
         "jsCode": "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];"
       },
-      "id": "68d2b39f-7aa2-43b7-8e9f-6e0624dbad55",
+      "id": "06bbf827-f0e5-4af0-928c-acd6c16d49a0",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
