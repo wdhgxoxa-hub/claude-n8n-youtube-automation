@@ -1,0 +1,40 @@
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 19ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 484ms
+  Running TypeScript ...
+  Finished TypeScript in 1206ms ...
+  Collecting page data using 16 workers ...
+  Generating static pages using 16 workers (0/3) ...
+✓ Generating static pages using 16 workers (3/3) in 191ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✓  1 [demostracion] › e2e/diseno.spec.ts:320:1 › la barra lateral cubre páginas largas y permite navegar con poca altura (4.4s)
+
+  1 passed (6.4s)

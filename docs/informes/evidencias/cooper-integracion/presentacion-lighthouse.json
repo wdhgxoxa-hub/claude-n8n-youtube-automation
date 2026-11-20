@@ -1,0 +1,77 @@
+{
+  "entorno": "Chromium local; laboratorio, sin métricas de campo",
+  "mediciones": [
+    {
+      "path": "/",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T22:50:39.350Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 620.596,
+        "total-blocking-time": 48.5,
+        "cumulative-layout-shift": 0.003418989197530865
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T22:50:45.128Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 185.33995,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.001080493967817644
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-20T22:50:50.931Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 613.60905,
+        "total-blocking-time": 1,
+        "cumulative-layout-shift": 0.001333789173789174
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-20T22:50:56.417Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.58,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0003881172839506173
+      },
+      "warnings": [],
+      "failedAudits": []
+    }
+  ]
+}

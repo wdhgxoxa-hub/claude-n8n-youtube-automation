@@ -1,0 +1,81 @@
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 48ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 436ms
+  Running TypeScript ...
+  Finished TypeScript in 1156ms ...
+  Collecting page data using 16 workers ...
+  Generating static pages using 16 workers (0/3) ...
+✓ Generating static pages using 16 workers (3/3) in 202ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✘  1 [demostracion] › e2e/diseno.spec.ts:320:1 › la barra lateral cubre páginas largas y permite navegar con poca altura (15.8s)
+
+
+  1) [demostracion] › e2e/diseno.spec.ts:320:1 › la barra lateral cubre páginas largas y permite navegar con poca altura 
+
+    Error: expect(locator).toBeInViewport() failed
+
+    Locator:  locator('.sidebar').getByRole('link', { name: 'Mi perfil' })
+    Expected: in viewport
+    Received: viewport ratio 0
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toBeInViewport" locator('.sidebar').getByRole('link', { name: 'Mi perfil' }) with timeout 15000ms
+      - waiting for locator('.sidebar').getByRole('link', { name: 'Mi perfil' })
+        33 × locator resolved to <a href="/perfil">…</a>
+           - unexpected value "viewport ratio 0"
+
+
+      333 |         expect(rail?.height).toBe(480);
+      334 |         await page.locator(".sidebar").getByRole("link", { name: "Mi perfil" }).scrollIntoViewIfNeeded();
+    > 335 |         await expect(page.locator(".sidebar").getByRole("link", { name: "Mi perfil" })).toBeInViewport();
+          |                                                                                         ^
+      336 |       } else {
+      337 |         const bounds = await page.evaluate(() => {
+      338 |           const rail = document.querySelector(".sidebar")!.getBoundingClientRect();
+        at /home/david/Proyectos/cooper-wt/cooper-integracion/cooper/e2e/diseno.spec.ts:335:89
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/diseno-la-barra-lateral-cu-38b02-ite-navegar-con-poca-altura-demostracion/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/diseno-la-barra-lateral-cu-38b02-ite-navegar-con-poca-altura-demostracion/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/diseno-la-barra-lateral-cu-38b02-ite-navegar-con-poca-altura-demostracion/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/diseno-la-barra-lateral-cu-38b02-ite-navegar-con-poca-altura-demostracion/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [demostracion] › e2e/diseno.spec.ts:320:1 › la barra lateral cubre páginas largas y permite navegar con poca altura 

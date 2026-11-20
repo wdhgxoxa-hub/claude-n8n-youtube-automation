@@ -74,7 +74,7 @@ Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expre
 
 El receptor `/api/n8n/webhook` valida firma sobre bytes, tiempo, dueño, ID y digest persistidos. SSE reemite progreso del dueño y concilia el estado cada minuto. `COOPER_WEBHOOK_SECRET` debe coincidir con n8n y tener al menos 32 caracteres. En modo n8n, el panel administrativo usa los gastos registrados en `fab_costos`, indicando las estimaciones de las tarifas configuradas. No se mezcla el gasto simulado. El contrato completo, variables de n8n, migración de dueños y pasos para Claude/Walter están en [la guía del puente](../docs/cooper-puente-n8n.md).
 
-El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md). El montaje todavía no consume esa selección: FX devuelve 422 si se pide avatar o voz personalizados, con mensaje recuperable en Cooper. Un video sin selección conserva la voz según guion. No se descarta silenciosamente el presentador.
+El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md). La fábrica persiste esa selección y la usa en storyboard, voz, avatar y montaje. FX mantiene 422 para recursos de demostración. Un video sin selección conserva la voz según guion. Revocar consentimiento cancela la cola antes del siguiente paso y avisa; los interruptores y el presupuesto pausan conservando la elección. Detalles y límites en la guía del puente; sin ensayo pago ni despliegue.
 
 `ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` tienen implementaciones reales y simuladas seleccionables por entorno. La identidad real pasa por revisión humana de Walter; no hay verificación biométrica automática. Las creaciones y simuladores heredados permanecen etiquetados como tales. Detalles de las APIs actuales, estados, consentimiento fechado, privacidad y límites en [MEDIOS.md](MEDIOS.md).
 
@@ -118,7 +118,7 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 ## Fases siguientes
 
 2. Puente implementado y probado localmente; falta aplicar la migración y verificar en una instancia de ensayo antes del despliegue.
-3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales y del consumo del contrato de presentación por la fábrica.
+3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales, incluidos los flujos de presentación implementados.
 4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
 5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.
@@ -134,6 +134,6 @@ La demostración fuerza fábrica, medios, transcripción, consultas de chat y ga
 
 ## Integración verificada
 
-Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
+Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
 
-`npm run test:e2e` genera 72 PNG finales en `.cache/capturas-final/`, 18 pantallas/estados a 1440 y 390 px en dos temas, con manifiesto. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
+`npm run test:e2e` genera 98 PNG finales en `.cache/capturas-final/`: 72 de las 18 pantallas/estados a 1440 y 390 px en dos temas, 24 de la barra en páginas largas/pantallas bajas y 2 de revocación. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
