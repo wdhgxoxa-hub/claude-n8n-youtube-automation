@@ -61,6 +61,7 @@ export async function GET(request: Request) {
                 ? db().select().from(users).all()
                 : [fresh];
             if (
+              process.env.COOPER_DEMO === "1" ||
               process.env.COOPER_FABRICA !== "n8n" ||
               Date.now() - lastSync >= 60000
             ) {

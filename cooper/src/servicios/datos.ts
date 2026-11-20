@@ -124,7 +124,7 @@ export type Administracion = Awaited<ReturnType<typeof administracionActual>>;
 
 export async function administracionActual(user: User) {
   const local = administracion(user);
-  if (process.env.COOPER_FABRICA !== "n8n")
+  if (process.env.COOPER_DEMO === "1" || process.env.COOPER_FABRICA !== "n8n")
     return { ...local, fuente: "simulada" };
   const { FabricaN8n } = await import("./fabrica");
   const remote = await new FabricaN8n().gastos(user);

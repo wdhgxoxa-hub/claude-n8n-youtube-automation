@@ -70,6 +70,7 @@ export class ChatSimulado implements ProveedorChat {
       };
     }
     if (
+      process.env.COOPER_DEMO !== "1" &&
       process.env.COOPER_FABRICA === "n8n" &&
       /estado|reporte|pendiente|tendencia/.test(clean)
     ) {
