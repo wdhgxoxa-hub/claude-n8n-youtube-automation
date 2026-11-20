@@ -22,178 +22,185 @@ export function aplicarEstado(
   user: User,
   snapshot: z.infer<typeof estadoRemotoSchema>,
 ) {
-  db().transaction((tx) => {
-    for (const channel of snapshot.canales) {
-      if (user.role !== "admin" && channel.dueno_email !== user.email) continue;
-      const owner = tx
-        .select()
-        .from(users)
-        .where(eq(users.email, channel.dueno_email))
-        .get();
-      if (!owner) continue;
-      const existing = tx
-        .select()
-        .from(channels)
-        .where(eq(channels.id, channel.id))
-        .get();
-      if (existing && existing.ownerId !== owner.id)
-        throw new ErrorHttp(409, "Propietario incompatible.");
-      tx.insert(channels)
-        .values({
-          id: channel.id,
-          ownerId: owner.id,
-          name: channel.nombre,
-          niche: channel.nicho,
-          createdAt: Date.now(),
-        })
-        .onConflictDoUpdate({
-          target: channels.id,
-          set: { name: channel.nombre, niche: channel.nicho },
-        })
-        .run();
-    }
-    for (const video of snapshot.videos) {
-      if (user.role !== "admin" && video.dueno_email !== user.email) continue;
-      const owner = tx
-        .select()
-        .from(users)
-        .where(eq(users.email, video.dueno_email))
-        .get();
-      const channel = tx
-        .select()
-        .from(channels)
-        .where(eq(channels.id, video.canal_id))
-        .get();
-      if (!owner || channel?.ownerId !== owner.id) continue;
-      const existing = tx
-        .select()
-        .from(videos)
-        .where(eq(videos.id, video.id))
-        .get();
-      if (existing && existing.ownerId !== owner.id)
-        throw new ErrorHttp(409, "Propietario incompatible.");
-      if (existing && existing.remoteUpdatedAt >= video.actualizado_en)
-        continue;
-      const fields = {
-        stage: video.stage,
-        script: video.script,
-        title: video.titulo,
-        remoteUpdatedAt: video.actualizado_en,
-        updatedAt: Date.now(),
-      };
-      tx.insert(videos)
-        .values({
-          id: video.id,
-          ownerId: owner.id,
-          channelId: video.canal_id,
-          createdAt: Date.now(),
-          ...fields,
-        })
-        .onConflictDoUpdate({ target: videos.id, set: fields })
-        .run();
-    }
-  });
+  db().transaction(
+    (tx) => {
+      for (const channel of snapshot.canales) {
+        if (user.role !== "admin" && channel.dueno_email !== user.email)
+          continue;
+        const owner = tx
+          .select()
+          .from(users)
+          .where(eq(users.email, channel.dueno_email))
+          .get();
+        if (!owner) continue;
+        const existing = tx
+          .select()
+          .from(channels)
+          .where(eq(channels.id, channel.id))
+          .get();
+        if (existing && existing.ownerId !== owner.id)
+          throw new ErrorHttp(409, "Propietario incompatible.");
+        tx.insert(channels)
+          .values({
+            id: channel.id,
+            ownerId: owner.id,
+            name: channel.nombre,
+            niche: channel.nicho,
+            createdAt: Date.now(),
+          })
+          .onConflictDoUpdate({
+            target: channels.id,
+            set: { name: channel.nombre, niche: channel.nicho },
+          })
+          .run();
+      }
+      for (const video of snapshot.videos) {
+        if (user.role !== "admin" && video.dueno_email !== user.email) continue;
+        const owner = tx
+          .select()
+          .from(users)
+          .where(eq(users.email, video.dueno_email))
+          .get();
+        const channel = tx
+          .select()
+          .from(channels)
+          .where(eq(channels.id, video.canal_id))
+          .get();
+        if (!owner || channel?.ownerId !== owner.id) continue;
+        const existing = tx
+          .select()
+          .from(videos)
+          .where(eq(videos.id, video.id))
+          .get();
+        if (existing && existing.ownerId !== owner.id)
+          throw new ErrorHttp(409, "Propietario incompatible.");
+        if (existing && existing.remoteUpdatedAt >= video.actualizado_en)
+          continue;
+        const fields = {
+          stage: video.stage,
+          script: video.script,
+          title: video.titulo,
+          remoteUpdatedAt: video.actualizado_en,
+          updatedAt: Date.now(),
+        };
+        tx.insert(videos)
+          .values({
+            id: video.id,
+            ownerId: owner.id,
+            channelId: video.canal_id,
+            createdAt: Date.now(),
+            ...fields,
+          })
+          .onConflictDoUpdate({ target: videos.id, set: fields })
+          .run();
+      }
+    },
+    { behavior: "immediate" },
+  );
 }
 
 export function recibirWebhook(input: WebhookPuente, raw: string) {
-  return db().transaction((tx) => {
-    if (input.tipo === "orden") {
-      const order = tx
+  return db().transaction(
+    (tx) => {
+      if (input.tipo === "orden") {
+        const order = tx
+          .select()
+          .from(bridgeCommands)
+          .where(eq(bridgeCommands.id, input.id_evento))
+          .get();
+        // Solo órdenes originadas por el servidor Cooper. No basta conocer el secreto de callbacks.
+        if (
+          !order ||
+          JSON.stringify(JSON.parse(order.request)) !==
+            JSON.stringify(input.solicitud)
+        )
+          throw new ErrorHttp(409, "Orden incompatible.");
+        const owner = tx
+          .select()
+          .from(users)
+          .where(eq(users.id, order.ownerId))
+          .get();
+        if (!owner?.active) throw new ErrorHttp(403, "Cuenta no disponible.");
+        if (order.confirmed) return { estado: "confirmada" };
+        if (order.execution && order.execution !== input.ejecucion)
+          return { estado: "pendiente" };
+        if (input.fase === "confirmar" && !order.execution)
+          throw new ErrorHttp(409, "Orden sin reserva.");
+        tx.update(bridgeCommands)
+          .set({
+            execution: input.ejecucion,
+            confirmed: input.fase === "confirmar",
+          })
+          .where(eq(bridgeCommands.id, order.id))
+          .run();
+        return {
+          estado: input.fase === "confirmar" ? "confirmada" : "reservada",
+        };
+      }
+      const digest = createHash("sha256").update(raw).digest("hex");
+      const receipt = tx
         .select()
-        .from(bridgeCommands)
-        .where(eq(bridgeCommands.id, input.id_evento))
+        .from(bridgeReceipts)
+        .where(eq(bridgeReceipts.id, input.id_evento))
         .get();
-      // Solo órdenes originadas por el servidor Cooper. No basta conocer el secreto de callbacks.
-      if (
-        !order ||
-        JSON.stringify(JSON.parse(order.request)) !==
-          JSON.stringify(input.solicitud)
-      )
-        throw new ErrorHttp(409, "Orden incompatible.");
+      if (receipt) {
+        if (receipt.digest !== digest)
+          throw new ErrorHttp(409, "Evento incompatible.");
+        return { aceptado: true, duplicado: true };
+      }
       const owner = tx
         .select()
         .from(users)
-        .where(eq(users.id, order.ownerId))
+        .where(eq(users.email, input.video.dueno_email))
         .get();
-      if (!owner?.active) throw new ErrorHttp(403, "Cuenta no disponible.");
-      if (order.confirmed) return { estado: "confirmada" };
-      if (order.execution && order.execution !== input.ejecucion)
-        return { estado: "pendiente" };
-      if (input.fase === "confirmar" && !order.execution)
-        throw new ErrorHttp(409, "Orden sin reserva.");
-      tx.update(bridgeCommands)
-        .set({
-          execution: input.ejecucion,
-          confirmed: input.fase === "confirmar",
-        })
-        .where(eq(bridgeCommands.id, order.id))
-        .run();
-      return {
-        estado: input.fase === "confirmar" ? "confirmada" : "reservada",
-      };
-    }
-    const digest = createHash("sha256").update(raw).digest("hex");
-    const receipt = tx
-      .select()
-      .from(bridgeReceipts)
-      .where(eq(bridgeReceipts.id, input.id_evento))
-      .get();
-    if (receipt) {
-      if (receipt.digest !== digest)
-        throw new ErrorHttp(409, "Evento incompatible.");
-      return { aceptado: true, duplicado: true };
-    }
-    const owner = tx
-      .select()
-      .from(users)
-      .where(eq(users.email, input.video.dueno_email))
-      .get();
-    const video = tx
-      .select()
-      .from(videos)
-      .where(eq(videos.id, input.video.id))
-      .get();
-    if (
-      !owner ||
-      !video ||
-      video.ownerId !== owner.id ||
-      video.channelId !== input.video.canal_id
-    )
-      throw new ErrorHttp(404, "Video no disponible.");
-    const current = video.remoteUpdatedAt < input.video.actualizado_en;
-    if (current) {
-      tx.update(videos)
-        .set({
-          stage: input.video.stage,
-          script: input.video.script,
-          title: input.video.titulo,
-          remoteUpdatedAt: input.video.actualizado_en,
-          updatedAt: Date.now(),
-        })
-        .where(and(eq(videos.id, video.id), eq(videos.ownerId, owner.id)))
-        .run();
-      const last = tx
-        .select({ at: events.createdAt })
-        .from(events)
-        .where(eq(events.type, "progreso"))
-        .orderBy(desc(events.createdAt))
-        .limit(1)
+      const video = tx
+        .select()
+        .from(videos)
+        .where(eq(videos.id, input.video.id))
         .get();
-      tx.insert(events)
-        .values({
-          id: input.id_evento,
-          ownerId: owner.id,
-          type: "progreso",
-          payload: JSON.stringify({ id: video.id, stage: input.video.stage }),
-          createdAt: Math.max(Date.now(), (last?.at ?? 0) + 1),
-        })
+      if (
+        !owner ||
+        !video ||
+        video.ownerId !== owner.id ||
+        video.channelId !== input.video.canal_id
+      )
+        throw new ErrorHttp(404, "Video no disponible.");
+      const current = video.remoteUpdatedAt < input.video.actualizado_en;
+      if (current) {
+        tx.update(videos)
+          .set({
+            stage: input.video.stage,
+            script: input.video.script,
+            title: input.video.titulo,
+            remoteUpdatedAt: input.video.actualizado_en,
+            updatedAt: Date.now(),
+          })
+          .where(and(eq(videos.id, video.id), eq(videos.ownerId, owner.id)))
+          .run();
+        const last = tx
+          .select({ at: events.createdAt })
+          .from(events)
+          .where(eq(events.type, "progreso"))
+          .orderBy(desc(events.createdAt))
+          .limit(1)
+          .get();
+        tx.insert(events)
+          .values({
+            id: input.id_evento,
+            ownerId: owner.id,
+            type: "progreso",
+            payload: JSON.stringify({ id: video.id, stage: input.video.stage }),
+            createdAt: Math.max(Date.now(), (last?.at ?? 0) + 1),
+          })
+          .run();
+      }
+      tx.insert(bridgeReceipts)
+        .values({ id: input.id_evento, digest, createdAt: Date.now() })
         .run();
-    }
-    tx.insert(bridgeReceipts)
-      .values({ id: input.id_evento, digest, createdAt: Date.now() })
-      .run();
-    return { aceptado: true, duplicado: false };
-  });
+      return { aceptado: true, duplicado: false };
+    },
+    { behavior: "immediate" },
+  );
 }
 
 export async function procesarWebhook(request: Request) {
