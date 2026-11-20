@@ -21,12 +21,36 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: {
-    command: "npm run build && node scripts/e2e-server.mjs",
-    url: "http://127.0.0.1:3107/entrar",
-    reuseExistingServer: false,
-    timeout: 120000,
-    env: { COOPER_TEST_SECRET: secret },
-  },
+  projects: [
+    {
+      name: "chromium",
+      testIgnore: "diseno.spec.ts",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "demostracion",
+      testMatch: "diseno.spec.ts",
+      use: { ...devices["Desktop Chrome"], baseURL: "http://127.0.0.1:3109" },
+    },
+  ],
+  webServer: [
+    {
+      command: "node scripts/e2e-server.mjs",
+      url: "http://127.0.0.1:3107/entrar",
+      reuseExistingServer: false,
+      timeout: 120000,
+      env: { COOPER_TEST_SECRET: secret, COOPER_DEMO: "0" },
+    },
+    {
+      command: "node scripts/e2e-server.mjs",
+      url: "http://127.0.0.1:3109/entrar",
+      reuseExistingServer: false,
+      timeout: 120000,
+      env: {
+        COOPER_TEST_SECRET: secret,
+        COOPER_DEMO: "1",
+        COOPER_E2E_PORT: "3109",
+      },
+    },
+  ],
 });

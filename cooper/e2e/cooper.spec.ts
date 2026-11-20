@@ -148,7 +148,9 @@ test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
   await page.goto("/");
-  await expect(page.getByText("Todo empieza con una idea")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Tu primera historia empieza aquí" }),
+  ).toBeVisible();
   const event = await page.evaluate(
     () =>
       new Promise<string>((resolve) => {
@@ -410,4 +412,26 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
   await expect(page.locator(".presenter-summary")).toContainText(
     "En todo el video",
   );
+});
+
+test("bienvenida vacía: las tres acciones quedan antes del compositor", async ({
+  page,
+}) => {
+  // Luis no ha creado contenido; no usar el administrador con todos los videos.
+  await login(page.request, "luis@example.test");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 700 });
+    await page.goto("/");
+    const first = page.getByRole("button", { name: "Crear mi primer canal" });
+    await expect(first).toBeVisible();
+    const actions = await page.locator(".suggestions:visible").boundingBox();
+    const composer = await page.locator(".composer-area:visible").boundingBox();
+    expect(actions!.y + actions!.height).toBeLessThanOrEqual(composer!.y);
+    await first.click();
+    await expect(
+      page.getByRole("textbox", { name: "Mensaje para Cooper" }),
+    ).toHaveValue("Crea un canal: Ciencia cotidiana");
+    await noOverflow(page);
+  }
 });

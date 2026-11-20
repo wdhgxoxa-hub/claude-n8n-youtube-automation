@@ -15,6 +15,13 @@ if (!existsSync(chromium.executablePath())) {
   });
   if (install.status !== 0) process.exit(install.status ?? 1);
 }
+// Compilar una sola vez antes de arrancar los dos servidores aislados.
+const build = spawnSync(
+  process.execPath,
+  ["node_modules/next/dist/bin/next", "build"],
+  { stdio: "inherit", env: process.env },
+);
+if (build.status !== 0) process.exit(build.status ?? 1);
 const test = spawnSync(
   process.execPath,
   [cli, "test", ...process.argv.slice(2)],
