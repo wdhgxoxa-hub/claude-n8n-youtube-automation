@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
   type ReactNode,
 } from "react";
 import Link from "next/link";
@@ -20,6 +21,7 @@ import {
   ShieldCheck,
   LogOut,
   PanelLeftClose,
+  X,
 } from "lucide-react";
 import type { Estado } from "@/servicios/datos";
 import { Logo } from "@/marca/Logo";
@@ -71,18 +73,59 @@ export function Espacio({
   const path = usePathname();
   const reduced = useReducedMotion();
   const [paused, setPaused] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const sidebar = useRef<HTMLElement>(null);
   const refresh = useCallback(async () => {
     setData(await api<Estado>("estado", undefined, "GET"));
   }, []);
   useEffect(() => {
-    const source = new EventSource("/api/eventos");
-    source.addEventListener("estado", (e) => {
-      setData(JSON.parse(e.data));
-      setConnected(true);
-    });
-    source.addEventListener("fallo", () => setConnected(false));
-    source.onerror = () => setConnected(false);
-    return () => source.close();
+    let source: EventSource | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let stopped = false;
+    let attempts = 0;
+    const controller = new AbortController();
+    const connect = () => {
+      if (stopped) return;
+      if (timer) clearTimeout(timer);
+      source?.close();
+      source = new EventSource("/api/eventos");
+      const retry = () => {
+        if (stopped) return;
+        source?.close();
+        setConnected(false);
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(connect, Math.min(1000 * 2 ** attempts++, 30000));
+        void fetch("/api/estado", { signal: controller.signal })
+          .then((response) => {
+            if (!stopped && [401, 403].includes(response.status)) {
+              stopped = true;
+              clearTimeout(timer);
+              window.location.assign("/entrar");
+            }
+          })
+          .catch(() => {});
+      };
+      source.addEventListener("estado", (event) => {
+        try {
+          setData(JSON.parse(event.data));
+          setConnected(true);
+          attempts = 0;
+        } catch {
+          retry();
+        }
+      });
+      source.addEventListener("fallo", () => setConnected(false));
+      source.onerror = retry;
+    };
+    connect();
+    window.addEventListener("online", connect);
+    return () => {
+      stopped = true;
+      source?.close();
+      clearTimeout(timer);
+      controller.abort();
+      window.removeEventListener("online", connect);
+    };
   }, []);
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: light)");
@@ -98,12 +141,48 @@ export function Espacio({
     return () => media.removeEventListener("change", apply);
   }, [data.user.theme]);
   useEffect(() => {
-    const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenu(false);
+    if (!menu || !window.matchMedia("(max-width: 767px)").matches) return;
+    const panel = sidebar.current;
+    const opener = menuButton.current;
+    const focusable = () =>
+      Array.from(
+        panel?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled])",
+        ) ?? [],
+      );
+    focusable()[0]?.focus();
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMenu(false);
+      }
+      if (event.key === "Tab") {
+        const items = focusable();
+        const target = event.shiftKey ? items.at(-1) : items[0];
+        if (
+          (event.shiftKey && document.activeElement === items[0]) ||
+          (!event.shiftKey && document.activeElement === items.at(-1))
+        ) {
+          event.preventDefault();
+          target?.focus();
+        }
+      }
     };
+    const media = window.matchMedia("(max-width: 767px)");
+    const resize = () => {
+      if (!media.matches) setMenu(false);
+    };
+    media.addEventListener("change", resize);
+    const before = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
-  }, []);
+    return () => {
+      media.removeEventListener("change", resize);
+      document.body.style.overflow = before;
+      window.removeEventListener("keydown", close);
+      opener?.focus();
+    };
+  }, [menu]);
   const pending = data.videos.filter((v) => esperaAprobacion(v.stage)).length;
   return (
     <Context.Provider value={{ data, refresh, connected }}>
@@ -112,13 +191,27 @@ export function Espacio({
           <a className="skip" href="#contenido">
             Saltar al contenido
           </a>
-          <aside id="navegacion" className={`sidebar ${menu ? "is-open" : ""}`}>
+          <aside
+            ref={sidebar}
+            role={menu ? "dialog" : undefined}
+            aria-modal={menu || undefined}
+            aria-label="Navegación del estudio"
+            id="navegacion"
+            className={`sidebar ${menu ? "is-open" : ""}`}
+          >
             <Link href="/" className="brand" aria-label="Cooper, inicio">
               <Logo />
               <span>
                 cooper<span className="brand-dot">.</span>
               </span>
             </Link>
+            <button
+              className="icon-button drawer-close"
+              aria-label="Cerrar navegación"
+              onClick={() => setMenu(false)}
+            >
+              <X size={20} />
+            </button>
             <div className="workspace-label">Tu espacio de creación</div>
             <nav aria-label="Principal">
               {nav.map(({ path: href, label, icon: Icon }) => (
@@ -212,11 +305,20 @@ export function Espacio({
               </div>
             </div>
           </aside>
-          <div className="main-column">
+          {menu && (
+            <button
+              className="drawer-backdrop"
+              aria-label="Cerrar menú"
+              tabIndex={-1}
+              onClick={() => setMenu(false)}
+            />
+          )}
+          <div className="main-column" inert={menu}>
             <header className="topbar">
               <button
+                ref={menuButton}
                 className="icon-button menu-button"
-                aria-label={menu ? "Cerrar navegación" : "Abrir navegación"}
+                aria-label="Abrir navegación"
                 aria-controls="navegacion"
                 aria-expanded={menu}
                 onClick={() => setMenu(!menu)}

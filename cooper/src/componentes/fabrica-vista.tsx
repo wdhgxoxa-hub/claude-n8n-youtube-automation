@@ -62,7 +62,14 @@ export function Recorrido({
     </motion.ol>
   );
 }
-export function VideoMini({ video }: { video: Video }) {
+export function VideoMini({
+  video,
+  heading = 3,
+}: {
+  video: Video;
+  heading?: 2 | 3;
+}) {
+  const Title = heading === 2 ? "h2" : "h3";
   const { data } = useEspacio();
   return (
     <Link href={`/videos/${video.id}`} className="video-mini">
@@ -74,7 +81,7 @@ export function VideoMini({ video }: { video: Video }) {
           {data.channels.find((c) => c.id === video.channelId)?.name ??
             "Tu canal"}
         </small>
-        <h3>{video.title}</h3>
+        <Title>{video.title}</Title>
         <span
           className={`video-status ${esperaAprobacion(video.stage) ? "pending" : video.stage === 11 ? "finished" : ""}`}
         >

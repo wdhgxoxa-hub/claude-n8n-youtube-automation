@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { currentUser } from "@/lib/sesion";
 import { estado } from "@/servicios/datos";
 import { Espacio } from "@/componentes/espacio";
@@ -13,7 +12,6 @@ export default async function Layout({
   const user = await currentUser().catch(() => redirect("/entrar"));
   async function logout() {
     "use server";
-    (await cookies()).delete("cooper-test");
     await signOut({ redirectTo: "/entrar" });
   }
   return (

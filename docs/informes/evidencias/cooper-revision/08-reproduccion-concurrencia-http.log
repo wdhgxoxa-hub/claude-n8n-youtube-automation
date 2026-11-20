@@ -1,0 +1,34 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run tests/revision-fabrica.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-revision/cooper
+
+ ❯ tests/revision-fabrica.test.ts (1 test | 1 failed) 70ms
+   × R10 serializa dos aprobaciones HTTP y una sincronización en vuelo 40ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/revision-fabrica.test.ts > R10 serializa dos aprobaciones HTTP y una sincronización en vuelo
+AssertionError: expected [ 'aprobar', 'aprobar' ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/revision-fabrica.test.ts:34:54
+     32|   await sync;
+     33|   const settled = await results;
+     34|   expect(calls.filter(event => event === "aprobar")).toHaveLength(1);
+       |                                                      ^
+     35|   expect(settled.filter(result => result.status === "fulfilled")).toHa…
+     36|   expect(db().select().from(videos).where(eq(videos.id, id)).get()?.st…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:17:43
+   Duration  515ms (transform 79ms, setup 13ms, import 334ms, tests 70ms, environment 0ms)

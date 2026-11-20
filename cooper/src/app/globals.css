@@ -220,9 +220,8 @@ details[open] summary {
   font-size: 13px;
   font-weight: 700;
   border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    transform 0.2s;
+  /* El texto y el fondo cambian juntos al alternar el tema. */
+  transition: transform 0.2s;
 }
 .button:hover:not(:disabled) {
   filter: brightness(1.06);
@@ -786,7 +785,8 @@ main:focus {
   min-width: 0;
   flex: 1;
 }
-.video-mini h3 {
+.video-mini :is(h2, h3) {
+  letter-spacing: normal;
   font-size: 13px;
   line-height: 1.6;
   overflow-wrap: anywhere;
@@ -1115,7 +1115,7 @@ main:focus {
 .video-list-row .video-mini {
   flex: 1;
 }
-.video-list-row .video-mini h3 {
+.video-list-row .video-mini :is(h2, h3) {
   font-size: 15px;
 }
 .video-list-row .video-mini small {
@@ -2194,7 +2194,7 @@ main:focus {
     width: 56px;
     height: 64px;
   }
-  .video-list-row .video-mini h3 {
+  .video-list-row .video-mini :is(h2, h3) {
     font-size: 13px;
   }
   .video-list-row .video-mini small {
@@ -2719,7 +2719,7 @@ main:focus {
 .channel-meta {
   padding-top: 16px;
 }
-.video-list-row .video-mini h3 {
+.video-list-row .video-mini :is(h2, h3) {
   font-size: 17px;
 }
 .video-list-row .film-thumbnail {
@@ -2729,7 +2729,7 @@ main:focus {
 .video-mini small {
   font-size: 11px;
 }
-.video-mini:hover h3 {
+.video-mini:hover :is(h2, h3) {
   color: var(--accent);
 }
 .preview-art {
@@ -2896,7 +2896,7 @@ main:focus {
     width: 88px;
     height: 74px;
   }
-  .video-list-row .video-mini h3 {
+  .video-list-row .video-mini :is(h2, h3) {
     font-size: 14px;
   }
 }
@@ -2907,5 +2907,28 @@ main:focus {
     animation: none !important;
     transition-duration: 0s !important;
     scroll-behavior: auto !important;
+  }
+}
+.drawer-close,
+.drawer-backdrop {
+  display: none;
+}
+@media (max-width: 767px) {
+  .drawer-close {
+    display: inline-flex;
+    position: absolute;
+    top: 16px;
+    right: 12px;
+  }
+  .drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: #0008;
+    z-index: 39;
+    border: 0;
+  }
+  .sidebar.is-open ~ .main-column .menu-button {
+    visibility: hidden;
   }
 }

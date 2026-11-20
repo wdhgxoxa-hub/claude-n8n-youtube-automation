@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { aplicarMigraciones } from "./migraciones";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import * as schema from "./schema";
@@ -19,7 +19,12 @@ function connect() {
   sqlite.pragma("foreign_keys = ON");
   sqlite.pragma("busy_timeout = 5000");
   const database = drizzle(sqlite, { schema });
-  migrate(database, { migrationsFolder: resolve("drizzle") });
+  try {
+    aplicarMigraciones(sqlite, resolve("drizzle"));
+  } catch (error) {
+    sqlite.close();
+    throw error;
+  }
   return database;
 }
 type Db = ReturnType<typeof connect>;

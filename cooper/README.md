@@ -18,7 +18,7 @@ Abre `http://localhost:3000`. Configura en Google OAuth el callback `http://loca
 
 Para producción local: `npm run build && npm start`. Mantén el proceso en un servidor Node, con SQLite en un volumen persistente. No es una exportación estática ni una aplicación para edge. HTTPS, proxy y respaldos pertenecen a la fase 5.
 
-Las migraciones SQL versionadas de `drizzle/` se aplican con el migrador de Drizzle, tanto con `db:migrate` como al abrir la conexión. WAL, claves foráneas e índices por dueño están activados. La base de ejecución se excluye deliberadamente del trazado de Turbopack; las migraciones sí se incluyen. Nunca empaquetes datos privados en la imagen de despliegue.
+Las migraciones SQL versionadas de `drizzle/` se leen con Drizzle y se aplican bajo una transacción `IMMEDIATE`, con diario compatible y comprobación de hashes, tanto con `db:migrate` como al abrir la conexión. WAL, claves foráneas e índices por dueño están activados. La base de ejecución se excluye deliberadamente del trazado de Turbopack; las migraciones sí se incluyen. Nunca empaquetes datos privados en la imagen de despliegue.
 
 ## Variables
 
@@ -34,7 +34,6 @@ Las migraciones SQL versionadas de `drizzle/` se aplican con el migrador de Driz
 | `COOPER_SIMULACION_MS`                   | Intervalo de avance; 8000 ms por defecto. Las aprobaciones nunca avanzan solas.                                                           |
 | `COOPER_N8N_URL`, `COOPER_N8N_TOKEN`     | Endpoint HTTP y token privado del futuro puente. Solo servidor.                                                                           |
 | `COOPER_GASTO_ALERTA_USD`                | Umbral diario informativo; por defecto 25 USD. No bloquea producción.                                                                     |
-| `COOPER_TEST_MODE`, `COOPER_TEST_SECRET` | Sesión exclusiva de pruebas: bandera `1`, host loopback y secreto de al menos 32 caracteres. Mantener desactivada fuera del ensayo local. |
 | `NEXT_TELEMETRY_DISABLED`                | `1` para desactivar la telemetría de Next.                                                                                                |
 
 El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.cache/`. `COOPER_E2E_SECRET` es una variable interna entre el ejecutor y sus procesos. `PLAYWRIGHT_BROWSERS_PATH` se fija automáticamente a `.cache/browsers`. No copies estas variables a producción.
@@ -93,9 +92,9 @@ Las mutaciones requieren `{ "aceptado": true }` antes de persistir el reflejo lo
 
 Cada API obtiene la sesión y valida entradas con Zod. Las páginas privadas usan un layout autenticado; detalle y administración vuelven a verificar el recurso/rol en servidor. Los IDs ajenos responden 404. El gasto se consulta en una ruta administrativa separada y no forma parte del estado, chat ni SSE de usuarios normales.
 
-Mutaciones con control de origen y límite de 90 solicitudes por minuto por usuario/proceso. Archivo máximo 5 MB, cuerpo JSON máximo 8 MB, hasta cinco adjuntos por mensaje y lista cerrada de MIME. Descarga privada con `nosniff`, sin SVG/HTML de usuario. Cabeceras CSP, HSTS, frame denial y permisos de micrófono limitados al origen. La CSP conserva `unsafe-inline` para la hidratación de Next; no se renderiza HTML de usuario. La evolución a nonces por solicitud puede acompañar el proxy de producción.
+Mutaciones con control de origen y límite de 90 solicitudes por minuto por usuario/proceso; lecturas API limitadas a 300. Hay un máximo de cuatro conexiones SSE por usuario/proceso, con cola acotada y liberación al cerrar. Archivo máximo 5 MB, cuerpo JSON máximo 8 MB, hasta cinco adjuntos por mensaje y lista cerrada de MIME. Descarga privada con `nosniff`, sin SVG/HTML de usuario. Cabeceras CSP, HSTS, frame denial y permisos de micrófono limitados al origen. La CSP genera un nonce por respuesta para los scripts y fuerza renderizado dinámico. Solo los estilos conservan `unsafe-inline` por las animaciones. Los adjuntos llevan una CSP `sandbox` propia y se verifica su firma de formato; esto no sustituye el análisis antivirus.
 
-La sesión E2E exige un secreto aleatorio, firma HMAC con expiración, cookie HttpOnly/SameSite y host local. No habilitar esa ruta en un servidor expuesto. El modo de pruebas no permite saltarse la lista permitida ni la suspensión. La revocación se revalida en cada petición y pulso SSE. El rate limiter es local al proceso, adecuado a esta instancia SQLite de hasta diez personas; una expansión requiere almacenamiento compartido.
+La aplicación solo acepta sesiones Auth.js. Se retiraron la ruta de autenticación de ensayo y las variables `COOPER_TEST_MODE`/`COOPER_TEST_SECRET`: configurarlas no permite entrar, tampoco con host loopback. El ejecutor E2E inicia un emisor separado en `127.0.0.1:33172`, limitado a correos ficticios, base temporal y credencial efímera; emite cookies Auth.js cifradas sin OAuth. Nunca se importa desde `src/` ni se inicia con `npm start`. La revocación se revalida antes y después de cada sincronización SSE. La reconexión de navegador usa espera exponencial hasta 30 segundos y vuelve a entrada si la sesión expira. Los límites y la serialización de operaciones HTTP son locales al proceso; varias réplicas necesitan coordinación compartida.
 
 Los adjuntos quedan en SQLite; no hay análisis antivirus ni limpieza automática de archivos huérfanos en esta fase. No introducir evidencias personales reales en el modo simulado. Los datos de pruebas son ficticios y quedan en `.cache/`, fuera de Git.
 
@@ -120,11 +119,11 @@ npm run test:e2e
 npm run build
 ```
 
-E2E construye y prueba la aplicación en modo producción en `127.0.0.1:3107`, con base temporal y credenciales efímeras. Instala Chromium en `.cache/browsers` si falta; el primer ensayo necesita red y las bibliotecas de Chromium del sistema. Nunca usa la base de `.env.local`. No reutiliza un servidor que ya ocupe el puerto.
+E2E construye y prueba la aplicación en modo producción en `127.0.0.1:33171`, con base temporal y credenciales efímeras. Instala Chromium en `.cache/browsers` si falta; el primer ensayo necesita red y las bibliotecas de Chromium del sistema. Nunca usa la base de `.env.local`. No reutiliza un servidor que ya ocupe el puerto.
 
 Vitest cubre identidad, permisos/rutas, aislamiento de chat, gasto, etapas, HTTP, programación, adjuntos, privacidad y consentimiento. Playwright cubre entrada, chat, creación, SSE, ambas aprobaciones, correcciones, audio, biblioteca, perfil, administración, revocación y auditoría axe en ambos temas. Capturas en `test-results/visual/`; reportes en `playwright-report/`. Anchuras: 360, 390, 768, 1024, 1440 y 1920. Son artefactos reproducibles, no se versionan.
 
-Tras construir, `node scripts/auditoria.mjs` mide el inicio autenticado en una instancia aislada con Lighthouse móvil. Informe en `.cache/auditoria/lighthouse.html`; métricas resumidas en `.cache/auditoria/resumen.json`. Son mediciones de laboratorio, no datos de usuarios reales.
+Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y la entrada en móvil y escritorio, repitiendo ambos temas privados (la entrada tiene tema oscuro fijo). `--rapida` limita las mediciones al inicio. Informes HTML por ruta en `.cache/auditoria/`; métricas resumidas en `.cache/auditoria/resumen.json`. El ejecutor falla si hay advertencias, rendimiento inferior a 90 o accesibilidad/buenas prácticas inferiores a 100. Son mediciones de laboratorio, no datos de usuarios reales.
 
 ## Fases siguientes
 

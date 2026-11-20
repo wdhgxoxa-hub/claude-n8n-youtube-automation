@@ -8,7 +8,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync } from "node:fs";
 const secret = process.env.COOPER_E2E_SECRET!;
 async function login(request: APIRequestContext, email = "ana@example.test") {
-  const response = await request.post("/api/prueba", {
+  const response = await request.post("http://127.0.0.1:33172/sesion", {
     data: { email, secret },
   });
   expect(response.status()).toBe(200);
@@ -45,17 +45,29 @@ test("entrada pública, cabeceras y protección de rutas", async ({
   expect(response.headers()["content-security-policy"]).toContain(
     "frame-ancestors 'none'",
   );
-  expect(response.headers()["x-content-type-options"]).toBe("nosniff");
+  const csp = response.headers()["content-security-policy"];
+  expect(
+    csp.split(";").find((value) => value.trim().startsWith("script-src")),
+  ).not.toContain("unsafe-inline");
+  expect(csp).toMatch(/nonce-[A-Za-z0-9+/=]+/);
   expect(
     (
       await request.post("/api/prueba", {
+        data: { email: "admin@example.test", secret },
+      })
+    ).status(),
+  ).toBe(401);
+  expect(response.headers()["x-content-type-options"]).toBe("nosniff");
+  expect(
+    (
+      await request.post("http://127.0.0.1:33172/sesion", {
         data: { email: "intruso@example.test", secret },
       })
     ).status(),
   ).toBe(403);
   expect(
     (
-      await request.post("/api/prueba", {
+      await request.post("http://127.0.0.1:33172/sesion", {
         data: { email: "admin@example.test", secret: "incorrecto" },
       })
     ).status(),
@@ -144,6 +156,7 @@ test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
   await page.goto("/admin");
+  await expect(page.locator(".connection")).toHaveText("En vivo");
   await expect(
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
@@ -229,7 +242,7 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
     page.getByRole("heading", { name: "Ana presentadora" }),
   ).toBeVisible();
   await expect(page.getByText("Solo tú", { exact: true })).toBeVisible();
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3107" });
+  const other = await browser.newContext({ baseURL: "http://127.0.0.1:33171" });
   await login(other.request, "luis@example.test");
   expect(
     (await (await other.request.get("/api/estado")).json()).assets,
@@ -281,11 +294,12 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
 }) => {
   await login(page.request, "admin@example.test");
   await page.goto("/admin");
+  await expect(page.locator(".connection")).toHaveText("En vivo");
   await expect(
     page.getByRole("heading", { name: "El equipo, en perspectiva" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Gasto diario alto", { exact: true }),
+    page.getByRole("main").getByText("Gasto diario alto", { exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Semana", exact: true }).click();
   await expect(
@@ -303,11 +317,15 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   await expect(
     page.getByText("invitado@example.test", { exact: true }),
   ).toHaveCount(0);
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3107" });
+  const other = await browser.newContext({ baseURL: "http://127.0.0.1:33171" });
   await login(other.request, "luis@example.test");
+  const suspendedPage = await other.newPage();
+  await suspendedPage.goto("/");
+  await expect(suspendedPage.locator(".connection")).toHaveText("En vivo");
   const row = page.getByRole("row").filter({ hasText: "luis@example.test" });
   await row.getByRole("button", { name: "Desactivar" }).click();
   expect((await other.request.get("/api/estado")).status()).toBe(401);
+  await expect(suspendedPage).toHaveURL(/entrar/);
   await row.getByRole("button", { name: "Reactivar" }).click();
   expect((await other.request.get("/api/estado")).status()).toBe(200);
   await other.close();
@@ -316,9 +334,10 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
     fullPage: true,
   });
 });
-test("auditoría AA, seis anchuras, tema claro, movimiento reducido y capturas", async ({
+test("auditoría AA de todas las pantallas, anchuras y ambos temas", async ({
   page,
 }) => {
+  test.setTimeout(240000);
   await login(page.request, "admin@example.test");
   videoId = (await (await page.request.get("/api/estado")).json()).videos[0].id;
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -354,21 +373,32 @@ test("auditoría AA, seis anchuras, tema claro, movimiento reducido y capturas",
       "/perfil",
       "/admin",
     ]) {
-      await page.setViewportSize({ width: 1440, height: 1000 });
-      await page.goto(path);
-      await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
-      await expect(page.locator(".connection")).toHaveText("En vivo");
-      await noOverflow(page);
-      const results = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-        .analyze();
-      expect(results.violations, `${path} ${theme}`).toEqual([]);
-      await page.screenshot({
-        path: `test-results/visual/${path.replaceAll("/", "_") || "inicio"}-${theme}.png`,
-        fullPage: true,
-      });
-      await page.setViewportSize({ width: 360, height: 800 });
-      await noOverflow(page);
+      for (const width of [360, 390, 768, 1440]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(path);
+        await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+        await expect(page.locator(".connection")).toHaveText("En vivo");
+        await noOverflow(page);
+        const results = await new AxeBuilder({ page })
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+          .analyze();
+        expect(results.violations, `${path} ${theme} ${width}`).toEqual([]);
+        await page.screenshot({
+          path: `test-results/visual/${path.replaceAll("/", "_") || "inicio"}-${theme}-${width}.png`,
+          fullPage: true,
+        });
+        if (path === "/" && width < 768) {
+          await page.getByRole("tab", { name: /Fábrica/ }).click();
+          await noOverflow(page);
+          expect((await new AxeBuilder({ page }).analyze()).violations).toEqual(
+            [],
+          );
+          await page.screenshot({
+            path: `test-results/visual/fabrica-${theme}-${width}.png`,
+            fullPage: true,
+          });
+        }
+      }
     }
   }
   await page.setViewportSize({ width: 720, height: 500 });

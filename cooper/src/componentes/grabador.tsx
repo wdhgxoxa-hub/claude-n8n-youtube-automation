@@ -10,22 +10,24 @@ export function Grabador({
   onError: (error: string) => void;
   onRecording?: (value: boolean) => void;
 }) {
+  const mounted = useRef(false);
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [recording, setRecording] = useState(false),
     [busy, setBusy] = useState(false);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
       if (timeout.current) clearTimeout(timeout.current);
       if (recorder.current?.state === "recording") {
         recorder.current.onstop = null;
         recorder.current.stop();
       }
       stream.current?.getTracks().forEach((t) => t.stop());
-    },
-    [],
-  );
+    };
+  }, []);
   async function start() {
     try {
       if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder)
@@ -33,10 +35,15 @@ export function Grabador({
           "Tu navegador no permite grabar audio. Puedes adjuntar una grabación.",
         );
       setBusy(true);
-      stream.current = await navigator.mediaDevices.getUserMedia({
+      const captured = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      const r = new MediaRecorder(stream.current);
+      if (!mounted.current) {
+        captured.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      stream.current = captured;
+      const r = new MediaRecorder(captured);
       recorder.current = r;
       const chunks: BlobPart[] = [];
       r.ondataavailable = (e) => chunks.push(e.data);
@@ -65,11 +72,13 @@ export function Grabador({
         if (r.state === "recording") r.stop();
       }, 60000);
     } catch (e) {
+      stream.current?.getTracks().forEach((track) => track.stop());
+      if (!mounted.current) return;
       onError(
         e instanceof Error ? e.message : "Permite el micrófono para grabar.",
       );
     } finally {
-      setBusy(false);
+      if (mounted.current) setBusy(false);
     }
   }
   return (

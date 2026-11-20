@@ -348,7 +348,7 @@ export function Videos() {
         <div className="video-list">
           {visible.map((v) => (
             <div className="video-list-row" key={v.id}>
-              <VideoMini video={v} />
+              <VideoMini video={v} heading={2} />
               <div
                 className="mini-stages"
                 role="img"

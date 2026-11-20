@@ -1,0 +1,124 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --grep entrada pública|R08|R09
+[WebServer] npm notice run cooper@0.1.0 build
+[WebServer] npm notice run next build
+
+Running 3 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/cooper.spec.ts:34:1 › entrada pública, cabeceras y protección de rutas (258ms)
+  ✘  2 [chromium] › e2e/revision.spec.ts:6:1 › R08 recupera SSE después de una respuesta HTTP temporal (8.3s)
+  ✘  3 [chromium] › e2e/revision.spec.ts:17:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar (15.3s)
+
+
+  1) [chromium] › e2e/cooper.spec.ts:34:1 › entrada pública, cabeceras y protección de rutas ───────
+
+    Error: expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "unsafe-inline"
+    Received string:        " script-src 'self' 'unsafe-inline'"
+
+      47 |   );
+      48 |   const csp = response.headers()["content-security-policy"];
+    > 49 |   expect(csp.split(";").find(value => value.trim().startsWith("script-src"))).not.toContain("unsafe-inline");
+         |                                                                                   ^
+      50 |   expect(csp).toMatch(/nonce-[A-Za-z0-9+/=]+/);
+      51 |   expect((await request.post("/api/prueba", { data: { email: "admin@example.test", secret } })).status()).toBe(404);
+      52 |   expect(response.headers()["x-content-type-options"]).toBe("nosniff");
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/cooper.spec.ts:49:83
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/cooper-entrada-pública-cabeceras-y-protección-de-rutas-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/cooper-entrada-pública-cabeceras-y-protección-de-rutas-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/cooper-entrada-pública-cabeceras-y-protección-de-rutas-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/cooper-entrada-pública-cabeceras-y-protección-de-rutas-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/revision.spec.ts:6:1 › R08 recupera SSE después de una respuesta HTTP temporal
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.connection')
+    Expected: "En vivo"
+    Received: "Reconectando"
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toHaveText" locator('.connection') with timeout 8000ms
+      - waiting for locator('.connection')
+        20 × locator resolved to <span class="connection ">…</span>
+           - unexpected value "Reconectando"
+
+
+      12 |   });
+      13 |   await page.goto("/");
+    > 14 |   await expect(page.locator(".connection")).toHaveText("En vivo", { timeout: 8000 });
+         |                                             ^
+      15 |   expect(attempts).toBeGreaterThan(1);
+      16 | });
+      17 | test("R09 el menú móvil contiene el foco y lo devuelve al cerrar", async ({ page }) => {
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/revision.spec.ts:14:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/revision-R08-recupera-SSE--6a8e9-una-respuesta-HTTP-temporal-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/revision-R08-recupera-SSE--6a8e9-una-respuesta-HTTP-temporal-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/revision-R08-recupera-SSE--6a8e9-una-respuesta-HTTP-temporal-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/revision-R08-recupera-SSE--6a8e9-una-respuesta-HTTP-temporal-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e/revision.spec.ts:17:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('.sidebar a').first()
+    Expected: focused
+    Received: inactive
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('.sidebar a').first() with timeout 15000ms
+      - waiting for locator('.sidebar a').first()
+        34 × locator resolved to <a href="/" class="brand" aria-label="Cooper, inicio">…</a>
+           - unexpected value "inactive"
+
+
+      19 |   await page.goto("/");
+      20 |   await page.getByRole("button", { name: "Abrir navegación" }).click();
+    > 21 |   await expect(page.locator(".sidebar a").first()).toBeFocused();
+         |                                                    ^
+      22 |   for (let i = 0; i < 14; i++) {
+      23 |     await page.keyboard.press("Tab");
+      24 |     expect(await page.evaluate(() => !!document.activeElement?.closest(".sidebar"))).toBe(true);
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/revision.spec.ts:21:52
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/revision-R09-el-menú-móvil-91619-oco-y-lo-devuelve-al-cerrar-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/revision-R09-el-menú-móvil-91619-oco-y-lo-devuelve-al-cerrar-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/revision-R09-el-menú-móvil-91619-oco-y-lo-devuelve-al-cerrar-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/revision-R09-el-menú-móvil-91619-oco-y-lo-devuelve-al-cerrar-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › e2e/cooper.spec.ts:34:1 › entrada pública, cabeceras y protección de rutas ────────
+    [chromium] › e2e/revision.spec.ts:6:1 › R08 recupera SSE después de una respuesta HTTP temporal
+    [chromium] › e2e/revision.spec.ts:17:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar
