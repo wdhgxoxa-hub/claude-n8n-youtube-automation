@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "566ee085-30bc-4fbe-9f8d-13d0fd115a9a",
+      "id": "d3144316-13d5-4295-a604-5e2737cb675b",
       "name": "Cada mañana",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -43,7 +43,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "359347e8-5d7e-44b4-a455-62f7ced0bcf5",
+      "id": "5257c7bb-4183-414e-8479-70ed05d40a84",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -73,7 +73,7 @@
         },
         "returnAll": true
       },
-      "id": "a4c6a5cb-afbc-4c9e-bfbf-97ce58fd0656",
+      "id": "770b9bec-f1a5-4796-89f2-f6b6b7781c05",
       "name": "Videos en curso",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -88,7 +88,7 @@
       "parameters": {
         "jsCode": "\n// Un video está atascado si sigue «en proceso» y su fila no cambió en 24 h (las aprobaciones pendientes también cuentan:\n// te recuerda lo que espera tu respuesta).\nconst hace = Date.now() - 24 * 3600000;\nconst a = $input.all().map(i => i.json).filter(v => v.video_id && ['en_proceso', 'detenido', 'con_fallas', 'error_publicacion'].includes(v.estado)\n  && Date.parse(v.updatedAt || v.createdAt || 0) < hace);\nif (!a.length) return [{ json: { nada: true } }];\nconst l = a.slice(0, 20).map(v => `• ${v.video_id} (${v.canal_id}) en «${v.etapa}», ${v.estado}${v.error ? ': ' + String(v.error).slice(0, 80) : ''}`);\nreturn [{ json: { texto: `Videos sin avanzar hace más de 24 h (${a.length}):\\n` + l.join('\\n') + (a.length > 20 ? '\\n…' : '') + '\\n\\nUsa «estado» o pídeme corregir.' } }];\n"
       },
-      "id": "36b532c4-dc69-47e6-b5cc-ca60a33fa64d",
+      "id": "36aafb13-92a6-4dc2-9d33-b3768cb78f70",
       "name": "Atascados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -108,7 +108,7 @@
           },
           "conditions": [
             {
-              "id": "d08b7cce-2e11-4643-b8db-c1e2cceca27f",
+              "id": "3f38a6ca-c818-4f9b-a46a-ed06e8534c2b",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -122,7 +122,7 @@
         },
         "options": {}
       },
-      "id": "77a62914-cef4-4b5e-8caf-2ce7c6db8b55",
+      "id": "8d682c47-c2fc-4ca0-b0bf-fa85b5b8acb7",
       "name": "¿Hay atascados?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -143,7 +143,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "65bbfeb3-b5d5-4730-bc39-3bde67d8fddd",
+      "id": "33ecc54d-5e69-4c9a-bf8a-2979f82bd6af",
       "name": "Aviso: atascados",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -169,7 +169,7 @@
           },
           "conditions": [
             {
-              "id": "52388986-ba4a-4bff-ae4d-08fde0095f2e",
+              "id": "316d67e7-6d17-4eb8-9a76-1fe97155f2aa",
               "leftValue": "={{ new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Lima' }) === 'Mon' }}",
               "rightValue": "",
               "operator": {
@@ -183,7 +183,7 @@
         },
         "options": {}
       },
-      "id": "7e235090-a4ad-4324-8354-659895f9468f",
+      "id": "1c41b054-a361-406d-94b8-5a9a9cb51860",
       "name": "¿Es lunes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -196,7 +196,7 @@
       "parameters": {
         "jsCode": "return [{ json: { tipo: 'reporte', dias: 7 } }];"
       },
-      "id": "c7c0e527-c539-4b19-b648-b29b4051f8b5",
+      "id": "c342cc4c-e3dc-4273-8fa9-5d5b9c2737f6",
       "name": "Pedido de reporte",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -225,7 +225,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "a6a93408-464f-450f-8792-e5a6489e535b",
+      "id": "4cfa2609-80e3-452d-a578-cb7d4aeb95ff",
       "name": "Reporte de 7 días",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -246,7 +246,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "3ca92eaf-b854-405e-8576-2d6a0d0ed1d3",
+      "id": "a0dc3c06-05c8-461c-9254-80af67016f17",
       "name": "Enviar reporte semanal",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -282,7 +282,7 @@
         },
         "returnAll": true
       },
-      "id": "86ae8bb2-e841-4d70-9fad-bfc6226fd64b",
+      "id": "6519d4d1-7c38-462b-9d27-a775b0b6ae5b",
       "name": "Canales activos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -314,7 +314,7 @@
         },
         "returnAll": true
       },
-      "id": "979c0919-9ac8-45cf-ab14-fcc87b806cf8",
+      "id": "5bdb85ac-5c03-4f86-9b31-8ea56d90feb2",
       "name": "Costos de la semana",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -327,9 +327,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst aj = $('Leer ajustes').first().json; const hace7 = Date.now() - 7 * 86400000;\nconst vids = $('Videos en curso').all().map(i => i.json).filter(v => v.video_id);\nconst canalDe = Object.fromEntries(vids.map(v => [v.video_id, v.canal_id]));\nconst gasto = {}; for (const c of $input.all().map(i => i.json)) if (c.video_id && canalDe[c.video_id]) gasto[canalDe[c.video_id]] = (gasto[canalDe[c.video_id]] || 0) + (Number(c.usd) || 0);\nconst canales = $('Canales activos').all().map(i => i.json).filter(c => c.canal_id);\nconst pedidos = [], notas = [];\nfor (const c of canales) {\n  let m = {}; try { m = JSON.parse(c.metas || '{}'); } catch (x) { m = {}; }\n  if (m.auto !== true) continue;\n  const fmt = m.formato === 'largo' ? 'largo' : 'short';\n  const deCanal = vids.filter(v => v.canal_id === c.canal_id);\n  const semana = deCanal.filter(v => Date.parse(v.createdAt || 0) >= hace7 && !['cancelado', 'rechazado'].includes(v.estado)).length;\n  const enCurso = deCanal.filter(v => v.estado === 'en_proceso').length;\n  const g = Math.round((gasto[c.canal_id] || 0) * 100) / 100;\n  const unidad = fmt === 'short' ? Number(aj.presupuestoShortUsd || 2.5) : Number(aj.presupuestoLargoUsd || 8);\n  const ret = deCanal.filter(v => Number.isFinite(Number(v.retencion_media)) && v.retencion_media !== null && v.retencion_media !== '')\n    .sort((a, b) => Date.parse(b.createdAt || 0) - Date.parse(a.createdAt || 0)).slice(0, 3).map(v => Number(v.retencion_media));\n  const retMedia = ret.length === 3 ? ret.reduce((a, b) => a + b, 0) / 3 : null;\n  const meta = Number(m.videos_semana || 0), tope = Number(m.gasto_semana_usd || 0), retMin = Number(m.retencion_min || 0);\n  let motivo = '';\n  if (semana >= meta) motivo = `meta cumplida (${semana}/${meta})`;\n  else if (enCurso > 0) motivo = `ya hay ${enCurso} en curso`;\n  else if (g + unidad > tope) motivo = `tope semanal: US$${g} gastados de US$${tope}`;\n  else if (retMedia !== null && retMedia < retMin) motivo = `freno de calidad: retención ${Math.round(retMedia * 100)} % < ${Math.round(retMin * 100)} % en los últimos 3`;\n  if (motivo) { notas.push(`• ${c.canal_id}: ${motivo}`); continue; }\n  pedidos.push({ evento: 'nuevo_video', canal_id: c.canal_id, tema: '', formato: fmt, automatico: true,\n    indicaciones: `Producción automática hacia la meta semanal (${semana + 1}/${meta}). Elige el tema con más potencial según la biblia y lo aprendido.` });\n  notas.push(`• ${c.canal_id}: pido un ${fmt} (${semana + 1}/${meta} esta semana; US$${g} de US$${tope})`);\n}\nif (!notas.length) return [{ json: { nada: true } }];\nreturn [{ json: { pedidos, texto: '🤖 Producción automática de hoy\\n' + notas.join('\\n') + (pedidos.length ? '\\n\\nTe llegará el guion para aprobar.' : '') } }];\n"
+        "jsCode": "\nconst aj = $('Leer ajustes').first().json; const hace7 = Date.now() - 7 * 86400000;\nconst vids = $('Videos en curso').all().map(i => i.json).filter(v => v.video_id);\nconst canalDe = Object.fromEntries(vids.map(v => [v.video_id, v.canal_id]));\nconst gasto = {}; for (const c of $input.all().map(i => i.json)) if (c.video_id && canalDe[c.video_id]) gasto[canalDe[c.video_id]] = (gasto[canalDe[c.video_id]] || 0) + (Number(c.usd) || 0);\nconst canales = $('Canales activos').all().map(i => i.json).filter(c => c.canal_id);\nconst pedidos = [], notas = [];\nfor (const c of canales) {\n  let m = {}; try { m = JSON.parse(c.metas || '{}'); } catch (x) { m = {}; }\n  if (m.auto !== true) continue;\n  const fmt = m.formato === 'largo' ? 'largo' : 'short';\n  const deCanal = vids.filter(v => v.canal_id === c.canal_id);\n  const semana = deCanal.filter(v => Date.parse(v.createdAt || 0) >= hace7 && !['cancelado', 'rechazado'].includes(v.estado)).length;\n  const enCurso = deCanal.filter(v => v.estado === 'en_proceso').length;\n  const g = Math.round((gasto[c.canal_id] || 0) * 100) / 100;\n  const unidad = fmt === 'short' ? Number(aj.presupuestoShortUsd || 2.5) : Number(aj.presupuestoLargoUsd || 8);\n  const ret = deCanal.filter(v => Number.isFinite(Number(v.retencion_media)) && v.retencion_media !== null && v.retencion_media !== '')\n    .sort((a, b) => Date.parse(b.createdAt || 0) - Date.parse(a.createdAt || 0)).slice(0, 3).map(v => Number(v.retencion_media));\n  const retMedia = ret.length === 3 ? ret.reduce((a, b) => a + b, 0) / 3 : null;\n  const meta = Number(m.videos_semana || 0), tope = Number(m.gasto_semana_usd || 0), retMin = Number(m.retencion_min || 0);\n  let motivo = '';\n  if (semana >= meta) motivo = `meta cumplida (${semana}/${meta})`;\n  else if (enCurso > 0) motivo = `ya hay ${enCurso} en curso`;\n  else if (g + unidad > tope) motivo = `tope semanal: US$${g} gastados de US$${tope}`;\n  else if (retMedia !== null && retMedia < retMin) motivo = `freno de calidad: retención ${Math.round(retMedia * 100)} % < ${Math.round(retMin * 100)} % en los últimos 3`;\n  if (motivo) { notas.push(`• ${c.canal_id}: ${motivo}`); continue; }\n  pedidos.push({ evento: 'nuevo_video', canal_id: c.canal_id, tema: '', formato: fmt, automatico: true,\n    indicaciones: `Producción automática hacia la meta semanal (${semana + 1}/${meta}). Elige el tema con más potencial según la biblia, lo aprendido y el radar de tendencias de hoy (si una idea del radar encaja con la biblia, úsala).` });\n  notas.push(`• ${c.canal_id}: pido un ${fmt} (${semana + 1}/${meta} esta semana; US$${g} de US$${tope})`);\n}\nif (!notas.length) return [{ json: { nada: true } }];\nreturn [{ json: { pedidos, texto: '🤖 Producción automática de hoy\\n' + notas.join('\\n') + (pedidos.length ? '\\n\\nTe llegará el guion para aprobar.' : '') } }];\n"
       },
-      "id": "f60f598b-e25a-4f06-960c-b2da76df7b7d",
+      "id": "77b6d3d5-8d1a-40c9-a118-dbd84679f5e6",
       "name": "Plan del día",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -349,7 +349,7 @@
           },
           "conditions": [
             {
-              "id": "4458cf58-728f-490a-8b84-547897a07ff6",
+              "id": "dda2b10c-7933-40a4-aeb1-2c35ad2ebb5a",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -363,7 +363,7 @@
         },
         "options": {}
       },
-      "id": "38bd2a73-c6a6-494a-b54a-de0f39fe7802",
+      "id": "bf9a8bc8-c3f2-468c-a0d5-cf064b86d2a9",
       "name": "¿Hay plan?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -384,7 +384,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "19eba49d-4c43-4808-bc06-ff7d6169e691",
+      "id": "cb3a730f-05d3-4736-952c-478bc79db9b5",
       "name": "Aviso: plan del día",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -403,7 +403,7 @@
       "parameters": {
         "jsCode": "const p = $('Plan del día').first().json.pedidos || []; return p.length ? p.map(x => ({ json: x })) : [{ json: { nada: true } }];"
       },
-      "id": "5443a552-1a3f-47f8-83ee-6194317dbc30",
+      "id": "77892037-e295-4967-8a8c-3a3bfe5f455b",
       "name": "Un pedido por canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -423,7 +423,7 @@
           },
           "conditions": [
             {
-              "id": "41aab6d4-2cac-41ec-b93e-903847c52210",
+              "id": "2fb22a43-f1d9-41fd-8966-f1da273d1bcb",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -437,7 +437,7 @@
         },
         "options": {}
       },
-      "id": "5e00c05c-c43f-41ca-9209-c02a1c8536ec",
+      "id": "56314b4c-bb6e-4419-b069-5573df3a852c",
       "name": "¿Pide video?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -466,7 +466,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "f6c7b993-32f1-499a-87ea-58d4370e1fae",
+      "id": "73f8ef9c-4797-4fe8-8e03-b304826c470a",
       "name": "Pedir video automático",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,

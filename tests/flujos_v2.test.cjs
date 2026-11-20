@@ -1126,3 +1126,41 @@ test('telegram: todos los mensajes van en HTML escapado (un «_» o «<» ya no 
   }
   assert.ok(n > 30);
 });
+
+test('especialistas por red: cada red sale a la hora que propone su especialista (6–23 h) y con su propio texto', () => {
+  const RED = wf('FabRedes00000001');
+  const pub = { youtube: { titulos: ['T1'], hora: 17 }, tiktok: { texto: 'solo tiktok', hashtags: ['negocios'], hora: 21 }, instagram: { texto: 'solo reels', hora: 3 } };
+  const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'short', perfil: 'p', redes: 'youtube,tiktok,instagram', contexto: { render_url: 'https://r.mp4', publicacion: pub } };
+  const out = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: inicio, 'Leer ajustes': aj }, all: { 'Agenda del canal': [] } }).map(i => i.json);
+  const por = Object.fromEntries(out.map(o => [o.plataformas, o]));
+  assert.ok(hl(por.youtube.programado).endsWith(', 17:00')); assert.ok(hl(por.tiktok.programado).endsWith(', 21:00'));
+  assert.ok(hl(por.instagram.programado).endsWith(', 20:00'));   // 3 h no es válida: queda la de Ajustes
+  assert.ok(cuerpoDe(por.tiktok).includes('solo tiktok\n\n#negocios')); assert.ok(cuerpoDe(por.instagram).includes('solo reels'));
+});
+
+test('radar de tendencias: consultas por canal, encargo al analista, guardado por canal y uso en guion y storyboard', () => {
+  const VQ = wf('FabVidiq00000001'), RA = wf('FabRadar00000001');
+  const ll = run(codeOf(VQ, 'Llamadas de cuenta'), { nodes: { Inicio: { accion: 'radar', nicho: 'negocios con números reales' } } }).map(i => i.json);
+  assert.deepStrictEqual(ll.map(x => x.nombre), ['vidiq_instagram_tiktok_outlier_search', 'vidiq_outliers', 'vidiq_tiktok_trending_sound_search']);
+  assert.match(ll[0].args.audienceQuery, /^Culture\/Region: .+; Global: false; Demographics: .+;$/);
+  const ped = run(codeOf(RA, 'Pedidos de radar'), { all: { $input: [{ canal_id: 'mr', nombre: 'Margen Real', nicho: 'negocios', estado: 'activo' }, { canal_id: 'x' }] } }).map(i => i.json);
+  assert.strictEqual(ped.length, 1); assert.strictEqual(ped[0].accion, 'radar');
+  const enc = run(codeOf(RA, 'Encargo del analista'), { all: { 'Pedidos de radar': ped, $input: [{ ok: true, textos: ['REELS', 'SHORTS', 'SONIDOS'], creditos: 15 }] } })[0].json;
+  assert.match(enc.prompt, /REELS[\s\S]*SHORTS[\s\S]*SONIDOS/); assert.match(enc.prompt, /CapCut/);
+  const salida = t => ({ output: [{ content: [{ type: 'output_text', text: JSON.stringify(t) }] }] });
+  const r = run(codeOf(RA, 'Radar del canal'), { all: { 'Encargo del analista': [enc, { ...enc, canal_id: 'b', nombre: 'B' }], $input: [salida({ resumen: 'r', ideas: [{ titulo: 'Kebab', red: 'tiktok', gancho: 'g' }], sonidos: [] }), { error: 'x' }] } }).map(i => i.json);
+  assert.deepStrictEqual(r.map(x => x.ok), [true, false]); assert.strictEqual(JSON.parse(r[0].tendencias).ideas[0].titulo, 'Kebab');
+  const m = run(codeOf(RA, 'Mensaje de radar'), { all: { 'Radar del canal': r } })[0].json.texto;
+  assert.match(m, /Margen Real\nr\n1\. \[tiktok\] Kebab/); assert.match(m, /B: sin radar/);
+  const ver = run(codeOf(RA, 'Radar guardado'), { nodes: { Inicio: { accion: 'ver' } }, all: { $input: [{ canal_id: 'mr', nombre: 'Margen Real', tendencias: r[0].tendencias }] } })[0].json.respuesta;
+  assert.match(ver, /1\. \[tiktok\] Kebab/);
+  // El guionista recibe el radar si tiene menos de 3 días; uno viejo no se usa.
+  const nv = t => run(codeOf(ORQ, 'Nuevo video'), { nodes: { Inicio: { canal_id: 'mr', tema: '' }, 'Buscar canal': { canal_id: 'mr', tendencias: t }, 'Buscar biblia': { resultado: '{}' }, 'Leer ajustes': aj }, all: { $input: [] } })[0].json.pedido.datos.tendencias;
+  assert.strictEqual(nv(r[0].tendencias).ideas[0].titulo, 'Kebab');
+  assert.strictEqual(nv(JSON.stringify({ fecha: '2026-01-01T00:00:00Z', ideas: [] })), null);
+  const sb = run(codeOf(ORQ, 'Pedir storyboard'), { nodes: { Inicio: { canal_id: 'mr', video_id: 'v' }, 'Biblia del video': { resultado: '{}' }, Video: { formato: 'short' }, 'Canal del video': { tendencias: r[0].tendencias }, 'Leer ajustes': aj } })[0].json;
+  assert.strictEqual(sb.datos.tendencias.resumen, 'r');
+  // Los especialistas existen y el contrato los nombra.
+  for (const red of ['tiktok', 'instagram', 'youtube']) assert.ok(fs.existsSync(path.join(__dirname, '..', 'skill', 'roles', `especialista-${red}.md`)));
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'skill', 'FABRICA.md'), 'utf8'), /especialista-tiktok\.md/);
+});

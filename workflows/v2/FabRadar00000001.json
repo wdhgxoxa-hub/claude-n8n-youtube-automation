@@ -1,0 +1,633 @@
+{
+  "id": "FabRadar00000001",
+  "name": "F · Radar de tendencias",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 7,
+              "triggerAtMinute": 40
+            }
+          ]
+        }
+      },
+      "id": "51c7ef4e-5086-4a2a-a2cd-d9972929b8ce",
+      "name": "Cada mañana (radar)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "9a74b109-0e77-439c-a8f3-611a92e322d9",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e0707dfc-7892-417a-b867-5a214b61fb8b",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowRadar === true && $('Leer ajustes').first().json.allowVidiq === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dfc78c29-c3ae-41d5-b2a0-f308a03a2a3f",
+      "name": "¿Radar encendido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "activo"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "a15eaacc-0ed2-40ba-8fb4-5602494173ef",
+      "name": "Canales (radar)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst c = $input.all().map(i => i.json).filter(x => x.canal_id && x.nicho);\nreturn c.length ? c.map(x => ({ json: { accion: 'radar', canal_id: x.canal_id, nombre: x.nombre || x.canal_id, nicho: String(x.nicho).slice(0, 450),\n  redes: x.redes || 'youtube,tiktok' } })) : [{ json: { nada: true } }];\n"
+      },
+      "id": "526c3f29-24da-4c5e-9e9d-4670bddbbd5c",
+      "name": "Pedidos de radar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "74ad54df-8d7f-4f31-b51e-83c326cfdc23",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "410a62be-5968-4b20-8489-9991037793e5",
+      "name": "¿Hay canales?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabVidiq00000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f2d0e122-8205-4b50-ba38-98c9d22a457a",
+      "name": "vidIQ: radar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Une cada canal con lo que trajo vidIQ (mismo orden) y arma el encargo del analista de tendencias.\nconst ped = $('Pedidos de radar').all().map(i => i.json); const vq = $input.all().map(i => i.json);\nreturn ped.map((p, i) => { const v = vq[i] || {}; const t = v.ok ? (v.textos || []) : [];\n  return { json: { ...p, ok: !!v.ok, creditos: v.creditos || 0, prompt:\n`Eres el analista de tendencias de una fábrica de videos con IA (imágenes y clips generados, voz en off, montaje automático; sin rostros reales, sin grabar personas, sin plantillas de CapCut).\nCanal: ${p.nombre}. Nicho: ${p.nicho}. Publica en: ${p.redes}.\nCon estos datos de esta semana, di qué está funcionando y propón ideas que ESTA fábrica pueda producir ya, distintas por red:\n- TikTok: ritmo, ganchos en pantalla, sonidos en alza (el sonido solo se puede sugerir: se pone a mano al publicar).\n- Instagram Reels: estética, bucle, texto de portada, guardados y compartidos.\n- YouTube Shorts: retención, búsqueda, nada de contenido repetido ni plantillas (política de contenido inauténtico).\nDescarta lo que dependa de música con derechos en YouTube, de caras de personas reales o de grabar en persona.\nResponde JSON {\"resumen\": \"2 frases\", \"formatos\": [{\"formato\": \"\", \"por_que\": \"\", \"ejemplo\": \"url\"}], \"ideas\": [{\"titulo\": \"\", \"red\": \"tiktok|instagram|youtube|todas\", \"gancho\": \"primera frase y texto en pantalla\", \"formato\": \"\", \"por_que\": \"dato concreto del radar\", \"caduca_dias\": 7}], \"sonidos\": [{\"nombre\": \"\", \"url\": \"\", \"uso\": \"\"}]}\nMáximo 5 ideas, 3 formatos y 3 sonidos. Usa solo datos de abajo; si no alcanzan, dilo en el resumen.\n\n== Reels y TikTok que superan a su creador ==\n${(t[0] || 'sin datos').slice(0, 9000)}\n\n== Shorts en español que despegan ==\n${(t[1] || 'sin datos').slice(0, 6000)}\n\n== Sonidos de TikTok en alza ==\n${(t[2] || 'sin datos').slice(0, 4000)}` } }; });\n"
+      },
+      "id": "a3354983-2a8b-47b2-9929-58f06c7b533f",
+      "name": "Encargo del analista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }] }] } }}"
+      },
+      "id": "fa9e9c50-369a-4770-9adf-23194883a05e",
+      "name": "Analista de tendencias",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1980,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredOpenAI001",
+          "name": "OpenAI"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst enc = $('Encargo del analista').all().map(i => i.json); const hoy = new Date().toISOString();\nreturn $input.all().map((i, k) => { const p = enc[k] || {}; let r = {};\n  try { r = JSON.parse((i.json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); } catch (x) { r = {}; }\n  const ideas = (r.ideas || []).slice(0, 5); const ok = ideas.length > 0;\n  return { json: { canal_id: p.canal_id, nombre: p.nombre, ok, creditos: p.creditos,\n    tendencias: ok ? JSON.stringify({ fecha: hoy, resumen: String(r.resumen || '').slice(0, 600), formatos: (r.formatos || []).slice(0, 3), ideas, sonidos: (r.sonidos || []).slice(0, 3) }) : '' } }; });\n"
+      },
+      "id": "8daa74cc-4115-4adb-92b0-8da213059332",
+      "name": "Radar del canal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().filter(i => i.json.ok).map(i => ({ json: { canal_id: i.json.canal_id, tendencias: i.json.tendencias } }));"
+      },
+      "id": "92c57db5-ec98-4275-9eb5-2f941ccd6129",
+      "name": "Solo tendencias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.canal_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "74402e15-de63-4f86-a11c-7e73f0d856aa",
+      "name": "Guardar tendencias",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst l = $('Radar del canal').all().map(i => i.json);\nconst t = l.map(c => { if (!c.ok) return `• ${c.nombre}: sin radar hoy (vidIQ o el analista no respondieron).`;\n  const r = JSON.parse(c.tendencias);\n  return `${c.nombre}\\n${r.resumen}\\n` + r.ideas.map((x, i) => `${i + 1}. [${x.red}] ${x.titulo}\\n   ${x.gancho}`).join('\\n')\n    + (r.sonidos.length ? '\\nSonidos en alza en TikTok (para publicar a mano; la publicación automática no los agrega): ' + r.sonidos.map(s => s.nombre).join(' · ') : ''); }).join('\\n\\n');\nreturn [{ json: { texto: ('📡 Radar de tendencias\\n\\n' + t + '\\n\\nLa fábrica las usará en los próximos guiones. Para pedir una: «haz un video de la idea 2 de Margen Real».').slice(0, 3900) } }];\n"
+      },
+      "id": "669062e3-c16f-48c0-ac41-25febb40ac1e",
+      "name": "Mensaje de radar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ String($json.texto ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ec0469fd-6aea-41f2-affa-e2072b05f7d3",
+      "name": "Aviso: radar",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3080,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "c641c8e0-59a7-427b-a71a-989366ce6a6c",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bb8dd7ea-e4f3-4f68-80ba-0d6181287cd1",
+              "leftValue": "={{ $('Inicio').first().json.accion !== 'correr' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "63477aaa-9cf6-4edc-b551-2301094cc175",
+      "name": "¿Solo ver?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "activo"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "58961d2e-af73-4868-bcb3-c0306671b522",
+      "name": "Canales (ver radar)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3740,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst p = $('Inicio').first().json; const c = $input.all().map(i => i.json).filter(x => x.canal_id && (!p.canal_id || x.canal_id === p.canal_id));\nconst t = c.map(x => { let r = null; try { r = JSON.parse(x.tendencias || 'null'); } catch (e) { r = null; }\n  if (!r) return `${x.nombre || x.canal_id}: todavía sin radar.`;\n  const dias = Math.floor((Date.now() - Date.parse(r.fecha)) / 86400000);\n  return `${x.nombre || x.canal_id} (canal_id ${x.canal_id}, radar de hace ${dias} d)\\n${r.resumen}\\n` + (r.ideas || []).map((i, k) => `${k + 1}. [${i.red}] ${i.titulo} — ${i.gancho} (formato: ${i.formato})`).join('\\n')\n    + ((r.sonidos || []).length ? '\\nSonidos TikTok: ' + r.sonidos.map(s => s.nombre + (s.url ? ' ' + s.url : '')).join(' · ') : ''); });\nreturn [{ json: { respuesta: t.join('\\n\\n') || 'No hay canales activos.' } }];\n"
+      },
+      "id": "ac921805-68ad-4e4a-b13b-b56ab20259cb",
+      "name": "Radar guardado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3960,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "¿Solo ver?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Solo ver?": {
+      "main": [
+        [
+          {
+            "node": "Canales (ver radar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canales (ver radar)": {
+      "main": [
+        [
+          {
+            "node": "Radar guardado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cada mañana (radar)": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "¿Radar encendido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Radar encendido?": {
+      "main": [
+        [
+          {
+            "node": "Canales (radar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canales (radar)": {
+      "main": [
+        [
+          {
+            "node": "Pedidos de radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos de radar": {
+      "main": [
+        [
+          {
+            "node": "¿Hay canales?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay canales?": {
+      "main": [
+        [
+          {
+            "node": "vidIQ: radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vidIQ: radar": {
+      "main": [
+        [
+          {
+            "node": "Encargo del analista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encargo del analista": {
+      "main": [
+        [
+          {
+            "node": "Analista de tendencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analista de tendencias": {
+      "main": [
+        [
+          {
+            "node": "Radar del canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Radar del canal": {
+      "main": [
+        [
+          {
+            "node": "Solo tendencias",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mensaje de radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solo tendencias": {
+      "main": [
+        [
+          {
+            "node": "Guardar tendencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje de radar": {
+      "main": [
+        [
+          {
+            "node": "Aviso: radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

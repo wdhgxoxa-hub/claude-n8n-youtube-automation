@@ -105,7 +105,7 @@ W = {  # flujos
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
     'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001', 'refs': 'FabReferencias01',
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
-    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001', 'reenviar': 'FabReenviar00001',
+    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001', 'reenviar': 'FabReenviar00001', 'radar': 'FabRadar00000001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -334,6 +334,7 @@ return [{ json: {
   allowYoutube: false,        // subida privada a YouTube
   allowAnalytics: false,      // YouTube Analytics y estadísticas de redes para aprender
   allowVidiq: false,          // vidIQ: palabras clave, videos que destacan y puntaje de títulos (créditos de tu plan)
+  allowRadar: false,          // radar diario de tendencias por canal: vidIQ (15 créditos) + análisis con GPT (centavos)
   allowMiniaturas: false,     // miniatura con GPT Image + texto montado en Creatomate (pago por uso)
   allowCortes: false,         // 2–3 cortes verticales de cada video largo para TikTok, Reels y Shorts (créditos de Creatomate)
   allowRedes: false,          // publicar en YouTube, TikTok, Instagram y Facebook con Upload-Post (suscripción)
@@ -348,6 +349,7 @@ return [{ json: {
   costoClipSegUsd: 0.07,      // Gemini Omni 1.2 Flash a 720p (precio de lista de Google, nov-2026)
   costoRevisionUsd: 0.01,     // revisión visual de un plano, estimado
   costoCriticoUsd: 0.02,      // una crítica de investigación o guion, estimado
+  costoRadarUsd: 0.05,        // análisis diario de tendencias de un canal (GPT), estimado
   costoVerificacionUsd: 0.25, // una verificación de cifras con búsqueda web (~10 búsquedas y ~75k tokens), estimado
   costoVozUsdPorPlano: 0.002, // Gemini TTS por plano, estimado
   avisoGastoPct: 0.8,         // al pasar esta fracción del tope, pide permiso por Telegram antes de seguir
@@ -591,7 +593,7 @@ const presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.pr
 return [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',
   version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },
   pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,
-    nicho: canal.nicho || '', formato, biblia,
+    nicho: canal.nicho || '', formato, biblia, tendencias: (() => { try { const t = JSON.parse(canal.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),
     duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',
     indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];
 """)
@@ -759,7 +761,7 @@ dt_get(f, 'Video', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id 
 code(f, 'Pedir storyboard', r"""
 const e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};
 return [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,
-  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '',
+  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '', tendencias: (() => { try { const t = JSON.parse($('Canal del video').first().json.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),
     presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,
     costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];
 """)
@@ -819,7 +821,7 @@ dt_get(f, 'Video (rehacer)', 'videos', 'video_id', "={{ $('Inicio').first().json
 code(f, 'Pedir storyboard corregido', r"""
 const e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};
 return [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,
-  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '',
+  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '', tendencias: (() => { try { const t = JSON.parse($('Canal (rehacer)').first().json.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),
     presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,
     costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];
 """)
@@ -1964,7 +1966,8 @@ f.add('Agente', '@n8n/n8n-nodes-langchain.agent', 3.1,
            "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}"
            'Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. '
            'Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. '
-           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes, reenviar, metas, adoptar_cuenta. '
+           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes, reenviar, metas, adoptar_cuenta, tendencias. '
+           'Si el operador pide un video «de la idea N» o de una tendencia, primero usa tendencias (ver) y luego crear_video con ese tema y su gancho en indicaciones. '
            'Si el operador da una cuenta existente (enlace o @usuario) para que la fábrica la lleve, usa adoptar_cuenta. Si habla de metas, ritmo o de que la fábrica trabaje sola, usa metas. '
            'Si el operador dice que no le llegó una aprobación o que un enlace no abre, usa reenviar (nunca reintentes ejecuciones). '
            'Si el operador pide un video sin tema o que la fábrica elija el tema, usa crear_video con tema vacío: la fábrica investiga el nicho y elige. '
@@ -2020,13 +2023,15 @@ tool('metas', 'Fija las metas semanales de un canal y si la fábrica produce sol
 tool('adoptar_cuenta', 'Adopta una cuenta existente de YouTube, TikTok o Instagram: la analiza con su competencia y propone canal, biblia, metas y plan para aprobar.',
      {'evento': 'adoptar_cuenta', 'url': AI('url', 'enlace de la cuenta o @usuario'), 'red': AI('red', 'youtube, tiktok o instagram si el operador lo dice; vacío si viene en el enlace'),
       'notas': AI('notas', 'lo que pidió el operador sobre la cuenta; vacío si nada')})
+tool('tendencias', 'Muestra el radar de tendencias de los canales (ideas por red, formatos y sonidos de esta semana), o lo corre de nuevo. Úsalo antes de crear un video «de la idea N».',
+     {'accion': AI('accion', 'ver (por defecto) o correr si el operador pide actualizar el radar ahora'), 'canal_id': AI('canal_id', 'id del canal; vacío para todos')}, W['radar'])
 tool('reenviar', 'Vuelve a mandar las aprobaciones pendientes (todas o las de un video). Si un enlace ya no funciona, rehace esa aprobación con un enlace nuevo. Devuelve el resultado tal cual.',
      {'video_id': AI('video_id', 'id del video o vacío para todas')}, W['reenviar'])
 code(f, 'Respuesta', "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];")
 f.chain('Inicio', 'Agente', 'Respuesta')
 f.ai('Modelo', 'Agente', 'ai_languageModel')
 f.ai('Memoria', 'Agente', 'ai_memory')
-for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes', 'reenviar', 'metas', 'adoptar_cuenta'):
+for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes', 'reenviar', 'metas', 'adoptar_cuenta', 'tendencias'):
     f.ai(t, 'Agente', 'ai_tool')
 AGENTE = f.dump()
 
@@ -2199,7 +2204,7 @@ const leer = r => { const t = String(r?.data ?? r?.body ?? '');
   if (m.result?.isError) return { ok: false, error: txt.slice(0, 200) };
   return { ok: true, texto: txt }; };
 """
-switch(f, 'Según acción', 3, "({ titulos: 1, cuenta: 2 })[$('Inicio').first().json.accion] ?? 0")
+switch(f, 'Según acción', 3, "({ titulos: 1, cuenta: 2, radar: 2 })[$('Inicio').first().json.accion] ?? 0")
 # investigar
 vq('Palabras clave', "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'vidiq_keyword_research', arguments: { mode: 'research', keyword: String($('Inicio').first().json.semilla || $('Inicio').first().json.tema || '').slice(0, 150), limit: 15, userGoal: 'elegir el ángulo y las palabras clave de un video nuevo para un canal en español' } } }) }}")
 vq('Videos que destacan', "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'vidiq_outliers', arguments: { keyword: String($('Inicio').first().json.tema || '').slice(0, 500), language: $('Inicio').first().json.idioma || 'es', contentType: $('Inicio').first().json.formato === 'short' ? 'short' : 'long', limit: 10, userGoal: 'ver qué videos del tema superan a su canal para inspirar el gancho y el título' } } }) }}")
@@ -2229,6 +2234,13 @@ code(f, 'Sin títulos', "return [{ json: { ok: false, error: 'no hay títulos qu
 # cuenta: perfil y últimas publicaciones de una cuenta (YouTube, TikTok o Instagram) para adoptarla
 code(f, 'Llamadas de cuenta', r"""
 const e = $('Inicio').first().json; const h = String(e.handle || '');
+// Radar: lo que destaca esta semana en Reels y TikTok del nicho, los Shorts en español que despegan y los sonidos en alza.
+if (e.accion === 'radar') { const q = String(e.nicho || '').slice(0, 450); const desde = new Date(Date.now() - 10 * 86400000);
+  const R = [['vidiq_instagram_tiktok_outlier_search', { query: q, audienceQuery: 'Culture/Region: ' + (e.region || 'Perú y Latinoamérica hispanohablante') + '; Global: false; Demographics: ' + String(e.publico || 'adultos 18-45 de habla hispana').slice(0, 200) + ';',
+      descriptionLanguage: ['es'], datePostedAfter: desde.toISOString(), resultsPerPlatform: 5 }],
+    ['vidiq_outliers', { keyword: q.slice(0, 200), contentType: 'short', language: 'es', publishedWithin: 'thisMonth', limit: 8 }],
+    ['vidiq_tiktok_trending_sound_search', { query: q.slice(0, 200), limit: 8 }]];
+  return R.map(([nombre, args], i) => ({ json: { nombre, args: { ...args, userGoal: 'detectar tendencias y formatos que funcionan para un canal propio' }, id: 20 + i } })); }
 const L = { youtube: [['vidiq_channel_stats', { channelId: h }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'short' }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'long', popular: true }]],
   tiktok: [['vidiq_tiktok_profile', { handle: h }], ['vidiq_tiktok_profile_videos', { handle: h }]],
   instagram: [['vidiq_ig_profile', { handle: h }], ['vidiq_ig_profile_reels', { handle: h }]] }[e.red] || [];
@@ -2238,7 +2250,8 @@ vq('Consultar cuenta', "={{ JSON.stringify({ jsonrpc: '2.0', id: $json.id, metho
 code(f, 'Resumen de cuenta', VQ_LEER + r"""
 const r = $input.all().map(i => leer(i.json));
 if (!r.some(x => x.ok)) return [{ json: { ok: false, error: r.map(x => x.error).filter(Boolean)[0] || 'vidIQ no respondió' } }];
-return [{ json: { ok: true, perfil: r[0]?.ok ? r[0].texto.slice(0, 4000) : '', publicaciones: r.slice(1).filter(x => x.ok).map(x => x.texto).join('\n\n').slice(0, 9000), creditos: r.filter(x => x.ok).length * 5 } }];
+return [{ json: { ok: true, perfil: r[0]?.ok ? r[0].texto.slice(0, 4000) : '', publicaciones: r.slice(1).filter(x => x.ok).map(x => x.texto).join('\n\n').slice(0, 9000),
+  textos: r.map(x => x.ok ? x.texto.slice(0, 9000) : ''), creditos: r.filter(x => x.ok).length * 5 } }];
 """)
 f.chain('Inicio', 'Iniciar vidIQ', 'vidIQ listo', 'Según acción')
 f.link('Según acción', 'Palabras clave', 0)
@@ -2437,7 +2450,9 @@ const agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {
   const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }
   envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };
 if (e.formato === 'short') {
-  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);
+  // Hora del especialista de cada red (6–23 h, hora del público) si la propuso; si no, la de Ajustes.
+  const horaRed = red => { const h = Number(pub[red]?.hora); return Number.isFinite(h) && h >= 6 && h <= 23 ? h : null; };
+  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? horaRed(red) ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);
 } else {
   for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))
     agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});
@@ -2682,7 +2697,7 @@ for (const c of canales) {
   else if (retMedia !== null && retMedia < retMin) motivo = `freno de calidad: retención ${Math.round(retMedia * 100)} % < ${Math.round(retMin * 100)} % en los últimos 3`;
   if (motivo) { notas.push(`• ${c.canal_id}: ${motivo}`); continue; }
   pedidos.push({ evento: 'nuevo_video', canal_id: c.canal_id, tema: '', formato: fmt, automatico: true,
-    indicaciones: `Producción automática hacia la meta semanal (${semana + 1}/${meta}). Elige el tema con más potencial según la biblia y lo aprendido.` });
+    indicaciones: `Producción automática hacia la meta semanal (${semana + 1}/${meta}). Elige el tema con más potencial según la biblia, lo aprendido y el radar de tendencias de hoy (si una idea del radar encaja con la biblia, úsala).` });
   notas.push(`• ${c.canal_id}: pido un ${fmt} (${semana + 1}/${meta} esta semana; US$${g} de US$${tope})`);
 }
 if (!notas.length) return [{ json: { nada: true } }];
@@ -2700,6 +2715,103 @@ f.link('¿Hay plan?', 'Un pedido por canal', 0)
 f.link('Un pedido por canal', '¿Pide video?')
 f.link('¿Pide video?', 'Pedir video automático', 0)
 RUTINA = f.dump()
+
+# ======================================================================================
+# F · Radar de tendencias: cada mañana, antes de la rutina, mira qué despega en el nicho de cada canal activo
+# (Reels y TikTok que superan a su creador, Shorts en español, sonidos en alza) y un analista (GPT) lo convierte en
+# ideas que la fábrica sí puede producir. Queda en el canal (columna «tendencias», vale 3 días): lo leen el guionista,
+# los especialistas de cada red y la producción automática. Te llega el resumen por Telegram.
+# ======================================================================================
+f = Flow(W['radar'], 'F · Radar de tendencias')
+f.add('Cada mañana (radar)', 'n8n-nodes-base.scheduleTrigger', 1.2, {'rule': {'interval': [{'field': 'days', 'triggerAtHour': 7, 'triggerAtMinute': 40}]}})
+call(f, 'Leer ajustes', W['ajustes'])
+iff(f, '¿Radar encendido?', "$('Leer ajustes').first().json.allowRadar === true && $('Leer ajustes').first().json.allowVidiq === true")
+f.add('Canales (radar)', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('canales'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'activo'}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+code(f, 'Pedidos de radar', r"""
+const c = $input.all().map(i => i.json).filter(x => x.canal_id && x.nicho);
+return c.length ? c.map(x => ({ json: { accion: 'radar', canal_id: x.canal_id, nombre: x.nombre || x.canal_id, nicho: String(x.nicho).slice(0, 450),
+  redes: x.redes || 'youtube,tiktok' } })) : [{ json: { nada: true } }];
+""")
+iff(f, '¿Hay canales?', '$json.nada !== true')
+call(f, 'vidIQ: radar', W['vidiq'], each=True)
+code(f, 'Encargo del analista', r"""
+// Une cada canal con lo que trajo vidIQ (mismo orden) y arma el encargo del analista de tendencias.
+const ped = $('Pedidos de radar').all().map(i => i.json); const vq = $input.all().map(i => i.json);
+return ped.map((p, i) => { const v = vq[i] || {}; const t = v.ok ? (v.textos || []) : [];
+  return { json: { ...p, ok: !!v.ok, creditos: v.creditos || 0, prompt:
+`Eres el analista de tendencias de una fábrica de videos con IA (imágenes y clips generados, voz en off, montaje automático; sin rostros reales, sin grabar personas, sin plantillas de CapCut).
+Canal: ${p.nombre}. Nicho: ${p.nicho}. Publica en: ${p.redes}.
+Con estos datos de esta semana, di qué está funcionando y propón ideas que ESTA fábrica pueda producir ya, distintas por red:
+- TikTok: ritmo, ganchos en pantalla, sonidos en alza (el sonido solo se puede sugerir: se pone a mano al publicar).
+- Instagram Reels: estética, bucle, texto de portada, guardados y compartidos.
+- YouTube Shorts: retención, búsqueda, nada de contenido repetido ni plantillas (política de contenido inauténtico).
+Descarta lo que dependa de música con derechos en YouTube, de caras de personas reales o de grabar en persona.
+Responde JSON {"resumen": "2 frases", "formatos": [{"formato": "", "por_que": "", "ejemplo": "url"}], "ideas": [{"titulo": "", "red": "tiktok|instagram|youtube|todas", "gancho": "primera frase y texto en pantalla", "formato": "", "por_que": "dato concreto del radar", "caduca_dias": 7}], "sonidos": [{"nombre": "", "url": "", "uso": ""}]}
+Máximo 5 ideas, 3 formatos y 3 sonidos. Usa solo datos de abajo; si no alcanzan, dilo en el resumen.
+
+== Reels y TikTok que superan a su creador ==
+${(t[0] || 'sin datos').slice(0, 9000)}
+
+== Shorts en español que despegan ==
+${(t[1] || 'sin datos').slice(0, 6000)}
+
+== Sonidos de TikTok en alza ==
+${(t[2] || 'sin datos').slice(0, 4000)}` } }; });
+""")
+http(f, 'Analista de tendencias', 'POST', 'https://api.openai.com/v1/responses',
+     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }] }] } }}",
+     timeout=180000, cred=CRED_OPENAI)
+f.nodes[-1].update({'onError': 'continueRegularOutput', 'retryOnFail': True, 'maxTries': 2, 'waitBetweenTries': 5000})
+code(f, 'Radar del canal', r"""
+const enc = $('Encargo del analista').all().map(i => i.json); const hoy = new Date().toISOString();
+return $input.all().map((i, k) => { const p = enc[k] || {}; let r = {};
+  try { r = JSON.parse((i.json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); } catch (x) { r = {}; }
+  const ideas = (r.ideas || []).slice(0, 5); const ok = ideas.length > 0;
+  return { json: { canal_id: p.canal_id, nombre: p.nombre, ok, creditos: p.creditos,
+    tendencias: ok ? JSON.stringify({ fecha: hoy, resumen: String(r.resumen || '').slice(0, 600), formatos: (r.formatos || []).slice(0, 3), ideas, sonidos: (r.sonidos || []).slice(0, 3) }) : '' } }; });
+""")
+code(f, 'Solo tendencias', "return $input.all().filter(i => i.json.ok).map(i => ({ json: { canal_id: i.json.canal_id, tendencias: i.json.tendencias } }));")
+dt_update(f, 'Guardar tendencias', 'canales', 'canal_id', '={{ $json.canal_id }}')
+code(f, 'Mensaje de radar', r"""
+const l = $('Radar del canal').all().map(i => i.json);
+const t = l.map(c => { if (!c.ok) return `• ${c.nombre}: sin radar hoy (vidIQ o el analista no respondieron).`;
+  const r = JSON.parse(c.tendencias);
+  return `${c.nombre}\n${r.resumen}\n` + r.ideas.map((x, i) => `${i + 1}. [${x.red}] ${x.titulo}\n   ${x.gancho}`).join('\n')
+    + (r.sonidos.length ? '\nSonidos en alza en TikTok (para publicar a mano; la publicación automática no los agrega): ' + r.sonidos.map(s => s.nombre).join(' · ') : ''); }).join('\n\n');
+return [{ json: { texto: ('📡 Radar de tendencias\n\n' + t + '\n\nLa fábrica las usará en los próximos guiones. Para pedir una: «haz un video de la idea 2 de Margen Real».').slice(0, 3900) } }];
+""")
+tg(f, 'Aviso: radar', "={{ $('Leer ajustes').first().json.chatId }}", '={{ $json.texto }}')
+# A pedido (herramienta «tendencias» del agente): ver el radar guardado o correrlo ya.
+trigger(f)
+iff(f, '¿Solo ver?', "$('Inicio').first().json.accion !== 'correr'")
+f.add('Canales (ver radar)', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('canales'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'activo'}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+code(f, 'Radar guardado', r"""
+const p = $('Inicio').first().json; const c = $input.all().map(i => i.json).filter(x => x.canal_id && (!p.canal_id || x.canal_id === p.canal_id));
+const t = c.map(x => { let r = null; try { r = JSON.parse(x.tendencias || 'null'); } catch (e) { r = null; }
+  if (!r) return `${x.nombre || x.canal_id}: todavía sin radar.`;
+  const dias = Math.floor((Date.now() - Date.parse(r.fecha)) / 86400000);
+  return `${x.nombre || x.canal_id} (canal_id ${x.canal_id}, radar de hace ${dias} d)\n${r.resumen}\n` + (r.ideas || []).map((i, k) => `${k + 1}. [${i.red}] ${i.titulo} — ${i.gancho} (formato: ${i.formato})`).join('\n')
+    + ((r.sonidos || []).length ? '\nSonidos TikTok: ' + r.sonidos.map(s => s.nombre + (s.url ? ' ' + s.url : '')).join(' · ') : ''); });
+return [{ json: { respuesta: t.join('\n\n') || 'No hay canales activos.' } }];
+""")
+f.link('Inicio', '¿Solo ver?')
+f.link('¿Solo ver?', 'Canales (ver radar)', 0)
+f.link('Canales (ver radar)', 'Radar guardado')
+f.link('¿Solo ver?', 'Leer ajustes', 1)
+f.chain('Cada mañana (radar)', 'Leer ajustes', '¿Radar encendido?')
+f.link('¿Radar encendido?', 'Canales (radar)', 0)
+f.chain('Canales (radar)', 'Pedidos de radar', '¿Hay canales?')
+f.link('¿Hay canales?', 'vidIQ: radar', 0)
+f.chain('vidIQ: radar', 'Encargo del analista', 'Analista de tendencias', 'Radar del canal', 'Solo tendencias', 'Guardar tendencias')
+f.link('Radar del canal', 'Mensaje de radar')
+f.link('Mensaje de radar', 'Aviso: radar')
+RADAR = f.dump()
 
 # ======================================================================================
 # F · Vigilante de errores: cualquier flujo que falle te avisa por Telegram (flujo, nodo, error y enlace).
@@ -2894,16 +3006,16 @@ def recorrer(v):
     if isinstance(v, list): return [recorrer(x) for x in v]
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, REENVIAR, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT]:
     for n in wf['nodes']:
         n['parameters'] = recorrer(n['parameters'])
 
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, AGENTE, PEND, REENVIAR, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
                            'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, REENVIAR, CHAT]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)

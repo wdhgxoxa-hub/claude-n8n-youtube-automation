@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "4f1d7a1f-2662-4746-9def-18ab00261378",
+      "id": "d4cdb7f0-0fc7-4be7-ab76-8a0d0271346a",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "8e0e9506-8a31-48b8-a0f5-5a4d94aee273",
+      "id": "102de99f-0f98-41e3-a7e6-a24c635e1c0f",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -55,7 +55,7 @@
           },
           "conditions": [
             {
-              "id": "6566619c-917f-4800-8c62-1949a87caa88",
+              "id": "b56f6ed2-0b1c-4309-96f1-c35cc2dc0c45",
               "leftValue": "={{ $('Leer ajustes').first().json.allowVidiq === true && ($('Inicio').first().json.contexto?.publicacion?.youtube?.titulos || []).length > 1 }}",
               "rightValue": "",
               "operator": {
@@ -69,7 +69,7 @@
         },
         "options": {}
       },
-      "id": "6706e697-7623-453b-95d3-d189e0898c3b",
+      "id": "73ad3090-3457-452f-ae2c-07c970657c5a",
       "name": "¿Puntuar títulos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -82,7 +82,7 @@
       "parameters": {
         "jsCode": "const TITULO = {\"origen\": \"Adaptado al español de title.py de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21).\", \"escritorio\": 60, \"movil\": 40, \"maximo\": 100, \"palabras_miniatura\": 3, \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"definitivo\", \"mejor\", \"poderoso\", \"secreto\", \"revolucionario\", \"alucinante\", \"epico\", \"perfecto\", \"completo\", \"todo\", \"tremendo\", \"impactante\"], \"vacias\": [\"el\", \"la\", \"los\", \"las\", \"un\", \"una\", \"unos\", \"unas\", \"de\", \"del\", \"al\", \"a\", \"en\", \"y\", \"o\", \"que\", \"con\", \"por\", \"para\", \"es\", \"son\", \"se\", \"su\", \"sus\", \"tu\", \"tus\", \"mi\", \"mis\", \"lo\", \"como\", \"este\", \"esta\", \"esto\", \"eso\", \"asi\", \"muy\", \"cuanto\", \"cuanta\", \"por que\", \"porque\", \"shorts\"]};\n\nconst normalT = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');\nconst palabrasT = t => normalT(t).match(/[a-z0-9ñ']+/g) || [];\nfunction revisarTitulo(titulo, miniatura) {\n  const t = String(titulo || '').trim(), n = [...t].length, fallas = [], bien = [];\n  if (n > TITULO.maximo) fallas.push(['largo', `${n} caracteres: el límite de YouTube es ${TITULO.maximo}`]);\n  else if (n > TITULO.escritorio) fallas.push(['largo', `${n} caracteres: la búsqueda de escritorio corta cerca de ${TITULO.escritorio}`]);\n  else bien.push(`${n} caracteres, dentro del corte de escritorio (${TITULO.escritorio})`);\n  if (n > TITULO.movil) { const cab = [...t].slice(0, TITULO.movil).join(''); const cabeza = cab.includes(' ') ? cab.slice(0, cab.lastIndexOf(' ')) : cab; fallas.push(['movil', `en el celular se ve «${cabeza}…»: revisa que el tema sobreviva`]); }\n  const mayus = t.split(/\\s+/).filter(w => [...w].length > 2 && w === w.toUpperCase() && w !== w.toLowerCase() && !/\\d/.test(w));\n  if (mayus.length > 2) fallas.push(['gritos', `${mayus.length} palabras en mayúsculas: más de dos parece spam`]);\n  const vagas = [...new Set(palabrasT(t).filter(w => TITULO.vagas.includes(w)))].sort();\n  if (vagas.length) fallas.push(['vago', `${vagas.join(', ')}: cámbialo por un número, un nombre o una fecha`]);\n  if (/\\d/.test(t)) bien.push('lleva una cifra concreta'); else fallas.push(['sin-cifra', 'sin número, fecha ni nombre: el arreglo más fiable']);\n  if (t.endsWith('?')) bien.push('pregunta abierta');\n  if (!palabrasT(t).slice(0, 3).filter(w => !TITULO.vacias.includes(w)).length) fallas.push(['inicio', 'las tres primeras palabras son relleno: adelanta el tema']);\n  if (miniatura) {\n    const clave = x => new Set(palabrasT(x).filter(w => w.length > 1 && !TITULO.vacias.includes(w)));\n    const m = clave(miniatura); const comunes = [...clave(t)].filter(w => m.has(w)).sort();\n    if (comunes.length) fallas.push(['repite', `la miniatura repite el título en ${comunes.join(', ')}: debe decir lo que el título no dice`]);\n    else bien.push('título y miniatura dicen cosas distintas');\n    if (palabrasT(miniatura).length > TITULO.palabras_miniatura) fallas.push(['miniatura-larga', `${palabrasT(miniatura).length} palabras en la miniatura: ${TITULO.palabras_miniatura} es el techo a tamaño de feed`]);\n  }\n  return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };\n}\nconst e = $('Inicio').first().json; const t = (e.contexto.publicacion.youtube.titulos || []).map(x => revisarTitulo(x)).filter(r => r.caracteres <= TITULO.maximo).sort((a, b) => b.puntaje - a.puntaje).map(r => r.titulo); return [{ json: { accion: 'titulos', titulos: t.length ? t : e.contexto.publicacion.youtube.titulos, formato: e.formato } }];"
       },
-      "id": "124003d2-638c-420b-87c7-aed4c1a120ea",
+      "id": "d0e90ede-7924-41bd-80c6-112f41f81dc4",
       "name": "Pedido de títulos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -111,7 +111,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "008dce75-f1ca-40ae-b77c-ac378a6afb75",
+      "id": "bea0636c-62b1-4a02-abef-650ec5e2c378",
       "name": "vidIQ: títulos",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -146,7 +146,7 @@
         },
         "returnAll": true
       },
-      "id": "747b8ae8-2a1c-49ea-8e76-c5700020a3ef",
+      "id": "7f900a79-1fce-4120-914c-b2cbddb55746",
       "name": "Agenda del canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -159,9 +159,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const TITULO = {\"origen\": \"Adaptado al español de title.py de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21).\", \"escritorio\": 60, \"movil\": 40, \"maximo\": 100, \"palabras_miniatura\": 3, \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"definitivo\", \"mejor\", \"poderoso\", \"secreto\", \"revolucionario\", \"alucinante\", \"epico\", \"perfecto\", \"completo\", \"todo\", \"tremendo\", \"impactante\"], \"vacias\": [\"el\", \"la\", \"los\", \"las\", \"un\", \"una\", \"unos\", \"unas\", \"de\", \"del\", \"al\", \"a\", \"en\", \"y\", \"o\", \"que\", \"con\", \"por\", \"para\", \"es\", \"son\", \"se\", \"su\", \"sus\", \"tu\", \"tus\", \"mi\", \"mis\", \"lo\", \"como\", \"este\", \"esta\", \"esto\", \"eso\", \"asi\", \"muy\", \"cuanto\", \"cuanta\", \"por que\", \"porque\", \"shorts\"]};\n\nconst normalT = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');\nconst palabrasT = t => normalT(t).match(/[a-z0-9ñ']+/g) || [];\nfunction revisarTitulo(titulo, miniatura) {\n  const t = String(titulo || '').trim(), n = [...t].length, fallas = [], bien = [];\n  if (n > TITULO.maximo) fallas.push(['largo', `${n} caracteres: el límite de YouTube es ${TITULO.maximo}`]);\n  else if (n > TITULO.escritorio) fallas.push(['largo', `${n} caracteres: la búsqueda de escritorio corta cerca de ${TITULO.escritorio}`]);\n  else bien.push(`${n} caracteres, dentro del corte de escritorio (${TITULO.escritorio})`);\n  if (n > TITULO.movil) { const cab = [...t].slice(0, TITULO.movil).join(''); const cabeza = cab.includes(' ') ? cab.slice(0, cab.lastIndexOf(' ')) : cab; fallas.push(['movil', `en el celular se ve «${cabeza}…»: revisa que el tema sobreviva`]); }\n  const mayus = t.split(/\\s+/).filter(w => [...w].length > 2 && w === w.toUpperCase() && w !== w.toLowerCase() && !/\\d/.test(w));\n  if (mayus.length > 2) fallas.push(['gritos', `${mayus.length} palabras en mayúsculas: más de dos parece spam`]);\n  const vagas = [...new Set(palabrasT(t).filter(w => TITULO.vagas.includes(w)))].sort();\n  if (vagas.length) fallas.push(['vago', `${vagas.join(', ')}: cámbialo por un número, un nombre o una fecha`]);\n  if (/\\d/.test(t)) bien.push('lleva una cifra concreta'); else fallas.push(['sin-cifra', 'sin número, fecha ni nombre: el arreglo más fiable']);\n  if (t.endsWith('?')) bien.push('pregunta abierta');\n  if (!palabrasT(t).slice(0, 3).filter(w => !TITULO.vacias.includes(w)).length) fallas.push(['inicio', 'las tres primeras palabras son relleno: adelanta el tema']);\n  if (miniatura) {\n    const clave = x => new Set(palabrasT(x).filter(w => w.length > 1 && !TITULO.vacias.includes(w)));\n    const m = clave(miniatura); const comunes = [...clave(t)].filter(w => m.has(w)).sort();\n    if (comunes.length) fallas.push(['repite', `la miniatura repite el título en ${comunes.join(', ')}: debe decir lo que el título no dice`]);\n    else bien.push('título y miniatura dicen cosas distintas');\n    if (palabrasT(miniatura).length > TITULO.palabras_miniatura) fallas.push(['miniatura-larga', `${palabrasT(miniatura).length} palabras en la miniatura: ${TITULO.palabras_miniatura} es el techo a tamaño de feed`]);\n  }\n  return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };\n}\n\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst porRevision = (yt.titulos || []).map(t => revisarTitulo(t)).sort((a, b) => b.puntaje - a.puntaje)[0]?.titulo;   // sin vidIQ: el mejor según yt-empaque\nconst tituloYt = String((vq?.ok && vq.mejor) || porRevision || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = [];\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
+        "jsCode": "const TITULO = {\"origen\": \"Adaptado al español de title.py de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21).\", \"escritorio\": 60, \"movil\": 40, \"maximo\": 100, \"palabras_miniatura\": 3, \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"definitivo\", \"mejor\", \"poderoso\", \"secreto\", \"revolucionario\", \"alucinante\", \"epico\", \"perfecto\", \"completo\", \"todo\", \"tremendo\", \"impactante\"], \"vacias\": [\"el\", \"la\", \"los\", \"las\", \"un\", \"una\", \"unos\", \"unas\", \"de\", \"del\", \"al\", \"a\", \"en\", \"y\", \"o\", \"que\", \"con\", \"por\", \"para\", \"es\", \"son\", \"se\", \"su\", \"sus\", \"tu\", \"tus\", \"mi\", \"mis\", \"lo\", \"como\", \"este\", \"esta\", \"esto\", \"eso\", \"asi\", \"muy\", \"cuanto\", \"cuanta\", \"por que\", \"porque\", \"shorts\"]};\n\nconst normalT = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');\nconst palabrasT = t => normalT(t).match(/[a-z0-9ñ']+/g) || [];\nfunction revisarTitulo(titulo, miniatura) {\n  const t = String(titulo || '').trim(), n = [...t].length, fallas = [], bien = [];\n  if (n > TITULO.maximo) fallas.push(['largo', `${n} caracteres: el límite de YouTube es ${TITULO.maximo}`]);\n  else if (n > TITULO.escritorio) fallas.push(['largo', `${n} caracteres: la búsqueda de escritorio corta cerca de ${TITULO.escritorio}`]);\n  else bien.push(`${n} caracteres, dentro del corte de escritorio (${TITULO.escritorio})`);\n  if (n > TITULO.movil) { const cab = [...t].slice(0, TITULO.movil).join(''); const cabeza = cab.includes(' ') ? cab.slice(0, cab.lastIndexOf(' ')) : cab; fallas.push(['movil', `en el celular se ve «${cabeza}…»: revisa que el tema sobreviva`]); }\n  const mayus = t.split(/\\s+/).filter(w => [...w].length > 2 && w === w.toUpperCase() && w !== w.toLowerCase() && !/\\d/.test(w));\n  if (mayus.length > 2) fallas.push(['gritos', `${mayus.length} palabras en mayúsculas: más de dos parece spam`]);\n  const vagas = [...new Set(palabrasT(t).filter(w => TITULO.vagas.includes(w)))].sort();\n  if (vagas.length) fallas.push(['vago', `${vagas.join(', ')}: cámbialo por un número, un nombre o una fecha`]);\n  if (/\\d/.test(t)) bien.push('lleva una cifra concreta'); else fallas.push(['sin-cifra', 'sin número, fecha ni nombre: el arreglo más fiable']);\n  if (t.endsWith('?')) bien.push('pregunta abierta');\n  if (!palabrasT(t).slice(0, 3).filter(w => !TITULO.vacias.includes(w)).length) fallas.push(['inicio', 'las tres primeras palabras son relleno: adelanta el tema']);\n  if (miniatura) {\n    const clave = x => new Set(palabrasT(x).filter(w => w.length > 1 && !TITULO.vacias.includes(w)));\n    const m = clave(miniatura); const comunes = [...clave(t)].filter(w => m.has(w)).sort();\n    if (comunes.length) fallas.push(['repite', `la miniatura repite el título en ${comunes.join(', ')}: debe decir lo que el título no dice`]);\n    else bien.push('título y miniatura dicen cosas distintas');\n    if (palabrasT(miniatura).length > TITULO.palabras_miniatura) fallas.push(['miniatura-larga', `${palabrasT(miniatura).length} palabras en la miniatura: ${TITULO.palabras_miniatura} es el techo a tamaño de feed`]);\n  }\n  return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };\n}\n\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst porRevision = (yt.titulos || []).map(t => revisarTitulo(t)).sort((a, b) => b.puntaje - a.puntaje)[0]?.titulo;   // sin vidIQ: el mejor según yt-empaque\nconst tituloYt = String((vq?.ok && vq.mejor) || porRevision || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = [];\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  // Hora del especialista de cada red (6–23 h, hora del público) si la propuso; si no, la de Ajustes.\n  const horaRed = red => { const h = Number(pub[red]?.hora); return Number.isFinite(h) && h >= 6 && h <= 23 ? h : null; };\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? horaRed(red) ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
       },
-      "id": "a5af5d99-6db8-436c-807a-c19be06271e1",
+      "id": "e7fb1060-e2e7-4ca3-b4c7-5dcb8786216d",
       "name": "Plan de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -181,7 +181,7 @@
           },
           "conditions": [
             {
-              "id": "99706ead-9570-485a-ad42-2f7231dd4414",
+              "id": "967e2a1d-8bb0-445f-9c18-72d9373ba36d",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -195,7 +195,7 @@
         },
         "options": {}
       },
-      "id": "c6918598-f1ec-4ae1-a6c6-e1ffa675e67c",
+      "id": "57ead325-6457-4a43-bc02-ae265a9947af",
       "name": "¿Hay envíos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -346,7 +346,7 @@
           }
         }
       },
-      "id": "ab880fb5-a1d6-415c-bea2-31e9c61eabf9",
+      "id": "84602866-5ae8-497f-8edc-d9f7a314e73f",
       "name": "Subir a redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -369,7 +369,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const pedidos = $('Plan de publicación').all().map(i => i.json);\nreturn $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];\n  const id = r.request_id || r.job_id || r.data?.request_id || '';\n  // Upload-Post da job_id a lo programado: su estado se consulta con ?job_id= (con request_id da 404 hasta la hora).\n  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, job_id: String(r.job_id || ''), plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),\n    url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',\n    resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),\n    publicado_en: p.programado || new Date().toISOString() } }; });\n"
       },
-      "id": "06bb6b43-b629-4b59-b021-013f55a7fd4b",
+      "id": "33e709b8-34b7-4621-86d8-dbb310b2692e",
       "name": "Filas de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -397,7 +397,7 @@
         },
         "options": {}
       },
-      "id": "6af27540-b2ab-49a2-a752-f6e7cf3fa1c4",
+      "id": "1494e61b-cf4c-447f-ae97-8d1e27187d4b",
       "name": "Guardar publicaciones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -410,7 +410,7 @@
       "parameters": {
         "jsCode": "\n// «publicado» solo si algo salió ya; si todo quedó en el calendario, «programado» hasta que\n// «F · Confirmar publicaciones» compruebe en Upload-Post que salió de verdad.\nconst filas = $('Filas de publicación').all().map(i => i.json); const ok = filas.filter(f => f.request_id);\nconst estado = !ok.length ? 'error_publicacion' : ok.some(f => f.estado === 'enviado') ? 'publicado' : 'programado';\nreturn [{ json: { estado, etapa: estado === 'programado' ? 'programado' : 'publicado',\n  publicado_en: ok[0]?.publicado_en || '', error: ok.length === filas.length ? '' : filas.filter(f => !f.request_id).map(f => f.tipo + ': ' + f.resultado).join('; ').slice(0, 500) } }];\n"
       },
-      "id": "83f80a3c-c9e4-468d-8b17-b6b2ad603c50",
+      "id": "97b6743c-0ff2-42b8-ace4-c25af24d4dfa",
       "name": "Video publicado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -448,7 +448,7 @@
         },
         "options": {}
       },
-      "id": "e46d85b8-7890-428f-a29d-e803e9e83d4e",
+      "id": "567a4af6-6ce1-4ade-a060-98f4848ab5f6",
       "name": "Marcar publicado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -462,7 +462,7 @@
         "amount": 120,
         "unit": "seconds"
       },
-      "id": "a1f830cb-6b6b-44a4-9ae7-ab2ae97a3076",
+      "id": "b4a55750-0ce4-4b35-ae35-7a2a567a3b75",
       "name": "Esperar a las redes",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -470,13 +470,13 @@
         3080,
         0
       ],
-      "webhookId": "00f6e424-c038-463e-b07e-675a592f6775"
+      "webhookId": "c87f304b-98f8-47a1-a993-de8888cd233e"
     },
     {
       "parameters": {
         "jsCode": "const l = $('Filas de publicación').all().filter(i => i.json.request_id && i.json.estado === 'enviado').map(i => ({ json: i.json })); return l.length ? l : [{ json: { nada: true } }];"
       },
-      "id": "be7f91b6-ff15-4b33-8cab-964b4be617b6",
+      "id": "b9c818ea-dc95-4205-b28a-54c4a578d8ee",
       "name": "Pedidos de estado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -496,7 +496,7 @@
           },
           "conditions": [
             {
-              "id": "09842900-687d-421c-8a20-4825a1469dcf",
+              "id": "cb6db2bd-aff2-41f5-9b5f-142d3e2e0826",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -510,7 +510,7 @@
         },
         "options": {}
       },
-      "id": "ce7bb303-550b-446c-b2a3-3d363d5796c1",
+      "id": "50f395d2-3b10-4a5d-b23f-410873cd0872",
       "name": "¿Hay que consultar?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -535,7 +535,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "ffe99a71-1838-44f3-803e-3305d568cdee",
+      "id": "4a147d99-da52-46aa-a92f-9f05c093e0c2",
       "name": "Estado en redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -558,7 +558,7 @@
       "parameters": {
         "jsCode": "\n// Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).\nconst filas = $('Filas de publicación').all().map(i => i.json); const pedidos = $('Plan de publicación').all().map(i => i.json);\nconst estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];\nconst enviados = filas.filter(f => f.request_id && f.estado === 'enviado');\nconst lineas = filas.map(f => {\n  if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;\n  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas}: ${pedidos[filas.indexOf(f)]?.hora_local || f.publicado_en}`;\n  const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];\n  const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')\n    : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';\n  return `✓ ${f.tipo} → ${f.plataformas}${st.status ? ' (' + st.status + ')' : ''}${det ? '\\n   ' + det : ''}`; });\nreturn [{ json: { texto: `Publicación de ${$('Inicio').first().json.video_id}:\\n` + lineas.join('\\n') } }];\n"
       },
-      "id": "2d009a99-ea2e-49ee-82e4-30ecd9aeab37",
+      "id": "8d51570d-b62b-494d-a0d3-f64e8945eec5",
       "name": "Resumen de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -579,7 +579,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "ca7cc078-fc56-4592-9595-2702c366ee4b",
+      "id": "cbd0f12f-b91d-40e7-9a0a-1d9323e1bd9a",
       "name": "Aviso: publicado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -606,7 +606,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "5272e9db-afd8-4104-99dc-a7c91a0e83cd",
+      "id": "25448a4d-3ca7-42e7-aada-cbe583d239a1",
       "name": "Aviso: nada que publicar",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

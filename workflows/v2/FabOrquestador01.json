@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "9150ea4a-4cff-4a41-adb6-67b9a3ee7b2a",
+      "id": "2a2607cc-2219-4286-8e73-fafeca90c881",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "13f2e6be-017b-465e-be57-161d766164a7",
+      "id": "917961d1-e12f-4edf-8bfd-4255d3818c07",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json;\n// adoptar_cuenta devuelve una propuesta de canal como investigar_nichos: pasa por la misma aprobación.\nconst clave = e.evento === 'claude_ok' ? 'claude_ok:' + ({ corregir_guion: 'guion', adoptar_cuenta: 'investigar_nichos' }[e.modo] || e.modo)\n  : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;\nconst rutas = [\"nuevo_canal\", \"claude_ok:investigar_nichos\", \"aprobado:canal\", \"cambios:canal\", \"claude_ok:crear_biblia\", \"nuevo_video\", \"claude_ok:guion\", \"aprobado:guion\", \"cambios:guion\", \"claude_ok:storyboard\", \"aprobado:storyboard\", \"cambios:storyboard\", \"claude_ok:aprender\", \"aprobado:final\", \"cambios:final\", \"corregir\", \"ajustar_biblia\", \"programar\", \"referencias\", \"configurar_redes\", \"metas\", \"adoptar_cuenta\", \"otro\"];\nconst i = rutas.indexOf(clave);\nreturn [{ json: { ...e, clave, salida: i === -1 ? rutas.length - 1 : i } }];\n"
       },
-      "id": "c17f8cee-0a76-42ae-881e-1876624506e1",
+      "id": "1349ca0a-6c8f-4a3a-bec0-f6612b0fcc0d",
       "name": "Ruta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -63,7 +63,7 @@
         "numberOutputs": 23,
         "output": "={{ $json.salida }}"
       },
-      "id": "3a16ad5a-87bc-4bc7-a135-5fe17c68284b",
+      "id": "7fa1c5e3-c454-425f-9fac-88c1eee146ef",
       "name": "Según evento",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -76,7 +76,7 @@
       "parameters": {
         "jsCode": "const e=$json; return [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.criterios || '', rechazos: e.rechazos || [] } } }];"
       },
-      "id": "3739d844-4ad9-4d7f-8c16-6f5d4452cedc",
+      "id": "f2a35648-f8ab-485f-b2a7-5d6371276938",
       "name": "Pedir nichos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -105,7 +105,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "03b0c3fc-047d-46b7-8f5b-d6e264333be9",
+      "id": "c73c6945-3997-4056-a392-e21f897a4b32",
       "name": "Claude: nichos",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -126,7 +126,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "c818d70d-9077-43fe-ab63-bef566c6c06b",
+      "id": "e919647a-8b47-4b28-91f5-80794b6abe2f",
       "name": "Aviso: investigando",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -152,7 +152,7 @@
           },
           "conditions": [
             {
-              "id": "64141262-3e34-485e-858c-fcd5ad19b256",
+              "id": "edcd6eb4-09c3-44bb-8fb0-69323701e87c",
               "leftValue": "={{ $('Leer ajustes').first().json.allowCritico === true }}",
               "rightValue": "",
               "operator": {
@@ -166,7 +166,7 @@
         },
         "options": {}
       },
-      "id": "4cfd1f65-3da0-4a92-a90e-f6f4677c9870",
+      "id": "d1fc6faf-ee4b-4a42-9640-d492eac879e2",
       "name": "¿Criticar nichos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -188,7 +188,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Eres un crítico escéptico de investigación de mercado para YouTube. Revisa esta propuesta de canal y marca cada afirmación sin fuente o con datos dudosos (cifras de búsquedas, mercados, competidores). Responde JSON {\"sin_fuente\": [\"…\"], \"riesgos\": [\"…\"], \"veredicto\": \"una frase\"}.\\n\\n' + JSON.stringify($('Inicio').first().json.resultado).slice(0, 12000) }] }] } }}"
       },
-      "id": "b27c4444-e9ea-4181-a30a-86ed593e9ede",
+      "id": "41052bc0-b375-43c6-9369-eca1a3a9f720",
       "name": "Crítico de nichos",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -208,7 +208,7 @@
       "parameters": {
         "jsCode": "\nconst r = $('Inicio').first().json.resultado || {}; const c = r.canal || {};\nlet critica = '';\nif ($('Crítico de nichos').isExecuted) { try { const k = JSON.parse(($('Crítico de nichos').first().json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}');\n  critica = `\\n\\nCrítico (GPT-6 Astra): ${k.veredicto || ''}` + ((k.sin_fuente || []).length ? '\\nSin fuente: ' + k.sin_fuente.slice(0, 4).join('; ') : ''); } catch (e) { critica = ''; } }\nconst ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\\n');\nconst temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\\n');\nconst dg = r.diagnostico || null; const cu = r.cuenta || null; const mt = r.metas || null;\nconst diag = dg ? `\\n\\nDiagnóstico de la cuenta (${cu?.red || ''} ${cu?.handle || ''}):\\nBien: ${(dg.bien || []).slice(0, 4).join('; ')}\\nCambiar: ${(dg.cambiar || []).slice(0, 5).join('; ')}\\nCompetencia: ${(dg.competencia || []).slice(0, 4).map(x => x.patron || x).join('; ')}` : '';\nconst metas = mt ? `\\nMetas propuestas: ${mt.videos_semana} ${mt.formato || 'videos'}/semana, tope US$${mt.gasto_semana_usd}/semana` : '';\nconst mensaje = `${cu ? 'Adopción de cuenta' : 'Propuesta de canal'}: ${c.nombre_propuesto}\\nNicho: ${c.nicho}\\nPúblico: ${c.publico}\\nPromesa: ${c.promesa}${diag}${metas}\\n\\nEvidencia:\\n${ev}\\n\\nPrimeros temas:\\n${temas}${critica}`;\nconst aviso = (cu ? `🧭 Adopción de ${cu.red} ${cu.handle}: ${c.nombre_propuesto}\\n${String((dg?.cambiar || [])[0] || c.nicho || '').slice(0, 200)}` : `🧭 Propuesta de canal: ${c.nombre_propuesto}\\n${String(c.nicho || '').slice(0, 200)}`) + '\\n\\nÁbrelo para ver la evidencia y decidir.';\nreturn [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, job_id: $('Inicio').first().json.job_id } }];\n"
       },
-      "id": "cef46729-006b-4488-95dc-94d71f597e5d",
+      "id": "c287aeea-a761-4ceb-99ee-4a9c71286735",
       "name": "Mensaje de canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -237,7 +237,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "e96dd967-c3e6-44b8-91f1-8b8ef553dc78",
+      "id": "b154b3a8-bef5-43d4-b8b0-78261552aa2c",
       "name": "Aprobar canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -250,7 +250,7 @@
       "parameters": {
         "jsCode": "\nconst c = ($json.contexto || {}).canal || {};\nconst canal_id = (c.nombre_propuesto || 'canal').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) + '-' + Date.now().toString(36).slice(-4);\nreturn [{ json: { canal_id, nombre: c.nombre_propuesto || '', nicho: c.nicho || '', estado: 'creando_biblia', biblia_ruta: '',\n  presupuesto_largo_usd: $('Leer ajustes').first().json.presupuestoLargoUsd, presupuesto_short_usd: $('Leer ajustes').first().json.presupuestoShortUsd,\n  plataformas: ($json.contexto || {}).cuenta?.red || 'youtube', formato_defecto: (c.formatos || ['largo'])[0],\n  // Metas del canal: las propone la adopción; un canal nuevo empieza sin producción automática.\n  metas: JSON.stringify({ videos_semana: 3, formato: (c.formatos || ['short']).includes('short') ? 'short' : 'largo', gasto_semana_usd: 10, retencion_min: 0.5, auto: false, ...(($json.contexto || {}).metas || {}) }),\n  cuenta: ($json.contexto || {}).cuenta ? JSON.stringify(($json.contexto || {}).cuenta) : '' } }];\n"
       },
-      "id": "a9b7b5cc-b83a-46c8-a31a-d38dafdebd3a",
+      "id": "9d500894-c26f-4de7-acbc-d1ceaa5d5d24",
       "name": "Nuevo canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -278,7 +278,7 @@
         },
         "options": {}
       },
-      "id": "6472270a-5b52-4bbb-b561-0a2bca389b13",
+      "id": "bc94c66f-e109-447f-8e95-da87dc1e8bcc",
       "name": "Guardar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -291,7 +291,7 @@
       "parameters": {
         "jsCode": "const ctx = $('Según evento').first().json.contexto; return [{ json: { modo:'crear_biblia', canal_id: $('Nuevo canal').first().json.canal_id, video_id:'', datos:{ canal: ctx.canal, evidencia: ctx.evidencia, notas: ctx.cuenta ? 'Cuenta existente adoptada: la biblia debe respetar su identidad actual (tono, estilo, público) y aplicar este diagnóstico: ' + JSON.stringify({ cuenta: ctx.cuenta, diagnostico: ctx.diagnostico }).slice(0, 6000) : '' } } }];"
       },
-      "id": "91cfb5e5-a188-4ef5-bd3b-36d44e4be52c",
+      "id": "3eb83f40-5f11-490f-b23f-ba1e4db02856",
       "name": "Pedir biblia",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -320,7 +320,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "427bf7b9-b271-4bce-93c6-8bf5eec6f9de",
+      "id": "7e5700e2-c26b-4215-a33f-41f4d63b6bd5",
       "name": "Claude: biblia",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -333,7 +333,7 @@
       "parameters": {
         "jsCode": "\nconst e = $json; const c = (e.contexto || {}).canal || {}; const cu = (e.contexto || {}).cuenta;\nif (cu) return [{ json: { modo: 'adoptar_cuenta', canal_id: '', video_id: '', datos: { ...cu, notas: 'Cambios del operador a la propuesta anterior: ' + (e.cambios || '') + ' · Propuesta anterior: ' + JSON.stringify({ canal: c, diagnostico: e.contexto.diagnostico }).slice(0, 3000) } } }];\nreturn [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.cambios || '', rechazos:[{ nombre: c.nombre_propuesto, nicho: c.nicho, motivo: e.cambios || '' }] } } }];\n"
       },
-      "id": "3fc9cfbc-d9b9-4f20-b558-5de0d08f6c3e",
+      "id": "2fb5f296-7bb7-4145-84dc-4aac810b89ec",
       "name": "Reinvestigar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -362,7 +362,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "17be6fa1-7daa-4961-9b23-a7eec8103c96",
+      "id": "a0dec098-75ed-4a14-954e-29c009682ebf",
       "name": "Claude: nichos otra vez",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -375,7 +375,7 @@
       "parameters": {
         "jsCode": "return [{ json: { estado:'activo', biblia_ruta: 'trabajo:' + $json.job_id } }];"
       },
-      "id": "33b810a0-b5b3-4fff-b10e-85aa2409e206",
+      "id": "7f075879-c9ec-41c0-933d-00ddf777d1a3",
       "name": "Canal activo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -413,7 +413,7 @@
         },
         "options": {}
       },
-      "id": "483cd293-93df-4582-a150-2dd57e31d711",
+      "id": "4f3a43f6-1d38-4b24-8b39-c0c7853a0813",
       "name": "Activar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -434,7 +434,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "4060e380-2e79-4585-bef7-318338ec0334",
+      "id": "ed6ab61a-c139-481d-9860-a5b928c89b38",
       "name": "Aviso: canal listo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -453,7 +453,7 @@
       "parameters": {
         "jsCode": "return [{ json: { canal_id: $('Inicio').first().json.canal_id } }];"
       },
-      "id": "acd80af4-5a60-458e-a37a-a9124873e1d4",
+      "id": "3736dfe0-bf58-4730-a8dc-202b64f71dd8",
       "name": "Encargo de referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -482,7 +482,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "369248b4-475d-44d2-b61f-bc4bd3dca854",
+      "id": "5c72aa7d-2021-497f-9301-47157065e297",
       "name": "Referencias del canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -513,7 +513,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "868267c3-871d-4255-9107-e0d3319ae64d",
+      "id": "cf575df1-5b6d-4ed2-8705-154ada3059df",
       "name": "Buscar canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -534,7 +534,7 @@
           },
           "conditions": [
             {
-              "id": "4a0e0e1d-df66-4d6b-942b-e37f93746c2f",
+              "id": "405ef89e-f688-4762-9d12-1a4aacb71b0b",
               "leftValue": "={{ $json.estado === 'activo' && String($json.biblia_ruta).startsWith('trabajo:') }}",
               "rightValue": "",
               "operator": {
@@ -548,7 +548,7 @@
         },
         "options": {}
       },
-      "id": "d187c3e9-6170-47b9-8ca4-bc7ede2c7fe4",
+      "id": "f2cceefe-001c-477a-8960-4f68fa375b99",
       "name": "¿Canal activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -579,7 +579,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "7bf9a2da-e050-4f68-9e50-889acdc60cd8",
+      "id": "7bb4df32-3c58-412e-8bdc-1aa86073e9c0",
       "name": "Buscar biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -591,9 +591,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;\nconst biblia = (JSON.parse($('Buscar biblia').first().json.resultado || '{}').resultado) || {};\n// Sin tema: la fábrica lo elige (vidIQ investiga el nicho y el guionista elige sin repetir los temas recientes).\nconst elegir = !String(e.tema || '').trim();\nconst recientes = $input.all().map(i => i.json).filter(v => v.video_id && v.tema).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 30).map(v => v.tema);\nconst formato = e.formato || canal.formato_defecto || 'largo';\nconst video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);\nconst presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;\nreturn [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',\n  version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },\n  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,\n    nicho: canal.nicho || '', formato, biblia,\n    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',\n    indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;\nconst biblia = (JSON.parse($('Buscar biblia').first().json.resultado || '{}').resultado) || {};\n// Sin tema: la fábrica lo elige (vidIQ investiga el nicho y el guionista elige sin repetir los temas recientes).\nconst elegir = !String(e.tema || '').trim();\nconst recientes = $input.all().map(i => i.json).filter(v => v.video_id && v.tema).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 30).map(v => v.tema);\nconst formato = e.formato || canal.formato_defecto || 'largo';\nconst video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);\nconst presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;\nreturn [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',\n  version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },\n  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,\n    nicho: canal.nicho || '', formato, biblia, tendencias: (() => { try { const t = JSON.parse(canal.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),\n    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',\n    indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];\n"
       },
-      "id": "081707fe-c103-4f58-9a3f-f1a4fde182d0",
+      "id": "33dd5552-fb7f-4aa5-9262-85aaf78503d6",
       "name": "Nuevo video",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -609,7 +609,7 @@
         "includeOtherFields": false,
         "options": {}
       },
-      "id": "85c9fe10-571c-4dd7-8871-4cd6dec9f61f",
+      "id": "88039edb-f322-4fa0-a3de-b095f7d6f31a",
       "name": "Fila del video",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -637,7 +637,7 @@
         },
         "options": {}
       },
-      "id": "5533b99c-e6b2-4b21-a728-a100ab1c8a19",
+      "id": "5959a42d-a552-4e38-b34b-49df0ee0f1df",
       "name": "Guardar video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -657,7 +657,7 @@
           },
           "conditions": [
             {
-              "id": "447db907-e804-4a6c-98da-164bd0b4b58e",
+              "id": "964ca165-fc73-4244-8faa-7f133822cd50",
               "leftValue": "={{ $('Leer ajustes').first().json.allowVidiq === true }}",
               "rightValue": "",
               "operator": {
@@ -671,7 +671,7 @@
         },
         "options": {}
       },
-      "id": "bcc18156-846e-4966-be6c-75cc60c6f223",
+      "id": "43f3d3e7-03e1-479a-ae38-7f395ff8ccaf",
       "name": "¿Investigar con vidIQ?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -684,7 +684,7 @@
       "parameters": {
         "jsCode": "\n// La investigación de palabras clave necesita una semilla corta (2–4 palabras); con la frase entera vidIQ devolvía volumen nulo.\nconst p = $('Nuevo video').first().json.pedido;\nconst vacias = new Set('a al como cómo con cuanto cuánto de del el en es la las lo los mas más para por que qué se su sus un una uno y o verdad realmente gana ganan cuesta hoy'.split(' '));\nconst semilla = String(p.datos.tema || p.datos.nicho || '').toLowerCase().normalize('NFC').replace(/[¿?¡!.,:;«»\"()]/g, ' ').split(/\\s+/).filter(w => w.length > 2 && !vacias.has(w)).slice(0, 3).join(' ');\nreturn [{ json: { accion: 'investigar', tema: p.datos.tema || semilla, semilla: semilla || p.datos.tema, formato: p.datos.formato, idioma: $('Leer ajustes').first().json.idioma } }];\n"
       },
-      "id": "a23deb88-6180-405a-aed5-1656d2b9afa0",
+      "id": "636fda7b-1d5d-4d17-879f-a1e90b3e4521",
       "name": "Pedido a vidIQ",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -713,7 +713,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "3c12a95a-9c3e-4d2d-bd3c-111ce1af1c88",
+      "id": "4a8035f8-f976-4be1-8e5b-43a4da4bacbe",
       "name": "vidIQ: investigar",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -726,7 +726,7 @@
       "parameters": {
         "jsCode": "\n// El guion recibe lo que encontró vidIQ (palabras clave y videos que destacan) como contexto, si se usó.\nconst p = $('Nuevo video').first().json.pedido;\nconst vq = $('vidIQ: investigar').isExecuted ? $('vidIQ: investigar').first().json : null;\nreturn [{ json: { ...p, datos: { ...p.datos, ...(vq?.ok ? { vidiq: 'datos', investigacion_vidiq: { palabras_clave: vq.palabras_clave, videos_destacados: vq.videos_destacados } } : {}) } } }];\n"
       },
-      "id": "7f3140b1-b810-45d3-95b9-b03e8d4f8a6b",
+      "id": "77de479d-2eff-49a2-a1d8-14ebac2e4810",
       "name": "Pedir guion",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -755,7 +755,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "01b33294-a053-4a80-b44a-8edab350b7ee",
+      "id": "d299312b-833f-4f5e-a43c-b305aa57f61f",
       "name": "Claude: guion",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -776,7 +776,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "8aaeb3f5-d313-4ab0-848f-77efd7d3b9c2",
+      "id": "ef929fa7-8b48-4905-b0b9-26c7fe7054e5",
       "name": "Aviso: escribiendo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -803,7 +803,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "091db226-0ef5-490b-a62a-b087179c6804",
+      "id": "353093d0-48e6-4410-bea6-1858836b9ae5",
       "name": "Aviso: canal no listo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -839,7 +839,7 @@
         },
         "returnAll": true
       },
-      "id": "4a4c2342-faf3-46dd-bc8a-be6244ca04c4",
+      "id": "a123a360-bcf7-4dd2-bf69-5e3a778fd563",
       "name": "Videos de las últimas 24 h",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -854,7 +854,7 @@
       "parameters": {
         "jsCode": "\n// Topes de 24 h: por canal y de toda la fábrica. Si se pasan, el video no se crea y te avisa.\nconst aj = $('Leer ajustes').first().json; const canal = $('Buscar canal').first().json.canal_id;\nconst v = $input.all().map(i => i.json).filter(x => x.video_id);\nconst delCanal = v.filter(x => x.canal_id === canal).length;\nconst motivo = delCanal >= aj.maxVideosDiaPorCanal ? `el canal ${canal} ya tiene ${delCanal} videos nuevos en 24 h (tope ${aj.maxVideosDiaPorCanal})`\n  : v.length >= aj.maxVideosDiaTotal ? `la fábrica ya creó ${v.length} videos en 24 h (tope ${aj.maxVideosDiaTotal})` : '';\nreturn [{ json: { ok: !motivo, motivo } }];\n"
       },
-      "id": "dd89452a-ede8-4017-883e-76042a098a9c",
+      "id": "d99dc60a-18b6-4e99-8512-7474a79bfd7d",
       "name": "Revisar topes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -874,7 +874,7 @@
           },
           "conditions": [
             {
-              "id": "51e9b53b-8b06-42c5-92b8-9cb9e9fdb815",
+              "id": "d76bc3ee-112d-422e-8925-f5970e8cf045",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -888,7 +888,7 @@
         },
         "options": {}
       },
-      "id": "66d2770b-4991-44c1-bc25-5122483b3f67",
+      "id": "bccc6136-0250-429f-a7fb-65b8a1b31a9a",
       "name": "¿Dentro de los topes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -909,7 +909,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "2b01fccc-2ac2-4af3-b216-fade7411f248",
+      "id": "83a23a30-9ac8-4c5b-ba74-b1c4c3bba5df",
       "name": "Aviso: tope diario",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -945,7 +945,7 @@
         },
         "returnAll": true
       },
-      "id": "6dcf7f61-e1be-4a60-b368-73f6b959e2ad",
+      "id": "4b11ca44-b360-4a46-99fb-da0e91419c58",
       "name": "Temas recientes del canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -978,7 +978,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "b472e4b6-234d-4cf5-a4ea-af2558eb8dfe",
+      "id": "37c6b9e4-0873-4a7d-b0a1-e1321df22b70",
       "name": "Video (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -999,7 +999,7 @@
           },
           "conditions": [
             {
-              "id": "333006a7-15bd-4295-ac60-6c1f87d8d959",
+              "id": "90b77921-f666-4bce-b2a0-c554a3f188c8",
               "leftValue": "={{ $('Leer ajustes').first().json.allowCritico === true && Number($json.intentos || 0) < 2 }}",
               "rightValue": "",
               "operator": {
@@ -1013,7 +1013,7 @@
         },
         "options": {}
       },
-      "id": "f4664352-5fec-4118-873b-e947756d8532",
+      "id": "2d4ba047-1274-4537-9133-06616388db31",
       "name": "¿Criticar guion?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1026,7 +1026,7 @@
       "parameters": {
         "jsCode": "const GANCHOS = {\"formulas\": [{\"id\": \"el-dato\", \"nombre\": \"El dato\", \"forma\": \"Un número que el espectador no sabía, dicho seco, y su consecuencia.\", \"ejemplo\": \"De cada 10 soles que pagas en el grifo, solo 2 se quedan en el grifo.\", \"falla\": \"Muere si el número es vago o no se puede comprobar. Di la fuente.\", \"patrones\": [\"\\\\b\\\\d+([.,]\\\\d+)?\\\\s?%\", \"\\\\b\\\\d+ (de|en) (cada )?\\\\d+\\\\b\", \"\\\\bde cada \\\\d+\\\\b\", \"\\\\bs/ ?\\\\d\", \"\\\\bde (tus|tu|sus|cada) \\\\d+\\\\b\", \"\\\\d+ (mil|soles|millones)?.*(y|pero) .*\\\\d+\"]}, {\"id\": \"resultado-ajeno\", \"nombre\": \"El resultado de otro\", \"forma\": \"El resultado de alguien con nombre o un negocio concreto, y luego el mecanismo.\", \"ejemplo\": \"Esta pollería vende 70 mil al mes y al dueño le quedan 7 mil. Hice la cuenta.\", \"falla\": \"No inventes el número. Si no puedes nombrar el caso, usa otra fórmula.\", \"patrones\": [\"\\\\beste (negocio|grifo|local|restaurante|canal|senor|dueno)\\\\b\", \"\\\\besta (polleria|bodega|tienda|empresa|senora)\\\\b\", \"\\\\bpaso de .* a\\\\b\", \"\\\\ben (un|una|dos|tres|\\\\d+) (semana|mes|ano)s?\\\\b\"]}, {\"id\": \"el-error\", \"nombre\": \"El error\", \"forma\": \"Nombra el error que el espectador probablemente comete ahora mismo.\", \"ejemplo\": \"Crees que el grifo te roba en el precio. El margen está en otro lado.\", \"falla\": \"Solo funciona si el error es común y se comprueba en un segundo.\", \"patrones\": [\"\\\\b(estas|sigues) (haciendo|cometiendo|pagando)\\\\b\", \"\\\\bel (error|motivo) (que )?(todos|casi todos|nadie)\\\\b\", \"\\\\bdeja de\\\\b\", \"\\\\bcrees que\\\\b\"]}, {\"id\": \"contra-corriente\", \"nombre\": \"Contra la corriente\", \"forma\": \"Di el consejo que todos aceptan y recházalo.\", \"ejemplo\": \"Todos dicen que el grifo gana con la gasolina. Gana con lo que vende al lado.\", \"falla\": \"Necesita la prueba en los 15 segundos siguientes o suena a llevar la contraria por gusto.\", \"patrones\": [\"\\\\btodos (dicen|creen|piensan|te dicen)\\\\b\", \"\\\\bes (en realidad )?(mentira|falso)\\\\b\", \"\\\\bnadie (te dice|habla de|te cuenta)\\\\b\", \"\\\\bno es (por|lo que)\\\\b\"]}, {\"id\": \"la-revelacion\", \"nombre\": \"La revelación\", \"forma\": \"Promete que vas a mostrar algo concreto y muéstralo.\", \"ejemplo\": \"Te muestro la boleta real de un camión cisterna, en pantalla.\", \"falla\": \"Hay que mostrarlo pronto: una revelación al minuto 8 es una caída al minuto 1.\", \"patrones\": [\"\\\\bte (voy a )?(muestro|mostrar|ensenar|enseno)\\\\b\", \"\\\\baqui (esta|tienes)\\\\b\", \"\\\\ben pantalla\\\\b\"]}, {\"id\": \"el-superlativo\", \"nombre\": \"El superlativo\", \"forma\": \"El más barato, caro, rápido o rentable de una categoría.\", \"ejemplo\": \"Este es el negocio con el margen más chico de todo el barrio.\", \"falla\": \"Los superlativos salen baratos: gánatelo diciendo contra qué gana.\", \"patrones\": [\"\\\\bel (mas|menos) \\\\w+ de\\\\b\", \"\\\\bla (mas|menos) \\\\w+ de\\\\b\", \"\\\\b(el|la) (mejor|peor|unico|unica)\\\\b\", \"\\\\bnumero uno\\\\b\"]}, {\"id\": \"el-reloj\", \"nombre\": \"El reloj\", \"forma\": \"Pon un límite de tiempo a la recompensa.\", \"ejemplo\": \"En 50 segundos vas a saber cuánto se queda el grifo de tus 10 soles.\", \"falla\": \"El reloj tiene que ser verdad. Si te pasas, el próximo gancho no se cree.\", \"patrones\": [\"\\\\ben (los proximos )?\\\\d+ (segundos|minutos|horas)\\\\b\", \"\\\\bal final de(l| este) video\\\\b\", \"\\\\ben menos de \\\\d+\\\\b\"]}, {\"id\": \"lo-probe\", \"nombre\": \"Lo probé\", \"forma\": \"Un experimento en primera persona con un costo dicho.\", \"ejemplo\": \"Pasé un día entero con el encargado de un grifo contando cada sol.\", \"falla\": \"Necesita un costo real (tiempo, plata, riesgo) o no hay nada en juego.\", \"patrones\": [\"\\\\b(probe|pase|gaste|intente|deje|segui)\\\\b\", \"\\\\bdurante \\\\d+ (dias|semanas|meses)\\\\b\", \"\\\\bpara que tu no\\\\b\"]}, {\"id\": \"la-pregunta\", \"nombre\": \"La pregunta\", \"forma\": \"La pregunta exacta que el espectador escribiría en el buscador.\", \"ejemplo\": \"¿Cuánto se queda de verdad un grifo de tus 10 soles?\", \"falla\": \"Tiene que ser la pregunta del espectador, no la tuya.\", \"patrones\": [\"^(por que|como|cuanto|cuanta|cuantos|cuantas|que|cual|cuando|quien|sabias|es|vale)\\\\b\", \"\\\\?\\\\s*$\"]}, {\"id\": \"antes-despues\", \"nombre\": \"Antes y después\", \"forma\": \"Dos estados y un corte entre ellos.\", \"ejemplo\": \"Así se veía la caja a las 6 de la mañana. Así a las 10 de la noche.\", \"falla\": \"Solo funciona con una imagen que lo muestre.\", \"patrones\": [\"\\\\bantes\\\\b.*\\\\bahora\\\\b\", \"\\\\bantes\\\\b.*\\\\bdespues\\\\b\", \"\\\\basi (era|estaba|se veia)\\\\b\", \"\\\\bantes (ganaba|vendia|cobraba)\\\\b\"]}, {\"id\": \"el-desarme\", \"nombre\": \"El desarme\", \"forma\": \"Desarma en público algo real, pieza por pieza.\", \"ejemplo\": \"Desarmé el precio de un galón de gasolina en sus 5 partes.\", \"falla\": \"Di qué desarmaste y en cuántas partes: desarmar un solo ejemplo es una anécdota.\", \"patrones\": [\"\\\\b(desarme|desarmamos|desarmo|desarmar)\\\\b\", \"\\\\b(saque|sacamos|hice) la cuenta\\\\b\", \"\\\\ben sus \\\\d+ partes\\\\b\", \"\\\\banalice\\\\b\"]}, {\"id\": \"la-suma\", \"nombre\": \"La suma\", \"forma\": \"Dos cosas con nombre que juntas dan un resultado.\", \"ejemplo\": \"La gasolina más la tienda de al lado: así paga sus cuentas un grifo.\", \"falla\": \"Las dos cosas deben tener nombre y el resultado necesitar las dos.\", \"patrones\": [\"\\\\b\\\\w+ (mas|\\\\+) (la|el|los|las)? ?\\\\w+\\\\b\", \"\\\\bjuntos?\\\\b\", \"\\\\bcombina(r|do)?\\\\b\"]}, {\"id\": \"la-advertencia\", \"nombre\": \"La advertencia\", \"forma\": \"Un costo que el espectador está a punto de pagar.\", \"ejemplo\": \"No abras un grifo sin saber cuánto te deja de verdad cada galón.\", \"falla\": \"Si el costo es chico, el gancho miente. Guárdala para lo grave.\", \"patrones\": [\"\\\\bno (abras|compres|pongas|firmes|inviertas|pagues)\\\\b\", \"\\\\bantes de (abrir|comprar|poner|invertir|pagar)\\\\b\", \"\\\\bcuidado\\\\b\"]}, {\"id\": \"la-lista\", \"nombre\": \"La lista\", \"forma\": \"Un conjunto contado, con el número en la primera frase.\", \"ejemplo\": \"5 cosas que paga el grifo antes de ganar un sol.\", \"falla\": \"El número debe ser exacto y cada punto distinto de los demás.\", \"patrones\": [\"^\\\\d+ \\\\w+\", \"\\\\b(estas son|aqui van) (las )?\\\\d+\\\\b\"]}, {\"id\": \"la-boleta\", \"nombre\": \"La boleta\", \"forma\": \"Muestra la prueba primero y explica después.\", \"ejemplo\": \"Esta es la lista de precios de Petroperú de esta semana. Mira la tercera fila.\", \"falla\": \"Necesita la prueba real en pantalla: una prueba contada no es prueba.\", \"patrones\": [\"\\\\b(esta|este) es (la|el) (boleta|lista|recibo|factura|precio|cuenta)\\\\b\", \"\\\\bmira (la|el|esta|este)\\\\b\", \"\\\\bprueba\\\\b\"]}, {\"id\": \"el-de-adentro\", \"nombre\": \"El de adentro\", \"forma\": \"Información de dentro del negocio o del sistema.\", \"ejemplo\": \"El encargado del grifo sabe un número que casi ningún cliente pregunta.\", \"falla\": \"No finjas un acceso que no tienes.\", \"patrones\": [\"\\\\b(nadie|casi nadie|pocos) (sabe|saben|pregunta|preguntan|mira|miran)\\\\b\", \"\\\\bescondid[oa]\\\\b\", \"\\\\bpor dentro\\\\b\", \"\\\\bdetras de\\\\b\"]}, {\"id\": \"lo-imposible\", \"nombre\": \"Lo imposible\", \"forma\": \"Una afirmación que suena falsa, y luego la prueba.\", \"ejemplo\": \"Un grifo puede vender un millón al mes y aun así no llegar a fin de mes.\", \"falla\": \"La prueba tiene que empezar antes de los 20 segundos o suena a anzuelo.\", \"patrones\": [\"\\\\bsin (ganar|perder|vender|pagar)\\\\b\", \"\\\\by aun asi\\\\b\", \"\\\\bnunca\\\\b\", \"\\\\bcero\\\\b\", \"\\\\by (no|apenas) (le )?(queda|gana)\\\\b\"]}, {\"id\": \"la-comparacion\", \"nombre\": \"La comparación\", \"forma\": \"Dos opciones con nombre y una gana.\", \"ejemplo\": \"Grifo de marca contra grifo independiente: uno gana el doble por galón.\", \"falla\": \"Di en voz alta cuál pierde: una comparación sin perdedor es un anuncio.\", \"patrones\": [\"\\\\bvs\\\\.?\\\\b\", \"\\\\bcontra\\\\b\", \"\\\\bversus\\\\b\", \"\\\\bcual (gana|deja|conviene)\\\\b\", \"\\\\bel doble\\\\b\"]}, {\"id\": \"el-origen\", \"nombre\": \"El origen\", \"forma\": \"De dónde sale de verdad un resultado.\", \"ejemplo\": \"El sol que gana el grifo no sale de la gasolina. Sale de la tienda.\", \"falla\": \"Funciona una vez por tema; no la repitas en el mismo canal seguido.\", \"patrones\": [\"\\\\bde donde sale\\\\b\", \"\\\\bno sale de\\\\b\", \"\\\\btodo empieza\\\\b\", \"\\\\bla (verdadera )?razon\\\\b\"]}, {\"id\": \"la-fecha\", \"nombre\": \"La fecha\", \"forma\": \"Algo cambia en una fecha concreta.\", \"ejemplo\": \"Desde este mes el impuesto a la gasolina cambia. Esto es lo que pagas de más.\", \"falla\": \"Solo con una fecha real y comprobable: es la forma más rápida de perder la confianza.\", \"patrones\": [\"\\\\b(este|el proximo) (mes|ano)\\\\b\", \"\\\\besta semana\\\\b\", \"\\\\bdesde (hoy|este|el)\\\\b\", \"\\\\bya no\\\\b\", \"\\\\bcambia\\\\b\"]}, {\"id\": \"a-ti\", \"nombre\": \"A ti\", \"forma\": \"Nombra al espectador exacto en las primeras seis palabras.\", \"ejemplo\": \"Si cargas 10 soles de gasolina cada día, esto te interesa.\", \"falla\": \"Estrecho gana a amplio: «si haces negocios» no le habla a nadie.\", \"patrones\": [\"^si (tu |usted )?\\\\w+\", \"\\\\bpara (todos )?los que\\\\b\", \"\\\\bpara ti\\\\b\"]}], \"listas\": {\"relleno\": [\"basicamente\", \"literalmente\", \"realmente\", \"simplemente\", \"muy\", \"hola\", \"bienvenidos\", \"bienvenido\", \"hoy\", \"video\", \"suscribete\", \"canal\", \"chicos\", \"amigos\", \"gente\", \"bueno\"], \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"secreto\", \"poderoso\", \"definitivo\", \"revolucionario\", \"alucinante\", \"epico\", \"tremendo\", \"impactante\", \"sorprendente\"], \"tu\": [\"tu\", \"tus\", \"te\", \"ti\", \"contigo\", \"usted\", \"ustedes\", \"vos\", \"pagas\", \"crees\", \"sabes\", \"compras\", \"ganas\", \"gastas\", \"piensas\", \"imaginas\", \"haces\", \"tienes\", \"quieres\", \"ves\", \"pierdes\", \"dejas\", \"cargas\", \"vendes\", \"pagaste\", \"creias\", \"pensabas\"], \"riesgo\": [\"pierde\", \"pierdes\", \"perder\", \"perdida\", \"quiebra\", \"quebro\", \"cierra\", \"cerro\", \"cuesta\", \"costo\", \"riesgo\", \"deuda\", \"debe\", \"antes\", \"nunca\", \"falla\", \"ruina\", \"regalas\", \"roba\", \"menos\", \"apenas\", \"solo\"], \"curiosidad\": [\"por que\", \"como\", \"cuanto\", \"cuanta\", \"cuantos\", \"cuantas\", \"que\", \"cual\", \"hasta\", \"pero\", \"nadie\", \"casi\", \"excepto\", \"razon\", \"en realidad\", \"de verdad\", \"menos de lo que\", \"mas de lo que\", \"sabias\", \"le queda\", \"le quedan\"], \"cierre\": [\"porque\", \"asi que\", \"lo que significa\", \"es decir\"]}, \"rango_palabras\": [9, 24]};\n\nconst normalG = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[¿¡]/g, '').trim();\nconst palabrasG = t => normalG(t).match(/[a-z0-9%/.,]+/g) || [];\nconst escG = x => x.replace(/[.*+?^${}()|[\\]\\\\/]/g, '\\\\$&');\nconst cuentaG = (lista, t) => { const n = normalG(t); return lista.reduce((a, x) => a + (n.match(new RegExp('\\\\b' + escG(x) + '\\\\b', 'g')) || []).length, 0); };\nconst CONCRETO_G = /(\\d[\\d.,]*\\s?(%|mil|millones|soles|dolares|s|m|h)?\\b|s\\/ ?\\d|\\$ ?\\d|\\b\\d+\\s?(segundos?|minutos?|horas?|dias?|semanas?|meses|anos?)\\b)/g;\nconst nConcreto = t => (normalG(t).match(CONCRETO_G) || []).length;\nconst acotar = x => Math.max(0, Math.min(100, x));\nfunction puntuarGancho(t) {\n  const L = GANCHOS.listas, [MIN_P, MAX_P] = GANCHOS.rango_palabras, w = palabrasG(t);\n  const mayusc = String(t).split(/\\s+/).filter(Boolean).slice(1).filter(x => { const c = x.slice(0, 1); return c !== c.toLowerCase() && c === c.toUpperCase(); }).length;\n  const especificidad = w.length ? acotar(34 + nConcreto(t) * 22 - cuentaG(L.vagas, t) * 16 - cuentaG(L.relleno, t) * 5 + Math.min(18, 6 * mayusc)) : 0;\n  const primeras = String(t).split(/\\s+/).filter(Boolean).slice(0, 6).join(' ');\n  const a_ti = acotar(26 + cuentaG(L.tu, t) * 20 + (cuentaG(L.tu, primeras) ? 30 : 0));\n  const riesgo = acotar(22 + cuentaG(L.riesgo, t) * 26 + (nConcreto(t) ? 14 : 0));\n  const curiosidad = acotar(24 + cuentaG(L.curiosidad, t) * 17 + (String(t).trim().endsWith('?') ? 18 : 0) + (cuentaG(L.cierre, t) ? -18 : 0));\n  const n = w.length; const brevedad = !n ? 0 : (n >= MIN_P && n <= MAX_P) ? 100 : n < MIN_P ? Math.max(30, 100 - (MIN_P - n) * 11) : Math.max(10, 100 - (n - MAX_P) * 7);\n  const propiedades = { especificidad, a_ti, riesgo, curiosidad, brevedad }; const v = Object.values(propiedades);\n  const veredicto = Math.floor(0.6 * v.reduce((a, b) => a + b, 0) / v.length + 0.4 * Math.min(...v) + 0.5);\n  const nt = normalG(t); let formula = 'Sin fórmula', hits = 0;\n  for (const f of GANCHOS.formulas) { const k = f.patrones.filter(p => new RegExp(p).test(nt)).length; if (k > hits) { hits = k; formula = f.nombre; } }\n  const mas_debil = Object.keys(propiedades).reduce((a, b) => propiedades[b] < propiedades[a] ? b : a);\n  return { gancho: String(t).trim(), propiedades, veredicto, banda: veredicto >= 72 ? 'FUERTE' : veredicto >= 55 ? 'SIRVE' : 'DÉBIL', formula, mas_debil };\n}\n\nconst r = $('Inicio').first().json.resultado || {};\nconst ganchos = (r.ganchos || []).map(g => puntuarGancho(g));\nreturn [{ json: { ganchos, elegido: ganchos[r.gancho_elegido || 0] || null } }];\n"
       },
-      "id": "24264993-0e29-4ddc-b807-bca994abdd7e",
+      "id": "f884ab12-4a0e-47ca-aca9-65a3fd02ed50",
       "name": "Puntuar ganchos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1046,7 +1046,7 @@
           },
           "conditions": [
             {
-              "id": "2d56030e-bd70-43d5-9edd-1fe38d386de0",
+              "id": "23780060-fb7c-4008-9295-4cb4a7012643",
               "leftValue": "={{ $('Leer ajustes').first().json.allowVerificacion === true }}",
               "rightValue": "",
               "operator": {
@@ -1060,7 +1060,7 @@
         },
         "options": {}
       },
-      "id": "44814d90-e09f-4782-a349-0371955be096",
+      "id": "559d2056-9e91-48a1-b671-fe7819098602",
       "name": "¿Verificar cifras?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1082,7 +1082,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, tools: [{ type: 'web_search' }], max_tool_calls: 12, input: [{ role: 'user', content: [{ type: 'input_text', text: \"Eres el verificador de datos de un canal que desarma negocios con números reales. Tu trabajo es que ninguna cifra salga al aire sin fuente actual. Recibes el guion, sus fuentes y las notas del guionista (ahí dice qué datos no pudo conseguir). Busca en la web, primero en fuentes oficiales y actuales del país del canal (en Perú: Osinergmin y su Facilito, Petroperú, SUNAT, MEF, INEI, BCRP, El Peruano, Andina) y luego en medios serios con fecha. Haz dos cosas: (1) cada cifra del guion: confírmala o corrígela con su fuente y su fecha; (2) cada dato que el guionista no consiguió: búscalo. Con los datos, arma la cuenta corrida completa del ejemplo del guion (de lo que paga el cliente a lo que le queda al negocio), paso a paso, y comprueba la aritmética. Nunca inventes un valor ni una fuente. Si no encuentras fuente, déjalo vacío y dilo. Una cifra vieja (más de un año) se marca como vieja.\" + ' Responde SOLO JSON {\"cifras\":[{\"dato\":\"\",\"valor_guion\":\"\",\"valor_verificado\":\"\",\"estado\":\"ok|corregir|sin_fuente|vieja\",\"fecha\":\"\",\"fuente_url\":\"\"}],\"faltantes\":[{\"dato\":\"\",\"valor\":\"\",\"fecha\":\"\",\"fuente_url\":\"\"}],\"cuenta\":[\"paso con su cifra\"],\"resumen\":\"\"}. Hoy es ' + new Date().toISOString().slice(0, 10) + '.' + String.fromCharCode(10, 10) + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, notas_del_guionista: $('Inicio').first().json.resultado?.notas }).slice(0, 12000) }] }] } }}"
       },
-      "id": "83d68f38-2c71-443a-86cf-d0cbe8815727",
+      "id": "decebe9a-0ea3-4318-ab54-aff2e74576dd",
       "name": "Verificar cifras",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1102,7 +1102,7 @@
       "parameters": {
         "jsCode": "\n// Lee la verificación (JSON dentro del texto). Si no hubo o falló, el guion sigue igual: nunca se bloquea por esto.\nif (!$('Verificar cifras').isExecuted) return [{ json: { leido: false, verificacion: null } }];\nconst t = ($('Verificar cifras').first().json.output || []).filter(o => o.type === 'message').flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '';\nlet v = null; try { const m = t.match(/\\{[\\s\\S]*\\}/); v = m ? JSON.parse(m[0]) : null; } catch (e) { v = null; }\nif (!v) return [{ json: { leido: false, verificacion: null } }];\nconst cifras = (Array.isArray(v.cifras) ? v.cifras : []).slice(0, 30); const faltantes = (Array.isArray(v.faltantes) ? v.faltantes : []).slice(0, 20);\nconst cuenta = (Array.isArray(v.cuenta) ? v.cuenta : []).map(String).slice(0, 15);\nconst n = e => cifras.filter(c => c.estado === e).length;\nconst resumen = `${n('ok')} confirmadas, ${n('corregir')} por corregir, ${n('vieja')} viejas, ${n('sin_fuente')} sin fuente; ${faltantes.filter(f => f.valor).length} datos nuevos encontrados`;\nreturn [{ json: { leido: true, verificacion: { cifras, faltantes, cuenta, resumen: String(v.resumen || '').slice(0, 600) }, conteo: resumen,\n  corregir: n('corregir') + n('vieja') > 0 || faltantes.some(f => f.valor) } }];\n"
       },
-      "id": "455ab974-a49c-48e4-a9b3-a2d2763d273c",
+      "id": "ffaffbc6-c478-4e2d-be02-477e0cbf7e17",
       "name": "Cifras verificadas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1115,7 +1115,7 @@
       "parameters": {
         "jsCode": "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'verificación de cifras', servicio: 'OpenAI (búsqueda web)', usd: aj.costoVerificacionUsd } }];"
       },
-      "id": "31dce0ff-7344-4b2d-af6f-ee588cb59362",
+      "id": "7a9778f9-1f37-4890-a97a-a5ad86ca3684",
       "name": "Fila de costo (verificación)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1143,7 +1143,7 @@
         },
         "options": {}
       },
-      "id": "e85dda45-c6c8-4be3-8254-d329a19b09e9",
+      "id": "df6fa223-ad28-4a46-949d-b117790a2d80",
       "name": "Guardar costo (verificación)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1165,7 +1165,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: \"Eres el crítico de guiones de un canal de YouTube y TikTok. Eres escéptico y concreto; no felicitas. Puntúa de 1 a 10: gancho (en 2–3 s abre un contraste o una pregunta concreta con una cifra; nada de «hoy te voy a contar»), promesa (el inicio cumple el título), claridad (una idea por frase; un espectador distraído entiende la cuenta), emocion (personaje concreto, detalle sensorial y tensión real; no tristeza plana), exactitud (cada cifra tiene fuente o se dice como estimación una vez; y LA ARITMÉTICA CUADRA: si hay una cuenta con base fija, las salidas suman exactamente la base y lo que «queda» en cada paso es correcto) y originalidad (no repite el enfoque, la estructura ni el gancho de los temas recientes del canal; YouTube no monetiza contenido repetitivo). Revisa también: que el cierre no prometa un documental o «la cuenta completa» si no existe (en Shorts, invita a seguir el canal o pregunta al público); y que un Short tenga 110–130 palabras. Si alguna nota es menor que 8, da instrucciones concretas de reescritura (qué frase cambiar y cómo). Si llega «verificacion_de_cifras», la exactitud se juzga con ella: una cifra marcada «corregir», «vieja» o «sin_fuente» que el guion usa, o una cuenta corrida incompleta cuando la verificación trae los datos que faltaban, baja la exactitud a 7 o menos e indica en las instrucciones qué cifra cambiar y por cuál, con su fuente. Para el gancho, identifica cuál de estas 21 fórmulas usa y si cae en su forma de fallar; si llega «puntaje_ganchos» (alerta automática de 0 a 100), úsalo como pista, nunca como nota: El dato (Un número que el espectador no sabía, dicho seco, y su consecuencia. Falla: Muere si el número es vago o no se puede comprobar. Di la fuente.); El resultado de otro (El resultado de alguien con nombre o un negocio concreto, y luego el mecanismo. Falla: No inventes el número. Si no puedes nombrar el caso, usa otra fórmula.); El error (Nombra el error que el espectador probablemente comete ahora mismo. Falla: Solo funciona si el error es común y se comprueba en un segundo.); Contra la corriente (Di el consejo que todos aceptan y recházalo. Falla: Necesita la prueba en los 15 segundos siguientes o suena a llevar la contraria por gusto.); La revelación (Promete que vas a mostrar algo concreto y muéstralo. Falla: Hay que mostrarlo pronto: una revelación al minuto 8 es una caída al minuto 1.); El superlativo (El más barato, caro, rápido o rentable de una categoría. Falla: Los superlativos salen baratos: gánatelo diciendo contra qué gana.); El reloj (Pon un límite de tiempo a la recompensa. Falla: El reloj tiene que ser verdad. Si te pasas, el próximo gancho no se cree.); Lo probé (Un experimento en primera persona con un costo dicho. Falla: Necesita un costo real (tiempo, plata, riesgo) o no hay nada en juego.); La pregunta (La pregunta exacta que el espectador escribiría en el buscador. Falla: Tiene que ser la pregunta del espectador, no la tuya.); Antes y después (Dos estados y un corte entre ellos. Falla: Solo funciona con una imagen que lo muestre.); El desarme (Desarma en público algo real, pieza por pieza. Falla: Di qué desarmaste y en cuántas partes: desarmar un solo ejemplo es una anécdota.); La suma (Dos cosas con nombre que juntas dan un resultado. Falla: Las dos cosas deben tener nombre y el resultado necesitar las dos.); La advertencia (Un costo que el espectador está a punto de pagar. Falla: Si el costo es chico, el gancho miente. Guárdala para lo grave.); La lista (Un conjunto contado, con el número en la primera frase. Falla: El número debe ser exacto y cada punto distinto de los demás.); La boleta (Muestra la prueba primero y explica después. Falla: Necesita la prueba real en pantalla: una prueba contada no es prueba.); El de adentro (Información de dentro del negocio o del sistema. Falla: No finjas un acceso que no tienes.); Lo imposible (Una afirmación que suena falsa, y luego la prueba. Falla: La prueba tiene que empezar antes de los 20 segundos o suena a anzuelo.); La comparación (Dos opciones con nombre y una gana. Falla: Di en voz alta cuál pierde: una comparación sin perdedor es un anuncio.); El origen (De dónde sale de verdad un resultado. Falla: Funciona una vez por tema; no la repitas en el mismo canal seguido.); La fecha (Algo cambia en una fecha concreta. Falla: Solo con una fecha real y comprobable: es la forma más rápida de perder la confianza.); A ti (Nombra al espectador exacto en las primeras seis palabras. Falla: Estrecho gana a amplio: «si haces negocios» no le habla a nadie.)\" + ' Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\\n\\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, verificacion_de_cifras: $('Cifras verificadas').first().json.verificacion, puntaje_ganchos: $('Puntuar ganchos').first().json.ganchos.map(g => ({ gancho: g.gancho, veredicto: g.veredicto, banda: g.banda, formula: g.formula, mas_debil: g.mas_debil })), temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}"
       },
-      "id": "57a12485-e0fe-4662-9112-c88fd911bc21",
+      "id": "c7cf4f22-70e8-4c12-9592-bc2e9ef09fde",
       "name": "Crítico del guion",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1185,7 +1185,7 @@
       "parameters": {
         "jsCode": "\nlet k = {}; try { k = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); } catch (e) { k = {}; }\nconst dims = ['gancho', 'promesa', 'claridad', 'emocion', 'exactitud', 'originalidad'];\nconst notas = Object.fromEntries(dims.map(d => [d, Number(k[d]) || 0]));\nconst leido = dims.some(d => notas[d] > 0);\n// Si el crítico no respondió bien, no se bloquea: el guion pasa a tu aprobación con la nota de Claude.\n// Si la verificación encontró cifras por corregir o datos que faltaban, se reescribe aunque las notas sean altas.\nconst ver = $('Cifras verificadas').isExecuted ? $('Cifras verificadas').first().json : {};\nconst porCifras = ver.leido === true && ver.corregir === true;\nconst problemas = [...(k.problemas || []), ...(porCifras ? ['Cifras: ' + ver.conteo] : [])];\nreturn [{ json: { notas, pasa: (!leido || dims.every(d => notas[d] >= 8)) && !porCifras, problemas, instrucciones: String(k.instrucciones || '').slice(0, 2000), leido, por_cifras: porCifras } }];\n"
       },
-      "id": "5374dd53-e81b-45fd-a43c-d8d317cfa24e",
+      "id": "b1cd6f1e-29d8-4097-b887-c701f3ce88a0",
       "name": "Veredicto del crítico",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1205,7 +1205,7 @@
           },
           "conditions": [
             {
-              "id": "cd3195df-92c4-4054-bd1e-9ae21c527d36",
+              "id": "9ace2581-2688-48c9-8873-30b0b274b558",
               "leftValue": "={{ $json.pasa === true }}",
               "rightValue": "",
               "operator": {
@@ -1219,7 +1219,7 @@
         },
         "options": {}
       },
-      "id": "dbc4c319-f2b4-4b57-9c3c-e20392e8f6fc",
+      "id": "836ae5aa-c283-437d-ae7d-e6f774edfe08",
       "name": "¿Pasa el crítico?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1232,7 +1232,7 @@
       "parameters": {
         "jsCode": "return [{ json: { intentos: Number($('Video (crítico)').first().json.intentos || 0) + 1, etapa: 'guion' } }];"
       },
-      "id": "9a28f845-b42c-49f1-a96a-bd047c60ffe5",
+      "id": "31a61c57-e603-4d14-a0de-84625ad52ecf",
       "name": "Contar revisión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1270,7 +1270,7 @@
         },
         "options": {}
       },
-      "id": "15b91a70-efad-4d5d-b05c-50248deaf53e",
+      "id": "4dc68d01-88a0-4438-b508-4332e5dcf62a",
       "name": "Revisión en la tabla",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1301,7 +1301,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "055c38eb-c2cc-46d0-9c1e-2b235e600ec0",
+      "id": "b49cdef8-1e92-4f90-a1ec-0a4db9e25bc5",
       "name": "Canal (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1333,7 +1333,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "c06e6ea9-d485-47db-af90-1b6f1b49e360",
+      "id": "5ccc4576-8313-4503-8d95-336ff2f3b85c",
       "name": "Biblia (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1347,7 +1347,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Veredicto del crítico').first().json;\nconst biblia = (JSON.parse($('Biblia (crítico)').first().json.resultado || '{}').resultado) || {};\nconst ver = $('Cifras verificadas').isExecuted ? $('Cifras verificadas').first().json : {};\nconst datosVer = ver.leido ? ` Datos verificados en la web (úsalos con su fuente y fecha, corrige lo marcado y arma la cuenta corrida completa): ${JSON.stringify(ver.verificacion)}` : '';\nreturn [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.resultado, biblia, cifras_verificadas: ver.leido ? ver.verificacion : null,\n    cambios: (`Crítica automática (notas ${JSON.stringify(v.notas)}): ${v.instrucciones} ${v.problemas.join('; ')}`.slice(0, 2500) + datosVer).slice(0, 8000) } } }];\n"
       },
-      "id": "ec486800-43c4-4e22-ba48-2d0c180df9dd",
+      "id": "c1c72a51-518f-40f7-a1f0-2cd0c8890b28",
       "name": "Pedir corrección (crítico)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1376,7 +1376,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "f79b16a2-1870-4f6b-adfd-32b63d8d7d98",
+      "id": "a023049b-3e2a-40ad-a45c-69f552e1e987",
       "name": "Claude: corregir (crítico)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1389,7 +1389,7 @@
       "parameters": {
         "jsCode": "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'crítico del guion', servicio: 'OpenAI', usd: aj.costoCriticoUsd } }];"
       },
-      "id": "45c1c215-7cfc-4487-b3fe-226c98d2a1d7",
+      "id": "45a183de-3569-4549-b189-b9ce68370680",
       "name": "Fila de costo (crítico)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1417,7 +1417,7 @@
         },
         "options": {}
       },
-      "id": "1f77a118-ba04-4e9e-8121-4b9d8e83d037",
+      "id": "64cbfcbb-e9c3-4603-92fd-5a99cf1dce05",
       "name": "Guardar costo (crítico)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1430,7 +1430,7 @@
       "parameters": {
         "jsCode": "const GANCHOS = {\"formulas\": [{\"id\": \"el-dato\", \"nombre\": \"El dato\", \"forma\": \"Un número que el espectador no sabía, dicho seco, y su consecuencia.\", \"ejemplo\": \"De cada 10 soles que pagas en el grifo, solo 2 se quedan en el grifo.\", \"falla\": \"Muere si el número es vago o no se puede comprobar. Di la fuente.\", \"patrones\": [\"\\\\b\\\\d+([.,]\\\\d+)?\\\\s?%\", \"\\\\b\\\\d+ (de|en) (cada )?\\\\d+\\\\b\", \"\\\\bde cada \\\\d+\\\\b\", \"\\\\bs/ ?\\\\d\", \"\\\\bde (tus|tu|sus|cada) \\\\d+\\\\b\", \"\\\\d+ (mil|soles|millones)?.*(y|pero) .*\\\\d+\"]}, {\"id\": \"resultado-ajeno\", \"nombre\": \"El resultado de otro\", \"forma\": \"El resultado de alguien con nombre o un negocio concreto, y luego el mecanismo.\", \"ejemplo\": \"Esta pollería vende 70 mil al mes y al dueño le quedan 7 mil. Hice la cuenta.\", \"falla\": \"No inventes el número. Si no puedes nombrar el caso, usa otra fórmula.\", \"patrones\": [\"\\\\beste (negocio|grifo|local|restaurante|canal|senor|dueno)\\\\b\", \"\\\\besta (polleria|bodega|tienda|empresa|senora)\\\\b\", \"\\\\bpaso de .* a\\\\b\", \"\\\\ben (un|una|dos|tres|\\\\d+) (semana|mes|ano)s?\\\\b\"]}, {\"id\": \"el-error\", \"nombre\": \"El error\", \"forma\": \"Nombra el error que el espectador probablemente comete ahora mismo.\", \"ejemplo\": \"Crees que el grifo te roba en el precio. El margen está en otro lado.\", \"falla\": \"Solo funciona si el error es común y se comprueba en un segundo.\", \"patrones\": [\"\\\\b(estas|sigues) (haciendo|cometiendo|pagando)\\\\b\", \"\\\\bel (error|motivo) (que )?(todos|casi todos|nadie)\\\\b\", \"\\\\bdeja de\\\\b\", \"\\\\bcrees que\\\\b\"]}, {\"id\": \"contra-corriente\", \"nombre\": \"Contra la corriente\", \"forma\": \"Di el consejo que todos aceptan y recházalo.\", \"ejemplo\": \"Todos dicen que el grifo gana con la gasolina. Gana con lo que vende al lado.\", \"falla\": \"Necesita la prueba en los 15 segundos siguientes o suena a llevar la contraria por gusto.\", \"patrones\": [\"\\\\btodos (dicen|creen|piensan|te dicen)\\\\b\", \"\\\\bes (en realidad )?(mentira|falso)\\\\b\", \"\\\\bnadie (te dice|habla de|te cuenta)\\\\b\", \"\\\\bno es (por|lo que)\\\\b\"]}, {\"id\": \"la-revelacion\", \"nombre\": \"La revelación\", \"forma\": \"Promete que vas a mostrar algo concreto y muéstralo.\", \"ejemplo\": \"Te muestro la boleta real de un camión cisterna, en pantalla.\", \"falla\": \"Hay que mostrarlo pronto: una revelación al minuto 8 es una caída al minuto 1.\", \"patrones\": [\"\\\\bte (voy a )?(muestro|mostrar|ensenar|enseno)\\\\b\", \"\\\\baqui (esta|tienes)\\\\b\", \"\\\\ben pantalla\\\\b\"]}, {\"id\": \"el-superlativo\", \"nombre\": \"El superlativo\", \"forma\": \"El más barato, caro, rápido o rentable de una categoría.\", \"ejemplo\": \"Este es el negocio con el margen más chico de todo el barrio.\", \"falla\": \"Los superlativos salen baratos: gánatelo diciendo contra qué gana.\", \"patrones\": [\"\\\\bel (mas|menos) \\\\w+ de\\\\b\", \"\\\\bla (mas|menos) \\\\w+ de\\\\b\", \"\\\\b(el|la) (mejor|peor|unico|unica)\\\\b\", \"\\\\bnumero uno\\\\b\"]}, {\"id\": \"el-reloj\", \"nombre\": \"El reloj\", \"forma\": \"Pon un límite de tiempo a la recompensa.\", \"ejemplo\": \"En 50 segundos vas a saber cuánto se queda el grifo de tus 10 soles.\", \"falla\": \"El reloj tiene que ser verdad. Si te pasas, el próximo gancho no se cree.\", \"patrones\": [\"\\\\ben (los proximos )?\\\\d+ (segundos|minutos|horas)\\\\b\", \"\\\\bal final de(l| este) video\\\\b\", \"\\\\ben menos de \\\\d+\\\\b\"]}, {\"id\": \"lo-probe\", \"nombre\": \"Lo probé\", \"forma\": \"Un experimento en primera persona con un costo dicho.\", \"ejemplo\": \"Pasé un día entero con el encargado de un grifo contando cada sol.\", \"falla\": \"Necesita un costo real (tiempo, plata, riesgo) o no hay nada en juego.\", \"patrones\": [\"\\\\b(probe|pase|gaste|intente|deje|segui)\\\\b\", \"\\\\bdurante \\\\d+ (dias|semanas|meses)\\\\b\", \"\\\\bpara que tu no\\\\b\"]}, {\"id\": \"la-pregunta\", \"nombre\": \"La pregunta\", \"forma\": \"La pregunta exacta que el espectador escribiría en el buscador.\", \"ejemplo\": \"¿Cuánto se queda de verdad un grifo de tus 10 soles?\", \"falla\": \"Tiene que ser la pregunta del espectador, no la tuya.\", \"patrones\": [\"^(por que|como|cuanto|cuanta|cuantos|cuantas|que|cual|cuando|quien|sabias|es|vale)\\\\b\", \"\\\\?\\\\s*$\"]}, {\"id\": \"antes-despues\", \"nombre\": \"Antes y después\", \"forma\": \"Dos estados y un corte entre ellos.\", \"ejemplo\": \"Así se veía la caja a las 6 de la mañana. Así a las 10 de la noche.\", \"falla\": \"Solo funciona con una imagen que lo muestre.\", \"patrones\": [\"\\\\bantes\\\\b.*\\\\bahora\\\\b\", \"\\\\bantes\\\\b.*\\\\bdespues\\\\b\", \"\\\\basi (era|estaba|se veia)\\\\b\", \"\\\\bantes (ganaba|vendia|cobraba)\\\\b\"]}, {\"id\": \"el-desarme\", \"nombre\": \"El desarme\", \"forma\": \"Desarma en público algo real, pieza por pieza.\", \"ejemplo\": \"Desarmé el precio de un galón de gasolina en sus 5 partes.\", \"falla\": \"Di qué desarmaste y en cuántas partes: desarmar un solo ejemplo es una anécdota.\", \"patrones\": [\"\\\\b(desarme|desarmamos|desarmo|desarmar)\\\\b\", \"\\\\b(saque|sacamos|hice) la cuenta\\\\b\", \"\\\\ben sus \\\\d+ partes\\\\b\", \"\\\\banalice\\\\b\"]}, {\"id\": \"la-suma\", \"nombre\": \"La suma\", \"forma\": \"Dos cosas con nombre que juntas dan un resultado.\", \"ejemplo\": \"La gasolina más la tienda de al lado: así paga sus cuentas un grifo.\", \"falla\": \"Las dos cosas deben tener nombre y el resultado necesitar las dos.\", \"patrones\": [\"\\\\b\\\\w+ (mas|\\\\+) (la|el|los|las)? ?\\\\w+\\\\b\", \"\\\\bjuntos?\\\\b\", \"\\\\bcombina(r|do)?\\\\b\"]}, {\"id\": \"la-advertencia\", \"nombre\": \"La advertencia\", \"forma\": \"Un costo que el espectador está a punto de pagar.\", \"ejemplo\": \"No abras un grifo sin saber cuánto te deja de verdad cada galón.\", \"falla\": \"Si el costo es chico, el gancho miente. Guárdala para lo grave.\", \"patrones\": [\"\\\\bno (abras|compres|pongas|firmes|inviertas|pagues)\\\\b\", \"\\\\bantes de (abrir|comprar|poner|invertir|pagar)\\\\b\", \"\\\\bcuidado\\\\b\"]}, {\"id\": \"la-lista\", \"nombre\": \"La lista\", \"forma\": \"Un conjunto contado, con el número en la primera frase.\", \"ejemplo\": \"5 cosas que paga el grifo antes de ganar un sol.\", \"falla\": \"El número debe ser exacto y cada punto distinto de los demás.\", \"patrones\": [\"^\\\\d+ \\\\w+\", \"\\\\b(estas son|aqui van) (las )?\\\\d+\\\\b\"]}, {\"id\": \"la-boleta\", \"nombre\": \"La boleta\", \"forma\": \"Muestra la prueba primero y explica después.\", \"ejemplo\": \"Esta es la lista de precios de Petroperú de esta semana. Mira la tercera fila.\", \"falla\": \"Necesita la prueba real en pantalla: una prueba contada no es prueba.\", \"patrones\": [\"\\\\b(esta|este) es (la|el) (boleta|lista|recibo|factura|precio|cuenta)\\\\b\", \"\\\\bmira (la|el|esta|este)\\\\b\", \"\\\\bprueba\\\\b\"]}, {\"id\": \"el-de-adentro\", \"nombre\": \"El de adentro\", \"forma\": \"Información de dentro del negocio o del sistema.\", \"ejemplo\": \"El encargado del grifo sabe un número que casi ningún cliente pregunta.\", \"falla\": \"No finjas un acceso que no tienes.\", \"patrones\": [\"\\\\b(nadie|casi nadie|pocos) (sabe|saben|pregunta|preguntan|mira|miran)\\\\b\", \"\\\\bescondid[oa]\\\\b\", \"\\\\bpor dentro\\\\b\", \"\\\\bdetras de\\\\b\"]}, {\"id\": \"lo-imposible\", \"nombre\": \"Lo imposible\", \"forma\": \"Una afirmación que suena falsa, y luego la prueba.\", \"ejemplo\": \"Un grifo puede vender un millón al mes y aun así no llegar a fin de mes.\", \"falla\": \"La prueba tiene que empezar antes de los 20 segundos o suena a anzuelo.\", \"patrones\": [\"\\\\bsin (ganar|perder|vender|pagar)\\\\b\", \"\\\\by aun asi\\\\b\", \"\\\\bnunca\\\\b\", \"\\\\bcero\\\\b\", \"\\\\by (no|apenas) (le )?(queda|gana)\\\\b\"]}, {\"id\": \"la-comparacion\", \"nombre\": \"La comparación\", \"forma\": \"Dos opciones con nombre y una gana.\", \"ejemplo\": \"Grifo de marca contra grifo independiente: uno gana el doble por galón.\", \"falla\": \"Di en voz alta cuál pierde: una comparación sin perdedor es un anuncio.\", \"patrones\": [\"\\\\bvs\\\\.?\\\\b\", \"\\\\bcontra\\\\b\", \"\\\\bversus\\\\b\", \"\\\\bcual (gana|deja|conviene)\\\\b\", \"\\\\bel doble\\\\b\"]}, {\"id\": \"el-origen\", \"nombre\": \"El origen\", \"forma\": \"De dónde sale de verdad un resultado.\", \"ejemplo\": \"El sol que gana el grifo no sale de la gasolina. Sale de la tienda.\", \"falla\": \"Funciona una vez por tema; no la repitas en el mismo canal seguido.\", \"patrones\": [\"\\\\bde donde sale\\\\b\", \"\\\\bno sale de\\\\b\", \"\\\\btodo empieza\\\\b\", \"\\\\bla (verdadera )?razon\\\\b\"]}, {\"id\": \"la-fecha\", \"nombre\": \"La fecha\", \"forma\": \"Algo cambia en una fecha concreta.\", \"ejemplo\": \"Desde este mes el impuesto a la gasolina cambia. Esto es lo que pagas de más.\", \"falla\": \"Solo con una fecha real y comprobable: es la forma más rápida de perder la confianza.\", \"patrones\": [\"\\\\b(este|el proximo) (mes|ano)\\\\b\", \"\\\\besta semana\\\\b\", \"\\\\bdesde (hoy|este|el)\\\\b\", \"\\\\bya no\\\\b\", \"\\\\bcambia\\\\b\"]}, {\"id\": \"a-ti\", \"nombre\": \"A ti\", \"forma\": \"Nombra al espectador exacto en las primeras seis palabras.\", \"ejemplo\": \"Si cargas 10 soles de gasolina cada día, esto te interesa.\", \"falla\": \"Estrecho gana a amplio: «si haces negocios» no le habla a nadie.\", \"patrones\": [\"^si (tu |usted )?\\\\w+\", \"\\\\bpara (todos )?los que\\\\b\", \"\\\\bpara ti\\\\b\"]}], \"listas\": {\"relleno\": [\"basicamente\", \"literalmente\", \"realmente\", \"simplemente\", \"muy\", \"hola\", \"bienvenidos\", \"bienvenido\", \"hoy\", \"video\", \"suscribete\", \"canal\", \"chicos\", \"amigos\", \"gente\", \"bueno\"], \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"secreto\", \"poderoso\", \"definitivo\", \"revolucionario\", \"alucinante\", \"epico\", \"tremendo\", \"impactante\", \"sorprendente\"], \"tu\": [\"tu\", \"tus\", \"te\", \"ti\", \"contigo\", \"usted\", \"ustedes\", \"vos\", \"pagas\", \"crees\", \"sabes\", \"compras\", \"ganas\", \"gastas\", \"piensas\", \"imaginas\", \"haces\", \"tienes\", \"quieres\", \"ves\", \"pierdes\", \"dejas\", \"cargas\", \"vendes\", \"pagaste\", \"creias\", \"pensabas\"], \"riesgo\": [\"pierde\", \"pierdes\", \"perder\", \"perdida\", \"quiebra\", \"quebro\", \"cierra\", \"cerro\", \"cuesta\", \"costo\", \"riesgo\", \"deuda\", \"debe\", \"antes\", \"nunca\", \"falla\", \"ruina\", \"regalas\", \"roba\", \"menos\", \"apenas\", \"solo\"], \"curiosidad\": [\"por que\", \"como\", \"cuanto\", \"cuanta\", \"cuantos\", \"cuantas\", \"que\", \"cual\", \"hasta\", \"pero\", \"nadie\", \"casi\", \"excepto\", \"razon\", \"en realidad\", \"de verdad\", \"menos de lo que\", \"mas de lo que\", \"sabias\", \"le queda\", \"le quedan\"], \"cierre\": [\"porque\", \"asi que\", \"lo que significa\", \"es decir\"]}, \"rango_palabras\": [9, 24]};\n\nconst normalG = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[¿¡]/g, '').trim();\nconst palabrasG = t => normalG(t).match(/[a-z0-9%/.,]+/g) || [];\nconst escG = x => x.replace(/[.*+?^${}()|[\\]\\\\/]/g, '\\\\$&');\nconst cuentaG = (lista, t) => { const n = normalG(t); return lista.reduce((a, x) => a + (n.match(new RegExp('\\\\b' + escG(x) + '\\\\b', 'g')) || []).length, 0); };\nconst CONCRETO_G = /(\\d[\\d.,]*\\s?(%|mil|millones|soles|dolares|s|m|h)?\\b|s\\/ ?\\d|\\$ ?\\d|\\b\\d+\\s?(segundos?|minutos?|horas?|dias?|semanas?|meses|anos?)\\b)/g;\nconst nConcreto = t => (normalG(t).match(CONCRETO_G) || []).length;\nconst acotar = x => Math.max(0, Math.min(100, x));\nfunction puntuarGancho(t) {\n  const L = GANCHOS.listas, [MIN_P, MAX_P] = GANCHOS.rango_palabras, w = palabrasG(t);\n  const mayusc = String(t).split(/\\s+/).filter(Boolean).slice(1).filter(x => { const c = x.slice(0, 1); return c !== c.toLowerCase() && c === c.toUpperCase(); }).length;\n  const especificidad = w.length ? acotar(34 + nConcreto(t) * 22 - cuentaG(L.vagas, t) * 16 - cuentaG(L.relleno, t) * 5 + Math.min(18, 6 * mayusc)) : 0;\n  const primeras = String(t).split(/\\s+/).filter(Boolean).slice(0, 6).join(' ');\n  const a_ti = acotar(26 + cuentaG(L.tu, t) * 20 + (cuentaG(L.tu, primeras) ? 30 : 0));\n  const riesgo = acotar(22 + cuentaG(L.riesgo, t) * 26 + (nConcreto(t) ? 14 : 0));\n  const curiosidad = acotar(24 + cuentaG(L.curiosidad, t) * 17 + (String(t).trim().endsWith('?') ? 18 : 0) + (cuentaG(L.cierre, t) ? -18 : 0));\n  const n = w.length; const brevedad = !n ? 0 : (n >= MIN_P && n <= MAX_P) ? 100 : n < MIN_P ? Math.max(30, 100 - (MIN_P - n) * 11) : Math.max(10, 100 - (n - MAX_P) * 7);\n  const propiedades = { especificidad, a_ti, riesgo, curiosidad, brevedad }; const v = Object.values(propiedades);\n  const veredicto = Math.floor(0.6 * v.reduce((a, b) => a + b, 0) / v.length + 0.4 * Math.min(...v) + 0.5);\n  const nt = normalG(t); let formula = 'Sin fórmula', hits = 0;\n  for (const f of GANCHOS.formulas) { const k = f.patrones.filter(p => new RegExp(p).test(nt)).length; if (k > hits) { hits = k; formula = f.nombre; } }\n  const mas_debil = Object.keys(propiedades).reduce((a, b) => propiedades[b] < propiedades[a] ? b : a);\n  return { gancho: String(t).trim(), propiedades, veredicto, banda: veredicto >= 72 ? 'FUERTE' : veredicto >= 55 ? 'SIRVE' : 'DÉBIL', formula, mas_debil };\n}\n\nconst e = $('Inicio').first().json; const r = e.resultado || {}; const rb = r.rubrica || {};\nconst nota = Object.entries(rb).map(([k, v]) => k + ' ' + v).join(' · ');\nlet critica = '';\nif ($('Veredicto del crítico').isExecuted && $('Veredicto del crítico').first().json.leido) {\n  const n = $('Veredicto del crítico').first().json.notas; critica = '\\nCrítico (GPT-6 Astra): ' + Object.entries(n).map(([k, v]) => k + ' ' + v).join(' · '); }\nconst ver = $('Cifras verificadas').isExecuted && $('Cifras verificadas').first().json.leido ? $('Cifras verificadas').first().json : null;\nconst cifras = ver ? '\\nCifras (verificadas en la web): ' + ver.conteo + (ver.verificacion.cuenta.length ? '\\nCuenta: ' + ver.verificacion.cuenta.join(' → ').slice(0, 600) : '') : '';\nconst pg = (r.ganchos || [])[r.gancho_elegido || 0] ? puntuarGancho(r.ganchos[r.gancho_elegido || 0]) : null;\nconst alerta = pg ? ` (alerta ${pg.veredicto}/100 ${pg.banda} · ${pg.formula}${pg.banda === 'DÉBIL' ? ' · flojo en ' + pg.mas_debil : ''})` : '';\nconst mensaje = `Guion: ${r.titulo}\\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}${alerta}\\nRúbrica: ${nota}${critica}${cifras}\\n\\n${String(r.guion || '').slice(0, 3000)}`;\nconst prom = Object.values(rb).length ? Math.round(Object.values(rb).reduce((a, b) => a + Number(b || 0), 0) / Object.values(rb).length * 10) / 10 : null;\nconst aviso = `✍️ Guion listo · ${r.titulo || e.video_id}` + (r.tema_elegido ? `\\n🔎 Tema elegido por la fábrica: ${String(r.motivo_tema || '').slice(0, 160)}` : '') + `\\n\\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\\nPuntaje: ${prom}/10` : '') + (pg ? `\\n🪝 Gancho: ${pg.veredicto}/100 ${pg.banda} · ${pg.formula}` : '') + (ver ? `\\n🔎 Cifras: ${ver.conteo}` : '') + '\\n\\nÁbrelo para leerlo completo y decidir.';\nreturn [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];\n"
       },
-      "id": "cb1e7653-03c0-4095-a62a-5532e2e120b7",
+      "id": "852d6052-4c47-4543-93e6-21df68b28b92",
       "name": "Mensaje de guion",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1459,7 +1459,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "0747c452-a0cb-41e6-b475-cf05068bd2c8",
+      "id": "6e16961c-61f8-4b96-b641-4dbe590dec62",
       "name": "Aprobar guion",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1472,7 +1472,7 @@
       "parameters": {
         "jsCode": "const r = $('Inicio').first().json.resultado || {}; const t = String(r.tema_elegido || '').trim(); return t ? [{ json: { tema: t.slice(0, 500) } }] : [];"
       },
-      "id": "6dc687ef-b98b-4c18-977d-fb73e25f9981",
+      "id": "316f733b-4f42-407d-8739-a3d2e0280c6b",
       "name": "Tema elegido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1510,7 +1510,7 @@
         },
         "options": {}
       },
-      "id": "f29ca247-dde9-4cec-8334-a071d48bb70f",
+      "id": "e4118a86-dd05-4e31-bcb2-0fb5fa2b71c9",
       "name": "Guardar tema elegido",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1540,7 +1540,7 @@
         },
         "returnAll": true
       },
-      "id": "188f7ef7-f103-42f9-9caa-8dd5c3d903a5",
+      "id": "c60c26d2-0d8b-452e-96f4-f924f620a8f1",
       "name": "Temas del canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1573,7 +1573,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "cb02b9b2-84de-4eb6-a360-49d23aefb40c",
+      "id": "6c0fbeff-d2df-4c18-82c7-bb4c1542044a",
       "name": "Canal del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1605,7 +1605,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "be9ff477-2174-431c-924d-19762fa246ab",
+      "id": "9d3182ac-f62b-4e6d-ba5e-0eb26a1db76a",
       "name": "Biblia del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1637,7 +1637,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "d26f09cb-2bfd-4aba-9c44-88eba0548d9b",
+      "id": "769ad45f-a778-40dc-9d24-d7c3a73af941",
       "name": "Video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1649,9 +1649,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '',\n    presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '', tendencias: (() => { try { const t = JSON.parse($('Canal del video').first().json.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),\n    presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
       },
-      "id": "0a3701b4-a443-46b5-acc3-5c1edbe8b6de",
+      "id": "b3ecea1e-3040-49a3-bb77-9a9e2a1c10e3",
       "name": "Pedir storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1680,7 +1680,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "93ac20e3-fdd0-4e66-98f7-42f28299b0c3",
+      "id": "e9257812-ef07-4692-8db1-d367291b9480",
       "name": "Claude: storyboard",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1693,7 +1693,7 @@
       "parameters": {
         "jsCode": "return [{ json: { etapa: 'storyboard' } }];"
       },
-      "id": "7c414fad-d1c3-47ae-8685-8aa157abe638",
+      "id": "d631b19d-1ce5-4b7e-8c88-bfa4fc01d09f",
       "name": "Etapa storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1731,7 +1731,7 @@
         },
         "options": {}
       },
-      "id": "57945ca1-bbb6-481c-8283-97142c875047",
+      "id": "de74888c-14a2-437e-9c70-025958bbe013",
       "name": "Video en storyboard",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1762,7 +1762,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "c246d7bb-4d46-4e88-8269-ca28718b05a9",
+      "id": "cf422abb-5680-411c-a66c-c9d1b2e6edde",
       "name": "Canal (corrección)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1794,7 +1794,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "d892dcfe-3f8a-41f8-b7f8-caeefe1dbfa0",
+      "id": "4efb039d-8f5f-4552-bcbd-6425cff1681a",
       "name": "Biblia (corrección)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1808,7 +1808,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (corrección)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.video_id, datos: { guion: e.contexto, cambios: e.cambios || '', biblia } } }];\n"
       },
-      "id": "9a7787de-8b77-43e4-919c-1126d64af4a4",
+      "id": "07b6bcfd-ba67-489d-9779-3e5321095fa1",
       "name": "Pedir corrección",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1837,7 +1837,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "1f17afdf-d966-49b8-b1cb-ddbda5edd470",
+      "id": "4fe62408-83b0-4f51-a41f-343f37903ce9",
       "name": "Claude: corregir",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1850,7 +1850,7 @@
       "parameters": {
         "jsCode": "\nconst r = $json.resultado || {}; const p = r.planos || [];\nconst cuenta = p.reduce((a, x) => (a[x.tipo] = (a[x.tipo] || 0) + 1, a), {});\nconst mensaje = `Storyboard listo: ${p.length} planos (${Object.entries(cuenta).map(([k, v]) => v + ' ' + k).join(', ')}).\\nCosto estimado: US$${r.costo_estimado_usd ?? '?'}\\n\\n` +\n  p.slice(0, 25).map(x => `${x.id} [${x.tipo}, ${x.encuadre}] ${String(x.texto_narrado).slice(0, 90)}`).join('\\n');\nconst nombres = { imagen: 'imágenes', archivo: 'clips de archivo', clip: 'clips animados', avatar: 'avatar' };\nconst aviso = `🎬 Storyboard listo · ${p.length} escenas\\n${Object.entries(cuenta).map(([k, v]) => v + ' ' + (nombres[k] || k)).join(' · ')}\\nCosto estimado: US$${r.costo_estimado_usd ?? '?'}\\n\\nÁbrelo para ver escena por escena y decidir. Al aprobar empieza el gasto.`;\nreturn [{ json: { etapa: 'storyboard', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: $json.video_id, canal_id: $json.canal_id } }];\n"
       },
-      "id": "85658eb2-bb9e-4876-8c75-c5142f12f26d",
+      "id": "b33ce748-360d-441f-952c-b7accd8cbb99",
       "name": "Mensaje de storyboard",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1879,7 +1879,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "cd4ca9a8-c36c-4511-9b77-9fa639302d1f",
+      "id": "fd2c2281-9509-4d57-8762-426d801bc648",
       "name": "Aprobar storyboard",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1910,7 +1910,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "4c1342d4-fda0-4bc0-974f-02d13b58a07c",
+      "id": "e68e7773-1e22-4ce0-ab19-f5829d9b1ddb",
       "name": "Canal (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1942,7 +1942,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "dcc01e61-1d92-47ba-bd0a-a8d3959431bb",
+      "id": "9dab88d9-bd61-417e-b106-4d2443587d5a",
       "name": "Biblia (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1974,7 +1974,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "fc96f539-33e1-47e4-b7d9-3742676303cb",
+      "id": "39b64c3b-5b79-47a6-bdcc-05b301691223",
       "name": "Video (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2005,7 +2005,7 @@
         },
         "returnAll": true
       },
-      "id": "c63ac92d-80e6-4954-b664-8ef82303a75b",
+      "id": "b477b7cf-147e-4a55-8747-6123491071a7",
       "name": "Trabajos (producción)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2020,7 +2020,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Video (producción)').first().json;\nconst biblia = (JSON.parse($('Biblia (producción)').first().json.resultado || '{}').resultado) || {};\n// El guion aprobado es el último resultado listo de «guion» o «corregir_guion»: viaja con el video a su carpeta.\nconst guiones = $('Trabajos (producción)').all().map(i => i.json).filter(t => t.estado === 'listo' && ['guion', 'corregir_guion'].includes(t.modo));\nconst ultimo = guiones.sort((a, b) => String(a.createdAt || a.id).localeCompare(String(b.createdAt || b.id))).pop();\nconst guion = ultimo ? (JSON.parse(ultimo.resultado || '{}').resultado || {}) : {};\nreturn [{ json: { video_id: e.video_id, canal_id: e.canal_id, tema: v.tema, version: v.version || 1, formato: v.formato, presupuesto_usd: v.presupuesto_usd,\n  storyboard: e.contexto, guion, biblia, notas: '' } }];\n"
       },
-      "id": "282349c0-3cf1-42f1-95ab-3cc6826988f3",
+      "id": "7125617d-f586-4ee2-a3ec-3fc0ae4c51f0",
       "name": "Encargo de producción",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2049,7 +2049,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "1265e328-420b-446b-9bec-f30d250e1346",
+      "id": "5338171a-484c-453f-a420-e19f4ab4593b",
       "name": "Producir",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2080,7 +2080,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "11bfe18d-83e7-426c-b6fb-5cedce12e8e5",
+      "id": "a6b123cc-589d-4bcb-83fa-da326c61da65",
       "name": "Canal (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2112,7 +2112,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "fca342a0-f1b6-4b52-99b5-344345d7cca8",
+      "id": "801ec767-9c17-4e7f-89ca-deac9b554d2a",
       "name": "Biblia (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2144,7 +2144,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "b0af690f-1e87-491a-8033-f979aeff8707",
+      "id": "3fcfcbe2-6a3a-4a98-8ac6-312f8f9bb59d",
       "name": "Video (rehacer)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2156,9 +2156,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '',\n    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};\nreturn [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,\n  datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '', tendencias: (() => { try { const t = JSON.parse($('Canal (rehacer)').first().json.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),\n    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,\n    costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];\n"
       },
-      "id": "43853aec-fd3d-4551-94cf-2eefc2579ee0",
+      "id": "d7ce4244-6316-43d1-9b15-218fd588308e",
       "name": "Pedir storyboard corregido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2187,7 +2187,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "4043b29f-c25f-4975-868d-e52b33984a10",
+      "id": "b148ff70-f61f-4589-9f48-a65ab9609e22",
       "name": "Claude: storyboard corregido",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2208,7 +2208,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "348d9ef9-7a45-4be3-a8bb-7b7fb7a793e6",
+      "id": "1d724395-13e2-4c97-a74b-1844432ebed6",
       "name": "Resumen de aprendizaje",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2245,7 +2245,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "af2459d2-5cbc-424d-b7e8-c441409780ce",
+      "id": "dc7d8b4f-658d-4f27-9cd3-d4a45f96ed41",
       "name": "Video (publicar)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2266,7 +2266,7 @@
           },
           "conditions": [
             {
-              "id": "93269270-c0f2-4239-a2d0-aae6559dc283",
+              "id": "b2e84945-d4f4-43d1-92d7-bcecc54e26c9",
               "leftValue": "={{ $('Leer ajustes').first().json.allowYoutube === true }}",
               "rightValue": "",
               "operator": {
@@ -2280,7 +2280,7 @@
         },
         "options": {}
       },
-      "id": "5ab50a80-ed45-4aad-88b1-291a2bce78e8",
+      "id": "068b8def-da34-47b2-8605-310d600f9963",
       "name": "¿YouTube encendido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -2302,7 +2302,7 @@
           "timeout": 300000
         }
       },
-      "id": "6716f762-e2ef-40bb-a8ff-8239eb1d5fc7",
+      "id": "45934bfb-a337-453b-a3a2-7497b7fe29fa",
       "name": "Descargar render",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -2349,7 +2349,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { snippet: { title: $('Video (publicar)').first().json.tema.slice(0, 95), description: ($('Inicio').first().json.contexto.creditos || []).join('\\n'), categoryId: '27', defaultLanguage: 'es' }, status: Object.assign({ privacyStatus: 'private', selfDeclaredMadeForKids: false, containsSyntheticMedia: true }, Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() + 3600000 ? { publishAt: new Date($('Video (publicar)').first().json.publicar_en).toISOString() } : {}) } }}"
       },
-      "id": "ef55cd9f-12ce-4945-9a35-b6b99004b162",
+      "id": "3acab0b6-58db-4e18-b070-af604aa5066c",
       "name": "Abrir subida YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -2378,7 +2378,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "data"
       },
-      "id": "cebf4156-d792-4a35-b304-6c2ef3a9a456",
+      "id": "28a16bb6-77f2-4bf5-9452-efecf2df7064",
       "name": "Subir a YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -2391,7 +2391,7 @@
       "parameters": {
         "jsCode": "return [{ json: { estado: 'publicado', etapa: 'publicado', youtube_id: $json.id || '', publicado_en: (Date.parse($('Video (publicar)').first().json.publicar_en || '') > Date.now() ? new Date($('Video (publicar)').first().json.publicar_en) : new Date()).toISOString() } }];"
       },
-      "id": "b89c290a-e3dc-4bdc-b28d-dd4f75d0cad9",
+      "id": "5084021a-60f5-47ed-954f-663bdddda5c0",
       "name": "Video publicado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2429,7 +2429,7 @@
         },
         "options": {}
       },
-      "id": "a76330f3-8ab3-4f84-b7e1-e773d02bdcc3",
+      "id": "bb1ee088-f8e6-40a3-bc82-619188dabe4b",
       "name": "Marcar publicado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2450,7 +2450,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "1cbe059c-045d-4f9d-901a-74f1bb699d90",
+      "id": "4ab20590-0bfa-42ae-a6b3-77f5577e8815",
       "name": "Aviso: subido",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2477,7 +2477,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "85e22b3c-1b78-444c-aa3a-dd0e4840ce3e",
+      "id": "cbe1c408-0584-46ae-8a25-221d2dee9921",
       "name": "Aviso: YouTube apagado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2514,7 +2514,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "2d73eeef-c22c-40b9-a267-0e91344eae5c",
+      "id": "6fbec260-462e-4491-b7b3-1d7134950461",
       "name": "Canal (publicar)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2535,7 +2535,7 @@
           },
           "conditions": [
             {
-              "id": "fea10932-ce1a-48aa-90a8-1dfe999c9043",
+              "id": "84c92f1d-a98f-490b-9756-109d1847380b",
               "leftValue": "={{ $('Leer ajustes').first().json.allowRedes === true && !!$json.uploadpost_perfil }}",
               "rightValue": "",
               "operator": {
@@ -2549,7 +2549,7 @@
         },
         "options": {}
       },
-      "id": "982abccf-f0ef-421d-9f30-8b50baae71b8",
+      "id": "ad82ddae-95f7-4498-aee8-1cb1eb60ed41",
       "name": "¿Publicar con Upload-Post?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -2562,7 +2562,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const v = $('Video (publicar)').first().json; const c = $('Canal (publicar)').first().json;\nreturn [{ json: { video_id: v.video_id, canal_id: v.canal_id, tema: v.tema, formato: v.formato, publicar_en: v.publicar_en || '',\n  perfil: c.uploadpost_perfil, redes: c.redes || 'youtube,tiktok,instagram,facebook', zona: c.zona || '', contexto: e.contexto || {} } }];\n"
       },
-      "id": "997e872e-966b-43bb-9aa6-7f6d2e536f04",
+      "id": "7a3aee24-5d87-4fbf-9627-80dc4ea751b0",
       "name": "Encargo de redes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2591,7 +2591,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "de2bad3f-3ff9-4b91-b1b2-3677d696d82b",
+      "id": "8045014b-fa84-4c3b-8b17-52dda4385bd1",
       "name": "Publicar en redes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2612,7 +2612,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "30e16f60-6b02-4849-a7db-dd6c2827f14e",
+      "id": "37a38b6e-f9da-4162-a895-cf4bb53b84d0",
       "name": "Aviso: publicando",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2631,7 +2631,7 @@
       "parameters": {
         "jsCode": "return [{ json: { accion: 'token', canal_id: $('Video (publicar)').first().json.canal_id } }];"
       },
-      "id": "f2cf8490-10cc-4bea-9b29-9b8161985ecc",
+      "id": "dddf767b-dbd2-4e59-b58d-01ce54e19897",
       "name": "Pedir token del canal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2660,7 +2660,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "56f833c3-4402-476a-8883-227f49ead9ff",
+      "id": "9fc1901f-941f-4c4e-885c-64511af3c5cf",
       "name": "Token del canal",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2680,7 +2680,7 @@
           },
           "conditions": [
             {
-              "id": "1a69a86e-2702-4983-87ce-8c77990646d2",
+              "id": "5a3bc978-faa5-43e8-8719-74343e06f51d",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -2694,7 +2694,7 @@
         },
         "options": {}
       },
-      "id": "76b9f3bc-1609-42fc-9856-a483c80a9beb",
+      "id": "c07a4b49-a7b1-4e79-89a5-3c6668b04919",
       "name": "¿Canal conectado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -2715,7 +2715,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "a6185a59-6935-4f28-93d4-0ddcf2451f1e",
+      "id": "01fe3b26-b77a-4427-97d0-2fb555c64167",
       "name": "Aviso: canal sin YouTube",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2734,7 +2734,7 @@
       "parameters": {
         "jsCode": "const e = $json; return [{ json: { evento: 'corregir', video_id: e.video_id, canal_id: e.canal_id, etapa: 'storyboard', instruccion: e.cambios || '' } }];"
       },
-      "id": "0d40b032-78c1-4cc1-aae6-9d50daa6ef20",
+      "id": "477fe66e-c1a9-48da-92ed-0958df70c5ff",
       "name": "Cambio final a corrección",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2763,7 +2763,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "f1de6608-f870-4f36-9f68-eaf6efd5c3c9",
+      "id": "fe22a4cb-2a37-49c0-a731-ed254c6f3ab3",
       "name": "Orquestar corrección final",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2793,7 +2793,7 @@
         },
         "returnAll": true
       },
-      "id": "5f516115-ff3e-48c6-ba46-1240f27a2a8e",
+      "id": "0772c47c-cfd7-496e-bb26-84cc233b7cb1",
       "name": "Trabajos del video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2807,7 +2807,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const etapa = /story/i.test(e.etapa || '') ? 'storyboard' : 'guion';\nconst modos = etapa === 'guion' ? ['guion', 'corregir_guion'] : ['storyboard'];\nconst t = $input.all().map(i => i.json).filter(x => x.job_id && x.estado === 'listo' && modos.includes(x.modo))\n  .sort((a, b) => String(a.createdAt || a.id).localeCompare(String(b.createdAt || b.id))).pop();\nif (!t) return [{ json: { hay: false, video_id: e.video_id, etapa } }];\nreturn [{ json: { hay: true, evento: 'cambios', etapa, video_id: e.video_id, canal_id: t.canal_id || e.canal_id,\n  contexto: JSON.parse(t.resultado || '{}').resultado || {}, cambios: String(e.instruccion || '').slice(0, 4000) } }];\n"
       },
-      "id": "f95140df-48cd-4e33-b380-9aa728e1cfaa",
+      "id": "3ede7ef6-f3fd-464c-a4e5-e13b5e5ba00d",
       "name": "Última versión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2827,7 +2827,7 @@
           },
           "conditions": [
             {
-              "id": "57654db1-1054-4c6e-97c5-839be71bd94d",
+              "id": "de6a02c4-9d7e-4cf1-8994-a1491440cda2",
               "leftValue": "={{ $json.hay === true }}",
               "rightValue": "",
               "operator": {
@@ -2841,7 +2841,7 @@
         },
         "options": {}
       },
-      "id": "180834e4-24be-4b23-a434-05268798bc6b",
+      "id": "c4d5fcab-ec49-4683-ac3f-35ec61fbb413",
       "name": "¿Hay versión?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -2870,7 +2870,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "3dded7fd-1ea3-4a96-8c5e-29fa8b7888ee",
+      "id": "e5a9b8b5-8e22-4254-a6af-bbdd6681ce4e",
       "name": "Volver a orquestar",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2891,7 +2891,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "6b849f72-64ee-49c8-a97d-b91011aedf97",
+      "id": "2a4523b5-d002-490f-8a10-5f4060dfe793",
       "name": "Aviso: corrigiendo",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2918,7 +2918,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "2f0d084b-5cab-4d62-b7c3-886e42d5c539",
+      "id": "cee0a379-7c52-49c2-af3b-2e5ec202c3b5",
       "name": "Aviso: sin versión",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -2955,7 +2955,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "fd08e8d1-e8cc-4740-88f1-476789883c06",
+      "id": "802b23da-1398-4afd-9f98-afcd6b54c378",
       "name": "Canal (ajuste)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2987,7 +2987,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "4ba1a030-fa8f-4fe9-a702-4c5568456e20",
+      "id": "69139c7f-7f81-4559-99ba-8c62efd1c2ef",
       "name": "Biblia (ajuste)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3001,7 +3001,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const fila = $json;\nconst campo = String(e.campo || '').trim();\nif (!fila.job_id || !/^[a-z_]+(\\.[a-z_0-9]+){0,3}$/.test(campo) || ['canal_id', 'nombre'].includes(campo.split('.')[0]) || campo.split('.').some(k => ['__proto__', 'constructor', 'prototype'].includes(k)))\n  return [{ json: { ok: false, motivo: !fila.job_id ? 'no encuentro la biblia de ' + e.canal_id : 'campo no válido: ' + campo } }];\nlet valor = e.valor; try { valor = JSON.parse(e.valor); } catch (err) { /* texto */ }\nconst env = JSON.parse(fila.resultado || '{}'); const b = env.resultado || (env.resultado = {});\nconst partes = campo.split('.'); let o = b;\nfor (const k of partes.slice(0, -1)) o = (o[k] && typeof o[k] === 'object') ? o[k] : (o[k] = {});\nconst ultimo = partes[partes.length - 1];\nif (Array.isArray(o[ultimo]) && !Array.isArray(valor)) o[ultimo].push(valor); else o[ultimo] = valor;\nreturn [{ json: { ok: true, resultado: JSON.stringify(env), resumen: `${campo} = ${JSON.stringify(valor).slice(0, 200)}` } }];\n"
       },
-      "id": "4c0fdc44-4cee-4c04-9a7c-53c7c22c8673",
+      "id": "107143c9-3a10-44cf-bc74-8dd5c46ad6a7",
       "name": "Aplicar ajuste",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3021,7 +3021,7 @@
           },
           "conditions": [
             {
-              "id": "c3ca2a44-1490-4497-adf9-7c6f53e9f7f7",
+              "id": "615e8676-ccc5-48f8-af5b-44d17c465032",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -3035,7 +3035,7 @@
         },
         "options": {}
       },
-      "id": "bb073d94-9230-4d43-9eda-9e5a47b58831",
+      "id": "fbd348b1-acbb-4de3-984e-217f8acb3915",
       "name": "¿Ajuste válido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3048,7 +3048,7 @@
       "parameters": {
         "jsCode": "return [{ json: { resultado: $json.resultado } }];"
       },
-      "id": "fcb5fbc5-664a-44b0-a06f-aea76da5121b",
+      "id": "d6f4bb2c-21a1-4e62-ac03-0b1d67d6a808",
       "name": "Fila de biblia",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3086,7 +3086,7 @@
         },
         "options": {}
       },
-      "id": "b51caa47-9146-4e66-b939-6408abfd45db",
+      "id": "ff7fe1a9-2654-4b53-b59c-6193b6fba451",
       "name": "Guardar ajuste",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3107,7 +3107,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "47d6d061-a63d-41c8-9fce-2dc1ebe40df7",
+      "id": "80443491-1600-484f-b62a-430a08fe28f4",
       "name": "Aviso: ajuste guardado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3134,7 +3134,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "59311ae8-bc79-4c99-a38f-2eb6b7a00ac4",
+      "id": "0cb3f5d1-6a92-4f79-926e-d461dd67857d",
       "name": "Aviso: ajuste inválido",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3153,7 +3153,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const t = Date.parse(e.fecha || '');\nconst ok = !isNaN(t) && t > Date.now() + 3600000 && t < Date.now() + 180 * 86400000;\nreturn [{ json: { ok, publicar_en: ok ? new Date(t).toISOString() : '', motivo: isNaN(t) ? 'fecha ilegible: ' + e.fecha : 'la fecha debe estar entre 1 hora y 6 meses desde ahora' } }];\n"
       },
-      "id": "d38922a7-a1a4-48f7-936a-602c8815d2b5",
+      "id": "72526f4d-d380-457b-a302-4e880b3a1e9b",
       "name": "Validar fecha",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3173,7 +3173,7 @@
           },
           "conditions": [
             {
-              "id": "54fa57db-c7cb-431a-b6ae-5447d911f078",
+              "id": "cc88beba-b9ea-434b-ac89-cedbdeba4372",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -3187,7 +3187,7 @@
         },
         "options": {}
       },
-      "id": "f9f50bc6-f64a-4540-a649-1353a876425a",
+      "id": "2d0f5062-b04c-4a49-ab48-a3dc40d9d12e",
       "name": "¿Fecha válida?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3200,7 +3200,7 @@
       "parameters": {
         "jsCode": "return [{ json: { publicar_en: $json.publicar_en } }];"
       },
-      "id": "5f83b17f-a1d8-4f7a-82b0-3571a72bc32b",
+      "id": "3cc3b24e-696d-4853-8ce0-8120b1111da3",
       "name": "Fila de fecha",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3238,7 +3238,7 @@
         },
         "options": {}
       },
-      "id": "7cd54b4f-8574-415c-9c11-16a3797cf35b",
+      "id": "ee61d66b-5c96-490f-b867-44fc24b3839b",
       "name": "Guardar fecha",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3259,7 +3259,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "91236efa-a9d4-4ee2-952f-e24d26f6be7a",
+      "id": "aa8bcb6f-b894-4adc-bccc-24108055eb32",
       "name": "Aviso: programado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3286,7 +3286,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "aa26e9a4-cb36-49e2-8bf2-65dc8ff37d24",
+      "id": "93b425c6-4a30-4144-bc06-ff558dc5e385",
       "name": "Aviso: fecha inválida",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3305,7 +3305,7 @@
       "parameters": {
         "jsCode": "return [{ json: { canal_id: $json.canal_id } }];"
       },
-      "id": "29530228-3384-4627-849d-284f8b6a89ff",
+      "id": "18c62628-434a-421d-8e41-763df3afde5e",
       "name": "Pedir referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3334,7 +3334,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "d4d2637b-8ac3-46ca-ae9d-40456bb0c71f",
+      "id": "a8d0d01a-413e-40b1-891a-86661ae4c351",
       "name": "Referencias a pedido",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -3347,7 +3347,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const n = (x, a, b) => { if (x === '' || x === null || x === undefined) return null; const v = Number(String(x).replace(',', '.')); return Number.isFinite(v) && v >= a && v <= b ? v : null; };\nconst cambios = { videos_semana: n(e.videos_semana, 0, 21), gasto_semana_usd: n(e.gasto_semana_usd, 0, 200), retencion_min: n(e.retencion_min, 0, 1),\n  formato: ['short', 'largo'].includes(String(e.formato || '')) ? e.formato : null,\n  auto: [true, 'true', 'sí', 'si'].includes(e.auto) ? true : [false, 'false', 'no'].includes(e.auto) ? false : null };\nconst limpio = Object.fromEntries(Object.entries(cambios).filter(([, v]) => v !== null));\nreturn [{ json: { ok: !!e.canal_id && Object.keys(limpio).length > 0, cambios: limpio } }];\n"
       },
-      "id": "24b3fece-5c2f-424e-bc11-e6a295746fc0",
+      "id": "1e44da9e-4103-400c-8525-80f8149daca8",
       "name": "Validar metas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3367,7 +3367,7 @@
           },
           "conditions": [
             {
-              "id": "39627125-5f1e-47f0-adbf-026c94b6d02e",
+              "id": "a7196365-c962-4b3f-a22d-e195ea3681be",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -3381,7 +3381,7 @@
         },
         "options": {}
       },
-      "id": "35e93e34-a7c5-484e-a0de-b44602c8950d",
+      "id": "64e4f102-61d9-4b0d-9af7-349bf49cd0a7",
       "name": "¿Metas válidas?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3412,7 +3412,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "84bb646b-7d65-44b7-969b-18b55d2e46f5",
+      "id": "b5a1dc3b-abb7-4a08-82f0-b36bf9bf191d",
       "name": "Canal (metas)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3433,7 +3433,7 @@
           },
           "conditions": [
             {
-              "id": "b332a1b4-99d6-41cf-8807-f399acf0264c",
+              "id": "173ce8e6-d157-4230-8fa7-5311746f6e07",
               "leftValue": "={{ !!$json.canal_id }}",
               "rightValue": "",
               "operator": {
@@ -3447,7 +3447,7 @@
         },
         "options": {}
       },
-      "id": "b3a614da-6e03-445b-9d18-7d6e7048206d",
+      "id": "79c7983f-be20-426b-b4a5-f124b0ba3e88",
       "name": "¿Existe el canal (metas)?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3460,7 +3460,7 @@
       "parameters": {
         "jsCode": "\nlet antes = {}; try { antes = JSON.parse($json.metas || '{}'); } catch (x) { antes = {}; }\nconst metas = { videos_semana: 3, formato: 'short', gasto_semana_usd: 10, retencion_min: 0.5, auto: false, ...antes, ...$('Validar metas').first().json.cambios };\nreturn [{ json: { metas: JSON.stringify(metas), _texto: `Metas de ${$json.canal_id}: ${metas.videos_semana} ${metas.formato}/semana, tope US$${metas.gasto_semana_usd}/semana, retención mínima ${Math.round(metas.retencion_min * 100)} %, producción automática ${metas.auto ? 'encendida' : 'apagada'}.` } }];\n"
       },
-      "id": "d921f5f1-d9ef-4c6e-9a52-2cf627f07314",
+      "id": "5f7c49b7-702a-433f-a9a1-68eb3f3fccae",
       "name": "Fila de metas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3473,7 +3473,7 @@
       "parameters": {
         "jsCode": "return [{ json: { metas: $json.metas } }];"
       },
-      "id": "ee053827-1cb2-4add-a4a8-ab43daba7cf1",
+      "id": "103d9d6d-fb8b-40bc-9389-d00bd34e38a8",
       "name": "Solo metas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3511,7 +3511,7 @@
         },
         "options": {}
       },
-      "id": "f88e0c9c-4675-4b08-86cc-b286e95464cd",
+      "id": "326785d1-dda2-4ddf-9ddb-25c39f48c7dd",
       "name": "Guardar metas",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3532,7 +3532,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "b331c7a5-37ff-495e-a8be-777bd6b1773e",
+      "id": "315d9d6f-6660-4204-b447-e776c61a37d6",
       "name": "Aviso: metas",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3559,7 +3559,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "120bca11-8b30-4ed3-94ea-d3bbe8c36781",
+      "id": "dc65cd8b-9b92-4960-8bcb-820426a5d775",
       "name": "Aviso: metas inválidas",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3578,7 +3578,7 @@
       "parameters": {
         "jsCode": "\n// Acepta enlace o @usuario. Detecta la red y el usuario; sin red clara, asume Instagram si viene con @ y la red no se dice.\nconst e = $('Inicio').first().json; const u = String(e.url || e.cuenta || '').trim(); let red = String(e.red || '').toLowerCase(); let handle = '';\nconst m = u.match(/(?:youtube\\.com\\/(?:@|c\\/|channel\\/)?|youtu\\.be\\/)([\\w.\\-@]+)/i) || null;\nif (/youtube\\.com|youtu\\.be/i.test(u)) { red = 'youtube'; handle = (u.match(/youtube\\.com\\/(@[\\w.\\-]+|channel\\/[\\w\\-]+|c\\/[\\w.\\-]+)/i) || [])[1] || ''; handle = handle.replace(/^c\\//, '@').replace(/^channel\\//, ''); }\nelse if (/tiktok\\.com/i.test(u)) { red = 'tiktok'; handle = (u.match(/tiktok\\.com\\/@([\\w.\\-]+)/i) || [])[1] || ''; }\nelse if (/instagram\\.com/i.test(u)) { red = 'instagram'; handle = (u.match(/instagram\\.com\\/([\\w.]+)/i) || [])[1] || ''; }\nelse if (/^@?[\\w.\\-]{2,60}$/.test(u)) { handle = u.replace(/^@/, ''); red = ['youtube', 'tiktok', 'instagram'].includes(red) ? red : 'instagram'; if (red === 'youtube') handle = '@' + handle; }\nconst ok = !!handle && ['youtube', 'tiktok', 'instagram'].includes(red);\nreturn [{ json: { ok, accion: 'cuenta', red, handle, url: u, notas: String(e.notas || e.indicaciones || ''), motivo: ok ? '' : 'no reconocí la cuenta: manda el enlace de YouTube, TikTok o Instagram' } }];\n"
       },
-      "id": "18393182-5bb1-4eab-b7bb-bd254ee7dd1b",
+      "id": "8b0e1e4c-86d7-403a-92a1-db09ff8ba186",
       "name": "Leer enlace",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3598,7 +3598,7 @@
           },
           "conditions": [
             {
-              "id": "31364cda-2900-4803-9439-681f16c82044",
+              "id": "86fed5ed-8a6b-4013-b7b3-2c908a90f336",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -3612,7 +3612,7 @@
         },
         "options": {}
       },
-      "id": "e4582cda-b32d-4c5f-a4f1-90dfb09e259a",
+      "id": "853151ca-7e27-4f2c-b2e1-1d98af4430bf",
       "name": "¿Cuenta reconocida?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3641,7 +3641,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "b8d4d641-6085-4832-940c-99656ebd9f69",
+      "id": "6c34f4ef-6f96-4655-8a5b-487211656c19",
       "name": "vidIQ: cuenta",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -3654,7 +3654,7 @@
       "parameters": {
         "jsCode": "\nconst c = $('Leer enlace').first().json; const v = $json || {};\nreturn [{ json: { modo: 'adoptar_cuenta', canal_id: '', video_id: '', datos: { red: c.red, handle: c.handle, url: c.url, notas: c.notas,\n  perfil: v.ok ? v.perfil : '', publicaciones: v.ok ? v.publicaciones : '', error_vidiq: v.ok ? '' : String(v.error || 'vidIQ no respondió') } } }];\n"
       },
-      "id": "dd310d91-885f-4c26-a2d6-fd955907a636",
+      "id": "ef097b64-5ffd-4c1c-a7d7-f11ce97b23de",
       "name": "Pedir adopción",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3683,7 +3683,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "b64b2950-c550-48ac-9caa-df8a63c0d504",
+      "id": "d048ab64-2bcc-47fa-b1ab-5e55c21d6d5b",
       "name": "Claude: adopción",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -3704,7 +3704,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "290bde48-4efc-4618-a0e7-7919989ad119",
+      "id": "40bb7326-6b64-42e3-a21f-927468b40e32",
       "name": "Aviso: adopción en marcha",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3731,7 +3731,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "690c7282-c255-4da8-8737-c383492a4797",
+      "id": "f66e9990-e3ff-4093-8883-d992b6eb2f11",
       "name": "Aviso: cuenta no reconocida",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3750,7 +3750,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json;\nconst perfil = String(e.perfil || '').trim(); const redes = String(e.redes || '').toLowerCase().split(/[\\s,]+/).filter(Boolean);\nconst validas = ['youtube', 'tiktok', 'instagram', 'facebook'];\nconst malas = redes.filter(r => !validas.includes(r));\nlet zona = String(e.zona || '').trim(); let zonaMala = false;\nif (zona) { try { new Intl.DateTimeFormat('en', { timeZone: zona }); } catch (err) { zonaMala = true; } }\nconst ok = /^[A-Za-z0-9_.-]{2,60}$/.test(perfil) && redes.length > 0 && !malas.length && !zonaMala;\nreturn [{ json: { ok, fila: { uploadpost_perfil: perfil, redes: [...new Set(redes)].join(','), ...(zona && !zonaMala ? { zona } : {}) },\n  motivo: zonaMala ? 'zona horaria desconocida: ' + zona + ' (ej.: America/Lima, America/Mexico_City, Europe/Madrid)' : !/^[A-Za-z0-9_.-]{2,60}$/.test(perfil) ? 'perfil de Upload-Post inválido: ' + perfil : malas.length ? 'redes desconocidas: ' + malas.join(', ') + ' (válidas: ' + validas.join(', ') + ')' : 'falta la lista de redes' } }];\n"
       },
-      "id": "8bacb02d-541c-42f6-b086-a71ee4f6c1f7",
+      "id": "23c3453e-4769-4c70-9def-1f564397cff0",
       "name": "Validar redes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3770,7 +3770,7 @@
           },
           "conditions": [
             {
-              "id": "55976cd6-40f8-4e09-ae5e-d33cfe656280",
+              "id": "b0e394f1-bcbf-4ee4-8920-d70a2d465d24",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -3784,7 +3784,7 @@
         },
         "options": {}
       },
-      "id": "9e040257-50be-4cd9-8217-08755f813774",
+      "id": "8372c4f4-4534-40b0-af4f-5fb69d5c0dd1",
       "name": "¿Redes válidas?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3815,7 +3815,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "1c5d60d1-7e32-4bf7-a48c-4fd7d90b9144",
+      "id": "0a069ad7-d0ee-4da2-b607-e14fec62af90",
       "name": "Canal (redes)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3836,7 +3836,7 @@
           },
           "conditions": [
             {
-              "id": "ebaff3eb-81fc-4681-afdb-951dba366343",
+              "id": "0c05a580-6427-478d-91b0-b3f16dc81c3e",
               "leftValue": "={{ !!$json.canal_id }}",
               "rightValue": "",
               "operator": {
@@ -3850,7 +3850,7 @@
         },
         "options": {}
       },
-      "id": "f284ed34-855e-4963-8935-5980873143db",
+      "id": "5a526b33-24c8-4fb5-9efe-a834cdc8675e",
       "name": "¿Existe el canal?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -3863,7 +3863,7 @@
       "parameters": {
         "jsCode": "return [{ json: $('Validar redes').first().json.fila }];"
       },
-      "id": "e8a29a68-64ec-4260-b912-cd6fe7d96965",
+      "id": "57cff30b-2f4f-44d2-b869-1a89b6bace23",
       "name": "Fila de redes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3901,7 +3901,7 @@
         },
         "options": {}
       },
-      "id": "afe21a0f-6ef6-4179-83c5-bb4576caecf0",
+      "id": "19907b8e-3e62-459b-ab91-d508c1c2c4da",
       "name": "Guardar redes",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -3922,7 +3922,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "ee196183-7005-4387-979e-3efd4757f855",
+      "id": "8e4944b1-b756-40a3-a37d-5c9718f706ec",
       "name": "Aviso: redes guardadas",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3949,7 +3949,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "9ccd3807-e6f3-4733-8534-624906430b7e",
+      "id": "388ee071-b839-40d3-98da-b591842abba1",
       "name": "Aviso: redes inválidas",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -3976,7 +3976,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "ba49df88-f2b1-4f4e-b8f5-fe219f0952ea",
+      "id": "1987b7a9-3814-4013-bb65-d025bf266d85",
       "name": "Aviso: evento",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "6a88cdc5-9a91-48d5-a5e4-dcad9026b573",
+      "id": "041af10c-65be-4222-a934-16330f93fa67",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -47,7 +47,7 @@
         "specifyBody": "json",
         "jsonBody": "={\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-03-26\",\"capabilities\":{},\"clientInfo\":{\"name\":\"fabrica-n8n\",\"version\":\"1\"}}}"
       },
-      "id": "484f04ab-218d-4cb0-98db-3630b3b228a2",
+      "id": "9026f97d-8034-4cef-a4e0-bc672f9fc3b1",
       "name": "Iniciar vidIQ",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -102,7 +102,7 @@
         "specifyBody": "json",
         "jsonBody": "={\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\",\"params\":{}}"
       },
-      "id": "0ea6fb52-9edd-41c8-aebb-0d6faf425cda",
+      "id": "00ff4e36-c562-4fe7-982d-fca40a9eff4f",
       "name": "vidIQ listo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -125,9 +125,9 @@
       "parameters": {
         "mode": "expression",
         "numberOutputs": 3,
-        "output": "={{ ({ titulos: 1, cuenta: 2 })[$('Inicio').first().json.accion] ?? 0 }}"
+        "output": "={{ ({ titulos: 1, cuenta: 2, radar: 2 })[$('Inicio').first().json.accion] ?? 0 }}"
       },
-      "id": "c9a8e84b-26ef-4ab4-aa49-6dfdff7f2299",
+      "id": "fc590dd3-e87d-4eec-9b38-bf5b2bc1e422",
       "name": "Según acción",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -172,7 +172,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'vidiq_keyword_research', arguments: { mode: 'research', keyword: String($('Inicio').first().json.semilla || $('Inicio').first().json.tema || '').slice(0, 150), limit: 15, userGoal: 'elegir el ángulo y las palabras clave de un video nuevo para un canal en español' } } }) }}"
       },
-      "id": "a1f8d349-34cf-44bc-8876-dc6193b25a25",
+      "id": "8a861dee-d11b-4aae-8853-0fa7f8a3e816",
       "name": "Palabras clave",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -227,7 +227,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'vidiq_outliers', arguments: { keyword: String($('Inicio').first().json.tema || '').slice(0, 500), language: $('Inicio').first().json.idioma || 'es', contentType: $('Inicio').first().json.formato === 'short' ? 'short' : 'long', limit: 10, userGoal: 'ver qué videos del tema superan a su canal para inspirar el gancho y el título' } } }) }}"
       },
-      "id": "7bfed997-7176-47be-8940-78dda513e63b",
+      "id": "03b740f2-6cd3-4d53-b38c-ee60f7d51742",
       "name": "Videos que destacan",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -250,7 +250,7 @@
       "parameters": {
         "jsCode": "\n// Lee una respuesta de MCP (JSON o SSE) y devuelve el texto de la herramienta (o lanza el error de vidIQ).\nconst leer = r => { const t = String(r?.data ?? r?.body ?? '');\n  const d = t.split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); const raw = d.length ? d[d.length - 1] : t;\n  let m; try { m = JSON.parse(raw); } catch (e) { return { ok: false, error: 'respuesta ilegible de vidIQ' }; }\n  if (m.error) return { ok: false, error: String(m.error.message || m.error).slice(0, 200) };\n  const txt = (m.result?.content || []).filter(c => c.type === 'text').map(c => c.text).join('\\n');\n  if (m.result?.isError) return { ok: false, error: txt.slice(0, 200) };\n  return { ok: true, texto: txt }; };\n\nconst kw = leer($('Palabras clave').first().json); const ov = leer($json);\nif (!kw.ok && !ov.ok) return [{ json: { ok: false, error: kw.error || ov.error } }];\n// Se pasa a Claude como contexto recortado: el texto ya viene resumido por vidIQ.\nreturn [{ json: { ok: true, palabras_clave: kw.ok ? kw.texto.slice(0, 6000) : '', videos_destacados: ov.ok ? ov.texto.slice(0, 6000) : '',\n  creditos: (kw.ok ? 5 : 0) + (ov.ok ? 5 : 0) } }];\n"
       },
-      "id": "7034f6b2-5fcb-4929-bede-56a2ab029594",
+      "id": "d04b5ef1-d3cf-4b4a-a2da-9fa07dbaf260",
       "name": "Resumen de investigación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -263,7 +263,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json;\nconst t = (e.titulos || []).map(x => String(x || '').trim()).filter(Boolean).filter((x, i, a) => a.indexOf(x) === i).slice(0, 4);\nreturn t.length ? t.map(titulo => ({ json: { titulo: titulo.slice(0, 200), tipo: e.formato === 'short' ? 'short' : 'long' } })) : [{ json: { vacio: true } }];\n"
       },
-      "id": "ed399597-d37d-4f7f-816c-1201bbe1a91e",
+      "id": "4f95f3be-144d-48a2-92b5-c5ffba0e47cd",
       "name": "Un ítem por título",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -283,7 +283,7 @@
           },
           "conditions": [
             {
-              "id": "4c263057-fc6f-437e-a157-0e6ae8e15344",
+              "id": "e558fb4d-ee39-4224-81e4-7bc6761aa5a4",
               "leftValue": "={{ $json.vacio !== true }}",
               "rightValue": "",
               "operator": {
@@ -297,7 +297,7 @@
         },
         "options": {}
       },
-      "id": "a9f6b6c8-b4ff-4fc8-b3f2-36b3c61e6ee0",
+      "id": "eb3baa85-8f10-41e6-baad-498518856f53",
       "name": "¿Hay títulos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -348,7 +348,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'vidiq_score_title', arguments: { title: $json.titulo, type: $json.tipo } } }) }}"
       },
-      "id": "b9ec3484-9fff-4e8b-bb16-03031984af5f",
+      "id": "db4380ca-2780-4c08-99af-bf9f272196dc",
       "name": "Puntuar título",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -371,7 +371,7 @@
       "parameters": {
         "jsCode": "\n// Lee una respuesta de MCP (JSON o SSE) y devuelve el texto de la herramienta (o lanza el error de vidIQ).\nconst leer = r => { const t = String(r?.data ?? r?.body ?? '');\n  const d = t.split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); const raw = d.length ? d[d.length - 1] : t;\n  let m; try { m = JSON.parse(raw); } catch (e) { return { ok: false, error: 'respuesta ilegible de vidIQ' }; }\n  if (m.error) return { ok: false, error: String(m.error.message || m.error).slice(0, 200) };\n  const txt = (m.result?.content || []).filter(c => c.type === 'text').map(c => c.text).join('\\n');\n  if (m.result?.isError) return { ok: false, error: txt.slice(0, 200) };\n  return { ok: true, texto: txt }; };\n\nconst titulos = $('Un ítem por título').all().map(i => i.json.titulo);\nconst notas = $input.all().map((i, k) => { const r = leer(i.json); const n = r.ok ? Number((r.texto.match(/(\\d{1,3})\\s*(?:\\/\\s*100|puntos|points|score)/i) || r.texto.match(/score[^0-9]{0,15}(\\d{1,3})/i) || [])[1]) : NaN;\n  return { titulo: titulos[k], puntaje: Number.isFinite(n) && n <= 100 ? n : null, error: r.ok ? '' : r.error }; });\nconst validas = notas.filter(n => n.puntaje !== null).sort((a, b) => b.puntaje - a.puntaje);\nreturn [{ json: { ok: validas.length > 0, mejor: validas[0]?.titulo || titulos[0], puntaje: validas[0]?.puntaje ?? null, notas, creditos: notas.filter(n => !n.error).length * 5 } }];\n"
       },
-      "id": "08e8329e-9991-4c13-a48e-ec6748baaad8",
+      "id": "26be9723-97ee-4c41-951d-079aa7db264c",
       "name": "Mejor título",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -384,7 +384,7 @@
       "parameters": {
         "jsCode": "return [{ json: { ok: false, error: 'no hay títulos que puntuar' } }];"
       },
-      "id": "58663b5d-9eef-419b-be8e-5cf0ef75d178",
+      "id": "178bc581-6c5a-4dcf-ac6b-48bd3316baa3",
       "name": "Sin títulos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -395,9 +395,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const h = String(e.handle || '');\nconst L = { youtube: [['vidiq_channel_stats', { channelId: h }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'short' }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'long', popular: true }]],\n  tiktok: [['vidiq_tiktok_profile', { handle: h }], ['vidiq_tiktok_profile_videos', { handle: h }]],\n  instagram: [['vidiq_ig_profile', { handle: h }], ['vidiq_ig_profile_reels', { handle: h }]] }[e.red] || [];\nreturn L.map(([nombre, args], i) => ({ json: { nombre, args: { ...args, userGoal: 'analizar una cuenta propia para mejorar su contenido y su ritmo de publicación' }, id: 10 + i } }));\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const h = String(e.handle || '');\n// Radar: lo que destaca esta semana en Reels y TikTok del nicho, los Shorts en español que despegan y los sonidos en alza.\nif (e.accion === 'radar') { const q = String(e.nicho || '').slice(0, 450); const desde = new Date(Date.now() - 10 * 86400000);\n  const R = [['vidiq_instagram_tiktok_outlier_search', { query: q, audienceQuery: 'Culture/Region: ' + (e.region || 'Perú y Latinoamérica hispanohablante') + '; Global: false; Demographics: ' + String(e.publico || 'adultos 18-45 de habla hispana').slice(0, 200) + ';',\n      descriptionLanguage: ['es'], datePostedAfter: desde.toISOString(), resultsPerPlatform: 5 }],\n    ['vidiq_outliers', { keyword: q.slice(0, 200), contentType: 'short', language: 'es', publishedWithin: 'thisMonth', limit: 8 }],\n    ['vidiq_tiktok_trending_sound_search', { query: q.slice(0, 200), limit: 8 }]];\n  return R.map(([nombre, args], i) => ({ json: { nombre, args: { ...args, userGoal: 'detectar tendencias y formatos que funcionan para un canal propio' }, id: 20 + i } })); }\nconst L = { youtube: [['vidiq_channel_stats', { channelId: h }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'short' }], ['vidiq_channel_videos', { channelId: h, videoFormat: 'long', popular: true }]],\n  tiktok: [['vidiq_tiktok_profile', { handle: h }], ['vidiq_tiktok_profile_videos', { handle: h }]],\n  instagram: [['vidiq_ig_profile', { handle: h }], ['vidiq_ig_profile_reels', { handle: h }]] }[e.red] || [];\nreturn L.map(([nombre, args], i) => ({ json: { nombre, args: { ...args, userGoal: 'analizar una cuenta propia para mejorar su contenido y su ritmo de publicación' }, id: 10 + i } }));\n"
       },
-      "id": "7c200398-63ff-4e1f-a4f7-65083b258cae",
+      "id": "c9abf9ec-44ea-47ad-a74c-e062eb7792e7",
       "name": "Llamadas de cuenta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -442,7 +442,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ jsonrpc: '2.0', id: $json.id, method: 'tools/call', params: { name: $json.nombre, arguments: $json.args } }) }}"
       },
-      "id": "64ebc7e9-7a88-43e2-9437-706f47f9860e",
+      "id": "ae02fc06-57cd-4b91-a6a7-ebb1e9f5e8c3",
       "name": "Consultar cuenta",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -463,9 +463,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Lee una respuesta de MCP (JSON o SSE) y devuelve el texto de la herramienta (o lanza el error de vidIQ).\nconst leer = r => { const t = String(r?.data ?? r?.body ?? '');\n  const d = t.split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); const raw = d.length ? d[d.length - 1] : t;\n  let m; try { m = JSON.parse(raw); } catch (e) { return { ok: false, error: 'respuesta ilegible de vidIQ' }; }\n  if (m.error) return { ok: false, error: String(m.error.message || m.error).slice(0, 200) };\n  const txt = (m.result?.content || []).filter(c => c.type === 'text').map(c => c.text).join('\\n');\n  if (m.result?.isError) return { ok: false, error: txt.slice(0, 200) };\n  return { ok: true, texto: txt }; };\n\nconst r = $input.all().map(i => leer(i.json));\nif (!r.some(x => x.ok)) return [{ json: { ok: false, error: r.map(x => x.error).filter(Boolean)[0] || 'vidIQ no respondió' } }];\nreturn [{ json: { ok: true, perfil: r[0]?.ok ? r[0].texto.slice(0, 4000) : '', publicaciones: r.slice(1).filter(x => x.ok).map(x => x.texto).join('\\n\\n').slice(0, 9000), creditos: r.filter(x => x.ok).length * 5 } }];\n"
+        "jsCode": "\n// Lee una respuesta de MCP (JSON o SSE) y devuelve el texto de la herramienta (o lanza el error de vidIQ).\nconst leer = r => { const t = String(r?.data ?? r?.body ?? '');\n  const d = t.split('\\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()); const raw = d.length ? d[d.length - 1] : t;\n  let m; try { m = JSON.parse(raw); } catch (e) { return { ok: false, error: 'respuesta ilegible de vidIQ' }; }\n  if (m.error) return { ok: false, error: String(m.error.message || m.error).slice(0, 200) };\n  const txt = (m.result?.content || []).filter(c => c.type === 'text').map(c => c.text).join('\\n');\n  if (m.result?.isError) return { ok: false, error: txt.slice(0, 200) };\n  return { ok: true, texto: txt }; };\n\nconst r = $input.all().map(i => leer(i.json));\nif (!r.some(x => x.ok)) return [{ json: { ok: false, error: r.map(x => x.error).filter(Boolean)[0] || 'vidIQ no respondió' } }];\nreturn [{ json: { ok: true, perfil: r[0]?.ok ? r[0].texto.slice(0, 4000) : '', publicaciones: r.slice(1).filter(x => x.ok).map(x => x.texto).join('\\n\\n').slice(0, 9000),\n  textos: r.map(x => x.ok ? x.texto.slice(0, 9000) : ''), creditos: r.filter(x => x.ok).length * 5 } }];\n"
       },
-      "id": "c64141ac-0bb0-4277-8e0d-bab73c086ad0",
+      "id": "3d89e49b-fbe8-49d3-a27d-8a926f03af15",
       "name": "Resumen de cuenta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

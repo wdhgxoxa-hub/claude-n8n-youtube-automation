@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "897ebcac-c9eb-4d03-91c4-e0160449c01c",
+      "id": "ef209399-ab51-400a-be6f-b64feb29949b",
       "name": "Error en un flujo",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
@@ -17,7 +17,7 @@
       "parameters": {
         "jsCode": "\n// Aviso claro en español: qué se detuvo, en qué paso, por qué (traducido) y un enlace corto al detalle.\nconst e = $json; const ex = e.execution || {}; const wf = e.workflow || {};\nconst original = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\\s+/g, ' ').trim();\nconst nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';\nconst motivos = [\n  [/too many requests|rate.?limit|\\b429\\b|resource.?exhausted/i, 'el servicio pidió ir más despacio (demasiadas solicitudes seguidas).'],\n  [/timed? ?out|timeout|ETIMEDOUT/i, 'el servicio tardó demasiado en responder.'],\n  [/\\b401\\b|unauthori[sz]ed|invalid api key|incorrect api key|authentication/i, 'una clave fue rechazada: revisa la credencial de ese servicio.'],\n  [/\\b402\\b|insufficient|quota|billing|credits?/i, 'no hay saldo o créditos suficientes en el servicio.'],\n  [/ENOTFOUND|ECONNREFUSED|ECONNRESET|socket hang up|network/i, 'no hubo conexión con el servicio.'],\n  [/\\b5\\d\\d\\b|internal server error|bad gateway|service unavailable/i, 'el servicio externo tuvo una falla de su lado.'],\n  [/not supported|bad request|\\b400\\b/i, 'el servicio rechazó el pedido (formato o parámetros).'],\n];\nconst motivo = (motivos.find(([r]) => r.test(original)) || [null, null])[1];\nconst esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst nombre = String(wf.name || wf.id || 'un flujo').replace(/^(F|FX|M\\d+(–M\\d+)?) · /, '');\nconst texto = `⚠️ <b>Se detuvo: ${esc(nombre)}</b>\\nPaso: ${esc(nodo)}\\nMotivo: ${esc(motivo || original.slice(0, 300))}`\n  + (motivo ? `\\n<i>${esc(original.slice(0, 160))}</i>` : '') + (ex.retryOf ? '\\n(era un reintento)' : '')\n  + (ex.url ? `\\n<a href=\"${esc(ex.url)}\">Ver el detalle</a>` : '');\nreturn [{ json: { texto } }];\n"
       },
-      "id": "142f7814-cd9b-4e32-b45b-d6d122de3065",
+      "id": "1b027084-867d-4be0-aa55-2670044845ad",
       "name": "Mensaje de error",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -38,7 +38,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "0e1d46d8-6c20-4d7d-a2c0-62e6309d3cf5",
+      "id": "7349e58e-2ab0-48ec-b37b-561759890f66",
       "name": "Avisar error",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

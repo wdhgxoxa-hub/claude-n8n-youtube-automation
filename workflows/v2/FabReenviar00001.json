@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "8f0a5e23-e30b-4cb9-8867-6a01d6460052",
+      "id": "26dd1ae3-0fae-4d21-a991-c9894d78e05f",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "6715a411-8ea6-4e2b-8ecf-ff7eef45f9cf",
+      "id": "3f3eddda-a568-4d3b-a6e4-a4f537a4e1e7",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -65,7 +65,7 @@
         },
         "returnAll": true
       },
-      "id": "a2c85e84-459d-489d-84c7-ccae6fb1fb12",
+      "id": "773ca9b7-cba2-4ce1-ab0b-9e853235c39a",
       "name": "Pendientes",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -80,7 +80,7 @@
       "parameters": {
         "jsCode": "\nconst vid = String($('Inicio').first().json.video_id || '').trim();\nconst l = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente' && (!vid || r.video_id === vid));\nreturn l.length ? l.map(r => ({ json: { ...r, prueba: r.url.replace(/^https?:\\/\\/[^/]+/, 'http://127.0.0.1:5678') } })) : [{ json: { nada: true } }];\n"
       },
-      "id": "3d2e4b5c-ccd9-47ec-9c06-c86485121b4b",
+      "id": "9fb8ac99-d7a6-421e-88e3-a522e4586479",
       "name": "Elegir",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -100,7 +100,7 @@
           },
           "conditions": [
             {
-              "id": "9d2066ec-879a-45d7-98e1-bd85d78202b2",
+              "id": "8fc8ee36-47c2-443b-b280-1c9175ab3594",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -114,7 +114,7 @@
         },
         "options": {}
       },
-      "id": "732b36bf-73c0-4ee2-b444-8f7d689307c5",
+      "id": "dc2b1003-88f6-4f1a-9b48-e7541e555825",
       "name": "¿Hay pendientes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -138,7 +138,7 @@
           }
         }
       },
-      "id": "1bb65ecd-5663-4c44-bb51-cfd39f8909a5",
+      "id": "5bdb97f5-180d-430b-aa29-13c9f9834e0d",
       "name": "Probar enlace",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -152,7 +152,7 @@
       "parameters": {
         "jsCode": "\n// Vivo = el formulario todavía se puede llenar (200 con <form>). Respondido, detenido o firma rota (401) = muerto.\nconst filas = $('Elegir').all().map(i => i.json);\nreturn $input.all().map((it, k) => { const r = filas[k]; const cuerpo = String(it.json.data ?? it.json.body ?? '');\n  const vivo = Number(it.json.statusCode) === 200 && /<form/i.test(cuerpo);\n  const rehacer = !vivo && !!r.pedido;\n  return { json: { ...r, vivo, rehacer, salida: vivo ? 0 : rehacer ? 1 : 2 } }; });\n"
       },
-      "id": "4f499505-b793-4bfa-832e-08a84cee633a",
+      "id": "abb72f2e-af91-4e16-b8c4-a0d80278bada",
       "name": "Diagnóstico",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -167,7 +167,7 @@
         "numberOutputs": 3,
         "output": "={{ $json.salida }}"
       },
-      "id": "f06fd925-45e8-4681-84d6-537ed9aebd4d",
+      "id": "1a16ec06-d07c-4b68-adc1-b33a97cfcf6f",
       "name": "Según diagnóstico",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -205,7 +205,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "1b40b9f9-dbe0-4f74-a705-6cacf2fe615a",
+      "id": "10c94d4e-412c-4092-9531-8a08c9dc36da",
       "name": "Reenviar tarjeta",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -225,7 +225,7 @@
       "parameters": {
         "jsCode": "return $input.all().map(i => ({ json: { aprobacion_id: i.json.aprobacion_id, estado: 'anulado', decidido_en: new Date().toISOString(), cambios: 'enlace muerto: rehecha con «reenviar»' } }));"
       },
-      "id": "40e8d0b1-9d2c-46c4-8b1d-ca3d1a493fea",
+      "id": "09f81e3e-7205-4d11-8c16-9186d272c251",
       "name": "Anular",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -263,7 +263,7 @@
         },
         "options": {}
       },
-      "id": "6ad324b3-8567-464c-af59-67c5a73649c0",
+      "id": "c55d4c1a-dbcc-4ff7-9992-563f44fe4515",
       "name": "Anular en la tabla",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -277,7 +277,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "return { json: JSON.parse($json.pedido) };"
       },
-      "id": "8e38f3c8-7cf0-4fdb-8f61-7b0576b48229",
+      "id": "1f3b50e0-7d9d-4d8d-9ccb-9932b1d170d5",
       "name": "Pedido original",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -306,7 +306,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "5fadb116-82d3-4f52-8fe8-f522c19af75c",
+      "id": "a8158620-df94-4ed3-869e-541c2c369c0c",
       "name": "Rehacer aprobación",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -319,7 +319,7 @@
       "parameters": {
         "jsCode": "\nif (!$('Diagnóstico').isExecuted) return [{ json: { texto: 'No hay aprobaciones pendientes' + ($('Inicio').first().json.video_id ? ' de ' + $('Inicio').first().json.video_id : '') + '.' } }];\nconst d = $('Diagnóstico').all().map(i => i.json); const nombre = r => `${r.etapa}${r.video_id ? ' · ' + r.video_id : ''}`;\nconst l = [];\nconst vivos = d.filter(r => r.vivo), rehechos = d.filter(r => r.rehacer), perdidos = d.filter(r => !r.vivo && !r.rehacer);\nif (vivos.length) l.push('Reenviadas con su mismo enlace: ' + vivos.map(r => `${nombre(r)} (${r.url})`).join('; '));\nif (rehechos.length) l.push('Enlace muerto, rehechas con enlace nuevo (llega en un momento): ' + rehechos.map(nombre).join(', '));\nif (perdidos.length) l.push('No se pueden rehacer (su proceso se detuvo; pide «corregir» o crea el video de nuevo): ' + perdidos.map(nombre).join(', '));\nreturn [{ json: { texto: l.join('\\n') } }];\n"
       },
-      "id": "3b0e2a8b-77b5-45b6-8f73-cfbaa88a1901",
+      "id": "c793916e-ea6b-4ea9-9ad5-f2f3d6a6bcf4",
       "name": "Resultado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

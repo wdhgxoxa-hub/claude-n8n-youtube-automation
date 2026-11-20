@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "8a537955-36d9-41ec-9deb-c396ca2ad761",
+      "id": "1732774a-8d2f-452c-9efb-03b7c48be907",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "6329f19e-eb24-44d7-ab41-9141559d0be7",
+      "id": "086f8e61-7e42-407d-9025-b40fcd62008a",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst planos = (e.storyboard?.planos || []).filter(p => p && p.id).map(p => ({ ...p }));\n// Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se\n// mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el\n// storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.\nconst seg = p => Math.max(4, Math.min(8, Math.round(String(p.texto_narrado || '').replace(/\\[[^\\]]*\\]/g, '').split(/\\s+/).filter(Boolean).length / 2.5)));\nconst movimiento = { animados: [] };\nif (e.formato === 'short' && aj.allowClips) {\n  const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;\n  const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);\n  const mueve = p => ['clip', 'archivo'].includes(p.tipo);\n  const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)\n    + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;\n  const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))\n    .filter(x => x.p.tipo === 'imagen').sort((a, b) => b.peso - a.peso);\n  for (const x of orden) {\n    const clips = planos.filter(p => p.tipo === 'clip').length; const cuota = planos.filter(mueve).length / planos.length;\n    if (clips >= topeClips || (cuota >= aj.movimientoMinShort && mueve(planos[0]))) break;\n    const extra = seg(x.p) * aj.costoClipSegUsd;\n    if (costoActual() + extra > presupuesto0 * (aj.avisoGastoPct || 1)) continue;\n    x.p.tipo = 'clip'; x.p.duracion_clip_s = seg(x.p); movimiento.animados.push(x.p.id);\n  }\n  planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = seg(p); });\n  movimiento.cuota = Math.round(planos.filter(mueve).length / Math.max(1, planos.length) * 100) / 100;\n}\nplanos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = 8; });\nconst n = t => planos.filter(p => p.tipo === t).length;\nconst segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.duracion_clip_s, 0);\n// Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.\n// Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.\nconst revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;\nconst costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa\n  + segClips * aj.costoClipSegUsd + n('avatar') * 1 + planos.length * aj.costoVozUsdPorPlano;\nconst faltan = [];\nif (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');\nif (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');\nif (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');\nif (!aj.allowVoz) faltan.push('voz (Gemini TTS)');\nif (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');\nif (!aj.allowMontaje) faltan.push('montaje (Creatomate)');\nconst presupuesto = Number(e.presupuesto_usd) || (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd);\nif (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);\nreturn [{ json: { ...e, planos, movimiento, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,\n  dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];\n"
       },
-      "id": "e0e354dc-92a2-471e-837e-5b28aa5a0046",
+      "id": "54ae661f-22a0-4937-b004-1da6292d115d",
       "name": "Plan de producción",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -68,7 +68,7 @@
           },
           "conditions": [
             {
-              "id": "a5a9329c-aef2-46e5-ae4b-e6e8f92c38ba",
+              "id": "c86c8065-e050-4eb0-a7f4-9fc795014066",
               "leftValue": "={{ $json.faltan.length === 0 }}",
               "rightValue": "",
               "operator": {
@@ -82,7 +82,7 @@
         },
         "options": {}
       },
-      "id": "bee2fdee-e4dc-4d95-ac1e-34f0bbf236bc",
+      "id": "9c497ac5-38ce-4bab-8478-c7c0b2ae8268",
       "name": "¿Todo encendido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -103,7 +103,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "691a0fe5-a6a7-4ae1-b499-d8a385139d21",
+      "id": "23973f20-ddc1-4319-880d-d0edcc216e04",
       "name": "Aviso: falta encender",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -129,7 +129,7 @@
           },
           "conditions": [
             {
-              "id": "9042cbfe-647e-4a49-a6a6-7d3a81fcac64",
+              "id": "6339ab42-e894-40dd-9fc8-0021eefa2d8c",
               "leftValue": "={{ $json.dentro === true }}",
               "rightValue": "",
               "operator": {
@@ -143,7 +143,7 @@
         },
         "options": {}
       },
-      "id": "44eb2280-3eec-493e-9c33-e73d9f448248",
+      "id": "2d04e9ab-5a82-41c2-9646-ca44a9f931ba",
       "name": "¿Dentro del presupuesto?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -164,7 +164,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "6d36c72e-a32c-4e20-b92e-e621473983a1",
+      "id": "928e6a5e-1fc1-4588-8213-15376241d936",
       "name": "Aviso: sobre presupuesto",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -202,7 +202,7 @@
           ]
         }
       },
-      "id": "29e34171-3f4c-4d59-99fb-6e68524bb479",
+      "id": "45fa70e4-6986-45c3-ac1c-29a88aff8e0b",
       "name": "Carpeta del canal: buscar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -231,7 +231,7 @@
           },
           "conditions": [
             {
-              "id": "2b3e92f9-c50a-4de8-b0c0-d650b955f74c",
+              "id": "4394474c-ccfe-4444-b071-351bb02c3048",
               "leftValue": "={{ ($json.files || []).length > 0 }}",
               "rightValue": "",
               "operator": {
@@ -245,7 +245,7 @@
         },
         "options": {}
       },
-      "id": "c8dca88b-4e48-4e9b-88d7-b31ac39e6c82",
+      "id": "d13ade6f-16d1-4214-89a4-ed1659253f7a",
       "name": "¿Existe la carpeta del canal?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -267,7 +267,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: $('Plan de producción').first().json.canal_id, mimeType: 'application/vnd.google-apps.folder', parents: [$('Leer ajustes').first().json.driveCarpetaRaizId] } }}"
       },
-      "id": "f743382e-816f-4c07-9d6b-0dfc57f3da8c",
+      "id": "18f5e2c0-66fe-4f02-bbae-2e790ee11328",
       "name": "Carpeta del canal: crear",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -295,7 +295,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: $('Plan de producción').first().json.video_id + ' · ' + String($('Plan de producción').first().json.tema || '').slice(0, 60) + ' · v' + ($('Plan de producción').first().json.version || 1), mimeType: 'application/vnd.google-apps.folder', parents: [($('Carpeta del canal: crear').isExecuted ? $('Carpeta del canal: crear').first().json.id : $('Carpeta del canal: buscar').first().json.files[0].id)] } }}"
       },
-      "id": "2c6a20a1-1411-4fd2-8ac7-99c693d37bf8",
+      "id": "b5a161b0-327a-4a64-a30b-3aaff9f1ecad",
       "name": "Carpeta del video",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -314,7 +314,7 @@
       "parameters": {
         "jsCode": "\n// Guion, storyboard y biblia quedan junto al video: cualquier versión se puede rehacer o auditar.\nconst e = $('Plan de producción').first().json;\nconst json = (nombre, obj) => ({ json: { nombre }, binary: { archivo: { data: Buffer.from(JSON.stringify(obj, null, 2)).toString('base64'), mimeType: 'application/json', fileName: nombre } } });\nreturn [json('storyboard.json', e.storyboard || {}), json('biblia.json', e.biblia || {}), json('guion.json', e.guion || {})];\n"
       },
-      "id": "72df0629-9c8b-43de-9c16-9f2ad60e4547",
+      "id": "cc51cd6a-339b-4904-9e89-03dffe140954",
       "name": "Archivos del encargo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -345,7 +345,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "archivo"
       },
-      "id": "29baaebb-a3c7-48f5-b459-71d6648671a9",
+      "id": "8c175c35-1f66-4c2a-a36d-8ed80cd1b030",
       "name": "Encargo: subir",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -392,7 +392,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: $('Archivos del encargo').item.json.nombre } }}"
       },
-      "id": "1bafcf48-7a5e-484c-84cc-e9626f127e82",
+      "id": "015c9d5a-759e-487e-b01d-d7273377cc18",
       "name": "Encargo: nombrar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -414,7 +414,7 @@
       "parameters": {
         "jsCode": "return [{ json: { drive_carpeta: 'https://drive.google.com/drive/folders/' + $('Carpeta del video').first().json.id, etapa: 'produccion', estado: 'en_proceso', error: '' } }];"
       },
-      "id": "43848b6a-34b7-4d22-a8cd-63b0dd8b80bc",
+      "id": "e0488684-057a-4443-ae39-bc18915c113c",
       "name": "Carpeta en la tabla",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -452,7 +452,7 @@
         },
         "options": {}
       },
-      "id": "fa95cd69-9abb-4a46-8848-b1aeda31f1ba",
+      "id": "d7c7edd4-9cf8-4ab4-9997-fa5afae1f46d",
       "name": "Video en producción",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -465,7 +465,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Plan de producción').first().json; const b = e.biblia || {};\nconst estilo = [b.estilo_visual?.descripcion, b.estilo_visual?.luz, b.estilo_visual?.lente, b.estilo_visual?.textura,\n  (b.estilo_visual?.paleta_hex || []).length ? 'paleta ' + b.estilo_visual.paleta_hex.join(' ') : ''].filter(Boolean).join('. ');\nconst refs = id => [...(b.personajes || []), ...(b.escenarios || [])].filter(x => (id || []).includes(x.id)).flatMap(x => x.referencias_urls || []).slice(0, 6);\n// Sin prompt_imagen (planos de archivo): la escena sale de lo que dice la voz y de la búsqueda, nunca solo del estilo del canal.\nconst limpio = t => String(t || '').replace(/\\[[^\\]]*\\]/g, '').replace(/\\s+/g, ' ').trim();\nconst escena = p => limpio(p.prompt_imagen) || [p.busqueda_archivo ? 'Escena: ' + p.busqueda_archivo : '', 'Lo que narra la voz: ' + limpio(p.texto_narrado)].filter(Boolean).join('. ');\nreturn e.planos.map(p => ({ json: { video_id: e.video_id, plano: p, intento: 1,\n  prompt: `${escena(p)}. Encuadre ${p.encuadre}, ángulo ${p.angulo || 'a la altura de los ojos'}, luz ${p.luz}. Estilo: ${estilo}. Sin texto, letras, cifras ni logos dentro de la imagen: las cifras las pone el montaje encima.`,\n  referencias: refs([...(p.personajes || []), p.escenario]),\n  salida: p.tipo === 'avatar' ? 1 : (p.tipo === 'archivo' && $('Leer ajustes').first().json.allowArchivo) ? 2 : 0 } }));\n"
       },
-      "id": "66bc3158-c74b-445f-b503-1535604e3c5c",
+      "id": "0ff81586-7005-4416-9f2b-3ca36cdaf966",
       "name": "Un ítem por plano",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -480,7 +480,7 @@
         "numberOutputs": 3,
         "output": "={{ $json.salida }}"
       },
-      "id": "faaa6666-6ae2-4548-9f63-521ef8cdab95",
+      "id": "9ae696fe-aa86-44d8-ab2c-523644ae5d18",
       "name": "Según tipo de plano",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -505,7 +505,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "14dfedf3-ff95-469c-b40f-bb3053a02611",
+      "id": "4256a1d8-8002-4f7c-b02d-ed0e219546e4",
       "name": "Buscar en Pexels",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -529,7 +529,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst prev = $('Un ítem por plano').item.json; const vertical = $('Plan de producción').first().json.formato === 'short';\nconst ok = f => f.link && f.width && f.height && (vertical ? f.height > f.width : f.width > f.height) && Math.max(f.width, f.height) >= 1280;\n// Hasta 3 videos distintos (el mejor archivo de cada uno) con su miniatura: el revisor visual elige o los rechaza todos.\nconst candidatos = ($json.videos || []).filter(x => x.duration >= 4).map(x => {\n  const f = (x.video_files || []).filter(ok).sort((a, b) => Math.abs(Math.max(a.width, a.height) - 1920) - Math.abs(Math.max(b.width, b.height) - 1920))[0];\n  return f ? { url: f.link, thumb: x.image || (x.video_pictures || [])[0]?.picture || '', fuente: { banco: 'Pexels', autor: x.user?.name, pagina: x.url } } : null;\n}).filter(c => c && c.thumb).slice(0, 3);\nreturn { json: { ...prev, candidatos } };\n"
       },
-      "id": "333a05a7-2384-41cd-8d8d-69ab6206a0a8",
+      "id": "45268c30-a96e-4aec-9b3c-194efee31d75",
       "name": "Elegir de Pexels",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -549,7 +549,7 @@
           },
           "conditions": [
             {
-              "id": "0f8dd71e-734b-4174-a338-0f991e8f7197",
+              "id": "d6804060-16f3-4e8c-9f93-1543e2d0b03c",
               "leftValue": "={{ ($json.candidatos || []).length > 0 }}",
               "rightValue": "",
               "operator": {
@@ -563,7 +563,7 @@
         },
         "options": {}
       },
-      "id": "46babdbf-1cfb-43d2-8d7d-ce13909febe5",
+      "id": "e5e2d3a5-6a48-4d5c-b0a2-78dab3ea8992",
       "name": "¿Hay en Pexels?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -588,7 +588,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpQueryAuth"
       },
-      "id": "4295dfe9-4fba-4a60-9760-c9ebdb2eccb5",
+      "id": "276f5f29-7285-492c-b4f4-e3aac776b3ad",
       "name": "Buscar en Pixabay",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -612,7 +612,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst prev = $('Un ítem por plano').item.json; const vertical = $('Plan de producción').first().json.formato === 'short';\nconst candidatos = ($json.hits || []).filter(h => h.duration >= 4).map(h => ({ h, f: h.videos?.large?.url ? h.videos.large : h.videos?.medium }))\n  .filter(x => x.f?.url && (vertical ? x.f.height > x.f.width : x.f.width > x.f.height))\n  .map(x => ({ url: x.f.url, thumb: x.f.thumbnail || x.h.videos?.medium?.thumbnail || '', fuente: { banco: 'Pixabay', autor: x.h.user, pagina: x.h.pageURL } }))\n  .filter(c => c.thumb).slice(0, 3);\nreturn { json: { ...prev, candidatos } };\n"
       },
-      "id": "af9dfe55-88bf-47b3-8f8e-9738249ede05",
+      "id": "b45ecbd1-16ea-4f6d-a76f-58f1408d5259",
       "name": "Elegir de Pixabay",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -632,7 +632,7 @@
           },
           "conditions": [
             {
-              "id": "6b85d557-715e-459e-9ace-f52f2b9038c9",
+              "id": "8218d0ac-c4df-4380-9b44-fdfa38338d04",
               "leftValue": "={{ ($json.candidatos || []).length > 0 }}",
               "rightValue": "",
               "operator": {
@@ -646,7 +646,7 @@
         },
         "options": {}
       },
-      "id": "d9dcdaf1-a06f-48c5-b29e-37b596421369",
+      "id": "dbb362ee-840a-435d-bbda-ed3adb8a4cf7",
       "name": "¿Hay en Pixabay?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -660,7 +660,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "return { json: { ...$json, revisar: $('Leer ajustes').first().json.allowRevisionVisual === true } };"
       },
-      "id": "8acf6dfd-7c3e-489a-9ae4-9553b7405fb1",
+      "id": "efe186c1-023d-47e7-9173-1f3949595175",
       "name": "Pedido de revisión de archivo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -680,7 +680,7 @@
           },
           "conditions": [
             {
-              "id": "f89d7c3e-e63b-4311-b4d7-090f57cfc71c",
+              "id": "262a01b3-13f7-40cc-a8d3-0374db99c82e",
               "leftValue": "={{ $json.revisar === true }}",
               "rightValue": "",
               "operator": {
@@ -694,7 +694,7 @@
         },
         "options": {}
       },
-      "id": "ba424f5b-08b5-42a4-8521-061eebca26bf",
+      "id": "d6c69b88-be2b-46a5-bffb-933ee1679fe8",
       "name": "¿Revisar archivo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -722,7 +722,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: \"Eres el revisor visual de una fábrica de videos. Decides si una imagen o un clip sirve para la escena. Cada repetición cuesta dinero: repite solo lo que de verdad no sirve. Las cifras y los textos de pantalla los pone el montaje encima. Nunca exijas texto ni cifras dentro de la imagen ni pidas añadirlos; si corriges un prompt, debe seguir diciendo «sin texto, cifras ni logos». Rechaza si: (1) no muestra lo que dice la voz en esa escena (otro lugar, otro negocio, otro objeto); (2) en una imagen generada aparece texto, letras, marcas de agua o logos; (3) muestra algo que contradice el tema (p. ej. criptomonedas o dólares cuando se habla de soles; comida de otro país cuando se habla de un plato peruano); (4) es de mala calidad (borroso, deformado, manos o rostros rotos); (5) con referencias: el personaje no coincide en rostro, vestuario o paleta. Video real de archivo: tolera letreros o logos pequeños de fondo; rechaza solo si una marca o un texto es protagonista o se lee en primer plano. Un gráfico sencillo sin etiquetas (monedas, barras, una moneda partida) es válido como apoyo de una cifra hablada. Aprueba si la escena se entiende con la voz y el texto de pantalla y encaja con lo narrado, aunque no sea perfecta.\" + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + '. Búsqueda usada: ' + ($json.plano.busqueda_archivo || '') + '. Es video real de archivo: tolera letreros o logos pequeños de fondo (recháza solo si una marca o un texto es protagonista) y no exijas cifras: el montaje las pone encima. Te muestro ' + $json.candidatos.length + ' miniaturas de clips de archivo, en orden (1, 2, 3). Elige el número del mejor que sirva para esta escena o -1 si ninguno sirve. Responde JSON {\\\"elegido\\\": n, \\\"motivo\\\": \\\"\\\"}.' }, ...$json.candidatos.map(c => ({ type: 'input_image', image_url: c.thumb }))] }] } }}"
       },
-      "id": "5435458d-f910-4c95-b744-9d92378e3d48",
+      "id": "a37b6bbd-bfd3-4d0c-b809-b7b5743dad44",
       "name": "Revisar archivo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -746,7 +746,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\n// Sin revisión: el primero. Con revisión: el que eligió el revisor visual; si ninguno sirve (o falló), se genera la imagen.\nconst p = $('Pedido de revisión de archivo').item.json; const c = p.candidatos || [];\nlet n = 1, motivo = '';\nif (p.revisar) { try { const v = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); n = Number(v.elegido); motivo = String(v.motivo || ''); } catch (e) { n = -1; motivo = 'revisión ilegible'; } }\nconst elegido = Number.isInteger(n) && n >= 1 && n <= c.length ? c[n - 1] : null;\nreturn { json: { ...p, url: elegido?.url || '', fuente: elegido?.fuente || null, nota_archivo: elegido ? '' : ('archivo rechazado: ' + (motivo || 'ninguno sirve')).slice(0, 200) } };\n"
       },
-      "id": "bcde13c2-bf00-453b-baa4-cd0bbca766df",
+      "id": "5491d9f3-90ce-41e0-a94f-20656a63babc",
       "name": "Archivo elegido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -766,7 +766,7 @@
           },
           "conditions": [
             {
-              "id": "19cbeafb-7d56-4f63-be40-a97d27e55662",
+              "id": "fb95d510-ca8a-4b0c-8539-3b5333bf1b4b",
               "leftValue": "={{ !!$json.url }}",
               "rightValue": "",
               "operator": {
@@ -780,7 +780,7 @@
         },
         "options": {}
       },
-      "id": "8c865ad2-4ea3-48a2-a4a5-2d25b8af3b63",
+      "id": "df49823c-4d81-474a-899d-1f1104c84556",
       "name": "¿Sirve el archivo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -794,7 +794,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: { ...$json.plano, tipo: 'archivo' }, fuente: $json.fuente, intento: 0 } };"
       },
-      "id": "bfb2c85b-b34e-493c-aab8-e9b5486bafa4",
+      "id": "76a21898-6a4b-44f7-b50f-102171cd3ed0",
       "name": "Archivo aprobado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -808,7 +808,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const p = $('Un ítem por plano').item.json; return { json: { ...p, plano: { ...p.plano, tipo: 'imagen' } } };"
       },
-      "id": "6db7e006-f1e2-46c4-bf25-9f7bb31f4921",
+      "id": "fbeca410-5d46-4625-93d6-0f8ea0037424",
       "name": "Sin archivo: generar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -822,7 +822,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "return { json: { ...$json, plano: { ...$json.plano, tipo: $json.plano.tipo === 'archivo' ? 'imagen' : $json.plano.tipo } } };"
       },
-      "id": "bb78c43a-5e5d-48df-9464-468dfd506a5b",
+      "id": "95617a1c-278f-497b-a8eb-39f2c530217f",
       "name": "Pedido de imagen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -850,7 +850,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: $('Plan de producción').first().json.formato === 'short' ? '1024x1536' : '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}"
       },
-      "id": "ed81d218-97eb-4736-b057-e5dcf3611a22",
+      "id": "dd9270b0-d325-4c90-a85b-5f26bc51494f",
       "name": "Generar imagen",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -873,7 +873,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst pedido = $('Pedido de imagen').item.json;   // primer intento o repetición\nif (!out?.result) throw new Error('Sin imagen en la respuesta para ' + pedido.plano?.id);\nreturn { json: pedido,\n  binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: pedido.plano.id + '.png' } } };\n"
       },
-      "id": "73b5a35a-331b-4750-bd94-3d4f4b61749a",
+      "id": "7141ff66-b963-4e35-a310-f21bdffd24ec",
       "name": "Extraer imagen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -893,7 +893,7 @@
           },
           "conditions": [
             {
-              "id": "718c7d72-8f80-472a-a232-1fc3b76c30c9",
+              "id": "4705afb0-c076-455e-96d6-e720b46b6ec4",
               "leftValue": "={{ $json.plano.tipo === 'clip' }}",
               "rightValue": "",
               "operator": {
@@ -907,7 +907,7 @@
         },
         "options": {}
       },
-      "id": "8e150aa1-3d1e-4da2-b05b-4f262f37baf9",
+      "id": "65043efe-f4e4-4d96-999c-b459fea23373",
       "name": "¿Es clip?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -935,7 +935,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloClip, store: false, input: [{ type: 'image', data: $('Generar imagen').item.json.output.find(o => o.type === 'image_generation_call').result, mime_type: 'image/png' }, { type: 'text', text: '<FIRST_FRAME> [0-' + ($json.plano.duracion_clip_s || 8) + 's] ' + ($json.plano.prompt_movimiento || $json.plano.movimiento || 'movimiento de cámara lento') + '. ' + $json.plano.prompt_imagen + '. Use this image as the starting frame. Sin texto ni logos. Sin diálogo.' }], generation_config: { video_config: { task: 'image_to_video' } }, response_format: { type: 'video', aspect_ratio: $('Plan de producción').first().json.formato === 'short' ? '9:16' : '16:9', resolution: '720p' } } }}"
       },
-      "id": "9e67e247-d102-4811-845c-858a23301a0b",
+      "id": "59799d49-100d-4999-993d-bb5f8ad9865e",
       "name": "Animar (Gemini Omni)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -958,7 +958,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\n// Gemini Omni entrega el clip en base64 o, si pesa más de 4 MB, como URI que hay que descargar con la clave.\nconst prev = $('Extraer imagen').item.json;\nconst v = ($json.steps || []).filter(s => s.type === 'model_output').flatMap(s => s.content || []).find(c => c.type === 'video');\nif (v?.data) return { json: { ...prev, clip_uri: '' }, binary: { imagen: { data: v.data, mimeType: v.mime_type || 'video/mp4', fileName: prev.plano.id + '.mp4' } } };\nif (v?.uri) return { json: { ...prev, clip_uri: v.uri } };\nthrow new Error('Sin video en la respuesta de Gemini Omni para ' + prev.plano?.id);\n"
       },
-      "id": "56f3e06e-3772-4c4f-8f6c-2fd33ceff114",
+      "id": "47daaed2-1fa0-420f-a9e4-8fc5edc107fa",
       "name": "Extraer clip",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -978,7 +978,7 @@
           },
           "conditions": [
             {
-              "id": "8c1ebaf2-379c-4652-afe0-284fd6eff1e1",
+              "id": "502e9d51-531d-4e38-b3fb-b86026f55a47",
               "leftValue": "={{ !!$json.clip_uri }}",
               "rightValue": "",
               "operator": {
@@ -992,7 +992,7 @@
         },
         "options": {}
       },
-      "id": "a3526142-064b-4d51-a91b-fad27446790a",
+      "id": "fee8ca8b-2c67-4f42-af08-2fba457e920b",
       "name": "¿Clip por URI?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1017,7 +1017,7 @@
           }
         }
       },
-      "id": "2e119600-046f-45b7-beee-d4a692a3b896",
+      "id": "7f6b86e2-99f9-48b0-abfb-086807d8c39a",
       "name": "Descargar clip",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1040,7 +1040,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const prev = $('Extraer imagen').item.json; const b = $binary.imagen; return { json: { ...prev, clip_uri: '' }, binary: { imagen: { ...b, mimeType: 'video/mp4', fileName: prev.plano.id + '.mp4' } } };"
       },
-      "id": "6526be97-507d-414f-b345-ef9d5c92ba90",
+      "id": "c67cde21-58fa-4cc9-a13d-292fec8d3455",
       "name": "Clip descargado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1077,7 +1077,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "imagen"
       },
-      "id": "eca52c96-7c37-446b-81ee-102a2a4ef494",
+      "id": "6526263b-a145-428b-aedd-0fea7231721f",
       "name": "Subir a Drive",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1127,7 +1127,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: $('Extraer imagen').item.json.plano.id + '-i' + $('Extraer imagen').item.json.intento + ($('Extraer imagen').item.json.plano.tipo === 'clip' ? '.mp4' : '.png') } }}"
       },
-      "id": "0aa25a86-4424-4f56-97b9-62cad5c0ffd6",
+      "id": "547d1464-3085-4d3a-8471-d19de445ad80",
       "name": "Nombrar en Drive",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1164,7 +1164,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "00c097c9-5c15-474d-81d9-60b92393ee7b",
+      "id": "32c8360e-3814-4289-a763-2da3d75691cf",
       "name": "Compartir enlace",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1187,7 +1187,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst prev = $('Extraer imagen').item.json; const id = $('Subir a Drive').item.json.id;\nreturn { json: { ...prev, url: 'https://drive.google.com/uc?export=download&id=' + id } };\n"
       },
-      "id": "9c46a9cf-8989-488e-93fa-ddec6f826c89",
+      "id": "02883e00-d543-491b-851a-93daef5ae1cb",
       "name": "URL del plano",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1207,7 +1207,7 @@
           },
           "conditions": [
             {
-              "id": "1b02f0e0-3807-45c6-b409-be7ca7cd75b9",
+              "id": "be920cc8-4898-43b6-9ecf-d8c6addeb4d3",
               "leftValue": "={{ $('Leer ajustes').first().json.allowRevisionVisual === true && $json.plano.tipo !== 'clip' }}",
               "rightValue": "",
               "operator": {
@@ -1221,7 +1221,7 @@
         },
         "options": {}
       },
-      "id": "1115fc9e-f165-44bc-a4d2-4ab80f38bfe2",
+      "id": "91f7cd94-6a84-47ca-989d-7823223b1948",
       "name": "¿Revisión visual activa?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1249,7 +1249,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: \"Eres el revisor visual de una fábrica de videos. Decides si una imagen o un clip sirve para la escena. Cada repetición cuesta dinero: repite solo lo que de verdad no sirve. Las cifras y los textos de pantalla los pone el montaje encima. Nunca exijas texto ni cifras dentro de la imagen ni pidas añadirlos; si corriges un prompt, debe seguir diciendo «sin texto, cifras ni logos». Rechaza si: (1) no muestra lo que dice la voz en esa escena (otro lugar, otro negocio, otro objeto); (2) en una imagen generada aparece texto, letras, marcas de agua o logos; (3) muestra algo que contradice el tema (p. ej. criptomonedas o dólares cuando se habla de soles; comida de otro país cuando se habla de un plato peruano); (4) es de mala calidad (borroso, deformado, manos o rostros rotos); (5) con referencias: el personaje no coincide en rostro, vestuario o paleta. Video real de archivo: tolera letreros o logos pequeños de fondo; rechaza solo si una marca o un texto es protagonista o se lee en primer plano. Un gráfico sencillo sin etiquetas (monedas, barras, una moneda partida) es válido como apoyo de una cifra hablada. Aprueba si la escena se entiende con la voz y el texto de pantalla y encaja con lo narrado, aunque no sea perfecta.\" + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + (($json.plano.texto_pantalla) ? ' · El montaje pondrá encima el texto «' + $json.plano.texto_pantalla + '»: NO lo exijas dentro de la imagen; la imagen debe ir sin texto.' : '') + '. La primera imagen es la generada; las siguientes, las referencias. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}"
       },
-      "id": "8974ec50-2536-4475-9462-7791ec7e9554",
+      "id": "a8e93b60-95a8-456a-ae6d-980eff3e0538",
       "name": "Revisar plano",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1271,7 +1271,7 @@
       "parameters": {
         "jsCode": "\n// Repetir una imagen cuesta: solo se repite si cabe en el tope del video, contando lo ya gastado en TODAS las pasadas\n// (imágenes y revisiones) y reservando lo que falta generar. Si no cabe, se acepta y queda anotado.\nconst aj = $('Leer ajustes').first().json; const e = $('Plan de producción').first().json; const max = aj.maxIntentosPlano;\nconst pasadas = n => { const l = []; if (!$(n).isExecuted) return l; for (let k = 0; k < 500; k++) { let it; try { it = $(n).all(0, k); } catch (x) { break; } if (!it || !it.length) break; l.push(...it); } return l; };\nconst hechas = pasadas('Extraer imagen'); const ya = new Set(hechas.map(i => i.json.plano?.id));\nconst revisiones = pasadas('Revisar plano').length + pasadas('Revisar archivo').length;\nconst unidad = aj.costoImagenUsd + aj.costoRevisionUsd;\nconst faltan = (e.planos || []).filter(p => ['imagen', 'clip'].includes(p.tipo) && !ya.has(p.id)).length;\nconst gastado = hechas.length * aj.costoImagenUsd + revisiones * aj.costoRevisionUsd;\n// Tope para repetir: el umbral del aviso de gasto, para que las repeticiones no frenen el video pidiendo permiso.\nlet cupo = Math.floor((e.presupuesto * (aj.avisoGastoPct || 1) - gastado - faltan * unidad - (e.planos || []).length * aj.costoVozUsdPorPlano) / unidad + 1e-9);\nreturn $input.all().map((it, i) => {\n  const prev = $('URL del plano').itemMatching(i).json; let v = { aprobado: true };\n  try { v = JSON.parse((it.json.output || []).flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '{}'); } catch (x) { v = { aprobado: false, problemas: ['respuesta ilegible'] }; }\n  const quiere = v.aprobado === false && prev.intento < max;\n  const repetir = quiere && cupo > 0; if (repetir) cupo--;\n  const prompt = repetir && v.prompt_corregido ? v.prompt_corregido + '. Sin texto, letras, cifras ni logos dentro de la imagen.' : prev.prompt;\n  const problemas = [...(v.problemas || []), ...(quiere && !repetir ? ['aceptado sin repetir: no cabe en el tope de gasto'] : [])];\n  return { json: { ...prev, revisiones: (prev.revisiones || 0) + 1, veredicto: { ...v, problemas }, repetir, intento: prev.intento + (repetir ? 1 : 0), prompt } };\n});\n"
       },
-      "id": "52e89e93-587f-4751-9632-a7de48ee3cd6",
+      "id": "fc8ded95-fa1e-4cd8-969a-612ab08477b6",
       "name": "Veredicto",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1291,7 +1291,7 @@
           },
           "conditions": [
             {
-              "id": "61b34460-9bae-482f-8ce4-63ff055e6f7a",
+              "id": "737252f7-7a95-44c1-9854-2824ff6cd949",
               "leftValue": "={{ $json.repetir === true }}",
               "rightValue": "",
               "operator": {
@@ -1305,7 +1305,7 @@
         },
         "options": {}
       },
-      "id": "7652fe13-d050-4596-b1c9-a62d839d2c08",
+      "id": "3539bb9f-3464-4916-9798-788880081293",
       "name": "¿Repetir plano?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1319,7 +1319,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano, intento: $json.intento, revisiones: $json.revisiones || 0, nota_revision: ($json.veredicto?.problemas || []).join('; ') } };"
       },
-      "id": "8d57b21c-fb7e-4c87-b732-5688c81eb480",
+      "id": "99ea0cba-aa42-4794-8168-481f0a8007b0",
       "name": "Plano aprobado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1333,7 +1333,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, intento: 0, nota_revision: 'avatar: falta decidir HeyGen' } };"
       },
-      "id": "f30a901e-f79f-4dd6-bcc1-23db1ce4933d",
+      "id": "9979891a-385a-4539-97f2-d19ed34e355f",
       "name": "Avatar pendiente",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1346,7 +1346,7 @@
       "parameters": {
         "jsCode": "\nconst plan = $('Plan de producción').first().json.planos || [];\nconst ids = plan.map(p => p.id);\nconst listos = new Map();\nfor (const fuente of ['Archivo aprobado', 'Plano aprobado', 'Avatar pendiente']) {\n  if (!$(fuente).isExecuted) continue;\n  for (let pasada = 0; pasada < 500; pasada++) {\n    let items; try { items = $(fuente).all(0, pasada); } catch (e) { break; }\n    if (!items || !items.length) break;\n    for (const it of items) if (it.json.plano_id) listos.set(it.json.plano_id, it.json);\n  }\n}\nif (!ids.length || ids.some(id => !listos.has(id))) return [];   // aún faltan planos: esta llegada no sigue\nreturn [{ json: { planos: ids.map(id => listos.get(id)) } }];\n"
       },
-      "id": "7a79d365-b382-4e22-90e2-cdc1ba3cd8fb",
+      "id": "503afba3-0e9a-4df0-be71-680bd46fde61",
       "name": "Juntar planos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1359,7 +1359,7 @@
       "parameters": {
         "jsCode": "\nconst aj = $('Leer ajustes').first().json;\nreturn $('Juntar planos').first().json.planos.map(p => ({ json: { video_id: p.video_id, plano_id: p.plano_id, tipo: p.plano?.tipo || '',\n  archivo_url: p.url || '', estado: p.url ? 'listo' : 'pendiente', intentos: p.intento || 0, nota_revision: String(p.nota_revision || '').slice(0, 500),\n  costo_usd: Math.round(((['imagen', 'clip'].includes(p.plano?.tipo) ? (p.intento || 1) * aj.costoImagenUsd : 0)\n    + (p.plano?.tipo === 'clip' ? (p.plano.duracion_clip_s || 8) * aj.costoClipSegUsd : 0) + (p.revisiones || 0) * aj.costoRevisionUsd) * 1000) / 1000 } }));\n"
       },
-      "id": "6e6d4716-bd37-43ab-b96f-8c8e22681ebc",
+      "id": "4f7bb131-b8c6-45b5-aa3c-bd38484b0c8d",
       "name": "Filas de planos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1387,7 +1387,7 @@
         },
         "options": {}
       },
-      "id": "4b3df646-3646-4cbc-81ce-e0b5a9d9a2a8",
+      "id": "41a0bd27-f9fc-4fd4-bfb8-e942dc19cbfd",
       "name": "Guardar planos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1400,7 +1400,7 @@
       "parameters": {
         "jsCode": "\n// Lo gastado hasta aquí, contado plano por plano (incluye repeticiones y revisiones).\nconst aj = $('Leer ajustes').first().json; const e = $('Plan de producción').first().json;\nconst planos = $('Juntar planos').first().json.planos;\nconst imagenes = planos.filter(p => ['imagen', 'clip'].includes(p.plano?.tipo)).reduce((a, p) => a + (p.intento || 1), 0);\nconst clips = planos.filter(p => p.plano?.tipo === 'clip').length; const segClips = planos.filter(p => p.plano?.tipo === 'clip').reduce((a, p) => a + (p.plano.duracion_clip_s || 8), 0);\nconst revisiones = planos.reduce((a, p) => a + (p.revisiones || 0), 0);\nconst usd = imagenes * aj.costoImagenUsd + segClips * aj.costoClipSegUsd + revisiones * aj.costoRevisionUsd;\nconst pct = usd / (e.presupuesto || 1);\nreturn [{ json: { imagenes, clips, seg_clips: segClips, revisiones, usd: Math.round(usd * 100) / 100, pct: Math.round(pct * 100) / 100, aviso: pct >= aj.avisoGastoPct } }];\n"
       },
-      "id": "00d7f595-94ac-42d2-b491-c74a27a54e8f",
+      "id": "d9b6d155-ceb9-440e-b426-7bf851293ef6",
       "name": "Gasto de planos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1420,7 +1420,7 @@
           },
           "conditions": [
             {
-              "id": "90b9492c-8cf7-45d3-8a43-14bb81bde54b",
+              "id": "d7d73955-d47b-49a3-a8af-430b64430a3a",
               "leftValue": "={{ $json.aviso === true }}",
               "rightValue": "",
               "operator": {
@@ -1434,7 +1434,7 @@
         },
         "options": {}
       },
-      "id": "ffbe1fcf-5b32-43d5-9cc1-309e23aa4635",
+      "id": "e001c8eb-8f38-4e7a-952e-9eb1c3b17fa8",
       "name": "¿Pasa el aviso de gasto?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1447,7 +1447,7 @@
       "parameters": {
         "jsCode": "const ids = $('Plan de producción').first().json;\nreturn [{ json: { aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: 'gasto',\n  video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),\n  resumen: String('El video ' + $('Plan de producción').first().json.video_id + ' ya gastó ~US$' + $('Gasto de planos').first().json.usd + ' (' + Math.round($('Gasto de planos').first().json.pct * 100) + ' % del tope de US$' + $('Plan de producción').first().json.presupuesto + ') solo en imágenes y clips. ¿Sigo con voz, música y montaje?' || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '',\n  aviso: String('💸 Permiso de gasto · ' + $('Plan de producción').first().json.video_id + '\\nYa gastó ~US$' + $('Gasto de planos').first().json.usd + ' en imágenes (' + Math.round($('Gasto de planos').first().json.pct * 100) + ' % del tope de US$' + $('Plan de producción').first().json.presupuesto + ').\\n\\n¿Sigo con voz, música y montaje? Ábrelo para decidir.' || '').slice(0, 1500), pedido: String('' || '') } }];"
       },
-      "id": "b689f28b-06ae-4386-958a-0c6ea7e54b94",
+      "id": "b1dd16e8-bf75-4d24-9663-e1adaa2714cb",
       "name": "Permiso de gasto · preparar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1475,7 +1475,7 @@
         },
         "options": {}
       },
-      "id": "988ad234-958f-49c5-bc46-cb308adae891",
+      "id": "f2094f76-21ca-4455-8ffd-fe6d85be6bfa",
       "name": "Permiso de gasto · registrar",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1513,7 +1513,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "12e1a0bc-a2e3-4859-8f99-6349f7057e66",
+      "id": "3a9868ab-657d-4775-8e4f-657336f6b396",
       "name": "Permiso de gasto · avisar",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1555,7 +1555,7 @@
         },
         "options": {}
       },
-      "id": "182293e8-ae8c-44e9-aaca-d595f8e26165",
+      "id": "348445b5-6648-4bcd-b0e8-be46cf350677",
       "name": "Permiso de gasto · esperar",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -1563,13 +1563,13 @@
         12980,
         0
       ],
-      "webhookId": "5088b89b-0bcc-4634-8bb4-31d2b21811de"
+      "webhookId": "ebd94b17-ecb3-45de-bde2-198890e4f1b5"
     },
     {
       "parameters": {
         "jsCode": "const mapa = {\"Seguir\": \"seguir\", \"Detener\": \"detenido\"}; const d = $json['Decisión'];\nconst estado = mapa[d] || 'detenido';\nreturn [{ json: { aprobacion_id: $('Permiso de gasto · preparar').first().json.aprobacion_id, estado, cambios: String($json['Cambios'] || '').slice(0, 4000), decidido_en: new Date().toISOString() } }];"
       },
-      "id": "b1719e2a-fa6a-418d-bf27-8a41fb47fcb4",
+      "id": "0aad5572-dc58-4ddb-8f2c-0bb7a3ce4556",
       "name": "Permiso de gasto · decisión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1607,7 +1607,7 @@
         },
         "options": {}
       },
-      "id": "f874b005-3842-44ee-87d2-4bf23f9e6ba0",
+      "id": "06696b32-a2d0-49b4-b9d0-d5be2a506063",
       "name": "Permiso de gasto · cerrar",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1627,7 +1627,7 @@
           },
           "conditions": [
             {
-              "id": "e69d1a19-06f0-4aa6-a394-af5b2ad284cd",
+              "id": "f4f91ce7-1f05-47fe-aa76-b12cda3347ff",
               "leftValue": "={{ $('Permiso de gasto · decisión').first().json.estado === 'seguir' }}",
               "rightValue": "",
               "operator": {
@@ -1641,7 +1641,7 @@
         },
         "options": {}
       },
-      "id": "809be055-2397-4519-92df-7b13a40bf2a8",
+      "id": "c0b12d7b-0de0-4304-ac24-d97a50d654ad",
       "name": "¿Sigo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1654,7 +1654,7 @@
       "parameters": {
         "jsCode": "return [{ json: { etapa: 'produccion', estado: 'detenido', error: 'detenido por el operador al pasar el aviso de gasto' } }];"
       },
-      "id": "5df952c9-1d06-4cd8-9fb0-d8a768a975f8",
+      "id": "f2ea6d3e-becf-4521-b507-a3715f4745f1",
       "name": "Producción detenida",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1692,7 +1692,7 @@
         },
         "options": {}
       },
-      "id": "39de87a8-f7c1-4202-9277-e7d3fa6fd0d0",
+      "id": "178bfefd-328b-45da-90a9-2adee99ecee2",
       "name": "Video detenido",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1705,7 +1705,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Plan de producción').first().json;\nreturn [{ json: { video_id: e.video_id, biblia: e.biblia || {}, musica: e.storyboard?.musica || {}, efectos: e.storyboard?.efectos || [],\n  carpeta: $('Carpeta del video').first().json.id, planos: $('Juntar planos').first().json.planos } }];\n"
       },
-      "id": "f95b1125-274e-4613-8662-2ee7ae25bfe0",
+      "id": "62c4d0b4-37da-4d59-8e4f-a1900b91430b",
       "name": "Encargo de sonido",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1734,7 +1734,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "d917fcf9-7997-4909-817d-15b5e56918fd",
+      "id": "f8763282-1df6-4a6e-82d8-25d633977af8",
       "name": "Sonido y emoción",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -1747,7 +1747,7 @@
       "parameters": {
         "jsCode": "\n// componer(): arma la composición de Creatomate. La usan el video principal y los cortes verticales.\n// Cada escena dura lo que su voz (+ un respiro). Encima: subtítulos (Shorts, cortes o si la biblia lo pide), título de\n// capítulo en los largos y efectos del storyboard; debajo, la música hasta el final. Estilo desde biblia.montaje.\nfunction componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {\n  const m = plan.biblia?.montaje || {};\n  const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));\n  const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);\n  const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));\n  const listos = planos.filter(p => p.url && voces[p.plano_id]?.url && orden.includes(p.plano_id))\n    .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\n  const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);\n  const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';\n  const RESPIRO = vertical ? 0.15 : 0.35;   // en Shorts el respiro largo alargaba el video (67 s para 45 previstos)\n  const limpio = t => String(t || '').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/<[^>]+>/g, '').replace(/\\s{2,}/g, ' ').trim();\n  // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).\n  const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };\n  let total = 0;\n  const escenas = listos.map((p, i) => {\n    const voz = voces[p.plano_id];\n    const dur = Math.round((voz.duracion_s + RESPIRO) * 100) / 100; total += dur;\n    const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';\n    const mov = p.plano.movimiento || '';\n    const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]\n      : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;\n    const els = [\n      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },\n      { type: 'audio', source: voz.url, duration: null },   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)\n    ];\n    if (subtitulos) {\n      const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;\n      let t = 0;\n      for (const x of partes) { const d = Math.round(voz.duracion_s * x.length / letras * 100) / 100;\n        els.push({ type: 'text', text: x, time: Math.round(t * 100) / 100, duration: d, y: vertical ? '72%' : '86%', width: '86%', x_alignment: '50%',\n          font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });\n        t += d; }\n    }\n    // Cifra clave en grande (storyboard: texto_pantalla), para que el espectador siga la cuenta sin perderse.\n    if (p.plano.texto_pantalla) els.push({ type: 'text', text: String(p.plano.texto_pantalla).slice(0, 40), time: 0, duration: dur, y: vertical ? '30%' : '20%', width: '88%', x_alignment: '50%',\n      font_family: fuente, font_weight: '800', font_size: vertical ? '11 vmin' : '8 vmin', fill_color: m.color_cifra || '#22C55E', stroke_color: '#000000', stroke_width: '1.6 vmin',\n      animations: [{ time: 'start', duration: 0.35, type: 'scale', start_scale: '70%', end_scale: '100%', easing: 'quadratic-out' }] });\n    if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',\n      font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',\n      animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });\n    for (const x of efectos[p.plano_id] || []) els.push({ type: 'audio', source: x.url, time: 0, duration: Math.min(dur, x.duracion_s || dur), volume: m.efectos_volumen || '35%', audio_fade_out: 0.4 });\n    return { type: 'composition', track: 1, name: p.plano_id, duration: dur,\n      transition: i && (p.plano.transicion || m.transicion) === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined, elements: els };\n  });\n  total = Math.round(total * 100) / 100;\n  const elementos = [...escenas];\n  if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: total, source: son.musica.url,\n    volume: m.musica_volumen || '16%', audio_fade_in: 1, audio_fade_out: 2.5 });\n  const creditos = [son.musica?.credito, ...(son.efectos || []).map(x => x && x.credito), ...listos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)]\n    .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);\n  return { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },\n    listos: listos.length, esperados: orden.length, total, subtitulos, creditos };\n}\n\nconst e = $('Plan de producción').first().json;\nconst c = componer({ plan: e, planos: $('Juntar planos').first().json.planos, son: $json, vertical: e.formato === 'short' });\nreturn [{ json: { source: c.source, video_id: e.video_id, canal_id: e.canal_id, planos: c.listos, esperados: c.esperados,\n  duracion_estimada_s: c.total, subtitulos: c.subtitulos, creditos: c.creditos } }];\n"
       },
-      "id": "c5d027b0-05cb-4c49-bf50-cc5e9a2c5f25",
+      "id": "bb8485ef-f9be-4f3c-8230-2ef5b2cb0113",
       "name": "Composición Creatomate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1769,7 +1769,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { source: $json.source } }}"
       },
-      "id": "c6e63dbf-a131-4d4d-9a3a-a2aa131ccc2a",
+      "id": "4038886e-0c84-41f0-965e-0f7f7614414f",
       "name": "Renderizar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1789,7 +1789,7 @@
         "amount": 45,
         "unit": "seconds"
       },
-      "id": "f959bc28-13e0-4c14-9eee-49877dbef337",
+      "id": "b8a6839f-2d1c-42a6-ad21-f63a1fa774a3",
       "name": "Esperar render",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -1797,7 +1797,7 @@
         15180,
         0
       ],
-      "webhookId": "a2271711-d176-4a70-9fb2-3adeb8146990"
+      "webhookId": "2147ff1e-87ca-4772-afe8-bf5bb59f4456"
     },
     {
       "parameters": {
@@ -1809,7 +1809,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "97c9c55d-1b16-407f-b5a0-a767aac50602",
+      "id": "73f1d0da-05e3-402c-bf61-225dd9239456",
       "name": "Consultar render",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -1838,7 +1838,7 @@
           },
           "conditions": [
             {
-              "id": "bb6c52b5-5a77-40fa-9fd8-54fb60e69afe",
+              "id": "618336aa-f745-490f-aa24-7f020cdcde26",
               "leftValue": "={{ $json.status === 'succeeded' }}",
               "rightValue": "",
               "operator": {
@@ -1852,7 +1852,7 @@
         },
         "options": {}
       },
-      "id": "dd79574c-e823-4dfe-a996-a58fb40c1916",
+      "id": "3c20f5fb-514e-44a1-ae1a-66ed1a8fb5ee",
       "name": "¿Render listo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1872,7 +1872,7 @@
           },
           "conditions": [
             {
-              "id": "4219a5e0-b23e-455e-8840-ddf857e63618",
+              "id": "c626cabd-c224-4e4e-a3ae-006cc1418bfc",
               "leftValue": "={{ $json.status === 'failed' }}",
               "rightValue": "",
               "operator": {
@@ -1886,7 +1886,7 @@
         },
         "options": {}
       },
-      "id": "9674cf76-765b-47a4-945d-2731564c5aa1",
+      "id": "f02f53ca-0ea7-4e5e-a283-475238f28104",
       "name": "¿Render fallido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -1907,7 +1907,7 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "2f0b16bd-200c-422a-be1d-06f3f6e1a3fe",
+      "id": "bc4a733a-8c88-4ef5-bdc8-f5191e9bc6b2",
       "name": "Aviso: render fallido",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1926,7 +1926,7 @@
       "parameters": {
         "jsCode": "\n// Una fila por concepto en «costos». Los montos de pago por uso son estimados con los precios de Ajustes;\n// música, efectos y montaje van dentro de suscripciones (0 US$, se anotan para saber qué se usó).\nconst aj = $('Leer ajustes').first().json; const g = $('Gasto de planos').first().json;\nconst son = $('Sonido y emoción').first().json; const vid = $('Plan de producción').first().json.video_id;\nconst filas = [\n  ['imágenes', 'OpenAI', g.imagenes * aj.costoImagenUsd],\n  ['clips', 'Gemini Omni', (g.seg_clips ?? g.clips * 8) * aj.costoClipSegUsd],\n  ['revisión visual', 'OpenAI', g.revisiones * aj.costoRevisionUsd],\n  ['voz', 'Gemini TTS', (son.voces || []).length * aj.costoVozUsdPorPlano],\n  ['música', 'Epidemic Sound (suscripción)', 0],\n  ['efectos', 'Epidemic Sound (suscripción)', 0],\n  ['montaje', 'Creatomate (créditos)', 0],\n].filter(([c, s, usd], i) => usd > 0 || i >= 4);\nreturn filas.map(([concepto, servicio, usd]) => ({ json: { video_id: vid, concepto, servicio, usd: Math.round(usd * 1000) / 1000 } }));\n"
       },
-      "id": "9ab4ea05-c880-4c8b-b5dd-70c5fa2494f2",
+      "id": "21870f17-3fa3-43c9-bd9b-9c88a5fef0bd",
       "name": "Costos del video",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1954,7 +1954,7 @@
         },
         "options": {}
       },
-      "id": "66cf57a3-6ffa-4e87-b8a7-c07a444a049c",
+      "id": "6050dc28-4004-478f-97b0-ec9f1d800c14",
       "name": "Guardar costos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -1967,7 +1967,7 @@
       "parameters": {
         "jsCode": "const t = $('Costos del video').all().reduce((a, i) => a + i.json.usd, 0); return [{ json: { costo_usd: Math.round(t * 100) / 100, etapa: 'calidad' } }];"
       },
-      "id": "c722a273-7724-4fee-b3fe-1ae3d9583dbf",
+      "id": "5cfe98e3-b32a-45a1-8e08-6e48b14cdc49",
       "name": "Costo total",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2005,7 +2005,7 @@
         },
         "options": {}
       },
-      "id": "28ef9ff5-219c-4ac5-9844-aab6b090ac98",
+      "id": "0ec4c851-e6f0-413e-8f12-0590ae905e76",
       "name": "Costo en la tabla",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2018,7 +2018,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Plan de producción').first().json;\nreturn [{ json: { plan: e, planos: $('Juntar planos').first().json.planos, son: $('Sonido y emoción').first().json, carpeta: $('Carpeta del video').first().json.id } }];\n"
       },
-      "id": "4fde5f3c-8ba4-454d-bf3e-e9887730cb95",
+      "id": "f3c7a9c7-8412-4dff-a99b-6a89795e6a21",
       "name": "Encargo de derivados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2047,7 +2047,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "c9d0bee0-6a9b-4dc4-85f7-e7fc935ee05b",
+      "id": "97ec54bd-2d7d-4ed0-b69d-43f7e0481781",
       "name": "Derivados",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -2060,7 +2060,7 @@
       "parameters": {
         "jsCode": "\nconst d = $json; const vid = $('Plan de producción').first().json.video_id;\nconst filas = [];\nif (d.costo_usd) filas.push({ video_id: vid, concepto: 'miniatura', servicio: 'OpenAI', usd: Math.round(d.costo_usd * 1000) / 1000 });\nif ((d.cortes || []).length) filas.push({ video_id: vid, concepto: 'cortes verticales (' + d.cortes.length + ')', servicio: 'Creatomate (créditos)', usd: 0 });\nreturn filas.length ? filas.map(x => ({ json: x })) : [{ json: { nada: true } }];\n"
       },
-      "id": "1ee1410a-46ed-4208-9396-b81f973a2a6f",
+      "id": "86a42670-0173-4464-853b-87eca6770be8",
       "name": "Costo de derivados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2080,7 +2080,7 @@
           },
           "conditions": [
             {
-              "id": "37a06888-7d7e-47ef-95e4-0ed355942430",
+              "id": "6266dfb3-8ce4-402f-9577-8ead7b8fbe8c",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -2094,7 +2094,7 @@
         },
         "options": {}
       },
-      "id": "2d99dded-1e65-439d-9aab-078b3da29d9b",
+      "id": "48c6aa33-7034-4a49-9ee1-810ed8aca557",
       "name": "¿Anotar derivados?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -2122,7 +2122,7 @@
         },
         "options": {}
       },
-      "id": "7e858fe1-d6e7-445c-9141-8e5d36f846e1",
+      "id": "1b4b3fc9-7c81-42cf-be7f-d39f7f0589c6",
       "name": "Guardar costo de derivados",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -2135,7 +2135,7 @@
       "parameters": {
         "jsCode": "\nconst c = $('Composición Creatomate').first().json; const r = $('Consultar render').last().json; const e = $('Plan de producción').first().json;\nconst son = $('Sonido y emoción').first().json; const d = $('Derivados').first().json;\nreturn [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: r.url, duracion_s: r.duration, ancho: r.width, alto: r.height,\n  planos: c.planos, esperados: c.esperados, creditos: c.creditos, subtitulos: c.subtitulos, duracion_estimada_s: c.duracion_estimada_s,\n  voces: (son.voces || []).map(v => ({ plano_id: v.plano_id, ppm: v.palabras_por_minuto, duracion_s: v.duracion_s })),\n  usa_musica: !!son.musica?.url, costo_usd: Math.round(($('Costo total').first().json.costo_usd + (d.costo_usd || 0)) * 100) / 100, presupuesto: e.presupuesto,\n  formato: e.formato, carpeta: $('Carpeta del video').first().json.id, tema: e.tema,\n  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {}, miniatura_texto: e.storyboard?.miniatura?.texto || '',\n  movimiento_real: (() => { const l = $('Juntar planos').first().json.planos; return l.length ? Math.round(l.filter(p => p.url && ['clip', 'archivo'].includes(p.plano?.tipo)).length / l.length * 100) / 100 : 1; })() } }];\n"
       },
-      "id": "2a20ccc6-ad67-4eba-80e8-ba4e97116ffd",
+      "id": "296681b1-76ef-4de7-b302-5b23e5324c1d",
       "name": "Encargo de calidad",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2165,7 +2165,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "8e43ec23-7a5b-4a1c-b06b-50287ac853fe",
+      "id": "fa07f89e-2d01-41e4-a165-b4d80a7037fb",
       "name": "Calidad y publicación",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,

@@ -11,6 +11,10 @@ Cada modelo trabaja con **un rol** y lee solo su archivo. Una sola fuente de ver
 | Crítico de guion | `critico.md` | GPT (n8n lo incrusta en el nodo «Crítico del guion») | antes de tu aprobación del guion |
 | Revisor visual | `revisor-visual.md` | GPT con visión (n8n lo incrusta en «Revisar plano» y «Revisar archivo») | cada imagen y cada clip de archivo |
 | Editor de publicación | `editor-publicacion.md` | Claude (dentro del storyboard) | títulos, descripciones y textos por red |
+| Especialista de TikTok | `especialista-tiktok.md` | Claude (dentro del storyboard) | texto, hashtags y hora de TikTok |
+| Especialista de Instagram | `especialista-instagram.md` | Claude (dentro del storyboard) | texto, hashtags y hora de Reels |
+| Especialista de YouTube | `especialista-youtube.md` | Claude (dentro del storyboard) | títulos, descripción, consultas y hora de YouTube |
+| Analista de tendencias | (incrustado en «Analista de tendencias») | GPT, cada mañana | radar por canal: ideas por red, formatos y sonidos |
 | Analista | `analista.md` | Claude | `aprender` |
 
 Para cambiar cómo trabaja un rol: edita su archivo. Claude lo lee en cada encargo; los roles de GPT se aplican al regenerar los flujos (`python3 tools/generar_flujos_v2.py`) e importarlos.
