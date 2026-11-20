@@ -20,7 +20,7 @@ plan = {'formato': 'largo', 'planos': [pl(i) for i in ('p1', 'p2', 'p3')], 'bibl
 planos = [{'plano_id': i, 'url': 'https://i/' + i, 'plano': pl(i)} for i in ('p1', 'p2', 'p3')]
 son = {'voces': [{'plano_id': i, 'url': 'v' + i, 'duracion_s': 10} for i in ('p1', 'p2', 'p3')], 'musica': {'url': 'm'}}
 c = probar('FabDerivados0001', 'Composiciones de cortes', {'Inicio': [{'plan': plan, 'planos': planos, 'son': son}]})
-caso('cortes en motor', len(c) == 1 and c[0]['source']['height'] == 1920 and c[0]['duracion_s'] == 20.7, json.dumps({k: c[0].get(k) for k in ('corte', 'titulo', 'duracion_s')}))
+caso('cortes en motor', len(c) == 1 and c[0]['source']['height'] == 1920 and c[0]['duracion_s'] == 20.3, json.dumps({k: c[0].get(k) for k in ('corte', 'titulo', 'duracion_s')}))
 # 3. Video principal (misma función, horizontal)
 comp = probar('FabProduccion001', 'Composición Creatomate', {'Plan de producción': [{**plan, 'video_id': 'v', 'canal_id': 'c'}], 'Juntar planos': [{'planos': planos}]}, entrada=[son])
 caso('montaje en motor', comp[0]['source']['width'] == 1920 and comp[0]['planos'] == 3, f"duración {comp[0]['duracion_estimada_s']} s")
@@ -40,7 +40,7 @@ a = probar('FabRutina0000001', 'Atascados', {}, entrada=[{'video_id': 'a', 'cana
 caso('atascados en motor', 'a (c)' in a.get('texto', ''))
 # 8. Vigilante de errores
 m = probar('FabErrores000001', 'Mensaje de error', {}, entrada=[{'workflow': {'name': 'X'}, 'execution': {'lastNodeExecuted': 'N', 'error': {'message': 'boom'}, 'url': 'u'}}])[0]
-caso('vigilante en motor', 'en el nodo «N»' in m['texto'])
+caso('vigilante en motor', 'Paso: N' in m['texto'] and 'Motivo: boom' in m['texto'])
 # 9. Envío real a Upload-Post simulado: el motor arma el multipart y un receptor local lo descompone
 import http.server, threading, email, email.policy, copy, socket
 recibido = {}

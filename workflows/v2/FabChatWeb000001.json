@@ -16,7 +16,7 @@
           "loadPreviousSession": "notSupported"
         }
       },
-      "id": "8002f275-af69-45a5-bd0a-ba02c94f1828",
+      "id": "005f515a-abe4-4a22-a136-4bc8d553930e",
       "name": "Chat",
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
@@ -36,7 +36,7 @@
       "parameters": {
         "jsCode": "return [{ json: { texto: String($json.chatInput || '').slice(0, 4000), chatId: 'web-' + String($json.sessionId || 'computadora').slice(0, 60) } }];"
       },
-      "id": "7000ec17-d657-4f5b-8414-518b2c8e3f1b",
+      "id": "511a8e8b-2b0c-4303-b269-82da5bc79084",
       "name": "A agente",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -65,7 +65,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "038965ce-4619-45fa-ac1e-85a2196df2d3",
+      "id": "21b2baad-5cdd-438d-82f2-0ad7d523723c",
       "name": "Agente",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -78,7 +78,7 @@
       "parameters": {
         "jsCode": "return [{ json: { output: String($json.respuesta || 'Listo.') } }];"
       },
-      "id": "36d8f716-bfdd-4c09-a2e6-65da1808ec3f",
+      "id": "987b8e39-4383-4653-b60d-df413c14a268",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

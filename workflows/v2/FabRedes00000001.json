@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "91d9578a-3a3d-4272-b75e-44f9374863eb",
+      "id": "49ae4ca3-735f-4142-aa21-42a5da78d1e3",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "1ae9816c-2993-4ee1-8d52-ccee5b197d52",
+      "id": "9cb909cb-faec-48aa-9eeb-d3ef43342d64",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -55,7 +55,7 @@
           },
           "conditions": [
             {
-              "id": "5e811249-da47-4854-9100-3678e1e29f61",
+              "id": "f45f45a9-b6ec-4f40-99c6-9ea1f0754651",
               "leftValue": "={{ $('Leer ajustes').first().json.allowVidiq === true && ($('Inicio').first().json.contexto?.publicacion?.youtube?.titulos || []).length > 1 }}",
               "rightValue": "",
               "operator": {
@@ -69,7 +69,7 @@
         },
         "options": {}
       },
-      "id": "8090bb68-8656-4a86-b120-e15267b44e90",
+      "id": "c326352f-f037-4ad0-88c7-6b24e980af6a",
       "name": "¿Puntuar títulos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -82,7 +82,7 @@
       "parameters": {
         "jsCode": "const e = $('Inicio').first().json; return [{ json: { accion: 'titulos', titulos: e.contexto.publicacion.youtube.titulos, formato: e.formato } }];"
       },
-      "id": "1ce0cf0e-0ff7-4a11-a24d-01ffefd6afe1",
+      "id": "f8c597c9-2f5e-4dac-95e5-f6c91487d5f1",
       "name": "Pedido de títulos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -111,7 +111,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "ae40bfb5-25f2-455c-b3c9-1d2c918331f7",
+      "id": "576408b3-c28a-4cb1-9bc0-5097180cc81f",
       "name": "vidIQ: títulos",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -146,7 +146,7 @@
         },
         "returnAll": true
       },
-      "id": "4dac2b3a-e840-470f-bac4-28656abff16f",
+      "id": "d001a864-33e6-46f7-8de9-74e21981cf8d",
       "name": "Agenda del canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -159,9 +159,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst tituloYt = String((vq?.ok && vq.mejor) || (yt.titulos || [])[0] || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Video completo en el canal.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = [];\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
+        "jsCode": "\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst tituloYt = String((vq?.ok && vq.mejor) || (yt.titulos || [])[0] || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = [];\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
       },
-      "id": "bbdab92c-348c-44e8-b3d5-a9b64fe87988",
+      "id": "961cae33-d70e-4d99-af3f-52459b549d4b",
       "name": "Plan de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -181,7 +181,7 @@
           },
           "conditions": [
             {
-              "id": "a042ac8a-b908-4b07-8416-73736916fd3d",
+              "id": "bd551c8b-9875-4f94-b533-d980944d7baa",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -195,7 +195,7 @@
         },
         "options": {}
       },
-      "id": "b3d46b4b-8cd8-41f2-bee8-74edab3f7a05",
+      "id": "2cb90acc-0eb4-4def-b087-9864bebcee1a",
       "name": "¿Hay envíos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -346,7 +346,7 @@
           }
         }
       },
-      "id": "2abc531d-1fd3-49e2-bfd4-47ffefdc2943",
+      "id": "fd103375-497d-4f2a-ae19-d89ed07fe862",
       "name": "Subir a redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -369,7 +369,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const pedidos = $('Plan de publicación').all().map(i => i.json);\nreturn $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];\n  const id = r.request_id || r.job_id || r.data?.request_id || '';\n  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),\n    url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',\n    resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),\n    publicado_en: p.programado || new Date().toISOString() } }; });\n"
       },
-      "id": "a31a4a8b-bc93-4e1e-b608-56529cd87ab9",
+      "id": "f6113884-b496-4f9d-99fb-ede679e6accb",
       "name": "Filas de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -397,7 +397,7 @@
         },
         "options": {}
       },
-      "id": "0153ede5-d81d-4f71-ab7c-02b6a59fc1dc",
+      "id": "1679db83-dccb-4e52-b401-3a39c34e1bbd",
       "name": "Guardar publicaciones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -410,7 +410,7 @@
       "parameters": {
         "jsCode": "\nconst filas = $('Filas de publicación').all().map(i => i.json); const ok = filas.filter(f => f.request_id);\nreturn [{ json: { estado: ok.length ? 'publicado' : 'error_publicacion', etapa: 'publicado',\n  publicado_en: ok[0]?.publicado_en || '', error: ok.length === filas.length ? '' : filas.filter(f => !f.request_id).map(f => f.tipo + ': ' + f.resultado).join('; ').slice(0, 500) } }];\n"
       },
-      "id": "3cc53c9f-4935-42dc-ba02-7eaf805145c8",
+      "id": "de04cb14-2028-43a2-9b77-6d468d098a2d",
       "name": "Video publicado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -448,7 +448,7 @@
         },
         "options": {}
       },
-      "id": "fb8a2d75-aa06-43c1-8b0f-00fe0429b0ea",
+      "id": "be8384ec-b892-468b-bbe3-8f7476b222ce",
       "name": "Marcar publicado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -462,7 +462,7 @@
         "amount": 120,
         "unit": "seconds"
       },
-      "id": "a15341bb-3983-48a2-a17e-7e31854d7fea",
+      "id": "3031a9ee-2732-4f81-a556-c6fac4b72c03",
       "name": "Esperar a las redes",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -470,13 +470,13 @@
         3080,
         0
       ],
-      "webhookId": "d9ec0d60-c545-40dc-b056-8f35ef17efb3"
+      "webhookId": "78da430d-a0c8-4d06-94ed-cd5cc02388dc"
     },
     {
       "parameters": {
         "jsCode": "const l = $('Filas de publicación').all().filter(i => i.json.request_id && i.json.estado === 'enviado').map(i => ({ json: i.json })); return l.length ? l : [{ json: { request_id: 'ninguno' } }];"
       },
-      "id": "9bf58e4c-3b7d-455b-a67b-7b8446d1fbae",
+      "id": "b1b2038f-ead7-4815-8e0d-a39224d8d365",
       "name": "Pedidos de estado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -501,7 +501,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "66110ac8-bd69-4fd2-a924-c3dc640cd6d7",
+      "id": "4883c7b0-5574-45fc-a5bc-568b2fdae629",
       "name": "Estado en redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -524,7 +524,7 @@
       "parameters": {
         "jsCode": "\n// Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).\nconst filas = $('Filas de publicación').all().map(i => i.json); const pedidos = $('Plan de publicación').all().map(i => i.json);\nconst estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];\nconst enviados = filas.filter(f => f.request_id && f.estado === 'enviado');\nconst lineas = filas.map(f => {\n  if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;\n  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas}: ${pedidos[filas.indexOf(f)]?.hora_local || f.publicado_en}`;\n  const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];\n  const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')\n    : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';\n  return `✓ ${f.tipo} → ${f.plataformas}${st.status ? ' (' + st.status + ')' : ''}${det ? '\\n   ' + det : ''}`; });\nreturn [{ json: { texto: `Publicación de ${$('Inicio').first().json.video_id}:\\n` + lineas.join('\\n') } }];\n"
       },
-      "id": "a853cd6c-2b93-4983-ad55-e23d6bbe3c99",
+      "id": "c9f59c1c-220a-4abc-9b99-97c02545fd98",
       "name": "Resumen de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -544,7 +544,7 @@
           "appendAttribution": false
         }
       },
-      "id": "74e5876e-7833-47a9-88cf-c58069e60b60",
+      "id": "4a1d1bda-6dbb-4d43-8e27-4593417c01e3",
       "name": "Aviso: publicado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -570,7 +570,7 @@
           "appendAttribution": false
         }
       },
-      "id": "e3b2861f-769c-44c9-9169-ba95beef3c05",
+      "id": "19aa60a1-a646-4c1b-a06c-959d0c507d5a",
       "name": "Aviso: nada que publicar",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

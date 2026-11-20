@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "ec0ce45a-e92b-46e9-af2f-fac53d82d2e2",
+      "id": "795b3943-5c89-47ed-8e21-408e0f9b89ae",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "94fc346e-3924-4f6b-bf18-88d6f8439041",
+      "id": "43d0aa59-717a-4d19-b534-df0de98714dc",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "\n// Fallas bloquean (el video no te llega); avisos acompañan al video para que decidas.\nconst e = $('Inicio').first().json; const fallas = []; const avisos = [];\nif (!e.render_url) fallas.push('sin archivo de render');\nif (e.planos < e.esperados) fallas.push(`faltan planos: ${e.esperados - e.planos} de ${e.esperados}`);\nconst d = Number(e.duracion_s) || 0; const corto = e.formato === 'short';\nif (corto ? (d < 15 || d > 90) : d < 180) fallas.push(`duración fuera de rango: ${Math.round(d)} s`);\nif (e.duracion_estimada_s && Math.abs(d - e.duracion_estimada_s) > 1.5) fallas.push(`desfase de sincronía: render ${d} s vs. voz ${e.duracion_estimada_s} s`);\nconst esperado = corto ? [1080, 1920] : [1920, 1080];\nif (e.ancho && e.alto && (e.ancho !== esperado[0] || e.alto !== esperado[1])) fallas.push(`resolución ${e.ancho}x${e.alto}, se esperaba ${esperado.join('x')}`);\nif (corto && !e.subtitulos) fallas.push('un Short necesita subtítulos (se ve sin sonido)');\nif (e.usa_musica && !(e.creditos || []).some(c => /Epidemic/.test(c))) fallas.push('falta el crédito de la música');\nconst lentos = (e.voces || []).filter(v => v.ppm && v.ppm < 100).map(v => v.plano_id);\nconst rapidos = (e.voces || []).filter(v => v.ppm && v.ppm > 200).map(v => v.plano_id);\nif (lentos.length) avisos.push(`voz lenta (<100 palabras/min) en ${lentos.join(', ')}`);\nif (rapidos.length) avisos.push(`voz rápida (>200 palabras/min) en ${rapidos.join(', ')}`);\nif (e.presupuesto && e.costo_usd > e.presupuesto) avisos.push(`costó US$${e.costo_usd}, por encima del tope de US$${e.presupuesto}`);\nfor (const a of e.avisos_derivados || []) avisos.push(a);\nreturn [{ json: { ...e, fallas, avisos, aprobado_qc: fallas.length === 0 } }];\n"
       },
-      "id": "d4b8408e-1690-4788-a853-16f91a4f0ed2",
+      "id": "c886586b-7cd8-44f6-b15a-1420bb83fa63",
       "name": "Chequeos objetivos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -68,7 +68,7 @@
           },
           "conditions": [
             {
-              "id": "d2fbac8a-fdd8-40f9-b12d-d07832d855a7",
+              "id": "3f06a8d7-2b07-493e-9e14-84400e4cc117",
               "leftValue": "={{ $json.aprobado_qc === true }}",
               "rightValue": "",
               "operator": {
@@ -82,7 +82,7 @@
         },
         "options": {}
       },
-      "id": "1c15ef04-5501-4545-86be-59fa569259f3",
+      "id": "54f7cb3e-8144-4362-96e3-24967feff5f6",
       "name": "¿Pasa calidad?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -93,9 +93,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $json;\nconst extra = e.avisos.length ? '\\n\\nAvisos:\\n• ' + e.avisos.join('\\n• ') : '';\nconst cortes = (e.cortes || []).map(c => `\\n• Corte ${c.corte} (${Math.round(c.duracion_s)} s): ${c.url}`).join('');\nconst titulos = (e.publicacion?.youtube?.titulos || []).slice(0, 3).map((t, i) => `\\n${i + 1}. ${t}`).join('');\nreturn [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id,\n  contexto: { render_url: e.render_url, creditos: e.creditos || [], cortes: e.cortes || [], miniatura_url: e.miniatura_url || '', publicacion: e.publicacion || {}, formato: e.formato },\n  mensaje: (`Video ${e.video_id} listo (${Math.round(e.duracion_s)} s, ~US$${e.costo_usd}).\\nRevísalo: ${e.render_url}` + (e.miniatura_url ? `\\nMiniatura: ${e.miniatura_url}` : '')\n    + (cortes ? `\\nCortes verticales:${cortes}` : '') + (titulos ? `\\nTítulos propuestos:${titulos}` : '')\n    + `\\nCarpeta: https://drive.google.com/drive/folders/${e.carpeta}${extra}\\n\\n¿Lo apruebo para publicarlo?`).slice(0, 3900) } }];\n"
+        "jsCode": "\nconst e = $json;\nconst extra = e.avisos.length ? '\\n\\nAvisos:\\n• ' + e.avisos.join('\\n• ') : '';\nconst cortes = (e.cortes || []).map(c => `\\n• Corte ${c.corte} (${Math.round(c.duracion_s)} s): ${c.url}`).join('');\nconst titulos = (e.publicacion?.youtube?.titulos || []).slice(0, 3).map((t, i) => `\\n${i + 1}. ${t}`).join('');\nconst aviso = `🎞️ Video listo · ${Math.round(e.duracion_s)} s · US$${e.costo_usd}\\n▶️ ${e.render_url}` + (e.avisos.length ? `\\n⚠️ ${e.avisos.length} aviso(s): míralos en el enlace` : '') + '\\n\\nSi te gusta, apruébalo para publicarlo.';\nreturn [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, aviso,\n  contexto: { render_url: e.render_url, creditos: e.creditos || [], cortes: e.cortes || [], miniatura_url: e.miniatura_url || '', publicacion: e.publicacion || {}, formato: e.formato },\n  mensaje: (`Video ${e.video_id} listo (${Math.round(e.duracion_s)} s, ~US$${e.costo_usd}).\\nRevísalo: ${e.render_url}` + (e.miniatura_url ? `\\nMiniatura: ${e.miniatura_url}` : '')\n    + (cortes ? `\\nCortes verticales:${cortes}` : '') + (titulos ? `\\nTítulos propuestos:${titulos}` : '')\n    + `\\nCarpeta: https://drive.google.com/drive/folders/${e.carpeta}${extra}\\n\\n¿Lo apruebo para publicarlo?`).slice(0, 3900) } }];\n"
       },
-      "id": "741b68d1-fc83-40ea-9882-ddf4e02e45f3",
+      "id": "6d6315f1-6dad-4f5a-87cd-05bd42d48480",
       "name": "Mensaje final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -124,7 +124,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "619a67c3-3db5-49ca-8c52-8b2d813db6bc",
+      "id": "503b0fae-7127-445b-93b3-0c6a8357bd1e",
       "name": "Aprobación final",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -137,7 +137,7 @@
       "parameters": {
         "jsCode": "return [{ json: { etapa: 'calidad', estado: 'con_fallas', error: $json.fallas.join('; ').slice(0, 500) } }];"
       },
-      "id": "4847fe38-b91e-47f6-acf6-5422f1334173",
+      "id": "6f74958d-3b3b-4315-a447-99e4945b8ad7",
       "name": "Video rechazado por calidad",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -175,7 +175,7 @@
         },
         "options": {}
       },
-      "id": "d1edf1af-64bd-4c73-92f8-718bf9685b55",
+      "id": "cc13cc4b-b5f0-43c4-8ac8-42c126f514b1",
       "name": "Marcar fallas",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -189,13 +189,13 @@
         "resource": "message",
         "operation": "sendMessage",
         "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
-        "text": "={{ 'El video ' + $('Inicio').first().json.video_id + ' no pasó calidad: ' + $('Chequeos objetivos').first().json.fallas.join('; ') + '. Render: ' + ($('Inicio').first().json.render_url || '—') }}",
+        "text": "={{ '❌ El video ' + $('Inicio').first().json.video_id + ' no pasó el control de calidad (no se publicó):\\n• ' + $('Chequeos objetivos').first().json.fallas.join('\\n• ') + ($('Inicio').first().json.render_url ? '\\n\\n▶️ Lo que salió: ' + $('Inicio').first().json.render_url : '') }}",
         "additionalFields": {
           "disable_web_page_preview": true,
           "appendAttribution": false
         }
       },
-      "id": "4012d6c2-b9ee-4fcd-9e20-46e66d9dfdc8",
+      "id": "94ca40c1-6d5a-4da2-9dea-7fdb9cee3eb9",
       "name": "Aviso: no pasó calidad",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

@@ -14,8 +14,8 @@ function run(js, { nodes = {}, json = {}, all = {}, binary = {} } = {}) {
     isExecuted: nodes[name] !== undefined || all[name] !== undefined,
   });
   const $input = { all: () => (all.$input || [json]).map(j => ({ json: j })), item: { json, binary } };
-  const fn = new Function('$', '$json', '$input', '$now', '$binary', js);
-  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary);
+  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', js);
+  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' });
   return Array.isArray(r) ? r : [r];
 }
 
@@ -103,12 +103,12 @@ test('producción: composición sigue el storyboard, dura lo que la voz y pone l
     nodes: { 'Plan de producción': { video_id: 'v', planos: [...storyboard.planos, { id: 'p03', tipo: 'archivo' }], biblia, formato: 'short' }, 'Juntar planos': { planos } } })[0].json;
   const els = out.source.elements;
   assert.deepStrictEqual(els.filter(e => e.type === 'composition').map(e => e.name), ['p01', 'p02', 'p03']);
-  assert.strictEqual(els[0].duration, 3.35);
+  assert.strictEqual(els[0].duration, 3.15);                                  // Short: respiro de 0,15 s
   assert.strictEqual(els[1].elements[0].type, 'video');
   assert.strictEqual(els[2].elements[0].type, 'video');
   assert.strictEqual(els[0].elements[1].source, 'https://d/v1');
   const musica = els.find(e => e.track === 2);
-  assert.strictEqual(musica.duration, Math.round((3.35 + 4.85 + 2.35) * 100) / 100);
+  assert.strictEqual(musica.duration, Math.round((3.15 + 4.65 + 2.15) * 100) / 100);
   assert.strictEqual(out.source.width, 1080);
   assert.deepStrictEqual(out.creditos, ['Música: X', 'Pexels: Ana (https://pexels/1)']);
 });
@@ -148,14 +148,15 @@ test('sonido: también acepta PCM crudo', () => {
 });
 
 test('producción: de Pexels elige un video en la orientación del formato', () => {
-  const resp = { videos: [{ duration: 10, user: { name: 'Ana' }, url: 'https://pexels/1', video_files: [
-    { link: 'https://h.mp4', width: 1920, height: 1080 }, { link: 'https://v.mp4', width: 1080, height: 1920 }] }] };
+  const resp = { videos: [{ duration: 10, user: { name: 'Ana' }, url: 'https://pexels/1', image: 'https://pexels/1.jpg', video_files: [
+    { link: 'https://h.mp4', width: 1920, height: 1080 }, { link: 'https://v.mp4', width: 1080, height: 1920 }] },
+    { duration: 2, image: 'https://pexels/corto.jpg', video_files: [{ link: 'https://c.mp4', width: 1080, height: 1920 }] }] };
   const corto = run(codeOf(PROD, 'Elegir de Pexels'), { json: resp, nodes: { 'Un ítem por plano': { plano: { id: 'p1' } }, 'Plan de producción': { formato: 'short' } } })[0].json;
-  assert.strictEqual(corto.url, 'https://v.mp4');
+  assert.deepStrictEqual(corto.candidatos.map(c => [c.url, c.thumb]), [['https://v.mp4', 'https://pexels/1.jpg']]);   // el de 2 s no sirve
   const largo = run(codeOf(PROD, 'Elegir de Pexels'), { json: resp, nodes: { 'Un ítem por plano': { plano: { id: 'p1' } }, 'Plan de producción': { formato: 'largo' } } })[0].json;
-  assert.strictEqual(largo.url, 'https://h.mp4');
+  assert.strictEqual(largo.candidatos[0].url, 'https://h.mp4');
   const nada = run(codeOf(PROD, 'Elegir de Pexels'), { json: { videos: [] }, nodes: { 'Un ítem por plano': { plano: { id: 'p1' } }, 'Plan de producción': { formato: 'largo' } } })[0].json;
-  assert.strictEqual(nada.url, '');
+  assert.deepStrictEqual(nada.candidatos, []);
 });
 
 test('calidad: detecta planos faltantes y duración corta', () => {
@@ -184,7 +185,7 @@ test('montaje: Short con subtítulos repartidos en la voz; largo con título de 
   assert.strictEqual(subs[0].font_family, 'Inter');
   assert.ok(!esc.some(e => e.text === 'El hallazgo'));                   // sin capítulo en Shorts
   const fx = esc.filter(e => e.type === 'audio' && e.source.startsWith('https://fx'));
-  assert.strictEqual(fx.length, 2); assert.strictEqual(fx[1].duration, 4.35); // un efecto largo no pasa la escena
+  assert.strictEqual(fx.length, 2); assert.strictEqual(fx[1].duration, 4.15); // un efecto largo no pasa la escena (Short: respiro 0,15 s)
   assert.strictEqual(corto.source.elements.find(e => e.track === 2).volume, '12%');
   assert.deepStrictEqual(corto.creditos, ['Música: X', 'Efectos: E']);
   const largo = run(codeOf(PROD, 'Composición Creatomate'), { json: son, nodes: { 'Plan de producción': { ...base, formato: 'largo' }, 'Juntar planos': { planos: [{ plano_id: 'p01', url: 'https://i', plano }] } } })[0].json;
@@ -586,9 +587,14 @@ test('escala: todo flujo es válido — nodos únicos, conexiones existentes, si
 test('vigilante: el aviso de error dice flujo, nodo, mensaje y enlace', () => {
   const ERR = wf('FabErrores000001');
   const m = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'M8 · Publicación en redes' }, execution: { lastNodeExecuted: 'Subir a redes', url: 'https://n8n/x/1', error: { message: '429  demasiadas\n peticiones' } } } })[0].json.texto;
-  assert.match(m, /«M8 · Publicación en redes» en el nodo «Subir a redes»/); assert.match(m, /429 demasiadas peticiones/); assert.match(m, /https:\/\/n8n\/x\/1/);
+  assert.match(m, /Se detuvo: Publicación en redes/); assert.match(m, /Paso: Subir a redes/);
+  assert.match(m, /Motivo: el servicio pidió ir más despacio/); assert.match(m, /429 demasiadas peticiones/);   // motivo en español + original
+  assert.match(m, /<a href="https:\/\/n8n\/x\/1">Ver el detalle<\/a>/);
+  const raro = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'F · X' }, execution: { error: { message: 'algo <raro> & nuevo' } } } })[0].json.texto;
+  assert.match(raro, /Motivo: algo &lt;raro&gt; &amp; nuevo/);   // sin traducción: el original, escapado para HTML de Telegram
   const vacio = run(codeOf(ERR, 'Mensaje de error'), { json: {} })[0].json.texto;
   assert.match(vacio, /error sin mensaje/);
+  assert.strictEqual(nodo(ERR, 'Avisar error').parameters.additionalFields.parse_mode, 'HTML');
   for (const id of ['FabProduccion001', 'FabRedes00000001', 'FabOrquestador01']) { const s = wf(id).settings;
     assert.strictEqual(s.errorWorkflow, 'FabErrores000001'); assert.ok(s.executionTimeout > 0 && s.executionTimeout <= 3600); }
 });
@@ -696,4 +702,95 @@ test('agente: cada herramienta declara su esquema (sin él n8n solo pasa un text
 test('crear_video: las indicaciones del operador llegan al pedido de guion', () => {
   assert.ok('indicaciones' in nodo(AGT, 'crear_video').parameters.workflowInputs.value);
   assert.match(codeOf(ORQ, 'Nuevo video'), /indicaciones: String\(e\.indicaciones \|\| ''\)\.slice\(0, 2000\)/);
+});
+
+test('producción: «Juntar planos» solo deja pasar cuando están todos los planos del plan (y en el orden del plan)', () => {
+  const PRD = wf('FabProduccion001'); assert.strictEqual(nodo(PRD, 'Juntar planos').type, 'n8n-nodes-base.code');
+  const plan = { planos: [{ id: 'p1' }, { id: 'p2' }, { id: 'p3' }] };
+  const corre = (archivo, imagen) => run(codeOf(PRD, 'Juntar planos'), { nodes: { 'Plan de producción': plan }, all: { 'Archivo aprobado': archivo, 'Plano aprobado': imagen, 'Avatar pendiente': [] } });
+  assert.strictEqual(corre([{ plano_id: 'p2', url: 'a' }], []).length, 0);                       // llegó solo el archivo: no sigue
+  const out = corre([{ plano_id: 'p2', url: 'a' }], [{ plano_id: 'p3', url: 'c' }, { plano_id: 'p1', url: 'b' }]);
+  assert.deepStrictEqual(out[0].json.planos.map(p => p.plano_id), ['p1', 'p2', 'p3']);
+  const RIT = nodo(wf('FabSonido0000001'), 'Voz (Gemini TTS)').parameters.options.batching.batch;
+  assert.deepStrictEqual([RIT.batchSize, RIT.batchInterval], [1, 6500]);
+});
+
+test('mensajes: Telegram recibe una tarjeta corta y el formulario el detalle completo', () => {
+  const APX = wf('FabAprobacion001'); assert.match(nodo(APX, 'Aprobación · avisar').parameters.text, /Aprobación · preparar.*\.aviso/);
+  const prep = run(codeOf(APX, 'Aprobación · preparar'), { nodes: { Inicio: { etapa: 'storyboard', video_id: 'v', mensaje: 'L1\nL2\nL3\nL4\nL5', aviso: '🎬 corto' } } })[0].json;
+  assert.strictEqual(prep.aviso, '🎬 corto');
+  const sin = run(codeOf(APX, 'Aprobación · preparar'), { nodes: { Inicio: { etapa: 'guion', mensaje: 'L1\nL2\nL3\nL4\nL5' } } })[0].json.aviso;
+  assert.ok(sin.startsWith('L1\nL2\nL3') && !sin.includes('L4'));
+  const sb = run(codeOf(ORQ, 'Mensaje de storyboard'), { json: { video_id: 'v', canal_id: 'c', resultado: { costo_estimado_usd: 2.2, planos: Array.from({ length: 23 }, (_, i) => ({ id: 'p' + i, tipo: i < 6 ? 'archivo' : 'imagen', encuadre: 'x', texto_narrado: 't' })) } } })[0].json;
+  assert.match(sb.aviso, /23 escenas/); assert.match(sb.aviso, /17 imágenes · 6 clips de archivo|6 clips de archivo · 17 imágenes/); assert.ok(sb.aviso.split('\n').length <= 6);
+  assert.ok(sb.mensaje.includes('p22'));   // el detalle sigue completo para el formulario
+});
+
+test('aprobaciones: lo que se guarda en fab_aprobaciones existe como columna (n8n rechaza columnas desconocidas)', () => {
+  const COLUMNAS = ['aprobacion_id', 'etapa', 'video_id', 'canal_id', 'job_id', 'resumen', 'url', 'estado', 'cambios', 'decidido_en', 'aviso'];
+  for (const [w, p] of [['FabAprobacion001', 'Aprobación'], ['FabProduccion001', 'Permiso de gasto']]) {
+    const W = wf(w);
+    const ini = { etapa: 'guion', video_id: 'v', canal_id: 'c', mensaje: 'm', presupuesto: 1.5 };
+    const prep = run(codeOf(W, p + ' · preparar'), { nodes: { Inicio: ini, 'Plan de producción': ini, 'Gasto de planos': { usd: 1, pct: 0.7 } } })[0].json;
+    assert.deepStrictEqual(Object.keys(prep).filter(k => !COLUMNAS.includes(k)), [], w + ' preparar');
+    const dec = run(codeOf(W, p + ' · decisión'), { json: { 'Decisión': 'x' }, nodes: { [p + ' · preparar']: prep } })[0].json;
+    assert.deepStrictEqual(Object.keys(dec).filter(k => !COLUMNAS.includes(k)), [], w + ' decisión');
+  }
+});
+
+// ---------- Arreglos de la primera prueba real y banco de roles ----------
+test('archivo: el revisor visual elige entre 3 candidatos o los rechaza todos (y entonces se genera la imagen)', () => {
+  const PRD = wf('FabProduccion001');
+  const c = [{ url: 'u1', thumb: 't1', fuente: { banco: 'Pexels' } }, { url: 'u2', thumb: 't2', fuente: { banco: 'Pexels' } }];
+  const elige = (texto, revisar = true) => run(codeOf(PRD, 'Archivo elegido'), { json: { output: [{ content: [{ type: 'output_text', text: texto }] }] },
+    nodes: { 'Pedido de revisión de archivo': { plano: { id: 'p1' }, candidatos: c, revisar } } })[0].json;
+  assert.strictEqual(elige('{"elegido": 2, "motivo": "ok"}').url, 'u2');
+  const no = elige('{"elegido": -1, "motivo": "tiene texto en inglés"}'); assert.strictEqual(no.url, ''); assert.match(no.nota_archivo, /texto en inglés/);
+  assert.strictEqual(elige('basura').url, '');                       // respuesta ilegible: no se arriesga
+  assert.strictEqual(elige('', false).url, 'u1');                    // revisión apagada: el primero
+  const sigue = n => PRD.connections['¿Sirve el archivo?'].main[n][0].node;
+  assert.strictEqual(sigue(0), 'Archivo aprobado'); assert.strictEqual(sigue(1), 'Sin archivo: generar');
+  assert.strictEqual(PRD.connections['¿Hay en Pexels?'].main[0][0].node, 'Pedido de revisión de archivo');
+});
+
+test('montaje: la cifra clave del storyboard sale en grande en su escena', () => {
+  const PRD = wf('FabProduccion001');
+  const planos = [{ plano_id: 'p1', url: 'https://x/a.png', plano: { id: 'p1', tipo: 'imagen', texto_narrado: 'De tus 10 soles, 1 se va en impuestos', texto_pantalla: 'QUEDAN S/ 9' } }];
+  const out = run(codeOf(PRD, 'Composición Creatomate'), { json: { voces: [{ plano_id: 'p1', url: 'https://d/v1', duracion_s: 3 }] },
+    nodes: { 'Plan de producción': { video_id: 'v', planos: [planos[0].plano], biblia: {}, formato: 'short' }, 'Juntar planos': { planos } } })[0].json;
+  const cifra = out.source.elements[0].elements.find(e => e.type === 'text' && e.text === 'QUEDAN S/ 9');
+  assert.ok(cifra && cifra.font_size === '11 vmin' && cifra.y === '30%');
+});
+
+test('vidIQ: la semilla de palabras clave es corta (con la frase entera volvía volumen nulo)', () => {
+  const r = run(codeOf(ORQ, 'Pedido a vidIQ'), { nodes: { 'Nuevo video': { pedido: { datos: { tema: 'Cuánto gana de verdad una pollería en Lima', formato: 'short' } } }, 'Leer ajustes': aj } })[0].json;
+  assert.strictEqual(r.semilla, 'pollería lima'); assert.strictEqual(r.tema, 'Cuánto gana de verdad una pollería en Lima');
+  assert.match(JSON.stringify(nodo(wf('FabVidiq00000001'), 'Palabras clave').parameters), /json\.semilla/);
+});
+
+test('banco de roles: Claude lee su rol y los modelos de GPT llevan el suyo incrustado', () => {
+  const fab = fs.readFileSync(path.join(__dirname, '..', 'skill', 'FABRICA.md'), 'utf8');
+  for (const r of ['investigador', 'guionista', 'director-visual', 'editor-publicacion', 'analista']) {
+    assert.ok(fab.includes(r + '.md'), 'FABRICA no nombra ' + r); assert.ok(fs.existsSync(path.join(__dirname, '..', 'skill', 'roles', r + '.md')), r); }
+  const critico = JSON.stringify(nodo(ORQ, 'Crítico del guion').parameters); assert.match(critico, /LA ARITMÉTICA CUADRA/);
+  const PRD = wf('FabProduccion001');
+  for (const n of ['Revisar plano', 'Revisar archivo']) assert.match(JSON.stringify(nodo(PRD, n).parameters), /Eres el revisor visual/, n);
+  const guionista = fs.readFileSync(path.join(__dirname, '..', 'skill', 'roles', 'guionista.md'), 'utf8');
+  assert.match(guionista, /cuenta corrida/); assert.match(guionista, /110–130 palabras/);
+});
+
+test('cierre honesto: el guion recibe documental_url y la descripción del Short ya no promete un video completo', () => {
+  assert.match(codeOf(ORQ, 'Nuevo video'), /documental_url: String\(e\.documental_url \|\| ''\)/);
+  assert.ok(!codeOf(RED, 'Plan de publicación').includes('Video completo en el canal'));
+  assert.match(codeOf(wf('FabProduccion001'), 'Carpeta en la tabla'), /error: ''/);
+});
+
+test('todas las expresiones {{ }} de todos los flujos son JavaScript válido (el crítico fallaba en silencio por un salto de línea)', () => {
+  let total = 0; const malos = [];
+  for (const f of fs.readdirSync(dir)) { const w = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+    const ver = (v, n) => { if (typeof v === 'string') { if (v.startsWith('={{') && v.trimEnd().endsWith('}}')) { total++;
+        try { new Function('$', '$json', '$execution', '$now', '$fromAI', '$input', 'return (' + v.slice(3).trimEnd().slice(0, -2) + ')'); } catch (e) { malos.push(w.name + ' · ' + n.name + ': ' + e.message); } } }
+      else if (v && typeof v === 'object') for (const k in v) ver(v[k], n); };
+    for (const n of w.nodes) ver(n.parameters, n); }
+  assert.ok(total > 300); assert.deepStrictEqual(malos, []);
 });

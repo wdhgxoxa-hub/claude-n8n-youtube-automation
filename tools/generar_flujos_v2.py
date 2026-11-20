@@ -6,6 +6,14 @@ Todo el gasto queda apagado en F · Ajustes hasta que se active a propósito.
 """
 import json, os, uuid
 
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def rol(nombre):
+    """Texto de un rol del banco skill/roles/, para incrustarlo en las instrucciones de un modelo dentro de n8n."""
+    with open(os.path.join(RAIZ, 'skill', 'roles', nombre + '.md'), encoding='utf-8') as fh:
+        return ' '.join(l.strip() for l in fh if l.strip() and not l.startswith('#'))
+ROL_CRITICO, ROL_REVISOR = rol('critico'), rol('revisor-visual')
+JS = lambda t: json.dumps(t, ensure_ascii=False)   # texto como literal JS dentro de una expresión
+
 OUT = os.path.join(os.path.dirname(__file__), '..', 'workflows', 'v2')
 
 # --- Identificadores reales de la instancia -------------------------------------------
@@ -32,6 +40,7 @@ T = {  # tablas de datos
     'youtube': 'Uez0VV0bdzTX2FnE',  # conexión de cada canal con su canal de YouTube
     'publicaciones': 'OMPWHAVyhbtekML0',  # cada subida a redes (Upload-Post) con su request_id
     'aprobaciones': 'XrPPyzBaFxJwT5O3',   # decisiones pendientes y tomadas (Telegram y web usan el mismo formulario)
+    # columnas de fab_aprobaciones: aprobacion_id, etapa, video_id, canal_id, job_id, resumen, url, estado, cambios, decidido_en, aviso
 }
 W = {  # flujos
     'ajustes': 'FabAjustes000001', 'claude': 'FabLlamarClaude1', 'retorno': 'FabRetornoClaud1',
@@ -126,20 +135,24 @@ def tg(f, name, chat, text):
                  credentials=CRED_TG)
 
 
-def decision(f, p, etapa, titulo, mensaje, opciones, ids, con_cambios):
+def decision(f, p, etapa, titulo, mensaje, opciones, ids, con_cambios, aviso=None):
     """Una decisión del operador con UN formulario firmado de n8n.
     El mismo enlace se abre desde el botón de Telegram y desde la computadora (chat web: «pendientes»).
     Deja la fila en fab_aprobaciones (pendiente → decidida). Devuelve el nombre del nodo con {estado, cambios}.
     opciones: [(etiqueta del formulario, estado)], p. ej. [('Aprobar', 'aprobado'), ('Pedir cambios', 'cambios')]."""
     n = lambda x: f'{p} · {x}'
+    # Telegram recibe una tarjeta corta (aviso); el detalle completo va en el formulario.
+    aviso = aviso or ("(String(" + mensaje + " || '').split('\\n').map(x => x.trim()).filter(Boolean).slice(0, 3).join('\\n') + "
+                      "'\\n\\nÁbrelo para ver todo y decidir.')")
     code(f, n('preparar'), f"""const ids = {ids};
 return [{{ json: {{ aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: {etapa},
   video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),
-  resumen: String({mensaje} || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '' }} }}];""")
+  resumen: String({mensaje} || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '',
+  aviso: String({aviso} || '').slice(0, 1500) }} }}];""")
     dt_insert(f, n('registrar'), 'aprobaciones')
     f.add(n('avisar'), 'n8n-nodes-base.telegram', 1.2,
           {'resource': 'message', 'operation': 'sendMessage', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
-           'text': '={{ String(' + mensaje + ').slice(0, 3800) }}', 'replyMarkup': 'inlineKeyboard',
+           'text': "={{ $('" + n('preparar') + "').first().json.aviso }}", 'replyMarkup': 'inlineKeyboard',
            'inlineKeyboard': {'rows': [{'row': {'buttons': [{'text': '📝 Revisar y decidir', 'additionalFields': {
                'url': "={{ $('" + n('preparar') + "').first().json.url }}"}}]}}]},
            'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
@@ -384,7 +397,8 @@ trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
 ini = "$('Inicio').first().json"
 primero, ultimo, dec = decision(f, 'Aprobación', ini + ".etapa", "'Aprobar: ' + " + ini + ".etapa + (" + ini + ".video_id ? ' · ' + " + ini + ".video_id : '')",
-                               ini + ".mensaje", [('Aprobar', 'aprobado'), ('Pedir cambios', 'cambios')], ini, True)
+                               ini + ".mensaje", [('Aprobar', 'aprobado'), ('Pedir cambios', 'cambios')], ini, True,
+                               aviso="(" + ini + ".aviso || String(" + ini + ".mensaje || '').split('\\n').filter(Boolean).slice(0, 3).join('\\n') + '\\n\\nÁbrelo para ver todo y decidir.')")
 iff(f, '¿Aprobado?', "$('" + dec + "').first().json.estado === 'aprobado'")
 code(f, 'Evento aprobado', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'aprobado', mensaje: undefined } }];")
 code(f, 'Evento cambios', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: $('" + dec + "').first().json.cambios || 'Revísalo de nuevo y mejóralo.', mensaje: undefined } }];")
@@ -443,7 +457,8 @@ if ($('Crítico de nichos').isExecuted) { try { const k = JSON.parse(($('Crític
 const ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\n');
 const temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\n');
 const mensaje = `Propuesta de canal: ${c.nombre_propuesto}\nNicho: ${c.nicho}\nPúblico: ${c.publico}\nPromesa: ${c.promesa}\n\nEvidencia:\n${ev}\n\nPrimeros temas:\n${temas}${critica}`;
-return [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), contexto: r, job_id: $('Inicio').first().json.job_id } }];
+const aviso = `🧭 Propuesta de canal: ${c.nombre_propuesto}\n${String(c.nicho || '').slice(0, 200)}\n\nÁbrelo para ver la evidencia y decidir.`;
+return [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, job_id: $('Inicio').first().json.job_id } }];
 """)
 call(f, 'Aprobar canal', W['aprob'], wait=False)
 f.link('Según evento', '¿Criticar nichos?', 1)
@@ -495,12 +510,18 @@ return [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: String(e.tem
   version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },
   pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: e.tema, formato, biblia,
     duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',
-    indicaciones: String(e.indicaciones || '').slice(0, 2000) } } } }];
+    indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];
 """)
 f.add('Fila del video', 'n8n-nodes-base.set', 3.4, {'mode': 'raw', 'jsonOutput': '={{ $json.fila }}', 'includeOtherFields': False, 'options': {}})
 dt_insert(f, 'Guardar video', 'videos')
 iff(f, '¿Investigar con vidIQ?', "$('Leer ajustes').first().json.allowVidiq === true")
-code(f, 'Pedido a vidIQ', "const p = $('Nuevo video').first().json.pedido; return [{ json: { accion: 'investigar', tema: p.datos.tema, formato: p.datos.formato, idioma: $('Leer ajustes').first().json.idioma } }];")
+code(f, 'Pedido a vidIQ', r"""
+// La investigación de palabras clave necesita una semilla corta (2–4 palabras); con la frase entera vidIQ devolvía volumen nulo.
+const p = $('Nuevo video').first().json.pedido;
+const vacias = new Set('a al como con cuanto cuánto de del el en es la las lo los mas más para por que qué se su sus un una uno y o verdad realmente gana ganan cuesta hoy'.split(' '));
+const semilla = String(p.datos.tema || '').toLowerCase().normalize('NFC').replace(/[¿?¡!.,:;«»"()]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !vacias.has(w)).slice(0, 3).join(' ');
+return [{ json: { accion: 'investigar', tema: p.datos.tema, semilla: semilla || p.datos.tema, formato: p.datos.formato, idioma: $('Leer ajustes').first().json.idioma } }];
+""")
 call(f, 'vidIQ: investigar', W['vidiq'])
 code(f, 'Pedir guion', r"""
 // El guion recibe lo que encontró vidIQ (palabras clave y videos que destacan) como contexto, si se usó.
@@ -542,7 +563,7 @@ f.chain('Pedido a vidIQ', 'vidIQ: investigar', 'Pedir guion', 'Claude: guion', '
 dt_get(f, 'Video (crítico)', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
 iff(f, '¿Criticar guion?', "$('Leer ajustes').first().json.allowCritico === true && Number($json.intentos || 0) < 2")
 http(f, 'Crítico del guion', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Eres el crítico de guiones de un canal de YouTube. Puntúa de 1 a 10: gancho (abre una pregunta concreta), promesa (el inicio cumple el título), claridad, emocion (asombro o tensión, no tristeza plana), exactitud (cada dato tiene fuente en «fuentes») y originalidad (no repite el enfoque, la estructura ni el gancho de los temas recientes del canal; YouTube no monetiza contenido repetitivo o de plantilla). Si alguna nota es menor que 8, da instrucciones concretas de reescritura. Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_CRITICO) + " + ' Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}",
      timeout=120000, cred=CRED_OPENAI)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code(f, 'Veredicto del crítico', r"""
@@ -574,7 +595,9 @@ let critica = '';
 if ($('Veredicto del crítico').isExecuted && $('Veredicto del crítico').first().json.leido) {
   const n = $('Veredicto del crítico').first().json.notas; critica = '\nCrítico (GPT-6 Astra): ' + Object.entries(n).map(([k, v]) => k + ' ' + v).join(' · '); }
 const mensaje = `Guion: ${r.titulo}\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\nRúbrica: ${nota}${critica}\n\n${String(r.guion || '').slice(0, 3000)}`;
-return [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];
+const prom = Object.values(rb).length ? Math.round(Object.values(rb).reduce((a, b) => a + Number(b || 0), 0) / Object.values(rb).length * 10) / 10 : null;
+const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
+return [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];
 """)
 call(f, 'Aprobar guion', W['aprob'], wait=False)
 f.link('Según evento', 'Video (crítico)', 6)
@@ -625,7 +648,9 @@ const r = $json.resultado || {}; const p = r.planos || [];
 const cuenta = p.reduce((a, x) => (a[x.tipo] = (a[x.tipo] || 0) + 1, a), {});
 const mensaje = `Storyboard listo: ${p.length} planos (${Object.entries(cuenta).map(([k, v]) => v + ' ' + k).join(', ')}).\nCosto estimado: US$${r.costo_estimado_usd ?? '?'}\n\n` +
   p.slice(0, 25).map(x => `${x.id} [${x.tipo}, ${x.encuadre}] ${String(x.texto_narrado).slice(0, 90)}`).join('\n');
-return [{ json: { etapa: 'storyboard', mensaje: mensaje.slice(0, 3900), contexto: r, video_id: $json.video_id, canal_id: $json.canal_id } }];
+const nombres = { imagen: 'imágenes', archivo: 'clips de archivo', clip: 'clips animados', avatar: 'avatar' };
+const aviso = `🎬 Storyboard listo · ${p.length} escenas\n${Object.entries(cuenta).map(([k, v]) => v + ' ' + (nombres[k] || k)).join(' · ')}\nCosto estimado: US$${r.costo_estimado_usd ?? '?'}\n\nÁbrelo para ver escena por escena y decidir. Al aprobar empieza el gasto.`;
+return [{ json: { etapa: 'storyboard', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: $json.video_id, canal_id: $json.canal_id } }];
 """)
 call(f, 'Aprobar storyboard', W['aprob'], wait=False)
 route(9, 'Mensaje de storyboard', 'Aprobar storyboard')
@@ -835,7 +860,7 @@ function componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {
     .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));
   const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);
   const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';
-  const RESPIRO = 0.35;
+  const RESPIRO = vertical ? 0.15 : 0.35;   // en Shorts el respiro largo alargaba el video (67 s para 45 previstos)
   const limpio = t => String(t || '').replace(/\[[^\]]{1,30}\]/g, '').replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ').trim();
   // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).
   const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };
@@ -849,7 +874,7 @@ function componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {
       : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;
     const els = [
       { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },
-      { type: 'audio', source: voz.url },
+      { type: 'audio', source: voz.url, duration: null },   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)
     ];
     if (subtitulos) {
       const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;
@@ -859,6 +884,10 @@ function componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {
           font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });
         t += d; }
     }
+    // Cifra clave en grande (storyboard: texto_pantalla), para que el espectador siga la cuenta sin perderse.
+    if (p.plano.texto_pantalla) els.push({ type: 'text', text: String(p.plano.texto_pantalla).slice(0, 40), time: 0, duration: dur, y: vertical ? '30%' : '20%', width: '88%', x_alignment: '50%',
+      font_family: fuente, font_weight: '800', font_size: vertical ? '11 vmin' : '8 vmin', fill_color: m.color_cifra || '#22C55E', stroke_color: '#000000', stroke_width: '1.6 vmin',
+      animations: [{ time: 'start', duration: 0.35, type: 'scale', start_scale: '70%', end_scale: '100%', easing: 'quadratic-out' }] });
     if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',
       font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',
       animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });
@@ -933,7 +962,7 @@ gapi(f, 'Encargo: subir', 'POST', 'https://www.googleapis.com/upload/drive/v3/fi
 gapi(f, 'Encargo: nombrar', 'PATCH', "={{ 'https://www.googleapis.com/drive/v3/files/' + $json.id }}", 'googleDriveOAuth2Api',
      json_body="={{ { name: $('Archivos del encargo').item.json.nombre } }}",
      query={'addParents': CARPETA, 'removeParents': 'root'}, timeout=30000)
-code(f, 'Carpeta en la tabla', "return [{ json: { drive_carpeta: 'https://drive.google.com/drive/folders/' + $('Carpeta del video').first().json.id, etapa: 'produccion', estado: 'en_proceso' } }];")
+code(f, 'Carpeta en la tabla', "return [{ json: { drive_carpeta: 'https://drive.google.com/drive/folders/' + $('Carpeta del video').first().json.id, etapa: 'produccion', estado: 'en_proceso', error: '' } }];")
 dt_update(f, 'Video en producción', 'videos', 'video_id', "={{ $('Plan de producción').first().json.video_id }}")
 
 # --- Un ítem por plano ------------------------------------------------------------------
@@ -955,22 +984,42 @@ f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code1(f, 'Elegir de Pexels', r"""
 const prev = $('Un ítem por plano').item.json; const vertical = $('Plan de producción').first().json.formato === 'short';
 const ok = f => f.link && f.width && f.height && (vertical ? f.height > f.width : f.width > f.height) && Math.max(f.width, f.height) >= 1280;
-const v = ($json.videos || []).filter(x => x.duration >= 4).flatMap(x => (x.video_files || []).filter(ok).map(f => ({ ...f, autor: x.user?.name, pagina: x.url })))
-  .sort((a, b) => Math.abs(Math.max(a.width, a.height) - 1920) - Math.abs(Math.max(b.width, b.height) - 1920))[0];
-return { json: { ...prev, url: v?.link || '', fuente: v ? { banco: 'Pexels', autor: v.autor, pagina: v.pagina } : null } };
+// Hasta 3 videos distintos (el mejor archivo de cada uno) con su miniatura: el revisor visual elige o los rechaza todos.
+const candidatos = ($json.videos || []).filter(x => x.duration >= 4).map(x => {
+  const f = (x.video_files || []).filter(ok).sort((a, b) => Math.abs(Math.max(a.width, a.height) - 1920) - Math.abs(Math.max(b.width, b.height) - 1920))[0];
+  return f ? { url: f.link, thumb: x.image || (x.video_pictures || [])[0]?.picture || '', fuente: { banco: 'Pexels', autor: x.user?.name, pagina: x.url } } : null;
+}).filter(c => c && c.thumb).slice(0, 3);
+return { json: { ...prev, candidatos } };
 """)
-iff(f, '¿Hay en Pexels?', '!!$json.url')
+iff(f, '¿Hay en Pexels?', '($json.candidatos || []).length > 0')
 http(f, 'Buscar en Pixabay', 'GET', "={{ 'https://pixabay.com/api/videos/?per_page=10&safesearch=true&q=' + encodeURIComponent(($json.plano.busqueda_archivo || $json.plano.prompt_imagen).slice(0, 100)) }}",
      cred=CRED_PIXABAY, timeout=30000)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 f.nodes[-1]['parameters']['genericAuthType'] = 'httpQueryAuth'
 code1(f, 'Elegir de Pixabay', r"""
 const prev = $('Un ítem por plano').item.json; const vertical = $('Plan de producción').first().json.formato === 'short';
-const hit = ($json.hits || []).filter(h => h.duration >= 4).map(h => ({ h, f: h.videos?.large?.url ? h.videos.large : h.videos?.medium }))
-  .filter(x => x.f?.url && (vertical ? x.f.height > x.f.width : x.f.width > x.f.height))[0];
-return { json: { ...prev, url: hit?.f.url || '', fuente: hit ? { banco: 'Pixabay', autor: hit.h.user, pagina: hit.h.pageURL } : null } };
+const candidatos = ($json.hits || []).filter(h => h.duration >= 4).map(h => ({ h, f: h.videos?.large?.url ? h.videos.large : h.videos?.medium }))
+  .filter(x => x.f?.url && (vertical ? x.f.height > x.f.width : x.f.width > x.f.height))
+  .map(x => ({ url: x.f.url, thumb: x.f.thumbnail || x.h.videos?.medium?.thumbnail || '', fuente: { banco: 'Pixabay', autor: x.h.user, pagina: x.h.pageURL } }))
+  .filter(c => c.thumb).slice(0, 3);
+return { json: { ...prev, candidatos } };
 """)
-iff(f, '¿Hay en Pixabay?', '!!$json.url')
+iff(f, '¿Hay en Pixabay?', '($json.candidatos || []).length > 0')
+code1(f, 'Pedido de revisión de archivo', "return { json: { ...$json, revisar: $('Leer ajustes').first().json.allowRevisionVisual === true } };")
+iff(f, '¿Revisar archivo?', '$json.revisar === true')
+http(f, 'Revisar archivo', 'POST', 'https://api.openai.com/v1/responses',
+     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_REVISOR) + " + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + '. Búsqueda usada: ' + ($json.plano.busqueda_archivo || '') + '. Te muestro ' + $json.candidatos.length + ' miniaturas de clips de archivo, en orden (1, 2, 3). Elige el número del mejor que sirva para esta escena o -1 si ninguno sirve. Responde JSON {\\\"elegido\\\": n, \\\"motivo\\\": \\\"\\\"}.' }, ...$json.candidatos.map(c => ({ type: 'input_image', image_url: c.thumb }))] }] } }}",
+     timeout=90000, cred=CRED_OPENAI)
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+code1(f, 'Archivo elegido', r"""
+// Sin revisión: el primero. Con revisión: el que eligió el revisor visual; si ninguno sirve (o falló), se genera la imagen.
+const p = $('Pedido de revisión de archivo').item.json; const c = p.candidatos || [];
+let n = 1, motivo = '';
+if (p.revisar) { try { const v = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}'); n = Number(v.elegido); motivo = String(v.motivo || ''); } catch (e) { n = -1; motivo = 'revisión ilegible'; } }
+const elegido = Number.isInteger(n) && n >= 1 && n <= c.length ? c[n - 1] : null;
+return { json: { ...p, url: elegido?.url || '', fuente: elegido?.fuente || null, nota_archivo: elegido ? '' : ('archivo rechazado: ' + (motivo || 'ninguno sirve')).slice(0, 200) } };
+""")
+iff(f, '¿Sirve el archivo?', '!!$json.url')
 code1(f, 'Archivo aprobado', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: { ...$json.plano, tipo: 'archivo' }, fuente: $json.fuente, intento: 0 } };")
 code1(f, 'Sin archivo: generar', "const p = $('Un ítem por plano').item.json; return { json: { ...p, plano: { ...p.plano, tipo: 'imagen' } } };")
 # Todo pedido de imagen (primer intento, plano de archivo sin resultado o repetición) pasa por aquí.
@@ -1011,7 +1060,7 @@ return { json: { ...prev, url: 'https://drive.google.com/uc?export=download&id='
 """)
 iff(f, '¿Revisión visual activa?', "$('Leer ajustes').first().json.allowRevisionVisual === true && $json.plano.tipo !== 'clip'")
 http(f, 'Revisar plano', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: 'Revisa si la imagen coincide con las referencias (rostro, vestuario, paleta) y con la escena: ' + $json.plano.texto_narrado + '. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_REVISOR) + " + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + (($json.plano.texto_pantalla) ? ' · Cifra en pantalla: ' + $json.plano.texto_pantalla : '') + '. La primera imagen es la generada; las siguientes, las referencias. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
      timeout=120000, cred=CRED_OPENAI)
 code1(f, 'Veredicto', r"""
 const prev = $('URL del plano').item.json; let v = { aprobado: true };
@@ -1024,7 +1073,24 @@ return { json: { ...prev, revisiones: (prev.revisiones || 0) + 1, veredicto: v, 
 iff(f, '¿Repetir plano?', '$json.repetir === true')
 code1(f, 'Plano aprobado', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano, intento: $json.intento, revisiones: $json.revisiones || 0, nota_revision: ($json.veredicto?.problemas || []).join('; ') } };")
 code1(f, 'Avatar pendiente', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, intento: 0, nota_revision: 'avatar: falta decidir HeyGen' } };")
-f.add('Juntar planos', 'n8n-nodes-base.aggregate', 1, {'aggregate': 'aggregateAllItemData', 'destinationFieldName': 'planos', 'options': {}})
+# Puerta: a «Juntar planos» llegan tres caminos (archivo, imagen con reintentos y avatar). n8n lo ejecuta una vez por cada llegada,
+# así que solo deja pasar cuando están TODOS los planos del plan, juntando lo que dejó cada camino en todas sus pasadas.
+# (Antes era un nodo Aggregate: la primera llegada, con solo los planos de archivo, seguía sola hasta el montaje.)
+code(f, 'Juntar planos', r"""
+const plan = $('Plan de producción').first().json.planos || [];
+const ids = plan.map(p => p.id);
+const listos = new Map();
+for (const fuente of ['Archivo aprobado', 'Plano aprobado', 'Avatar pendiente']) {
+  if (!$(fuente).isExecuted) continue;
+  for (let pasada = 0; pasada < 500; pasada++) {
+    let items; try { items = $(fuente).all(0, pasada); } catch (e) { break; }
+    if (!items || !items.length) break;
+    for (const it of items) if (it.json.plano_id) listos.set(it.json.plano_id, it.json);
+  }
+}
+if (!ids.length || ids.some(id => !listos.has(id))) return [];   // aún faltan planos: esta llegada no sigue
+return [{ json: { planos: ids.map(id => listos.get(id)) } }];
+""")
 
 # --- Registro de planos y freno de gasto ------------------------------------------------
 code(f, 'Filas de planos', r"""
@@ -1050,7 +1116,8 @@ iff(f, '¿Pasa el aviso de gasto?', '$json.aviso === true')
 pe = "$('Plan de producción').first().json"
 gasto_ini, gasto_fin, gasto_dec = decision(f, 'Permiso de gasto', "'gasto'", "'Permiso de gasto · ' + " + pe + ".video_id",
     "'El video ' + " + pe + ".video_id + ' ya gastó ~US$' + $('Gasto de planos').first().json.usd + ' (' + Math.round($('Gasto de planos').first().json.pct * 100) + ' % del tope de US$' + " + pe + ".presupuesto + ') solo en imágenes y clips. ¿Sigo con voz, música y montaje?'",
-    [('Seguir', 'seguir'), ('Detener', 'detenido')], pe, False)
+    [('Seguir', 'seguir'), ('Detener', 'detenido')], pe, False,
+    aviso="'💸 Permiso de gasto · ' + " + pe + ".video_id + '\\nYa gastó ~US$' + $('Gasto de planos').first().json.usd + ' en imágenes (' + Math.round($('Gasto de planos').first().json.pct * 100) + ' % del tope de US$' + " + pe + ".presupuesto + ').\\n\\n¿Sigo con voz, música y montaje? Ábrelo para decidir.'")
 iff(f, '¿Sigo?', "$('" + gasto_dec + "').first().json.estado === 'seguir'")
 code(f, 'Producción detenida', "return [{ json: { etapa: 'produccion', estado: 'detenido', error: 'detenido por el operador al pasar el aviso de gasto' } }];")
 dt_update(f, 'Video detenido', 'videos', 'video_id', "={{ $('Plan de producción').first().json.video_id }}")
@@ -1139,10 +1206,17 @@ f.link('Según tipo de plano', 'Pedido de imagen', 0)
 f.link('Según tipo de plano', 'Avatar pendiente', 1)
 f.link('Según tipo de plano', 'Buscar en Pexels', 2)
 f.chain('Buscar en Pexels', 'Elegir de Pexels', '¿Hay en Pexels?')
-f.link('¿Hay en Pexels?', 'Archivo aprobado', 0)
+f.link('¿Hay en Pexels?', 'Pedido de revisión de archivo', 0)
 f.link('¿Hay en Pexels?', 'Buscar en Pixabay', 1)
 f.chain('Buscar en Pixabay', 'Elegir de Pixabay', '¿Hay en Pixabay?')
-f.link('¿Hay en Pixabay?', 'Archivo aprobado', 0)
+f.link('¿Hay en Pixabay?', 'Pedido de revisión de archivo', 0)
+f.link('Pedido de revisión de archivo', '¿Revisar archivo?')
+f.link('¿Revisar archivo?', 'Revisar archivo', 0)
+f.link('¿Revisar archivo?', 'Archivo elegido', 1)
+f.link('Revisar archivo', 'Archivo elegido')
+f.link('Archivo elegido', '¿Sirve el archivo?')
+f.link('¿Sirve el archivo?', 'Archivo aprobado', 0)
+f.link('¿Sirve el archivo?', 'Sin archivo: generar', 1)
 f.link('¿Hay en Pixabay?', 'Sin archivo: generar', 1)
 f.link('Sin archivo: generar', 'Pedido de imagen')
 f.link('Archivo aprobado', 'Juntar planos')
@@ -1375,7 +1449,8 @@ const e = $json;
 const extra = e.avisos.length ? '\n\nAvisos:\n• ' + e.avisos.join('\n• ') : '';
 const cortes = (e.cortes || []).map(c => `\n• Corte ${c.corte} (${Math.round(c.duracion_s)} s): ${c.url}`).join('');
 const titulos = (e.publicacion?.youtube?.titulos || []).slice(0, 3).map((t, i) => `\n${i + 1}. ${t}`).join('');
-return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id,
+const aviso = `🎞️ Video listo · ${Math.round(e.duracion_s)} s · US$${e.costo_usd}\n▶️ ${e.render_url}` + (e.avisos.length ? `\n⚠️ ${e.avisos.length} aviso(s): míralos en el enlace` : '') + '\n\nSi te gusta, apruébalo para publicarlo.';
+return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, aviso,
   contexto: { render_url: e.render_url, creditos: e.creditos || [], cortes: e.cortes || [], miniatura_url: e.miniatura_url || '', publicacion: e.publicacion || {}, formato: e.formato },
   mensaje: (`Video ${e.video_id} listo (${Math.round(e.duracion_s)} s, ~US$${e.costo_usd}).\nRevísalo: ${e.render_url}` + (e.miniatura_url ? `\nMiniatura: ${e.miniatura_url}` : '')
     + (cortes ? `\nCortes verticales:${cortes}` : '') + (titulos ? `\nTítulos propuestos:${titulos}` : '')
@@ -1385,7 +1460,7 @@ call(f, 'Aprobación final', W['aprob'], wait=False)
 code(f, 'Video rechazado por calidad', "return [{ json: { etapa: 'calidad', estado: 'con_fallas', error: $json.fallas.join('; ').slice(0, 500) } }];")
 dt_update(f, 'Marcar fallas', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
 tg(f, 'Aviso: no pasó calidad', "={{ $('Leer ajustes').first().json.chatId }}",
-   "={{ 'El video ' + $('Inicio').first().json.video_id + ' no pasó calidad: ' + $('Chequeos objetivos').first().json.fallas.join('; ') + '. Render: ' + ($('Inicio').first().json.render_url || '—') }}")
+   "={{ '❌ El video ' + $('Inicio').first().json.video_id + ' no pasó el control de calidad (no se publicó):\n• ' + $('Chequeos objetivos').first().json.fallas.join('\n• ') + ($('Inicio').first().json.render_url ? '\n\n▶️ Lo que salió: ' + $('Inicio').first().json.render_url : '') }}")
 f.chain('Inicio', 'Leer ajustes', 'Chequeos objetivos', '¿Pasa calidad?')
 f.link('¿Pasa calidad?', 'Mensaje final', 0)
 f.link('Mensaje final', 'Aprobación final')
@@ -1848,7 +1923,7 @@ const leer = r => { const t = String(r?.data ?? r?.body ?? '');
 """
 switch(f, 'Según acción', 2, "$('Inicio').first().json.accion === 'titulos' ? 1 : 0")
 # investigar
-vq('Palabras clave', "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'vidiq_keyword_research', arguments: { mode: 'research', keyword: String($('Inicio').first().json.tema || '').slice(0, 150), limit: 15, userGoal: 'elegir el ángulo y las palabras clave de un video nuevo para un canal en español' } } }) }}")
+vq('Palabras clave', "={{ JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'vidiq_keyword_research', arguments: { mode: 'research', keyword: String($('Inicio').first().json.semilla || $('Inicio').first().json.tema || '').slice(0, 150), limit: 15, userGoal: 'elegir el ángulo y las palabras clave de un video nuevo para un canal en español' } } }) }}")
 vq('Videos que destacan', "={{ JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'vidiq_outliers', arguments: { keyword: String($('Inicio').first().json.tema || '').slice(0, 500), language: $('Inicio').first().json.idioma || 'es', contentType: $('Inicio').first().json.formato === 'short' ? 'short' : 'long', limit: 10, userGoal: 'ver qué videos del tema superan a su canal para inspirar el gancho y el título' } } }) }}")
 code(f, 'Resumen de investigación', VQ_LEER + r"""
 const kw = leer($('Palabras clave').first().json); const ov = leer($json);
@@ -2056,7 +2131,7 @@ const hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').repla
 const texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\n\n').slice(0, 2100); };
 const comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };
 const campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({
-  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Video completo en el canal.', creditos].filter(Boolean).join('\n\n').slice(0, 4900) : descYt,
+  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\n\n').slice(0, 4900) : descYt,
     tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },
   tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },
   instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },
@@ -2186,13 +2261,30 @@ RUTINA = f.dump()
 f = Flow(W['errores'], 'F · Vigilante de errores')
 f.add('Error en un flujo', 'n8n-nodes-base.errorTrigger', 1, {})
 code(f, 'Mensaje de error', r"""
-// Un aviso corto y útil: qué flujo, en qué nodo, qué pasó y el enlace para abrir la ejecución.
+// Aviso claro en español: qué se detuvo, en qué paso, por qué (traducido) y un enlace corto al detalle.
 const e = $json; const ex = e.execution || {}; const wf = e.workflow || {};
-const msg = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\s+/g, ' ').slice(0, 400);
+const original = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\s+/g, ' ').trim();
 const nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';
-return [{ json: { texto: `⚠️ Falló «${wf.name || wf.id}» en el nodo «${nodo}»:\n${msg}` + (ex.url ? `\n${ex.url}` : '') + (ex.retryOf ? '\n(era un reintento)' : '') } }];
+const motivos = [
+  [/too many requests|rate.?limit|\b429\b|resource.?exhausted/i, 'el servicio pidió ir más despacio (demasiadas solicitudes seguidas).'],
+  [/timed? ?out|timeout|ETIMEDOUT/i, 'el servicio tardó demasiado en responder.'],
+  [/\b401\b|unauthori[sz]ed|invalid api key|incorrect api key|authentication/i, 'una clave fue rechazada: revisa la credencial de ese servicio.'],
+  [/\b402\b|insufficient|quota|billing|credits?/i, 'no hay saldo o créditos suficientes en el servicio.'],
+  [/ENOTFOUND|ECONNREFUSED|ECONNRESET|socket hang up|network/i, 'no hubo conexión con el servicio.'],
+  [/\b5\d\d\b|internal server error|bad gateway|service unavailable/i, 'el servicio externo tuvo una falla de su lado.'],
+  [/not supported|bad request|\b400\b/i, 'el servicio rechazó el pedido (formato o parámetros).'],
+];
+const motivo = (motivos.find(([r]) => r.test(original)) || [null, null])[1];
+const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const nombre = String(wf.name || wf.id || 'un flujo').replace(/^(F|FX|M\d+(–M\d+)?) · /, '');
+const texto = `⚠️ <b>Se detuvo: ${esc(nombre)}</b>\nPaso: ${esc(nodo)}\nMotivo: ${esc(motivo || original.slice(0, 300))}`
+  + (motivo ? `\n<i>${esc(original.slice(0, 160))}</i>` : '') + (ex.retryOf ? '\n(era un reintento)' : '')
+  + (ex.url ? `\n<a href="${esc(ex.url)}">Ver el detalle</a>` : '');
+return [{ json: { texto } }];
 """)
-tg(f, 'Avisar error', '8667738444', '={{ $json.texto.slice(0, 3900) }}')
+f.add('Avisar error', 'n8n-nodes-base.telegram', 1.2,
+      {'resource': 'message', 'operation': 'sendMessage', 'chatId': '8667738444', 'text': '={{ $json.texto.slice(0, 3900) }}',
+       'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False, 'parse_mode': 'HTML'}}, credentials=CRED_TG)
 f.chain('Error en un flujo', 'Mensaje de error', 'Avisar error')
 ERRORES = f.dump()
 
@@ -2241,9 +2333,9 @@ CHAT = f.dump()
 RITMO = {
     'FabProduccion001': {'Buscar en Pexels': (5, 1000, 3), 'Buscar en Pixabay': (5, 1200, 3), 'Generar imagen': (4, 1500, 2),
                          'Animar (Gemini Omni)': (2, 3000, 2), 'Subir a Drive': (5, 500, 3), 'Nombrar en Drive': (5, 300, 3),
-                         'Compartir enlace': (5, 300, 3), 'Revisar plano': (4, 1000, 2), 'Consultar render': (1, 0, 3),
+                         'Compartir enlace': (5, 300, 3), 'Revisar plano': (4, 1000, 2), 'Revisar archivo': (4, 1000, 2), 'Consultar render': (1, 0, 3),
                          'Carpeta del canal: buscar': (1, 0, 3), 'Encargo: nombrar': (3, 300, 3)},
-    'FabSonido0000001': {'Voz (Gemini TTS)': (5, 1000, 3), 'Subir voz a Drive': (5, 500, 3), 'Nombrar voz': (5, 300, 3),
+    'FabSonido0000001': {'Voz (Gemini TTS)': (1, 6500, 5),   # Gemini TTS respondió «too many requests» con 16 voces a 5/s; ~9 por minuto 'Subir voz a Drive': (5, 500, 3), 'Nombrar voz': (5, 300, 3),
                          'Compartir voz': (5, 300, 3), 'Buscar efecto': (3, 800, 3), 'Pedir efecto': (3, 800, 3)},
     'FabDerivados0001': {'Renderizar corte': (3, 1000, 0), 'Consultar cortes': (3, 300, 3), 'Consultar otra vez': (3, 300, 3),
                          'Nombrar base': (1, 0, 3), 'Compartir base': (1, 0, 3)},
@@ -2274,6 +2366,28 @@ assert not faltan, faltan
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
 TIEMPO = {'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
           'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600}
+# Expresiones de n8n: un salto de línea real dentro de un texto entre comillas no es JavaScript válido
+# (el crítico del guion fallaba en silencio por eso). Se escapan todos los que estén dentro de comillas.
+def escapar_saltos(ex):
+    out, q, esc = [], None, False
+    for ch in ex:
+        if q:
+            if esc: esc = False
+            elif ch == '\\': esc = True
+            elif ch == q: q = None
+            elif ch == '\n' and q in "'\"": out.append('\\n'); continue
+        elif ch in "'\"`": q = ch
+        out.append(ch)
+    return ''.join(out)
+def recorrer(v):
+    if isinstance(v, dict): return {k: recorrer(x) for k, x in v.items()}
+    if isinstance(v, list): return [recorrer(x) for x in v]
+    if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
+    return v
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, ERRORES, AGENTE, PEND, CHAT]:
+    for n in wf['nodes']:
+        n['parameters'] = recorrer(n['parameters'])
+
 for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, AGENTE, PEND, CHAT]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
                            'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})

@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "eae4380a-b028-4e31-87b0-d6e193946aa7",
+      "id": "49184bd0-4ef7-40bc-8fab-2c5671e86c62",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "2b16e7da-0159-4e4f-96d5-481b2dd14657",
+      "id": "503733a1-3249-456c-a964-3b674912f221",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -55,7 +55,7 @@
           },
           "conditions": [
             {
-              "id": "ee5e6442-b7dc-47e5-b62b-4d7b3301e6ac",
+              "id": "4ce0a544-5cf3-414a-a547-4e158a47eb97",
               "leftValue": "={{ $('Leer ajustes').first().json.allowCortes === true && $('Inicio').first().json.plan.formato !== 'short' && ($('Inicio').first().json.plan.storyboard?.cortes || []).length > 0 }}",
               "rightValue": "",
               "operator": {
@@ -69,7 +69,7 @@
         },
         "options": {}
       },
-      "id": "2f61575a-1223-4e7c-93d1-1dcb8268b937",
+      "id": "edf455d9-a955-45d0-a293-1c51f9f94c2d",
       "name": "¿Hace cortes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -80,9 +80,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// componer(): arma la composición de Creatomate. La usan el video principal y los cortes verticales.\n// Cada escena dura lo que su voz (+ un respiro). Encima: subtítulos (Shorts, cortes o si la biblia lo pide), título de\n// capítulo en los largos y efectos del storyboard; debajo, la música hasta el final. Estilo desde biblia.montaje.\nfunction componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {\n  const m = plan.biblia?.montaje || {};\n  const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));\n  const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);\n  const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));\n  const listos = planos.filter(p => p.url && voces[p.plano_id]?.url && orden.includes(p.plano_id))\n    .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\n  const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);\n  const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';\n  const RESPIRO = 0.35;\n  const limpio = t => String(t || '').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/<[^>]+>/g, '').replace(/\\s{2,}/g, ' ').trim();\n  // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).\n  const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };\n  let total = 0;\n  const escenas = listos.map((p, i) => {\n    const voz = voces[p.plano_id];\n    const dur = Math.round((voz.duracion_s + RESPIRO) * 100) / 100; total += dur;\n    const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';\n    const mov = p.plano.movimiento || '';\n    const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]\n      : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;\n    const els = [\n      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },\n      { type: 'audio', source: voz.url },\n    ];\n    if (subtitulos) {\n      const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;\n      let t = 0;\n      for (const x of partes) { const d = Math.round(voz.duracion_s * x.length / letras * 100) / 100;\n        els.push({ type: 'text', text: x, time: Math.round(t * 100) / 100, duration: d, y: vertical ? '72%' : '86%', width: '86%', x_alignment: '50%',\n          font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });\n        t += d; }\n    }\n    if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',\n      font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',\n      animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });\n    for (const x of efectos[p.plano_id] || []) els.push({ type: 'audio', source: x.url, time: 0, duration: Math.min(dur, x.duracion_s || dur), volume: m.efectos_volumen || '35%', audio_fade_out: 0.4 });\n    return { type: 'composition', track: 1, name: p.plano_id, duration: dur,\n      transition: i && (p.plano.transicion || m.transicion) === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined, elements: els };\n  });\n  total = Math.round(total * 100) / 100;\n  const elementos = [...escenas];\n  if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: total, source: son.musica.url,\n    volume: m.musica_volumen || '16%', audio_fade_in: 1, audio_fade_out: 2.5 });\n  const creditos = [son.musica?.credito, ...(son.efectos || []).map(x => x && x.credito), ...listos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)]\n    .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);\n  return { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },\n    listos: listos.length, esperados: orden.length, total, subtitulos, creditos };\n}\n\n// Cada corte: los planos que eligió el storyboard, en vertical, con subtítulos; máximo 3 cortes de hasta 60 s.\nconst e = $('Inicio').first().json; const ids = new Set((e.plan.planos || []).map(p => p.id));\nconst cortes = (e.plan.storyboard?.cortes || []).slice(0, 3)\n  .map((c, i) => ({ i, titulo: String(c.titulo || '').slice(0, 100), planos: (c.planos || []).filter(id => ids.has(id)) })).filter(c => c.planos.length);\nconst out = [];\nfor (const c of cortes) {\n  const r = componer({ plan: e.plan, planos: e.planos, son: e.son, vertical: true, soloIds: c.planos, forzarSubtitulos: true });\n  if (r.listos && r.total <= 61) out.push({ json: { corte: c.i + 1, titulo: c.titulo, duracion_s: r.total, source: r.source } });\n}\nreturn out.length ? out : [{ json: { ninguno: true } }];\n"
+        "jsCode": "\n// componer(): arma la composición de Creatomate. La usan el video principal y los cortes verticales.\n// Cada escena dura lo que su voz (+ un respiro). Encima: subtítulos (Shorts, cortes o si la biblia lo pide), título de\n// capítulo en los largos y efectos del storyboard; debajo, la música hasta el final. Estilo desde biblia.montaje.\nfunction componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {\n  const m = plan.biblia?.montaje || {};\n  const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));\n  const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);\n  const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));\n  const listos = planos.filter(p => p.url && voces[p.plano_id]?.url && orden.includes(p.plano_id))\n    .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\n  const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);\n  const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';\n  const RESPIRO = vertical ? 0.15 : 0.35;   // en Shorts el respiro largo alargaba el video (67 s para 45 previstos)\n  const limpio = t => String(t || '').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/<[^>]+>/g, '').replace(/\\s{2,}/g, ' ').trim();\n  // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).\n  const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };\n  let total = 0;\n  const escenas = listos.map((p, i) => {\n    const voz = voces[p.plano_id];\n    const dur = Math.round((voz.duracion_s + RESPIRO) * 100) / 100; total += dur;\n    const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';\n    const mov = p.plano.movimiento || '';\n    const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]\n      : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;\n    const els = [\n      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },\n      { type: 'audio', source: voz.url, duration: null },   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)\n    ];\n    if (subtitulos) {\n      const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;\n      let t = 0;\n      for (const x of partes) { const d = Math.round(voz.duracion_s * x.length / letras * 100) / 100;\n        els.push({ type: 'text', text: x, time: Math.round(t * 100) / 100, duration: d, y: vertical ? '72%' : '86%', width: '86%', x_alignment: '50%',\n          font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });\n        t += d; }\n    }\n    // Cifra clave en grande (storyboard: texto_pantalla), para que el espectador siga la cuenta sin perderse.\n    if (p.plano.texto_pantalla) els.push({ type: 'text', text: String(p.plano.texto_pantalla).slice(0, 40), time: 0, duration: dur, y: vertical ? '30%' : '20%', width: '88%', x_alignment: '50%',\n      font_family: fuente, font_weight: '800', font_size: vertical ? '11 vmin' : '8 vmin', fill_color: m.color_cifra || '#22C55E', stroke_color: '#000000', stroke_width: '1.6 vmin',\n      animations: [{ time: 'start', duration: 0.35, type: 'scale', start_scale: '70%', end_scale: '100%', easing: 'quadratic-out' }] });\n    if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',\n      font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',\n      animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });\n    for (const x of efectos[p.plano_id] || []) els.push({ type: 'audio', source: x.url, time: 0, duration: Math.min(dur, x.duracion_s || dur), volume: m.efectos_volumen || '35%', audio_fade_out: 0.4 });\n    return { type: 'composition', track: 1, name: p.plano_id, duration: dur,\n      transition: i && (p.plano.transicion || m.transicion) === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined, elements: els };\n  });\n  total = Math.round(total * 100) / 100;\n  const elementos = [...escenas];\n  if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: total, source: son.musica.url,\n    volume: m.musica_volumen || '16%', audio_fade_in: 1, audio_fade_out: 2.5 });\n  const creditos = [son.musica?.credito, ...(son.efectos || []).map(x => x && x.credito), ...listos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)]\n    .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);\n  return { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },\n    listos: listos.length, esperados: orden.length, total, subtitulos, creditos };\n}\n\n// Cada corte: los planos que eligió el storyboard, en vertical, con subtítulos; máximo 3 cortes de hasta 60 s.\nconst e = $('Inicio').first().json; const ids = new Set((e.plan.planos || []).map(p => p.id));\nconst cortes = (e.plan.storyboard?.cortes || []).slice(0, 3)\n  .map((c, i) => ({ i, titulo: String(c.titulo || '').slice(0, 100), planos: (c.planos || []).filter(id => ids.has(id)) })).filter(c => c.planos.length);\nconst out = [];\nfor (const c of cortes) {\n  const r = componer({ plan: e.plan, planos: e.planos, son: e.son, vertical: true, soloIds: c.planos, forzarSubtitulos: true });\n  if (r.listos && r.total <= 61) out.push({ json: { corte: c.i + 1, titulo: c.titulo, duracion_s: r.total, source: r.source } });\n}\nreturn out.length ? out : [{ json: { ninguno: true } }];\n"
       },
-      "id": "ca318a12-5f64-42b1-9084-ab17910f86c4",
+      "id": "978780c4-6302-43de-a100-914a3949f6fb",
       "name": "Composiciones de cortes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -102,7 +102,7 @@
           },
           "conditions": [
             {
-              "id": "a4dbaf8b-92c4-46ff-8807-c0cd3e30baab",
+              "id": "6135d67c-d831-40cc-847e-07353b36f12a",
               "leftValue": "={{ $json.ninguno !== true }}",
               "rightValue": "",
               "operator": {
@@ -116,7 +116,7 @@
         },
         "options": {}
       },
-      "id": "d394a071-c380-4302-af5f-1fc007e838af",
+      "id": "e1c423fd-a517-426e-b016-461ccab2f4d7",
       "name": "¿Hay cortes válidos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -144,7 +144,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { source: $json.source } }}"
       },
-      "id": "3697ed9a-9a26-481a-9516-a78de4c5a7c1",
+      "id": "65ff0646-9bb1-4e38-a76a-5cb70b1acdd0",
       "name": "Renderizar corte",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -165,7 +165,7 @@
         "amount": 60,
         "unit": "seconds"
       },
-      "id": "b644f85a-7ad6-44bf-a1ca-bd1a095917e9",
+      "id": "95eb5343-e3de-4f2e-aa9c-f51e44e1cf39",
       "name": "Esperar cortes",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -173,7 +173,7 @@
         1540,
         0
       ],
-      "webhookId": "f9e06850-2422-4462-806b-04524dfac7d4"
+      "webhookId": "b8ee862f-f719-46a6-a9cb-008fa81699b2"
     },
     {
       "parameters": {
@@ -191,7 +191,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "cee1a21e-3216-486d-b99a-a20b7e4a4c60",
+      "id": "52c9a092-8223-4cec-931f-e3269a7df50a",
       "name": "Consultar cortes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -214,7 +214,7 @@
       "parameters": {
         "jsCode": "\nconst pedidos = $('Composiciones de cortes').all().map(i => i.json);\nconst r = $input.all().map((i, k) => ({ ...pedidos[k], id: i.json.id || $('Renderizar corte').all()[k]?.json?.id, status: i.json.status, url: i.json.url || '' }));\nconst pendientes = r.some(x => !['succeeded', 'failed'].includes(x.status) && x.id);\nreturn r.map(x => ({ json: { ...x, source: undefined, pendientes } }));\n"
       },
-      "id": "feb22f3c-b6c4-402f-a919-a99608c4e82f",
+      "id": "0e5f2d93-de2c-4663-b92c-16be9d1e5e68",
       "name": "Estado de cortes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -234,7 +234,7 @@
           },
           "conditions": [
             {
-              "id": "71d1eb95-d9ea-42a5-8090-cd86ae6945a8",
+              "id": "0609e49d-f566-4cae-b759-6fb581a8514c",
               "leftValue": "={{ $json.pendientes === true }}",
               "rightValue": "",
               "operator": {
@@ -248,7 +248,7 @@
         },
         "options": {}
       },
-      "id": "dd082625-0bfc-48bb-869f-5e1f2acc9f09",
+      "id": "442382d0-d79f-48b1-ae7b-30be9b8726c9",
       "name": "¿Faltan cortes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -262,7 +262,7 @@
         "amount": 90,
         "unit": "seconds"
       },
-      "id": "68badcac-be1a-41e5-b23c-f80c11e7bd65",
+      "id": "75fbaede-41e0-4433-8ba0-fa7e80caac17",
       "name": "Esperar más",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -270,7 +270,7 @@
         2420,
         0
       ],
-      "webhookId": "ac7cfc43-3d85-413d-8470-b8c5dc528306"
+      "webhookId": "3469472a-00b2-4226-b04b-af140f18d904"
     },
     {
       "parameters": {
@@ -288,7 +288,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "7aaad10d-f198-42ec-a2b4-5976b29eac4d",
+      "id": "27b2100f-7cca-4871-9d5d-fb7003f78cd2",
       "name": "Consultar otra vez",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -311,7 +311,7 @@
       "parameters": {
         "jsCode": "\n// Junta los cortes terminados; los que fallaron o tardaron demasiado se omiten y se avisan.\nconst base = $('Estado de cortes').all().map(i => i.json);\nconst otra = $('Consultar otra vez').isExecuted ? $('Consultar otra vez').all().map(i => i.json) : [];\nconst final = base.map((c, k) => { const o = otra[k]; const st = o?.status || c.status; const url = o?.url || c.url;\n  return { corte: c.corte, titulo: c.titulo, duracion_s: c.duracion_s, ok: st === 'succeeded' && !!url, url: st === 'succeeded' ? url : '', estado: st || 'sin respuesta' }; });\nreturn [{ json: { cortes: final.filter(c => c.ok), fallidos: final.filter(c => !c.ok).map(c => `corte ${c.corte}: ${c.estado}`) } }];\n"
       },
-      "id": "55143ef0-1883-4d6e-8093-b6eedcf5240b",
+      "id": "5bb995f7-232b-4b33-aa95-04b20c6fbc4a",
       "name": "Cortes listos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -324,7 +324,7 @@
       "parameters": {
         "jsCode": "return [{ json: { cortes: [], fallidos: [] } }];"
       },
-      "id": "9697a110-cdc5-48ed-b512-7bbaf47bf9b3",
+      "id": "bef626fc-16f0-4961-bf35-57febf7c7107",
       "name": "Sin cortes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -344,7 +344,7 @@
           },
           "conditions": [
             {
-              "id": "27684d21-08ee-4151-9fd3-f58949b23724",
+              "id": "a32a5a86-acf5-4b96-9293-b263079f9020",
               "leftValue": "={{ $('Leer ajustes').first().json.allowMiniaturas === true && $('Inicio').first().json.plan.formato !== 'short' && !!$('Inicio').first().json.plan.storyboard?.miniatura }}",
               "rightValue": "",
               "operator": {
@@ -358,7 +358,7 @@
         },
         "options": {}
       },
-      "id": "dbad83fb-67bf-43b5-a4c1-cd2f49986f35",
+      "id": "b32429bd-ff50-4fc6-b662-000b5c5719b6",
       "name": "¿Hace miniatura?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -371,7 +371,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const mi = e.plan.storyboard.miniatura || {}; const b = e.plan.biblia || {};\n// Sin texto en la imagen: el texto lo monta Creatomate (letra nítida y estilo del canal).\nconst prompt = [`Miniatura de YouTube, 16:9, ${mi.prompt_imagen || mi.concepto || e.plan.tema}.`, b.estilo_visual?.descripcion ? 'Estilo: ' + b.estilo_visual.descripcion + '.' : '',\n  'Un solo sujeto claro, alto contraste, fondo simple, espacio libre a la izquierda para texto. Sin texto, sin letras, sin logos.'].filter(Boolean).join(' ');\nconst refs = (b.personajes || []).filter(p => (mi.personajes || []).includes(p.id)).flatMap(p => p.referencias_urls || []).slice(0, 3);\nreturn [{ json: { prompt, refs, texto: String(mi.texto || '').toUpperCase().slice(0, 32) } }];\n"
       },
-      "id": "ac057798-4323-48b3-85b0-7a203579fd0a",
+      "id": "13109590-8c0b-4646-8ca6-905fa29bb323",
       "name": "Pedido de miniatura",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -393,7 +393,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1536x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...$json.refs.map(u => ({ type: 'input_image', image_url: u }))] }] } }}"
       },
-      "id": "666967ba-66d1-4e0d-b341-8932e665682e",
+      "id": "8b40103a-1703-4606-bbe1-ad9c9f559b0c",
       "name": "Imagen de miniatura",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -413,7 +413,7 @@
       "parameters": {
         "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nif (!out?.result) return [{ json: { ok: false, error: 'sin imagen de miniatura' } }];\nreturn [{ json: { ok: true }, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: 'miniatura-base.png' } } }];\n"
       },
-      "id": "069dd7a7-8c56-495a-a113-6dab2e8f8a89",
+      "id": "ccfa0ffe-9318-4461-809a-b9ba056fc9c3",
       "name": "Archivo de miniatura",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -433,7 +433,7 @@
           },
           "conditions": [
             {
-              "id": "05efbb41-e88d-443e-b2ba-4a51b885ec0b",
+              "id": "c4a03f42-8152-42b0-98c4-d4e780200cc4",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -447,7 +447,7 @@
         },
         "options": {}
       },
-      "id": "708dc1e3-e1b5-4929-ba50-87e279fdc0b0",
+      "id": "e7786d25-216b-4d5a-ac36-98547a6ee515",
       "name": "¿Hay imagen?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -478,7 +478,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "imagen"
       },
-      "id": "2105c867-21f0-4ec1-beb8-f37c38affdb6",
+      "id": "1ba4824b-fcdc-4af5-a25c-872505f32e36",
       "name": "Subir base",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -519,7 +519,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: \"miniatura-base.png\" } }}"
       },
-      "id": "25db92fa-2ff4-46e4-b6ca-982037f712aa",
+      "id": "00fadfd8-dddb-44ef-a329-73d840564e56",
       "name": "Nombrar base",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -550,7 +550,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "091fd083-44fc-467b-9931-633a0f4c80d7",
+      "id": "6cd104b8-db56-4eda-a43a-ba9e5c07ce28",
       "name": "Compartir base",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -572,7 +572,7 @@
       "parameters": {
         "jsCode": "\n// 1280x720 JPG: la imagen a pantalla completa y el texto corto grande, con contorno, en el estilo del canal.\nconst e = $('Inicio').first().json; const m = e.plan.biblia?.montaje || {}; const texto = $('Pedido de miniatura').first().json.texto;\nconst url = 'https://drive.google.com/uc?export=download&id=' + $('Subir base').first().json.id;\nconst els = [{ type: 'image', source: url, fit: 'cover' }];\nif (texto) els.push({ type: 'text', text: texto, x: '27%', y: '50%', width: '48%', height: '70%', x_alignment: '0%', y_alignment: '50%',\n  font_family: m.fuente || 'Montserrat', font_weight: '900', font_size_maximum: '18 vmin', fill_color: m.color_texto || '#FFFFFF',\n  stroke_color: '#000000', stroke_width: '1.6 vmin', shadow_color: 'rgba(0,0,0,0.6)', shadow_blur: '2 vmin' });\nreturn [{ json: { source: { output_format: 'jpg', width: 1280, height: 720, elements: els }, base_url: url } }];\n"
       },
-      "id": "02312085-af5c-4c75-b289-97aaa67cf284",
+      "id": "2b310a0b-3942-4e91-8959-86fad6c1e03b",
       "name": "Composición de miniatura",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -594,7 +594,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { source: $json.source } }}"
       },
-      "id": "f1b695bc-c6cd-4ac6-a25b-d3afbe45e227",
+      "id": "09edaf5e-279e-4c52-91b2-a0357b45887f",
       "name": "Renderizar miniatura",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -615,7 +615,7 @@
         "amount": 20,
         "unit": "seconds"
       },
-      "id": "3cbcc884-e8b4-4add-95d6-cc3a48ff7cda",
+      "id": "8e493834-3ffb-4bff-a162-ac687bd6f150",
       "name": "Esperar miniatura",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -623,7 +623,7 @@
         5500,
         0
       ],
-      "webhookId": "ad9232d8-dfbd-4316-911c-5e41257098fa"
+      "webhookId": "42c74ca1-f850-477e-ac3b-bd303fdd997b"
     },
     {
       "parameters": {
@@ -635,7 +635,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "77804d6e-1272-45f0-8882-590ddfaa96e7",
+      "id": "aec30812-007e-4be6-90cc-8f9e07de16a8",
       "name": "Consultar miniatura",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -658,7 +658,7 @@
       "parameters": {
         "jsCode": "\n// Lo que vuelve a Producción: cortes listos, miniatura (o la imagen base si Creatomate falló) y su costo.\nconst aj = $('Leer ajustes').first().json;\nconst c = $('Cortes listos').isExecuted ? $('Cortes listos').first().json : { cortes: [], fallidos: [] };\nlet miniatura_url = '', avisos = [...(c.fallidos || [])], costo_usd = 0;\nif ($('Imagen de miniatura').isExecuted) {\n  costo_usd += aj.costoMiniaturaUsd;\n  const r = $('Consultar miniatura').isExecuted ? $('Consultar miniatura').first().json : {};\n  miniatura_url = r.status === 'succeeded' && r.url ? r.url : ($('Composición de miniatura').isExecuted ? $('Composición de miniatura').first().json.base_url : '');\n  if (!miniatura_url) avisos.push('no se pudo crear la miniatura');\n  else if (r.status !== 'succeeded') avisos.push('la miniatura salió sin texto (Creatomate no terminó)');\n}\nreturn [{ json: { cortes: c.cortes || [], miniatura_url, costo_usd, avisos } }];\n"
       },
-      "id": "96f3f294-2e86-416a-a966-037ca158a6c4",
+      "id": "74e6f044-b924-48cc-b7da-d6e50536499d",
       "name": "Resultado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

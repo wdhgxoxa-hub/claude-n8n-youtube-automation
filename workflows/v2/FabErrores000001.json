@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "1521eb70-cf47-45a7-9d98-dd9123b7a78e",
+      "id": "8679a76b-4ee5-41b6-b535-74d04f2d68bf",
       "name": "Error en un flujo",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
@@ -15,9 +15,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Un aviso corto y útil: qué flujo, en qué nodo, qué pasó y el enlace para abrir la ejecución.\nconst e = $json; const ex = e.execution || {}; const wf = e.workflow || {};\nconst msg = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\\s+/g, ' ').slice(0, 400);\nconst nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';\nreturn [{ json: { texto: `⚠️ Falló «${wf.name || wf.id}» en el nodo «${nodo}»:\\n${msg}` + (ex.url ? `\\n${ex.url}` : '') + (ex.retryOf ? '\\n(era un reintento)' : '') } }];\n"
+        "jsCode": "\n// Aviso claro en español: qué se detuvo, en qué paso, por qué (traducido) y un enlace corto al detalle.\nconst e = $json; const ex = e.execution || {}; const wf = e.workflow || {};\nconst original = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\\s+/g, ' ').trim();\nconst nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';\nconst motivos = [\n  [/too many requests|rate.?limit|\\b429\\b|resource.?exhausted/i, 'el servicio pidió ir más despacio (demasiadas solicitudes seguidas).'],\n  [/timed? ?out|timeout|ETIMEDOUT/i, 'el servicio tardó demasiado en responder.'],\n  [/\\b401\\b|unauthori[sz]ed|invalid api key|incorrect api key|authentication/i, 'una clave fue rechazada: revisa la credencial de ese servicio.'],\n  [/\\b402\\b|insufficient|quota|billing|credits?/i, 'no hay saldo o créditos suficientes en el servicio.'],\n  [/ENOTFOUND|ECONNREFUSED|ECONNRESET|socket hang up|network/i, 'no hubo conexión con el servicio.'],\n  [/\\b5\\d\\d\\b|internal server error|bad gateway|service unavailable/i, 'el servicio externo tuvo una falla de su lado.'],\n  [/not supported|bad request|\\b400\\b/i, 'el servicio rechazó el pedido (formato o parámetros).'],\n];\nconst motivo = (motivos.find(([r]) => r.test(original)) || [null, null])[1];\nconst esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst nombre = String(wf.name || wf.id || 'un flujo').replace(/^(F|FX|M\\d+(–M\\d+)?) · /, '');\nconst texto = `⚠️ <b>Se detuvo: ${esc(nombre)}</b>\\nPaso: ${esc(nodo)}\\nMotivo: ${esc(motivo || original.slice(0, 300))}`\n  + (motivo ? `\\n<i>${esc(original.slice(0, 160))}</i>` : '') + (ex.retryOf ? '\\n(era un reintento)' : '')\n  + (ex.url ? `\\n<a href=\"${esc(ex.url)}\">Ver el detalle</a>` : '');\nreturn [{ json: { texto } }];\n"
       },
-      "id": "7b71454a-b9ac-41c1-aadc-db2520facd70",
+      "id": "d35ec6bc-896a-436b-b0e6-027710f89a93",
       "name": "Mensaje de error",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -34,10 +34,11 @@
         "text": "={{ $json.texto.slice(0, 3900) }}",
         "additionalFields": {
           "disable_web_page_preview": true,
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
         }
       },
-      "id": "75ac1712-7a82-461c-aedf-ab84574e51f5",
+      "id": "19ec1974-fdd4-43f5-a6dd-3e8f1d0a968a",
       "name": "Avisar error",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
