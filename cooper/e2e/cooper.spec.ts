@@ -386,11 +386,15 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
   await page.getByRole("button", { name: "Pedir video", exact: true }).click();
   const state = await (await page.request.get("/api/estado")).json();
   await page
-    .getByLabel("Canal", { exact: true })
+    .getByRole("combobox", { name: "Canal", exact: true })
     .selectOption(state.channels[0].id);
   await page.getByLabel("Idea del video").fill("Cooper explica las mareas");
-  await page.getByLabel("Presentador", { exact: true }).selectOption("cooper");
-  await page.getByLabel("Voz", { exact: true }).selectOption("clara");
+  await page
+    .getByRole("combobox", { name: "Presentador", exact: true })
+    .selectOption("cooper");
+  await page
+    .getByRole("combobox", { name: "Voz", exact: true })
+    .selectOption("clara");
   await page.getByLabel("Presencia del avatar").selectOption("completo");
   await page.getByRole("button", { name: "Enviar a la fábrica" }).click();
   await page
