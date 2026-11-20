@@ -2,6 +2,7 @@ import { beforeAll, afterEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
 import { db } from "@/db";
 import { allowedEmails, attachments, assets, type User } from "@/db/schema";
+import { crearReto } from "@/servicios/biblioteca";
 import { loginGoogle } from "@/lib/identidad";
 import { ErrorHttp } from "@/lib/permisos";
 import { FabricaSimulada } from "@/servicios/fabrica";
@@ -73,7 +74,8 @@ it("R01 rechaza publicar un adjunto ajeno como foto de una voz", async () => {
     kind: "voz",
     name: "Voz",
     evidenceId: evidence,
-    photoId: foreign,
+    photoIds: [foreign],
+    challengeId: crearReto(ana, "voz").id,
     placement: "partes",
     consentimiento: true,
   });
@@ -231,6 +233,7 @@ it("protege perfil, evidencia y administración frente a referencias ajenas", as
         kind: "voz",
         name: "Voz",
         evidenceId: foreign,
+        challengeId: crearReto(ana, "voz").id,
         placement: "partes",
         consentimiento: true,
       })

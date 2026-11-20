@@ -1,7 +1,7 @@
 import { afterEach, beforeAll, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { videos, type User } from "@/db/schema";
+import { videos, bridgeCommands, type User } from "@/db/schema";
 import { loginGoogle } from "@/lib/identidad";
 import { FabricaN8n, FabricaSimulada } from "@/servicios/fabrica";
 let user: User, channel: string;
@@ -34,12 +34,18 @@ it("R10 serializa dos aprobaciones HTTP y una sincronización en vuelo", async (
   vi.stubGlobal(
     "fetch",
     vi.fn(async (_url, options) => {
-      const event = JSON.parse(options.body).evento;
+      const body = JSON.parse(options.body);
+      const event = body.evento;
       calls.push(event);
       if (event === "estado")
         return new Promise<Response>((resolve) => {
           release = resolve;
         });
+      db()
+        .update(bridgeCommands)
+        .set({ confirmed: true })
+        .where(eq(bridgeCommands.id, body.id_evento))
+        .run();
       return Response.json({ aceptado: true });
     }),
   );
@@ -51,14 +57,29 @@ it("R10 serializa dos aprobaciones HTTP y una sincronización en vuelo", async (
   ]);
   // El estado anterior responde después de las solicitudes de aprobación.
   await new Promise((resolve) => setTimeout(resolve, 20));
-  release(Response.json({ videos: [{ id, stage: 3 }] }));
+  release(
+    Response.json({
+      canales: [],
+      videos: [
+        {
+          id,
+          stage: 3,
+          canal_id: channel,
+          dueno_email: user.email,
+          titulo: "Carrera",
+          script: "Guion",
+          actualizado_en: 1,
+        },
+      ],
+    }),
+  );
   await sync;
   const settled = await results;
-  expect(calls.filter((event) => event === "aprobar")).toHaveLength(1);
+  expect(calls.filter((event) => event === "aprobar_guion")).toHaveLength(1);
   expect(
     settled.filter((result) => result.status === "fulfilled"),
-  ).toHaveLength(1);
+  ).toHaveLength(2);
   expect(db().select().from(videos).where(eq(videos.id, id)).get()?.stage).toBe(
-    4,
+    3,
   );
 });

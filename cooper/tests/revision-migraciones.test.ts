@@ -1,9 +1,12 @@
 import { expect, it, vi } from "vitest";
 import Database from "better-sqlite3";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { drizzle } from "drizzle-orm/better-sqlite3";
+const entries = JSON.parse(
+  readFileSync("drizzle/meta/_journal.json", "utf8"),
+).entries;
 // Se fuerza el intercalado: otro proceso aplica las migraciones después de leer
 // el diario y antes de iniciar la transacción. No depende del planificador.
 it("R07 serializa la lectura del diario y la aplicación de migraciones", async () => {
@@ -42,7 +45,7 @@ it("R07 serializa la lectura del diario y la aplicación de migraciones", async 
     expect(raced).toBe(true);
     expect(
       second.prepare("SELECT count(*) AS n FROM __drizzle_migrations").get(),
-    ).toEqual({ n: 2 });
+    ).toEqual({ n: entries.length });
   } finally {
     spy.mockRestore();
     second.close();
@@ -82,10 +85,11 @@ it("R07 preserva datos al actualizar, repite sin duplicar y revierte SQL fallido
     expect(sqlite.prepare("PRAGMA table_info(videos)").all()).toEqual(
       expect.arrayContaining([expect.objectContaining({ name: "avatar_id" })]),
     );
-    copyFileSync(
-      "drizzle/0001_presentadores.sql",
-      `${folder}/0001_presentadores.sql`,
-    );
+    for (const migration of entries)
+      copyFileSync(
+        `drizzle/${migration.tag}.sql`,
+        `${folder}/${migration.tag}.sql`,
+      );
     writeFileSync(
       `${folder}/fallida.sql`,
       "CREATE TABLE temporal(id TEXT);\n--> statement-breakpoint\nSQL INVALIDO;",
@@ -94,9 +98,8 @@ it("R07 preserva datos al actualizar, repite sin duplicar y revierte SQL fallido
       `${folder}/meta/_journal.json`,
       JSON.stringify({
         entries: [
-          entry,
-          { ...entry, when: 1795176001000, tag: "0001_presentadores" },
-          { ...entry, when: 1795176002000, tag: "fallida" },
+          ...entries,
+          { ...entry, when: 1795176004000, tag: "fallida" },
         ],
       }),
     );
@@ -108,7 +111,7 @@ it("R07 preserva datos al actualizar, repite sin duplicar y revierte SQL fallido
     ).toBeUndefined();
     expect(
       sqlite.prepare("SELECT count(*) AS n FROM __drizzle_migrations").get(),
-    ).toEqual({ n: 2 });
+    ).toEqual({ n: entries.length });
     sqlite.prepare("UPDATE __drizzle_migrations SET hash='alterado'").run();
     expect(() => aplicarMigraciones(sqlite, resolve("drizzle"))).toThrow(
       "historial",
