@@ -4,6 +4,67 @@ import { timingSafeEqual } from "node:crypto";
 import { encode } from "next-auth/jwt";
 import { loginGoogle } from "../src/lib/identidad";
 import { db } from "../src/db";
+import { assets, attachments, users } from "../src/db/schema";
+import { eq } from "drizzle-orm";
+import { crearReto } from "../src/servicios/biblioteca";
+import { VozSimulada } from "../src/servicios/proveedores/simulados";
+async function prepararRevisionDemo() {
+  if (
+    process.env.COOPER_DEMO !== "1" ||
+    db()
+      .select()
+      .from(assets)
+      .where(eq(assets.id, "demo-identidad-pendiente"))
+      .get()
+  )
+    return;
+  const owner =
+    db()
+      .insert(users)
+      .values({
+        id: "demo-identidad",
+        email: "identidad@example.test",
+        name: "Identidad ficticia",
+      })
+      .onConflictDoNothing()
+      .returning()
+      .get() ??
+    db().select().from(users).where(eq(users.id, "demo-identidad")).get()!;
+  const file = await new VozSimulada().sintetizar();
+  const evidenceId = "demo-grabacion";
+  db()
+    .insert(attachments)
+    .values({
+      id: evidenceId,
+      ownerId: owner.id,
+      name: "Muestra ficticia.wav",
+      mime: file.mime,
+      data: file.data,
+      size: Buffer.from(file.data, "base64").length,
+    })
+    .onConflictDoNothing()
+    .run();
+  const challenge = crearReto(owner, "voz");
+  db()
+    .insert(assets)
+    .values({
+      id: "demo-identidad-pendiente",
+      ownerId: owner.id,
+      kind: "voz",
+      name: "Voz de ensayo · identidad ficticia",
+      evidenceId,
+      challengeId: challenge.id,
+      status: "revision",
+      provider: "simulada",
+      simulated: true,
+      consentAt: Date.now(),
+      consentText: "Material ficticio para comprobar la revisión de identidad.",
+      consentVersion: "ensayo",
+      createdAt: Date.now(),
+    })
+    .run();
+}
+
 import { ErrorHttp } from "../src/lib/permisos";
 const secret = process.env.COOPER_E2E_SECRET;
 if (
@@ -39,6 +100,7 @@ const server = createServer(async (req, res) => {
     )
       throw new ErrorHttp(403, "Solo cuentas ficticias");
     const user = loginGoogle(input.email, input.email.split("@")[0]);
+    await prepararRevisionDemo();
     const salt = "authjs.session-token";
     const token = await encode({
       secret: process.env.AUTH_SECRET!,

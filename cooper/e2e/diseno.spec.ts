@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 const dir = ".cache/capturas-diseno";
 async function ready(page: Page, path = "/") {
   await page.goto(path);
@@ -151,5 +151,117 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   await page.locator(".factory-link").click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "¿A qué huele la lluvia?",
+  );
+});
+
+test("capturas finales: todas las pantallas y formularios demo en ambos temas", async ({
+  page,
+}) => {
+  test.setTimeout(240000);
+  const dir = ".cache/capturas-final";
+  mkdirSync(dir, { recursive: true });
+  const state = await (await page.request.get("/api/estado")).json();
+  const manifest: {
+    archivo: string;
+    tema: string;
+    ancho: number;
+    ruta: string;
+    demo: boolean;
+  }[] = [];
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const theme of ["oscuro", "claro"]) {
+    expect(
+      (
+        await page.request.patch("/api/perfil", {
+          data: {
+            name: "Walter",
+            image: "",
+            theme,
+            home: "chat",
+            whatsapp: "",
+          },
+        })
+      ).ok(),
+    ).toBe(true);
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+      for (const [name, path] of [
+        ["inicio", "/"],
+        ["fabrica", "/"],
+        ["canales", "/canales"],
+        ["videos", "/videos"],
+        ["detalle-video", `/videos/${state.videos[0].id}`],
+        ["aprobacion-guion", `/videos/${state.videos[1].id}`],
+        ["aprobacion-final", `/videos/${state.videos[2].id}`],
+        ["publicado", `/videos/${state.videos[3].id}`],
+        ["pedir-video", "/videos"],
+        ["avatares", "/avatares"],
+        ["voces", "/avatares"],
+        ["crear-avatar", "/avatares"],
+        ["crear-voz", "/avatares"],
+        ["perfil", "/perfil"],
+        ["admin", "/admin"],
+        ["entrada", "/entrar"],
+        ["entrada-error", "/entrar?error=AccessDenied"],
+        ["no-encontrado", "/inexistente"],
+      ]) {
+        if (["entrada", "entrada-error", "no-encontrado"].includes(name)) {
+          await page.goto(path);
+          // Variante de tokens públicos; no implica selector público de tema.
+          await page.evaluate((theme) => {
+            document.documentElement.dataset.theme = theme;
+          }, theme);
+        } else await ready(page, path);
+        if (name === "fabrica" && width === 390)
+          await page.getByRole("tab", { name: /Fábrica/ }).click();
+        if (name === "voces" || name === "crear-voz")
+          await page
+            .getByRole("button", { name: "Voces", exact: true })
+            .click();
+        if (name === "crear-avatar" || name === "crear-voz") {
+          await page
+            .getByRole("button", {
+              name: name === "crear-voz" ? "Crear voz" : "Crear avatar",
+              exact: true,
+            })
+            .click();
+          await expect(page.locator(".identity-form blockquote")).toContainText(
+            "Mi frase es:",
+          );
+        }
+        if (name === "pedir-video")
+          await page
+            .getByRole("button", { name: "Pedir video", exact: true })
+            .click();
+        if (name === "admin") {
+          await expect(page.locator(".identity-review")).toHaveCount(1);
+          await expect(page.locator(".identity-review")).toContainText(
+            "identidad ficticia",
+          );
+        }
+        await overflow(page);
+        expect(
+          (
+            await new AxeBuilder({ page })
+              .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+              .analyze()
+          ).violations,
+          `${name} ${theme} ${width}`,
+        ).toEqual([]);
+        const archivo = `${name}-${theme}-${width}.png`;
+        await page.screenshot({ path: `${dir}/${archivo}`, fullPage: true });
+        manifest.push({
+          archivo,
+          tema: theme,
+          ancho: width,
+          ruta: path,
+          demo: true,
+        });
+      }
+    }
+  }
+  writeFileSync(
+    `${dir}/manifest.json`,
+    JSON.stringify(manifest, null, 2) + "\n",
   );
 });

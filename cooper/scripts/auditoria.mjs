@@ -5,7 +5,6 @@ import { resolve } from "node:path";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
-const base = "http://127.0.0.1:33171";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -19,11 +18,18 @@ async function available(port) {
   await new Promise((resolve) => probe.close(resolve));
   return selected;
 }
-await available(33171);
-await available(33172);
+const appPort = await available(0);
+const fixturePort = await available(0);
+const base = `http://127.0.0.1:${appPort}`;
 const server = spawn(process.execPath, ["scripts/e2e-server.mjs"], {
   stdio: ["ignore", "ignore", "inherit"],
-  env: { ...process.env, COOPER_E2E_SECRET: secret },
+  env: {
+    ...process.env,
+    COOPER_E2E_SECRET: secret,
+    COOPER_E2E_PORT: String(appPort),
+    COOPER_E2E_FIXTURE_PORT: String(fixturePort),
+    COOPER_DEMO: "1",
+  },
 });
 let browser;
 try {
@@ -45,9 +51,12 @@ try {
     args: [`--remote-debugging-port=${port}`],
   });
   const context = await browser.newContext({ baseURL: base });
-  const auth = await context.request.post("http://127.0.0.1:33172/sesion", {
-    data: { email: "admin@example.test", secret },
-  });
+  const auth = await context.request.post(
+    `http://127.0.0.1:${fixturePort}/sesion`,
+    {
+      data: { email: "admin@example.test", secret },
+    },
+  );
   if (!auth.ok()) throw new Error("No se pudo crear la sesión aislada.");
   const channel = await (
     await context.request.post("/api/orden", {
