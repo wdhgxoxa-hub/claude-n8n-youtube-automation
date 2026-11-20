@@ -1,0 +1,212 @@
+{
+  "id": "FabCooperProgr01",
+  "name": "FX · Progreso de Cooper",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "53bcca63-f35d-5051-93db-56cf9fde1967",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7dca3385-07ff-56bc-b970-d868c2e06f32",
+              "leftValue": "={{ !!$json.dueno_email && !!$json.video_id && !$json.eliminado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f476237a-02e8-51b6-8c1f-b8e1bd03b5e9",
+      "name": "¿Tiene dueño?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ETAPAS = {\"radar\": 0, \"guion\": 1, \"verificacion\": 2, \"aprobacion_guion\": 3, \"storyboard\": 4, \"produccion\": 5, \"sonido\": 6, \"montaje\": 7, \"calidad\": 8, \"aprobacion_final\": 9, \"programado\": 10, \"publicado\": 11};\n\nconst v = $('Inicio').first().json;\nreturn [{ json: { version:'cooper-v1', tipo:'progreso', id_evento: v.cooper_evento_id || ('video:' + v.video_id + ':' + v.updatedAt),\n  video: { id:v.video_id, dueno_email:v.dueno_email, canal_id:v.canal_id, titulo:String(v.tema || ''),\n    stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];\n"
+      },
+      "id": "84be3ae1-b084-5c11-88a4-a66af290d0a8",
+      "name": "Progreso público",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst secret = String($env.COOPER_WEBHOOK_SECRET || '');\nif (secret.length < 32) throw new Error('Falta COOPER_WEBHOOK_SECRET');\nconst cuerpo = JSON.stringify($('Progreso público').first().json), timestamp = String(Date.now());\nconst firma = require('crypto').createHmac('sha256', secret).update(timestamp + '.' + cuerpo).digest('hex');\nreturn [{ json: { cuerpo, timestamp, firma: 'sha256=' + firma } }];\n"
+      },
+      "id": "6ab8d537-07c4-55db-9de4-fa011cac7698",
+      "name": "Firmar progreso",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "9918edb1-283c-5610-a7cb-e1c416dbae5a",
+      "name": "Avisar a Cooper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: $('Inicio').first().json }];"
+      },
+      "id": "a0e46022-2b8d-5e0f-b1e5-82ffe39b0581",
+      "name": "Conservar fila",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "¿Tiene dueño?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Tiene dueño?": {
+      "main": [
+        [
+          {
+            "node": "Progreso público",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Conservar fila",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Progreso público": {
+      "main": [
+        [
+          {
+            "node": "Firmar progreso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firmar progreso": {
+      "main": [
+        [
+          {
+            "node": "Avisar a Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar a Cooper": {
+      "main": [
+        [
+          {
+            "node": "Conservar fila",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

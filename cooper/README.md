@@ -1,6 +1,6 @@
-# Cooper — fase 1
+# Cooper — fases 1 y 2
 
-Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. Rama `cooper-fase1`; no incluye despliegue ni cambios en n8n.
+Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente preparado en `cooper-fase2` está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
 
 ## Arranque
 
@@ -32,7 +32,7 @@ Las migraciones SQL versionadas de `drizzle/` se leen con Drizzle y se aplican b
 | `COOPER_DATABASE_PATH`                   | Archivo SQLite; por defecto `./data/cooper.sqlite`.                                                                                       |
 | `COOPER_FABRICA`                         | `simulada` o `n8n`. Otros valores se rechazan.                                                                                            |
 | `COOPER_SIMULACION_MS`                   | Intervalo de avance; 8000 ms por defecto. Las aprobaciones nunca avanzan solas.                                                           |
-| `COOPER_N8N_URL`, `COOPER_N8N_TOKEN`     | Endpoint HTTP y token privado del futuro puente. Solo servidor.                                                                           |
+| `COOPER_N8N_URL`, `COOPER_N8N_TOKEN`     | Endpoint HTTP y token privado del puente. Solo servidor; token de al menos 32 caracteres.                                                                           |
 | `COOPER_GASTO_ALERTA_USD`                | Umbral diario informativo; por defecto 25 USD. No bloquea producción.                                                                     |
 | `NEXT_TELEMETRY_DISABLED`                | `1` para desactivar la telemetría de Next.                                                                                                |
 
@@ -68,23 +68,9 @@ Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expre
 
 `Fabrica` separa producción e interfaz. `FabricaSimulada` persiste operaciones y avanza con los pulsos SSE mientras hay un estudio abierto; no produce archivos audiovisuales reales. El detalle muestra una maqueta animada, no un video renderizado. Las fechas programadas se respetan después de las dos aprobaciones.
 
-`FabricaN8n` hace POST con token Bearer, timeout de 10 s y este sobre:
+`FabricaN8n` usa el contrato `cooper-v1`: token de cabecera, tipos y Zod, timeout de 10 s y tres intentos con backoff. Las órdenes se registran en SQLite; n8n reserva y confirma el despacho mediante callback HMAC. La eliminación se propaga como marca lógica en n8n y exige recursos en reposo. Las aprobaciones llevan el contexto guardado de n8n y la etapa se confirma remotamente.
 
-```json
-{
-  "evento": "nuevo_video",
-  "dueno_email": "persona@equipo.com",
-  "usuario_id": "uuid",
-  "datos": {
-    "id": "uuid-generado-por-cooper",
-    "evento": "nuevo_video",
-    "recursoId": "uuid-del-canal",
-    "texto": "Título"
-  }
-}
-```
-
-Las mutaciones requieren `{ "aceptado": true }` antes de persistir el reflejo local. El ID generado para canales/videos es el mismo en ambos lados. La consulta `estado` recibe `{ "videos": [{ "id": "uuid", "stage": 3, "script": "..." }] }`; solo se actualizan videos del dueño autenticado. `aprobar` envía ID y etapa. Los detalles de transporte y respuestas desconocidas nunca se devuelven al usuario. Las eliminaciones de videos/canales son locales en esta fase; su propagación real requiere el puente. No hay reintentos automáticos de mutaciones; la idempotencia distribuida, entrega durable, ingestión de gastos y contrato definitivo del puente corresponden a la fase 2. El contrato HTTP se prueba con respuestas simuladas; no se contactó un n8n real.
+El receptor `/api/n8n/webhook` valida firma sobre bytes, tiempo, dueño, ID y digest persistidos. SSE reemite progreso del dueño y concilia el estado cada minuto. `COOPER_WEBHOOK_SECRET` debe coincidir con n8n y tener al menos 32 caracteres. En modo n8n, el panel administrativo usa los gastos registrados en `fab_costos`, indicando las estimaciones de las tarifas configuradas. No se mezcla el gasto simulado. El contrato completo, variables de n8n, migración de dueños y pasos para Claude/Walter están en [la guía del puente](../docs/cooper-puente-n8n.md).
 
 `ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` son interfaces reemplazables. En esta fase la identidad comprueba evidencia y consentimiento, pero **no comprueba biométricamente a la persona**. Las voces de catálogo reproducen tonos de demostración y la transcripción devuelve una frase fija editable. Nunca se presenta esto como clonación o verificación real.
 
@@ -119,7 +105,7 @@ npm run test:e2e
 npm run build
 ```
 
-E2E construye y prueba la aplicación en modo producción en `127.0.0.1:33171`, con base temporal y credenciales efímeras. Instala Chromium en `.cache/browsers` si falta; el primer ensayo necesita red y las bibliotecas de Chromium del sistema. Nunca usa la base de `.env.local`. No reutiliza un servidor que ya ocupe el puerto.
+E2E construye y prueba la aplicación en modo producción en un puerto libre de `127.0.0.1` (o `COOPER_E2E_PORT` explícito), con base temporal y credenciales efímeras. Instala Chromium en `.cache/browsers` si falta; el primer ensayo necesita red y las bibliotecas de Chromium del sistema. Nunca usa la base de `.env.local`. No reutiliza un servidor que ya ocupe el puerto.
 
 Vitest cubre identidad, permisos/rutas, aislamiento de chat, gasto, etapas, HTTP, programación, adjuntos, privacidad y consentimiento. Playwright cubre entrada, chat, creación, SSE, ambas aprobaciones, correcciones, audio, biblioteca, perfil, administración, revocación y auditoría axe en ambos temas. Capturas en `test-results/visual/`; reportes en `playwright-report/`. Anchuras: 360, 390, 768, 1024, 1440 y 1920. Son artefactos reproducibles, no se versionan.
 
@@ -127,7 +113,7 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 
 ## Fases siguientes
 
-2. Puente real de n8n, propietario por canal, gastos reales, conciliación, cola durable e idempotencia distribuida.
+2. Puente implementado y probado localmente; falta aplicar la migración y verificar en una instancia de ensayo antes del despliegue.
 3. Generación real de avatares/voces, verificación de identidad real y transcripción real; sustituir adaptadores conservando permisos.
 4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
 5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.

@@ -3,9 +3,12 @@ const secret = process.env.COOPER_E2E_SECRET!;
 test.beforeEach(async ({ page }) => {
   expect(
     (
-      await page.request.post("http://127.0.0.1:33172/sesion", {
-        data: { email: "admin@example.test", secret },
-      })
+      await page.request.post(
+        `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT ?? "33172"}/sesion`,
+        {
+          data: { email: "admin@example.test", secret },
+        },
+      )
     ).status(),
   ).toBe(200);
 });
@@ -58,11 +61,11 @@ test("privacidad en HTML, JSON y carga de sesión Auth.js", async ({
     ).status(),
   ).toBe(200);
   const context = await browser.newContext({
-    baseURL: "http://127.0.0.1:33171",
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "33171"}`,
   });
   try {
     const session = await context.request.post(
-      "http://127.0.0.1:33172/sesion",
+      `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT ?? "33172"}/sesion`,
       { data: { email, secret } },
     );
     expect(session.status()).toBe(200);

@@ -47,6 +47,7 @@ export const videos = sqliteTable("videos", {
   avatarPlacement: text("avatar_placement", { enum: ["completo", "partes"] })
     .notNull()
     .default("partes"),
+  remoteUpdatedAt: integer("remote_updated_at").notNull().default(0),
   stage: integer("stage").notNull().default(0),
   script: text("script").notNull(),
   feedback: text("feedback").notNull().default(""),
@@ -113,3 +114,19 @@ export type User = typeof users.$inferSelect;
 export type Video = typeof videos.$inferSelect;
 export type Channel = typeof channels.$inferSelect;
 export type Asset = typeof assets.$inferSelect;
+
+export const bridgeCommands = sqliteTable("bridge_commands", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  request: text("request").notNull(),
+  execution: text("execution").notNull().default(""),
+  confirmed: integer("confirmed", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at").notNull(),
+});
+export const bridgeReceipts = sqliteTable("bridge_receipts", {
+  id: text("id").primaryKey(),
+  digest: text("digest").notNull(),
+  createdAt: integer("created_at").notNull(),
+});

@@ -8,9 +8,12 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync } from "node:fs";
 const secret = process.env.COOPER_E2E_SECRET!;
 async function login(request: APIRequestContext, email = "ana@example.test") {
-  const response = await request.post("http://127.0.0.1:33172/sesion", {
-    data: { email, secret },
-  });
+  const response = await request.post(
+    `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT ?? "33172"}/sesion`,
+    {
+      data: { email, secret },
+    },
+  );
   expect(response.status()).toBe(200);
 }
 async function noOverflow(page: Page) {
@@ -60,16 +63,22 @@ test("entrada pública, cabeceras y protección de rutas", async ({
   expect(response.headers()["x-content-type-options"]).toBe("nosniff");
   expect(
     (
-      await request.post("http://127.0.0.1:33172/sesion", {
-        data: { email: "intruso@example.test", secret },
-      })
+      await request.post(
+        `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT ?? "33172"}/sesion`,
+        {
+          data: { email: "intruso@example.test", secret },
+        },
+      )
     ).status(),
   ).toBe(403);
   expect(
     (
-      await request.post("http://127.0.0.1:33172/sesion", {
-        data: { email: "admin@example.test", secret: "incorrecto" },
-      })
+      await request.post(
+        `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT ?? "33172"}/sesion`,
+        {
+          data: { email: "admin@example.test", secret: "incorrecto" },
+        },
+      )
     ).status(),
   ).toBe(403);
   await expect(page).toHaveTitle(/Cooper/);
@@ -242,7 +251,9 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
     page.getByRole("heading", { name: "Ana presentadora" }),
   ).toBeVisible();
   await expect(page.getByText("Solo tú", { exact: true })).toBeVisible();
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:33171" });
+  const other = await browser.newContext({
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+  });
   await login(other.request, "luis@example.test");
   expect(
     (await (await other.request.get("/api/estado")).json()).assets,
@@ -317,7 +328,9 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   await expect(
     page.getByText("invitado@example.test", { exact: true }),
   ).toHaveCount(0);
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:33171" });
+  const other = await browser.newContext({
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+  });
   await login(other.request, "luis@example.test");
   const suspendedPage = await other.newPage();
   await suspendedPage.goto("/");

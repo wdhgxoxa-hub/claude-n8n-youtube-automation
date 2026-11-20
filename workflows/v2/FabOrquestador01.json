@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json;\n// adoptar_cuenta devuelve una propuesta de canal como investigar_nichos: pasa por la misma aprobación.\nconst clave = e.evento === 'claude_ok' ? 'claude_ok:' + ({ corregir_guion: 'guion', adoptar_cuenta: 'investigar_nichos' }[e.modo] || e.modo)\n  : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;\nconst rutas = [\"nuevo_canal\", \"claude_ok:investigar_nichos\", \"aprobado:canal\", \"cambios:canal\", \"claude_ok:crear_biblia\", \"nuevo_video\", \"claude_ok:guion\", \"aprobado:guion\", \"cambios:guion\", \"claude_ok:storyboard\", \"aprobado:storyboard\", \"cambios:storyboard\", \"claude_ok:aprender\", \"aprobado:final\", \"cambios:final\", \"corregir\", \"ajustar_biblia\", \"programar\", \"referencias\", \"configurar_redes\", \"metas\", \"adoptar_cuenta\", \"otro\"];\nconst i = rutas.indexOf(clave);\nreturn [{ json: { ...e, clave, salida: i === -1 ? rutas.length - 1 : i } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json;\n// adoptar_cuenta devuelve una propuesta de canal como investigar_nichos: pasa por la misma aprobación.\nconst clave = e.evento === 'claude_ok' ? 'claude_ok:' + ({ corregir_guion: 'guion', adoptar_cuenta: 'investigar_nichos' }[e.modo] || e.modo)\n  : ['aprobado','cambios'].includes(e.evento) ? e.evento + ':' + e.etapa : e.evento;\nconst rutas = [\"nuevo_canal\", \"claude_ok:investigar_nichos\", \"aprobado:canal\", \"cambios:canal\", \"claude_ok:crear_biblia\", \"nuevo_video\", \"claude_ok:guion\", \"aprobado:guion\", \"cambios:guion\", \"claude_ok:storyboard\", \"aprobado:storyboard\", \"cambios:storyboard\", \"claude_ok:aprender\", \"aprobado:final\", \"cambios:final\", \"corregir\", \"ajustar_biblia\", \"programar\", \"referencias\", \"configurar_redes\", \"metas\", \"adoptar_cuenta\", \"eliminar\", \"otro\"];\nconst i = rutas.indexOf(clave);\nreturn [{ json: { ...e, clave, salida: i === -1 ? rutas.length - 1 : i } }];\n"
       },
       "id": "1349ca0a-6c8f-4a3a-bec0-f6612b0fcc0d",
       "name": "Ruta",
@@ -60,7 +60,7 @@
     {
       "parameters": {
         "mode": "expression",
-        "numberOutputs": 23,
+        "numberOutputs": 24,
         "output": "={{ $json.salida }}"
       },
       "id": "7fa1c5e3-c454-425f-9fac-88c1eee146ef",
@@ -74,7 +74,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$json; return [{ json: { modo:'investigar_nichos', canal_id:'', video_id:'', datos:{ criterios: e.criterios || '', rechazos: e.rechazos || [] } } }];"
+        "jsCode": "const e=$json; return [{ json: { modo:'investigar_nichos', canal_id:e.canal_id || '', dueno_email:e.dueno_email || '', video_id:'', datos:{ criterios: e.criterios || '', rechazos: e.rechazos || [] } } }];"
       },
       "id": "f2a35648-f8ab-485f-b2a7-5d6371276938",
       "name": "Pedir nichos",
@@ -206,7 +206,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst r = $('Inicio').first().json.resultado || {}; const c = r.canal || {};\nlet critica = '';\nif ($('Crítico de nichos').isExecuted) { try { const k = JSON.parse(($('Crítico de nichos').first().json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}');\n  critica = `\\n\\nCrítico (GPT-6 Astra): ${k.veredicto || ''}` + ((k.sin_fuente || []).length ? '\\nSin fuente: ' + k.sin_fuente.slice(0, 4).join('; ') : ''); } catch (e) { critica = ''; } }\nconst ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\\n');\nconst temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\\n');\nconst dg = r.diagnostico || null; const cu = r.cuenta || null; const mt = r.metas || null;\nconst diag = dg ? `\\n\\nDiagnóstico de la cuenta (${cu?.red || ''} ${cu?.handle || ''}):\\nBien: ${(dg.bien || []).slice(0, 4).join('; ')}\\nCambiar: ${(dg.cambiar || []).slice(0, 5).join('; ')}\\nCompetencia: ${(dg.competencia || []).slice(0, 4).map(x => x.patron || x).join('; ')}` : '';\nconst metas = mt ? `\\nMetas propuestas: ${mt.videos_semana} ${mt.formato || 'videos'}/semana, tope US$${mt.gasto_semana_usd}/semana` : '';\nconst mensaje = `${cu ? 'Adopción de cuenta' : 'Propuesta de canal'}: ${c.nombre_propuesto}\\nNicho: ${c.nicho}\\nPúblico: ${c.publico}\\nPromesa: ${c.promesa}${diag}${metas}\\n\\nEvidencia:\\n${ev}\\n\\nPrimeros temas:\\n${temas}${critica}`;\nconst aviso = (cu ? `🧭 Adopción de ${cu.red} ${cu.handle}: ${c.nombre_propuesto}\\n${String((dg?.cambiar || [])[0] || c.nicho || '').slice(0, 200)}` : `🧭 Propuesta de canal: ${c.nombre_propuesto}\\n${String(c.nicho || '').slice(0, 200)}`) + '\\n\\nÁbrelo para ver la evidencia y decidir.';\nreturn [{ json: { etapa: 'canal', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, job_id: $('Inicio').first().json.job_id } }];\n"
+        "jsCode": "\nconst r = $('Inicio').first().json.resultado || {}; const c = r.canal || {};\nlet critica = '';\nif ($('Crítico de nichos').isExecuted) { try { const k = JSON.parse(($('Crítico de nichos').first().json.output || []).flatMap(o => o.content || []).find(x => x.type === 'output_text')?.text || '{}');\n  critica = `\\n\\nCrítico (GPT-6 Astra): ${k.veredicto || ''}` + ((k.sin_fuente || []).length ? '\\nSin fuente: ' + k.sin_fuente.slice(0, 4).join('; ') : ''); } catch (e) { critica = ''; } }\nconst ev = (r.evidencia || []).slice(0, 5).map(x => '• ' + x.dato).join('\\n');\nconst temas = (r.primeros_temas || []).slice(0, 5).map(t => '– ' + t).join('\\n');\nconst dg = r.diagnostico || null; const cu = r.cuenta || null; const mt = r.metas || null;\nconst diag = dg ? `\\n\\nDiagnóstico de la cuenta (${cu?.red || ''} ${cu?.handle || ''}):\\nBien: ${(dg.bien || []).slice(0, 4).join('; ')}\\nCambiar: ${(dg.cambiar || []).slice(0, 5).join('; ')}\\nCompetencia: ${(dg.competencia || []).slice(0, 4).map(x => x.patron || x).join('; ')}` : '';\nconst metas = mt ? `\\nMetas propuestas: ${mt.videos_semana} ${mt.formato || 'videos'}/semana, tope US$${mt.gasto_semana_usd}/semana` : '';\nconst mensaje = `${cu ? 'Adopción de cuenta' : 'Propuesta de canal'}: ${c.nombre_propuesto}\\nNicho: ${c.nicho}\\nPúblico: ${c.publico}\\nPromesa: ${c.promesa}${diag}${metas}\\n\\nEvidencia:\\n${ev}\\n\\nPrimeros temas:\\n${temas}${critica}`;\nconst aviso = (cu ? `🧭 Adopción de ${cu.red} ${cu.handle}: ${c.nombre_propuesto}\\n${String((dg?.cambiar || [])[0] || c.nicho || '').slice(0, 200)}` : `🧭 Propuesta de canal: ${c.nombre_propuesto}\\n${String(c.nicho || '').slice(0, 200)}`) + '\\n\\nÁbrelo para ver la evidencia y decidir.';\nreturn [{ json: { dueno_email: $('Inicio').first().json.dueno_email || '', canal_id: $('Inicio').first().json.canal_id || '', etapa: 'canal', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, job_id: $('Inicio').first().json.job_id } }];\n"
       },
       "id": "c287aeea-a761-4ceb-99ee-4a9c71286735",
       "name": "Mensaje de canal",
@@ -248,7 +248,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst c = ($json.contexto || {}).canal || {};\nconst canal_id = (c.nombre_propuesto || 'canal').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) + '-' + Date.now().toString(36).slice(-4);\nreturn [{ json: { canal_id, nombre: c.nombre_propuesto || '', nicho: c.nicho || '', estado: 'creando_biblia', biblia_ruta: '',\n  presupuesto_largo_usd: $('Leer ajustes').first().json.presupuestoLargoUsd, presupuesto_short_usd: $('Leer ajustes').first().json.presupuestoShortUsd,\n  plataformas: ($json.contexto || {}).cuenta?.red || 'youtube', formato_defecto: (c.formatos || ['largo'])[0],\n  // Metas del canal: las propone la adopción; un canal nuevo empieza sin producción automática.\n  metas: JSON.stringify({ videos_semana: 3, formato: (c.formatos || ['short']).includes('short') ? 'short' : 'largo', gasto_semana_usd: 10, retencion_min: 0.5, auto: false, ...(($json.contexto || {}).metas || {}) }),\n  cuenta: ($json.contexto || {}).cuenta ? JSON.stringify(($json.contexto || {}).cuenta) : '' } }];\n"
+        "jsCode": "\nconst c = ($json.contexto || {}).canal || {};\nconst canal_id = $json.canal_id || (c.nombre_propuesto || 'canal').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) + '-' + Date.now().toString(36).slice(-4);\nreturn [{ json: { dueno_email: $json.dueno_email || '', canal_id, nombre: c.nombre_propuesto || '', nicho: c.nicho || '', estado: 'creando_biblia', biblia_ruta: '',\n  presupuesto_largo_usd: $('Leer ajustes').first().json.presupuestoLargoUsd, presupuesto_short_usd: $('Leer ajustes').first().json.presupuestoShortUsd,\n  plataformas: ($json.contexto || {}).cuenta?.red || 'youtube', formato_defecto: (c.formatos || ['largo'])[0],\n  // Metas del canal: las propone la adopción; un canal nuevo empieza sin producción automática.\n  metas: JSON.stringify({ videos_semana: 3, formato: (c.formatos || ['short']).includes('short') ? 'short' : 'largo', gasto_semana_usd: 10, retencion_min: 0.5, auto: false, ...(($json.contexto || {}).metas || {}) }),\n  cuenta: ($json.contexto || {}).cuenta ? JSON.stringify(($json.contexto || {}).cuenta) : '' } }];\n"
       },
       "id": "9d500894-c26f-4de7-acbc-d1ceaa5d5d24",
       "name": "Nuevo canal",
@@ -262,7 +262,7 @@
     {
       "parameters": {
         "resource": "row",
-        "operation": "insert",
+        "operation": "upsert",
         "dataTableId": {
           "__rl": true,
           "mode": "id",
@@ -276,7 +276,17 @@
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         },
-        "options": {}
+        "options": {},
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.canal_id }}"
+            }
+          ]
+        }
       },
       "id": "bc94c66f-e109-447f-8e95-da87dc1e8bcc",
       "name": "Guardar canal",
@@ -400,6 +410,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -507,6 +522,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -591,7 +611,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;\nconst biblia = (JSON.parse($('Buscar biblia').first().json.resultado || '{}').resultado) || {};\n// Sin tema: la fábrica lo elige (vidIQ investiga el nicho y el guionista elige sin repetir los temas recientes).\nconst elegir = !String(e.tema || '').trim();\nconst recientes = $input.all().map(i => i.json).filter(v => v.video_id && v.tema).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 30).map(v => v.tema);\nconst formato = e.formato || canal.formato_defecto || 'largo';\nconst video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);\nconst presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;\nreturn [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',\n  version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },\n  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,\n    nicho: canal.nicho || '', formato, biblia, tendencias: (() => { try { const t = JSON.parse(canal.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),\n    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',\n    indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const canal = $('Buscar canal').first().json;\nconst biblia = (JSON.parse($('Buscar biblia').first().json.resultado || '{}').resultado) || {};\n// Sin tema: la fábrica lo elige (vidIQ investiga el nicho y el guionista elige sin repetir los temas recientes).\nconst elegir = !String(e.tema || '').trim();\nconst recientes = $input.all().map(i => i.json).filter(v => v.video_id && v.tema).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 30).map(v => v.tema);\nconst formato = e.formato || canal.formato_defecto || 'largo';\nconst video_id = e.video_id || 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);\nconst presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;\nreturn [{ json: { fila: { dueno_email: canal.dueno_email || '', video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',\n  version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },\n  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,\n    nicho: canal.nicho || '', formato, biblia, tendencias: (() => { try { const t = JSON.parse(canal.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),\n    duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',\n    indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];\n"
       },
       "id": "33dd5552-fb7f-4aa5-9262-85aaf78503d6",
       "name": "Nuevo video",
@@ -834,6 +854,11 @@
               "keyName": "createdAt",
               "condition": "gte",
               "keyValue": "={{ new Date(Date.now() - 1 * 86400000).toISOString() }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -940,6 +965,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Buscar canal').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -972,6 +1002,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1126,27 +1161,28 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
+        "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
+          "value": "FabCooperCosto01"
         },
-        "columns": {
-          "mappingMode": "autoMapInputData",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
           "value": {},
           "matchingColumns": [],
           "schema": [],
           "attemptToConvertTypes": false,
-          "convertFieldsToString": false
+          "convertFieldsToString": true
         },
-        "options": {}
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
       },
       "id": "df6fa223-ad28-4a46-949d-b117790a2d80",
       "name": "Guardar costo (verificación)",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
       "position": [
         10560,
         0
@@ -1257,6 +1293,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1295,6 +1336,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1400,27 +1446,28 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
+        "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
+          "value": "FabCooperCosto01"
         },
-        "columns": {
-          "mappingMode": "autoMapInputData",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
           "value": {},
           "matchingColumns": [],
           "schema": [],
           "attemptToConvertTypes": false,
-          "convertFieldsToString": false
+          "convertFieldsToString": true
         },
-        "options": {}
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
       },
       "id": "64cbfcbb-e9c3-4603-92fd-5a99cf1dce05",
       "name": "Guardar costo (crítico)",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
       "position": [
         12980,
         0
@@ -1497,6 +1544,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1535,6 +1587,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1567,6 +1624,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1631,6 +1693,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1718,6 +1785,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1756,6 +1828,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1904,6 +1981,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1968,6 +2050,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2074,6 +2161,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2138,6 +2230,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2239,6 +2336,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2416,6 +2518,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2508,6 +2615,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Video (publicar)').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2949,6 +3061,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -3225,6 +3342,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -3406,6 +3528,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -3498,6 +3625,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -3652,7 +3784,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst c = $('Leer enlace').first().json; const v = $json || {};\nreturn [{ json: { modo: 'adoptar_cuenta', canal_id: '', video_id: '', datos: { red: c.red, handle: c.handle, url: c.url, notas: c.notas,\n  perfil: v.ok ? v.perfil : '', publicaciones: v.ok ? v.publicaciones : '', error_vidiq: v.ok ? '' : String(v.error || 'vidIQ no respondió') } } }];\n"
+        "jsCode": "\nconst c = $('Leer enlace').first().json; const v = $json || {};\nreturn [{ json: { modo: 'adoptar_cuenta', canal_id: $('Inicio').first().json.canal_id || '', dueno_email: $('Inicio').first().json.dueno_email || '', video_id: '', datos: { red: c.red, handle: c.handle, url: c.url, notas: c.notas,\n  perfil: v.ok ? v.perfil : '', publicaciones: v.ok ? v.publicaciones : '', error_vidiq: v.ok ? '' : String(v.error || 'vidIQ no respondió') } } }];\n"
       },
       "id": "ef097b64-5ffd-4c1c-a7d7-f11ce97b23de",
       "name": "Pedir adopción",
@@ -3809,6 +3941,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -3888,6 +4025,11 @@
               "keyName": "canal_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -3990,6 +4132,1659 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "88e0ae30-2958-5122-b602-4fe9852c12b6",
+      "name": "Cooper · Verificar cifras entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'verificacion' } }];"
+      },
+      "id": "8be42d8a-9c97-584b-9ca1-0b83964b1e45",
+      "name": "Cooper · Verificar cifras etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a6060be6-70d7-5f63-8db0-bf8ed5c766a6",
+      "name": "Cooper · Verificar cifras guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Verificar cifras entrada').all();"
+      },
+      "id": "08ea52f9-9435-5232-af9b-447c47393220",
+      "name": "Cooper · Verificar cifras seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "56c5c81f-eb2a-5bbf-9b41-11516f2f692e",
+      "name": "Cooper · Aprobar guion entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'aprobacion_guion', guion_cooper: String($('Inicio').first().json.resultado?.guion || '').slice(0,30000) } }];"
+      },
+      "id": "4379268e-8a20-5e33-a62e-4b956cade273",
+      "name": "Cooper · Aprobar guion etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7b34c7c6-9aa0-5345-9b2f-a5d01f4ae76a",
+      "name": "Cooper · Aprobar guion guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Aprobar guion entrada').all();"
+      },
+      "id": "4e8f1872-0bb8-5699-90a6-8ea19a6ec76f",
+      "name": "Cooper · Aprobar guion seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "3cd8909a-9ca0-5ad0-83f9-cc84439cda37",
+      "name": "Cooper · Claude: corregir entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'guion' } }];"
+      },
+      "id": "df1a5134-a4af-5375-866e-1e67bb1c1623",
+      "name": "Cooper · Claude: corregir etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7c376cf7-3211-5a01-bf22-d32cea5d2cc6",
+      "name": "Cooper · Claude: corregir guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Claude: corregir entrada').all();"
+      },
+      "id": "5513bd4f-a04f-5d58-912c-3db7fd50d3a6",
+      "name": "Cooper · Claude: corregir seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "405b7da8-26d0-540b-8bcf-e26cd3d49536",
+      "name": "Cooper · Claude: corregir (crítico) entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'guion' } }];"
+      },
+      "id": "bfb24f9e-e373-51bb-a4c9-306212de473e",
+      "name": "Cooper · Claude: corregir (crítico) etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "2a43aeca-c745-5d8b-a605-addbf762f5c2",
+      "name": "Cooper · Claude: corregir (crítico) guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Claude: corregir (crítico) entrada').all();"
+      },
+      "id": "9b15d94a-6840-5695-9d64-d48fb404cee0",
+      "name": "Cooper · Claude: corregir (crítico) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json; return e.cooper ? [{ json:{ canal_id:e.canal_id, dueno_email:e.dueno_email, nombre:e.nombre || e.canal_id, nicho:e.criterios || '', estado:'investigando' } }] : [{json:{}}];"
+      },
+      "id": "9cd6b148-7f85-5677-970c-205f2507646e",
+      "name": "Cooper · reservar canal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b5cabf9a-4ab6-5f63-ba90-0c04c5b0ba4d",
+              "leftValue": "={{ $('Inicio').first().json.cooper === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8c56d7b1-052c-53b0-8e48-51d58ce7a69d",
+      "name": "¿Canal de Cooper?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "efadaf8a-a3d0-52db-8626-d732d802b021",
+      "name": "Cooper · guardar reserva",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: $('Inicio').first().json }];"
+      },
+      "id": "4f54952f-64f0-542d-9ba4-e80ac7ea30ab",
+      "name": "Cooper · pedido original",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "24f11051-3a46-56e6-81dc-0937171f985e",
+      "name": "Cooper · Canal del video entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'storyboard' } }];"
+      },
+      "id": "b71f5cd9-8ec4-524d-89f3-ac0e0c17c2f6",
+      "name": "Cooper · Canal del video etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "48ee4a09-9b6a-543f-b04d-ba8a0177872d",
+      "name": "Cooper · Canal del video guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Canal del video entrada').all();"
+      },
+      "id": "b8973f7b-9b4d-5814-8761-b408accf400c",
+      "name": "Cooper · Canal del video seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "a6a2e707-e33a-5449-9f9b-49dba821d523",
+      "name": "Cooper · Video (publicar) entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'programado' } }];"
+      },
+      "id": "4e666632-5538-596b-aea5-b53b50b4aea6",
+      "name": "Cooper · Video (publicar) etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1c502a4a-2d2a-5990-b434-d71ed0e54bd4",
+      "name": "Cooper · Video (publicar) guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Video (publicar) entrada').all();"
+      },
+      "id": "ea1aa3f9-8ea7-5f4b-b5b4-fd4b8f58ced8",
+      "name": "Cooper · Video (publicar) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a2832af1-b21f-57c3-b1fa-909e047ed114",
+              "leftValue": "={{ !!$('Inicio').first().json.aprobacion_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3f4444b2-4f5d-579d-80ae-4e33a74be805",
+      "name": "Cooper · cerrar Canal del video si",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{estado:'decidida',decidido_en:new Date().toISOString()}}];"
+      },
+      "id": "de3cf3ef-28ed-5149-85cd-5c1b76e8867c",
+      "name": "Cooper · cerrar Canal del video fila",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "XrPPyzBaFxJwT5O3"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "aprobacion_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.aprobacion_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d9f25110-6fec-5333-b346-baacd865db7a",
+      "name": "Cooper · cerrar Canal del video guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:$('Inicio').first().json}];"
+      },
+      "id": "40ba8c4c-4b5f-544c-b851-0c24a0252671",
+      "name": "Cooper · cerrar Canal del video seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e8af7fab-1a09-5db0-8749-cb7651ef067d",
+              "leftValue": "={{ !!$('Inicio').first().json.aprobacion_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d201856f-8966-573f-aa73-7db1797de3ca",
+      "name": "Cooper · cerrar Video (publicar) si",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{estado:'decidida',decidido_en:new Date().toISOString()}}];"
+      },
+      "id": "da6a088f-9e71-5cf3-845a-1a4050528d41",
+      "name": "Cooper · cerrar Video (publicar) fila",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "XrPPyzBaFxJwT5O3"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "aprobacion_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.aprobacion_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "df6c3611-cb7f-5f72-86eb-bcabc876121f",
+      "name": "Cooper · cerrar Video (publicar) guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:$('Inicio').first().json}];"
+      },
+      "id": "8c64bcaa-4f8b-515d-a230-621fbff38abb",
+      "name": "Cooper · cerrar Video (publicar) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{eliminado:true}}];"
+      },
+      "id": "ec741a6e-c537-51d1-839f-65f265e5fe6a",
+      "name": "Cooper · eliminar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9a9bf0b3-e6e9-5845-b0cd-adfcb6cda2cf",
+              "leftValue": "={{ $('Inicio').first().json.tipo === 'canal' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "462477f9-84e5-54d8-af5a-f063316a8c36",
+      "name": "¿Eliminar canal?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "6db1127c-5c41-5ffb-8b72-5a60993718ef",
+      "name": "Cooper · eliminar canal",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a031c98d-88b0-5c1a-9db1-61b4268db1d8",
+      "name": "Cooper · eliminar videos del canal",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "04f748c9-45ee-5a60-868d-a77a33d71fa4",
+      "name": "Cooper · eliminar video",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{eliminado:true}}];"
+      },
+      "id": "9440d304-dd58-51df-8952-60ff396d61e7",
+      "name": "Cooper · marca cascada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Guardar video\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "726de92a-e960-571f-8aff-5071349c3428",
+      "name": "Cooper · sello Guardar video",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "198ba2eb-2564-5726-bcea-d6a614ea0ec4",
+      "name": "Cooper · sello Guardar video aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Revisión en la tabla\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "74dd2076-e15c-5eca-86d4-c5bb03f502d7",
+      "name": "Cooper · sello Revisión en la tabla",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "5be34243-9506-521d-8e07-34a4413a99c5",
+      "name": "Cooper · sello Revisión en la tabla aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Guardar tema elegido\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "367968a8-1e23-57ff-8dc7-7639badf3842",
+      "name": "Cooper · sello Guardar tema elegido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "e35b008f-acbd-543f-aa2c-f8dd5f2309f4",
+      "name": "Cooper · sello Guardar tema elegido aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en storyboard\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "50da8576-7597-5797-a738-59bda6f95355",
+      "name": "Cooper · sello Video en storyboard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "481c573e-c3b6-56eb-a9f1-74bf39dcbf45",
+      "name": "Cooper · sello Video en storyboard aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Marcar publicado\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "a85bb979-566d-5e6a-920d-1fe5b8dc2761",
+      "name": "Cooper · sello Marcar publicado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "054f5508-7cc9-5c18-86d2-4f6d3d975fbd",
+      "name": "Cooper · sello Marcar publicado aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Guardar fecha\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "3604b33c-f466-5c4e-a423-dccc305f0bcf",
+      "name": "Cooper · sello Guardar fecha",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "416eb726-9028-5d43-be8a-269ed6e42f27",
+      "name": "Cooper · sello Guardar fecha aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Verificar cifras guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "1a824032-4846-5fab-bbfb-287b586720b2",
+      "name": "Cooper · sello Cooper · Verificar cifras guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "717daab4-7fb8-54c3-9c4a-9eb0b4a4d617",
+      "name": "Cooper · sello Cooper · Verificar cifras guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Aprobar guion guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "b2daf75c-6f3f-5b44-9648-f5ec59ccd1b7",
+      "name": "Cooper · sello Cooper · Aprobar guion guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "d77064db-1ac1-5cf7-b546-257422acbfc0",
+      "name": "Cooper · sello Cooper · Aprobar guion guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Claude: corregir guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "53976019-e83e-5a6b-9c01-52cefd6772d4",
+      "name": "Cooper · sello Cooper · Claude: corregir guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3740,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "88b2ffd8-8386-5caa-aacb-33af6b44f5ef",
+      "name": "Cooper · sello Cooper · Claude: corregir guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Claude: corregir (crítico) guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "104ab1af-bf14-588a-ab78-fa54c1e16c7d",
+      "name": "Cooper · sello Cooper · Claude: corregir (crítico) guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "67dc6a7c-26f1-5f77-adbd-385e9d75191a",
+      "name": "Cooper · sello Cooper · Claude: corregir (crítico) guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Canal del video guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "893c2355-c4f0-5b19-99b1-e72c04a224e0",
+      "name": "Cooper · sello Cooper · Canal del video guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4620,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "08fb3160-1340-52c4-9413-632342aaea3f",
+      "name": "Cooper · sello Cooper · Canal del video guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4840,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Video (publicar) guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "d5b605b7-2623-5c07-8508-ebdd10e82903",
+      "name": "Cooper · sello Cooper · Video (publicar) guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "60a31b54-a377-5bb7-a53b-4477115ec300",
+      "name": "Cooper · sello Cooper · Video (publicar) guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · eliminar videos del canal\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "b83b292a-3778-533d-b3c1-2bb11ef57588",
+      "name": "Cooper · sello Cooper · eliminar videos del canal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "da6bc75a-8f98-5a00-aeff-853bd0875ce7",
+      "name": "Cooper · sello Cooper · eliminar videos del canal aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · eliminar video\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "d4c50f80-4195-54eb-aa13-80c878da4269",
+      "name": "Cooper · sello Cooper · eliminar video",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5940,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "6d577af7-587b-5dcf-a3d2-1bd6509216dc",
+      "name": "Cooper · sello Cooper · eliminar video aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"crítico de nichos\", servicio:\"OpenAI\", usd:aj.costoCriticoUsd, estimado:true, paso_id:String($execution.id)+':'+\"Crítico de nichos\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "caa42f7a-98d6-55f3-9ec6-720622ccdc81",
+      "name": "Cooper · costo Crítico de nichos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "a26276fc-e79b-5a59-97bd-cf93bd2bf79a",
+      "name": "Cooper · costo Crítico de nichos registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Crítico de nichos').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "099c4cde-e1fd-57fb-bb52-c9d43523ed93",
+      "name": "Cooper · costo Crítico de nichos seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Guardar costo (verificación)\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "f216b1b5-1016-58c9-ac18-b7a313eeea50",
+      "name": "Cooper · identificar Guardar costo (verificación)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Guardar costo (crítico)\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "b791044a-89d9-59c2-98fc-933c4d757cea",
+      "name": "Cooper · identificar Guardar costo (crítico)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Crítico de nichos registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "4d5836f3-6775-59a7-b366-a5bd3169cdc5",
+      "name": "Cooper · identificar Cooper · costo Crítico de nichos registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -4030,7 +5825,7 @@
       "main": [
         [
           {
-            "node": "Pedir nichos",
+            "node": "¿Canal de Cooper?",
             "type": "main",
             "index": 0
           }
@@ -4079,7 +5874,7 @@
         ],
         [
           {
-            "node": "Canal del video",
+            "node": "Cooper · Canal del video entrada",
             "type": "main",
             "index": 0
           }
@@ -4121,7 +5916,7 @@
         ],
         [
           {
-            "node": "Video (publicar)",
+            "node": "Cooper · Video (publicar) entrada",
             "type": "main",
             "index": 0
           }
@@ -4184,6 +5979,13 @@
         ],
         [
           {
+            "node": "Cooper · eliminar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Aviso: evento",
             "type": "main",
             "index": 0
@@ -4235,7 +6037,7 @@
       "main": [
         [
           {
-            "node": "Mensaje de canal",
+            "node": "Cooper · costo Crítico de nichos",
             "type": "main",
             "index": 0
           }
@@ -4447,18 +6249,7 @@
       "main": [
         [
           {
-            "node": "Guardar video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Guardar video": {
-      "main": [
-        [
-          {
-            "node": "¿Investigar con vidIQ?",
+            "node": "Cooper · sello Guardar video",
             "type": "main",
             "index": 0
           }
@@ -4547,7 +6338,7 @@
       "main": [
         [
           {
-            "node": "Guardar tema elegido",
+            "node": "Cooper · sello Guardar tema elegido",
             "type": "main",
             "index": 0
           }
@@ -4598,7 +6389,7 @@
       "main": [
         [
           {
-            "node": "Verificar cifras",
+            "node": "Cooper · Verificar cifras entrada",
             "type": "main",
             "index": 0
           }
@@ -4643,7 +6434,7 @@
       "main": [
         [
           {
-            "node": "Guardar costo (verificación)",
+            "node": "Cooper · identificar Guardar costo (verificación)",
             "type": "main",
             "index": 0
           }
@@ -4681,7 +6472,7 @@
       "main": [
         [
           {
-            "node": "Guardar costo (crítico)",
+            "node": "Cooper · identificar Guardar costo (crítico)",
             "type": "main",
             "index": 0
           }
@@ -4710,18 +6501,7 @@
       "main": [
         [
           {
-            "node": "Revisión en la tabla",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Revisión en la tabla": {
-      "main": [
-        [
-          {
-            "node": "Canal (crítico)",
+            "node": "Cooper · sello Revisión en la tabla",
             "type": "main",
             "index": 0
           }
@@ -4754,7 +6534,7 @@
       "main": [
         [
           {
-            "node": "Claude: corregir (crítico)",
+            "node": "Cooper · Claude: corregir (crítico) entrada",
             "type": "main",
             "index": 0
           }
@@ -4765,7 +6545,7 @@
       "main": [
         [
           {
-            "node": "Aprobar guion",
+            "node": "Cooper · Aprobar guion entrada",
             "type": "main",
             "index": 0
           }
@@ -4831,7 +6611,7 @@
       "main": [
         [
           {
-            "node": "Video en storyboard",
+            "node": "Cooper · sello Video en storyboard",
             "type": "main",
             "index": 0
           }
@@ -4864,7 +6644,7 @@
       "main": [
         [
           {
-            "node": "Claude: corregir",
+            "node": "Cooper · Claude: corregir entrada",
             "type": "main",
             "index": 0
           }
@@ -5138,18 +6918,7 @@
       "main": [
         [
           {
-            "node": "Marcar publicado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Marcar publicado": {
-      "main": [
-        [
-          {
-            "node": "Aviso: subido",
+            "node": "Cooper · sello Marcar publicado",
             "type": "main",
             "index": 0
           }
@@ -5324,18 +7093,7 @@
       "main": [
         [
           {
-            "node": "Guardar fecha",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Guardar fecha": {
-      "main": [
-        [
-          {
-            "node": "Aviso: programado",
+            "node": "Cooper · sello Guardar fecha",
             "type": "main",
             "index": 0
           }
@@ -5580,6 +7338,912 @@
         [
           {
             "node": "Aviso: redes guardadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Verificar cifras entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Verificar cifras etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Verificar cifras etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Verificar cifras guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Verificar cifras seguir": {
+      "main": [
+        [
+          {
+            "node": "Verificar cifras",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobar guion entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Aprobar guion etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobar guion etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Aprobar guion guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobar guion seguir": {
+      "main": [
+        [
+          {
+            "node": "Aprobar guion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Claude: corregir etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Claude: corregir guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir seguir": {
+      "main": [
+        [
+          {
+            "node": "Claude: corregir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir (crítico) entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Claude: corregir (crítico) etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir (crítico) etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Claude: corregir (crítico) guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir (crítico) seguir": {
+      "main": [
+        [
+          {
+            "node": "Claude: corregir (crítico)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · pedido original": {
+      "main": [
+        [
+          {
+            "node": "Pedir nichos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Canal de Cooper?": {
+      "main": [
+        [
+          {
+            "node": "Cooper · reservar canal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · pedido original",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · reservar canal": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar reserva",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar reserva": {
+      "main": [
+        [
+          {
+            "node": "Cooper · pedido original",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Canal del video entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Canal del video etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Canal del video etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Canal del video guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Canal del video seguir": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Canal del video si",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Video (publicar) entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Video (publicar) etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Video (publicar) etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Video (publicar) guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Video (publicar) seguir": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Video (publicar) si",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Canal del video seguir": {
+      "main": [
+        [
+          {
+            "node": "Canal del video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Canal del video si": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Canal del video fila",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · cerrar Canal del video seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Canal del video fila": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Canal del video guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Canal del video guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Canal del video seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Video (publicar) seguir": {
+      "main": [
+        [
+          {
+            "node": "Video (publicar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Video (publicar) si": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Video (publicar) fila",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · cerrar Video (publicar) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Video (publicar) fila": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Video (publicar) guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cerrar Video (publicar) guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · cerrar Video (publicar) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · eliminar": {
+      "main": [
+        [
+          {
+            "node": "¿Eliminar canal?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Eliminar canal?": {
+      "main": [
+        [
+          {
+            "node": "Cooper · eliminar canal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · sello Cooper · eliminar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · eliminar canal": {
+      "main": [
+        [
+          {
+            "node": "Cooper · marca cascada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · marca cascada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · eliminar videos del canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar video": {
+      "main": [
+        [
+          {
+            "node": "Guardar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar video aviso": {
+      "main": [
+        [
+          {
+            "node": "¿Investigar con vidIQ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar video": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Guardar video aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Revisión en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Revisión en la tabla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Revisión en la tabla aviso": {
+      "main": [
+        [
+          {
+            "node": "Canal (crítico)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revisión en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Revisión en la tabla aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar tema elegido": {
+      "main": [
+        [
+          {
+            "node": "Guardar tema elegido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar tema elegido aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Guardar tema elegido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Guardar tema elegido aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en storyboard": {
+      "main": [
+        [
+          {
+            "node": "Video en storyboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en storyboard aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Video en storyboard": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video en storyboard aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Marcar publicado": {
+      "main": [
+        [
+          {
+            "node": "Marcar publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Marcar publicado aviso": {
+      "main": [
+        [
+          {
+            "node": "Aviso: subido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar publicado": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Marcar publicado aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar fecha": {
+      "main": [
+        [
+          {
+            "node": "Guardar fecha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Guardar fecha aviso": {
+      "main": [
+        [
+          {
+            "node": "Aviso: programado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar fecha": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Guardar fecha aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Verificar cifras guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Verificar cifras guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Verificar cifras guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Verificar cifras seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Verificar cifras guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Verificar cifras guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Aprobar guion guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Aprobar guion guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Aprobar guion guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Aprobar guion seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Aprobar guion guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Aprobar guion guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Claude: corregir guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Claude: corregir guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Claude: corregir guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Claude: corregir seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Claude: corregir guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Claude: corregir (crítico) guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Claude: corregir (crítico) guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Claude: corregir (crítico) guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Claude: corregir (crítico) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Claude: corregir (crítico) guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Claude: corregir (crítico) guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Canal del video guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Canal del video guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Canal del video guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Canal del video seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Canal del video guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Canal del video guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Video (publicar) guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Video (publicar) guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Video (publicar) guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Video (publicar) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Video (publicar) guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Video (publicar) guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · eliminar videos del canal": {
+      "main": [
+        [
+          {
+            "node": "Cooper · eliminar videos del canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · eliminar videos del canal aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Cooper · eliminar videos del canal": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · eliminar videos del canal aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · eliminar video": {
+      "main": [
+        [
+          {
+            "node": "Cooper · eliminar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · eliminar video aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Cooper · eliminar video": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · eliminar video aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Crítico de nichos": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Crítico de nichos registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Crítico de nichos registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Crítico de nichos seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Crítico de nichos seguir": {
+      "main": [
+        [
+          {
+            "node": "Mensaje de canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Guardar costo (verificación)": {
+      "main": [
+        [
+          {
+            "node": "Guardar costo (verificación)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Guardar costo (crítico)": {
+      "main": [
+        [
+          {
+            "node": "Guardar costo (crítico)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Crítico de nichos registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Crítico de nichos registrar",
             "type": "main",
             "index": 0
           }

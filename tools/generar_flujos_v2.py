@@ -2985,6 +2985,294 @@ for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, EST
 faltan = [(w, x) for w, d in RITMO.items() for x in d if x not in {n['name'] for wf in [PROD, SONIDO, DERIV, REFS, REDES, APRENDE, VIDIQ, YT] if wf['id'] == w for n in wf['nodes']}]
 assert not faltan, faltan
 
+# ======================================================================================
+# FX · API de Cooper. Contrato privado; ninguna llamada al editor/API pública de n8n.
+# ======================================================================================
+CONTRATO_COOPER = json.load(open(os.path.join(RAIZ, 'cooper/src/contratos/cooper-v1.json'), encoding='utf-8'))
+W.update({'cooper': 'FabCooperAPI0001', 'progreso': 'FabCooperProgr01', 'costo': 'FabCooperCosto01'})
+
+def cooper_js(nombre):
+    with open(os.path.join(RAIZ, 'tools/cooper', nombre + '.js'), encoding='utf-8') as fh:
+        return 'const CONTRATO = ' + json.dumps(CONTRATO_COOPER, ensure_ascii=False) + ';\n' + fh.read()
+
+def reabrir(wf):
+    f = Flow(wf['id'], wf['name'])
+    f.nodes, f.conn = wf['nodes'], wf['connections']
+    return f
+
+def antes(f, destino, primero, ultimo):
+    for src, kinds in list(f.conn.items()):
+        if src == ultimo:
+            continue
+        for edges in kinds.get('main', []):
+            for edge in edges:
+                if edge['node'] == destino:
+                    edge['node'] = primero
+    f.link(ultimo, destino)
+
+def despues(f, origen, primero, ultimo):
+    salidas = f.conn.pop(origen, {'main': [[]]})
+    f.conn[ultimo] = salidas
+    f.link(origen, primero)
+
+def firmar_cooper(f, nombre, cuerpo):
+    code(f, nombre, r"""
+const secret = String($env.COOPER_WEBHOOK_SECRET || '');
+if (secret.length < 32) throw new Error('Falta COOPER_WEBHOOK_SECRET');
+const cuerpo = JSON.stringify(%s), timestamp = String(Date.now());
+const firma = require('crypto').createHmac('sha256', secret).update(timestamp + '.' + cuerpo).digest('hex');
+return [{ json: { cuerpo, timestamp, firma: 'sha256=' + firma } }];
+""" % cuerpo)
+
+def enviar_cooper(f, nombre):
+    http(f, nombre, 'POST', "={{ $env.COOPER_WEBHOOK_URL }}", auth=False, timeout=10000,
+         headers={'Content-Type': 'application/json', 'x-cooper-timestamp': '={{ $json.timestamp }}', 'x-cooper-signature': '={{ $json.firma }}'})
+    f.nodes[-1]['parameters'].update({'sendBody': True, 'contentType': 'raw', 'rawContentType': 'application/json', 'body': '={{ $json.cuerpo }}'})
+    f.nodes[-1].update({'retryOnFail': True, 'maxTries': 5, 'waitBetweenTries': 2000})
+
+def lista_cooper(f, nombre, tabla, filtros=None):
+    f.add(nombre, 'n8n-nodes-base.dataTable', 1.1, {'resource': 'row', 'operation': 'get', 'dataTableId': rl(tabla),
+          'matchType': 'allConditions', 'filters': {'conditions': filtros or []}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+
+f = Flow(W['cooper'], 'FX · API de Cooper')
+f.add('Solicitud de Cooper', 'n8n-nodes-base.webhook', 2,
+      {'httpMethod': 'POST', 'path': 'cooper/v1', 'responseMode': 'responseNode', 'options': {}}, webhookId=nid())
+code(f, 'Autenticar', cooper_js('autenticar'))
+iff(f, '¿Autorizado?', '$json.status === 200')
+for nombre, tabla in [('Canales autorizados','canales'), ('Videos autorizados','videos')]:
+    lista_cooper(f, nombre, tabla, [{'keyName': 'dueno_email', 'condition': "={{ $('Autenticar').first().json.admin ? 'isNotEmpty' : 'eq' }}",
+                                  'keyValue': "={{ $('Autenticar').first().json.dueno_email }}"}])
+# Las decisiones se proyectan después de comprobar el video; jamás se devuelven enlaces/formularios internos.
+lista_cooper(f, 'Aprobaciones', 'aprobaciones', [{'keyName':'estado','condition':'eq','keyValue':'pendiente'}, {'keyName':'video_id','condition':'eq','keyValue':"={{ $('Autenticar').first().json.solicitud.datos.id || '__ninguno__' }}"}])
+code(f, 'Resolver', cooper_js('resolver'))
+switch(f, 'Tipo de petición', 3, "({ responder:0, gastos:1, orden:2 })[$json.accion]")
+lista_cooper(f, 'Costos administrativos', 'costos')
+code(f, 'Agregar gastos', cooper_js('gastos'))
+firmar_cooper(f, 'Firmar reserva', "({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'reservar', solicitud:$('Autenticar').first().json.solicitud })")
+enviar_cooper(f, 'Reservar orden')
+switch(f, 'Estado de reserva', 3, "({ reservada:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2")
+code(f, 'Evento del Orquestador', "return [{ json: $('Resolver').first().json.evento }];")
+call(f, 'Entregar al Orquestador', W['orq'], wait=False)
+firmar_cooper(f, 'Firmar confirmación', "({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'confirmar', solicitud:$('Autenticar').first().json.solicitud })")
+enviar_cooper(f, 'Confirmar orden')
+code(f, 'Aceptado', "return [{ json: { status:200, respuesta:{ aceptado:true } } }];")
+code(f, 'En proceso', "return [{ json: { status:409, respuesta:{ error:'Orden pendiente de confirmación' } } }];")
+f.add('Responder', 'n8n-nodes-base.respondToWebhook', 1.1, {'respondWith':'json','responseBody':'={{ $json.respuesta }}','options':{'responseCode':'={{ $json.status }}'}})
+f.chain('Solicitud de Cooper','Autenticar','¿Autorizado?')
+f.link('¿Autorizado?','Canales autorizados',0); f.link('¿Autorizado?','Responder',1)
+f.chain('Canales autorizados','Videos autorizados','Aprobaciones','Resolver','Tipo de petición')
+f.link('Tipo de petición','Responder',0); f.link('Tipo de petición','Costos administrativos',1); f.link('Tipo de petición','Firmar reserva',2)
+f.chain('Costos administrativos','Agregar gastos','Responder')
+f.chain('Firmar reserva','Reservar orden','Estado de reserva')
+f.link('Estado de reserva','Evento del Orquestador',0); f.link('Estado de reserva','Aceptado',1); f.link('Estado de reserva','En proceso',2)
+f.chain('Evento del Orquestador','Entregar al Orquestador','Firmar confirmación','Confirmar orden','Aceptado','Responder')
+f.link('En proceso','Responder')
+COOPER = f.dump()
+# El webhook transporta cabeceras privadas: no conservar input/output de ejecuciones.
+COOPER['settings'].update({'saveDataErrorExecution':'none','saveDataSuccessExecution':'none','saveExecutionProgress':False})
+
+# Un costo por paso, con dueño obtenido de la tabla (no del modelo ni del navegador).
+f = Flow(W['costo'], 'FX · Registrar costo por dueño')
+trigger(f)
+dt_get(f, 'Video del costo','videos','video_id', "={{ $('Inicio').first().json.video_id }}")
+dt_get(f, 'Canal del costo','canales','canal_id', "={{ $('Video del costo').first().json.canal_id || String($('Inicio').first().json.video_id || '').replace(/^canal:/, '') }}")
+code(f, 'Costo atribuido', r"""
+const c = $('Inicio').first().json, v = $('Video del costo').first().json, canal = $('Canal del costo').first().json;
+const dueno = v.dueno_email || canal.dueno_email || (c.video_id === 'canal:' ? String($env.COOPER_ADMIN_EMAIL || '') : '');
+if (!dueno || (c.video_id !== 'canal:' && !canal.dueno_email)) throw new Error('Costo sin dueño: completar la migración antes de producir');
+const usd = Number(c.usd); if (!Number.isFinite(usd) || usd < 0) throw new Error('Costo inválido');
+return [{ json: { video_id: c.video_id, concepto: c.concepto, servicio: c.servicio, usd,
+  dueno_email: dueno, estimado: c.estimado !== false,
+  paso_id: c.paso_id || String($execution.id) } }];
+""")
+dt_insert(f, 'Guardar costo atribuido','costos')
+f.chain('Inicio','Video del costo','Canal del costo','Costo atribuido','Guardar costo atribuido')
+COSTO_COOPER = f.dump()
+# Convertir todos los insert existentes de costos en llamadas a la atribución común.
+for wf in [ORQ, PROD, REFS, RADAR, VIDIQ, DERIV, SONIDO, APRENDE]:
+    for n in wf['nodes']:
+        if n['type'].endswith('.dataTable') and n['parameters'].get('operation') == 'insert' and n['parameters']['dataTableId']['value'] == T['costos']:
+            tmp = Flow('temp','temp'); call(tmp,n['name'],W['costo'],each=True)
+            n.update({'type':tmp.nodes[0]['type'],'typeVersion':tmp.nodes[0]['typeVersion'],'parameters':tmp.nodes[0]['parameters']})
+
+# Emisor de progreso. Recibe la fila completa después de persistir la etapa.
+f = Flow(W['progreso'], 'FX · Progreso de Cooper')
+trigger(f)
+iff(f, '¿Tiene dueño?', "!!$json.dueno_email && !!$json.video_id && !$json.eliminado")
+code(f, 'Progreso público', 'const ETAPAS = ' + json.dumps(CONTRATO_COOPER['etapas']) + ';\n' + r"""
+const v = $('Inicio').first().json;
+return [{ json: { version:'cooper-v1', tipo:'progreso', id_evento: v.cooper_evento_id || ('video:' + v.video_id + ':' + v.updatedAt),
+  video: { id:v.video_id, dueno_email:v.dueno_email, canal_id:v.canal_id, titulo:String(v.tema || ''),
+    stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];
+""")
+firmar_cooper(f,'Firmar progreso',"$('Progreso público').first().json")
+enviar_cooper(f,'Avisar a Cooper')
+code(f,'Conservar fila',"return [{ json: $('Inicio').first().json }];")
+f.chain('Inicio','¿Tiene dueño?'); f.link('¿Tiene dueño?','Progreso público',0); f.link('¿Tiene dueño?','Conservar fila',1)
+f.chain('Progreso público','Firmar progreso','Avisar a Cooper','Conservar fila')
+PROGRESO_COOPER = f.dump()
+
+# Registrar una etapa antes de un paso, conservando su entrada para no cambiar el contrato interno.
+def etapa_cooper(wf, destino, etapa, video_expr="$('Inicio').first().json.video_id", guion=None):
+    f = reabrir(wf); p = 'Cooper · ' + destino
+    code(f,p+' entrada','return $input.all();')
+    fields = "{ etapa:'" + etapa + "'" + (", guion_cooper: String(" + guion + ").slice(0,30000)" if guion else '') + " }"
+    code(f,p+' etapa', 'return [{ json: ' + fields + ' }];')
+    dt_update(f,p+' guardar','videos','video_id','={{ ' + video_expr + ' }}')
+    # Si la tabla no encuentra fila, conservar el flujo legado. La etapa sigue sin inventarse.
+    f.nodes[-1]['alwaysOutputData'] = True
+    code(f,p+' seguir',"return $('" + p + " entrada').all();")
+    f.chain(p+' entrada',p+' etapa',p+' guardar',p+' seguir')
+    antes(f,destino,p+' entrada',p+' seguir')
+
+etapa_cooper(ORQ,'Verificar cifras','verificacion')
+etapa_cooper(ORQ,'Aprobar guion','aprobacion_guion',guion="$('Inicio').first().json.resultado?.guion || ''")
+etapa_cooper(ORQ,'Claude: corregir','guion')
+etapa_cooper(ORQ,'Claude: corregir (crítico)','guion')
+etapa_cooper(PROD,'Sonido y emoción','sonido')
+etapa_cooper(PROD,'Composición Creatomate','montaje')
+etapa_cooper(PUB,'Aprobación final','aprobacion_final')
+
+# Cooper guarda decisiones de guion/final sin abrir un segundo formulario que pueda aprobar dos veces.
+f = reabrir(APROB)
+dt_get(f,'Cooper · dueño','videos','video_id',"={{ $('Inicio').first().json.video_id || '' }}")
+iff(f,'¿Decide Cooper?',"!!$json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa)")
+# La preparación/registro originales se conservan, solo se evita esperar formulario para estas dos puertas.
+antes(f,'Aprobación · preparar','Cooper · dueño','Cooper · dueño')
+despues(f,'Aprobación · registrar','¿Decide Cooper?','¿Decide Cooper?')
+# Evaluar sobre la fila original, no sobre el registro de aprobación.
+next(n for n in f.nodes if n['name']=='¿Decide Cooper?')['parameters']['conditions']['conditions'][0]['leftValue'] = "={{ !!$('Cooper · dueño').first().json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa) }}"
+f.conn['¿Decide Cooper?'] = {'main':[[],[{'node':'Aprobación · avisar','type':'main','index':0}]]}
+
+# No convertir una decisión de Cooper en un formulario reenviado por el flujo legado.
+for n in APROB['nodes']:
+    if n['name'] == 'Aprobación · preparar':
+        n['parameters']['jsCode'] = n['parameters']['jsCode'].replace("url: $execution.resumeFormUrl", "url: ($('Cooper · dueño').isExecuted && $('Cooper · dueño').first().json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa)) ? '' : $execution.resumeFormUrl")
+
+# El identificador de Cooper y el dueño sobreviven al trabajo asíncrono de investigación y a su aprobación.
+def cambiar(wf,nombre,viejo,nuevo):
+    n = next(n for n in wf['nodes'] if n['name']==nombre)
+    assert viejo in n['parameters']['jsCode'], (nombre,viejo)
+    n['parameters']['jsCode'] = n['parameters']['jsCode'].replace(viejo,nuevo)
+cambiar(ORQ,'Pedir nichos',"canal_id:'', video_id:''","canal_id:e.canal_id || '', dueno_email:e.dueno_email || '', video_id:''")
+cambiar(CLAUDE,'Preparar trabajo','fila: { job_id,','fila: { dueno_email: pedido.dueno_email || \'\', job_id,')
+cambiar(RETORNO,'Evento',"video_id: t.video_id || ''","dueno_email: t.dueno_email || '', video_id: t.video_id || ''")
+cambiar(ORQ,'Mensaje de canal',"etapa: 'canal', mensaje:","dueno_email: $('Inicio').first().json.dueno_email || '', canal_id: $('Inicio').first().json.canal_id || '', etapa: 'canal', mensaje:")
+cambiar(ORQ,'Nuevo canal',"const canal_id = (c.nombre_propuesto", "const canal_id = $json.canal_id || (c.nombre_propuesto")
+cambiar(ORQ,'Nuevo canal','json: { canal_id, nombre:',"json: { dueno_email: $json.dueno_email || '', canal_id, nombre:")
+cambiar(ORQ,'Nuevo video',"const video_id = 'v-'", "const video_id = e.video_id || 'v-'")
+cambiar(ORQ,'Nuevo video','fila: { video_id, canal_id:',"fila: { dueno_email: canal.dueno_email || '', video_id, canal_id:")
+cambiar(ORQ,'Pedir adopción',"canal_id: '', video_id: ''", "canal_id: $('Inicio').first().json.canal_id || '', dueno_email: $('Inicio').first().json.dueno_email || '', video_id: ''")
+# Los canales nuevos de Cooper quedan reservados mientras se investiga (sin habilitar producción).
+f = reabrir(ORQ)
+code(f,'Cooper · reservar canal',"const e=$('Inicio').first().json; return e.cooper ? [{ json:{ canal_id:e.canal_id, dueno_email:e.dueno_email, nombre:e.nombre || e.canal_id, nicho:e.criterios || '', estado:'investigando' } }] : [{json:{}}];")
+iff(f,'¿Canal de Cooper?',"$('Inicio').first().json.cooper === true")
+dt_insert(f,'Cooper · guardar reserva','canales')
+code(f,'Cooper · pedido original',"return [{ json: $('Inicio').first().json }];")
+antes(f,'Pedir nichos','¿Canal de Cooper?','Cooper · pedido original')
+f.link('¿Canal de Cooper?','Cooper · reservar canal',0); f.link('¿Canal de Cooper?','Cooper · pedido original',1)
+f.chain('Cooper · reservar canal','Cooper · guardar reserva','Cooper · pedido original')
+# La aprobación actualiza la reserva en vez de insertar otra identidad.
+n = next(n for n in ORQ['nodes'] if n['name']=='Guardar canal')
+n['parameters'].update({'operation':'upsert','matchType':'allConditions','filters':{'conditions':[{'keyName':'canal_id','condition':'eq','keyValue':'={{ $json.canal_id }}'}]}})
+# Cerrar la decisión y avanzar la etapa antes de cualquier publicación/producción.
+for nombre, etapa in [('Canal del video','storyboard'),('Video (publicar)','programado')]:
+    etapa_cooper(ORQ,nombre,etapa)
+f = reabrir(ORQ)
+for destino in ['Canal del video','Video (publicar)']:
+    # La decisión solo tiene ID cuando viene de Cooper. Los formularios legados ya se cierran solos.
+    p = 'Cooper · cerrar ' + destino
+    iff(f,p+' si',"!!$('Inicio').first().json.aprobacion_id")
+    code(f,p+' fila',"return [{json:{estado:'decidida',decidido_en:new Date().toISOString()}}];")
+    dt_update(f,p+' guardar','aprobaciones','aprobacion_id',"={{ $('Inicio').first().json.aprobacion_id }}")
+    code(f,p+' seguir',"return [{json:$('Inicio').first().json}];")
+    antes(f,destino,p+' si',p+' seguir'); f.link(p+' si',p+' fila',0); f.link(p+' si',p+' seguir',1)
+    f.chain(p+' fila',p+' guardar',p+' seguir')
+
+# Eliminación lógica: retener trazabilidad y gasto; impedir consultas y nuevas acciones.
+f = reabrir(ORQ)
+ruta = next(n for n in f.nodes if n['name']=='Ruta')
+ruta['parameters']['jsCode'] = ruta['parameters']['jsCode'].replace(json.dumps(RUTAS),json.dumps(RUTAS[:-1]+['eliminar','otro']))
+next(n for n in f.nodes if n['name']=='Según evento')['parameters']['numberOutputs'] += 1
+f.conn['Según evento']['main'].append(f.conn['Según evento']['main'][22]); f.conn['Según evento']['main'][22] = []
+code(f,'Cooper · eliminar',"return [{json:{eliminado:true}}];")
+iff(f,'¿Eliminar canal?',"$('Inicio').first().json.tipo === 'canal'")
+dt_update(f,'Cooper · eliminar canal','canales','canal_id',"={{ $('Inicio').first().json.id }}")
+dt_update(f,'Cooper · eliminar videos del canal','videos','canal_id',"={{ $('Inicio').first().json.id }}")
+dt_update(f,'Cooper · eliminar video','videos','video_id',"={{ $('Inicio').first().json.id }}")
+# Cada actualización recibe solo columnas admitidas.
+code(f,'Cooper · marca cascada',"return [{json:{eliminado:true}}];")
+f.link('Según evento','Cooper · eliminar',22); f.chain('Cooper · eliminar','¿Eliminar canal?')
+f.link('¿Eliminar canal?','Cooper · eliminar canal',0); f.link('¿Eliminar canal?','Cooper · eliminar video',1)
+f.chain('Cooper · eliminar canal','Cooper · marca cascada','Cooper · eliminar videos del canal')
+
+# Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.
+for wf in [ORQ, PROD, PUB, REDES, CONFIRMAR]:
+    f = reabrir(wf)
+    targets = [n for n in f.nodes if n['type'].endswith('.dataTable') and n['parameters'].get('operation') in ['insert','update'] and n['parameters']['dataTableId']['value'] == T['videos']]
+    for n in targets:
+        p = 'Cooper · sello ' + n['name']
+        code(f,p,"return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k }}));")
+        antes(f,n['name'],p,p)
+        call(f,p+' aviso',W['progreso'],each=True)
+        despues(f,n['name'],p+' aviso',p+' aviso')
+# Fuera del FX, las consultas legadas son del operador. Las filas eliminadas no se reactivan.
+for wf in [ORQ, PROD, PUB, RADAR, RUTINA, REFS, REDES, YT]:
+    for n in wf['nodes']:
+        p=n['parameters']
+        if n['type'].endswith('.dataTable') and p.get('operation') in ['get','update'] and p['dataTableId']['value'] in [T['videos'],T['canales']]:
+            p.setdefault('filters',{}).setdefault('conditions',[]).append({'keyName':'eliminado','condition':'neq','keyValue':True})
+
+
+# Registro al terminar cada llamada, incluso si un paso posterior falla. El total del video
+# sigue siendo una estimación visual; no vuelve a insertarse como un segundo gasto.
+for wf, nombres in [(PROD,['Guardar costos','Guardar costo de derivados']), (REFS,['Guardar costo de referencias'])]:
+    for n in wf['nodes']:
+        if n['name'] in nombres:
+            n.update({'type':'n8n-nodes-base.code','typeVersion':2,'parameters':{'jsCode':'return $input.all();'}})
+
+PASOS_COSTO = [
+    (PROD,'Generar imagen','imágenes','OpenAI',"aj.costoImagenUsd"),
+    (PROD,'Revisar plano','revisión visual','OpenAI',"aj.costoRevisionUsd"),
+    (PROD,'Revisar archivo','revisión de archivo','OpenAI',"aj.costoRevisionUsd"),
+    (PROD,'Animar (Gemini Omni)','clips','Gemini Omni',"Number($('Un ítem por plano').itemMatching(k).json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd"),
+    (PROD,'Renderizar','montaje','Creatomate (créditos)','0'),
+    (SONIDO,'Voz (Gemini TTS)','voz','Gemini TTS','aj.costoVozUsdPorPlano'),
+    (SONIDO,'Pedir descarga','música','Epidemic Sound (suscripción)','0'),
+    (SONIDO,'Pedir efecto','efectos','Epidemic Sound (suscripción)','0'),
+    (REFS,'Generar principal','referencia principal','OpenAI','aj.costoImagenUsd'),
+    (REFS,'Generar vista','referencia vista','OpenAI','aj.costoImagenUsd'),
+    (DERIV,'Imagen de miniatura','miniatura','OpenAI','aj.costoMiniaturaUsd'),
+    (DERIV,'Renderizar miniatura','montaje de miniatura','Creatomate (créditos)','0'),
+    (DERIV,'Renderizar corte','montaje de corte','Creatomate (créditos)','0'),
+    (ORQ,'Crítico de nichos','crítico de nichos','OpenAI','aj.costoCriticoUsd'),
+    (RADAR,'Analista de tendencias','radar','OpenAI','aj.costoRadarUsd'),
+    (CLAUDE,'Respuesta','texto','Claude (plan)','0'),
+]
+for wf, origen, concepto, servicio, usd in PASOS_COSTO:
+    f = reabrir(wf); p = 'Cooper · costo ' + origen
+    # El radar lleva varios canales; conservar el emparejamiento por índice.
+    vid = "('canal:' + $('Encargo del analista').all()[k].json.canal_id)" if wf['id']==W['radar'] else "(e.video_id || ('canal:' + e.canal_id))"
+    code(f,p,"const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:" + vid + ", concepto:" + JS(concepto) + ", servicio:" + JS(servicio) + ", usd:" + usd + ", estimado:true, paso_id:String($execution.id)+':'+" + JS(origen) + "+':'+$runIndex+':'+k }}));")
+    call(f,p+' registrar',W['costo'],each=True)
+    code(f,p+' seguir',"return $('" + origen + "').all().map((i,k) => ({...i, pairedItem:{item:k}}));")
+    f.chain(p,p+' registrar',p+' seguir')
+    # Solo salida de éxito; las salidas de error del HTTP mantienen su destino original.
+    outs=f.conn.setdefault(origen,{'main':[[]]})['main']
+    f.conn[p+' seguir']={'main':[outs[0]]}; outs[0]=[{'node':p,'type':'main','index':0}]
+# Upsert por paso, durable frente al reintento de la escritura del mismo gasto.
+n = next(n for n in COSTO_COOPER['nodes'] if n['name']=='Guardar costo atribuido')
+n['parameters'].update({'operation':'upsert','matchType':'allConditions','filters':{'conditions':[{'keyName':'paso_id','condition':'eq','keyValue':'={{ $json.paso_id }}'}]}})
+
+# También las filas heredadas de verificación/crítico reciben el ID del paso emisor.
+for wf in [ORQ, PROD, REFS, RADAR, DERIV, SONIDO, CLAUDE]:
+    f = reabrir(wf)
+    for n in list(f.nodes):
+        if n['type'].endswith('.executeWorkflow') and n['parameters']['workflowId']['value'] == W['costo']:
+            nombre = 'Cooper · identificar ' + n['name']
+            code(f,nombre,"return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));")
+            antes(f,n['name'],nombre,nombre)
+
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
 TIEMPO = {'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
           'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600}
@@ -3006,21 +3294,44 @@ def recorrer(v):
     if isinstance(v, list): return [recorrer(x) for x in v]
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER]:
     for n in wf['nodes']:
         n['parameters'] = recorrer(n['parameters'])
 
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
-                           'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
+                           'saveDataErrorExecution': 'none' if wf['id'] == W['cooper'] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] == W['cooper'] else 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER]
+
+def conservar_identificadores(wf, anterior):
+    prev = {n['name']: n for n in anterior.get('nodes', [])}
+    def ids(v, old, ruta):
+        if isinstance(v, dict):
+            for k, x in v.items():
+                o = old.get(k) if isinstance(old, dict) else None
+                if k == 'id' and isinstance(x, str) and len(x) == 36:
+                    v[k] = o or str(uuid.uuid5(uuid.NAMESPACE_URL, ruta + '/' + k))
+                else:
+                    ids(x, o, ruta + '/' + k)
+        elif isinstance(v, list):
+            for i, x in enumerate(v):
+                ids(x, old[i] if isinstance(old, list) and i < len(old) else None, ruta + '/' + str(i))
+    for n in wf['nodes']:
+        old = prev.get(n['name'], {})
+        ruta = wf['id'] + '/' + n['name']
+        n['id'] = old.get('id') or str(uuid.uuid5(uuid.NAMESPACE_URL, ruta))
+        if 'webhookId' in n:
+            n['webhookId'] = old.get('webhookId') or str(uuid.uuid5(uuid.NAMESPACE_URL, ruta + '/webhook'))
+        ids(n['parameters'], old.get('parameters'), ruta)
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     for wf in ALL:
         fn = os.path.join(OUT, wf['id'] + '.json')
+        anterior = json.load(open(fn)) if os.path.exists(fn) else {}
+        conservar_identificadores(wf, anterior)
         with open(fn, 'w') as fh:
             json.dump(wf, fh, ensure_ascii=False, indent=2)
     print('\n'.join(f"{w['id']}  {w['name']}  ({len(w['nodes'])} nodos)" for w in ALL))

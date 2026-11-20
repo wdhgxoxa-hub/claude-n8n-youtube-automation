@@ -1,0 +1,195 @@
+{
+  "id": "FabCooperCosto01",
+  "name": "FX · Registrar costo por dueño",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "ef839ff0-ba9f-5012-81f9-447079a3ae8a",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "d35e6de0-3055-5af0-9a28-e27c55870313",
+      "name": "Video del costo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Video del costo').first().json.canal_id || String($('Inicio').first().json.video_id || '').replace(/^canal:/, '') }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "41854c12-9d62-5354-b3fc-a4ff6c747bcf",
+      "name": "Canal del costo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst c = $('Inicio').first().json, v = $('Video del costo').first().json, canal = $('Canal del costo').first().json;\nconst dueno = v.dueno_email || canal.dueno_email || (c.video_id === 'canal:' ? String($env.COOPER_ADMIN_EMAIL || '') : '');\nif (!dueno || (c.video_id !== 'canal:' && !canal.dueno_email)) throw new Error('Costo sin dueño: completar la migración antes de producir');\nconst usd = Number(c.usd); if (!Number.isFinite(usd) || usd < 0) throw new Error('Costo inválido');\nreturn [{ json: { video_id: c.video_id, concepto: c.concepto, servicio: c.servicio, usd,\n  dueno_email: dueno, estimado: c.estimado !== false,\n  paso_id: c.paso_id || String($execution.id) } }];\n"
+      },
+      "id": "c2701c2d-937e-56da-bd97-d00a335fa175",
+      "name": "Costo atribuido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "vk7TvbIvNcTbmkVv"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "paso_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.paso_id }}"
+            }
+          ]
+        }
+      },
+      "id": "e03ec938-228d-5fa5-8f52-9bd98790c898",
+      "name": "Guardar costo atribuido",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Video del costo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video del costo": {
+      "main": [
+        [
+          {
+            "node": "Canal del costo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canal del costo": {
+      "main": [
+        [
+          {
+            "node": "Costo atribuido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo atribuido": {
+      "main": [
+        [
+          {
+            "node": "Guardar costo atribuido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

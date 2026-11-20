@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { and, eq, gt, asc } from "drizzle-orm";
+import { users, events } from "@/db/schema";
 import { ErrorHttp } from "@/lib/permisos";
 import { currentUser } from "@/lib/sesion";
 import { failure, reserveStream } from "@/lib/http";
@@ -15,6 +16,18 @@ export async function GET(request: Request) {
     let timer: ReturnType<typeof setTimeout> | undefined;
     let stopped = false;
     let stop = () => {};
+    let lastSync = 0;
+    let cursorTime = 0;
+    const lastEvent = request.headers.get("last-event-id");
+    if (lastEvent) {
+      const receipt = db()
+        .select()
+        .from(events)
+        .where(and(eq(events.id, lastEvent), eq(events.ownerId, user.id)))
+        .get();
+      if (receipt) cursorTime = receipt.createdAt;
+    }
+    let cursorId = lastEvent ?? "";
     const stream = new ReadableStream({
       start(controller) {
         stop = () => {
@@ -46,15 +59,60 @@ export async function GET(request: Request) {
               fresh.role === "admin"
                 ? db().select().from(users).all()
                 : [fresh];
-            await Promise.all(
-              owners.map((owner) => fabrica().sincronizar(owner)),
-            );
+            if (
+              process.env.COOPER_FABRICA !== "n8n" ||
+              Date.now() - lastSync >= 60000
+            ) {
+              lastSync = Date.now();
+              try {
+                await Promise.all(
+                  owners.map((owner) => fabrica().sincronizar(owner)),
+                );
+              } catch (error) {
+                if (process.env.COOPER_FABRICA !== "n8n") throw error;
+                if (!stopped && (controller.desiredSize ?? 0) > 0)
+                  controller.enqueue(
+                    encoder.encode(
+                      'event: fallo\ndata: {"error":"La conciliación está pendiente. Seguimos recibiendo el progreso."}\n\n',
+                    ),
+                  );
+              }
+            }
             const authorized = await currentUser();
             if (authorized.id !== user.id) {
               stop();
               return;
             }
-            // Un lector lento no acumula instantáneas ilimitadas.
+            const progress = db()
+              .select()
+              .from(events)
+              .where(
+                and(
+                  eq(events.type, "progreso"),
+                  authorized.role === "admin"
+                    ? undefined
+                    : eq(events.ownerId, authorized.id),
+                  gt(events.createdAt, cursorTime - 1),
+                ),
+              )
+              .orderBy(asc(events.createdAt), asc(events.id))
+              .limit(100)
+              .all();
+            for (const event of progress) {
+              if (
+                event.createdAt < cursorTime ||
+                (event.createdAt === cursorTime && event.id <= cursorId)
+              )
+                continue;
+              if (stopped || (controller.desiredSize ?? 0) <= 0) break;
+              controller.enqueue(
+                encoder.encode(
+                  `id: ${event.id}\nevent: progreso\ndata: ${event.payload}\n\n`,
+                ),
+              );
+              cursorTime = event.createdAt;
+              cursorId = event.id;
+            }
             if (!stopped && (controller.desiredSize ?? 0) > 0)
               controller.enqueue(
                 encoder.encode(

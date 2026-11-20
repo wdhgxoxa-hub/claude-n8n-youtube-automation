@@ -17,12 +17,15 @@ async function overflow(page: Page) {
 test.beforeEach(async ({ page }) => {
   expect(
     (
-      await page.request.post("http://127.0.0.1:33173/sesion", {
-        data: {
-          email: "admin@example.test",
-          secret: process.env.COOPER_E2E_SECRET,
+      await page.request.post(
+        `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_FIXTURE_PORT ?? "33173"}/sesion`,
+        {
+          data: {
+            email: "admin@example.test",
+            secret: process.env.COOPER_E2E_SECRET,
+          },
         },
-      })
+      )
     ).status(),
   ).toBe(200);
 });

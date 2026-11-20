@@ -19,7 +19,7 @@ import {
   requireOwn,
 } from "@/lib/permisos";
 import { body, failure, json, rateLimit, sameOrigin } from "@/lib/http";
-import { estado, administracion } from "@/servicios/datos";
+import { estado, administracionActual } from "@/servicios/datos";
 import { fabrica, ordenSchema } from "@/servicios/fabrica";
 import {
   chatSchema,
@@ -66,7 +66,7 @@ async function handle(request: Request, context: Context) {
     if (method === "GET") {
       rateLimit(`read:${user.id}`, 300);
       if (section === "estado") return json(estado(user));
-      if (section === "admin") return json(administracion(user));
+      if (section === "admin") return json(await administracionActual(user));
       if (section === "muestra-voz")
         return new Response(new VozSimulada().muestra() as BodyInit, {
           headers: {
@@ -359,7 +359,7 @@ async function handle(request: Request, context: Context) {
           user,
           db().select().from(videos).where(eq(videos.id, id)).get(),
         );
-        db().delete(videos).where(eq(videos.id, id)).run();
+        await fabrica().eliminar(user, id, "video");
         return json({ ok: true });
       }
       if (section === "canales" && id) {
@@ -367,7 +367,7 @@ async function handle(request: Request, context: Context) {
           user,
           db().select().from(channels).where(eq(channels.id, id)).get(),
         );
-        db().delete(channels).where(eq(channels.id, id)).run();
+        await fabrica().eliminar(user, id, "canal");
         return json({ ok: true });
       }
       if (section === "activos" && id) {
