@@ -2,16 +2,9 @@ import { randomUUID } from "node:crypto";
 import { and, eq, desc } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import {
-  channels,
-  videos,
-  events,
-  expenses,
-  assets,
-  type User,
-} from "@/db/schema";
+import { channels, videos, events, expenses, type User } from "@/db/schema";
 import { ErrorHttp, requireOwn } from "@/lib/permisos";
-import { CATALOGO } from "./medios";
+import { medioDisponible } from "./biblioteca";
 import { guionInicial, siguienteEtapa, esperaAprobacion } from "@/lib/etapas";
 export const EVENTOS = [
   "nuevo_canal",
@@ -73,24 +66,10 @@ export function validarOrden(user: User, orden: Orden) {
         .get();
   requireOwn(user, resource);
   if (orden.evento === "nuevo_video") {
-    for (const [id, kind] of [
-      [orden.avatarId, "avatar"],
-      [orden.voiceId, "voz"],
-    ]) {
-      if (!id || CATALOGO.some((a) => a.id === id && a.kind === kind)) continue;
-      const asset = db().select().from(assets).where(eq(assets.id, id)).get();
-      if (
-        !asset ||
-        asset.kind !== kind ||
-        !asset.verified ||
-        (asset.ownerId !== user.id && !asset.shared)
-      )
-        throw new ErrorHttp(
-          404,
-          "Ese avatar o voz no está disponible en tu biblioteca.",
-        );
-    }
+    if (orden.avatarId) medioDisponible(user, orden.avatarId, "avatar");
+    if (orden.voiceId) medioDisponible(user, orden.voiceId, "voz");
   }
+
   if (
     orden.evento === "programar" &&
     (!z.iso.datetime({ offset: true }).safeParse(orden.texto).success ||
@@ -315,7 +294,26 @@ export class FabricaN8n implements Fabrica {
     const id = randomUUID();
     const result = z
       .object({ aceptado: z.literal(true) })
-      .safeParse(await this.request(user, orden.evento, { ...orden, id }));
+      .safeParse(
+        await this.request(user, orden.evento, {
+          ...orden,
+          id,
+          ...(orden.evento === "nuevo_video"
+            ? {
+                presentacion: {
+                  version: 1,
+                  presencia: orden.avatarPlacement ?? "partes",
+                  avatar: orden.avatarId
+                    ? medioDisponible(user, orden.avatarId, "avatar")
+                    : null,
+                  voz: orden.voiceId
+                    ? medioDisponible(user, orden.voiceId, "voz")
+                    : null,
+                },
+              }
+            : {}),
+        }),
+      );
     if (!result.success)
       throw new ErrorHttp(502, "La fábrica no confirmó la solicitud.");
     return new FabricaSimulada(id, false).ejecutar(user, orden);

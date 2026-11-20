@@ -44,3 +44,28 @@ El radar detecta la noticia del día del nicho; el verificador confirma datos co
 6. Modo noticia en la fábrica y tareas de texto de GPT vía Codex con respaldo por API.
 
 Reglas para todas: no tocar fuera de su alcance; las pruebas existentes (`node --test tests/flujos_v2.test.cjs`) siguen pasando; sin secretos en el código (`.env.example`); commits en español.
+
+## Contrato aditivo de presentación — fase 3
+
+`nuevo_video` mantiene `datos.avatarId`, `datos.voiceId` y `datos.avatarPlacement` de la fase 1. Cooper valida dueño, permiso compartido, revisión y entrenamiento antes de enviar. Los IDs remotos se resuelven en el servidor; nunca se aceptan desde el navegador.
+
+Añade `datos.presentacion` opcional, versión 1:
+
+```json
+{
+  "version": 1,
+  "presencia": "partes",
+  "avatar": { "recurso_id": "uuid-local", "proveedor": "heygen", "id": "look-del-proveedor", "tipo": "propio" },
+  "voz": { "recurso_id": "gemini:Charon", "proveedor": "gemini", "id": "Charon", "tipo": "catalogo" }
+}
+```
+
+- `avatar` y `voz` admiten `null`: sin presentador / voz según guion. `presencia` admite `completo` o `partes`; en `partes` el storyboard determina las escenas. No se inventan tiempos antes de tener storyboard.
+- `tipo` admite `propio` y `catalogo`. Proveedores de avatar: `heygen`, `simulada`; de voz: `heygen`, `gemini`, `elevenlabs`, `simulada`.
+- Sin `presentacion`, el puente conserva su comportamiento anterior. Si está presente, debe persistirla junto al video y transmitirla a storyboard, planos y sonido. `completo` exige presentador en todas las escenas narradas; `partes` solo en las elegidas por el storyboard. Voz elegida: todas las escenas narradas.
+- Una selección con `proveedor: simulada` es demostrativa y no debe enviarse a un generador real. Las ilustraciones locales Luz y Cooper se conservan como vista previa; requieren un recurso de producción aprobado para render real.
+- Las voces Gemini se sintetizan con `Ajustes.modeloVoz`. Las voces clonadas HeyGen/ElevenLabs requieren su adaptador de síntesis; no se deben reinterpretar sus IDs como nombres Gemini. Para HeyGen avatar usar el ID de **look**, no el de grupo.
+- La presentación contiene referencias técnicas, nunca evidencia, fotos, grabaciones, URLs privadas ni consentimiento. Solo circula por el puente autenticado; no forma parte del estado público del navegador.
+- La retirada de compartir bloquea nuevas selecciones y vistas previas en Cooper. No cancela encargos ya aceptados. El puente necesita reconciliar la revocación si Walter exige cancelar material en cola.
+
+El consumo en n8n corresponde al puente/fábrica de fase 2 y su revisión conjunta: esta rama no modifica `tools/generar_flujos_v2.py` ni instala flujos. La base `e60ebf2` aún contiene «Avatar pendiente»; pasar el contrato no demuestra renderización en vivo.

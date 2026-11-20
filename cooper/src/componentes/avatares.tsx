@@ -12,7 +12,7 @@ import {
   Trash2,
   AudioLines,
 } from "lucide-react";
-import { CATALOGO, FRASE_IDENTIDAD } from "@/servicios/medios";
+import { CONSENTIMIENTO, ESTADOS_MEDIO } from "@/servicios/medios";
 import { CooperCara } from "@/marca/CooperCara";
 import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir, Grabador } from "./grabador";
@@ -74,14 +74,18 @@ export function Avatares() {
     [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [photo, setPhoto] = useState(""),
+    [photos, setPhotos] = useState<string[]>([]),
+    [challenge, setChallenge] = useState<{ id: string; phrase: string } | null>(
+      null,
+    ),
     [evidence, setEvidence] = useState("");
   async function upload(file: File, kind: "photo" | "evidence") {
     setBusy(true);
     setError("");
     try {
       const saved = await subir(file);
-      if (kind === "photo") setPhoto(saved.id);
+      if (kind === "photo")
+        setPhotos((items) => [...items, saved.id].slice(0, 3));
       else setEvidence(saved.id);
     } catch (e) {
       setError((e as Error).message);
@@ -95,20 +99,23 @@ export function Avatares() {
     setError("");
     const f = new FormData(e.currentTarget);
     try {
-      await api("activos", {
+      const result = await api<{ simulada: boolean }>("activos", {
         kind: tab,
         name: f.get("name"),
-        photoId: photo || undefined,
+        photoIds: photos,
+        challengeId: challenge?.id,
         evidenceId: evidence,
         placement: f.get("placement"),
         consentimiento: f.get("consentimiento") === "on",
       });
       await refresh();
       setCreating(false);
-      setPhoto("");
+      setPhotos([]);
       setEvidence("");
       setMessage(
-        "Tu creación es privada. La verificación y la generación son simuladas en este modo.",
+        result.simulada
+          ? "Tu creación es privada. La verificación y la generación son simuladas en este modo."
+          : "Solicitud guardada. Walter revisará tu identidad antes del entrenamiento. Tu creación es privada.",
       );
     } catch (e) {
       setError((e as Error).message);
@@ -124,10 +131,25 @@ export function Avatares() {
         action={
           <button
             className="button"
-            onClick={() => {
-              setCreating(!creating);
-              setPhoto("");
+            disabled={busy}
+            onClick={async () => {
+              setError("");
+              setPhotos([]);
               setEvidence("");
+              setChallenge(null);
+              if (creating) {
+                setCreating(false);
+                return;
+              }
+              setBusy(true);
+              try {
+                setChallenge(await api("identidad", { kind: tab }));
+                setCreating(true);
+              } catch (e) {
+                setError((e as Error).message);
+              } finally {
+                setBusy(false);
+              }
             }}
           >
             <Plus size={17} />
@@ -159,10 +181,34 @@ export function Avatares() {
       </div>
       <Notice error={error} message={message} />
       <p className="simulation-note">
-        Biblioteca de demostración. Las vistas previas son ilustraciones y tonos
-        de muestra; la generación y la verificación real se conectarán más
-        adelante.
+        {(
+          tab === "avatar"
+            ? data.medios.avatarSimulado
+            : data.medios.vozSimulada
+        )
+          ? "Modo simulado: usa material ficticio. Las vistas previas locales son ilustraciones y tonos de muestra."
+          : "Tus fotos y grabaciones son privadas. La revisión de identidad precede al entrenamiento."}
       </p>
+      {tab === "avatar" && !data.medios.avatarSimulado && (
+        <button
+          className="button secondary small"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            setError("");
+            try {
+              await api("catalogo", {});
+              await refresh();
+            } catch (e) {
+              setError((e as Error).message);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Cargar presentadores del estudio
+        </button>
+      )}
       {creating && (
         <section className="identity-form">
           <div>
@@ -171,9 +217,11 @@ export function Avatares() {
               Solo puedes crear una versión de ti. Queda privada hasta que
               decidas compartirla.
             </p>
-            <blockquote>{FRASE_IDENTIDAD}</blockquote>
+            <blockquote>{challenge?.phrase}</blockquote>
             <p className="helper">
-              Lee esta frase en una grabación de voz o un video corto.
+              Lee esta frase en una grabación de voz o un video corto. Caduca en
+              15 minutos. Walter comprobará la frase y tu identidad; si no puede
+              reconocerte, te pedirá repetirla en persona.
             </p>
           </div>
           <form className="stack" onSubmit={create}>
@@ -188,24 +236,49 @@ export function Avatares() {
             </label>
             {tab === "avatar" && (
               <label>
-                Una foto tuya
+                Fotos tuyas (hasta tres)
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   required
-                  onChange={(e) => {
-                    if (e.target.files?.[0])
-                      void upload(e.target.files[0], "photo");
+                  multiple
+                  onChange={async (e) => {
+                    const files = Array.from(e.target.files ?? []);
+                    setPhotos([]);
+                    if (files.length > 3) {
+                      setError("Selecciona hasta tres fotos.");
+                      return;
+                    }
+                    setBusy(true);
+                    try {
+                      const ids = [];
+                      for (const file of files)
+                        ids.push((await subir(file)).id);
+                      setPhotos(ids);
+                    } catch (e) {
+                      setError((e as Error).message);
+                    } finally {
+                      setBusy(false);
+                    }
                   }}
                 />
-                {photo && <span className="helper">Foto recibida</span>}
+                {photos.length > 0 && (
+                  <span className="helper">
+                    {photos.length} fotos recibidas. La primera se usará como
+                    avatar; las demás ayudan a revisar tu identidad.
+                  </span>
+                )}
               </label>
             )}
             <label>
               Grabación de identidad
               <input
                 type="file"
-                accept="audio/webm,audio/mp4,audio/ogg,audio/wav,video/webm,video/mp4"
+                accept={
+                  tab === "voz"
+                    ? "audio/webm,audio/mp4,audio/ogg,audio/wav"
+                    : "audio/webm,audio/mp4,audio/ogg,audio/wav,video/webm,video/mp4"
+                }
                 onChange={(e) => {
                   if (e.target.files?.[0])
                     void upload(e.target.files[0], "evidence");
@@ -230,15 +303,25 @@ export function Avatares() {
             </label>
             <label className="checkbox-label">
               <input name="consentimiento" type="checkbox" required />
-              Soy la persona de la foto y la grabación. Autorizo el uso de mi
-              identidad.
+              {CONSENTIMIENTO}
             </label>
             <button
               className="button"
-              disabled={busy || !evidence || (tab === "avatar" && !photo)}
+              disabled={
+                busy ||
+                !challenge ||
+                !evidence ||
+                (tab === "avatar" && photos.length === 0)
+              }
             >
               <Check size={16} />
-              Verificar y crear en modo simulado
+              {(
+                tab === "avatar"
+                  ? data.medios.avatarSimulado
+                  : data.medios.vozSimulada
+              )
+                ? "Crear en modo simulado"
+                : "Enviar a revisión de identidad"}
             </button>
           </form>
         </section>
@@ -257,67 +340,95 @@ export function Avatares() {
           visible: { transition: { staggerChildren: 0.06 } },
         }}
       >
-        {CATALOGO.filter((a) => a.kind === tab).map((a) => (
-          <motion.article
-            className="asset-card"
-            key={a.id}
-            variants={{
-              inicio: { y: 8 },
-              visible: { y: 0, transition: { duration: 0.25 } },
-            }}
-          >
-            <div className={`asset-portrait ${a.style}`}>
-              {a.kind === "voz" ? (
-                <div
-                  className={`waveform ${preview === a.id ? "playing" : ""}`}
-                >
-                  {Array.from({ length: 26 }, (_, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        height: `${20 + (Math.sin(i * 1.8) + 1) * 26}%`,
-                        animationDelay: `${i * 0.04}s`,
-                      }}
+        {data.catalogo
+          .filter((a) => a.kind === tab)
+          .map((a) => (
+            <motion.article
+              className="asset-card"
+              key={a.id}
+              variants={{
+                inicio: { y: 8 },
+                visible: { y: 0, transition: { duration: 0.25 } },
+              }}
+            >
+              <div className={`asset-portrait ${a.style}`}>
+                {a.kind === "avatar" && !a.simulada ? (
+                  preview === a.id ? (
+                    <video
+                      controls
+                      autoPlay
+                      muted
+                      playsInline
+                      src={`/api/muestra/${encodeURIComponent(a.id)}`}
+                      onError={() =>
+                        setError(
+                          "No se pudo cargar la vista previa. Inténtalo de nuevo.",
+                        )
+                      }
                     />
-                  ))}
-                </div>
-              ) : a.id === "cooper" ? (
-                <CooperCara
-                  size={172}
-                  estado={preview === a.id ? "hablando" : "reposo"}
-                />
-              ) : (
-                <Retrato variant={a.id} moving={preview === a.id} />
-              )}
-              <button
-                className="asset-play"
-                aria-label={`${preview === a.id ? "Pausar" : "Vista previa de"} ${a.name}`}
-                onClick={() => setPreview(preview === a.id ? "" : a.id)}
-              >
-                {preview === a.id ? <Pause size={18} /> : <Play size={18} />}
-              </button>
-            </div>
-            <div className="asset-info">
-              <h3>{a.name}</h3>
-              <p>{a.description}</p>
-              {preview === a.id && a.kind === "voz" && (
-                <audio
-                  controls
-                  autoPlay
-                  src="/api/muestra-voz"
-                  onEnded={() => setPreview("")}
-                />
-              )}
-              <small>
-                {a.kind === "voz"
-                  ? "Muestra de audio simulada"
-                  : a.style === "realista"
-                    ? "Maqueta de avatar realista"
-                    : "Avatar ilustrado"}
-              </small>
-            </div>
-          </motion.article>
-        ))}
+                  ) : (
+                    <span className="helper">Vista previa en movimiento</span>
+                  )
+                ) : a.kind === "voz" ? (
+                  <div
+                    className={`waveform ${preview === a.id ? "playing" : ""}`}
+                  >
+                    {Array.from({ length: 26 }, (_, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          height: `${20 + (Math.sin(i * 1.8) + 1) * 26}%`,
+                          animationDelay: `${i * 0.04}s`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : a.id === "cooper" ? (
+                  <CooperCara
+                    size={172}
+                    estado={preview === a.id ? "hablando" : "reposo"}
+                  />
+                ) : (
+                  <Retrato variant={a.id} moving={preview === a.id} />
+                )}
+                <button
+                  className="asset-play"
+                  aria-label={`${preview === a.id ? "Pausar" : "Vista previa de"} ${a.name}`}
+                  onClick={() => setPreview(preview === a.id ? "" : a.id)}
+                >
+                  {preview === a.id ? <Pause size={18} /> : <Play size={18} />}
+                </button>
+              </div>
+              <div className="asset-info">
+                <h3>{a.name}</h3>
+                <p>{a.description}</p>
+                {preview === a.id && a.kind === "voz" && (
+                  <audio
+                    controls
+                    autoPlay
+                    src={`/api/muestra/${encodeURIComponent(a.id)}`}
+                    onError={() =>
+                      setError(
+                        "No se pudo reproducir la muestra. Inténtalo de nuevo.",
+                      )
+                    }
+                    onEnded={() => setPreview("")}
+                  />
+                )}
+                <small>
+                  {a.simulada
+                    ? a.kind === "voz"
+                      ? "Muestra de audio simulada"
+                      : a.style === "realista"
+                        ? "Maqueta de avatar realista"
+                        : "Ilustración animada local"
+                    : a.kind === "voz"
+                      ? "Voz de catálogo"
+                      : "Presentador realista"}
+                </small>
+              </div>
+            </motion.article>
+          ))}
       </motion.div>
       <div className="library-section-title">
         <h2>Tu biblioteca y el equipo</h2>
@@ -352,7 +463,51 @@ export function Avatares() {
                       ? "En todo el video"
                       : "En algunas partes"}
                   </p>
-                  <small>Verificación simulada</small>
+                  <p role="status">{ESTADOS_MEDIO[a.status]}</p>
+                  {["iniciando", "entrenando"].includes(a.status) && (
+                    <progress aria-label={`Entrenamiento de ${a.name}`} />
+                  )}
+                  <small>
+                    {a.simulated
+                      ? "Verificación simulada"
+                      : a.verified
+                        ? "Identidad revisada por Walter"
+                        : "Identidad pendiente"}
+                  </small>
+                  {a.consentAt > 0 && (
+                    <small>
+                      Consentimiento:{" "}
+                      {new Date(a.consentAt).toLocaleDateString("es-PE")}
+                    </small>
+                  )}
+                  {a.syncError && (
+                    <p className="helper">
+                      No se pudo actualizar el estado. Se volverá a consultar
+                      automáticamente si el entrenamiento sigue en curso.
+                    </p>
+                  )}
+                  {a.status === "listo" && a.kind === "voz" && (
+                    <audio
+                      controls
+                      preload="none"
+                      src={`/api/muestra/${a.id}`}
+                      onError={() => setError("No se pudo reproducir la voz.")}
+                    />
+                  )}
+                  {a.status === "listo" &&
+                    a.kind === "avatar" &&
+                    a.hasPreview && (
+                      <video
+                        controls
+                        preload="none"
+                        playsInline
+                        src={`/api/muestra/${a.id}`}
+                        onError={() =>
+                          setError("No se pudo reproducir el avatar.")
+                        }
+                      />
+                    )}
+
                   <div className="privacy-label">
                     {a.shared ? (
                       <UsersRound size={14} />
@@ -363,9 +518,31 @@ export function Avatares() {
                   </div>
                   {a.ownerId === data.user.id && (
                     <div className="asset-actions">
+                      {a.retryable &&
+                        ["error", "iniciando"].includes(a.status) && (
+                          <button
+                            className="button secondary small"
+                            disabled={busy}
+                            onClick={async () => {
+                              setBusy(true);
+                              setError("");
+                              try {
+                                await api(`activos/${a.id}/reintentar`, {});
+                                await refresh();
+                              } catch (e) {
+                                setError((e as Error).message);
+                              } finally {
+                                setBusy(false);
+                              }
+                            }}
+                          >
+                            Recuperar envío
+                          </button>
+                        )}
+
                       <button
                         className="button secondary small"
-                        disabled={busy}
+                        disabled={busy || a.status !== "listo" || !a.verified}
                         onClick={async () => {
                           setBusy(true);
                           try {

@@ -2411,3 +2411,33 @@ main:focus {
   font-size: 12px;
   border-bottom: 1px solid var(--line);
 }
+
+/* Medios personales: el avance se expresa por estado, sin porcentajes estimados. */
+.asset-portrait video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.asset-info audio,
+.asset-info video {
+  width: 100%;
+  margin-top: 12px;
+}
+.asset-info small {
+  display: block;
+}
+.asset-info progress {
+  width: 100%;
+  accent-color: var(--accent);
+  margin: 8px 0;
+}
+.identity-review {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+.identity-reviews {
+  margin-block: 32px;
+}
+.identity-form blockquote {
+  overflow-wrap: anywhere;
+}

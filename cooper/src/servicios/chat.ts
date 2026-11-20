@@ -91,11 +91,3 @@ export class ChatSimulado implements ProveedorChat {
   }
 }
 export const proveedorChat: ProveedorChat = new ChatSimulado();
-export interface ProveedorTranscripcion {
-  transcribir(data: { mime: string; data: string }): Promise<string>;
-}
-export class TranscripcionSimulada implements ProveedorTranscripcion {
-  async transcribir() {
-    return "Quiero un nuevo video: Una idea que merece ser contada";
-  }
-}

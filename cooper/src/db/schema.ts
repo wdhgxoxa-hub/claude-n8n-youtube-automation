@@ -1,3 +1,4 @@
+import type { EstadoMedio } from "@/servicios/medios";
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
@@ -86,6 +87,24 @@ export const assets = sqliteTable("assets", {
   verified: integer("verified", { mode: "boolean" }).notNull().default(false),
   evidenceId: text("evidence_id").notNull(),
   photoId: text("photo_id").notNull().default(""),
+  provider: text("provider").notNull().default("simulada"),
+  providerId: text("provider_id").notNull().default(""),
+  status: text("status").$type<EstadoMedio>().notNull().default("listo"),
+  simulated: integer("simulated", { mode: "boolean" }).notNull().default(true),
+  photoIds: text("photo_ids").notNull().default("[]"),
+  challengeId: text("challenge_id").notNull().default(""),
+  consentAt: integer("consent_at").notNull().default(0),
+  consentText: text("consent_text").notNull().default(""),
+  consentVersion: text("consent_version").notNull().default(""),
+  reviewedBy: text("reviewed_by").notNull().default(""),
+  reviewedAt: integer("reviewed_at").notNull().default(0),
+  previewUrl: text("preview_url").notNull().default(""),
+  previewData: text("preview_data").notNull().default(""),
+  previewMime: text("preview_mime").notNull().default(""),
+  polledAt: integer("polled_at").notNull().default(0),
+  syncError: integer("sync_error", { mode: "boolean" })
+    .notNull()
+    .default(false),
   placement: text("placement", { enum: ["completo", "partes"] })
     .notNull()
     .default("partes"),
@@ -113,3 +132,21 @@ export type User = typeof users.$inferSelect;
 export type Video = typeof videos.$inferSelect;
 export type Channel = typeof channels.$inferSelect;
 export type Asset = typeof assets.$inferSelect;
+
+export const identityChallenges = sqliteTable("identity_challenges", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  kind: text("kind", { enum: ["avatar", "voz"] }).notNull(),
+  phrase: text("phrase").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+  usedAt: integer("used_at").notNull().default(0),
+});
+export const publicMedia = sqliteTable("public_media", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  providerId: text("provider_id").notNull(),
+  previewUrl: text("preview_url").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});

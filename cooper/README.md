@@ -1,6 +1,8 @@
-# Cooper — fase 1
+# Cooper — fases 1 y 3
 
-Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. Rama `cooper-fase1`; no incluye despliegue ni cambios en n8n.
+Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. Rama `cooper-fase3`; no incluye despliegue ni cambios en n8n.
+
+Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica.
 
 ## Arranque
 
@@ -43,9 +45,9 @@ El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.c
 
 - Entrada Google con lista permitida, suspensión y revocación comprobadas en el servidor. Sesiones de 24 horas. Rol administrativo almacenado en la base, nunca aceptado desde el cliente.
 - Inicio con chat y fábrica; pestañas en móvil y preferencia persistente. Navegación, canales, videos, detalle, biblioteca, perfil y administración.
-- Texto, adjuntos privados de hasta 5 MB, grabación MediaRecorder de hasta 60 segundos, transcripción simulada editable. Mensajes persistentes y gestión de errores recuperables.
+- Texto, adjuntos privados de hasta 5 MB, grabación MediaRecorder de hasta 60 segundos, transcripción editable con proveedor simulado o Gemini. Mensajes persistentes y gestión de errores recuperables.
 - Recorrido de doce etapas por SSE, parada en aprobación de guion y aprobación final, correcciones, referencias y programación. Los avisos de aprobación llevan al detalle. Simulación consistente entre pestañas, sin saltarse puertas al recargar.
-- Galería de avatares y voces, vistas previas, foto propia, evidencia de identidad, consentimiento, selección de avatar y voz por video, presencia completa o por partes, creación privada, compartir y retirar acceso. Las evidencias nunca se comparten.
+- Galería de avatares y voces, vistas previas, foto propia, evidencia de identidad, consentimiento, selección de avatar y voz por video, presencia completa o por partes, creación privada, compartir y retirar acceso. Las evidencias nunca se comparten con el equipo; Walter tiene acceso acotado mientras revisa una solicitud de identidad real.
 - Perfil con foto, nombre, apariencia, pantalla inicial y WhatsApp validado E.164.
 - Administración con usuarios, correos permitidos, gasto diario/semanal/mensual por usuario y alerta sin bloqueo. Los periodos son de calendario UTC; la semana empieza el lunes. Los importes simulados no representan facturación real.
 
@@ -85,9 +87,9 @@ Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expre
 }
 ```
 
-Las mutaciones requieren `{ "aceptado": true }` antes de persistir el reflejo local. El ID generado para canales/videos es el mismo en ambos lados. La consulta `estado` recibe `{ "videos": [{ "id": "uuid", "stage": 3, "script": "..." }] }`; solo se actualizan videos del dueño autenticado. `aprobar` envía ID y etapa. Los detalles de transporte y respuestas desconocidas nunca se devuelven al usuario. Las eliminaciones de videos/canales son locales en esta fase; su propagación real requiere el puente. No hay reintentos automáticos de mutaciones; la idempotencia distribuida, entrega durable, ingestión de gastos y contrato definitivo del puente corresponden a la fase 2. El contrato HTTP se prueba con respuestas simuladas; no se contactó un n8n real.
+Las mutaciones requieren `{ "aceptado": true }` antes de persistir el reflejo local. El ID generado para canales/videos es el mismo en ambos lados. La consulta `estado` recibe `{ "videos": [{ "id": "uuid", "stage": 3, "script": "..." }] }`; solo se actualizan videos del dueño autenticado. `aprobar` envía ID y etapa. El sobre añade `datos.presentacion` opcional con la selección resuelta y autorizada de avatar/voz: [contrato aditivo](../docs/cooper-especificacion.md). Los detalles de transporte y respuestas desconocidas nunca se devuelven al usuario. Las eliminaciones de videos/canales son locales en esta fase; su propagación real requiere el puente. No hay reintentos automáticos de mutaciones; la idempotencia distribuida, entrega durable, ingestión de gastos y contrato definitivo del puente corresponden a la fase 2. El contrato HTTP se prueba con respuestas simuladas; no se contactó un n8n real.
 
-`ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` son interfaces reemplazables. En esta fase la identidad comprueba evidencia y consentimiento, pero **no comprueba biométricamente a la persona**. Las voces de catálogo reproducen tonos de demostración y la transcripción devuelve una frase fija editable. Nunca se presenta esto como clonación o verificación real.
+`ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` tienen implementaciones reales y simuladas seleccionables por entorno. La identidad real pasa por revisión humana de Walter; no hay verificación biométrica automática. Las creaciones y simuladores heredados permanecen etiquetados como tales. Detalles de las APIs actuales, estados, consentimiento fechado, privacidad y límites en [MEDIOS.md](MEDIOS.md).
 
 ## Seguridad
 
@@ -129,7 +131,7 @@ Tras construir, `node scripts/auditoria.mjs` mide el inicio autenticado en una i
 ## Fases siguientes
 
 2. Puente real de n8n, propietario por canal, gastos reales, conciliación, cola durable e idempotencia distribuida.
-3. Generación real de avatares/voces, verificación de identidad real y transcripción real; sustituir adaptadores conservando permisos.
+3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales y del consumo del contrato de presentación por la fábrica.
 4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
 5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.

@@ -1,4 +1,4 @@
-import { and, desc, eq, or } from "drizzle-orm";
+import { and, desc, eq, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   users,
@@ -11,9 +11,16 @@ import {
   type User,
 } from "@/db/schema";
 import { requireAdmin } from "@/lib/permisos";
+import { catalogo, revisiones } from "./biblioteca";
+import { proveedorAvatar, proveedorVoz } from "./proveedores";
 export function estado(user: User) {
   return {
     user,
+    catalogo: catalogo(),
+    medios: {
+      avatarSimulado: proveedorAvatar().simulada,
+      vozSimulada: proveedorVoz().simulada,
+    },
     channels: db()
       .select()
       .from(channels)
@@ -42,6 +49,18 @@ export function estado(user: User) {
         name: assets.name,
         shared: assets.shared,
         verified: assets.verified,
+        status: assets.status,
+        simulated: assets.simulated,
+        consentAt: assets.consentAt,
+        syncError: assets.syncError,
+        retryable:
+          sql<boolean>`${assets.provider} = 'heygen' AND ${assets.providerId} = '' AND ${assets.verified} = 1`.mapWith(
+            Boolean,
+          ),
+        hasPreview: sql<boolean>`length(${assets.previewUrl}) > 0`.mapWith(
+          Boolean,
+        ),
+
         photoId: assets.photoId,
         placement: assets.placement,
         createdAt: assets.createdAt,
@@ -50,7 +69,11 @@ export function estado(user: User) {
       .where(
         or(
           eq(assets.ownerId, user.id),
-          and(eq(assets.shared, true), eq(assets.verified, true)),
+          and(
+            eq(assets.shared, true),
+            eq(assets.verified, true),
+            eq(assets.status, "listo"),
+          ),
         ),
       )
       .all(),
@@ -90,6 +113,7 @@ export function administracion(user: User) {
       };
     });
   return {
+    identidades: revisiones(user),
     users: team,
     allowed: db().select().from(allowedEmails).all(),
     threshold,

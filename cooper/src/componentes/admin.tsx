@@ -137,6 +137,78 @@ export function Admin({ initial }: { initial: Administracion }) {
           ))}
         </div>
       </section>
+      <section className="stack identity-reviews">
+        <h2>Revisión de identidad</h2>
+        <p>
+          Comprueba que conoces a la persona, que corresponde a la cuenta y que
+          lee la frase completa. Si hay dudas, pide que la repita en persona. No
+          apruebes por la frase solamente.
+        </p>
+        {data.identidades.length === 0 && (
+          <p className="helper">No hay identidades pendientes.</p>
+        )}
+        {data.identidades.map((a) => (
+          <form
+            key={a.id}
+            className="identity-review stack"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const f = new FormData(event.currentTarget);
+              await mutate(`identidades/${a.id}`, {
+                aceptar: f.get("decision") === "aceptar",
+                comprobado: f.get("comprobado") === "on",
+              });
+            }}
+          >
+            <h3>
+              {a.name} · {data.users.find((u) => u.id === a.ownerId)?.email}
+            </h3>
+            <blockquote>{a.phrase}</blockquote>
+            <p className="helper">
+              {a.consentText} · {new Date(a.consentAt).toLocaleString("es-PE")}
+            </p>
+            <div className="button-row">
+              {(JSON.parse(a.photoIds) as string[]).map((photo, i) => (
+                <a
+                  key={photo}
+                  className="button secondary small"
+                  href={`/api/revision-archivo/${a.id}/${photo}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Abrir foto {i + 1}
+                </a>
+              ))}
+              <a
+                className="button secondary small"
+                href={`/api/revision-archivo/${a.id}/${a.evidenceId}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Abrir grabación
+              </a>
+            </div>
+            <label>
+              Decisión
+              <select name="decision">
+                <option value="rechazar">
+                  Rechazar y pedir nueva evidencia
+                </option>
+                <option value="aceptar">
+                  Identidad comprobada; iniciar entrenamiento
+                </option>
+              </select>
+            </label>
+            <label className="checkbox-label">
+              <input type="checkbox" name="comprobado" required />
+              He revisado la grabación, la frase y la identidad de la persona.
+            </label>
+            <button className="button" disabled={busy}>
+              Guardar revisión
+            </button>
+          </form>
+        ))}
+      </section>
       <section className="allow-section">
         <div>
           <h2>Personas invitadas</h2>

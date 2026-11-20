@@ -5,6 +5,7 @@ import { currentUser } from "@/lib/sesion";
 import { failure } from "@/lib/http";
 import { estado } from "@/servicios/datos";
 import { fabrica } from "@/servicios/fabrica";
+import { sincronizarMedios } from "@/servicios/biblioteca";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
@@ -37,9 +38,10 @@ export async function GET(request: Request) {
               fresh.role === "admin"
                 ? db().select().from(users).all()
                 : [fresh];
-            await Promise.all(
-              owners.map((owner) => fabrica().sincronizar(owner)),
-            );
+            await Promise.all([
+              ...owners.map((owner) => fabrica().sincronizar(owner)),
+              sincronizarMedios(fresh),
+            ]);
             if (!stopped)
               controller.enqueue(
                 encoder.encode(
