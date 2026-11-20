@@ -15,7 +15,6 @@ import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
 import { Portada } from "./portada";
 import { useMovimientoReducido } from "./movimiento";
 import { Recorrido, VideoMini } from "./fabrica-vista";
-import { CATALOGO } from "@/servicios/medios";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Orden } from "@/servicios/fabrica";
 export function Canales() {
@@ -282,7 +281,12 @@ export function Videos() {
             Presentador
             <select name="avatarId">
               <option value="">Sin presentador</option>
-              {[...CATALOGO, ...data.assets]
+              {[
+                ...data.catalogo,
+                ...data.assets.filter(
+                  (a) => a.verified && a.status === "listo",
+                ),
+              ]
                 .filter((a) => a.kind === "avatar")
                 .map((a) => (
                   <option key={a.id} value={a.id}>
@@ -295,7 +299,12 @@ export function Videos() {
             Voz
             <select name="voiceId">
               <option value="">Elegir según el guion</option>
-              {[...CATALOGO, ...data.assets]
+              {[
+                ...data.catalogo,
+                ...data.assets.filter(
+                  (a) => a.verified && a.status === "listo",
+                ),
+              ]
                 .filter((a) => a.kind === "voz")
                 .map((a) => (
                   <option key={a.id} value={a.id}>
@@ -474,15 +483,22 @@ export function DetalleVideo({ id }: { id: string }) {
             <div className="presenter-summary">
               <span>
                 Presentador:{" "}
-                {[...CATALOGO, ...data.assets].find(
-                  (a) => a.id === video.avatarId,
-                )?.name ?? "Sin presentador"}
+                {[
+                  ...data.catalogo,
+                  ...data.assets.filter(
+                    (a) => a.verified && a.status === "listo",
+                  ),
+                ].find((a) => a.id === video.avatarId)?.name ??
+                  "Sin presentador"}
               </span>
               <span>
                 Voz:{" "}
-                {[...CATALOGO, ...data.assets].find(
-                  (a) => a.id === video.voiceId,
-                )?.name ?? "Según el guion"}
+                {[
+                  ...data.catalogo,
+                  ...data.assets.filter(
+                    (a) => a.verified && a.status === "listo",
+                  ),
+                ].find((a) => a.id === video.voiceId)?.name ?? "Según el guion"}
               </span>
               <span>
                 {video.avatarPlacement === "completo"

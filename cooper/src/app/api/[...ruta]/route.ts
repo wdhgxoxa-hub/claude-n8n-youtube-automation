@@ -21,13 +21,19 @@ import {
 import { body, failure, json, rateLimit, sameOrigin } from "@/lib/http";
 import { estado, administracionActual } from "@/servicios/datos";
 import { fabrica, ordenSchema } from "@/servicios/fabrica";
+import { chatSchema, proveedorChat } from "@/servicios/chat";
+import { proveedorTranscripcion } from "@/servicios/proveedores";
 import {
-  chatSchema,
-  proveedorChat,
-  TranscripcionSimulada,
-} from "@/servicios/chat";
+  crearReto,
+  crearMedio,
+  actualizarCatalogo,
+  muestraMedio,
+  revisarIdentidad,
+  archivoRevision,
+  eliminarMedio,
+  reintentarMedio,
+} from "@/servicios/biblioteca";
 import { validarArchivo } from "@/lib/archivos";
-import { AvatarSimulado, VozSimulada } from "@/servicios/medios";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ ruta: string[] }> };
@@ -67,13 +73,27 @@ async function handle(request: Request, context: Context) {
       rateLimit(`read:${user.id}`, 300);
       if (section === "estado") return json(estado(user));
       if (section === "admin") return json(await administracionActual(user));
-      if (section === "muestra-voz")
-        return new Response(new VozSimulada().muestra() as BodyInit, {
+      if (section === "revision-archivo" && id && action) {
+        const file = archivoRevision(user, id, action);
+        return new Response(Buffer.from(file.data, "base64"), {
           headers: {
-            "Content-Type": "audio/wav",
-            "Cache-Control": "private, max-age=3600",
+            "Content-Type": file.mime,
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
           },
         });
+      }
+      if (section === "muestra" && id) {
+        rateLimit(user.id);
+        const file = await muestraMedio(user, id);
+        return new Response(Buffer.from(file.data, "base64"), {
+          headers: {
+            "Content-Type": file.mime,
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+          },
+        });
+      }
       if (section === "archivos" && id) {
         const file = db()
           .select()
@@ -93,8 +113,12 @@ async function handle(request: Request, context: Context) {
             ),
           )
           .get();
-        if (!shared || !file?.mime.startsWith("image/"))
-          requireOwner(user, file);
+        if (
+          !shared ||
+          shared.status !== "listo" ||
+          !file?.mime.startsWith("image/")
+        )
+          requireOwn(user, file);
         if (!file) throw new ErrorHttp(404, "Archivo no encontrado.");
         return new Response(Buffer.from(file.data, "base64"), {
           headers: {
@@ -215,62 +239,35 @@ async function handle(request: Request, context: Context) {
         requireOwn(user, file);
         if (!file?.mime.startsWith("audio/"))
           throw new ErrorHttp(400, "Selecciona un audio.");
+        const provider = proveedorTranscripcion();
         return json({
-          texto: await new TranscripcionSimulada().transcribir(),
-          simulada: true,
+          texto: await provider.transcribir(file),
+          simulada: provider.simulada,
         });
       }
-      if (section === "activos") {
-        const parsed = z
-          .object({
-            kind: z.enum(["avatar", "voz"]),
-            name: text,
-            evidenceId: z.string().uuid(),
-            photoId: z.string().uuid().optional(),
-            placement: z.enum(["completo", "partes"]),
-            consentimiento: z.literal(true),
-          })
+      if (section === "identidad") {
+        const { kind } = z
+          .object({ kind: z.enum(["avatar", "voz"]) })
           .parse(input);
-        if (parsed.kind === "voz" && parsed.photoId)
-          throw new ErrorHttp(400, "Una voz no admite una foto adjunta.");
-        const evidence = db()
-          .select()
-          .from(attachments)
-          .where(eq(attachments.id, parsed.evidenceId))
-          .get();
-        requireOwn(user, evidence);
-        if (parsed.kind === "avatar") {
-          const photo = db()
-            .select()
-            .from(attachments)
-            .where(eq(attachments.id, parsed.photoId ?? ""))
-            .get();
-          requireOwn(user, photo);
-          if (!photo?.mime.startsWith("image/"))
-            throw new ErrorHttp(400, "Selecciona una foto.");
-        }
-        const provider =
-          parsed.kind === "avatar" ? new AvatarSimulado() : new VozSimulada();
-        const verified = await provider.verificar({
-          mime: evidence!.mime,
-          consentimiento: parsed.consentimiento,
-        });
-        const id = randomUUID();
-        db()
-          .insert(assets)
-          .values({
-            id,
-            ownerId: user.id,
-            kind: parsed.kind,
-            name: parsed.name,
-            evidenceId: parsed.evidenceId,
-            photoId: parsed.photoId ?? "",
-            placement: parsed.placement,
-            verified: verified.verified,
-            createdAt: Date.now(),
-          })
-          .run();
-        return json({ id, simulada: true });
+        return json(crearReto(user, kind));
+      }
+      if (section === "catalogo") {
+        await actualizarCatalogo();
+        return json({ ok: true });
+      }
+      if (section === "activos" && !id)
+        return json(await crearMedio(user, input));
+      if (section === "activos" && id && action === "reintentar") {
+        await reintentarMedio(user, id);
+        return json({ ok: true });
+      }
+      if (section === "identidades" && id) {
+        const { aceptar, comprobado } = z
+          .object({ aceptar: z.boolean(), comprobado: z.literal(true) })
+          .parse(input);
+        void comprobado;
+        await revisarIdentidad(user, id, aceptar);
+        return json({ ok: true });
       }
       if (section === "admin" && id === "permitidos") {
         requireAdmin(user);
@@ -336,6 +333,16 @@ async function handle(request: Request, context: Context) {
           db().select().from(assets).where(eq(assets.id, id)).get(),
         );
         const parsed = z.object({ shared: z.boolean() }).parse(input);
+        const asset = db()
+          .select()
+          .from(assets)
+          .where(eq(assets.id, id))
+          .get()!;
+        if (parsed.shared && (!asset.verified || asset.status !== "listo"))
+          throw new ErrorHttp(
+            409,
+            "Espera a que tu creación esté lista para compartirla.",
+          );
         db().update(assets).set(parsed).where(eq(assets.id, id)).run();
         return json({ ok: true });
       }
@@ -371,11 +378,7 @@ async function handle(request: Request, context: Context) {
         return json({ ok: true });
       }
       if (section === "activos" && id) {
-        requireOwn(
-          user,
-          db().select().from(assets).where(eq(assets.id, id)).get(),
-        );
-        db().delete(assets).where(eq(assets.id, id)).run();
+        await eliminarMedio(user, id);
         return json({ ok: true });
       }
       if (section === "admin" && id === "permitidos" && action) {

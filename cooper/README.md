@@ -1,6 +1,8 @@
-# Cooper — fases 1 y 2
+# Cooper — fases 1, 2 y 3
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente preparado en `cooper-fase2` está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
+
+Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica.
 
 ## Arranque
 
@@ -22,19 +24,19 @@ Las migraciones SQL versionadas de `drizzle/` se leen con Drizzle y se aplican b
 
 ## Variables
 
-| Variable                                 | Uso                                                                                                                                       |
-| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_SECRET`                            | Secreto aleatorio para Auth.js. Genera uno con `openssl rand -base64 32`.                                                                 |
-| `AUTH_URL`                               | Origen público canónico; también se usa para validar el origen de las mutaciones.                                                         |
-| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`   | Aplicación OAuth de Google.                                                                                                               |
-| `AUTH_TRUST_HOST`                        | `true` solo si controlas el proxy y las cabeceras de host.                                                                                |
-| `COOPER_ADMIN_EMAIL`                     | Correo del primer y único administrador. Cambiarlo no transfiere el rol.                                                                  |
-| `COOPER_DATABASE_PATH`                   | Archivo SQLite; por defecto `./data/cooper.sqlite`.                                                                                       |
-| `COOPER_FABRICA`                         | `simulada` o `n8n`. Otros valores se rechazan.                                                                                            |
-| `COOPER_SIMULACION_MS`                   | Intervalo de avance; 8000 ms por defecto. Las aprobaciones nunca avanzan solas.                                                           |
-| `COOPER_N8N_URL`, `COOPER_N8N_TOKEN`     | Endpoint HTTP y token privado del puente. Solo servidor; token de al menos 32 caracteres.                                                                           |
-| `COOPER_GASTO_ALERTA_USD`                | Umbral diario informativo; por defecto 25 USD. No bloquea producción.                                                                     |
-| `NEXT_TELEMETRY_DISABLED`                | `1` para desactivar la telemetría de Next.                                                                                                |
+| Variable                               | Uso                                                                                       |
+| -------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `AUTH_SECRET`                          | Secreto aleatorio para Auth.js. Genera uno con `openssl rand -base64 32`.                 |
+| `AUTH_URL`                             | Origen público canónico; también se usa para validar el origen de las mutaciones.         |
+| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | Aplicación OAuth de Google.                                                               |
+| `AUTH_TRUST_HOST`                      | `true` solo si controlas el proxy y las cabeceras de host.                                |
+| `COOPER_ADMIN_EMAIL`                   | Correo del primer y único administrador. Cambiarlo no transfiere el rol.                  |
+| `COOPER_DATABASE_PATH`                 | Archivo SQLite; por defecto `./data/cooper.sqlite`.                                       |
+| `COOPER_FABRICA`                       | `simulada` o `n8n`. Otros valores se rechazan.                                            |
+| `COOPER_SIMULACION_MS`                 | Intervalo de avance; 8000 ms por defecto. Las aprobaciones nunca avanzan solas.           |
+| `COOPER_N8N_URL`, `COOPER_N8N_TOKEN`   | Endpoint HTTP y token privado del puente. Solo servidor; token de al menos 32 caracteres. |
+| `COOPER_GASTO_ALERTA_USD`              | Umbral diario informativo; por defecto 25 USD. No bloquea producción.                     |
+| `NEXT_TELEMETRY_DISABLED`              | `1` para desactivar la telemetría de Next.                                                |
 
 El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.cache/`. `COOPER_E2E_SECRET` es una variable interna entre el ejecutor y sus procesos. `PLAYWRIGHT_BROWSERS_PATH` se fija automáticamente a `.cache/browsers`. No copies estas variables a producción.
 
@@ -42,9 +44,9 @@ El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.c
 
 - Entrada Google con lista permitida, suspensión y revocación comprobadas en el servidor. Sesiones de 24 horas. Rol administrativo almacenado en la base, nunca aceptado desde el cliente.
 - Inicio con chat y fábrica; pestañas en móvil y preferencia persistente. Navegación, canales, videos, detalle, biblioteca, perfil y administración.
-- Texto, adjuntos privados de hasta 5 MB, grabación MediaRecorder de hasta 60 segundos, transcripción simulada editable. Mensajes persistentes y gestión de errores recuperables.
+- Texto, adjuntos privados de hasta 5 MB, grabación MediaRecorder de hasta 60 segundos, transcripción editable con proveedor simulado o Gemini. Mensajes persistentes y gestión de errores recuperables.
 - Recorrido de doce etapas por SSE, parada en aprobación de guion y aprobación final, correcciones, referencias y programación. Los avisos de aprobación llevan al detalle. Simulación consistente entre pestañas, sin saltarse puertas al recargar.
-- Galería de avatares y voces, vistas previas, foto propia, evidencia de identidad, consentimiento, selección de avatar y voz por video, presencia completa o por partes, creación privada, compartir y retirar acceso. Las evidencias nunca se comparten.
+- Galería de avatares y voces, vistas previas, foto propia, evidencia de identidad, consentimiento, selección de avatar y voz por video, presencia completa o por partes, creación privada, compartir y retirar acceso. Las evidencias nunca se comparten con el equipo; Walter tiene acceso acotado mientras revisa una solicitud de identidad real.
 - Perfil con foto, nombre, apariencia, pantalla inicial y WhatsApp validado E.164.
 - Administración con usuarios, correos permitidos, gasto diario/semanal/mensual por usuario y alerta sin bloqueo. Los periodos son de calendario UTC; la semana empieza el lunes. Los importes simulados no representan facturación real.
 
@@ -72,7 +74,9 @@ Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expre
 
 El receptor `/api/n8n/webhook` valida firma sobre bytes, tiempo, dueño, ID y digest persistidos. SSE reemite progreso del dueño y concilia el estado cada minuto. `COOPER_WEBHOOK_SECRET` debe coincidir con n8n y tener al menos 32 caracteres. En modo n8n, el panel administrativo usa los gastos registrados en `fab_costos`, indicando las estimaciones de las tarifas configuradas. No se mezcla el gasto simulado. El contrato completo, variables de n8n, migración de dueños y pasos para Claude/Walter están en [la guía del puente](../docs/cooper-puente-n8n.md).
 
-`ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` son interfaces reemplazables. En esta fase la identidad comprueba evidencia y consentimiento, pero **no comprueba biométricamente a la persona**. Las voces de catálogo reproducen tonos de demostración y la transcripción devuelve una frase fija editable. Nunca se presenta esto como clonación o verificación real.
+El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md).
+
+`ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` tienen implementaciones reales y simuladas seleccionables por entorno. La identidad real pasa por revisión humana de Walter; no hay verificación biométrica automática. Las creaciones y simuladores heredados permanecen etiquetados como tales. Detalles de las APIs actuales, estados, consentimiento fechado, privacidad y límites en [MEDIOS.md](MEDIOS.md).
 
 ## Seguridad
 
@@ -114,7 +118,7 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 ## Fases siguientes
 
 2. Puente implementado y probado localmente; falta aplicar la migración y verificar en una instancia de ensayo antes del despliegue.
-3. Generación real de avatares/voces, verificación de identidad real y transcripción real; sustituir adaptadores conservando permisos.
+3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales y del consumo del contrato de presentación por la fábrica.
 4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
 5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.

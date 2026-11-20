@@ -14,6 +14,10 @@ const env = {
   COOPER_ADMIN_EMAIL: "admin@example.test",
   COOPER_DATABASE_PATH: resolve(dir, "cooper.sqlite"),
   COOPER_FABRICA: "simulada",
+  COOPER_AVATAR: "simulada",
+  COOPER_VOZ_CLONADA: "simulada",
+  COOPER_VOZ_CATALOGO: "simulada",
+  COOPER_TRANSCRIPCION: "simulada",
   COOPER_SIMULACION_MS: "400",
   COOPER_GASTO_ALERTA_USD: "0.5",
 };

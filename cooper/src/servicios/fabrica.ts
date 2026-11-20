@@ -7,7 +7,6 @@ import {
   videos,
   events,
   expenses,
-  assets,
   bridgeCommands,
   type User,
 } from "@/db/schema";
@@ -27,7 +26,7 @@ import {
   type ConsultaPuente,
 } from "@/contratos/puente";
 import { aplicarEstado } from "./puente";
-import { CATALOGO } from "./medios";
+import { medioDisponible } from "./biblioteca";
 import { guionInicial, siguienteEtapa, esperaAprobacion } from "@/lib/etapas";
 export const EVENTOS = [
   "nuevo_canal",
@@ -91,24 +90,10 @@ export function validarOrden(user: User, orden: Orden) {
         .get();
   requireOwn(user, resource);
   if (orden.evento === "nuevo_video") {
-    for (const [id, kind] of [
-      [orden.avatarId, "avatar"],
-      [orden.voiceId, "voz"],
-    ]) {
-      if (!id || CATALOGO.some((a) => a.id === id && a.kind === kind)) continue;
-      const asset = db().select().from(assets).where(eq(assets.id, id)).get();
-      if (
-        !asset ||
-        asset.kind !== kind ||
-        !asset.verified ||
-        (asset.ownerId !== user.id && !asset.shared)
-      )
-        throw new ErrorHttp(
-          404,
-          "Ese avatar o voz no está disponible en tu biblioteca.",
-        );
-    }
+    if (orden.avatarId) medioDisponible(user, orden.avatarId, "avatar");
+    if (orden.voiceId) medioDisponible(user, orden.voiceId, "voz");
   }
+
   if (
     orden.evento === "programar" &&
     (!z.iso.datetime({ offset: true }).safeParse(orden.texto).success ||
@@ -437,7 +422,24 @@ export class FabricaN8n implements Fabrica {
     const id = randomUUID();
     if (
       !aceptadoSchema.safeParse(
-        await this.request(user, orden.evento, { ...orden, id }),
+        await this.request(user, orden.evento, {
+          ...orden,
+          id,
+          ...(orden.evento === "nuevo_video"
+            ? {
+                presentacion: {
+                  version: 1,
+                  presencia: orden.avatarPlacement ?? "partes",
+                  avatar: orden.avatarId
+                    ? medioDisponible(user, orden.avatarId, "avatar")
+                    : null,
+                  voz: orden.voiceId
+                    ? medioDisponible(user, orden.voiceId, "voz")
+                    : null,
+                },
+              }
+            : {}),
+        }),
       ).success
     )
       throw new ErrorHttp(502, "La fábrica no confirmó la solicitud.");

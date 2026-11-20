@@ -17,7 +17,7 @@ export function Inicio() {
     [error, setError] = useState(""),
     [state, setState] = useState<EstadoCooper>("reposo"),
     [files, setFiles] = useState<{ id: string; name: string }[]>([]),
-    [transcript, setTranscript] = useState(false),
+    [transcript, setTranscript] = useState<"simulada" | "real" | null>(null),
     [channel, setChannel] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
   const end = useRef<HTMLDivElement>(null);
@@ -40,7 +40,7 @@ export function Inicio() {
       });
       setText("");
       setFiles([]);
-      setTranscript(false);
+      setTranscript(null);
       await refresh();
       setState("hablando");
       setTimeout(() => setState("reposo"), 1800);
@@ -61,11 +61,14 @@ export function Inicio() {
       const uploaded = await subir(file);
       setFiles((old) => [...old, uploaded]);
       if (audio) {
-        const result = await api<{ texto: string }>("transcribir", {
-          id: uploaded.id,
-        });
+        const result = await api<{ texto: string; simulada: boolean }>(
+          "transcribir",
+          {
+            id: uploaded.id,
+          },
+        );
         setText(result.texto);
-        setTranscript(true);
+        setTranscript(result.simulada ? "simulada" : "real");
       }
     } catch (e) {
       setError((e as Error).message);
@@ -207,7 +210,10 @@ export function Inicio() {
             {transcript && (
               <p className="helper">
                 <AudioLines size={14} />
-                Transcripción simulada. Edita el texto antes de enviarlo.
+                {transcript === "simulada"
+                  ? "Transcripción simulada."
+                  : "Transcripción del audio."}{" "}
+                Edita el texto antes de enviarlo.
               </p>
             )}
             <form onSubmit={send} className="composer">

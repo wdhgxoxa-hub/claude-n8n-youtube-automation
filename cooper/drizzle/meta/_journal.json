@@ -22,6 +22,13 @@
       "when": 1795176002000,
       "tag": "0002_puente",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1795176003000,
+      "tag": "0003_medios_reales",
+      "breakpoints": true
     }
   ]
 }

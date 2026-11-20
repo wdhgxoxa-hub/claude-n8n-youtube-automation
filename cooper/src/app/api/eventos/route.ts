@@ -6,6 +6,7 @@ import { currentUser } from "@/lib/sesion";
 import { failure, reserveStream } from "@/lib/http";
 import { estado } from "@/servicios/datos";
 import { fabrica } from "@/servicios/fabrica";
+import { sincronizarMedios } from "@/servicios/biblioteca";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
@@ -78,6 +79,7 @@ export async function GET(request: Request) {
                   );
               }
             }
+            await sincronizarMedios(fresh);
             const authorized = await currentUser();
             if (authorized.id !== user.id) {
               stop();

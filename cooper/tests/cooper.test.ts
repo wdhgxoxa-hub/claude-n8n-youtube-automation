@@ -23,7 +23,8 @@ import {
 } from "@/servicios/fabrica";
 import { ChatSimulado } from "@/servicios/chat";
 import { estado, administracion } from "@/servicios/datos";
-import { AvatarSimulado } from "@/servicios/medios";
+import { sincronizarMedios } from "@/servicios/biblioteca";
+import { AvatarSimulado } from "@/servicios/proveedores/simulados";
 let active: User;
 vi.mock("@/lib/sesion", () => ({ currentUser: async () => active }));
 import { GET, POST, PATCH, DELETE } from "@/app/api/[...ruta]/route";
@@ -341,10 +342,14 @@ describe("Archivos, identidad y entradas", () => {
       }),
     ).rejects.toThrow();
     active = ana;
+    const reto = await (
+      await route("POST", "identidad", { kind: "avatar" })
+    ).json();
     const result = await route("POST", "activos", {
+      challengeId: reto.id,
       kind: "avatar",
       name: "Ana",
-      photoId: photo,
+      photoIds: [photo],
       evidenceId: evidence,
       consentimiento: true,
       placement: "partes",
@@ -358,7 +363,11 @@ describe("Archivos, identidad y entradas", () => {
   });
   it("compartir permite la foto, nunca la evidencia ni modificar al otro", async () => {
     active = ana;
-    await route("PATCH", `activos/${asset}`, { shared: true });
+    db().update(assets).set({ polledAt: 0 }).where(eq(assets.id, asset)).run();
+    await sincronizarMedios(ana);
+    expect(
+      (await route("PATCH", `activos/${asset}`, { shared: true })).status,
+    ).toBe(200);
     active = luis;
     expect(estado(luis).assets).toHaveLength(1);
     expect((await route("GET", `archivos/${photo}`)).status).toBe(200);

@@ -230,7 +230,7 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
   await expect(page.getByRole("button", { name: "Pausar Alma" })).toBeVisible();
   await page.getByRole("button", { name: "Crear avatar" }).click();
   await page.getByLabel("Nombre", { exact: true }).fill("Ana presentadora");
-  await page.getByLabel("Una foto tuya").setInputFiles({
+  await page.getByLabel("Fotos tuyas (hasta tres)").setInputFiles({
     name: "foto.png",
     mimeType: "image/png",
     buffer: Buffer.from(
@@ -238,15 +238,15 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
       "base64",
     ),
   });
-  await expect(page.getByText("Foto recibida")).toBeVisible();
+  await expect(
+    page.getByText("1 fotos recibidas.", { exact: false }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Grabar audio", exact: true }).click();
   await page.waitForTimeout(500);
   await page.getByRole("button", { name: "Detener grabación" }).click();
   await expect(page.getByText("Grabación recibida")).toBeVisible();
-  await page.getByLabel("Soy la persona de la foto").check();
-  await page
-    .getByRole("button", { name: "Verificar y crear en modo simulado" })
-    .click();
+  await page.getByLabel("Declaro que soy la persona de las fotos").check();
+  await page.getByRole("button", { name: "Crear en modo simulado" }).click();
   await expect(
     page.getByRole("heading", { name: "Ana presentadora" }),
   ).toBeVisible();
@@ -477,4 +477,62 @@ test("bienvenida vacía: las tres acciones quedan antes del compositor", async (
     ).toHaveValue("Crea un canal: Ciencia cotidiana");
     await noOverflow(page);
   }
+});
+test("identidad con frase renovable, formulario accesible y entrenamiento en vivo", async ({
+  page,
+}) => {
+  await login(page.request);
+  await page.goto("/avatares");
+  await page.getByRole("button", { name: "Voces", exact: true }).click();
+  await page.getByRole("button", { name: "Crear voz", exact: true }).click();
+  const primera = await page.locator(".identity-form blockquote").innerText();
+  await page.getByRole("button", { name: "Crear voz", exact: true }).click();
+  await page.getByRole("button", { name: "Crear voz", exact: true }).click();
+  await expect(page.locator(".identity-form blockquote")).not.toHaveText(
+    primera,
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [360, 390, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await noOverflow(page);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({
+      path: `test-results/visual/identidad-${width}.png`,
+      fullPage: true,
+    });
+  }
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.getByLabel("Nombre", { exact: true }).fill("Voz de prueba");
+  await page.getByRole("button", { name: "Grabar audio", exact: true }).click();
+  await page.waitForTimeout(500);
+  await page.getByRole("button", { name: "Detener grabación" }).click();
+  await expect(page.getByText("Grabación recibida")).toBeVisible();
+  await page.getByLabel("Declaro que soy la persona de las fotos").check();
+  await page.getByRole("button", { name: "Crear en modo simulado" }).click();
+  const asset = page
+    .locator("article")
+    .filter({ has: page.getByRole("heading", { name: "Voz de prueba" }) });
+  await expect(asset.getByRole("status")).toHaveText("Entrenamiento en curso");
+  await expect(
+    asset.getByRole("button", { name: "Compartir", exact: true }),
+  ).toBeDisabled();
+  await expect(asset.getByRole("status")).toHaveText("Listo para usar");
+  await expect(
+    asset.getByRole("button", { name: "Compartir", exact: true }),
+  ).toBeEnabled();
+  const state = await (await page.request.get("/api/estado")).json();
+  const own = state.assets.find(
+    (a: { name: string }) => a.name === "Voz de prueba",
+  );
+  expect(own.consentAt).toBeGreaterThan(0);
+  expect(
+    (await page.request.get(`/api/muestra/${own.id}`)).headers()[
+      "content-type"
+    ],
+  ).toBe("audio/wav");
+  await page.reload();
+  await page.getByRole("button", { name: "Voces", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Voz de prueba" }),
+  ).toBeVisible();
 });
