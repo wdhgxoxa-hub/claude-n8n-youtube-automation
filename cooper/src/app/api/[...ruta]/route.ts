@@ -26,6 +26,7 @@ import {
   proveedorChat,
   TranscripcionSimulada,
 } from "@/servicios/chat";
+import { validarArchivo } from "@/lib/archivos";
 import { AvatarSimulado, VozSimulada } from "@/servicios/medios";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -63,6 +64,7 @@ async function handle(request: Request, context: Context) {
       rateLimit(user.id);
     }
     if (method === "GET") {
+      rateLimit(`read:${user.id}`, 300);
       if (section === "estado") return json(estado(user));
       if (section === "admin") return json(administracion(user));
       if (section === "muestra-voz")
@@ -84,12 +86,15 @@ async function handle(request: Request, context: Context) {
           .where(
             and(
               eq(assets.photoId, id),
+              eq(assets.kind, "avatar"),
+              eq(assets.ownerId, file?.ownerId ?? ""),
               eq(assets.shared, true),
               eq(assets.verified, true),
             ),
           )
           .get();
-        if (!shared) requireOwner(user, file);
+        if (!shared || !file?.mime.startsWith("image/"))
+          requireOwner(user, file);
         if (!file) throw new ErrorHttp(404, "Archivo no encontrado.");
         return new Response(Buffer.from(file.data, "base64"), {
           headers: {
@@ -97,6 +102,7 @@ async function handle(request: Request, context: Context) {
             "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(file.name)}`,
             "Cache-Control": "private, no-store",
             "X-Content-Type-Options": "nosniff",
+            "Content-Security-Policy": "default-src 'none'; sandbox",
           },
         });
       }
@@ -191,6 +197,7 @@ async function handle(request: Request, context: Context) {
         if (size > 5 * 1024 * 1024)
           throw new ErrorHttp(413, "El archivo supera los 5 MB.");
         if (size < 4) throw new ErrorHttp(400, "El archivo está vacío.");
+        validarArchivo(parsed.mime, parsed.data);
         const id = randomUUID();
         db()
           .insert(attachments)
@@ -224,6 +231,8 @@ async function handle(request: Request, context: Context) {
             consentimiento: z.literal(true),
           })
           .parse(input);
+        if (parsed.kind === "voz" && parsed.photoId)
+          throw new ErrorHttp(400, "Una voz no admite una foto adjunta.");
         const evidence = db()
           .select()
           .from(attachments)

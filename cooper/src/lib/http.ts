@@ -7,8 +7,11 @@ export function json(data: unknown, status = 200) {
   });
 }
 export function failure(error: unknown) {
-  if (error instanceof ErrorHttp)
-    return json({ error: error.message }, error.status);
+  if (error instanceof ErrorHttp) {
+    const response = json({ error: error.message }, error.status);
+    if (error.status === 429) response.headers.set("Retry-After", "60");
+    return response;
+  }
   if (error instanceof ZodError)
     return json(
       {
@@ -57,13 +60,32 @@ export async function body(request: Request) {
   }
 }
 const limits = new Map<string, { at: number; count: number }>();
-export function rateLimit(id: string) {
+export function rateLimit(id: string, maximum = 90) {
   const now = Date.now();
   for (const [key, value] of limits)
     if (now - value.at > 60000) limits.delete(key);
   const current = limits.get(id) ?? { at: now, count: 0 };
   current.count++;
   limits.set(id, current);
-  if (current.count > 90)
+  if (current.count > maximum)
     throw new ErrorHttp(429, "Hay muchas solicitudes. Espera un minuto.");
+}
+
+const streams = new Map<string, number>();
+export function reserveStream(id: string) {
+  const count = streams.get(id) ?? 0;
+  if (count >= 4)
+    throw new ErrorHttp(
+      429,
+      "Cierra otra pestaña antes de conectar la fábrica.",
+    );
+  streams.set(id, count + 1);
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    const remaining = (streams.get(id) ?? 1) - 1;
+    if (remaining) streams.set(id, remaining);
+    else streams.delete(id);
+  };
 }
