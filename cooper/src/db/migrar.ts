@@ -1,3 +1,3 @@
-import { db } from './index';
+import { db } from "./index";
 db();
-console.log('Migraciones de Cooper aplicadas.');
+console.log("Migraciones de Cooper aplicadas.");
