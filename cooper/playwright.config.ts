@@ -10,7 +10,7 @@ export default defineConfig({
   expect: { timeout: 15000 },
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: "http://127.0.0.1:3107",
+    baseURL: "http://127.0.0.1:33171",
     launchOptions: {
       args: [
         "--use-fake-device-for-media-stream",
@@ -24,9 +24,9 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     command: "npm run build && node scripts/e2e-server.mjs",
-    url: "http://127.0.0.1:3107/entrar",
+    url: "http://127.0.0.1:33171/entrar",
     reuseExistingServer: false,
     timeout: 120000,
-    env: { COOPER_TEST_SECRET: secret },
+    env: { COOPER_E2E_SECRET: secret },
   },
 });

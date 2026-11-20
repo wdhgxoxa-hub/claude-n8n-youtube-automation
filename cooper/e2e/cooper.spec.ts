@@ -8,7 +8,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync } from "node:fs";
 const secret = process.env.COOPER_E2E_SECRET!;
 async function login(request: APIRequestContext, email = "ana@example.test") {
-  const response = await request.post("/api/prueba", {
+  const response = await request.post("http://127.0.0.1:33172/sesion", {
     data: { email, secret },
   });
   expect(response.status()).toBe(200);
@@ -48,14 +48,14 @@ test("entrada pública, cabeceras y protección de rutas", async ({
   expect(response.headers()["x-content-type-options"]).toBe("nosniff");
   expect(
     (
-      await request.post("/api/prueba", {
+      await request.post("http://127.0.0.1:33172/sesion", {
         data: { email: "intruso@example.test", secret },
       })
     ).status(),
   ).toBe(403);
   expect(
     (
-      await request.post("/api/prueba", {
+      await request.post("http://127.0.0.1:33172/sesion", {
         data: { email: "admin@example.test", secret: "incorrecto" },
       })
     ).status(),
@@ -227,7 +227,7 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
     page.getByRole("heading", { name: "Ana presentadora" }),
   ).toBeVisible();
   await expect(page.getByText("Solo tú", { exact: true })).toBeVisible();
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3107" });
+  const other = await browser.newContext({ baseURL: "http://127.0.0.1:33171" });
   await login(other.request, "luis@example.test");
   expect(
     (await (await other.request.get("/api/estado")).json()).assets,
@@ -301,7 +301,7 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   await expect(
     page.getByText("invitado@example.test", { exact: true }),
   ).toHaveCount(0);
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3107" });
+  const other = await browser.newContext({ baseURL: "http://127.0.0.1:33171" });
   await login(other.request, "luis@example.test");
   const row = page.getByRole("row").filter({ hasText: "luis@example.test" });
   await row.getByRole("button", { name: "Desactivar" }).click();

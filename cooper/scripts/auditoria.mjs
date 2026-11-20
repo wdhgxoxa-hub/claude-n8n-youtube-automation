@@ -5,13 +5,13 @@ import { resolve } from "node:path";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
-const base = "http://127.0.0.1:3107";
+const base = "http://127.0.0.1:33171";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
 const server = spawn(process.execPath, ["scripts/e2e-server.mjs"], {
   stdio: ["ignore", "ignore", "inherit"],
-  env: { ...process.env, COOPER_TEST_SECRET: secret },
+  env: { ...process.env, COOPER_E2E_SECRET: secret },
 });
 let browser;
 try {
@@ -35,7 +35,7 @@ try {
   });
   const context = await browser.newContext();
   const page = await context.newPage();
-  const auth = await page.request.post(base + "/api/prueba", {
+  const auth = await page.request.post("http://127.0.0.1:33172/sesion", {
     data: { email: "admin@example.test", secret },
   });
   if (!auth.ok()) throw new Error("No se pudo crear la sesión aislada.");
