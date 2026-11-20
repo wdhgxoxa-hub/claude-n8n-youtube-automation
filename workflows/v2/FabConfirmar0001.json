@@ -1,0 +1,542 @@
+{
+  "id": "FabConfirmar0001",
+  "name": "F · Confirmar publicaciones",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1,
+              "triggerAtMinute": 7
+            }
+          ]
+        }
+      },
+      "id": "21854a32-7115-4612-a831-e0a0bc61da31",
+      "name": "Cada hora",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "581adb83-eb81-4e17-a97f-b9fb5ba8543b",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "OMPWHAVyhbtekML0"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "createdAt",
+              "condition": "gte",
+              "keyValue": "={{ new Date(Date.now() - 14 * 86400000).toISOString() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "a77c5db6-5519-4259-8bc2-9566c57b3033",
+      "name": "Publicaciones recientes",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Solo lo que ya debió salir (10 min de margen) y aún no está confirmado.\nconst corte = Date.now() - 10 * 60000;\nconst l = $input.all().map(i => i.json).filter(p => p.request_id && ['programado', 'enviado'].includes(p.estado) && Date.parse(p.publicado_en || 0) <= corte);\nreturn l.length ? l.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
+      },
+      "id": "ea20b38c-055f-4451-a775-f1414158788d",
+      "name": "Por confirmar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cd7c399d-6032-49eb-8c89-568f8ac7b254",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0e05c1c7-e144-4620-a1a4-0a4b1a6fb9a7",
+      "name": "¿Hay por confirmar?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.upload-post.com/api/uploadposts/status?' + ($json.job_id ? 'job_id=' + encodeURIComponent($json.job_id) : 'request_id=' + encodeURIComponent($json.request_id)) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "a4d86da4-ec79-40eb-a5e2-715dba1d58bc",
+      "name": "Consultar Upload-Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PpoAcczNUlZgLCwe",
+          "name": "Upload-Post"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Traduce la respuesta de Upload-Post: completo y sin fallos → publicado; fallido → error; lo demás sigue esperando.\nconst pedidos = $('Por confirmar').all().map(i => i.json);\nconst todas = $('Publicaciones recientes').all().map(i => i.json);\nconst cambios = [];\n$input.all().forEach((it, k) => {\n  const p = pedidos[k]; const r = it.json || {}; if (!p) return;\n  const res = Array.isArray(r.results) ? r.results : [];\n  const st = String(r.status || '').toLowerCase();\n  // Solo se juzga lo terminado: mientras está «queued» Upload-Post ya trae success:false (aún no hay intento).\n  if (!['completed', 'failed'].includes(st) || !res.length) return;   // pendiente o en proceso: se mira en una hora\n  const fallo = st === 'failed' || res.some(x => x.success !== true);\n  const listo = !fallo;\n  const urls = res.map(x => x.post_url || x.url || '').filter(Boolean);\n  const errores = res.filter(x => x.success !== true).map(x => `${x.platform}: ${String(x.error_message || x.error || x.message || 'error').slice(0, 120)}`);\n  cambios.push({ request_id: p.request_id, video_id: p.video_id, plataformas: p.plataformas, tipo: p.tipo,\n    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: (res.find(x => x.platform === 'youtube' && x.success === true) || {}).platform_post_id || '',\n    resultado: JSON.stringify(listo ? { status: st, urls } : { status: st || 'failed', errores }).slice(0, 800) });\n});\nif (!cambios.length) return [{ json: { nada: true } }];\n// Estado del video: publicado cuando todas sus publicaciones salieron; error si alguna falló.\nconst porVideo = {};\nfor (const v of new Set(cambios.map(c => c.video_id))) {\n  const filas = todas.filter(t => t.video_id === v).map(t => cambios.find(c => c.request_id === t.request_id) || t);\n  const yt = cambios.filter(c => c.video_id === v && /youtube/.test(c.plataformas)).map(c => c.youtube_id || (c.url.match(/(?:v=|shorts\\/|youtu\\.be\\/)([\\w-]{11})/) || [])[1]).find(Boolean) || '';\n  porVideo[v] = { video_id: v, youtube_id: yt,\n    estado: filas.some(f => f.estado === 'error') ? 'error_publicacion' : filas.every(f => f.estado === 'publicado') ? 'publicado' : '' };\n}\nreturn cambios.map(c => ({ json: { ...c, video: porVideo[c.video_id] } }));\n"
+      },
+      "id": "4ce9b523-1f47-4157-8684-0ef2969eace6",
+      "name": "Leer resultados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f0c72405-e59a-4f7d-9f09-b16ddfd911bb",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7b7b2c6f-2249-4371-93dd-f445e4bf5039",
+      "name": "¿Hubo cambios?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(i => ({ json: { request_id: i.json.request_id, estado: i.json.estado, resultado: i.json.resultado } }));"
+      },
+      "id": "d8cb0f7d-f4dc-4c30-ba48-3123bcbb94e0",
+      "name": "Fila de publicación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "OMPWHAVyhbtekML0"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "request_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.request_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "96a0f372-c9cc-4c8c-8a67-b6066e500a76",
+      "name": "Actualizar publicación",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst vistos = new Set(); const l = [];\nfor (const i of $('Leer resultados').all()) { const v = i.json.video; if (!v || !v.estado || vistos.has(v.video_id)) continue; vistos.add(v.video_id);\n  const fila = { video_id: v.video_id, estado: v.estado, etapa: v.estado === 'publicado' ? 'publicado' : 'publicacion' };\n  if (v.youtube_id) fila.youtube_id = v.youtube_id; l.push({ json: fila }); }\nreturn l.length ? l : [{ json: { nada: true } }];\n"
+      },
+      "id": "ef07570b-fea0-4215-a5e4-2328bfed6b02",
+      "name": "Videos a cerrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0b55bd67-d463-40d2-b18c-4b966d2f150e",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5557ef74-df8d-4062-9e52-a113e1bf0e80",
+      "name": "¿Cerrar video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.video_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "f406e1cb-0524-43c8-b544-c2d27499cf10",
+      "name": "Actualizar video",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst l = $('Leer resultados').all().map(i => i.json).map(c => c.estado === 'publicado'\n  ? `✅ ${c.video_id} → ${c.plataformas}${c.url ? '\\n' + c.url : ''}` : `❌ ${c.video_id} → ${c.plataformas}: ${JSON.parse(c.resultado).errores?.join('; ') || 'falló'}`);\nreturn [{ json: { texto: 'Publicación confirmada:\\n' + l.join('\\n') } }];\n"
+      },
+      "id": "383fe598-8624-43da-9b56-f92813e5ac86",
+      "name": "Aviso corto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ $json.texto.slice(0, 3900) }}",
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "35146df6-26c4-41ba-8464-9dcd6056cf03",
+      "name": "Avisar",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3300,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cada hora": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Publicaciones recientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publicaciones recientes": {
+      "main": [
+        [
+          {
+            "node": "Por confirmar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Por confirmar": {
+      "main": [
+        [
+          {
+            "node": "¿Hay por confirmar?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay por confirmar?": {
+      "main": [
+        [
+          {
+            "node": "Consultar Upload-Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Upload-Post": {
+      "main": [
+        [
+          {
+            "node": "Leer resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer resultados": {
+      "main": [
+        [
+          {
+            "node": "¿Hubo cambios?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hubo cambios?": {
+      "main": [
+        [
+          {
+            "node": "Fila de publicación",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Videos a cerrar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aviso corto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fila de publicación": {
+      "main": [
+        [
+          {
+            "node": "Actualizar publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Videos a cerrar": {
+      "main": [
+        [
+          {
+            "node": "¿Cerrar video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Cerrar video?": {
+      "main": [
+        [
+          {
+            "node": "Actualizar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso corto": {
+      "main": [
+        [
+          {
+            "node": "Avisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -48,7 +48,7 @@ W = {  # flujos
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
     'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001', 'refs': 'FabReferencias01',
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
-    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001',
+    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -2192,20 +2192,25 @@ code(f, 'Filas de publicación', r"""
 const e = $('Inicio').first().json; const pedidos = $('Plan de publicación').all().map(i => i.json);
 return $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];
   const id = r.request_id || r.job_id || r.data?.request_id || '';
-  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),
+  // Upload-Post da job_id a lo programado: su estado se consulta con ?job_id= (con request_id da 404 hasta la hora).
+  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, job_id: String(r.job_id || ''), plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),
     url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',
     resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),
     publicado_en: p.programado || new Date().toISOString() } }; });
 """)
 dt_insert(f, 'Guardar publicaciones', 'publicaciones')
 code(f, 'Video publicado', r"""
+// «publicado» solo si algo salió ya; si todo quedó en el calendario, «programado» hasta que
+// «F · Confirmar publicaciones» compruebe en Upload-Post que salió de verdad.
 const filas = $('Filas de publicación').all().map(i => i.json); const ok = filas.filter(f => f.request_id);
-return [{ json: { estado: ok.length ? 'publicado' : 'error_publicacion', etapa: 'publicado',
+const estado = !ok.length ? 'error_publicacion' : ok.some(f => f.estado === 'enviado') ? 'publicado' : 'programado';
+return [{ json: { estado, etapa: estado === 'programado' ? 'programado' : 'publicado',
   publicado_en: ok[0]?.publicado_en || '', error: ok.length === filas.length ? '' : filas.filter(f => !f.request_id).map(f => f.tipo + ': ' + f.resultado).join('; ').slice(0, 500) } }];
 """)
 dt_update(f, 'Marcar publicado', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
 wait(f, 'Esperar a las redes', 120)
-code(f, 'Pedidos de estado', "const l = $('Filas de publicación').all().filter(i => i.json.request_id && i.json.estado === 'enviado').map(i => ({ json: i.json })); return l.length ? l : [{ json: { request_id: 'ninguno' } }];")
+code(f, 'Pedidos de estado', "const l = $('Filas de publicación').all().filter(i => i.json.request_id && i.json.estado === 'enviado').map(i => ({ json: i.json })); return l.length ? l : [{ json: { nada: true } }];")
+iff(f, '¿Hay que consultar?', '$json.nada !== true')
 http(f, 'Estado en redes', 'GET', "={{ 'https://api.upload-post.com/api/uploadposts/status?request_id=' + encodeURIComponent($json.request_id) }}", timeout=30000, cred=CRED_UPLOADPOST)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code(f, 'Resumen de publicación', r"""
@@ -2232,8 +2237,97 @@ f.link('¿Hay envíos?', 'Subir a redes', 0)
 f.link('¿Hay envíos?', 'Aviso: nada que publicar', 1)
 f.chain('Subir a redes', 'Filas de publicación', 'Guardar publicaciones')
 f.link('Filas de publicación', 'Video publicado')
-f.chain('Video publicado', 'Marcar publicado', 'Esperar a las redes', 'Pedidos de estado', 'Estado en redes', 'Resumen de publicación', 'Aviso: publicado')
+f.chain('Video publicado', 'Marcar publicado', 'Esperar a las redes', 'Pedidos de estado', '¿Hay que consultar?')
+f.link('¿Hay que consultar?', 'Estado en redes', 0)
+f.link('¿Hay que consultar?', 'Resumen de publicación', 1)
+f.chain('Estado en redes', 'Resumen de publicación', 'Aviso: publicado')
 REDES = f.dump()
+
+# ======================================================================================
+# F · Confirmar publicaciones (cada hora): lo programado o enviado cuya hora ya pasó se consulta en Upload-Post.
+# Marca cada envío «publicado» (con su enlace) o «error», y el video «publicado» solo cuando todas sus redes salieron.
+# ======================================================================================
+f = Flow(W['confirmar'], 'F · Confirmar publicaciones')
+f.add('Cada hora', 'n8n-nodes-base.scheduleTrigger', 1.2, {'rule': {'interval': [{'field': 'hours', 'hoursInterval': 1, 'triggerAtMinute': 7}]}})
+call(f, 'Leer ajustes', W['ajustes'])
+f.add('Publicaciones recientes', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('publicaciones'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 14 * 86400000).toISOString() }}"}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+code(f, 'Por confirmar', r"""
+// Solo lo que ya debió salir (10 min de margen) y aún no está confirmado.
+const corte = Date.now() - 10 * 60000;
+const l = $input.all().map(i => i.json).filter(p => p.request_id && ['programado', 'enviado'].includes(p.estado) && Date.parse(p.publicado_en || 0) <= corte);
+return l.length ? l.map(p => ({ json: p })) : [{ json: { nada: true } }];
+""")
+iff(f, '¿Hay por confirmar?', '$json.nada !== true')
+http(f, 'Consultar Upload-Post', 'GET', "={{ 'https://api.upload-post.com/api/uploadposts/status?' + ($json.job_id ? 'job_id=' + encodeURIComponent($json.job_id) : 'request_id=' + encodeURIComponent($json.request_id)) }}", timeout=30000, cred=CRED_UPLOADPOST)
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+code(f, 'Leer resultados', r"""
+// Traduce la respuesta de Upload-Post: completo y sin fallos → publicado; fallido → error; lo demás sigue esperando.
+const pedidos = $('Por confirmar').all().map(i => i.json);
+const todas = $('Publicaciones recientes').all().map(i => i.json);
+const cambios = [];
+$input.all().forEach((it, k) => {
+  const p = pedidos[k]; const r = it.json || {}; if (!p) return;
+  const res = Array.isArray(r.results) ? r.results : [];
+  const st = String(r.status || '').toLowerCase();
+  // Solo se juzga lo terminado: mientras está «queued» Upload-Post ya trae success:false (aún no hay intento).
+  if (!['completed', 'failed'].includes(st) || !res.length) return;   // pendiente o en proceso: se mira en una hora
+  const fallo = st === 'failed' || res.some(x => x.success !== true);
+  const listo = !fallo;
+  const urls = res.map(x => x.post_url || x.url || '').filter(Boolean);
+  const errores = res.filter(x => x.success !== true).map(x => `${x.platform}: ${String(x.error_message || x.error || x.message || 'error').slice(0, 120)}`);
+  cambios.push({ request_id: p.request_id, video_id: p.video_id, plataformas: p.plataformas, tipo: p.tipo,
+    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: (res.find(x => x.platform === 'youtube' && x.success === true) || {}).platform_post_id || '',
+    resultado: JSON.stringify(listo ? { status: st, urls } : { status: st || 'failed', errores }).slice(0, 800) });
+});
+if (!cambios.length) return [{ json: { nada: true } }];
+// Estado del video: publicado cuando todas sus publicaciones salieron; error si alguna falló.
+const porVideo = {};
+for (const v of new Set(cambios.map(c => c.video_id))) {
+  const filas = todas.filter(t => t.video_id === v).map(t => cambios.find(c => c.request_id === t.request_id) || t);
+  const yt = cambios.filter(c => c.video_id === v && /youtube/.test(c.plataformas)).map(c => c.youtube_id || (c.url.match(/(?:v=|shorts\/|youtu\.be\/)([\w-]{11})/) || [])[1]).find(Boolean) || '';
+  porVideo[v] = { video_id: v, youtube_id: yt,
+    estado: filas.some(f => f.estado === 'error') ? 'error_publicacion' : filas.every(f => f.estado === 'publicado') ? 'publicado' : '' };
+}
+return cambios.map(c => ({ json: { ...c, video: porVideo[c.video_id] } }));
+""")
+iff(f, '¿Hubo cambios?', '$json.nada !== true')
+code(f, 'Fila de publicación', "return $input.all().map(i => ({ json: { request_id: i.json.request_id, estado: i.json.estado, resultado: i.json.resultado } }));")
+f.add('Actualizar publicación', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'update', 'dataTableId': rl('publicaciones'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'request_id', 'condition': 'eq', 'keyValue': "={{ $json.request_id }}"}]},
+       'columns': AUTOMAP, 'options': {}})
+code(f, 'Videos a cerrar', r"""
+const vistos = new Set(); const l = [];
+for (const i of $('Leer resultados').all()) { const v = i.json.video; if (!v || !v.estado || vistos.has(v.video_id)) continue; vistos.add(v.video_id);
+  const fila = { video_id: v.video_id, estado: v.estado, etapa: v.estado === 'publicado' ? 'publicado' : 'publicacion' };
+  if (v.youtube_id) fila.youtube_id = v.youtube_id; l.push({ json: fila }); }
+return l.length ? l : [{ json: { nada: true } }];
+""")
+iff(f, '¿Cerrar video?', '$json.nada !== true')
+f.add('Actualizar video', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'update', 'dataTableId': rl('videos'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'video_id', 'condition': 'eq', 'keyValue': "={{ $json.video_id }}"}]},
+       'columns': AUTOMAP, 'options': {}})
+code(f, 'Aviso corto', r"""
+const l = $('Leer resultados').all().map(i => i.json).map(c => c.estado === 'publicado'
+  ? `✅ ${c.video_id} → ${c.plataformas}${c.url ? '\n' + c.url : ''}` : `❌ ${c.video_id} → ${c.plataformas}: ${JSON.parse(c.resultado).errores?.join('; ') || 'falló'}`);
+return [{ json: { texto: 'Publicación confirmada:\n' + l.join('\n') } }];
+""")
+tg(f, 'Avisar', "={{ $('Leer ajustes').first().json.chatId }}", '={{ $json.texto.slice(0, 3900) }}')
+f.chain('Cada hora', 'Leer ajustes', 'Publicaciones recientes', 'Por confirmar', '¿Hay por confirmar?')
+f.link('¿Hay por confirmar?', 'Consultar Upload-Post', 0)
+f.chain('Consultar Upload-Post', 'Leer resultados', '¿Hubo cambios?')
+f.link('¿Hubo cambios?', 'Fila de publicación', 0)
+f.chain('Fila de publicación', 'Actualizar publicación')
+f.link('¿Hubo cambios?', 'Videos a cerrar', 0)
+f.chain('Videos a cerrar', '¿Cerrar video?')
+f.link('¿Cerrar video?', 'Actualizar video', 0)
+f.link('¿Hubo cambios?', 'Aviso corto', 0)
+f.chain('Aviso corto', 'Avisar')
+CONFIRMAR = f.dump()
 
 # ======================================================================================
 # F · Rutina diaria: videos atascados (cada día) y reporte semanal (lunes), sin que lo pidas.
@@ -2397,16 +2491,16 @@ def recorrer(v):
     if isinstance(v, list): return [recorrer(x) for x in v]
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, ERRORES, AGENTE, PEND, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, CHAT]:
     for n in wf['nodes']:
         n['parameters'] = recorrer(n['parameters'])
 
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, AGENTE, PEND, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, AGENTE, PEND, CHAT]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
                            'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, RUTINA, ERRORES, AGENTE, PEND, CHAT]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, CHAT]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)

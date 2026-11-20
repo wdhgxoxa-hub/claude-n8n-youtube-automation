@@ -808,3 +808,46 @@ test('tema elegido por la fábrica: sin tema, investiga el nicho, pasa los temas
   assert.strictEqual(run(codeOf(ORQ, 'Tema elegido'), { nodes: { Inicio: { resultado: {} } } }).length, 0);   // con tema dado, no toca la ficha
   assert.match(nodo(AGT, 'crear_video').parameters.workflowInputs.value.tema, /VACÍO si el operador no da tema/);
 });
+
+test('publicación programada: el video queda «programado» (no «publicado») y no se consulta Upload-Post con un id falso', () => {
+  const filas = [{ request_id: 'r1', job_id: 'j1', estado: 'programado', publicado_en: '2026-11-20T21:00:00Z' }, { request_id: 'r2', job_id: 'j2', estado: 'programado', publicado_en: '2026-11-21T00:00:00Z' }];
+  const v = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': filas } })[0].json;
+  assert.strictEqual(v.estado, 'programado'); assert.strictEqual(v.etapa, 'programado');
+  const ya = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': [{ ...filas[0], estado: 'enviado' }] } })[0].json;
+  assert.strictEqual(ya.estado, 'publicado');
+  const p = run(codeOf(RED, 'Pedidos de estado'), { all: { 'Filas de publicación': filas } });
+  assert.deepStrictEqual(p.map(i => i.json), [{ nada: true }]);
+  assert.ok(!JSON.stringify(RED).includes('ninguno'));
+  const sal = RED.connections['¿Hay que consultar?'].main;
+  assert.strictEqual(sal[0][0].node, 'Estado en redes'); assert.strictEqual(sal[1][0].node, 'Resumen de publicación');
+  const fp = run(codeOf(RED, 'Filas de publicación'), { all: { $input: [{ success: true, job_id: 'jj', request_id: 'rr' }], 'Plan de publicación': [{ tipo: 'principal', plataformas: 'youtube', programado: '2026-11-20T21:00:00Z' }] }, nodes: { Inicio: { video_id: 'v', canal_id: 'c' } } })[0].json;
+  assert.strictEqual(fp.job_id, 'jj'); assert.strictEqual(fp.estado, 'programado');
+});
+
+test('confirmar publicaciones: consulta por job_id lo que ya debió salir y cierra el video solo cuando salieron todas sus redes', () => {
+  const C = wf('FabConfirmar0001');
+  assert.match(C.nodes.find(n => n.name === 'Consultar Upload-Post').parameters.url, /job_id=/);
+  const pasado = new Date(Date.now() - 3600000).toISOString(), futuro = new Date(Date.now() + 3600000).toISOString();
+  const todas = [{ video_id: 'v', request_id: 'r1', job_id: 'j1', plataformas: 'youtube', estado: 'programado', publicado_en: pasado },
+    { video_id: 'v', request_id: 'r2', job_id: 'j2', plataformas: 'tiktok', estado: 'programado', publicado_en: futuro },
+    { video_id: 'w', request_id: 'r3', plataformas: 'youtube', estado: 'publicado', publicado_en: pasado }];
+  const por = run(codeOf(C, 'Por confirmar'), { all: { $input: todas } }).map(i => i.json.request_id);
+  assert.deepStrictEqual(por, ['r1']);
+  const ok = { status: 'completed', results: [{ platform: 'youtube', success: true, post_url: 'https://www.youtube.com/shorts/3sY1JsbPxMY' }] };
+  const r = run(codeOf(C, 'Leer resultados'), { all: { $input: [ok], 'Por confirmar': [todas[0]], 'Publicaciones recientes': todas } }).map(i => i.json);
+  assert.strictEqual(r[0].estado, 'publicado'); assert.strictEqual(r[0].video.estado, '');   // TikTok aún pendiente
+  const ambas = run(codeOf(C, 'Leer resultados'), { all: { $input: [ok, { status: 'completed', results: [{ platform: 'tiktok', success: true }] }], 'Por confirmar': [todas[0], todas[1]], 'Publicaciones recientes': todas } }).map(i => i.json);
+  assert.strictEqual(ambas[0].video.estado, 'publicado'); assert.strictEqual(ambas[0].video.youtube_id, '3sY1JsbPxMY');
+  // Respuesta real de Upload-Post para un programado en cola: success:false sin intento, no es un fallo.
+  const cola = { status: 'queued', scheduler_status: 'pending', results: [{ platform: 'youtube', status: 'queued', attempts: 0, success: false }] };
+  assert.deepStrictEqual(run(codeOf(C, 'Leer resultados'), { all: { $input: [cola], 'Por confirmar': [todas[0]], 'Publicaciones recientes': todas } })[0].json, { nada: true });
+  const real = { status: 'completed', results: [{ platform: 'youtube', success: true, platform_post_id: '3sY1JsbPxMY', post_url: 'https://www.youtube.com/watch?v=3sY1JsbPxMY', error_message: null }] };
+  assert.strictEqual(run(codeOf(C, 'Leer resultados'), { all: { $input: [real], 'Por confirmar': [todas[0]], 'Publicaciones recientes': todas } })[0].json.youtube_id, '3sY1JsbPxMY');
+  const esperando = run(codeOf(C, 'Leer resultados'), { all: { $input: [{ status: 'pending', results: [] }], 'Por confirmar': [todas[0]], 'Publicaciones recientes': todas } });
+  assert.deepStrictEqual(esperando[0].json, { nada: true });
+  const falla = run(codeOf(C, 'Leer resultados'), { all: { $input: [{ status: 'failed', results: [{ platform: 'youtube', success: false, error_message: 'cuota' }] }], 'Por confirmar': [todas[0]], 'Publicaciones recientes': todas } })[0].json;
+  assert.strictEqual(falla.estado, 'error'); assert.strictEqual(falla.video.estado, 'error_publicacion');
+  const cerrar = run(codeOf(C, 'Videos a cerrar'), { all: { 'Leer resultados': ambas } }).map(i => i.json);
+  assert.deepStrictEqual(cerrar, [{ video_id: 'v', estado: 'publicado', etapa: 'publicado', youtube_id: '3sY1JsbPxMY' }]);
+  assert.strictEqual(C.settings.errorWorkflow, 'FabErrores000001');
+});
