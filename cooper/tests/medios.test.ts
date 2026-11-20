@@ -444,14 +444,14 @@ describe("Identidad, privacidad y contrato de fábrica", () => {
       texto: "Prueba",
       recursoId: canal.id,
       avatarId: "cooper",
-      voiceId: "gemini:Charon",
+      voiceId: "voz-charon",
       avatarPlacement: "completo",
     });
     expect(JSON.parse(t.mock.calls[0][1]!.body as string)).toMatchObject({
       dueno_email: ana.email,
       datos: {
         avatarId: "cooper",
-        voiceId: "gemini:Charon",
+        voiceId: "voz-charon",
         avatarPlacement: "completo",
         presentacion: {
           version: 1,
@@ -518,7 +518,7 @@ describe("Identidad, privacidad y contrato de fábrica", () => {
     });
     vi.stubGlobal("fetch", t);
     await actualizarCatalogo();
-    expect(catalogo().some((a) => a.id === "heygen:look_prueba")).toBe(true);
+    expect(catalogo().some((a) => a.id.startsWith("presentador-"))).toBe(true);
     expect(catalogo().some((a) => a.id === "cooper")).toBe(true);
     expect(String(t.mock.calls[0][0])).toContain("ownership=public");
   });

@@ -1,4 +1,4 @@
-import { randomInt, randomUUID } from "node:crypto";
+import { createHash, randomInt, randomUUID } from "node:crypto";
 import { and, eq, lt, or } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
@@ -59,15 +59,17 @@ export function crearReto(user: User, kind: "avatar" | "voz") {
   db().insert(identityChallenges).values(row).run();
   return { id: row.id, phrase: row.phrase, expiresAt: row.expiresAt };
 }
-export const altaMedioSchema = z.object({
-  kind: z.enum(["avatar", "voz"]),
-  name: z.string().trim().min(1).max(120),
-  challengeId: z.string().uuid(),
-  evidenceId: z.string().uuid(),
-  photoIds: z.array(z.string().uuid()).max(3).default([]),
-  placement: z.enum(["completo", "partes"]),
-  consentimiento: z.literal(true),
-});
+export const altaMedioSchema = z
+  .object({
+    kind: z.enum(["avatar", "voz"]),
+    name: z.string().trim().min(1).max(120),
+    challengeId: z.string().uuid(),
+    evidenceId: z.string().uuid(),
+    photoIds: z.array(z.string().uuid()).max(3).default([]),
+    placement: z.enum(["completo", "partes"]),
+    consentimiento: z.literal(true),
+  })
+  .strict();
 function archivoPropio(user: User, id: string) {
   const file = db()
     .select()
@@ -79,6 +81,8 @@ function archivoPropio(user: User, id: string) {
 }
 export async function crearMedio(user: User, raw: unknown) {
   const input = altaMedioSchema.parse(raw);
+  if (input.kind === "voz" && input.photoIds.length)
+    throw new ErrorHttp(400, "Una voz no admite fotos adjuntas.");
   const reto = db()
     .select()
     .from(identityChallenges)
@@ -112,41 +116,44 @@ export async function crearMedio(user: User, raw: unknown) {
   const provider = input.kind === "avatar" ? proveedorAvatar() : proveedorVoz();
   const id = randomUUID(),
     now = Date.now();
-  db().transaction((tx) => {
-    const consumed = tx
-      .update(identityChallenges)
-      .set({ usedAt: now })
-      .where(
-        and(
-          eq(identityChallenges.id, reto.id),
-          eq(identityChallenges.usedAt, 0),
-        ),
-      )
-      .run();
-    if (consumed.changes !== 1)
-      throw new ErrorHttp(409, "Esta frase ya fue utilizada.");
-    tx.insert(assets)
-      .values({
-        id,
-        ownerId: user.id,
-        kind: input.kind,
-        name: input.name,
-        evidenceId: evidence.id,
-        photoId: input.photoIds[0] ?? "",
-        photoIds: JSON.stringify(input.photoIds),
-        challengeId: reto.id,
-        placement: input.placement,
-        consentAt: now,
-        consentText: CONSENTIMIENTO,
-        consentVersion: CONSENTIMIENTO_VERSION,
-        simulated: provider.simulada,
-        provider: provider.nombre,
-        status: provider.simulada ? "iniciando" : "revision",
-        verified: provider.simulada,
-        createdAt: now,
-      })
-      .run();
-  });
+  db().transaction(
+    (tx) => {
+      const consumed = tx
+        .update(identityChallenges)
+        .set({ usedAt: now })
+        .where(
+          and(
+            eq(identityChallenges.id, reto.id),
+            eq(identityChallenges.usedAt, 0),
+          ),
+        )
+        .run();
+      if (consumed.changes !== 1)
+        throw new ErrorHttp(409, "Esta frase ya fue utilizada.");
+      tx.insert(assets)
+        .values({
+          id,
+          ownerId: user.id,
+          kind: input.kind,
+          name: input.name,
+          evidenceId: evidence.id,
+          photoId: input.photoIds[0] ?? "",
+          photoIds: JSON.stringify(input.photoIds),
+          challengeId: reto.id,
+          placement: input.placement,
+          consentAt: now,
+          consentText: CONSENTIMIENTO,
+          consentVersion: CONSENTIMIENTO_VERSION,
+          simulated: provider.simulada,
+          provider: provider.nombre,
+          status: provider.simulada ? "iniciando" : "revision",
+          verified: provider.simulada,
+          createdAt: now,
+        })
+        .run();
+    },
+    { behavior: "immediate" },
+  );
   if (provider.simulada) await iniciarMedio(id);
   return { id, simulada: provider.simulada };
 }
@@ -160,7 +167,7 @@ function guardarTrabajo(id: string, trabajo: TrabajoMedio) {
       polledAt: Date.now(),
       syncError: false,
     })
-    .where(eq(assets.id, id))
+    .where(and(eq(assets.id, id), eq(assets.verified, true)))
     .run();
 }
 async function iniciarMedio(id: string) {
@@ -302,6 +309,17 @@ export async function sincronizarMedios(user: User) {
     }),
   );
 }
+// Identificadores de interfaz estables; los IDs del proveedor quedan en servidor.
+const idPresentador = (id: string) =>
+  `presentador-${createHash("sha256").update(id).digest("hex").slice(0, 32)}`;
+const idVoz = (voice: string) => `voz-${voice.toLowerCase()}`;
+const vozCatalogo = (id: string) => VOCES_GEMINI.find((v) => idVoz(v) === id);
+const avatarCatalogo = (id: string) =>
+  db()
+    .select()
+    .from(publicMedia)
+    .all()
+    .find((a) => idPresentador(a.providerId) === id);
 export function catalogo(): ItemCatalogo[] {
   const avatarSim = proveedorAvatar().simulada,
     vozSim = proveedorCatalogoVoz().simulada;
@@ -311,7 +329,7 @@ export function catalogo(): ItemCatalogo[] {
   if (!vozSim)
     fixed.push(
       ...VOCES_GEMINI.map((v) => ({
-        id: `gemini:${v}`,
+        id: idVoz(v),
         kind: "voz" as const,
         name: v,
         description: "Voz de catálogo · español",
@@ -327,7 +345,7 @@ export function catalogo(): ItemCatalogo[] {
         .from(publicMedia)
         .all()
         .map((a) => ({
-          id: a.id,
+          id: idPresentador(a.providerId),
           kind: "avatar" as const,
           name: a.name,
           description: "Presentador del estudio",
@@ -349,19 +367,22 @@ export async function actualizarCatalogo() {
   if (actualizacion) return actualizacion;
   actualizacion = (async () => {
     const items = await proveedorAvatar().catalogo();
-    db().transaction((tx) => {
-      tx.delete(publicMedia).run();
-      for (const a of items)
-        tx.insert(publicMedia)
-          .values({
-            id: `heygen:${a.id}`,
-            providerId: a.id,
-            name: a.nombre,
-            previewUrl: a.previewUrl,
-            updatedAt: Date.now(),
-          })
-          .run();
-    });
+    db().transaction(
+      (tx) => {
+        tx.delete(publicMedia).run();
+        for (const a of items)
+          tx.insert(publicMedia)
+            .values({
+              id: `heygen:${a.id}`,
+              providerId: a.id,
+              name: a.nombre,
+              previewUrl: a.previewUrl,
+              updatedAt: Date.now(),
+            })
+            .run();
+      },
+      { behavior: "immediate" },
+    );
     ultimaActualizacion = Date.now();
   })();
   try {
@@ -377,15 +398,19 @@ export function medioDisponible(
 ) {
   const item = catalogo().find((a) => a.id === id && a.kind === kind);
   if (item) {
-    const provider = id.startsWith("heygen:")
+    const remoteAvatar =
+      kind === "avatar" && !item.simulada ? avatarCatalogo(id) : undefined;
+    const remoteVoice =
+      kind === "voz" && !item.simulada ? vozCatalogo(id) : undefined;
+    const provider = remoteAvatar
       ? "heygen"
-      : id.startsWith("gemini:")
+      : remoteVoice
         ? "gemini"
         : "simulada";
     return {
       recurso_id: id,
       proveedor: provider,
-      id: provider === "simulada" ? id : id.slice(id.indexOf(":") + 1),
+      id: remoteAvatar?.providerId ?? remoteVoice ?? id,
       tipo: "catalogo" as const,
     };
   }
@@ -440,17 +465,15 @@ export async function muestraMedio(
     let file: ArchivoMedio;
     if ((a?.kind ?? cat?.kind) === "voz") {
       const p = proveedorVoz(
-        a?.provider ?? (id.startsWith("gemini:") ? "gemini" : "simulada"),
+        a?.provider ??
+          (vozCatalogo(id) && !cat?.simulada ? "gemini" : "simulada"),
       );
       file = await p.sintetizar(
-        a?.providerId ?? id.replace(/^gemini:/, ""),
+        a?.providerId ?? vozCatalogo(id) ?? id,
         "Hola. Esta es mi voz en Cooper. Vamos a contar una buena historia.",
       );
     } else {
-      const url =
-        a?.previewUrl ??
-        db().select().from(publicMedia).where(eq(publicMedia.id, id)).get()
-          ?.previewUrl;
+      const url = a?.previewUrl ?? avatarCatalogo(id)?.previewUrl;
       if (!url)
         throw new ErrorHttp(
           404,
@@ -492,7 +515,7 @@ export async function eliminarMedio(user: User, id: string) {
   // Retirar acceso antes de pedir el borrado remoto; un fallo conserva la fila para reintentar.
   db()
     .update(assets)
-    .set({ shared: false, verified: false })
+    .set({ shared: false, verified: false, status: "error" })
     .where(eq(assets.id, id))
     .run();
   if (a!.providerId) {
