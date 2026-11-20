@@ -1,0 +1,506 @@
+{
+  "id": "FabReenviar00001",
+  "name": "FX · Reenviar pendientes",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "f243be4e-3c52-4f9d-b209-34d30ffe0078",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "4c87f584-2fae-4b9d-b7c3-436520a4c229",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "XrPPyzBaFxJwT5O3"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "pendiente"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "dc4d1ca3-6c3a-4e2c-84ce-4a323deffe87",
+      "name": "Pendientes",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst vid = String($('Inicio').first().json.video_id || '').trim();\nconst l = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente' && (!vid || r.video_id === vid));\nreturn l.length ? l.map(r => ({ json: { ...r, prueba: r.url.replace(/^https?:\\/\\/[^/]+/, 'http://127.0.0.1:5678') } })) : [{ json: { nada: true } }];\n"
+      },
+      "id": "5c8a621c-7c56-4b1b-affa-45774ff372c5",
+      "name": "Elegir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "57d12f91-d836-4f1d-b4f8-9961767fac68",
+              "leftValue": "={{ $json.nada !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d6d38233-ae14-41b0-b97e-e6baf448b03e",
+      "name": "¿Hay pendientes?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.prueba }}",
+        "options": {
+          "timeout": 20000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "c879017c-1883-4bac-a356-b5d23c9f0d3d",
+      "name": "Probar enlace",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Vivo = el formulario todavía se puede llenar (200 con <form>). Respondido, detenido o firma rota (401) = muerto.\nconst filas = $('Elegir').all().map(i => i.json);\nreturn $input.all().map((it, k) => { const r = filas[k]; const cuerpo = String(it.json.data ?? it.json.body ?? '');\n  const vivo = Number(it.json.statusCode) === 200 && /<form/i.test(cuerpo);\n  const rehacer = !vivo && !!r.pedido;\n  return { json: { ...r, vivo, rehacer, salida: vivo ? 0 : rehacer ? 1 : 2 } }; });\n"
+      },
+      "id": "fffbdb90-7657-43ba-a49b-edb095a9a62a",
+      "name": "Diagnóstico",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ $json.salida }}"
+      },
+      "id": "02bd8553-bfb2-4dcd-9ac2-10bb57ed3a90",
+      "name": "Según diagnóstico",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
+        "text": "={{ '🔁 ' + ($json.aviso || $json.resumen || 'Aprobación pendiente') }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "📝 Revisar y decidir",
+                    "additionalFields": {
+                      "url": "={{ $json.url }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "disable_web_page_preview": true,
+          "appendAttribution": false
+        }
+      },
+      "id": "9de5d6f3-d549-4203-9c8f-8619023e37f4",
+      "name": "Reenviar tarjeta",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1980,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "MOSawTRQa5BzV3pt",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(i => ({ json: { aprobacion_id: i.json.aprobacion_id, estado: 'anulado', decidido_en: new Date().toISOString(), cambios: 'enlace muerto: rehecha con «reenviar»' } }));"
+      },
+      "id": "3ff03796-b9c3-4077-9b46-b478c12587ee",
+      "name": "Anular",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "XrPPyzBaFxJwT5O3"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "aprobacion_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.aprobacion_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "8342ebfe-0076-43a3-afbe-302fc3acb22f",
+      "name": "Anular en la tabla",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: JSON.parse($json.pedido) };"
+      },
+      "id": "9b2c667b-92b8-4988-88c4-8d3ed44c95b1",
+      "name": "Pedido original",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAprobacion001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "id": "eff046e8-7a36-4db3-8425-f97f7ca18bd7",
+      "name": "Rehacer aprobación",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nif (!$('Diagnóstico').isExecuted) return [{ json: { texto: 'No hay aprobaciones pendientes' + ($('Inicio').first().json.video_id ? ' de ' + $('Inicio').first().json.video_id : '') + '.' } }];\nconst d = $('Diagnóstico').all().map(i => i.json); const nombre = r => `${r.etapa}${r.video_id ? ' · ' + r.video_id : ''}`;\nconst l = [];\nconst vivos = d.filter(r => r.vivo), rehechos = d.filter(r => r.rehacer), perdidos = d.filter(r => !r.vivo && !r.rehacer);\nif (vivos.length) l.push('Reenviadas con su mismo enlace: ' + vivos.map(r => `${nombre(r)} (${r.url})`).join('; '));\nif (rehechos.length) l.push('Enlace muerto, rehechas con enlace nuevo (llega en un momento): ' + rehechos.map(nombre).join(', '));\nif (perdidos.length) l.push('No se pueden rehacer (su proceso se detuvo; pide «corregir» o crea el video de nuevo): ' + perdidos.map(nombre).join(', '));\nreturn [{ json: { texto: l.join('\\n') } }];\n"
+      },
+      "id": "a65cc903-4dfb-4c35-a24d-41e5f8bdac4a",
+      "name": "Resultado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pendientes": {
+      "main": [
+        [
+          {
+            "node": "Elegir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Elegir": {
+      "main": [
+        [
+          {
+            "node": "¿Hay pendientes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay pendientes?": {
+      "main": [
+        [
+          {
+            "node": "Probar enlace",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probar enlace": {
+      "main": [
+        [
+          {
+            "node": "Diagnóstico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diagnóstico": {
+      "main": [
+        [
+          {
+            "node": "Según diagnóstico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Según diagnóstico": {
+      "main": [
+        [
+          {
+            "node": "Reenviar tarjeta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Anular",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pedido original",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anular": {
+      "main": [
+        [
+          {
+            "node": "Anular en la tabla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido original": {
+      "main": [
+        [
+          {
+            "node": "Rehacer aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reenviar tarjeta": {
+      "main": [
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rehacer aprobación": {
+      "main": [
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

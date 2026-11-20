@@ -7,6 +7,7 @@ Cada modelo trabaja con **un rol** y lee solo su archivo. Una sola fuente de ver
 | Investigador de nichos | `investigador.md` | Claude | `investigar_nichos`, `crear_biblia` |
 | Guionista | `guionista.md` | Claude | `guion`, `corregir_guion` |
 | Director visual | `director-visual.md` | Claude | `storyboard` |
+| Verificador de cifras | `verificador.md` | GPT con búsqueda web (n8n lo incrusta en «Verificar cifras») | cada versión del guion, antes del crítico |
 | Crítico de guion | `critico.md` | GPT (n8n lo incrusta en el nodo «Crítico del guion») | antes de tu aprobación del guion |
 | Revisor visual | `revisor-visual.md` | GPT con visión (n8n lo incrusta en «Revisar plano» y «Revisar archivo») | cada imagen y cada clip de archivo |
 | Editor de publicación | `editor-publicacion.md` | Claude (dentro del storyboard) | títulos, descripciones y textos por red |

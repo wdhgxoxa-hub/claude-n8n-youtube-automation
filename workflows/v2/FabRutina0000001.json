@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "02773e2d-c10f-4daf-9d03-92c0629c3517",
+      "id": "573d85d5-39aa-4c13-b6db-e04a252e45b6",
       "name": "Cada mañana",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -43,7 +43,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "62afc13a-3c82-4bcd-a5d9-79e9f42138a6",
+      "id": "779629ed-c6d8-4ea5-a7bb-5c19c14c8c22",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -73,7 +73,7 @@
         },
         "returnAll": true
       },
-      "id": "bf44e02e-490f-4ff4-8936-0d1cfab60fcc",
+      "id": "678a5aa6-8b93-42a5-b51a-71b0a7cffe91",
       "name": "Videos en curso",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -88,7 +88,7 @@
       "parameters": {
         "jsCode": "\n// Un video está atascado si sigue «en proceso» y su fila no cambió en 24 h (las aprobaciones pendientes también cuentan:\n// te recuerda lo que espera tu respuesta).\nconst hace = Date.now() - 24 * 3600000;\nconst a = $input.all().map(i => i.json).filter(v => v.video_id && ['en_proceso', 'detenido', 'con_fallas', 'error_publicacion'].includes(v.estado)\n  && Date.parse(v.updatedAt || v.createdAt || 0) < hace);\nif (!a.length) return [{ json: { nada: true } }];\nconst l = a.slice(0, 20).map(v => `• ${v.video_id} (${v.canal_id}) en «${v.etapa}», ${v.estado}${v.error ? ': ' + String(v.error).slice(0, 80) : ''}`);\nreturn [{ json: { texto: `Videos sin avanzar hace más de 24 h (${a.length}):\\n` + l.join('\\n') + (a.length > 20 ? '\\n…' : '') + '\\n\\nUsa «estado» o pídeme corregir.' } }];\n"
       },
-      "id": "1b37e6cc-e603-4ade-a34a-c94c65548d7c",
+      "id": "573b212d-b055-4c7f-b7e6-e0b3c5d004b8",
       "name": "Atascados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -108,7 +108,7 @@
           },
           "conditions": [
             {
-              "id": "f93d38b9-30b2-4403-8326-a02e6f878955",
+              "id": "1da8471c-ea92-47e7-add6-585eff182527",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -122,7 +122,7 @@
         },
         "options": {}
       },
-      "id": "03d893c8-3659-4b88-a766-11c78f2e349b",
+      "id": "b90a1b2b-db8a-4ace-bba6-8cd081ffa39a",
       "name": "¿Hay atascados?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -142,7 +142,7 @@
           "appendAttribution": false
         }
       },
-      "id": "7f3b0e86-da91-4e15-b9bc-56a23ac1f5bd",
+      "id": "5c15e765-9dbe-4123-af84-703d00aae0a9",
       "name": "Aviso: atascados",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -168,7 +168,7 @@
           },
           "conditions": [
             {
-              "id": "d99f2bcf-6227-4d13-af37-768904ceff76",
+              "id": "daeaa013-fb9a-401c-a911-4c7a15f9c388",
               "leftValue": "={{ new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Lima' }) === 'Mon' }}",
               "rightValue": "",
               "operator": {
@@ -182,7 +182,7 @@
         },
         "options": {}
       },
-      "id": "6ad40728-056c-4b0c-b228-8b1e57f4ffe9",
+      "id": "e1bcd3fa-5e60-440d-8a59-4734f0b17a89",
       "name": "¿Es lunes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -195,7 +195,7 @@
       "parameters": {
         "jsCode": "return [{ json: { tipo: 'reporte', dias: 7 } }];"
       },
-      "id": "0d186b52-fe04-4f62-b68f-9ba5e4f82ca6",
+      "id": "720143e6-afd4-411a-ad9e-c3a481e458c9",
       "name": "Pedido de reporte",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -224,7 +224,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "16cc7dd0-9b3f-43ae-964e-ecf986820507",
+      "id": "30d7b2b2-75fe-401f-b563-cf7b158cad97",
       "name": "Reporte de 7 días",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -244,7 +244,7 @@
           "appendAttribution": false
         }
       },
-      "id": "f1f74c75-2bd6-4b7f-a20c-ad665e72ba04",
+      "id": "f027609b-01e7-4216-a432-2e45bdb60ab2",
       "name": "Enviar reporte semanal",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

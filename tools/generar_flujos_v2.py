@@ -11,7 +11,7 @@ def rol(nombre):
     """Texto de un rol del banco skill/roles/, para incrustarlo en las instrucciones de un modelo dentro de n8n."""
     with open(os.path.join(RAIZ, 'skill', 'roles', nombre + '.md'), encoding='utf-8') as fh:
         return ' '.join(l.strip() for l in fh if l.strip() and not l.startswith('#'))
-ROL_CRITICO, ROL_REVISOR = rol('critico'), rol('revisor-visual')
+ROL_CRITICO, ROL_REVISOR, ROL_VERIFICADOR = rol('critico'), rol('revisor-visual'), rol('verificador')
 JS = lambda t: json.dumps(t, ensure_ascii=False)   # texto como literal JS dentro de una expresión
 
 OUT = os.path.join(os.path.dirname(__file__), '..', 'workflows', 'v2')
@@ -48,7 +48,7 @@ W = {  # flujos
     'pub': 'FabPublicacion01', 'aprende': 'FabAprendizaje01', 'agente': 'FabAgenteTelegr1',
     'estado': 'FabEstado0000001', 'sonido': 'FabSonido0000001', 'refs': 'FabReferencias01',
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
-    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001',
+    'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001', 'reenviar': 'FabReenviar00001',
 }
 BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
@@ -135,7 +135,7 @@ def tg(f, name, chat, text):
                  credentials=CRED_TG)
 
 
-def decision(f, p, etapa, titulo, mensaje, opciones, ids, con_cambios, aviso=None):
+def decision(f, p, etapa, titulo, mensaje, opciones, ids, con_cambios, aviso=None, pedido="''"):
     """Una decisión del operador con UN formulario firmado de n8n.
     El mismo enlace se abre desde el botón de Telegram y desde la computadora (chat web: «pendientes»).
     Deja la fila en fab_aprobaciones (pendiente → decidida). Devuelve el nombre del nodo con {estado, cambios}.
@@ -148,7 +148,7 @@ def decision(f, p, etapa, titulo, mensaje, opciones, ids, con_cambios, aviso=Non
 return [{{ json: {{ aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: {etapa},
   video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),
   resumen: String({mensaje} || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '',
-  aviso: String({aviso} || '').slice(0, 1500) }} }}];""")
+  aviso: String({aviso} || '').slice(0, 1500), pedido: String({pedido} || '') }} }}];""")
     dt_insert(f, n('registrar'), 'aprobaciones')
     f.add(n('avisar'), 'n8n-nodes-base.telegram', 1.2,
           {'resource': 'message', 'operation': 'sendMessage', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
@@ -260,6 +260,7 @@ return [{ json: {
   allowArchivo: true,         // video de archivo de Pexels/Pixabay (gratis)
   allowEfectos: true,         // efectos de sonido de Epidemic Sound (incluidos en tu suscripción)
   allowCritico: false,        // segundo modelo (GPT-6 Astra) que critica investigación y guion (pago por uso, centavos)
+  allowVerificacion: false,   // verificador de cifras con búsqueda web (GPT-6 Astra + web_search) antes del crítico (pago por uso)
   allowReferencias: false,    // imágenes de referencia de personajes y escenarios del canal (pago por uso)
   allowAvatar: false,         // HeyGen
   allowMontaje: false,        // Creatomate: une imagen, voz y música
@@ -281,6 +282,7 @@ return [{ json: {
   costoClipSegUsd: 0.12,      // estimado prudente; corregir con la primera factura real
   costoRevisionUsd: 0.01,     // revisión visual de un plano, estimado
   costoCriticoUsd: 0.02,      // una crítica de investigación o guion, estimado
+  costoVerificacionUsd: 0.25, // una verificación de cifras con búsqueda web (~10 búsquedas y ~75k tokens), estimado
   costoVozUsdPorPlano: 0.002, // Gemini TTS por plano, estimado
   avisoGastoPct: 0.8,         // al pasar esta fracción del tope, pide permiso por Telegram antes de seguir
   presupuestoLargoUsd: 5,
@@ -398,7 +400,8 @@ call(f, 'Leer ajustes', W['ajustes'])
 ini = "$('Inicio').first().json"
 primero, ultimo, dec = decision(f, 'Aprobación', ini + ".etapa", "'Aprobar: ' + " + ini + ".etapa + (" + ini + ".video_id ? ' · ' + " + ini + ".video_id : '')",
                                ini + ".mensaje", [('Aprobar', 'aprobado'), ('Pedir cambios', 'cambios')], ini, True,
-                               aviso="(" + ini + ".aviso || String(" + ini + ".mensaje || '').split('\\n').filter(Boolean).slice(0, 3).join('\\n') + '\\n\\nÁbrelo para ver todo y decidir.')")
+                               aviso="(" + ini + ".aviso || String(" + ini + ".mensaje || '').split('\\n').filter(Boolean).slice(0, 3).join('\\n') + '\\n\\nÁbrelo para ver todo y decidir.')",
+                               pedido="JSON.stringify(" + ini + ")")   # para rehacerla igual si su ejecución muere («reenviar»)
 iff(f, '¿Aprobado?', "$('" + dec + "').first().json.estado === 'aprobado'")
 code(f, 'Evento aprobado', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'aprobado', mensaje: undefined } }];")
 code(f, 'Evento cambios', "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: $('" + dec + "').first().json.cambios || 'Revísalo de nuevo y mejóralo.', mensaje: undefined } }];")
@@ -570,8 +573,29 @@ f.chain('Pedido a vidIQ', 'vidIQ: investigar', 'Pedir guion', 'Claude: guion', '
 # 6 guion listo -> aprobación
 dt_get(f, 'Video (crítico)', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
 iff(f, '¿Criticar guion?', "$('Leer ajustes').first().json.allowCritico === true && Number($json.intentos || 0) < 2")
+# Verificador de cifras: busca en la web (fuentes oficiales primero) cada cifra del guion y lo que el guionista no consiguió.
+iff(f, '¿Verificar cifras?', "$('Leer ajustes').first().json.allowVerificacion === true")
+http(f, 'Verificar cifras', 'POST', 'https://api.openai.com/v1/responses',
+     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, tools: [{ type: 'web_search' }], max_tool_calls: 12, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_VERIFICADOR) + " + ' Responde SOLO JSON {\"cifras\":[{\"dato\":\"\",\"valor_guion\":\"\",\"valor_verificado\":\"\",\"estado\":\"ok|corregir|sin_fuente|vieja\",\"fecha\":\"\",\"fuente_url\":\"\"}],\"faltantes\":[{\"dato\":\"\",\"valor\":\"\",\"fecha\":\"\",\"fuente_url\":\"\"}],\"cuenta\":[\"paso con su cifra\"],\"resumen\":\"\"}. Hoy es ' + new Date().toISOString().slice(0, 10) + '.' + String.fromCharCode(10, 10) + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, notas_del_guionista: $('Inicio').first().json.resultado?.notas }).slice(0, 12000) }] }] } }}",
+     timeout=300000, cred=CRED_OPENAI)
+f.nodes[-1].update({'onError': 'continueRegularOutput'})
+code(f, 'Cifras verificadas', r"""
+// Lee la verificación (JSON dentro del texto). Si no hubo o falló, el guion sigue igual: nunca se bloquea por esto.
+if (!$('Verificar cifras').isExecuted) return [{ json: { leido: false, verificacion: null } }];
+const t = ($('Verificar cifras').first().json.output || []).filter(o => o.type === 'message').flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '';
+let v = null; try { const m = t.match(/\{[\s\S]*\}/); v = m ? JSON.parse(m[0]) : null; } catch (e) { v = null; }
+if (!v) return [{ json: { leido: false, verificacion: null } }];
+const cifras = (Array.isArray(v.cifras) ? v.cifras : []).slice(0, 30); const faltantes = (Array.isArray(v.faltantes) ? v.faltantes : []).slice(0, 20);
+const cuenta = (Array.isArray(v.cuenta) ? v.cuenta : []).map(String).slice(0, 15);
+const n = e => cifras.filter(c => c.estado === e).length;
+const resumen = `${n('ok')} confirmadas, ${n('corregir')} por corregir, ${n('vieja')} viejas, ${n('sin_fuente')} sin fuente; ${faltantes.filter(f => f.valor).length} datos nuevos encontrados`;
+return [{ json: { leido: true, verificacion: { cifras, faltantes, cuenta, resumen: String(v.resumen || '').slice(0, 600) }, conteo: resumen,
+  corregir: n('corregir') + n('vieja') > 0 || faltantes.some(f => f.valor) } }];
+""")
+code(f, 'Fila de costo (verificación)', "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'verificación de cifras', servicio: 'OpenAI (búsqueda web)', usd: aj.costoVerificacionUsd } }];")
+dt_insert(f, 'Guardar costo (verificación)', 'costos')
 http(f, 'Crítico del guion', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_CRITICO) + " + ' Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_CRITICO) + " + ' Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, verificacion_de_cifras: $('Cifras verificadas').first().json.verificacion, temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}",
      timeout=120000, cred=CRED_OPENAI)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code(f, 'Veredicto del crítico', r"""
@@ -580,7 +604,11 @@ const dims = ['gancho', 'promesa', 'claridad', 'emocion', 'exactitud', 'original
 const notas = Object.fromEntries(dims.map(d => [d, Number(k[d]) || 0]));
 const leido = dims.some(d => notas[d] > 0);
 // Si el crítico no respondió bien, no se bloquea: el guion pasa a tu aprobación con la nota de Claude.
-return [{ json: { notas, pasa: !leido || dims.every(d => notas[d] >= 8), problemas: k.problemas || [], instrucciones: String(k.instrucciones || '').slice(0, 2000), leido } }];
+// Si la verificación encontró cifras por corregir o datos que faltaban, se reescribe aunque las notas sean altas.
+const ver = $('Cifras verificadas').isExecuted ? $('Cifras verificadas').first().json : {};
+const porCifras = ver.leido === true && ver.corregir === true;
+const problemas = [...(k.problemas || []), ...(porCifras ? ['Cifras: ' + ver.conteo] : [])];
+return [{ json: { notas, pasa: (!leido || dims.every(d => notas[d] >= 8)) && !porCifras, problemas, instrucciones: String(k.instrucciones || '').slice(0, 2000), leido, por_cifras: porCifras } }];
 """)
 iff(f, '¿Pasa el crítico?', '$json.pasa === true')
 code(f, 'Contar revisión', "return [{ json: { intentos: Number($('Video (crítico)').first().json.intentos || 0) + 1, etapa: 'guion' } }];")
@@ -590,8 +618,11 @@ dt_get(f, 'Biblia (crítico)', 'trabajos', 'job_id', "={{ String($('Canal (crít
 code(f, 'Pedir corrección (crítico)', r"""
 const e = $('Inicio').first().json; const v = $('Veredicto del crítico').first().json;
 const biblia = (JSON.parse($('Biblia (crítico)').first().json.resultado || '{}').resultado) || {};
+const ver = $('Cifras verificadas').isExecuted ? $('Cifras verificadas').first().json : {};
+const datosVer = ver.leido ? ` Datos verificados en la web (úsalos con su fuente y fecha, corrige lo marcado y arma la cuenta corrida completa): ${JSON.stringify(ver.verificacion)}` : '';
 return [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.video_id,
-  datos: { guion: e.resultado, biblia, cambios: `Crítica automática (notas ${JSON.stringify(v.notas)}): ${v.instrucciones} ${v.problemas.join('; ')}`.slice(0, 3000) } } }];
+  datos: { guion: e.resultado, biblia, cifras_verificadas: ver.leido ? ver.verificacion : null,
+    cambios: (`Crítica automática (notas ${JSON.stringify(v.notas)}): ${v.instrucciones} ${v.problemas.join('; ')}`.slice(0, 2500) + datosVer).slice(0, 8000) } } }];
 """)
 call(f, 'Claude: corregir (crítico)', W['claude'])
 code(f, 'Fila de costo (crítico)', "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'crítico del guion', servicio: 'OpenAI', usd: aj.costoCriticoUsd } }];")
@@ -602,9 +633,11 @@ const nota = Object.entries(rb).map(([k, v]) => k + ' ' + v).join(' · ');
 let critica = '';
 if ($('Veredicto del crítico').isExecuted && $('Veredicto del crítico').first().json.leido) {
   const n = $('Veredicto del crítico').first().json.notas; critica = '\nCrítico (GPT-6 Astra): ' + Object.entries(n).map(([k, v]) => k + ' ' + v).join(' · '); }
-const mensaje = `Guion: ${r.titulo}\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\nRúbrica: ${nota}${critica}\n\n${String(r.guion || '').slice(0, 3000)}`;
+const ver = $('Cifras verificadas').isExecuted && $('Cifras verificadas').first().json.leido ? $('Cifras verificadas').first().json : null;
+const cifras = ver ? '\nCifras (verificadas en la web): ' + ver.conteo + (ver.verificacion.cuenta.length ? '\nCuenta: ' + ver.verificacion.cuenta.join(' → ').slice(0, 600) : '') : '';
+const mensaje = `Guion: ${r.titulo}\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\nRúbrica: ${nota}${critica}${cifras}\n\n${String(r.guion || '').slice(0, 3000)}`;
 const prom = Object.values(rb).length ? Math.round(Object.values(rb).reduce((a, b) => a + Number(b || 0), 0) / Object.values(rb).length * 10) / 10 : null;
-const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}` + (r.tema_elegido ? `\n🔎 Tema elegido por la fábrica: ${String(r.motivo_tema || '').slice(0, 160)}` : '') + `\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
+const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}` + (r.tema_elegido ? `\n🔎 Tema elegido por la fábrica: ${String(r.motivo_tema || '').slice(0, 160)}` : '') + `\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + (ver ? `\n🔎 Cifras: ${ver.conteo}` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
 return [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];
 """)
 call(f, 'Aprobar guion', W['aprob'], wait=False)
@@ -619,7 +652,12 @@ f.add('Temas del canal', 'n8n-nodes-base.dataTable', 1.1,
        'filters': {'conditions': [{'keyName': 'canal_id', 'condition': 'eq', 'keyValue': "={{ $('Inicio').first().json.canal_id }}"}]}, 'returnAll': True},
       alwaysOutputData=True, executeOnce=True)
 f.link('¿Criticar guion?', 'Temas del canal', 0)
-f.link('Temas del canal', 'Crítico del guion')
+f.link('Temas del canal', '¿Verificar cifras?')
+f.link('¿Verificar cifras?', 'Verificar cifras', 0)
+f.link('¿Verificar cifras?', 'Cifras verificadas', 1)
+f.chain('Verificar cifras', 'Cifras verificadas', 'Crítico del guion')
+f.link('Verificar cifras', 'Fila de costo (verificación)')
+f.link('Fila de costo (verificación)', 'Guardar costo (verificación)')
 f.link('¿Criticar guion?', 'Mensaje de guion', 1)
 f.chain('Crítico del guion', 'Veredicto del crítico', '¿Pasa el crítico?')
 f.chain('Veredicto del crítico', 'Fila de costo (crítico)', 'Guardar costo (crítico)')
@@ -930,8 +968,10 @@ const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
 const planos = (e.storyboard?.planos || []).filter(p => p && p.id);
 const n = t => planos.filter(p => p.tipo === t).length;
 // Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.
-const costo = (n('imagen') + n('clip')) * aj.costoImagenUsd + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1
-  + planos.length * aj.costoVozUsdPorPlano;
+// Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.
+const revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;
+const costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa
+  + n('clip') * 8 * aj.costoClipSegUsd + n('avatar') * 1 + planos.length * aj.costoVozUsdPorPlano;
 const faltan = [];
 if (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');
 if (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');
@@ -983,8 +1023,11 @@ const e = $('Plan de producción').first().json; const b = e.biblia || {};
 const estilo = [b.estilo_visual?.descripcion, b.estilo_visual?.luz, b.estilo_visual?.lente, b.estilo_visual?.textura,
   (b.estilo_visual?.paleta_hex || []).length ? 'paleta ' + b.estilo_visual.paleta_hex.join(' ') : ''].filter(Boolean).join('. ');
 const refs = id => [...(b.personajes || []), ...(b.escenarios || [])].filter(x => (id || []).includes(x.id)).flatMap(x => x.referencias_urls || []).slice(0, 6);
+// Sin prompt_imagen (planos de archivo): la escena sale de lo que dice la voz y de la búsqueda, nunca solo del estilo del canal.
+const limpio = t => String(t || '').replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+const escena = p => limpio(p.prompt_imagen) || [p.busqueda_archivo ? 'Escena: ' + p.busqueda_archivo : '', 'Lo que narra la voz: ' + limpio(p.texto_narrado)].filter(Boolean).join('. ');
 return e.planos.map(p => ({ json: { video_id: e.video_id, plano: p, intento: 1,
-  prompt: `${p.prompt_imagen}. Encuadre ${p.encuadre}, ángulo ${p.angulo || 'a la altura de los ojos'}, luz ${p.luz}. Estilo: ${estilo}. Sin texto ni logos.`,
+  prompt: `${escena(p)}. Encuadre ${p.encuadre}, ángulo ${p.angulo || 'a la altura de los ojos'}, luz ${p.luz}. Estilo: ${estilo}. Sin texto, letras, cifras ni logos dentro de la imagen: las cifras las pone el montaje encima.`,
   referencias: refs([...(p.personajes || []), p.escenario]),
   salida: p.tipo === 'avatar' ? 1 : (p.tipo === 'archivo' && $('Leer ajustes').first().json.allowArchivo) ? 2 : 0 } }));
 """)
@@ -1020,7 +1063,7 @@ iff(f, '¿Hay en Pixabay?', '($json.candidatos || []).length > 0')
 code1(f, 'Pedido de revisión de archivo', "return { json: { ...$json, revisar: $('Leer ajustes').first().json.allowRevisionVisual === true } };")
 iff(f, '¿Revisar archivo?', '$json.revisar === true')
 http(f, 'Revisar archivo', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_REVISOR) + " + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + '. Búsqueda usada: ' + ($json.plano.busqueda_archivo || '') + '. Te muestro ' + $json.candidatos.length + ' miniaturas de clips de archivo, en orden (1, 2, 3). Elige el número del mejor que sirva para esta escena o -1 si ninguno sirve. Responde JSON {\\\"elegido\\\": n, \\\"motivo\\\": \\\"\\\"}.' }, ...$json.candidatos.map(c => ({ type: 'input_image', image_url: c.thumb }))] }] } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_REVISOR) + " + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + '. Búsqueda usada: ' + ($json.plano.busqueda_archivo || '') + '. Es video real de archivo: tolera letreros o logos pequeños de fondo (recháza solo si una marca o un texto es protagonista) y no exijas cifras: el montaje las pone encima. Te muestro ' + $json.candidatos.length + ' miniaturas de clips de archivo, en orden (1, 2, 3). Elige el número del mejor que sirva para esta escena o -1 si ninguno sirve. Responde JSON {\\\"elegido\\\": n, \\\"motivo\\\": \\\"\\\"}.' }, ...$json.candidatos.map(c => ({ type: 'input_image', image_url: c.thumb }))] }] } }}",
      timeout=90000, cred=CRED_OPENAI)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code1(f, 'Archivo elegido', r"""
@@ -1072,15 +1115,29 @@ return { json: { ...prev, url: 'https://drive.google.com/uc?export=download&id='
 """)
 iff(f, '¿Revisión visual activa?', "$('Leer ajustes').first().json.allowRevisionVisual === true && $json.plano.tipo !== 'clip'")
 http(f, 'Revisar plano', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_REVISOR) + " + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + (($json.plano.texto_pantalla) ? ' · Cifra en pantalla: ' + $json.plano.texto_pantalla : '') + '. La primera imagen es la generada; las siguientes, las referencias. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloTexto, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_REVISOR) + " + ' Escena (lo que dice la voz): ' + $json.plano.texto_narrado + (($json.plano.texto_pantalla) ? ' · El montaje pondrá encima el texto «' + $json.plano.texto_pantalla + '»: NO lo exijas dentro de la imagen; la imagen debe ir sin texto.' : '') + '. La primera imagen es la generada; las siguientes, las referencias. Responde JSON {\"aprobado\": bool, \"problemas\": [], \"prompt_corregido\": \"\"}.' }, { type: 'input_image', image_url: $json.url }, ...$json.referencias.map(u => ({ type: 'input_image', image_url: u }))] }] } }}",
      timeout=120000, cred=CRED_OPENAI)
-code1(f, 'Veredicto', r"""
-const prev = $('URL del plano').item.json; let v = { aprobado: true };
-try { v = JSON.parse(($json.output || []).flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '{}'); } catch (e) { v = { aprobado: false, problemas: ['respuesta ilegible'] }; }
-const max = $('Leer ajustes').first().json.maxIntentosPlano;
-const repetir = v.aprobado === false && prev.intento < max;
-return { json: { ...prev, revisiones: (prev.revisiones || 0) + 1, veredicto: v, repetir, intento: prev.intento + (repetir ? 1 : 0),
-  prompt: repetir && v.prompt_corregido ? v.prompt_corregido : prev.prompt } };
+code(f, 'Veredicto', r"""
+// Repetir una imagen cuesta: solo se repite si cabe en el tope del video, contando lo ya gastado en TODAS las pasadas
+// (imágenes y revisiones) y reservando lo que falta generar. Si no cabe, se acepta y queda anotado.
+const aj = $('Leer ajustes').first().json; const e = $('Plan de producción').first().json; const max = aj.maxIntentosPlano;
+const pasadas = n => { const l = []; if (!$(n).isExecuted) return l; for (let k = 0; k < 500; k++) { let it; try { it = $(n).all(0, k); } catch (x) { break; } if (!it || !it.length) break; l.push(...it); } return l; };
+const hechas = pasadas('Extraer imagen'); const ya = new Set(hechas.map(i => i.json.plano?.id));
+const revisiones = pasadas('Revisar plano').length + pasadas('Revisar archivo').length;
+const unidad = aj.costoImagenUsd + aj.costoRevisionUsd;
+const faltan = (e.planos || []).filter(p => ['imagen', 'clip'].includes(p.tipo) && !ya.has(p.id)).length;
+const gastado = hechas.length * aj.costoImagenUsd + revisiones * aj.costoRevisionUsd;
+// Tope para repetir: el umbral del aviso de gasto, para que las repeticiones no frenen el video pidiendo permiso.
+let cupo = Math.floor((e.presupuesto * (aj.avisoGastoPct || 1) - gastado - faltan * unidad - (e.planos || []).length * aj.costoVozUsdPorPlano) / unidad + 1e-9);
+return $input.all().map((it, i) => {
+  const prev = $('URL del plano').itemMatching(i).json; let v = { aprobado: true };
+  try { v = JSON.parse((it.json.output || []).flatMap(o => o.content || []).find(c => c.type === 'output_text')?.text || '{}'); } catch (x) { v = { aprobado: false, problemas: ['respuesta ilegible'] }; }
+  const quiere = v.aprobado === false && prev.intento < max;
+  const repetir = quiere && cupo > 0; if (repetir) cupo--;
+  const prompt = repetir && v.prompt_corregido ? v.prompt_corregido + '. Sin texto, letras, cifras ni logos dentro de la imagen.' : prev.prompt;
+  const problemas = [...(v.problemas || []), ...(quiere && !repetir ? ['aceptado sin repetir: no cabe en el tope de gasto'] : [])];
+  return { json: { ...prev, revisiones: (prev.revisiones || 0) + 1, veredicto: { ...v, problemas }, repetir, intento: prev.intento + (repetir ? 1 : 0), prompt } };
+});
 """)
 iff(f, '¿Repetir plano?', '$json.repetir === true')
 code1(f, 'Plano aprobado', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano, intento: $json.intento, revisiones: $json.revisiones || 0, nota_revision: ($json.veredicto?.problemas || []).join('; ') } };")
@@ -1711,7 +1768,8 @@ f.add('Agente', '@n8n/n8n-nodes-langchain.agent', 3.1,
            "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}"
            'Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. '
            'Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. '
-           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes. '
+           'Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes, reenviar. '
+           'Si el operador dice que no le llegó una aprobación o que un enlace no abre, usa reenviar (nunca reintentes ejecuciones). '
            'Si el operador pide un video sin tema o que la fábrica elija el tema, usa crear_video con tema vacío: la fábrica investiga el nicho y elige. '
            'Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). '
            'Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. '
@@ -1757,11 +1815,13 @@ tool('conectar_youtube', 'Da el enlace para conectar un canal de la fábrica a s
      {'accion': 'enlace', 'canal_id': AI('canal_id', 'id del canal de la fábrica')}, W['yt'])
 tool('pendientes', 'Lista lo que espera la decisión del operador (canal, guion, storyboard, video final, permiso de gasto) con el enlace para decidir. Devuelve los enlaces tal cual.',
      {'tipo': 'pendientes'}, W['pendientes'])
+tool('reenviar', 'Vuelve a mandar las aprobaciones pendientes (todas o las de un video). Si un enlace ya no funciona, rehace esa aprobación con un enlace nuevo. Devuelve el resultado tal cual.',
+     {'video_id': AI('video_id', 'id del video o vacío para todas')}, W['reenviar'])
 code(f, 'Respuesta', "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];")
 f.chain('Inicio', 'Agente', 'Respuesta')
 f.ai('Modelo', 'Agente', 'ai_languageModel')
 f.ai('Memoria', 'Agente', 'ai_memory')
-for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes'):
+for t in ('crear_canal', 'crear_video', 'estado', 'reporte', 'corregir', 'ajustar_biblia', 'programar', 'referencias', 'conectar_youtube', 'configurar_redes', 'pendientes', 'reenviar'):
     f.ai(t, 'Agente', 'ai_tool')
 AGENTE = f.dump()
 
@@ -2421,6 +2481,70 @@ f.chain('Inicio', 'Pendientes', 'Lista')
 PEND = f.dump()
 
 # ======================================================================================
+# FX · Reenviar pendientes: vuelve a mandar cada aprobación pendiente con su mismo enlace si sigue viva.
+# Si su ejecución ya no espera (se reintentó, se detuvo), la anula y la rehace igual con un enlace nuevo.
+# El permiso de gasto vive dentro de la producción: si murió, no se puede rehacer aquí y se avisa.
+# ======================================================================================
+f = Flow(W['reenviar'], 'FX · Reenviar pendientes')
+trigger(f)
+call(f, 'Leer ajustes', W['ajustes'])
+f.add('Pendientes', 'n8n-nodes-base.dataTable', 1.1,
+      {'resource': 'row', 'operation': 'get', 'dataTableId': rl('aprobaciones'), 'matchType': 'allConditions',
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'pendiente'}]}, 'returnAll': True},
+      alwaysOutputData=True, executeOnce=True)
+code(f, 'Elegir', r"""
+const vid = String($('Inicio').first().json.video_id || '').trim();
+const l = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente' && (!vid || r.video_id === vid));
+return l.length ? l.map(r => ({ json: { ...r, prueba: r.url.replace(/^https?:\/\/[^/]+/, 'http://127.0.0.1:5678') } })) : [{ json: { nada: true } }];
+""")
+iff(f, '¿Hay pendientes?', '$json.nada !== true')
+f.add('Probar enlace', 'n8n-nodes-base.httpRequest', 4.2,
+      {'method': 'GET', 'url': '={{ $json.prueba }}', 'options': {'timeout': 20000, 'response': {'response': {'fullResponse': True, 'neverError': True, 'responseFormat': 'text'}}}},
+      onError='continueRegularOutput')
+code(f, 'Diagnóstico', r"""
+// Vivo = el formulario todavía se puede llenar (200 con <form>). Respondido, detenido o firma rota (401) = muerto.
+const filas = $('Elegir').all().map(i => i.json);
+return $input.all().map((it, k) => { const r = filas[k]; const cuerpo = String(it.json.data ?? it.json.body ?? '');
+  const vivo = Number(it.json.statusCode) === 200 && /<form/i.test(cuerpo);
+  const rehacer = !vivo && !!r.pedido;
+  return { json: { ...r, vivo, rehacer, salida: vivo ? 0 : rehacer ? 1 : 2 } }; });
+""")
+switch(f, 'Según diagnóstico', 3)
+f.add('Reenviar tarjeta', 'n8n-nodes-base.telegram', 1.2,
+      {'resource': 'message', 'operation': 'sendMessage', 'chatId': "={{ $('Leer ajustes').first().json.chatId }}",
+       'text': "={{ '🔁 ' + ($json.aviso || $json.resumen || 'Aprobación pendiente') }}", 'replyMarkup': 'inlineKeyboard',
+       'inlineKeyboard': {'rows': [{'row': {'buttons': [{'text': '📝 Revisar y decidir', 'additionalFields': {'url': '={{ $json.url }}'}}]}}]},
+       'additionalFields': {'disable_web_page_preview': True, 'appendAttribution': False}},
+      credentials=CRED_TG, onError='continueRegularOutput')
+code(f, 'Anular', "return $input.all().map(i => ({ json: { aprobacion_id: i.json.aprobacion_id, estado: 'anulado', decidido_en: new Date().toISOString(), cambios: 'enlace muerto: rehecha con «reenviar»' } }));")
+dt_update(f, 'Anular en la tabla', 'aprobaciones', 'aprobacion_id', '={{ $json.aprobacion_id }}')
+code1(f, 'Pedido original', "return { json: JSON.parse($json.pedido) };")
+call(f, 'Rehacer aprobación', W['aprob'], wait=False, each=True)
+code(f, 'Resultado', r"""
+if (!$('Diagnóstico').isExecuted) return [{ json: { texto: 'No hay aprobaciones pendientes' + ($('Inicio').first().json.video_id ? ' de ' + $('Inicio').first().json.video_id : '') + '.' } }];
+const d = $('Diagnóstico').all().map(i => i.json); const nombre = r => `${r.etapa}${r.video_id ? ' · ' + r.video_id : ''}`;
+const l = [];
+const vivos = d.filter(r => r.vivo), rehechos = d.filter(r => r.rehacer), perdidos = d.filter(r => !r.vivo && !r.rehacer);
+if (vivos.length) l.push('Reenviadas con su mismo enlace: ' + vivos.map(r => `${nombre(r)} (${r.url})`).join('; '));
+if (rehechos.length) l.push('Enlace muerto, rehechas con enlace nuevo (llega en un momento): ' + rehechos.map(nombre).join(', '));
+if (perdidos.length) l.push('No se pueden rehacer (su proceso se detuvo; pide «corregir» o crea el video de nuevo): ' + perdidos.map(nombre).join(', '));
+return [{ json: { texto: l.join('\n') } }];
+""")
+f.chain('Inicio', 'Leer ajustes', 'Pendientes', 'Elegir', '¿Hay pendientes?')
+f.link('¿Hay pendientes?', 'Probar enlace', 0)
+f.link('¿Hay pendientes?', 'Resultado', 1)
+f.chain('Probar enlace', 'Diagnóstico', 'Según diagnóstico')
+f.link('Según diagnóstico', 'Reenviar tarjeta', 0)
+f.link('Según diagnóstico', 'Anular', 1)
+f.link('Según diagnóstico', 'Resultado', 2)
+f.chain('Anular', 'Anular en la tabla')
+f.link('Según diagnóstico', 'Pedido original', 1)
+f.chain('Pedido original', 'Rehacer aprobación')
+f.link('Reenviar tarjeta', 'Resultado')
+f.link('Rehacer aprobación', 'Resultado')
+REENVIAR = f.dump()
+
+# ======================================================================================
 # F · Chat de la fábrica: el mismo agente de Telegram, desde la computadora (página de chat de n8n con usuario y clave)
 # ======================================================================================
 f = Flow(W['chat'], 'F · Chat de la fábrica (computadora)')
@@ -2491,16 +2615,16 @@ def recorrer(v):
     if isinstance(v, list): return [recorrer(x) for x in v]
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, REENVIAR, CHAT]:
     for n in wf['nodes']:
         n['parameters'] = recorrer(n['parameters'])
 
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, AGENTE, PEND, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, AGENTE, PEND, REENVIAR, CHAT]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
                            'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, CHAT]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, ERRORES, AGENTE, PEND, REENVIAR, CHAT]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)

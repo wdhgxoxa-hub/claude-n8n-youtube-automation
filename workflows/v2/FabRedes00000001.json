@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "5110b128-f399-4a8b-88f3-f172b8d041a4",
+      "id": "852cdfc4-42a5-4fac-a106-72a3d8921283",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "65f1bedd-8eea-4826-a8b7-dbab046dd495",
+      "id": "e561266b-7ca1-47bd-935a-fb3d705df7cb",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -55,7 +55,7 @@
           },
           "conditions": [
             {
-              "id": "b622c49e-c97d-490a-9f1e-4330d516ef5c",
+              "id": "5429e55f-5f22-4ea8-8b8d-2fe86932f256",
               "leftValue": "={{ $('Leer ajustes').first().json.allowVidiq === true && ($('Inicio').first().json.contexto?.publicacion?.youtube?.titulos || []).length > 1 }}",
               "rightValue": "",
               "operator": {
@@ -69,7 +69,7 @@
         },
         "options": {}
       },
-      "id": "998b8630-e8dd-4aa7-b696-6b90f4c422dc",
+      "id": "41ca8e15-fea5-47e1-b6ea-d828f89ffaa2",
       "name": "¿Puntuar títulos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -82,7 +82,7 @@
       "parameters": {
         "jsCode": "const e = $('Inicio').first().json; return [{ json: { accion: 'titulos', titulos: e.contexto.publicacion.youtube.titulos, formato: e.formato } }];"
       },
-      "id": "bdfac071-35a5-43fd-9045-466f3785da7b",
+      "id": "b515c162-4c03-46e7-82a0-b127f0d289d3",
       "name": "Pedido de títulos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -111,7 +111,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "e378d1f8-8e06-4089-ac27-bd0776e3efad",
+      "id": "3da9df6b-0f51-45fe-b3db-9bf5f90b8ca9",
       "name": "vidIQ: títulos",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -146,7 +146,7 @@
         },
         "returnAll": true
       },
-      "id": "ddf03e79-8301-46f7-8b79-51bc22d1fe6b",
+      "id": "12674fb6-5818-4cbd-9408-f259c8502eb8",
       "name": "Agenda del canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -161,7 +161,7 @@
       "parameters": {
         "jsCode": "\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst tituloYt = String((vq?.ok && vq.mejor) || (yt.titulos || [])[0] || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = [];\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
       },
-      "id": "85853851-cd76-4066-b122-398a40f542a5",
+      "id": "eafd4a1d-1732-4750-aaf5-7daf28ac2c93",
       "name": "Plan de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -181,7 +181,7 @@
           },
           "conditions": [
             {
-              "id": "c9763174-3463-4352-9865-56afca5bad97",
+              "id": "fa13e7a8-faa0-44f4-9c41-583cf0ba5585",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -195,7 +195,7 @@
         },
         "options": {}
       },
-      "id": "efc58960-3a8c-4929-8180-24d6baa94a36",
+      "id": "47625214-efd6-4d85-9a3d-48062b78cfb9",
       "name": "¿Hay envíos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -346,7 +346,7 @@
           }
         }
       },
-      "id": "677c6775-9eb3-4b60-8b60-1e9b9c9f2d81",
+      "id": "9c12aaa1-a71c-4f85-a6b2-dd56c0abfbb2",
       "name": "Subir a redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -369,7 +369,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const pedidos = $('Plan de publicación').all().map(i => i.json);\nreturn $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];\n  const id = r.request_id || r.job_id || r.data?.request_id || '';\n  // Upload-Post da job_id a lo programado: su estado se consulta con ?job_id= (con request_id da 404 hasta la hora).\n  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, job_id: String(r.job_id || ''), plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),\n    url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',\n    resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),\n    publicado_en: p.programado || new Date().toISOString() } }; });\n"
       },
-      "id": "c946b67b-cfb1-4c26-93e1-875866fbe693",
+      "id": "d6486cfc-207c-4843-9760-421c8c77ce30",
       "name": "Filas de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -397,7 +397,7 @@
         },
         "options": {}
       },
-      "id": "aea92535-de86-4ddd-aa3e-5b8bec778152",
+      "id": "b014d7a6-8909-4749-b1d5-455bf7b65905",
       "name": "Guardar publicaciones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -410,7 +410,7 @@
       "parameters": {
         "jsCode": "\n// «publicado» solo si algo salió ya; si todo quedó en el calendario, «programado» hasta que\n// «F · Confirmar publicaciones» compruebe en Upload-Post que salió de verdad.\nconst filas = $('Filas de publicación').all().map(i => i.json); const ok = filas.filter(f => f.request_id);\nconst estado = !ok.length ? 'error_publicacion' : ok.some(f => f.estado === 'enviado') ? 'publicado' : 'programado';\nreturn [{ json: { estado, etapa: estado === 'programado' ? 'programado' : 'publicado',\n  publicado_en: ok[0]?.publicado_en || '', error: ok.length === filas.length ? '' : filas.filter(f => !f.request_id).map(f => f.tipo + ': ' + f.resultado).join('; ').slice(0, 500) } }];\n"
       },
-      "id": "a60f2c1c-fb39-42f3-84e9-43548d52f56e",
+      "id": "8fbddd7a-8ef9-43b7-b61c-a367163d694e",
       "name": "Video publicado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -448,7 +448,7 @@
         },
         "options": {}
       },
-      "id": "3e676bff-bc0f-4596-a9b0-bca4e9e902ed",
+      "id": "3ba9ad03-5ca0-4824-82fd-f6e4090ce614",
       "name": "Marcar publicado",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -462,7 +462,7 @@
         "amount": 120,
         "unit": "seconds"
       },
-      "id": "8958032d-ecd9-44c9-8c95-489a47016599",
+      "id": "f3706c31-4238-4bdc-bd44-7f120d68c1f9",
       "name": "Esperar a las redes",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -470,13 +470,13 @@
         3080,
         0
       ],
-      "webhookId": "7d4b7320-1188-4b6e-b2bb-05bc5cbbb828"
+      "webhookId": "20b89a9d-c48e-402c-b4ce-561209617ed8"
     },
     {
       "parameters": {
         "jsCode": "const l = $('Filas de publicación').all().filter(i => i.json.request_id && i.json.estado === 'enviado').map(i => ({ json: i.json })); return l.length ? l : [{ json: { nada: true } }];"
       },
-      "id": "b1599d95-e458-41d5-a6f6-240647123878",
+      "id": "4bd874d1-3c54-4778-922d-f8053761bb1d",
       "name": "Pedidos de estado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -496,7 +496,7 @@
           },
           "conditions": [
             {
-              "id": "e54bac8b-d1ce-47bb-8a20-2ab9898dfbd3",
+              "id": "a0dc77da-a0f4-48e3-97d7-e2a7bc582e58",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -510,7 +510,7 @@
         },
         "options": {}
       },
-      "id": "6f7b888d-3806-488b-9b71-640471c7067a",
+      "id": "0d063ee0-62d8-460b-b2a2-cdf97a1b29ab",
       "name": "¿Hay que consultar?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -535,7 +535,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "b1f6e891-4dfa-4b44-942f-fa9298f8aba8",
+      "id": "4dac9c4f-2228-4f49-a83c-d95102f6df90",
       "name": "Estado en redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -558,7 +558,7 @@
       "parameters": {
         "jsCode": "\n// Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).\nconst filas = $('Filas de publicación').all().map(i => i.json); const pedidos = $('Plan de publicación').all().map(i => i.json);\nconst estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];\nconst enviados = filas.filter(f => f.request_id && f.estado === 'enviado');\nconst lineas = filas.map(f => {\n  if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;\n  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas}: ${pedidos[filas.indexOf(f)]?.hora_local || f.publicado_en}`;\n  const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];\n  const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')\n    : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';\n  return `✓ ${f.tipo} → ${f.plataformas}${st.status ? ' (' + st.status + ')' : ''}${det ? '\\n   ' + det : ''}`; });\nreturn [{ json: { texto: `Publicación de ${$('Inicio').first().json.video_id}:\\n` + lineas.join('\\n') } }];\n"
       },
-      "id": "37ba42ec-f7ff-4ef6-b138-47012ed74a5d",
+      "id": "aa94e78f-8832-4a8d-a750-b5bf6237a94f",
       "name": "Resumen de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -578,7 +578,7 @@
           "appendAttribution": false
         }
       },
-      "id": "2474355a-24ac-4b6b-9bc7-2e797f5398e3",
+      "id": "2495d388-2d61-4144-8515-a0c7a89cdb78",
       "name": "Aviso: publicado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -604,7 +604,7 @@
           "appendAttribution": false
         }
       },
-      "id": "259a0bd7-d445-420d-bac6-e40dcc84e2fb",
+      "id": "b45241ae-925b-44ab-b9ed-815b3eae603b",
       "name": "Aviso: nada que publicar",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

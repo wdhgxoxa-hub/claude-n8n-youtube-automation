@@ -6,12 +6,15 @@ const dir = path.join(__dirname, '..', 'workflows', 'v2');
 const wf = id => JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8'));
 const codeOf = (w, name) => w.nodes.find(n => n.name === name).parameters.jsCode;
 
-function run(js, { nodes = {}, json = {}, all = {}, binary = {} } = {}) {
+function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {} } = {}) {
   // Simula el entorno de un nodo Code de n8n: $('Nodo') con first/last/item/all/isExecuted, $json, $input.
   const $ = name => ({
     first: () => ({ json: nodes[name] }), last: () => ({ json: nodes[name] }), item: { json: nodes[name] },
-    all: () => (all[name] || (nodes[name] === undefined ? [] : [nodes[name]])).map(j => ({ json: j })),
-    isExecuted: nodes[name] !== undefined || all[name] !== undefined,
+    all: (o, k) => { if (k !== undefined && pasadas[name]) { if (k >= pasadas[name].length) throw new Error('sin pasada'); return pasadas[name][k].map(j => ({ json: j })); }
+      if (k > 0) throw new Error('sin pasada');
+      return (all[name] || (nodes[name] === undefined ? [] : [nodes[name]])).map(j => ({ json: j })); },
+    itemMatching: i => ({ json: (all[name] || [])[i] }),
+    isExecuted: nodes[name] !== undefined || all[name] !== undefined || pasadas[name] !== undefined,
   });
   const $input = { all: () => (all.$input || [json]).map(j => ({ json: j })), item: { json, binary } };
   const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', js);
@@ -91,7 +94,7 @@ test('producción: cada plano lleva sus referencias de la biblia', () => {
   const items = run(codeOf(PROD, 'Un ítem por plano'), { nodes: { 'Plan de producción': { video_id: 'v', planos: storyboard.planos, biblia } } });
   assert.deepStrictEqual(items[0].json.referencias, ['https://r/ana.png', 'https://r/faro.png']);
   assert.strictEqual(items[1].json.salida, 0); // el clip parte de una imagen
-  assert.match(items[0].json.prompt, /Sin texto ni logos/);
+  assert.match(items[0].json.prompt, /Sin texto, letras, cifras ni logos/);
 });
 
 test('producción: composición sigue el storyboard, dura lo que la voz y pone la música debajo', () => {
@@ -727,7 +730,7 @@ test('mensajes: Telegram recibe una tarjeta corta y el formulario el detalle com
 });
 
 test('aprobaciones: lo que se guarda en fab_aprobaciones existe como columna (n8n rechaza columnas desconocidas)', () => {
-  const COLUMNAS = ['aprobacion_id', 'etapa', 'video_id', 'canal_id', 'job_id', 'resumen', 'url', 'estado', 'cambios', 'decidido_en', 'aviso'];
+  const COLUMNAS = ['aprobacion_id', 'etapa', 'video_id', 'canal_id', 'job_id', 'resumen', 'url', 'estado', 'cambios', 'decidido_en', 'aviso', 'pedido'];
   for (const [w, p] of [['FabAprobacion001', 'Aprobación'], ['FabProduccion001', 'Permiso de gasto']]) {
     const W = wf(w);
     const ini = { etapa: 'guion', video_id: 'v', canal_id: 'c', mensaje: 'm', presupuesto: 1.5 };
@@ -850,4 +853,79 @@ test('confirmar publicaciones: consulta por job_id lo que ya debió salir y cier
   const cerrar = run(codeOf(C, 'Videos a cerrar'), { all: { 'Leer resultados': ambas } }).map(i => i.json);
   assert.deepStrictEqual(cerrar, [{ video_id: 'v', estado: 'publicado', etapa: 'publicado', youtube_id: '3sY1JsbPxMY' }]);
   assert.strictEqual(C.settings.errorWorkflow, 'FabErrores000001');
+});
+
+test('costo: sin texto en las imágenes, respaldo de escena para el archivo y repeticiones solo dentro del tope', () => {
+  const P = wf('FabProduccion001'); const prm = n => JSON.stringify(P.nodes.find(x => x.name === n).parameters);
+  assert.match(prm('Revisar plano'), /NO lo exijas dentro de la imagen/);
+  assert.match(prm('Revisar archivo'), /tolera letreros o logos pequeños de fondo/);
+  // Plano de archivo sin prompt_imagen: la escena sale de la búsqueda y de la voz (antes solo del estilo → pollerías).
+  const arch = { id: 'p02', tipo: 'archivo', texto_narrado: '[énfasis] Un galón a 20 soles.', busqueda_archivo: 'gas station pump night', prompt_imagen: '', encuadre: 'general', luz: 'noche' };
+  const it = run(codeOf(P, 'Un ítem por plano'), { nodes: { 'Plan de producción': { video_id: 'v', planos: [arch], biblia: { estilo_visual: { descripcion: 'cocinas de pollería' } } }, 'Leer ajustes': aj } })[0].json;
+  assert.match(it.prompt, /^Escena: gas station pump night\. Lo que narra la voz: Un galón a 20 soles\./);
+  // Veredicto: 12 planos, tope 1,5; ya se generaron 12 y se revisaron 12 → caben pocas repeticiones, no 11.
+  const planos = Array.from({ length: 12 }, (_, i) => ({ id: 'p' + i, tipo: 'imagen' }));
+  const malo = { output: [{ content: [{ type: 'output_text', text: JSON.stringify({ aprobado: false, problemas: ['no es un grifo'], prompt_corregido: 'un grifo' }) }] }] };
+  const prev = planos.map(p => ({ plano: p, intento: 1, prompt: 'x', url: 'u' }));
+  const ajs = { ...aj, allowRevisionVisual: true };
+  const out = run(codeOf(P, 'Veredicto'), { all: { $input: planos.map(() => malo), 'URL del plano': prev },
+    pasadas: { 'Extraer imagen': [prev], 'Revisar plano': [planos] }, nodes: { 'Leer ajustes': ajs, 'Plan de producción': { presupuesto: 1.5, planos } } }).map(i => i.json);
+  const rep = out.filter(o => o.repetir).length;
+  const total = (12 + rep) * aj.costoImagenUsd + (12 + rep) * aj.costoRevisionUsd + 12 * aj.costoVozUsdPorPlano;
+  assert.ok(rep > 0 && rep < 11, 'repeticiones ' + rep); assert.ok(total <= 1.5 * aj.avisoGastoPct + 1e-9, 'total ' + total);
+  assert.ok(out.find(o => !o.repetir).veredicto.problemas.includes('aceptado sin repetir: no cabe en el tope de gasto'));
+  assert.match(out.find(o => o.repetir).prompt, /Sin texto, letras, cifras ni logos/);
+  // Con presupuesto holgado, todas las que fallan se repiten (una vez).
+  const holgado = run(codeOf(P, 'Veredicto'), { all: { $input: planos.map(() => malo), 'URL del plano': prev },
+    pasadas: { 'Extraer imagen': [prev], 'Revisar plano': [planos] }, nodes: { 'Leer ajustes': ajs, 'Plan de producción': { presupuesto: 10, planos } } });
+  assert.strictEqual(holgado.filter(i => i.json.repetir).length, 12);
+  const plan = run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { video_id: 'v', storyboard: { planos: [...planos.slice(0, 9), ...Array.from({ length: 3 }, (_, i) => ({ id: 'a' + i, tipo: 'archivo' }))] }, presupuesto_usd: 1.5 }, 'Leer ajustes': ajs } })[0].json;
+  assert.ok(plan.costo_estimado_usd > 9 * aj.costoImagenUsd, 'la estimación cuenta revisiones y respaldo del archivo');
+});
+
+test('cifras verificadas: busca en la web antes del crítico, obliga a reescribir si hay cifras por corregir y pasa los datos a Claude', () => {
+  const O = wf('FabOrquestador01'); const nodo = n => O.nodes.find(x => x.name === n);
+  const body = nodo('Verificar cifras').parameters.jsonBody;
+  assert.match(body, /type: 'web_search'/); assert.match(body, /Eres el verificador de datos/); assert.match(body, /notas_del_guionista/);
+  assert.strictEqual(O.connections['Temas del canal'].main[0][0].node, '¿Verificar cifras?');
+  assert.strictEqual(O.connections['Cifras verificadas'].main[0][0].node, 'Crítico del guion');
+  assert.match(nodo('Crítico del guion').parameters.jsonBody, /verificacion_de_cifras/);
+  // Respuesta real (forma de la prueba en vivo): búsquedas, razonamiento y un mensaje con el JSON.
+  const texto = JSON.stringify({ cifras: [{ dato: 'IGV', valor_guion: '1,53', valor_verificado: '1,53', estado: 'ok' }, { dato: 'margen', valor_guion: '4-5', valor_verificado: '', estado: 'vieja', fecha: '2024-11' }],
+    faltantes: [{ dato: 'Precio de lista Petroperú gasohol regular', valor: '15.6293 soles/galón', fecha: '2026-11-18', fuente_url: 'https://www.petroperu.com.pe/x.pdf' }], cuenta: ['S/ 10', 'IGV 1,53'], resumen: 'ok' });
+  const resp = { output: [{ type: 'web_search_call' }, { type: 'reasoning' }, { type: 'message', content: [{ type: 'output_text', text: texto, annotations: [] }] }] };
+  const cv = run(codeOf(O, 'Cifras verificadas'), { nodes: { 'Verificar cifras': resp } })[0].json;
+  assert.strictEqual(cv.leido, true); assert.strictEqual(cv.corregir, true);
+  assert.match(cv.conteo, /1 confirmadas, 0 por corregir, 1 viejas, 0 sin fuente; 1 datos nuevos/);
+  assert.deepStrictEqual(run(codeOf(O, 'Cifras verificadas'), {})[0].json, { leido: false, verificacion: null });          // apagado
+  assert.strictEqual(run(codeOf(O, 'Cifras verificadas'), { nodes: { 'Verificar cifras': { error: { message: '500' } } } })[0].json.leido, false); // falló: no bloquea
+  const altas = { output: [{ content: [{ type: 'output_text', text: JSON.stringify({ gancho: 9, promesa: 9, claridad: 9, emocion: 9, exactitud: 9, originalidad: 9 }) }] }] };
+  assert.strictEqual(run(codeOf(O, 'Veredicto del crítico'), { json: altas, nodes: { 'Cifras verificadas': cv } })[0].json.pasa, false);
+  assert.strictEqual(run(codeOf(O, 'Veredicto del crítico'), { json: altas, nodes: { 'Cifras verificadas': { ...cv, corregir: false } } })[0].json.pasa, true);
+  const ped = run(codeOf(O, 'Pedir corrección (crítico)'), { nodes: { Inicio: { video_id: 'v', canal_id: 'c', resultado: { guion: 'x' } }, 'Veredicto del crítico': { notas: {}, instrucciones: '', problemas: [] }, 'Biblia (crítico)': { resultado: '{}' }, 'Cifras verificadas': cv } })[0].json;
+  assert.strictEqual(ped.datos.cifras_verificadas.faltantes[0].valor, '15.6293 soles/galón'); assert.match(ped.datos.cambios, /Datos verificados en la web/);
+  const msg = run(codeOf(O, 'Mensaje de guion'), { nodes: { Inicio: { video_id: 'v', resultado: { titulo: 'T', guion: 'g', rubrica: { gancho: 8 } } }, 'Cifras verificadas': cv } })[0].json;
+  assert.match(msg.aviso, /🔎 Cifras: 1 confirmadas/); assert.match(msg.mensaje, /Cuenta: S\/ 10 → IGV 1,53/);
+  assert.strictEqual(aj.allowVerificacion, false);
+});
+
+test('reenviar: reenvía lo vivo con su enlace, rehace lo muerto con el pedido original y avisa lo que no se puede rehacer', () => {
+  const R = wf('FabReenviar00001'); const A = wf('FabAprobacion001');
+  const ini = { etapa: 'guion', video_id: 'v1', canal_id: 'c', mensaje: 'm', contexto: { titulo: 'T' } };
+  const prep = run(codeOf(A, 'Aprobación · preparar'), { nodes: { Inicio: ini } })[0].json;
+  assert.deepStrictEqual(JSON.parse(prep.pedido), ini);                     // la aprobación guarda su pedido
+  const filas = [{ aprobacion_id: 'a1', etapa: 'guion', video_id: 'v1', url: 'https://x.ngrok-free.dev/form-waiting/457?signature=s', estado: 'pendiente', pedido: JSON.stringify(ini) },
+    { aprobacion_id: 'a2', etapa: 'storyboard', video_id: 'v2', url: 'https://x.ngrok-free.dev/form-waiting/466?signature=s', estado: 'pendiente', pedido: '{}' },
+    { aprobacion_id: 'a3', etapa: 'gasto', video_id: 'v3', url: 'https://x.ngrok-free.dev/form-waiting/470?signature=s', estado: 'pendiente', pedido: '' }];
+  const el = run(codeOf(R, 'Elegir'), { all: { $input: filas }, nodes: { Inicio: {} } }).map(i => i.json);
+  assert.strictEqual(el[0].prueba, 'http://127.0.0.1:5678/form-waiting/457?signature=s');
+  assert.strictEqual(run(codeOf(R, 'Elegir'), { all: { $input: filas }, nodes: { Inicio: { video_id: 'v2' } } }).length, 1);
+  const resp = [{ statusCode: 200, data: '<html><form id="n8n-form">' }, { statusCode: 401, data: 'Unauthorized' }, { statusCode: 200, data: 'Form Submitted' }];
+  const d = run(codeOf(R, 'Diagnóstico'), { all: { $input: resp, Elegir: el } }).map(i => i.json);
+  assert.deepStrictEqual(d.map(x => x.salida), [0, 1, 2]);
+  assert.deepStrictEqual(run(codeOf(R, 'Pedido original'), { json: { pedido: JSON.stringify(ini) } })[0].json, ini);
+  const t = run(codeOf(R, 'Resultado'), { all: { 'Diagnóstico': d }, nodes: { Inicio: {} } })[0].json.texto;
+  assert.match(t, /mismo enlace: guion · v1/); assert.match(t, /rehechas con enlace nuevo .*storyboard · v2/); assert.match(t, /No se pueden rehacer .*gasto · v3/);
+  assert.match(run(codeOf(R, 'Resultado'), { nodes: { Inicio: { video_id: 'v9' } } })[0].json.texto, /No hay aprobaciones pendientes de v9/);
+  const AG = wf('FabAgenteTelegr1'); assert.ok(AG.connections['reenviar'].ai_tool);
 });

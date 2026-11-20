@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "21854a32-7115-4612-a831-e0a0bc61da31",
+      "id": "be69e24e-3677-449a-bfd2-8e2ef39e4ec4",
       "name": "Cada hora",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -43,7 +43,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "581adb83-eb81-4e17-a97f-b9fb5ba8543b",
+      "id": "19eed11f-8a07-4d3c-bd13-60bb76812cfd",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -73,7 +73,7 @@
         },
         "returnAll": true
       },
-      "id": "a77c5db6-5519-4259-8bc2-9566c57b3033",
+      "id": "578a4169-f3dd-4034-80bd-58dc94029f7b",
       "name": "Publicaciones recientes",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -88,7 +88,7 @@
       "parameters": {
         "jsCode": "\n// Solo lo que ya debió salir (10 min de margen) y aún no está confirmado.\nconst corte = Date.now() - 10 * 60000;\nconst l = $input.all().map(i => i.json).filter(p => p.request_id && ['programado', 'enviado'].includes(p.estado) && Date.parse(p.publicado_en || 0) <= corte);\nreturn l.length ? l.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
       },
-      "id": "ea20b38c-055f-4451-a775-f1414158788d",
+      "id": "b6fa0d4f-68c4-4ff3-8fd7-09cd50253c2b",
       "name": "Por confirmar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -108,7 +108,7 @@
           },
           "conditions": [
             {
-              "id": "cd7c399d-6032-49eb-8c89-568f8ac7b254",
+              "id": "03f104da-4bf7-4d1a-b464-ac4657d60e33",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -122,7 +122,7 @@
         },
         "options": {}
       },
-      "id": "0e05c1c7-e144-4620-a1a4-0a4b1a6fb9a7",
+      "id": "a690617e-fd48-4ba5-8290-d5d290e0a540",
       "name": "¿Hay por confirmar?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -141,7 +141,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "a4d86da4-ec79-40eb-a5e2-715dba1d58bc",
+      "id": "bd8296ce-1121-40d2-bedc-7a723ce37a02",
       "name": "Consultar Upload-Post",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -161,7 +161,7 @@
       "parameters": {
         "jsCode": "\n// Traduce la respuesta de Upload-Post: completo y sin fallos → publicado; fallido → error; lo demás sigue esperando.\nconst pedidos = $('Por confirmar').all().map(i => i.json);\nconst todas = $('Publicaciones recientes').all().map(i => i.json);\nconst cambios = [];\n$input.all().forEach((it, k) => {\n  const p = pedidos[k]; const r = it.json || {}; if (!p) return;\n  const res = Array.isArray(r.results) ? r.results : [];\n  const st = String(r.status || '').toLowerCase();\n  // Solo se juzga lo terminado: mientras está «queued» Upload-Post ya trae success:false (aún no hay intento).\n  if (!['completed', 'failed'].includes(st) || !res.length) return;   // pendiente o en proceso: se mira en una hora\n  const fallo = st === 'failed' || res.some(x => x.success !== true);\n  const listo = !fallo;\n  const urls = res.map(x => x.post_url || x.url || '').filter(Boolean);\n  const errores = res.filter(x => x.success !== true).map(x => `${x.platform}: ${String(x.error_message || x.error || x.message || 'error').slice(0, 120)}`);\n  cambios.push({ request_id: p.request_id, video_id: p.video_id, plataformas: p.plataformas, tipo: p.tipo,\n    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: (res.find(x => x.platform === 'youtube' && x.success === true) || {}).platform_post_id || '',\n    resultado: JSON.stringify(listo ? { status: st, urls } : { status: st || 'failed', errores }).slice(0, 800) });\n});\nif (!cambios.length) return [{ json: { nada: true } }];\n// Estado del video: publicado cuando todas sus publicaciones salieron; error si alguna falló.\nconst porVideo = {};\nfor (const v of new Set(cambios.map(c => c.video_id))) {\n  const filas = todas.filter(t => t.video_id === v).map(t => cambios.find(c => c.request_id === t.request_id) || t);\n  const yt = cambios.filter(c => c.video_id === v && /youtube/.test(c.plataformas)).map(c => c.youtube_id || (c.url.match(/(?:v=|shorts\\/|youtu\\.be\\/)([\\w-]{11})/) || [])[1]).find(Boolean) || '';\n  porVideo[v] = { video_id: v, youtube_id: yt,\n    estado: filas.some(f => f.estado === 'error') ? 'error_publicacion' : filas.every(f => f.estado === 'publicado') ? 'publicado' : '' };\n}\nreturn cambios.map(c => ({ json: { ...c, video: porVideo[c.video_id] } }));\n"
       },
-      "id": "4ce9b523-1f47-4157-8684-0ef2969eace6",
+      "id": "b7b96a07-e370-400b-9617-8c72ea7295be",
       "name": "Leer resultados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -181,7 +181,7 @@
           },
           "conditions": [
             {
-              "id": "f0c72405-e59a-4f7d-9f09-b16ddfd911bb",
+              "id": "77668a58-10d4-49e2-9b7a-dd2b2f6bdc7f",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -195,7 +195,7 @@
         },
         "options": {}
       },
-      "id": "7b7b2c6f-2249-4371-93dd-f445e4bf5039",
+      "id": "1af00ffa-7f87-4c19-ae6f-099bf8659dc5",
       "name": "¿Hubo cambios?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -208,7 +208,7 @@
       "parameters": {
         "jsCode": "return $input.all().map(i => ({ json: { request_id: i.json.request_id, estado: i.json.estado, resultado: i.json.resultado } }));"
       },
-      "id": "d8cb0f7d-f4dc-4c30-ba48-3123bcbb94e0",
+      "id": "37b7b396-7074-4234-95db-6c3cd9848aa8",
       "name": "Fila de publicación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -246,7 +246,7 @@
         },
         "options": {}
       },
-      "id": "96a0f372-c9cc-4c8c-8a67-b6066e500a76",
+      "id": "c6a81469-29ec-441d-8a3f-9a1123802f95",
       "name": "Actualizar publicación",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -259,7 +259,7 @@
       "parameters": {
         "jsCode": "\nconst vistos = new Set(); const l = [];\nfor (const i of $('Leer resultados').all()) { const v = i.json.video; if (!v || !v.estado || vistos.has(v.video_id)) continue; vistos.add(v.video_id);\n  const fila = { video_id: v.video_id, estado: v.estado, etapa: v.estado === 'publicado' ? 'publicado' : 'publicacion' };\n  if (v.youtube_id) fila.youtube_id = v.youtube_id; l.push({ json: fila }); }\nreturn l.length ? l : [{ json: { nada: true } }];\n"
       },
-      "id": "ef07570b-fea0-4215-a5e4-2328bfed6b02",
+      "id": "844fa75e-6fca-407f-a4c3-d64d2978ddfd",
       "name": "Videos a cerrar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -279,7 +279,7 @@
           },
           "conditions": [
             {
-              "id": "0b55bd67-d463-40d2-b18c-4b966d2f150e",
+              "id": "6db6e354-0bb9-45b3-b8db-d82ed8bdc731",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -293,7 +293,7 @@
         },
         "options": {}
       },
-      "id": "5557ef74-df8d-4062-9e52-a113e1bf0e80",
+      "id": "96f35bf8-448b-43d8-8101-35ac9e0f725e",
       "name": "¿Cerrar video?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -331,7 +331,7 @@
         },
         "options": {}
       },
-      "id": "f406e1cb-0524-43c8-b544-c2d27499cf10",
+      "id": "f70dc0b7-680f-44bd-921f-12960265a821",
       "name": "Actualizar video",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -344,7 +344,7 @@
       "parameters": {
         "jsCode": "\nconst l = $('Leer resultados').all().map(i => i.json).map(c => c.estado === 'publicado'\n  ? `✅ ${c.video_id} → ${c.plataformas}${c.url ? '\\n' + c.url : ''}` : `❌ ${c.video_id} → ${c.plataformas}: ${JSON.parse(c.resultado).errores?.join('; ') || 'falló'}`);\nreturn [{ json: { texto: 'Publicación confirmada:\\n' + l.join('\\n') } }];\n"
       },
-      "id": "383fe598-8624-43da-9b56-f92813e5ac86",
+      "id": "81370af9-bc61-4138-b9c9-5d24f337714e",
       "name": "Aviso corto",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -364,7 +364,7 @@
           "appendAttribution": false
         }
       },
-      "id": "35146df6-26c4-41ba-8464-9dcd6056cf03",
+      "id": "bfbadbac-f48a-4e86-bf6b-3bbba81376b2",
       "name": "Avisar",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

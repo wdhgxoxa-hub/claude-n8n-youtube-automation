@@ -13,7 +13,7 @@
           ]
         }
       },
-      "id": "6db48189-d01e-44f3-ad5a-bb5b99448091",
+      "id": "80ffc04e-71fe-4572-8596-674cdda92db9",
       "name": "Cada día",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -42,7 +42,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "4c5ce55c-a1a5-45a9-9361-8e2738a21cbe",
+      "id": "3bdb9109-7fde-452d-8f48-565fe4f7248d",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -62,7 +62,7 @@
           },
           "conditions": [
             {
-              "id": "44785f93-0014-49f3-ab94-52cd6050e342",
+              "id": "58561048-c8f5-4352-a065-273321088cc2",
               "leftValue": "={{ $json.allowAnalytics === true }}",
               "rightValue": "",
               "operator": {
@@ -76,7 +76,7 @@
         },
         "options": {}
       },
-      "id": "2c197f68-8cec-4139-93ae-f4098326fb0b",
+      "id": "748ba594-97aa-43e2-b678-2aa5f7bc7745",
       "name": "¿Analytics activo?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -111,7 +111,7 @@
         },
         "returnAll": true
       },
-      "id": "1a701f6b-a753-49c9-ac3b-957abafedc6d",
+      "id": "9a6cd46d-3298-45ed-af4e-ea16362899a7",
       "name": "Videos publicados",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -126,7 +126,7 @@
       "parameters": {
         "jsCode": "\n// Solo los videos que cumplen hoy 2 o 7 días de publicados.\nconst hoy = Date.now(); const dia = 86400000;\nconst toca = $input.all().map(i => i.json).filter(v => v.youtube_id && v.publicado_en).filter(v => {\n  const d = Math.floor((hoy - Date.parse(v.publicado_en)) / dia); return d === 2 || d === 7; });\nreturn toca.length ? toca.map(v => ({ json: { ...v, dias: Math.floor((hoy - Date.parse(v.publicado_en)) / dia), desde: v.publicado_en.slice(0, 10) } })) : [{ json: { nada: true } }];\n"
       },
-      "id": "dca48c23-751a-4f9e-9bc1-3af2a94a2b6e",
+      "id": "842e0b6e-33a1-45dd-8417-bdea112fbdf8",
       "name": "Toca medir",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -146,7 +146,7 @@
           },
           "conditions": [
             {
-              "id": "b141f247-af8c-461b-9f3e-713d685bb017",
+              "id": "7988f6e6-a085-4790-be1b-e2e5f923f02d",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -160,7 +160,7 @@
         },
         "options": {}
       },
-      "id": "cb19d1f1-705c-4221-8c95-7a2a4f9405e1",
+      "id": "5512412b-520b-408b-a4fc-686c821c5260",
       "name": "¿Hay que medir?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -173,7 +173,7 @@
       "parameters": {
         "jsCode": "return $input.all().map(i => ({ json: { accion: 'token', canal_id: i.json.canal_id } }));"
       },
-      "id": "f28fda27-40ad-4e02-86a7-918c393804f4",
+      "id": "98c70dbc-73d2-4734-8e71-6c6bd6e6673c",
       "name": "Pedir tokens",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -202,7 +202,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "47b32b2e-941e-4c22-95c6-3beb99897f1c",
+      "id": "226056af-aa13-4574-affe-2fa74ce13946",
       "name": "Tokens de los canales",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -215,7 +215,7 @@
       "parameters": {
         "jsCode": "\n// Une cada video con el token de su canal (mismo orden). Los canales sin conexión se saltan.\nconst vids = $('Toca medir').all().map(i => i.json); const toks = $input.all().map(i => i.json);\nconst out = vids.map((v, i) => ({ ...v, token: toks[i]?.ok ? toks[i].access_token : '' })).filter(v => v.token);\nreturn out.length ? out.map(v => ({ json: v })) : [{ json: { nada: true } }];\n"
       },
-      "id": "ba49e844-fcc9-400b-8d04-6616ae5b9e17",
+      "id": "d3d5ace5-99bc-48d7-8051-dcd4fff3f5d9",
       "name": "Pedidos de retención",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -235,7 +235,7 @@
           },
           "conditions": [
             {
-              "id": "8bb73d09-5432-4b0f-8e86-ebd0613f8489",
+              "id": "231729cb-3ed3-4946-83e1-fa6535d9fb6d",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -249,7 +249,7 @@
         },
         "options": {}
       },
-      "id": "7b63ad8d-006b-49ff-ac6b-2b0dbf8aab5d",
+      "id": "379b8ec0-d509-4685-9390-3f8b9480423d",
       "name": "¿Algún canal conectado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -310,7 +310,7 @@
           }
         }
       },
-      "id": "3d1652bf-bd99-47e2-9c79-c1b575e32ba7",
+      "id": "37fcf2ba-6674-4a65-8497-3a6d27530d0a",
       "name": "Retención",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -344,7 +344,7 @@
         },
         "returnAll": true
       },
-      "id": "e22b7668-7d73-4cec-b413-cfb584a13a22",
+      "id": "c996088f-b8bb-44c9-9058-886eb24ee4f2",
       "name": "Publicaciones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -359,7 +359,7 @@
       "parameters": {
         "jsCode": "\n// Envíos a TikTok, Instagram, Facebook y YouTube (Upload-Post) que cumplen hoy 2 o 7 días.\nconst hoy = Date.now(); const dia = 86400000;\nconst toca = $input.all().map(i => i.json).filter(p => p.request_id && p.publicado_en && p.estado !== 'error')\n  .map(p => ({ ...p, dias: Math.floor((hoy - Date.parse(p.publicado_en)) / dia) })).filter(p => p.dias === 2 || p.dias === 7);\nreturn toca.length ? toca.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
       },
-      "id": "e43d1e9f-cdb1-4d9d-a42f-f4e8b05781b1",
+      "id": "6b6b4c78-d377-4534-ac43-3a153ab64600",
       "name": "Toca medir en redes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -379,7 +379,7 @@
           },
           "conditions": [
             {
-              "id": "2f052dc7-0f2f-4b84-95b1-422797a757f1",
+              "id": "a8b5dd79-cced-4831-a5ee-602523ce7fb4",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -393,7 +393,7 @@
         },
         "options": {}
       },
-      "id": "295fcec3-93ad-414a-9bc6-073355202d77",
+      "id": "d6151223-9e76-4ff0-a563-a587b57d771f",
       "name": "¿Hay en redes?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -418,7 +418,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
       },
-      "id": "6d6eb10c-5072-4bb9-b521-f5e45688b42f",
+      "id": "c69efc8f-5c39-4c3c-801e-ccdb4428b70c",
       "name": "Métricas en redes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -441,7 +441,7 @@
       "parameters": {
         "jsCode": "\n// YouTube: curva de retención. Redes: vistas, likes, comentarios, compartidos y guardados por red (Upload-Post).\n// Todo va a Claude (modo «aprender») por canal; una lección solo entra a la biblia si se repite en 3 videos.\nconst yt = $('Pedidos de retención').isExecuted ? $('Pedidos de retención').all().map(i => i.json).filter(v => v.video_id) : [];\nconst ret = $('Retención').isExecuted ? $('Retención').all().map(i => i.json) : [];\nconst vids = yt.map((v, i) => ({ video_id: v.video_id, canal_id: v.canal_id, dias: v.dias, retencion: ret[i]?.rows || [] }));\nconst env = $('Métricas en redes').isExecuted ? $('Toca medir en redes').all().map(i => i.json) : [];\nconst met = $('Métricas en redes').isExecuted ? $('Métricas en redes').all().map(i => i.json) : [];\nconst redes = env.map((p, i) => ({ video_id: p.video_id, canal_id: p.canal_id, tipo: p.tipo, titulo: p.titulo, plataformas: p.plataformas, dias: p.dias,\n  metricas: met[i]?.error || JSON.stringify(met[i] || {}).length > 6000 ? null : met[i] }));\nconst porCanal = {};\nfor (const v of vids) (porCanal[v.canal_id] ||= { videos: [], redes: [] }).videos.push(v);\nfor (const r of redes) (porCanal[r.canal_id] ||= { videos: [], redes: [] }).redes.push(r);\nreturn Object.entries(porCanal).map(([canal_id, d]) => ({ json: { modo: 'aprender', canal_id, video_id: '', datos: { canal_id, videos: d.videos, redes: d.redes } } }));\n"
       },
-      "id": "6f851d97-f184-49b3-adab-8823ae15d8c4",
+      "id": "4d1baca2-9851-43cb-94f5-85fc21739e9b",
       "name": "Pedir lecciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -470,7 +470,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "20d46c2d-030f-42eb-8134-21407b999a06",
+      "id": "814f5141-c7cc-4fbe-9d5b-95f9920e0cf6",
       "name": "Claude: aprender",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,

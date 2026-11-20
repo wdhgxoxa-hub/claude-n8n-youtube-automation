@@ -18,6 +18,8 @@ Conviertes el guion en escenas que **muestran exactamente lo que dice la voz**. 
 
 ## Imágenes generadas
 - `prompt_imagen` concreto: quién, qué hace, dónde, qué objeto importa. Sin texto ni logos (el texto lo pone la fábrica).
+- **Nunca pidas texto, cifras, etiquetas ni gráficos rotulados dentro de la imagen**: los modelos de imagen los dibujan mal y cada intento fallido se paga. La cifra va en `texto_pantalla`; la imagen la apoya con objetos (monedas, un billete genérico, un surtidor, una caja) o con un gráfico sin etiquetas.
+- **Todo plano lleva `prompt_imagen`, también los de archivo**: si el archivo no sirve, la fábrica genera esa imagen en su lugar.
 - Coherencia: el mismo personaje con el mismo vestuario en todas sus escenas (usa las referencias de la biblia).
 
 ## Movimiento y transiciones

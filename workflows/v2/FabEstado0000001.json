@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "2963fa36-bcf8-45aa-bd06-541dfc60cfe7",
+      "id": "e3daa964-28ae-4b30-8a53-a32b76536173",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -36,7 +36,7 @@
         },
         "returnAll": true
       },
-      "id": "29108aa1-96dc-4519-8575-9572fa705587",
+      "id": "2dca6d1e-20a8-4ec9-98b5-b86281e86e7b",
       "name": "Videos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -68,7 +68,7 @@
         },
         "returnAll": true
       },
-      "id": "e8fa1b2f-8f72-47b6-87d0-0d9b5f06a7e3",
+      "id": "f9b6bf01-2937-4568-8b6d-e794a9892dbb",
       "name": "Costos",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -90,7 +90,7 @@
           },
           "conditions": [
             {
-              "id": "275f34ee-2727-4fa8-a29a-54667f2178a3",
+              "id": "fee216e3-50e6-4689-927d-e5a61e6d7db2",
               "leftValue": "={{ $('Inicio').first().json.tipo === 'reporte' }}",
               "rightValue": "",
               "operator": {
@@ -104,7 +104,7 @@
         },
         "options": {}
       },
-      "id": "01f03dc6-7cfc-4df6-a662-7afb9d973ae5",
+      "id": "bb733071-95b0-48c9-8609-a210983c3da5",
       "name": "¿Es reporte?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -134,7 +134,7 @@
         },
         "returnAll": true
       },
-      "id": "cfc8083b-3872-4467-bfc5-83ee9afd65f3",
+      "id": "88f39324-dad2-4313-ba75-da4114ca3793",
       "name": "Conexiones",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -148,7 +148,7 @@
       "parameters": {
         "jsCode": "\nconst p = $('Inicio').first().json;\nconst cs = $input.all().map(i => i.json).filter(c => c.canal_id && (!p.canal_id || c.canal_id === p.canal_id));\nreturn cs.length ? cs.map(c => ({ json: { accion: 'estadisticas', canal_id: c.canal_id } })) : [{ json: { nada: true } }];\n"
       },
-      "id": "598de08f-32d2-423e-86f9-ca2eabc94393",
+      "id": "032f2b9a-f210-4828-8260-6714668f0b66",
       "name": "Pedir estadísticas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -168,7 +168,7 @@
           },
           "conditions": [
             {
-              "id": "bf4edf52-709d-40cd-bf21-8cbcc9a16138",
+              "id": "c5012d76-0dca-4bf0-95ca-5bf18bcf6ecd",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -182,7 +182,7 @@
         },
         "options": {}
       },
-      "id": "26c0e9b6-eabb-48f4-b4a8-eef1d367af9d",
+      "id": "f9b6ce18-8b15-4c78-8cd6-560dca0e55c8",
       "name": "¿Hay canales conectados?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -211,7 +211,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "a239d3de-f960-435b-bd87-975838b12b9f",
+      "id": "862dcb90-2a0b-4a56-9ff1-d0d2b07e4c44",
       "name": "Estadísticas de YouTube",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -224,7 +224,7 @@
       "parameters": {
         "jsCode": "\n// «estado»: los 10 videos más recientes. «reporte»: por canal, cuánto se produjo, publicó y gastó.\nconst pedido = $('Inicio').first().json;\nconst videos = $('Videos').all().map(i => i.json).filter(v => v.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));\nconst costos = $('Costos').all().map(i => i.json).filter(c => c.video_id);\nif (pedido.tipo !== 'reporte') {\n  const ult = videos.slice(0, 10);\n  return [{ json: { resumen: ult.length ? ult.map(v => `${v.video_id} · ${v.canal_id} · ${v.etapa} · ${v.estado} · US$${v.costo_usd || 0}`).join('\\n') : 'Sin videos todavía.' } }];\n}\nconst desde = pedido.dias ? Date.now() - Number(pedido.dias) * 86400000 : 0;\nconst vs = videos.filter(v => (!pedido.canal_id || v.canal_id === pedido.canal_id) && Date.parse(v.createdAt || 0) >= desde);\nconst porCanal = {};\nfor (const v of vs) { const c = (porCanal[v.canal_id] ||= { videos: 0, publicados: 0, gasto: 0, etapas: {} });\n  c.videos++; if (v.estado === 'publicado') c.publicados++; c.etapas[v.etapa] = (c.etapas[v.etapa] || 0) + 1;\n  c.gasto += costos.filter(x => x.video_id === v.video_id).reduce((a, x) => a + (x.usd || 0), 0); }\nconst yt = {}; if ($('Estadísticas de YouTube').isExecuted) for (const i of $('Estadísticas de YouTube').all()) if (i.json.ok) yt[i.json.canal_id] = i.json;\nfor (const id of Object.keys(yt)) porCanal[id] ||= { videos: 0, publicados: 0, gasto: 0, etapas: {} };\nconst lineas = Object.entries(porCanal).map(([id, c]) => (yt[id] ? `${id} (YouTube «${yt[id].canal_youtube}»: ${yt[id].ocultos ? 'suscriptores ocultos' : yt[id].suscriptores + ' suscriptores'}, ${yt[id].vistas} vistas, ${yt[id].videos} videos) — ` : `${id}: `) + `${c.videos} videos, ${c.publicados} publicados, US$${Math.round(c.gasto * 100) / 100} (prom. US$${c.videos ? Math.round(c.gasto / c.videos * 100) / 100 : 0}) · etapas: ${Object.entries(c.etapas).map(([k, n]) => k + ' ' + n).join(', ')}`);\nreturn [{ json: { resumen: lineas.length ? `Reporte${pedido.dias ? ' de ' + pedido.dias + ' días' : ''}:\\n` + lineas.join('\\n') : 'Sin videos en ese periodo.' } }];\n"
       },
-      "id": "6b9de663-fe3c-42bd-bbbc-902d721b46b3",
+      "id": "84b53825-f78f-45f3-9a59-d5371b5a36df",
       "name": "Resumen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

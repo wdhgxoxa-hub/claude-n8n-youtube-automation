@@ -80,9 +80,11 @@ Haz, en este orden:
 
 ### `corregir_guion`
 
-`datos`: `guion` (el resultado anterior completo), `cambios` (texto del operador), `biblia`.
+`datos`: `guion` (el resultado anterior completo), `cambios` (texto del operador o del crítico), `biblia`, `cifras_verificadas` (opcional).
 
 Aplica solo los cambios pedidos, conserva lo demás y devuelve el mismo formato que `guion`.
+
+Si llega `cifras_verificadas`, la fábrica ya buscó en la web cada cifra y los datos que te faltaban: `cifras` (estado `ok`, `corregir`, `vieja` o `sin_fuente`, con `valor_verificado`, `fecha` y `fuente_url`), `faltantes` (datos nuevos con su fuente) y `cuenta` (la cuenta corrida propuesta). Úsalos: corrige lo marcado, completa la cuenta corrida con los datos nuevos, comprueba la aritmética y añade sus fuentes a `fuentes`. No uses una cifra `sin_fuente`; di la fecha de los datos en el guion cuando importe.
 
 ### `storyboard`
 
@@ -126,7 +128,7 @@ Cada plano lleva `emocion` (una o dos palabras: intriga, asombro, calma, tensió
 
 **Publicación:** tres títulos de YouTube distintos (≤ 70 caracteres, la palabra clave principal al inicio; la fábrica los puntúa con vidIQ y usa el mejor). Descripción de 2–4 frases con la promesa y las fuentes principales. TikTok e Instagram: 1–2 frases que abran curiosidad, 3–5 hashtags en español. Facebook: título y texto algo más largos. Nada de afirmaciones sin fuente ni clickbait que el video no cumpla.
 
-El `prompt_imagen` describe solo la escena; la identidad de personajes y el estilo los aportan las referencias de la biblia, no el texto.
+El `prompt_imagen` describe solo la escena; la identidad de personajes y el estilo los aportan las referencias de la biblia, no el texto. **Todo plano lleva `prompt_imagen`**, también los de archivo (es el respaldo si el archivo no sirve), y ninguno pide texto, cifras ni gráficos rotulados: las cifras van en `texto_pantalla`, que el montaje pone encima.
 
 ### `revisar_plano`
 

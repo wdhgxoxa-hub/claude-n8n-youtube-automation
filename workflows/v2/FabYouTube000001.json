@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "ede5b592-8a67-4dc8-b21c-344a62003253",
+      "id": "be274b17-329a-46cc-b39b-17afa74d759b",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "10df2455-45ea-4041-ac99-77896b99634a",
+      "id": "ad2a2652-ad0b-422f-b2dc-c10c63065cd5",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -50,7 +50,7 @@
         "numberOutputs": 3,
         "output": "={{ ({ enlace: 0, token: 1, estadisticas: 1 })[$('Inicio').first().json.accion] ?? 1 }}"
       },
-      "id": "2679a7b3-7e3a-468b-a75d-53e23bb034f7",
+      "id": "9c833747-a409-490f-a299-3235ad033eed",
       "name": "Según acción",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
@@ -81,7 +81,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "5595bbd8-b717-4b83-943a-f608b318bea1",
+      "id": "49c6d33c-499d-4480-bb43-00cfbfb38f7e",
       "name": "Conexión (enlace)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -95,7 +95,7 @@
       "parameters": {
         "jsCode": "\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst canal_id = String(e.canal_id || '').toLowerCase().trim();\nif (!/^[a-z0-9-]{3,60}$/.test(canal_id)) return [{ json: { valido: false, respuesta: 'Formato: conectar <id-del-canal>' } }];\nconst bytes = new Uint8Array(16);\nif (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(bytes); else for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);\nconst nonce = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');\nconst params = { client_id: aj.googleClientId, redirect_uri: aj.baseUrl + '/webhook/youtube-callback', response_type: 'code',\n  access_type: 'offline', prompt: 'consent select_account', include_granted_scopes: 'false', state: canal_id + '.' + nonce,\n  scope: ['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/yt-analytics.readonly'].join(' ') };\n// El entorno de Code de n8n no trae URLSearchParams: se codifica a mano.\nconst q = Object.entries(params).map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');\nreturn [{ json: { valido: true, existe: !!$json.canal_id, canal_id, nonce, estado: 'pendiente',\n  url: 'https://accounts.google.com/o/oauth2/v2/auth?' + q } }];\n"
       },
-      "id": "dffc776e-e997-4497-9372-623c792265f3",
+      "id": "b4f42f5f-a4ab-4792-bea0-9a3d104c14a7",
       "name": "Preparar enlace",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -115,7 +115,7 @@
           },
           "conditions": [
             {
-              "id": "048ac7f4-7781-4cd9-9888-d9f4c3b72ae0",
+              "id": "337ef64b-68db-4306-9295-09520f800235",
               "leftValue": "={{ $json.valido === true }}",
               "rightValue": "",
               "operator": {
@@ -129,7 +129,7 @@
         },
         "options": {}
       },
-      "id": "444ccf9f-34b9-4b15-a23c-6c7b6467daad",
+      "id": "0521a51a-a4e3-4b89-8817-1dababa73792",
       "name": "¿Canal válido?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -149,7 +149,7 @@
           },
           "conditions": [
             {
-              "id": "b0df7742-2f9c-44eb-aade-8602b49bd8d1",
+              "id": "c4c7b4e5-1be6-485f-9f9a-b6f20252e7fa",
               "leftValue": "={{ $json.existe === true }}",
               "rightValue": "",
               "operator": {
@@ -163,7 +163,7 @@
         },
         "options": {}
       },
-      "id": "7772089b-bec8-461d-8621-145bec5ad9ba",
+      "id": "0f8c9b49-1028-4fff-b03c-b9135175eae1",
       "name": "¿Ya existe?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -176,7 +176,7 @@
       "parameters": {
         "jsCode": "return [{ json: { canal_id: $json.canal_id, nonce: $json.nonce, estado: 'pendiente' } }];"
       },
-      "id": "63d82b1f-de84-4af3-838a-9faf5988db5c",
+      "id": "0568cae2-723e-42fd-b3a6-89a4856bcb6b",
       "name": "Fila pendiente",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -214,7 +214,7 @@
         },
         "options": {}
       },
-      "id": "d761e111-6c30-4f7d-9123-b3f89cffe4ea",
+      "id": "c16a9407-d83c-4255-adc4-b7732e9684e4",
       "name": "Guardar pendiente",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -227,7 +227,7 @@
       "parameters": {
         "jsCode": "return [{ json: { canal_id: $json.canal_id, nonce: $json.nonce, estado: 'pendiente' } }];"
       },
-      "id": "f27a6c86-5ba1-4850-a968-372ad97e326e",
+      "id": "5dbaa4d6-ecc5-4ffb-930e-1ed2e1b355f4",
       "name": "Fila nueva",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -255,7 +255,7 @@
         },
         "options": {}
       },
-      "id": "ba3a2fd0-e2b0-42d7-9d78-c86c08da4ffd",
+      "id": "fe2697a3-006f-42f4-bd56-6abff1bae154",
       "name": "Crear pendiente",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -268,7 +268,7 @@
       "parameters": {
         "jsCode": "\nconst p = $('Preparar enlace').first().json;\nreturn [{ json: { ok: true, respuesta: `Para conectar «${p.canal_id}» a YouTube abre este enlace, elige el canal (o su cuenta de marca) y acepta:\\n${p.url}\\n\\nEl enlace sirve una vez. Te aviso aquí cuando quede conectado.` } }];\n"
       },
-      "id": "3435b924-97ca-414d-b31d-18ab2bd4722f",
+      "id": "d87b3488-f236-4f83-a635-caccf4af608c",
       "name": "Respuesta enlace",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -281,7 +281,7 @@
       "parameters": {
         "jsCode": "return [{ json: { ok: false, respuesta: $json.respuesta } }];"
       },
-      "id": "e88c0c1a-dd8a-4fd3-a186-13b1714a6a9d",
+      "id": "d2b42699-2f29-47c5-b11e-dcf3e15b1cb1",
       "name": "Respuesta inválida",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -312,7 +312,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "8c347bfc-c8ee-4484-b1b8-7d20bdb68d66",
+      "id": "715e81f6-2f67-4268-aa07-4e490c83533b",
       "name": "Conexión",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -333,7 +333,7 @@
           },
           "conditions": [
             {
-              "id": "33d98950-e1a3-4c72-a117-a393095c91b5",
+              "id": "1323ec58-a599-42fb-a1b2-d8c9a552e381",
               "leftValue": "={{ $json.estado === 'conectado' && !!$json.refresh_token }}",
               "rightValue": "",
               "operator": {
@@ -347,7 +347,7 @@
         },
         "options": {}
       },
-      "id": "2707730c-9729-42f0-a00b-4baeac44ab3e",
+      "id": "fee31160-426c-411c-b466-ccb5ee00f1fc",
       "name": "¿Conectado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -369,7 +369,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth"
       },
-      "id": "bb7e16e2-f28d-4321-9d4d-626d9062b67b",
+      "id": "70d2aaf3-dd9a-47ce-b707-1a4ccfedc2fd",
       "name": "Renovar token",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -392,7 +392,7 @@
       "parameters": {
         "jsCode": "\nconst r = $json; const c = $('Conexión').first().json;\nif (!r.access_token) return [{ json: { ok: false, error: 'Google no renovó el permiso de «' + c.canal_id + '»' + (r.error ? ' (' + JSON.stringify(r.error).slice(0, 120) + ')' : '') + '. Vuelve a conectarlo: conectar ' + c.canal_id } }];\nreturn [{ json: { ok: true, access_token: r.access_token, canal_id: c.canal_id, canal_youtube: c.canal_youtube, canal_youtube_id: c.canal_youtube_id } }];\n"
       },
-      "id": "4f50928d-adcf-4745-8ee2-2cc07ada1660",
+      "id": "1ea822b1-a155-4e78-9219-fa43a1b0b89b",
       "name": "Token",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -405,7 +405,7 @@
       "parameters": {
         "jsCode": "const id = $('Inicio').first().json.canal_id; return [{ json: { ok: false, error: `El canal «${id}» no está conectado a YouTube. Escribe en Telegram: conectar ${id}` } }];"
       },
-      "id": "e52a84ba-db66-4674-8f77-4c5106789611",
+      "id": "ecbdf1e2-b1f7-4ca6-b2f9-b06d31493ab1",
       "name": "Sin conexión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -425,7 +425,7 @@
           },
           "conditions": [
             {
-              "id": "f0a07d97-c273-4fca-901c-af396173f5d1",
+              "id": "19f16b25-ba0a-4eed-8a11-6aed36e85e59",
               "leftValue": "={{ $('Inicio').first().json.accion === 'estadisticas' && $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -439,7 +439,7 @@
         },
         "options": {}
       },
-      "id": "5975e736-a6cf-4ac1-bfa8-11615aec9c21",
+      "id": "2d7a4093-092c-4c5b-b1c3-9a9e4d9e2ddb",
       "name": "¿Pide estadísticas?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -465,7 +465,7 @@
           ]
         }
       },
-      "id": "7eb80796-8849-426f-8f64-e4cf19ac359e",
+      "id": "426a5f51-ba69-43b8-8d9a-26ba04c4ac6a",
       "name": "Canal en YouTube",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -482,7 +482,7 @@
       "parameters": {
         "jsCode": "\nconst t = $('Token').first().json; const it = ($json.items || [])[0];\nif (!it) return [{ json: { ok: false, canal_id: t.canal_id, error: 'YouTube no devolvió el canal' } }];\nconst s = it.statistics || {};\nreturn [{ json: { ok: true, canal_id: t.canal_id, canal_youtube: it.snippet?.title || t.canal_youtube,\n  suscriptores: Number(s.subscriberCount || 0), vistas: Number(s.viewCount || 0), videos: Number(s.videoCount || 0), ocultos: !!s.hiddenSubscriberCount } }];\n"
       },
-      "id": "39491d90-3ea9-40da-9440-361387feed78",
+      "id": "58cd7e9e-100f-47ff-b3d5-c4a42257ce73",
       "name": "Estadísticas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -495,7 +495,7 @@
       "parameters": {
         "jsCode": "return [{ json: $json }];"
       },
-      "id": "e911d9b2-2f9c-4420-9432-4d9fa8f422a9",
+      "id": "4aa16a7e-c2d7-4eed-8b9c-0f06dec5616c",
       "name": "Devolver token",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -511,7 +511,7 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "95cde5bc-0b81-4bcd-9c7d-d96c07b33f7e",
+      "id": "d2452854-0ac1-4bde-a4ac-292d0aecddaa",
       "name": "Vuelta de Google",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -541,7 +541,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "6979d110-01c5-43f3-ac91-0d381c1fb456",
+      "id": "7e2fa8b8-eafa-41a8-8fbe-b161ed461d79",
       "name": "Ajustes (vuelta)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -554,7 +554,7 @@
       "parameters": {
         "jsCode": "\nconst q = $('Vuelta de Google').first().json.query || {};\nconst [canal_id, nonce] = String(q.state || '').split('.');\nreturn [{ json: { canal_id: String(canal_id || '').toLowerCase(), nonce: nonce || '', code: q.code || '', error: q.error || '' } }];\n"
       },
-      "id": "00f0423c-f4e1-40de-8e36-55f53216314f",
+      "id": "3f15b1fe-92cf-453f-bdec-2c513e2ee4e8",
       "name": "Leer vuelta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -585,7 +585,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "941b2447-b9ab-4d9f-9144-a14c0e6723cb",
+      "id": "dea8d00f-1d79-4048-8a66-bd8e3902e3fe",
       "name": "Conexión pendiente",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -599,7 +599,7 @@
       "parameters": {
         "jsCode": "\nconst v = $('Leer vuelta').first().json; const fila = $json;\nconst motivo = v.error ? 'Google respondió: ' + v.error\n  : !fila.canal_id ? 'no reconozco el canal'\n  : fila.estado !== 'pendiente' || !fila.nonce || fila.nonce !== v.nonce ? 'el enlace ya se usó o caducó; pide otro con «conectar ' + v.canal_id + '»'\n  : !v.code ? 'falta el código de Google' : '';\nreturn [{ json: { ok: !motivo, motivo, canal_id: v.canal_id, code: v.code } }];\n"
       },
-      "id": "c3c5e1b8-e843-4e80-a46b-e0aca004d5c3",
+      "id": "3074d4f1-14f5-43af-9538-47cb6e591389",
       "name": "Validar vuelta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -619,7 +619,7 @@
           },
           "conditions": [
             {
-              "id": "a0eb2eb0-9de3-4b1d-a6f4-ba55f6de14ac",
+              "id": "2034a639-1139-42ea-ab72-92cc42f75587",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -633,7 +633,7 @@
         },
         "options": {}
       },
-      "id": "b7bc8edc-8d07-4325-a2d7-1ac680894640",
+      "id": "d5f4f0ca-1a01-4afa-93f3-0bf269bea214",
       "name": "¿Vuelta válida?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -655,7 +655,7 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth"
       },
-      "id": "aadfdeb5-bfd1-4367-8a13-9846d8e9978c",
+      "id": "9bd3709c-e610-4395-a573-09bc9078541f",
       "name": "Canjear código",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -688,7 +688,7 @@
           ]
         }
       },
-      "id": "a874327d-716d-4ea3-af5c-892ad65e2a67",
+      "id": "94b8cee8-d0cd-4d4c-89f4-4db7f1298128",
       "name": "Qué canal es",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -705,7 +705,7 @@
       "parameters": {
         "jsCode": "\nconst t = $('Canjear código').first().json; const it = ($json.items || [])[0];\nif (!t.refresh_token || !it) return [{ json: { ok: false, motivo: !t.refresh_token ? 'Google no entregó un permiso duradero (' + JSON.stringify(t.error || 'sin refresh_token').slice(0, 120) + ')' : 'esa cuenta no tiene canal de YouTube' } }];\nreturn [{ json: { ok: true, estado: 'conectado', nonce: '', refresh_token: t.refresh_token, canal_youtube: it.snippet?.title || '', canal_youtube_id: it.id, conectado_en: new Date().toISOString() } }];\n"
       },
-      "id": "66371599-20f6-4870-ab11-2ae94d2215aa",
+      "id": "420303a8-41a9-49bf-8374-83a5521c4931",
       "name": "Fila conectada",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -725,7 +725,7 @@
           },
           "conditions": [
             {
-              "id": "0e212871-2128-4599-8346-71cc00b6d619",
+              "id": "11194b2e-71f1-4559-b4f7-7a0aac587aaa",
               "leftValue": "={{ $json.ok === true }}",
               "rightValue": "",
               "operator": {
@@ -739,7 +739,7 @@
         },
         "options": {}
       },
-      "id": "85d60be6-8136-4de2-b38e-5da7aef1a4f6",
+      "id": "da293210-5951-47fb-9d23-ea7be5780841",
       "name": "¿Conexión lista?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -752,7 +752,7 @@
       "parameters": {
         "jsCode": "const { ok, ...fila } = $json; return [{ json: fila }];"
       },
-      "id": "3650f323-20ea-4bd7-a0d6-e262bf954ba6",
+      "id": "32615e82-a818-4faa-af35-22dc2791bd1e",
       "name": "Datos de conexión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -790,7 +790,7 @@
         },
         "options": {}
       },
-      "id": "8123d00b-5640-4fdd-bc8e-741d0fba6f47",
+      "id": "78ad8ef8-e817-4883-9ed9-918e8560ee9e",
       "name": "Guardar conexión",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -810,7 +810,7 @@
           "appendAttribution": false
         }
       },
-      "id": "83eba099-6242-486a-aa8c-5e14cb346cd1",
+      "id": "fdeb6ac2-35f8-40b1-bcf1-66468d470a8e",
       "name": "Aviso: conectado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -841,7 +841,7 @@
           }
         }
       },
-      "id": "112a848b-5aa2-4548-8c96-66b62520cb4e",
+      "id": "38fa1133-4ef3-49dc-95df-a567657f77c5",
       "name": "Página: listo",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
@@ -854,7 +854,7 @@
       "parameters": {
         "jsCode": "return [{ json: { motivo: $json.motivo || 'error desconocido' } }];"
       },
-      "id": "bd4457d4-1bc6-46df-93e6-27dddb3821da",
+      "id": "43df35a1-be0f-4950-bd72-241a268545a4",
       "name": "Motivo del fallo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -874,7 +874,7 @@
           "appendAttribution": false
         }
       },
-      "id": "0333717d-9cfb-4f11-9a58-949bd7f84a2d",
+      "id": "600be1f8-25da-4dd8-8044-f6f34417f2df",
       "name": "Aviso: no conectado",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -905,7 +905,7 @@
           }
         }
       },
-      "id": "cb231dad-6573-4f07-81f9-5f512108cbf9",
+      "id": "178601df-9861-452c-b213-71e76faff50a",
       "name": "Página: error",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
