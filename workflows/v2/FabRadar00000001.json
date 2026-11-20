@@ -504,6 +504,19 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Analista de tendencias registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "8979438d-c248-5418-9772-8e830b14212e",
+      "name": "Cooper · identificar Cooper · costo Analista de tendencias registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
     }
   ],
   "connections": {
@@ -688,7 +701,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Analista de tendencias registrar",
+            "node": "Cooper · identificar Cooper · costo Analista de tendencias registrar",
             "type": "main",
             "index": 0
           }
@@ -711,6 +724,17 @@
         [
           {
             "node": "Radar del canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Analista de tendencias registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Analista de tendencias registrar",
             "type": "main",
             "index": 0
           }

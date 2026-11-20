@@ -227,7 +227,9 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
     page.getByRole("heading", { name: "Ana presentadora" }),
   ).toBeVisible();
   await expect(page.getByText("Solo tú", { exact: true })).toBeVisible();
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3107" });
+  const other = await browser.newContext({
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+  });
   await login(other.request, "luis@example.test");
   expect(
     (await (await other.request.get("/api/estado")).json()).assets,
@@ -301,7 +303,9 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   await expect(
     page.getByText("invitado@example.test", { exact: true }),
   ).toHaveCount(0);
-  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3107" });
+  const other = await browser.newContext({
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+  });
   await login(other.request, "luis@example.test");
   const row = page.getByRole("row").filter({ hasText: "luis@example.test" });
   await row.getByRole("button", { name: "Desactivar" }).click();

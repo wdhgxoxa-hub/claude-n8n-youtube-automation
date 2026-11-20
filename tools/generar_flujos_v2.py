@@ -3235,7 +3235,7 @@ PASOS_COSTO = [
     (PROD,'Generar imagen','imágenes','OpenAI',"aj.costoImagenUsd"),
     (PROD,'Revisar plano','revisión visual','OpenAI',"aj.costoRevisionUsd"),
     (PROD,'Revisar archivo','revisión de archivo','OpenAI',"aj.costoRevisionUsd"),
-    (PROD,'Animar (Gemini Omni)','clips','Gemini Omni',"Number($('Un ítem por plano').first().json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd"),
+    (PROD,'Animar (Gemini Omni)','clips','Gemini Omni',"Number($('Un ítem por plano').itemMatching(k).json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd"),
     (PROD,'Renderizar','montaje','Creatomate (créditos)','0'),
     (SONIDO,'Voz (Gemini TTS)','voz','Gemini TTS','aj.costoVozUsdPorPlano'),
     (SONIDO,'Pedir descarga','música','Epidemic Sound (suscripción)','0'),
@@ -3263,6 +3263,15 @@ for wf, origen, concepto, servicio, usd in PASOS_COSTO:
 # Upsert por paso, durable frente al reintento de la escritura del mismo gasto.
 n = next(n for n in COSTO_COOPER['nodes'] if n['name']=='Guardar costo atribuido')
 n['parameters'].update({'operation':'upsert','matchType':'allConditions','filters':{'conditions':[{'keyName':'paso_id','condition':'eq','keyValue':'={{ $json.paso_id }}'}]}})
+
+# También las filas heredadas de verificación/crítico reciben el ID del paso emisor.
+for wf in [ORQ, PROD, REFS, RADAR, DERIV, SONIDO, CLAUDE]:
+    f = reabrir(wf)
+    for n in list(f.nodes):
+        if n['type'].endswith('.executeWorkflow') and n['parameters']['workflowId']['value'] == W['costo']:
+            nombre = 'Cooper · identificar ' + n['name']
+            code(f,nombre,"return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));")
+            antes(f,n['name'],nombre,nombre)
 
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
 TIEMPO = {'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,

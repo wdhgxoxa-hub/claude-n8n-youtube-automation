@@ -831,6 +831,45 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Imagen de miniatura registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "12f3a8a7-c891-598b-9dce-8c6f83d6c46b",
+      "name": "Cooper · identificar Cooper · costo Imagen de miniatura registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Renderizar miniatura registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "e9cd2bf2-0503-5c74-a2f5-1102cbdc840a",
+      "name": "Cooper · identificar Cooper · costo Renderizar miniatura registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Renderizar corte registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "b27c5348-6d70-5fc9-b84a-b815366a4d4f",
+      "name": "Cooper · identificar Cooper · costo Renderizar corte registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -1159,7 +1198,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Imagen de miniatura registrar",
+            "node": "Cooper · identificar Cooper · costo Imagen de miniatura registrar",
             "type": "main",
             "index": 0
           }
@@ -1192,7 +1231,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Renderizar miniatura registrar",
+            "node": "Cooper · identificar Cooper · costo Renderizar miniatura registrar",
             "type": "main",
             "index": 0
           }
@@ -1225,7 +1264,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Renderizar corte registrar",
+            "node": "Cooper · identificar Cooper · costo Renderizar corte registrar",
             "type": "main",
             "index": 0
           }
@@ -1248,6 +1287,39 @@
         [
           {
             "node": "Esperar cortes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Imagen de miniatura registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Imagen de miniatura registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Renderizar miniatura registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar miniatura registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Renderizar corte registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar corte registrar",
             "type": "main",
             "index": 0
           }

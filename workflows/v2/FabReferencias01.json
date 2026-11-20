@@ -873,6 +873,32 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Generar principal registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "4838ca64-d43d-525d-9120-eff6cd5a46bc",
+      "name": "Cooper · identificar Cooper · costo Generar principal registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Generar vista registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "17307380-8388-557c-8e1e-dda7d0f0b9fb",
+      "name": "Cooper · identificar Cooper · costo Generar vista registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -1174,7 +1200,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Generar principal registrar",
+            "node": "Cooper · identificar Cooper · costo Generar principal registrar",
             "type": "main",
             "index": 0
           }
@@ -1207,7 +1233,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Generar vista registrar",
+            "node": "Cooper · identificar Cooper · costo Generar vista registrar",
             "type": "main",
             "index": 0
           }
@@ -1230,6 +1256,28 @@
         [
           {
             "node": "Extraer vista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Generar principal registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar principal registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Generar vista registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar vista registrar",
             "type": "main",
             "index": 0
           }

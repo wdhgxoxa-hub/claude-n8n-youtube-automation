@@ -934,6 +934,45 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Voz (Gemini TTS) registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "e73f787a-eacb-5588-9494-30e159ec37a4",
+      "name": "Cooper · identificar Cooper · costo Voz (Gemini TTS) registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Pedir descarga registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "734a0b13-e02f-5036-af9a-9c2cd9b1b275",
+      "name": "Cooper · identificar Cooper · costo Pedir descarga registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Pedir efecto registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "a5ba4c46-3edf-5092-9782-357587a67375",
+      "name": "Cooper · identificar Cooper · costo Pedir efecto registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -1248,7 +1287,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Voz (Gemini TTS) registrar",
+            "node": "Cooper · identificar Cooper · costo Voz (Gemini TTS) registrar",
             "type": "main",
             "index": 0
           }
@@ -1281,7 +1320,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Pedir descarga registrar",
+            "node": "Cooper · identificar Cooper · costo Pedir descarga registrar",
             "type": "main",
             "index": 0
           }
@@ -1314,7 +1353,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Pedir efecto registrar",
+            "node": "Cooper · identificar Cooper · costo Pedir efecto registrar",
             "type": "main",
             "index": 0
           }
@@ -1337,6 +1376,39 @@
         [
           {
             "node": "Efecto listo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Voz (Gemini TTS) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Voz (Gemini TTS) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Pedir descarga registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Pedir descarga registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Pedir efecto registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Pedir efecto registrar",
             "type": "main",
             "index": 0
           }

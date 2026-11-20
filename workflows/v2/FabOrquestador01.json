@@ -5746,6 +5746,45 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Guardar costo (verificación)\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "f216b1b5-1016-58c9-ac18-b7a313eeea50",
+      "name": "Cooper · identificar Guardar costo (verificación)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Guardar costo (crítico)\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "b791044a-89d9-59c2-98fc-933c4d757cea",
+      "name": "Cooper · identificar Guardar costo (crítico)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Crítico de nichos registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "4d5836f3-6775-59a7-b366-a5bd3169cdc5",
+      "name": "Cooper · identificar Cooper · costo Crítico de nichos registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -6395,7 +6434,7 @@
       "main": [
         [
           {
-            "node": "Guardar costo (verificación)",
+            "node": "Cooper · identificar Guardar costo (verificación)",
             "type": "main",
             "index": 0
           }
@@ -6433,7 +6472,7 @@
       "main": [
         [
           {
-            "node": "Guardar costo (crítico)",
+            "node": "Cooper · identificar Guardar costo (crítico)",
             "type": "main",
             "index": 0
           }
@@ -8149,7 +8188,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Crítico de nichos registrar",
+            "node": "Cooper · identificar Cooper · costo Crítico de nichos registrar",
             "type": "main",
             "index": 0
           }
@@ -8172,6 +8211,39 @@
         [
           {
             "node": "Mensaje de canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Guardar costo (verificación)": {
+      "main": [
+        [
+          {
+            "node": "Guardar costo (verificación)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Guardar costo (crítico)": {
+      "main": [
+        [
+          {
+            "node": "Guardar costo (crítico)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Crítico de nichos registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Crítico de nichos registrar",
             "type": "main",
             "index": 0
           }

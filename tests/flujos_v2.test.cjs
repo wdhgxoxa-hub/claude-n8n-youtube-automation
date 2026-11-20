@@ -1303,3 +1303,12 @@ test('Cooper: todos los nodos Code compilan y todo el grafo apunta a nodos exist
     }
   }
 });
+test('Cooper: cada clip se cobra con su duración y cada gasto conserva el ID emisor', () => {
+  const p = wf('FabProduccion001');
+  const out = run(codeOf(p,'Cooper · costo Animar (Gemini Omni)'), { nodes: { Inicio:{video_id:'v-ana'}, 'Leer ajustes':aj },
+    all: { $input:[{},{}], 'Un ítem por plano':[{plano:{duracion_clip_s:4}},{plano:{duracion_clip_s:9}}] } });
+  assert.strictEqual(out[0].json.usd,4*aj.costoClipSegUsd);assert.strictEqual(out[1].json.usd,9*aj.costoClipSegUsd);
+  const stamp=codeOf(ORQ,'Cooper · identificar Guardar costo (crítico)');
+  const once=run(stamp,{json:{usd:0.02}})[0].json;
+  assert.strictEqual(run(stamp,{json:once})[0].json.paso_id,once.paso_id);
+});

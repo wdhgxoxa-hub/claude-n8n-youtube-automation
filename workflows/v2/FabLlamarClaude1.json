@@ -334,6 +334,19 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Respuesta registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "293fdc3f-45ff-57df-a834-b3a0e7e64767",
+      "name": "Cooper · identificar Cooper · costo Respuesta registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
     }
   ],
   "connections": {
@@ -454,7 +467,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Respuesta registrar",
+            "node": "Cooper · identificar Cooper · costo Respuesta registrar",
             "type": "main",
             "index": 0
           }
@@ -486,6 +499,17 @@
     "Cooper · costo Respuesta seguir": {
       "main": [
         []
+      ]
+    },
+    "Cooper · identificar Cooper · costo Respuesta registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Respuesta registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },

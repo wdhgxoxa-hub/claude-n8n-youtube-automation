@@ -2702,7 +2702,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"clips\", servicio:\"Gemini Omni\", usd:Number($('Un ítem por plano').first().json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd, estimado:true, paso_id:String($execution.id)+':'+\"Animar (Gemini Omni)\"+':'+$runIndex+':'+k }}));"
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"clips\", servicio:\"Gemini Omni\", usd:Number($('Un ítem por plano').itemMatching(k).json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd, estimado:true, paso_id:String($execution.id)+':'+\"Animar (Gemini Omni)\"+':'+$runIndex+':'+k }}));"
       },
       "id": "865533d7-dcab-5da6-baa8-c85914341737",
       "name": "Cooper · costo Animar (Gemini Omni)",
@@ -2807,6 +2807,71 @@
       "typeVersion": 2,
       "position": [
         660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Generar imagen registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "c282549a-496e-53dd-bb53-d1ba9135db15",
+      "name": "Cooper · identificar Cooper · costo Generar imagen registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Revisar plano registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "c60c6988-f7a6-57ec-9575-d16c577de48d",
+      "name": "Cooper · identificar Cooper · costo Revisar plano registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Revisar archivo registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "6e59a5c2-2785-5dd3-8754-bb4532d223c7",
+      "name": "Cooper · identificar Cooper · costo Revisar archivo registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Animar (Gemini Omni) registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "458454e9-a0fe-573d-8c73-620cc0b3fa58",
+      "name": "Cooper · identificar Cooper · costo Animar (Gemini Omni) registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Renderizar registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "fab85bc6-e678-54df-8caa-147f2d8f4a9b",
+      "name": "Cooper · identificar Cooper · costo Renderizar registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
         0
       ]
     }
@@ -4002,7 +4067,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Generar imagen registrar",
+            "node": "Cooper · identificar Cooper · costo Generar imagen registrar",
             "type": "main",
             "index": 0
           }
@@ -4035,7 +4100,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Revisar plano registrar",
+            "node": "Cooper · identificar Cooper · costo Revisar plano registrar",
             "type": "main",
             "index": 0
           }
@@ -4068,7 +4133,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Revisar archivo registrar",
+            "node": "Cooper · identificar Cooper · costo Revisar archivo registrar",
             "type": "main",
             "index": 0
           }
@@ -4101,7 +4166,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Animar (Gemini Omni) registrar",
+            "node": "Cooper · identificar Cooper · costo Animar (Gemini Omni) registrar",
             "type": "main",
             "index": 0
           }
@@ -4134,7 +4199,7 @@
       "main": [
         [
           {
-            "node": "Cooper · costo Renderizar registrar",
+            "node": "Cooper · identificar Cooper · costo Renderizar registrar",
             "type": "main",
             "index": 0
           }
@@ -4157,6 +4222,61 @@
         [
           {
             "node": "Esperar render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Generar imagen registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar imagen registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Revisar plano registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar plano registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Revisar archivo registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar archivo registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Animar (Gemini Omni) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Animar (Gemini Omni) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Renderizar registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar registrar",
             "type": "main",
             "index": 0
           }
