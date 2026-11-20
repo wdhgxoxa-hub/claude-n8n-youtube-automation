@@ -199,109 +199,111 @@ export function Espacio({
             id="navegacion"
             className={`sidebar ${menu ? "is-open" : ""}`}
           >
-            <Link href="/" className="brand" aria-label="Cooper, inicio">
-              <Logo />
-              <span>
-                cooper<span className="brand-dot">.</span>
-              </span>
-            </Link>
-            <button
-              className="icon-button drawer-close"
-              aria-label="Cerrar navegación"
-              onClick={() => setMenu(false)}
-            >
-              <X size={20} />
-            </button>
-            <div className="workspace-label">Tu espacio de creación</div>
-            <nav aria-label="Principal">
-              {nav.map(({ path: href, label, icon: Icon }) => (
-                <Link
-                  onClick={() => setMenu(false)}
-                  key={href}
-                  href={href}
-                  aria-current={
-                    (href === "/" ? path === "/" : path.startsWith(href))
-                      ? "page"
-                      : undefined
-                  }
-                >
-                  <Icon size={19} />
-                  <span>{label}</span>
-                  {href === "/videos" && pending > 0 && (
-                    <span className="nav-count">{pending}</span>
-                  )}
-                </Link>
-              ))}
-            </nav>
-            <div className="sidebar-note">
-              <p>En tu estudio</p>
-              <Link href="/videos">
-                <strong>
-                  {data.videos.filter((v) => v.stage < 11).length}
-                </strong>{" "}
-                videos en producción
-              </Link>
-              <Link href="/videos">
-                <strong>{pending}</strong> por aprobar
-              </Link>
-              <div className="sidebar-summary-track" aria-hidden="true">
-                {Array.from({ length: 12 }, (_, i) => (
-                  <i
-                    key={i}
-                    className={
-                      data.videos.some((v) => v.stage === i) ? "occupied" : ""
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-            <nav className="bottom-nav" aria-label="Cuenta">
-              {data.user.role === "admin" && (
-                <Link
-                  onClick={() => setMenu(false)}
-                  href="/admin"
-                  aria-current={path === "/admin" ? "page" : undefined}
-                >
-                  <ShieldCheck size={18} />
-                  Administración
-                </Link>
-              )}
-              <Link
-                onClick={() => setMenu(false)}
-                href="/perfil"
-                aria-current={path === "/perfil" ? "page" : undefined}
-              >
-                <Settings2 size={18} />
-                Mi perfil
-              </Link>
-              <form action={logout}>
-                <button className="nav-button">
-                  <LogOut size={18} />
-                  Cerrar sesión
-                </button>
-              </form>
-            </nav>
-            <div className="identity">
-              {data.user.image ? (
-                <Image
-                  unoptimized
-                  src={data.user.image}
-                  width={36}
-                  height={36}
-                  alt=""
-                />
-              ) : (
-                <span className="initial">
-                  {data.user.name.slice(0, 1).toUpperCase()}
+            <div className="sidebar-content">
+              <Link href="/" className="brand" aria-label="Cooper, inicio">
+                <Logo />
+                <span>
+                  cooper<span className="brand-dot">.</span>
                 </span>
-              )}
-              <div>
-                <strong>{data.user.name}</strong>
-                <small>
-                  {data.user.role === "admin"
-                    ? "Administrador"
-                    : "Equipo Cooper"}
-                </small>
+              </Link>
+              <button
+                className="icon-button drawer-close"
+                aria-label="Cerrar navegación"
+                onClick={() => setMenu(false)}
+              >
+                <X size={20} />
+              </button>
+              <div className="workspace-label">Tu espacio de creación</div>
+              <nav aria-label="Principal">
+                {nav.map(({ path: href, label, icon: Icon }) => (
+                  <Link
+                    onClick={() => setMenu(false)}
+                    key={href}
+                    href={href}
+                    aria-current={
+                      (href === "/" ? path === "/" : path.startsWith(href))
+                        ? "page"
+                        : undefined
+                    }
+                  >
+                    <Icon size={19} />
+                    <span>{label}</span>
+                    {href === "/videos" && pending > 0 && (
+                      <span className="nav-count">{pending}</span>
+                    )}
+                  </Link>
+                ))}
+              </nav>
+              <div className="sidebar-note">
+                <p>En tu estudio</p>
+                <Link href="/videos">
+                  <strong>
+                    {data.videos.filter((v) => v.stage < 11).length}
+                  </strong>{" "}
+                  videos en producción
+                </Link>
+                <Link href="/videos">
+                  <strong>{pending}</strong> por aprobar
+                </Link>
+                <div className="sidebar-summary-track" aria-hidden="true">
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <i
+                      key={i}
+                      className={
+                        data.videos.some((v) => v.stage === i) ? "occupied" : ""
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+              <nav className="bottom-nav" aria-label="Cuenta">
+                {data.user.role === "admin" && (
+                  <Link
+                    onClick={() => setMenu(false)}
+                    href="/admin"
+                    aria-current={path === "/admin" ? "page" : undefined}
+                  >
+                    <ShieldCheck size={18} />
+                    Administración
+                  </Link>
+                )}
+                <Link
+                  onClick={() => setMenu(false)}
+                  href="/perfil"
+                  aria-current={path === "/perfil" ? "page" : undefined}
+                >
+                  <Settings2 size={18} />
+                  Mi perfil
+                </Link>
+                <form action={logout}>
+                  <button className="nav-button">
+                    <LogOut size={18} />
+                    Cerrar sesión
+                  </button>
+                </form>
+              </nav>
+              <div className="identity">
+                {data.user.image ? (
+                  <Image
+                    unoptimized
+                    src={data.user.image}
+                    width={36}
+                    height={36}
+                    alt=""
+                  />
+                ) : (
+                  <span className="initial">
+                    {data.user.name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+                <div>
+                  <strong>{data.user.name}</strong>
+                  <small>
+                    {data.user.role === "admin"
+                      ? "Administrador"
+                      : "Equipo Cooper"}
+                  </small>
+                </div>
               </div>
             </div>
           </aside>

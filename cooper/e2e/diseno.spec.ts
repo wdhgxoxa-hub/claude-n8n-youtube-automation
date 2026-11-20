@@ -316,3 +316,78 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
   }
   expect(errors).toEqual([]);
 });
+
+test("la barra lateral cubre páginas largas y permite navegar con poca altura", async ({
+  page,
+}) => {
+  test.setTimeout(120000);
+  const state = await (await page.request.get("/api/estado")).json();
+  const dir = ".cache/capturas-final";
+  mkdirSync(dir, { recursive: true });
+  for (const width of [360, 390, 768, 1024, 1440, 1920]) {
+    for (const [name, path] of [
+      ["inicio", "/"],
+      ["detalle", `/videos/${state.videos[0].id}`],
+    ]) {
+      await page.setViewportSize({ width, height: 480 });
+      await ready(page, path);
+      if (width < 768) {
+        await page.getByRole("button", { name: "Abrir navegación" }).click();
+        const rail = await page.locator(".sidebar").boundingBox();
+        expect(rail?.y).toBe(0);
+        expect(rail?.height).toBe(480);
+        await page
+          .locator(".sidebar")
+          .getByRole("link", { name: "Mi perfil" })
+          .scrollIntoViewIfNeeded();
+        await expect(
+          page.locator(".sidebar").getByRole("link", { name: "Mi perfil" }),
+        ).toBeInViewport();
+      } else {
+        const bounds = await page.evaluate(() => {
+          const rail = document
+            .querySelector(".sidebar")!
+            .getBoundingClientRect();
+          const area = document
+            .querySelector(".workspace")!
+            .getBoundingClientRect();
+          return { rail: rail.bottom, area: area.bottom, height: area.height };
+        });
+        expect(bounds.height).toBeGreaterThan(480);
+        expect(bounds.rail).toBeCloseTo(bounds.area, 0);
+        await page.evaluate(() =>
+          window.scrollTo(0, document.body.scrollHeight),
+        );
+        expect(
+          await page.evaluate(() => {
+            const r = document
+              .querySelector(".sidebar")!
+              .getBoundingClientRect();
+            return (
+              r.bottom >=
+              Math.min(
+                innerHeight,
+                document.documentElement.getBoundingClientRect().bottom,
+              ) -
+                1
+            );
+          }),
+        ).toBe(true);
+      }
+      await overflow(page);
+      await page.screenshot({
+        path: `${dir}/barra-${name}-${width}-final.png`,
+      });
+      if (width >= 768) await page.evaluate(() => window.scrollTo(0, 0));
+      else
+        await page.locator(".sidebar-content").evaluate((el) => {
+          el.scrollTop = 0;
+        });
+      await page.screenshot({
+        path: `${dir}/barra-${name}-${width}.png`,
+        fullPage: width >= 768,
+      });
+      if (width < 768) await page.keyboard.press("Escape");
+    }
+  }
+});

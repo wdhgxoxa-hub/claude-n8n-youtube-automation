@@ -301,11 +301,17 @@ details[open] summary {
   min-height: 100dvh;
 }
 .sidebar {
+  background: var(--rail);
+  border-right: 1px solid var(--line);
+  min-height: 100dvh;
+  align-self: stretch;
+}
+.sidebar-content {
   position: sticky;
   top: 0;
   height: 100dvh;
-  background: var(--rail);
-  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   padding: 32px 16px 0;
@@ -1873,7 +1879,7 @@ main:focus {
   .workspace {
     grid-template-columns: 192px minmax(0, 1fr);
   }
-  .sidebar {
+  .sidebar-content {
     padding: 24px 12px 0;
   }
   .brand {
@@ -2033,6 +2039,8 @@ main:focus {
   }
   .sidebar {
     position: fixed;
+    top: 0;
+    height: 100dvh;
     z-index: 40;
     width: 240px;
     transform: translateX(-100%);
