@@ -19,8 +19,10 @@ export function Admin({ initial }: { initial: Administracion }) {
     try {
       await api(path, value, method);
       setData(await api<Administracion>("admin", undefined, "GET"));
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     } finally {
       setBusy(false);
     }
@@ -28,10 +30,10 @@ export function Admin({ initial }: { initial: Administracion }) {
   async function invite(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    await mutate("admin/permitidos", {
+    const saved = await mutate("admin/permitidos", {
       email: new FormData(form).get("email"),
     });
-    form.reset();
+    if (saved) form.reset();
   }
   const total = data.users.reduce((a, u) => a + u[period], 0);
   return (
