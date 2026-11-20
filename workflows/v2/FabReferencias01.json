@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "b7270c94-6fc9-4f3c-8982-1290aad572ca",
+      "id": "6069f5b2-fca0-4692-91f4-1051748e9307",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "6f573058-a19f-4a77-a9bc-f6d00569a884",
+      "id": "a11892c0-2719-4cdf-bd1b-455ad448c323",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -66,7 +66,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "b5ad096e-288b-4bde-8893-62b0b3113e79",
+      "id": "f21d6be4-8905-4807-a51d-779b8d8be1e6",
       "name": "Canal",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -98,7 +98,7 @@
         "returnAll": false,
         "limit": 1
       },
-      "id": "b3fad265-4c8e-429f-86f3-97fc5f989740",
+      "id": "c1db66ad-3638-429b-890f-fe15ed4e6067",
       "name": "Biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -112,7 +112,7 @@
       "parameters": {
         "jsCode": "\n// Pasada 1: una imagen principal por personaje (frente) y por escenario (plano general), con el estilo del canal.\nconst aj = $('Leer ajustes').first().json; const b = (JSON.parse($json.resultado || '{}').resultado) || {};\nconst ev = b.estilo_visual || {};\nconst estilo = [ev.descripcion, ev.luz, ev.lente, ev.textura, (ev.paleta_hex || []).length ? 'paleta ' + ev.paleta_hex.join(' ') : ''].filter(Boolean).join('. ');\nconst personajes = (b.personajes || []).filter(p => p.id && !(p.referencias_urls || []).length);\nconst escenarios = (b.escenarios || []).filter(p => p.id && !(p.referencias_urls || []).length);\nconst pedidos = [\n  ...personajes.map(p => ({ id: p.id, clase: 'personaje', vista: 'frente', prompt: `Retrato de referencia de ${p.nombre || p.id}: ${p.descripcion || ''}. De frente, plano medio, fondo neutro liso. Estilo: ${estilo}. Sin texto.` })),\n  ...escenarios.map(p => ({ id: p.id, clase: 'escenario', vista: 'general', prompt: `Imagen de referencia del escenario ${p.nombre || p.id}: ${p.descripcion || ''}. Plano general, sin personas. Estilo: ${estilo}. Sin texto.` })),\n].slice(0, 12);\nconst costo = Math.round((pedidos.length + personajes.length * 2) * aj.costoImagenUsd * 100) / 100;\nif (!aj.allowReferencias || !pedidos.length) return [{ json: { nada: true, pendientes: pedidos.length, costo } }];\nreturn pedidos.map(p => ({ json: { ...p, costo } }));\n"
       },
-      "id": "a31d4048-8038-40b2-ae50-9fb523309a1a",
+      "id": "40c5c63a-a48d-438a-b71a-37424a36ec07",
       "name": "Pedidos principales",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -132,7 +132,7 @@
           },
           "conditions": [
             {
-              "id": "ea94a0c0-bee5-47eb-8088-02666f03c36f",
+              "id": "e35f94d6-8dd8-4c8f-ac80-65b63dcf9554",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -146,7 +146,7 @@
         },
         "options": {}
       },
-      "id": "e0857c12-fb02-4c40-92de-8b40bc7e9f31",
+      "id": "c0761ef8-3ce0-452e-981d-538f451256f4",
       "name": "¿Generar referencias?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -174,7 +174,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1024x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...($json.referencia ? [{ type: 'input_image', image_url: $json.referencia }] : [])] }] } }}"
       },
-      "id": "4a75b915-eef5-4c91-90a0-0511382247c5",
+      "id": "8d6de5a3-e9cd-45a3-914d-ce0eae29a7c3",
       "name": "Generar principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -197,7 +197,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst p = $('Pedidos principales').item.json;\nif (!out?.result) throw new Error('Sin imagen de referencia para ' + p.id);\nreturn { json: p, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: p.id + '-' + p.vista + '.png' } } };\n"
       },
-      "id": "35f9f043-6edd-4b8d-ba37-a790b9e2e5fa",
+      "id": "f7f3bd6b-c649-4ad6-88b5-9ce3cb0dfba4",
       "name": "Extraer principal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -234,7 +234,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "imagen"
       },
-      "id": "688b4d2d-8af9-4d5f-a7d3-7a068119b718",
+      "id": "d239eba9-d4f6-47e9-9862-fd6c3e9c1ca3",
       "name": "Subir principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -284,7 +284,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: 'ref-' + $('Inicio').first().json.canal_id + '-' + $('Extraer principal').item.json.id + '-' + $('Extraer principal').item.json.vista + '.png' } }}"
       },
-      "id": "fd1f99cf-17ee-4692-8359-648993d6b6ed",
+      "id": "40db0bd1-05ec-4364-a0df-df8fbb0b746b",
       "name": "Nombrar principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -321,7 +321,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "bb931545-991b-4602-bce4-1652b418a63c",
+      "id": "a6ba7b41-c54d-4020-a9b1-3f106a86987c",
       "name": "Compartir principal",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -344,7 +344,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const p = $('Extraer principal').item.json; return { json: { id: p.id, clase: p.clase, vista: p.vista, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir principal').item.json.id } };"
       },
-      "id": "56dd84ee-0b82-48cd-b93d-9e7ad7eabb75",
+      "id": "79c8cb30-dba8-488d-9668-7760e2eb63a2",
       "name": "URL principal",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -359,7 +359,7 @@
         "destinationFieldName": "refs",
         "options": {}
       },
-      "id": "bfbe5b33-30da-40a9-8546-120020182c92",
+      "id": "a92fc333-44c0-4066-88e7-74eb41c6e83c",
       "name": "Juntar principal",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -372,7 +372,7 @@
       "parameters": {
         "jsCode": "\n// Pasada 2: perfil y cuerpo entero de cada personaje, usando su imagen principal como referencia (misma cara y vestuario).\nconst principales = $('Juntar principal').first().json.refs.filter(r => r.clase === 'personaje');\nconst pedidos = principales.flatMap(r => [\n  { id: r.id, clase: 'personaje', vista: 'perfil', referencia: r.url, prompt: 'El mismo personaje de la imagen de referencia, idéntico rostro, peinado y vestuario, de perfil, plano medio, fondo neutro liso. Sin texto.' },\n  { id: r.id, clase: 'personaje', vista: 'cuerpo entero', referencia: r.url, prompt: 'El mismo personaje de la imagen de referencia, idéntico rostro, peinado y vestuario, de cuerpo entero, de pie, fondo neutro liso. Sin texto.' },\n]);\nreturn pedidos.length ? pedidos.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
       },
-      "id": "76b0e45e-3a45-46fa-bbb9-9ec67805d26b",
+      "id": "1644eecf-43f9-4233-8a3a-2b8940fcab0b",
       "name": "Pedidos de vistas",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -392,7 +392,7 @@
           },
           "conditions": [
             {
-              "id": "a4943b12-eff2-41c1-9c98-174fcdc3a2e8",
+              "id": "e601a1bd-011f-4854-80da-c048de9cdf64",
               "leftValue": "={{ $json.nada !== true }}",
               "rightValue": "",
               "operator": {
@@ -406,7 +406,7 @@
         },
         "options": {}
       },
-      "id": "1cf6fc24-67c2-4c94-90c8-c24edfe04b53",
+      "id": "ca29de5a-f564-4a6b-8ac9-23bc2875bfd7",
       "name": "¿Hay vistas?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -434,7 +434,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloTexto, tools: [{ type: 'image_generation', model: $('Leer ajustes').first().json.modeloImagen, size: '1024x1024' }], tool_choice: { type: 'image_generation' }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }, ...($json.referencia ? [{ type: 'input_image', image_url: $json.referencia }] : [])] }] } }}"
       },
-      "id": "db2042df-1c6f-41ab-a275-e23e030b478d",
+      "id": "2ba27da2-9b04-47ba-b3cf-79781cc8106e",
       "name": "Generar vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -457,7 +457,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "\nconst out = ($json.output || []).find(o => o.type === 'image_generation_call');\nconst p = $('Pedidos de vistas').item.json;\nif (!out?.result) throw new Error('Sin imagen de referencia para ' + p.id);\nreturn { json: p, binary: { imagen: { data: out.result, mimeType: 'image/png', fileName: p.id + '-' + p.vista + '.png' } } };\n"
       },
-      "id": "916f4cf6-248f-493e-ae40-df7d1ccbd5eb",
+      "id": "6e3203e7-6397-4f23-b3b8-1ff4e2d9c496",
       "name": "Extraer vista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -494,7 +494,7 @@
         "contentType": "binaryData",
         "inputDataFieldName": "imagen"
       },
-      "id": "e4ea8f65-ff89-4489-8715-48423e575ce5",
+      "id": "101d4a09-2ca8-4118-a0bc-0ac503beabdc",
       "name": "Subir vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -544,7 +544,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { name: 'ref-' + $('Inicio').first().json.canal_id + '-' + $('Extraer vista').item.json.id + '-' + $('Extraer vista').item.json.vista + '.png' } }}"
       },
-      "id": "80a15491-69f3-44cb-bdb9-4ed3067751e7",
+      "id": "3e4d462e-3d83-481e-91d0-2567f9eca801",
       "name": "Nombrar vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -581,7 +581,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ { role: \"reader\", type: \"anyone\" } }}"
       },
-      "id": "26229ee3-05a0-4a6c-bcaf-e30161ef3ad0",
+      "id": "77d05c1e-cd43-487f-8321-c3b6e7ca1954",
       "name": "Compartir vista",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -604,7 +604,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const p = $('Extraer vista').item.json; return { json: { id: p.id, clase: p.clase, vista: p.vista, url: 'https://drive.google.com/uc?export=download&id=' + $('Subir vista').item.json.id } };"
       },
-      "id": "6843bca5-28a0-4bda-9c6a-275f7d47efea",
+      "id": "8b4e051d-047b-441a-adf4-d85d532aa02d",
       "name": "URL vista",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -619,7 +619,7 @@
         "destinationFieldName": "refs",
         "options": {}
       },
-      "id": "699fcc48-6aff-467e-9bc5-5f78491986e0",
+      "id": "a45e2e09-8875-4d7a-9e98-8f37a9a9b92a",
       "name": "Juntar vista",
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -632,7 +632,7 @@
       "parameters": {
         "jsCode": "\n// Las URL se guardan en la biblia (personajes[].referencias_urls, escenarios[].referencias_urls); producción ya las usa.\nconst fila = $('Biblia').first().json; const env = JSON.parse(fila.resultado || '{}'); const b = env.resultado || {};\nconst refs = [...$('Juntar principal').first().json.refs, ...($('Juntar vista').isExecuted ? $('Juntar vista').first().json.refs : [])];\nfor (const lista of [b.personajes || [], b.escenarios || []]) for (const x of lista) {\n  const urls = refs.filter(r => r.id === x.id).map(r => r.url); if (urls.length) x.referencias_urls = [...(x.referencias_urls || []), ...urls]; }\nenv.resultado = b;\nreturn [{ json: { resultado: JSON.stringify(env), total: refs.length } }];\n"
       },
-      "id": "d298b618-0676-41c4-8e49-226e141eeb91",
+      "id": "09a40455-c49b-461e-915f-3e6d55b958f8",
       "name": "Biblia con referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -670,7 +670,7 @@
         },
         "options": {}
       },
-      "id": "2ccff043-5ceb-42b6-8bd5-eda49953f886",
+      "id": "aed4128c-f7d7-46a0-8bc5-a49e34eef568",
       "name": "Guardar biblia",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -683,7 +683,7 @@
       "parameters": {
         "jsCode": "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: 'canal:' + $('Inicio').first().json.canal_id, concepto: 'referencias del canal', servicio: 'OpenAI', usd: Math.round($('Biblia con referencias').first().json.total * aj.costoImagenUsd * 1000) / 1000 } }];"
       },
-      "id": "3f8f9224-8709-44a4-bfa1-e9199c9edbe6",
+      "id": "951a0486-bd6d-4995-ac54-2128b72caeda",
       "name": "Costo de referencias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -711,7 +711,7 @@
         },
         "options": {}
       },
-      "id": "40356462-ffb9-4573-af10-ced15a2982f4",
+      "id": "d861fdeb-92d3-45d3-b687-17a28458c615",
       "name": "Guardar costo de referencias",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -731,7 +731,7 @@
           "appendAttribution": false
         }
       },
-      "id": "59bf9395-5f0a-42fe-895c-ee50902bdd1f",
+      "id": "213a1f02-1cb5-4e55-9728-370a98e457f2",
       "name": "Aviso: referencias listas",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -757,7 +757,7 @@
           "appendAttribution": false
         }
       },
-      "id": "4436c939-a649-40bb-90ca-052e5e125235",
+      "id": "546fbcb4-9c7f-48c4-847b-330b0af8633b",
       "name": "Aviso: referencias pendientes",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,

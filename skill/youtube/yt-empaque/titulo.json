@@ -1,0 +1,6 @@
+{
+ "origen": "Adaptado al español de title.py de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21).",
+ "escritorio": 60, "movil": 40, "maximo": 100, "palabras_miniatura": 3,
+ "vagas": ["increible","impresionante","brutal","loco","locura","enorme","masivo","definitivo","mejor","poderoso","secreto","revolucionario","alucinante","epico","perfecto","completo","todo","tremendo","impactante"],
+ "vacias": ["el","la","los","las","un","una","unos","unas","de","del","al","a","en","y","o","que","con","por","para","es","son","se","su","sus","tu","tus","mi","mis","lo","como","este","esta","esto","eso","asi","muy","cuanto","cuanta","por que","porque","shorts"]
+}

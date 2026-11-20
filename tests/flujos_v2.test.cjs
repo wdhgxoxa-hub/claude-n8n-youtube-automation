@@ -555,7 +555,7 @@ test('producción y calidad: el costo de la miniatura se suma y la aprobación f
   assert.strictEqual(run(codeOf(PROD, 'Costo de derivados'), { json: { costo_usd: 0, cortes: [] }, nodes: { 'Plan de producción': { video_id: 'v' } } })[0].json.nada, true);
   const m = run(codeOf(PUB, 'Mensaje final'), { json: { video_id: 'v', canal_id: 'c', render_url: 'r', duracion_s: 300, costo_usd: 2, carpeta: 'k', avisos: [],
     cortes: [{ corte: 1, duracion_s: 40, url: 'c1' }], miniatura_url: 'm', publicacion: { youtube: { titulos: ['A', 'B'] } }, formato: 'largo' } })[0].json;
-  assert.match(m.mensaje, /Miniatura: m/); assert.match(m.mensaje, /Corte 1 \(40 s\): c1/); assert.match(m.mensaje, /1\. A\n2\. B/); assert.match(m.mensaje, /publicarlo/);
+  assert.match(m.mensaje, /Miniatura: m/); assert.match(m.mensaje, /Corte 1 \(40 s\): c1/); assert.match(m.mensaje, /1\. A — \d+\/100.*\n2\. B — \d+\/100/); assert.match(m.mensaje, /publicarlo/);
   assert.deepStrictEqual(m.contexto.cortes.length, 1); assert.strictEqual(m.contexto.miniatura_url, 'm');
 });
 
@@ -887,7 +887,8 @@ test('cifras verificadas: busca en la web antes del crítico, obliga a reescribi
   const O = wf('FabOrquestador01'); const nodo = n => O.nodes.find(x => x.name === n);
   const body = nodo('Verificar cifras').parameters.jsonBody;
   assert.match(body, /type: 'web_search'/); assert.match(body, /Eres el verificador de datos/); assert.match(body, /notas_del_guionista/);
-  assert.strictEqual(O.connections['Temas del canal'].main[0][0].node, '¿Verificar cifras?');
+  assert.strictEqual(O.connections['Temas del canal'].main[0][0].node, 'Puntuar ganchos');
+  assert.strictEqual(O.connections['Puntuar ganchos'].main[0][0].node, '¿Verificar cifras?');
   assert.strictEqual(O.connections['Cifras verificadas'].main[0][0].node, 'Crítico del guion');
   assert.match(nodo('Crítico del guion').parameters.jsonBody, /verificacion_de_cifras/);
   // Respuesta real (forma de la prueba en vivo): búsquedas, razonamiento y un mensaje con el JSON.
@@ -928,4 +929,78 @@ test('reenviar: reenvía lo vivo con su enlace, rehace lo muerto con el pedido o
   assert.match(t, /mismo enlace: guion · v1/); assert.match(t, /rehechas con enlace nuevo .*storyboard · v2/); assert.match(t, /No se pueden rehacer .*gasto · v3/);
   assert.match(run(codeOf(R, 'Resultado'), { nodes: { Inicio: { video_id: 'v9' } } })[0].json.texto, /No hay aprobaciones pendientes de v9/);
   const AG = wf('FabAgenteTelegr1'); assert.ok(AG.connections['reenviar'].ai_tool);
+});
+
+// ---------- skills de YouTube (skill/youtube) ----------
+const { execFileSync } = require('node:child_process');
+const ALL_IDS = fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => f.slice(0, -5));
+const nodoDe = (w, n) => w.nodes.find(x => x.name === n);
+const RAIZ_REPO = path.join(__dirname, '..');
+const SK = path.join(RAIZ_REPO, 'skill', 'youtube');
+const MUESTRA_GANCHOS = ['De tus 10 soles, el grifo se queda con menos de lo que crees.', 'Hoy te voy a contar algo increíble sobre los grifos, suscríbete.',
+  '¿Cuánto se queda de verdad un grifo de tus 10 soles de gasolina?', 'Vende 70 mil al mes… y al dueño le quedan 7 mil.', 'Los grifos son un negocio muy interesante.',
+  'Si cargas 10 soles de gasolina cada día, esto te interesa porque pierdes más de lo que crees.', 'Todos dicen que el grifo gana con la gasolina. Nadie te dice esto.',
+  'En 50 segundos vas a saber cuánto paga el Estado, Petroperú y el transporte antes de que el grifo vea un sol.', '5 cosas que paga el grifo antes de ganar un sol.', 'Ñandú, Él y ÁRBOL: prueba de tildes y mayúsculas'];
+const MUESTRA_TITULOS = [['Margen del grifo: ¿cuánto se queda de tus 10 soles de gasolina?', ''], ['Grifo: de tus S/ 10, ¿cuánto se queda?', 'QUEDAN S/ 2'],
+  ['El INCREÍBLE SECRETO QUE NADIE SABE', ''], ['Grifo: de tus S/ 10, ¿cuánto se queda?', 'EL GRIFO GANA POCO HOY'], ['a'.repeat(105), ''], ['La pollería de Don Julio: 70 mil al mes', 'QUEDAN 7 MIL']];
+
+test('skills de YouTube: n8n puntúa ganchos y títulos EXACTAMENTE igual que las herramientas en Python de Claude', () => {
+  const O = wf('FabOrquestador01'), M = wf('FabPublicacion01');
+  const ganchosJs = new Function(codeOf(O, 'Puntuar ganchos').split('\nconst r = ')[0] + '\nreturn puntuarGancho;')();
+  const py = JSON.parse(execFileSync('python3', ['-c', `import json,sys; sys.path.insert(0, ${JSON.stringify(path.join(SK, 'yt-guion'))}); import ganchos; print(json.dumps([ganchos.puntuar(t) for t in json.loads(sys.argv[1])]))`, JSON.stringify(MUESTRA_GANCHOS)]).toString());
+  MUESTRA_GANCHOS.forEach((g, i) => { const j = ganchosJs(g);
+    assert.deepStrictEqual({ p: j.propiedades, v: j.veredicto, b: j.banda, f: j.formula, d: j.mas_debil }, { p: py[i].propiedades, v: py[i].veredicto, b: py[i].banda, f: py[i].formula, d: py[i].mas_debil }, g); });
+  const titJs = new Function(codeOf(M, 'Mensaje final').split('\nconst e = $json;')[0] + '\nreturn revisarTitulo;')();
+  const pyt = JSON.parse(execFileSync('python3', ['-c', `import json,sys; sys.path.insert(0, ${JSON.stringify(path.join(SK, 'yt-empaque'))}); import titulo; print(json.dumps([titulo.revisar(t, m or None) for t, m in json.loads(sys.argv[1])]))`, JSON.stringify(MUESTRA_TITULOS)]).toString());
+  MUESTRA_TITULOS.forEach(([t, m], i) => { const j = titJs(t, m || undefined);
+    assert.deepStrictEqual({ p: j.puntaje, f: j.fallas, b: j.bien, n: j.caracteres }, { p: pyt[i].puntaje, f: pyt[i].fallas, b: pyt[i].bien, n: pyt[i].caracteres }, t); });
+  // separa lo malo de lo bueno (es una alerta: solo se exige el orden grueso)
+  assert.ok(ganchosJs(MUESTRA_GANCHOS[0]).veredicto > ganchosJs(MUESTRA_GANCHOS[1]).veredicto + 20);
+});
+
+test('skills de YouTube: el gancho se puntúa y colapsa las filas del canal (el crítico ya no corre una vez por video)', () => {
+  const O = wf('FabOrquestador01');
+  const r = { ganchos: ['Los grifos son interesantes.', 'De tus 10 soles, el grifo se queda con menos de lo que crees.'], gancho_elegido: 1, titulo: 'T', guion: 'g', rubrica: { gancho: 8 } };
+  const out = run(codeOf(O, 'Puntuar ganchos'), { all: { $input: [{ tema: 'a' }, { tema: 'b' }, { tema: 'c' }] }, nodes: { Inicio: { resultado: r } } });
+  assert.strictEqual(out.length, 1); assert.strictEqual(out[0].json.elegido.formula, 'El dato');
+  assert.match(nodoDe(O, 'Crítico del guion').parameters.jsonBody, /puntaje_ganchos/);
+  assert.match(nodoDe(O, 'Crítico del guion').parameters.jsonBody, /La boleta/);   // el crítico GPT lleva las 21 fórmulas incrustadas
+  const msg = run(codeOf(O, 'Mensaje de guion'), { nodes: { Inicio: { video_id: 'v', resultado: r } } })[0].json;
+  assert.match(msg.aviso, /🪝 Gancho: \d+\/100 (FUERTE|SIRVE|DÉBIL) · El dato/); assert.match(msg.mensaje, /alerta \d+\/100/);
+});
+
+test('escala: una tabla leída entera nunca se reparte en nodos que corren por ítem (llamadas pagas o mensajes repetidos)', () => {
+  const malos = [];
+  for (const id of ALL_IDS) { const w = wf(id); const nd = Object.fromEntries(w.nodes.map(n => [n.name, n]));
+    for (const n of w.nodes) { const p = n.parameters || {};
+      if (!(n.type === 'n8n-nodes-base.dataTable' && p.operation === 'get' && p.returnAll)) continue;
+      const cola = [n.name], vistos = new Set();
+      while (cola.length) { const x = cola.shift(); if (vistos.has(x)) continue; vistos.add(x);
+        for (const salida of (w.connections[x]?.main || [])) for (const c of salida || []) { const t = nd[c.node]; const tipo = t.type.split('.').pop();
+          if ((tipo === 'code' && t.parameters?.mode !== 'runOnceForEachItem') || t.executeOnce) continue;   // colapsa o corre una vez
+          if (['if', 'switch'].includes(tipo)) { cola.push(t.name); continue; }                                 // deja pasar los ítems
+          malos.push(`${w.name}: ${n.name} → ${t.name}`); } } } }
+  assert.deepStrictEqual(malos, []);
+});
+
+test('skills de YouTube: están en el repo, con licencia, sin preguntas y conectadas a su modo', () => {
+  const skills = ['yt-guion', 'yt-empaque', 'yt-seo', 'yt-cortes', 'yt-capitulos', 'yt-retencion'];
+  const fab = fs.readFileSync(path.join(RAIZ_REPO, 'skill', 'FABRICA.md'), 'utf8');
+  for (const s of skills) { const md = fs.readFileSync(path.join(SK, s, 'SKILL.md'), 'utf8');
+    assert.match(md, new RegExp('^---\\nname: ' + s + '\\ndescription:'), s); assert.match(md, /MIT/); assert.match(fab, new RegExp('`' + s + '`'), s + ' en FABRICA.md');
+    assert.doesNotMatch(md, /ship it|voice\.md`? if it exists|ask for/i, s); }
+  assert.match(fs.readFileSync(path.join(SK, 'LICENSE-youtube-agent-skill'), 'utf8'), /MIT License[\s\S]*Jake Schincariol/);
+  assert.strictEqual(JSON.parse(fs.readFileSync(path.join(SK, 'yt-guion', 'ganchos.json'), 'utf8')).formulas.length, 21);
+  const tmp = path.join(require('os').tmpdir(), 'capitulos-prueba.json');
+  fs.writeFileSync(tmp, JSON.stringify([{ t: '0:00', titulo: 'Lo que pagas aquí' }, { t: '0:05', titulo: 'Lo que cobra el Estado' }]));
+  const cap = JSON.parse(execFileSync('python3', [path.join(SK, 'yt-capitulos', 'capitulos.py'), tmp, '--duracion', '300']).toString());
+  assert.strictEqual(cap.valido, false); assert.ok(cap.fallas.some(f => /al menos 3/.test(f)) && cap.fallas.some(f => /dura 5 s/.test(f)));
+});
+
+test('skills de YouTube: los títulos llegan a vidIQ ordenados por la revisión y, sin vidIQ, se publica el mejor revisado', () => {
+  const R = wf('FabRedes00000001');
+  const titulos = ['El INCREÍBLE SECRETO QUE NADIE SABE', 'Grifo: de tus S/ 10, ¿cuánto se queda?', 'a'.repeat(120)];
+  const p = run(codeOf(R, 'Pedido de títulos'), { nodes: { Inicio: { contexto: { publicacion: { youtube: { titulos } } }, formato: 'short' } } })[0].json;
+  assert.deepStrictEqual(p.titulos, ['Grifo: de tus S/ 10, ¿cuánto se queda?', 'El INCREÍBLE SECRETO QUE NADIE SABE']);
+  assert.match(codeOf(R, 'Plan de publicación'), /const porRevision = /);
 });

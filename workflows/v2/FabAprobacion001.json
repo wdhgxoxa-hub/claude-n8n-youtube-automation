@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "b4759c74-2089-472b-adb1-c796c31a8992",
+      "id": "ee6f1430-8ce9-42b5-bbf9-a4ce6b2ece43",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -35,7 +35,7 @@
           "waitForSubWorkflow": true
         }
       },
-      "id": "97623ff8-262d-4b07-a677-eaf4d30f24cb",
+      "id": "f5eb8a16-bb51-4aca-a6cd-fad9b095dd8a",
       "name": "Leer ajustes",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -48,7 +48,7 @@
       "parameters": {
         "jsCode": "const ids = $('Inicio').first().json;\nreturn [{ json: { aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: $('Inicio').first().json.etapa,\n  video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),\n  resumen: String($('Inicio').first().json.mensaje || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '',\n  aviso: String(($('Inicio').first().json.aviso || String($('Inicio').first().json.mensaje || '').split('\\n').filter(Boolean).slice(0, 3).join('\\n') + '\\n\\nÁbrelo para ver todo y decidir.') || '').slice(0, 1500), pedido: String(JSON.stringify($('Inicio').first().json) || '') } }];"
       },
-      "id": "c2a09df6-340d-496d-a7e5-fe98cf3ac69b",
+      "id": "0e53b708-aeab-42c4-97a0-c1f8566ae3fa",
       "name": "Aprobación · preparar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -76,7 +76,7 @@
         },
         "options": {}
       },
-      "id": "e62d0b62-7b86-4845-a2bb-76b1f4174c73",
+      "id": "3f244a19-1565-4205-9d33-691bddfebadd",
       "name": "Aprobación · registrar",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -113,7 +113,7 @@
           "appendAttribution": false
         }
       },
-      "id": "32919146-1915-42e0-9082-e38be1a9b0a9",
+      "id": "e30a2079-f703-4043-ae30-0142248e75dd",
       "name": "Aprobación · avisar",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -160,7 +160,7 @@
         },
         "options": {}
       },
-      "id": "2b8989d3-bff9-46e1-a0aa-42e203c3d460",
+      "id": "ee92b105-8a39-45e6-b5e3-85f3494cc47a",
       "name": "Aprobación · esperar",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -168,13 +168,13 @@
         1320,
         0
       ],
-      "webhookId": "dcbeb567-696e-4b16-ad05-70a6cc1c8ec4"
+      "webhookId": "84d29e1f-6f07-46a2-b156-8ef812fea7f6"
     },
     {
       "parameters": {
         "jsCode": "const mapa = {\"Aprobar\": \"aprobado\", \"Pedir cambios\": \"cambios\"}; const d = $json['Decisión'];\nconst estado = mapa[d] || 'cambios';\nreturn [{ json: { aprobacion_id: $('Aprobación · preparar').first().json.aprobacion_id, estado, cambios: String($json['Cambios'] || '').slice(0, 4000), decidido_en: new Date().toISOString() } }];"
       },
-      "id": "4c686f00-db02-4bb2-8e0e-cb7187f030e3",
+      "id": "77936d82-b782-4a1a-a429-99ee05d3ebcd",
       "name": "Aprobación · decisión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -212,7 +212,7 @@
         },
         "options": {}
       },
-      "id": "8f8864a0-3cd7-4c12-81a0-79f19ff144b2",
+      "id": "542525f5-569b-412a-9b0b-5da861ef67c6",
       "name": "Aprobación · cerrar",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
@@ -232,7 +232,7 @@
           },
           "conditions": [
             {
-              "id": "13361241-aac2-4d55-8fa1-9f981cd9d745",
+              "id": "7c646657-b2c3-487a-95fe-b23d2148729e",
               "leftValue": "={{ $('Aprobación · decisión').first().json.estado === 'aprobado' }}",
               "rightValue": "",
               "operator": {
@@ -246,7 +246,7 @@
         },
         "options": {}
       },
-      "id": "1c33356f-d1e3-4c5a-b982-f38dbc2d8861",
+      "id": "b4de5b59-b127-43be-b8c4-7492ec7a7646",
       "name": "¿Aprobado?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -259,7 +259,7 @@
       "parameters": {
         "jsCode": "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'aprobado', mensaje: undefined } }];"
       },
-      "id": "1c5532dc-5445-4a2d-9406-88ec85c5857f",
+      "id": "e166d19b-80cc-4dc6-944a-e9d1659333b1",
       "name": "Evento aprobado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -272,7 +272,7 @@
       "parameters": {
         "jsCode": "const i = $('Inicio').first().json; return [{ json: { ...i, evento: 'cambios', cambios: $('Aprobación · decisión').first().json.cambios || 'Revísalo de nuevo y mejóralo.', mensaje: undefined } }];"
       },
-      "id": "5df39512-df52-42f8-a298-67ef8f960a0f",
+      "id": "55488afb-e092-418a-86eb-b6df57b18b82",
       "name": "Evento cambios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -301,7 +301,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "3361c04d-9f44-4616-a421-c176bd2298a2",
+      "id": "2b1f081a-22af-4906-ad29-e94054d5bdf9",
       "name": "Seguir (aprobado)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
@@ -330,7 +330,7 @@
           "waitForSubWorkflow": false
         }
       },
-      "id": "0ae5bfcf-0360-4a04-87ad-87fe6dd87fee",
+      "id": "d1045463-d57e-4161-a339-e5e4e300b101",
       "name": "Seguir (cambios)",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,

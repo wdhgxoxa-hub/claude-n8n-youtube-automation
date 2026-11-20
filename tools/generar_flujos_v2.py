@@ -12,6 +12,63 @@ def rol(nombre):
     with open(os.path.join(RAIZ, 'skill', 'roles', nombre + '.md'), encoding='utf-8') as fh:
         return ' '.join(l.strip() for l in fh if l.strip() and not l.startswith('#'))
 ROL_CRITICO, ROL_REVISOR, ROL_VERIFICADOR = rol('critico'), rol('revisor-visual'), rol('verificador')
+# Skills de YouTube (skill/youtube): n8n usa los MISMOS datos que las herramientas en Python de Claude.
+SKILLS = os.path.join(RAIZ, 'skill', 'youtube')
+GANCHOS_DATOS = json.load(open(os.path.join(SKILLS, 'yt-guion', 'ganchos.json'), encoding='utf-8'))
+TITULO_DATOS = json.load(open(os.path.join(SKILLS, 'yt-empaque', 'titulo.json'), encoding='utf-8'))
+# Puerto exacto de skill/youtube/yt-guion/ganchos.py (una prueba compara ambos sobre los mismos ganchos).
+GANCHOS_JS = 'const GANCHOS = ' + json.dumps({k: GANCHOS_DATOS[k] for k in ('formulas', 'listas', 'rango_palabras')}, ensure_ascii=False) + ';\n' + r"""
+const normalG = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[¿¡]/g, '').trim();
+const palabrasG = t => normalG(t).match(/[a-z0-9%/.,]+/g) || [];
+const escG = x => x.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+const cuentaG = (lista, t) => { const n = normalG(t); return lista.reduce((a, x) => a + (n.match(new RegExp('\\b' + escG(x) + '\\b', 'g')) || []).length, 0); };
+const CONCRETO_G = /(\d[\d.,]*\s?(%|mil|millones|soles|dolares|s|m|h)?\b|s\/ ?\d|\$ ?\d|\b\d+\s?(segundos?|minutos?|horas?|dias?|semanas?|meses|anos?)\b)/g;
+const nConcreto = t => (normalG(t).match(CONCRETO_G) || []).length;
+const acotar = x => Math.max(0, Math.min(100, x));
+function puntuarGancho(t) {
+  const L = GANCHOS.listas, [MIN_P, MAX_P] = GANCHOS.rango_palabras, w = palabrasG(t);
+  const mayusc = String(t).split(/\s+/).filter(Boolean).slice(1).filter(x => { const c = x.slice(0, 1); return c !== c.toLowerCase() && c === c.toUpperCase(); }).length;
+  const especificidad = w.length ? acotar(34 + nConcreto(t) * 22 - cuentaG(L.vagas, t) * 16 - cuentaG(L.relleno, t) * 5 + Math.min(18, 6 * mayusc)) : 0;
+  const primeras = String(t).split(/\s+/).filter(Boolean).slice(0, 6).join(' ');
+  const a_ti = acotar(26 + cuentaG(L.tu, t) * 20 + (cuentaG(L.tu, primeras) ? 30 : 0));
+  const riesgo = acotar(22 + cuentaG(L.riesgo, t) * 26 + (nConcreto(t) ? 14 : 0));
+  const curiosidad = acotar(24 + cuentaG(L.curiosidad, t) * 17 + (String(t).trim().endsWith('?') ? 18 : 0) + (cuentaG(L.cierre, t) ? -18 : 0));
+  const n = w.length; const brevedad = !n ? 0 : (n >= MIN_P && n <= MAX_P) ? 100 : n < MIN_P ? Math.max(30, 100 - (MIN_P - n) * 11) : Math.max(10, 100 - (n - MAX_P) * 7);
+  const propiedades = { especificidad, a_ti, riesgo, curiosidad, brevedad }; const v = Object.values(propiedades);
+  const veredicto = Math.floor(0.6 * v.reduce((a, b) => a + b, 0) / v.length + 0.4 * Math.min(...v) + 0.5);
+  const nt = normalG(t); let formula = 'Sin fórmula', hits = 0;
+  for (const f of GANCHOS.formulas) { const k = f.patrones.filter(p => new RegExp(p).test(nt)).length; if (k > hits) { hits = k; formula = f.nombre; } }
+  const mas_debil = Object.keys(propiedades).reduce((a, b) => propiedades[b] < propiedades[a] ? b : a);
+  return { gancho: String(t).trim(), propiedades, veredicto, banda: veredicto >= 72 ? 'FUERTE' : veredicto >= 55 ? 'SIRVE' : 'DÉBIL', formula, mas_debil };
+}
+"""
+# Puerto exacto de skill/youtube/yt-empaque/titulo.py.
+TITULO_JS = 'const TITULO = ' + json.dumps(TITULO_DATOS, ensure_ascii=False) + ';\n' + r"""
+const normalT = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const palabrasT = t => normalT(t).match(/[a-z0-9ñ']+/g) || [];
+function revisarTitulo(titulo, miniatura) {
+  const t = String(titulo || '').trim(), n = [...t].length, fallas = [], bien = [];
+  if (n > TITULO.maximo) fallas.push(['largo', `${n} caracteres: el límite de YouTube es ${TITULO.maximo}`]);
+  else if (n > TITULO.escritorio) fallas.push(['largo', `${n} caracteres: la búsqueda de escritorio corta cerca de ${TITULO.escritorio}`]);
+  else bien.push(`${n} caracteres, dentro del corte de escritorio (${TITULO.escritorio})`);
+  if (n > TITULO.movil) { const cab = [...t].slice(0, TITULO.movil).join(''); const cabeza = cab.includes(' ') ? cab.slice(0, cab.lastIndexOf(' ')) : cab; fallas.push(['movil', `en el celular se ve «${cabeza}…»: revisa que el tema sobreviva`]); }
+  const mayus = t.split(/\s+/).filter(w => [...w].length > 2 && w === w.toUpperCase() && w !== w.toLowerCase() && !/\d/.test(w));
+  if (mayus.length > 2) fallas.push(['gritos', `${mayus.length} palabras en mayúsculas: más de dos parece spam`]);
+  const vagas = [...new Set(palabrasT(t).filter(w => TITULO.vagas.includes(w)))].sort();
+  if (vagas.length) fallas.push(['vago', `${vagas.join(', ')}: cámbialo por un número, un nombre o una fecha`]);
+  if (/\d/.test(t)) bien.push('lleva una cifra concreta'); else fallas.push(['sin-cifra', 'sin número, fecha ni nombre: el arreglo más fiable']);
+  if (t.endsWith('?')) bien.push('pregunta abierta');
+  if (!palabrasT(t).slice(0, 3).filter(w => !TITULO.vacias.includes(w)).length) fallas.push(['inicio', 'las tres primeras palabras son relleno: adelanta el tema']);
+  if (miniatura) {
+    const clave = x => new Set(palabrasT(x).filter(w => w.length > 1 && !TITULO.vacias.includes(w)));
+    const m = clave(miniatura); const comunes = [...clave(t)].filter(w => m.has(w)).sort();
+    if (comunes.length) fallas.push(['repite', `la miniatura repite el título en ${comunes.join(', ')}: debe decir lo que el título no dice`]);
+    else bien.push('título y miniatura dicen cosas distintas');
+    if (palabrasT(miniatura).length > TITULO.palabras_miniatura) fallas.push(['miniatura-larga', `${palabrasT(miniatura).length} palabras en la miniatura: ${TITULO.palabras_miniatura} es el techo a tamaño de feed`]);
+  }
+  return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };
+}
+"""
 JS = lambda t: json.dumps(t, ensure_ascii=False)   # texto como literal JS dentro de una expresión
 
 OUT = os.path.join(os.path.dirname(__file__), '..', 'workflows', 'v2')
@@ -573,6 +630,13 @@ f.chain('Pedido a vidIQ', 'vidIQ: investigar', 'Pedir guion', 'Claude: guion', '
 # 6 guion listo -> aprobación
 dt_get(f, 'Video (crítico)', 'videos', 'video_id', "={{ $('Inicio').first().json.video_id }}")
 iff(f, '¿Criticar guion?', "$('Leer ajustes').first().json.allowCritico === true && Number($json.intentos || 0) < 2")
+# Puntuar ganchos (alerta de yt-guion). Además deja UN solo ítem: «Temas del canal» devuelve una fila por video
+# del canal y, sin esto, el verificador, el crítico y la corrección corrían una vez por fila.
+code(f, 'Puntuar ganchos', GANCHOS_JS + r"""
+const r = $('Inicio').first().json.resultado || {};
+const ganchos = (r.ganchos || []).map(g => puntuarGancho(g));
+return [{ json: { ganchos, elegido: ganchos[r.gancho_elegido || 0] || null } }];
+""")
 # Verificador de cifras: busca en la web (fuentes oficiales primero) cada cifra del guion y lo que el guionista no consiguió.
 iff(f, '¿Verificar cifras?', "$('Leer ajustes').first().json.allowVerificacion === true")
 http(f, 'Verificar cifras', 'POST', 'https://api.openai.com/v1/responses',
@@ -595,7 +659,7 @@ return [{ json: { leido: true, verificacion: { cifras, faltantes, cuenta, resume
 code(f, 'Fila de costo (verificación)', "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'verificación de cifras', servicio: 'OpenAI (búsqueda web)', usd: aj.costoVerificacionUsd } }];")
 dt_insert(f, 'Guardar costo (verificación)', 'costos')
 http(f, 'Crítico del guion', 'POST', 'https://api.openai.com/v1/responses',
-     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_CRITICO) + " + ' Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, verificacion_de_cifras: $('Cifras verificadas').first().json.verificacion, temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}",
+     body="={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: " + JS(ROL_CRITICO) + " + ' Responde JSON {\"gancho\":n,\"promesa\":n,\"claridad\":n,\"emocion\":n,\"exactitud\":n,\"originalidad\":n,\"problemas\":[\"…\"],\"instrucciones\":\"…\"}.\n\n' + JSON.stringify({ titulo: $('Inicio').first().json.resultado?.titulo, ganchos: $('Inicio').first().json.resultado?.ganchos, guion: $('Inicio').first().json.resultado?.guion, fuentes: $('Inicio').first().json.resultado?.fuentes, verificacion_de_cifras: $('Cifras verificadas').first().json.verificacion, puntaje_ganchos: $('Puntuar ganchos').first().json.ganchos.map(g => ({ gancho: g.gancho, veredicto: g.veredicto, banda: g.banda, formula: g.formula, mas_debil: g.mas_debil })), temas_recientes: $('Temas del canal').all().map(i => i.json).filter(v => v.video_id && v.video_id !== $('Inicio').first().json.video_id).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 15).map(v => v.tema) }).slice(0, 15000) }] }] } }}",
      timeout=120000, cred=CRED_OPENAI)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code(f, 'Veredicto del crítico', r"""
@@ -627,7 +691,7 @@ return [{ json: { modo: 'corregir_guion', canal_id: e.canal_id, video_id: e.vide
 call(f, 'Claude: corregir (crítico)', W['claude'])
 code(f, 'Fila de costo (crítico)', "const aj = $('Leer ajustes').first().json; return [{ json: { video_id: $('Inicio').first().json.video_id, concepto: 'crítico del guion', servicio: 'OpenAI', usd: aj.costoCriticoUsd } }];")
 dt_insert(f, 'Guardar costo (crítico)', 'costos')
-code(f, 'Mensaje de guion', r"""
+code(f, 'Mensaje de guion', GANCHOS_JS + r"""
 const e = $('Inicio').first().json; const r = e.resultado || {}; const rb = r.rubrica || {};
 const nota = Object.entries(rb).map(([k, v]) => k + ' ' + v).join(' · ');
 let critica = '';
@@ -635,9 +699,11 @@ if ($('Veredicto del crítico').isExecuted && $('Veredicto del crítico').first(
   const n = $('Veredicto del crítico').first().json.notas; critica = '\nCrítico (GPT-6 Astra): ' + Object.entries(n).map(([k, v]) => k + ' ' + v).join(' · '); }
 const ver = $('Cifras verificadas').isExecuted && $('Cifras verificadas').first().json.leido ? $('Cifras verificadas').first().json : null;
 const cifras = ver ? '\nCifras (verificadas en la web): ' + ver.conteo + (ver.verificacion.cuenta.length ? '\nCuenta: ' + ver.verificacion.cuenta.join(' → ').slice(0, 600) : '') : '';
-const mensaje = `Guion: ${r.titulo}\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}\nRúbrica: ${nota}${critica}${cifras}\n\n${String(r.guion || '').slice(0, 3000)}`;
+const pg = (r.ganchos || [])[r.gancho_elegido || 0] ? puntuarGancho(r.ganchos[r.gancho_elegido || 0]) : null;
+const alerta = pg ? ` (alerta ${pg.veredicto}/100 ${pg.banda} · ${pg.formula}${pg.banda === 'DÉBIL' ? ' · flojo en ' + pg.mas_debil : ''})` : '';
+const mensaje = `Guion: ${r.titulo}\nGancho: ${(r.ganchos || [])[r.gancho_elegido || 0] || ''}${alerta}\nRúbrica: ${nota}${critica}${cifras}\n\n${String(r.guion || '').slice(0, 3000)}`;
 const prom = Object.values(rb).length ? Math.round(Object.values(rb).reduce((a, b) => a + Number(b || 0), 0) / Object.values(rb).length * 10) / 10 : null;
-const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}` + (r.tema_elegido ? `\n🔎 Tema elegido por la fábrica: ${String(r.motivo_tema || '').slice(0, 160)}` : '') + `\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + (ver ? `\n🔎 Cifras: ${ver.conteo}` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
+const aviso = `✍️ Guion listo · ${r.titulo || e.video_id}` + (r.tema_elegido ? `\n🔎 Tema elegido por la fábrica: ${String(r.motivo_tema || '').slice(0, 160)}` : '') + `\n\nGancho: «${String((r.ganchos || [])[r.gancho_elegido || 0] || '').slice(0, 220)}»` + (prom ? `\nPuntaje: ${prom}/10` : '') + (pg ? `\n🪝 Gancho: ${pg.veredicto}/100 ${pg.banda} · ${pg.formula}` : '') + (ver ? `\n🔎 Cifras: ${ver.conteo}` : '') + '\n\nÁbrelo para leerlo completo y decidir.';
 return [{ json: { etapa: 'guion', mensaje: mensaje.slice(0, 3900), aviso, contexto: r, video_id: e.video_id, canal_id: e.canal_id } }];
 """)
 call(f, 'Aprobar guion', W['aprob'], wait=False)
@@ -652,7 +718,8 @@ f.add('Temas del canal', 'n8n-nodes-base.dataTable', 1.1,
        'filters': {'conditions': [{'keyName': 'canal_id', 'condition': 'eq', 'keyValue': "={{ $('Inicio').first().json.canal_id }}"}]}, 'returnAll': True},
       alwaysOutputData=True, executeOnce=True)
 f.link('¿Criticar guion?', 'Temas del canal', 0)
-f.link('Temas del canal', '¿Verificar cifras?')
+f.link('Temas del canal', 'Puntuar ganchos')
+f.link('Puntuar ganchos', '¿Verificar cifras?')
 f.link('¿Verificar cifras?', 'Verificar cifras', 0)
 f.link('¿Verificar cifras?', 'Cifras verificadas', 1)
 f.chain('Verificar cifras', 'Cifras verificadas', 'Crítico del guion')
@@ -1256,7 +1323,7 @@ return [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: r.url,
   voces: (son.voces || []).map(v => ({ plano_id: v.plano_id, ppm: v.palabras_por_minuto, duracion_s: v.duracion_s })),
   usa_musica: !!son.musica?.url, costo_usd: Math.round(($('Costo total').first().json.costo_usd + (d.costo_usd || 0)) * 100) / 100, presupuesto: e.presupuesto,
   formato: e.formato, carpeta: $('Carpeta del video').first().json.id, tema: e.tema,
-  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {} } }];
+  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {}, miniatura_texto: e.storyboard?.miniatura?.texto || '' } }];
 """)
 f.nodes[-1].update({'executeOnce': True})
 call(f, 'Calidad y publicación', W['pub'], wait=False)
@@ -1513,11 +1580,14 @@ for (const a of e.avisos_derivados || []) avisos.push(a);
 return [{ json: { ...e, fallas, avisos, aprobado_qc: fallas.length === 0 } }];
 """)
 iff(f, '¿Pasa calidad?', '$json.aprobado_qc === true')
-code(f, 'Mensaje final', r"""
+code(f, 'Mensaje final', TITULO_JS + r"""
 const e = $json;
 const extra = e.avisos.length ? '\n\nAvisos:\n• ' + e.avisos.join('\n• ') : '';
 const cortes = (e.cortes || []).map(c => `\n• Corte ${c.corte} (${Math.round(c.duracion_s)} s): ${c.url}`).join('');
-const titulos = (e.publicacion?.youtube?.titulos || []).slice(0, 3).map((t, i) => `\n${i + 1}. ${t}`).join('');
+// Cada título revisado con yt-empaque (mismo titulo.json que usa Claude), junto con el texto de la miniatura.
+const mini = e.miniatura_texto || '';
+const titulos = (e.publicacion?.youtube?.titulos || []).slice(0, 3).map((t, i) => { const r = revisarTitulo(t, mini);
+  return `\n${i + 1}. ${t} — ${r.puntaje}/100` + (r.fallas.length ? ' · ' + r.fallas.map(f => f[0]).join(', ') : ''); }).join('');
 const aviso = `🎞️ Video listo · ${Math.round(e.duracion_s)} s · US$${e.costo_usd}\n▶️ ${e.render_url}` + (e.avisos.length ? `\n⚠️ ${e.avisos.length} aviso(s): míralos en el enlace` : '') + '\n\nSi te gusta, apruébalo para publicarlo.';
 return [{ json: { etapa: 'final', video_id: e.video_id, canal_id: e.canal_id, aviso,
   contexto: { render_url: e.render_url, creditos: e.creditos || [], cortes: e.cortes || [], miniatura_url: e.miniatura_url || '', publicacion: e.publicacion || {}, formato: e.formato },
@@ -1632,7 +1702,7 @@ f.add('Costos', 'n8n-nodes-base.dataTable', 1.1,
 iff(f, '¿Es reporte?', "$('Inicio').first().json.tipo === 'reporte'")
 f.add('Conexiones', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('youtube'), 'matchType': 'allConditions',
-       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'conectado'}]}, 'returnAll': True}, alwaysOutputData=True)
+       'filters': {'conditions': [{'keyName': 'estado', 'condition': 'eq', 'keyValue': 'conectado'}]}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
 code(f, 'Pedir estadísticas', r"""
 const p = $('Inicio').first().json;
 const cs = $input.all().map(i => i.json).filter(c => c.canal_id && (!p.canal_id || c.canal_id === p.canal_id));
@@ -2160,13 +2230,13 @@ f = Flow(W['redes'], 'M8 · Publicación en redes')
 trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
 iff(f, '¿Puntuar títulos?', "$('Leer ajustes').first().json.allowVidiq === true && ($('Inicio').first().json.contexto?.publicacion?.youtube?.titulos || []).length > 1")
-code(f, 'Pedido de títulos', "const e = $('Inicio').first().json; return [{ json: { accion: 'titulos', titulos: e.contexto.publicacion.youtube.titulos, formato: e.formato } }];")
+code(f, 'Pedido de títulos', TITULO_JS + "const e = $('Inicio').first().json; const t = (e.contexto.publicacion.youtube.titulos || []).map(x => revisarTitulo(x)).filter(r => r.caracteres <= TITULO.maximo).sort((a, b) => b.puntaje - a.puntaje).map(r => r.titulo); return [{ json: { accion: 'titulos', titulos: t.length ? t : e.contexto.publicacion.youtube.titulos, formato: e.formato } }];")
 call(f, 'vidIQ: títulos', W['vidiq'])
 f.add('Agenda del canal', 'n8n-nodes-base.dataTable', 1.1,
       {'resource': 'row', 'operation': 'get', 'dataTableId': rl('publicaciones'), 'matchType': 'allConditions',
        'filters': {'conditions': [{'keyName': 'canal_id', 'condition': 'eq', 'keyValue': "={{ $('Inicio').first().json.canal_id }}"}, {'keyName': 'createdAt', 'condition': 'gte', 'keyValue': "={{ new Date(Date.now() - 30 * 86400000).toISOString() }}"}]}, 'returnAll': True},
       alwaysOutputData=True, executeOnce=True)
-code(f, 'Plan de publicación', r"""
+code(f, 'Plan de publicación', TITULO_JS + r"""
 // Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo
 // ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};
@@ -2196,7 +2266,8 @@ else if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.d
 const horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;
 // --- textos ---
 const vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};
-const tituloYt = String((vq?.ok && vq.mejor) || (yt.titulos || [])[0] || e.tema || '').slice(0, 100);
+const porRevision = (yt.titulos || []).map(t => revisarTitulo(t)).sort((a, b) => b.puntaje - a.puntaje)[0]?.titulo;   // sin vidIQ: el mejor según yt-empaque
+const tituloYt = String((vq?.ok && vq.mejor) || porRevision || e.tema || '').slice(0, 100);
 const creditos = (c.creditos || []).join('\n');
 const descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\n\n').slice(0, 4900);
 const tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');

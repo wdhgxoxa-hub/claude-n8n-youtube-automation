@@ -1,0 +1,405 @@
+{
+ "version": "1.0-es",
+ "origen": "Adaptado al español de las 21 fórmulas de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21). Las expresiones se aplican al texto en minúsculas y sin tildes ni ¿¡.",
+ "reglas": [
+  "Confirma el título en la primera frase: un gancho que ignora su título es la razón de que se vayan a los 8 segundos.",
+  "Una sola idea: un gancho con dos promesas no cumple ninguna.",
+  "Lo concreto gana a lo grande: «de 10 soles quedan 2» gana a «ganan muchísimo».",
+  "Si prometes mostrar algo, muéstralo antes de los 20 segundos.",
+  "Nunca empieces diciendo quién eres ni pidiendo suscripción: todavía no te lo has ganado."
+ ],
+ "formulas": [
+  {
+   "id": "el-dato",
+   "nombre": "El dato",
+   "forma": "Un número que el espectador no sabía, dicho seco, y su consecuencia.",
+   "ejemplo": "De cada 10 soles que pagas en el grifo, solo 2 se quedan en el grifo.",
+   "falla": "Muere si el número es vago o no se puede comprobar. Di la fuente.",
+   "patrones": [
+    "\\b\\d+([.,]\\d+)?\\s?%",
+    "\\b\\d+ (de|en) (cada )?\\d+\\b",
+    "\\bde cada \\d+\\b",
+    "\\bs/ ?\\d",
+    "\\bde (tus|tu|sus|cada) \\d+\\b",
+    "\\d+ (mil|soles|millones)?.*(y|pero) .*\\d+"
+   ]
+  },
+  {
+   "id": "resultado-ajeno",
+   "nombre": "El resultado de otro",
+   "forma": "El resultado de alguien con nombre o un negocio concreto, y luego el mecanismo.",
+   "ejemplo": "Esta pollería vende 70 mil al mes y al dueño le quedan 7 mil. Hice la cuenta.",
+   "falla": "No inventes el número. Si no puedes nombrar el caso, usa otra fórmula.",
+   "patrones": [
+    "\\beste (negocio|grifo|local|restaurante|canal|senor|dueno)\\b",
+    "\\besta (polleria|bodega|tienda|empresa|senora)\\b",
+    "\\bpaso de .* a\\b",
+    "\\ben (un|una|dos|tres|\\d+) (semana|mes|ano)s?\\b"
+   ]
+  },
+  {
+   "id": "el-error",
+   "nombre": "El error",
+   "forma": "Nombra el error que el espectador probablemente comete ahora mismo.",
+   "ejemplo": "Crees que el grifo te roba en el precio. El margen está en otro lado.",
+   "falla": "Solo funciona si el error es común y se comprueba en un segundo.",
+   "patrones": [
+    "\\b(estas|sigues) (haciendo|cometiendo|pagando)\\b",
+    "\\bel (error|motivo) (que )?(todos|casi todos|nadie)\\b",
+    "\\bdeja de\\b",
+    "\\bcrees que\\b"
+   ]
+  },
+  {
+   "id": "contra-corriente",
+   "nombre": "Contra la corriente",
+   "forma": "Di el consejo que todos aceptan y recházalo.",
+   "ejemplo": "Todos dicen que el grifo gana con la gasolina. Gana con lo que vende al lado.",
+   "falla": "Necesita la prueba en los 15 segundos siguientes o suena a llevar la contraria por gusto.",
+   "patrones": [
+    "\\btodos (dicen|creen|piensan|te dicen)\\b",
+    "\\bes (en realidad )?(mentira|falso)\\b",
+    "\\bnadie (te dice|habla de|te cuenta)\\b",
+    "\\bno es (por|lo que)\\b"
+   ]
+  },
+  {
+   "id": "la-revelacion",
+   "nombre": "La revelación",
+   "forma": "Promete que vas a mostrar algo concreto y muéstralo.",
+   "ejemplo": "Te muestro la boleta real de un camión cisterna, en pantalla.",
+   "falla": "Hay que mostrarlo pronto: una revelación al minuto 8 es una caída al minuto 1.",
+   "patrones": [
+    "\\bte (voy a )?(muestro|mostrar|ensenar|enseno)\\b",
+    "\\baqui (esta|tienes)\\b",
+    "\\ben pantalla\\b"
+   ]
+  },
+  {
+   "id": "el-superlativo",
+   "nombre": "El superlativo",
+   "forma": "El más barato, caro, rápido o rentable de una categoría.",
+   "ejemplo": "Este es el negocio con el margen más chico de todo el barrio.",
+   "falla": "Los superlativos salen baratos: gánatelo diciendo contra qué gana.",
+   "patrones": [
+    "\\bel (mas|menos) \\w+ de\\b",
+    "\\bla (mas|menos) \\w+ de\\b",
+    "\\b(el|la) (mejor|peor|unico|unica)\\b",
+    "\\bnumero uno\\b"
+   ]
+  },
+  {
+   "id": "el-reloj",
+   "nombre": "El reloj",
+   "forma": "Pon un límite de tiempo a la recompensa.",
+   "ejemplo": "En 50 segundos vas a saber cuánto se queda el grifo de tus 10 soles.",
+   "falla": "El reloj tiene que ser verdad. Si te pasas, el próximo gancho no se cree.",
+   "patrones": [
+    "\\ben (los proximos )?\\d+ (segundos|minutos|horas)\\b",
+    "\\bal final de(l| este) video\\b",
+    "\\ben menos de \\d+\\b"
+   ]
+  },
+  {
+   "id": "lo-probe",
+   "nombre": "Lo probé",
+   "forma": "Un experimento en primera persona con un costo dicho.",
+   "ejemplo": "Pasé un día entero con el encargado de un grifo contando cada sol.",
+   "falla": "Necesita un costo real (tiempo, plata, riesgo) o no hay nada en juego.",
+   "patrones": [
+    "\\b(probe|pase|gaste|intente|deje|segui)\\b",
+    "\\bdurante \\d+ (dias|semanas|meses)\\b",
+    "\\bpara que tu no\\b"
+   ]
+  },
+  {
+   "id": "la-pregunta",
+   "nombre": "La pregunta",
+   "forma": "La pregunta exacta que el espectador escribiría en el buscador.",
+   "ejemplo": "¿Cuánto se queda de verdad un grifo de tus 10 soles?",
+   "falla": "Tiene que ser la pregunta del espectador, no la tuya.",
+   "patrones": [
+    "^(por que|como|cuanto|cuanta|cuantos|cuantas|que|cual|cuando|quien|sabias|es|vale)\\b",
+    "\\?\\s*$"
+   ]
+  },
+  {
+   "id": "antes-despues",
+   "nombre": "Antes y después",
+   "forma": "Dos estados y un corte entre ellos.",
+   "ejemplo": "Así se veía la caja a las 6 de la mañana. Así a las 10 de la noche.",
+   "falla": "Solo funciona con una imagen que lo muestre.",
+   "patrones": [
+    "\\bantes\\b.*\\bahora\\b",
+    "\\bantes\\b.*\\bdespues\\b",
+    "\\basi (era|estaba|se veia)\\b",
+    "\\bantes (ganaba|vendia|cobraba)\\b"
+   ]
+  },
+  {
+   "id": "el-desarme",
+   "nombre": "El desarme",
+   "forma": "Desarma en público algo real, pieza por pieza.",
+   "ejemplo": "Desarmé el precio de un galón de gasolina en sus 5 partes.",
+   "falla": "Di qué desarmaste y en cuántas partes: desarmar un solo ejemplo es una anécdota.",
+   "patrones": [
+    "\\b(desarme|desarmamos|desarmo|desarmar)\\b",
+    "\\b(saque|sacamos|hice) la cuenta\\b",
+    "\\ben sus \\d+ partes\\b",
+    "\\banalice\\b"
+   ]
+  },
+  {
+   "id": "la-suma",
+   "nombre": "La suma",
+   "forma": "Dos cosas con nombre que juntas dan un resultado.",
+   "ejemplo": "La gasolina más la tienda de al lado: así paga sus cuentas un grifo.",
+   "falla": "Las dos cosas deben tener nombre y el resultado necesitar las dos.",
+   "patrones": [
+    "\\b\\w+ (mas|\\+) (la|el|los|las)? ?\\w+\\b",
+    "\\bjuntos?\\b",
+    "\\bcombina(r|do)?\\b"
+   ]
+  },
+  {
+   "id": "la-advertencia",
+   "nombre": "La advertencia",
+   "forma": "Un costo que el espectador está a punto de pagar.",
+   "ejemplo": "No abras un grifo sin saber cuánto te deja de verdad cada galón.",
+   "falla": "Si el costo es chico, el gancho miente. Guárdala para lo grave.",
+   "patrones": [
+    "\\bno (abras|compres|pongas|firmes|inviertas|pagues)\\b",
+    "\\bantes de (abrir|comprar|poner|invertir|pagar)\\b",
+    "\\bcuidado\\b"
+   ]
+  },
+  {
+   "id": "la-lista",
+   "nombre": "La lista",
+   "forma": "Un conjunto contado, con el número en la primera frase.",
+   "ejemplo": "5 cosas que paga el grifo antes de ganar un sol.",
+   "falla": "El número debe ser exacto y cada punto distinto de los demás.",
+   "patrones": [
+    "^\\d+ \\w+",
+    "\\b(estas son|aqui van) (las )?\\d+\\b"
+   ]
+  },
+  {
+   "id": "la-boleta",
+   "nombre": "La boleta",
+   "forma": "Muestra la prueba primero y explica después.",
+   "ejemplo": "Esta es la lista de precios de Petroperú de esta semana. Mira la tercera fila.",
+   "falla": "Necesita la prueba real en pantalla: una prueba contada no es prueba.",
+   "patrones": [
+    "\\b(esta|este) es (la|el) (boleta|lista|recibo|factura|precio|cuenta)\\b",
+    "\\bmira (la|el|esta|este)\\b",
+    "\\bprueba\\b"
+   ]
+  },
+  {
+   "id": "el-de-adentro",
+   "nombre": "El de adentro",
+   "forma": "Información de dentro del negocio o del sistema.",
+   "ejemplo": "El encargado del grifo sabe un número que casi ningún cliente pregunta.",
+   "falla": "No finjas un acceso que no tienes.",
+   "patrones": [
+    "\\b(nadie|casi nadie|pocos) (sabe|saben|pregunta|preguntan|mira|miran)\\b",
+    "\\bescondid[oa]\\b",
+    "\\bpor dentro\\b",
+    "\\bdetras de\\b"
+   ]
+  },
+  {
+   "id": "lo-imposible",
+   "nombre": "Lo imposible",
+   "forma": "Una afirmación que suena falsa, y luego la prueba.",
+   "ejemplo": "Un grifo puede vender un millón al mes y aun así no llegar a fin de mes.",
+   "falla": "La prueba tiene que empezar antes de los 20 segundos o suena a anzuelo.",
+   "patrones": [
+    "\\bsin (ganar|perder|vender|pagar)\\b",
+    "\\by aun asi\\b",
+    "\\bnunca\\b",
+    "\\bcero\\b",
+    "\\by (no|apenas) (le )?(queda|gana)\\b"
+   ]
+  },
+  {
+   "id": "la-comparacion",
+   "nombre": "La comparación",
+   "forma": "Dos opciones con nombre y una gana.",
+   "ejemplo": "Grifo de marca contra grifo independiente: uno gana el doble por galón.",
+   "falla": "Di en voz alta cuál pierde: una comparación sin perdedor es un anuncio.",
+   "patrones": [
+    "\\bvs\\.?\\b",
+    "\\bcontra\\b",
+    "\\bversus\\b",
+    "\\bcual (gana|deja|conviene)\\b",
+    "\\bel doble\\b"
+   ]
+  },
+  {
+   "id": "el-origen",
+   "nombre": "El origen",
+   "forma": "De dónde sale de verdad un resultado.",
+   "ejemplo": "El sol que gana el grifo no sale de la gasolina. Sale de la tienda.",
+   "falla": "Funciona una vez por tema; no la repitas en el mismo canal seguido.",
+   "patrones": [
+    "\\bde donde sale\\b",
+    "\\bno sale de\\b",
+    "\\btodo empieza\\b",
+    "\\bla (verdadera )?razon\\b"
+   ]
+  },
+  {
+   "id": "la-fecha",
+   "nombre": "La fecha",
+   "forma": "Algo cambia en una fecha concreta.",
+   "ejemplo": "Desde este mes el impuesto a la gasolina cambia. Esto es lo que pagas de más.",
+   "falla": "Solo con una fecha real y comprobable: es la forma más rápida de perder la confianza.",
+   "patrones": [
+    "\\b(este|el proximo) (mes|ano)\\b",
+    "\\besta semana\\b",
+    "\\bdesde (hoy|este|el)\\b",
+    "\\bya no\\b",
+    "\\bcambia\\b"
+   ]
+  },
+  {
+   "id": "a-ti",
+   "nombre": "A ti",
+   "forma": "Nombra al espectador exacto en las primeras seis palabras.",
+   "ejemplo": "Si cargas 10 soles de gasolina cada día, esto te interesa.",
+   "falla": "Estrecho gana a amplio: «si haces negocios» no le habla a nadie.",
+   "patrones": [
+    "^si (tu |usted )?\\w+",
+    "\\bpara (todos )?los que\\b",
+    "\\bpara ti\\b"
+   ]
+  }
+ ],
+ "listas": {
+  "relleno": [
+   "basicamente",
+   "literalmente",
+   "realmente",
+   "simplemente",
+   "muy",
+   "hola",
+   "bienvenidos",
+   "bienvenido",
+   "hoy",
+   "video",
+   "suscribete",
+   "canal",
+   "chicos",
+   "amigos",
+   "gente",
+   "bueno"
+  ],
+  "vagas": [
+   "increible",
+   "impresionante",
+   "brutal",
+   "loco",
+   "locura",
+   "enorme",
+   "masivo",
+   "secreto",
+   "poderoso",
+   "definitivo",
+   "revolucionario",
+   "alucinante",
+   "epico",
+   "tremendo",
+   "impactante",
+   "sorprendente"
+  ],
+  "tu": [
+   "tu",
+   "tus",
+   "te",
+   "ti",
+   "contigo",
+   "usted",
+   "ustedes",
+   "vos",
+   "pagas",
+   "crees",
+   "sabes",
+   "compras",
+   "ganas",
+   "gastas",
+   "piensas",
+   "imaginas",
+   "haces",
+   "tienes",
+   "quieres",
+   "ves",
+   "pierdes",
+   "dejas",
+   "cargas",
+   "vendes",
+   "pagaste",
+   "creias",
+   "pensabas"
+  ],
+  "riesgo": [
+   "pierde",
+   "pierdes",
+   "perder",
+   "perdida",
+   "quiebra",
+   "quebro",
+   "cierra",
+   "cerro",
+   "cuesta",
+   "costo",
+   "riesgo",
+   "deuda",
+   "debe",
+   "antes",
+   "nunca",
+   "falla",
+   "ruina",
+   "regalas",
+   "roba",
+   "menos",
+   "apenas",
+   "solo"
+  ],
+  "curiosidad": [
+   "por que",
+   "como",
+   "cuanto",
+   "cuanta",
+   "cuantos",
+   "cuantas",
+   "que",
+   "cual",
+   "hasta",
+   "pero",
+   "nadie",
+   "casi",
+   "excepto",
+   "razon",
+   "en realidad",
+   "de verdad",
+   "menos de lo que",
+   "mas de lo que",
+   "sabias",
+   "le queda",
+   "le quedan"
+  ],
+  "cierre": [
+   "porque",
+   "asi que",
+   "lo que significa",
+   "es decir"
+  ]
+ },
+ "rango_palabras": [
+  9,
+  24
+ ],
+ "nota_uso": "Alerta, no juez: el autor original midió que separa ganchos malos de reales, pero apenas distingue los éxitos de un creador de sus fracasos. Un puntaje bajo es motivo para mirar otra vez; uno alto no promete nada."
+}

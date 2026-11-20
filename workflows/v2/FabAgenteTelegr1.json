@@ -6,7 +6,7 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "21643dff-9ee5-49cc-9323-b187089acfa1",
+      "id": "19985d9c-fb17-4937-ac95-f598e0e2ca1d",
       "name": "Inicio",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -23,7 +23,7 @@
           "systemMessage": "={{ 'Hoy es ' + $now.setZone('America/Lima').setLocale('es').toFormat(\"cccc d 'de' LLLL 'de' yyyy, HH:mm\") + ' (hora de Lima, UTC-5). ' }}Eres el operador de una fábrica de videos de YouTube. Respondes en español, en una o dos frases. Solo actúas con tus herramientas; si algo no se puede hacer con ellas, lo dices. Herramientas: crear_canal, crear_video, estado, reporte, corregir, ajustar_biblia, programar, referencias, conectar_youtube, configurar_redes, pendientes, reenviar. Si el operador dice que no le llegó una aprobación o que un enlace no abre, usa reenviar (nunca reintentes ejecuciones). Si el operador pide un video sin tema o que la fábrica elija el tema, usa crear_video con tema vacío: la fábrica investiga el nicho y elige. Si preguntan qué falta aprobar o qué está pendiente, usa pendientes y devuelve la lista con sus enlaces tal cual (el operador decide en ese enlace). Para conectar un canal a YouTube usa conectar_youtube y devuelve el enlace tal cual. Nunca publicas ni gastas: la fábrica pide aprobación con un enlace «Revisar y decidir» (en Telegram y en pendientes). Si falta un dato (canal, video, tema, fecha), pregunta solo eso. Para «programar», convierte la fecha que diga el operador a ISO 8601 con zona America/Lima (UTC-5) y confírmala en tu respuesta."
         }
       },
-      "id": "b9b1575f-b5ba-4b41-97f5-09f784988ac6",
+      "id": "f31702db-5b53-49b3-99f9-bd84a1eb010f",
       "name": "Agente",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
@@ -42,7 +42,7 @@
         "responsesApiEnabled": true,
         "options": {}
       },
-      "id": "79ff69c9-4969-4a9e-adaa-db592d851489",
+      "id": "5412b40d-7153-4958-b3db-4e1425262194",
       "name": "Modelo",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
@@ -63,7 +63,7 @@
         "sessionKey": "={{ 'fabrica-' + $('Inicio').first().json.chatId }}",
         "contextWindowLength": 20
       },
-      "id": "23f46d1c-cf14-47a9-8fac-568ae43b76d3",
+      "id": "ce391b66-aaa0-473e-95e2-9e0c44389730",
       "name": "Memoria",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -113,7 +113,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "c5b9543a-665c-41c0-88af-91dc799cf320",
+      "id": "6afe2461-6f38-46ca-8526-d294bd341557",
       "name": "crear_canal",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -196,7 +196,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "05a2f54a-b964-43ce-8e3f-135221ee6963",
+      "id": "f9da17a0-436f-4773-b500-c32e3e865935",
       "name": "crear_video",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -235,7 +235,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "8ae0fc6c-7c81-4750-8ed0-5808cf126206",
+      "id": "135b6163-301e-4d9a-970d-9a76115620b0",
       "name": "estado",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -296,7 +296,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "48a8fc05-9e83-4e86-879e-12d10943787d",
+      "id": "18742045-7512-4928-8675-d1201a879f82",
       "name": "reporte",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -368,7 +368,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "45c9695b-0c4a-46ed-acc2-048436f55876",
+      "id": "3fac94d7-d947-4a1a-89fe-5e767c881487",
       "name": "corregir",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -440,7 +440,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "13fd851c-13c2-4ac6-9068-e660998da128",
+      "id": "181b452f-9dc1-4d7f-b954-d78185a3255b",
       "name": "ajustar_biblia",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -501,7 +501,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "1541ce25-9be5-4f94-8706-4af436a7d387",
+      "id": "bc850858-be10-4f74-9257-48e609030bc9",
       "name": "programar",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -551,7 +551,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "3fade622-1a6d-45dd-9da9-772b546eac72",
+      "id": "52cd9eca-b7ab-4315-89a4-0e126e1528e6",
       "name": "referencias",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -634,7 +634,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "3372eb2e-81d5-479f-9ddd-a36c0b8c9fe4",
+      "id": "31d328a7-c26d-445e-a848-56b8b9b83300",
       "name": "configurar_redes",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -684,7 +684,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "b84eee97-f437-46d2-94df-f36bbbd79755",
+      "id": "6356e0d0-47ab-4904-958c-e7755ecf0c58",
       "name": "conectar_youtube",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -723,7 +723,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "7b8ca44d-abcb-48b3-99ac-271ad66238da",
+      "id": "c592d0b1-a68f-4416-9a49-8a9f74e0e0a7",
       "name": "pendientes",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -762,7 +762,7 @@
           "convertFieldsToString": false
         }
       },
-      "id": "310c7dd2-ae12-4255-a6ce-34737efbc815",
+      "id": "66d30ade-867a-476a-8ef0-4ac2b08d6465",
       "name": "reenviar",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
@@ -775,7 +775,7 @@
       "parameters": {
         "jsCode": "return [{ json: { respuesta: String($json.output || 'Listo.').slice(0, 3900) } }];"
       },
-      "id": "d1ef9781-e73e-459c-a544-798919606c24",
+      "id": "0f17c701-1750-4a5f-897b-e5109497d6f0",
       "name": "Respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
