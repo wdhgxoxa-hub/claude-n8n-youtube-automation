@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
 const dir = ".cache/capturas-diseno";
+test.use({ timezoneId: "America/Lima" });
 async function ready(page: Page, path = "/") {
   await page.goto(path);
   await expect(page.locator(".connection")).toHaveText("En vivo");
@@ -264,4 +265,36 @@ test("capturas finales: todas las pantallas y formularios demo en ambos temas", 
     `${dir}/manifest.json`,
     JSON.stringify(manifest, null, 2) + "\n",
   );
+});
+
+test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (msg) => {
+    if (msg.type() === "error") errors.push(msg.text());
+  });
+  for (const theme of ["oscuro", "claro"]) {
+    await page.request.patch("/api/perfil", {
+      data: { name: "Walter", image: "", theme, home: "chat", whatsapp: "" },
+    });
+    for (const path of ["/admin", "/avatares", "/"]) {
+      await ready(page, path);
+      await page.waitForTimeout(900);
+      expect(await page.locator('path[d="undefined"]').count()).toBe(0);
+    }
+    await page.getByLabel("Mensaje para Cooper").fill("¿Qué tengo pendiente?");
+    await page.getByLabel("Mensaje para Cooper").press("Enter");
+    await expect(
+      page.getByRole("img", { name: "Cooper hablando" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("img", { name: "Cooper reposo" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Pausar movimiento" }).click();
+    await page.waitForTimeout(800);
+    await page.getByRole("button", { name: "Activar movimiento" }).click();
+  }
+  expect(errors).toEqual([]);
 });

@@ -109,16 +109,7 @@ export function CooperCara({
         strokeWidth="3"
         strokeLinecap="round"
         animate={{
-          d:
-            !reduced && estado === "hablando"
-              ? [
-                  "M71 138q19 12 38 0",
-                  "M74 136q16 29 32 0",
-                  "M71 138q19 8 38 0",
-                  "M76 136q14 22 28 0",
-                  "M71 138q19 12 38 0",
-                ]
-              : "M71 138q19 12 38 0",
+          scaleY: !reduced && estado === "hablando" ? [1, 1.8, 0.7, 1.5, 1] : 1,
         }}
         transition={{
           repeat: !reduced && estado === "hablando" ? Infinity : 0,
