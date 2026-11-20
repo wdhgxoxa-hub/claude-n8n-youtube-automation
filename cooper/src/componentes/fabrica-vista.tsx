@@ -167,7 +167,6 @@ export function FabricaVista() {
                     key={v.id}
                     className="queue-item"
                     aria-pressed={active.id === v.id}
-                    aria-label={`Ver recorrido: ${v.title}`}
                     onClick={() => setSelected(v.id)}
                     whileHover={reduced ? {} : { y: -2 }}
                     whileTap={reduced ? {} : { scale: 0.97 }}

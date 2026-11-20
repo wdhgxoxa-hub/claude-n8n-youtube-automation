@@ -185,13 +185,14 @@ try {
     summaries.some(
       (result) =>
         result.warnings.length ||
+        result.failedAudits.length ||
         result.scores.performance < 0.9 ||
         result.scores.accessibility < 1 ||
         result.scores["best-practices"] < 1,
     )
   )
     throw new Error(
-      "La auditoría requiere rendimiento >=90, accesibilidad/buenas prácticas 100 y ninguna advertencia.",
+      "La auditoría requiere rendimiento >=90, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.",
     );
 } finally {
   await browser?.close();

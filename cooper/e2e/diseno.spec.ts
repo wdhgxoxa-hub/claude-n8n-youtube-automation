@@ -58,7 +58,14 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
       await ready(page, path);
       await overflow(page);
       const result = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+        .withTags([
+          "wcag2a",
+          "wcag2aa",
+          "wcag21a",
+          "wcag21aa",
+          "wcag22a",
+          "wcag22aa",
+        ])
         .analyze();
       expect(result.violations, `${name} ${width}`).toEqual([]);
       await page.screenshot({
@@ -70,7 +77,9 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
     if (width === 390) await page.getByRole("tab", { name: /Fábrica/ }).click();
     await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
     await page
-      .getByRole("button", { name: "Ver recorrido: ¿A qué huele la lluvia?" })
+      .getByRole("button", {
+        name: /04 ¿A qué huele la lluvia\? Aprobación de guion/,
+      })
       .click();
     await expect(page.locator(".factory-pane li.current")).toContainText(
       "Aprobación de guion",
@@ -81,7 +90,7 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
     );
     await page
       .getByRole("button", {
-        name: "Ver recorrido: Por qué el cielo cambia de color",
+        name: /12 Por qué el cielo cambia de color/,
       })
       .click();
     await expect(page.getByRole("progressbar")).toHaveAttribute(
@@ -89,7 +98,7 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
       "12",
     );
     await page
-      .getByRole("button", { name: "Ver recorrido: El mar también respira" })
+      .getByRole("button", { name: /08 El mar también respira/ })
       .click();
     await page.screenshot({
       path: `${dir}/fabrica-${width}.png`,
@@ -143,7 +152,9 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
       .evaluate((el) => getComputedStyle(el, "::after").animationName),
   ).toBe("none");
   await page
-    .getByRole("button", { name: "Ver recorrido: ¿A qué huele la lluvia?" })
+    .getByRole("button", {
+      name: /04 ¿A qué huele la lluvia\? Aprobación de guion/,
+    })
     .focus();
   await page.keyboard.press("Enter");
   await expect(page.locator(".factory-pane li.current")).toContainText(
@@ -244,7 +255,14 @@ test("capturas finales: todas las pantallas y formularios demo en ambos temas", 
         expect(
           (
             await new AxeBuilder({ page })
-              .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+              .withTags([
+                "wcag2a",
+                "wcag2aa",
+                "wcag21a",
+                "wcag21aa",
+                "wcag22a",
+                "wcag22aa",
+              ])
               .analyze()
           ).violations,
           `${name} ${theme} ${width}`,

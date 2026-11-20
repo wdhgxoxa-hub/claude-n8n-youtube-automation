@@ -393,7 +393,14 @@ test("auditoría AA de todas las pantallas, anchuras y ambos temas", async ({
         await expect(page.locator(".connection")).toHaveText("En vivo");
         await noOverflow(page);
         const results = await new AxeBuilder({ page })
-          .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+          .withTags([
+            "wcag2a",
+            "wcag2aa",
+            "wcag21a",
+            "wcag21aa",
+            "wcag22a",
+            "wcag22aa",
+          ])
           .analyze();
         expect(results.violations, `${path} ${theme} ${width}`).toEqual([]);
         await page.screenshot({

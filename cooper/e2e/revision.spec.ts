@@ -245,7 +245,14 @@ test("entrada, no encontrado y formularios accesibles en ambos temas y cuatro an
         expect(
           (
             await new AxeBuilder({ page })
-              .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+              .withTags([
+                "wcag2a",
+                "wcag2aa",
+                "wcag21a",
+                "wcag21aa",
+                "wcag22a",
+                "wcag22aa",
+              ])
               .analyze()
           ).violations,
           `${screen} ${theme} ${width}`,
