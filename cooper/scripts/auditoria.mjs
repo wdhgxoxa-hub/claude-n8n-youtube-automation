@@ -9,6 +9,18 @@ const base = "http://127.0.0.1:33171";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
+async function available(port) {
+  const probe = createServer();
+  await new Promise((resolve, reject) => {
+    probe.once("error", reject);
+    probe.listen(port, "127.0.0.1", resolve);
+  });
+  const selected = probe.address().port;
+  await new Promise((resolve) => probe.close(resolve));
+  return selected;
+}
+await available(33171);
+await available(33172);
 const server = spawn(process.execPath, ["scripts/e2e-server.mjs"], {
   stdio: ["ignore", "ignore", "inherit"],
   env: { ...process.env, COOPER_E2E_SECRET: secret },
@@ -17,77 +29,164 @@ let browser;
 try {
   let ready = false;
   for (let i = 0; i < 100; i++) {
+    if (server.exitCode !== null)
+      throw new Error("El servidor aislado terminó antes de arrancar.");
     try {
       ready = (await fetch(base + "/entrar")).ok;
     } catch {
-      /* Esperar al servidor aislado, sin usar una instancia existente. */
+      /* Esperar al servidor propio. */
     }
     if (ready) break;
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((resolve) => setTimeout(resolve, 200));
   }
   if (!ready) throw new Error("El servidor de auditoría no arrancó.");
-  const probe = createServer();
-  await new Promise((r) => probe.listen(0, "127.0.0.1", r));
-  const port = probe.address().port;
-  await new Promise((r) => probe.close(r));
+  const port = await available(0);
   browser = await chromium.launch({
     args: [`--remote-debugging-port=${port}`],
   });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  const auth = await page.request.post("http://127.0.0.1:33172/sesion", {
+  const context = await browser.newContext({ baseURL: base });
+  const auth = await context.request.post("http://127.0.0.1:33172/sesion", {
     data: { email: "admin@example.test", secret },
   });
   if (!auth.ok()) throw new Error("No se pudo crear la sesión aislada.");
-  // Lighthouse usa el contexto predeterminado. Se transfiere exclusivamente la cookie de ensayo.
+  const channel = await (
+    await context.request.post("/api/orden", {
+      data: { evento: "nuevo_canal", texto: "Ciencia cotidiana" },
+    })
+  ).json();
+  const video = await (
+    await context.request.post("/api/orden", {
+      data: {
+        evento: "nuevo_video",
+        recursoId: channel.id,
+        texto: "Por qué el cielo es azul",
+      },
+    })
+  ).json();
   const cdp = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   await cdp.contexts()[0].addCookies(await context.cookies());
-  const result = await lighthouse(base + "/", {
-    port,
-    logLevel: "error",
-    output: "html",
-    onlyCategories: ["performance", "accessibility", "best-practices"],
-    disableStorageReset: true,
-    formFactor: "mobile",
-    screenEmulation: {
-      mobile: true,
-      width: 390,
-      height: 844,
-      deviceScaleFactor: 1,
-      disabled: false,
-    },
-  });
-  if (!result?.lhr) throw new Error("Lighthouse no devolvió resultados.");
+  const summaries = [];
   mkdirSync(".cache/auditoria", { recursive: true });
-  writeFileSync(".cache/auditoria/lighthouse.html", result.report);
-  const summary = {
-    url: result.lhr.finalDisplayedUrl,
-    fecha: result.lhr.fetchTime,
-    entorno: "Chromium local; simulación móvil, sin datos de campo",
-    scores: Object.fromEntries(
-      Object.entries(result.lhr.categories).map(([key, value]) => [
-        key,
-        value.score,
-      ]),
-    ),
-    metrics: Object.fromEntries(
-      [
-        "first-contentful-paint",
-        "largest-contentful-paint",
-        "total-blocking-time",
-        "cumulative-layout-shift",
-        "speed-index",
-      ].map((key) => [key, result.lhr.audits[key].displayValue]),
-    ),
-    warnings: result.lhr.runWarnings,
-  };
-  writeFileSync(
-    ".cache/auditoria/resumen.json",
-    JSON.stringify(summary, null, 2) + "\n",
-  );
-  console.log(JSON.stringify(summary, null, 2));
+  for (const theme of ["oscuro", "claro"]) {
+    const profile = await context.request.patch("/api/perfil", {
+      data: {
+        name: "Ensayo Lighthouse",
+        image: "",
+        theme,
+        home: "chat",
+        whatsapp: "",
+      },
+    });
+    if (!profile.ok())
+      throw new Error("No se pudo configurar el tema de ensayo.");
+    for (const formFactor of ["mobile", "desktop"]) {
+      const paths = process.argv.includes("--rapida")
+        ? ["/"]
+        : [
+            "/",
+            "/canales",
+            "/videos",
+            `/videos/${video.id}`,
+            "/avatares",
+            "/perfil",
+            "/admin",
+            "/entrar",
+          ];
+      for (const path of paths) {
+        const mobile = formFactor === "mobile";
+        const result = await lighthouse(base + path, {
+          port,
+          logLevel: "error",
+          output: "html",
+          onlyCategories: ["performance", "accessibility", "best-practices"],
+          disableStorageReset: true,
+          formFactor,
+          screenEmulation: {
+            mobile,
+            width: mobile ? 390 : 1440,
+            height: 900,
+            deviceScaleFactor: 1,
+            disabled: false,
+          },
+          ...(mobile
+            ? {}
+            : {
+                throttling: {
+                  rttMs: 40,
+                  throughputKbps: 10240,
+                  cpuSlowdownMultiplier: 1,
+                  requestLatencyMs: 0,
+                  downloadThroughputKbps: 0,
+                  uploadThroughputKbps: 0,
+                },
+              }),
+        });
+        if (!result?.lhr || result.lhr.runtimeError)
+          throw new Error("Lighthouse no completó la medición.");
+        const name = `${path.replaceAll("/", "_") || "inicio"}-${theme}-${formFactor}`;
+        writeFileSync(`.cache/auditoria/${name}.html`, result.report);
+        const summary = {
+          path,
+          theme: path === "/entrar" ? "oscuro (entrada pública)" : theme,
+          formFactor,
+          fecha: result.lhr.fetchTime,
+          scores: Object.fromEntries(
+            Object.entries(result.lhr.categories).map(([key, value]) => [
+              key,
+              value.score,
+            ]),
+          ),
+          metrics: Object.fromEntries(
+            [
+              "largest-contentful-paint",
+              "total-blocking-time",
+              "cumulative-layout-shift",
+            ].map((key) => [key, result.lhr.audits[key].numericValue]),
+          ),
+          warnings: result.lhr.runWarnings,
+          failedAudits: Object.values(result.lhr.audits)
+            .filter(
+              (a) =>
+                a.score !== null &&
+                a.score < 1 &&
+                a.scoreDisplayMode === "binary",
+            )
+            .map((a) => ({ id: a.id, title: a.title })),
+        };
+        summaries.push(summary);
+        writeFileSync(
+          ".cache/auditoria/resumen.json",
+          JSON.stringify(
+            {
+              entorno: "Chromium local; laboratorio, sin métricas de campo",
+              mediciones: summaries,
+            },
+            null,
+            2,
+          ) + "\n",
+        );
+        console.log(
+          `${path} ${theme} ${formFactor}: ${JSON.stringify(summary.scores)}; advertencias=${summary.warnings.length}`,
+        );
+      }
+    }
+  }
   await cdp.close();
+  if (
+    summaries.some(
+      (result) =>
+        result.warnings.length ||
+        result.scores.performance < 0.9 ||
+        result.scores.accessibility < 1 ||
+        result.scores["best-practices"] < 1,
+    )
+  )
+    throw new Error(
+      "La auditoría requiere rendimiento >=90, accesibilidad/buenas prácticas 100 y ninguna advertencia.",
+    );
 } finally {
   await browser?.close();
   server.kill("SIGTERM");
+  if (server.exitCode === null)
+    await new Promise((resolve) => server.once("exit", resolve));
 }
