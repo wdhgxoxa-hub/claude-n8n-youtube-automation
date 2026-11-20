@@ -346,8 +346,8 @@ export function Espacio({
             <main id="contenido" tabIndex={-1}>
               <motion.div
                 key={path}
-                initial={{ opacity: 0.6 }}
-                animate={{ opacity: 1 }}
+                initial={{ y: 2 }}
+                animate={{ y: 0 }}
                 transition={{ duration: reduced || paused ? 0 : 0.2 }}
               >
                 {children}
