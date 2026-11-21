@@ -1,0 +1,33 @@
+{
+  "fecha_utc": "2026-11-21T20:30:09.710842+00:00",
+  "fecha_lima": "2026-11-21T15:30:09.710842-05:00",
+  "operacion": "solo_lectura",
+  "vps": {
+    "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+    "docker": "29.10.0",
+    "HostConfig.Memory": 1073741824,
+    "HostConfig.MemorySwap": 2147483648,
+    "cgroup": {
+      "memory.max": 1073741824,
+      "memory.swap.max": 1073741824
+    },
+    "host": {
+      "SwapTotal_kB": 0,
+      "SwapFree_kB": 0
+    }
+  },
+  "candidato": {
+    "archivo": "deploy/compose.yaml",
+    "sha256": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "imagen_prevista": "localhost/cooper:bfd5e79",
+    "mem_limit": "1g",
+    "memswap_limit": null
+  },
+  "conclusion": "El host no ofrece swap utilizable. Un ensayo que utiliza swap no reproduce la condición vigente de memoria del VPS.",
+  "cambios_servicios_o_limites": false,
+  "campos_privados_consultados": false,
+  "fuentes": [
+    "https://docs.docker.com/engine/containers/resource_constraints/#--memory-swap-details",
+    "https://docs.docker.com/reference/compose-file/container-spec/#memswap_limit"
+  ]
+}

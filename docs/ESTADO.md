@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 15:28 (Lima).
+Última actualización: 2026-11-21 15:30 (Lima).
 
 ## Qué es
 
@@ -69,6 +69,8 @@
 ## En curso
 
 - Integración `total-integrador`: incorpora frentes cerrados desde `a69e374`, preservando los worktrees activos. Verificación y despliegue autorizados en curso; el cierre distinguirá las pruebas nuevas de evidencias históricas.
+
+- **H19, condición de memoria real comprobada:** Cooper VPS tiene 1 GiB de RAM y el host no tiene swap, aunque el cgroup permite hasta 1 GiB de swap si existiera. El candidato conserva esos límites. Un ensayo que usó swap no acredita esa condición; competencia repetirá sin swap. Consulta read-only, sin cambiar servicios, límites o imagen. [Recibo](informes/total-memoria-vps.md).
 
 - H19 ampliado: Data Tables real con 10.000 videos detectó unos nueve segundos de proyección administrativa por filtros repetidos. Agrupación por ID implementada y contrastada: proyección administrativa 9.136→197 ms, respuestas idénticas en cuatro casos. El total máximo sigue en 1.070 ms frente al presupuesto comparativo de 1.000 ms; límite explícito. Delta único de Resolver y reversa ensayados en ambos motores; aplicación remota pendiente. No cambia Cooper ni su imagen. [Medición inicial](informes/total-volumen-n8n.md).
 
