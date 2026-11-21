@@ -8,6 +8,8 @@ import { api, Heading, Notice, useEspacio } from "./espacio";
 import type { EstadoMarcas } from "@/servicios/marcas/servicio";
 import type { Marca, PiezaMarca } from "@/db/schema";
 import { formatos, redes, rubros } from "@/servicios/marcas/opciones";
+import { crearPlantillaTienda } from "@/servicios/marcas/tienda";
+import { PanelMarcaTienda } from "./marca-tienda";
 type MarcaVista = EstadoMarcas["marcas"][number];
 const nombreRubro = {
   "iglesia-reformada": "Iglesia reformada",
@@ -31,7 +33,12 @@ export function Marcas({
   piezaId?: string;
   marcaId?: string;
   seccionInicial?:
-    "calendario" | "estudio" | "competencia" | "publicados" | "aprendizaje";
+    | "calendario"
+    | "estudio"
+    | "competencia"
+    | "publicados"
+    | "aprendizaje"
+    | "tienda";
 }) {
   const editorId = useId();
   const { data: espacio } = useEspacio(),
@@ -50,7 +57,10 @@ export function Marcas({
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [editar, setEditar] = useState<PiezaMarca>();
-  const [conexionAbierta, setConexionAbierta] = useState(true);
+  const [conexionAbierta, setConexionAbierta] = useState(() => {
+    const inicial = initial.marcas.find((m) => m.id === seleccion);
+    return !inicial?.guia.tienda;
+  });
   const [business, setBusiness] = useState<Record<string, boolean>>({});
   const editorOrigin = useRef<HTMLElement | null>(null);
   const newBrandButton = useRef<HTMLButtonElement>(null);
@@ -78,11 +88,13 @@ export function Marcas({
     setEditor(false);
   }
   const marca = data.marcas.find((m) => m.id === seleccion);
-  function cambiarSeccion(valor: string) {
+  const seccionActiva =
+    seccion === "tienda" && !marca?.guia.tienda ? "calendario" : seccion;
+  function cambiarSeccion(valor: string, marcaSeleccionada = marca?.id) {
     setSeccion(valor);
     const url = new URL(window.location.href);
     url.searchParams.set("seccion", valor);
-    if (marca) url.searchParams.set("marca", marca.id);
+    if (marcaSeleccionada) url.searchParams.set("marca", marcaSeleccionada);
     url.searchParams.delete("pieza");
     window.history.replaceState(null, "", url.pathname + url.search);
   }
@@ -143,6 +155,8 @@ export function Marcas({
                 v,
               );
               setSeleccion(m.id);
+              setConexionAbierta(!m.guia.tienda);
+              cambiarSeccion(m.guia.tienda ? "tienda" : "calendario", m.id);
               cerrarEditor();
             }, "Guía de marca guardada.")
           }
@@ -172,6 +186,13 @@ export function Marcas({
                     onClick={() => {
                       setSeleccion(m.id);
                       setEditar(undefined);
+                      setConexionAbierta(!m.guia.tienda);
+                      cambiarSeccion(
+                        seccion === "tienda" && !m.guia.tienda
+                          ? "calendario"
+                          : seccion,
+                        m.id,
+                      );
                     }}
                   >
                     <span
@@ -364,6 +385,7 @@ export function Marcas({
                     aria-label="Secciones de la marca"
                   >
                     {[
+                      ...(marca.guia.tienda ? [["tienda", "Tienda"]] : []),
                       ["calendario", "Calendario"],
                       ["estudio", "Estudio"],
                       ["competencia", "Competencia"],
@@ -371,8 +393,8 @@ export function Marcas({
                       ["aprendizaje", "Aprendizaje"],
                     ].map(([v, label]) => (
                       <button
-                        className={seccion === v ? "active" : ""}
-                        aria-current={seccion === v ? "page" : undefined}
+                        className={seccionActiva === v ? "active" : ""}
+                        aria-current={seccionActiva === v ? "page" : undefined}
                         key={v}
                         onClick={() => cambiarSeccion(v)}
                       >
@@ -380,6 +402,9 @@ export function Marcas({
                       </button>
                     ))}
                   </nav>
+                  {seccionActiva === "tienda" && marca.guia.tienda && (
+                    <PanelMarcaTienda zona={marca.zona} />
+                  )}
                   {seccion === "competencia" && (
                     <div>
                       <button
@@ -473,7 +498,7 @@ export function Marcas({
                       )}
                     </section>
                   )}
-                  {seccion === "calendario" && (
+                  {seccionActiva === "calendario" && (
                     <>
                       <div className="marca-calendario-titulo">
                         <CalendarDays size={24} />
@@ -714,6 +739,17 @@ function EditorMarca({
   guardar: (v: unknown) => Promise<void>;
 }) {
   const [paso, setPaso] = useState(0);
+  const [usarTienda, setUsarTienda] = useState(false);
+  const [identidad, setIdentidad] = useState(() => ({
+    nombre: marca?.nombre ?? "",
+    rubro: marca?.rubro ?? rubros[0],
+    colores: marca?.guia.colores ?? ["#142c3b", "#f0eee7"],
+    tipografia: marca?.guia.tipografia ?? "serif",
+    tono: marca?.guia.tono ?? "Cercano, cuidadoso y claro",
+  }));
+  const tienda =
+    marca?.guia.tienda ??
+    (usarTienda ? crearPlantillaTienda().guia.tienda : undefined);
   const formulario = useRef<HTMLFormElement>(null);
   useEffect(() => {
     formulario.current
@@ -729,15 +765,22 @@ function EditorMarca({
     }
     void guardar({
       nombre: f.get("nombre"),
-      rubro: f.get("rubro"),
+      rubro: identidad.rubro,
       ownerId: f.get("ownerId"),
       zona: f.get("zona"),
       guia: {
-        colores: [f.get("color1"), f.get("color2")],
+        ...marca?.guia,
+        ...(tienda ? { tienda } : {}),
+        colores: [
+          f.get("color1"),
+          f.get("color2"),
+          ...identidad.colores.slice(2),
+        ],
         tipografia: f.get("tipografia"),
         logoId: f.get("logoId"),
         tono: f.get("tono"),
-        versionBiblia: f.get("versionBiblia"),
+        versionBiblia:
+          f.get("versionBiblia") ?? marca?.guia.versionBiblia ?? "RVR1960",
       },
     });
   }
@@ -760,11 +803,52 @@ function EditorMarca({
       <form className="stack" onSubmit={next} ref={formulario} aria-busy={busy}>
         <fieldset hidden={paso !== 0}>
           <legend tabIndex={-1}>Identidad y dueño</legend>
+          {!marca && (
+            <>
+              <label>
+                Punto de partida
+                <select
+                  value={usarTienda ? "tienda" : "blanco"}
+                  onChange={(e) => {
+                    const usar = e.target.value === "tienda";
+                    const plantilla = usar ? crearPlantillaTienda() : undefined;
+                    setUsarTienda(usar);
+                    setIdentidad({
+                      nombre: plantilla?.nombre ?? "",
+                      rubro: plantilla?.rubro ?? rubros[0],
+                      colores: plantilla?.guia.colores ?? [
+                        "#142c3b",
+                        "#f0eee7",
+                      ],
+                      tipografia: plantilla?.guia.tipografia ?? "serif",
+                      tono:
+                        plantilla?.guia.tono ?? "Cercano, cuidadoso y claro",
+                    });
+                  }}
+                >
+                  <option value="blanco">Guía en blanco</option>
+                  <option value="tienda">
+                    Tienda de ropa de Walter (ejemplo)
+                  </option>
+                </select>
+              </label>
+              {usarTienda && (
+                <p className="marcas-demo">
+                  Plantilla de ejemplo · Pendiente de definición con Walter.
+                  Incluye moda y ecommerce, cinco pilares, calendario de ejemplo
+                  y métricas de conversión. Puedes adaptar el nombre y la guía.
+                </p>
+              )}
+            </>
+          )}
           <label>
             Nombre de la marca
             <input
               name="nombre"
-              defaultValue={marca?.nombre}
+              value={identidad.nombre}
+              onChange={(e) =>
+                setIdentidad({ ...identidad, nombre: e.target.value })
+              }
               required={paso === 0}
               minLength={2}
               maxLength={100}
@@ -782,7 +866,17 @@ function EditorMarca({
           </label>
           <label>
             Rubro
-            <select name="rubro" defaultValue={marca?.rubro}>
+            <select
+              name="rubro"
+              value={identidad.rubro}
+              disabled={!!tienda}
+              onChange={(e) =>
+                setIdentidad({
+                  ...identidad,
+                  rubro: e.target.value as Marca["rubro"],
+                })
+              }
+            >
               {rubros.map((r) => (
                 <option key={r} value={r}>
                   {nombreRubro[r]}
@@ -803,7 +897,13 @@ function EditorMarca({
               <input
                 name="color1"
                 type="color"
-                defaultValue={marca?.guia.colores[0] ?? "#142c3b"}
+                value={identidad.colores[0]}
+                onChange={(e) =>
+                  setIdentidad({
+                    ...identidad,
+                    colores: [e.target.value, ...identidad.colores.slice(1)],
+                  })
+                }
               />
             </label>
             <label>
@@ -811,7 +911,17 @@ function EditorMarca({
               <input
                 name="color2"
                 type="color"
-                defaultValue={marca?.guia.colores[1] ?? "#f0eee7"}
+                value={identidad.colores[1]}
+                onChange={(e) =>
+                  setIdentidad({
+                    ...identidad,
+                    colores: [
+                      identidad.colores[0],
+                      e.target.value,
+                      ...identidad.colores.slice(2),
+                    ],
+                  })
+                }
               />
             </label>
           </div>
@@ -819,7 +929,13 @@ function EditorMarca({
             Tipografía
             <select
               name="tipografia"
-              defaultValue={marca?.guia.tipografia ?? "serif"}
+              value={identidad.tipografia}
+              onChange={(e) =>
+                setIdentidad({
+                  ...identidad,
+                  tipografia: e.target.value as "serif" | "sans",
+                })
+              }
             >
               <option value="serif">Con remates</option>
               <option value="sans">Sin remates</option>
@@ -842,7 +958,10 @@ function EditorMarca({
             Tono
             <textarea
               name="tono"
-              defaultValue={marca?.guia.tono ?? "Cercano, cuidadoso y claro"}
+              value={identidad.tono}
+              onChange={(e) =>
+                setIdentidad({ ...identidad, tono: e.target.value })
+              }
               required={paso === 1}
               minLength={3}
               maxLength={500}
@@ -852,19 +971,21 @@ function EditorMarca({
         <fieldset hidden={paso !== 2}>
           <legend tabIndex={-1}>Especialista y revisión</legend>
           <p>
-            El especialista sigue el rubro y la guía. Los avisos usan plantillas
-            propias; las ilustraciones pueden servir como fondo. Texto, horarios
-            y citas permanecen editables.
+            {tienda
+              ? "El especialista de moda y ecommerce prepara lanzamientos, lookbooks, reels de producto, ofertas y UGC. Toda propuesta requiere validar productos, permisos y condiciones comerciales."
+              : "El especialista sigue el rubro y la guía. Los avisos usan plantillas propias; las ilustraciones pueden servir como fondo. Texto, horarios y citas permanecen editables."}
           </p>
-          <label>
-            Versión bíblica (si corresponde)
-            <input
-              name="versionBiblia"
-              defaultValue={marca?.guia.versionBiblia ?? "RVR1960"}
-              required={paso === 2}
-              maxLength={30}
-            />
-          </label>
+          {identidad.rubro === "iglesia-reformada" && (
+            <label>
+              Versión bíblica (si corresponde)
+              <input
+                name="versionBiblia"
+                defaultValue={marca?.guia.versionBiblia ?? "RVR1960"}
+                required={paso === 2 && identidad.rubro === "iglesia-reformada"}
+                maxLength={30}
+              />
+            </label>
+          )}
           <label>
             Zona horaria
             <input
@@ -874,8 +995,9 @@ function EditorMarca({
             />
           </label>
           <p>
-            Después de guardar, añade las cuentas. Walter verifica la conexión y
-            revisa cada pieza antes de programarla.
+            {tienda
+              ? "La plantilla no crea cuentas ni publicaciones. El catálogo web queda desconectado y la conversión real, sin datos. Walter definirá la tienda y revisará cada pieza antes de programarla."
+              : "Después de guardar, añade las cuentas. Walter verifica la conexión y revisa cada pieza antes de programarla."}
           </p>
         </fieldset>
         <div className="actions">

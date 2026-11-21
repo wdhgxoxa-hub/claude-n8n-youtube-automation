@@ -21,7 +21,8 @@ export default async function Page({
     seccion === "publicados" ||
     seccion === "aprendizaje" ||
     seccion === "estudio" ||
-    seccion === "competencia"
+    seccion === "competencia" ||
+    seccion === "tienda"
       ? seccion
       : "calendario";
   return (

@@ -1,0 +1,198 @@
+.panel {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+
+.panel h3 {
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.panel h4 {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.panel p {
+  max-width: 72ch;
+}
+
+.panel small,
+.nota,
+.formula {
+  color: var(--muted);
+}
+
+.aviso {
+  border-left: 3px solid var(--accent);
+  padding: 8px 16px;
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.introduccion {
+  margin-bottom: 24px;
+}
+
+.pilares {
+  border-top: 1px solid var(--line);
+}
+
+.pilar {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.numero {
+  color: var(--accent);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  padding-top: 3px;
+}
+
+.pilar p {
+  margin: 6px 0;
+}
+
+.panel summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: 10px;
+}
+
+.seccion {
+  margin-top: 36px;
+}
+
+.calendario {
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.calendario li {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dia {
+  display: flex;
+  flex-direction: column;
+  font-variant-numeric: tabular-nums;
+}
+
+.dia span {
+  color: var(--muted);
+}
+
+.metricas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.metrica {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.metrica dt {
+  font-weight: 600;
+}
+
+.metrica dd {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.metrica .valor {
+  margin: 12px 0 16px;
+  font-size: 24px;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.ejemplo,
+.requisitos {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.ejemplo > p,
+.requisitos dl {
+  margin: 12px 0;
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.estado {
+  color: var(--muted);
+  font-size: 14px;
+  border: 1px solid var(--line);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.requisitos dl > div {
+  margin: 16px 0;
+}
+
+.requisitos dt {
+  font-weight: 600;
+}
+
+.requisitos dd {
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.pendientes {
+  padding-left: 20px;
+}
+
+.pendientes li {
+  padding: 6px 0;
+}
+
+@media (max-width: 600px) {
+  .metricas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .calendario li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .dia {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .ejemplo,
+  .requisitos,
+  .metrica {
+    padding-inline: 16px;
+  }
+}
