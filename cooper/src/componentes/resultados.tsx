@@ -21,6 +21,10 @@ import {
 } from "@/contratos/resultados";
 import type { Metricas } from "@/servicios/marcas/tipos";
 
+function cantidad(n: number, singular: string, plural: string) {
+  return `${n} ${n === 1 ? singular : plural}`;
+}
+
 function MetricasMarca({ metricas: m }: { metricas: Metricas | null }) {
   return (
     <>
@@ -235,8 +239,8 @@ export function Publicados({ initial }: { initial: Resultados }) {
       <Filtros {...consulta} />
       {error && <p role="alert">{error}</p>}
       <p role="status">
-        {publicaciones.length} publicaciones · {visibles.length} registros de
-        origen
+        {cantidad(publicaciones.length, "publicación", "publicaciones")} ·{" "}
+        {cantidad(visibles.length, "registro", "registros")} de origen
       </p>
       <p className="muted">
         Cada fuente conserva sus métricas. Solo agrupamos registros con una
@@ -358,14 +362,25 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
           </Link>
         }
       />
-      {data.demo && <p className="notice">Ejemplos de aprendizaje con datos ficticios.</p>}
+      {data.demo && (
+        <p className="notice">Ejemplos de aprendizaje con datos ficticios.</p>
+      )}
       {data.user.role === "admin" && <InterruptorAprendizaje />}
       <Filtros {...consulta} />
       {error && <p role="alert">{error}</p>}
       <p role="status">
-        {lecciones.filter((l) => l.tipo === "video").length} lecciones de videos
-        · {lecciones.filter((l) => l.tipo === "marca").length} registros de
-        Marcas
+        {cantidad(
+          lecciones.filter((l) => l.tipo === "video").length,
+          "lección",
+          "lecciones",
+        )}{" "}
+        de videos ·{" "}
+        {cantidad(
+          lecciones.filter((l) => l.tipo === "marca").length,
+          "registro",
+          "registros",
+        )}{" "}
+        de Marcas
       </p>
       <p className="muted">
         Las observaciones de Marcas y las lecciones de videos conservan su
