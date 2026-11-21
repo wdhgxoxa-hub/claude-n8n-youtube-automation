@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const LIMITE = 256 * 1024;
-export function crearRele({ modo, token, socket, puertoDestino = 8789, timeout = 47000 }) {
+export function crearRele({ modo, token, socket, puertoDestino = 8789, timeout }) {
   if (!['pc', 'vps'].includes(modo) || typeof token !== 'string' || token.length < 32)
     throw new Error('Configuración de relé inválida');
   if (modo === 'vps' && (!socket || !socket.startsWith('/')))
@@ -64,7 +64,8 @@ export function crearRele({ modo, token, socket, puertoDestino = 8789, timeout =
         res.end(Buffer.concat(result));
       });
     });
-    const timer = setTimeout(() => upstream.destroy(new Error('tiempo')), timeout);
+    const timer = setTimeout(() => upstream.destroy(new Error('tiempo')),
+      timeout ?? (req.url === '/v1/texto' ? 200000 : 47000));
     upstream.on('close', () => clearTimeout(timer));
     upstream.on('error', () => reply(503, 'puente_no_disponible'));
     res.on('close', () => { if (!res.writableEnded) upstream.destroy(); });
