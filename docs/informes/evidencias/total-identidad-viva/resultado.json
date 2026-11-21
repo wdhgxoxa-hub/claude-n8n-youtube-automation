@@ -1,0 +1,39 @@
+{
+  "commit_producto": "7f8cbbd",
+  "fecha_lima": "2026-11-21",
+  "causa": {
+    "creacion_lima": "2026-11-21T13:06:39.531-05:00",
+    "consulta_lima": "2026-11-21T13:06:54.402-05:00",
+    "demora_ms": 14871,
+    "intervalo_sse_ms": 400,
+    "timeout_asercion_ms": 15000,
+    "fallos_sondeo": 0,
+    "estado_posterior": "listo"
+  },
+  "unitarias": {
+    "pasadas": 30,
+    "fallidas": 0,
+    "archivos": 4
+  },
+  "regresion_con_codigo_anterior": {
+    "fallos_esperados": 3,
+    "codigo": 1
+  },
+  "focal": {
+    "pasadas": 2,
+    "fallidas": 0,
+    "duracion_s": 17.1,
+    "identidad_s": 10.3,
+    "biblioteca_sin_navegador_s": 4.5,
+    "codigo": 0,
+    "timeouts_modificados": false
+  },
+  "lint_tipos_formato": "PASS",
+  "build": "PASS",
+  "puerta_completa": "pendiente_orquestador",
+  "logs_sha256": {
+    "unitarias.log": "f3eb1f98922db94d207d7fb9c95fe570e4a4cc39cdee884d9582ec71a13a1d9a",
+    "regresion-antes.log": "c1aa375a0c807594e813f4d0cbd8eb2059bc7c1874a4478a50f8cc198d6a849d",
+    "focal.log": "c569196051dd68707aeddeefbe49ab6462b3f87286d98fd21fc4c57685fd8d31"
+  }
+}

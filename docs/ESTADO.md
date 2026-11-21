@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 12:36 (Lima).
+Última actualización: 2026-11-21 13:17 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **Biblioteca simulada, 21-11:** corregida la carrera entre el sondeo de entrenamiento y la actualización SSE; solo el adaptador local reduce su espera, los remotos conservan diez segundos. Regresión de frontera y controles reales: 30/30 unitarias; identidad en vivo y progreso sin navegador: 2/2 E2E focales. Timeout y aserciones originales intactos. Implementado y probado en rama propia; integración, puerta completa e imagen final a cargo del orquestador. [Informe](informes/total-identidad-viva.md).
 
 - **Integración cooper-total en curso:** chat real 37/37 tras corregir memoria, identificadores de video y orientación de identidad; tres contextos reales del puente VPS también correctos. Retención incluye montajes por revisión y conciliación cancelada; benchmark de 10.000 videos reduce el ciclo de avisos de 885 a 20 ms sin alterar las lecturas. Sentinel usa caché privada verificada y sus fuentes se retiraron del historial saliente. Estos cambios están integrados localmente, todavía no acreditan el despliegue final. [Chat](informes/total-chat-aceptacion.md), [retención](informes/total-retencion-integrada.md), [volumen](informes/total-m12.md), [Sentinel](informes/total-sentinel-privado.md).
 
