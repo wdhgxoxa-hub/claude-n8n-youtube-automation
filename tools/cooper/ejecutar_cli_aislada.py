@@ -37,9 +37,12 @@ def ejecutar(wid, base='file:/var/lib/cooper/n8n/database.sqlite?mode=ro'):
    ejecuciones=[{'id':e[0],'estado':e[1]} for e in c.execute('SELECT id,status FROM execution_entity WHERE id>? AND workflowId=? ORDER BY id',(previo,wid))]
   return {'workflow':wid,'codigo_cli':r.returncode,'ejecuciones':ejecuciones,'runner_externo_aislado':True,'salida_cruda_descartada':True}
  finally:
-  subprocess.run(['docker','exec','cooper-runner-1','sh','-c','if test -f '+pid+'; then kill -TERM "$(cat '+pid+')"; rm -f '+pid+'; fi'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+  subprocess.run(['docker','exec','cooper-runner-1','sh','-c','if test -f '+pid+'; then kill -TERM "$(cat '+pid+')"; fi'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
   try: runner.wait(timeout=50)
-  except subprocess.TimeoutExpired: runner.terminate()
+  except subprocess.TimeoutExpired:
+   subprocess.run(['docker','exec','cooper-runner-1','sh','-c','if test -f '+pid+'; then kill -KILL "$(cat '+pid+')"; fi'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+   runner.terminate()
+  subprocess.run(['docker','exec','cooper-runner-1','rm','-f',pid],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
   subprocess.run(['docker','exec','cooper-runner-1','rm','-f',ruta],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 
 
