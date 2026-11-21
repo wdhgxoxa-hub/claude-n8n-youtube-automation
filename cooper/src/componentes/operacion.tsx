@@ -659,7 +659,7 @@ export function PantallaOperacion({
                 <input
                   name="perfil"
                   required
-                  pattern="[A-Za-z0-9_.-]{2,60}"
+                  pattern="[A-Za-z0-9_.\-]{2,60}"
                   defaultValue={canal.perfil}
                 />
               </label>
@@ -758,7 +758,7 @@ export function PantallaOperacion({
                 <input
                   name="id"
                   required
-                  pattern="[a-z0-9_-]{1,60}"
+                  pattern="[a-z0-9_\-]{1,60}"
                   placeholder="presentadora"
                 />
               </label>

@@ -136,6 +136,10 @@ for (const width of [1440, 390])
           current.getByText("Consultando la fábrica…", { exact: true }),
         ).toHaveCount(0);
         await current.waitForTimeout(900);
+        await current.locator("input[pattern]").evaluateAll((inputs) => {
+          for (const input of inputs)
+            new RegExp(`^(?:${input.getAttribute("pattern")})$`, "v");
+        });
         const measure = await medir(current);
         // 60 Hz nominales: tolerancia de muestreo 5%; ningún atasco de 100 ms.
         expect(measure.fps, `${path}: FPS`).toBeGreaterThanOrEqual(57);
