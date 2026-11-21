@@ -533,7 +533,7 @@ export async function confirmarChat(user: User, raw: unknown) {
     if (!claimed.changes)
       throw new ErrorHttp(409, "La acción ya fue atendida.");
     try {
-      const texto = await ejecutar(user, accion);
+      const texto = await ejecutar(user, accion, a.id);
       db()
         .update(chatActions)
         .set({ status: "confirmada" })

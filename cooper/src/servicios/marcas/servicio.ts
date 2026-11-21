@@ -596,7 +596,13 @@ export async function procesarMarcas(
           db()
             .update(piezasMarca)
             .set({ checkpoint })
-            .where(eq(piezasMarca.id, p.id))
+            .where(
+              and(
+                eq(piezasMarca.id, p.id),
+                eq(piezasMarca.estado, "enviando"),
+                eq(piezasMarca.leaseAt, now),
+              ),
+            )
             .run(),
       );
       db()
@@ -608,7 +614,13 @@ export async function procesarMarcas(
           aviso: result.aviso ?? "",
           updatedAt: now,
         })
-        .where(eq(piezasMarca.id, p.id))
+        .where(
+          and(
+            eq(piezasMarca.id, p.id),
+            eq(piezasMarca.estado, "enviando"),
+            eq(piezasMarca.leaseAt, now),
+          ),
+        )
         .run();
       atendidas++;
     } catch {
@@ -620,7 +632,13 @@ export async function procesarMarcas(
             "La red o la validación no confirmaron la publicación. Revisa la conexión y concilia; no se reenviará automáticamente.",
           updatedAt: now,
         })
-        .where(eq(piezasMarca.id, p.id))
+        .where(
+          and(
+            eq(piezasMarca.id, p.id),
+            eq(piezasMarca.estado, "enviando"),
+            eq(piezasMarca.leaseAt, now),
+          ),
+        )
         .run();
     }
   }

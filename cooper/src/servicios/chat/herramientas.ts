@@ -251,9 +251,10 @@ export async function consultar(
 export async function ejecutar(
   user: User,
   accion: ReturnType<typeof prepararLlamada>,
+  tarjetaId?: string,
 ) {
   const actor = { ...user, role: "usuario" as const },
-    f = fabrica();
+    f = fabrica(tarjetaId ? { tipo: "chat", id: tarjetaId } : undefined);
   if (accion.nombre.startsWith("aprobar_")) {
     await f.aprobar(actor, accion.argumentos.recursoId);
     return "Aprobación enviada. Verás el avance en tu espacio.";

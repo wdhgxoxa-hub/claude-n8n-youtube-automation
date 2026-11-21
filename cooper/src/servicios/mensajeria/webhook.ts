@@ -368,15 +368,22 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
           now,
         );
       } else if (action.decision === "aprobar")
-        await fabrica().aprobar(user, action.resourceId, action.revision);
+        await fabrica({ tipo: "accion_whatsapp", id: action.key }).aprobar(
+          user,
+          action.resourceId,
+          action.revision,
+        );
       else
-        await fabrica().ejecutar(user, {
-          evento: "corregir",
-          recursoId: action.resourceId,
-          parametros: { revisionWhatsApp: action.revision },
-          texto:
-            "Solicito cambios desde WhatsApp. Detallaré la revisión en Cooper antes de aprobar.",
-        });
+        await fabrica({ tipo: "accion_whatsapp", id: action.key }).ejecutar(
+          user,
+          {
+            evento: "corregir",
+            recursoId: action.resourceId,
+            parametros: { revisionWhatsApp: action.revision },
+            texto:
+              "Solicito cambios desde WhatsApp. Detallaré la revisión en Cooper antes de aprobar.",
+          },
+        );
       db()
         .update(actions)
         .set({ state: "completada" })

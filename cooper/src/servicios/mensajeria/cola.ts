@@ -375,7 +375,13 @@ export async function procesarCola(
           errorCode: "",
           interactive: message.type === "interactive",
         })
-        .where(eq(outbox.id, job.id))
+        .where(
+          and(
+            eq(outbox.id, job.id),
+            eq(outbox.state, "enviando"),
+            eq(outbox.leaseAt, now),
+          ),
+        )
         .run();
       if (provider.simulada)
         db()
@@ -410,7 +416,13 @@ export async function procesarCola(
           errorCode: e.codigo,
           nextAt: now + Math.max(e.esperaMs, 30000 * 2 ** (job.attempts - 1)),
         })
-        .where(eq(outbox.id, job.id))
+        .where(
+          and(
+            eq(outbox.id, job.id),
+            eq(outbox.state, "enviando"),
+            eq(outbox.leaseAt, now),
+          ),
+        )
         .run();
     }
   }

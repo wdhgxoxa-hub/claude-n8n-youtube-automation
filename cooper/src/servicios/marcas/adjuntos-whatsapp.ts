@@ -107,6 +107,16 @@ export async function importarMediosWhatsApp(transporte: typeof fetch = fetch) {
       if (!vigente?.consentAt || vigente.verifiedAt !== c.verifiedAt)
         throw new ErrorHttp(403, "Contacto revocado.");
       db().transaction((tx) => {
+        const vigente = tx
+          .select()
+          .from(marcaIngestas)
+          .where(eq(marcaIngestas.id, job.id))
+          .get();
+        if (
+          vigente?.estado !== "descargando" ||
+          vigente.intentos !== job.intentos + 1
+        )
+          return;
         const id = randomUUID();
         tx.insert(attachments)
           .values({
@@ -137,7 +147,13 @@ export async function importarMediosWhatsApp(transporte: typeof fetch = fetch) {
       db()
         .update(marcaIngestas)
         .set({ estado: job.intentos >= 2 ? "fallida" : "pendiente" })
-        .where(eq(marcaIngestas.id, job.id))
+        .where(
+          and(
+            eq(marcaIngestas.id, job.id),
+            eq(marcaIngestas.estado, "descargando"),
+            eq(marcaIngestas.intentos, job.intentos + 1),
+          ),
+        )
         .run();
     }
   }

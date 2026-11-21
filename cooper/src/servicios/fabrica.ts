@@ -1,3 +1,4 @@
+import { vincularOrden, type OrigenOperacion } from "./conciliacion-registro";
 import { createHash, randomUUID } from "node:crypto";
 import { and, eq, desc } from "drizzle-orm";
 import { z } from "zod";
@@ -409,7 +410,10 @@ export class FabricaN8n implements Fabrica {
     return serializar(user.id, () => this.eliminarRecurso(user, id, tipo));
   }
 
-  constructor(private opciones = { timeoutMs: 10000, backoffMs: 250 }) {}
+  constructor(
+    private opciones = { timeoutMs: 10000, backoffMs: 250 },
+    private origen?: OrigenOperacion,
+  ) {}
   async request(
     user: User,
     event: EventoPuente | ConsultaPuente,
@@ -465,6 +469,11 @@ export class FabricaN8n implements Fabrica {
         })
         .onConflictDoNothing()
         .run();
+    if (
+      this.origen &&
+      db().select().from(bridgeCommands).where(eq(bridgeCommands.id, id)).get()
+    )
+      vincularOrden(user.id, this.origen, id);
     if (decision) {
       const anterior = db()
         .select()
@@ -644,12 +653,14 @@ export class FabricaN8n implements Fabrica {
     db().delete(table).where(eq(table.id, id)).run();
   }
 }
-export function fabrica(): Fabrica {
+export function fabrica(origen?: OrigenOperacion): Fabrica {
   const mode =
     process.env.COOPER_DEMO === "1"
       ? "simulada"
       : (process.env.COOPER_FABRICA ?? "simulada");
   if (!["simulada", "n8n"].includes(mode))
     throw new ErrorHttp(503, "Configuración de fábrica inválida.");
-  return mode === "n8n" ? new FabricaN8n() : new FabricaSimulada();
+  return mode === "n8n"
+    ? new FabricaN8n(undefined, origen)
+    : new FabricaSimulada();
 }

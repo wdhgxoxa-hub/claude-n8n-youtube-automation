@@ -13,6 +13,10 @@ export interface RedSocial {
     guardar: (c: Checkpoint) => void,
   ): Promise<ResultadoRed>;
   metricas(cuenta: CuentaMarca, remoto: string): Promise<Metricas>;
+  consultarPublicacion?(
+    cuenta: CuentaMarca,
+    pieza: PiezaMarca,
+  ): Promise<{ publicada: boolean; remoto: string }>;
 }
 const objeto = (v: unknown): Record<string, unknown> =>
   z.record(z.string(), z.unknown()).parse(v);
@@ -538,6 +542,50 @@ export class RedOficial implements RedSocial {
           },
     );
     return publicada(id(r.post_id ?? r.id), cp);
+  }
+
+  // Separada de publicar: ninguna ruta de conciliación puede crear, subir ni finalizar medios.
+  async consultarPublicacion(c: CuentaMarca, p: PiezaMarca) {
+    const cp = p.checkpoint;
+    if (c.red === "youtube" || c.red === "tiktok") {
+      const requestId = cp.id || cp.envio;
+      if (!requestId) return { publicada: false, remoto: "" };
+      const r = await this.upload("uploadposts/history", {
+        request_id: requestId,
+        profile_username: c.remoto,
+        platform: c.red,
+        limit: "10",
+      });
+      const row = lista(r.history).find(
+        (m) =>
+          m.request_id === requestId &&
+          m.profile_username === c.remoto &&
+          m.platform === c.red,
+      );
+      return {
+        publicada:
+          !!row &&
+          row.success === true &&
+          !row.fallback_to_inbox &&
+          texto(row.post_url).startsWith("https://"),
+        remoto: requestId,
+      };
+    }
+    if (c.red === "facebook" && p.datos.formato === "reel" && cp.id) {
+      const token = await this.pagina(c);
+      const r = await this.graph(id(cp.id), token, undefined, {
+        fields: "status",
+      });
+      const status = objeto(r.status);
+      return {
+        publicada:
+          !!status.publishing_phase &&
+          objeto(status.publishing_phase).publish_status === "published",
+        remoto: cp.id,
+      };
+    }
+    // Un contenedor o una foto cargada no demuestra cuál fue el post final.
+    return { publicada: false, remoto: "" };
   }
 }
 export function proveedorRed(): RedSocial {

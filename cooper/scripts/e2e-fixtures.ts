@@ -4,7 +4,7 @@ import { timingSafeEqual } from "node:crypto";
 import { encode } from "next-auth/jwt";
 import { loginGoogle } from "../src/lib/identidad";
 import { db } from "../src/db";
-import { assets, attachments, users } from "../src/db/schema";
+import { assets, attachments, users, chatActions } from "../src/db/schema";
 import { eq } from "drizzle-orm";
 import { crearReto } from "../src/servicios/biblioteca";
 import { VozSimulada } from "../src/servicios/proveedores/simulados";
@@ -109,6 +109,25 @@ const server = createServer(async (req, res) => {
     )
       throw new ErrorHttp(403, "Solo cuentas ficticias");
     const user = loginGoogle(input.email, input.email.split("@")[0]);
+    if (input.escenario === "conciliacion" && user.role === "admin") {
+      db()
+        .insert(chatActions)
+        .values({
+          id: "e2e-conciliacion",
+          ownerId: user.id,
+          tool: "nuevo_canal",
+          arguments: "{}",
+          fingerprint: "ensayo",
+          channelId: "",
+          title: "Operación ficticia interrumpida",
+          detail: "",
+          status: "revisar",
+          createdAt: Date.now() - 600000,
+          expiresAt: Date.now() + 600000,
+        })
+        .onConflictDoNothing()
+        .run();
+    }
     await prepararRevisionDemo();
     const secure = process.env.AUTH_URL?.startsWith("https://") === true;
     const salt = `${secure ? "__Secure-" : ""}authjs.session-token`;
