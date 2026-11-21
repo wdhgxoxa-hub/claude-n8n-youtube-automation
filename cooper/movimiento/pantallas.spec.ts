@@ -207,6 +207,12 @@ for (const width of [1440, 390])
           await current
             .getByLabel("Usuario de la cuenta")
             .fill("@ejemplo_movimiento");
+        if (path === "/redes")
+          await current
+            .getByLabel("Perfil de publicación")
+            .fill("estudio_movimiento");
+        if (path === "/admin/fabrica")
+          await current.getByLabel("Voz", { exact: true }).click();
         if (review) {
           await current
             .getByRole("button", { name: review, exact: true })
