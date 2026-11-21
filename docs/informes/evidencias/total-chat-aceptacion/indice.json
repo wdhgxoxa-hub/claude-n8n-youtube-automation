@@ -1,0 +1,36 @@
+{
+  "fecha": "2026-11-21T12:29:25.675112-05:00",
+  "ensayos": [
+    {
+      "archivo": "preferencias.json",
+      "sha256": "3538546ccd7b12e5d39d43c7b0e26954e06f788d9042fdf33b1a98077ad782a3",
+      "revision": "37e8421c6afef46bed44aca7f550014f4f62f1f1",
+      "estado": "CON_HALLAZGOS",
+      "llamadas": 37,
+      "correctos": 36,
+      "fallos": [
+        8
+      ]
+    },
+    {
+      "archivo": "herramientas.json",
+      "sha256": "eabd851b10be9cb1cba9c904a71e53a74ce8153cea5aa7573a131c258ca890c0",
+      "revision": "ed71273a43e7cb95bc0d84aa3f65904903e3ea8d",
+      "estado": "CON_HALLAZGOS",
+      "llamadas": 37,
+      "correctos": 36,
+      "fallos": [
+        20
+      ]
+    },
+    {
+      "archivo": "final.json",
+      "sha256": "a6af26bc41b37bf7b1303888e81c6ed427d74f5cd6c1a0076f8790bea67d68ab",
+      "revision": "801af85039ec6c8b5c8c6d4f45f0afa28600e1f6",
+      "estado": "PASS_RUBRICA",
+      "llamadas": 37,
+      "correctos": 37,
+      "fallos": []
+    }
+  ]
+}
