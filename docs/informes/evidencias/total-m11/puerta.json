@@ -1,0 +1,91 @@
+{
+  "commit": "24a2645a47fdd945e9421ebf49c6047ca42f4888",
+  "pasos": [
+    {
+      "paso": "ci",
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 9205,
+      "sha256_original": "d6e405a5ef20687b5c71d8b262d419d433405c3178e3e89305d3660b445f771f",
+      "sha256_archivado": "d6e405a5ef20687b5c71d8b262d419d433405c3178e3e89305d3660b445f771f"
+    },
+    {
+      "paso": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 9472,
+      "sha256_original": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007",
+      "sha256_archivado": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "paso": "typecheck",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 2488,
+      "sha256_original": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f",
+      "sha256_archivado": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "paso": "unitarias",
+      "comando": "npm test",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 72504,
+      "sha256_original": "4afc1984c5d4c506c1267be2150041ae127983fc1103cc812457b530ccfbce31",
+      "sha256_archivado": "869fe417ccca3feb8d6c68b2c4735da9b828ee706efa81cd4ceeca1190d4569e"
+    },
+    {
+      "paso": "e2e",
+      "comando": "npm run test:e2e",
+      "rc": 1,
+      "advertencias": 0,
+      "duracion_ms": 271,
+      "sha256_original": "6959bf199d8bdfb88d40f797b817cc5181b976da1a07360e853008e983a81c89",
+      "sha256_archivado": "6959bf199d8bdfb88d40f797b817cc5181b976da1a07360e853008e983a81c89"
+    },
+    {
+      "paso": "build",
+      "estado": "NOT_RUN",
+      "motivo": "Cadena anterior falló; guardia conservada"
+    },
+    {
+      "paso": "flujos",
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 3580,
+      "sha256_original": "0156e033e37eb97dd2d79941e85dd3a2959071586629b312178a76b2babc524a",
+      "sha256_archivado": "0156e033e37eb97dd2d79941e85dd3a2959071586629b312178a76b2babc524a"
+    }
+  ],
+  "build_independiente": {
+    "comando": "npm run build",
+    "rc": 0,
+    "advertencias": 0,
+    "no_repara_cadena_e2e": true,
+    "sha256_original": "0ac7c6846b2e65f097208a09794fccc9f7440c06ca4a67093384354578b4b17a",
+    "sha256_archivado": "91aa3e692db590e8130124701cda82fd30f0bac7a5727e5ea5de57ed98ae8edb"
+  },
+  "resultado": "ENV_BLOCKED",
+  "rc_cadena": 1,
+  "unitarias": 436,
+  "flujos": 172,
+  "motivo": "Guardia E2E rechaza falta de .cache/sentinel-venv/bin/python; no se modifica ni prepara Sentinel por el límite de M11.",
+  "turno": "2026-11-21 12:37 America/Lima",
+  "cierre_contenedor": "exited false 0; eliminado; sin procesos ni puertos publicados",
+  "pids": [
+    2897987,
+    2940394,
+    2972448,
+    2999186,
+    3012676,
+    3057598,
+    3070772,
+    3079239
+  ],
+  "normalizacion_logs": "Copias versionadas sin ANSI, CR ni espacios finales; originales conservados en .cache/m11/checkout/puerta-m11.",
+  "recursos": "Cuota de contenedor 1 CPU, afinidad CPU 0, Playwright 1 worker; Next informó 23 procesos de recopilación/generación pese a esa restricción de CPU."
+}

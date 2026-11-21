@@ -1,0 +1,78 @@
+
+ RUN  v4.1.12 /ensayo/cooper
+
+ ✓ tests/whatsapp.test.ts (36 tests) 377ms
+ ✓ tests/marcas.test.ts (21 tests) 3471ms
+   ✓ render escapa texto y compone un reel real sin proveedor pago  2437ms
+ ✓ tests/medios.test.ts (20 tests) 242ms
+ ✓ tests/puente.test.ts (19 tests) 704ms
+     ✓ SSE reemite el evento persistido y omite eventos de otros dueños y costos  514ms
+ ✓ tests/retencion.test.ts (26 tests) 4726ms
+   ✓ CLI exige simulación, no sobrescribe, no crea bases, guarda 0600 y oculta errores privados  1846ms
+ ✓ tests/cooper.test.ts (37 tests) 364ms
+ ✓ tests/montajes-fabrica.test.ts (22 tests) 1116ms
+ ✓ tests/conciliacion.test.ts (15 tests) 381ms
+ ✓ tests/chat-locales.test.ts (11 tests) 1834ms
+   ✓ valida el sobre entero antes de emitir texto o propuestas; no acepta herramientas del sistema  544ms
+   ✓ el JSON del ejecutable pasa por dueño, esquema de herramienta y confirmación real de Cooper  589ms
+ ✓ tests/chat-memoria.test.ts (17 tests) 581ms
+ ✓ tests/chat-ia.test.ts (18 tests) 555ms
+ ✓ tests/competencia.test.ts (8 tests) 128ms
+ ✓ tests/chat-proveedores.test.ts (6 tests) 88ms
+ ✓ tests/operacion.test.ts (8 tests) 163ms
+ ✓ tests/biblioteca-trabajador.test.ts (15 tests) 2580ms
+   ✓ dos procesos compiten por la misma reserva SQLite y solo uno la obtiene  858ms
+   ✓ recupera tras SIGKILL en plena consulta y reinicio sin crear ni entrenar otra vez  1565ms
+ ✓ tests/presentacion.test.ts (5 tests) 269ms
+ ✓ tests/resultados.test.ts (8 tests) 211ms
+ ✓ tests/chat-semantica.test.ts (10 tests) 1163ms
+   ✓ recorre memoria, retorno y olvido con proveedor ficticio sin confundirlo con evaluación real  437ms
+   ✓ un JSON de síntesis inválido queda FAIL y conserva apuntes  303ms
+ ✓ tests/chat-evaluacion.test.ts (30 tests) 775ms
+ ✓ tests/revision-seguridad.test.ts (18 tests) 824ms
+   ✓ R11 limita lecturas repetidas y permite recuperarse tras la ventana  614ms
+ ✓ tests/total-seguridad-medios.test.ts (3 tests) 301ms
+ ✓ tests/noticias.test.ts (3 tests) 204ms
+ ✓ tests/puerta.test.ts (6 tests) 20ms
+ ✓ tests/chat-http.test.ts (4 tests) 198ms
+ ✓ tests/revision-migraciones.test.ts (2 tests) 76ms
+ ✓ tests/conciliacion-caidas.test.ts (8 tests) 15966ms
+   ✓ SIGKILL chat antes de aceptación, reinicio sin duplicados  3189ms
+   ✓ SIGKILL chat despues de aceptación, reinicio sin duplicados  2163ms
+   ✓ SIGKILL whatsapp antes de aceptación, reinicio sin duplicados  1293ms
+   ✓ SIGKILL whatsapp despues de aceptación, reinicio sin duplicados  1231ms
+   ✓ SIGKILL marca antes de aceptación, reinicio sin duplicados  1249ms
+   ✓ SIGKILL marca despues de aceptación, reinicio sin duplicados  2234ms
+   ✓ SIGKILL ingesta antes de aceptación, reinicio sin duplicados  2209ms
+   ✓ SIGKILL ingesta despues de aceptación, reinicio sin duplicados  2398ms
+ ✓ tests/observabilidad.test.ts (4 tests) 111ms
+ ✓ tests/integracion-medios.test.ts (3 tests) 162ms
+ ✓ tests/biblioteca-seguimiento-base.test.ts (3 tests) 79ms
+ ✓ tests/chat-memoria-http.test.ts (2 tests) 147ms
+ ✓ tests/demo.test.ts (4 tests) 97ms
+ ✓ tests/revision-fabrica.test.ts (1 test) 184ms
+ ✓ tests/revision-db.test.ts (2 tests) 579ms
+   ✓ R06 espera un escritor SQLite sin fallar al pasar de lectura a escritura  465ms
+ ✓ tests/revision-http.test.ts (3 tests) 94ms
+ ✓ tests/chat-memoria-migracion.test.ts (1 test) 26ms
+ ✓ tests/total-seguridad-http.test.ts (8 tests) 48ms
+ ✓ tests/total-seguridad-ssrf.test.ts (10 tests) 58ms
+ ✓ tests/integracion-demo.test.ts (1 test) 81ms
+ ✓ tests/integracion-puente.test.ts (1 test) 419ms
+   ✓ I03 conciliación del puente espera al escritor SQLite antes de leer y modificar  417ms
+ ✓ tests/biblioteca-arranque.test.ts (4 tests) 4ms
+ ✓ tests/movimiento-assets.test.ts (4 tests) 119ms
+ ✓ tests/total-seguridad-sesion.test.ts (1 test) 49ms
+ ✓ tests/revision-sesion.test.ts (1 test) 49ms
+ ✓ tests/revision-encabezados.test.tsx (1 test) 34ms
+ ✓ tests/periodos.test.ts (4 tests) 6ms
+ ✓ tests/salud.test.ts (2 tests) 65ms
+
+ Test Files  46 passed (46)
+      Tests  436 passed (436)
+   Start at  17:39:13
+   Duration  72.10s (transform 1.31s, setup 775ms, import 23.03s, tests 39.73s, environment 4ms)
+
+JSON report written to /ensayo/cooper/.cache/puerta/vitest.json
+npm notice run cooper@0.1.0 test
+npm notice run vitest run

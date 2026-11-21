@@ -366,3 +366,24 @@ node scripts/auditoria.mjs --movimiento
 Sentinel usa únicamente la caché privada verificada en `.cache/sentinel`, Python en `.cache/sentinel-venv` y Chromium en `.cache/sentinel-browsers`. Preparación: `npm run preparar:sentinel -- --repo /checkout/autorizado` y `npm run preparar:pruebas`; la ruta externa solo se admite al preparar, nunca durante la ejecución, que tampoco acepta `SENTINEL_CODIGO`/`SENTINEL_PYTHON` externos. El guardián solo permite el destino E2E loopback; no contacta la fábrica real. No se leen archivos de credenciales.
 
 Evidencia fuera de Git: `.cache/videos-movimiento/index.html` permite abrir los videos sin autoplay; `indice.json` incluye SHA-256. Cada ronda conserva métricas, capturas, videos y reportes Sentinel. La cadencia del WebM de Playwright es distinta de los FPS medidos por requestAnimationFrame. CPU 4× aproxima carga móvil; no sustituye un ensayo en teléfono físico. Resultados finales y pendientes en [el informe](../docs/informes/cooper-animacion-fuerte.md).
+
+## Aceptación multiengine (M11)
+
+La puerta normal incorpora 24 recorridos esenciales en Firefox y WebKit: dos temas,
+viewport 390/1440 px y tres casos por combinación. Conserva toda la suite Chromium.
+`npm run preparar:pruebas` instala también ambos motores fijados por el lockfile;
+`ci/Containerfile` añade sus bibliotecas dentro de Debian, nunca al host.
+
+```bash
+# Después de preparar el entorno aislado con los requisitos de la puerta:
+npm run test:e2e -- --project=firefox-oscuro-390 --project=webkit-claro-1440
+# La puerta completa ejecuta las ocho combinaciones sin filtro.
+```
+
+Los casos prueban teclado, chat, reconexión SSE, ambas aprobaciones manuales,
+pausa persistente y movimiento reducido, axe y medios locales sintéticos.
+Las capacidades de codecs y la versión efectiva del motor se adjuntan al reporte.
+Firefox usa captura ficticia nativa; si el motor carece de MediaRecorder se exige
+el aviso de incompatibilidad y la alternativa de adjuntar WAV. La transcripción
+es simulada. No se afirma Safari/iPhone físico, permisos de micrófono reales ni
+lector de pantalla. Resultados efectivos y límites: [M11](../docs/informes/total-m11.md).

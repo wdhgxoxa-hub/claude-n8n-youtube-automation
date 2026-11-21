@@ -1,0 +1,37 @@
+
+Running 24 tests using 1 worker
+
+  ✓   1 [firefox-oscuro-390] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (13.6s)
+  ✓   2 [firefox-oscuro-390] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (3.0s)
+
+  ✓   3 [firefox-oscuro-390] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (3.4s)
+  ✓   4 [firefox-oscuro-1440] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (14.4s)
+  ✓   5 [firefox-oscuro-1440] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (3.7s)
+
+  ✓   6 [firefox-oscuro-1440] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (4.2s)
+  ✓   7 [firefox-claro-390] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (13.1s)
+  ✓   8 [firefox-claro-390] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (2.9s)
+
+  ✓   9 [firefox-claro-390] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (3.3s)
+  ✓  10 [firefox-claro-1440] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (13.8s)
+  ✓  11 [firefox-claro-1440] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (3.8s)
+
+  ✓  12 [firefox-claro-1440] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (4.4s)
+  ✓  13 [webkit-oscuro-390] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (13.2s)
+  ✓  14 [webkit-oscuro-390] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (9.0s)
+
+  ✓  15 [webkit-oscuro-390] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (4.0s)
+  ✓  16 [webkit-oscuro-1440] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (19.8s)
+  ✓  17 [webkit-oscuro-1440] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (11.5s)
+
+  ✓  18 [webkit-oscuro-1440] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (9.4s)
+  ✓  19 [webkit-claro-390] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (13.8s)
+  ✓  20 [webkit-claro-390] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (10.8s)
+
+  ✓  21 [webkit-claro-390] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (7.7s)
+  ✓  22 [webkit-claro-1440] › e2e/multiengine.spec.ts:99:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (22.9s)
+  ✓  23 [webkit-claro-1440] › e2e/multiengine.spec.ts:177:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (9.0s)
+
+  ✓  24 [webkit-claro-1440] › e2e/multiengine.spec.ts:253:1 › grabación nativa con señal sintética y reproducción de medios soportados (4.9s)
+
+  24 passed (3.8m)

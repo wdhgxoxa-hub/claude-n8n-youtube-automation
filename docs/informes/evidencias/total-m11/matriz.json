@@ -1,0 +1,560 @@
+{
+  "commit": "24a2645a47fdd945e9421ebf49c6047ca42f4888",
+  "base": "66732be0ed95f5afa2289e3b8c0ef3d798290802",
+  "entorno": {
+    "sistema": "Debian 12",
+    "node": "24.22.3",
+    "npm": "12.2.2",
+    "playwright": "1.65.1",
+    "cpus": 1,
+    "workers": 1
+  },
+  "resumen": {
+    "startTime": "2026-11-21T17:32:33.050Z",
+    "duration": 226755.547,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "errores": [],
+  "reporte_original_sha256": "a2715d4000ff2b05f0b993ca0d23b147ddb1bd11c57ff01fc2484ad36b234302",
+  "casos": [
+    {
+      "proyecto": "firefox-oscuro-390",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 13620,
+      "motor": {
+        "proyecto": "firefox-oscuro-390",
+        "version": "159.0",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-oscuro-1440",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 14427,
+      "motor": {
+        "proyecto": "firefox-oscuro-1440",
+        "version": "159.0",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-claro-390",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 13050,
+      "motor": {
+        "proyecto": "firefox-claro-390",
+        "version": "159.0",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-claro-1440",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 13782,
+      "motor": {
+        "proyecto": "firefox-claro-1440",
+        "version": "159.0",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-oscuro-390",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 13180,
+      "motor": {
+        "proyecto": "webkit-oscuro-390",
+        "version": "27.2",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-oscuro-1440",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 19753,
+      "motor": {
+        "proyecto": "webkit-oscuro-1440",
+        "version": "27.2",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-claro-390",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 13751,
+      "motor": {
+        "proyecto": "webkit-claro-390",
+        "version": "27.2",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-claro-1440",
+      "caso": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 22944,
+      "motor": {
+        "proyecto": "webkit-claro-1440",
+        "version": "27.2",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-oscuro-390",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 3042,
+      "motor": {
+        "proyecto": "firefox-oscuro-390",
+        "version": "159.0",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-oscuro-1440",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 3681,
+      "motor": {
+        "proyecto": "firefox-oscuro-1440",
+        "version": "159.0",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-claro-390",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 2852,
+      "motor": {
+        "proyecto": "firefox-claro-390",
+        "version": "159.0",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-claro-1440",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 3842,
+      "motor": {
+        "proyecto": "firefox-claro-1440",
+        "version": "159.0",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-oscuro-390",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 8984,
+      "motor": {
+        "proyecto": "webkit-oscuro-390",
+        "version": "27.2",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-oscuro-1440",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 11486,
+      "motor": {
+        "proyecto": "webkit-oscuro-1440",
+        "version": "27.2",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-claro-390",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 10778,
+      "motor": {
+        "proyecto": "webkit-claro-390",
+        "version": "27.2",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-claro-1440",
+      "caso": "pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 9040,
+      "motor": {
+        "proyecto": "webkit-claro-1440",
+        "version": "27.2",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-oscuro-390",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 3354,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": true,
+          "audio/ogg": true,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "mime": "audio/ogg",
+        "nombre": "grabacion.ogg"
+      },
+      "motor": {
+        "proyecto": "firefox-oscuro-390",
+        "version": "159.0",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-oscuro-1440",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 4232,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": true,
+          "audio/ogg": true,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "mime": "audio/ogg",
+        "nombre": "grabacion.ogg"
+      },
+      "motor": {
+        "proyecto": "firefox-oscuro-1440",
+        "version": "159.0",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-claro-390",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 3335,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": true,
+          "audio/ogg": true,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "mime": "audio/ogg",
+        "nombre": "grabacion.ogg"
+      },
+      "motor": {
+        "proyecto": "firefox-claro-390",
+        "version": "159.0",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "firefox-claro-1440",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 4380,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": true,
+          "audio/ogg": true,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "mime": "audio/ogg",
+        "nombre": "grabacion.ogg"
+      },
+      "motor": {
+        "proyecto": "firefox-claro-1440",
+        "version": "159.0",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-oscuro-390",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 3969,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": false,
+          "audio/ogg": false,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "estado": "NOT_SUPPORTED",
+        "alternativa": "adjunto WAV"
+      },
+      "motor": {
+        "proyecto": "webkit-oscuro-390",
+        "version": "27.2",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-oscuro-1440",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 9369,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": false,
+          "audio/ogg": false,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "estado": "NOT_SUPPORTED",
+        "alternativa": "adjunto WAV"
+      },
+      "motor": {
+        "proyecto": "webkit-oscuro-1440",
+        "version": "27.2",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "oscuro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-claro-390",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 7666,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": false,
+          "audio/ogg": false,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "estado": "NOT_SUPPORTED",
+        "alternativa": "adjunto WAV"
+      },
+      "motor": {
+        "proyecto": "webkit-claro-390",
+        "version": "27.2",
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    },
+    {
+      "proyecto": "webkit-claro-1440",
+      "caso": "grabación nativa con señal sintética y reproducción de medios soportados",
+      "estado": "passed",
+      "intentos": 1,
+      "duracion_ms": 4933,
+      "formatos": {
+        "grabacion": {
+          "audio/webm": false,
+          "audio/ogg": false,
+          "audio/mp4": false
+        },
+        "video": {
+          "video/webm; codecs=vp8": "probably",
+          "video/mp4; codecs=avc1.42E01E": "probably"
+        }
+      },
+      "grabacion": {
+        "estado": "NOT_SUPPORTED",
+        "alternativa": "adjunto WAV"
+      },
+      "motor": {
+        "proyecto": "webkit-claro-1440",
+        "version": "27.2",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "tema": "claro",
+        "errores": []
+      }
+    }
+  ],
+  "limites": [
+    "Viewport móvil, no teléfono físico",
+    "WebKit Linux, no Safari/iOS",
+    "Sin lector de pantalla ni micrófono físico",
+    "Transcripción y proveedores simulados",
+    "Reproduce WebM/VP8 y WAV; MP4 solo capacidad declarada canPlayType",
+    "El focal no sustituye la puerta completa ni ejecuta Sentinel"
+  ]
+}

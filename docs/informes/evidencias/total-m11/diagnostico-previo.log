@@ -1,0 +1,102 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [firefox-oscuro-390] › e2e/multiengine.spec.ts:90:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (15.3s)
+  ✓  2 [firefox-oscuro-390] › e2e/multiengine.spec.ts:168:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (3.7s)
+  ✘  3 [firefox-oscuro-390] › e2e/multiengine.spec.ts:241:1 › grabación nativa con señal sintética y reproducción de medios soportados (2.1s)
+  ✓  4 [webkit-claro-1440] › e2e/multiengine.spec.ts:90:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (23.0s)
+  ✘  5 [webkit-claro-1440] › e2e/multiengine.spec.ts:168:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (8.8s)
+
+  ✓  6 [webkit-claro-1440] › e2e/multiengine.spec.ts:241:1 › grabación nativa con señal sintética y reproducción de medios soportados (6.6s)
+
+
+  1) [firefox-oscuro-390] › e2e/multiengine.spec.ts:241:1 › grabación nativa con señal sintética y reproducción de medios soportados
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 415
+
+      281 |       .press("Enter");
+      282 |     const uploaded = await upload;
+    > 283 |     expect(uploaded.status()).toBe(200);
+          |                               ^
+      284 |     const payload = uploaded.request().postDataJSON();
+      285 |     await info.attach("grabacion", {
+      286 |       body: JSON.stringify({ mime: payload.mime, nombre: payload.name }),
+        at /ensayo/cooper/e2e/multiengine.spec.ts:283:31
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/multiengine-grabación-nati-efaed-ucción-de-medios-soportados-firefox-oscuro-390/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/multiengine-grabación-nati-efaed-ucción-de-medios-soportados-firefox-oscuro-390/error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/multiengine-grabación-nati-efaed-ucción-de-medios-soportados-firefox-oscuro-390/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/multiengine-grabación-nati-efaed-ucción-de-medios-soportados-firefox-oscuro-390/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-claro-1440] › e2e/multiengine.spec.ts:168:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 24
+
+    - Array []
+    + Array [
+    +   "/127.0.0.1:3109/videos/97e27618-03b8-4ad4-b588-148aa26cb342?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-0?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-1?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-2?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-3?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/marcas?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/canales?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/radar?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/publicados?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/aprendizaje?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-1?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-2?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/videos/demo-675dc72f-1bb7-4547-a28b-3c390442a10b-3?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/marcas?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/canales?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/radar?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/publicados?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/aprendizaje?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/avatares?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    +   "/127.0.0.1:3109/admin?_rsc=HcIkfjK9IY_WhrIq due to access control checks.",
+    + ]
+
+      85 |     contentType: "image/png",
+      86 |   });
+    > 87 |   expect(errores.get(page)).toEqual([]);
+         |                             ^
+      88 | });
+      89 |
+      90 | test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", async ({
+        at /ensayo/cooper/e2e/multiengine.spec.ts:87:29
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/multiengine-pausa-persiste-da550-esibilidad-en-ambos-tamaños-webkit-claro-1440/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/multiengine-pausa-persiste-da550-esibilidad-en-ambos-tamaños-webkit-claro-1440/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/multiengine-pausa-persiste-da550-esibilidad-en-ambos-tamaños-webkit-claro-1440/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/multiengine-pausa-persiste-da550-esibilidad-en-ambos-tamaños-webkit-claro-1440/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [firefox-oscuro-390] › e2e/multiengine.spec.ts:241:1 › grabación nativa con señal sintética y reproducción de medios soportados
+    [webkit-claro-1440] › e2e/multiengine.spec.ts:168:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños
+  4 passed (1.1m)

@@ -1,0 +1,14 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs
+file:///ensayo/cooper/scripts/entorno-pruebas.mjs:136
+    throw new Error(
+          ^
+
+Error: Falta Python de ensayo. Ejecute npm run preparar:pruebas o npm run ci:limpia.
+    at comprobarInstalacion (file:///ensayo/cooper/scripts/entorno-pruebas.mjs:136:11)
+    at file:///ensayo/cooper/scripts/e2e.mjs:5:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.3
