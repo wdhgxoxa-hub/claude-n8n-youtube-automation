@@ -11,8 +11,16 @@ import {
   useMotionValue,
 } from "framer-motion";
 const motionQuery = "(prefers-reduced-motion: reduce)";
+let mediaPreferencia: MediaQueryList | undefined;
+function preferenciaMovimiento() {
+  // Reutilizar la consulta evita crear MediaQueryLists en cada actualización SSE.
+  return (mediaPreferencia ??= window.matchMedia(motionQuery));
+}
+function instantaneaPreferencia() {
+  return preferenciaMovimiento().matches;
+}
 function observarPreferencia(notify: () => void) {
-  const media = window.matchMedia(motionQuery);
+  const media = preferenciaMovimiento();
   media.addEventListener("change", notify);
   return () => media.removeEventListener("change", notify);
 }
@@ -21,7 +29,7 @@ export function useMovimientoReducido() {
   // también detiene los MotionValues al cambiar la preferencia en vivo.
   const reduced = useSyncExternalStore(
     observarPreferencia,
-    () => window.matchMedia(motionQuery).matches,
+    instantaneaPreferencia,
     () => true,
   );
   const config = useContext(MotionConfigContext);

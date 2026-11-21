@@ -152,6 +152,18 @@ test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", a
       })
     ).ok(),
   ).toBe(true);
+  // El contexto con videos activos reproduce los pulsos SSE de la suite completa.
+  const canal = await page.request.post("/api/orden", {
+    data: { evento: "nuevo_canal", texto: "Ensayo de estabilidad Marcas" },
+  });
+  expect(canal.ok()).toBe(true);
+  const { id: canalId } = await canal.json();
+  for (let i = 0; i < 3; i++) {
+    const video = await page.request.post("/api/orden", {
+      data: { evento: "nuevo_video", recursoId: canalId, texto: `Ensayo ${i}` },
+    });
+    expect(video.ok()).toBe(true);
+  }
   await page.goto("/marcas");
   const folder = resolve(".cache/sentinel-marcas");
   mkdirSync(folder, { recursive: true });
