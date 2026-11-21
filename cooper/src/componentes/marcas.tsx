@@ -1181,6 +1181,7 @@ function Pieza({
                   key={id}
                   src={`/api/marcas/medio/${p.id}?i=${i}`}
                   alt={`${p.datos.titulo}, pieza ${i + 1}`}
+                  loading="eager"
                   width={1080}
                   height={p.datos.formato === "historia" ? 1920 : 1350}
                   unoptimized
