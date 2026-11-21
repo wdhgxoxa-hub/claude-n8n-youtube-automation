@@ -67,6 +67,11 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
     const tarea = run(codeOf(captura, 'Preparar trabajo de aprendizaje'), { json: { canal_id: 'canal-a', datos: { evidencias: [observada] } } })[0].json;
     assert.strictEqual(tarea.estado, 'bloqueado');
     assert.strictEqual(JSON.parse(tarea.resultado)._aprendizaje.evidencias[0].metricas.vistas, 123);
+    const publico={video_id:'video-permitido',canal_id:'canal-a',request_id:'req',estado:'publicado'};
+    const medir=r=>JSON.parse(run(codeOf(captura,'Diagnóstico del ensayo'),{all:{'Toca medir en redes':[publico],'Métricas en redes':[r]}})[0].json.resultado);
+    assert.equal(medir({request_id:'req',platforms:{youtube:{success:true,platform_post_id:'abcdefghijk',post_metrics:{views:3}}}}).redes[0].youtube_id_confirmado,'abcdefghijk');
+    assert.equal(medir({request_id:'ajeno',platforms:{youtube:{success:true,platform_post_id:'abcdefghijk'}}}).redes[0].youtube_id_confirmado,null);
+    assert.ok(!JSON.stringify(medir({error:{message:'texto-reservado'}})).includes('texto-reservado'));
     const propuesta = { lecciones: [{ regla: 'Probar un gancho concreto', causa: 'Hipótesis pendiente de contraste', correccion: 'Acortar la introducción', origenes: [{ video_id: observada.video_id, red: 'youtube', ventana: '72h', metrica: 'vistas', valor: 99999 }] }] };
     const archivo = path.join(carpeta, 'propuesta.json');
     fs.writeFileSync(archivo, JSON.stringify(propuesta));

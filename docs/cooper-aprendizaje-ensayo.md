@@ -32,6 +32,7 @@ Comprobar mediante proyecciones de las tablas, sin columnas de credenciales:
 
 - Historial y fecha nuevos por video/red. Un contador cero es válido; un dato ausente sigue siendo `null`. YouTube puede tardar en entregar informes.
 - Trabajo `aprender-ensayo-*` con `modo=aprender`, `estado=bloqueado` y `_aprendizaje.evidencias`. Incluye solo métricas y contexto creativo del mismo canal. No se envió a ningún proveedor de IA.
+- Trabajo `aprender-diag-*` con diagnóstico mínimo: respuesta presente, indicadores de error, métricas disponibles e ID YouTube nativo únicamente cuando la respuesta confirma el mismo `request_id`. No almacena tokens, errores crudos ni respuestas completas. Permite reconciliar `youtube_id` sin consultar `runData`; verificar primero el mismo video/canal y respaldar el valor anterior.
 - Ningún video o publicación nuevo y ninguna fila nueva de costos. Los workflows originales siguen con su estado previo.
 
 Se respetan las mismas ventanas, espera mínima y consulta diaria del M7. Si aún no toca medir, no hay conexión válida o la plataforma no entrega datos, puede no aparecer un trabajo. Eso se registra como límite real; no se fuerzan cifras ni se declara éxito por el código 0. La captura solo mide los IDs explícitos, aunque existan otros videos.
@@ -56,6 +57,6 @@ Este flujo no tiene HTTP ni llamadas a otros flujos. Solo lee el trabajo exacto,
 
 ## 4. Reversa y cierre
 
-Para probar rollback, restaurar solo las columnas observacionales de las filas elegidas a su snapshot y retirar solo los trabajos `aprender-ensayo-*` creados por este ensayo; comparar los valores y conteos con el snapshot. Después se puede repetir la captura. Eliminar los tres workflows temporales por sus IDs comprobados; ninguno contiene triggers públicos o programados. Conservar el manifest y un resumen de resultados sin tokens. No declarar rollback probado hasta comparar el estado restaurado.
+Para probar rollback, restaurar solo las columnas observacionales de las filas elegidas a su snapshot y retirar solo los trabajos `aprender-ensayo-*` y `aprender-diag-*` creados por este ensayo; comparar los valores y conteos con el snapshot. Después se puede repetir la captura. Eliminar los tres workflows temporales por sus IDs comprobados; ninguno contiene triggers públicos o programados. Conservar el manifest y un resumen de resultados sin tokens. No declarar rollback probado hasta comparar el estado restaurado.
 
 Un resultado observado no reconstruye las métricas de 24h/72h que nunca se midieron: conserva la fecha y demora reales. Una hipótesis guardada y su lectura por el siguiente guion cierran el circuito técnico; demostrar mejora requiere métricas futuras de un video aprobado por una persona.

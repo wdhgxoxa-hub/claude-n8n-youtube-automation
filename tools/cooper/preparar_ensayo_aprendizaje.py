@@ -86,6 +86,33 @@ return $input.all().map((i,k)=>({json:{job_id:'aprender-ensayo-'+String($executi
     registrar['name'] = 'Guardar evidencia del ensayo'
     f['nodes'].append(registrar)
     enlace(f, pedido['name'], registrar['name'])
+    # Diagnóstico mínimo separado: permite comprobar permisos/IDs sin consultar runData.
+    diagnostico = crear_nodo('Diagnóstico del ensayo', 'code', {'jsCode': """
+const pedidos=$('Toca medir en redes').isExecuted?$('Toca medir en redes').all().map(i=>i.json).filter(p=>p.request_id):[];
+const respuestas=$('Métricas en redes').isExecuted?$('Métricas en redes').all().map(i=>i.json):[];
+const redes=pedidos.map((p,k)=>{const r=respuestas[k] || {}, y=r.platforms?.youtube;
+ const coincide=r.request_id===p.request_id, id=String(y?.platform_post_id || '');
+ return {video_id:p.video_id,canal_id:p.canal_id,request_id:p.request_id,respuesta_recibida:!!respuestas[k],
+  error:!!r.error,request_id_coincide:coincide,plataformas:Object.entries(r.platforms || {}).map(([red,x])=>({red,publicado:x.success===true,
+   metricas_disponibles:!!x.post_metrics,error_metricas:!!x.post_metrics_error})),
+  youtube_id_confirmado:coincide && p.estado==='publicado' && y?.success===true && /^[a-zA-Z0-9_-]{11}$/.test(id)?id:null};});
+const yt=$('Pedidos de retención').isExecuted?$('Pedidos de retención').all().map(i=>i.json).filter(p=>p.video_id):[];
+const met=$('Cooper · métricas YouTube').isExecuted?$('Cooper · métricas YouTube').all().map(i=>i.json):[];
+return [{json:{job_id:'aprender-diag-'+String($execution.id),video_id:'',canal_id:pedidos[0]?.canal_id || yt[0]?.canal_id || '',
+ modo:'aprender_diagnostico',estado:'listo',resultado:JSON.stringify({fecha:new Date().toISOString(),redes,
+ youtube:yt.map((p,k)=>({video_id:p.video_id,canal_id:p.canal_id,filas:met[k]?.rows?.length || 0,error:!!met[k]?.error})),
+ sin_publicacion:true,sin_ia:true})}}];
+"""})
+    guardar_diagnostico = copy.deepcopy(registrar)
+    guardar_diagnostico.update({'name': 'Guardar diagnóstico del ensayo',
+                               'id': str(uuid.uuid5(uuid.NAMESPACE_URL, 'ensayo-aprendizaje/diagnostico'))})
+    f['nodes'].extend([diagnostico, guardar_diagnostico])
+    for salida in f['connections']['Planos para aprender']['main']:
+        for e in salida:
+            if e['node'] == 'Pedir lecciones':
+                e['node'] = diagnostico['name']
+    enlace(f, diagnostico['name'], guardar_diagnostico['name'])
+    enlace(f, guardar_diagnostico['name'], 'Pedir lecciones')
     # Rama de renovación solamente: no existe callback OAuth, enlace, subida ni Telegram.
     yt = leer('FabYouTube000001')
     nombres = ['Inicio', 'Conexión', '¿Conectado?', 'Renovar token', 'Token', 'Sin conexión']
