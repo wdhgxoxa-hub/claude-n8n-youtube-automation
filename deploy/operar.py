@@ -145,7 +145,7 @@ class Operator:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             yield
 
-    def compose(self, *args, image=None):
+    def compose(self, *args, image=None, image_overrides=None):
         env = dict(self.env)
         if self.release.exists():
             env["COOPER_IMAGE"] = json.loads(self.release.read_text())["image"]
@@ -156,6 +156,8 @@ class Operator:
             cmd += ["-f", str(DEPLOY / "compose.chat.yaml")]
         if env.get("COOPER_LAB") == "1" and env.get("COOPER_COMPOSE_OVERRIDE"):
             cmd += ["-f", env["COOPER_COMPOSE_OVERRIDE"]]
+        if image_overrides is not None:
+            cmd += ["-f", str(image_overrides)]
         return run(cmd + list(args), env=env)
 
     def restic(self, *args, cwd=None):

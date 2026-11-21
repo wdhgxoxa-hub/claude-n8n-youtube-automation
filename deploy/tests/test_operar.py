@@ -26,6 +26,20 @@ class CopiasTest(unittest.TestCase):
         (self.source / "n8n/binaryData").mkdir()
         (self.source / "n8n/binaryData/prueba").write_bytes(b"binario de n8n")
 
+    def test_override_de_imagenes_se_aplica_tras_compose_y_laboratorio(self):
+        state=self.root/'estado';state.mkdir();(state/'chat-tunel.enabled').touch()
+        override=self.root/'imagenes-reversa.json';override.write_text('{}')
+        env={'DATA_ROOT':str(self.source),'STATE_ROOT':str(state),'COOPER_LAB':'1',
+             'COOPER_COMPOSE_OVERRIDE':str(self.root/'lab.yaml')}
+        operator=op.Operator(env,self.root/'entorno-ficticio')
+        with patch.object(op,'run',return_value='') as command:
+            operator.compose('up','-d','--pull','never','chat-n8n',image_overrides=override)
+        args=command.call_args.args[0]
+        files=[args[i+1] for i,value in enumerate(args) if value=='-f']
+        self.assertEqual(files,[str(op.DEPLOY/'compose.yaml'),str(op.DEPLOY/'compose.chat.yaml'),
+                                env['COOPER_COMPOSE_OVERRIDE'],str(override)])
+        self.assertEqual(args[-5:],['up','-d','--pull','never','chat-n8n'])
+
     def test_copia_incluye_adjuntos_conteos_y_hashes(self):
         target = self.root / "target"
         op.copy_data(self.source, target)

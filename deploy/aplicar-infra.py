@@ -214,13 +214,29 @@ def restore_files(backup, destination, previous):
         target.with_name(target.name + '.infra-tmp').unlink(missing_ok=True)
 
 
-def start(op):
+def previous_image_overrides(op, previous_services):
+    """Certifica referencias públicas por servicio; admite relés con otra imagen."""
+    overrides = {}
+    allowed = set(SERVICES) | {'chat-cooper', 'chat-n8n', 'chat-runner'}
+    operar.require(set(previous_services) <= allowed and set(SERVICES) <= set(previous_services), 'Servicios anteriores no reconocidos')
+    for name, value in previous_services.items():
+        reference = value['imagen']
+        operar.require(isinstance(reference, str) and re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9./:_@-]*', reference), 'Referencia de reversa no válida')
+        actual = operar.run([op.engine, 'image', 'inspect', reference, '--format', '{{.Id}}'], env=op.env).strip()
+        operar.require(actual.removeprefix('sha256:') == value['id'].removeprefix('sha256:'), 'La referencia anterior ya no identifica su imagen activa')
+        overrides[name] = {'image': reference}
+    return {'services': overrides}
+
+
+def start(op, image_overrides=None):
     names = ['cooper', 'n8n', 'runner']
     if (op.state / 'chat-tunel.enabled').exists():
         names += ['chat-cooper', 'chat-n8n', 'chat-runner']
-    op.compose('up', '-d', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '240', *names)
+    options = {'image_overrides': image_overrides} if image_overrides is not None else {}
+    pull = ('--pull', 'never') if image_overrides is not None else ()
+    op.compose('up', '-d', '--no-build', '--force-recreate', *pull, '--wait', '--wait-timeout', '240', *names, **options)
     # Ingreso público al final, cuando dependencias y namespaces están recreados.
-    op.compose('up', '-d', '--no-deps', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '180', 'caddy')
+    op.compose('up', '-d', '--no-deps', '--no-build', '--force-recreate', *pull, '--wait', '--wait-timeout', '180', 'caddy', **options)
 
 
 def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=None):
@@ -232,6 +248,7 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
     marker = op.state / 'mantenimiento'
     operar.require(not marker.exists(), 'Hay mantenimiento o recuperación pendiente')
     previous_services = healthy(op)
+    previous_images = previous_image_overrides(op, previous_services)
     cooper_identity = verify_cooper_identity(op, previous_services['cooper'], receipt, image_archive)
     no_running(op)
     # Las imágenes deben precargarse antes del corte. No se confía en etiquetas mutables.
@@ -251,6 +268,8 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
     directory = op.state / ('infra-' + str(time.time_ns()))
     backup = directory / 'configuracion-anterior'
     backup.mkdir(parents=True, mode=0o700)
+    rollback_images = directory / 'imagenes-reversa.json'
+    operar.write_json(rollback_images, previous_images)
     previous = {}
     for name in FILES:
         path = target / name
@@ -263,6 +282,7 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
               'respaldo_configuracion': str(backup), 'entorno_copiado': False,
               'identidad_cooper': cooper_identity,
               'identidades_anteriores': previous_identities,
+              'imagenes_reversa_sha256': operar.digest(rollback_images),
               'codigo_aplicador_sha256': operar.digest(Path(__file__)),
               'codigo_operar_sha256': operar.digest(Path(operar.__file__))}
     operar.write_json(output, result)
@@ -303,7 +323,10 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
             op.ownership()
             operar.verify(op.data)
             result['manifiesto_restaurado_sha256'] = operar.digest(op.data / 'manifiesto.json')
-        start(op)
+        operar.require(operar.digest(rollback_images) == result['imagenes_reversa_sha256'] and
+                       json.loads(rollback_images.read_text()) == previous_image_overrides(op, previous_services),
+                       'La reversa ya no identifica las imágenes previas')
+        start(op, image_overrides=rollback_images)
         reverted = healthy(op)
         operar.require(all(reverted[name]['id'] == value['id'] for name, value in previous_services.items()), 'La reversa no recuperó las imágenes anteriores')
         operar.write_json(output, {**result, 'estado': 'FALLO_REVERTIDO', 'reversion': 'PASS', 'configuracion_restaurada': 'PASS', 'datos_restaurados': bool(snapshot)})

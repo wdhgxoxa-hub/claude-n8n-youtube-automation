@@ -19,7 +19,7 @@ spec.loader.exec_module(infra)
 
 
 class InfraTest(unittest.TestCase):
-    def scenario(self, failure=False, rollback_failure=False, running=False):
+    def scenario(self, failure=False, rollback_failure=False, running=False, mixed=False):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             target, candidate, state, data = [root / name for name in ('deploy', 'candidato', 'estado', 'datos')]
@@ -48,14 +48,22 @@ class InfraTest(unittest.TestCase):
                        'motor':{'migracion':'PASS','reversion':'PASS','idempotencia':'PASS','imagen_nueva':images['n8n']['imagen'],'imagen_anterior':images['n8n']['anterior']}}
             events = []
             failed_once = False
+            relay_images = {'chat-cooper': 'cooper-id', 'chat-n8n': 'cooper-anterior-id', 'chat-runner': 'cooper-anterior-id'}
+            if mixed: (state / 'chat-tunel.enabled').touch()
 
             class Operator:
                 def __init__(self):
                     self.state, self.data, self.engine, self.env, self.env_file = state, data, 'docker', {}, target / '.env'
-                def compose(self, *args):
+                def compose(self, *args, image_overrides=None):
                     nonlocal failed_once
                     events.append(args)
                     if args[0] == 'ps': return args[-1]
+                    if args[0] == 'up':
+                        selected = json.loads(image_overrides.read_text())['services'] if image_overrides else {}
+                        for name in relay_images:
+                            if name in args: relay_images[name] = selected.get(name, {}).get('image', 'cooper-id')
+                        if image_overrides:
+                            assert args[args.index('--pull')+1] == 'never'
                     if args[0] == 'up' and failure and (not failed_once or rollback_failure):
                         failed_once = True
                         with closing(sqlite3.connect(data / 'n8n/database.sqlite')) as db, db:
@@ -77,11 +85,13 @@ class InfraTest(unittest.TestCase):
                     self.assertEqual(args[-2:], ['config','--images'])
                     return '\n'.join([value['imagen'] for value in images.values()] + ['cooper-id'])
                 if args[1:3] == ['image','inspect']:
+                    if args[3].endswith('-id'): return args[3]
                     return next(name + ('-nuevo-id' if value['imagen'] == args[3] else '-anterior-id') for name, value in images.items() if args[3] in (value['imagen'], value['anterior']))
                 template, name = args[-2:]
                 if '.State.Status' in template: return 'running healthy'
                 is_new = not (target / 'compose.yaml').read_text().startswith('PUBLICO ANTERIOR')
                 if name == 'cooper': return 'cooper-id'
+                if name in relay_images: return relay_images[name]
                 return name + ('-nuevo-id' if is_new else '-anterior-id')
 
             operator = Operator()
@@ -109,11 +119,17 @@ class InfraTest(unittest.TestCase):
                 self.assertFalse((backups[0] / '.env').exists())
             self.assertEqual((target / '.env').read_text(), 'FICTICIO=no-copiar')
             self.assertEqual((state / 'mantenimiento').exists(), rollback_failure)
+            if mixed and not rollback_failure:
+                self.assertEqual(relay_images['chat-cooper'], 'cooper-id')
+                for name in ('chat-n8n', 'chat-runner'):
+                    self.assertEqual(relay_images[name], 'cooper-anterior-id' if failure else 'cooper-id')
 
     def test_actualizacion_exige_imagenes_y_preserva_cooper(self): self.scenario()
     def test_fallo_restaura_archivos_y_datos_reales_del_fixture(self): self.scenario(failure=True)
     def test_reversa_incompleta_conserva_marcador(self): self.scenario(failure=True, rollback_failure=True)
     def test_no_corta_si_existen_ejecuciones(self): self.scenario(running=True)
+    def test_reversa_recupera_reles_anteriores_a_cooper(self): self.scenario(failure=True,mixed=True)
+    def test_actualizacion_migra_reles_de_estado_mixto(self): self.scenario(mixed=True)
 
     def test_rechaza_candidato_distinto_antes_de_operar(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -134,6 +150,24 @@ class InfraTest(unittest.TestCase):
             for relay in ('chat-cooper','chat-n8n','chat-runner'):
                 self.assertIn(relay, op.calls[0])
             self.assertTrue(all('--force-recreate' in call for call in op.calls))
+
+    def test_override_solo_imagenes_certificadas_por_servicio(self):
+        previous={name:{'imagen':'registro/'+name+':anterior','id':'sha256:'+name} for name in infra.SERVICES}
+        previous['chat-n8n']={'imagen':'localhost/cooper:vieja','id':'sha256:cooper-viejo'}
+        op=SimpleNamespace(engine='docker',env={})
+        def inspect(args,**_):return next(v['id'] for v in previous.values() if v['imagen']==args[3])
+        with patch.object(infra.operar,'run',side_effect=inspect):
+            result=infra.previous_image_overrides(op,previous)
+        self.assertEqual(result,{'services':{name:{'image':value['imagen']} for name,value in previous.items()}})
+        with patch.object(infra.operar,'run',return_value='sha256:otra'):
+            with self.assertRaisesRegex(RuntimeError,'ya no identifica'):infra.previous_image_overrides(op,previous)
+        previous['ajeno']={'imagen':'registro/ajeno','id':'otro'}
+        with self.assertRaisesRegex(RuntimeError,'no reconocidos'):infra.previous_image_overrides(op,previous)
+
+    def test_reversa_no_admite_interpolacion_de_referencia(self):
+        previous={name:{'imagen':'${OTRA_IMAGEN}','id':'sha256:'+name} for name in infra.SERVICES}
+        with self.assertRaisesRegex(RuntimeError,'no válida'):
+            infra.previous_image_overrides(SimpleNamespace(engine='docker',env={}),previous)
 
 class ImageIdentityTest(unittest.TestCase):
     def image(self, tag='localhost/cooper:ensayo', wrong_link=False):
