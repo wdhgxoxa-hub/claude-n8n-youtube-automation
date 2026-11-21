@@ -1,0 +1,18 @@
+# Complemento opcional: aplicar solo tras revisión del operador, nunca automático.
+# El monitor del host publica una proyección allowlist en este directorio aislado.
+services:
+  cooper:
+    environment:
+      COOPER_OBSERVABILIDAD_VPS_PATH: /app/observabilidad/estado.json
+      COOPER_N8N_API_URL: ${COOPER_N8N_API_URL:-}
+      COOPER_N8N_API_KEY: ${COOPER_N8N_API_KEY:-}
+      COOPER_TELEGRAM_BOT_TOKEN: ${COOPER_TELEGRAM_BOT_TOKEN:-}
+      COOPER_TELEGRAM_CHAT_ID: ${COOPER_TELEGRAM_CHAT_ID:-}
+      COOPER_OBSERVABILIDAD_PAUSA: ${COOPER_OBSERVABILIDAD_PAUSA:-0}
+    volumes:
+      - type: bind
+        source: ${STATE_ROOT:?Definir STATE_ROOT}/observabilidad
+        target: /app/observabilidad
+        read_only: true
+        bind:
+          create_host_path: false
