@@ -21,6 +21,8 @@ import {
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import {
   House,
+  ChartNoAxesCombined,
+  BookOpen,
   Clapperboard,
   Radio,
   UsersRound,
@@ -40,6 +42,7 @@ export async function api<T = unknown>(
 ): Promise<T> {
   const response = await fetch(`/api/${path}`, {
     method,
+    signal: AbortSignal.timeout(15000),
     headers:
       data === undefined ? undefined : { "Content-Type": "application/json" },
     body: data === undefined ? undefined : JSON.stringify(data),
@@ -65,6 +68,8 @@ const nav = [
   { path: "/", label: "Inicio", icon: House },
   { path: "/canales", label: "Canales", icon: Radio },
   { path: "/videos", label: "Videos", icon: Clapperboard },
+  { path: "/publicados", label: "Publicados", icon: ChartNoAxesCombined },
+  { path: "/aprendizaje", label: "Aprendizaje", icon: BookOpen },
   { path: "/avatares", label: "Avatares y voces", icon: UsersRound },
 ];
 function observarVisibilidad(notify: () => void) {
@@ -103,7 +108,7 @@ export function Espacio({
     let attempts = 0;
     const controller = new AbortController();
     const connect = () => {
-      if (stopped) return;
+      if (stopped || !navigator.onLine) return;
       if (timer) clearTimeout(timer);
       source?.close();
       source = new EventSource("/api/eventos");
@@ -135,7 +140,13 @@ export function Espacio({
       source.addEventListener("fallo", () => setConnected(false));
       source.onerror = retry;
     };
+    const offline = () => {
+      source?.close();
+      clearTimeout(timer);
+      setConnected(false);
+    };
     connect();
+    window.addEventListener("offline", offline);
     window.addEventListener("online", connect);
     return () => {
       stopped = true;
@@ -143,6 +154,7 @@ export function Espacio({
       clearTimeout(timer);
       controller.abort();
       window.removeEventListener("online", connect);
+      window.removeEventListener("offline", offline);
     };
   }, []);
   useEffect(() => {

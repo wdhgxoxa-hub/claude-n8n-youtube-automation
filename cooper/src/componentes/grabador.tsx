@@ -124,6 +124,7 @@ export async function subir(file: File) {
   });
   const response = await fetch("/api/archivos", {
     method: "POST",
+    signal: AbortSignal.timeout(15000),
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name: file.name,
