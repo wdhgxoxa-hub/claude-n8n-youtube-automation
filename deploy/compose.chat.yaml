@@ -1,0 +1,35 @@
+# Complemento opcional. Mantiene las validaciones loopback de aplicación y fábrica.
+x-rele: &rele
+  image: ${COOPER_IMAGE:?Definir COOPER_IMAGE}
+  entrypoint: [node, /rele/tunel.mjs]
+  restart: unless-stopped
+  user: "1000:1000"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  mem_limit: 64m
+  cpus: 0.25
+  pids_limit: 32
+  environment:
+    COOPER_RELE_MODO: vps
+    COOPER_RELE_SOCKET: /tunel/puente.sock
+    PUENTE_CODEX_TOKEN: ${PUENTE_CODEX_TOKEN:?Configurar token del VPS}
+  volumes:
+    - ../servicios/puente-codex/tunel.mjs:/rele/tunel.mjs:ro
+    - /run/cooper-chat:/tunel:ro
+  logging:
+    driver: json-file
+    options: {max-size: 1m, max-file: "2"}
+services:
+  chat-cooper:
+    <<: *rele
+    network_mode: service:cooper
+    depends_on: {cooper: {condition: service_healthy, restart: true}}
+  chat-n8n:
+    <<: *rele
+    network_mode: service:n8n
+    depends_on: {n8n: {condition: service_healthy, restart: true}}
+  chat-runner:
+    <<: *rele
+    network_mode: service:runner
+    depends_on: {runner: {condition: service_healthy, restart: true}}

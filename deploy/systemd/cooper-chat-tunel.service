@@ -1,0 +1,19 @@
+[Unit]
+Description=Túnel SSH de Cooper VPS hacia el puente privado de la PC
+After=network-online.target cooper-chat-rele.service
+Wants=network-online.target
+Requires=cooper-chat-rele.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -NT -i %h/.ssh/cooper_vps -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o BatchMode=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o ConnectTimeout=10 -R /run/cooper-chat/puente.sock:%h/.local/share/cooper/tunel/puente.sock operador@144.91.88.253
+Restart=always
+RestartSec=10
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=default.target

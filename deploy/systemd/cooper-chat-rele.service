@@ -1,0 +1,23 @@
+[Unit]
+Description=Relé privado de Cooper hacia el plan de la PC
+After=puente-codex.service
+Requires=puente-codex.service
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/cooper/cooper.env
+Environment=COOPER_RELE_MODO=pc
+Environment=COOPER_RELE_SOCKET=%h/.local/share/cooper/tunel/puente.sock
+ExecStartPre=/usr/bin/install -d -m 0700 %h/.local/share/cooper/tunel
+ExecStart=/usr/bin/node %h/.local/lib/cooper/puente-codex/tunel.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/share/cooper
+RestrictAddressFamilies=AF_UNIX AF_INET
+
+[Install]
+WantedBy=default.target
