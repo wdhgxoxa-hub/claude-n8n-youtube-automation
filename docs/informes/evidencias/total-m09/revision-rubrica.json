@@ -1,0 +1,507 @@
+{
+  "fecha": "2026-11-21T16:49:53.986Z",
+  "revisionRubrica": "2147a9e6fd248c048e85a457888aca7215d02ebf",
+  "origen": "evaluacion-real-original.json",
+  "sha256Origen": "a5b5a6b9df24f8ff2899766474b4d01149eeb99721c1a49e6ad4ca88e1dcdb7a",
+  "llamadasAdicionales": 0,
+  "nota": "Reevaluación offline de las mismas respuestas reales, no una nueva muestra. Se conserva el informe original. La referencia histórica a la preferencia anterior no es una preferencia vigente.",
+  "total": 37,
+  "pass": 32,
+  "fail": 5,
+  "resultados": [
+    {
+      "id": 1,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 2,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 3,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 4,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 5,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 6,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 7,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 8,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 9,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 10,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 11,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 12,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 13,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 14,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 15,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 16,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 17,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 18,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "limiteEstudio": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 19,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "limiteEstudio": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 20,
+      "original": "FAIL",
+      "revisado": "FAIL",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "identidadConsentimiento": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 21,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 22,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 23,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 24,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 25,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 26,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 27,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 28,
+      "original": "FAIL",
+      "revisado": "FAIL",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "confirmacionExplicita": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 29,
+      "original": "FAIL",
+      "revisado": "FAIL",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": false,
+        "noAfirmaEjecucion": true,
+        "respuestaPresente": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 30,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "seleccion": true,
+        "noAfirmaEjecucion": true,
+        "salidaAislada": true,
+        "argumentosValidos": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 31,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "sintesisAceptada": true,
+        "idea": true,
+        "preferencia": true,
+        "pendiente": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 32,
+      "original": "FAIL",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "sintesisAceptada": true,
+        "corregida": true,
+        "anteriorRetirada": true,
+        "ideaConservada": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 33,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "sintesisAceptada": true,
+        "pendienteRetirado": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 34,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "soloResumenAntiguo": true,
+        "recuerdaTitulo": true,
+        "recuerdaCorreccion": true,
+        "noEjecuta": true,
+        "salidaAislada": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 35,
+      "original": "PASS",
+      "revisado": "PASS",
+      "controles": {
+        "contextoAislado": true,
+        "sintesisAceptada": true,
+        "dosIdeas": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 36,
+      "original": "FAIL",
+      "revisado": "FAIL",
+      "controles": {
+        "contextoAislado": true,
+        "aclara": true,
+        "noAsume": true,
+        "salidaAislada": true,
+        "sinMutaciones": true
+      }
+    },
+    {
+      "id": 37,
+      "original": "FAIL",
+      "revisado": "FAIL",
+      "controles": {
+        "contextoAislado": true,
+        "cortePersistente": true,
+        "noRecuperaOlvidado": true,
+        "reconoceAusencia": true,
+        "noEjecuta": true,
+        "salidaAislada": true,
+        "sinMutaciones": true
+      }
+    }
+  ]
+}
