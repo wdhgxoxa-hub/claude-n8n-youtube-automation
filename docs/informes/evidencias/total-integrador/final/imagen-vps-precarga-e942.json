@@ -1,0 +1,9 @@
+{
+  "estado": "PRECARGADA_SIN_ACTIVAR",
+  "imagen": "localhost/cooper:e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+  "archivo": "/home/operador/total-integrador-20261121/cooper-e942dc9.tar.gz",
+  "archivo_sha256": "b64e0934ef6038c5207e0574c8c30542ae3810051ca977a8f393dbfa4bd5bad2",
+  "podman_config_id": "a8deb319d1c3913162719f0ed3af3152a249caf65feca185817e3d432ee70261",
+  "docker_image_id": "sha256:8f84efab492f6a305d8e997b5bf4bff3bf64a7f0fad956794e911faf0fab330b",
+  "carga_rc": 0
+}

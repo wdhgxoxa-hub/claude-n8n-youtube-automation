@@ -1,0 +1,13 @@
+{
+  "base_remota": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "corte": "abb94c119ef1e08b8da29c0558b67a95806c9392",
+  "rutas_salientes": 1149,
+  "env_reales_por_nombre": [],
+  "fuente_sentinel_privada_por_ruta": [],
+  "metadatos_historicos_sentinel_revisados": [
+    "cooper/vendor/sentinel/README.md",
+    "cooper/vendor/sentinel/origen.json"
+  ],
+  "resultado": "PASS",
+  "alcance": "Solo nombres de rutas Git; dos archivos hist\u00f3ricos revisados contienen documentaci\u00f3n y huellas, nunca fuentes privadas."
+}

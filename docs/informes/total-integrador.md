@@ -40,6 +40,10 @@ Inspección VPS de solo lectura (21-11-2026 14:21 Lima): siete servicios sanos; 
 
 Validación focal nueva: 16/16 casos aprobados, incluidos Marcas/Sentinel en 1440 y 390 px, reproducción MP4 iniciada con teclado, cuatro auditorías axe de todas las rutas y ocho entradas Firefox/WebKit. En raíz, las 185 pruebas operativas pasaron con advertencias convertidas en errores. El [preflight n8n](evidencias/total-integrador/preflight-n8n.json) valida 25 archivos certificados y el lote ensayado sin consumir el entorno ni mutar el VPS; el CAS vivo previo pasó y se repetirá bajo bloqueo. Los archivos públicos del relé coinciden por SHA-256 con el checkout integrado.
 
+Aceptación operativa final sobre la imagen `e942dc9`: migración 11→14, ocho bloques Compose, avería inyectada con relés mixtos, reversa exacta de siete IDs/datos/configuración y segunda actualización saludable. [Recibos](total-integrador-operacion-final.md). El arnés local adapta únicamente las dependencias de namespace de Podman; los helpers certificados de producción no cambian. La imagen precargada en Docker corresponde al mismo archivo gzip por SHA-256; aún no activada.
+
+Últimos cierres integrados: helper WAL de Radar (`54b9ac7`) y cierres/documentación `d33b60c`, `2be2dc5`, `abb94c1`; las 189 pruebas operativas pasan. Los recibos históricos de esos cierres no sustituyen las aceptaciones nuevas de esta misión.
+
 ## Limitaciones reales
 
 No se inicia OAuth ni se fabrica una sesión de producción. La aceptación pública y el control de acceso sin sesión son distintos del recorrido privado autenticado. Los proveedores pagos y la publicación permanecen fuera del alcance autorizado.
