@@ -10,6 +10,8 @@ export default defineConfig([
     "playwright-report/**",
     "test-results/**",
     "next-env.d.ts",
+    // Copia íntegra de Sentinel: comprobada por SHA-256, no reformatear su guardián.
+    "vendor/sentinel/**",
   ]),
   ...ts.configs.recommended,
   {

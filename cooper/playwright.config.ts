@@ -10,7 +10,14 @@ export default defineConfig({
   workers: 1,
   timeout: 60000,
   expect: { timeout: 15000 },
-  reporter: [["list"], ["html", { open: "never" }]],
+  reporter:
+    process.env.COOPER_CI_REPORTES === "1"
+      ? [
+          ["list"],
+          ["html", { open: "never" }],
+          ["json", { outputFile: ".cache/puerta/playwright.json" }],
+        ]
+      : [["list"], ["html", { open: "never" }]],
   use: {
     baseURL,
     // Las llamadas API del ensayo deben cumplir el mismo control CSRF que el navegador.

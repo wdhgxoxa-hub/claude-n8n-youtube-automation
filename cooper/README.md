@@ -10,7 +10,7 @@ COOPER_MOVIMIENTO_RONDA=ronda-1 COOPER_MOVIMIENTO_SALIDA=.cache/videos-integraci
 COOPER_MOVIMIENTO_SALIDA=.cache/videos-integracion3 node scripts/indice-movimiento.mjs
 ```
 
-Sentinel usa su propia versión de Chromium en `.cache/sentinel-browsers`, que puede prepararse con `PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/sentinel-browsers" ~/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python -m playwright install chromium`. Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas.
+Sentinel y sus dependencias están fijados en este repositorio. `npm run preparar:pruebas` prepara su entorno Python y ambos Chromium; para reproducir desde cero use `npm run ci:limpia` ([procedimiento](#puerta-reproducible-desde-cero)). Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas.
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). La puesta en vivo inicial se conserva en [cooper-vivo](../docs/informes/cooper-vivo.md). La instalación local usa la integración 3, con once migraciones y respaldo previo: [estado, evidencias y límites respecto del VPS](../docs/informes/cooper-integracion3.md). El arranque automático local permanece deshabilitado tras el corte al VPS; esta misión inició solo la web de la PC.
 
@@ -122,6 +122,61 @@ Movimiento: entrada escalonada del catálogo a 60 ms por elemento, transición d
 
 Se usaron filesystem/CLI, navegador Chromium local mediante Playwright y consulta de documentación oficial de Next/Auth.js. Los conectores disponibles de diseño no eran necesarios para este código ni se les enviaron datos del proyecto. No se usaron servicios de pago ni recursos externos de marca.
 
+## Puerta reproducible desde cero
+
+En un commit de la rama de trabajo, desde `cooper/`:
+
+```bash
+npm run ci:limpia
+# Si el motor disponible es Docker:
+npm run ci:limpia -- docker
+```
+
+Requiere Git, tar, Node 24 y un motor local Podman (predeterminado) o Docker operativo,
+Linux x86_64, conexión a los registros públicos y espacio para la imagen/navegadores.
+No instala herramientas globales. Exporta **solo HEAD** con `git archive` a una carpeta
+nueva `.cache/ci-limpia-*/checkout`; los cambios sin commit no forman parte del ensayo.
+No modifica el worktree, no monta HOME, sockets ni archivos privados, no publica puertos
+ni imágenes y no configura un servicio de CI remoto. Conserva el checkout y los artefactos.
+
+La imagen Debian 12 fija Node 24.22.3 y uv 0.12.24 por digest; instala CPython 3.14.7,
+FFmpeg y las bibliotecas oficiales de Chromium. `package-lock.json` fija npm/Playwright JS;
+`ci/sentinel-requirements.txt` fija las cinco dependencias Python con SHA-256 y solo wheels.
+`vendor/sentinel/origen.json` conserva la revisión y los hashes del guardián y los tres
+módulos originales. Los paquetes del sistema se obtienen del repositorio Debian vigente:
+la imagen base y las dependencias de aplicación están fijadas, no se promete una imagen
+binariamente idéntica ante futuras actualizaciones de seguridad del sistema.
+
+Dentro del entorno soportado, el arnés ejecuta `npm ci`, prepara Python y los dos Chromium,
+y después `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:e2e`, `npm run build`
+y, desde la raíz, `node --test tests/flujos_v2.test.cjs`. Los siete comandos mantienen
+su orden; la preparación adicional queda registrada. Ningún test, guardián o umbral se omite.
+Si ya dispone de las versiones y bibliotecas indicadas, puede usar `npm run ci:local`.
+Para la ejecución manual: `npm ci`, `npm run preparar:pruebas`, `npm run preflight`, y
+los seis comandos restantes. Los `.env` reales en la raíz o `cooper/` se rechazan por nombre
+sin abrirlos; utilice el ensayo limpio para conservar su configuración de desarrollo.
+
+El preflight valida sistema, herramientas, hashes y el lanzamiento de ambos Chromium antes
+de las E2E. No usa ni instala nada en `~/Proyectos/Sistema-Sentinel`. Cada lenguaje conserva
+el navegador que exige su versión de Playwright; no se enlazan cachés ajenas. Las suites usan
+cuentas, sesiones, puertos libres, SQLite y proveedores ficticios. El arnés transmite solo
+variables de herramientas, sin credenciales, configuración de proveedores ni `NODE_OPTIONS`.
+
+Evidencia en `<checkout>/cooper/.cache/puerta/`: logs por paso, `vitest.json`,
+`playwright.json` y `resultado.json` con SHA del código, versiones, rc, duración, advertencias,
+conteos y SHA-256 de cada log. Un rc distinto de cero, una advertencia, una omisión, un
+reintento E2E o una suite vacía hacen fallar la puerta. Capturas e informe Sentinel permanecen
+además en las ubicaciones habituales de `.cache/`; las cookies de Sentinel se retiran al terminar.
+No publique indiscriminadamente el checkout: contiene datos y sesiones ficticios de ensayo.
+
+Documentación oficial consultada: [Playwright CI](https://playwright.dev/docs/ci),
+[navegadores Python](https://playwright.dev/python/docs/browsers),
+[uv en contenedores](https://docs.astral.sh/uv/guides/integration/docker/),
+[instalación con hashes](https://pip.pypa.io/en/stable/topics/secure-installs/),
+[Podman run](https://docs.podman.io/en/latest/markdown/podman-run.1.html).
+Publicar CI o redistribuir la copia interna de Sentinel exige decisión de Walter;
+esta misión deja únicamente el arnés local.
+
 ## Verificación
 
 Para el puente real local: `npm run test:ensayo` (Node 24, Podman y la imagen `ghcr.io/n8n-io/n8n:2.47.4`). Crea Data Tables, migra datos ficticios, importa/publica workflows por REST y prueba Cooper en modo n8n con sesiones locales. Usa red interna sin Internet, puertos loopback libres, secretos nuevos y un volumen exclusivo en `~/.cache/cooper-ensayo/`. Al salir detiene `cooper-ensayo-n8n` y conserva su volumen. Cada repetición archiva el contenedor anterior detenido y crea una instancia nueva; rechaza reutilizar uno en ejecución o sin su etiqueta. No lee `.env` reales. Los resultados y capturas quedan en `.cache/e2e-ensayo-*`; [informe, límites y migración para Claude](../docs/informes/cooper-ensayo.md).
@@ -231,7 +286,7 @@ El chat pide una frase breve y cálida, como máximo dos salvo solicitud de deta
 COOPER_PULIDO_RONDA=ronda-1 npm run test:e2e -- --config playwright.pulido.config.ts
 ```
 
-Requiere Sistema Sentinel instalado en `~/Proyectos/Sistema-Sentinel/codigo` y su entorno Python, o las rutas `SENTINEL_CODIGO` y `SENTINEL_PYTHON`; el ensayo multimedia usa FFmpeg. El adaptador conserva el guardián de Sentinel y añade únicamente una sesión ficticia y viewport al navegador. Las pruebas usan loopback, base efímera y servicios simulados; no requieren Google ni credenciales de producción. Los artefactos quedan en `.cache/capturas-pulido/<ronda>/`, junto con métricas, informe de Sentinel y capturas. Las cookies de ensayo se eliminan al terminar. Playwright complementa los módulos de recorridos, caos y estabilidad con axe, la matriz de pantallas, formularios, micrófono ficticio, fotos, ráfagas, red desconectada y recuperación. La reproducción de video y voz se comprueba con archivos sintéticos servidos localmente.
+Requiere la [preparación reproducible](#puerta-reproducible-desde-cero) de Sentinel y FFmpeg, incluidos en el contenedor de ensayo. El adaptador conserva el guardián de Sentinel y añade únicamente una sesión ficticia y viewport al navegador. Las pruebas usan loopback, base efímera y servicios simulados; no requieren Google ni credenciales de producción. Los artefactos quedan en `.cache/capturas-pulido/<ronda>/`, junto con métricas, informe de Sentinel y capturas. Las cookies de ensayo se eliminan al terminar. Playwright complementa los módulos de recorridos, caos y estabilidad con axe, la matriz de pantallas, formularios, micrófono ficticio, fotos, ráfagas, red desconectada y recuperación. La reproducción de video y voz se comprueba con archivos sintéticos servidos localmente.
 
 
 ## Operación completa de la fábrica
@@ -264,6 +319,6 @@ node scripts/indice-movimiento.mjs
 node scripts/auditoria.mjs --movimiento
 ```
 
-Sentinel usa su API local existente (`~/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python`, configurable con `SENTINEL_PYTHON`) y Chromium propio en `.cache/sentinel-browsers`. Preparación local: `PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/sentinel-browsers" "$HOME/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python" -m playwright install chromium`. El guardián solo permite el destino E2E loopback; no contacta la fábrica real. No se leen archivos de credenciales.
+Sentinel usa la copia íntegra fijada en `vendor/sentinel`, Python en `.cache/sentinel-venv` y Chromium en `.cache/sentinel-browsers`. Preparación: `npm run preparar:pruebas`; no requiere rutas personales ni acepta `SENTINEL_CODIGO`/`SENTINEL_PYTHON` externos. El guardián solo permite el destino E2E loopback; no contacta la fábrica real. No se leen archivos de credenciales.
 
 Evidencia fuera de Git: `.cache/videos-movimiento/index.html` permite abrir los videos sin autoplay; `indice.json` incluye SHA-256. Cada ronda conserva métricas, capturas, videos y reportes Sentinel. La cadencia del WebM de Playwright es distinta de los FPS medidos por requestAnimationFrame. CPU 4× aproxima carga móvil; no sustituye un ensayo en teléfono físico. Resultados finales y pendientes en [el informe](../docs/informes/cooper-animacion-fuerte.md).

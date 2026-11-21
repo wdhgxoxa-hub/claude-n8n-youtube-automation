@@ -1,0 +1,16 @@
+{
+  "proyecto": "Sistema Sentinel",
+  "version": "0.1.0",
+  "revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+  "archivos": {
+    "src/sentinel/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/sentinel/contrato.py": "d8ce03b7a5024649ca8f34951c64b612b7af119acc1ec845fdc5aeefe52f0aeb",
+    "src/sentinel/guardian/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/sentinel/guardian/guardian.py": "be3bd795900ddecaca75e0bef2f6d9dbd0c8abf7528944205a836ed0d47d523f",
+    "src/sentinel/guardian/proteger.js": "9e27a451e45687521706afbb527878b58f9d173c4c36fe1c6218ced534482844",
+    "src/sentinel/pruebas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/sentinel/pruebas/recorridos.py": "80ea25e32d0bd0e22249ba8afc48ea4897741d016f2f92336deb945cf14da4b1",
+    "src/sentinel/pruebas/caos.py": "246f5ef7f7a69a89bafc76b6b60592c0dd73810ffd7b4e02c85ce01b760d6cb2",
+    "src/sentinel/pruebas/estabilidad.py": "9d9b37028dbd72469ff9d7b24954839be643493e89c88c4b53544a013fce0054"
+  }
+}

@@ -226,9 +226,7 @@ test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", a
     { mode: 0o600 },
   );
   try {
-    const python =
-      process.env.SENTINEL_PYTHON ||
-      `${process.env.HOME}/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python`;
+    const python = resolve(".cache/sentinel-venv/bin/python");
     const result = await new Promise<{ code: number | null; log: string }>(
       (done, reject) => {
         const child = spawn(python, ["scripts/sentinel-cooper.py", config], {

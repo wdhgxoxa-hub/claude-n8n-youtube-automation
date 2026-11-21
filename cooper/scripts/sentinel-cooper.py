@@ -4,18 +4,21 @@ El proceso padre impone el plazo y termina su grupo de procesos al excederlo.
 """
 import importlib
 import json
-import os
+import hashlib
 from pathlib import Path
 import sys
 from urllib.parse import urlsplit
 
 config = json.loads(Path(sys.argv[1]).read_text())
-raiz = Path(os.environ.get('SENTINEL_CODIGO', str(Path.home() / 'Proyectos/Sistema-Sentinel/codigo')))
+raiz = Path(__file__).resolve().parents[1] / 'vendor/sentinel'
+for archivo, esperado in json.loads((raiz / 'origen.json').read_text())['archivos'].items():
+    if hashlib.sha256((raiz / archivo).read_bytes()).hexdigest() != esperado:
+        raise ValueError('Sentinel modificado: ' + archivo)
 sys.path.insert(0, str(raiz / 'src'))
 from sentinel.contrato import Objetivo, ComprobacionDestino, Contexto, Exclusiones
 from sentinel.guardian.guardian import Guardian
 
-if urlsplit(config['url']).hostname != '127.0.0.1':
+if any(urlsplit(config[k]).hostname != '127.0.0.1' for k in ('url', 'fixture')):
     raise ValueError('Solo Cooper E2E en loopback')
 cookies = json.loads(Path(config['sesion']).read_text())['cookies']
 carpeta = Path(config['salida'])
