@@ -30,6 +30,9 @@ export const medicionSchema = z.object({
   comentarios: contador,
   // El porcentaje medio visto puede superar el 100 % por repeticiones.
   retencion: contador,
+  seguidoresGanados: contador.optional(),
+  ventana: z.enum(["24h", "72h", "7d"]).nullable().optional(),
+  demoraHoras: contador.optional(),
 });
 export const publicacionSchema = z.object({
   id: z.string().max(300),
@@ -55,6 +58,35 @@ export const incidenciaSchema = z.object({
   cambio: z.string().max(2000),
 });
 export const leccionSchema = z.object({
+  causa: z.string().max(2000).optional(),
+  correccion: z.string().max(2000).optional(),
+  nivel: z.enum(["hipotesis", "patron"]).optional(),
+  origenes: z
+    .array(
+      z.object({
+        videoId: z.string().max(300),
+        red: z.string().max(40),
+        ventana: z.enum(["24h", "72h", "7d"]),
+        fecha,
+        metrica: z.enum([
+          "vistas",
+          "meGusta",
+          "comentarios",
+          "retencion",
+          "seguidoresGanados",
+        ]),
+        valor: z.number().finite().nonnegative(),
+        demoraHoras: z.number().nonnegative(),
+      }),
+    )
+    .max(20)
+    .optional(),
+  aplicaciones: z
+    .array(
+      z.object({ videoId: z.string().max(300), cambio: z.string().max(1500) }),
+    )
+    .max(20)
+    .optional(),
   id: z.string().max(300),
   fecha,
   resumen: z.string().max(3000),

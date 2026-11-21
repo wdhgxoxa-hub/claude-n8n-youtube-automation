@@ -265,6 +265,7 @@ export function Publicados() {
                     ["Vistas", m?.vistas],
                     ["Me gusta", m?.meGusta],
                     ["Comentarios", m?.comentarios],
+                    ["Seguidores ganados", m?.seguidoresGanados],
                   ].map(([label, value]) => (
                     <div key={String(label)}>
                       <dt>{label}</dt>
@@ -392,6 +393,80 @@ export function Aprendizaje() {
                 {l.canal} · {fecha(l.fecha)}
               </p>
               <h3>{l.resumen}</h3>
+              {!l.origenes?.length && (
+                <p className="muted">
+                  Registro histórico sin evidencia enlazada; no se aplica
+                  automáticamente al guion.
+                </p>
+              )}
+              {l.nivel && (
+                <p className="muted">
+                  {l.nivel === "patron"
+                    ? "Patrón en tres o más videos; causa por contrastar."
+                    : "Hipótesis: necesita más videos para confirmar el patrón."}
+                </p>
+              )}
+              {l.causa && (
+                <p>
+                  <strong>Posible causa:</strong> {l.causa}
+                </p>
+              )}
+              {l.correccion && (
+                <p>
+                  <strong>Cambio propuesto:</strong> {l.correccion}
+                </p>
+              )}
+              {!!l.origenes?.length && (
+                <ul aria-label="Evidencia de la lección">
+                  {l.origenes.map((o, i) => (
+                    <li key={o.videoId + o.red + i}>
+                      <Link href={"/videos/" + encodeURIComponent(o.videoId)}>
+                        {data.videos.find((v) => v.id === o.videoId)?.title ||
+                          "Video de origen"}
+                      </Link>
+                      {" · "}
+                      {o.red}
+                      {" · "}
+                      {o.ventana}
+                      {" · "}
+                      {
+                        {
+                          vistas: "Vistas",
+                          meGusta: "Me gusta",
+                          comentarios: "Comentarios",
+                          retencion: "Retención",
+                          seguidoresGanados: "Seguidores ganados",
+                        }[o.metrica]
+                      }
+                      :{" "}
+                      {o.metrica === "retencion"
+                        ? Math.round(o.valor * 100) + " %"
+                        : numero(o.valor)}
+                      {o.demoraHoras > 0 &&
+                        " (captura " + o.demoraHoras + " h después del hito)"}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {l.correccion && (
+                <p className="muted">
+                  {l.aplicaciones?.length
+                    ? "Aplicada en guiones; el efecto aún necesita nuevas métricas."
+                    : "Pendiente de aplicar en el siguiente guion."}
+                </p>
+              )}
+              {!!l.aplicaciones?.length && (
+                <ul aria-label="Aplicaciones de la lección">
+                  {l.aplicaciones.map((a, i) => (
+                    <li key={a.videoId + i}>
+                      <Link href={"/videos/" + encodeURIComponent(a.videoId)}>
+                        Ver guion
+                      </Link>
+                      : {a.cambio}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {l.ganchos.length > 0 && (
                 <p>
                   <strong>Ganchos que funcionan:</strong>{" "}

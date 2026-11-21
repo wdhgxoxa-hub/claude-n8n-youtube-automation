@@ -122,3 +122,20 @@ it("conserva retención media superior a 100 % y mantiene acotada la curva de au
     }).success,
   ).toBe(false);
 });
+
+it("sincroniza evidencia y aplicaciones con métricas opcionales sin convertir ausencias en cero", () => {
+  const medicion = medicionSchema.parse({
+    fecha: "2026-11-21T00:00:00Z",
+    vistas: 0,
+    meGusta: null,
+    comentarios: null,
+    retencion: null,
+    seguidoresGanados: 3,
+    ventana: "72h",
+    demoraHoras: 2,
+  });
+  expect(medicion.vistas).toBe(0);
+  expect(medicion.meGusta).toBeNull();
+  expect(medicion.seguidoresGanados).toBe(3);
+  expect(medicion.ventana).toBe("72h");
+});

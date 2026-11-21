@@ -228,3 +228,77 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
     fullPage: true,
   });
 });
+
+test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejora", async ({
+  page,
+}) => {
+  const state: Estado = await (await page.request.get("/api/estado")).json();
+  const video = state.videos[0];
+  const channel = state.channels.find((c) => c.id === video.channelId)!;
+  channel.lecciones = [
+    {
+      id: "leccion-evidencia",
+      fecha: "2026-11-21T00:00:00Z",
+      resumen: "Abrir con la cifra peruana",
+      ganchos: [],
+      temas: [],
+      nivel: "hipotesis",
+      causa: "La explicación aparece después del primer plano.",
+      correccion: "Mover la cifra a la apertura.",
+      origenes: [
+        {
+          videoId: video.id,
+          red: "youtube",
+          ventana: "72h",
+          fecha: "2026-11-21T00:00:00Z",
+          metrica: "retencion",
+          valor: 0.4,
+          demoraHoras: 2,
+        },
+      ],
+      aplicaciones: [
+        { videoId: video.id, cambio: "La cifra abre el primer plano." },
+      ],
+    },
+  ];
+  await page.route("**/api/estado", (r) => r.fulfill({ json: state }));
+  await page.route("**/api/eventos", (r) =>
+    r.fulfill({
+      contentType: "text/event-stream",
+      body: "event: estado\ndata: " + JSON.stringify(state) + "\n\n",
+    }),
+  );
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/aprendizaje");
+    const lesson = page
+      .locator(".lesson:visible")
+      .filter({ hasText: "Abrir con la cifra peruana" });
+    await expect(
+      lesson.getByText("Posible causa:", { exact: false }),
+    ).toBeVisible();
+    await expect(
+      lesson.getByText("Cambio propuesto:", { exact: false }),
+    ).toBeVisible();
+    await expect(lesson.getByLabel("Evidencia de la lección")).toContainText(
+      "Retención: 40 % (captura 2 h después del hito)",
+    );
+    await expect(
+      lesson.getByText(
+        "Aplicada en guiones; el efecto aún necesita nuevas métricas.",
+      ),
+    ).toBeVisible();
+    await expect(
+      lesson.getByRole("link", { name: video.title }),
+    ).toHaveAttribute("href", "/videos/" + video.id);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: ".cache/capturas-aprendizaje/evidencia-" + width + ".png",
+      fullPage: true,
+    });
+  }
+});
