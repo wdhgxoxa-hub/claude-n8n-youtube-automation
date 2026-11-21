@@ -1,0 +1,99 @@
+{
+  "fecha": "2026-11-21T22:53:05.119931+00:00",
+  "estado": "RONDAS_ORIGINALES_Y_REVISION_PASS",
+  "commit_checkout": "5e8e26020d6fdf69538de91194860c006d5f6b29",
+  "archivo_sha256": "a39f202e60692238aca610cc6f734e946f4da52193dcef17faa02f06c1379e3c",
+  "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+  "head_mision_inicial": "deb1f2a566d06d7f36fd540e6756863dd136cb89",
+  "diferencias_cooper_desde_fuente": [
+    "cooper/README.md"
+  ],
+  "ronda1": {
+    "stats": {
+      "startTime": "2026-11-21T21:54:01.916Z",
+      "duration": 2295691.489,
+      "expected": 123,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errors": [],
+    "playwright_sha256": "d3c4c09f4c52c5214de167a8e43aa374bad53db448a688ccf098f1fde4fd204b",
+    "ejecucion": {
+      "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 2311901,
+      "sha256": "f1d6bc63dc4221b0c3faba22094d1ca830eee107f4f9262107a4e7c5c55a1a31"
+    }
+  },
+  "contenedor": "cooper-integrador-rondas-estres",
+  "reanudacion": "Se recupera la ejecución viva mediante podman logs; no se repitieron primera ronda ni puerta. El antiguo archivo de log dejó de seguir stdout al cortarse la sesión.",
+  "fuentes_oficiales": [
+    "https://playwright.dev/docs/test-cli",
+    "https://playwright.dev/docs/videos",
+    "https://ffmpeg.org/ffmpeg.html"
+  ],
+  "equivalencia_runtime": {
+    "b3e608eec138a03fce419a66954497b8fc2c50ea": {
+      "cooper/src": "d504cf3ba827e9f92937dcf9823669f150b9400f",
+      "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+      "cooper/drizzle": "5d74b8f6187db81200a70d19185b7db94931106e",
+      "cooper/package.json": "47664f5f3a38052b85c039eeed377c77cd1aae49",
+      "cooper/package-lock.json": "f5864ce4698f755d0a8c8a45f96f4253e44ad4ed",
+      "cooper/next.config.ts": "dc9b20b04b185f9b1ac40551be4307a4e8ca2c29",
+      "cooper/postcss.config.mjs": "d062fcdae9dd9b353832f04e63a83de020ec4fbe",
+      "cooper/tsconfig.json": "b4449684e10fb0bafff06d0ba3de4269ac45ae08"
+    },
+    "5e8e26020d6fdf69538de91194860c006d5f6b29": {
+      "cooper/src": "d504cf3ba827e9f92937dcf9823669f150b9400f",
+      "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+      "cooper/drizzle": "5d74b8f6187db81200a70d19185b7db94931106e",
+      "cooper/package.json": "47664f5f3a38052b85c039eeed377c77cd1aae49",
+      "cooper/package-lock.json": "f5864ce4698f755d0a8c8a45f96f4253e44ad4ed",
+      "cooper/next.config.ts": "dc9b20b04b185f9b1ac40551be4307a4e8ca2c29",
+      "cooper/postcss.config.mjs": "d062fcdae9dd9b353832f04e63a83de020ec4fbe",
+      "cooper/tsconfig.json": "b4449684e10fb0bafff06d0ba3de4269ac45ae08"
+    },
+    "af2774cdf2bfe7072142d7a2e1ba9ebd512948ff": {
+      "cooper/src": "d504cf3ba827e9f92937dcf9823669f150b9400f",
+      "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+      "cooper/drizzle": "5d74b8f6187db81200a70d19185b7db94931106e",
+      "cooper/package.json": "47664f5f3a38052b85c039eeed377c77cd1aae49",
+      "cooper/package-lock.json": "f5864ce4698f755d0a8c8a45f96f4253e44ad4ed",
+      "cooper/next.config.ts": "dc9b20b04b185f9b1ac40551be4307a4e8ca2c29",
+      "cooper/postcss.config.mjs": "d062fcdae9dd9b353832f04e63a83de020ec4fbe",
+      "cooper/tsconfig.json": "b4449684e10fb0bafff06d0ba3de4269ac45ae08"
+    }
+  },
+  "runtime_equivalente": true,
+  "diferencias_cooper_b3_al_head": [
+    "cooper/README.md",
+    "cooper/pulido/estres.spec.ts"
+  ],
+  "fecha_actualizada": "2026-11-21T23:19:09.802374+00:00",
+  "rondas_resultado_sha256": "49c205dbe49ff2adbd5d011ea2cd0822c00e083c86b015a5d9f7eb5ad597d86d",
+  "ronda2": {
+    "stats": {
+      "startTime": "2026-11-21T22:32:24.768Z",
+      "duration": 2304220.7509999997,
+      "expected": 123,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errors": [],
+    "playwright_sha256": "8e587d675726336d10b1272932fe6e59e0ffe17b09a4cd3918d6670ec46d69ac",
+    "ejecucion": {
+      "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 2311301,
+      "sha256": "aa996bf5af33d0bf48b6d6953efe7f1892b3cf8529cbd7f60df2c45ae74ebd66"
+    }
+  },
+  "rondas_fin": "2026-11-21T23:10:49.564Z",
+  "nuevo_codigo_producto": false,
+  "pruebas_repetidas": false,
+  "nota_advertencias": "El runner original registró 0 advertencias; Playwright emitió sugerencias informativas de archivo lento que se conservan en el log recuperado."
+}

@@ -1,0 +1,487 @@
+{
+  "fecha": "2026-11-21T23:11:52.803249+00:00",
+  "estado": "PASS_MUESTRA_VISUAL",
+  "metodo": "Un fotograma en la mitad temporal de ocho rutas seleccionadas por cada recorrido continuo; sin modificar los videos originales. Las planchas reducen a la mitad los fotogramas desktop; originales PNG se conservan.",
+  "fotogramas": [
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/entrar",
+      "segundos": 0.7705,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-00.png",
+      "sha256": "29904521d6fa3d1b173a60f9062584ee76a89e500d9f8603b4517145ffac6116",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/",
+      "segundos": 3.301,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-01.png",
+      "sha256": "783043db44caf241a5f060eefc92156a86ac7d4d6a3faf412d27a9bb34caab41",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/marcas",
+      "segundos": 7.2975,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-02.png",
+      "sha256": "bdb0b8dc26c819f37680907be73630cde2bba641105be6c7fcca51dc1f277519",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/radar",
+      "segundos": 13.4485,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-05.png",
+      "sha256": "6dbe699c5c6fe9dce9cabc064aefea2c3515a5cdcc3b0c8ebfd71105df0c0bec",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/videos",
+      "segundos": 27.365499999999997,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-14.png",
+      "sha256": "35db2945e28faed9b9024f112663eed23341635b24b19dc9a045616ec841fd02",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/publicados",
+      "segundos": 30.514499999999998,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-16.png",
+      "sha256": "42371b66f9aadfe80683fe86cdf543cc82a8550382a32f6e53868132afaa5a52",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/aprendizaje",
+      "segundos": 32.106,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-17.png",
+      "sha256": "08d2b696bdc1cef3b8a320d50875baa73098691d1c8182e6568ace4ee5868cce",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 1440,
+      "ruta": "/admin/fabrica",
+      "segundos": 38.967,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-1440.webm",
+      "video_sha256": "083ac7a8286bcc37646b0e448700cf4dc74d480e24b95d18df3d26bbe0bd5c73",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-21.png",
+      "sha256": "21f3611f0b57c04ae6ac7c167d5e3bf1aab02e7368c1359aab1ab40b8f2fb388",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/entrar",
+      "segundos": 0.849,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-00.png",
+      "sha256": "1cbc4c2cd234562efa43b5dd92bc83e9535448b5a469126ad34603a32c4c1657",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/",
+      "segundos": 4.206,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-01.png",
+      "sha256": "11e9a03607b7b2ece43d170ac57ca527085f2bf0dbfcf77fafeacc3fb0968a9f",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/marcas",
+      "segundos": 9.083,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-02.png",
+      "sha256": "a124606370e0b3ca54f93b715a97649777df6dd17a57b09e12db531713183df6",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/radar",
+      "segundos": 15.756499999999999,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-05.png",
+      "sha256": "7a6d204c6c6e32b7294ce02d381fb67fade8ee904c0b9ca86f80a7aa5967dd2b",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/videos",
+      "segundos": 30.897,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-14.png",
+      "sha256": "b8ded7ea30cdea856bddf2f61df6cfc382f2306f955859e70bbb5989e4d8049f",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/publicados",
+      "segundos": 34.4315,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-16.png",
+      "sha256": "8de73da3dd46494736e217eddaa40ffe7afb96e43b2e202e58ab3a474bbaa773",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/aprendizaje",
+      "segundos": 36.2645,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-17.png",
+      "sha256": "f34d50ce6f389a50e92aa904c0683ab67032df26c95e9e5835431ab224db5921",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-1",
+      "ancho": 390,
+      "ruta": "/admin/fabrica",
+      "segundos": 43.564,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-1/recorrido-completo-390.webm",
+      "video_sha256": "a54dd209d424a7ab08ee13afe0b869ada8d709ae5695921c5bfe867e8017c783",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-21.png",
+      "sha256": "a2a220c35a7048dfc4bf5a892ac2e66e6e2844e779613723febbee26ebe8e91a",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/entrar",
+      "segundos": 0.7795,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-00.png",
+      "sha256": "223a79dcd4883b170f488063a10c2237851a30c075c3593a510db3b65876746d",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/",
+      "segundos": 3.359,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-01.png",
+      "sha256": "1036a418484a26b3a884810eeb9045030881b611469a9f8906264fc1eff8591c",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/marcas",
+      "segundos": 7.42,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-02.png",
+      "sha256": "773d04019255d47e84da618246f5b983735827c7bbf568bbde713ccf2e77ed8e",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/radar",
+      "segundos": 13.6465,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-05.png",
+      "sha256": "19b7ec7e0082347698db5f19232bcfdbcb30e771210fa5939593b269086e42de",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/videos",
+      "segundos": 27.8125,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-14.png",
+      "sha256": "086d70bbf2e0c168ca0b73a871b068c39849bbb44c49be2b210f40b4876331a5",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/publicados",
+      "segundos": 31.037,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-16.png",
+      "sha256": "f3900f48538b8035c899323054c8fda4f0497491542f9a1e1ed01854803b6193",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/aprendizaje",
+      "segundos": 32.693,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-17.png",
+      "sha256": "4cbffb0dc0eaf20503ffc94dfa1e1455ef0ad4a74b380596ce8ce49c3473ab37",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 1440,
+      "ruta": "/admin/fabrica",
+      "segundos": 39.5775,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-1440.webm",
+      "video_sha256": "ea55aad115def4bebe8cec00655c21e470d9cf96eefcd509268b5d5959048dfb",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-21.png",
+      "sha256": "beee673ff3c9a6080915f0ea076a303127342c7176dae77369b4ac6c09dab428",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/entrar",
+      "segundos": 0.916,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-00.png",
+      "sha256": "a8b9082a8b7b9ed6f1dbcc9cda3582a387dbaf19df0798b2057f7e674ca1b816",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/",
+      "segundos": 4.5995,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-01.png",
+      "sha256": "55c8a00509b4370f1249229179c45f08ab92e78e0a2b7350061c5447b7bbeac2",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/marcas",
+      "segundos": 9.885,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-02.png",
+      "sha256": "445da4334833a0c205e3a95607dfef597679342b24c06b1fba0665c14f8528d5",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/radar",
+      "segundos": 16.981,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-05.png",
+      "sha256": "9a5d325ad5d8269474f4b4786a580e076aa43c76dea8ea48727edd1cbc032e3c",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/videos",
+      "segundos": 33.338499999999996,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-14.png",
+      "sha256": "5c0e3d63535245b88a568e83d09350ac2744dad68af265f63906950f9f38bbff",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/publicados",
+      "segundos": 37.0235,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-16.png",
+      "sha256": "6ad03abb3ee18116081e38aa7526b281c83801790ca2b259e8bce5c3e54c9a0b",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/aprendizaje",
+      "segundos": 38.947,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-17.png",
+      "sha256": "28d6df8e46c87bc1e286e659e34efb8fea2c1104c87dd7395bddd1cd2fc763bf",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    },
+    {
+      "ronda": "cierre-2",
+      "ancho": 390,
+      "ruta": "/admin/fabrica",
+      "segundos": 46.6415,
+      "video": ".cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7/cierre-2/recorrido-completo-390.webm",
+      "video_sha256": "5ed9e74008519d508b092c55462bfac1e1f7e573f935105e2d62c630dbfd9efe",
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-21.png",
+      "sha256": "95c2c60154e9250b9cf64e6ca36549856353443c4969b95d14320e382b903056",
+      "inspeccionada": true,
+      "observacion": "Contenido y controles legibles, sin solapamientos visibles en el encuadre. Captura de un instante de la ruta, con su posición de desplazamiento original."
+    }
+  ],
+  "planchas": [
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-1-1440-1.png",
+      "sha256": "5b38e5e7ae0742a7d0c93692ba9555b290ad022293309bd7cf6ca518c37406d2",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-00.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-01.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-02.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-05.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-1-1440-2.png",
+      "sha256": "3e09a3d22ecf316d340ecbc822e0525f72557d8ed473d42a9eb097e0c4aeafbe",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-14.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-16.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-17.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-1440-21.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-1-390-1.png",
+      "sha256": "3df9fe6638dfc71a77248309cf86c41255ef9c322d8209598e56c45be9b44b70",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-00.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-01.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-02.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-05.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-1-390-2.png",
+      "sha256": "6386ec13c4aaf185d0059af338001cc84e7f318ef30d1c4280df22e93f924c2e",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-14.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-16.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-17.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-1-390-21.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-2-1440-1.png",
+      "sha256": "47afdd198d71123bb1fd1709181eaf1d06fd81d6db675afffeebc7dff8f257df",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-00.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-01.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-02.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-05.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-2-1440-2.png",
+      "sha256": "b2c7b62178eae557a2df6f8511a1688401ff9d02d24ee90305562507abbb5525",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-14.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-16.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-17.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-1440-21.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-2-390-1.png",
+      "sha256": "e64463fb32b1d934dd65275acb6afef703c8b46e24bc3044acb8043d49243d31",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-00.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-01.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-02.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-05.png"
+      ],
+      "inspeccionada": true
+    },
+    {
+      "archivo": "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/plancha-cierre-2-390-2.png",
+      "sha256": "f46e6d37dae3776261cffbb3bd24e2920d5de6b49ae99079b00bf82469ced700",
+      "fotogramas": [
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-14.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-16.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-17.png",
+        "docs/informes/evidencias/total-integrador/cierre-ronda2/fotogramas/cierre-2-390-21.png"
+      ],
+      "inspeccionada": true
+    }
+  ],
+  "revision_fecha": "2026-11-21T23:14:16.993173+00:00",
+  "limitaciones": [
+    "Se inspeccionaron 32 fotogramas de cuatro videos continuos mediante 8 planchas; no es una inspección visual cuadro a cuadro de cada video.",
+    "Marcas muestra barras desplazables y Administración aparece a media página conforme al desplazamiento original; el encuadre no contiene toda la página.",
+    "Los videos corresponden al entorno local simulado de Playwright; no prueban OAuth real ni navegadores en dispositivos físicos."
+  ]
+}

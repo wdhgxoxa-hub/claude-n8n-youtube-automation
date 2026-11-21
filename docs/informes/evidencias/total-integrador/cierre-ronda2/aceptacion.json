@@ -1,0 +1,181 @@
+{
+  "fecha": "2026-11-21T23:19:09.802374+00:00",
+  "fecha_lima": "2026-11-21T18:19:09.802374-05:00",
+  "resultado": "PASS_LABORATORIO_RONDAS_Y_MUESTRA_VISUAL",
+  "commit_checkout": "5e8e26020d6fdf69538de91194860c006d5f6b29",
+  "archivo_fuente_sha256": "a39f202e60692238aca610cc6f734e946f4da52193dcef17faa02f06c1379e3c",
+  "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+  "rondas": [
+    {
+      "ronda": "cierre-1",
+      "pruebas": 123,
+      "archivos_video": 1788,
+      "videos_principales": 94,
+      "bytes_video": 305168840,
+      "cuadros_decodificados": 139070,
+      "capturas_png_validadas": 204,
+      "matrices": [
+        {
+          "ancho": 1440,
+          "tema": "oscuro",
+          "pantallas": 22,
+          "fps_min": 60.00281666114576,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        },
+        {
+          "ancho": 1440,
+          "tema": "claro",
+          "pantallas": 22,
+          "fps_min": 60.002340587170025,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        },
+        {
+          "ancho": 390,
+          "tema": "oscuro",
+          "pantallas": 22,
+          "fps_min": 59.99999999999999,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        },
+        {
+          "ancho": 390,
+          "tema": "claro",
+          "pantallas": 22,
+          "fps_min": 59.99999999999999,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        }
+      ],
+      "sentinel": [
+        {
+          "ancho": 1440,
+          "rutas": 25,
+          "acciones": 6107,
+          "muestras_fps": 294,
+          "fps_min_puntual": 20,
+          "muestras_menos_45_fps": 20,
+          "hallazgos_info": 0
+        },
+        {
+          "ancho": 390,
+          "rutas": 25,
+          "acciones": 9562,
+          "muestras_fps": 436,
+          "fps_min_puntual": 60,
+          "muestras_menos_45_fps": 0,
+          "hallazgos_info": 1
+        }
+      ]
+    },
+    {
+      "ronda": "cierre-2",
+      "pruebas": 123,
+      "archivos_video": 1788,
+      "videos_principales": 94,
+      "bytes_video": 309399254,
+      "cuadros_decodificados": 162602,
+      "capturas_png_validadas": 204,
+      "matrices": [
+        {
+          "ancho": 1440,
+          "tema": "oscuro",
+          "pantallas": 22,
+          "fps_min": 60.00293568082009,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        },
+        {
+          "ancho": 1440,
+          "tema": "claro",
+          "pantallas": 22,
+          "fps_min": 60.00281666114576,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        },
+        {
+          "ancho": 390,
+          "tema": "oscuro",
+          "pantallas": 22,
+          "fps_min": 59.999008280854845,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        },
+        {
+          "ancho": 390,
+          "tema": "claro",
+          "pantallas": 22,
+          "fps_min": 59.99900828085486,
+          "frame_max_ms": 16.800000000000182,
+          "cls_max": 0,
+          "tareas_largas": 0
+        }
+      ],
+      "sentinel": [
+        {
+          "ancho": 1440,
+          "rutas": 25,
+          "acciones": 6020,
+          "muestras_fps": 295,
+          "fps_min_puntual": 5,
+          "muestras_menos_45_fps": 42,
+          "hallazgos_info": 0
+        },
+        {
+          "ancho": 390,
+          "rutas": 25,
+          "acciones": 9133,
+          "muestras_fps": 500,
+          "fps_min_puntual": 20,
+          "muestras_menos_45_fps": 2,
+          "hallazgos_info": 1
+        }
+      ]
+    }
+  ],
+  "pruebas_repetidas": false,
+  "producto_modificado": false,
+  "verificador": {
+    "comando": "python3 -B cooper/scripts/verificar-rondas.py .cache/total-integrador/rondas-estres/checkout/cooper/.cache/videos-integracion7 cierre-1 cierre-2 --salida docs/informes/evidencias/total-integrador/cierre-ronda2/revision-tecnica",
+    "script_sha256": "b73559b2c468dd4e9989dc0f10a8826e562b969e63a4cc910a2477564ed86daf",
+    "rc": 0,
+    "resultado": "PASS_TECNICO",
+    "diagnosticos_ffmpeg_ffprobe": 0
+  },
+  "revision_visual": {
+    "resultado": "PASS_MUESTRA_VISUAL",
+    "capturas_originales": 48,
+    "fotogramas": 32,
+    "planchas": 8,
+    "recorridos_continuos": 4,
+    "huellas_coinciden_con_verificador": true,
+    "hallazgos_bloqueantes_observados": []
+  },
+  "limitaciones": [
+    "Laboratorio local con datos simulados y sesiones de prueba; no verifica OAuth real ni dispositivos físicos.",
+    "La inspección visual comprende 48 capturas y 32 fotogramas, no cada cuadro de todos los videos.",
+    "Los 3576 archivos de video incluyen copias y auxiliares de Playwright/Sentinel; son 188 clips principales.",
+    "El campo revision_visual del informe técnico se conserva como pendiente por diseño del verificador; este recibo y los manifiestos visuales registran la inspección posterior.",
+    "Sentinel caótico presentó caídas puntuales de FPS (mínimo 5 en escritorio de cierre-2); no hubo congelaciones, caídas ni hallazgos no informativos. La matriz controlada se mantuvo en ~60 FPS, CLS 0 y 0 tareas largas.",
+    "Cada ronda móvil conserva un aviso informativo de cobertura sobre Fábrica (18), vista sin URL propia revisada por recorridos; los módulos por ruta no abren esa subvista directamente.",
+    "Marcas y la tabla de Publicados móvil permiten desplazamiento horizontal; una captura fija no muestra todos sus elementos simultáneamente."
+  ],
+  "pendientes_de_walter_nuevos": [],
+  "referencias": {
+    "procedencia.json": "33c8e361cedbbbe10f583dd398aa202068a627aed3bb5797dcd0bbbb3d0b902c",
+    "rondas-resultado-original.json": "49c205dbe49ff2adbd5d011ea2cd0822c00e083c86b015a5d9f7eb5ad597d86d",
+    "rondas-completas.log": "e2cf9f37ba842d138fb5fa7311599ddd532c09509e03c3ee48fbed19fbd932fb",
+    "verificacion-videos.log": "4f54c1cf4c27502007c6c5c586bdd7b666038a9e032833c654531d77d634b473",
+    "revision-tecnica/verificacion.json": "3d866ca70d3d2e768ef260fd61f2d52200cd7579617aaf7c1c7c0568b99b2c0b",
+    "revision-visual-parcial.json": "6cbfce8ce0ea27e8860cabf73d6b3e0135066745ef413366ac574bdf55c10c1e",
+    "fotogramas/manifest.json": "3ea35fa38ba34799f510e460dafce2eb642940f43f8435c6a6e69a611b817119"
+  }
+}

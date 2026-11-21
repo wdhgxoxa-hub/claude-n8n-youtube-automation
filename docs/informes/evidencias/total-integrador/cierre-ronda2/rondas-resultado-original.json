@@ -1,0 +1,35 @@
+{
+  "inicio": "2026-11-21T21:53:35.290Z",
+  "pasos": [
+    {
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 6067,
+      "sha256": "3c5bbab133b05679518e48b526dfb63f9b7e4041bdb129ca70118c23817ceaf6"
+    },
+    {
+      "comando": "node scripts/preparar-pruebas.mjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 4717,
+      "sha256": "a498b24a48ef0172e684bb4fb1588354d629674b959c7420ec9790ba30bdf262"
+    },
+    {
+      "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 2311901,
+      "sha256": "f1d6bc63dc4221b0c3faba22094d1ca830eee107f4f9262107a4e7c5c55a1a31"
+    },
+    {
+      "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 2311301,
+      "sha256": "aa996bf5af33d0bf48b6d6953efe7f1892b3cf8529cbd7f60df2c45ae74ebd66"
+    }
+  ],
+  "resultado": "PASS",
+  "fin": "2026-11-21T23:10:49.564Z"
+}

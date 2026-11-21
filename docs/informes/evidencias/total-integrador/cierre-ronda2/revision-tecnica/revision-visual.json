@@ -1,0 +1,347 @@
+{
+  "estado": "pendiente",
+  "criterios": [
+    "contenido legible",
+    "sin recortes/solapamientos",
+    "contraste y tema coherentes",
+    "gráficos y estados presentes"
+  ],
+  "muestras": [
+    {
+      "archivo": "cierre-1/1440-oscuro-01-inicio.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/",
+      "sha256": "473a5b1228e847df37da1771cb321d5df5b6b620004687d3c936a5ee3d463a44"
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-02-marcas.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/marcas",
+      "sha256": "c10b85976d3c2a54f9a3d450f78a23a2aa765b29b0039d6c4a5f84d8c0170fc6"
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-09-cuentas.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/cuentas",
+      "sha256": "cb6581aed05ea76d2b8e2611f9080b7a09252b8f1c6ea11fb50d7db8ecd10275"
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-16-publicados.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/publicados",
+      "sha256": "a3af512971000fccfd709e55e399986d5ee6e0b0a208d2fa0044d9d50d131b71"
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-17-aprendizaje.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/aprendizaje",
+      "sha256": "f0adbc5c6c411224f9315e80fbe1aea7e2e65101cd1cb96139b5baaf0229ebe4"
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-21-admin.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/admin/fabrica",
+      "sha256": "9d1d7e2369398295a26b4e60566c90dc586622dc4545297bc0620e4acfb096a0"
+    },
+    {
+      "archivo": "cierre-1/1440-claro-01-inicio.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/",
+      "sha256": "c01c7fcf210fb911dbca48671a37565c3bf6f93b363499e991f3d74aa615f178"
+    },
+    {
+      "archivo": "cierre-1/1440-claro-02-marcas.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/marcas",
+      "sha256": "cf16fc4133d0921125d2976b6844adc1aa6a8542622d5c04781f341164d50d09"
+    },
+    {
+      "archivo": "cierre-1/1440-claro-09-cuentas.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/cuentas",
+      "sha256": "c96a139c25d8df2f516f2a255983a23d242040f8663100feafe8c0d2c734464d"
+    },
+    {
+      "archivo": "cierre-1/1440-claro-16-publicados.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/publicados",
+      "sha256": "c271dd039e45e0a7e93dab40e93a8b6755e61ce3771bd5620a5a3bd37c451cf4"
+    },
+    {
+      "archivo": "cierre-1/1440-claro-17-aprendizaje.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/aprendizaje",
+      "sha256": "969dba8ba2170f0ae5cb48f3941049a5abaa036beeef473366d6acf0c115b2e4"
+    },
+    {
+      "archivo": "cierre-1/1440-claro-21-admin.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/admin/fabrica",
+      "sha256": "08239d41974665168effb6f56720dda7f461354792780a2a6b4275358785a6cf"
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-01-inicio.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/",
+      "sha256": "5f248eedf7ad217c68030542953beb6e3ae34e66235fc99b8bd05a0458e55040"
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-02-marcas.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/marcas",
+      "sha256": "a19dc20ca8c4595fdaa951960568f89baaadf5761240b6cebf37591cba4d407c"
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-09-cuentas.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/cuentas",
+      "sha256": "b5d76875d52678bb30733d13f4dec4f1551ee913a7d31c0e5f6243c79b023b67"
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-16-publicados.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/publicados",
+      "sha256": "f1c6f4a367b162766d3576f84e732828fa297a9bf63eddfda30093823832cfd9"
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-17-aprendizaje.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/aprendizaje",
+      "sha256": "e018c51cd4d2554aa9bac6757902263614b22366f664cd35342e1f6706db5e40"
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-21-admin.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/admin/fabrica",
+      "sha256": "3caef6f67a11dcd54f27e1bc62cc5a3a4bc9236e6dfd0d45ba0a2dade612beb4"
+    },
+    {
+      "archivo": "cierre-1/390-claro-01-inicio.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/",
+      "sha256": "07893589f8e6dc99eeecad60133ab3232bd1142c78a8054a27f47d1140661db7"
+    },
+    {
+      "archivo": "cierre-1/390-claro-02-marcas.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/marcas",
+      "sha256": "c99c536eaaf18956732a5ce046696306a5e4444d8125f02e16c6b2878490842f"
+    },
+    {
+      "archivo": "cierre-1/390-claro-09-cuentas.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/cuentas",
+      "sha256": "39c1b6cdd48a70ef305ffa04359c1b84c00444aa4d0c4c9b3f29d0d37c314f0a"
+    },
+    {
+      "archivo": "cierre-1/390-claro-16-publicados.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/publicados",
+      "sha256": "e36bc5e6eda0c71e5c9cf0951780a726955cd0fad32f5fca83ea8e27ab56446d"
+    },
+    {
+      "archivo": "cierre-1/390-claro-17-aprendizaje.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/aprendizaje",
+      "sha256": "b627eb210f9cc78ebeda05520dc6102fbb878ed04c16bbf54620aebb2caa989c"
+    },
+    {
+      "archivo": "cierre-1/390-claro-21-admin.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/admin/fabrica",
+      "sha256": "8be7dc5ab5e2a6c49c3a79ee9b353bbad87c67d59078eff06228ef1322f0f53d"
+    },
+    {
+      "archivo": "cierre-2/1440-oscuro-01-inicio.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/",
+      "sha256": "c7bd82357d9f69343cc5a2daabf10c52a484f3245ffee8f4e870204e6bb91b6f"
+    },
+    {
+      "archivo": "cierre-2/1440-oscuro-02-marcas.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/marcas",
+      "sha256": "140480d57d6e31cd10ea42b2f39e464050318cae2b83fe4bca967ff71713c47c"
+    },
+    {
+      "archivo": "cierre-2/1440-oscuro-09-cuentas.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/cuentas",
+      "sha256": "bcf80055e9dfb81b16bcaa8843dfae9dba4ba978381d05e4c3b4b00b7884aa35"
+    },
+    {
+      "archivo": "cierre-2/1440-oscuro-16-publicados.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/publicados",
+      "sha256": "5af9008b7e4877093f9c224d195eb6a1cb5a2989b9e59ed50873d12c68f76aca"
+    },
+    {
+      "archivo": "cierre-2/1440-oscuro-17-aprendizaje.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/aprendizaje",
+      "sha256": "eeacb0a22635feffbcae14e134e14f44ccf04662670d1389c3dbae7a8fba2965"
+    },
+    {
+      "archivo": "cierre-2/1440-oscuro-21-admin.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/admin/fabrica",
+      "sha256": "7c7f1cc9f1563e91c6a509d56d679ad7667e5140c201589c6f69086637d21f48"
+    },
+    {
+      "archivo": "cierre-2/1440-claro-01-inicio.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/",
+      "sha256": "125ae40bf966a727017e6659352d3c180017441edbf734b5ad4493177513c729"
+    },
+    {
+      "archivo": "cierre-2/1440-claro-02-marcas.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/marcas",
+      "sha256": "907fd7ba3410db83f271b7c699e9769b2dff56f2a10157e924d89136ae98f473"
+    },
+    {
+      "archivo": "cierre-2/1440-claro-09-cuentas.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/cuentas",
+      "sha256": "755a33793b6a7514fdd96bfeeb85ea642024833a79b4e5d7bc63af805c8011c7"
+    },
+    {
+      "archivo": "cierre-2/1440-claro-16-publicados.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/publicados",
+      "sha256": "2a64acf8fe7adf55704615ff232d78d70ae6812cc52ee2f6144f70043ef92f7d"
+    },
+    {
+      "archivo": "cierre-2/1440-claro-17-aprendizaje.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/aprendizaje",
+      "sha256": "fa0c8304458bd35c92a566c6cb74cda9b1320125b9a21a77f5edbb4301312dfc"
+    },
+    {
+      "archivo": "cierre-2/1440-claro-21-admin.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/admin/fabrica",
+      "sha256": "6ddadda16d601b27105d69a2d936b8a32305f5453fe9e77be28d32ee863caf2a"
+    },
+    {
+      "archivo": "cierre-2/390-oscuro-01-inicio.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/",
+      "sha256": "5f248eedf7ad217c68030542953beb6e3ae34e66235fc99b8bd05a0458e55040"
+    },
+    {
+      "archivo": "cierre-2/390-oscuro-02-marcas.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/marcas",
+      "sha256": "fd6e0f424f9460d3b39d9a0222ce0501fc0e00b77b4709a174254dbce0b73f27"
+    },
+    {
+      "archivo": "cierre-2/390-oscuro-09-cuentas.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/cuentas",
+      "sha256": "ef05264388c8be4db778f232a2118127f6852bc4fefb8c63cab49ca4c21d2d2d"
+    },
+    {
+      "archivo": "cierre-2/390-oscuro-16-publicados.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/publicados",
+      "sha256": "e389d3ff28adfb363cdee71d0fd4d44211d104f4fbb6b4c075c9c6eb97de3492"
+    },
+    {
+      "archivo": "cierre-2/390-oscuro-17-aprendizaje.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/aprendizaje",
+      "sha256": "54eb0c4e9bd41662a27e7b1955e557e1f2bd66951658e29e87be5f9431cd24d0"
+    },
+    {
+      "archivo": "cierre-2/390-oscuro-21-admin.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/admin/fabrica",
+      "sha256": "884a429b65e57120e5fb44b6836658d91196661864d67455b8b69cb836590e16"
+    },
+    {
+      "archivo": "cierre-2/390-claro-01-inicio.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/",
+      "sha256": "07893589f8e6dc99eeecad60133ab3232bd1142c78a8054a27f47d1140661db7"
+    },
+    {
+      "archivo": "cierre-2/390-claro-02-marcas.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/marcas",
+      "sha256": "a0b85790bd29e3585010de9cdb2c4cc99651b539837252b7a6a2c6798899cd0f"
+    },
+    {
+      "archivo": "cierre-2/390-claro-09-cuentas.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/cuentas",
+      "sha256": "c47494e35245247b072c7071c60f8be88e55ae49b99514eaa198367309b29e31"
+    },
+    {
+      "archivo": "cierre-2/390-claro-16-publicados.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/publicados",
+      "sha256": "413e8315e1916e4a2615ac255d3c2084921a7d07cf9313d4859be1499a1f611c"
+    },
+    {
+      "archivo": "cierre-2/390-claro-17-aprendizaje.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/aprendizaje",
+      "sha256": "dfd48da6e33951105a6b39c0eee7479bdf2cf1cf96bfe855a1a7c6fbddeae35c"
+    },
+    {
+      "archivo": "cierre-2/390-claro-21-admin.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/admin/fabrica",
+      "sha256": "94a43aa181a616d670475ba6401eb6e5f27c07369448f8e38b16cf974e2174a5"
+    }
+  ]
+}
