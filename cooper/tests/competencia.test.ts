@@ -109,6 +109,18 @@ it("rechaza métricas sin URL consultada, muestras repetidas, antiguas o de otro
     "sin_datos",
   );
 });
+it("exige analizar cada competidor y distingue falta de muestra de ausencia de outlier", () => {
+  const { raw, respuesta } = fixture();
+  raw.competidores[1].muestras = [];
+  const parcial = normalizarCompetencia(raw, respuesta, "Margen Real", now);
+  expect(parcial.estado).toBe("parcial");
+  expect(parcial.limitaciones.join(" ")).toContain("por competidor");
+  raw.competidores[1] = fixture().raw.competidores[1];
+  raw.competidores[1].muestras[3].vistas = 110;
+  const completo = normalizarCompetencia(raw, respuesta, "Margen Real", now);
+  expect(completo.estado).toBe("listo");
+  expect(completo.competidores[1].outliers).toEqual([]);
+});
 it("una búsqueda parcial nunca certifica ausencia de homónimos ni acepta perfiles repetidos o privados", () => {
   const { raw, respuesta } = fixture();
   raw.competidores[1] = raw.competidores[0];

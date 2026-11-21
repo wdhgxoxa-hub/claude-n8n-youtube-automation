@@ -202,6 +202,23 @@ export function normalizarCompetencia(
       "Faltan cuentas verificables: se necesitan entre 3 y 5 competidores.",
     );
   if (
+    competidores.some(
+      (c) =>
+        !c.muestras.some(
+          (v) =>
+            reciente(v.fecha, 30) &&
+            c.muestras.filter(
+              (anterior) =>
+                anterior.formato === v.formato &&
+                Date.parse(anterior.fecha) < Date.parse(v.fecha),
+            ).length >= 3,
+        ),
+    )
+  )
+    limitaciones.push(
+      "Falta una muestra comparable por competidor: una publicación reciente y tres anteriores del mismo formato. Una cuenta sin muestra no equivale a una cuenta sin destacados.",
+    );
+  if (
     !["youtube", "tiktok"].every((red) =>
       comprobaciones.some((c) => c.red === red),
     )
