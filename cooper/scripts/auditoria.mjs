@@ -85,7 +85,7 @@ try {
       },
     })
   ).json();
-  if (marcasAudit) {
+  if (marcasAudit || motionAudit) {
     const response = await context.request.post("/api/marcas", {
       data: { nombre: "Congregación de ensayo", rubro: "iglesia-reformada" },
     });
@@ -113,6 +113,7 @@ try {
         : motionAudit
           ? [
               "/",
+              "/marcas",
               "/canales",
               `/canales/${channel.id}`,
               "/videos",
