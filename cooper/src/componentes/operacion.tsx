@@ -892,7 +892,12 @@ export function PantallaOperacion({
                   <p className="operation-detail">{d.detalle}</p>
                 </details>
                 {d.videoId && (
-                  <Link href={`/videos/${d.videoId}`}>Ver video</Link>
+                  <Link
+                    className="button secondary"
+                    href={`/videos/${d.videoId}`}
+                  >
+                    Ver video
+                  </Link>
                 )}
                 <form
                   className="stack"

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "./validacion";
 import { observabilidadSchema, leccionSchema } from "./observabilidad";
 import contrato from "./cooper-v1.json";
 export { contrato };

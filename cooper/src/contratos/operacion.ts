@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "./validacion";
 import catalogo from "./ajustes-fabrica.json";
 import campos from "./biblia-campos.json";
 export { campos };

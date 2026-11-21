@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "./validacion";
 // Solo recursos HTTPS; nunca HTML, credenciales de URL ni esquemas ejecutables.
 export const urlMedio = z
   .string()
