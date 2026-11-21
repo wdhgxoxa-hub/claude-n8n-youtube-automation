@@ -13,5 +13,9 @@ export async function register() {
         await import("./servicios/biblioteca-trabajador");
       iniciarBiblioteca();
     }
+    if (process.env.COOPER_OBSERVABILIDAD_PAUSA !== "1") {
+      const { iniciarAlertasSalud } = await import("./servicios/alertas-salud");
+      iniciarAlertasSalud();
+    }
   }
 }
