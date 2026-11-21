@@ -1,0 +1,16 @@
+{
+  "modalidad": "resolver_api",
+  "api_id": "xorCR0lfNlil8Ovy",
+  "republicar_originales": [
+    "xorCR0lfNlil8Ovy"
+  ],
+  "plan_publicacion": [
+    "xorCR0lfNlil8Ovy"
+  ],
+  "credenciales_faltantes": [],
+  "resolver_antes_sha256": "178bc9b4ef4a4ceb99f92cae193b771523662d58ee176f0a5ecdd80655dcf56c",
+  "resolver_despues_sha256": "fbe854c83acc16e0d47dfcc8f6dda12e1e00c7b800a9ee61327b2528c08d72e1",
+  "resto_estado_sha256": "91b4d4456285a737d74e4b4da94870289e5b5775804ddd43a982c915becc75fb",
+  "estado_antes_sha256": "1b1bffa629637f473fc79ab84b543ad7ca9245f06d2de34572078ed39b1410cf",
+  "estado_despues_sha256": "e87808996af276b4fa8e36277c9ba9e84df8cf76ca886ea998dcf8de500ad0c0"
+}
