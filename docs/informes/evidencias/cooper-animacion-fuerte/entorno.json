@@ -1,0 +1,38 @@
+{
+  "node": "v24.22.3",
+  "npm": "12.2.2",
+  "chromium": "Google Chrome for Testing 159.0.8154.6",
+  "paquetes": {
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "lottie-web": "5.13.0",
+    "lighthouse": "13.6.0",
+    "@playwright/test": "1.65.1"
+  },
+  "cpu_playwright": {
+    "1440": 1,
+    "390": 4
+  },
+  "pantalla_px": {
+    "escritorio": [
+      1440,
+      900
+    ],
+    "movil": [
+      390,
+      900
+    ]
+  },
+  "datos": "ficticios; servidores loopback; sin servicios de producción",
+  "nota": "Chromium headless local; no teléfono físico ni métricas de campo",
+  "sentinel": {
+    "playwright_python": "1.63.0",
+    "chromium": "Google Chrome for Testing 153.0.8010.12",
+    "modulos": [
+      "recorridos",
+      "caos",
+      "estabilidad"
+    ],
+    "duracion_por_modulo_s": 160
+  }
+}

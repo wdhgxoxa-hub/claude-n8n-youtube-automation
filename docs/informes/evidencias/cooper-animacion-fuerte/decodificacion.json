@@ -1,0 +1,887 @@
+{
+  "videos": 176,
+  "duracion_verificacion_s": 13.94,
+  "correctos": 176,
+  "resultados": [
+    {
+      "archivo": "ronda-7/1440-claro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-claro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-estados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-interacciones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/1440-oscuro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-claro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-estados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-interacciones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-7/390-oscuro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-claro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-estados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-interacciones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/1440-oscuro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-claro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-estados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-interacciones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-00-entrar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-01-inicio.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-02-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-03-canales.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-04-radar.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-05-rutina.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-06-redes.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-07-referencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-08-cuentas.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-09-programados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-10-decisiones.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-11-incidencias.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-12-avisos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-13-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-14-videos.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-15-publicados.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-16-aprendizaje.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-17-avatares.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-18-perfil.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-19-admin.webm",
+      "rc": 0,
+      "errores": ""
+    },
+    {
+      "archivo": "ronda-8/390-oscuro-20-admin.webm",
+      "rc": 0,
+      "errores": ""
+    }
+  ]
+}

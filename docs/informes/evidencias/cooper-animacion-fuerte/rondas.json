@@ -1,0 +1,210 @@
+{
+  "commit_codigo": "f852849b6da5a9015945f4dc3b0267628c042f13",
+  "rondas": [
+    {
+      "ronda": "ronda-7",
+      "playwright": {
+        "startTime": "2026-11-21T11:31:44.002Z",
+        "duration": 1210103.127,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "muestras": 84,
+      "fps": {
+        "min": 59.99900828085486,
+        "max": 60.007339740728625,
+        "media": 60.00369333401971
+      },
+      "p95_ms_maximo": 16.799999999999955,
+      "frame_ms_maximo": 16.800000000000182,
+      "long_tasks": 0,
+      "cls_maximo": 0,
+      "sentinel": [
+        {
+          "ancho": 1440,
+          "pantallas": 30,
+          "modulos": [
+            {
+              "nombre": "recorridos",
+              "hallazgos": 0
+            },
+            {
+              "nombre": "caos",
+              "hallazgos": 0
+            },
+            {
+              "nombre": "estabilidad",
+              "hallazgos": 0
+            }
+          ],
+          "hallazgos_por_gravedad": {},
+          "caos": {
+            "acciones": 6304,
+            "muestras_fps": 286,
+            "fps": {
+              "min": 20,
+              "max": 61,
+              "media": 57.42307692307692
+            },
+            "congelaciones": 0,
+            "caidas": 0
+          },
+          "estabilidad": {
+            "muestras": 106,
+            "long_tasks": 0,
+            "long_task_ms_maximo": 0,
+            "caida": ""
+          },
+          "sha256_informe": "85e6ac5c6f692b865bc123624f32aec965e2d3e1567ebf49c249aaa47357f17d"
+        },
+        {
+          "ancho": 390,
+          "pantallas": 30,
+          "modulos": [
+            {
+              "nombre": "recorridos",
+              "hallazgos": 1
+            },
+            {
+              "nombre": "caos",
+              "hallazgos": 0
+            },
+            {
+              "nombre": "estabilidad",
+              "hallazgos": 0
+            }
+          ],
+          "hallazgos_por_gravedad": {
+            "info": 1
+          },
+          "caos": {
+            "acciones": 9462,
+            "muestras_fps": 416,
+            "fps": {
+              "min": 60,
+              "max": 61,
+              "media": 60.00961538461539
+            },
+            "congelaciones": 0,
+            "caidas": 0
+          },
+          "estabilidad": {
+            "muestras": 83,
+            "long_tasks": 0,
+            "long_task_ms_maximo": 0,
+            "caida": ""
+          },
+          "sha256_informe": "45ecc2615bf17472df1e4b0df9a4a0476fdc554f0cd8b271e829e422eb608914"
+        }
+      ]
+    },
+    {
+      "ronda": "ronda-8",
+      "playwright": {
+        "startTime": "2026-11-21T11:52:21.696Z",
+        "duration": 1209172.524,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "muestras": 84,
+      "fps": {
+        "min": 59.99900828085487,
+        "max": 60.00733974072861,
+        "media": 60.00339695595066
+      },
+      "p95_ms_maximo": 16.800000000000182,
+      "frame_ms_maximo": 16.800000000000182,
+      "long_tasks": 0,
+      "cls_maximo": 0,
+      "sentinel": [
+        {
+          "ancho": 1440,
+          "pantallas": 30,
+          "modulos": [
+            {
+              "nombre": "recorridos",
+              "hallazgos": 0
+            },
+            {
+              "nombre": "caos",
+              "hallazgos": 0
+            },
+            {
+              "nombre": "estabilidad",
+              "hallazgos": 0
+            }
+          ],
+          "hallazgos_por_gravedad": {},
+          "caos": {
+            "acciones": 7752,
+            "muestras_fps": 349,
+            "fps": {
+              "min": 20,
+              "max": 61,
+              "media": 55.767908309455585
+            },
+            "congelaciones": 0,
+            "caidas": 0
+          },
+          "estabilidad": {
+            "muestras": 106,
+            "long_tasks": 0,
+            "long_task_ms_maximo": 0,
+            "caida": ""
+          },
+          "sha256_informe": "52b71e83b4988d1b9d5cd4e87b0b34ecb60e3273f548d43960422436d1948857"
+        },
+        {
+          "ancho": 390,
+          "pantallas": 30,
+          "modulos": [
+            {
+              "nombre": "recorridos",
+              "hallazgos": 1
+            },
+            {
+              "nombre": "caos",
+              "hallazgos": 0
+            },
+            {
+              "nombre": "estabilidad",
+              "hallazgos": 0
+            }
+          ],
+          "hallazgos_por_gravedad": {
+            "info": 1
+          },
+          "caos": {
+            "acciones": 9421,
+            "muestras_fps": 414,
+            "fps": {
+              "min": 60,
+              "max": 61,
+              "media": 60.007246376811594
+            },
+            "congelaciones": 0,
+            "caidas": 0
+          },
+          "estabilidad": {
+            "muestras": 83,
+            "long_tasks": 0,
+            "long_task_ms_maximo": 0,
+            "caida": ""
+          },
+          "sha256_informe": "63b9cbd5a11574d2fd4389f40406ed109308b7a4bf6787515f3b06a6d7212ae5"
+        }
+      ]
+    }
+  ],
+  "limites": {
+    "fps_minimo": 57,
+    "p95_ms_maximo": 25,
+    "frame_ms_menor_que": 100,
+    "long_task_ms_menor_que": 100,
+    "cls_maximo": 0.01
+  }
+}
