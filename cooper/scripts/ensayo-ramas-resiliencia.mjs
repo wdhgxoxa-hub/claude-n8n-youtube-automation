@@ -74,13 +74,20 @@ export async function runResiliencia(ctx) {
       async () => {
         const es = await api.all("/executions");
         for (const e of es.filter(
-          (e) => e.workflowId === workflowId && e.status === status,
+          (e) =>
+            e.workflowId === workflowId && [status, "error"].includes(e.status),
         )) {
           const d = await detalle(e.id);
           const entrada =
             d.data?.resultData?.runData?.Inicio?.[0]?.data?.main?.[0]?.[0]
               ?.json;
-          if (entrada?.video_id === videoId) return d;
+          if (entrada?.video_id !== videoId) continue;
+          assert.equal(
+            d.status,
+            status,
+            `${videoId}: ${d.data.resultData.lastNodeExecuted}: ${d.data.resultData.error?.message}`,
+          );
+          return d;
         }
         return false;
       },
