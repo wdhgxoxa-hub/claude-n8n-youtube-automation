@@ -299,7 +299,9 @@ test("operación: la aprobación exige confirmar y el estado no muestra datos ad
   page,
 }) => {
   await page.goto("/decisiones");
-  const entries = page.locator(".operation-entry");
+  // El streaming de Next puede conservar temporalmente una copia oculta del HTML.
+  // Contar las decisiones presentadas, no los buffers de Suspense pendientes.
+  const entries = page.locator(".operation-entry:visible");
   await expect(entries.first()).toBeVisible();
   const cantidad = await entries.count();
   await entries
