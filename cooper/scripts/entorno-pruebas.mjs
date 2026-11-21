@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 export const raiz = resolve(import.meta.dirname, "..");
@@ -18,6 +18,16 @@ export function entornoLimpio(origen = process.env) {
     if (origen[key]) env[key] = origen[key];
   return {
     ...env,
+    // La imagen oficial ya trae las cabeceras de su Node. Evitar descargarlas y
+    // extraer propietarios de un tar bajo un contenedor sin capacidades.
+    ...(existsSync(resolve(dirname(process.execPath), "../include/node/node.h"))
+      ? {
+          npm_package_config_node_gyp_nodedir: resolve(
+            dirname(process.execPath),
+            "..",
+          ),
+        }
+      : {}),
     NEXT_TELEMETRY_DISABLED: "1",
     PYTHONDONTWRITEBYTECODE: "1",
     npm_config_update_notifier: "false",
