@@ -1,0 +1,46 @@
+{
+  "estado": "PASS",
+  "archivos_sha256": {
+    "codigo-aplicador.json": "678be9826586d9c8251baced7be0b09cd7d18a21f101201278651598de8044db",
+    "compose.log": "a973d35b021abb12fed1e1a5a66b7d3f1a6a8380b3c35676e7ff444a8d8db080",
+    "imagen.json": "306acd88aaf99f47c4f8bffcf41c4182ed10a07a14239a7468735057c55f168e",
+    "infra-aceptacion.json": "b3b2b7e63243a27be77db837c4961a69beff6873533a6d2cf39e8a1c7a5b8904",
+    "infra-aplicador.json": "a35fa574b7efdc47cc384760b9de94f151e02e0b7b087357651f929cbaa2471f",
+    "intentos-laboratorio.json": "bc04df98538423c9a9d32ebb1938e2434020e57b1e6038d608367ee2b188e450",
+    "migracion.json": "4db4b978c32283c8ad357de3a02ef3c2c10483ed3960dbc5c12e9c12bd86b6b8",
+    "motor.json": "0f3b7465f10d6e25c8eefa52d435aad72b5b534cea5a21d637068d350f4a4c78",
+    "operacion-tests.log": "a956a2828ac8d56ea6b67699c6a24d76efddd81922dc7180b234f72b3cd57842"
+  },
+  "recibos_privados": {
+    "fallo-inyectado.json": {
+      "ruta": "/home/david/.cache/tiop-e942/cooper/.cache/e2e-vps-rFjwUS/aceptacion-infra-1795293268098720119/fallo-inyectado.json",
+      "sha256": "9f3d1192a79c0de472d7b29013f26ca365ebab51816dd314b6e2d69ca8ad1e1c",
+      "resultado": {
+        "estado": "FALLO_REVERTIDO",
+        "reversion": "PASS"
+      }
+    },
+    "actualizacion.json": {
+      "ruta": "/home/david/.cache/tiop-e942/cooper/.cache/e2e-vps-rFjwUS/aceptacion-infra-1795293268098720119/actualizacion.json",
+      "sha256": "89ca5fde0ad76f170bf68188f7bca8359d85b29e3aeb1e4bf190ae3295ac7899",
+      "resultado": {
+        "estado": "PASS",
+        "salud": "PASS",
+        "datos_preservados": "PASS"
+      }
+    },
+    "resultado.json": {
+      "ruta": "/home/david/.cache/tiop-e942/cooper/.cache/e2e-vps-rFjwUS/aceptacion-infra-1795293268098720119/resultado.json",
+      "sha256": "ef2905b73523151fd380f0792331c8ffa02e5bcb76b4828e2728a14a4e72909a",
+      "resultado": {
+        "aplicador": "PASS",
+        "fallo_inyectado_y_reversa": "PASS",
+        "actualizacion": "PASS"
+      }
+    }
+  },
+  "datos_privados_publicados": false,
+  "remoto_modificado_por_este_frente": false,
+  "salida_ensayo_mixto": 0,
+  "stderr_ensayo_mixto_bytes": 0
+}

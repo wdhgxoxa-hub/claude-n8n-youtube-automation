@@ -1,0 +1,33 @@
+{
+  "imagen_fuente": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+  "aplicador_fuente": "f3750dcced95e202f9141d53b01cc5df6edd78fe",
+  "arnes_commits": [
+    "2d5ef00",
+    "1b300f8"
+  ],
+  "archivos": {
+    "deploy/aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+    "deploy/operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "deploy/tests/infra-aplicador.py": "62dd8acb8848cf74f51764ce1cc8c34b546ceef761967541665013c0af653de5",
+    "deploy/tests/test_aplicar_infra.py": "ed2a29333ee26b9b8460a3b1582d22b6041d6a0db82d39af7b402883b8db9025"
+  },
+  "pruebas_operativas": {
+    "total": 185,
+    "estado": "PASS",
+    "warnings": "error",
+    "log_sha256": "a956a2828ac8d56ea6b67699c6a24d76efddd81922dc7180b234f72b3cd57842"
+  },
+  "ensayo_mixto": {
+    "estado": "PASS",
+    "salida": 0,
+    "stderr_bytes": 0,
+    "servicios_verificados": 7,
+    "adaptaciones_solo_laboratorio": [
+      "Relés rootless usan /sys vacío de solo lectura, sin sysfs del host.",
+      "Antes de up --force-recreate de padres, se comprueba que los relés estén detenidos y se retiran solo esos dependientes.",
+      "En down se detienen primero los relés; se verifica su estado y se retiran antes de los padres.",
+      "Se conservan red, argumentos e image_overrides; healthy, comprobaciones previas y comparación final de IDs corren intactos."
+    ],
+    "limite": "No acredita el detalle de orden de eliminación del backend Docker remoto; acredita el aplicador exacto con red real, siete identidades, respaldo/restauración y salud en Podman."
+  }
+}

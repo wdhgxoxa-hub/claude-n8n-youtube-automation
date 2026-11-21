@@ -1,0 +1,36 @@
+{
+  "imagen_historica": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "intentos": [
+    {
+      "directorio": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg/aceptacion-infra-1795292574699760071",
+      "estado": "FALLO_LABORATORIO_NO_ACEPTACION",
+      "causa": "runc rootless no pudo montar sysfs del namespace de red compartido; fallo anterior a aplicar.",
+      "recibos": {}
+    },
+    {
+      "directorio": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg/aceptacion-infra-1795292687556379341",
+      "estado": "FALLO_LABORATORIO_NO_ACEPTACION",
+      "causa": "Podman impidió recrear padres con dependientes de namespace existentes; no se completó reversa.",
+      "recibos": {
+        "fallo-inyectado.json": {
+          "sha256": "0261baaee2fa9fbf2fe9289f4700f6fe0d4f90a9a6d62fb60387eaeac182dd2a",
+          "estado": "RESPALDADO"
+        }
+      }
+    },
+    {
+      "directorio": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-mix-51a3f547/aceptacion-infra-1795292973737142215",
+      "estado": "FALLO_LABORATORIO_NO_ACEPTACION",
+      "causa": "Con /sys vacío inició la mezcla, pero Podman aún exigía retirar dependientes detenidos antes de recrear padres; no se completó reversa.",
+      "recibos": {
+        "fallo-inyectado.json": {
+          "sha256": "273ba04b05535a54c2195c84490331fb4c9ed9f22e4ef3a8e4e18850f9f86009",
+          "estado": "RESPALDADO"
+        }
+      }
+    }
+  ],
+  "datos_y_recibos_privados_conservados": true,
+  "remoto_modificado": false,
+  "aceptacion_final": "Solo el ensayo e942 con adaptación explícita terminó correctamente."
+}
