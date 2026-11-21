@@ -6,6 +6,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -32,6 +33,10 @@ def initialize(image, data):
                '-e', 'N8N_DIAGNOSTICS_ENABLED=false', '-e', 'N8N_VERSION_NOTIFICATIONS_ENABLED=false',
                '-e', 'N8N_TEMPLATES_ENABLED=false', '-e', 'N8N_LOG_LEVEL=error',
                '--entrypoint=n8n', image, 'export:workflow', '--all', '--output=/dev/null']
+    cpu_set = os.getenv('COOPER_ENSAYO_CPUSET')
+    if cpu_set:
+        operar.require(bool(re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*', cpu_set)), 'Afinidad CPU inválida')
+        command[2:2] = ['--cpuset-cpus', cpu_set]
     # El CLI inicializa/migra la base, pero no arranca triggers ni descifra credenciales.
     # Descarta las definiciones sin copiar/exportar valores a un artefacto.
     try:
