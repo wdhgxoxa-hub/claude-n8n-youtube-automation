@@ -125,7 +125,11 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
   await teclado(page, salto);
   await page.keyboard.press("Enter");
   await expect(page.locator("#contenido")).toBeFocused();
-  const message = page.getByLabel("Mensaje para Cooper");
+  const message = page
+    .getByRole("main")
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true });
+  await expect(message).toHaveCount(1);
+  await expect(message).toBeVisible();
   const canal = `M11 ${info.project.name}`;
   await teclado(page, message);
   await page.keyboard.type(`Crea un canal: ${canal}`);
@@ -318,7 +322,11 @@ test("grabación nativa con señal sintética y reproducción de medios soportad
     await expect(
       page.getByText("Transcripción simulada.", { exact: false }),
     ).toBeVisible();
-    const message = page.getByLabel("Mensaje para Cooper");
+    const message = page
+      .getByRole("main")
+      .getByRole("textbox", { name: "Mensaje para Cooper", exact: true });
+    await expect(message).toHaveCount(1);
+    await expect(message).toBeVisible();
     await expect(message).not.toHaveValue("");
     await message.fill("Transcripción corregida por teclado");
     await expect(message).toHaveValue("Transcripción corregida por teclado");
