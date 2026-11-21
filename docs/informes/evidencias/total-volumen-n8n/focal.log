@@ -1,0 +1,11 @@
+✔ fixture de 10000 videos, diez dueños, cien canales y relaciones deterministas (116.954805ms)
+✔ lee los filtros canónicos sin reemplazar returnAll ni el control de dueño (0.511837ms)
+✔ la proyección canónica descarta filas ajenas y conserva escenas e historial propios (22.897764ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 199.174521

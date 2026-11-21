@@ -1,0 +1,24 @@
+{
+  "commit_codigo": "1942868c8ca70a7b4ddb031c9f9224f0a0450e65",
+  "fuentes_medidas_coinciden_con_commit": {
+    "tools/cooper/medir-volumen-n8n.cjs": "19b1654570a2769fccbe087f4d9b9dc314fa474ecaa4b5a0a822c1e955ca015d",
+    "tools/cooper/volumen-fixture.cjs": "34184e022c214a38b0030f1c644d7faaaeeea4c9aabb5ee4cb7b36670d34853b",
+    "workflows/v2/FabCooperAPI0001.json": "eaac210957bcb67da3a04a6751111ca8590e2fc59e616b893dcf46ec078c4e6d",
+    "contratos/cooper-tablas-produccion.json": "de59f568dc845eb78b9945738eb6cbb41a54c4db51361f289593b0de137796c3"
+  },
+  "rc_medicion": 0,
+  "presupuesto_temporal": "FAIL",
+  "correccion": "PASS",
+  "rc_focal": 0,
+  "focal": 3,
+  "rc_flujos": 0,
+  "flujos": 173,
+  "puerta_cooper": "NOT_RUN por alcance expreso",
+  "archivos": {
+    "medicion.json": "78d386f5330dad87412e4c6c9cdfcd14056e1b991d5a927256ab647b7c218136",
+    "origen.json": "fef3fc79706573bcc3f1d16e5e7f99dbf4eeabb82e9fd589d2d6cbc9288c7cfb",
+    "ejecucion.log": "c83a1bdbd27ce140d2160fec7dd4740dbe568808a9ac977880a6c121345b1fab",
+    "focal.log": "a929769c3d85b1cbe551291e46b0a9caee65efdfbcf62eb442be7f81c00a181a",
+    "flujos.log": "613d7b607af2149cf74d51c299daa1fc725471a7ac7963241b1332d7b4bd4fc8"
+  }
+}

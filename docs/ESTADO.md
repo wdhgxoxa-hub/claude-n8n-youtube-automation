@@ -37,6 +37,8 @@
 
 ## En curso
 
+- H19 ampliado: Data Tables real con 10.000 videos detectó unos nueve segundos de proyección administrativa por filtros repetidos. Agrupación por ID implementada en el puente; contraste completo de tiempos, contenido y aislamiento en curso. No cambia Cooper ni su imagen. [Medición inicial](informes/total-volumen-n8n.md).
+
 - Orquestador `cooper-total`: cerrar Radar/vidIQ tras aislar dos columnas de eventos ausentes y corregir la sonda, completar dos rondas Sentinel+Playwright con videos; aceptar y desplegar exactamente la imagen nueva, comprobar acceso público, refrescar réplica y publicar las dos ramas autorizadas del remoto propio. Los fallos técnicos siguen a cargo de Codex.
 - Imagen nueva y parches n8n/runner 2.47.6/Caddy 2.11.8: ensayos de migración, Compose y reversa antes de la aplicación remota. El runtime Marcas conserva simulación y publicación apagada.
 - Aceptación privada del VPS: sesión Google real, aislamiento, SSE y adjuntos. No se iniciará OAuth ni se fabricará una sesión de producción.
