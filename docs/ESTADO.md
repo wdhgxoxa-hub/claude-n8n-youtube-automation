@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 11:02 (Lima).
+Última actualización: 2026-11-21 11:10 (Lima).
 
 ## Qué es
 
@@ -32,6 +32,7 @@
 
 - Orquestador `cooper-total`: integrar/desplegar los frentes y activar el monitor, receptor de recibos y timers de réplica/arranque; ensayar imagen nueva y reversa con copia del respaldo real. El frente Operación no reabrió workflows ni hizo push.
 - Cooper total: integrar el frente aprendizaje y ejecutar su [ensayo de lectura](cooper-aprendizaje-ensayo.md) sobre publicaciones existentes, con respaldo/reversa, sin reanudar producción. La conexión real y la calidad de las lecciones todavía no se acreditan por las pruebas locales.
+- **Lote cooper-total:** clon aislado publica 25/25 flujos con cuatro pasos sin credencial bloqueados explícitamente y tres entradas externas deshabilitadas; la entrada definitiva FINAL3 ya pasó importación32, publicación25, versiones y reversa exacta187tablas en un único recibo ligado al plan antes de otro intento real. No se ha habilitado producción de medios ni publicado contenido social. [Ensayos](informes/total-despliegue.md).
 
 - Claude: revisar e instalar el lote n8n de integración 3 en el destino elegido, con respaldo real previo, mapa de IDs y reversa. Contiene 32 exportaciones inactivas; **no se aplicó en vivo**. [Procedimiento](cooper-cobertura-despliegue.md).
 - Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas, repositorio de copias fuera del VPS y conexión del chat con los planes de la PC.

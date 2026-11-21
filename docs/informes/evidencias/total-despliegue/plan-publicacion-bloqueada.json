@@ -1,0 +1,65 @@
+{
+  "bloqueos": [
+    {
+      "workflow": "8nqh0n7jewLQOikC",
+      "nodo": "Crear avatar",
+      "bloqueo": "HeyGen"
+    },
+    {
+      "workflow": "8nqh0n7jewLQOikC",
+      "nodo": "Consultar avatar",
+      "bloqueo": "HeyGen"
+    },
+    {
+      "workflow": "FabSonido0000001",
+      "nodo": "Voz (HeyGen)",
+      "bloqueo": "HeyGen"
+    },
+    {
+      "workflow": "FabSonido0000001",
+      "nodo": "Voz (ElevenLabs)",
+      "bloqueo": "ElevenLabs"
+    }
+  ],
+  "entradas_deshabilitadas": [
+    {
+      "workflow": "FabConfirmar0001",
+      "nodo": "Cada hora"
+    },
+    {
+      "workflow": "FabRadar00000001",
+      "nodo": "Cada ma\u00f1ana (radar)"
+    },
+    {
+      "workflow": "FabYouTube000001",
+      "nodo": "Vuelta de Google"
+    }
+  ],
+  "publicar": [
+    "FabAgenteTelegr1",
+    "FabAjustes000001",
+    "FabPendientes001",
+    "FabVidiq00000001",
+    "gNrGzmHBxJ3OIuQM",
+    "z74zUkz2BR8k0GLR",
+    "FabAprobacion001",
+    "FabConfirmar0001",
+    "FabLlamarClaude1",
+    "FabReferencias01",
+    "FabYouTube000001",
+    "MkC3QS6ogZZ8n24u",
+    "YgWu9aUDsB2VYaz3",
+    "8nqh0n7jewLQOikC",
+    "FabDerivados0001",
+    "FabEstado0000001",
+    "FabPublicacion01",
+    "FabRedes00000001",
+    "FabReenviar00001",
+    "FabSonido0000001",
+    "rvwLNNS309MEi8cL",
+    "FabProduccion001",
+    "FabRadar00000001",
+    "FabOrquestador01",
+    "xorCR0lfNlil8Ovy"
+  ]
+}

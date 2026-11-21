@@ -1,6 +1,6 @@
 # cooper-total — operación instalada y ensayos de despliegue
 
-Actualizado: 21-11-2026, 11:02 (Lima). Frente `total-despliegue`, continuación de `total-operacion`. La aplicación final todavía no se ha desplegado por este frente; el orquestador conserva el turno de escritura en el VPS.
+Actualizado: 21-11-2026, 11:10 (Lima). Frente `total-despliegue`, continuación de `total-operacion`. La aplicación final todavía no se ha desplegado por este frente; el orquestador conserva el turno de escritura en el VPS.
 
 ## Commits
 
@@ -8,6 +8,7 @@ Actualizado: 21-11-2026, 11:02 (Lima). Frente `total-despliegue`, continuación 
 - `6aa98ff`: rechazo controlado de sobres del monitor fuera del esquema.
 - `fd654c4`: ensayo n8n real de columnas/importación inactiva y recuperación exacta.
 - `658385f`: réplica ejecutable desde systemd de usuario; aislamiento SSH y corrección de metadatos UID al restaurar.
+- `331b925`: publicación aislada opcional por plan validado, comprobación de versiones/ajenos y reversa posterior; recibo ligado al hash del plan.
 - `723fa91`: Vigilante envía categorías cerradas, omite error crudo y construye enlaces con origen fijo e ID validado; secreto ficticio y URL de proveedor no se propagan.
 - Base operativa: `2aaeb9a`, `033da1f`, `24ca1bb`; puerta y auditoría en [total-operacion](total-operacion.md).
 
@@ -45,13 +46,21 @@ La migración final sobre la copia real pasó de ocho a once migraciones, conser
 
 **Compose final: siete bloques PASS.** HTTPS y TLS verificado, cabeceras/editor privado; login ficticio con cookie segura; runner externo 2.47.4 y firma n8n→Cooper; SSE y cinco reconexiones; restic cifrado/restauración; export e import en volumen vacío; actualización/reversa conjunta conservando estado. El ensayo usó un worktree separado del SHA exacto y los servicios quedaron retirados. Dos intentos previos detectaron condiciones del arnés, no del producto: ruta de socket Unix demasiado larga y archivo exportado sin metadatos Git; se corrigió el contexto y se repitió completo con salida cero. No se inició OAuth.
 
-El **lote final ensayado inicialmente** (`581fedd8c786dbca4eae41fbe7bc19655ce52be372fde35dc379aac2ef513c85`) pasó importación y reversa: cinco columnas idempotentes, 32 workflows inactivos, nueve tablas/118 filas preservadas, 187 tablas restauradas, mismo SHA256 SQLite y mismos IDs/active/version. Este ensayo cubrió importación, no publicación: el orquestador encontró posteriormente una validación al republicar el cuarto flujo y restauró producción. La publicación secuencial de los 22 originales también se ensayó en un clon, un CLI por ID, sin red: 13 publicados y nueve rechazados. Siete rechazos corresponden a referencias a subflujos aún sin publicar; dos a credenciales ausentes (`8nqh0n7jewLQOikC` y `FabSonido0000001`). La salida privada se clasificó en memoria usando las plantillas del código fuente n8n 2.47.4; únicamente se conservaron ID/código/categoría/estado. No se leyó ni descifró el contenido de credenciales. No hay ciclos estáticos entre los 22, pero el orden original no respeta sus dependencias. Tres dependencias pertenecen a los pausados: `FabYouTube000001`, `FabRadar00000001` y `FabConfirmar0001`. El orquestador revisará sus guardias y la preparación de referencias antes de otro intento. El hotfix del Vigilante requiere otra entrada ensayada antes de aplicar.
+El **lote final ensayado inicialmente** (`581fedd8c786dbca4eae41fbe7bc19655ce52be372fde35dc379aac2ef513c85`) pasó importación y reversa: cinco columnas idempotentes, 32 workflows inactivos, nueve tablas/118 filas preservadas, 187 tablas restauradas, mismo SHA256 SQLite y mismos IDs/active/version. Este ensayo cubrió importación, no publicación: el orquestador encontró posteriormente una validación al republicar el cuarto flujo y restauró producción. La publicación secuencial de los 22 originales también se ensayó en un clon, un CLI por ID, sin red: 13 publicados y nueve rechazados. Siete rechazos corresponden a referencias a subflujos aún sin publicar; dos a credenciales ausentes (`8nqh0n7jewLQOikC` y `FabSonido0000001`). La salida privada se clasificó en memoria usando las plantillas del código fuente n8n 2.47.4; únicamente se conservaron ID/código/categoría/estado. No se leyó ni descifró el contenido de credenciales. No hay ciclos estáticos entre los 22, pero el orden original no respeta sus dependencias. Tres dependencias pertenecen a los pausados: `FabYouTube000001`, `FabRadar00000001` y `FabConfirmar0001`. La sección siguiente documenta la solución ensayada antes de otro intento. El hotfix del Vigilante se incluyó en el lote FINAL3 ensayado.
 
 Para desplegar la imagen, el orquestador debe conservar los scripts `deploy/` de la última integración: incluyen correcciones operativas posteriores al SHA de la imagen. No reemplazarlos por el archivo de fuentes usado en la compilación.
 
+## Publicación segura tras identificar los bloqueos
+
+Se ensayó una solución explícita sobre otro clon, sin alterar la fuente canónica: reemplazar exclusivamente los cuatro nodos sin credencial por nodos Code que lanzan `Falta configurar HeyGen/ElevenLabs; paso bloqueado.`. Se retiran credenciales, reintentos y continuación tras error de esos cuatro nodos. Sus cuerpos se ejecutaron como regresión: los cuatro lanzan error, sin resultado de éxito simulado. El preparador definitivo conserva esta transformación en un diff auditable y la implementación original en la fuente/respaldo.
+
+Para satisfacer las dependencias se incluyeron tres subflujos antes pausados, conservando su entrada `executeWorkflowTrigger` y deshabilitando exclusivamente `Cada hora` (Confirmar), `Cada mañana (radar)` y `Vuelta de Google` (YouTube). Ninguna de esas tres entradas externas se abrió. Los 25 IDs se publicaron con el CLI oficial en orden topológico: **25/25 PASS**, sin red y sin ejecutar proveedores. El plan seguro y cada código de salida se adjuntan a la evidencia. Esto demuestra validación/publicación; no demuestra que una credencial real pueda producir contenido.
+
+El arnés `ensayar-n8n.py --publicar <plan.json>` ya verifica ese orden, el estado activo y la versión de cada flujo, las filas y los workflows ajenos; posteriormente restaura la copia exacta. Su recibo incluye `publicacion`, `publicados` y `publicar_sha256`. El lote definitivo FINAL3 pasó ese arnés: entrada SHA256 `955344e94ab52eb91eeb8d8281b7bdae53008d1687d1a8074b23263a1cad758c`, plan `5bb99302ce5445ca98114ae5c50fb553d7b64285a5a87b201fcfe543a662f758`; importación de 32, publicación de 25, cinco columnas idempotentes, versiones y ajenos verificados. La reversa recuperó las 187 tablas y el SHA256 SQLite original; nueve tablas/118 filas preservadas. Recibo completo en la evidencia. La aplicación real permanece bajo el turno del orquestador.
+
 ## Puerta y evidencia
 
-La puerta completa de operación ya pasó: npm ci/lint/typecheck/build, 284 unitarias, 43 E2E con Sentinel y 147 pruebas de flujos, cero errores/advertencias. Véase [evidencia de operación](evidencias/total-operacion/). Los cambios posteriores de este frente solo afectan despliegue: 42 pruebas Python con `-W error` y `git diff --check` pasan. El hotfix del Vigilante añade una regresión: 148/148 pruebas de flujos pasan, incluida la no divulgación de una credencial ficticia en errores conocidos, desconocidos, del disparador y en URL recibidas. El orquestador está ejecutando la puerta integrada de la aplicación final; no se sustituye esa puerta con estos ensayos.
+La puerta completa de operación ya pasó: npm ci/lint/typecheck/build, 284 unitarias, 43 E2E con Sentinel y 147 pruebas de flujos, cero errores/advertencias. Véase [evidencia de operación](evidencias/total-operacion/). Los cambios posteriores de este frente solo afectan despliegue: 46 pruebas Python con `-W error` y `git diff --check` pasan tras ampliar el arnés de publicación. El hotfix del Vigilante añade una regresión: 148/148 pruebas de flujos pasan, incluida la no divulgación de una credencial ficticia en errores conocidos, desconocidos, del disparador y en URL recibidas. El orquestador está ejecutando la puerta integrada de la aplicación final; no se sustituye esa puerta con estos ensayos.
 
 [Evidencia segura del frente](evidencias/total-despliegue/): logs de compilación preliminar/final, migración, Compose, lote n8n, regresiones y estado real de unidades/monitor/recibos. No incluye bases, exports privados, credenciales ni entornos.
 
@@ -64,7 +73,7 @@ La puerta completa de operación ya pasó: npm ci/lint/typecheck/build, 284 unit
 
 ## Trabajo todavía en curso del orquestador
 
-Publicación del lote n8n definitivo tras resolver la validación y ensayar el Vigilante seguro, prueba coordinada de stack, despliegue, puerta integrada y dos rondas Sentinel/Playwright con videos. La imagen final, su migración/reversa y los siete bloques Compose ya pasaron; estos otros pasos no se declaran terminados en este informe.
+Aplicación real del lote FINAL3, prueba coordinada de stack, despliegue, puerta integrada y dos rondas Sentinel/Playwright con videos. La candidata169, su migración/reversa y los siete bloques Compose pasaron; nuevas correcciones de la integración y H09 (runtime Marcas) requieren otra imagen antes de la aceptación definitiva. No se declaran terminados esos pasos.
 
 Fuente oficial cotejada para export/import/publish/unpublish: [Server CLI de n8n](https://docs.n8n.io/deploy/host-n8n/configure-n8n/use-the-command-line.md). Referencias de restic/systemd/Telegram en [operación](../cooper-operacion.md).
 
