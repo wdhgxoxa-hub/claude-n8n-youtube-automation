@@ -1,0 +1,61 @@
+{
+  "rubrica": "M09 sin cambios respecto de e5cbc3a; máximo dos frases y 40 palabras",
+  "muestras": [
+    {
+      "archivo": "ensayo-1.json",
+      "sha256": "d1debf2814055742886ce2c0b0f8d65c3c5550383e69f1ba4b1fb49416a08f1d",
+      "revision": "fdc6ebb42bc22393b82a2e78af8eb578b4de59f3",
+      "fecha": "2026-11-21T17:17:28.475Z",
+      "rc": 2,
+      "conteos": {
+        "PASS": 36,
+        "FAIL": 1
+      },
+      "llamadas": 37,
+      "medianaPalabras": 19,
+      "maximoPalabras": 28,
+      "estadisticas": {
+        "respuesta": {
+          "n": 33,
+          "errores": 0,
+          "p50Ms": 2883.312340999997,
+          "p95Ms": 4242.283141000007
+        },
+        "sintesis": {
+          "n": 4,
+          "errores": 0,
+          "p50Ms": 2708.9458719999966,
+          "p95Ms": 3415.7544570000027
+        }
+      }
+    },
+    {
+      "archivo": "ensayo-2.json",
+      "sha256": "a25db168791d5d8cb35f4186dd6c9de287512da9e497e2f2521cde76fe52af4c",
+      "revision": "6827959356982ff048c9e6f6b4d6b227fe2d53d9",
+      "fecha": "2026-11-21T17:20:04.561Z",
+      "rc": 0,
+      "conteos": {
+        "PASS": 37
+      },
+      "llamadas": 37,
+      "medianaPalabras": 19,
+      "maximoPalabras": 26,
+      "estadisticas": {
+        "respuesta": {
+          "n": 33,
+          "errores": 0,
+          "p50Ms": 2831.543696000008,
+          "p95Ms": 3299.4298759999983
+        },
+        "sintesis": {
+          "n": 4,
+          "errores": 0,
+          "p50Ms": 2654.869728999998,
+          "p95Ms": 3171.954117999994
+        }
+      }
+    }
+  ],
+  "totalLlamadas": 74
+}

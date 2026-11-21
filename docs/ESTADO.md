@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **21-11-2026, Lima — revisión de integración de producto:** recuperado el empaquetador offline de competencia con altas/bajas explícitas y los complementos faltantes de `total-chatfix`, conservando la política vigente de 18 palabras. Pruebas focales: 76 de chat, 173 de flujos y dos del empaquetador; lint y tipos aprobados. Informe/ensayos históricos de chatfix recuperados con alcance separado. Implementado y probado en `total-integrador-producto`; pendiente de integrar y de la puerta completa conjunta, sin despliegue propio. [Informe](informes/total-integrador-producto.md).
+
 - **21-11-2026 (Lima), integración Sentinel en curso:** incorporadas las ampliaciones propias cerradas de `total-sentinel` en `total-integrador-web`: caos móvil, inventario de controles, videos por prueba, recuperación de Aprendizaje y navegación persistente de Marcas. Se conserva la caché privada y el guardián sin alteraciones; las rondas de esta combinación quedan a cargo del integrador. [Evidencia histórica del frente](informes/total-sentinel.md).
 
 - **21-11-2026 (Lima), integración web en curso:** incorporadas las mejoras de accesibilidad de `total-accesibilidad` (teclado, foco, contraste, etiquetas y matriz axe) en `total-integrador-web`, preservando Resultados unificados y las pruebas Firefox/WebKit. La puerta del frente está documentada; la combinación requiere la puerta de `total-integrador`, sin despliegue desde este frente. [Informe de accesibilidad](informes/total-accesibilidad.md).
