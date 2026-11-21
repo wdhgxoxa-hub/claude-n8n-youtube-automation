@@ -1,0 +1,58 @@
+{
+  "fecha": "2026-11-21T16:17:41.008Z",
+  "node": "v24.22.3",
+  "paquetes": {
+    "next": "16.4.6",
+    "next-auth": "5.0.0-beta.32",
+    "@auth/core": "0.41.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sharp": "0.35.5",
+    "better-sqlite3": "13.2.0",
+    "drizzle-orm": "0.45.4",
+    "zod": "4.6.7"
+  },
+  "n8n_observado": "2.47.4",
+  "n8n_parche_minimo_rama": "2.47.6",
+  "avisos_n8n": [
+    {
+      "id": "GHSA-q8rc-7m84-mfvj",
+      "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-q8rc-7m84-mfvj"
+    },
+    {
+      "id": "GHSA-c772-hjfp-gfc2",
+      "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-c772-hjfp-gfc2"
+    },
+    {
+      "id": "GHSA-g333-hr44-g82p",
+      "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-g333-hr44-g82p"
+    },
+    {
+      "id": "GHSA-h59h-rf6m-7jp5",
+      "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-h59h-rf6m-7jp5"
+    }
+  ],
+  "openssh_observado": "1:9.6p1-3ubuntu13.20",
+  "openssh_aviso": "https://ubuntu.com/security/notices/USN-8928-1",
+  "limitacion": "npm audit cubre el lock de Cooper, no las imágenes o todos los paquetes del VPS.",
+  "caddy_observado": "2.11.2",
+  "caddy_parche_propuesto": ">=2.11.8 compatible; pendiente de ensayo",
+  "avisos_caddy": [
+    {
+      "id": "GHSA-8qx7-j2v2-x6q5",
+      "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-8qx7-j2v2-x6q5"
+    },
+    {
+      "id": "GHSA-6365-7ppr-5r92",
+      "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-6365-7ppr-5r92"
+    },
+    {
+      "id": "GHSA-j8px-rmrx-76h9",
+      "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-j8px-rmrx-76h9"
+    },
+    {
+      "id": "GHSA-r766-rf9f-588h",
+      "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-r766-rf9f-588h"
+    }
+  ]
+}

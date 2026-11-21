@@ -1,0 +1,58 @@
+{
+  "fecha_utc": "2026-11-21T16:08:25.099121+00:00",
+  "solo_lectura": true,
+  "resultados": {
+    "escuchas": {
+      "rc": 0,
+      "salida": "Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nudp   UNCONN 0      0         127.0.0.54:53        0.0.0.0:*          \nudp   UNCONN 0      0      127.0.0.53%lo:53        0.0.0.0:*          \ntcp   LISTEN 0      4096         0.0.0.0:443       0.0.0.0:*          \ntcp   LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*          \ntcp   LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*          \ntcp   LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*          \ntcp   LISTEN 0      4096         0.0.0.0:80        0.0.0.0:*          \ntcp   LISTEN 0      4096       127.0.0.1:8443      0.0.0.0:*          \ntcp   LISTEN 0      4096            [::]:22           [::]:*"
+    },
+    "ssh": {
+      "rc": 0,
+      "salida": "logingracetime 120\nmaxauthtries 6\nmaxsessions 10\npermitrootlogin no\npubkeyauthentication yes\npasswordauthentication no\nkbdinteractiveauthentication no\nx11forwarding no\ngatewayports no\nallowtcpforwarding local\nauthenticationmethods any\npermitopen any\npermitlisten any"
+    },
+    "ufw": {
+      "rc": 0,
+      "salida": "Status: active\nLogging: on (low)\nDefault: deny (incoming), allow (outgoing), deny (routed)\nNew profiles: skip\n\nTo                         Action      From\n--                         ------      ----\n22/tcp                     ALLOW IN    Anywhere                  \n80/tcp                     ALLOW IN    Anywhere                  \n443/tcp                    ALLOW IN    Anywhere                  \n22/tcp (v6)                ALLOW IN    Anywhere (v6)             \n80/tcp (v6)                ALLOW IN    Anywhere (v6)             \n443/tcp (v6)               ALLOW IN    Anywhere (v6)"
+    },
+    "docker_ipv4": {
+      "rc": 0,
+      "salida": "-N COOPER-INGRESS\n-A COOPER-INGRESS -m conntrack --ctstate RELATED,ESTABLISHED -j RETURN\n-A COOPER-INGRESS -p tcp -m conntrack --ctorigdstport 80 -j RETURN\n-A COOPER-INGRESS -p tcp -m conntrack --ctorigdstport 443 -j RETURN\n-A COOPER-INGRESS -j DROP"
+    },
+    "docker_ipv6": {
+      "rc": 0,
+      "salida": "-N COOPER-INGRESS\n-A COOPER-INGRESS -m conntrack --ctstate RELATED,ESTABLISHED -j RETURN\n-A COOPER-INGRESS -p tcp -m conntrack --ctorigdstport 80 -j RETURN\n-A COOPER-INGRESS -p tcp -m conntrack --ctorigdstport 443 -j RETURN\n-A COOPER-INGRESS -j DROP"
+    },
+    "cadena_ipv4": {
+      "rc": 0,
+      "salida": "-N DOCKER-USER\n-A DOCKER-USER -i eth0 -j COOPER-INGRESS"
+    },
+    "cadena_ipv6": {
+      "rc": 0,
+      "salida": "-N DOCKER-USER\n-A DOCKER-USER -i eth0 -j COOPER-INGRESS"
+    },
+    "fail2ban": {
+      "rc": 0,
+      "salida": "Status for the jail: sshd\n|- Filter\n|  |- Currently failed:\t0\n|  |- Total failed:\t0\n|  `- Journal matches:\t_SYSTEMD_UNIT=sshd.service + _COMM=sshd\n`- Actions\n   |- Currently banned:\t0\n   |- Total banned:\t0"
+    },
+    "servicios": {
+      "rc": 0,
+      "salida": "active\nactive\nactive\nactive\nactive"
+    },
+    "permisos_sin_contenidos": {
+      "rc": 0,
+      "salida": "700 root:root /etc/cooper\n600 root:root /etc/cooper/.env\n600 root:root /etc/cooper/restic-password"
+    },
+    "contenedores": {
+      "rc": 0,
+      "salida": "cooper-chat-runner-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 \ncooper-chat-n8n-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 \ncooper-runner-1 ghcr.io/n8n-io/runners:2.47.4 5680/tcp\ncooper-chat-cooper-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 \ncooper-n8n-1 ghcr.io/n8n-io/n8n:2.47.4 5678/tcp\ncooper-cooper-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 3000/tcp\ncooper-caddy-1 caddy:2.11.2-alpine 0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 443/udp, 2019/tcp, 127.0.0.1:8443->8443/tcp"
+    },
+    "versiones": {
+      "rc": 0,
+      "salida": "docker-ce\t5:29.10.0-1~ubuntu.24.04~noble\nfail2ban\t1.0.2-3ubuntu0.1\nopenssh-server\t1:9.6p1-3ubuntu13.20\nufw\t0.36.2-6"
+    },
+    "actualizaciones_pendientes_cache": {
+      "rc": 0,
+      "salida": "Listing..."
+    }
+  }
+}

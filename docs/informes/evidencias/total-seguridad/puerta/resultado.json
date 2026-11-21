@@ -1,0 +1,73 @@
+{
+  "commit": "495121a150943a547e79621dec11f47eeb5635ee",
+  "inicio_utc": "2026-11-21T16:27:49.078845+00:00",
+  "pasos": [
+    {
+      "nombre": "01-ci",
+      "comando": "npm ci",
+      "directorio": "cooper",
+      "rc": 0,
+      "segundos": 4.81,
+      "sha256": "4b88abc3d42b93eabbc32917a72fd8290482d3546e3d00254514f41ea975ce65",
+      "sha256_versionado": "4b88abc3d42b93eabbc32917a72fd8290482d3546e3d00254514f41ea975ce65"
+    },
+    {
+      "nombre": "02-lint",
+      "comando": "npm run lint",
+      "directorio": "cooper",
+      "rc": 0,
+      "segundos": 2.73,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007",
+      "sha256_versionado": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "03-typecheck",
+      "comando": "npm run typecheck",
+      "directorio": "cooper",
+      "rc": 0,
+      "segundos": 1.0,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f",
+      "sha256_versionado": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "04-unitarias",
+      "comando": "npm test",
+      "directorio": "cooper",
+      "rc": 0,
+      "segundos": 16.76,
+      "sha256": "eaadc4c65cd210de61251628e0311b1c8deba8a0643ffa8c2bfade5ed7a788dd",
+      "sha256_versionado": "778c6427ffc9611ce25eda1828b4ec50a78ec7d374de1e295ccef4b7d2ff10d4"
+    },
+    {
+      "nombre": "05-e2e",
+      "comando": "npm run test:e2e",
+      "directorio": "cooper",
+      "rc": 0,
+      "segundos": 371.51,
+      "sha256": "b8aa9fcaa94ff465697d983df9fbe5abae647c681d194ca6710c5cdf4c9dacb3",
+      "sha256_versionado": "e95404972e8eb7f15363451769fd9e8d02db8390454ce70546a1305cf24ba727"
+    },
+    {
+      "nombre": "06-build",
+      "comando": "npm run build",
+      "directorio": "cooper",
+      "rc": 0,
+      "segundos": 2.68,
+      "sha256": "d6ac3142076b9f54562a45249813a83f8aa90bbc0217840c2268c0778860efd0",
+      "sha256_versionado": "928712c112461114aaf0b0aa4c24b74367fcd8a0e032946e433288a64133afee"
+    },
+    {
+      "nombre": "07-flujos",
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "directorio": ".",
+      "rc": 0,
+      "segundos": 0.99,
+      "sha256": "62f97d63495e0d511d0a5030fcb9b345a2ef09835ca059ca9a6c14a122b84cc5",
+      "sha256_versionado": "62f97d63495e0d511d0a5030fcb9b345a2ef09835ca059ca9a6c14a122b84cc5"
+    }
+  ],
+  "fin_utc": "2026-11-21T16:34:29.555600+00:00",
+  "errores": 0,
+  "advertencias": 0,
+  "normalizacion": "Solo espacios finales por línea y salto de línea final."
+}

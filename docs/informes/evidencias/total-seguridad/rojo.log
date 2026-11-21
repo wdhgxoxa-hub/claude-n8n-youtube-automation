@@ -1,0 +1,144 @@
+npm notice run cooper@0.1.0 npx
+npm notice run 'vitest' run tests/total-seguridad-http.test.ts tests/total-seguridad-medios.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/total-seguridad/cooper
+
+ ❯ tests/total-seguridad-medios.test.ts (2 tests | 2 failed) 107ms
+   × rechaza referencias heredadas a medios de otro dueño incluso para una pieza propia 54ms
+   × no permite evadir el límite público rotando IDs y no consume el cupo de una sesión 53ms
+ ❯ tests/total-seguridad-http.test.ts (8 tests | 8 failed) 23ms
+   × cierra mutaciones sin un origen comprobable: {} 15ms
+   × cierra mutaciones sin un origen comprobable: {"sec-fetch-site":"same-site"} 1ms
+   × cierra mutaciones sin un origen comprobable: {"referer":"roto"} 0ms
+   × acepta origen exacto o Referer del mismo origen y no confía en subdominios 1ms
+   × rechaza Content-Type engañoso text/plain; application/json 3ms
+   × rechaza Content-Type engañoso application/jsonp 1ms
+   × rechaza Content-Type engañoso text/plain; type=application/json 0ms
+   × admite JSON con charset 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/total-seguridad-http.test.ts > cierra mutaciones sin un origen comprobable: {}
+ FAIL  tests/total-seguridad-http.test.ts > cierra mutaciones sin un origen comprobable: {"sec-fetch-site":"same-site"}
+ FAIL  tests/total-seguridad-http.test.ts > cierra mutaciones sin un origen comprobable: {"referer":"roto"}
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/total-seguridad-http.test.ts:15:48
+     13|   "cierra mutaciones sin un origen comprobable: %j",
+     14|   (headers) => {
+     15|     expect(() => sameOrigin(request(headers))).toThrow("Origen");
+       |                                                ^
+     16|   },
+     17| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/total-seguridad-http.test.ts > acepta origen exacto o Referer del mismo origen y no confía en subdominios
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/total-seguridad-http.test.ts:28:49
+     26|     { origin: "https://cooper.example.test", "sec-fetch-site": "cross-…
+     27|     { origin: "https://ajeno.test", "x-forwarded-host": "ajeno.test" },
+     28|   ]) expect(() => sameOrigin(request(headers))).toThrow("Origen");
+       |                                                 ^
+     29| });
+     30| it.each(["text/plain; application/json", "application/jsonp", "text/pl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/total-seguridad-http.test.ts > rechaza Content-Type engañoso text/plain; application/json
+ FAIL  tests/total-seguridad-http.test.ts > rechaza Content-Type engañoso application/jsonp
+ FAIL  tests/total-seguridad-http.test.ts > rechaza Content-Type engañoso text/plain; type=application/json
+AssertionError: promise resolved "{}" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
+- }
++ {}
+
+ ❯ tests/total-seguridad-http.test.ts:33:97
+     31|   "rechaza Content-Type engañoso %s",
+     32|   async (type) => {
+     33|     await expect(body(request({ origin: "https://cooper.example.test",…
+       |                                                                                                 ^
+     34|   },
+     35| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/total-seguridad-http.test.ts > admite JSON con charset
+AssertionError: promise rejected "Error: Se requiere JSON. { status: 415 }" instead of resolving
+ ❯ tests/total-seguridad-http.test.ts:37:124
+     35| );
+     36| it("admite JSON con charset", async () => {
+     37|   await expect(body(request({ origin: "https://cooper.example.test", "…
+       |                                                                                                                            ^
+     38| });
+     39|
+
+Caused by: Error: Se requiere JSON.
+ ❯ body src/lib/http.ts:41:11
+ ❯ tests/total-seguridad-http.test.ts:37:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { status: 415 }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/total-seguridad-medios.test.ts > rechaza referencias heredadas a medios de otro dueño incluso para una pieza propia
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/total-seguridad-medios.test.ts:24:79
+     22|   db().insert(attachments).values({ id: ajeno, ownerId: luis.id, name:…
+     23|   db().update(piezasMarca).set({ mediosIds: [ajeno] }).where(eq(piezas…
+     24|   expect(() => leerMedio(pieza.id, new URL("https://cooper.test/?i=0")…
+       |                                                                               ^
+     25| });
+     26| it("no permite evadir el límite público rotando IDs y no consume el cu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/total-seguridad-medios.test.ts > no permite evadir el límite público rotando IDs y no consume el cupo de una sesión
+AssertionError: expected 404 to be 429 // Object.is equality
+
+- Expected
++ Received
+
+- 429
++ 404
+
+ ❯ tests/total-seguridad-medios.test.ts:30:26
+     28|   for (let i = 0; i < 300; i++) expect((await call(randomUUID())).stat…
+     29|   const limited = await call(randomUUID());
+     30|   expect(limited.status).toBe(429);
+       |                          ^
+     31|   expect(limited.headers.get("retry-after")).toBe("60");
+     32|   expect((await call(randomUUID(), false)).status).toBe(404);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  10 failed (10)
+   Start at  11:05:05
+   Duration  1.25s (transform 528ms, setup 32ms, import 886ms, tests 130ms, environment 0ms)

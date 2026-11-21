@@ -1,0 +1,27 @@
+test_conserva_webhooks_publicos (test_caddy_seguridad.CaddySeguridadTest.test_conserva_webhooks_publicos) ... ok
+test_puente_se_bloquea_antes_de_webhooks_para_cualquier_metodo (test_caddy_seguridad.CaddySeguridadTest.test_puente_se_bloquea_antes_de_webhooks_para_cualquier_metodo) ... ok
+test_completa_solo_con_ssh_y_dns_correctos (test_esperar_vps.EsperaTest.test_completa_solo_con_ssh_y_dns_correctos) ... ok
+test_dns_ajeno_o_mixto_impide_continuar (test_esperar_vps.EsperaTest.test_dns_ajeno_o_mixto_impide_continuar) ... ok
+test_exige_llave_y_host_conocido_antes_de_dns (test_esperar_vps.EsperaTest.test_exige_llave_y_host_conocido_antes_de_dns) ... ok
+test_no_conecta_sin_ip_o_con_ip_no_publica (test_esperar_vps.EsperaTest.test_no_conecta_sin_ip_o_con_ip_no_publica) ... ok
+test_timeout_no_aborta_la_espera (test_esperar_vps.EsperaTest.test_timeout_no_aborta_la_espera) ... ok
+test_propaga_configuracion_de_chat_whatsapp_y_texto (test_integracion.IntegracionTest.test_propaga_configuracion_de_chat_whatsapp_y_texto) ... ok
+test_actualizacion_fallida_cierra_servicios_y_conserva_reversion (test_operar.CopiasTest.test_actualizacion_fallida_cierra_servicios_y_conserva_reversion) ... ok
+test_config_no_ejecuta_shell (test_operar.CopiasTest.test_config_no_ejecuta_shell) ... ok
+test_copia_incluye_adjuntos_conteos_y_hashes (test_operar.CopiasTest.test_copia_incluye_adjuntos_conteos_y_hashes) ... ok
+test_importacion_no_sobrescribe_instalacion (test_operar.CopiasTest.test_importacion_no_sobrescribe_instalacion) ... ok
+test_importar_pc_sin_caddy_prepara_volumenes (test_operar.CopiasTest.test_importar_pc_sin_caddy_prepara_volumenes) ... ok
+test_no_sobrescribe_destino (test_operar.CopiasTest.test_no_sobrescribe_destino) ... ok
+test_rechaza_enlaces_fuera_del_volumen (test_operar.CopiasTest.test_rechaza_enlaces_fuera_del_volumen) ... ok
+test_rechaza_origen_modificado_durante_copia (test_operar.CopiasTest.test_rechaza_origen_modificado_durante_copia) ... ok
+test_rechaza_permisos_de_secretos_abiertos (test_operar.CopiasTest.test_rechaza_permisos_de_secretos_abiertos) ... ok
+test_reinicia_servicios_tras_fallo_de_copia (test_operar.CopiasTest.test_reinicia_servicios_tras_fallo_de_copia) ... ok
+test_restauracion_rechaza_corrupcion (test_operar.CopiasTest.test_restauracion_rechaza_corrupcion) ... ok
+test_restauracion_rechaza_filas_ausentes (test_operar.CopiasTest.test_restauracion_rechaza_filas_ausentes) ... ok
+test_reversion_no_borra_datos_si_copia_no_es_valida (test_operar.CopiasTest.test_reversion_no_borra_datos_si_copia_no_es_valida) ... ok
+test_wal_contiene_transacciones_confirmadas (test_operar.CopiasTest.test_wal_contiene_transacciones_confirmadas) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.479s
+
+OK

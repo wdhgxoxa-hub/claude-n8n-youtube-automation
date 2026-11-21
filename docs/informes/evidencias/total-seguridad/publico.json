@@ -1,0 +1,104 @@
+{
+  "fecha_utc": "2026-11-21T16:09:25.200342+00:00",
+  "sin_sesion": true,
+  "tls_verificado": true,
+  "puertos_ipv4": {
+    "22": "accesible",
+    "80": "accesible",
+    "443": "accesible",
+    "8443": "no accesible desde esta PC",
+    "3000": "no accesible desde esta PC",
+    "5678": "no accesible desde esta PC",
+    "5679": "no accesible desde esta PC",
+    "5680": "no accesible desde esta PC",
+    "8789": "no accesible desde esta PC"
+  },
+  "http": [
+    {
+      "url": "https://cooper.cooperestudio.com/entrar",
+      "estado": 200,
+      "cabeceras": {
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-ZDQ2YjY5MjktMDZjNS00NjVhLWE0NjItYzIwOGUxNWY4YzMx' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://accounts.google.com",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(self), geolocation=()",
+        "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate"
+      }
+    },
+    {
+      "url": "https://cooper.cooperestudio.com/api/estado",
+      "estado": 401,
+      "cabeceras": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(self), geolocation=()",
+        "Cache-Control": "no-store"
+      }
+    },
+    {
+      "url": "https://cooper.cooperestudio.com/api/eventos",
+      "estado": 401,
+      "cabeceras": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(self), geolocation=()",
+        "Cache-Control": "no-store"
+      }
+    },
+    {
+      "url": "https://cooper.cooperestudio.com/api/marcas",
+      "estado": 401,
+      "cabeceras": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(self), geolocation=()",
+        "Cache-Control": "no-store"
+      }
+    },
+    {
+      "url": "https://flujos.cooperestudio.com/",
+      "estado": 404,
+      "cabeceras": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    },
+    {
+      "url": "https://flujos.cooperestudio.com/rest/settings",
+      "estado": 404,
+      "cabeceras": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    },
+    {
+      "url": "https://flujos.cooperestudio.com/api/v1/workflows",
+      "estado": 404,
+      "cabeceras": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    },
+    {
+      "url": "https://flujos.cooperestudio.com/webhook/cooper/v1",
+      "estado": 404,
+      "cabeceras": {
+        "Content-Security-Policy": "sandbox allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-scripts allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    }
+  ]
+}
