@@ -51,7 +51,8 @@ export function ejecutarCodex(p, { bin = 'codex', timeoutMs = 40000, signal, env
             if (!events.some(x => x.type === 'turn.completed') || events.some(x => ['error','turn.failed'].includes(x.type))) throw new Error();
             const items = events.filter(x => x.type === 'item.completed').map(x => x.item);
             const text = items.filter(x => x.type === 'agent_message').at(-1)?.text;
-            const search = items.filter(x => x.type === 'web_search');
+            const search = items.filter(x => x.type === 'web_search' &&
+              !['failed','incomplete','in_progress','cancelled'].includes(x.status));
             const output = search.map(x => ({ type:'web_search_call', status:'completed', action:x.action || {} }));
             output.push({ type:'message', content:[{ type:'output_text', text }] });
             const response = { status:'completed', output, ruta:'codex', busqueda_real:search.length > 0,

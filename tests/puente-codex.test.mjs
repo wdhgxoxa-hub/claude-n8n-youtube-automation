@@ -20,7 +20,7 @@ let input=''; process.stdin.on('data',c=>input+=c); process.stdin.on('end',()=>{
  if(input.includes('FALLAR')) {process.stderr.write('no devolver esta salida');process.exit(1);}
  if(input.includes('EXCESO')) {process.stdout.write('a'.repeat(3*1024*1024));return;}
  if(input.includes('INVALIDO')) {console.log('no es json');return;}
- if(input.includes('BUSCAR')) console.log(JSON.stringify({type:'item.completed',item:{type:'web_search',action:{type:'search',sources:[{url:'https://fuente.example.test/hecho'}]}}}));
+ if(input.includes('BUSCAR')) console.log(JSON.stringify({type:'item.completed',item:{type:'web_search',status:input.includes('BUSCAR_FALLO') ? 'failed' : 'completed',action:{type:'search',sources:[{url:'https://fuente.example.test/hecho'}]}}}));
  console.log(JSON.stringify({type:'item.completed',item:{type:'agent_message',text:JSON.stringify({resumen:'ensayo',ideas:[]})}}));
  console.log(JSON.stringify({type:'turn.completed',usage:{input_tokens:12,output_tokens:8}}));
 });
@@ -38,6 +38,7 @@ test('Codex simulado: stdin literal, sandbox, autenticación ChatGPT y entorno s
 });
 test('búsqueda requiere evento real, no basta afirmarlo en el texto', async () => {
   await assert.rejects(runner({...pedido('normal'),buscar_web:true}),/respuesta_invalida/);
+  await assert.rejects(runner({...pedido('BUSCAR_FALLO'),buscar_web:true}),/respuesta_invalida/);
   const r=await runner({...pedido('BUSCAR'),buscar_web:true});
   assert.equal(r.busqueda_real,true); assert.deepEqual(r.fuentes_consultadas,['https://fuente.example.test/hecho']);
 });
