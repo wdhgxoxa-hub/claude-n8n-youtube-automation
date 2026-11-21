@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 13:23 (Lima).
+Última actualización: 2026-11-21 13:37 (Lima).
 
 ## Qué es
 
@@ -16,7 +16,7 @@
 - **Operación desplegada y probada:** restic cifrado fuera del VPS en PC, restauración de 25 archivos/dos bases, monitor con Telegram/TLS/reintento y reinicio real del VPS con siete servicios recuperados. La copia depende de PC disponible; queda un snapshot final tras el despliegue. [Operación](informes/total-operacion.md), [copia fresca](informes/total-cierre-aceptacion.md).
 - **Seguridad integrada:** límites de origen/MIME/medios y bloqueo Caddy aplicado con reversa 401→404→401→404. Confirmar/Vigilante no conservan errores crudos de proveedor. Sentinel usa caché privada verificada, excluida de imagen y árbol público; historial saliente saneado y comprobado sin fuentes privadas. [Seguridad](informes/total-seguridad.md), [Sentinel](informes/total-sentinel-privado.md), [mapa de commits](informes/evidencias/cooper-total/historia-saneada.json).
 - **Despliegue parcial vigente:** Cooper VPS `cbf2068`, once migraciones. Imagen candidata `719409f`, trece migraciones, construida sin advertencias; sustituye a `fcfab3b` tras corregir solo el sondeo simulado. Imagen intermedia pasó migración/reversa 11→13, 8 Compose y fallo/reversa de infraestructura. No se atribuyen esos recibos a la nueva imagen. [Procedencia](informes/evidencias/cooper-total/imagen-final.json), [aceptación](informes/total-cierre-aceptacion.md).
-- **Validación en curso, fallos preservados:** los intentos limpios encontraron Git ausente, sandbox Firefox, frontera del simulador y recarga entre lotes RSC. Corregidos sin relajar guardianes/umbrales. Voz pasa 30 unitarias/2 E2E focales; recarga WebKit 3/3. La puerta 4 pasa 459 unitarias y continúa en 77 E2E. No se declara puerta final ni dos rondas aprobadas. [Intentos](informes/evidencias/cooper-total/intentos-puerta-final.json), [identidad](informes/total-identidad-viva.md).
+- **Puerta limpia aprobada, rondas ampliadas en curso:** los intentos limpios encontraron Git ausente, sandbox Firefox, frontera del simulador y recarga entre lotes RSC. Corregidos sin relajar guardianes/umbrales. Voz pasa 30 unitarias/2 E2E focales; recarga WebKit 3/3. La puerta 4 pasó 459 unitarias, 77 E2E y 173 flujos sobre un checkout limpio, con cero errores/advertencias. La primera ronda ampliada de 92 pruebas está en curso; todavía no hay dos rondas aprobadas. [Recibo](informes/evidencias/cooper-total/puerta-final/resultado.json). [Intentos](informes/evidencias/cooper-total/intentos-puerta-final.json), [identidad](informes/total-identidad-viva.md).
 
 - Fases 1–6: web, chat por los planes de Claude/Codex, puente firmado con n8n, avatares/voces, WhatsApp, preparación VPS y modo noticia. Proveedores con gasto y modo noticia requieren su activación correspondiente.
 - **Integración 3:** Pulido, Memoria, Cobertura, Marcas y Animación fusionados en orden; `version-chatgpt` y `main` publicados en el remoto propio `mio`, por excepción expresa de Walter. [Informe y evidencia](informes/cooper-integracion3.md).
@@ -33,7 +33,7 @@
 
 ## En curso
 
-- Orquestador `cooper-total`: resolver Radar/vidIQ con diagnóstico real, completar puerta limpia y dos rondas Sentinel+Playwright con videos; aceptar y desplegar exactamente la imagen nueva, comprobar acceso público, refrescar réplica y publicar las dos ramas autorizadas del remoto propio. Los fallos técnicos siguen a cargo de Codex.
+- Orquestador `cooper-total`: cerrar Radar/vidIQ tras aislar dos columnas de eventos ausentes y corregir la sonda, completar dos rondas Sentinel+Playwright con videos; aceptar y desplegar exactamente la imagen nueva, comprobar acceso público, refrescar réplica y publicar las dos ramas autorizadas del remoto propio. Los fallos técnicos siguen a cargo de Codex.
 - Imagen nueva y parches n8n/runner 2.47.6/Caddy 2.11.8: ensayos de migración, Compose y reversa antes de la aplicación remota. El runtime Marcas conserva simulación y publicación apagada.
 - Aceptación privada del VPS: sesión Google real, aislamiento, SSE y adjuntos. No se iniciará OAuth ni se fabricará una sesión de producción.
 - Las ventanas futuras de aprendizaje necesitan tiempo y publicaciones aprobadas; el siguiente guion probado fue un borrador. No hay un nuevo video corregido ni mejora de métricas atribuida.

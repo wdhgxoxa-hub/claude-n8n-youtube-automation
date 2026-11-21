@@ -1,6 +1,6 @@
 # Cooper total — informe del orquestador
 
-**Corte provisional: 21-11-2026, 13:20 Lima. La misión continúa.** Rama/worktree propios `cooper-total`. Faltan la puerta final limpia, dos rondas integradas con videos, resolver la aceptación del radar, desplegar la imagen corregida y publicar las dos ramas autorizadas. No se declara aceptada una versión por haberla construido.
+**Corte provisional: 21-11-2026, 13:37 Lima. La misión continúa.** Rama/worktree propios `cooper-total`. La puerta limpia ya pasó. Faltan dos rondas integradas con videos, resolver la aceptación del radar, desplegar la imagen corregida y publicar las dos ramas autorizadas. No se declara aceptada una versión por haberla construido.
 
 ## Alcance y control de cambios
 
@@ -25,7 +25,7 @@ Los informes M01/M03/M05–M12 detallan los cambios adicionales de la auditoría
 
 La puerta inicial de esta misión pasó 322 unitarias/49 E2E/167 flujos, pero fue anterior a los cambios finales y **no** se usa como aceptación final. Las rondas preliminares fallidas también se conservan.
 
-Los intentos limpios finales detectaron: Git ausente en el contenedor de CI; capacidades insuficientes para el sandbox de Firefox; una espera del simulador de voz que agotaba 15 s antes del evento SSE; y una recarga WebKit entre lotes de precarga RSC. Se corrigieron sin quitar guardianes, filtrar errores ni aumentar umbrales. La voz pasa 30 pruebas dirigidas y 2 E2E; la recarga pasa 3 ejecuciones explícitas. La puerta 4 está en curso. [Intentos y huellas](evidencias/cooper-total/intentos-puerta-final.json), [voz](total-identidad-viva.md), [precargas](evidencias/cooper-total/precargas.json).
+Los intentos limpios finales detectaron: Git ausente en el contenedor de CI; capacidades insuficientes para el sandbox de Firefox; una espera del simulador de voz que agotaba 15 s antes del evento SSE; y una recarga WebKit entre lotes de precarga RSC. Se corrigieron sin quitar guardianes, filtrar errores ni aumentar umbrales. La voz pasa 30 pruebas dirigidas y 2 E2E; la recarga pasa 3 ejecuciones explícitas. La puerta 4 pasó sobre el checkout limpio `9dbea5b`: **459 unitarias, 77 E2E y 173 flujos**, cero errores, advertencias, omisiones y reintentos. La primera ronda ampliada de 92 pruebas está en curso. [Recibo de los ocho pasos](evidencias/cooper-total/puerta-final/resultado.json), [huellas y equivalencia del código de Cooper con la imagen](evidencias/cooper-total/puerta-final/archivos.json). [Intentos y huellas](evidencias/cooper-total/intentos-puerta-final.json), [voz](total-identidad-viva.md), [precargas](evidencias/cooper-total/precargas.json).
 
 Imagen candidata: **`localhost/cooper:719409f`**, trece migraciones, construcción Docker sin advertencias, archivo SHA256 **`135b173772ba14b48aebcd0889b55c4d67bf6d386d0b9d7760827ac6888e249a`**. Sustituye a `fcfab3b` por el ajuste del sondeo simulado. [Procedencia](evidencias/cooper-total/imagen-final.json). El despliegue exige aceptación del mismo artefacto y dos rondas limpias Sentinel+Playwright con videos; todavía no se han completado.
 
@@ -40,4 +40,4 @@ Sentinel permanece privado: caché ignorada preparada desde la revisión fijada,
 5. Fijar retención y cotejar operaciones sin recibo; identificar la clave administrativa anterior antes de revocarla. Conciliación de facturas y otras ampliaciones opcionales no se consideran defectos pendientes.
 6. Revisar las hipótesis de aprendizaje y aprobar futuros videos para contrastarlas. El uso de una lección en un borrador no demuestra mejora de retención ni crecimiento.
 
-La lista se conciliará con las últimas pruebas. Los fallos técnicos del radar y la puerta siguen a cargo de Codex, no se trasladan a Walter por falta de diagnóstico.
+La lista se conciliará con las últimas pruebas. Los fallos técnicos del radar siguen a cargo de Codex, no se trasladan a Walter por falta de diagnóstico. La auditoría aisló dos columnas productivas ausentes en `fab_eventos` (`canal_id`, `evento`); las otras 26 ausencias son lecturas opcionales o campos de ensayo. El comparador exige el contrato productivo y la migración aditiva se ensaya sin importar ni publicar workflows. La sonda vidIQ compacta tenía un fallo del parser de expresiones por cierres contiguos `}}`; serializar en Code lo corrige. Los ocho pedidos MCP canónicos originales pasan el parser real en n8n 2.47.4 y 2.47.6 y no requieren ese cambio. Aún falta acreditar estos arreglos en la aceptación remota del radar.
