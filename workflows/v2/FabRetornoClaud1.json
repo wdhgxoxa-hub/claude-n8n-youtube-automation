@@ -28,7 +28,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst b = $json.body || {};\nconst ok = typeof b.job_id === 'string' && /^[a-z_]+-[a-z0-9]+-[a-z0-9]+$/.test(b.job_id)\n  && typeof b.modo === 'string' && ['ok','error'].includes(b.estado);\nreturn [{ json: { valido: ok, job_id: b.job_id, modo: b.modo, estado: b.estado,\n  resultado: b.resultado ?? null, avisos: Array.isArray(b.avisos) ? b.avisos.slice(0, 20) : [] } }];\n"
+        "jsCode": "// Solo el sobre autenticado aporta el resultado; dueño y recursos salen del trabajo.\nconst b = $json.body || {};\nconst modos = ['investigar_nichos','adoptar_cuenta','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];\nconst objeto = x => x !== null && typeof x === 'object' && !Array.isArray(x);\nconst avisos = b.avisos === undefined ? [] : b.avisos;\nlet valido = objeto(b) && typeof b.job_id === 'string' && b.job_id.length <= 160\n  && /^[a-z_]+-[a-z0-9]+-[a-z0-9]+$/.test(b.job_id) && modos.includes(b.modo)\n  && b.job_id.startsWith(b.modo + '-') && ['ok','error'].includes(b.estado)\n  && (objeto(b.resultado) || b.estado === 'error' && b.resultado == null)\n  && Array.isArray(avisos) && avisos.length <= 20\n  && avisos.every(x => typeof x === 'string' && x.length <= 2000);\nlet huella;\n// Orden estable: reserializar las mismas claves no convierte un reintento en otro resultado.\nfunction canon(x, profundidad = 0) {\n  if (profundidad > 64) throw new Error('Resultado demasiado profundo');\n  if (Array.isArray(x)) return '[' + x.map(v => canon(v, profundidad + 1)).join(',') + ']';\n  if (objeto(x)) return '{' + Object.keys(x).sort().map(k => JSON.stringify(k) + ':' + canon(x[k], profundidad + 1)).join(',') + '}';\n  return JSON.stringify(x);\n}\nif (valido) {\n  try {\n    const texto = canon({modo:b.modo, estado:b.estado, resultado:b.resultado ?? null, avisos});\n    valido = texto.length <= 1000000;\n    if (valido) huella = require('crypto').createHash('sha256').update(texto).digest('hex');\n  } catch { valido = false; }\n}\nreturn [{json: valido ? {valido, job_id:b.job_id, modo:b.modo, estado:b.estado,\n  resultado:b.resultado ?? null, avisos, huella} : {valido:false}}];\n"
       },
       "id": "65718686-43cc-4d53-bbb9-38ffd8cd4786",
       "name": "Validar",
@@ -93,7 +93,7 @@
           ]
         },
         "returnAll": false,
-        "limit": 1
+        "limit": 2
       },
       "id": "d202e62c-05e4-44f8-bb16-92a986162cf8",
       "name": "Buscar trabajo",
@@ -107,6 +107,19 @@
     },
     {
       "parameters": {
+        "jsCode": "const v = $('Validar').first().json;\nconst filas = $input.all().map(i => i.json).filter(t => t.job_id);\nconst t = filas[0];\nlet salida = {accion:'rechazar', codigo:409, status:'rechazado'};\nif (filas.length === 1 && t.job_id === v.job_id && t.modo === v.modo) {\n  if (['enviado','envio_incierto'].includes(t.estado)) {\n    salida = {accion:'reservar', codigo:202, status:'revision_requerida'};\n  } else {\n    let recibo;\n    try { recibo = JSON.parse(t.resultado).retorno; } catch { /* Sin recibo comprobable. */ }\n    if (recibo?.version === 1 && recibo.huella === v.huella) {\n      if (['listo','error'].includes(t.estado) && recibo.entregado === true)\n        salida = {accion:'duplicado', codigo:200, status:'recibido'};\n      else if (t.estado === 'retorno_en_curso')\n        salida = {accion:'revision', codigo:202, status:'revision_requerida'};\n    }\n  }\n}\nreturn [{json:salida}];\n"
+      },
+      "id": "66c19b25-82a7-5a4b-8e52-726fca630eab",
+      "name": "Clasificar retorno",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -117,7 +130,7 @@
           "conditions": [
             {
               "id": "7ca9a46e-66d6-4c54-a727-dbba73c8af7a",
-              "leftValue": "={{ $json.job_id === $('Validar').first().json.job_id && $json.estado === 'enviado' }}",
+              "leftValue": "={{ $json.accion === 'reservar' }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -135,7 +148,160 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1100,
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst v = $('Validar').first().json;\nreturn [{json:{estado:'retorno_en_curso', resultado:JSON.stringify({resultado:v.resultado, avisos:v.avisos,\n  retorno:{version:1, huella:v.huella, ejecucion:String($execution.id), entregado:false}})}}];\n"
+      },
+      "id": "112af5f5-9d4d-59fe-9a50-d2cd2c79b4bf",
+      "name": "Reserva del retorno",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "BIHxr4bhuShuU9pS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Buscar trabajo').first().json.id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "={{ $('Buscar trabajo').first().json.estado }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "8c9a04de-c856-5a13-9830-ae8e478fd700",
+      "name": "Reservar retorno",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "98d7add8-7335-5a8e-9cec-bc3e6aa8665b",
+              "leftValue": "={{ $json.estado === 'retorno_en_curso' && $json.resultado === $('Reserva del retorno').first().json.resultado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "781cf69a-4462-543f-a99b-3c71be7c0d52",
+      "name": "¿Reserva propia?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "BIHxr4bhuShuU9pS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "job_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Validar').first().json.job_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 2
+      },
+      "id": "9a816958-403d-5d3e-9b9a-b796cb33ef04",
+      "name": "Releer trabajo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const v = $('Validar').first().json;\nconst filas = $input.all().map(i => i.json).filter(t => t.job_id);\nconst t = filas[0];\nlet salida = {accion:'rechazar', codigo:409, status:'rechazado'};\nif (filas.length === 1 && t.job_id === v.job_id && t.modo === v.modo) {\n  if (['enviado','envio_incierto'].includes(t.estado)) {\n    salida = {accion:'reservar', codigo:202, status:'revision_requerida'};\n  } else {\n    let recibo;\n    try { recibo = JSON.parse(t.resultado).retorno; } catch { /* Sin recibo comprobable. */ }\n    if (recibo?.version === 1 && recibo.huella === v.huella) {\n      if (['listo','error'].includes(t.estado) && recibo.entregado === true)\n        salida = {accion:'duplicado', codigo:200, status:'recibido'};\n      else if (t.estado === 'retorno_en_curso')\n        salida = {accion:'revision', codigo:202, status:'revision_requerida'};\n    }\n  }\n}\nreturn [{json:salida}];\n"
+      },
+      "id": "8197e5fe-0f38-5db0-9ba0-6e40b1e5073d",
+      "name": "Clasificar concurrente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: $json.status } }}",
+        "options": {
+          "responseCode": "={{ $json.codigo }}"
+        }
+      },
+      "id": "1659fa15-1146-51f6-a2ce-507aa287f498",
+      "name": "Responder estado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
         0
       ]
     },
@@ -148,7 +314,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1320,
+        2860,
         0
       ]
     },
@@ -168,6 +334,16 @@
               "keyName": "job_id",
               "condition": "eq",
               "keyValue": "={{ $('Validar').first().json.job_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "retorno_en_curso"
+            },
+            {
+              "keyName": "resultado",
+              "condition": "eq",
+              "keyValue": "={{ $('Reserva del retorno').first().json.resultado }}"
             }
           ]
         },
@@ -186,7 +362,42 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1540,
+        3080,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "81960b96-0012-5bea-8e15-682fed4f771c",
+              "leftValue": "={{ $json.resultado === $('Fila actualizada').first().json.resultado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "556aeb9e-2b52-5453-8dfb-e9c7736ea223",
+      "name": "¿Entrega guardada?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3300,
         0
       ]
     },
@@ -203,7 +414,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1760,
+        3520,
         0
       ]
     },
@@ -216,7 +427,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1980,
+        3740,
         0
       ]
     },
@@ -237,7 +448,7 @@
         },
         "mode": "once",
         "options": {
-          "waitForSubWorkflow": false
+          "waitForSubWorkflow": true
         }
       },
       "id": "c6e806c1-79b8-45cd-b810-0b92daf70bca",
@@ -245,7 +456,60 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        2200,
+        3960,
+        0
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f33c0609-7093-566f-ab5d-91c38f0fee06",
+              "leftValue": "={{ !$json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "be2866c0-ce14-58a7-a3bd-9d48c60e8490",
+      "name": "¿Orquestador concluido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: \"revision_requerida\" } }}",
+        "options": {
+          "responseCode": 202
+        }
+      },
+      "id": "4515bf09-d02c-5cb8-aff6-1e44745ebf6c",
+      "name": "Responder revisión",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        4400,
         0
       ]
     },
@@ -262,7 +526,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        2420,
+        4620,
         0
       ]
     }
@@ -312,6 +576,17 @@
       "main": [
         [
           {
+            "node": "Clasificar retorno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar retorno": {
+      "main": [
+        [
+          {
             "node": "¿Trabajo pendiente?",
             "type": "main",
             "index": 0
@@ -323,6 +598,108 @@
       "main": [
         [
           {
+            "node": "Reserva del retorno",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reserva del retorno": {
+      "main": [
+        [
+          {
+            "node": "Reservar retorno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar retorno": {
+      "main": [
+        [
+          {
+            "node": "¿Reserva propia?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Reserva propia?": {
+      "main": [
+        [
+          {
+            "node": "Evento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Releer trabajo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Releer trabajo": {
+      "main": [
+        [
+          {
+            "node": "Clasificar concurrente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar concurrente": {
+      "main": [
+        [
+          {
+            "node": "Responder estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evento": {
+      "main": [
+        [
+          {
+            "node": "Avisar al orquestador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar al orquestador": {
+      "main": [
+        [
+          {
+            "node": "¿Orquestador concluido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Orquestador concluido?": {
+      "main": [
+        [
+          {
             "node": "Fila actualizada",
             "type": "main",
             "index": 0
@@ -330,7 +707,7 @@
         ],
         [
           {
-            "node": "Responder rechazo",
+            "node": "Responder revisión",
             "type": "main",
             "index": 0
           }
@@ -352,29 +729,25 @@
       "main": [
         [
           {
+            "node": "¿Entrega guardada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Entrega guardada?": {
+      "main": [
+        [
+          {
             "node": "Responder recibido",
             "type": "main",
             "index": 0
           }
-        ]
-      ]
-    },
-    "Responder recibido": {
-      "main": [
+        ],
         [
           {
-            "node": "Evento",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Evento": {
-      "main": [
-        [
-          {
-            "node": "Avisar al orquestador",
+            "node": "Responder revisión",
             "type": "main",
             "index": 0
           }

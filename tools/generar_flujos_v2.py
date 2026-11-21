@@ -4,7 +4,7 @@
 Uso: python3 tools/generar_flujos_v2.py  -> escribe workflows/v2/*.json
 Todo el gasto queda apagado en F · Ajustes hasta que se active a propósito.
 """
-import json, os, uuid
+import json, os, uuid, re
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def rol(nombre):
@@ -111,7 +111,9 @@ W = {  # flujos
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
     'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001', 'reenviar': 'FabReenviar00001', 'radar': 'FabRadar00000001',
 }
-BASE = 'https://flujos.cooperestudio.com'
+BASE = os.environ.get('FABRICA_ORIGEN_PUBLICO', 'https://flujos.cooperestudio.com')
+if not re.fullmatch(r'https://[a-z0-9]+(?:[.-][a-z0-9]+)*(?::[0-9]{1,5})?', BASE) or re.search(r'(?:https://|[.])ngrok[^/]*', BASE):
+    raise ValueError('FABRICA_ORIGEN_PUBLICO debe ser un origen HTTPS estable, sin ruta ni credenciales')
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
 
 
@@ -398,9 +400,13 @@ const pedido = $('Inicio').first().json;
 const aj = $('Leer ajustes').first().json;
 const modos = ['investigar_nichos','adoptar_cuenta','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];
 if (!modos.includes(pedido.modo)) throw new Error('Modo desconocido: ' + pedido.modo);
+const origen = aj.baseUrl;
+if (typeof origen !== 'string' || !/^https:\/\/[a-z0-9]+(?:[.-][a-z0-9]+)*(?::[0-9]{1,5})?$/.test(origen)
+    || /(?:https:\/\/|[.])ngrok/.test(origen) || aj.retornoUrl !== origen + '/webhook/video-factory/resultado')
+  throw new Error('Configurar un origen HTTPS estable y su retorno canónico');
 const job_id = pedido.modo + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
 const payload = { contrato: 'fabrica-v2', modo: pedido.modo, job_id,
-  retorno_url: 'https://flujos.cooperestudio.com/webhook/video-factory/resultado',
+  retorno_version: 1, retorno_url: aj.retornoUrl,
   video_id: pedido.video_id || '', canal_id: pedido.canal_id || '', datos: pedido.datos || {} };
 return [{ json: { job_id, payload, permitido: aj.allowClaude === true, routineUrl: aj.routineUrl,
   fila: { job_id, video_id: payload.video_id, canal_id: payload.canal_id, modo: pedido.modo,
@@ -416,10 +422,11 @@ http(f, 'Despertar routine', 'POST', "={{ $('Preparar trabajo').first().json.rou
 # Fallos de red pasajeros (p. ej. DNS EAI_AGAIN): reintenta y, si sigue fallando, marca el trabajo y avisa.
 f.nodes[-1].update({'retryOnFail': True, 'maxTries': 4, 'waitBetweenTries': 5000, 'onError': 'continueErrorOutput'})
 code(f, 'Respuesta', "return [{ json: { job_id: $('Preparar trabajo').first().json.job_id, enviado: true } }];")
-code(f, 'Fallo al despertar', "return [{ json: { estado: 'error', resultado: JSON.stringify({ error: String($json.error?.message || $json.error || 'sin detalle').slice(0, 500) }) } }];")
+code(f, 'Fallo al despertar', "return [{ json: { estado: 'envio_incierto', resultado: JSON.stringify({ error: 'No se confirmó la recepción de la routine; conciliar antes de repetir el pedido.' }) } }];")
 dt_update(f, 'Marcar trabajo fallido', 'trabajos', 'job_id', "={{ $('Preparar trabajo').first().json.job_id }}")
+f.nodes[-1]['parameters']['filters']['conditions'].append({'keyName': 'estado', 'condition': 'eq', 'keyValue': 'enviado'})
 tg(f, 'Aviso: Claude no respondió', "={{ $('Leer ajustes').first().json.chatId }}",
-   "={{ 'No pude despertar a Claude (' + $('Preparar trabajo').first().json.payload.modo + '). Reintenté 4 veces. Vuelve a enviar el pedido en un momento.' }}")
+   "={{ 'No se confirmó la recepción de Claude (' + $('Preparar trabajo').first().json.payload.modo + '). Revisa el trabajo antes de repetir el pedido.' }}")
 code(f, 'Bloqueado', "return [{ json: { job_id: $('Preparar trabajo').first().json.job_id, enviado: false } }];")
 f.chain('Inicio', 'Leer ajustes', 'Preparar trabajo', 'Fila del trabajo', 'Registrar trabajo', '¿Claude permitido?')
 f.link('¿Claude permitido?', 'Despertar routine', 0)
@@ -436,21 +443,39 @@ f = Flow(W['retorno'], 'F · Retorno de Claude')
 f.add('Resultado de Claude', 'n8n-nodes-base.webhook', 2,
       {'httpMethod': 'POST', 'path': 'video-factory/resultado', 'authentication': 'headerAuth',
        'responseMode': 'responseNode', 'options': {}}, credentials=CRED_CLAVE, webhookId=nid())
-code(f, 'Validar', r"""
-const b = $json.body || {};
-const ok = typeof b.job_id === 'string' && /^[a-z_]+-[a-z0-9]+-[a-z0-9]+$/.test(b.job_id)
-  && typeof b.modo === 'string' && ['ok','error'].includes(b.estado);
-return [{ json: { valido: ok, job_id: b.job_id, modo: b.modo, estado: b.estado,
-  resultado: b.resultado ?? null, avisos: Array.isArray(b.avisos) ? b.avisos.slice(0, 20) : [] } }];
-""")
+code(f, 'Validar', open(os.path.join(RAIZ, 'tools/cooper/retorno_validar.js'), encoding='utf-8').read())
 iff(f, '¿Válido?', '$json.valido === true')
 dt_get(f, 'Buscar trabajo', 'trabajos', 'job_id', "={{ $('Validar').first().json.job_id }}")
-iff(f, '¿Trabajo pendiente?', "$json.job_id === $('Validar').first().json.job_id && $json.estado === 'enviado'")
+f.nodes[-1]['parameters']['limit'] = 2
+clasificar_retorno = open(os.path.join(RAIZ, 'tools/cooper/retorno_clasificar.js'), encoding='utf-8').read()
+code(f, 'Clasificar retorno', clasificar_retorno)
+iff(f, '¿Trabajo pendiente?', "$json.accion === 'reservar'")
+code(f, 'Reserva del retorno', r"""
+const v = $('Validar').first().json;
+return [{json:{estado:'retorno_en_curso', resultado:JSON.stringify({resultado:v.resultado, avisos:v.avisos,
+  retorno:{version:1, huella:v.huella, ejecucion:String($execution.id), entregado:false}})}}];
+""")
+dt_update(f, 'Reservar retorno', 'trabajos', 'id', "={{ $('Buscar trabajo').first().json.id }}")
+f.nodes[-1]['parameters']['filters']['conditions'].append({'keyName': 'estado', 'condition': 'eq', 'keyValue': "={{ $('Buscar trabajo').first().json.estado }}"})
+f.nodes[-1]['alwaysOutputData'] = True
+iff(f, '¿Reserva propia?', "$json.estado === 'retorno_en_curso' && $json.resultado === $('Reserva del retorno').first().json.resultado")
+dt_get(f, 'Releer trabajo', 'trabajos', 'job_id', "={{ $('Validar').first().json.job_id }}")
+f.nodes[-1]['parameters']['limit'] = 2
+code(f, 'Clasificar concurrente', clasificar_retorno)
+f.add('Responder estado', 'n8n-nodes-base.respondToWebhook', 1.1,
+      {'respondWith': 'json', 'responseBody': '={{ { status: $json.status } }}', 'options': {'responseCode': '={{ $json.codigo }}'}})
 code(f, 'Fila actualizada', r"""
 const v = $('Validar').first().json;
-return [{ json: { estado: v.estado === 'ok' ? 'listo' : 'error', resultado: JSON.stringify({ resultado: v.resultado, avisos: v.avisos }) } }];
+const guardado = JSON.parse($('Reserva del retorno').first().json.resultado);
+guardado.retorno.entregado = true;
+return [{ json: { estado: v.estado === 'ok' ? 'listo' : 'error', resultado: JSON.stringify(guardado) } }];
 """)
 dt_update(f, 'Guardar resultado', 'trabajos', 'job_id', "={{ $('Validar').first().json.job_id }}")
+f.nodes[-1]['parameters']['filters']['conditions'].extend([
+    {'keyName': 'estado', 'condition': 'eq', 'keyValue': 'retorno_en_curso'},
+    {'keyName': 'resultado', 'condition': 'eq', 'keyValue': "={{ $('Reserva del retorno').first().json.resultado }}"}])
+f.nodes[-1]['alwaysOutputData'] = True
+iff(f, '¿Entrega guardada?', "$json.resultado === $('Fila actualizada').first().json.resultado")
 f.add('Responder recibido', 'n8n-nodes-base.respondToWebhook', 1.1,
       {'respondWith': 'json', 'responseBody': '={{ { status: "recibido" } }}', 'options': {'responseCode': 200}})
 code(f, 'Evento', r"""
@@ -458,16 +483,32 @@ const v = $('Validar').first().json; const t = $('Buscar trabajo').first().json;
 return [{ json: { evento: v.estado === 'ok' ? 'claude_ok' : 'claude_error', modo: v.modo, job_id: v.job_id,
   video_id: t.video_id || '', canal_id: t.canal_id || '', resultado: v.resultado, avisos: v.avisos } }];
 """)
-call(f, 'Avisar al orquestador', W['orq'], wait=False)
+# Esperar el tramo del Orquestador antes de cerrar el HTTP: en n8n 2.47.4,
+# cerrar el receptor puede dejar el subflujo desacoplado sin ejecutar sus nodos.
+call(f, 'Avisar al orquestador', W['orq'], wait=True)
+f.nodes[-1]['onError'] = 'continueRegularOutput'
+f.nodes[-1]['alwaysOutputData'] = True
+iff(f, '¿Orquestador concluido?', '!$json.error')
+f.add('Responder revisión', 'n8n-nodes-base.respondToWebhook', 1.1,
+      {'respondWith': 'json', 'responseBody': '={{ { status: "revision_requerida" } }}', 'options': {'responseCode': 202}})
 f.add('Responder rechazo', 'n8n-nodes-base.respondToWebhook', 1.1,
       {'respondWith': 'json', 'responseBody': '={{ { status: "rechazado" } }}', 'options': {'responseCode': 409}})
 f.chain('Resultado de Claude', 'Validar', '¿Válido?')
 f.link('¿Válido?', 'Buscar trabajo', 0)
 f.link('¿Válido?', 'Responder rechazo', 1)
-f.link('Buscar trabajo', '¿Trabajo pendiente?')
-f.link('¿Trabajo pendiente?', 'Fila actualizada', 0)
-f.link('¿Trabajo pendiente?', 'Responder rechazo', 1)
-f.chain('Fila actualizada', 'Guardar resultado', 'Responder recibido', 'Evento', 'Avisar al orquestador')
+f.chain('Buscar trabajo', 'Clasificar retorno', '¿Trabajo pendiente?')
+f.link('¿Trabajo pendiente?', 'Reserva del retorno', 0)
+f.link('¿Trabajo pendiente?', 'Responder estado', 1)
+f.chain('Reserva del retorno', 'Reservar retorno', '¿Reserva propia?')
+f.link('¿Reserva propia?', 'Evento', 0)
+f.link('¿Reserva propia?', 'Releer trabajo', 1)
+f.chain('Releer trabajo', 'Clasificar concurrente', 'Responder estado')
+f.chain('Evento', 'Avisar al orquestador', '¿Orquestador concluido?')
+f.link('¿Orquestador concluido?', 'Fila actualizada', 0)
+f.link('¿Orquestador concluido?', 'Responder revisión', 1)
+f.chain('Fila actualizada', 'Guardar resultado', '¿Entrega guardada?')
+f.link('¿Entrega guardada?', 'Responder recibido', 0)
+f.link('¿Entrega guardada?', 'Responder revisión', 1)
 RETORNO = f.dump()
 
 # ======================================================================================

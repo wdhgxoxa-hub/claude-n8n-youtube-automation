@@ -36,7 +36,7 @@ export async function until(check, label, ms = 30000) {
   }
   throw new Error(`Tiempo agotado: ${label}`);
 }
-export async function startN8n(appPort) {
+export async function startN8n(appPort, { credencialFicticia = false } = {}) {
   const root = resolve(homedir(), ".cache/cooper-ensayo");
   mkdirSync(root, { recursive: true, mode: 0o700 });
   const run = mkdtempSync(`${root}/run-`);
@@ -184,7 +184,8 @@ export async function startN8n(appPort) {
       password: `Aa1!${secret().slice(0, 40)}`,
     });
     const scopes = (await rest("/api-keys/scopes")).filter((s) =>
-      /^(dataTable|workflow|execution)/.test(s),
+      /^(dataTable|workflow|execution)/.test(s) ||
+      (credencialFicticia && s === "credential:create"),
     );
     const key = (
       await rest("/api-keys", {

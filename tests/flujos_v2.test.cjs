@@ -2141,7 +2141,71 @@ test('Cooper: el gasto cruza las 19 UTC sin cambiar el día de Lima', () => {
 });
 
 test('Claude: el sobre lleva retorno estable fuera de los datos no confiables', () => {
- const p=run(codeOf(CL,'Preparar trabajo'),{nodes:{Inicio:{modo:'guion',datos:{retorno_url:'https://ajeno.test/'}},'Leer ajustes':{allowClaude:true}}})[0].json.payload;
+ const p=run(codeOf(CL,'Preparar trabajo'),{nodes:{Inicio:{modo:'guion',datos:{retorno_url:'https://ajeno.test/'}},'Leer ajustes':aj}})[0].json.payload;
  assert.strictEqual(p.retorno_url,'https://flujos.cooperestudio.com/webhook/video-factory/resultado');
  assert.strictEqual(aj.baseUrl,'https://flujos.cooperestudio.com');
+});
+
+test('M01: el retorno usa el origen configurado y rechaza destinos antiguos o incoherentes', () => {
+ const preparar = ajustes => run(codeOf(CL, 'Preparar trabajo'), {nodes: {Inicio: {modo:'guion'}, 'Leer ajustes': ajustes}})[0].json.payload;
+ const origen = 'https://fabrica.example.test';
+ const url = origen + '/webhook/video-factory/resultado';
+ assert.strictEqual(preparar({...aj, baseUrl:origen, retornoUrl:url}).retorno_url, url);
+ for (const [baseUrl, retornoUrl] of [
+  ['https://antiguo.ngrok-free.dev', 'https://antiguo.ngrok-free.dev/webhook/video-factory/resultado'],
+  [origen, 'https://ajeno.test/webhook/video-factory/resultado'],
+  [origen, url+'?clave=no'], [origen, url+'#fragmento'], ['http://fabrica.example.test', url],
+  ['https://usuario:clave@fabrica.example.test', url], [origen+'/ruta', url],
+ ]) assert.throws(() => preparar({...aj, baseUrl, retornoUrl}));
+});
+
+test('M01: el retorno valida modo, prefijo, resultado y avisos antes de consultar trabajos', () => {
+ const body = {job_id:'guion-abc12-xyz9', modo:'guion', estado:'ok', resultado:{guion:'Ficticio'}, avisos:[]};
+ const validar = b => run(codeOf(RET,'Validar'),{json:{body:b}})[0].json.valido;
+ for (const b of [{...body,modo:'storyboard'}, {...body,modo:'desconocido'}, {...body,resultado:[]},
+  {...body,resultado:'texto'}, {...body,avisos:[{}]}, {...body,avisos:['x'.repeat(2001)]}]) assert.strictEqual(validar(b),false);
+ assert.strictEqual(validar(body),true);
+});
+
+test('M01: el recibo identifica contenido, modo y estado; el orden de las claves no lo altera', () => {
+ const body = {job_id:'guion-abc12-xyz9',modo:'guion',estado:'ok',resultado:{a:1,b:{c:2}},avisos:[]};
+ const validar = b => run(codeOf(RET,'Validar'),{json:{body:b}})[0].json;
+ assert.strictEqual(validar(body).huella,validar({...body,resultado:{b:{c:2},a:1}}).huella);
+ assert.notStrictEqual(validar(body).huella,validar({...body,estado:'error'}).huella);
+ assert.notStrictEqual(validar(body).huella,validar({...body,resultado:{a:2}}).huella);
+ assert.strictEqual(validar({...body,resultado:{texto:'x'.repeat(1000001)}}).valido,false);
+});
+
+test('M01: clasificar no reenvía resultados reservados, alterados, históricos ni trabajos duplicados', () => {
+ const v = run(codeOf(RET,'Validar'),{json:{body:{job_id:'guion-abc12-xyz9',modo:'guion',estado:'ok',resultado:{}}}})[0].json;
+ const fila = {job_id:v.job_id,modo:v.modo,estado:'enviado',resultado:''};
+ const clasificar = filas => run(codeOf(RET,'Clasificar retorno'),{nodes:{Validar:v},all:{$input:filas}})[0].json;
+ assert.strictEqual(clasificar([fila]).accion,'reservar');
+ assert.strictEqual(clasificar([{...fila,estado:'envio_incierto'}]).accion,'reservar');
+ for(const filas of [[],[fila,fila],[{...fila,modo:'storyboard'}],[{...fila,estado:'bloqueado'}],[{...fila,estado:'listo',resultado:'{}'}]])
+  assert.strictEqual(clasificar(filas).codigo,409);
+ const resultado = JSON.stringify({retorno:{version:1,huella:v.huella,entregado:false}});
+ assert.strictEqual(clasificar([{...fila,estado:'retorno_en_curso',resultado}]).codigo,202);
+ assert.strictEqual(clasificar([{...fila,estado:'listo',resultado}]).codigo,409);
+ assert.strictEqual(clasificar([{...fila,estado:'listo',resultado:JSON.stringify({retorno:{version:1,huella:v.huella,entregado:true}})}]).codigo,200);
+});
+
+test('M01: reserva condicional y confirmación después del despacho; timeout no pisa el callback', () => {
+ const reserva = RET.nodes.find(n => n.name === 'Reservar retorno');
+ assert.strictEqual(reserva.parameters.matchType,'allConditions');
+ assert.deepStrictEqual(reserva.parameters.filters.conditions.map(c => c.keyName),['id','estado']);
+ assert.strictEqual(reserva.alwaysOutputData,true);
+ assert.strictEqual(RET.connections['Avisar al orquestador'].main[0][0].node,'¿Orquestador concluido?');
+ assert.strictEqual(RET.connections['¿Orquestador concluido?'].main[0][0].node,'Fila actualizada');
+ assert.strictEqual(RET.connections['¿Entrega guardada?'].main[0][0].node,'Responder recibido');
+ assert.strictEqual(RET.connections['¿Orquestador concluido?'].main[1][0].node,'Responder revisión');
+ const despacho = RET.nodes.find(n => n.name === 'Avisar al orquestador');
+ assert.strictEqual(despacho.parameters.options.waitForSubWorkflow,true);
+ assert.strictEqual(despacho.alwaysOutputData,true);
+ assert.strictEqual(despacho.onError,'continueRegularOutput');
+ const fallo = run(codeOf(CL,'Fallo al despertar'),{json:{error:'detalle privado ficticio'}})[0].json;
+ assert.strictEqual(fallo.estado,'envio_incierto');
+ assert.ok(!fallo.resultado.includes('detalle privado'));
+ const guardar = CL.nodes.find(n => n.name === 'Marcar trabajo fallido');
+ assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'estado' && c.keyValue === 'enviado'));
 });
