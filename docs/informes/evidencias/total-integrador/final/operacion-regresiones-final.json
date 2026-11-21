@@ -1,0 +1,12 @@
+{
+  "fecha_utc": "2026-11-21T22:39:20.916956+00:00",
+  "corte": "deb1f2a566d06d7f36fd540e6756863dd136cb89",
+  "comando": "taskset -c 0-7 python3 -B -W error -m unittest discover -s deploy/tests -p 'test_*.py'",
+  "resultado": "PASS",
+  "pruebas": 241,
+  "rc": 0,
+  "advertencias": 0,
+  "duracion_segundos": 1.481,
+  "salida_sha256": "a7b4f1780ed9fc265bfb46039eccb0d03d2f413fce5ceb46e1b4858a550d3900",
+  "sin_vps": true
+}

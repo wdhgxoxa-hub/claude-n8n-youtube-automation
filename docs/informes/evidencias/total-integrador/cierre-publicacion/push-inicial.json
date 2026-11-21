@@ -1,0 +1,21 @@
+{
+  "fecha_lima": "2026-11-21T18:19:59.023297-05:00",
+  "estado": "PASS",
+  "operacion": "git push --atomic mio HEAD:refs/heads/version-chatgpt HEAD:refs/heads/main",
+  "anterior": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "commit": "fc0e98a3bdc00b4b8665a7252556ec58ed54ada8",
+  "fast_forward": true,
+  "refs_verificadas": [
+    {
+      "sha": "fc0e98a3bdc00b4b8665a7252556ec58ed54ada8",
+      "ref": "refs/heads/main"
+    },
+    {
+      "sha": "fc0e98a3bdc00b4b8665a7252556ec58ed54ada8",
+      "ref": "refs/heads/version-chatgpt"
+    }
+  ],
+  "fuentes_privadas_sentinel": "sin coincidencias por objetos; ver metadatos-fc0e98a.json",
+  "origin_mutado": false,
+  "forzado": false
+}

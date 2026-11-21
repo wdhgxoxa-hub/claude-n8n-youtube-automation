@@ -1,0 +1,28 @@
+{
+  "fecha_lima": "2026-11-21T18:21:35.378464-05:00",
+  "commit": "1c3e051e3a5a14df992db43497eaff64f098111c",
+  "comando": "python3 -B -W error -m unittest discover -s deploy/tests -p 'test_*.py'",
+  "pruebas": 269,
+  "duracion_segundos": 1.722,
+  "rc": 0,
+  "resultado": "PASS",
+  "advertencias": 0,
+  "helpers": {
+    "deploy/activar-marcas-simuladas.py": "4bfdb6c789461661ac2246325f1a067ab0a15d38b59093fd1d29c6982f8cfd20",
+    "deploy/horario-radar.py": "df5621f98aec16a95622cc9f4b3f21c67ee9de037f418beb9cc5697ee8cbe21a",
+    "deploy/configurar-marcas-worker.py": "e09f236662780c7b9d61951af4699f7ec5bd7dd180f72d5500786d020b2bffb0"
+  },
+  "runtime_identico_b3": true,
+  "paths_comparados": [
+    "cooper/src",
+    "cooper/public",
+    "cooper/drizzle",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "cooper/postcss.config.mjs",
+    "cooper/tsconfig.json",
+    "cooper/Dockerfile"
+  ],
+  "puerta_producto_reutilizada": "docs/informes/evidencias/total-integrador/puerta-final.json"
+}

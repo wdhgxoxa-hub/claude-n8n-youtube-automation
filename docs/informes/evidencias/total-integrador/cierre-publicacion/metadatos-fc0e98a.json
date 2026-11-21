@@ -1,0 +1,38 @@
+{
+  "fecha_lima": "2026-11-21T18:19:40.472963-05:00",
+  "commit": "fc0e98a3bdc00b4b8665a7252556ec58ed54ada8",
+  "base": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "commits_salientes": 368,
+  "objetos_salientes": 4224,
+  "sentinel": {
+    "pin": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+    "blobs_no_vacios": 67,
+    "coincidencias": [],
+    "contenido_leido": false
+  },
+  "rutas": {
+    "arboles": 368,
+    "unicas": 1990,
+    "sospechosas": [],
+    "links_submodulos": []
+  },
+  "principal": {
+    "sin_seguimiento": 63,
+    "colisiones": []
+  },
+  "refs": [
+    {
+      "ref": "refs/heads/main",
+      "sha": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ancestro": true
+    },
+    {
+      "ref": "refs/heads/version-chatgpt",
+      "sha": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ancestro": true
+    }
+  ],
+  "head_estable": true,
+  "limite": "Solo metadatos y nombres; no inspecciona contenido de archivos privados ni garantiza ausencia de secretos incrustados.",
+  "resultado": "PASS_METADATOS"
+}
