@@ -238,7 +238,7 @@ La auditoría vacía ahora la caché HTTP **antes de cada ruta**, conservando ú
 ```bash
 node scripts/rendimiento-bundles.mjs .cache/rendimiento/despues/bundles.json
 COOPER_AUDITORIA_SALIDA=.cache/rendimiento/despues/lighthouse node scripts/auditoria.mjs --rendimiento
-node scripts/rendimiento-trazas.mjs --fase=despues
+node scripts/rendimiento-trazas.mjs --fase=despues --exigir-umbrales
 node scripts/rendimiento-medios.mjs despues
 node scripts/benchmark-sqlite.mjs
 ```
