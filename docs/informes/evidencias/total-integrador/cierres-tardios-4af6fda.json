@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "base_comparacion": "4af6fdacbb526802bc2df675a92fa74321247818",
+  "aplicacion_preservada": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "ramas": [
+    {
+      "rama": "total-competencia-revision-final",
+      "corte_solicitado": "b6da864f502523d4983d7cda0b081164c9ee3ed4",
+      "ref_observada": "7d0e7054cfc49d520183d4579530566195974d19",
+      "decision": "Recuperación posterior a PASS; dos commits de helper incorporados y adaptados, arnés Docker histórico preparado pero no ejecutado no incorporado."
+    },
+    {
+      "rama": "total-final4-aceptacion-22ece8e",
+      "corte_solicitado": "33a8f53c23e9584c6a0b716ec8fe71a0660087a6",
+      "ref_observada": "33a8f53c23e9584c6a0b716ec8fe71a0660087a6",
+      "decision": "Dos commits helper equivalentes por patch-id, no duplicados. Evidencia histórica cuatro servicios/22 y límite siete servicios; no aceptación b3."
+    },
+    {
+      "rama": "total-matriz-final",
+      "corte_solicitado": "f62b5b4dc912b6e6625a763682a2a89b695fcefa",
+      "ref_observada": "f62b5b4dc912b6e6625a763682a2a89b695fcefa",
+      "decision": "Solo matriz documental sobre fuente anterior; no sobrescribe la matriz actual."
+    },
+    {
+      "rama": "total-revision-rondas-cierre",
+      "corte_solicitado": "7c889ef76f63effc18e2b8150622450521ad9882",
+      "ref_observada": "5344c884d614875297aab9895c9ef229280a0c03",
+      "decision": "Ocho archivos de revisión visual ficticia cierre7/22; sin runtime. No sustituyen rondas b3."
+    }
+  ],
+  "equivalencias_patch_id": [
+    {
+      "commits": [
+        "fe0f602",
+        "dd87909",
+        "8a9168f"
+      ],
+      "patch_id": "199191b1ec5a86851be9544fb49d9b1526663fe2"
+    },
+    {
+      "commits": [
+        "207c264",
+        "7dc8c06",
+        "34d3144"
+      ],
+      "patch_id": "c755ccd9ad520e61a388ed6f47fd7820dd69dd63"
+    }
+  ],
+  "avance_solo_documental": [
+    "43017d9",
+    "7d0e705",
+    "5344c88"
+  ],
+  "cambio_funcional_nuevo": "recuperar-infra.py y sus regresiones, adaptados en cd39539",
+  "aplicacion_modificada": false,
+  "vps_consultado": false,
+  "pruebas_de_ramas_historicas_reejecutadas": false
+}

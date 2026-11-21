@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "fuente": "consulta de metadatos de raíz comunicada a este agente; sin nueva consulta VPS",
+  "observado_utc": "2026-11-21T21:42:00Z",
+  "observado_lima": "2026-11-21T16:42:00-05:00",
+  "unidades": {
+    "cooper-stack.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "exited",
+      "UnitFileState": "enabled",
+      "FragmentPath": "/etc/systemd/system/cooper-stack.service",
+      "DropInPaths": [],
+      "NeedDaemonReload": "no"
+    },
+    "cooper-backup.timer": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled",
+      "FragmentPath": "/etc/systemd/system/cooper-backup.timer",
+      "DropInPaths": [],
+      "NeedDaemonReload": "no"
+    },
+    "cooper-monitor.timer": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled",
+      "FragmentPath": "/etc/systemd/system/cooper-monitor.timer",
+      "DropInPaths": [],
+      "NeedDaemonReload": "no"
+    },
+    "cooper-backup.service": {
+      "LoadState": "loaded",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "UnitFileState": "static",
+      "FragmentPath": "/etc/systemd/system/cooper-backup.service",
+      "DropInPaths": [],
+      "NeedDaemonReload": "no"
+    },
+    "cooper-monitor.service": {
+      "LoadState": "loaded",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "UnitFileState": "static",
+      "FragmentPath": "/etc/systemd/system/cooper-monitor.service",
+      "DropInPaths": [],
+      "NeedDaemonReload": "no"
+    }
+  },
+  "ambito": "estado efectivo de unidades, complementario a las huellas de archivos ya cotejadas",
+  "entorno_leido": false,
+  "logs_leidos": false,
+  "nuevo_reinicio_o_despliegue": false
+}

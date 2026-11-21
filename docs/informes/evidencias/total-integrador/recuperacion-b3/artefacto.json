@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "fuente_helper": "cd39539cf10c686717ee3fc2e44b355faa1ca6e4",
+  "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "wrapper_sha256": "f3eaefa3b7f6ce663300fc387762732cedf3d63501831d31e712d2c44b537126",
+  "bundle_archivos": 25,
+  "bundle_codigo_canonico_sha256": "0dfb5e21050d50f2aff2020673e21756ee5f84b1765067b28df4ebf6c2d988bb",
+  "archivos": {
+    "ejecutar-recuperacion.py": "c55fa3865675067e6f7906655ac87f59b009cd9d5ab134f85f1678598ec94478",
+    "recuperar-infra.py": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+    "REVISION.md": "0da61a8050b5dfa0618a0068b601b5cd79aec138f1502089a5b95d6a2d33c33e"
+  },
+  "ensayo_real_sha256": "7061420596d3fc01b5961725e046fb57bdcd5558921d2ba62155b0dae3cba868",
+  "pruebas": {
+    "operativas": 221,
+    "adaptador": 18
+  },
+  "vps_ejecutado": false
+}

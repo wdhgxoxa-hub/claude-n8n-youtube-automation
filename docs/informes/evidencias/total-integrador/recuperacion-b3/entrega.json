@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artefacto": "/home/david/.cache/total-integrador-producto-recuperacion-b3/recuperacion-infra-b3.tar.gz",
+  "artefacto_sha256": "19eb6c3a6ef8003654486b1f9d72812a5127cba7344bfc8d6de5a5c41f701171",
+  "adaptador_sha256": "c55fa3865675067e6f7906655ac87f59b009cd9d5ab134f85f1678598ec94478",
+  "helper_sha256": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+  "manifiesto_sha256": "aa0adba51cce01ac4fd568a8651911fb6ca0f8b3bd7ea27d66b3da16e60e5828",
+  "ensayo_real_operacion_sha256": "7061420596d3fc01b5961725e046fb57bdcd5558921d2ba62155b0dae3cba868",
+  "ensayo_real_estado": "PASS",
+  "ensayo_real_rc": 0,
+  "ensayo_real_stderr_bytes": 0,
+  "bundle25_modificado": false,
+  "copia_final_modificada": false,
+  "limites": [
+    "El preflight del adaptador acredita código/recibo, no estado vivo.",
+    "Un lote o edición n8n posterior bloquea recuperación.",
+    "Mezcla de imágenes restaurada inmediatamente; no se persiste override para recreaciones futuras.",
+    "Sin acceso ni ejecución VPS por este agente."
+  ]
+}
