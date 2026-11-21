@@ -1,0 +1,5573 @@
+{
+  "ejecucion": {
+    "sha": "99cd616",
+    "inicio": "2026-11-21T18:26:06.893Z",
+    "fin": "2026-11-21T18:28:49.570Z",
+    "rc": 0,
+    "advertencias": []
+  },
+  "muestras": [
+    {
+      "name": "390-claro-00-entrar",
+      "path": "/entrar",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.0049590875279,
+      "p95": 16.799999999999727,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-00-entrar.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Continuar con Google",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-01-inicio",
+      "path": "/",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-01-inicio.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Conocer el estudio",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Ver lo recordado",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Chat",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Fábrica (4)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Crear otro canal",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Dar forma a una idea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar mis pendientes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Mensaje para Cooper",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Adjuntar archivo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Archivo adjunto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Grabar audio",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Canal del chat",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Video del chat",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Enviar mensaje",
+          "destino": null,
+          "deshabilitado": true
+        }
+      ]
+    },
+    {
+      "name": "390-claro-02-marcas",
+      "path": "/marcas",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.0049590875279,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-02-marcas.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "marcas: Estudio",
+        "marcas: Publicados",
+        "marcas: Aprendizaje",
+        "marcas: Calendario"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Añadir marca o cuenta",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Marca de integraciónOtro rubro0 cuentas · Privada",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Editar guía",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Cuentas y conexión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Redinstagramfacebooktiktokyoutube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Nombre de la cuenta",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Identificador de cuenta o perfil",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Página vinculada (para Instagram)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Añadir cuenta",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Calendario",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Estudio",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Competencia",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Publicados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Aprendizaje",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Crear una publicación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Cuenta",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Formatoimagencarruselreelhistoria",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "PlantillaEncuentro del domingoGrupos en casaPróximo encuentroNueva colecciónUna nueva historia",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Horario (hora de tu dispositivo)Vacío: sugerencia en America/Lima.",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Título de la pieza",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Horario, lugar u otro detalle de la pieza",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Diapositivas (una por línea, para carrusel)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Proponer texto con el especialista",
+          "destino": null,
+          "deshabilitado": true
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Texto de la publicación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Montaje aprobado de fábricaUsar adjuntos y plantilla",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar montajes desde fábrica",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Fotos, fondos o videos del dueño",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Subir foto o video (hasta 5 MB)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Abrir chat",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver videos de fábrica",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Guardar borrador",
+          "destino": null,
+          "deshabilitado": true
+        }
+      ]
+    },
+    {
+      "name": "390-claro-03-canales",
+      "path": "/canales",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-03-canales.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Borrar canal Ciencia cotidiana",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Abrir biblia y operación",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Modo noticia: desactivado de Ciencia cotidiana",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Redes",
+          "destino": "/redes?canal=demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Metas",
+          "destino": "/rutina?canal=demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas?canal=demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Borrar canal La ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Abrir biblia y operación",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciudad",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Modo noticia: desactivado de La ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Redes",
+          "destino": "/redes?canal=demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciudad",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Metas",
+          "destino": "/rutina?canal=demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciudad",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas?canal=demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciudad",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Nombre del canal",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "¿De qué trata?",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Crear canal",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-04-canales",
+      "path": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.0049590875279,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-04-canales.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "CanalCiencia cotidianaLa ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Tema del canal",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar tema del canal",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Público",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar público",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Promesa editorial",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar promesa editorial",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Idioma",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar idioma",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Estilo visual",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar estilo visual",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Colores — uno por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar colores — uno por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Iluminación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar iluminación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Encuadre y lente",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar encuadre y lente",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Textura",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar textura",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Elementos visuales prohibidos — uno por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar elementos visuales prohibidos — uno por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Tono",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar tono",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Descripción de la voz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar descripción de la voz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Ritmo de narración",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar ritmo de narración",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Personalidad de la voz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar personalidad de la voz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Palabras prohibidas — una por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar palabras prohibidas — una por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Voz de catálogo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar voz de catálogo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Identificador de voz personalizada",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar identificador de voz personalizada",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Plantilla de montaje",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar plantilla de montaje",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Segundos por plano largo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar segundos por plano largo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Segundos por plano corto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar segundos por plano corto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Tipografía",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar tipografía",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Color de los subtítulos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar color de los subtítulos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Volumen de la música",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar volumen de la música",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Volumen de los efectos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar volumen de los efectos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Transición",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar transición",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Estilo musical",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar estilo musical",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Reglas editoriales",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar reglas editoriales",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Publicación en YouTube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar publicación en youtube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Publicación en TikTok",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar publicación en tiktok",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Publicación en Instagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar publicación en instagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Publicación en Facebook",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar publicación en facebook",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Configurar plataformas y publicación",
+          "destino": "/redes",
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-05-radar",
+      "path": "/radar",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-05-radar.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "CanalCiencia cotidianaLa ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Solicitar nuevo radar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver fuente",
+          "destino": "https://es.wikipedia.org/wiki/Petricor",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Usar idea y pedir video",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-06-rutina",
+      "path": "/rutina",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99999999999999,
+      "p95": 16.799999999999727,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 120,
+      "video": "390-claro-06-rutina.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "CanalCiencia cotidianaLa ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Videos por semana",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "FormatoCorto verticalLargo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Retención mínima (%)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Producir automáticamente hacia la meta",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Nuevo presupuesto semanal (USD)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar metas",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-07-redes",
+      "path": "/redes",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99999999999999,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 120,
+      "video": "390-claro-07-redes.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "CanalCiencia cotidianaLa ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Revisar video",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-0",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Preparar conexión de YouTube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Perfil de publicación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "youtube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "tiktok",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "instagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "facebook",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Zona horaria",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar redes",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-08-referencias",
+      "path": "/referencias",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.799999999999727,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-08-referencias.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "CanalCiencia cotidianaLa ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Añadir o actualizar una referencia",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Tipo de referenciaPersonajeEscenario",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Nombre corto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Descripción fija",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Enlaces de referencia — uno por línea",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar referencia",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Solicitar referencias pendientes",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-09-cuentas",
+      "path": "/cuentas",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99999999999999,
+      "p95": 16.799999999999955,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 120,
+      "video": "390-claro-09-cuentas.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "CanalCiencia cotidianaLa ciudad a pie",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Revisar propuestas pendientes",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "RedYouTubeTikTokInstagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Usuario de la cuenta",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar adopción",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-10-programados",
+      "path": "/programados",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00495908752789,
+      "p95": 16.799999999999727,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-10-programados.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver video y programación",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver video y programación",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver video y programación",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-11-decisiones",
+      "path": "/decisiones",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-11-decisiones.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Leer detalle completo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver video",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-1",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "DecisiónAprobarPedir cambios",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Cambios solicitados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar decisión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Leer detalle completo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver video",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-2",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "DecisiónAprobarPedir cambios",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Cambios solicitados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar decisión",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-12-incidencias",
+      "path": "/incidencias",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.799999999999727,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-12-incidencias.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-13-avisos",
+      "path": "/avisos",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99900828085486,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-13-avisos.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Configurar mis avisos de WhatsApp",
+          "destino": "/perfil",
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-14-videos",
+      "path": "/videos",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.0049590875279,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-14-videos.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pedir video",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Todos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "En producción",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Por aprobar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Publicados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ciencia cotidianaEl mar también respiraMontaje",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-0",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ciencia cotidiana¿A qué huele la lluvia?Aprobación de guion",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-1",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "La ciudad a pieLa ciudad antes del ruidoAprobación final",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-2",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ciencia cotidianaPor qué el cielo cambia de colorPublicado",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-15-videos",
+      "path": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-0",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00495908752789,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-15-videos.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos / Detalle",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Reproducir vista previa",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Referencias y publicación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Fecha y hora local",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Programar publicación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "textarea",
+          "nombre": "Referencias",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Guardar referencias",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Aprobar",
+          "destino": null,
+          "deshabilitado": true
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pedir cambios",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Borrar video",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-16-publicados",
+      "path": "/publicados",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99999999999999,
+      "p95": 16.800000000000182,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 120,
+      "video": "390-claro-16-publicados.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "cambiar métrica",
+        "abrir tabla"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados de marcas",
+          "destino": "/marcas?seccion=publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "TipoVideos y MarcasVideosMarcas",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "DueñoTodo el equipoadmin · c141532f",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Canal o marcaTodos los ámbitosCanal: Ciencia cotidiana · admin · demo-c14Canal: La ciudad a pie · admin · demo-c14Marca: Marca de integración · admin · 9b501004",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Desde (Lima)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hasta (Lima)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Todas las redes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "instagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "tiktok",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "youtube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Limpiar filtros",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar resultados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver detalle de Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver origen: Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Métrica del gráficoVistasMe gustaComentariosRetención",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Ver datos de evolución",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver detalle de Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver origen: Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Métrica del gráficoVistasMe gustaComentariosRetención",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Ver datos de evolución",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver detalle de Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver origen: Por qué el cielo cambia de color",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-3",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Métrica del gráficoVistasMe gustaComentariosRetención",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "summary",
+          "nombre": "Ver datos de evolución",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-17-aprendizaje",
+      "path": "/aprendizaje",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.800000000000182,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-17-aprendizaje.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "filtrar corregidos"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje de marcas",
+          "destino": "/marcas?seccion=aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Medición y aprendizaje automático",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "TipoVideos y MarcasVideosMarcas",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "DueñoTodo el equipoadmin · c141532f",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Canal o marcaTodos los ámbitosCanal: Ciencia cotidiana · admin · demo-c14Canal: La ciudad a pie · admin · demo-c14Marca: Marca de integración · admin · 9b501004",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Desde (Lima)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hasta (Lima)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Todas las redes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "instagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "tiktok",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "youtube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Limpiar filtros",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar resultados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ver origen",
+          "destino": "/canales/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-ciencia",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Todos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pendientes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Corregidos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "¿A qué huele la lluvia?",
+          "destino": "/videos/demo-c141532f-d135-4f4f-bfcc-cfe5adfb2cec-1",
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-18-avatares",
+      "path": "/avatares",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99999999999999,
+      "p95": 16.799999999999727,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 120,
+      "video": "390-claro-18-avatares.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Crear avatar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Avatares",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Voces",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Vista previa de Alma",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Vista previa de Mateo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Vista previa de Luz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Vista previa de Cooper",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    },
+    {
+      "name": "390-claro-19-perfil",
+      "path": "/perfil",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.0049590875279,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-19-perfil.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Cambiar foto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Tu nombre",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "WhatsAppIncluye el código del país. Guarda el perfil y verifica tu número abajo.",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Noche",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Día",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Sistema",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Al abrir CooperConversar con CooperVer la fábricaEn celular, esta será tu primera pestaña.",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Guardar perfil",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Acepto recibir un código de verificación de Cooper en este número.",
+          "destino": null,
+          "deshabilitado": true
+        },
+        {
+          "tipo": "button",
+          "nombre": "Enviar código",
+          "destino": null,
+          "deshabilitado": true
+        }
+      ]
+    },
+    {
+      "name": "390-claro-20-admin",
+      "path": "/admin",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 59.99999999999999,
+      "p95": 16.700000000000273,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 120,
+      "video": "390-claro-20-admin.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Hoy",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Semana",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Mes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Desactivar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "Persona para consultar recuerdosElige una personaadmin (admin@example.test)Identidad ficticia (identidad@example.test)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Ver recuerdos de la persona",
+          "destino": null,
+          "deshabilitado": true
+        },
+        {
+          "tipo": "button",
+          "nombre": "Consultar operaciones interrumpidas",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Abrir grabación",
+          "destino": "/api/revision-archivo/demo-identidad-pendiente/demo-grabacion",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "select",
+          "nombre": "DecisiónRechazar y pedir nueva evidenciaIdentidad comprobada; iniciar entrenamiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "He revisado la grabación, la frase y la identidad de la persona.",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Guardar revisión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Correo permitido",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Invitar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Retirar admin@example.test",
+          "destino": null,
+          "deshabilitado": true
+        }
+      ]
+    },
+    {
+      "name": "390-claro-21-admin",
+      "path": "/admin/fabrica",
+      "width": 390,
+      "theme": "claro",
+      "cpu": 4,
+      "fps": 60.00198353664584,
+      "p95": 16.799999999999955,
+      "maxFrame": 16.800000000000182,
+      "longTasks": [],
+      "cls": 0,
+      "frames": 121,
+      "video": "390-claro-21-admin.webm",
+      "interacciones": [
+        "entrada",
+        "scroll",
+        "pausa",
+        "reanudar",
+        "actualizar",
+        "preparar cambios",
+        "cancelar sin enviar"
+      ],
+      "controles": [
+        {
+          "tipo": "a",
+          "nombre": "Saltar al contenido",
+          "destino": "#contenido",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Cooper, inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Inicio",
+          "destino": "/",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Marcas",
+          "destino": "/marcas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Canales",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Operación",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Videos2",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Publicados",
+          "destino": "/publicados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Aprendizaje",
+          "destino": "/aprendizaje",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avatares y voces",
+          "destino": "/avatares",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "30\n1\n2\n3\n4\n5\n6\n7\n8\n9 videos en producción",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "20\n1\n2\n3\n4\n5\n6\n7\n8\n9 por aprobar",
+          "destino": "/videos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Administración",
+          "destino": "/admin",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Mi perfil",
+          "destino": "/perfil",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Cerrar sesión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Abrir navegación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Pausar movimiento",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Biblia",
+          "destino": "/canales",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Radar",
+          "destino": "/radar",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Rutina y metas",
+          "destino": "/rutina",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Especialistas y redes",
+          "destino": "/redes",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Referencias",
+          "destino": "/referencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Adoptar cuenta",
+          "destino": "/cuentas",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Programados",
+          "destino": "/programados",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Decisiones",
+          "destino": "/decisiones",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Incidencias",
+          "destino": "/incidencias",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Avisos",
+          "destino": "/avisos",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "a",
+          "nombre": "Ajustes",
+          "destino": "/admin/fabrica",
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Actualizar",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Investigación y guiones",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Imágenes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Revisión visual",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Clips animados",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Voz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Música",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Video de archivo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Efectos de sonido",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Crítico de guion",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Respaldo de texto por API",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Verificación de cifras",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Referencias visuales",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Presentadores",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Montaje",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Archivo en Drive",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Publicación directa en YouTube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Medición y aprendizaje",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Investigación de audiencias",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Radar diario",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Miniaturas",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Cortes verticales",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Publicación en redes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Privacidad de YouTube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Modelo de texto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Modelo de imágenes",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Modelo de clips",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Avatar: USD por segundo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Voz HeyGen: USD por carácter",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Voz ElevenLabs: USD por carácter",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Modelo de voz",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Modelo del crítico",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Voz predeterminada",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Imagen: USD por unidad",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Clip: USD por segundo",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Revisión visual: USD por revisión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Crítico: USD por revisión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Radar: USD por análisis",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Verificación: USD por revisión",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Voz: USD por plano",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Umbral para pedir permiso de gasto (0 a 1)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Presupuesto por video largo (USD)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Máximo de videos diarios por canal",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Máximo de videos diarios de la fábrica",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Presupuesto por video corto (USD)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Proporción mínima con movimiento (0 a 1)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Máximo de clips por corto",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Máximo de intentos por plano",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Miniatura: USD por unidad",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Idioma",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Zona horaria de publicación",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hora de publicación: youtube",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hora de publicación: youtube shorts",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hora de publicación: tiktok",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hora de publicación: instagram",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Hora de publicación: facebook",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Días mínimos entre videos largos",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Máximo de publicaciones por red y día",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "input",
+          "nombre": "Días de salida de cortes (separados por comas)",
+          "destino": null,
+          "deshabilitado": false
+        },
+        {
+          "tipo": "button",
+          "nombre": "Revisar ajustes",
+          "destino": null,
+          "deshabilitado": false
+        }
+      ]
+    }
+  ]
+}

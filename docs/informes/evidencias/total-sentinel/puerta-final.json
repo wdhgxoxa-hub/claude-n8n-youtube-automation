@@ -1,0 +1,522 @@
+{
+  "sha": "99cd61604d7ada76c6cbdd4a7f35eee9ff9cb59f",
+  "inicio": "2026-11-21T18:03:27.940Z",
+  "fin": "2026-11-21T18:15:55.317Z",
+  "rc": 0,
+  "advertencias": [],
+  "playwright": {
+    "stats": {
+      "startTime": "2026-11-21T18:04:16.713Z",
+      "duration": 694343.206,
+      "expected": 54,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errores_fuera_de_pruebas": 0,
+    "pruebas": [
+      {
+        "archivo": "biblioteca-trabajador.spec.ts",
+        "linea": 4,
+        "caso": "la biblioteca termina con la ventana cerrada, sin SSE ni consultas que impulsen el trabajo",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 14569
+      },
+      {
+        "archivo": "chat-planes.spec.ts",
+        "linea": 3,
+        "caso": "respuesta completa mantiene la boca y la espera se puede cancelar",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 16757
+      },
+      {
+        "archivo": "conciliacion.spec.ts",
+        "linea": 4,
+        "caso": "conciliación administrativa: consulta, evidencia, cierre durable y acceso aislado",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 4938
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 37,
+        "caso": "entrada pública, cabeceras y protección de rutas",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 628
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 91,
+        "caso": "conversa, pide un video, observa SSE y aprueba las dos puertas",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 8187
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 145,
+        "caso": "chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajenas",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1946
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 200,
+        "caso": "boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 5427
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 261,
+        "caso": "aísla usuarios, gasto, chat, SSE y acciones de video",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 540
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 307,
+        "caso": "adjuntos y grabación con transcripción editable",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1565
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 350,
+        "caso": "una foto del chat abre el avatar privado sin omitir verificación",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1645
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 405,
+        "caso": "biblioteca propia, verificación simulada, privacidad y compartir",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 12848
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 457,
+        "caso": "perfil guarda tema, inicio y WhatsApp; móvil y teclado",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2767
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 487,
+        "caso": "administración, gastos por periodo, alerta y revocación inmediata",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2610
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 538,
+        "caso": "auditoría AA de todas las pantallas, anchuras y ambos temas",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 33334
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 620,
+        "caso": "elige avatar, voz y presencia al pedir un video desde la biblioteca",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1393
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 655,
+        "caso": "bienvenida vacía: las tres acciones quedan antes del compositor",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 719
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 676,
+        "caso": "identidad con frase renovable, formulario accesible y entrenamiento en vivo",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 14841
+      },
+      {
+        "archivo": "cooper.spec.ts",
+        "linea": 781,
+        "caso": "modo noticia por canal se detiene sin verificación real",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 3422
+      },
+      {
+        "archivo": "marcas.spec.ts",
+        "linea": 7,
+        "caso": "Marcas: alta, estudio, pieza, revisión, edición y matriz accesible",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 10289
+      },
+      {
+        "archivo": "marcas.spec.ts",
+        "linea": 170,
+        "caso": "Marcas: Sentinel 1440 recorre sus cinco secciones con el guardián activo",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 159503
+      },
+      {
+        "archivo": "marcas.spec.ts",
+        "linea": 170,
+        "caso": "Marcas: Sentinel 390 recorre sus cinco secciones con el guardián activo",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 158667
+      },
+      {
+        "archivo": "memoria.spec.ts",
+        "linea": 12,
+        "caso": "recuerdos privados, regreso al estudio, revisión administrativa y borrado",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 8438
+      },
+      {
+        "archivo": "montajes.spec.ts",
+        "linea": 4,
+        "caso": "reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambia la fábrica",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 4378
+      },
+      {
+        "archivo": "navegacion-resultados.spec.ts",
+        "linea": 5,
+        "caso": "Resultados enlaza las secciones de Marcas y conserva el destino al recargar",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 13824
+      },
+      {
+        "archivo": "resultados-unificados.spec.ts",
+        "linea": 15,
+        "caso": "consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados y origen",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 8184
+      },
+      {
+        "archivo": "revision.spec.ts",
+        "linea": 15,
+        "caso": "R08 recupera SSE después de una respuesta HTTP temporal",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1570
+      },
+      {
+        "archivo": "revision.spec.ts",
+        "linea": 35,
+        "caso": "R09 el menú móvil contiene el foco y lo devuelve al cerrar",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 563
+      },
+      {
+        "archivo": "revision.spec.ts",
+        "linea": 53,
+        "caso": "privacidad en HTML, JSON y carga de sesión Auth.js",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 708
+      },
+      {
+        "archivo": "revision.spec.ts",
+        "linea": 128,
+        "caso": "R12 conserva el correo de invitación cuando falla la red",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1255
+      },
+      {
+        "archivo": "revision.spec.ts",
+        "linea": 148,
+        "caso": "R13 libera el micrófono cuando MediaRecorder no puede iniciar",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 412
+      },
+      {
+        "archivo": "revision.spec.ts",
+        "linea": 181,
+        "caso": "entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 45579
+      },
+      {
+        "archivo": "seguridad.spec.ts",
+        "linea": 3,
+        "caso": "mutaciones exigen origen comprobado y JSON exacto; la sesión sigue utilizable",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 69
+      },
+      {
+        "archivo": "whatsapp.spec.ts",
+        "linea": 5,
+        "caso": "WhatsApp: verificar número, elegir avisos, revocar al cambiar y revisar accesibilidad",
+        "proyecto": "chromium",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 3693
+      },
+      {
+        "archivo": "animacion.spec.ts",
+        "linea": 186,
+        "caso": "pausa y movimiento reducido detienen efectos activos, incluso al navegar",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2899
+      },
+      {
+        "archivo": "animacion.spec.ts",
+        "linea": 251,
+        "caso": "fluidez local y propiedades de animación sin cambios de geometría",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 6670
+      },
+      {
+        "archivo": "animacion.spec.ts",
+        "linea": 340,
+        "caso": "avance por evento: relleno, destello único y porcentaje final",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1754
+      },
+      {
+        "archivo": "animacion.spec.ts",
+        "linea": 37,
+        "caso": "entrada, fábrica, mirada, chat, audio y adjunto en movimiento",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 10417
+      },
+      {
+        "archivo": "diseno.spec.ts",
+        "linea": 33,
+        "caso": "demostración: siete pantallas, dos tamaños y fábrica seleccionable",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 8447
+      },
+      {
+        "archivo": "diseno.spec.ts",
+        "linea": 110,
+        "caso": "movimiento opcional, teclado y retícula en seis anchuras",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1792
+      },
+      {
+        "archivo": "diseno.spec.ts",
+        "linea": 169,
+        "caso": "capturas finales: todas las pantallas y formularios demo en ambos temas",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 40110
+      },
+      {
+        "archivo": "diseno.spec.ts",
+        "linea": 293,
+        "caso": "I08 identidad se hidrata en Lima y Cooper no emite errores SVG",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 13013
+      },
+      {
+        "archivo": "diseno.spec.ts",
+        "linea": 325,
+        "caso": "la barra lateral cubre páginas largas y permite navegar con poca altura",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 4785
+      },
+      {
+        "archivo": "diseno.spec.ts",
+        "linea": 400,
+        "caso": "integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 26806
+      },
+      {
+        "archivo": "operacion.spec.ts",
+        "linea": 30,
+        "caso": "radar presenta competencia, diferenciación y límites sin inventar mediciones",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2125
+      },
+      {
+        "archivo": "operacion.spec.ts",
+        "linea": 140,
+        "caso": "canales con nombres repetidos conservan menús accesibles distintos",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 750
+      },
+      {
+        "archivo": "operacion.spec.ts",
+        "linea": 169,
+        "caso": "operación: biblia, metas, redes, referencias y adopción con confirmación y persistencia",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 6111
+      },
+      {
+        "archivo": "operacion.spec.ts",
+        "linea": 219,
+        "caso": "operación: una idea produce un video, los ajustes registran cambios y el fallo de lectura se recupera",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 3518
+      },
+      {
+        "archivo": "operacion.spec.ts",
+        "linea": 270,
+        "caso": "operación: la aprobación exige confirmar y el estado no muestra datos administrativos",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1256
+      },
+      {
+        "archivo": "operacion.spec.ts",
+        "linea": 287,
+        "caso": "operación: referencias editables y solicitudes de radar y conexión permanecen en el simulador",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 3679
+      },
+      {
+        "archivo": "resultados.spec.ts",
+        "linea": 41,
+        "caso": "Aprendizaje activa y pausa la medición con persistencia y permiso administrativo",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2574
+      },
+      {
+        "archivo": "resultados.spec.ts",
+        "linea": 112,
+        "caso": "Publicados presenta intervalos YouTube en segundos sin recortar repeticiones",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1448
+      },
+      {
+        "archivo": "resultados.spec.ts",
+        "linea": 171,
+        "caso": "Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2544
+      },
+      {
+        "archivo": "resultados.spec.ts",
+        "linea": 247,
+        "caso": "el montaje real se reproduce y sustituye la maqueta; galería y embeds usan URLs exactas",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1385
+      },
+      {
+        "archivo": "resultados.spec.ts",
+        "linea": 402,
+        "caso": "Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejora",
+        "proyecto": "demostracion",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 2974
+      }
+    ]
+  },
+  "vitest": {
+    "success": true,
+    "numTotalTests": 443,
+    "numPassedTests": 443,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "flujos": {
+    "tests": 172,
+    "pass": 172,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  }
+}

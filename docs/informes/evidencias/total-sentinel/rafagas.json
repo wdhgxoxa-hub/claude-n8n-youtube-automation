@@ -1,0 +1,16 @@
+{
+  "rafagas-estres-integrado": {
+    "intentos": 60,
+    "mensajesAceptados": 12,
+    "longitudMaxima": 6000,
+    "foto": true,
+    "recuperacionRed": true
+  },
+  "rafagas-estres-movil": {
+    "intentos": 60,
+    "mensajesAceptados": 12,
+    "longitudMaxima": 6000,
+    "foto": true,
+    "recuperacionRed": true
+  }
+}

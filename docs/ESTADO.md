@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **21-11-2026 (Lima), integración Sentinel en curso:** incorporadas las ampliaciones propias cerradas de `total-sentinel` en `total-integrador-web`: caos móvil, inventario de controles, videos por prueba, recuperación de Aprendizaje y navegación persistente de Marcas. Se conserva la caché privada y el guardián sin alteraciones; las rondas de esta combinación quedan a cargo del integrador. [Evidencia histórica del frente](informes/total-sentinel.md).
+
 - **21-11-2026 (Lima), integración web en curso:** incorporadas las mejoras de accesibilidad de `total-accesibilidad` (teclado, foco, contraste, etiquetas y matriz axe) en `total-integrador-web`, preservando Resultados unificados y las pruebas Firefox/WebKit. La puerta del frente está documentada; la combinación requiere la puerta de `total-integrador`, sin despliegue desde este frente. [Informe de accesibilidad](informes/total-accesibilidad.md).
 
 - **Margen Real — estrategia investigada e integrada localmente:** ocho referentes hispanos, tres peruanos, y 60 videos de muestra con fuentes y duraciones. Biblia editorial parcial y cinco hipótesis en `canales/margen-real/`; no son lecciones propias confirmadas. Integrada en `total-integrador`, pendiente de puerta conjunta; no aplicada a la biblia activa ni publicada. [Informe histórico](informes/total-margen-estrategia.md).

@@ -1,0 +1,25 @@
+{
+  "codigo": "a2ab128 (solo cambios posteriores en harness durante ejecución)",
+  "rc": 1,
+  "e2e": {
+    "startTime": "2026-11-21T17:23:29.582Z",
+    "duration": 517900.35599999997,
+    "expected": 51,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "fallos": [
+    {
+      "caso": "Publicados presenta intervalos YouTube en segundos sin recortar repeticiones",
+      "proyecto": "demostracion",
+      "estado": "unexpected"
+    },
+    {
+      "caso": "Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejora",
+      "proyecto": "demostracion",
+      "estado": "unexpected"
+    }
+  ],
+  "resolucion": "Merge e3e30c7 de total-resultados-e2e/f0b21a8, con mocks de /api/resultados y conservación de contratos visuales"
+}

@@ -1,0 +1,165 @@
+{
+  "fecha_lima": "2026-11-21T13:54:03.408598-05:00",
+  "archivos": [
+    {
+      "archivo": "aprendizaje-movil.png",
+      "bytes": 125500,
+      "sha256": "229b4f8041562fe5d227153ee4afb91d715f9f09da6845f3c75d8e0256c2aa5c"
+    },
+    {
+      "archivo": "chat-verde.log.gz",
+      "bytes": 318,
+      "sha256": "88c8b420e72aa44c0e9e49d57335555e1151a7e98b2e36bf8a2f30b0ae173652"
+    },
+    {
+      "archivo": "deploy-tests.log.gz",
+      "bytes": 2459,
+      "sha256": "32c98e5d325542e263a4f88e9523894b5093b337b7886017ab8b16e7690308bc"
+    },
+    {
+      "archivo": "estres-verde.log.gz",
+      "bytes": 821,
+      "sha256": "7f47e76b090091980ed302af2865662aaf34f09625a4eb3ebe8f8e41e92116e7"
+    },
+    {
+      "archivo": "fps-repeticion.json",
+      "bytes": 141421,
+      "sha256": "67a6da7dc9c731f6673dd7d04843f4f2bd350c8ef8a6c41b4bd727c17d193965"
+    },
+    {
+      "archivo": "fps-repeticion.log.gz",
+      "bytes": 792,
+      "sha256": "436dec173bc8ba6aaa00ccde7cb71000a930ffe22ded0d61f642460cee5df05a"
+    },
+    {
+      "archivo": "guardian-verde.log.gz",
+      "bytes": 214,
+      "sha256": "e7380e8890a355205cddf8177e7a1f0ac28ba71d80bcdc3bd1b8ea4b5898f141"
+    },
+    {
+      "archivo": "guardian.log.gz",
+      "bytes": 914,
+      "sha256": "e7aa4363762c098d7a4e6eec7bb059bfb19035a2f588664442d557fe9eb75c59"
+    },
+    {
+      "archivo": "integracion.json",
+      "bytes": 29033,
+      "sha256": "0d7f62b34495395ade6a70c6f10791848f797324dd7d827a9321082e3ed4043f"
+    },
+    {
+      "archivo": "marcas-escritorio.png",
+      "bytes": 202329,
+      "sha256": "68bdd24281b75fd75c14aa8a8703aa736faee77b6658ae8969d32d61aace7225"
+    },
+    {
+      "archivo": "masiva-ronda-1.json",
+      "bytes": 6296,
+      "sha256": "5aa1189a99930a50ea276695f2066fcb7cc347106247383005c21c0270af640e"
+    },
+    {
+      "archivo": "masiva-ronda-1.log.gz",
+      "bytes": 2111,
+      "sha256": "2b9c5dfff84b67d0ffe36f3e54abf21fdd7b9d7f426c09b3238c06d2739c1a6d"
+    },
+    {
+      "archivo": "masiva-ronda-2.json",
+      "bytes": 6296,
+      "sha256": "47375f5a4d5ccd2cb1031266f67af993877dbff655899abc9c6d0a22a70f74fb"
+    },
+    {
+      "archivo": "masiva-ronda-2.log.gz",
+      "bytes": 1727,
+      "sha256": "06f1ca703747bf1d1328d2c24711b351655f18caaf7540d540203efd178b52fe"
+    },
+    {
+      "archivo": "masiva-ronda-3.json",
+      "bytes": 6342,
+      "sha256": "cae053487c48ac111fdf9d2c1312e5742e7bca27a1b023354a55251548278875"
+    },
+    {
+      "archivo": "masiva-ronda-3.log.gz",
+      "bytes": 1453,
+      "sha256": "a78bf50148ba2e8ecc90033fab3d90c8883ae9fe55f7eb438744bdbaa70a02bc"
+    },
+    {
+      "archivo": "movimiento.json",
+      "bytes": 555145,
+      "sha256": "56d7526fcd76641c27eda75af3d69d6c8b33d3af12386b35f0f1acd7600e906d"
+    },
+    {
+      "archivo": "pre-masiva-2.log.gz",
+      "bytes": 9211,
+      "sha256": "6f674666a68f6f3c6b1ce1d4922872ed8d3cbd4dffbbc7861e74d7a7230af381"
+    },
+    {
+      "archivo": "puerta-final.json",
+      "bytes": 16008,
+      "sha256": "68ae87962f2c8f22ec42cfce212b1916c9ac861db515d1284db3d310651fae91"
+    },
+    {
+      "archivo": "puerta-final.log.gz",
+      "bytes": 11702,
+      "sha256": "ee7c79481c2f574aa40dc408ae7f5f3b93b418b0687bce518f801e35a89de00c"
+    },
+    {
+      "archivo": "puerta-inicial.json",
+      "bytes": 756,
+      "sha256": "a76f17a2fd2302115ace8893a9e264c8b1535349d8b11a6e98a28b64f4549bfb"
+    },
+    {
+      "archivo": "puerta-inicial.log.gz",
+      "bytes": 5409,
+      "sha256": "5ddd7aaa3b6544e549ab0e7953b8d25951c643cf04fe4c493388280c156e3bbb"
+    },
+    {
+      "archivo": "puerta-rojo.log.gz",
+      "bytes": 942,
+      "sha256": "3f9149bd18c1cba410cb3aafaacb8d952fff5a63b3639541c4c774c3ef6504ff"
+    },
+    {
+      "archivo": "puerta-verde.log.gz",
+      "bytes": 290,
+      "sha256": "88b2b3672a401678ae89243f644609c0411e6b31ef8a40f0fb4271a63ef6a9af"
+    },
+    {
+      "archivo": "radar-rojo.log.gz",
+      "bytes": 522,
+      "sha256": "6ae46ed6fe4f96fb53e59e2a94399f283f9648e936f485838b48bd36c0f44da7"
+    },
+    {
+      "archivo": "radar-verde.log.gz",
+      "bytes": 176,
+      "sha256": "09d516834b63cb3cdaec8e0a79e151ff9fcce222ca60d6841528d9f134d51cd9"
+    },
+    {
+      "archivo": "rafagas.json",
+      "bytes": 319,
+      "sha256": "b91f746f9e6f1f78572f6d4657a4bdeefe2c280e6c7a58be037ba5f265379a88"
+    },
+    {
+      "archivo": "sentinel-privado-verde.log.gz",
+      "bytes": 339,
+      "sha256": "ff72071b868814d6af02be4cc49dfa24d1fcdc8afb3042c27ea9b15ea7b54f7a"
+    },
+    {
+      "archivo": "sentinel.json",
+      "bytes": 59767,
+      "sha256": "fd1dba8e905491c577213b6bde568c87457a668046d5c8ad159273e0a008f4ca"
+    },
+    {
+      "archivo": "ui-rojo.log.gz",
+      "bytes": 1727,
+      "sha256": "4bd4b9e850f17bb4242229d481b873d7977f38df9c4985bf38ef0a2fc853c70d"
+    },
+    {
+      "archivo": "ui-verde.log.gz",
+      "bytes": 888,
+      "sha256": "7531d09267fc5d1a9fd54d086cfa9cdbcc17165a1521fdb62919660a61d385ec"
+    },
+    {
+      "archivo": "videos.json",
+      "bytes": 264685,
+      "sha256": "0242d9fc3ca50d8530bc1f742f8247119efc416f2dcf3b0f6d15f420836d825a"
+    }
+  ]
+}

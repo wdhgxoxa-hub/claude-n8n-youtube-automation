@@ -1,0 +1,199 @@
+{
+  "inicio": "2026-11-21T17:37:50.059Z",
+  "fin": "2026-11-21T17:59:35.384Z",
+  "rc": 1,
+  "playwright": {
+    "stats": {
+      "startTime": "2026-11-21T17:37:55.996Z",
+      "duration": 1299246.018,
+      "expected": 13,
+      "skipped": 6,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "errores_fuera_de_pruebas": 1,
+    "pruebas": [
+      {
+        "archivo": "movimiento/estados.spec.ts",
+        "linea": 5,
+        "caso": "1440: vacío, ilustración sin motor, enlace vencido y página ausente",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 4409
+      },
+      {
+        "archivo": "movimiento/estados.spec.ts",
+        "linea": 5,
+        "caso": "390: vacío, ilustración sin motor, enlace vencido y página ausente",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 4136
+      },
+      {
+        "archivo": "movimiento/interacciones.spec.ts",
+        "linea": 5,
+        "caso": "1440: bienvenida, Lottie, pausa persistente, publicación y movimiento reducido",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 16042
+      },
+      {
+        "archivo": "movimiento/interacciones.spec.ts",
+        "linea": 5,
+        "caso": "390: bienvenida, Lottie, pausa persistente, publicación y movimiento reducido",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 15712
+      },
+      {
+        "archivo": "movimiento/pantallas.spec.ts",
+        "linea": 66,
+        "caso": "1440 oscuro: pantallas, scroll, pausa, vídeo y CPU 1x",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 121200
+      },
+      {
+        "archivo": "movimiento/pantallas.spec.ts",
+        "linea": 66,
+        "caso": "1440 claro: pantallas, scroll, pausa, vídeo y CPU 1x",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 121260
+      },
+      {
+        "archivo": "movimiento/pantallas.spec.ts",
+        "linea": 66,
+        "caso": "390 oscuro: pantallas, scroll, pausa, vídeo y CPU 4x",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 134652
+      },
+      {
+        "archivo": "movimiento/pantallas.spec.ts",
+        "linea": 66,
+        "caso": "390 claro: pantallas, scroll, pausa, vídeo y CPU 4x",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 141328
+      },
+      {
+        "archivo": "movimiento/sentinel.spec.ts",
+        "linea": 7,
+        "caso": "Sistema Sentinel 1440: recorrido, caos y estabilidad",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 364622
+      },
+      {
+        "archivo": "movimiento/sentinel.spec.ts",
+        "linea": 7,
+        "caso": "Sistema Sentinel 390: recorrido, caos y estabilidad",
+        "proyecto": "movimiento-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 360532
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 18,
+        "caso": "chat: ráfaga de envíos, texto de 6000 caracteres, foto, rechazo recuperable y red",
+        "proyecto": "estres-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 5223
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 18,
+        "caso": "chat: ráfaga de envíos, texto de 6000 caracteres, foto, rechazo recuperable y red",
+        "proyecto": "estres-movil",
+        "estado": "skipped",
+        "intentos": 0,
+        "duracion_ms": 0
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 95,
+        "caso": "formularios: doble envío crea un solo canal, cancelación de chat lento y recuperación",
+        "proyecto": "estres-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 1103
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 95,
+        "caso": "formularios: doble envío crea un solo canal, cancelación de chat lento y recuperación",
+        "proyecto": "estres-movil",
+        "estado": "skipped",
+        "intentos": 0,
+        "duracion_ms": 0
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 135,
+        "caso": "audio ficticio repetido, descarga privada y fábrica temporalmente caída",
+        "proyecto": "estres-integrado",
+        "estado": "expected",
+        "intentos": 1,
+        "duracion_ms": 5000
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 135,
+        "caso": "audio ficticio repetido, descarga privada y fábrica temporalmente caída",
+        "proyecto": "estres-movil",
+        "estado": "skipped",
+        "intentos": 0,
+        "duracion_ms": 0
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 183,
+        "caso": "aprendizaje: red lenta, doble clic, caída y reintento conservan el ajuste",
+        "proyecto": "estres-integrado",
+        "estado": "unexpected",
+        "intentos": 1,
+        "duracion_ms": 1848
+      },
+      {
+        "archivo": "pulido/estres.spec.ts",
+        "linea": 183,
+        "caso": "aprendizaje: red lenta, doble clic, caída y reintento conservan el ajuste",
+        "proyecto": "estres-movil",
+        "estado": "skipped",
+        "intentos": 0,
+        "duracion_ms": 0
+      },
+      {
+        "archivo": "integracion3/recorrido.spec.ts",
+        "linea": 6,
+        "caso": "recorrido completo continuo de 1440 px",
+        "proyecto": "recorrido-integrado",
+        "estado": "skipped",
+        "intentos": 0,
+        "duracion_ms": 0
+      },
+      {
+        "archivo": "integracion3/recorrido.spec.ts",
+        "linea": 6,
+        "caso": "recorrido completo continuo de 390 px",
+        "proyecto": "recorrido-integrado",
+        "estado": "skipped",
+        "intentos": 0,
+        "duracion_ms": 0
+      }
+    ]
+  },
+  "sha": "5ed61351eab57b274b71c0cf0890b7c03d7dc50c"
+}

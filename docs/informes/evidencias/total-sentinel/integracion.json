@@ -1,0 +1,847 @@
+{
+  "base": "de397f31",
+  "rama": "total-sentinel",
+  "ramas_corte_inicial": [
+    {
+      "rama": "total-aprendizaje",
+      "sha": "688a1579b88684ed19e39de0d25cc6cb999f543c",
+      "incluida": true,
+      "archivos_desde_base": 47
+    },
+    {
+      "rama": "total-aprendizaje-aceptacion",
+      "sha": "632bd1fee71e66a7e2bfd2b4e5ef225052740846",
+      "incluida": true,
+      "archivos_desde_base": 52
+    },
+    {
+      "rama": "total-auditoria",
+      "sha": "ad67618acdc4aba4c5d6329cd0d93ab4e259759f",
+      "incluida": true,
+      "archivos_desde_base": 1
+    },
+    {
+      "rama": "total-chat-vps",
+      "sha": "3ba2508e5cf26bcd5416738fb3e4298e434d2714",
+      "incluida": true,
+      "archivos_desde_base": 43
+    },
+    {
+      "rama": "total-chatfix",
+      "sha": "e5cbc3a3b12a2b3ae3a3513fb188495294b02965",
+      "incluida": true,
+      "archivos_desde_base": 18
+    },
+    {
+      "rama": "total-competencia",
+      "sha": "16e70d472a7b08b1d5b45c07b3fc4ee119bf7b62",
+      "incluida": true,
+      "archivos_desde_base": 42
+    },
+    {
+      "rama": "total-competencia-aceptacion",
+      "sha": "f5d12463f99c23ed0167d52546ce54d25af34744",
+      "incluida": true,
+      "archivos_desde_base": 269
+    },
+    {
+      "rama": "total-competencia-navegacion",
+      "sha": "ba6769c660021a46998f20cb63fcc9d1882542ee",
+      "incluida": true,
+      "archivos_desde_base": 180
+    },
+    {
+      "rama": "total-competencia-orquestada",
+      "sha": "39537a7fc49e81dac1a61dfa6e6dd9361aeaaeb6",
+      "incluida": true,
+      "archivos_desde_base": 33
+    },
+    {
+      "rama": "total-competencia-youtube",
+      "sha": "3525e6a963aaed02cbab9e5eca1230a16239493a",
+      "incluida": true,
+      "archivos_desde_base": 463
+    },
+    {
+      "rama": "total-despliegue",
+      "sha": "f62e3cd391598f59c5d39b90412fac85225d281f",
+      "incluida": true,
+      "archivos_desde_base": 85
+    },
+    {
+      "rama": "total-despliegue-aceptacion",
+      "sha": "d26b6147cf879c633b432034d74b79e2174de19c",
+      "incluida": true,
+      "archivos_desde_base": 51
+    },
+    {
+      "rama": "total-guia",
+      "sha": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "incluida": true,
+      "archivos_desde_base": 0
+    },
+    {
+      "rama": "total-infra-segura",
+      "sha": "533703d1c2a43cc2c8af07fa0580c0d44cfb21cd",
+      "incluida": true,
+      "archivos_desde_base": 288
+    },
+    {
+      "rama": "total-m01",
+      "sha": "1b00e5f9b06406dcd573b8ea6c7c8a64e87310af",
+      "incluida": true,
+      "archivos_desde_base": 13
+    },
+    {
+      "rama": "total-m03",
+      "sha": "f6fb304cd02a1b3e5f7c20ec8d43efa15bfa8389",
+      "incluida": true,
+      "archivos_desde_base": 22
+    },
+    {
+      "rama": "total-m05",
+      "sha": "c25546a38ec1639e003044bea039981f8092feb5",
+      "incluida": true,
+      "archivos_desde_base": 24
+    },
+    {
+      "rama": "total-m06",
+      "sha": "fc362c5469711d53baef192a6c32d77921ae63f3",
+      "incluida": true,
+      "archivos_desde_base": 13
+    },
+    {
+      "rama": "total-m07",
+      "sha": "799117733ea9e74acf8f6d4c85234af8d2bb71e4",
+      "incluida": true,
+      "archivos_desde_base": 19
+    },
+    {
+      "rama": "total-m08",
+      "sha": "2f63527373667b4110e142f01444033bca1cc244",
+      "incluida": true,
+      "archivos_desde_base": 38
+    },
+    {
+      "rama": "total-m09",
+      "sha": "e5cbc3a3b12a2b3ae3a3513fb188495294b02965",
+      "incluida": true,
+      "archivos_desde_base": 18
+    },
+    {
+      "rama": "total-m10",
+      "sha": "66b366727e5aa37d16d5aaa58e174bd0f1f16e01",
+      "incluida": true,
+      "archivos_desde_base": 28
+    },
+    {
+      "rama": "total-marcas-runtime",
+      "sha": "2dac9d5d4e8d93e924c7c9a4e2acc3b7ed63f636",
+      "incluida": true,
+      "archivos_desde_base": 188
+    },
+    {
+      "rama": "total-n8n-lote",
+      "sha": "e3394168008778684752467c4b5de45d64f06ed0",
+      "incluida": true,
+      "archivos_desde_base": 7
+    },
+    {
+      "rama": "total-operacion",
+      "sha": "a496077990a5962e87384ac4eb139892d2e91f50",
+      "incluida": true,
+      "archivos_desde_base": 49
+    },
+    {
+      "rama": "total-resultados-e2e",
+      "sha": "2d82c9e5ac917e5f8ffce64db1dfdd2b7126e906",
+      "incluida": true,
+      "archivos_desde_base": 491
+    },
+    {
+      "rama": "total-retorno-2476",
+      "sha": "71be3c706266f27ce257c4a524fa062377564a34",
+      "incluida": true,
+      "archivos_desde_base": 500
+    },
+    {
+      "rama": "total-seguridad",
+      "sha": "cb9c478a2776313e390db3c4e77ead2909439404",
+      "incluida": true,
+      "archivos_desde_base": 50
+    },
+    {
+      "rama": "total-sentinel",
+      "sha": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "incluida": true,
+      "archivos_desde_base": 0
+    },
+    {
+      "rama": "total-sentinel-guardia",
+      "sha": "7592d70dbb4a681a90f9c7c9f6164c503e55a0bc",
+      "incluida": true,
+      "archivos_desde_base": 440
+    }
+  ],
+  "commits": [
+    {
+      "sha": "99cd61604d7ada76c6cbdd4a7f35eee9ff9cb59f",
+      "titulo": "Separar la evidencia de ráfagas móvil y escritorio"
+    },
+    {
+      "sha": "dbac915c962997eea99d2f632904c585e52425e8",
+      "titulo": "Conservar las secciones de Marcas al recargar y cubrirlas con caos"
+    },
+    {
+      "sha": "def9ce23001f5dce6636f064a6d584b45021a4a1",
+      "titulo": "Corregir el singular de los contadores de resultados"
+    },
+    {
+      "sha": "ab0e804f83990ecaf8d63a6eb22c4077e56458ca",
+      "titulo": "Prueba: distinguir el aviso de caída del anunciador de rutas"
+    },
+    {
+      "sha": "f9dda3ed4ff89e368eb53f1c69fe4e4a9eafc6c6",
+      "titulo": "Incluir videos de una puerta aprobada en el índice de movimiento"
+    },
+    {
+      "sha": "0e15b2ea92f0053da03a9f5bb8b285a966275576",
+      "titulo": "Permitir grabar todos los flujos de la puerta final de Sentinel"
+    },
+    {
+      "sha": "5ed61351eab57b274b71c0cf0890b7c03d7dc50c",
+      "titulo": "Actualizar la evaluación integrada del chat sin perder aislamiento ni confirmaciones"
+    },
+    {
+      "sha": "10671946358a87ebaacb7b2e1d87191c20e1e46f",
+      "titulo": "Integrar Sentinel privado con fuentes verificadas fuera del árbol público"
+    },
+    {
+      "sha": "d0a61e5e51ba91567bb947395a40dd8ece3a9f1e",
+      "titulo": "Integrar la guía terminada y sus capturas locales"
+    },
+    {
+      "sha": "659e49aaa3c575da3f3464c4faceec2dcde78717",
+      "titulo": "Integrar el cierre de muestras y diagnósticos de competencia"
+    },
+    {
+      "sha": "ccaaaf776578b7b86ac706318fed4622b6ea5eae",
+      "titulo": "Integrar el cierre documental del chat corregido"
+    },
+    {
+      "sha": "e3e30c73ba8728ea0d15d918b81224e005e9ba7b",
+      "titulo": "Integrar la aceptación de resultados sobre la proyección unificada"
+    },
+    {
+      "sha": "679e7f7e9e0d3b913962b140008b533f1ac40f45",
+      "titulo": "Integrar la documentación final de la puerta M08"
+    },
+    {
+      "sha": "4c35cd354bc31ed8eff2caa52de286e317efe2bd",
+      "titulo": "Integrar la evidencia nativa de competencia de YouTube"
+    },
+    {
+      "sha": "c85a02737f87594f019114f851ac29bb113316b3",
+      "titulo": "Integrar el cierre concurrente de correcciones del chat"
+    },
+    {
+      "sha": "b45899df48f1dc76686d1fc6b46578343ae719e5",
+      "titulo": "Separar los datos de caída entre los ensayos móvil y escritorio"
+    },
+    {
+      "sha": "3cec8c36b55707b2bf1a43c1ee9725e173f9ca09",
+      "titulo": "Conservar el contador de caos al navegar la fixture del guardián"
+    },
+    {
+      "sha": "a2ab1280d63aebed08bb2698cfa38eec1d141c39",
+      "titulo": "Ampliar Sentinel con caos móvil, controles inventariados y videos por prueba"
+    },
+    {
+      "sha": "5267610f23e377d8d318e4385ce26c20a32cb0ed",
+      "titulo": "Conservar el rechazo de respuestas duplicadas del radar al integrar competencia"
+    },
+    {
+      "sha": "be9117a1f7ffaf20efd364292bffa1377b5860cb",
+      "titulo": "Conservar compatibilidad con el resumen spec de Node al integrar M08"
+    },
+    {
+      "sha": "036ca8a0208012f14205f4a9f9039b1ac7a6c57c",
+      "titulo": "Integrar localmente total-sentinel-guardia para Sentinel"
+    },
+    {
+      "sha": "aefae90aa6558b51c8e318ab7776c5572477620f",
+      "titulo": "Integrar localmente total-seguridad para Sentinel"
+    },
+    {
+      "sha": "07a4e0ed5956c865509ae483643061d2385a7abe",
+      "titulo": "Integrar localmente total-resultados-e2e para Sentinel"
+    },
+    {
+      "sha": "d5bec2975a00bc5afbc33e60cf5d27c7d48906b9",
+      "titulo": "Integrar localmente total-operacion para Sentinel"
+    },
+    {
+      "sha": "070f6a1993e9c8afe8279f8083e9a9591c60cebd",
+      "titulo": "Integrar localmente total-n8n-lote para Sentinel"
+    },
+    {
+      "sha": "7dafe641e4374cefdf8dac6f33b5635646cd149d",
+      "titulo": "Integrar localmente total-marcas-runtime para Sentinel"
+    },
+    {
+      "sha": "6d717df2ff3047417fb96503beb524b08cc36c0e",
+      "titulo": "Integrar localmente total-m10 para Sentinel"
+    },
+    {
+      "sha": "066ab117219e07bbe6ca299761520274abc8f7af",
+      "titulo": "Integrar localmente total-m08 para Sentinel"
+    },
+    {
+      "sha": "d3471c9aa8b469c829df0fdc0bcaef2a7b103924",
+      "titulo": "Integrar localmente total-m07 para Sentinel"
+    },
+    {
+      "sha": "eb485b35be3005ffb1cfc3b3765aefe921d35b64",
+      "titulo": "Integrar localmente total-m06 para Sentinel"
+    },
+    {
+      "sha": "a45dbd4061508044b43c5bf8ee37952228742f87",
+      "titulo": "Integrar localmente total-m05 para Sentinel"
+    },
+    {
+      "sha": "c877d71fd37f2ebf5ce0fe88ba118cd335691890",
+      "titulo": "Integrar localmente total-m03 para Sentinel"
+    },
+    {
+      "sha": "7efa2b319cdbb086524c85bb000e59c563dd0552",
+      "titulo": "Integrar localmente total-m01 para Sentinel"
+    },
+    {
+      "sha": "7da41a67f4ef0d770d39a40a6d64ca44f9a592bb",
+      "titulo": "Integrar localmente total-infra-segura para Sentinel"
+    },
+    {
+      "sha": "a6fcfe3115fbc5d4101b46f643fc4b27e56093a4",
+      "titulo": "Integrar localmente total-despliegue-aceptacion para Sentinel"
+    },
+    {
+      "sha": "678d2edd0917203e406bfb3ab23c12f31ad7ac36",
+      "titulo": "Integrar localmente total-despliegue para Sentinel"
+    },
+    {
+      "sha": "91fe793a661a890ad0d381ee04a3b6c3fffb060b",
+      "titulo": "Integrar localmente total-competencia-orquestada para Sentinel"
+    },
+    {
+      "sha": "4aa97b11fa9fbe1d59b65693921862773392a61c",
+      "titulo": "Integrar localmente total-competencia-navegacion para Sentinel"
+    },
+    {
+      "sha": "1cc80c3e64d720501f15e4ec1a381721539b6c18",
+      "titulo": "Integrar localmente total-competencia-aceptacion para Sentinel"
+    },
+    {
+      "sha": "e539a37019207293d2b690092a67e5222b01f49b",
+      "titulo": "Integrar localmente total-competencia para Sentinel"
+    },
+    {
+      "sha": "6538272ab5c1703f6ce6e43a3e8489b9253ee659",
+      "titulo": "Integrar localmente total-chatfix para Sentinel"
+    },
+    {
+      "sha": "101ae5e3bcd21b7fc72ce6a0f0b70d7dbf552c8a",
+      "titulo": "Integrar localmente total-chat-vps para Sentinel"
+    },
+    {
+      "sha": "b33f56aa91788142cc7f32ef0b2e063ae55af91b",
+      "titulo": "Integrar localmente total-auditoria para Sentinel"
+    },
+    {
+      "sha": "f229cca4ad024d4ead0597cb5da9d493d363e993",
+      "titulo": "Integrar localmente total-aprendizaje-aceptacion para Sentinel"
+    },
+    {
+      "sha": "a7e2e21170fea4dbf34c28dceefa6d95a643be4f",
+      "titulo": "Integrar localmente total-aprendizaje para Sentinel"
+    },
+    {
+      "sha": "134934e70667ad9e717fa6ba2c3e1b2d3ed474e7",
+      "titulo": "Integrar localmente el corte total de retorno para Sentinel"
+    }
+  ],
+  "resoluciones": [
+    {
+      "rama": "total-aprendizaje",
+      "archivos": [
+        "cooper/src/componentes/resultados.tsx",
+        "docs/ESTADO.md",
+        "docs/cooper-aprendizaje-ensayo.md",
+        "docs/informes/total-aprendizaje.md",
+        "skill/FABRICA.md",
+        "tests/flujos_v2.test.cjs",
+        "tests/test_cli_aprendizaje.py",
+        "tools/cooper/aceptar_aprendizaje_plan.mjs",
+        "tools/cooper/aprendizaje_flujos.py",
+        "tools/cooper/ejecutar_cli_aislada.py",
+        "tools/cooper/preparar_ensayo_aprendizaje.py",
+        "tools/cooper/reconciliar_youtube_aprendizaje.py",
+        "tools/generar_flujos_v2.py",
+        "workflows/v2/FabCooperAPI0001.json",
+        "workflows/v2/FabErrores000001.json",
+        "workflows/v2/FabLlamarClaude1.json",
+        "workflows/v2/FabOrquestador01.json",
+        "workflows/v2/FabRetornoClaud1.json"
+      ],
+      "resolucion": "Conservar corte integrado posterior: equivalentes cherry-pick de aprendizaje, refactor M10, retorno reservado y aceptación real; informe posterior conserva cierre de la rama."
+    },
+    {
+      "rama": "total-aprendizaje-aceptacion",
+      "archivos": [
+        "docs/ESTADO.md",
+        "docs/informes/total-aprendizaje.md",
+        "skill/FABRICA.md",
+        "tests/flujos_v2.test.cjs",
+        "workflows/v2/FabCooperAPI0001.json",
+        "workflows/v2/FabErrores000001.json",
+        "workflows/v2/FabLlamarClaude1.json",
+        "workflows/v2/FabOrquestador01.json",
+        "workflows/v2/FabRetornoClaud1.json"
+      ],
+      "resolucion": "Conservar aceptación ya incluida y contratos posteriores de retorno/M10; el único commit no equivalente es el cierre documental 632bd1f."
+    },
+    {
+      "rama": "total-chat-vps",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Mantener ESTADO integrado posterior; conserva el cierre Chat VPS y su reconexión. Código idéntico por cherry-picks."
+    },
+    {
+      "rama": "total-chatfix",
+      "archivos": [
+        "cooper/package.json",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Mantener scripts acumulados M08 y evaluar:chat de M09; el código del evaluador se fusiona sin conflictos. Conservar ESTADO posterior y sus pendientes."
+    },
+    {
+      "rama": "total-competencia",
+      "archivos": [
+        "docs/ESTADO.md",
+        "tests/flujos_v2.test.cjs",
+        "tools/cooper/competencia_flujos.py",
+        "tools/generar_flujos_v2.py",
+        "workflows/v2/FabCooperAPI0001.json",
+        "workflows/v2/FabErrores000001.json",
+        "workflows/v2/FabOrquestador01.json"
+      ],
+      "resolucion": "Conservar competencia ya integrada, pausa del horario de radar 6bdbc2a, extensión de aprendizaje y regresiones de retorno posteriores; no reactivar horarios al resolver."
+    },
+    {
+      "rama": "total-competencia-navegacion",
+      "archivos": [
+        "cooper/src/app/(estudio)/marcas/page.tsx",
+        "cooper/src/componentes/marcas.tsx",
+        "cooper/src/componentes/resultados.tsx",
+        "deploy/verificar-chat-contexto.cjs",
+        "tests/chat-contexto.test.cjs"
+      ],
+      "resolucion": "Todos los commits entrantes tienen equivalente cherry-pick. Conservar navegación M10 y sondas corregidas posteriores; evitar restaurar componentes antiguos."
+    },
+    {
+      "rama": "total-competencia-orquestada",
+      "archivos": [
+        "tests/flujos_v2.test.cjs",
+        "tools/cooper/competencia_flujos.py",
+        "workflows/v2/FabOrquestador01.json"
+      ],
+      "resolucion": "Preservar la pausa de radar y el enlace idea/radar integrado en e10b730, junto con el retorno transaccional posterior. La variante entrante precede a las correcciones del Orquestador. Revisión complementaria: 5267610 conserva además el rechazo de respuestas duplicadas de la rama entrante, demostrado rojo→verde."
+    },
+    {
+      "rama": "total-despliegue",
+      "archivos": [
+        "cooper/src/servicios/chat.ts",
+        "deploy/compose.chat.yaml",
+        "deploy/cooper-chat.sshd.conf",
+        "deploy/ensayar-n8n.py",
+        "deploy/monitor.py",
+        "deploy/tests/test_ensayar_n8n.py",
+        "deploy/tests/test_monitor.py",
+        "docs/ESTADO.md",
+        "docs/cooper-operacion.md",
+        "docs/informes/evidencias/total-despliegue/SHA256SUMS",
+        "docs/informes/total-despliegue.md",
+        "servicios/puente-codex/tunel.mjs",
+        "workflows/v2/FabErrores000001.json"
+      ],
+      "resolucion": "Conservar correcciones posteriores de chat, túnel, monitor TLS/reintentos, publicación por dependencias y manifest de imágenes. Mantener informe/recibos acumulados; la condición de recuperación saludable se fusiona automáticamente."
+    },
+    {
+      "rama": "total-despliegue-aceptacion",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Conservar ESTADO posterior con FINAL3 publicado y reversa; se mantienen todos los recibos de aceptación entrantes."
+    },
+    {
+      "rama": "total-infra-segura",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Conservar historial integrado y manifest de infraestructura; recibo de reversa y su informe quedan incorporados. Se consolidan los pendientes documentales al cierre."
+    },
+    {
+      "rama": "total-m01",
+      "archivos": [
+        "cooper/scripts/ensayo-infra.mjs",
+        "docs/ESTADO.md",
+        "skill/FABRICA.md",
+        "tests/flujos_v2.test.cjs",
+        "tests/retorno_n8n.test.mjs",
+        "workflows/v2/FabLlamarClaude1.json",
+        "workflows/v2/FabRetornoClaud1.json"
+      ],
+      "resolucion": "Conservar retorno posterior 2.47.4/2.47.6: validación editorial antes de reserva/despacho, recibo durable y ensayos actualizados. El contrato M01 permanece reforzado, sin volver al flujo anterior."
+    },
+    {
+      "rama": "total-m03",
+      "archivos": [
+        "cooper/README.md",
+        "cooper/scripts/e2e-fixtures.ts",
+        "docs/ESTADO.md",
+        "docs/cooper-conciliacion.md"
+      ],
+      "resolucion": "Código M03 ya recogido por cherry-pick; conservar fixtures acumuladas y documentación de conciliación posterior. Informe propio de M03 incorporado."
+    },
+    {
+      "rama": "total-m05",
+      "archivos": [
+        "cooper/README.md",
+        "cooper/drizzle/meta/_journal.json",
+        "cooper/scripts/e2e-fixtures.ts",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Preservar diario SQLite integrado y fixtures acumuladas; M05 ya está incorporado con las migraciones posteriores compatibles. No renumerar ni retirar migraciones al fusionar."
+    },
+    {
+      "rama": "total-m06",
+      "archivos": [
+        "cooper/MEDIOS.md",
+        "cooper/package.json",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Preservar documentación y scripts acumulados de retención M06/M08; implementación ya equivalente. Conservar política pendiente, sin activar borrado."
+    },
+    {
+      "rama": "total-m07",
+      "archivos": [
+        "cooper/drizzle/meta/_journal.json",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Conservar diario conjunto con 0011_montajes_fabrica y 0017_biblioteca; reservas y recuperación M07 se fusionan sin conflictos de código."
+    },
+    {
+      "rama": "total-m08",
+      "archivos": [
+        "cooper/package.json",
+        "cooper/scripts/puerta.mjs",
+        "cooper/tests/puerta.test.ts"
+      ],
+      "resolucion": "Mantener M08 corregido por total-competencia-youtube: parser Node spec y política explícita core-js; no retirar scripts de retención/evaluación ni regresiones acumuladas. Revisión complementaria: be9117a restituye explícitamente el parser spec y su regresión, demostrado rojo→verde."
+    },
+    {
+      "rama": "total-m10",
+      "archivos": [
+        "cooper/scripts/e2e-fixtures.ts",
+        "cooper/src/componentes/metricas-resultados.tsx",
+        "cooper/src/componentes/resultados.tsx",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Preservar M10 integrado con títulos del video de origen, aviso de datos ficticios y fixtures de montaje/conciliación; mantener el interruptor administrativo una sola vez."
+    },
+    {
+      "rama": "total-marcas-runtime",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Conservar ESTADO conjunto; código/runtime de Marcas idéntico al integrado. Recibos e informe se conservan sin ejecutarlos."
+    },
+    {
+      "rama": "total-operacion",
+      "archivos": [
+        "deploy/monitor-validar.js",
+        "deploy/replicar-pc.py",
+        "deploy/systemd/cooper-replica-pc.service",
+        "deploy/tests/test_monitor.py",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Código de operación equivalente por cherry-pick; mantener las correcciones posteriores de seguridad del monitor y réplica. Informe y evidencia de cierre incorporados."
+    },
+    {
+      "rama": "total-resultados-e2e",
+      "archivos": [
+        "tools/cooper/aceptar_aprendizaje_plan.mjs"
+      ],
+      "resolucion": "Todos los commits tienen equivalentes; conservar aceptación actualizada al retorno reservado y validación editorial previa, probada en ambas versiones."
+    },
+    {
+      "rama": "total-seguridad",
+      "archivos": [
+        "deploy/tests/test_caddy_seguridad.py",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Mantener pruebas Caddy posteriores sobre manifest de imágenes y control público; código de seguridad equivalente. Conservar evidencia y pendientes del informe."
+    },
+    {
+      "rama": "total-sentinel-guardia",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Incorporar corrección del harness Sentinel y sus tres regresiones; conservar ESTADO integrado. Guardián, evaluador y umbrales intactos."
+    },
+    {
+      "rama": "total-chatfix (6827959)",
+      "archivos": [
+        "cooper/src/servicios/chat.ts"
+      ],
+      "resolucion": "Adoptar solo nueva instrucción de brevedad/memoria; mantener ejecutar(user, accion, a.id) de conciliación M03. Herramientas y regresión se fusionan automáticamente."
+    },
+    {
+      "rama": "total-competencia-youtube (6932db1)",
+      "archivos": [
+        "docs/ESTADO.md",
+        "tools/cooper/aceptar_aprendizaje_plan.mjs",
+        "workflows/v2/FabOrquestador01.json"
+      ],
+      "resolucion": "Combinar hechos de Estado; conservar Buscar trabajo en reserva; regenerar Orquestador con competencia nativa entrante y rechazo de duplicados conservado."
+    },
+    {
+      "rama": "total-m08 (9a4f092)",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Añadir cierre M08 y su revisión pendiente al Estado acumulado; no recuperar estados históricos ya superados."
+    },
+    {
+      "rama": "total-resultados-e2e (f0b21a8)",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Añadir evidencia focalizada de resultados al Estado acumulado. Adoptar pruebas que inyectan la proyección unificada y mantienen los contratos visuales originales."
+    },
+    {
+      "rama": "total-chatfix (1002cc0)",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Combinar hechos/curso y actualizar pendiente de aceptación de memoria al ensayo final, conservando límites de cuota y VPS."
+    },
+    {
+      "rama": "total-competencia-youtube (1cc2a67)",
+      "archivos": [
+        "docs/ESTADO.md",
+        "tests/sonda_vidiq.test.cjs",
+        "tools/cooper/preparar_sonda_vidiq.py",
+        "workflows/v2/FabOrquestador01.json"
+      ],
+      "resolucion": "Adoptar lector MCP con correlación ID y clasificación HTTP ampliada, pruebas entrantes y cifra actualizada; regenerar Orquestador manteniendo unicidad del radar."
+    },
+    {
+      "rama": "total-guia (ff0dd3e)",
+      "archivos": [
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Añadir entrega documental de guía y conservar todos los hechos/pendientes anteriores."
+    },
+    {
+      "rama": "total-sentinel-privado (55bf5e9)",
+      "archivos": [
+        "cooper/scripts/puerta.mjs",
+        "cooper/scripts/sentinel-cooper.py",
+        "tests/test_sentinel_exclusiones.py",
+        "docs/ESTADO.md"
+      ],
+      "resolucion": "Adoptar caché privada e importaciones verificadas, eliminar vendor del árbol y conservar navegación SPA/regresión del contador de caos y parser spec."
+    }
+  ],
+  "ramas_corte_final": [
+    {
+      "rama": "total-aprendizaje",
+      "sha": "688a1579b88684ed19e39de0d25cc6cb999f543c",
+      "incluida": true
+    },
+    {
+      "rama": "total-aprendizaje-aceptacion",
+      "sha": "632bd1fee71e66a7e2bfd2b4e5ef225052740846",
+      "incluida": true
+    },
+    {
+      "rama": "total-auditoria",
+      "sha": "ad67618acdc4aba4c5d6329cd0d93ab4e259759f",
+      "incluida": true
+    },
+    {
+      "rama": "total-chat-vps",
+      "sha": "3ba2508e5cf26bcd5416738fb3e4298e434d2714",
+      "incluida": true
+    },
+    {
+      "rama": "total-chatfix",
+      "sha": "1002cc032616be613f1cedc9b4d2449e3266b209",
+      "incluida": true
+    },
+    {
+      "rama": "total-cierre-aceptacion",
+      "sha": "0696e03a5b45fa878d2d046e1279a0e7a71b6306",
+      "incluida": false,
+      "estado": "En curso al corte; sin informe de cierre propio",
+      "motivo": "No se modifica ni se da por terminada una misión concurrente; fuera del conjunto de ramas terminadas solicitado."
+    },
+    {
+      "rama": "total-competencia",
+      "sha": "16e70d472a7b08b1d5b45c07b3fc4ee119bf7b62",
+      "incluida": true
+    },
+    {
+      "rama": "total-competencia-aceptacion",
+      "sha": "f5d12463f99c23ed0167d52546ce54d25af34744",
+      "incluida": true
+    },
+    {
+      "rama": "total-competencia-navegacion",
+      "sha": "ba6769c660021a46998f20cb63fcc9d1882542ee",
+      "incluida": true
+    },
+    {
+      "rama": "total-competencia-orquestada",
+      "sha": "39537a7fc49e81dac1a61dfa6e6dd9361aeaaeb6",
+      "incluida": true
+    },
+    {
+      "rama": "total-competencia-youtube",
+      "sha": "1cc2a6776c4f1e1fba28a28fbe0a8a51c89c8860",
+      "incluida": true
+    },
+    {
+      "rama": "total-despliegue",
+      "sha": "f62e3cd391598f59c5d39b90412fac85225d281f",
+      "incluida": true
+    },
+    {
+      "rama": "total-despliegue-aceptacion",
+      "sha": "d26b6147cf879c633b432034d74b79e2174de19c",
+      "incluida": true
+    },
+    {
+      "rama": "total-guia",
+      "sha": "ff0dd3eb0e564b7f776335825353674305eb83ff",
+      "incluida": true
+    },
+    {
+      "rama": "total-infra-segura",
+      "sha": "533703d1c2a43cc2c8af07fa0580c0d44cfb21cd",
+      "incluida": true
+    },
+    {
+      "rama": "total-m01",
+      "sha": "1b00e5f9b06406dcd573b8ea6c7c8a64e87310af",
+      "incluida": true
+    },
+    {
+      "rama": "total-m03",
+      "sha": "f6fb304cd02a1b3e5f7c20ec8d43efa15bfa8389",
+      "incluida": true
+    },
+    {
+      "rama": "total-m05",
+      "sha": "c25546a38ec1639e003044bea039981f8092feb5",
+      "incluida": true
+    },
+    {
+      "rama": "total-m06",
+      "sha": "fc362c5469711d53baef192a6c32d77921ae63f3",
+      "incluida": true
+    },
+    {
+      "rama": "total-m07",
+      "sha": "799117733ea9e74acf8f6d4c85234af8d2bb71e4",
+      "incluida": true
+    },
+    {
+      "rama": "total-m08",
+      "sha": "9a4f09204544703fd408c5985610aead110195f2",
+      "incluida": true
+    },
+    {
+      "rama": "total-m09",
+      "sha": "e5cbc3a3b12a2b3ae3a3513fb188495294b02965",
+      "incluida": true
+    },
+    {
+      "rama": "total-m10",
+      "sha": "66b366727e5aa37d16d5aaa58e174bd0f1f16e01",
+      "incluida": true
+    },
+    {
+      "rama": "total-m11",
+      "sha": "24a2645a47fdd945e9421ebf49c6047ca42f4888",
+      "incluida": false,
+      "estado": "En curso al corte; sin informe de cierre propio",
+      "motivo": "No se modifica ni se da por terminada una misión concurrente; fuera del conjunto de ramas terminadas solicitado."
+    },
+    {
+      "rama": "total-m12",
+      "sha": "49fd2aee78599bc25ddb3dab8667256ba21fc187",
+      "incluida": false,
+      "estado": "En curso al corte; sin informe de cierre propio",
+      "motivo": "No se modifica ni se da por terminada una misión concurrente; fuera del conjunto de ramas terminadas solicitado."
+    },
+    {
+      "rama": "total-marcas-runtime",
+      "sha": "2dac9d5d4e8d93e924c7c9a4e2acc3b7ed63f636",
+      "incluida": true
+    },
+    {
+      "rama": "total-n8n-lote",
+      "sha": "e3394168008778684752467c4b5de45d64f06ed0",
+      "incluida": true
+    },
+    {
+      "rama": "total-operacion",
+      "sha": "a496077990a5962e87384ac4eb139892d2e91f50",
+      "incluida": true
+    },
+    {
+      "rama": "total-resultados-e2e",
+      "sha": "f0b21a87671cbdb430069ae70118c6ec36a8f3a3",
+      "incluida": true
+    },
+    {
+      "rama": "total-retorno-2476",
+      "sha": "71be3c706266f27ce257c4a524fa062377564a34",
+      "incluida": true
+    },
+    {
+      "rama": "total-seguridad",
+      "sha": "cb9c478a2776313e390db3c4e77ead2909439404",
+      "incluida": true
+    },
+    {
+      "rama": "total-sentinel",
+      "sha": "b45899df48f1dc76686d1fc6b46578343ae719e5",
+      "incluida": true
+    },
+    {
+      "rama": "total-sentinel-guardia",
+      "sha": "7592d70dbb4a681a90f9c7c9f6164c503e55a0bc",
+      "incluida": true
+    },
+    {
+      "rama": "total-sentinel-privado",
+      "sha": "55bf5e9698bddfab8570a0a00fe5972fb71ed5b0",
+      "incluida": true
+    }
+  ],
+  "codigo_integrado": "99cd61604d7ada76c6cbdd4a7f35eee9ff9cb59f",
+  "fecha_corte_final_lima": "2026-11-21T12:32:48.749035-05:00"
+}
