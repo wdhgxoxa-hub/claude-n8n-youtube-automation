@@ -110,6 +110,8 @@ La aplicación solo acepta sesiones Auth.js. Se retiraron la ruta de autenticaci
 
 Los adjuntos quedan en SQLite; no hay análisis antivirus ni limpieza automática de archivos huérfanos en esta fase. No introducir evidencias personales reales en el modo simulado. Los datos de pruebas son ficticios y quedan en `.cache/`, fuera de Git.
 
+M06 añade `npm run datos:inventario -- --simular --base copia.sqlite --politica retencion.example.json --salida informe.json`: inventario privado por dueño y simulación de retención, sin modificar la base ni cargar `.env`. [Alcance, política propuesta, pruebas y límites](../docs/cooper-retencion.md). El borrado real y los plazos siguen pendientes de Walter (B08).
+
 ## Diseño y accesibilidad
 
 Dirección: mesa de producción con conversación lateral y recorrido de trabajo. Tokens semánticos grafito `#191d20`, fondo `#101214`, marfil `#f0eee7`, celeste `#a6d7ed`, terminado `#c79b75`; equivalentes claros. Manrope variable alojada localmente, retícula de 4/8 px, formas y SVG propios. Cooper aparece en el chat y como opción explícita de presentador; la marca general usa la C con patita.

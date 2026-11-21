@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:e2e": "node scripts/e2e.mjs",
     "test:ensayo": "node --test ../tests/migrar_dueno.test.mjs && node scripts/ensayo.mjs",
-    "db:migrate": "tsx src/db/migrar.ts"
+    "db:migrate": "tsx src/db/migrar.ts",
+    "datos:inventario": "tsx scripts/retencion.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",

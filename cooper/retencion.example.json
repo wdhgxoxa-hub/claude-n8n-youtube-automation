@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "modo": "simular",
+  "dias": {
+    "adjunto": null,
+    "mensaje": null,
+    "memoria": null,
+    "activo": null,
+    "derivado": null,
+    "consentimiento": null,
+    "ingesta": null,
+    "aviso": null
+  },
+  "excepciones": { "duenos": [], "recursos": [] }
+}
