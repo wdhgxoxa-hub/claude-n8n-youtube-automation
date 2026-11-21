@@ -8,6 +8,24 @@ function metricasAprendizaje(m) {
   const numero = v => v !== null && v !== '' && v !== undefined && Number.isFinite(Number(v)) && Number(v) >= 0 ? Number(v) : null;
   return Object.fromEntries(['vistas','meGusta','comentarios','retencion','seguidoresGanados'].map(k => [k, numero(m?.[k])]));
 }
+function duracionYoutubeAprendizaje(raw) {
+  const m = String(raw || '').match(/^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/);
+  if (!m) return null;
+  const segundos = Number(m[1] || 0)*86400 + Number(m[2] || 0)*3600 + Number(m[3] || 0)*60 + Number(m[4] || 0);
+  return segundos > 0 ? segundos : null;
+}
+function curvaYoutubeAprendizaje(reporte, duracion) {
+  if (!(duracion > 0)) return [];
+  const campos = (reporte?.columnHeaders || []).map(c => c.name);
+  const tiempo = campos.indexOf('elapsedVideoTimeRatio'), valor = campos.indexOf('audienceWatchRatio');
+  if (tiempo < 0 || valor < 0) return [];
+  // YouTube entrega 100 intervalos, no una muestra por segundo. No interpolar.
+  return (reporte.rows || []).flatMap(r => {
+    const t = r[tiempo], v = r[valor];
+    return typeof t === 'number' && t > 0 && t <= 1 && typeof v === 'number' && Number.isFinite(v) && v >= 0
+      ? [{ segundo:Math.round(t*duracion*1000)/1000, porcentaje:v }] : [];
+  }).sort((a,b) => a.segundo-b.segundo).slice(0,100);
+}
 function contextoAprendizaje(video, trabajos, planos) {
   const propios = trabajos.filter(t => t.video_id === video.video_id && t.canal_id === video.canal_id && ['ok','listo'].includes(t.estado)).sort((a,b) => String(b.updatedAt || b.createdAt).localeCompare(String(a.updatedAt || a.createdAt)));
   const resultado = modo => { const r = parseAprendizaje(propios.find(t => modo.includes(t.modo))?.resultado); return r.resultado || r; };
@@ -31,9 +49,13 @@ function validarAprendizaje(resultado, contexto, jobId) {
   const lecciones = (Array.isArray(resultado?.lecciones) ? resultado.lecciones : []).slice(0,30).flatMap((l,i) => {
     const refs = (Array.isArray(l.origenes) ? l.origenes : []).flatMap(o => {
       const e = evidencias.find(e => e.video_id === o.video_id && e.red === o.red && e.ventana === o.ventana);
-      if (!e || !['vistas','meGusta','comentarios','retencion','seguidoresGanados'].includes(o.metrica) || e.metricas[o.metrica] === null || e.metricas[o.metrica] === undefined) return [];
+      if (!e || !['vistas','meGusta','comentarios','retencion','seguidoresGanados'].includes(o.metrica)) return [];
+      const punto = o.segundo === undefined ? null : (e.retencion_segundos || []).find(p => p.segundo === o.segundo);
+      if (o.segundo !== undefined && (o.metrica !== 'retencion' || !punto)) return [];
+      const valor = punto ? punto.porcentaje : e.metricas[o.metrica];
+      if (typeof valor !== 'number' || !Number.isFinite(valor) || valor < 0) return [];
       // El valor procede del registro, nunca de la respuesta del modelo.
-      return [{ video_id:e.video_id, red:e.red, ventana:e.ventana, fecha:e.fecha, metrica:o.metrica, valor:e.metricas[o.metrica], demora_horas:e.demora_horas || 0 }];
+      return [{ video_id:e.video_id, red:e.red, ventana:e.ventana, fecha:e.fecha, metrica:o.metrica, valor, ...(punto ? {segundo:punto.segundo} : {}), demora_horas:e.demora_horas || 0 }];
     });
     if (!refs.length || !texto(l.regla).trim() || !texto(l.causa).trim() || !texto(l.correccion).trim()) return [];
     return [{ id:jobId + ':' + i, regla:texto(l.regla,500), causa:texto(l.causa), correccion:texto(l.correccion), origenes:refs.slice(0,20),

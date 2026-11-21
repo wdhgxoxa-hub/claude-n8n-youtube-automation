@@ -54,7 +54,7 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
       for (const n of f.nodes.filter(n => n.type.endsWith('.executeWorkflow')))
         assert.strictEqual(n.parameters.workflowId.value, token.id);
       for (const n of f.nodes.filter(n => n.type.endsWith('.httpRequest'))) {
-        assert.match(n.parameters.url, /youtubeanalytics.googleapis.com|api.upload-post.com\/api\/uploadposts\/post-analytics\/|oauth2.googleapis.com\/token/);
+        assert.match(n.parameters.url, /youtubeanalytics.googleapis.com|api.upload-post.com\/api\/uploadposts\/post-analytics\/|oauth2.googleapis.com\/token|^https:\/\/www.googleapis.com\/youtube\/v3\/videos$/);
         if (n.parameters.method === 'POST') assert.strictEqual(n.parameters.url, 'https://oauth2.googleapis.com/token');
       }
     }
@@ -2074,4 +2074,51 @@ test('aceptación del plan: lección real validada y siguiente guion lee IDs sin
  const guion=await aceptar({fase:'guion',trabajo:listo,fuentes},async prompt=>{assert.ok(prompt.includes(id));return {texto:JSON.stringify({guion:'Un comercio peruano abre el relato.',aprendizajes_aplicados:[{id,cambio:'El caso local abre el guion'}]}),llamadas:[]};});
  assert.equal(guion.prueba.omision_rechazada,true);assert.deepEqual(guion.prueba.ids,[id]);assert.equal(guion.crea_video,false);assert.equal(guion.publica,false);
  await assert.rejects(()=>aceptar({fase:'guion',trabajo,fuentes},async()=>({})),/leccion_persistida/);
+});
+
+test('aprendizaje: duración publicada convierte intervalos a segundos y conserva repeticiones',()=>{
+ const video={video_id:'v',canal_id:'c',youtube_id:'abcdefghijk',publicado_en:'2026-11-01T00:00:00Z'};
+ const clock=relojAprendizaje('2026-11-02T00:00:00Z');
+ const retencion={columnHeaders:[{name:'audienceWatchRatio'},{name:'elapsedVideoTimeRatio'}],rows:[[1.25,.01],[.4,.5],[0,1],[null,.8]]};
+ const all={'Pedidos de retención':[video],'Retención':[retencion],'Datos del video publicado':[{items:[{id:video.youtube_id,snippet:{title:'Título publicado',thumbnails:{high:{url:'https://example.test/miniatura.jpg'}}},contentDetails:{duration:'PT2M'}}]}],$input:[{columnHeaders:['views','averageViewPercentage'].map(name=>({name})),rows:[[12,50]]}]};
+ const h=run(codeOf(APR,'Cooper · historial YouTube'),{all,clock})[0].json;
+ const m=JSON.parse(h.metricas_youtube)[0];
+ assert.deepEqual(m.curvaRetencion,[{segundo:1.2,porcentaje:1.25},{segundo:60,porcentaje:.4},{segundo:120,porcentaje:0}]);
+ assert.equal(m.duracionSegundos,120);
+ const pedido=run(codeOf(APR,'Pedir lecciones'),{clock,all:{...all,'Videos publicados':[video],'Cooper · historial YouTube':[h]}})[0].json;
+ const e=pedido.datos.evidencias[0];
+ assert.equal(e.creativo.titulo,'Título publicado');assert.equal(e.creativo.miniatura.pixeles_inspeccionados,false);
+ assert.deepEqual(e.retencion_segundos,m.curvaRetencion);
+ const trabajo=run(codeOf(APR,'Preparar trabajo de aprendizaje'),{json:pedido})[0].json;
+ const propuesta={resumen:'Revisar el momento medido',lecciones:[{regla:'Simplificar la explicación',causa:'Posible exceso de detalle',correccion:'Acortar la frase del plano',origenes:[{video_id:'v',red:'youtube',ventana:'24h',metrica:'retencion',segundo:60,valor:999}]}]};
+ const salida=run(codeOf(APR,'Validar aprendizaje del plan'),{json:{texto:JSON.stringify(propuesta),llamadas:[]},all:{'Preparar trabajo de aprendizaje':[trabajo]}})[0].json;
+ assert.equal(salida.estado,'listo');
+ const leccion=JSON.parse(salida.resultado).resultado.lecciones[0];
+ assert.equal(leccion.origenes[0].valor,.4);assert.equal(leccion.origenes[0].segundo,60);
+ const next=run(codeOf(ORQ,'Nuevo video'),{nodes:{Inicio:{tema:'Siguiente caso'},'Buscar canal':{canal_id:'c'},'Buscar biblia':{resultado:'{}'}},all:{'Lecciones antes del guion':[{...trabajo,...salida}]}})[0].json;
+ assert.equal(next.pedido.datos.aprendizaje.lecciones[0].id,leccion.id);
+ const proyectada=run(OBS+'return [{json:leccionesCooper({canal_id:"c"},$json.t)}];',{json:{t:[{...trabajo,...salida,createdAt:'2026-11-02T00:00:00Z'}]}})[0].json;
+ assert.equal(proyectada[0].origenes[0].segundo,60);
+ const sinDuracion=run(codeOf(APR,'Cooper · historial YouTube'),{clock,all:{...all,'Datos del video publicado':[{error:'Sin permiso'}]}})[0].json;
+ assert.deepEqual(JSON.parse(sinDuracion.metricas_youtube)[0].curvaRetencion,[]);
+ assert.equal(JSON.parse(sinDuracion.metricas_youtube)[0].vistas,12);
+ assert.ok(APR.connections['Datos del video publicado'].main[0].some(e=>e.node==='Reponer pedidos de retención'));
+ assert.ok(APR.connections['Reponer pedidos de retención'].main[0].some(e=>e.node==='Retención'));
+});
+
+test('aprendizaje: no inventa segundos, patrón solo con tres videos y conserva hitos del mismo día',()=>{
+ const base={red:'youtube',ventana:'24h',fecha:'2026-11-02T00:00:00Z',metricas:{retencion:.5},retencion_segundos:[{segundo:3,porcentaje:.4}]};
+ const evidencias=['a','b','c'].map(video_id=>({...base,video_id}));
+ const validar=origenes=>run(APRENDIZAJE+'return [{json:validarAprendizaje($json.r,$json.c,"j")}];',{json:{r:{lecciones:[{regla:'Regla',causa:'Hipótesis',correccion:'Acortar apertura',origenes}]},c:{evidencias}}})[0].json.lecciones;
+ assert.equal(validar(evidencias.map(e=>({...e,metrica:'retencion',segundo:3})))[0].nivel,'patron');
+ assert.deepEqual(validar([{...evidencias[0],metrica:'retencion',segundo:4}]),[]);
+ const viejo={fecha:'2026-11-04T00:00:00Z',ventana:'24h',vistas:10};
+ const clock=relojAprendizaje('2026-11-04T02:00:00Z');
+ const v={video_id:'v',canal_id:'c',publicado_en:'2026-11-01T02:00:00Z',metricas_youtube:JSON.stringify([viejo])};
+ const h=run(codeOf(APR,'Cooper · historial YouTube'),{clock,all:{'Pedidos de retención':[v],$input:[{columnHeaders:[{name:'views'}],rows:[[20]]}]}})[0].json;
+ assert.deepEqual(JSON.parse(h.metricas_youtube).map(m=>m.ventana),['24h','72h']);
+ const proyectado=run(OBS+'return [{json:observabilidadCooper($json,[],[],[],[])}];',{json:{...v,...h,estado:'publicado',youtube_id:'abcdefghijk'}})[0].json;
+ assert.deepEqual(proyectado.publicaciones[0].historial.map(m=>m.ventana),['24h','72h']);
+ const red=run(OBS+'return [{json:JSON.parse(historialRedesCooper($json.p,$json.r,Date.now()))}];',{clock,json:{p:{...v,metricas_historial:JSON.stringify({tiktok:[viejo]})},r:{platforms:{tiktok:{success:true,post_metrics:{views:20}}}}}})[0].json;
+ assert.deepEqual(red.tiktok.map(m=>m.ventana),['24h','72h']);
 });

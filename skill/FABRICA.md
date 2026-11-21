@@ -164,6 +164,8 @@ Compara la imagen con sus referencias y con el texto narrado. `resultado`: `{ "a
 
 Cada evidencia incluye `creativo`: guion, planos, título y descripción de miniatura existentes, más curva de retención. Cruza caídas con frases/planos y la promesa del título/miniatura. Si falta una pieza, dilo: no inventes una explicación causal. La causa siempre es una hipótesis; un patrón requiere tres videos distintos. Cada lección necesita una corrección concreta a probar. No afirmes que ya se corrigió o mejoró sin un guion posterior y sus métricas.
 
+`retencion_segundos` conserva los puntos observados `{segundo, porcentaje}`. YouTube entrega 100 intervalos de tiempo relativo: se ubican en segundos usando la duración publicada, sin interpolar. Las repeticiones pueden superar el 100 %. Si falta duración o curva, no atribuyas una caída a un segundo. Para citar un punto añade `segundo` exacto a su origen con `metrica: "retencion"`; sin `segundo`, citas la media. `creativo.titulo` usa el título publicado cuando está disponible. La URL y descripción de miniatura no significan que se hayan inspeccionado sus píxeles.
+
 `resultado`: `{ "resumen": "", "lecciones": [{ "regla": "", "causa": "", "correccion": "", "origenes": [{ "video_id": "", "red": "youtube", "ventana": "24h", "metrica": "retencion" }] }] }`. Usa solo referencias recibidas: el servidor toma el valor medido de la evidencia persistida, nunca una cifra propuesta por el modelo. Sin evidencia suficiente devuelve `lecciones: []` con el motivo.
 
 ### Lectura obligatoria de aprendizaje al escribir

@@ -8,11 +8,11 @@ function textoCooper(value, max = 2000) {
   return String(value || '').replace(/https?:\/\/\S+/gi, '[enlace]').replace(/(?:Bearer|Apikey)\s+\S+/gi, '[privado]')
     .split(/\n|(?<=[.!?])\s/).filter(s => !/\b(?:USD|US\$|costos?|presupuesto|tokens?|api.?key|secret|proveedor|credencial|OpenAI|Claude|Creatomate|HeyGen|ElevenLabs|Gemini)\b|\$\s*\d/i.test(s)).join(' ').slice(0,max);
 }
-function curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({segundo:numeroCooper(p.second ?? p.segundo),porcentaje:numeroCooper(p.percentage ?? p.porcentaje)})).filter(p=>p.segundo!==null && p.porcentaje!==null && p.porcentaje<=1).slice(0,600); }
+function curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({segundo:numeroCooper(p.second ?? p.segundo),porcentaje:numeroCooper(p.percentage ?? p.porcentaje)})).filter(p=>p.segundo!==null && p.porcentaje!==null).sort((a,b)=>a.segundo-b.segundo).slice(0,600); }
 function medicionCooper(value) {
   const fecha = fechaCooper(value.fecha); if (!fecha) return null;
   const r = numeroCooper(value.retencion);
-  return { fecha, seguidoresGanados:numeroCooper(value.seguidoresGanados), ventana:['24h','72h','7d'].includes(value.ventana)?value.ventana:null, demoraHoras:numeroCooper(value.demora_horas), curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };
+  return { fecha, curvaFuente:value.curvaFuente==='youtube_intervalos'?'youtube_intervalos':'post_segundos', seguidoresGanados:numeroCooper(value.seguidoresGanados), ventana:['24h','72h','7d'].includes(value.ventana)?value.ventana:null, demoraHoras:numeroCooper(value.demora_horas), curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };
 }
 function leccionesCooper(canal, trabajos) {
   return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).slice(-100).flatMap(t => {
@@ -24,7 +24,7 @@ function leccionesCooper(canal, trabajos) {
         return a?[{videoId:String(g.video_id),cambio:textoCooper(a.cambio,1500)}]:[];
       }).slice(-20);
       return { id:String(l.id),fecha,resumen:textoCooper(l.regla,3000),ganchos:[],temas:[],causa:textoCooper(l.causa),correccion:textoCooper(l.correccion),nivel:l.nivel==='patron'?'patron':'hipotesis',aplicaciones,
-        origenes:(l.origenes || []).slice(0,20).map(o=>({videoId:String(o.video_id),red:String(o.red).slice(0,40),ventana:o.ventana,fecha:fechaCooper(o.fecha),metrica:o.metrica,valor:numeroCooper(o.valor),demoraHoras:numeroCooper(o.demora_horas) || 0})).filter(o=>o.fecha && o.valor!==null) };
+        origenes:(l.origenes || []).slice(0,20).map(o=>({videoId:String(o.video_id),red:String(o.red).slice(0,40),ventana:o.ventana,fecha:fechaCooper(o.fecha),metrica:o.metrica,valor:numeroCooper(o.valor),...(numeroCooper(o.segundo)!==null?{segundo:numeroCooper(o.segundo)}:{}),demoraHoras:numeroCooper(o.demora_horas) || 0})).filter(o=>o.fecha && o.valor!==null) };
     });
     const lista = x => (Array.isArray(x) ? x : []).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);
     const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);
@@ -45,8 +45,9 @@ function observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {
   }
   const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);
   for (const p of publicadas) if (p.red==='youtube') {
-    const porDia=new Map(ytHist.map(m=>[m.fecha.slice(0,10),m]));
-    for (const m of p.historial) { const otro=porDia.get(m.fecha.slice(0,10)); porDia.set(m.fecha.slice(0,10),{...m,retencion:m.retencion ?? otro?.retencion ?? null,seguidoresGanados:m.seguidoresGanados ?? otro?.seguidoresGanados ?? null}); }
+    const clave=m=>m.fecha.slice(0,10)+':'+(m.ventana || 'diaria');
+    const porDia=new Map(ytHist.map(m=>[clave(m),m]));
+    for (const m of p.historial) { const otro=porDia.get(clave(m)), curva=m.curvaRetencion.length?m:otro; porDia.set(clave(m),{...m,curvaRetencion:curva?.curvaRetencion || [],curvaFuente:curva?.curvaFuente || m.curvaFuente,retencion:m.retencion ?? otro?.retencion ?? null,seguidoresGanados:m.seguidoresGanados ?? otro?.seguidoresGanados ?? null}); }
     p.historial=[...porDia.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90);
   }
   // Los eventos de resolución explicitan qué revisión fue superada. Avanzar de etapa no basta.
@@ -79,7 +80,7 @@ function historialRedesCooper(p, respuesta, ahora) {
     const horas=(ahora-Date.parse(p.publicado_en || ''))/3600000,ventana=horas>=168?'7d':horas>=72?'72h':horas>=24?'24h':null;
     const dato={fecha,ventana,demora_horas:ventana?Math.max(0,Math.round(horas-(ventana==='7d'?168:ventana==='72h'?72:24))):null,seguidoresGanados:numeroCooper(m.new_followers),vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};
     const prev=Array.isArray(historial[red])?historial[red]:[];
-    historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10)),dato].slice(-90);
+    historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10) || x.ventana!==ventana),dato].slice(-90);
   }
   return JSON.stringify(historial);
 }

@@ -182,6 +182,11 @@ def validar_limites(f):
             seguro = (p.get('method', 'GET') == 'GET' and p['url'] in [
                 'https://youtubeanalytics.googleapis.com/v2/reports',
                 "={{ 'https://api.upload-post.com/api/uploadposts/post-analytics/' + encodeURIComponent($json.request_id) }}"])
+            seguro |= (p.get('method') == 'GET'
+                       and p['url'] == 'https://www.googleapis.com/youtube/v3/videos'
+                       and {q['name']: q['value'] for q in p.get('queryParameters', {}).get('parameters', [])} == {
+                           'part': 'snippet,contentDetails', 'id': '={{ $json.youtube_id }}',
+                           'fields': 'items(id,snippet(title,thumbnails),contentDetails(duration))'})
             seguro |= p.get('method') == 'POST' and p['url'] == 'https://oauth2.googleapis.com/token'
             if not seguro:
                 raise ValueError('Petición fuera de analytics/renovación')
