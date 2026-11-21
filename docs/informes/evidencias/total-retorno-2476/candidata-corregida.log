@@ -1,0 +1,24 @@
+▶ M01: routine ficticia, retorno autenticado y ruta real del Orquestador en n8n aislado
+  ✔ sin clave o con clave incorrecta: 403 y ninguna escritura (195.319975ms)
+  ✔ routine ficticia → webhook → trabajo → ruta del Orquestador con dueño persistido (496.348605ms)
+  ✔ duplicado idéntico, incluso reordenado: 200 sin segundo despacho; alterado: 409 (453.088082ms)
+  ✔ modo discordante, trabajo inexistente o bloqueado: 409 (651.492877ms)
+  ✔ ocho retornos simultáneos reservan y despachan una sola vez (1741.035748ms)
+  ✔ error de la routine se guarda y enruta como claude_error una sola vez (595.132099ms)
+  ✔ aprendizaje conserva contexto y recibo; el evento usa métricas verificadas antes del despacho (715.914622ms)
+  ✔ el guion omiso o con ID ajeno no reserva ni despacha; la corrección válida sí (896.723587ms)
+  ✔ callback tardío después de timeout de envío conserva el trabajo original (319.27266ms)
+  ✔ caída después de reservar: persiste la incertidumbre tras reiniciar n8n y no redespacha (12908.029145ms)
+  ✔ caída del despacho: 202, conserva resultado y evita confirmación falsa (1692.214344ms)
+  ✔ el Orquestador puede terminar sin ítems sin perder la confirmación (1502.630989ms)
+  ✔ URL antigua no se usa ni se sigue como respaldo (8.281759ms)
+  ✔ reversa local restaura versión anterior y conserva trabajos sin reentregarlos (597.719019ms)
+✔ M01: routine ficticia, retorno autenticado y ruta real del Orquestador en n8n aislado (42969.102553ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43021.692798

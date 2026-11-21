@@ -1,0 +1,36 @@
+{
+  "estado": "PASS",
+  "codigo": "7b5b1ce",
+  "base": "4cbe485",
+  "helper": "67d3bd0",
+  "pruebas": {
+    "n8n_2_47_6": 15,
+    "n8n_2_47_4": 15,
+    "flujos": 172,
+    "selector_imagen": 3
+  },
+  "errores": 0,
+  "advertencias": 0,
+  "cpu_contenedor": 0.5,
+  "red": "interna sin salida; puerto solo loopback",
+  "cuentas": "ficticias",
+  "vps_modificado": false,
+  "fuentes_sha256": {
+    "workflows/v2/FabRetornoClaud1.json": "6f45023da3125e8e18537a10b46adb7b8f731ccc89b3dad5d450de05ea656b5f",
+    "tools/cooper/aprendizaje_flujos.py": "6d332a6ac98d4c6f23d30a4a2f8edcc40961dca0845a78c614c8dde244d5aa16",
+    "tools/cooper/aceptar_aprendizaje_plan.mjs": "76e8272e3d47d00f058fc2cf3aff9fd14c9ee260492249b331009d31bc2dd148",
+    "tests/retorno_n8n.test.mjs": "cfe3fe555481c9199efe37bb5e97936a5be06012dfa219c603355e933bad7b9b"
+  },
+  "defecto_anterior": {
+    "ambas_versiones": {
+      "pasaron": 5,
+      "fallaron": 8
+    },
+    "causa": "Evento leía Fila actualizada antes de ejecutarla; la extensión de aprendizaje sustituía la confirmación y perdía el recibo."
+  },
+  "imagenes": {
+    "version": "2.47.6",
+    "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+    "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+  }
+}

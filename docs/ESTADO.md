@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 12:10 (Lima).
+Última actualización: 2026-11-21 12:14 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **Retorno y aprendizaje compatibles, probado localmente:** corregida la lectura prematura de «Fila actualizada» y la pérdida del recibo M01. La validación editorial ahora precede a reserva/despacho; contexto y deduplicación se conservan. Pasan 15 casos reales en n8n 2.47.6 y 15 en 2.47.4, 172 de flujos y tres del selector estricto de imágenes. Pendiente integración y aplicación coordinada; VPS sin cambios por este frente. [Evidencia](informes/total-retorno-2476.md).
 
 - **Aprendizaje aceptado con datos reales:** TikTok/YouTube de una publicación existente, hipótesis generada por el plan PC, lección persistida y siguiente guion que declara su ID; omisión rechazada. Reversa y reaplicación comprobadas sin nuevos videos ni costos. Google existente y Data API funcionan; Analytics devolvió cero filas. M7 pendiente de activación coordinada. [Evidencia](informes/total-aprendizaje-aceptacion.md).
 
