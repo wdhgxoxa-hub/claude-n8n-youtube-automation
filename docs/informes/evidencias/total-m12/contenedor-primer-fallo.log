@@ -1,0 +1,9 @@
+M12 inicio ci
+npm error gyp ERR! command "/usr/local/bin/node" "/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild"
+npm error gyp ERR! cwd /ensayo/cooper/node_modules/better-sqlite3
+npm error gyp ERR! node -v v24.22.3
+npm error gyp ERR! node-gyp -v v13.0.0
+npm error gyp ERR! $npm_package_name better-sqlite3
+npm error gyp ERR! $npm_package_version 13.2.0
+npm error gyp ERR! not ok
+npm error A complete log of this run can be found in: /ensayo/cooper/.cache/npm/_logs/2026-11-21T17_37_35_807Z-debug-0.log

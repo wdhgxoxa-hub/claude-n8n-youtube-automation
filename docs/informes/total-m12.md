@@ -1,7 +1,8 @@
 # M12 — historiales con volumen (H19)
 
 21-11-2026, Lima. Rama/worktree `total-m12`, base integrada `66732be`.
-Implementado y probado localmente; no integrado ni desplegado. Sin push, merge,
+Implementado y probado localmente; **puerta completa FAIL por fluidez preexistente**.
+Este frente no integró ni desplegó. Sin push, merge,
 VPS, servicios externos, OAuth, pagos ni acceso a credenciales. No se modificaron
 flujos n8n, migraciones, vendor ni el entorno de Sentinel.
 
@@ -9,6 +10,7 @@ flujos n8n, migraciones, vendor ni el entorno de Sentinel.
 
 - `8026806` — fixture determinista y benchmark repetible, con medición inicial.
 - `49fd2ae` — consulta de avisos faltantes, proyección mínima y seis regresiones H19.
+- `3c347b2` — informe, ESTADO y primera puerta local sin navegador.
 - El commit de cierre registra este informe, ESTADO y la evidencia de la puerta.
 
 `cicloMensajeria` cargaba los 10.000 videos completos cada 15 segundos, aun con
@@ -87,15 +89,67 @@ Tipos y [87 pruebas focales](evidencias/total-m12/focal.log) pasan: seis H19,
 36 WhatsApp, 19 puente, 18 seguridad y ocho resultados. Incluyen SSE persistido,
 aislamiento, revocación de sesión y liberación de conexiones. Un worker/CPU.
 
-Puerta parcial sobre `49fd2ae`: `npm ci`, `npm run lint`, `npm run typecheck`,
-`npm test` (**442/442**) y `node --test tests/flujos_v2.test.cjs` (**172/172**) pasan
-con rc 0, cero advertencias y sin omisiones. [Recibo](evidencias/total-m12/puerta.json)
-y registros `puerta-*.log` en la misma carpeta.
+La implementación y las pruebas focales concluyeron en menos de siete minutos,
+dentro del máximo de veinte; el resto corresponde a documentación y puerta.
+La primera puerta local pasa instalación, lint, tipos, **442 unitarias** y
+**172 flujos**, con rc 0 y cero advertencias. Se creó `.cache/LISTO-PUERTA` a las
+12:28 Lima y se recibió el turno fechado 12:35 antes de iniciar navegador/build.
 
-`.cache/LISTO-PUERTA` creada a las 12:28 Lima; E2E/build esperan el archivo
-`.cache/TURNO-PUERTA` del orquestador. No se lanzarán antes. La implementación y
-las pruebas focales concluyeron en menos de siete minutos, dentro del máximo de
-veinte minutos; el resto corresponde a documentación y puerta.
+Se exportó `3c347b2` con `git archive` y se construyó la imagen del Containerfile
+existente. Ensayo en Podman sin puertos publicados, sin montar HOME, sockets ni
+archivos privados; una CPU y un worker. Se reprodujo la secuencia de `ci:limpia`
+con afinidad explícita y `CIRCLE_NODE_TOTAL=1`, `RAYON_NUM_THREADS=1`,
+`UV_THREADPOOL_SIZE=1`. [Origen y hash](evidencias/total-m12/contenedor-origen.json),
+[secuencia ejecutable](evidencias/total-m12/puerta-contenedor.sh) y
+[recibo final](evidencias/total-m12/puerta.json).
+
+Reejecución del ensayo preparado en este worktree (el contenedor se elimina al salir):
+
+```bash
+podman run --rm --name cooper-m12-puerta --cpuset-cpus=10 --cpus=1 \
+  --shm-size=1g --cap-drop=ALL --security-opt=no-new-privileges \
+  --volume "$PWD/.cache/puerta-m12/checkout:/ensayo:rw" \
+  localhost/cooper-ci:total-m12 bash /ensayo/m12-puerta.sh
+```
+
+El contraste de base usa `git archive 66732be`, la misma imagen y límites, y
+`npm run test:e2e -- --grep "fluidez local"`; no representa otra puerta completa.
+
+| Paso final en contenedor | Resultado | rc |
+| --- | --- | ---: |
+| `npm ci` y preparación existente | PASS; 0 vulnerabilidades | 0 |
+| `npm run lint` | PASS; 0 errores/advertencias | 0 |
+| `npm run typecheck` | PASS | 0 |
+| `npm test` | PASS; 442/442 | 0 |
+| `npm run test:e2e` | **FAIL; 52/53, sin omitidos ni reintentos Playwright** | 1 |
+| `npm run build` | PASS, ejecutado también después del fallo E2E | 0 |
+| `node --test tests/flujos_v2.test.cjs`, desde raíz | PASS; 172/172 | 0 |
+
+Todos esos pasos tienen cero advertencias. El único escenario fallido es
+`e2e/animacion.spec.ts:251`, fluidez local: exige **>55 fps**, obtuvo **44,80 fps**
+en CPU 0. Se midió carga del host y se repitió la puerta en CPU 10, manteniendo
+una CPU/worker y todos los umbrales: **41,72 fps**, de nuevo 52/53 aprobados.
+Una muestra de carga no prueba causalidad; el cambio de CPU no resolvió el fallo.
+Como contraste se exportó la base **66732be**, sin ningún cambio M12, con las mismas
+dependencias/imagen y CPU 10: el caso aislado también falla, **32,58 fps**, rc 1.
+[Primera E2E](evidencias/total-m12/e2e-cpu0.log),
+[segunda E2E](evidencias/total-m12/contenedor-e2e.log) y
+[contraste de base](evidencias/total-m12/base-fluidez.log).
+Esto acredita que el fallo se reproduce sin M12; **no se declara la puerta verde**.
+No se cambió animación ni se relajó el umbral para cerrar esta misión.
+
+Dos fallos de preparación del ensayo también quedan registrados: el primer
+`npm ci` intentó extraer cabeceras con `fchown` sin capacidades; se aplicó la
+variable ya usada por `entornoLimpio` para reutilizar `/usr/local`. Al archivar
+la primera E2E, el reporte renombrado quedó fuera de `.cache` y ESLint analizó su
+JavaScript generado; se movió a `.cache`, sin cambiar reglas de lint. Tras ambas
+correcciones de preparación se repitió la secuencia desde `npm ci`.
+
+Los contenedores propios `cooper-m12-puerta` y `cooper-m12-base` terminaron y se
+eliminaron con `--rm`; se comprobó que no quedan activos. Los artefactos completos
+permanecen en `.cache/puerta-m12/` y `.cache/puerta-m12-base/`. El orquestador debe
+repetir su puerta integrada después del retiro de Sentinel; aquí se ensayó solo
+el código de esta rama, sin mezclar el frente concurrente.
 
 ## Límites reales
 
@@ -122,6 +176,9 @@ También se leyó la guía instalada de Next sobre `serverExternalPackages`.
 
 ## Pendientes de Walter
 
+- Encargar al frente de animación/orquestador resolver la fluidez bajo la
+  restricción de una CPU. La puerta completa queda pendiente de ese cierre;
+  no se amplió M12 a cambios de otra misión ni se rebajaron criterios.
 - Ninguna decisión bloquea esta corrección local. La aceptación operativa con
   historia real y cualquier prueba en VPS/n8n corresponden a una misión autorizada.
 - Si el volumen real supera estos presupuestos, acordar una lectura paginada

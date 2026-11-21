@@ -1,0 +1,7 @@
+{"node":"24.22.3","npm":"12.2.2","python":"3.14.7","uv":"0.12.24","sistema":"debian 12","sentinel":"6764bbdcab91719947e93ba1cc476cbefafb58e8"}
+Using CPython 3.14.7
+Creating virtual environment at: .cache/sentinel-venv
+Using Python 3.14.7 environment at: .cache/sentinel-venv
+Resolved 5 packages in 214ms
+Checked 5 packages in 0.03ms
+Preparación y lanzamiento de ambos Chromium: PASS.

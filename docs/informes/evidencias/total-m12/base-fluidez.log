@@ -1,0 +1,101 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --grep fluidez local
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 75ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 17.2s
+  Running TypeScript ...
+  Finished TypeScript in 11.6s ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/4) ...
+  Generating static pages using 1 worker (1/4) 
+  Generating static pages using 1 worker (2/4) 
+  Generating static pages using 1 worker (3/4) 
+✓ Generating static pages using 1 worker (4/4) in 58ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/admin/conciliacion
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✘  1 [demostracion] › e2e/animacion.spec.ts:251:1 › fluidez local y propiedades de animación sin cambios de geometría (8.6s)
+
+
+  1) [demostracion] › e2e/animacion.spec.ts:251:1 › fluidez local y propiedades de animación sin cambios de geometría 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 55
+    Received:   32.583644599856946
+
+      320 |     ).toEqual([]);
+      321 |     expect(sample.cls).toBe(0);
+    > 322 |     expect(sample.fps).toBeGreaterThan(55);
+          |                        ^
+      323 |     results.push({ cpu: rate, ...sample });
+      324 |   }
+      325 |   await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+        at /ensayo/cooper/e2e/animacion.spec.ts:322:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/animacion-fluidez-local-y--6b4e6-ón-sin-cambios-de-geometría-demostracion/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/animacion-fluidez-local-y--6b4e6-ón-sin-cambios-de-geometría-demostracion/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/animacion-fluidez-local-y--6b4e6-ón-sin-cambios-de-geometría-demostracion/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/animacion-fluidez-local-y--6b4e6-ón-sin-cambios-de-geometría-demostracion/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/animacion-fluidez-local-y--6b4e6-ón-sin-cambios-de-geometría-demostracion/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [demostracion] › e2e/animacion.spec.ts:251:1 › fluidez local y propiedades de animación sin cambios de geometría 

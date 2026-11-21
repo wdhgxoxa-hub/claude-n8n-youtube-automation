@@ -1,43 +1,95 @@
 {
-  "fechaLima": "2026-11-21T12:31:17.736093-05:00",
+  "fechaLima": "2026-11-21T13:08:55.481221-05:00",
   "revisionCodigo": "49fd2ae",
-  "cpu": 0,
+  "revisionCheckout": "3c347b2",
+  "resultado": "FAIL",
+  "motivo": "La fluidez de animación falla también en la base 66732be bajo una CPU; no se alteraron umbrales ni código de otro frente.",
+  "cpu": 10,
   "workers": 1,
   "pasos": [
     {
       "comando": "npm ci",
-      "rc": 0,
       "estado": "PASS",
-      "evidencia": "puerta-ci.log"
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-ci.log",
+      "sha256": "d6e405a5ef20687b5c71d8b262d419d433405c3178e3e89305d3660b445f771f"
+    },
+    {
+      "comando": "node scripts/preparar-pruebas.mjs",
+      "estado": "PASS",
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-preparacion.log",
+      "sha256": "cc57352fe43e22a1846d7fcfd32c4c0da8447153737102b65d85cd8e112a3e68"
     },
     {
       "comando": "npm run lint",
-      "rc": 0,
       "estado": "PASS",
-      "evidencia": "puerta-lint.log"
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-lint.log",
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
     },
     {
       "comando": "npm run typecheck",
-      "rc": 0,
       "estado": "PASS",
-      "evidencia": "puerta-tipos.log"
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-typecheck.log",
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
     },
     {
       "comando": "npm test",
-      "rc": 0,
       "estado": "PASS",
-      "evidencia": "puerta-unit.log"
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-unitarias.log",
+      "sha256": "97ccdd4f44364398287fe03d6fc143128e981d019b39ad8ac3ba56aa33b02659"
     },
     {
-      "comando": "node --test tests/flujos_v2.test.cjs",
-      "rc": 0,
+      "comando": "npm run test:e2e",
+      "estado": "FAIL",
+      "rc": 1,
+      "advertencias": 0,
+      "evidencia": "contenedor-e2e.log",
+      "sha256": "6331c4a777985e837b4e494af1ac296cf26c7846d0a05138f1ca0c9d3f587613"
+    },
+    {
+      "comando": "npm run build",
       "estado": "PASS",
-      "evidencia": "puerta-flujos.log"
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-build.log",
+      "sha256": "90be36ee9d58df2eb731776d99edff05229a23dc16687e1a0254c3f3d45e5705"
+    },
+    {
+      "comando": "node --test tests/flujos_v2.test.cjs (raíz)",
+      "estado": "PASS",
+      "rc": 0,
+      "advertencias": 0,
+      "evidencia": "contenedor-flujos.log",
+      "sha256": "a8fb1063cf4b3e23cbb4a4b51e839b3b37aad64e7fb90d60393f28522175bd87"
     }
   ],
-  "unitarias": 442,
-  "e2e": "NOT_RUN: esperando .cache/TURNO-PUERTA",
-  "build": "NOT_RUN: esperando .cache/TURNO-PUERTA",
-  "flujos": 172,
-  "advertenciasPasosEjecutados": 0
+  "pruebas": {
+    "unitarias": 442,
+    "e2eAprobadas": 52,
+    "e2eFallidas": 1,
+    "e2eOmitidas": 0,
+    "e2eReintentosPlaywright": 0,
+    "flujos": 172
+  },
+  "fluidez": {
+    "umbralFpsMayorQue": 55,
+    "rondaCPU0": 44.79999999999999,
+    "rondaCPU10": 41.72461752433935,
+    "base66732beCPU10": 32.583644599856946,
+    "baseRc": 1
+  },
+  "contenedoresPropiosAlFinal": 0,
+  "bootstrapFallidos": [
+    "contenedor-ci-primer-fallo.log",
+    "contenedor-cpu10-artefactos.log"
+  ]
 }

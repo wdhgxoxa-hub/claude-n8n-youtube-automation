@@ -1,0 +1,12 @@
+{
+  "commit": "3c347b26fa8aca89e9c3a0a72dc6bd8f7f6e087a",
+  "archivo_sha256": "d1b547b093ce815205db9c29ef153743bb2fe71a6e1a85201c7eeee28f2975ba",
+  "limpio": true,
+  "afinidadCPU": "0",
+  "workers": 1,
+  "red": "contenedor sin puertos publicados",
+  "entorno": "solo checkout git; sin HOME, sockets ni .env reales",
+  "imagenId": "7873255a460286e90a66111f3848f34ff50b6cb879be689859983e99a0bc1d5a",
+  "afinidadFinalCPU": "10",
+  "baseContraste": "66732be"
+}

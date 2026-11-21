@@ -1,0 +1,34 @@
+Extracto del fallo inicial de preparación. Registro completo sin cambios: contenedor-ci-primer-fallo.log.gz
+SHA256 completo: 66fffdf23492e6fe002e687aaebe9851d2b5ecef47c02568f6eaa7213fa22c5b
+
+npm error code 1
+npm error path /ensayo/cooper/node_modules/better-sqlite3
+npm error command failed
+npm error command sh -c node-gyp rebuild
+npm error gyp info it worked if it ends with ok
+npm error gyp info using node-gyp@13.0.0
+npm error gyp info using node@24.22.3 | linux | x64
+npm error gyp info find Python using Python version 3.14.7 found at "/usr/local/bin/python3"
+npm error gyp http GET https://nodejs.org/download/release/v24.22.3/node-v24.22.3-headers.tar.gz
+npm error gyp http 200 https://nodejs.org/download/release/v24.22.3/node-v24.22.3-headers.tar.gz
+npm error gyp ERR! error while extracting tarball TAR_ENTRY_ERROR EPERM: operation not permitted, fchown
+npm error gyp ERR! error while extracting tarball TAR_ENTRY_ERROR EPERM: operation not permitted, fchown
+npm error gyp ERR! error while extracting tarball TAR_ENTRY_ERROR EPERM: operation not permitted, fchown
+npm error gyp ERR! error while extracting tarball TAR_ENTRY_ERROR EPERM: operation not permitted, fchown
+npm error gyp ERR! error while extracting tarball TAR_ENTRY_ERROR EPERM: operation not permitted, fchown
+npm error gyp ERR! error while extracting tarball TAR_ENTRY_ERROR EPERM: operation not permitted, fchown
+[... errores fchown repetidos; consultar gzip ...]
+npm error gyp ERR! stack at go (/usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/install.js:254:17)
+npm error gyp ERR! stack at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+npm error gyp ERR! stack at async install (/usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/install.js:63:18)
+npm error gyp ERR! stack at async getNodeDir (/usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/configure.js:79:7)
+npm error gyp ERR! stack at async run (/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js:81:18)
+npm error gyp ERR! System Linux 7.3.4-1-cachyos
+npm error gyp ERR! command "/usr/local/bin/node" "/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild"
+npm error gyp ERR! cwd /ensayo/cooper/node_modules/better-sqlite3
+npm error gyp ERR! node -v v24.22.3
+npm error gyp ERR! node-gyp -v v13.0.0
+npm error gyp ERR! $npm_package_name better-sqlite3
+npm error gyp ERR! $npm_package_version 13.2.0
+npm error gyp ERR! not ok
+npm error A complete log of this run can be found in: /ensayo/cooper/.cache/npm/_logs/2026-11-21T17_37_35_807Z-debug-0.log

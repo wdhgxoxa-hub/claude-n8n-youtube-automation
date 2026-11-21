@@ -1,0 +1,38 @@
+M12 inicio ci
+
+added 361 packages, and audited 368 packages in 15s
+
+found 0 vulnerabilities
+M12 inicio preparacion
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 125.7 MiB
+Chrome Headless Shell 159.0.8154.6 (playwright chromium-headless-shell v1255) downloaded to /ensayo/cooper/.cache/browsers/chromium_headless_shell-1255
+Preparación y lanzamiento de ambos Chromium: PASS.
+M12 inicio lint
+npm notice run cooper@0.1.0 lint
+npm notice run eslint . --max-warnings 0
+M12 inicio typecheck
+npm notice run cooper@0.1.0 typecheck
+npm notice run tsc --noEmit
+M12 inicio unitarias
+ ✓ tests/salud.test.ts (2 tests) 16ms
+
+ Test Files  47 passed (47)
+      Tests  442 passed (442)
+   Start at  17:39:50
+   Duration  58.16s (transform 1.54s, setup 519ms, import 18.89s, tests 32.77s, environment 10ms)
+
+JSON report written to /ensayo/cooper/.cache/puerta/vitest.json
+M12 inicio e2e
+
+        npx playwright show-trace test-results/animacion-fluidez-local-y--6b4e6-ón-sin-cambios-de-geometría-demostracion/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [demostracion] › e2e/animacion.spec.ts:251:1 › fluidez local y propiedades de animación sin cambios de geometría 
+  52 passed (9.3m)

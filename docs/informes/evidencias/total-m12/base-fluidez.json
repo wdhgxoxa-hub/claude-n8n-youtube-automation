@@ -1,0 +1,12 @@
+{
+  "base": "66732be0ed95f5afa2289e3b8c0ef3d798290802",
+  "cpu": 10,
+  "workers": 1,
+  "comando": "npm run test:e2e -- --grep \"fluidez local\"",
+  "rc": 1,
+  "fps": 32.583644599856946,
+  "umbralFpsMayorQue": 55,
+  "log": "base-fluidez.log",
+  "sha256": "37409effe36c0e3fc2f1ee27459edcd519b45b0193ffa5114cec3c22383977c9",
+  "archivoFuenteSha256": "44b6e3963ec5c78e145f834603cfa9351f15db184caa909b80b32cfcc56365c9"
+}

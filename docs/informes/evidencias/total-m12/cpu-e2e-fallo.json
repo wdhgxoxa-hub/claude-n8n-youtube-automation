@@ -1,0 +1,33 @@
+{
+  "fechaUTC": "2026-11-21T17:49:27.398383+00:00",
+  "intervaloSegundos": 1,
+  "ocupacionPorcentaje": {
+    "cpu0": 92.9,
+    "cpu1": 100.0,
+    "cpu2": 28.4,
+    "cpu3": 13.4,
+    "cpu4": 9.4,
+    "cpu5": 4.0,
+    "cpu6": 9.1,
+    "cpu7": 41.7,
+    "cpu8": 14.3,
+    "cpu9": 9.1,
+    "cpu10": 6.2,
+    "cpu11": 6.0,
+    "cpu12": 4.0,
+    "cpu13": 4.0,
+    "cpu14": 5.0,
+    "cpu15": 5.1,
+    "cpu16": 4.1,
+    "cpu17": 7.0,
+    "cpu18": 7.1,
+    "cpu19": 3.1,
+    "cpu20": 6.1,
+    "cpu21": 9.1,
+    "cpu22": 6.0,
+    "cpu23": 3.0
+  },
+  "cpuInicial": 0,
+  "cpuSiguiente": 10,
+  "nota": "Muestra de utilización del host; no atribuye causalidad al fallo de FPS."
+}
