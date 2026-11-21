@@ -1,0 +1,208 @@
+{
+  "resultado": "PASS",
+  "fecha_lima": "2026-11-21T16:53:22.134070-05:00",
+  "origen": {
+    "base": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+    "fix": "a6f95bdfba88b665e1d10f679be1a3f0118aacbf",
+    "archivo_sha256": "a3fa8da5ca0aee45a93d0f6e4f1a608971f92be1aa304818e3f68170d042d2b8",
+    "patch_sha256": "ae82e1a8c9b404ae338daaded04b24bd967a917ade4a9dcfaf6dced6856108d2",
+    "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8"
+  },
+  "equivalencia": {
+    "archivos_comprobados": 336,
+    "diferencias": [
+      {
+        "archivo": "cooper/pulido/estres.spec.ts",
+        "base_sha256": "7ec2434d5fedc2565ba3927227bd3b3e4d00abb06e22ef0e02f1f1cb981acb2d",
+        "focal_sha256": "3c47d0982d4e7c24a18a4a16a6fc886d467c0dfebdb3d60f74457906b8ea800b"
+      }
+    ],
+    "runtime_identico": true,
+    "equivalencia_integrador": {
+      "commit": "5e8e26020d6fdf69538de91194860c006d5f6b29",
+      "archivos_identicos": 336
+    }
+  },
+  "preparacion_y_ensayos": {
+    "inicio": "2026-11-21T21:51:48.522Z",
+    "pasos": [
+      {
+        "comando": "npm ci",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 7098,
+        "sha256": "6bc688c743252de3d9354a34a6e2b5896276d4f58e9fc95fbdb801f58ce1c5a9"
+      },
+      {
+        "comando": "node scripts/preparar-pruebas.mjs",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 4634,
+        "sha256": "2d97f846255564ea7525efc333d4b58836e1b3a00d209c4594129defb1169a85"
+      },
+      {
+        "comando": "node node_modules/eslint/bin/eslint.js pulido/estres.spec.ts --max-warnings 0",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 621,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "comando": "npm run typecheck",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 6560,
+        "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+      },
+      {
+        "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts --project=estres-movil",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 28052,
+        "sha256": "bbcc25dbe7e164446e77412de141abd196a1699fe707fd654c6950bde4906e2a"
+      },
+      {
+        "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts --project=estres-integrado",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 28514,
+        "sha256": "ee921dea59b45a638ee33c824b855cf274bc1e0849a1559715d016ff3330c758"
+      }
+    ],
+    "resultado": "PASS",
+    "fin": "2026-11-21T21:53:04.005Z"
+  },
+  "proyectos": [
+    {
+      "proyecto": "estres-movil",
+      "stats": {
+        "startTime": "2026-11-21T21:52:18.387Z",
+        "duration": 17066.958000000002,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "playwright_sha256": "e64e4b09e61e418436fd3c540ae15daeafe41c808a0dcba0a44e569fcf043393",
+      "rafagas": {
+        "intentos": 60,
+        "mensajesAceptados": 12,
+        "longitudMaxima": 6000,
+        "foto": true,
+        "recuperacionRed": true
+      },
+      "rafagas_sha256": "a10cdd11fe75855c3b0807d7ea8d7b811bee155263d647effe4299a8e5b5e330",
+      "videos": [
+        {
+          "archivo": "pruebas/estres-aprendizaje-red-len-b9667-intento-conservan-el-ajuste-estres-movil/video.webm",
+          "sha256": "1fd302f0345c98999199f0259660dd76ecc22cb621d6bbbe19cbd16484eaa64f",
+          "bytes": 199400
+        },
+        {
+          "archivo": "pruebas/estres-audio-ficticio-repe-20ec8-fábrica-temporalmente-caída-estres-movil/video.webm",
+          "sha256": "47385d974ea3b9a94c9b00fa0b2b88a55ea9e9e184e5e36775756b5186c4d022",
+          "bytes": 499384
+        },
+        {
+          "archivo": "pruebas/estres-chat-ráfaga-de-enví-24d28-o-rechazo-recuperable-y-red-estres-movil/video.webm",
+          "sha256": "ef4dc20189e6dd0ded18c6047b200af77e92d215f5bf1b0fba6be02be6061e2d",
+          "bytes": 717207
+        },
+        {
+          "archivo": "pruebas/estres-formularios-doble-e-60e8e-e-chat-lento-y-recuperación-estres-movil/video.webm",
+          "sha256": "d1c8bb01f48026f826d823023ca249158c41a0781e5b9e9afe7978ad1c3cd396",
+          "bytes": 264388
+        },
+        {
+          "archivo": "reporte/data/03b824f2e0ec7f91a685b139a2f2e45e255af394.webm",
+          "sha256": "1fd302f0345c98999199f0259660dd76ecc22cb621d6bbbe19cbd16484eaa64f",
+          "bytes": 199400
+        },
+        {
+          "archivo": "reporte/data/6c319871442b00c52286e4bb502afa9a72d3a304.webm",
+          "sha256": "ef4dc20189e6dd0ded18c6047b200af77e92d215f5bf1b0fba6be02be6061e2d",
+          "bytes": 717207
+        },
+        {
+          "archivo": "reporte/data/b25051dbbabbf23e63d0f807ea4ecabb377c5566.webm",
+          "sha256": "d1c8bb01f48026f826d823023ca249158c41a0781e5b9e9afe7978ad1c3cd396",
+          "bytes": 264388
+        },
+        {
+          "archivo": "reporte/data/f91800c6de1be76e8d7b54fd96e8508c7ada0ad9.webm",
+          "sha256": "47385d974ea3b9a94c9b00fa0b2b88a55ea9e9e184e5e36775756b5186c4d022",
+          "bytes": 499384
+        }
+      ]
+    },
+    {
+      "proyecto": "estres-integrado",
+      "stats": {
+        "startTime": "2026-11-21T21:52:45.225Z",
+        "duration": 18741.549000000003,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "playwright_sha256": "d418d3516fdc7d5e5491d9cac06a8c93c1f1796cf79536d17a6383fe7b26afa4",
+      "rafagas": {
+        "intentos": 60,
+        "mensajesAceptados": 12,
+        "longitudMaxima": 6000,
+        "foto": true,
+        "recuperacionRed": true
+      },
+      "rafagas_sha256": "a10cdd11fe75855c3b0807d7ea8d7b811bee155263d647effe4299a8e5b5e330",
+      "videos": [
+        {
+          "archivo": "pruebas/estres-aprendizaje-red-len-b9667-intento-conservan-el-ajuste-estres-integrado/video.webm",
+          "sha256": "60467eec9c412d0d1e5db3936df9a32c517c8db08fa3c281eb5d24492d964e49",
+          "bytes": 190291
+        },
+        {
+          "archivo": "pruebas/estres-audio-ficticio-repe-20ec8-fábrica-temporalmente-caída-estres-integrado/video.webm",
+          "sha256": "c84ae3fb54c6efbb3d99ac6703c2855f8ac955d9fdaba25df2e1dcdcea1e1fc6",
+          "bytes": 568267
+        },
+        {
+          "archivo": "pruebas/estres-chat-ráfaga-de-enví-24d28-o-rechazo-recuperable-y-red-estres-integrado/video.webm",
+          "sha256": "5b42699d4d323a03a165f3e71506e934435c6bbe3e5419840036c5f2f59fee5e",
+          "bytes": 678253
+        },
+        {
+          "archivo": "pruebas/estres-formularios-doble-e-60e8e-e-chat-lento-y-recuperación-estres-integrado/video.webm",
+          "sha256": "10dc51e4850219e52d20abe36757470435a8ff018615cfe197ffb2a954509036",
+          "bytes": 299852
+        },
+        {
+          "archivo": "reporte/data/5cb55b0e9610b7e5337984b8ef5133e79cc40870.webm",
+          "sha256": "60467eec9c412d0d1e5db3936df9a32c517c8db08fa3c281eb5d24492d964e49",
+          "bytes": 190291
+        },
+        {
+          "archivo": "reporte/data/b30ad419477bd71cf27fd6e261a2f12314d1ef68.webm",
+          "sha256": "c84ae3fb54c6efbb3d99ac6703c2855f8ac955d9fdaba25df2e1dcdcea1e1fc6",
+          "bytes": 568267
+        },
+        {
+          "archivo": "reporte/data/bbb87d3d1c97ec0a4182144d4f62a59b034659ba.webm",
+          "sha256": "5b42699d4d323a03a165f3e71506e934435c6bbe3e5419840036c5f2f59fee5e",
+          "bytes": 678253
+        },
+        {
+          "archivo": "reporte/data/c156f6d0efc52907e43dd922e67c09b6d2b25783.webm",
+          "sha256": "10dc51e4850219e52d20abe36757470435a8ff018615cfe197ffb2a954509036",
+          "bytes": 299852
+        }
+      ]
+    }
+  ],
+  "log_sha256": "4dc857f14fc0ebc6e0f59773d2b080478366ecc72be2c98b08aafe5ff1144879",
+  "limites": [
+    "Focal de8 casos, no reemplaza puerta completa ni las dos rondas completas.",
+    "Una preparación inicial sin el parche fue detectada por comparación de blobs y detenida; sus artefactos se conservan separados y no se cuentan.",
+    "Datos, audio y red del simulador; no hay despliegue ni proveedores reales."
+  ],
+  "pendientes_de_walter": []
+}

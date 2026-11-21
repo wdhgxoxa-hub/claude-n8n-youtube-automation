@@ -10089,6 +10089,34 @@
         }
       ],
       "limite": "Se conserva el corte de 55 refs del barrido anterior. No se siguen refs QA activas ni se declara terminada la puerta o la aceptación visual."
+    },
+    {
+      "integracion": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "cambio_tardio": "H19: sentencias SQLite reutilizadas por transacción para evitar agotamiento de memoria",
+      "equivalencia": [
+        {
+          "commit": "fd585f0c783c46790c9ab9beefe78c9357c1475f",
+          "patch_id": "c35e30209d6d8a4e0b9c476cbe97ddc43e37c397"
+        },
+        {
+          "commit": "22ece8e1f078b149944118feeabbb6c803992ff4",
+          "patch_id": "c35e30209d6d8a4e0b9c476cbe97ddc43e37c397"
+        },
+        {
+          "commit": "dce1b03d6db1597332e71eb79d719b2f5bda197c",
+          "patch_id": "c35e30209d6d8a4e0b9c476cbe97ddc43e37c397"
+        }
+      ],
+      "archivos": [
+        "cooper/src/servicios/puente.ts",
+        "cooper/tests/puente-capacidad.test.ts"
+      ],
+      "limite": "Se cerró después del barrido previo. Su aceptación sustituye la del runtime anterior; ninguna de las rondas canceladas acredita este corte.",
+      "tipo": "cierre_tardio_h19_integrado",
+      "fecha_lima": "2026-11-21",
+      "estado": "código integrado; puerta y dos rondas nuevas en ejecución",
+      "base_anterior": "4e029e73f680435cd0814301457a03c6574b1cce",
+      "faltantes_aplicacion_del_cierre_h19": 0
     }
   ],
   "resumen_cierre_actual": {

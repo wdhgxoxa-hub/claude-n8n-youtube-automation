@@ -1,0 +1,1010 @@
+{
+  "resultado": "DIAGNOSTICO_NO_ACEPTADO",
+  "fecha_utc": "2026-11-21T21:50:43.337037+00:00",
+  "corte": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "ronda": "cierre-1",
+  "stats": {
+    "startTime": "2026-11-21T21:03:57.025Z",
+    "duration": 2480561.591,
+    "expected": 119,
+    "skipped": 3,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "proyectos": 14,
+  "motivo": "El ensayo de ráfagas busca una región de escritorio que en móvil es tabpanel. Falló antes de ejecutar el formulario. La ronda 2 no empezó.",
+  "fix_solo_test": "a6f95bd",
+  "playwright_sha256": "528b03e078378377f15eae4e76bac0aaddebe59b178c3b63947066ad9e2ff5af",
+  "revision_visual": {
+    "originales": [
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-vacio-fallback.png",
+        "sha256": "3be172787d8fba880e8d4061c6d159686a57725736fde5c084f756583436abdd",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-ausente.png",
+        "sha256": "84f5b43a8b6be4aed8fa09da68a5cefd4ae4cdd0bf79ed687a22f7ca18a66cdc",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-enlace-vencido.png",
+        "sha256": "0421c2fff78a62d0c5bcfede6dad0188479489048ab86e39b5952be1ba1a4b45",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-vacio-fallback.png",
+        "sha256": "3a66f4842c8892288f57d062da53d57ecada85f8081b25bbf8943003c77fcf58",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-ausente.png",
+        "sha256": "add5ff47f629a7237f35f5440b0e5ee90daf45bfad7db6e5beda66d5b76c12a1",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-enlace-vencido.png",
+        "sha256": "ab15322df8b5a3230dcccee24a84d7738ffc2fb11de2be8cb23f0fbb3383c92a",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-fabrica.png",
+        "sha256": "35f94d13303f024d82f4b087effe83ee6d716bd83926e3d5d94cb8364b00a5e3",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-celebracion.png",
+        "sha256": "5f43d71cf241eb431f3ccf90eccf53e427ea808bc7b95fc4b013132f04b0835b",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-fabrica.png",
+        "sha256": "2e06383097268c96939e7bf7e597329c057a5d7cecde4deb276b993a241ed877",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-celebracion.png",
+        "sha256": "6ff287132c367f1e83f419b64e68f39494c035798cb906812b5234dd595361bf",
+        "tipo": "original de estado/interacción",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-oscuro-01-inicio.png",
+        "sha256": "fa7d27d47cb2ee053f6e1cb28b201a17cecf1df28ecd4514ec7573e61e4d0b7b",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-oscuro-02-marcas.png",
+        "sha256": "ae1506d8d7f2f129e6151e4aff6cd177a16e16cef68cf71c2fbafc6c6b734f5f",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-oscuro-09-cuentas.png",
+        "sha256": "958176d0ad5743a108eb7218e82d0dd1c90b955cbda0babbef1ebd308c1a8290",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-oscuro-16-publicados.png",
+        "sha256": "2a7324c09d0d75a8a0b57f81e5cb6e954d56ce8de7d6f3846cb16a83fc1073dd",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-oscuro-17-aprendizaje.png",
+        "sha256": "4221b270b8eb0cdcd1dddb57949f5cac94c2f5692c332c673d3a297dcb564b01",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-oscuro-21-admin.png",
+        "sha256": "3ca0667f9da8b17b3013e8c8cb71a209ed9210d51883496290ac64e081459766",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-claro-01-inicio.png",
+        "sha256": "1b1959a513e86b4aea44457229a536870918d10ce27c196820a6b52ed4545a10",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-claro-02-marcas.png",
+        "sha256": "24dcd3c0a62d0b85ee7b0c13a03060bb6e302cfba85480851b7413356743edb1",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-claro-09-cuentas.png",
+        "sha256": "755a33793b6a7514fdd96bfeeb85ea642024833a79b4e5d7bc63af805c8011c7",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-claro-16-publicados.png",
+        "sha256": "18b67c13b4c1653f46621c23429d19ad163fb68574beb79aaa045b45d9a79ce7",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-claro-17-aprendizaje.png",
+        "sha256": "a8c7ff070cdbc4eeb310ecb0b38fc6957d0086387dfcf7ec21b719bbefe82098",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/1440-claro-21-admin.png",
+        "sha256": "0c1bbb9c2a1ecc401528bb5502a5fe51e585da9ee06ab97f066f6582d8237cad",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-oscuro-01-inicio.png",
+        "sha256": "5f248eedf7ad217c68030542953beb6e3ae34e66235fc99b8bd05a0458e55040",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-oscuro-02-marcas.png",
+        "sha256": "ef15c81369b68d2389e902510c712797873b21e02ec249c5cfdd3c178799fc02",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-oscuro-09-cuentas.png",
+        "sha256": "3a02af52ce9044fd83af374022e186c5d5089b07dd5b10c79d68da8e2d012f8f",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-oscuro-16-publicados.png",
+        "sha256": "7767aef84bf390477656f3d5157fc20d4b27df0d69c5d1506be86d86e27b174b",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-oscuro-17-aprendizaje.png",
+        "sha256": "5f2593b54c0ad1614917c32db289f2bb1e016dfc8e5393ae34b4fa96695c4a19",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-oscuro-21-admin.png",
+        "sha256": "ede61734882756f1bc35a5f20709146a8e2c816fd943bca145c6970a4bb6fe33",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-claro-01-inicio.png",
+        "sha256": "07893589f8e6dc99eeecad60133ab3232bd1142c78a8054a27f47d1140661db7",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-claro-02-marcas.png",
+        "sha256": "f924cab3b1f68852de7d7fcad5fc497ef185628e6148d85be06a6707b674c732",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-claro-09-cuentas.png",
+        "sha256": "abb6e1f98521f686a4f63286cd6974637b43388216598700f64e303874eb7a3f",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-claro-16-publicados.png",
+        "sha256": "5af9a42845d6e2b0128ee942bc2f73fdcea4aa70316f092ddbd9eb3f0368db36",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-claro-17-aprendizaje.png",
+        "sha256": "13b735dae40751b0babb669e8dadd932fbe720a4f64ff07153c9217ab891a6cc",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "ronda": "cierre-1",
+        "archivo": "cierre-1/390-claro-21-admin.png",
+        "sha256": "ea36060701e473a948ba196d846ccfd2371225db7515578eeb78bbb5f84afd0d",
+        "tipo": "original principal",
+        "resultado": "sin defecto visual observado"
+      }
+    ],
+    "fotogramas": [
+      {
+        "archivo_video": "1440-estados.webm",
+        "segundo": 0.827,
+        "etiqueta": "estados muestra 1/3",
+        "captura": "000-estados-1440.png",
+        "sha256": "85173f46a6f14c0b6df1b4fd1fcfd0e505234fc4c79b5933cf57401d889b67a8",
+        "tipo": "estados",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:30:49.495956-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-estados.webm",
+        "segundo": 2.48,
+        "etiqueta": "estados muestra 2/3",
+        "captura": "001-estados-1440.png",
+        "sha256": "930d7091eafd40fdda41a679ad4d172491a70acb13c665a44a310c68df8924a4",
+        "tipo": "estados",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:30:49.496038-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-estados.webm",
+        "segundo": 4.133,
+        "etiqueta": "estados muestra 3/3",
+        "captura": "002-estados-1440.png",
+        "sha256": "1cb780917ea9062aed4e058d7f518f6205569fd2ef50e048fb00f101b53b573d",
+        "tipo": "estados",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:30:49.496103-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-interacciones.webm",
+        "segundo": 1.26,
+        "etiqueta": "interacciones muestra 1/6",
+        "captura": "003-interacciones-1440.png",
+        "sha256": "cc72dc0a8fcec3d5f65fbd3501d214566ac1b44c615e2a4c89c67040cbd4c0f0",
+        "tipo": "interacciones",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:30:49.496258-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-interacciones.webm",
+        "segundo": 3.78,
+        "etiqueta": "interacciones muestra 2/6",
+        "captura": "004-interacciones-1440.png",
+        "sha256": "3b0ef93d0347312160ec364c8d29349dbab24f8919c05ef1df0762041db5926f",
+        "tipo": "interacciones",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:30:49.496388-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-interacciones.webm",
+        "segundo": 6.3,
+        "etiqueta": "interacciones muestra 3/6",
+        "captura": "005-interacciones-1440.png",
+        "sha256": "7152dba1bafebc5393b91a6b62f17ca0163315e53901301762905064fd2927b5",
+        "tipo": "interacciones",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:30:49.496572-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-interacciones.webm",
+        "segundo": 8.82,
+        "etiqueta": "interacciones muestra 4/6",
+        "captura": "006-interacciones-1440.png",
+        "sha256": "280b6eaf9cc8764813ebd969af56d9a07052f73ed2109dc5745455c06b054ae4",
+        "tipo": "interacciones",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:00.233331-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-interacciones.webm",
+        "segundo": 11.34,
+        "etiqueta": "interacciones muestra 5/6",
+        "captura": "007-interacciones-1440.png",
+        "sha256": "4afa018e06d5d603293a355cb923c4c2bb6683186c04d3348ed1ec20d8834e8e",
+        "tipo": "interacciones",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:00.233536-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "1440-interacciones.webm",
+        "segundo": 13.86,
+        "etiqueta": "interacciones muestra 6/6",
+        "captura": "008-interacciones-1440.png",
+        "sha256": "3d58d32dad58a49a32b7dc65f975127f36acf74adbe5f16abeba5ef74b4a4e48",
+        "tipo": "interacciones",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:00.233665-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-estados.webm",
+        "segundo": 0.833,
+        "etiqueta": "estados muestra 1/3",
+        "captura": "009-estados-390.png",
+        "sha256": "7072e2d5e9b39ef9ced1f7eb0f5a43712b0a890c5f9680c269c2dca514142137",
+        "tipo": "estados",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:00.233733-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-estados.webm",
+        "segundo": 2.5,
+        "etiqueta": "estados muestra 2/3",
+        "captura": "010-estados-390.png",
+        "sha256": "1526b0e04434190625caa274bb5b46d5a87efebae443a8e4c9fb46889f4437ce",
+        "tipo": "estados",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:00.233770-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-estados.webm",
+        "segundo": 4.167,
+        "etiqueta": "estados muestra 3/3",
+        "captura": "011-estados-390.png",
+        "sha256": "cac0e4034bc1bf829affa06202e3809c4ca5e0efc87113b79444505528b9d58d",
+        "tipo": "estados",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:00.233815-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-interacciones.webm",
+        "segundo": 1.237,
+        "etiqueta": "interacciones muestra 1/6",
+        "captura": "012-interacciones-390.png",
+        "sha256": "e1cba92178eeda411c42304ebb3797a5a19074bbe9ccd6f832e8695147be8678",
+        "tipo": "interacciones",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:07.468099-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-interacciones.webm",
+        "segundo": 3.71,
+        "etiqueta": "interacciones muestra 2/6",
+        "captura": "013-interacciones-390.png",
+        "sha256": "ac3e188d03db97da3ad7e3360393d5deb55ac4b8b2c3cf02930eb7a517b1e1b4",
+        "tipo": "interacciones",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:07.468191-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-interacciones.webm",
+        "segundo": 6.183,
+        "etiqueta": "interacciones muestra 3/6",
+        "captura": "014-interacciones-390.png",
+        "sha256": "61911e23257ea2c2edc0689c50e8c532f1d7b1dc984317a1d229bdf312afadae",
+        "tipo": "interacciones",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:07.468254-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-interacciones.webm",
+        "segundo": 8.657,
+        "etiqueta": "interacciones muestra 4/6",
+        "captura": "015-interacciones-390.png",
+        "sha256": "0d6c5b26c86cf6b78ff02ca5316a91ef2e5638525eddfd33abee45782d93259e",
+        "tipo": "interacciones",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:07.468320-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-interacciones.webm",
+        "segundo": 11.13,
+        "etiqueta": "interacciones muestra 5/6",
+        "captura": "016-interacciones-390.png",
+        "sha256": "79169a334b284d80efd11a076e2e3165d7623c7d3a8800aba847c08d8e817816",
+        "tipo": "interacciones",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:07.468382-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "390-interacciones.webm",
+        "segundo": 13.603,
+        "etiqueta": "interacciones muestra 6/6",
+        "captura": "017-interacciones-390.png",
+        "sha256": "30a0a493003098c4bb2d66f972d57216e5d62bde0a72dc572dabf275135fc5c1",
+        "tipo": "interacciones",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:31:07.468459-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 0.775,
+        "etiqueta": "/entrar",
+        "captura": "018-tour-1440.png",
+        "sha256": "b195992e7d0117662bfd2b58f5681bf3c40ea8886caf975f490470975f834401",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:43:58.814087-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 3.308,
+        "etiqueta": "/",
+        "captura": "019-tour-1440.png",
+        "sha256": "cd2f522c0109cec7f79e5a6c2d33d919e37bf0e57229ee192ae12f381d10c794",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:43:58.814325-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 7.304,
+        "etiqueta": "/marcas",
+        "captura": "020-tour-1440.png",
+        "sha256": "011d92fee6f728cd792424ab9e18b462aa5ed268a0fa6a132490879378276713",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:43:58.814509-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 10.329,
+        "etiqueta": "/canales",
+        "captura": "021-tour-1440.png",
+        "sha256": "713a80d385580841ab87901bc2996a3f66e065a90d676b5bbacb19e6c72a5b1b",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:43:58.814623-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 11.898,
+        "etiqueta": "/canales/dbb8540e-5961-4076-9bae-492a51b27e42",
+        "captura": "022-tour-1440.png",
+        "sha256": "327568dbdf5a11250084b43b6597713592abdf5c84493516e31f646f4e7bddc5",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:43:58.814715-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 13.457,
+        "etiqueta": "/radar",
+        "captura": "023-tour-1440.png",
+        "sha256": "8b63f86c291fc3ad8e3bcd1871098cdf918b421908043e7d7657fc6cf08a9530",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:43:58.814839-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 15.008,
+        "etiqueta": "/rutina",
+        "captura": "024-tour-1440.png",
+        "sha256": "df23a8414277196ae03aee86a56a6aa0dc9d75d2323bacd56dd1a79e12c0bbf4",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:08.511029-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 16.558,
+        "etiqueta": "/redes",
+        "captura": "025-tour-1440.png",
+        "sha256": "fc3f60089be83c56c40386eda042179f1822550df5c0b3d67dc97f648f10b20c",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:08.511232-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 18.099,
+        "etiqueta": "/referencias",
+        "captura": "026-tour-1440.png",
+        "sha256": "3234a879311d9b9a8d213c185928e20820e5639db4becf27bded8d4822fcb884",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:08.511368-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 19.64,
+        "etiqueta": "/cuentas",
+        "captura": "027-tour-1440.png",
+        "sha256": "4e96c072a545eafac6609c4d0797057ef0f51a30dcff5d56a7462fd967d1ed2e",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:08.511484-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 21.181,
+        "etiqueta": "/programados",
+        "captura": "028-tour-1440.png",
+        "sha256": "7a1f690043cf83487da05c922dc410887772150898ffd59586a2f6d58502f143",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:08.511583-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 22.723,
+        "etiqueta": "/decisiones",
+        "captura": "029-tour-1440.png",
+        "sha256": "9ad7f4096b79c3c4906fb8e716211a9e23b9a83ae04a233d3eb494043f3288b5",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:08.511667-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 24.272,
+        "etiqueta": "/incidencias",
+        "captura": "030-tour-1440.png",
+        "sha256": "91952a97c7d646d167b6c6c11ecc7d186d3a0c533a6c22c577e996e095cf1ae6",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:18.532048-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 25.815,
+        "etiqueta": "/avisos",
+        "captura": "031-tour-1440.png",
+        "sha256": "a4e6ac3c6cdf3dae3b74ea214c50adc25cab64c5fa5d81bcee3561a62d5093fa",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:18.532163-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 27.358,
+        "etiqueta": "/videos",
+        "captura": "032-tour-1440.png",
+        "sha256": "789da879a0d019bacd22b92cefcf0ba1353f34d22df8c1a891765baeee12a338",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:18.532390-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 28.91,
+        "etiqueta": "/videos/202ce1e5-5c5b-4bd6-8077-4ccbd74d8cf6",
+        "captura": "033-tour-1440.png",
+        "sha256": "13ae2bb8a44adbbcb5730df8c186e9d38e95dab05b57505dc997bc25dacfb5db",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:18.532584-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 30.494,
+        "etiqueta": "/publicados",
+        "captura": "034-tour-1440.png",
+        "sha256": "27cad9ab3ebca344e15f95be19e08ae0df47986b161c05f23e18f07f2cf11e99",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:18.532826-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 32.09,
+        "etiqueta": "/aprendizaje",
+        "captura": "035-tour-1440.png",
+        "sha256": "35b01fd3fdc4a9a2d6859fa847ca7f8730f9ec34e5db5270cc5b133cd588dff6",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:18.532989-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 33.663,
+        "etiqueta": "/avatares",
+        "captura": "036-tour-1440.png",
+        "sha256": "232c3548ad79b3264781305a3e5859770ca55af6e5d849472efbbe7213871628",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:28.869442-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 35.222,
+        "etiqueta": "/perfil",
+        "captura": "037-tour-1440.png",
+        "sha256": "7e0e869721231ae67600776ec5a984e6e81a18a25e2cbd062a01297726348a50",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:28.869578-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 36.781,
+        "etiqueta": "/admin",
+        "captura": "038-tour-1440.png",
+        "sha256": "77fac238232211afa67903e1ef36853880b8c8c98621340b4f825868ab02e136",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:28.869683-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-1440.webm",
+        "segundo": 38.962,
+        "etiqueta": "/admin/fabrica",
+        "captura": "039-tour-1440.png",
+        "sha256": "84f76b40fe63d44eb01ec374f1d07ac0066e3512062948f79c9cf6b86551067e",
+        "tipo": "tour",
+        "ancho": 1440,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:28.869791-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 0.851,
+        "etiqueta": "/entrar",
+        "captura": "040-tour-390.png",
+        "sha256": "3acea2dbf571e3410ec0c1e4141316640d4fe213e2c6cb33a31798c38c699e1e",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:28.869852-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 4.193,
+        "etiqueta": "/",
+        "captura": "041-tour-390.png",
+        "sha256": "591d9272e24b7a2756f1fe626300014b7b7ee03720c809ec6fe46bd7e51e389a",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:28.869907-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 9.075,
+        "etiqueta": "/marcas",
+        "captura": "042-tour-390.png",
+        "sha256": "4c15a2fa7c6f6a90e2390189f4b74a2ec777c1e268b8ca101b8e517094934c3e",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:37.808608-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 12.335,
+        "etiqueta": "/canales",
+        "captura": "043-tour-390.png",
+        "sha256": "b51e1160088404b12aac9aa853dda827da298b5e8477d76774317d0e7f66c981",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:37.808690-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 14.058,
+        "etiqueta": "/canales/dbb8540e-5961-4076-9bae-492a51b27e42",
+        "captura": "044-tour-390.png",
+        "sha256": "5eab732726c4eef12f6866984dde953b6985cc51308be47fc5df868ce540a5a3",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:37.808750-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 15.773,
+        "etiqueta": "/radar",
+        "captura": "045-tour-390.png",
+        "sha256": "b1be9ad85bde1e2a553ed4c4d501dcda7c9b03f3218eafa4c8b4aff3a2e349f7",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:37.808831-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 17.48,
+        "etiqueta": "/rutina",
+        "captura": "046-tour-390.png",
+        "sha256": "b7ef6afecbd685df1ec1ac4c82acc04a79b63dd8502fc32d31f500c30381631e",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:37.808889-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 19.157,
+        "etiqueta": "/redes",
+        "captura": "047-tour-390.png",
+        "sha256": "9563968b2ff63ff2061b2ab019a4d0b1f87280cdda6826e195396238ebf760d2",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:37.808950-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 20.814,
+        "etiqueta": "/referencias",
+        "captura": "048-tour-390.png",
+        "sha256": "9f9dad32dde67ae63be66f1854df8a45c00439d9cafa2c928ab4e780d40b2acd",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:45.618574-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 22.477,
+        "etiqueta": "/cuentas",
+        "captura": "049-tour-390.png",
+        "sha256": "577f186dd2f79efc5c8a62538fd8a1d6f6ecdba40e5555106031124b757424d2",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:45.618660-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 24.146,
+        "etiqueta": "/programados",
+        "captura": "050-tour-390.png",
+        "sha256": "31d14f2a92593bf5bc493bec8f581c7077eaed571b03000d314d37602902da6b",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:45.618728-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 25.833,
+        "etiqueta": "/decisiones",
+        "captura": "051-tour-390.png",
+        "sha256": "b3017de56f64106eb14de377bf9f2acc8f770cae75583ff0ef479ee9fc680969",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:45.618785-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 27.521,
+        "etiqueta": "/incidencias",
+        "captura": "052-tour-390.png",
+        "sha256": "2e17dcd109fb9bd2fac942f1c8d640e206308fa9688668bb1b30d07553ae3a0b",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:45.618848-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 29.192,
+        "etiqueta": "/avisos",
+        "captura": "053-tour-390.png",
+        "sha256": "90fc945a8f13aceb7a4a4126db5c38028bc3be11687d6a892fead9eb0296f543",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:45.618907-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 30.901,
+        "etiqueta": "/videos",
+        "captura": "054-tour-390.png",
+        "sha256": "9e9389e71d3e67303e2b6f2069153a0311b8abea2c44aaa5cbfd1056cbfb03bf",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124309-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 32.654,
+        "etiqueta": "/videos/202ce1e5-5c5b-4bd6-8077-4ccbd74d8cf6",
+        "captura": "055-tour-390.png",
+        "sha256": "2798aadad7f680f07267bc95e3be1dcae075a5f01604637fe3dca85735cf396a",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124400-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 34.479,
+        "etiqueta": "/publicados",
+        "captura": "056-tour-390.png",
+        "sha256": "3de3b26f33b06586229e5f12b3673e562f6f6f3fe987e535b6151319f50735ea",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124461-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 36.303,
+        "etiqueta": "/aprendizaje",
+        "captura": "057-tour-390.png",
+        "sha256": "ae74fd7d6691c84f0bc5d661a40a0b15dca96e568b091e74b6573cfb8b0842cd",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124520-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 38.029,
+        "etiqueta": "/avatares",
+        "captura": "058-tour-390.png",
+        "sha256": "4ebb0366ece70d891e5e68c1e93459fe45456c1ce61b6e43edc979363beadf53",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124586-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 39.713,
+        "etiqueta": "/perfil",
+        "captura": "059-tour-390.png",
+        "sha256": "f602f260e2e2f1fac9c52eca578fd90198fc21b6d5f438c435abfc6bc8c5b94d",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124631-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 41.395,
+        "etiqueta": "/admin",
+        "captura": "060-tour-390.png",
+        "sha256": "0cc2c07ad9d40674e4d47a5ff7d2770d9b7fb92b5b8e25bfe4aab9594e1a1139",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124686-05:00",
+        "resultado": "sin defecto visual observado"
+      },
+      {
+        "archivo_video": "recorrido-completo-390.webm",
+        "segundo": 43.719,
+        "etiqueta": "/admin/fabrica",
+        "captura": "061-tour-390.png",
+        "sha256": "bf41019e90bb3ed1ce822694e1bdf70127c7f1803951ccdd05ca284ba05098ed",
+        "tipo": "tour",
+        "ancho": 390,
+        "ronda": "cierre-1",
+        "fecha_lima": "2026-11-21T16:44:53.124733-05:00",
+        "resultado": "sin defecto visual observado"
+      }
+    ],
+    "resultado": "Sin defectos visuales observados en este muestreo; no acredita aceptación porque la ronda falló.",
+    "limite": "Inspección directa de 34 originales y 62 fotogramas; no visionado humano continuo de cada segundo de todos los videos."
+  },
+  "verificacion_tecnica": "No ejecutada: el control previo rechazó la ronda fallida.",
+  "ronda_2": "NO_EJECUTADA"
+}

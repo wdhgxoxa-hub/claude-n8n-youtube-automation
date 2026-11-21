@@ -485,3 +485,69 @@ solo diagnóstico: **no acreditan la aceptación de las dos rondas nuevas**.
 El integrador preservó fallo/cancelación y reinició puerta y rondas desde
 `4e029e7` en `puerta-validacion` y `rondas-validacion`. La revisión final sigue
 pendiente de sus artefactos completos. No se añade una decisión de Walter.
+
+### Cierre tardío H19 y nuevo corte de aceptación
+
+H19 cerró después del barrido anterior. El cambio `fd585f0`, su duplicado
+`22ece8e` y la integración `dce1b03` tienen el mismo patch-id
+`c35e30209d6d8a4e0b9c476cbe97ddc43e37c397`: reutilización de sentencias SQLite
+por transacción en el puente, con regresiones de capacidad. `dce1b03` es
+ancestro del corte `b3e608eec138a03fce419a66954497b8fc2c50ea`; la matriz
+conserva el cierre previo como histórico y agrega este cambio tardío integrado.
+No se siguieron worktrees activos ni se convirtió una rama QA sin cierre en
+trabajo terminado.
+
+La puerta H19 del integrador terminó **467 unitarias, 103 E2E y 235 pruebas
+de flujos, todas PASS**, con instalación limpia, lint, tipos y build aprobados,
+cero advertencias y omisiones. Su archivo fuente tiene SHA-256
+`a3fa8da5ca0aee45a93d0f6e4f1a608971f92be1aa304818e3f68170d042d2b8`.
+Las rondas anteriores sobre `4e029e7` quedaron canceladas para incorporar H19;
+sus capturas y cualquier puerta previa conservan solo su alcance histórico.
+
+La primera ronda H19 quedó **rechazada: 119 PASS, 1 FAIL y 3 no ejecutadas**.
+El caso móvil de ráfagas buscaba una región «Chat con Cooper», que existe
+solo en escritorio; el móvil usa el tabpanel «Chat». La captura original
+muestra el campo de mensaje visible con sus 6000 caracteres y el botón de
+envío disponible. El timeout ocurrió al buscar la región, antes de enviar.
+La segunda ronda no comenzó y el verificador técnico no se ejecutó.
+
+[Diagnóstico H19](evidencias/total-integrador-web/diagnostico-h19.json):
+inspección directa de 24 originales de seis vistas a 1440/390 en claro/oscuro,
+10 originales de estados e interacciones y 62 fotogramas (44 de recorridos,
+18 de estados e interacciones). No se observaron defectos visuales en ese
+muestreo. **No es aceptación de dos rondas** ni visionado continuo de todos
+los videos. Se conservaron los informes y logs de Marcas de ambos tamaños,
+sin configuración ni sesiones efímeras, y la evidencia del fallo.
+
+El commit `a6f95bd` corrige exclusivamente el ensayo: campo accesible exacto,
+único y visible, formulario asociado obligatorio y cinco `requestSubmit()`
+por cada una de las doce iteraciones. Mantiene 60 intentos, exactamente doce
+mensajes aceptados, texto de 6000 caracteres, foto, recuperación de red y
+cero errores de página. No cambia aplicación, timeout, reintentos ni guardias.
+Se consultó la [documentación oficial de localizadores de Playwright](https://playwright.dev/docs/locators).
+El integrador lo incorporó como `5e8e260` y reiniciará ambas rondas completas.
+No se desplegó desde este frente ni se añade una decisión de Walter.
+
+### Estrés completo después de corregir el selector móvil
+
+[Focal acreditado](evidencias/total-integrador-web/estres-focal.json): **8/8 PASS**,
+cuatro casos móviles en 17,1 segundos y cuatro de escritorio en 18,7 segundos.
+Dieciséis videos conservados; cero fallos, omisiones, reintentos y advertencias.
+Instalación limpia, comprobación de tres motores, lint focal con
+`--max-warnings 0`, typecheck y los dos builds previos aprobados. Los 336
+archivos de `cooper/` coinciden byte a byte con `5e8e260`; respecto a `b3e608e`
+solo cambia `pulido/estres.spec.ts`. Imagen y aplicación permanecen iguales.
+
+Además de la ráfaga, se ejecutaron íntegros los ensayos de alta única con cinco
+envíos, cancelación y recuperación de chat lento, audio sintético repetido,
+descarga privada, caída de fábrica y aprendizaje con red lenta/doble clic/reintento.
+Cada recibo de ráfagas acredita 60 intentos, doce mensajes aceptados, longitud
+máxima 6000, foto y recuperación de red. El timeout permanece en 120 segundos,
+con un worker y cero retries en la configuración total original.
+
+Una primera preparación focal no aplicó el parche al checkout ignorado; la
+comparación de blobs lo detectó y el contenedor propio se detuvo. Sus artefactos
+quedaron separados y no se cuentan como resultado del cambio. La ejecución
+válida comenzó después de verificar los 336 archivos del corte integrado.
+Este focal no sustituye la puerta ni las dos rondas secuenciales de 123 casos
+que el integrador reinicia en `rondas-estres`. Pendientes de Walter: ninguno nuevo.

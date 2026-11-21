@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:49 (Lima).
+Última actualización: 2026-11-21 16:53 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,9 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — estrés móvil y escritorio verificados:** selector del ensayo corregido para el tabpanel móvil mediante el cuadro de mensaje accesible y su formulario asociado; aplicación sin cambios. Focal completo 8/8 PASS, 16 videos, 60 intentos→12 mensajes por tamaño, cero advertencias/reintentos/omisiones. Integrado como `5e8e260`; dos rondas conjuntas nuevas pendientes. La ronda H19 fallida y sus 34 originales/62 fotogramas quedan como diagnóstico no aceptado. [Evidencia](informes/total-integrador-web.md#estrés-completo-después-de-corregir-el-selector-móvil).
+
 
 - **21-11-2026, Lima — diagnóstico de estrés móvil preservado:** puerta b3 aprobada; ronda de 123 casos termina con 119 PASS, un fallo de selector región/panel móvil y tres omitidos. No cuenta como aceptación. La captura acredita textbox/formulario presentes; se corrige solo el arnés y se repetirán puerta y dos rondas secuenciales completas, sin relajar el verificador. Aún sin push ni activación de esta misión. [Recibo](informes/evidencias/total-integrador/rondas-h19-diagnostico.json).
 
