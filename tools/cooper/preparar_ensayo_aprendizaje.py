@@ -98,9 +98,11 @@ const redes=pedidos.map((p,k)=>{const r=respuestas[k] || {}, y=r.platforms?.yout
   youtube_id_confirmado:coincide && p.estado==='publicado' && y?.success===true && /^[a-zA-Z0-9_-]{11}$/.test(id)?id:null};});
 const yt=$('Pedidos de retención').isExecuted?$('Pedidos de retención').all().map(i=>i.json).filter(p=>p.video_id):[];
 const met=$('Cooper · métricas YouTube').isExecuted?$('Cooper · métricas YouTube').all().map(i=>i.json):[];
+const publicados=$('Datos del video publicado').isExecuted?$('Datos del video publicado').all().map(i=>i.json):[];
 return [{json:{job_id:'aprender-diag-'+String($execution.id),video_id:'',canal_id:pedidos[0]?.canal_id || yt[0]?.canal_id || '',
  modo:'aprender_diagnostico',estado:'listo',resultado:JSON.stringify({fecha:new Date().toISOString(),redes,
- youtube:yt.map((p,k)=>({video_id:p.video_id,canal_id:p.canal_id,filas:met[k]?.rows?.length || 0,error:!!met[k]?.error})),
+ youtube:yt.map((p,k)=>({video_id:p.video_id,canal_id:p.canal_id,permiso_renovado:!!p.token,respuesta_recibida:!!met[k],filas:met[k]?.rows?.length || 0,error:!!met[k]?.error,
+  datos_publicados:{respuesta_recibida:!!publicados[k],error:!!publicados[k]?.error,id_coincide:!!publicados[k]?.items?.some(v=>v.id===p.youtube_id)}})),
  sin_publicacion:true,sin_ia:true})}}];
 """})
     guardar_diagnostico = copy.deepcopy(registrar)

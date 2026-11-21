@@ -72,6 +72,9 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
     assert.equal(medir({request_id:'req',platforms:{youtube:{success:true,platform_post_id:'abcdefghijk',post_metrics:{views:3}}}}).redes[0].youtube_id_confirmado,'abcdefghijk');
     assert.equal(medir({request_id:'ajeno',platforms:{youtube:{success:true,platform_post_id:'abcdefghijk'}}}).redes[0].youtube_id_confirmado,null);
     assert.ok(!JSON.stringify(medir({error:{message:'texto-reservado'}})).includes('texto-reservado'));
+    const diagnosticoYT=JSON.parse(run(codeOf(captura,'Diagnóstico del ensayo'),{all:{'Pedidos de retención':[{video_id:'v',canal_id:'c',youtube_id:'abcdefghijk',token:'dato-ficticio-no-exportar'}],'Cooper · métricas YouTube':[{rows:[[1]]}],'Datos del video publicado':[{items:[{id:'abcdefghijk'}]}]}})[0].json.resultado);
+    assert.equal(diagnosticoYT.youtube[0].permiso_renovado,true);assert.equal(diagnosticoYT.youtube[0].datos_publicados.id_coincide,true);
+    assert.ok(!JSON.stringify(diagnosticoYT).includes('dato-ficticio-no-exportar'));
     const propuesta = { lecciones: [{ regla: 'Probar un gancho concreto', causa: 'Hipótesis pendiente de contraste', correccion: 'Acortar la introducción', origenes: [{ video_id: observada.video_id, red: 'youtube', ventana: '72h', metrica: 'vistas', valor: 99999 }] }] };
     const archivo = path.join(carpeta, 'propuesta.json');
     fs.writeFileSync(archivo, JSON.stringify(propuesta));
