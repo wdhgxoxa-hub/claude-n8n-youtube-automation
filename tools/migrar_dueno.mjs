@@ -22,7 +22,8 @@ export async function planMigration(api, admin, { assignAll = false } = {}) {
   const selected = {};
   const columns = [];
   for (const [name, schema] of Object.entries(manifest.tablas)) {
-    const matches = tables.filter((t) => t.name === name);
+    const names = name === "fab_publicaciones" ? [name, "publicaciones"] : [name];
+    const matches = tables.filter((t) => names.includes(t.name));
     if (matches.length !== 1)
       throw new Error(
         `Se requiere una sola tabla ${name}; encontradas: ${matches.length}`,
