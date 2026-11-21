@@ -1,0 +1,12 @@
+{
+  "resultado": "PASS",
+  "origen": "f283319b73210e54c8fec0c4b4e7cddb1894a65f",
+  "base": "2dabc3a6b136afce79cc5309f33b5da8f6918b72",
+  "archivos_verificados": 94,
+  "workflows_inactivos": 32,
+  "diff_aplicado_y_contenido_identico": true,
+  "reversa_restaura_todos_los_hashes": true,
+  "respaldo_real": false,
+  "tar_sha256": "346422176909e50810e6705eba4c4b4ade0aa851e14997b5faf98a552a1ed1d2",
+  "tar_bytes": 538589
+}

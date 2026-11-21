@@ -1,0 +1,57 @@
+{
+  "inicio": "2026-11-21T19:09:14.343656+00:00",
+  "sha": "f283319b73210e54c8fec0c4b4e7cddb1894a65f",
+  "comandos": [
+    {
+      "comando": "npm ci",
+      "rc": 0,
+      "duracion_s": 9.5,
+      "advertencias": [],
+      "log": "npm-ci.log"
+    },
+    {
+      "comando": "npm run lint",
+      "rc": 0,
+      "duracion_s": 4.4,
+      "advertencias": [],
+      "log": "lint.log"
+    },
+    {
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "duracion_s": 1.28,
+      "advertencias": [],
+      "log": "typecheck.log"
+    },
+    {
+      "comando": "npm test",
+      "rc": 0,
+      "duracion_s": 20.81,
+      "advertencias": [],
+      "log": "unitarias.log"
+    },
+    {
+      "comando": "npm run test:e2e",
+      "rc": 0,
+      "duracion_s": 417.03,
+      "advertencias": [],
+      "log": "e2e.log"
+    },
+    {
+      "comando": "npm run build",
+      "rc": 0,
+      "duracion_s": 3.91,
+      "advertencias": [],
+      "log": "build.log"
+    },
+    {
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "duracion_s": 1.18,
+      "advertencias": [],
+      "log": "flujos.log"
+    }
+  ],
+  "fin": "2026-11-21T19:16:52.452315+00:00",
+  "resultado": "PASS"
+}

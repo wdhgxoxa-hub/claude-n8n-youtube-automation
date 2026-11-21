@@ -1,0 +1,395 @@
+{
+  "resultado": "PASS",
+  "inicio": "2026-11-21T19:06:53.585Z",
+  "fin": "2026-11-21T19:16:13.685Z",
+  "duracion_s": 560.1,
+  "fuente": "cooper/.cache/total-n8n-ramas/2026-11-21T19-06-53.585Z/resultado.json",
+  "copia": {
+    "archivo": "../tests/fixtures/n8n-total-datos.json",
+    "origen": "Snapshot ficticio copiado para ensayos; no contiene datos de producción ni credenciales",
+    "sha256": "24bec9c71495ea119aabdfaf177ee5ffd3707239f4bad08664e2d9f1e26873c8",
+    "filas": 3,
+    "credenciales": 0
+  },
+  "rondas_audiovisuales": 21,
+  "rondas_marcas": 3,
+  "casos_resiliencia": 24,
+  "cobertura": {
+    "avatar-completo": 3,
+    "avatar-partes-heygen": 3,
+    "avatar-partes-elevenlabs": 3,
+    "clips": 3,
+    "youtube-directo": 3,
+    "musica": 3,
+    "noticia": 3,
+    "contrato de voz inválido y Vigilante": 3,
+    "callback inválido y desconocido rechazados": 3,
+    "render fallido conserva fallo durable": 3,
+    "clip processing_agotado detiene conjunto incompleto": 3,
+    "clip failed detiene conjunto incompleto": 3,
+    "clip uri_ajeno detiene conjunto incompleto": 3,
+    "Wait reanuda misma ejecución tras SIGKILL": 3,
+    "callback pendiente sobrevive SIGKILL sin duplicar": 3,
+    "Marcas reels": 3
+  },
+  "ejecuciones": {
+    "success": 2832,
+    "error": 3
+  },
+  "errores_intencionales": [
+    "2297",
+    "2305",
+    "2313"
+  ],
+  "errores_inesperados": [],
+  "caidas_n8n": 6,
+  "caidas_worker_marcas": 6,
+  "contenedor_final": "exited",
+  "historico": [
+    "Copia histórica intacta después de todas las corridas"
+  ],
+  "traza": {
+    "archivo": "pasos-motor.json",
+    "pasos": 552
+  },
+  "marcas": {
+    "fuente": "Worker y receptor POST de Cooper reales, SQLite exclusiva, FFmpeg/FFprobe reales, RedSimulada",
+    "adaptaciones": [
+      "Origen HTTPS sustituido solo en copia n8n por loopback 8890 con relay cerrado stdin/stdout",
+      "Interruptor habilitado solo en copia; secreto efímero de la instancia en memoria, sin valores en evidencia",
+      "Reloj de creación/aprobación de fixtures 120 segundos atrás para que el horario venza sin espera"
+    ],
+    "rondas": [
+      {
+        "ronda": 1,
+        "duracion_ms": 6189,
+        "entrada": {
+          "id": "ca5598a3-3cfe-4ac5-b9d9-e3e404d3ab6f",
+          "estado": "programada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "",
+          "metricas": null,
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288197942,
+          "leaseAt": 0,
+          "red": "instagram",
+          "adjuntos": 1,
+          "artifact": "/home/david/Proyectos/cooper-wt/total-n8n-ramas/cooper/.cache/total-n8n-ramas/2026-11-21T19-06-53.585Z/marcas/reel-1.mp4",
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "codec_type": "video",
+                "width": 720,
+                "height": 1280
+              },
+              {
+                "codec_name": "aac",
+                "codec_type": "audio"
+              }
+            ],
+            "format": {
+              "duration": "3.021333",
+              "size": "15064"
+            }
+          },
+          "adaptacionReloj": "Creación y aprobación 120 segundos atrás; horario vencido al despertar real"
+        },
+        "trasCaida": {
+          "id": "ca5598a3-3cfe-4ac5-b9d9-e3e404d3ab6f",
+          "estado": "programada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "",
+          "metricas": null,
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288197942,
+          "leaseAt": 0
+        },
+        "salida": {
+          "id": "ca5598a3-3cfe-4ac5-b9d9-e3e404d3ab6f",
+          "estado": "publicada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "simulada-instagram-ca5598a3-3cfe-4ac5-b9d9-e3e404d3ab6f",
+          "metricas": {
+            "vistas": 240,
+            "alcance": 180,
+            "interacciones": 24,
+            "capturadas": 1795288319628
+          },
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288319054,
+          "leaseAt": 1795288319054
+        },
+        "publicacionRepetidaSinCambios": true,
+        "firmaInvalida": 401,
+        "envioInterrumpido": {
+          "antes": {
+            "id": "c9460f78-9a7b-44f2-9dc8-10bb3111ad9a",
+            "estado": "enviando",
+            "revision": 1,
+            "aprobadaRevision": 1,
+            "remoto": "",
+            "metricas": null,
+            "aviso": "",
+            "medios": 1,
+            "updatedAt": 1795288200906,
+            "leaseAt": 1795288322650
+          },
+          "despues": {
+            "id": "c9460f78-9a7b-44f2-9dc8-10bb3111ad9a",
+            "estado": "revision",
+            "revision": 1,
+            "aprobadaRevision": 1,
+            "remoto": "",
+            "metricas": null,
+            "aviso": "La ejecución se interrumpió. Conciliar antes de reenviar.",
+            "medios": 1,
+            "updatedAt": 1795288200906,
+            "leaseAt": 1795288021868
+          },
+          "repeticionSinReenvio": true,
+          "adaptacionReloj": "Reserva envejecida 301 segundos en la copia tras SIGKILL real dentro del transporte simulado"
+        }
+      },
+      {
+        "ronda": 2,
+        "duracion_ms": 6347,
+        "entrada": {
+          "id": "91217fd2-726f-45d3-b54e-67f317233b98",
+          "estado": "programada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "",
+          "metricas": null,
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288204219,
+          "leaseAt": 0,
+          "red": "facebook",
+          "adjuntos": 2,
+          "artifact": "/home/david/Proyectos/cooper-wt/total-n8n-ramas/cooper/.cache/total-n8n-ramas/2026-11-21T19-06-53.585Z/marcas/reel-2.mp4",
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "codec_type": "video",
+                "width": 720,
+                "height": 1280
+              },
+              {
+                "codec_name": "aac",
+                "codec_type": "audio"
+              }
+            ],
+            "format": {
+              "duration": "4.021333",
+              "size": "33827"
+            }
+          },
+          "adaptacionReloj": "Creación y aprobación 120 segundos atrás; horario vencido al despertar real"
+        },
+        "trasCaida": {
+          "id": "91217fd2-726f-45d3-b54e-67f317233b98",
+          "estado": "programada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "",
+          "metricas": null,
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288204219,
+          "leaseAt": 0
+        },
+        "salida": {
+          "id": "91217fd2-726f-45d3-b54e-67f317233b98",
+          "estado": "publicada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "simulada-facebook-91217fd2-726f-45d3-b54e-67f317233b98",
+          "metricas": {
+            "vistas": 240,
+            "alcance": 180,
+            "interacciones": 24,
+            "capturadas": 1795288326074
+          },
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288325562,
+          "leaseAt": 1795288325562
+        },
+        "publicacionRepetidaSinCambios": true,
+        "firmaInvalida": 401,
+        "envioInterrumpido": {
+          "antes": {
+            "id": "f148eeb9-25b1-4fb4-bb96-0f6aab96c804",
+            "estado": "enviando",
+            "revision": 1,
+            "aprobadaRevision": 1,
+            "remoto": "",
+            "metricas": null,
+            "aviso": "",
+            "medios": 1,
+            "updatedAt": 1795288207243,
+            "leaseAt": 1795288329063
+          },
+          "despues": {
+            "id": "f148eeb9-25b1-4fb4-bb96-0f6aab96c804",
+            "estado": "revision",
+            "revision": 1,
+            "aprobadaRevision": 1,
+            "remoto": "",
+            "metricas": null,
+            "aviso": "La ejecución se interrumpió. Conciliar antes de reenviar.",
+            "medios": 1,
+            "updatedAt": 1795288207243,
+            "leaseAt": 1795288028288
+          },
+          "repeticionSinReenvio": true,
+          "adaptacionReloj": "Reserva envejecida 301 segundos en la copia tras SIGKILL real dentro del transporte simulado"
+        }
+      },
+      {
+        "ronda": 3,
+        "duracion_ms": 5583,
+        "entrada": {
+          "id": "5e39c570-2bf8-4a5d-a388-99927cfd7c70",
+          "estado": "programada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "",
+          "metricas": null,
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288210572,
+          "leaseAt": 0,
+          "red": "tiktok",
+          "adjuntos": 2,
+          "artifact": "/home/david/Proyectos/cooper-wt/total-n8n-ramas/cooper/.cache/total-n8n-ramas/2026-11-21T19-06-53.585Z/marcas/reel-3.mp4",
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "codec_type": "video",
+                "width": 720,
+                "height": 1280
+              },
+              {
+                "codec_name": "aac",
+                "codec_type": "audio"
+              }
+            ],
+            "format": {
+              "duration": "4.021333",
+              "size": "34406"
+            }
+          },
+          "adaptacionReloj": "Creación y aprobación 120 segundos atrás; horario vencido al despertar real"
+        },
+        "trasCaida": {
+          "id": "5e39c570-2bf8-4a5d-a388-99927cfd7c70",
+          "estado": "programada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "",
+          "metricas": null,
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288210572,
+          "leaseAt": 0
+        },
+        "salida": {
+          "id": "5e39c570-2bf8-4a5d-a388-99927cfd7c70",
+          "estado": "publicada",
+          "revision": 1,
+          "aprobadaRevision": 1,
+          "remoto": "simulada-tiktok-5e39c570-2bf8-4a5d-a388-99927cfd7c70",
+          "metricas": {
+            "vistas": 240,
+            "alcance": 180,
+            "interacciones": 24,
+            "capturadas": 1795288332663
+          },
+          "aviso": "",
+          "medios": 1,
+          "updatedAt": 1795288332074,
+          "leaseAt": 1795288332074
+        },
+        "publicacionRepetidaSinCambios": true,
+        "firmaInvalida": 401,
+        "envioInterrumpido": {
+          "antes": {
+            "id": "78220077-0bba-4805-8b11-02f87a81b98b",
+            "estado": "enviando",
+            "revision": 1,
+            "aprobadaRevision": 1,
+            "remoto": "",
+            "metricas": null,
+            "aviso": "",
+            "medios": 1,
+            "updatedAt": 1795288213775,
+            "leaseAt": 1795288334632
+          },
+          "despues": {
+            "id": "78220077-0bba-4805-8b11-02f87a81b98b",
+            "estado": "revision",
+            "revision": 1,
+            "aprobadaRevision": 1,
+            "remoto": "",
+            "metricas": null,
+            "aviso": "La ejecución se interrumpió. Conciliar antes de reenviar.",
+            "medios": 1,
+            "updatedAt": 1795288213775,
+            "leaseAt": 1795288033849
+          },
+          "repeticionSinReenvio": true,
+          "adaptacionReloj": "Reserva envejecida 301 segundos en la copia tras SIGKILL real dentro del transporte simulado"
+        }
+      }
+    ],
+    "entregasFirmadas": 15
+  },
+  "artefactos": [
+    {
+      "archivo": "lote-total-n8n-ramas.tar.gz",
+      "bytes": 538589,
+      "sha256": "346422176909e50810e6705eba4c4b4ade0aa851e14997b5faf98a552a1ed1d2"
+    },
+    {
+      "archivo": "pasos-motor.json.gz",
+      "bytes": 197588,
+      "sha256": "22a15aec081e2ca369cba0ba35e0c950fe926fca44cbcaf752bfe7a6449c1c26"
+    },
+    {
+      "archivo": "reel-1.mp4",
+      "bytes": 15064,
+      "sha256": "4879213079ac0365f808adf40081117776b8c665f019c73c477deaba29a9dce5"
+    },
+    {
+      "archivo": "reel-2.mp4",
+      "bytes": 33827,
+      "sha256": "c9dcb9273b6c5b914529290c50d29a755fe9c90874262e19a73612719d0a92e8"
+    },
+    {
+      "archivo": "reel-3.mp4",
+      "bytes": 34406,
+      "sha256": "de6f3eb6fa9966c02c7833ec3e579da0ea1d862cb881cf81a5eecc6a48fc5145"
+    },
+    {
+      "archivo": "resultado.json.gz",
+      "bytes": 113215,
+      "sha256": "7c35dc2564d3a11b51e97f906810f4ea43bd51eb2274d040a7cc687ed2589ccc"
+    }
+  ]
+}

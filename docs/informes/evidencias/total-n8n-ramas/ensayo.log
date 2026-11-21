@@ -1,0 +1,49 @@
+npm notice run cooper@0.1.0 test:ensayo:ramas
+npm notice run node scripts/ensayo-total.mjs --ramas
+Instancia aislada lista: http://127.0.0.1:40473
+Rama avatar-completo R1: PASS (14008ms)
+Rama avatar-completo R2: PASS (12890ms)
+Rama avatar-completo R3: PASS (12610ms)
+Rama avatar-partes-heygen R1: PASS (11239ms)
+Rama avatar-partes-heygen R2: PASS (10894ms)
+Rama avatar-partes-heygen R3: PASS (12779ms)
+Rama avatar-partes-elevenlabs R1: PASS (11683ms)
+Rama avatar-partes-elevenlabs R2: PASS (11496ms)
+Rama avatar-partes-elevenlabs R3: PASS (13391ms)
+Rama clips R1: PASS (14296ms)
+Rama clips R2: PASS (17951ms)
+Rama clips R3: PASS (15468ms)
+Rama youtube-directo R1: PASS (15459ms)
+Rama youtube-directo R2: PASS (11412ms)
+Rama youtube-directo R3: PASS (11455ms)
+Rama musica R1: PASS (12820ms)
+Rama musica R2: PASS (14501ms)
+Rama musica R3: PASS (15333ms)
+Rama noticia R1: PASS (15386ms)
+Rama noticia R2: PASS (16201ms)
+Rama noticia R3: PASS (16902ms)
+Resiliencia R1 contrato de voz inválido y Vigilante: PASS
+Resiliencia R1 callback inválido y desconocido rechazados: PASS
+Resiliencia R2 contrato de voz inválido y Vigilante: PASS
+Resiliencia R2 callback inválido y desconocido rechazados: PASS
+Resiliencia R3 contrato de voz inválido y Vigilante: PASS
+Resiliencia R3 callback inválido y desconocido rechazados: PASS
+Resiliencia R1 render fallido conserva fallo durable: PASS
+Resiliencia R2 render fallido conserva fallo durable: PASS
+Resiliencia R3 render fallido conserva fallo durable: PASS
+Resiliencia R1 clip processing_agotado detiene conjunto incompleto: PASS
+Resiliencia R2 clip processing_agotado detiene conjunto incompleto: PASS
+Resiliencia R3 clip processing_agotado detiene conjunto incompleto: PASS
+Resiliencia R1 clip failed detiene conjunto incompleto: PASS
+Resiliencia R2 clip failed detiene conjunto incompleto: PASS
+Resiliencia R3 clip failed detiene conjunto incompleto: PASS
+Resiliencia R1 clip uri_ajeno detiene conjunto incompleto: PASS
+Resiliencia R2 clip uri_ajeno detiene conjunto incompleto: PASS
+Resiliencia R3 clip uri_ajeno detiene conjunto incompleto: PASS
+Resiliencia R1 Wait reanuda misma ejecución tras SIGKILL: PASS
+Resiliencia R1 callback pendiente sobrevive SIGKILL sin duplicar: PASS
+Resiliencia R2 Wait reanuda misma ejecución tras SIGKILL: PASS
+Resiliencia R2 callback pendiente sobrevive SIGKILL sin duplicar: PASS
+Resiliencia R3 Wait reanuda misma ejecución tras SIGKILL: PASS
+Resiliencia R3 callback pendiente sobrevive SIGKILL sin duplicar: PASS
+Evidencia: /home/david/Proyectos/cooper-wt/total-n8n-ramas/cooper/.cache/total-n8n-ramas/2026-11-21T19-06-53.585Z
