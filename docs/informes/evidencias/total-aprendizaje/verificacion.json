@@ -1,0 +1,25 @@
+{
+  "fecha_lima": "2026-11-21T10:29:48.318926-05:00",
+  "commit_codigo": "cc2cb4d",
+  "puerta": {
+    "comando": "cd cooper && npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
+    "codigo": 0,
+    "unitarias": 285,
+    "e2e": 44,
+    "errores": 0,
+    "advertencias": 0
+  },
+  "flujos": {
+    "comando": "node --test tests/flujos_v2.test.cjs",
+    "codigo": 0,
+    "pruebas": 154,
+    "fallos": 0
+  },
+  "ensayo_remoto_ejecutado": false,
+  "archivos": {
+    "puerta-final.log": "f696aa2ce2c556ed42ba96b4ddb485a70ecc6febdd67a1b5efda6f5965d65d9d",
+    "flujos-final.log": "3e5c0a9b0b2c8426296821e15dac162208e803e3c0de221fc678a006a632ad0a",
+    "evidencia-390.png": "df57c2fe7d5e8098918b910c528d8355ed32d6ab8ac74e28af0231c0dbe3e2d8",
+    "evidencia-1440.png": "302bb70396c25f578f6881f056646e861ca1f1092a1c567c9a925b45deb32582"
+  }
+}

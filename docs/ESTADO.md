@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 10:25 (Lima).
+Última actualización: 2026-11-21 10:28 (Lima).
 
 ## Qué es
 
@@ -10,6 +10,7 @@
 ## Hecho
 
 - **cooper-total / Operación:** implementados réplica cifrada en PC, restauración antes de promover copia, monitor firmado para Telegram y arranque protegido por mantenimiento. Copia real VPS y recuperación externa verificadas el 21-11 a las 10:17 Lima: snapshot `04cd7f6f`, 25 archivos y dos bases; los cuatro servicios volvieron saludables. Puerta del frente: 284 unitarias, 43 E2E, 147 flujos y 36 pruebas de operación; cero errores/advertencias. Código entregado al orquestador; timers y monitor aún pendientes de instalación coordinada. [Informe](informes/total-operacion.md).
+- **Cooper total, frente aprendizaje:** implementado y probado localmente el ciclo de métricas 24h/72h/7d, evidencia creativa y lecciones por canal con lectura obligatoria del siguiente guion, trazabilidad en Aprendizaje y ensayo seguro sin producción ni llamadas de IA. Puerta completa: 285 unitarias, 44 E2E, 154 regresiones de flujos; cero errores/advertencias. **Pendiente de integración y validación/despliegue remoto por el orquestador.** [Informe](informes/total-aprendizaje.md).
 
 - Fases 1–6: web, chat por los planes de Claude/Codex, puente firmado con n8n, avatares/voces, WhatsApp, preparación VPS y modo noticia. Proveedores con gasto y modo noticia requieren su activación correspondiente.
 - **Integración 3:** Pulido, Memoria, Cobertura, Marcas y Animación fusionados en orden; `version-chatgpt` y `main` publicados en el remoto propio `mio`, por excepción expresa de Walter. [Informe y evidencia](informes/cooper-integracion3.md).
@@ -27,6 +28,7 @@
 ## En curso
 
 - Orquestador `cooper-total`: integrar/desplegar los frentes y activar el monitor, receptor de recibos y timers de réplica/arranque; ensayar imagen nueva y reversa con copia del respaldo real. El frente Operación no reabrió workflows ni hizo push.
+- Cooper total: integrar el frente aprendizaje y ejecutar su [ensayo de lectura](cooper-aprendizaje-ensayo.md) sobre publicaciones existentes, con respaldo/reversa, sin reanudar producción. La conexión real y la calidad de las lecciones todavía no se acreditan por las pruebas locales.
 
 - Claude: revisar e instalar el lote n8n de integración 3 en el destino elegido, con respaldo real previo, mapa de IDs y reversa. Contiene 32 exportaciones inactivas; **no se aplicó en vivo**. [Procedimiento](cooper-cobertura-despliegue.md).
 - Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas, repositorio de copias fuera del VPS y conexión del chat con los planes de la PC.
@@ -42,6 +44,8 @@
 6. Revisar los videos y probar un teléfono físico de gama media y Safari si se utiliza. La emulación local no sustituye esa aceptación.
 7. Marcas: definir identidad/dueños, asignar activos y permisos, cotejar corpus bíblico y guía pastoral, aprobar plantilla WhatsApp y decidir retención/conciliación de medios y primer ensayo real.
 8. Elegir repositorio de copias remoto, custodiar las claves offline y probar recuperación fuera del VPS. Si se requiere IA de los planes allí, completar el túnel restringido a los puentes de la PC y validar desde los contenedores.
+
+9. Aprendizaje: revisar hipótesis editoriales, reautorizar solo las cuentas cuyo permiso de analytics falle y aprobar los futuros videos con los que contrastar las correcciones. No se inventan métricas de ventanas pasadas ni una mejora causal.
 
 ## Ideas conversadas
 
