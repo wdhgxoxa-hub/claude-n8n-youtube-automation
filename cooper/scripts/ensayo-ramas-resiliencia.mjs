@@ -355,6 +355,153 @@ export async function runResiliencia(ctx) {
     await api.request("POST", `/workflows/${ids.FabProduccion001}/publish`, {});
   }
 
+  const ajustesOriginales = bodyWorkflow(
+    await api.request("GET", `/workflows/${ids.FabAjustes000001}`),
+  );
+  const ajustesClips = structuredClone(ajustesOriginales);
+  const ajustes = ajustesClips.nodes.find((n) => n.name === "Ajustes");
+  ajustes.parameters.jsCode = ajustes.parameters.jsCode.replace(
+    /allowClips:\s*(?:true|false)/,
+    "allowClips: true",
+  );
+  await api.request("PUT", `/workflows/${ids.FabAjustes000001}`, ajustesClips);
+  await api.request("POST", `/workflows/${ids.FabAjustes000001}/publish`, {});
+  try {
+    for (const caso of ["processing_agotado", "failed", "uri_ajeno"]) {
+      const copia = structuredClone(original);
+      const animar = copia.nodes.find((n) => n.name === "Animar (Gemini Omni)");
+      const consultar = copia.nodes.find(
+        (n) => n.name === "Consultar archivo de clip",
+      );
+      assert.equal(animar.type, "n8n-nodes-base.code");
+      assert.equal(consultar.type, "n8n-nodes-base.code");
+      const uri =
+        caso === "uri_ajeno"
+          ? "https://ensayo.invalid/clip-ajeno.mp4"
+          : "https://generativelanguage.googleapis.com/v1beta/files/clip-fallo:download?alt=media";
+      animar.parameters.jsCode = `const respuestas=(()=>{${animar.parameters.jsCode}})();
+return respuestas.map((item,i)=>{const plano=$('Extraer imagen').itemMatching(i).json.plano;
+  if(plano.id!=='p02') return item;
+  return {...item,json:{...item.json,steps:[{type:'model_output',content:[{type:'video',mime_type:'video/mp4',uri:${JSON.stringify(uri)}}]}]}};
+});`;
+      consultar.parameters.jsCode = `return $input.all().map(item=>({json:{name:item.json.clip_nombre,state:${JSON.stringify(caso === "failed" ? "FAILED" : "PROCESSING")}}}));`;
+      await api.request("PUT", `/workflows/${ids.FabProduccion001}`, copia);
+      await api.request(
+        "POST",
+        `/workflows/${ids.FabProduccion001}/publish`,
+        {},
+      );
+      for (let ronda = 1; ronda <= rounds; ronda++) {
+        const canal_id = `ramas-clip-${caso}-r${ronda}`,
+          video_id = `${canal_id}-v`;
+        await sembrarVideo(canal_id, video_id);
+        await call("resiliencia-produccion", {
+          canal_id,
+          video_id,
+          formato: "short",
+          presupuesto_usd: 10,
+          biblia,
+          guion: { titulo: "Clip interrumpido", guion: "Guion ficticio" },
+          storyboard: {
+            planos: [1, 2].map((i) => ({
+              id: `p0${i}`,
+              tipo: "clip",
+              duracion_clip_s: 8,
+              texto_narrado:
+                "Esta narración ficticia comprueba la animación de dos clips y verifica que una pieza incompleta detiene el montaje del ensayo local.",
+              prompt_imagen: "Esquema propio del cielo",
+              encuadre: "general",
+              movimiento: "zoom lento",
+              personajes: [],
+              escenario: "cielo",
+              transicion: "corte",
+              texto_pantalla: "",
+            })),
+            musica: {},
+            efectos: [],
+            cortes: [],
+            miniatura: {},
+            publicacion: {},
+          },
+        });
+        const ejecucion = await encontrarEjecucion(
+          ids.FabProduccion001,
+          video_id,
+          "success",
+        );
+        const runs = ejecucion.data.resultData.runData;
+        assert.ok(runs["Clip · fallo durable"]);
+        assert.ok(
+          runs["Plano aprobado"],
+          "El primer clip válido debe completarse",
+        );
+        const completos = (runs["Juntar planos"] || []).flatMap(
+          (r) => r.data?.main?.[0] || [],
+        );
+        assert.equal(
+          completos.length,
+          0,
+          "Un clip fallido no permite montar el conjunto parcial",
+        );
+        for (const nodo of [
+          "Encargo de sonido",
+          "Sonido y emoción",
+          "Renderizar",
+          "Encargo de calidad",
+        ])
+          assert.equal(
+            runs[nodo],
+            undefined,
+            `${nodo} no debe recibir un conjunto incompleto`,
+          );
+        const consultas = (runs["Consultar archivo de clip"] || []).length;
+        assert.equal(
+          consultas,
+          caso === "processing_agotado" ? 40 : caso === "failed" ? 1 : 0,
+        );
+        assert.equal(runs["Descargar clip"], undefined);
+        const video = (await rows("videos")).find(
+          (v) => v.video_id === video_id,
+        );
+        assert.equal(video.estado, "con_fallas");
+        assert.equal(video.etapa, "produccion");
+        assert.ok(video.error);
+        assert.equal(
+          (await rows("aprobaciones")).filter((a) => a.video_id === video_id)
+            .length,
+          0,
+        );
+        assert.equal(
+          (await rows("publicaciones")).filter((p) => p.video_id === video_id)
+            .length,
+          0,
+        );
+        registrar({
+          caso: `clip ${caso} detiene conjunto incompleto`,
+          ronda,
+          canal_id,
+          video_id,
+          ejecucion: ejecucion.id,
+          estado: video.estado,
+          consultas,
+          clipsPedidos: 2,
+          planosCompletosParaMontaje: 0,
+          aprobaciones: 0,
+          publicaciones: 0,
+        });
+      }
+    }
+  } finally {
+    await api.request("PUT", `/workflows/${ids.FabProduccion001}`, original);
+    await api.request("POST", `/workflows/${ids.FabProduccion001}/publish`, {});
+    await api.request(
+      "PUT",
+      `/workflows/${ids.FabAjustes000001}`,
+      ajustesOriginales,
+    );
+    await api.request("POST", `/workflows/${ids.FabAjustes000001}/publish`, {});
+  }
+
   for (let ronda = 1; ronda <= rounds; ronda++) {
     const canal_id = `ramas-recuperacion-r${ronda}`;
     const propuesta = {
@@ -370,6 +517,7 @@ export async function runResiliencia(ctx) {
     };
     await call("resiliencia-aprobacion", {
       canal_id,
+      dueno_email: "resiliencia@example.test",
       etapa: "canal",
       contexto: propuesta,
       mensaje: "Aprobación ficticia para comprobar recuperación tras caída",
