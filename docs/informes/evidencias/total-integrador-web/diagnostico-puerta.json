@@ -1,0 +1,209 @@
+{
+  "tipo": "diagnostico_previo_no_aceptacion_final",
+  "codigo": "e942dc9",
+  "fecha_utc": "2026-11-21T20:42:37.788138+00:00",
+  "origen": "puerta-cierre/checkout/cooper/.cache/accesibilidad",
+  "metodo": "Inspección directa de 28 PNG originales, seis vistas principales en cuatro combinaciones y cuatro estados poblados de Marcas.",
+  "capturas": [
+    {
+      "archivo": "rutas-claro-1440/inicio.png",
+      "sha256": "829811d2ed21d23c9e82e0ad631a595ab28ac22e9343bb4bf55d4a6c04545f20",
+      "bytes": 168069,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-1440/marcas.png",
+      "sha256": "44ce9682bea487dafb65e587ce1e313d7b44c02cd861f3de5c907d7dd9c8a724",
+      "bytes": 82223,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-1440/cuentas.png",
+      "sha256": "9fd73348a6a6baa2aaa1d0febf6f24c6d25aa14e540ef56f4557de1f7dcdfa21",
+      "bytes": 114026,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-1440/publicados.png",
+      "sha256": "1331e3becfdaa5a6ec32ecee797d8e82ed259da0521a48b9c593b2c312e3e7b0",
+      "bytes": 195025,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-1440/aprendizaje.png",
+      "sha256": "0073dc953a0fc6ea61553efa67ea4544c909b0ec7264d2e4039a61656f498e88",
+      "bytes": 179407,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-1440/admin-fabrica.png",
+      "sha256": "12baa80e57c7e664b7b684ca3046d7e9c548e8b08b514c26064eff74da97983d",
+      "bytes": 216821,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-360/inicio.png",
+      "sha256": "ec74667173ca701d00f8ec4f57bb24f6926a2b18b80182b0ad37ce624ca7ea29",
+      "bytes": 58715,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-360/marcas.png",
+      "sha256": "d306f0785d09b27a768499af96cb8ebe554162058750d8e4ca2905b20e6b546e",
+      "bytes": 37649,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-360/cuentas.png",
+      "sha256": "59cf764d3fdf61d2791e55569a3dc24027d1e633361108d54fcb8e15be726079",
+      "bytes": 64975,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-360/publicados.png",
+      "sha256": "fd6ae60f7b5c4463750d945bab18c8e37f8e49c5047e3671e31b1482ce557de8",
+      "bytes": 165761,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-360/aprendizaje.png",
+      "sha256": "94400d4027bbfddf6c951dc4c07178c33fb2be6dd886ad89936ae664b5b34357",
+      "bytes": 136303,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-claro-360/admin-fabrica.png",
+      "sha256": "d2b2a7555eec0cf2462b248412f94172da04089b71720e9156f894a259427d6f",
+      "bytes": 206137,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-1440/inicio.png",
+      "sha256": "38bd4d96730fac71180b0bca926cf832ac4c0d0aba85d3a1a0bcbbeac6f68600",
+      "bytes": 168227,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-1440/marcas.png",
+      "sha256": "414a38a27065dd7de6436928819f669c797438ab80da547679a790ecc6dbafeb",
+      "bytes": 81076,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-1440/cuentas.png",
+      "sha256": "5c3b91a4a22c625781d4ab82b3bdd8b30812e8146835c73a1461ecf09b2fa93c",
+      "bytes": 111431,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-1440/publicados.png",
+      "sha256": "11b6d5a09c9e7fe7470e4b60b183f5cf98d9ba0d635de8c36de2a7a3d4ac93d3",
+      "bytes": 193981,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-1440/aprendizaje.png",
+      "sha256": "637c69e79f11724f6f7053db7d80b9d2bb77399effe181c1726d68686bee11ed",
+      "bytes": 178183,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-1440/admin-fabrica.png",
+      "sha256": "5e4d713199bb9e7628807f6aa5541eb37ece32447da739d283fcd9b43e3735e5",
+      "bytes": 215804,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-360/inicio.png",
+      "sha256": "341ccc29a4502fbf95e543ba9bdda0a04f091c7846fce1449ba1e2cf5e746ea3",
+      "bytes": 58239,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-360/marcas.png",
+      "sha256": "30ec7adec8720ff97ff3b2bb35024a740f11371038f59343ce81764fc2aa6d0d",
+      "bytes": 37788,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-360/cuentas.png",
+      "sha256": "58e7d280926694efc04e2fe6a4e2bcb645a86f6da5d7c3fc85c0a6152e4be48d",
+      "bytes": 65044,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-360/publicados.png",
+      "sha256": "8dadec6d0c4173496afe1b552f5870f28e028974ded246d9a0048bed41be7b5d",
+      "bytes": 168463,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-360/aprendizaje.png",
+      "sha256": "db58829d4324ce6fa70c131315462942528df9787010833206ffee9c5ce70152",
+      "bytes": 137726,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "rutas-oscuro-360/admin-fabrica.png",
+      "sha256": "65d91ce62b7408e37400fd8bc0651b7522b6a7d6b84e882b9a33be04f09b7fc4",
+      "bytes": 208615,
+      "revisado": true,
+      "resultado": "sin defecto visual observado"
+    },
+    {
+      "archivo": "interacciones-oscuro-360/marca-editor-publicacion.png",
+      "sha256": "904d0feace7c79e8f73653f4af19d60373e86751f602ae688e15f2bf77d8fb95",
+      "bytes": 186851,
+      "revisado": true,
+      "resultado": "sin defecto visual observado",
+      "observacion": "Enlace Saltar al contenido visible durante el foco por teclado; la navegación de pestañas móvil conserva desplazamiento horizontal."
+    },
+    {
+      "archivo": "interacciones-claro-360/marca-calendario-poblado.png",
+      "sha256": "43344a601931c64a672a5f8c990eaeda259cb3dae36bae86201606e24593de01",
+      "bytes": 115830,
+      "revisado": true,
+      "resultado": "sin defecto visual observado",
+      "observacion": "Enlace Saltar al contenido visible durante el foco por teclado; la navegación de pestañas móvil conserva desplazamiento horizontal."
+    },
+    {
+      "archivo": "interacciones-oscuro-1440/marca-revision.png",
+      "sha256": "6fd24c09996ef04619a747f30f81d07e3aa2bc7da612b491af69c27a8494ba0f",
+      "bytes": 105159,
+      "revisado": true,
+      "resultado": "sin defecto visual observado",
+      "observacion": "Enlace Saltar al contenido visible durante el foco por teclado; la navegación de pestañas móvil conserva desplazamiento horizontal."
+    },
+    {
+      "archivo": "interacciones-claro-1440/marca-estudio-historial.png",
+      "sha256": "b4086e9fd727421a19f8f4b3ede4103e63f67df3b8628c325ad0db6afc602460",
+      "bytes": 173702,
+      "revisado": true,
+      "resultado": "sin defecto visual observado",
+      "observacion": "Enlace Saltar al contenido visible durante el foco por teclado; la navegación de pestañas móvil conserva desplazamiento horizontal."
+    }
+  ]
+}

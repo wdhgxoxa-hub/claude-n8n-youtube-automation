@@ -449,3 +449,39 @@ Resultado de este nuevo barrido: ningún resto de aplicación; un helper operati
 posterior en integración por producto (`e29bba5`). No contradice el cierre anterior
 del helper Radar/Resolver: son cambios distintos y cortes distintos. El integrador
 recibió el aviso antes de iniciar su despliegue. No se agregan decisiones de Walter.
+
+### Cierre del helper WAL y focal completo de operación
+
+La integración `abb94c1` cierra el único helper pendiente del barrido de 55 refs:
+`e29bba5` → `54b9ac7`, `9dc7ce0` → `d33b60c` y `39ac406` → `2be2dc5`.
+El primero conserva patch-id exacto; todos los archivos fuera de ESTADO de los
+tres commits son idénticos por blob y sus destinos son ancestros del corte.
+ESTADO se concilió de forma aditiva. El árbol `cooper/` permanece idéntico a
+`e942dc9`. La matriz conserva cortes históricos y registra ahora **cero restos
+de aplicación y cero helpers operativos de las ramas cerradas del corte**.
+
+La puerta posterior detectó una aserción de Radar cuyo nombre exacto de región
+omitía «cotidiana», presente en la cuenta de ensayo. El integrador corrigió solo
+la prueba en `4e029e7`; equivalente delegado `5876264`: región accesible que
+contiene el encabezado exacto «Competencia e identidad», unicidad y texto
+«Por investigar» visible. No cambia la aplicación ni se debilita su cobertura.
+
+[Archivo completo de operación: 7/7 PASS](evidencias/total-integrador-web/operacion-focal.json),
+9,5 segundos, build previo PASS y cero advertencias, reintentos u omisiones.
+Se conservan nueve videos en `.cache/operacion-focal/checkout/cooper/test-results/`.
+Checkout propio archivado e imagen CI fijada, CPU 16–23 liberadas al cerrar;
+`cooper/` coincide exactamente con `4e029e7`. Además de Radar se probaron SSR,
+consulta explícita, nombres repetidos, persistencia y confirmaciones, errores
+recuperables y separación administrativa. Este focal no sustituye la puerta.
+
+[Diagnóstico visual previo](evidencias/total-integrador-web/diagnostico-puerta.json):
+se inspeccionaron directamente 24 capturas originales de las seis vistas
+principales en claro/oscuro a 360/1440, más cuatro estados poblados de Marcas.
+No se observaron solapamientos, textos cortados ni controles fuera del ancho;
+la navegación móvil de Marcas conserva desplazamiento horizontal y el enlace
+«Saltar al contenido» aparece cuando tiene foco. Estas capturas pertenecen a
+`puerta-cierre`, cuya ejecución quedó rechazada por la aserción citada. Son
+solo diagnóstico: **no acreditan la aceptación de las dos rondas nuevas**.
+El integrador preservó fallo/cancelación y reinició puerta y rondas desde
+`4e029e7` en `puerta-validacion` y `rondas-validacion`. La revisión final sigue
+pendiente de sus artefactos completos. No se añade una decisión de Walter.

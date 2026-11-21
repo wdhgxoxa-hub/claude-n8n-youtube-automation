@@ -10056,53 +10056,72 @@
       "faltantes_aplicacion_en_ramas_cerradas": 0,
       "faltantes_helpers_operativos_en_ramas_cerradas": 0,
       "limite": "No vuelve a seguir refs de rondas/QA sin cierre ni acredita la puerta o despliegue del objetivo."
+    },
+    {
+      "tipo": "cierre_helper_wal_posterior",
+      "fecha_lima": "2026-11-21T15:43:13.145459-05:00",
+      "commit_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+      "commit_integrado_observado": "abb94c119ef1e08b8da29c0558b67a95806c9392",
+      "ramas_totales": 55,
+      "faltantes_aplicacion_en_ramas_cerradas": 0,
+      "faltantes_helpers_operativos_en_ramas_cerradas": 0,
+      "cierre_helper_wal": [
+        {
+          "origen": "e29bba5521b2054fc0841239cb71f724d5e2a86e",
+          "integrado": "54b9ac720d1070f549119113cc2d3b1cce68803e",
+          "archivos_fuera_estado_identicos": 3,
+          "integrado_por_ascendencia_en": "abb94c1",
+          "conservacion_estado": "Actualización aditiva al integrar los cierres documentales."
+        },
+        {
+          "origen": "9dc7ce0e4ccbe27440f8cb625bafdef9c772c544",
+          "integrado": "d33b60c46c87b7c9cf51a4f76d07d7bf8a551564",
+          "archivos_fuera_estado_identicos": 11,
+          "integrado_por_ascendencia_en": "abb94c1",
+          "conservacion_estado": "Actualización aditiva al integrar los cierres documentales."
+        },
+        {
+          "origen": "39ac4067b3e87bb0b240186a181c8eb6703df0bb",
+          "integrado": "2be2dc5144df4b870249b9d0acad641e6c594830",
+          "archivos_fuera_estado_identicos": 2,
+          "integrado_por_ascendencia_en": "abb94c1",
+          "conservacion_estado": "Actualización aditiva al integrar los cierres documentales."
+        }
+      ],
+      "limite": "Se conserva el corte de 55 refs del barrido anterior. No se siguen refs QA activas ni se declara terminada la puerta o la aceptación visual."
     }
   ],
   "resumen_cierre_actual": {
-    "fecha_lima": "2026-11-21T15:36:10.165209-05:00",
+    "fecha_lima": "2026-11-21T15:43:13.145459-05:00",
     "commit_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
-    "commit_integrado_observado": "34d6c7a2fab3180ad54df31a6789cac4041d244e",
+    "commit_integrado_observado": "abb94c119ef1e08b8da29c0558b67a95806c9392",
     "ramas_totales": 55,
-    "deltas": [
+    "faltantes_aplicacion_en_ramas_cerradas": 0,
+    "faltantes_helpers_operativos_en_ramas_cerradas": 0,
+    "cierre_helper_wal": [
       {
-        "rama": "total-competencia-revision",
-        "sha": "d876b330e16f9657bc736b5cbb64fb94ab65153f",
-        "sha_previo": null,
-        "estado": "documentacion_con_ensayo_pendiente",
-        "commits": [
-          "d876b33"
-        ],
-        "detalle": "Memo documental de auditoría con aceptación Radar y límites de volumen; declara ensayo H19 pendiente de ejecución. Sin runtime nuevo ni cierre completo."
+        "origen": "e29bba5521b2054fc0841239cb71f724d5e2a86e",
+        "integrado": "54b9ac720d1070f549119113cc2d3b1cce68803e",
+        "archivos_fuera_estado_identicos": 3,
+        "integrado_por_ascendencia_en": "abb94c1",
+        "conservacion_estado": "Actualización aditiva al integrar los cierres documentales."
       },
       {
-        "rama": "total-radar-contexto",
-        "sha": "39ac4067b3e87bb0b240186a181c8eb6703df0bb",
-        "sha_previo": "6f6af6465f3240250aad150c3f68b72488ee5595",
-        "estado": "delta_operativo_cerrado_en_revision_producto",
-        "commits": [
-          "e29bba5",
-          "9dc7ce0",
-          "39ac406"
-        ],
-        "detalle": "Helper WAL de clon autónomo y recibos públicos de 146 filas/memoria. Producto asignado a integración; no cambia Cooper ni se aplica desde este frente."
+        "origen": "9dc7ce0e4ccbe27440f8cb625bafdef9c772c544",
+        "integrado": "d33b60c46c87b7c9cf51a4f76d07d7bf8a551564",
+        "archivos_fuera_estado_identicos": 11,
+        "integrado_por_ascendencia_en": "abb94c1",
+        "conservacion_estado": "Actualización aditiva al integrar los cierres documentales."
       },
       {
-        "rama": "total-revision-rondas-cierre",
-        "sha": "ccd539d19381709136a93694559cf4af4ffca431",
-        "sha_previo": "65a5996887bf98ccde28ab093494222ad7672f52",
-        "estado": "codigo_equivalente_evidencia_parcial",
-        "commits": [
-          "be2b242",
-          "ccd539d"
-        ],
-        "equivalente_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
-        "detalle": "Exclusión mutante montajes ya cubierta por 1c2f2b3/e942dc9 y pruebas originales. Recibo documenta ronda rechazada y revisión parcial; no acredita aceptación completa."
+        "origen": "39ac4067b3e87bb0b240186a181c8eb6703df0bb",
+        "integrado": "2be2dc5144df4b870249b9d0acad641e6c594830",
+        "archivos_fuera_estado_identicos": 2,
+        "integrado_por_ascendencia_en": "abb94c1",
+        "conservacion_estado": "Actualización aditiva al integrar los cierres documentales."
       }
     ],
-    "faltantes_aplicacion_en_ramas_cerradas": 0,
-    "faltantes_helpers_operativos_en_ramas_cerradas": 1,
-    "responsable_helper": "total-integrador-producto: e29bba5 y cierres posteriores",
-    "limite": "Barrido de puntas por SHA; no se importan ni persiguen nuevas rondas/QA sin cierre. La matriz base de 54 refs se conserva como corte histórico."
+    "limite": "Se conserva el corte de 55 refs del barrido anterior. No se siguen refs QA activas ni se declara terminada la puerta o la aceptación visual."
   },
   "barrido_posterior": {
     "fecha_lima": "2026-11-21T15:36:10.165209-05:00",

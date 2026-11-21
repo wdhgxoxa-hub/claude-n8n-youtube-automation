@@ -1,0 +1,107 @@
+{
+  "fecha_lima": "2026-11-21T15:45:10.040708-05:00",
+  "codigo_integrado": "4e029e73f680435cd0814301457a03c6574b1cce",
+  "codigo_ensayado": "5876264292398a647c51aba188fbf5be1477acd0",
+  "arbol_cooper_identico": true,
+  "entorno": "checkout archivado propio, imagen localhost/cooper-ci:863803598c05, CPU 16–23, red y puertos aislados",
+  "comando": "node scripts/e2e.mjs operacion.spec.ts --max-failures=1 --reporter=list,json",
+  "build": "PASS",
+  "resultado": "PASS",
+  "pruebas": [
+    {
+      "titulo": "radar presenta competencia, diferenciación y límites sin inventar mediciones",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    },
+    {
+      "titulo": "operación: el HTML inicial contiene los datos y actualizar mantiene la consulta explícita",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    },
+    {
+      "titulo": "canales con nombres repetidos conservan menús accesibles distintos",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    },
+    {
+      "titulo": "operación: biblia, metas, redes, referencias y adopción con confirmación y persistencia",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    },
+    {
+      "titulo": "operación: una idea produce un video, los ajustes registran cambios y el fallo de lectura se recupera",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    },
+    {
+      "titulo": "operación: la aprobación exige confirmar y el estado no muestra datos administrativos",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    },
+    {
+      "titulo": "operación: referencias editables y solicitudes de radar y conexión permanecen en el simulador",
+      "proyecto": "demostracion",
+      "resultado": "PASS"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-11-21T20:44:31.438Z",
+    "duration": 9468.042000000001,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "advertencias": 0,
+  "log_sha256": "39dd1ec6ba104f4384ff7df31d76079344bae3e30bed95ba28eb32f35ed0a76a",
+  "playwright_sha256": "24eb28813f0dd4282f11532fa50d2a5f5b7c953b391ef5515b3145a7f009b428",
+  "fuentes_tar_sha256": "12e37a9752888cf80a240973108b7ce20872d79ffa2599727d266358d22b1270",
+  "videos": [
+    {
+      "archivo": "test-results/operacion-canales-con-nomb-5c080--menús-accesibles-distintos-demostracion/video-1.webm",
+      "bytes": 1457,
+      "sha256": "8bdf11bd3dc90cc4e3774abdd1263e2da946560cc8ec232179e6d0a2cbecf9ae"
+    },
+    {
+      "archivo": "test-results/operacion-canales-con-nomb-5c080--menús-accesibles-distintos-demostracion/video.webm",
+      "bytes": 51102,
+      "sha256": "4ba9ae4358d33fad89b307121206514e14fbd2dc3a69230658c78674696e23e6"
+    },
+    {
+      "archivo": "test-results/operacion-operación-biblia-dcacd-confirmación-y-persistencia-demostracion/video.webm",
+      "bytes": 281976,
+      "sha256": "e2eabad6b3c902cf7b8b3d8fb51528249ee458cbb485d1c2055cf449cb815915"
+    },
+    {
+      "archivo": "test-results/operacion-operación-el-HTM-5cb64-tiene-la-consulta-explícita-demostracion/video.webm",
+      "bytes": 51780,
+      "sha256": "8ed1ccfb0b87bb03925a7b9017733ce42c62c2ce83492781ef879a6a9032f887"
+    },
+    {
+      "archivo": "test-results/operacion-operación-la-apr-37317-estra-datos-administrativos-demostracion/video.webm",
+      "bytes": 75938,
+      "sha256": "700528598ea4a303e551a0f8defeb39197d2c40fc0cca169117c305c5731c943"
+    },
+    {
+      "archivo": "test-results/operacion-operación-refere-986da--permanecen-en-el-simulador-demostracion/video.webm",
+      "bytes": 201491,
+      "sha256": "69143efe7df0f1b9c6f60073ca216746921bab0ff0862a88d94d0035f2434d99"
+    },
+    {
+      "archivo": "test-results/operacion-operación-una-id-70369-allo-de-lectura-se-recupera-demostracion/video.webm",
+      "bytes": 170372,
+      "sha256": "5128e8bca1c4ba54c885bf3d4e2e0f20c9eb948fc349ded23b137c3ecdb94fa7"
+    },
+    {
+      "archivo": "test-results/operacion-radar-presenta-c-9cbf0-tes-sin-inventar-mediciones-demostracion/video-1.webm",
+      "bytes": 1457,
+      "sha256": "58d2c4a173396ca7c14faf09e5839ce435b6a8f831456fcf036762e6ece373ec"
+    },
+    {
+      "archivo": "test-results/operacion-radar-presenta-c-9cbf0-tes-sin-inventar-mediciones-demostracion/video.webm",
+      "bytes": 182242,
+      "sha256": "549dcabdd9483665fdb2f30545e6dea027f81a65ecb6b6cba1ede67626f7f247"
+    }
+  ],
+  "limite": "Focal completo del archivo; no sustituye la puerta conjunta ni las dos rondas."
+}
