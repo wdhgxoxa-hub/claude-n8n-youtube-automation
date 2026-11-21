@@ -536,6 +536,7 @@ for (const tema of temas) {
         await route.fulfill({ json: operacion });
       });
       await page.goto("/radar");
+      await page.getByRole("button", { name: "Actualizar", exact: true }).click();
       await expect(
         page.getByRole("status").filter({ hasText: "Consultando la fábrica…" }),
       ).toBeVisible();
@@ -560,6 +561,7 @@ for (const tema of temas) {
         }),
       );
       await abrir(page, "/avisos", tema);
+      await page.getByRole("button", { name: "Actualizar", exact: true }).click();
       await expect(page.locator('.notice[role="alert"]')).toContainText(
         "Pulsa Actualizar",
       );
@@ -656,6 +658,17 @@ for (const tema of temas) {
           expect(respuesta.ok()).toBe(true);
           await expect(
             page.getByRole("button", { name: "Actualizar resultados" }),
+          ).toBeEnabled();
+        } else if (!["/", "/canales", "/videos"].includes(ruta)) {
+          const [respuesta] = await Promise.all([
+            page.waitForResponse(
+              (r) => new URL(r.url()).pathname === "/api/operacion",
+            ),
+            page.getByRole("button", { name: "Actualizar", exact: true }).click(),
+          ]);
+          expect(respuesta.ok()).toBe(true);
+          await expect(
+            page.getByRole("button", { name: "Actualizar", exact: true }),
           ).toBeEnabled();
         }
         // Esperar al estado vacío recibido, en lugar del HTML SSR poblado.

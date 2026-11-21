@@ -109,7 +109,12 @@ export function administracion(user: User) {
       month: sql<number>`sum(case when ${expenses.createdAt} >= ${month} then ${expenses.amount} else 0 end)`,
     })
     .from(expenses)
-    .where(and(gte(expenses.createdAt, Math.min(week, month)), lte(expenses.createdAt, now)))
+    .where(
+      and(
+        gte(expenses.createdAt, Math.min(week, month)),
+        lte(expenses.createdAt, now),
+      ),
+    )
     .groupBy(expenses.ownerId)
     .all();
   const threshold = Number(process.env.COOPER_GASTO_ALERTA_USD) || 25;

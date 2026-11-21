@@ -26,9 +26,10 @@ const counts = {
   pieces: 24000,
 };
 const now = Date.UTC(2026, 10, 21, 12);
-const day = Date.UTC(2026, 10, 21);
-const week = Date.UTC(2026, 10, 16);
-const month = Date.UTC(2026, 10, 1);
+// Mismo límite de Lima y exclusión de fechas futuras del servicio integrado.
+const day = Date.UTC(2026, 10, 21, 5);
+const week = Date.UTC(2026, 10, 16, 5);
+const month = Date.UTC(2026, 10, 1, 5);
 const samples = 60;
 const warmup = 5;
 const stamp = (i) => now - i * 1000;
@@ -81,7 +82,7 @@ const oldExpenses = (rows) =>
     const sum = (since) =>
       Math.round(
         own
-          .filter((r) => r.created_at >= since)
+          .filter((r) => r.created_at >= since && r.created_at <= now)
           .reduce((total, r) => total + r.amount, 0) * 100,
       ) / 100;
     return { ownerId, day: sum(day), week: sum(week), month: sum(month) };
@@ -147,8 +148,8 @@ const queries = [
     params: [],
     transform: oldExpenses,
     after: {
-      sql: "SELECT owner_id AS ownerId, sum(case when created_at >= ? then amount else 0 end) AS day, sum(case when created_at >= ? then amount else 0 end) AS week, sum(case when created_at >= ? then amount else 0 end) AS month FROM expenses WHERE created_at >= ? GROUP BY owner_id",
-      params: [day, week, month, Math.min(week, month)],
+      sql: "SELECT owner_id AS ownerId, sum(case when created_at >= ? then amount else 0 end) AS day, sum(case when created_at >= ? then amount else 0 end) AS week, sum(case when created_at >= ? then amount else 0 end) AS month FROM expenses WHERE created_at >= ? AND created_at <= ? GROUP BY owner_id",
+      params: [day, week, month, Math.min(week, month), now],
       transform: newExpenses,
     },
   },

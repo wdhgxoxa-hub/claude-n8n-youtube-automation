@@ -74,6 +74,7 @@ export function PantallaOperacion({
     restaurarFoco = useRef(false),
     actualizar = useRef<HTMLButtonElement>(null);
   const cargar = useCallback(async () => {
+    setCargando(true);
     try {
       if (vista === "ajustes") {
         const resultado = await api<Ajustes>("admin/fabrica", undefined, "GET");
@@ -364,7 +365,7 @@ export function PantallaOperacion({
           </div>
         </div>
       )}
-      {cargando && !op && !ajustes ? (
+      {cargando ? (
         <p role="status">Consultando la fábrica…</p>
       ) : null}
       {necesitaCanal && op && (
