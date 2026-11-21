@@ -102,7 +102,7 @@ export function Canales() {
       <div className="management-layout">
         <section className="channel-list">
           {data.channels.length ? (
-            data.channels.map((c) => (
+            data.channels.map((c, index) => (
               <article className="channel-card" key={c.id}>
                 <div className="channel-heading">
                   <span className="channel-symbol">
@@ -150,7 +150,7 @@ export function Canales() {
                   </Link>
                 </div>
                 <nav
-                  aria-label={`Operación de ${c.name}`}
+                  aria-label={`Operación de ${c.name}, canal ${index + 1}`}
                   className="button-row"
                 >
                   <Link href={`/redes?canal=${c.id}`}>Redes</Link>

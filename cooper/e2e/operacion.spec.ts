@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 async function entrar(page: Page) {
   expect(
     (
@@ -26,6 +27,35 @@ async function confirmar(page: Page) {
   ).toHaveCount(0);
 }
 test.beforeEach(async ({ page }) => entrar(page));
+test("canales con nombres repetidos conservan menús accesibles distintos", async ({
+  page,
+}) => {
+  const state = await (await page.request.get("/api/estado")).json();
+  state.channels = [0, 1].map((i) => ({
+    ...state.channels[0],
+    id: `canal-duplicado-${i}`,
+    name: "Canal con nombre compartido",
+  }));
+  // La regresión de presentación no modifica los canales de las demás suites.
+  await page.route("**/api/estado", (route) => route.fulfill({ json: state }));
+  await page.route("**/api/eventos", (route) =>
+    route.fulfill({
+      contentType: "text/event-stream",
+      body: `event: estado\ndata: ${JSON.stringify(state)}\n\n`,
+    }),
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/canales");
+  const menus = page.getByRole("navigation", {
+    name: /Operación de Canal con nombre compartido/,
+  });
+  await expect(menus).toHaveCount(2);
+  const names = await menus.evaluateAll((nodes) =>
+    nodes.map((node) => node.getAttribute("aria-label")),
+  );
+  expect(new Set(names).size).toBe(2);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
 test("operación: biblia, metas, redes, referencias y adopción con confirmación y persistencia", async ({
   page,
 }) => {
