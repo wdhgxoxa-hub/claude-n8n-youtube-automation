@@ -279,6 +279,151 @@
         2640,
         0
       ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Preparar trabajo').first().json.fila.video_id || '' }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "bf80bd97-a083-5e1b-a14b-c59c68b3e618",
+      "name": "Video del trabajo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Video del trabajo').first().json.canal_id || $('Preparar trabajo').first().json.fila.canal_id || '' }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "4fd5890c-c574-58fb-903b-b46b72712de9",
+      "name": "Canal del trabajo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst fila = $('Preparar trabajo').first().json.fila;\nconst video = $('Video del trabajo').first().json, canal = $('Canal del trabajo').first().json;\nconst dueno = video.dueno_email || canal.dueno_email || (!fila.video_id && !fila.canal_id ? String($env.COOPER_ADMIN_EMAIL || '') : '');\nif (!dueno || fila.video_id && !video.dueno_email || (fila.canal_id || video.canal_id) && !canal.dueno_email ||\n    video.dueno_email && canal.dueno_email !== video.dueno_email) throw new Error('Trabajo sin dueño válido: completar la migración');\nreturn [{json:{...fila, canal_id:video.canal_id || fila.canal_id, dueno_email:dueno}}];\n"
+      },
+      "id": "3bef9294-5899-5ca6-b38e-4bd609ea21c9",
+      "name": "Atribuir trabajo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"texto\", servicio:\"Claude (plan)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Respuesta\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "d5945bc8-5ac9-531e-a9a5-8e90a1b46d58",
+      "name": "Cooper · costo Respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "92699293-97a6-5a76-8561-bff554c9067e",
+      "name": "Cooper · costo Respuesta registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Respuesta').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "ba797d5a-eb77-5a72-a708-6b341fd5b934",
+      "name": "Cooper · costo Respuesta seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Respuesta registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "293fdc3f-45ff-57df-a834-b3a0e7e64767",
+      "name": "Cooper · identificar Cooper · costo Respuesta registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
     }
   ],
   "connections": {
@@ -319,7 +464,7 @@
       "main": [
         [
           {
-            "node": "Registrar trabajo",
+            "node": "Video del trabajo",
             "type": "main",
             "index": 0
           }
@@ -389,6 +534,88 @@
         [
           {
             "node": "Aviso: Claude no respondió",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video del trabajo": {
+      "main": [
+        [
+          {
+            "node": "Canal del trabajo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canal del trabajo": {
+      "main": [
+        [
+          {
+            "node": "Atribuir trabajo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atribuir trabajo": {
+      "main": [
+        [
+          {
+            "node": "Registrar trabajo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Respuesta registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Respuesta registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Respuesta seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Respuesta seguir": {
+      "main": [
+        []
+      ]
+    },
+    "Cooper · identificar Cooper · costo Respuesta registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Respuesta registrar",
             "type": "main",
             "index": 0
           }

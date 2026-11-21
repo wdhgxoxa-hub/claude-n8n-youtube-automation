@@ -1,0 +1,64 @@
+{
+  "codigo_verificado": "c05c8e3c552f870d8ccba119b94fca53ef40227b",
+  "ramas_ancestro": {
+    "cooper-ensayo": "72a78af6cba91044445725485a6b51c37374df76",
+    "cooper-animacion": "b784d98c9a4541afc014cbb9ef79c706e84ce43b",
+    "cooper-chat-ia": "6b2fc552c72e9f13596f63c77fa109a51b85f2e2",
+    "cooper-fase4": "0ea769ffed414670ab8fbb0f56cd1a8967842245",
+    "cooper-fase5": "2179c6a1b76d5c82a42ea75f59423fbb0da00557",
+    "cooper-fase6": "1d6ce516865fca44ac437e27aa054f8c5f4ef9a0"
+  },
+  "puerta": {
+    "npm_ci": 0,
+    "lint": 0,
+    "typecheck": 0,
+    "test": {
+      "rc": 0,
+      "aprobadas": 216,
+      "archivos": 22
+    },
+    "test_e2e": {
+      "rc": 0,
+      "aprobadas": 32
+    },
+    "build": 0,
+    "flujos": {
+      "rc": 0,
+      "aprobadas": 129
+    },
+    "errores": 0,
+    "advertencias": 0
+  },
+  "adicionales": {
+    "puente_y_migracion": {
+      "rc": 0,
+      "aprobadas": 18
+    },
+    "copias_y_configuracion": {
+      "rc": 0,
+      "aprobadas": 15
+    },
+    "compose_aislado": {
+      "rc": 0,
+      "bloques_pass": 7
+    }
+  },
+  "capturas": {
+    "png": 130,
+    "matriz_completa": 104,
+    "complementarias": 26
+  },
+  "entorno": "Local aislado, datos ficticios, sin llamadas autenticadas a proveedores; no verificación en vivo.",
+  "lighthouse": {
+    "ejecucion_inicial_rc": 143,
+    "complemento_rc": 0,
+    "verificacion_matriz_rc": 0,
+    "mediciones": 32,
+    "scores": {
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenas_practicas": 100
+    },
+    "advertencias": 0
+  }
+}

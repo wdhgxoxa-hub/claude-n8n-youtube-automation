@@ -1,0 +1,70 @@
+npm notice run cooper@0.1.0 test:ensayo
+npm notice run node --test ../tests/migrar_dueno.test.mjs && node scripts/ensayo.mjs
+✔ planifica sin escribir y conserva costos conciliados y dueños explícitos (1.498104ms)
+✔ huérfanos y contradicciones se rechazan antes de escribir (0.56335ms)
+✔ nombres duplicados y tipos incompatibles no se migran (0.195016ms)
+✔ segunda ejecución vacía y reversa aditiva idempotente (1.078293ms)
+✔ la reversa no pisa cambios posteriores ni otro destino (0.309038ms)
+✔ cambio entre plan y escritura detiene la aplicación (0.17698ms)
+✔ la decisión explícita de asignar todo al administrador conserva reversa e idempotencia (0.409274ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.617838
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 20ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 406ms
+  Running TypeScript ...
+  Finished TypeScript in 1063ms ...
+  Collecting page data using 16 workers ...
+  Generating static pages using 16 workers (0/3) ...
+✓ Generating static pages using 16 workers (3/3) in 225ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Ensayo: cooper-ensayo-n8n, n8n 2.47.4, http://127.0.0.1:36111; volumen /home/david/.cache/cooper-ensayo/run-ieqFKO/n8n
+PASS instancia aislada y propietario ficticio por REST
+PASS migración: simulación sin escritura, 111 filas, paginación, idempotencia y reversa
+PASS dos canales del administrador, uno de Ana y videos en varias etapas
+PASS 28 workflows importados por REST; FX y subflujos publicados, proveedores apagados
+PASS sesiones Auth.js de dos cuentas y consulta aislada desde Cooper hacia n8n
+PASS token inválido, rol falsificado, recursos ajenos y gasto exclusivo del administrador
+PASS creación de canal y videos con dos cuentas, persistencia y callback HMAC emitido por n8n
+PASS firma inválida sin efecto, callback duplicado idempotente, contenido cambiado y dueño ajeno rechazados
+PASS callback con dos fallos de transporte recuperado por los reintentos reales de n8n sin duplicar eventos
+PASS aprobaciones de guion y final cierran decisiones y avanzan por el Orquestador real
+PASS programación, eliminación en reposo y rechazo de borrado durante producción
+PASS eliminación de canal y costo idempotente atribuido por tablas, ignorando un dueño enviado falso
+PASS 422 recuperable de recurso simulado y presentación real ficticia pausada con interruptores apagados, sin gasto
+PASS confirmación caída tras despacho real: reserva bloqueada, recuperación firmada y reentrega sin repetir
+PASS SSE del dueño sin videos ajenos, costos, IDs remotos ni enlaces internos
+PASS reentrega confirmada de creación, aprobación y eliminación sin repetir sus efectos
+PASS navegador móvil con sesión local, aislamiento y presentación pausada visible
+Evidencia: /home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/.cache/e2e-ensayo-dIiHSx; resultado 0. Instancia conservada y detenida.

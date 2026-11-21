@@ -1,0 +1,32 @@
+{
+  "routes": [
+    {
+      "path": "/entrar",
+      "status": 200,
+      "redirectsToLogin": false
+    },
+    {
+      "path": "/admin",
+      "status": 307,
+      "redirectsToLogin": true
+    },
+    {
+      "path": "/api/auth/session",
+      "status": 200,
+      "redirectsToLogin": false
+    },
+    {
+      "path": "/api/auth/providers",
+      "status": 200,
+      "redirectsToLogin": false
+    }
+  ],
+  "service": "active",
+  "startup": "enabled",
+  "sqliteIntegrity": "ok",
+  "productionUsers": 0,
+  "commands": 0,
+  "testMode": "0",
+  "googleLoginPerformed": false,
+  "authenticatedAdminUi": "PENDIENTE_LOGIN_DE_WALTER"
+}

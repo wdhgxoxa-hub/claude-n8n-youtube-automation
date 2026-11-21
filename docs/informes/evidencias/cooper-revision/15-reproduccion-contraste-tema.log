@@ -1,0 +1,177 @@
+
+added 357 packages, and audited 364 packages in 4s
+
+found 0 vulnerabilities
+npm notice run cooper@0.1.0 lint
+npm notice run eslint . --max-warnings 0
+npm notice run cooper@0.1.0 typecheck
+npm notice run tsc --noEmit
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-revision/cooper
+
+
+ Test Files  7 passed (7)
+      Tests  64 passed (64)
+   Start at  16:24:13
+   Duration  3.05s (transform 139ms, setup 40ms, import 1.61s, tests 859ms, environment 0ms)
+
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs
+[WebServer] npm notice run cooper@0.1.0 build
+[WebServer] npm notice run next build
+
+Running 15 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/cooper.spec.ts:34:1 › entrada pública, cabeceras y protección de rutas (590ms)
+  ✓   2 [chromium] › e2e/cooper.spec.ts:82:1 › conversa, pide un video, observa SSE y aprueba las dos puertas (6.9s)
+  ✓   3 [chromium] › e2e/cooper.spec.ts:134:1 › aísla usuarios, gasto, chat, SSE y acciones de video (426ms)
+  ✓   4 [chromium] › e2e/cooper.spec.ts:178:1 › adjuntos y grabación con transcripción editable (1.2s)
+  ✓   5 [chromium] › e2e/cooper.spec.ts:212:1 › biblioteca propia, verificación simulada, privacidad y compartir (1.8s)
+  ✓   6 [chromium] › e2e/cooper.spec.ts:259:1 › perfil guarda tema, inicio y WhatsApp; móvil y teclado (1.5s)
+  ✘   7 [chromium] › e2e/cooper.spec.ts:289:1 › administración, gastos por periodo, alerta y revocación inmediata (231ms)
+  ✓   8 [chromium] › e2e/cooper.spec.ts:335:1 › auditoría AA de todas las pantallas, anchuras y ambos temas (25.3s)
+  ✓   9 [chromium] › e2e/cooper.spec.ts:410:1 › elige avatar, voz y presencia al pedir un video desde la biblioteca (656ms)
+  ✓  10 [chromium] › e2e/revision.spec.ts:12:1 › R08 recupera SSE después de una respuesta HTTP temporal (1.4s)
+  ✓  11 [chromium] › e2e/revision.spec.ts:32:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar (317ms)
+  ✓  12 [chromium] › e2e/revision.spec.ts:50:1 › privacidad en HTML, JSON y carga de sesión Auth.js (457ms)
+  ✓  13 [chromium] › e2e/revision.spec.ts:122:1 › R12 conserva el correo de invitación cuando falla la red (475ms)
+  ✓  14 [chromium] › e2e/revision.spec.ts:142:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar (483ms)
+  ✘  15 [chromium] › e2e/revision.spec.ts:175:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras (13.0s)
+
+
+  1) [chromium] › e2e/cooper.spec.ts:289:1 › administración, gastos por periodo, alerta y revocación inmediata
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Gasto diario alto', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByText('Gasto diario alto', { exact: true }) resolved to 2 elements:
+        1) <strong>Gasto diario alto</strong> aka locator('#contenido').getByText('Gasto diario alto')
+        2) <strong>Gasto diario alto</strong> aka getByText('Gasto diario alto').nth(1)
+
+    Call log:
+      - Expect "toBeVisible" getByText('Gasto diario alto', { exact: true }) with timeout 15000ms
+      - waiting for getByText('Gasto diario alto', { exact: true })
+
+
+      299 |   await expect(
+      300 |     page.getByText("Gasto diario alto", { exact: true }),
+    > 301 |   ).toBeVisible();
+          |     ^
+      302 |   await page.getByRole("button", { name: "Semana", exact: true }).click();
+      303 |   await expect(
+      304 |     page.getByRole("button", { name: "Semana", exact: true }),
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/cooper.spec.ts:301:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/cooper-administración-gast-11f8f-erta-y-revocación-inmediata-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/cooper-administración-gast-11f8f-erta-y-revocación-inmediata-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/cooper-administración-gast-11f8f-erta-y-revocación-inmediata-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/cooper-administración-gast-11f8f-erta-y-revocación-inmediata-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/revision.spec.ts:175:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras
+
+    Error: no-encontrado claro 360
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 58
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#89bcd4",
+    +               "contrastRatio": 2.05,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "9.8pt (13px)",
+    +               "fontWeight": "bold",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 2.05 (foreground color: #ffffff, background color: #89bcd4, font size: 9.8pt (13px), font weight: bold). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<a class=\"button\" href=\"/\">Volver al inicio</a>",
+    +                 "target": Array [
+    +                   "a",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 2.05 (foreground color: #ffffff, background color: #89bcd4, font size: 9.8pt (13px), font weight: bold). Expected contrast ratio of 4.5:1",
+    +         "html": "<a class=\"button\" href=\"/\">Volver al inicio</a>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "a",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    + ]
+
+      247 |           ).violations,
+      248 |           `${screen} ${theme} ${width}`,
+    > 249 |         ).toEqual([]);
+          |           ^
+      250 |         await page.screenshot({
+      251 |           path: `test-results/visual/${screen}-${theme}-${width}.png`,
+      252 |           fullPage: true,
+        at /home/david/Proyectos/cooper-wt/cooper-revision/cooper/e2e/revision.spec.ts:249:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/revision-entrada-no-encont-c5269-bos-temas-y-cuatro-anchuras-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/revision-entrada-no-encont-c5269-bos-temas-y-cuatro-anchuras-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/revision-entrada-no-encont-c5269-bos-temas-y-cuatro-anchuras-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/revision-entrada-no-encont-c5269-bos-temas-y-cuatro-anchuras-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › e2e/cooper.spec.ts:289:1 › administración, gastos por periodo, alerta y revocación inmediata
+    [chromium] › e2e/revision.spec.ts:175:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras
+  13 passed (1.0m)

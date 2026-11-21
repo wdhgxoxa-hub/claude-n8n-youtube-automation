@@ -1,0 +1,157 @@
+{
+  "proveedor": "simulado",
+  "conversaciones": [
+    {
+      "id": 1,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 2,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 3,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 4,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 5,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 6,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 7,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 8,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 9,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 10,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 11,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 12,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 13,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 14,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 15,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 16,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 17,
+      "tipo": "intencion",
+      "resultado": "PASS"
+    },
+    {
+      "id": 18,
+      "tipo": "fuera",
+      "resultado": "PASS"
+    },
+    {
+      "id": 19,
+      "tipo": "fuera",
+      "resultado": "PASS"
+    },
+    {
+      "id": 20,
+      "tipo": "avatar",
+      "resultado": "PASS"
+    },
+    {
+      "id": 21,
+      "tipo": "canal_ajeno",
+      "resultado": "PASS"
+    },
+    {
+      "id": 22,
+      "tipo": "video_ajeno",
+      "resultado": "PASS"
+    },
+    {
+      "id": 23,
+      "tipo": "admin_ajeno",
+      "resultado": "PASS"
+    },
+    {
+      "id": 24,
+      "tipo": "dueno_inyectado",
+      "resultado": "PASS"
+    },
+    {
+      "id": 25,
+      "tipo": "herramienta_inyectada",
+      "resultado": "PASS"
+    },
+    {
+      "id": 26,
+      "tipo": "foto_ajena",
+      "resultado": "PASS"
+    },
+    {
+      "id": 27,
+      "tipo": "tarjeta_ajena",
+      "resultado": "PASS"
+    },
+    {
+      "id": 28,
+      "tipo": "si_ambiguo",
+      "resultado": "PASS"
+    },
+    {
+      "id": 29,
+      "tipo": "memoria",
+      "resultado": "PASS"
+    },
+    {
+      "id": 30,
+      "tipo": "audio",
+      "resultado": "PASS"
+    }
+  ],
+  "total": 30,
+  "descripcion": "Evalúa selección determinista, orquestación y defensas. No mide acierto de modelos remotos."
+}

@@ -1,0 +1,31 @@
+{
+  "workflows": 34,
+  "active": 32,
+  "duplicateNames": 0,
+  "allOldIdsPreserved": true,
+  "crons": [
+    {
+      "id": "FabAprendizaje01",
+      "active": true,
+      "nodesUnchanged": true
+    },
+    {
+      "id": "FabConfirmar0001",
+      "active": true,
+      "nodesUnchanged": true
+    },
+    {
+      "id": "FabRadar00000001",
+      "active": true,
+      "nodesUnchanged": true
+    },
+    {
+      "id": "FabRutina0000001",
+      "active": true,
+      "nodesUnchanged": true
+    }
+  ],
+  "settingsPreserved": true,
+  "credentialsPreserved": true,
+  "textApiFallback": true
+}

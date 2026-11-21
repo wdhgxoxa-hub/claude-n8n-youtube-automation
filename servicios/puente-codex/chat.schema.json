@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "texto": { "type": "string", "maxLength": 24000 },
+    "llamadas": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nombre": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "argumentos": { "type": "string", "maxLength": 16000 }
+        },
+        "required": ["nombre", "argumentos"]
+      }
+    }
+  },
+  "required": ["texto", "llamadas"]
+}

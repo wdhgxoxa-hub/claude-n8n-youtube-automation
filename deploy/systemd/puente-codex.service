@@ -1,0 +1,25 @@
+[Unit]
+Description=Puente privado de texto Codex para Cooper
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.local/lib/cooper/puente-codex
+EnvironmentFile=%h/.config/cooper/codex.env
+Environment=PATH=/usr/bin:/bin:%h/.local/bin
+ExecStart=/usr/bin/node %h/.local/lib/cooper/puente-codex/server.mjs
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.codex
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=default.target

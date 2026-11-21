@@ -1,0 +1,594 @@
+{
+  "codigo_sha": "eb0d07a0d637e3309ed98812b47ba271172153fc",
+  "orden": "cd cooper && npm run test:e2e",
+  "capturas": [
+    {
+      "archivo": "cooper/.cache/capturas-final/admin-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1479,
+      "sha256": "88f23fe16ac49a5fd5d0961166685e7fa5fca863b63e65ac93cbede2f81487e4"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/admin-claro-390.png",
+      "ancho": 390,
+      "alto": 1795,
+      "sha256": "50d350d722d30863284f5e6f9747d340ab37b563e8bd7ea682ba3e78ce15d682"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/admin-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1479,
+      "sha256": "369d07df2f609414184ac83965a156e5f9ae43926505586868c5cd3664b7b31e"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/admin-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1795,
+      "sha256": "54665eb7144120253684ad07ad84531e4974af960c8b668918a7e2ee351260d6"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-final-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1275,
+      "sha256": "8ea191f631c290b046d8049c3a19572e494c4d418a28c31a64b448bcba2e5792"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-final-claro-390.png",
+      "ancho": 390,
+      "alto": 1921,
+      "sha256": "528586cfa01891fd01f4b77d67d107ce46fd8cfc30bfc188c8d941f0e4d71be9"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-final-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1275,
+      "sha256": "c41cbf20c75854c02d1a4805212b382032664594eae6dbe24c305f09af8021f1"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-final-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1921,
+      "sha256": "80d9c70a53799d5518a3c2cb3800e1addd133ee6911c4a38c71ec59f15149870"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-guion-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1275,
+      "sha256": "464130370ddef884d442e002ccf4101347e64e4336f1e9413a55377a85e7a498"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-guion-claro-390.png",
+      "ancho": 390,
+      "alto": 1891,
+      "sha256": "237ae2746394259e423c695a5ada094254379d321e50f4384f0f7753188ae4b1"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-guion-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1275,
+      "sha256": "1c2860479d892849c135c092e67100840649d02af4fb55c11287fa90d52989b6"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/aprobacion-guion-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1891,
+      "sha256": "516fa345ad9237cd729af9a32ea017288ef343a0acbb82c5ce22015e300786fe"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/avatares-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "8cdd837cbdaee27bed699fe52a8aed133920f4e174fa35611ce4c0ab85ec6beb"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/avatares-claro-390.png",
+      "ancho": 390,
+      "alto": 1217,
+      "sha256": "1e45aa9b9a777d2f91894dcf35ca7ec3d7aef84ea452e4d0940aa2526125fbf0"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/avatares-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "dcb6b5f6091369e2b1418c2bf29e511237cf34832e04ab5395a47edc5fe22a67"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/avatares-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1217,
+      "sha256": "52ddc3439695ff06e1da63c422ca8d444cd7daf8bb12023405521bcb9f851337"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-1024-final.png",
+      "ancho": 1024,
+      "alto": 480,
+      "sha256": "169743c51d8d944f544e0f490dbf64b2e02d68db4243a46dc2382d1adfbec748"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-1024.png",
+      "ancho": 1024,
+      "alto": 1228,
+      "sha256": "8bdc81d1bb705a8e9df6b8e4224c6b115c29db7226d0937dd44687b902b0a2ce"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-1440-final.png",
+      "ancho": 1440,
+      "alto": 480,
+      "sha256": "492e3ea3c78c830437c8b115703657c8cef0c6e83692079de959f5ab2b6d449d"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-1440.png",
+      "ancho": 1440,
+      "alto": 1248,
+      "sha256": "fe10ce2cb3f474e8b02abee42fe74bda8288324d94e552de7bcffbb1f84bab4a"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-1920-final.png",
+      "ancho": 1920,
+      "alto": 480,
+      "sha256": "f321fc582adcfe2edc712ee2ac70e9fdf4a05b024b253c8fa8898949eb2cbaaf"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-1920.png",
+      "ancho": 1920,
+      "alto": 1249,
+      "sha256": "fd7b3f09fa3d71712809225b36ac2602f4ba9051c41ce7b6be58a75397cdf07b"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-360-final.png",
+      "ancho": 360,
+      "alto": 480,
+      "sha256": "130c793e424a9c84e4b97ea6b7a9d16e40d8ae0ee1a6f6a448acb2cf33a6f6c3"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-360.png",
+      "ancho": 360,
+      "alto": 480,
+      "sha256": "7477ef8945655c91038fb8404bae0145e8176cf544267c51809bc7720d0c3a15"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-390-final.png",
+      "ancho": 390,
+      "alto": 480,
+      "sha256": "e853eac0454edf5d76f0355dee79ea82d06c93b1838f4bac48c8bce0e9e984ac"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-390.png",
+      "ancho": 390,
+      "alto": 480,
+      "sha256": "f74d77d11003997f4301acad00d7907ffa08f0d31d9838db660d289151fe3b75"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-768-final.png",
+      "ancho": 768,
+      "alto": 480,
+      "sha256": "e12d8af5816584fd59903dcb3b8e3f0f7b43fb0049ee4656e9a91ef4f19df914"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-detalle-768.png",
+      "ancho": 768,
+      "alto": 1808,
+      "sha256": "8734215851737615bdaac17a4dbe478c1ccaef35bd6ef0909257b8cd152805e0"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-1024-final.png",
+      "ancho": 1024,
+      "alto": 480,
+      "sha256": "d4848757985e2e9a0eb6e2554421a48306c04686f5aa694f8911cb7bb78d5b6d"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-1024.png",
+      "ancho": 1024,
+      "alto": 1447,
+      "sha256": "6d984f535d07b6fe53e6c91b5b4fa7a2df2ebd4563d10ac6501cd55f0e40f8d3"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-1440-final.png",
+      "ancho": 1440,
+      "alto": 480,
+      "sha256": "7d2fffa8a9d6ee6336f40efce0516cdd909c90c812ae8533ceb87965cc84bcb7"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-1440.png",
+      "ancho": 1440,
+      "alto": 1120,
+      "sha256": "15da17fe01a920072b4bdd3cdc6274a88966cf8753ee304ea26e49d6fd22e281"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-1920-final.png",
+      "ancho": 1920,
+      "alto": 480,
+      "sha256": "516a3ea6250df3c7f4eff44016d3f7be5f7bdfa11c624dc4da3bcf7654da8f2b"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-1920.png",
+      "ancho": 1920,
+      "alto": 1113,
+      "sha256": "2a6106c9f912c670ec1ba0b60643b6deb783207359ba9bc56bb5b83fa56e0ff4"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-360-final.png",
+      "ancho": 360,
+      "alto": 480,
+      "sha256": "39b6877a54362929aa3110c7617dd19d20287a952c97935e8e9e777aa43973b1"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-360.png",
+      "ancho": 360,
+      "alto": 480,
+      "sha256": "bde62390849fa5ddd04fd234fb24d0c2dac36834caf52e92e823ce73c8e6021b"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-390-final.png",
+      "ancho": 390,
+      "alto": 480,
+      "sha256": "fb10345f24a53e0f62ce0f86ec3184430b87b6be629baf5403d45654e8f154a2"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-390.png",
+      "ancho": 390,
+      "alto": 480,
+      "sha256": "1cb0d1d2a42bb023ca0ccf7567dcada69349f39411ce6ef3d40a2ee363683062"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-768-final.png",
+      "ancho": 768,
+      "alto": 480,
+      "sha256": "e0c40146becac1f2d4f6ed72a8b6d14b699472a76fec678ff2787037c2efe969"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/barra-inicio-768.png",
+      "ancho": 768,
+      "alto": 1493,
+      "sha256": "bb2c6a5786c8c2d9fac5d86818eef5c950325ccbea58a720f6c81cec6c0ca343"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/canales-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "e39f9560b62baff954812c5cdc1b3a7cf2568a20551e42bef2462d6c89f659d6"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/canales-claro-390.png",
+      "ancho": 390,
+      "alto": 1369,
+      "sha256": "9bd0ee832feaf886f15a0ed13d7278f73da0784fc5d789a39384ff2a621aed9a"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/canales-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "de313151925ad066ffd3f3ba7b46b2008b4e67eabc28acbbd4f7aae638be6a45"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/canales-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1369,
+      "sha256": "33f508db350c71a6ec34137390068cf76ad27a92308ba9f63bd38f1830ee952a"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-avatar-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1580,
+      "sha256": "26077cda7dd8bf08d3c83893b9675eb2ba3f711c241d56b304961d77ce84c8d4"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-avatar-claro-390.png",
+      "ancho": 390,
+      "alto": 2250,
+      "sha256": "d6eb190931d38d18470c60f4df5fec8abaa9d3d975acc5270934ad52d3c69561"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-avatar-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1580,
+      "sha256": "e7742069333ea11d5727ec19bbe163b4ea4db0f15d28d252486126c5cbf9e748"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-avatar-oscuro-390.png",
+      "ancho": 390,
+      "alto": 2280,
+      "sha256": "2438a847c59dac6744b247330936b1d6187c2176119f7503c6597cae754015e6"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-voz-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1487,
+      "sha256": "ed17fad077e8fb377cc73ccd2089f1d5badcc77f2d22d4d4ba5864e106b5a962"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-voz-claro-390.png",
+      "ancho": 390,
+      "alto": 1879,
+      "sha256": "150013ccf6b84cb7b551ddb8bff2f40598193bf28037b15d4c94c52a67c2f472"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-voz-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1487,
+      "sha256": "9e168d151f5a08cd9ca65000cee7fb7950ea4722def7cc685dd528c5f42a900e"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/crear-voz-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1879,
+      "sha256": "f2b6f87188de00d136abee93e5ce22ad95626393c52fd0873e691b78dd0007fe"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/detalle-video-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1247,
+      "sha256": "e19d47b7aae8dee72b9a9fb477d262720466a3c26709d3a81189a8d43079e554"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/detalle-video-claro-390.png",
+      "ancho": 390,
+      "alto": 1889,
+      "sha256": "462c098e64b75afa02133d1aba6f21fd90e41c907c58b34a898944af6f7b2154"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/detalle-video-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1247,
+      "sha256": "65de526e92496593483d74c7f255ce4c9b2bdf613855354944900243d3a14ec7"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/detalle-video-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1889,
+      "sha256": "6b23d426acd4a398cb3bcc79bda7fb1ee8eb28ce9af24c8668fa51da15e9db8f"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "8ceb483a4dfba04a4fcdbf73bb1b1dda4a1efc8b55229acbb3a40117c4a6a02b"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-claro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "6b901d7522f47b63286f7f5412ce0d3a996d0e605fef2cac083b7066d0b84e4a"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-error-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "5bc1f53c2aea24b757047aacbe83fcd45bf5795a36251ea391caf83aa3930ab7"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-error-claro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "d3b355a22c323ef35d829424a8800d8a1fc3f7eb411117d25a26f9034e30468f"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-error-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "011e44e96ab69f9ca37fa5c551db0599ce34b08723c06b49b1eb7ba3c315d92c"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-error-oscuro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "8ff14d067d3ab4db6e8eda96a1595bb2322b831558373fddeb8e9520f4f4a7fe"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "3436b90d6ef114936dd4b808b44690f19aeb901d3c7063c19002b2126d3b4a52"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/entrada-oscuro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "e990d138c7fecf13d65a15b823a119933e23ed2984e4ac21f85b88501852b63e"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/fabrica-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1120,
+      "sha256": "c01bb8176532538113156a29a25faf6e5de26b36bbcd3368b0e7526c20ba01f7"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/fabrica-claro-390.png",
+      "ancho": 390,
+      "alto": 1294,
+      "sha256": "153a51151f8cedd9f0d693c99d4f0464f3d96f5e3ddb28c48fbf56ca08edf164"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/fabrica-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1120,
+      "sha256": "7838ecc4e8395640c40284844166c6221afeb1c6088744f7f929e4944effb248"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/fabrica-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1294,
+      "sha256": "ed34d2dd9267d2625ac9a0db055d7a5440e4b5fdd3fa0845270e8016d2c6385f"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/inicio-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1120,
+      "sha256": "c01bb8176532538113156a29a25faf6e5de26b36bbcd3368b0e7526c20ba01f7"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/inicio-claro-390.png",
+      "ancho": 390,
+      "alto": 967,
+      "sha256": "98a3e59350e2dc10e31c86875648457a440835401e968fe1c91da4ab31ad19ee"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/inicio-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1120,
+      "sha256": "7838ecc4e8395640c40284844166c6221afeb1c6088744f7f929e4944effb248"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/inicio-oscuro-390.png",
+      "ancho": 390,
+      "alto": 967,
+      "sha256": "54e0452d7a4a789869744281ed2c10304d47445473cab0bfc4ee32a22077edf7"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/no-encontrado-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "11bfa628097b74ee3d1cb7ed08928797c74c1e730023a6ec317718ee7a9ea82b"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/no-encontrado-claro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "2d0a9caf2a192ececf18ef9368ad21976a742fa234a9ab97a72431202e0eaab2"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/no-encontrado-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "37b0514ea466f7f2e621f8dca549d5577373d1ccb3e2b98ab7fe68d926225554"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/no-encontrado-oscuro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "a34378b6f4339308405e4e638e3ae2da18be39bbf5d00b59dc4f50795420245d"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/pedir-video-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1328,
+      "sha256": "d60c65c9076a31e10eca7ed46c78643afdec24fb3b225c168743f272570c18eb"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/pedir-video-claro-390.png",
+      "ancho": 390,
+      "alto": 1476,
+      "sha256": "5d77215188f04f272cb74c9f666302ce7d4f3023fa01bdf5f27fc8bd62ee31c5"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/pedir-video-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1328,
+      "sha256": "c893dbb9bf8870c5617bf6c32f7b93674cfdeaa9360a0c0abff2acf41fa883db"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/pedir-video-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1476,
+      "sha256": "ce7c58e4ad0bce80f6c3fe0f2c36cf73f84fe8b2f82b1946c48558a4e20485b4"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/perfil-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "6e320ef6b6ab82507feef6ead182e4e46a00325dbbe7dd081f2a52359d0fe223"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/perfil-claro-390.png",
+      "ancho": 390,
+      "alto": 1279,
+      "sha256": "5b7ab14de637cb2c4c1cf0f3840976f55648e5dea03882708a9aabbe82ecb31d"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/perfil-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "adbd37a033e9cd81c41d5316ac5e1204564da58b22afa6ed14bc06add5333d33"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/perfil-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1279,
+      "sha256": "2e675284cc32b7022d3508328e24ac4f893a07e20fe8884f5cc0194360c1aa11"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/presentacion-revocada-1440.png",
+      "ancho": 1440,
+      "alto": 1304,
+      "sha256": "4b6fcc941fad9f0f963f90819fcd99c78f8c1897cd601fa6c6501e0fc2e4d74a"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/presentacion-revocada-390.png",
+      "ancho": 390,
+      "alto": 1968,
+      "sha256": "7bf23adaab251bf6aac8156338dd34fadea3ae01dcf2197dfd795287ced68a47"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/publicado-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1247,
+      "sha256": "4350d731a0f143dafb5a2573a01707b595df49a08859fc8ae1aab21c3de82fa3"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/publicado-claro-390.png",
+      "ancho": 390,
+      "alto": 1899,
+      "sha256": "ed79b5bbb45bc68bfa13777d9990d3cbe864d0913b9113845a722b60d62ed983"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/publicado-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1247,
+      "sha256": "41ed6167ae025b6e1acc9848521e5893b26db909c0a4f2ed4c041457606e14db"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/publicado-oscuro-390.png",
+      "ancho": 390,
+      "alto": 1899,
+      "sha256": "c2c26950615269f7d50542891c19b3e809e73a6a68a5df3f8e0e0b02d5aee6bd"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/videos-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "e42bbcc62ac77d556f44d899f23391cc942b35ccb07adeffc30ae41c81ea2d4c"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/videos-claro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "260299f895a175ac51361ed7c6b46ddf2d4c1a3d220fda5ce81b53362c99559c"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/videos-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "efa05cf9acd4c2f8290e08e00cdc00ce1f15c2c371e72649626cacb86e8d6eec"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/videos-oscuro-390.png",
+      "ancho": 390,
+      "alto": 844,
+      "sha256": "07dfb4814af9559812ce1de888744df56e4e55a34c06773ee6fdca720e660040"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/voces-claro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "5e342f5f661a765762589dc6036d0fda316e74c0664f6dfa52d96d7f0d7d5065"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/voces-claro-390.png",
+      "ancho": 390,
+      "alto": 939,
+      "sha256": "f9964089a9ba171b823a3e533bc7b9b7d5343e1fb982a200c8170f976717d699"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/voces-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 1000,
+      "sha256": "d2adceecf593e2482aefd9f666d6c5ef28b9362fc2358907f871704dfd016771"
+    },
+    {
+      "archivo": "cooper/.cache/capturas-final/voces-oscuro-390.png",
+      "ancho": 390,
+      "alto": 939,
+      "sha256": "ce48baaa70ad60aa26a89e334db1f48c668becfe88e655a0e5901c6991944e60"
+    }
+  ]
+}

@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const ids = $('Inicio').first().json;\nreturn [{ json: { aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: $('Inicio').first().json.etapa,\n  video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),\n  resumen: String($('Inicio').first().json.mensaje || '').slice(0, 600), url: $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '',\n  aviso: String(($('Inicio').first().json.aviso || String($('Inicio').first().json.mensaje || '').split('\\n').filter(Boolean).slice(0, 3).join('\\n') + '\\n\\nÁbrelo para ver todo y decidir.') || '').slice(0, 1500), pedido: String(JSON.stringify($('Inicio').first().json) || '') } }];"
+        "jsCode": "const ids = $('Inicio').first().json;\nreturn [{ json: { aprobacion_id: 'ap-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7), etapa: $('Inicio').first().json.etapa,\n  video_id: String(ids.video_id || ''), canal_id: String(ids.canal_id || ''), job_id: String(ids.job_id || ''),\n  resumen: String($('Inicio').first().json.mensaje || '').slice(0, 600), url: ($('Cooper · dueño').isExecuted && $('Cooper · dueño').first().json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa)) ? '' : $execution.resumeFormUrl, estado: 'pendiente', cambios: '', decidido_en: '',\n  aviso: String(($('Inicio').first().json.aviso || String($('Inicio').first().json.mensaje || '').split('\\n').filter(Boolean).slice(0, 3).join('\\n') + '\\n\\nÁbrelo para ver todo y decidir.') || '').slice(0, 1500), pedido: String(JSON.stringify($('Inicio').first().json) || '') } }];"
       },
       "id": "22526155-51b8-4fff-9b95-f22da711cf66",
       "name": "Aprobación · preparar",
@@ -339,6 +339,72 @@
         2860,
         0
       ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id || '' }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "7a4b9df5-8bfd-5f0d-a268-25717dff4184",
+      "name": "Cooper · dueño",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "97d5037b-3635-5177-83be-90f9fbe05cd9",
+              "leftValue": "={{ !!$('Cooper · dueño').first().json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1a535b5a-6d78-5316-8c90-cafc533aaa95",
+      "name": "¿Decide Cooper?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -347,17 +413,6 @@
         [
           {
             "node": "Aprobación · registrar",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Aprobación · registrar": {
-      "main": [
-        [
-          {
-            "node": "Aprobación · avisar",
             "type": "main",
             "index": 0
           }
@@ -412,7 +467,7 @@
       "main": [
         [
           {
-            "node": "Aprobación · preparar",
+            "node": "Cooper · dueño",
             "type": "main",
             "index": 0
           }
@@ -464,6 +519,40 @@
         [
           {
             "node": "Seguir (cambios)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · dueño": {
+      "main": [
+        [
+          {
+            "node": "Aprobación · preparar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Decide Cooper?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Aprobación · avisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aprobación · registrar": {
+      "main": [
+        [
+          {
+            "node": "¿Decide Cooper?",
             "type": "main",
             "index": 0
           }

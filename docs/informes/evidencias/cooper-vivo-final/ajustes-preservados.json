@@ -1,0 +1,7 @@
+{
+  "existingKeysPreserved": true,
+  "newKeys": [
+    "allowTextoApi"
+  ],
+  "allowTextoApi": true
+}

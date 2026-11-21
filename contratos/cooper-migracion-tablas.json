@@ -1,0 +1,40 @@
+{
+  "version": "cooper-v1",
+  "aplicar_automaticamente": false,
+  "tablas": {
+    "fab_canales": {
+      "dueno_email": "string",
+      "eliminado": "boolean",
+      "modo_noticia": "boolean",
+      "noticia_hoy": "string"
+    },
+    "fab_videos": {
+      "dueno_email": "string",
+      "eliminado": "boolean",
+      "guion_cooper": "string",
+      "cooper_actualizado_en": "number",
+      "cooper_evento_id": "string",
+      "presentacion": "string",
+      "cooper_orden_id": "string",
+      "modo_noticia": "boolean",
+      "noticia": "string",
+      "noticia_guion_hash": "string",
+      "noticia_storyboard_hash": "string"
+    },
+    "fab_trabajos": {
+      "dueno_email": "string"
+    },
+    "fab_costos": {
+      "dueno_email": "string",
+      "paso_id": "string",
+      "estimado": "boolean",
+      "ruta": "string",
+      "ahorro_estimado_usd": "number",
+      "motivo_respaldo": "string"
+    },
+    "fab_planos": {
+      "presentacion": "string",
+      "usa_avatar": "boolean"
+    }
+  }
+}

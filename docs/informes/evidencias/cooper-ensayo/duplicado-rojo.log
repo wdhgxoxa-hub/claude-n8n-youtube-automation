@@ -1,0 +1,61 @@
+npm notice run cooper@0.1.0 test:ensayo
+npm notice run node scripts/ensayo.mjs
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 21ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 403ms
+  Running TypeScript ...
+  Finished TypeScript in 1087ms ...
+  Collecting page data using 16 workers ...
+  Generating static pages using 16 workers (0/3) ...
+✓ Generating static pages using 16 workers (3/3) in 217ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Ensayo: cooper-ensayo-n8n, n8n 2.47.4, http://127.0.0.1:38767; volumen /home/david/.cache/cooper-ensayo/run-vsTLaM/n8n
+PASS instancia aislada y propietario ficticio por REST
+PASS migración: simulación sin escritura, 111 filas, paginación, idempotencia y reversa
+PASS dos canales del administrador, uno de Ana y videos en varias etapas
+PASS 28 workflows importados por REST; FX y subflujos publicados, proveedores apagados
+PASS sesiones Auth.js de dos cuentas y consulta aislada desde Cooper hacia n8n
+PASS token inválido, rol falsificado, recursos ajenos y gasto exclusivo del administrador
+PASS creación de canal y videos con dos cuentas, persistencia y callback HMAC emitido por n8n
+PASS firma inválida sin efecto, callback duplicado idempotente, contenido cambiado y dueño ajeno rechazados
+PASS callback con dos fallos de transporte recuperado por los reintentos reales de n8n sin duplicar eventos
+PASS aprobaciones de guion y final cierran decisiones y avanzan por el Orquestador real
+PASS programación, eliminación en reposo y rechazo de borrado durante producción
+PASS 422 recuperable de recurso simulado y presentación real ficticia pausada con interruptores apagados, sin gasto
+PASS reserva incierta bloquea otro despacho y confirmación conciliada permite reentrega sin duplicar
+PASS SSE del dueño sin videos ajenos, costos, IDs remotos ni enlaces internos
+FAIL AssertionError [ERR_ASSERTION]: FX nuevo_video: {"error":"Identificador existente"}
+
+409 !== 200
+
+    at bridge (file:///home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/scripts/ensayo-escenarios.mjs:13:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async scenarios (file:///home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/scripts/ensayo-escenarios.mjs:143:3)
+    at async file:///home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/scripts/ensayo.mjs:153:3
+{"ejecucion":"70","workflow":"FX · Validar presentación","nodo":"Detener presentación","error":"Tu video está en pausa porque la creación con avatar está desactivada. Conservamos tu elección; Walter debe habilitarla antes de continuar. [line 1]"}
+Evidencia: /home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/.cache/e2e-ensayo-z9IxkU; resultado 1. Instancia conservada y detenida.

@@ -1,0 +1,24 @@
+[
+  {
+    "formFactor": "mobile",
+    "scores": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1
+    },
+    "warnings": [],
+    "lcp": 607.379,
+    "cls": 0
+  },
+  {
+    "formFactor": "desktop",
+    "scores": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1
+    },
+    "warnings": [],
+    "lcp": 617.78195,
+    "cls": 0
+  }
+]

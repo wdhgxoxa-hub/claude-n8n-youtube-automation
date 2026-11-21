@@ -1,0 +1,28 @@
+{
+  "fecha": "20261120-223305-0500",
+  "respaldo": "/home/david/.cache/cooper-chat-planes/respaldo-20261120-223305-0500",
+  "base": "/home/david/.local/share/cooper/cooper.sqlite",
+  "antes": {
+    "integridad": "ok",
+    "claves_foraneas": 0,
+    "migraciones": 8
+  },
+  "despues": {
+    "integridad": "ok",
+    "claves_foraneas": 0,
+    "migraciones": 8
+  },
+  "servicios": {
+    "cooper": "active",
+    "puente-codex": "active"
+  },
+  "dropin": "/home/david/.config/systemd/user/cooper.service.d/chat-planes.conf",
+  "build": "9dOj3Hh-SeslbBEtY2miS",
+  "commit": "70d70e2f6a0beedd7b7190eebc2317c2cc2390b7",
+  "hashes_respaldo": {
+    "cooper.sqlite": "610b9265302ad5ad1ee042903fb0d71545f1758c1006b199012673edd150a4ef",
+    "server.mjs": "f5241c65880a1624c44e38c22c8661e1df776e5005f513816deff0ace21cff5e",
+    "contrato.cjs": "d696b5d67b2386d7c2fe9c1f7614c00e78a56f12bac3fbfa5ed85f52454180d2"
+  },
+  "respaldo_verificado_tras_cierre": true
+}

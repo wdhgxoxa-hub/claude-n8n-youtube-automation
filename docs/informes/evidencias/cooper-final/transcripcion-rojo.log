@@ -1,0 +1,34 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/chat-proveedores.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-final/cooper
+
+ ❯ tests/chat-proveedores.test.ts (6 tests | 1 failed) 30ms
+   × transcripción usa multipart con el modelo documentado y devuelve texto editable 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/chat-proveedores.test.ts > transcripción usa multipart con el modelo documentado y devuelve texto editable
+AssertionError: expected 'es' to be null
+
+- Expected:
+null
+
++ Received:
+"es"
+
+ ❯ tests/chat-proveedores.test.ts:316:32
+    314|   const form = init?.body as FormData;
+    315|   expect(form.get("model")).toBe("gpt-transcribe");
+    316|   expect(form.get("language")).toBeNull();
+       |                                ^
+    317|   expect(form.getAll("languages[]")).toEqual(["es"]);
+    318|   expect((form.get("file") as File).name).toBe("grabacion.webm");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  20:32:57
+   Duration  322ms (transform 130ms, setup 22ms, import 168ms, tests 30ms, environment 0ms)

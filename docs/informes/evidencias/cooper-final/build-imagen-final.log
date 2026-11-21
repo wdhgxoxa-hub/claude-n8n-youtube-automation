@@ -1,0 +1,94 @@
+[1/3] STEP 1/6: FROM docker.io/library/node:24.22.3-bookworm-slim AS dependencias
+[1/3] STEP 2/6: RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ ca-certificates && rm -r /var/lib/apt/lists/*
+--> Using cache 548bc232b9f31734c84abdbdd87e14d16f052257c9f793ae403b37c0ba402d32
+--> 548bc232b9f3
+[1/3] STEP 3/6: ENV npm_config_update_notifier=false
+--> Using cache 4d82e22b19eba69a6d7d53a84a10ea9ef7bb08843127d310eef67992ec4e3345
+--> 4d82e22b19eb
+[1/3] STEP 4/6: WORKDIR /app
+--> Using cache 29450e9ea10c84b39e84e979ee8023975969879d4b5f277d088bd313e888d7d8
+--> 29450e9ea10c
+[1/3] STEP 5/6: COPY cooper/package.json cooper/package-lock.json ./
+--> Using cache 784172ef6421a5cdaaccf94dca4120d4c0482d06b66289482cc7b20cd61ed4b2
+--> 784172ef6421
+[1/3] STEP 6/6: RUN npm ci --no-audit --no-fund
+--> Using cache 5c0473ca2601f6ebb4541a18ebae701db92af6fb4978dc2ee00f4cbb43955b42
+--> 5c0473ca2601
+[3/3] STEP 1/11: FROM docker.io/library/node:24.22.3-bookworm-slim AS ejecutar
+[3/3] STEP 2/11: ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
+--> Using cache 13cfa8c80618d382a45b077be001105cad0ad40cf184765e4158a77d5edb606f
+--> 13cfa8c80618
+[3/3] STEP 3/11: WORKDIR /app
+--> Using cache 09818a6a5927f6763edbaeb980b050d8b61ff5277332d4a3a2666af9e28b8cd5
+--> 09818a6a5927
+[3/3] STEP 4/11: COPY --from=construir --chown=node:node /app/.next/standalone ./
+[2/3] STEP 1/4: FROM 5c0473ca2601f6ebb4541a18ebae701db92af6fb4978dc2ee00f4cbb43955b42 AS construir
+[2/3] STEP 2/4: ENV NEXT_TELEMETRY_DISABLED=1 COOPER_STANDALONE=1
+--> Using cache 747f35e8cfc46be53f4e9b79723458e8351895cd131f9de742ef0688a1179361
+--> 747f35e8cfc4
+[2/3] STEP 3/4: COPY cooper/ ./
+--> cfd605e9711a
+[2/3] STEP 4/4: RUN mkdir -p public && npm run build
+
+> cooper@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 40ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.5s
+  Running TypeScript ...
+  Finished TypeScript in 3.1s ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/4) ...
+  Generating static pages using 19 workers (1/4)
+  Generating static pages using 19 workers (2/4)
+  Generating static pages using 19 workers (3/4)
+✓ Generating static pages using 19 workers (4/4) in 225ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+--> d9a435e5e10f
+--> a969d5f06791
+[3/3] STEP 5/11: COPY --from=construir --chown=node:node /app/.next/static ./.next/static
+--> 64aabf4bac70
+[3/3] STEP 6/11: COPY --from=construir --chown=node:node /app/public ./public
+--> 79cda7701a79
+[3/3] STEP 7/11: COPY --from=construir --chown=node:node /app/drizzle ./drizzle
+--> ad832119babd
+[3/3] STEP 8/11: USER node
+--> 3dc2dfa68f02
+[3/3] STEP 9/11: EXPOSE 3000
+--> 2985b1ec3293
+[3/3] STEP 10/11: HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 CMD node -e "fetch('http://127.0.0.1:3000/api/salud').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
+--> 043e941e0aa6
+[3/3] STEP 11/11: CMD ["node", "server.js"]
+[3/3] COMMIT localhost/cooper:final-c05c8e3
+--> b5573131284f
+Successfully tagged localhost/cooper:final-c05c8e3
+b5573131284f7c6128f7b9aaca59678ef5a296cf5fcd2e106c11518f36f5c0d2

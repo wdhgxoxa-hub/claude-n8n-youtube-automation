@@ -1,0 +1,52 @@
+[
+  {
+    "evento": "estado",
+    "admin": false,
+    "owner": "administrador",
+    "http": 200,
+    "channels": 2,
+    "videos": 5,
+    "ownersCorrect": true,
+    "newsOff": true
+  },
+  {
+    "evento": "estado",
+    "admin": false,
+    "owner": "sin_recursos",
+    "http": 200,
+    "channels": 0,
+    "videos": 0,
+    "ownersCorrect": true,
+    "newsOff": true
+  },
+  {
+    "evento": "estado",
+    "admin": true,
+    "owner": "administrador",
+    "http": 200,
+    "channels": 2,
+    "videos": 5,
+    "ownersCorrect": true,
+    "newsOff": true
+  },
+  {
+    "evento": "gastos",
+    "admin": true,
+    "owner": "administrador",
+    "http": 200,
+    "valid": true
+  },
+  {
+    "evento": "tendencias",
+    "admin": false,
+    "owner": "administrador",
+    "http": 200,
+    "summaryValid": true
+  },
+  {
+    "evento": "estado",
+    "admin": true,
+    "owner": "sin_recursos",
+    "http": 403
+  }
+]

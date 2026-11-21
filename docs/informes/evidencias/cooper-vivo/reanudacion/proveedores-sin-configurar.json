@@ -1,0 +1,26 @@
+[
+  {
+    "workflow": "8nqh0n7jewLQOikC",
+    "node": "Crear avatar",
+    "type": "httpHeaderAuth",
+    "reason": "Proveedor nuevo sin credencial existente; no configurado"
+  },
+  {
+    "workflow": "8nqh0n7jewLQOikC",
+    "node": "Consultar avatar",
+    "type": "httpHeaderAuth",
+    "reason": "Proveedor nuevo sin credencial existente; no configurado"
+  },
+  {
+    "workflow": "FabSonido0000001",
+    "node": "Voz (HeyGen)",
+    "type": "httpHeaderAuth",
+    "reason": "Proveedor nuevo sin credencial existente; no configurado"
+  },
+  {
+    "workflow": "FabSonido0000001",
+    "node": "Voz (ElevenLabs)",
+    "type": "httpHeaderAuth",
+    "reason": "Proveedor nuevo sin credencial existente; no configurado"
+  }
+]

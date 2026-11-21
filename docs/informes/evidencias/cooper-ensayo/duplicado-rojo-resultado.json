@@ -1,0 +1,20 @@
+{
+  "exitCode": 1,
+  "results": [
+    "instancia aislada y propietario ficticio por REST",
+    "migración: simulación sin escritura, 111 filas, paginación, idempotencia y reversa",
+    "dos canales del administrador, uno de Ana y videos en varias etapas",
+    "28 workflows importados por REST; FX y subflujos publicados, proveedores apagados",
+    "sesiones Auth.js de dos cuentas y consulta aislada desde Cooper hacia n8n",
+    "token inválido, rol falsificado, recursos ajenos y gasto exclusivo del administrador",
+    "creación de canal y videos con dos cuentas, persistencia y callback HMAC emitido por n8n",
+    "firma inválida sin efecto, callback duplicado idempotente, contenido cambiado y dueño ajeno rechazados",
+    "callback con dos fallos de transporte recuperado por los reintentos reales de n8n sin duplicar eventos",
+    "aprobaciones de guion y final cierran decisiones y avanzan por el Orquestador real",
+    "programación, eliminación en reposo y rechazo de borrado durante producción",
+    "422 recuperable de recurso simulado y presentación real ficticia pausada con interruptores apagados, sin gasto",
+    "reserva incierta bloquea otro despacho y confirmación conciliada permite reentrega sin duplicar",
+    "SSE del dueño sin videos ajenos, costos, IDs remotos ni enlaces internos"
+  ],
+  "stopped": "exited"
+}

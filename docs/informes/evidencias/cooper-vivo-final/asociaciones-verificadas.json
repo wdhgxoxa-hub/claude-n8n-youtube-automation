@@ -1,0 +1,28 @@
+{
+  "allNodesChecked": 1021,
+  "credentialAssociationsExact": true,
+  "unconfiguredMediaBranchesPreserved": true,
+  "openAiFallbackUsesExistingOpenAiCredential": true,
+  "crons": [
+    {
+      "id": "FabAprendizaje01",
+      "active": true,
+      "nodesUnchanged": true
+    },
+    {
+      "id": "FabConfirmar0001",
+      "active": true,
+      "nodesUnchanged": true
+    },
+    {
+      "id": "FabRadar00000001",
+      "active": true,
+      "nodesUnchanged": true
+    },
+    {
+      "id": "FabRutina0000001",
+      "active": true,
+      "nodesUnchanged": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+import type { NextConfig } from "next";
+const config: NextConfig = {
+  output: process.env.COOPER_STANDALONE === "1" ? "standalone" : undefined,
+  poweredByHeader: false,
+  outputFileTracingIncludes: { "/*": ["./drizzle/**/*"] },
+  serverExternalPackages: ["better-sqlite3"],
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(self), geolocation=()",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+        ],
+      },
+    ];
+  },
+};
+export default config;

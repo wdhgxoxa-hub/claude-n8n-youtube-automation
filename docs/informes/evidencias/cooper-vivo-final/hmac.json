@@ -1,0 +1,10 @@
+{
+  "execution": "consulta de recibo desconocido desde videos-n8n; sin reserva ni despacho",
+  "validSignature": {
+    "http": 200,
+    "estado": "nueva"
+  },
+  "invalidSignature": {
+    "http": 401
+  }
+}

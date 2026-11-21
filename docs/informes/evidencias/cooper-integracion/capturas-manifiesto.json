@@ -1,0 +1,650 @@
+[
+  {
+    "archivo": "inicio-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/",
+    "demo": true,
+    "alto": 1120,
+    "sha256": "2059befd33a1d81c58df62bcae61246e1996950723206d8a214d3fe038246135"
+  },
+  {
+    "archivo": "fabrica-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/",
+    "demo": true,
+    "alto": 1120,
+    "sha256": "2059befd33a1d81c58df62bcae61246e1996950723206d8a214d3fe038246135"
+  },
+  {
+    "archivo": "canales-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/canales",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "0fedd0c19ba740e2a0b554f560e02fc3607045ed7ea86e75b6ac417862f5392e"
+  },
+  {
+    "archivo": "videos-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "efa05cf9acd4c2f8290e08e00cdc00ce1f15c2c371e72649626cacb86e8d6eec"
+  },
+  {
+    "archivo": "detalle-video-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-0",
+    "demo": true,
+    "alto": 1247,
+    "sha256": "b611475b4eb685c71971574f0e9fa455ec6700a012b91f7bce6a4b0a58f7dabf"
+  },
+  {
+    "archivo": "aprobacion-guion-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-1",
+    "demo": true,
+    "alto": 1275,
+    "sha256": "1d2264256719a73530626ffc2b1a3c40b002323f9f84326e7d86b3065043fd17"
+  },
+  {
+    "archivo": "aprobacion-final-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-2",
+    "demo": true,
+    "alto": 1275,
+    "sha256": "ab8877e59e3d09c6e43da46d973e60f937ff95ee2ad442636030a3e047a5fb3a"
+  },
+  {
+    "archivo": "publicado-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-3",
+    "demo": true,
+    "alto": 1247,
+    "sha256": "3e07e13acb71fd7816d8f366846004d911f837b837ce19ea3b34df4c25b7d118"
+  },
+  {
+    "archivo": "pedir-video-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 1328,
+    "sha256": "3e3d55bd2e93e0916ec324d250fe211f79499fd46c16da7a2b5859680e4b87db"
+  },
+  {
+    "archivo": "avatares-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "dcb6b5f6091369e2b1418c2bf29e511237cf34832e04ab5395a47edc5fe22a67"
+  },
+  {
+    "archivo": "voces-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "d2adceecf593e2482aefd9f666d6c5ef28b9362fc2358907f871704dfd016771"
+  },
+  {
+    "archivo": "crear-avatar-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1580,
+    "sha256": "57f201b6ef7e509e340c8bc9f2c9cce0a50f22deb61699da8fc5998b5b8906df"
+  },
+  {
+    "archivo": "crear-voz-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1487,
+    "sha256": "51cee37371d0494d0943124c54bfb813ed641aa42ea1689b51657b3c6b30cf81"
+  },
+  {
+    "archivo": "perfil-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/perfil",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "dbc28e706131210d1beafd5b1e0b0a3ee92b3fbf5f8a6fde85c7e3d0f9e67698"
+  },
+  {
+    "archivo": "admin-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/admin",
+    "demo": true,
+    "alto": 1479,
+    "sha256": "369724ddee345aafa6d0e00f381957d9b04a77d8db818c015c920d6c3558a5e1"
+  },
+  {
+    "archivo": "entrada-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/entrar",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "3436b90d6ef114936dd4b808b44690f19aeb901d3c7063c19002b2126d3b4a52"
+  },
+  {
+    "archivo": "entrada-error-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/entrar?error=AccessDenied",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "011e44e96ab69f9ca37fa5c551db0599ce34b08723c06b49b1eb7ba3c315d92c"
+  },
+  {
+    "archivo": "no-encontrado-oscuro-1440.png",
+    "tema": "oscuro",
+    "ancho": 1440,
+    "ruta": "/inexistente",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "37b0514ea466f7f2e621f8dca549d5577373d1ccb3e2b98ab7fe68d926225554"
+  },
+  {
+    "archivo": "inicio-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/",
+    "demo": true,
+    "alto": 967,
+    "sha256": "54e0452d7a4a789869744281ed2c10304d47445473cab0bfc4ee32a22077edf7"
+  },
+  {
+    "archivo": "fabrica-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/",
+    "demo": true,
+    "alto": 1294,
+    "sha256": "ed34d2dd9267d2625ac9a0db055d7a5440e4b5fdd3fa0845270e8016d2c6385f"
+  },
+  {
+    "archivo": "canales-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/canales",
+    "demo": true,
+    "alto": 1369,
+    "sha256": "33f508db350c71a6ec34137390068cf76ad27a92308ba9f63bd38f1830ee952a"
+  },
+  {
+    "archivo": "videos-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 844,
+    "sha256": "e69aea359c9106d13e4bc9837293dca8f66a193a0a2a33c921bfaa9db61bc889"
+  },
+  {
+    "archivo": "detalle-video-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-0",
+    "demo": true,
+    "alto": 1889,
+    "sha256": "6b23d426acd4a398cb3bcc79bda7fb1ee8eb28ce9af24c8668fa51da15e9db8f"
+  },
+  {
+    "archivo": "aprobacion-guion-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-1",
+    "demo": true,
+    "alto": 1891,
+    "sha256": "516fa345ad9237cd729af9a32ea017288ef343a0acbb82c5ce22015e300786fe"
+  },
+  {
+    "archivo": "aprobacion-final-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-2",
+    "demo": true,
+    "alto": 1921,
+    "sha256": "80d9c70a53799d5518a3c2cb3800e1addd133ee6911c4a38c71ec59f15149870"
+  },
+  {
+    "archivo": "publicado-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-3",
+    "demo": true,
+    "alto": 1899,
+    "sha256": "c2c26950615269f7d50542891c19b3e809e73a6a68a5df3f8e0e0b02d5aee6bd"
+  },
+  {
+    "archivo": "pedir-video-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 1476,
+    "sha256": "ce7c58e4ad0bce80f6c3fe0f2c36cf73f84fe8b2f82b1946c48558a4e20485b4"
+  },
+  {
+    "archivo": "avatares-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1217,
+    "sha256": "52ddc3439695ff06e1da63c422ca8d444cd7daf8bb12023405521bcb9f851337"
+  },
+  {
+    "archivo": "voces-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 939,
+    "sha256": "ce48baaa70ad60aa26a89e334db1f48c668becfe88e655a0e5901c6991944e60"
+  },
+  {
+    "archivo": "crear-avatar-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 2280,
+    "sha256": "09b7cbfb436bdb9be347f275caddb0154a734822bd777af0ba4ddf9c51774417"
+  },
+  {
+    "archivo": "crear-voz-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1879,
+    "sha256": "c71047cca5902b6baad93de989b9517e65f847b8878557a16b54b1fe9ab03482"
+  },
+  {
+    "archivo": "perfil-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/perfil",
+    "demo": true,
+    "alto": 1279,
+    "sha256": "2e675284cc32b7022d3508328e24ac4f893a07e20fe8884f5cc0194360c1aa11"
+  },
+  {
+    "archivo": "admin-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/admin",
+    "demo": true,
+    "alto": 1795,
+    "sha256": "433e46599e0da6f0d5c86f0b92c09e93d21e48788de839854e3c42bb6a9f5f6d"
+  },
+  {
+    "archivo": "entrada-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/entrar",
+    "demo": true,
+    "alto": 844,
+    "sha256": "e990d138c7fecf13d65a15b823a119933e23ed2984e4ac21f85b88501852b63e"
+  },
+  {
+    "archivo": "entrada-error-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/entrar?error=AccessDenied",
+    "demo": true,
+    "alto": 844,
+    "sha256": "8ff14d067d3ab4db6e8eda96a1595bb2322b831558373fddeb8e9520f4f4a7fe"
+  },
+  {
+    "archivo": "no-encontrado-oscuro-390.png",
+    "tema": "oscuro",
+    "ancho": 390,
+    "ruta": "/inexistente",
+    "demo": true,
+    "alto": 844,
+    "sha256": "a34378b6f4339308405e4e638e3ae2da18be39bbf5d00b59dc4f50795420245d"
+  },
+  {
+    "archivo": "inicio-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/",
+    "demo": true,
+    "alto": 1120,
+    "sha256": "2a3a41f91539657228c067f01cc8104b49d7fc83d14c53bbdcedb1afce2370b7"
+  },
+  {
+    "archivo": "fabrica-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/",
+    "demo": true,
+    "alto": 1120,
+    "sha256": "2a3a41f91539657228c067f01cc8104b49d7fc83d14c53bbdcedb1afce2370b7"
+  },
+  {
+    "archivo": "canales-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/canales",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "1d148fc10831fe16547620d18083f11b37c01e6b337b98b8aebb928c09ff286f"
+  },
+  {
+    "archivo": "videos-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "e42bbcc62ac77d556f44d899f23391cc942b35ccb07adeffc30ae41c81ea2d4c"
+  },
+  {
+    "archivo": "detalle-video-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-0",
+    "demo": true,
+    "alto": 1247,
+    "sha256": "7c70c42bb952cc92292cd197f2a5bb8f635d394017812d31bf7fdc68bd1b1176"
+  },
+  {
+    "archivo": "aprobacion-guion-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-1",
+    "demo": true,
+    "alto": 1275,
+    "sha256": "8dbcf5280bcbd1f432ba26d690dfae014a52e9a79ef655969e09e3aae5c51691"
+  },
+  {
+    "archivo": "aprobacion-final-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-2",
+    "demo": true,
+    "alto": 1275,
+    "sha256": "5009d701a74262ecaaa9ea3d58c5ba369eca396e9c5870f3ff5310096b8a6e76"
+  },
+  {
+    "archivo": "publicado-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-3",
+    "demo": true,
+    "alto": 1247,
+    "sha256": "67434c3502d20996194bfe7197e94e03da9e3ec062e31859d7bb0b553d81a964"
+  },
+  {
+    "archivo": "pedir-video-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 1328,
+    "sha256": "001f6480d7ceab262146265d98a8df3b282ebc7271b0d4cb2daeef9a2708bb99"
+  },
+  {
+    "archivo": "avatares-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "8cdd837cbdaee27bed699fe52a8aed133920f4e174fa35611ce4c0ab85ec6beb"
+  },
+  {
+    "archivo": "voces-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "5e342f5f661a765762589dc6036d0fda316e74c0664f6dfa52d96d7f0d7d5065"
+  },
+  {
+    "archivo": "crear-avatar-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1580,
+    "sha256": "ca56389cc2939144517f5c9562e0cf2b10669a99e6b959dc4e528a29e66aab5f"
+  },
+  {
+    "archivo": "crear-voz-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1487,
+    "sha256": "424a3d953eb9de416897040a64521a8c433fad8e339ce2f59a17ec4e7e4bc3ef"
+  },
+  {
+    "archivo": "perfil-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/perfil",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "6e320ef6b6ab82507feef6ead182e4e46a00325dbbe7dd081f2a52359d0fe223"
+  },
+  {
+    "archivo": "admin-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/admin",
+    "demo": true,
+    "alto": 1479,
+    "sha256": "4243f71fc3095f095d913dc6e93d5fea3c0f4e01e07d72514872be21075d4a2d"
+  },
+  {
+    "archivo": "entrada-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/entrar",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "8ceb483a4dfba04a4fcdbf73bb1b1dda4a1efc8b55229acbb3a40117c4a6a02b"
+  },
+  {
+    "archivo": "entrada-error-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/entrar?error=AccessDenied",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "5bc1f53c2aea24b757047aacbe83fcd45bf5795a36251ea391caf83aa3930ab7"
+  },
+  {
+    "archivo": "no-encontrado-claro-1440.png",
+    "tema": "claro",
+    "ancho": 1440,
+    "ruta": "/inexistente",
+    "demo": true,
+    "alto": 1000,
+    "sha256": "11bfa628097b74ee3d1cb7ed08928797c74c1e730023a6ec317718ee7a9ea82b"
+  },
+  {
+    "archivo": "inicio-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/",
+    "demo": true,
+    "alto": 967,
+    "sha256": "98a3e59350e2dc10e31c86875648457a440835401e968fe1c91da4ab31ad19ee"
+  },
+  {
+    "archivo": "fabrica-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/",
+    "demo": true,
+    "alto": 1294,
+    "sha256": "153a51151f8cedd9f0d693c99d4f0464f3d96f5e3ddb28c48fbf56ca08edf164"
+  },
+  {
+    "archivo": "canales-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/canales",
+    "demo": true,
+    "alto": 1369,
+    "sha256": "9bd0ee832feaf886f15a0ed13d7278f73da0784fc5d789a39384ff2a621aed9a"
+  },
+  {
+    "archivo": "videos-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 844,
+    "sha256": "260299f895a175ac51361ed7c6b46ddf2d4c1a3d220fda5ce81b53362c99559c"
+  },
+  {
+    "archivo": "detalle-video-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-0",
+    "demo": true,
+    "alto": 1889,
+    "sha256": "462c098e64b75afa02133d1aba6f21fd90e41c907c58b34a898944af6f7b2154"
+  },
+  {
+    "archivo": "aprobacion-guion-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-1",
+    "demo": true,
+    "alto": 1891,
+    "sha256": "237ae2746394259e423c695a5ada094254379d321e50f4384f0f7753188ae4b1"
+  },
+  {
+    "archivo": "aprobacion-final-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-2",
+    "demo": true,
+    "alto": 1921,
+    "sha256": "528586cfa01891fd01f4b77d67d107ce46fd8cfc30bfc188c8d941f0e4d71be9"
+  },
+  {
+    "archivo": "publicado-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/videos/demo-b38317e5-a3a8-429d-b188-96690bdc4187-3",
+    "demo": true,
+    "alto": 1899,
+    "sha256": "ed79b5bbb45bc68bfa13777d9990d3cbe864d0913b9113845a722b60d62ed983"
+  },
+  {
+    "archivo": "pedir-video-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/videos",
+    "demo": true,
+    "alto": 1476,
+    "sha256": "5d77215188f04f272cb74c9f666302ce7d4f3023fa01bdf5f27fc8bd62ee31c5"
+  },
+  {
+    "archivo": "avatares-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1217,
+    "sha256": "1e45aa9b9a777d2f91894dcf35ca7ec3d7aef84ea452e4d0940aa2526125fbf0"
+  },
+  {
+    "archivo": "voces-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 939,
+    "sha256": "f9964089a9ba171b823a3e533bc7b9b7d5343e1fb982a200c8170f976717d699"
+  },
+  {
+    "archivo": "crear-avatar-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 2250,
+    "sha256": "637295cb17f93f71b0cd3922f78c1816e917afd38862eee308b3c3df648c2e3f"
+  },
+  {
+    "archivo": "crear-voz-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/avatares",
+    "demo": true,
+    "alto": 1879,
+    "sha256": "4bef8048cc0265eba5dcecc7d66f56a25dfc98881acb3a7eb28145088f89e538"
+  },
+  {
+    "archivo": "perfil-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/perfil",
+    "demo": true,
+    "alto": 1279,
+    "sha256": "5b7ab14de637cb2c4c1cf0f3840976f55648e5dea03882708a9aabbe82ecb31d"
+  },
+  {
+    "archivo": "admin-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/admin",
+    "demo": true,
+    "alto": 1795,
+    "sha256": "8cb1ed31d13485c600e7f80ce2891b57d862e923ca93e2edf8c82dca5bada5f4"
+  },
+  {
+    "archivo": "entrada-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/entrar",
+    "demo": true,
+    "alto": 844,
+    "sha256": "6b901d7522f47b63286f7f5412ce0d3a996d0e605fef2cac083b7066d0b84e4a"
+  },
+  {
+    "archivo": "entrada-error-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/entrar?error=AccessDenied",
+    "demo": true,
+    "alto": 844,
+    "sha256": "d3b355a22c323ef35d829424a8800d8a1fc3f7eb411117d25a26f9034e30468f"
+  },
+  {
+    "archivo": "no-encontrado-claro-390.png",
+    "tema": "claro",
+    "ancho": 390,
+    "ruta": "/inexistente",
+    "demo": true,
+    "alto": 844,
+    "sha256": "2d0a9caf2a192ececf18ef9368ad21976a742fa234a9ab97a72431202e0eaab2"
+  }
+]

@@ -1,0 +1,23 @@
+FROM docker.io/library/node:24.22.3-bookworm-slim AS dependencias
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ ca-certificates && rm -r /var/lib/apt/lists/*
+ENV npm_config_update_notifier=false
+WORKDIR /app
+COPY cooper/package.json cooper/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+FROM dependencias AS construir
+ENV NEXT_TELEMETRY_DISABLED=1 COOPER_STANDALONE=1
+COPY cooper/ ./
+RUN mkdir -p public && npm run build
+
+FROM docker.io/library/node:24.22.3-bookworm-slim AS ejecutar
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
+WORKDIR /app
+COPY --from=construir --chown=node:node /app/.next/standalone ./
+COPY --from=construir --chown=node:node /app/.next/static ./.next/static
+COPY --from=construir --chown=node:node /app/public ./public
+COPY --from=construir --chown=node:node /app/drizzle ./drizzle
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 CMD node -e "fetch('http://127.0.0.1:3000/api/salud').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
+CMD ["node", "server.js"]

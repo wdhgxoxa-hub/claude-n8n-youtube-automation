@@ -69,6 +69,8 @@ function revisarTitulo(titulo, miniatura) {
   return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };
 }
 """
+PRESENTACION_JS = open(os.path.join(RAIZ, 'tools/cooper/presentacion.js'), encoding='utf-8').read()
+
 JS = lambda t: json.dumps(t, ensure_ascii=False)   # texto como literal JS dentro de una expresión
 
 OUT = os.path.join(os.path.dirname(__file__), '..', 'workflows', 'v2')
@@ -81,6 +83,8 @@ CRED_GEMINI = {'httpHeaderAuth': {'id': 'FabCredGemini001', 'name': 'Gemini (Veo
 CRED_EPIDEMIC = {'httpHeaderAuth': {'id': 'FabCredEpidemic1', 'name': 'Epidemic Sound'}}
 CRED_PEXELS = {'httpHeaderAuth': {'id': 'FabCredPexels001', 'name': 'Pexels'}}
 CRED_PIXABAY = {'httpQueryAuth': {'id': 'FabCredPixabay01', 'name': 'Pixabay'}}
+CRED_HEYGEN = {'httpHeaderAuth': {'id': 'FabCredHeyGen001', 'name': 'HeyGen (x-api-key)'}}
+CRED_ELEVEN = {'httpHeaderAuth': {'id': 'FabCredEleven001', 'name': 'ElevenLabs (xi-api-key)'}}
 CRED_CREATOMATE = {'httpHeaderAuth': {'id': 'mtHyTqYtuZSQYGWN', 'name': 'Creatomate'}}
 CRED_GOOGLE = {'googleDriveOAuth2Api': {'id': '5fXmeNSyBH0EFFf7', 'name': 'Google Drive account'}}
 # YouTube: cada canal guarda su propio permiso en la tabla «youtube»; aquí solo va el cliente OAuth de Google
@@ -326,6 +330,7 @@ return [{ json: {
   allowArchivo: true,         // video de archivo de Pexels/Pixabay (gratis)
   allowEfectos: true,         // efectos de sonido de Epidemic Sound (incluidos en tu suscripción)
   allowCritico: false,        // segundo modelo (GPT-6 Astra) que critica investigación y guion (pago por uso, centavos)
+  allowTextoApi: false,       // respaldo automático de texto; activar explícitamente para permitir gasto API
   allowVerificacion: false,   // verificador de cifras con búsqueda web (GPT-6 Astra + web_search) antes del crítico (pago por uso)
   allowReferencias: false,    // imágenes de referencia de personajes y escenarios del canal (pago por uso)
   allowAvatar: false,         // HeyGen
@@ -342,6 +347,9 @@ return [{ json: {
   modeloTexto: 'gpt-6-astra',
   modeloImagen: 'gpt-image-2.6-sunburst',
   modeloClip: 'gemini-omni-1.2-flash', // Veo quedó obsoleto el 22-10-2026; su reemplazo es Gemini Omni
+  costoAvatarSegUsd: 0.10,     // estimación configurable; no conciliación de factura
+  costoVozHeygenCaracterUsd: 0.0001,
+  costoVozElevenCaracterUsd: 0.0003,
   modeloVoz: 'gemini-3.8-flash-tts',
   modeloCritico: 'gpt-6-astra',
   vozGemini: 'Charon',        // voz grave de narrador; cambiable por canal en la biblia (voz.gemini_voice)
@@ -590,9 +598,9 @@ const recientes = $input.all().map(i => i.json).filter(v => v.video_id && v.tema
 const formato = e.formato || canal.formato_defecto || 'largo';
 const video_id = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
 const presupuesto = formato === 'short' ? canal.presupuesto_short_usd : canal.presupuesto_largo_usd;
-return [{ json: { fila: { video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',
+return [{ json: { fila: { presentacion: JSON.stringify(e.presentacion || null), cooper_orden_id: e.cooper_orden_id || '', video_id, canal_id: canal.canal_id, tema: elegir ? '(la fábrica elige el tema)' : String(e.tema || '').slice(0, 500), formato, etapa: 'guion', estado: 'en_proceso',
   version: 1, costo_usd: 0, presupuesto_usd: presupuesto, drive_carpeta: '', youtube_id: '', intentos: 0, error: '' },
-  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,
+  pedido: { modo: 'guion', canal_id: canal.canal_id, video_id, datos: { presentacion: e.presentacion || null, tema: elegir ? '' : e.tema, elegir_tema: elegir, temas_recientes: recientes,
     nicho: canal.nicho || '', formato, biblia, tendencias: (() => { try { const t = JSON.parse(canal.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),
     duracion_objetivo_s: formato === 'short' ? 50 : 540, vidiq: e.vidiq === 'use' ? 'use' : 'skip',
     indicaciones: String(e.indicaciones || '').slice(0, 2000), documental_url: String(e.documental_url || '') } } } }];
@@ -762,7 +770,9 @@ code(f, 'Pedir storyboard', r"""
 const e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia del video').first().json.resultado || '{}').resultado) || {};
 return [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,
   datos: { guion: e.contexto, biblia, formato: $('Video').first().json.formato || 'largo', notas: e.notas || '', tendencias: (() => { try { const t = JSON.parse($('Canal del video').first().json.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),
-    presupuesto_usd: Number($('Video').first().json.presupuesto_usd) || 1.5,
+    presentacion: JSON.parse($('Video').first().json.presentacion || 'null'),
+    presentacion_instrucciones: 'Respeta presencia: completo en todas las escenas narradas; partes solo algunas. Marca usa_avatar boolean en cada plano. La voz elegida narra todos. No cambies IDs ni proveedores.',
+    presupuesto_usd: Number($('Video').first().json.presupuesto_usd),
     costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];
 """)
 call(f, 'Claude: storyboard', W['claude'])
@@ -809,7 +819,7 @@ const guiones = $('Trabajos (producción)').all().map(i => i.json).filter(t => t
 const ultimo = guiones.sort((a, b) => String(a.createdAt || a.id).localeCompare(String(b.createdAt || b.id))).pop();
 const guion = ultimo ? (JSON.parse(ultimo.resultado || '{}').resultado || {}) : {};
 return [{ json: { video_id: e.video_id, canal_id: e.canal_id, tema: v.tema, version: v.version || 1, formato: v.formato, presupuesto_usd: v.presupuesto_usd,
-  storyboard: e.contexto, guion, biblia, notas: '' } }];
+  presentacion: JSON.parse(v.presentacion || 'null'), storyboard: e.contexto, guion, biblia, notas: '' } }];
 """)
 call(f, 'Producir', W['prod'], wait=False)
 route(10, 'Canal (producción)', 'Biblia (producción)', 'Video (producción)', 'Trabajos (producción)', 'Encargo de producción', 'Producir')
@@ -822,7 +832,9 @@ code(f, 'Pedir storyboard corregido', r"""
 const e = $('Inicio').first().json; const biblia = (JSON.parse($('Biblia (rehacer)').first().json.resultado || '{}').resultado) || {};
 return [{ json: { modo: 'storyboard', canal_id: e.canal_id, video_id: e.video_id,
   datos: { storyboard_anterior: e.contexto, biblia, formato: $('Video (rehacer)').first().json.formato || 'largo', notas: e.cambios || '', tendencias: (() => { try { const t = JSON.parse($('Canal (rehacer)').first().json.tendencias || '{}'); return Date.now() - Date.parse(t.fecha || 0) < 3 * 86400000 ? t : null; } catch (x) { return null; } })(),
-    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd) || 1.5,
+    presentacion: JSON.parse($('Video (rehacer)').first().json.presentacion || 'null'),
+    presentacion_instrucciones: 'Conserva el contrato de presentación y marca usa_avatar en cada plano; partes exige un subconjunto narrado.',
+    presupuesto_usd: Number($('Video (rehacer)').first().json.presupuesto_usd),
     costos: { imagen_usd: $('Leer ajustes').first().json.costoImagenUsd, clip_seg_usd: $('Leer ajustes').first().json.costoClipSegUsd } } } }];
 """)
 call(f, 'Claude: storyboard corregido', W['claude'])
@@ -1052,8 +1064,9 @@ function componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {
   const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));
   const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);
   const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));
-  const listos = planos.filter(p => p.url && voces[p.plano_id]?.url && orden.includes(p.plano_id))
+  const listos = planos.filter(p => p.url && (voces[p.plano_id]?.url || !p.plano.texto_narrado && Number(p.plano.duracion_s) > 0) && orden.includes(p.plano_id))
     .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));
+  if (listos.length !== orden.length) throw new Error('Faltan planos o voces para montar');
   const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);
   const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';
   const RESPIRO = vertical ? 0.15 : 0.35;   // en Shorts el respiro largo alargaba el video (67 s para 45 previstos)
@@ -1062,15 +1075,16 @@ function componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {
   const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };
   let total = 0;
   const escenas = listos.map((p, i) => {
-    const voz = voces[p.plano_id];
-    const dur = Math.round((voz.duracion_s + RESPIRO) * 100) / 100; total += dur;
-    const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';
+    const voz = voces[p.plano_id] || {duracion_s:Number(p.plano.duracion_s)};
+    if (!Number.isFinite(voz.duracion_s) || voz.duracion_s <= 0) throw new Error('Duración de voz inválida');
+    const dur = Math.round((voz.duracion_s + (p.plano.tipo === 'avatar' ? 0 : RESPIRO)) * 100) / 100; total += dur;
+    const video = ['clip', 'archivo', 'avatar'].includes(p.plano.tipo);
     const mov = p.plano.movimiento || '';
     const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]
       : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;
     const els = [
-      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },
-      { type: 'audio', source: voz.url, duration: null },   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)
+      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: p.plano.tipo !== 'avatar' } : {}), animations: anim },
+      ...(voz.url ? [{ type: 'audio', source: voz.url, duration: null }] : []),   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)
     ];
     if (subtitulos) {
       const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;
@@ -1109,9 +1123,11 @@ function componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {
 f = Flow(W['prod'], 'M4–M6 · Producción')
 trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
-code(f, 'Plan de producción', r"""
+code(f, 'Plan de producción', PRESENTACION_JS + r"""
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
-const planos = (e.storyboard?.planos || []).filter(p => p && p.id).map(p => ({ ...p }));
+const presentacion = validarPresentacion(e.presentacion);
+const planos = planosPresentacion((e.storyboard?.planos || []).filter(p => p && p.id), presentacion);
+if (new Set(planos.map(p => p.id)).size !== planos.length) throw new Error('IDs de plano duplicados');
 // Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se
 // mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el
 // storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.
@@ -1120,7 +1136,7 @@ const movimiento = { animados: [] };
 if (e.formato === 'short' && aj.allowClips) {
   const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;
   const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);
-  const mueve = p => ['clip', 'archivo'].includes(p.tipo);
+  const mueve = p => ['clip', 'archivo', 'avatar'].includes(p.tipo);
   const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)
     + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;
   const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))
@@ -1142,17 +1158,20 @@ const segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.du
 // Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.
 const revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;
 const costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa
-  + segClips * aj.costoClipSegUsd + n('avatar') * 1 + planos.length * aj.costoVozUsdPorPlano;
+  + segClips * aj.costoClipSegUsd + planos.filter(p => p.tipo === 'avatar').reduce((a,p) => a + Math.max(1, String(p.texto_narrado).split(/\s+/).length / 2.5) * aj.costoAvatarSegUsd, 0)
+  + planos.reduce((a,p) => a + costoVozPresentacion(p.texto_narrado, presentacion, aj), 0);
+if (!Number.isFinite(costo)) throw new Error('Configura las tarifas de presentación');
 const faltan = [];
-if (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');
+if (planos.some(p => p.tipo !== 'avatar') && !aj.allowImagenes) faltan.push('imágenes (OpenAI)');
 if (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');
-if (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
+if ((n('avatar') || presentacion?.avatar) && !aj.allowAvatar) faltan.push('avatar (HeyGen)');
 if (!aj.allowVoz) faltan.push('voz (Gemini TTS)');
 if (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');
 if (!aj.allowMontaje) faltan.push('montaje (Creatomate)');
-const presupuesto = Number(e.presupuesto_usd) || (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd);
+const presupuesto = Number(e.presupuesto_usd ?? (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd));
+if (!Number.isFinite(presupuesto) || presupuesto < 0) throw new Error('Presupuesto inválido');
 if (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);
-return [{ json: { ...e, planos, movimiento, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,
+return [{ json: { ...e, presentacion, planos, movimiento, bloqueo: presentacion?.avatar && !aj.allowAvatar ? 'avatar_apagado' : !aj.allowVoz ? 'voz_apagada' : costo > presupuesto ? 'presupuesto' : faltan.length ? 'produccion_pausada' : '', costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,
   dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];
 """)
 iff(f, '¿Todo encendido?', '$json.faltan.length === 0')
@@ -1178,7 +1197,7 @@ code(f, 'Archivos del encargo', r"""
 // Guion, storyboard y biblia quedan junto al video: cualquier versión se puede rehacer o auditar.
 const e = $('Plan de producción').first().json;
 const json = (nombre, obj) => ({ json: { nombre }, binary: { archivo: { data: Buffer.from(JSON.stringify(obj, null, 2)).toString('base64'), mimeType: 'application/json', fileName: nombre } } });
-return [json('storyboard.json', e.storyboard || {}), json('biblia.json', e.biblia || {}), json('guion.json', e.guion || {})];
+return [json('storyboard.json', { ...e.storyboard, presentacion:e.presentacion, planos:e.planos }), json('biblia.json', e.biblia || {}), json('guion.json', e.guion || {})];
 """)
 gapi(f, 'Encargo: subir', 'POST', 'https://www.googleapis.com/upload/drive/v3/files', 'googleDriveOAuth2Api',
      binary_field='archivo', query={'uploadType': 'media'})
@@ -1320,7 +1339,7 @@ return $input.all().map((it, i) => {
 """)
 iff(f, '¿Repetir plano?', '$json.repetir === true')
 code1(f, 'Plano aprobado', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: $json.url, plano: $json.plano, intento: $json.intento, revisiones: $json.revisiones || 0, nota_revision: ($json.veredicto?.problemas || []).join('; ') } };")
-code1(f, 'Avatar pendiente', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, intento: 0, nota_revision: 'avatar: falta decidir HeyGen' } };")
+code1(f, 'Plano para avatar', "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, intento: 0, nota_revision: 'pendiente de sincronización con la voz elegida' } };")
 # Puerta: a «Juntar planos» llegan tres caminos (archivo, imagen con reintentos y avatar). n8n lo ejecuta una vez por cada llegada,
 # así que solo deja pasar cuando están TODOS los planos del plan, juntando lo que dejó cada camino en todas sus pasadas.
 # (Antes era un nodo Aggregate: la primera llegada, con solo los planos de archivo, seguía sola hasta el montaje.)
@@ -1328,7 +1347,7 @@ code(f, 'Juntar planos', r"""
 const plan = $('Plan de producción').first().json.planos || [];
 const ids = plan.map(p => p.id);
 const listos = new Map();
-for (const fuente of ['Archivo aprobado', 'Plano aprobado', 'Avatar pendiente']) {
+for (const fuente of ['Archivo aprobado', 'Plano aprobado', 'Plano para avatar']) {
   if (!$(fuente).isExecuted) continue;
   for (let pasada = 0; pasada < 500; pasada++) {
     let items; try { items = $(fuente).all(0, pasada); } catch (e) { break; }
@@ -1343,7 +1362,7 @@ return [{ json: { planos: ids.map(id => listos.get(id)) } }];
 # --- Registro de planos y freno de gasto ------------------------------------------------
 code(f, 'Filas de planos', r"""
 const aj = $('Leer ajustes').first().json;
-return $('Juntar planos').first().json.planos.map(p => ({ json: { video_id: p.video_id, plano_id: p.plano_id, tipo: p.plano?.tipo || '',
+return $('Juntar planos').first().json.planos.map(p => ({ json: { video_id: p.video_id, plano_id: p.plano_id, tipo: p.plano?.tipo || '', usa_avatar:p.plano?.tipo === 'avatar', presentacion:JSON.stringify(p.plano?.presentacion || null),
   archivo_url: p.url || '', estado: p.url ? 'listo' : 'pendiente', intentos: p.intento || 0, nota_revision: String(p.nota_revision || '').slice(0, 500),
   costo_usd: Math.round(((['imagen', 'clip'].includes(p.plano?.tipo) ? (p.intento || 1) * aj.costoImagenUsd : 0)
     + (p.plano?.tipo === 'clip' ? (p.plano.duracion_clip_s || 8) * aj.costoClipSegUsd : 0) + (p.revisiones || 0) * aj.costoRevisionUsd) * 1000) / 1000 } }));
@@ -1373,7 +1392,7 @@ dt_update(f, 'Video detenido', 'videos', 'video_id', "={{ $('Plan de producción
 # --- Sonido -----------------------------------------------------------------------------
 code(f, 'Encargo de sonido', r"""
 const e = $('Plan de producción').first().json;
-return [{ json: { video_id: e.video_id, biblia: e.biblia || {}, musica: e.storyboard?.musica || {}, efectos: e.storyboard?.efectos || [],
+return [{ json: { video_id: e.video_id, presentacion: e.presentacion, biblia: e.biblia || {}, musica: e.storyboard?.musica || {}, efectos: e.storyboard?.efectos || [],
   carpeta: $('Carpeta del video').first().json.id, planos: $('Juntar planos').first().json.planos } }];
 """)
 call(f, 'Sonido y emoción', W['sonido'])
@@ -1381,7 +1400,7 @@ call(f, 'Sonido y emoción', W['sonido'])
 # --- Montaje ----------------------------------------------------------------------------
 code(f, 'Composición Creatomate', COMPONER + r"""
 const e = $('Plan de producción').first().json;
-const c = componer({ plan: e, planos: $('Juntar planos').first().json.planos, son: $json, vertical: e.formato === 'short' });
+const c = componer({ plan: e, planos: $json.planos || $('Juntar planos').first().json.planos, son: $json, vertical: e.formato === 'short' });
 return [{ json: { source: c.source, video_id: e.video_id, canal_id: e.canal_id, planos: c.listos, esperados: c.esperados,
   duracion_estimada_s: c.total, subtitulos: c.subtitulos, creditos: c.creditos } }];
 """)
@@ -1452,7 +1471,7 @@ f.link('¿Existe la carpeta del canal?', 'Carpeta del canal: crear', 1)
 f.link('Carpeta del canal: crear', 'Carpeta del video')
 f.chain('Carpeta del video', 'Archivos del encargo', 'Encargo: subir', 'Encargo: nombrar', 'Carpeta en la tabla', 'Video en producción', 'Un ítem por plano', 'Según tipo de plano')
 f.link('Según tipo de plano', 'Pedido de imagen', 0)
-f.link('Según tipo de plano', 'Avatar pendiente', 1)
+f.link('Según tipo de plano', 'Plano para avatar', 1)
 f.link('Según tipo de plano', 'Buscar en Pexels', 2)
 f.chain('Buscar en Pexels', 'Elegir de Pexels', '¿Hay en Pexels?')
 f.link('¿Hay en Pexels?', 'Pedido de revisión de archivo', 0)
@@ -1483,7 +1502,7 @@ f.chain('Revisar plano', 'Veredicto', '¿Repetir plano?')
 f.link('¿Repetir plano?', 'Pedido de imagen', 0)
 f.link('¿Repetir plano?', 'Plano aprobado', 1)
 f.link('Plano aprobado', 'Juntar planos')
-f.link('Avatar pendiente', 'Juntar planos')
+f.link('Plano para avatar', 'Juntar planos')
 f.chain('Juntar planos', 'Filas de planos', 'Guardar planos')
 f.link('Juntar planos', 'Gasto de planos')
 f.link('Gasto de planos', '¿Pasa el aviso de gasto?')
@@ -1513,11 +1532,13 @@ PROD = f.dump()
 f = Flow(W['sonido'], 'M5 · Sonido y emoción')
 trigger(f)
 call(f, 'Leer ajustes', W['ajustes'])
-code(f, 'Textos de voz', r"""
+code(f, 'Textos de voz', PRESENTACION_JS + r"""
 // Un ítem por plano. Gemini TTS lee el texto al pie de la letra: la actuación va aparte, en «style»
 // (emoción y ritmo de todo el plano) y en etiquetas <short pause>/<long pause>; el énfasis, en MAYÚSCULAS.
 const e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;
 const b = e.biblia || {}; const voz = b.voz || {};
+const presentacion = validarPresentacion(e.presentacion);
+if (presentacion && !aj.allowVoz) throw new Error('La voz está desactivada');
 const base = [voz.descripcion, voz.tono, voz.ritmo].filter(Boolean).join(', ') || 'narrador de documental, voz grave y cercana, ritmo ágil';
 const ESTILO = { 'susurro': 'en voz baja, casi un susurro', 'suspenso': 'con suspenso contenido', 'urgencia': 'con urgencia' };
 const planos = (e.planos || []).filter(p => p.plano?.texto_narrado);
@@ -1529,7 +1550,7 @@ return planos.map(p => {
     .replace(/\[pausa larga\]/gi, ' <long pause> ').replace(/\[pausa\]/gi, ' <short pause> ')
     .replace(/\[[^\]]{1,30}\]/g, '').replace(/\s{2,}/g, ' ').trim();
   const estilo = [base, p.plano.emocion ? 'con ' + p.plano.emocion : '', ...extra, `en ${b.idioma || 'español latino neutro'}`].filter(Boolean).join(', ');
-  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: voz.gemini_voice || aj.vozGemini } };
+  return { json: { video_id: e.video_id, plano_id: p.plano_id, texto, estilo: estilo.slice(0, 300), voz: presentacion?.voz?.id || voz.gemini_voice || aj.vozGemini, proveedor: presentacion?.voz?.proveedor || 'gemini', presentacion, costo_voz_usd: costoVozPresentacion(texto, presentacion, aj) } };
 });
 """)
 http(f, 'Voz (Gemini TTS)', 'POST', 'https://generativelanguage.googleapis.com/v1beta/interactions',
@@ -2985,9 +3006,304 @@ for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, EST
 faltan = [(w, x) for w, d in RITMO.items() for x in d if x not in {n['name'] for wf in [PROD, SONIDO, DERIV, REFS, REDES, APRENDE, VIDIQ, YT] if wf['id'] == w for n in wf['nodes']}]
 assert not faltan, faltan
 
+# ======================================================================================
+# FX · API de Cooper. Contrato privado; ninguna llamada al editor/API pública de n8n.
+# ======================================================================================
+CONTRATO_COOPER = json.load(open(os.path.join(RAIZ, 'cooper/src/contratos/cooper-v1.json'), encoding='utf-8'))
+W.update({'cooper': 'FabCooperAPI0001', 'progreso': 'FabCooperProgr01', 'costo': 'FabCooperCosto01'})
+
+def cooper_js(nombre):
+    with open(os.path.join(RAIZ, 'tools/cooper', nombre + '.js'), encoding='utf-8') as fh:
+        return 'const CONTRATO = ' + json.dumps(CONTRATO_COOPER, ensure_ascii=False) + ';\n' + fh.read()
+
+def reabrir(wf):
+    f = Flow(wf['id'], wf['name'])
+    f.nodes, f.conn = wf['nodes'], wf['connections']
+    return f
+
+def antes(f, destino, primero, ultimo):
+    for src, kinds in list(f.conn.items()):
+        if src == ultimo:
+            continue
+        for edges in kinds.get('main', []):
+            for edge in edges:
+                if edge['node'] == destino:
+                    edge['node'] = primero
+    f.link(ultimo, destino)
+
+def despues(f, origen, primero, ultimo):
+    salidas = f.conn.pop(origen, {'main': [[]]})
+    f.conn[ultimo] = salidas
+    f.link(origen, primero)
+
+def firmar_cooper(f, nombre, cuerpo):
+    code(f, nombre, r"""
+const secret = String($env.COOPER_WEBHOOK_SECRET || '');
+if (secret.length < 32) throw new Error('Falta COOPER_WEBHOOK_SECRET');
+const cuerpo = JSON.stringify(%s), timestamp = String(Date.now());
+const firma = require('crypto').createHmac('sha256', secret).update(timestamp + '.' + cuerpo).digest('hex');
+return [{ json: { cuerpo, timestamp, firma: 'sha256=' + firma } }];
+""" % cuerpo)
+
+def enviar_cooper(f, nombre):
+    http(f, nombre, 'POST', "={{ $env.COOPER_WEBHOOK_URL }}", auth=False, timeout=10000,
+         headers={'Content-Type': 'application/json', 'x-cooper-timestamp': '={{ $json.timestamp }}', 'x-cooper-signature': '={{ $json.firma }}'})
+    f.nodes[-1]['parameters'].update({'sendBody': True, 'contentType': 'raw', 'rawContentType': 'application/json', 'body': '={{ $json.cuerpo }}'})
+    f.nodes[-1].update({'retryOnFail': True, 'maxTries': 5, 'waitBetweenTries': 2000})
+
+def lista_cooper(f, nombre, tabla, filtros=None):
+    f.add(nombre, 'n8n-nodes-base.dataTable', 1.1, {'resource': 'row', 'operation': 'get', 'dataTableId': rl(tabla),
+          'matchType': 'allConditions', 'filters': {'conditions': filtros or []}, 'returnAll': True}, alwaysOutputData=True, executeOnce=True)
+
+f = Flow(W['cooper'], 'FX · API de Cooper')
+f.add('Solicitud de Cooper', 'n8n-nodes-base.webhook', 2,
+      {'httpMethod': 'POST', 'path': 'cooper/v1', 'responseMode': 'responseNode', 'options': {}}, webhookId=nid())
+code(f, 'Autenticar', cooper_js('autenticar'))
+iff(f, '¿Autorizado?', '$json.status === 200')
+iff(f, '¿Consultar recibo?', "!['estado','reporte','pendientes','tendencias','gastos'].includes($('Autenticar').first().json.solicitud.evento)")
+firmar_cooper(f, 'Firmar consulta de orden', "({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'consultar', solicitud:$('Autenticar').first().json.solicitud })")
+enviar_cooper(f, 'Consultar orden')
+switch(f, 'Recibo anterior', 3, "({ nueva:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2")
+for nombre, tabla in [('Canales autorizados','canales'), ('Videos autorizados','videos')]:
+    lista_cooper(f, nombre, tabla, [{'keyName': 'dueno_email', 'condition': "={{ $('Autenticar').first().json.admin ? 'isNotEmpty' : 'eq' }}",
+                                  'keyValue': "={{ $('Autenticar').first().json.dueno_email }}"}])
+# Las decisiones se proyectan después de comprobar el video; jamás se devuelven enlaces/formularios internos.
+lista_cooper(f, 'Aprobaciones', 'aprobaciones', [{'keyName':'estado','condition':'eq','keyValue':'pendiente'}, {'keyName':'video_id','condition':'eq','keyValue':"={{ $('Autenticar').first().json.solicitud.datos.id || '__ninguno__' }}"}])
+code(f, 'Resolver', PRESENTACION_JS + cooper_js('resolver'))
+switch(f, 'Tipo de petición', 3, "({ responder:0, gastos:1, orden:2 })[$json.accion]")
+lista_cooper(f, 'Costos administrativos', 'costos')
+code(f, 'Agregar gastos', cooper_js('gastos'))
+firmar_cooper(f, 'Firmar reserva', "({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'reservar', solicitud:$('Autenticar').first().json.solicitud })")
+enviar_cooper(f, 'Reservar orden')
+switch(f, 'Estado de reserva', 3, "({ reservada:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2")
+code(f, 'Evento del Orquestador', "return [{ json: $('Resolver').first().json.evento }];")
+call(f, 'Entregar al Orquestador', W['orq'], wait=False)
+firmar_cooper(f, 'Firmar confirmación', "({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'confirmar', solicitud:$('Autenticar').first().json.solicitud })")
+enviar_cooper(f, 'Confirmar orden')
+code(f, 'Aceptado', "return [{ json: { status:200, respuesta:{ aceptado:true } } }];")
+code(f, 'En proceso', "return [{ json: { status:409, respuesta:{ error:'Orden pendiente de confirmación' } } }];")
+f.add('Responder', 'n8n-nodes-base.respondToWebhook', 1.1, {'respondWith':'json','responseBody':'={{ $json.respuesta }}','options':{'responseCode':'={{ $json.status }}'}})
+f.chain('Solicitud de Cooper','Autenticar','¿Autorizado?')
+f.link('¿Autorizado?','¿Consultar recibo?',0); f.link('¿Autorizado?','Responder',1)
+f.link('¿Consultar recibo?','Firmar consulta de orden',0); f.link('¿Consultar recibo?','Canales autorizados',1)
+f.chain('Firmar consulta de orden','Consultar orden','Recibo anterior')
+f.link('Recibo anterior','Canales autorizados',0); f.link('Recibo anterior','Aceptado',1); f.link('Recibo anterior','En proceso',2)
+f.chain('Canales autorizados','Videos autorizados','Aprobaciones','Resolver','Tipo de petición')
+f.link('Tipo de petición','Responder',0); f.link('Tipo de petición','Costos administrativos',1); f.link('Tipo de petición','Firmar reserva',2)
+f.chain('Costos administrativos','Agregar gastos','Responder')
+f.chain('Firmar reserva','Reservar orden','Estado de reserva')
+f.link('Estado de reserva','Evento del Orquestador',0); f.link('Estado de reserva','Aceptado',1); f.link('Estado de reserva','En proceso',2)
+f.chain('Evento del Orquestador','Entregar al Orquestador','Firmar confirmación','Confirmar orden','Aceptado','Responder')
+f.link('En proceso','Responder')
+COOPER = f.dump()
+# El webhook transporta cabeceras privadas: no conservar input/output de ejecuciones.
+COOPER['settings'].update({'saveDataErrorExecution':'none','saveDataSuccessExecution':'none','saveExecutionProgress':False})
+
+# Un costo por paso, con dueño obtenido de la tabla (no del modelo ni del navegador).
+f = Flow(W['costo'], 'FX · Registrar costo por dueño')
+trigger(f)
+dt_get(f, 'Video del costo','videos','video_id', "={{ $('Inicio').first().json.video_id }}")
+dt_get(f, 'Canal del costo','canales','canal_id', "={{ $('Video del costo').first().json.canal_id || String($('Inicio').first().json.video_id || '').replace(/^canal:/, '') }}")
+code(f, 'Costo atribuido', r"""
+const c = $('Inicio').first().json, v = $('Video del costo').first().json, canal = $('Canal del costo').first().json;
+const dueno = v.dueno_email || canal.dueno_email || (c.video_id === 'canal:' ? String($env.COOPER_ADMIN_EMAIL || '') : '');
+if (!dueno || (c.video_id !== 'canal:' && !canal.dueno_email)) throw new Error('Costo sin dueño: completar la migración antes de producir');
+const usd = Number(c.usd); if (!Number.isFinite(usd) || usd < 0) throw new Error('Costo inválido');
+return [{ json: { video_id: c.video_id, concepto: c.concepto, servicio: c.servicio, usd,
+  dueno_email: dueno, estimado: c.estimado !== false,
+  paso_id: c.paso_id || String($execution.id) } }];
+""")
+dt_insert(f, 'Guardar costo atribuido','costos')
+f.chain('Inicio','Video del costo','Canal del costo','Costo atribuido','Guardar costo atribuido')
+COSTO_COOPER = f.dump()
+# Convertir todos los insert existentes de costos en llamadas a la atribución común.
+for wf in [ORQ, PROD, REFS, RADAR, VIDIQ, DERIV, SONIDO, APRENDE]:
+    for n in wf['nodes']:
+        if n['type'].endswith('.dataTable') and n['parameters'].get('operation') == 'insert' and n['parameters']['dataTableId']['value'] == T['costos']:
+            tmp = Flow('temp','temp'); call(tmp,n['name'],W['costo'],each=True)
+            n.update({'type':tmp.nodes[0]['type'],'typeVersion':tmp.nodes[0]['typeVersion'],'parameters':tmp.nodes[0]['parameters']})
+
+# Emisor de progreso. Recibe la fila completa después de persistir la etapa.
+f = Flow(W['progreso'], 'FX · Progreso de Cooper')
+trigger(f)
+iff(f, '¿Tiene dueño?', "!!$json.dueno_email && !!$json.video_id && !$json.eliminado")
+code(f, 'Progreso público', 'const ETAPAS = ' + json.dumps(CONTRATO_COOPER['etapas']) + ';\n' + r"""
+const v = $('Inicio').first().json;
+return [{ json: { version:'cooper-v1', tipo:'progreso', id_evento: v.cooper_evento_id || ('video:' + v.video_id + ':' + v.updatedAt),
+  video: { id:v.video_id, dueno_email:v.dueno_email, canal_id:v.canal_id, titulo:String(v.tema || ''),
+    modo_noticia:v.modo_noticia === true, stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];
+""")
+firmar_cooper(f,'Firmar progreso',"$('Progreso público').first().json")
+enviar_cooper(f,'Avisar a Cooper')
+code(f,'Conservar fila',"return [{ json: $('Inicio').first().json }];")
+f.chain('Inicio','¿Tiene dueño?'); f.link('¿Tiene dueño?','Progreso público',0); f.link('¿Tiene dueño?','Conservar fila',1)
+f.chain('Progreso público','Firmar progreso','Avisar a Cooper','Conservar fila')
+PROGRESO_COOPER = f.dump()
+
+# Registrar una etapa antes de un paso, conservando su entrada para no cambiar el contrato interno.
+def etapa_cooper(wf, destino, etapa, video_expr="$('Inicio').first().json.video_id", guion=None):
+    f = reabrir(wf); p = 'Cooper · ' + destino
+    code(f,p+' entrada','return $input.all();')
+    fields = "{ etapa:'" + etapa + "'" + (", guion_cooper: String(" + guion + ").slice(0,30000)" if guion else '') + " }"
+    code(f,p+' etapa', 'return [{ json: ' + fields + ' }];')
+    dt_update(f,p+' guardar','videos','video_id','={{ ' + video_expr + ' }}')
+    # Si la tabla no encuentra fila, conservar el flujo legado. La etapa sigue sin inventarse.
+    f.nodes[-1]['alwaysOutputData'] = True
+    code(f,p+' seguir',"return $('" + p + " entrada').all();")
+    f.chain(p+' entrada',p+' etapa',p+' guardar',p+' seguir')
+    antes(f,destino,p+' entrada',p+' seguir')
+
+etapa_cooper(ORQ,'Verificar cifras','verificacion')
+etapa_cooper(ORQ,'Aprobar guion','aprobacion_guion',guion="$('Inicio').first().json.resultado?.guion || ''")
+etapa_cooper(ORQ,'Claude: corregir','guion')
+etapa_cooper(ORQ,'Claude: corregir (crítico)','guion')
+etapa_cooper(PROD,'Sonido y emoción','sonido')
+etapa_cooper(PROD,'Composición Creatomate','montaje')
+etapa_cooper(PUB,'Aprobación final','aprobacion_final')
+
+# Cooper guarda decisiones de guion/final sin abrir un segundo formulario que pueda aprobar dos veces.
+f = reabrir(APROB)
+dt_get(f,'Cooper · dueño','videos','video_id',"={{ $('Inicio').first().json.video_id || '' }}")
+iff(f,'¿Decide Cooper?',"!!$json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa)")
+# La preparación/registro originales se conservan, solo se evita esperar formulario para estas dos puertas.
+antes(f,'Aprobación · preparar','Cooper · dueño','Cooper · dueño')
+despues(f,'Aprobación · registrar','¿Decide Cooper?','¿Decide Cooper?')
+# Evaluar sobre la fila original, no sobre el registro de aprobación.
+next(n for n in f.nodes if n['name']=='¿Decide Cooper?')['parameters']['conditions']['conditions'][0]['leftValue'] = "={{ !!$('Cooper · dueño').first().json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa) }}"
+f.conn['¿Decide Cooper?'] = {'main':[[],[{'node':'Aprobación · avisar','type':'main','index':0}]]}
+
+# No convertir una decisión de Cooper en un formulario reenviado por el flujo legado.
+for n in APROB['nodes']:
+    if n['name'] == 'Aprobación · preparar':
+        n['parameters']['jsCode'] = n['parameters']['jsCode'].replace("url: $execution.resumeFormUrl", "url: ($('Cooper · dueño').isExecuted && $('Cooper · dueño').first().json.dueno_email && ['guion','final'].includes($('Inicio').first().json.etapa)) ? '' : $execution.resumeFormUrl")
+
+# El identificador de Cooper y el dueño sobreviven al trabajo asíncrono de investigación y a su aprobación.
+def cambiar(wf,nombre,viejo,nuevo):
+    n = next(n for n in wf['nodes'] if n['name']==nombre)
+    assert viejo in n['parameters']['jsCode'], (nombre,viejo)
+    n['parameters']['jsCode'] = n['parameters']['jsCode'].replace(viejo,nuevo)
+cambiar(ORQ,'Pedir nichos',"canal_id:'', video_id:''","canal_id:e.canal_id || '', dueno_email:e.dueno_email || '', video_id:''")
+f = reabrir(CLAUDE)
+dt_get(f, 'Video del trabajo', 'videos', 'video_id', "={{ $('Preparar trabajo').first().json.fila.video_id || '' }}")
+dt_get(f, 'Canal del trabajo', 'canales', 'canal_id', "={{ $('Video del trabajo').first().json.canal_id || $('Preparar trabajo').first().json.fila.canal_id || '' }}")
+code(f, 'Atribuir trabajo', r"""
+const fila = $('Preparar trabajo').first().json.fila;
+const video = $('Video del trabajo').first().json, canal = $('Canal del trabajo').first().json;
+const dueno = video.dueno_email || canal.dueno_email || (!fila.video_id && !fila.canal_id ? String($env.COOPER_ADMIN_EMAIL || '') : '');
+if (!dueno || fila.video_id && !video.dueno_email || (fila.canal_id || video.canal_id) && !canal.dueno_email ||
+    video.dueno_email && canal.dueno_email !== video.dueno_email) throw new Error('Trabajo sin dueño válido: completar la migración');
+return [{json:{...fila, canal_id:video.canal_id || fila.canal_id, dueno_email:dueno}}];
+""")
+f.chain('Video del trabajo', 'Canal del trabajo', 'Atribuir trabajo')
+antes(f, 'Registrar trabajo', 'Video del trabajo', 'Atribuir trabajo')
+cambiar(RETORNO,'Evento',"video_id: t.video_id || ''","dueno_email: t.dueno_email || '', video_id: t.video_id || ''")
+cambiar(ORQ,'Mensaje de canal',"etapa: 'canal', mensaje:","dueno_email: $('Inicio').first().json.dueno_email || '', canal_id: $('Inicio').first().json.canal_id || '', etapa: 'canal', mensaje:")
+cambiar(ORQ,'Nuevo canal',"const canal_id = (c.nombre_propuesto", "const canal_id = $json.canal_id || (c.nombre_propuesto")
+cambiar(ORQ,'Nuevo canal','json: { canal_id, nombre:',"json: { dueno_email: $json.dueno_email || '', canal_id, nombre:")
+cambiar(ORQ,'Nuevo video',"const video_id = 'v-'", "const video_id = e.video_id || 'v-'")
+cambiar(ORQ,'Nuevo video','fila: { presentacion:',"fila: { dueno_email: canal.dueno_email || '', presentacion:")
+cambiar(ORQ,'Pedir adopción',"canal_id: '', video_id: ''", "canal_id: $('Inicio').first().json.canal_id || '', dueno_email: $('Inicio').first().json.dueno_email || '', video_id: ''")
+# Los canales nuevos de Cooper quedan reservados mientras se investiga (sin habilitar producción).
+f = reabrir(ORQ)
+code(f,'Cooper · reservar canal',"const e=$('Inicio').first().json; return e.cooper ? [{ json:{ canal_id:e.canal_id, dueno_email:e.dueno_email, nombre:e.nombre || e.canal_id, nicho:e.criterios || '', estado:'investigando' } }] : [{json:{}}];")
+iff(f,'¿Canal de Cooper?',"$('Inicio').first().json.cooper === true")
+dt_insert(f,'Cooper · guardar reserva','canales')
+code(f,'Cooper · pedido original',"return [{ json: $('Inicio').first().json }];")
+antes(f,'Pedir nichos','¿Canal de Cooper?','Cooper · pedido original')
+f.link('¿Canal de Cooper?','Cooper · reservar canal',0); f.link('¿Canal de Cooper?','Cooper · pedido original',1)
+f.chain('Cooper · reservar canal','Cooper · guardar reserva','Cooper · pedido original')
+# La aprobación actualiza la reserva en vez de insertar otra identidad.
+n = next(n for n in ORQ['nodes'] if n['name']=='Guardar canal')
+n['parameters'].update({'operation':'upsert','matchType':'allConditions','filters':{'conditions':[{'keyName':'canal_id','condition':'eq','keyValue':'={{ $json.canal_id }}'}]}})
+# Cerrar la decisión y avanzar la etapa antes de cualquier publicación/producción.
+for nombre, etapa in [('Canal del video','storyboard'),('Video (publicar)','programado')]:
+    etapa_cooper(ORQ,nombre,etapa)
+f = reabrir(ORQ)
+for destino in ['Canal del video','Video (publicar)']:
+    # La decisión solo tiene ID cuando viene de Cooper. Los formularios legados ya se cierran solos.
+    p = 'Cooper · cerrar ' + destino
+    iff(f,p+' si',"!!$('Inicio').first().json.aprobacion_id")
+    code(f,p+' fila',"return [{json:{estado:'decidida',decidido_en:new Date().toISOString()}}];")
+    dt_update(f,p+' guardar','aprobaciones','aprobacion_id',"={{ $('Inicio').first().json.aprobacion_id }}")
+    code(f,p+' seguir',"return [{json:$('Inicio').first().json}];")
+    antes(f,destino,p+' si',p+' seguir'); f.link(p+' si',p+' fila',0); f.link(p+' si',p+' seguir',1)
+    f.chain(p+' fila',p+' guardar',p+' seguir')
+
+# Eliminación lógica: retener trazabilidad y gasto; impedir consultas y nuevas acciones.
+f = reabrir(ORQ)
+ruta = next(n for n in f.nodes if n['name']=='Ruta')
+ruta['parameters']['jsCode'] = ruta['parameters']['jsCode'].replace(json.dumps(RUTAS),json.dumps(RUTAS[:-1]+['eliminar','otro']))
+next(n for n in f.nodes if n['name']=='Según evento')['parameters']['numberOutputs'] += 1
+f.conn['Según evento']['main'].append(f.conn['Según evento']['main'][22]); f.conn['Según evento']['main'][22] = []
+code(f,'Cooper · eliminar',"return [{json:{eliminado:true}}];")
+iff(f,'¿Eliminar canal?',"$('Inicio').first().json.tipo === 'canal'")
+dt_update(f,'Cooper · eliminar canal','canales','canal_id',"={{ $('Inicio').first().json.id }}")
+dt_update(f,'Cooper · eliminar videos del canal','videos','canal_id',"={{ $('Inicio').first().json.id }}")
+dt_update(f,'Cooper · eliminar video','videos','video_id',"={{ $('Inicio').first().json.id }}")
+# Cada actualización recibe solo columnas admitidas.
+code(f,'Cooper · marca cascada',"return [{json:{eliminado:true}}];")
+f.link('Según evento','Cooper · eliminar',22); f.chain('Cooper · eliminar','¿Eliminar canal?')
+f.link('¿Eliminar canal?','Cooper · eliminar canal',0); f.link('¿Eliminar canal?','Cooper · eliminar video',1)
+f.chain('Cooper · eliminar canal','Cooper · marca cascada','Cooper · eliminar videos del canal')
+
+# Extensión de presentación, antes de los sellos y de la atribución de costos.
+exec(compile(open(os.path.join(RAIZ, 'tools/cooper/presentacion_flujos.py'), encoding='utf-8').read(), 'presentacion_flujos.py', 'exec'))
+
+# Registro al terminar cada llamada, incluso si un paso posterior falla. El total del video
+# sigue siendo una estimación visual; no vuelve a insertarse como un segundo gasto.
+for wf, nombres in [(PROD,['Guardar costos','Guardar costo de derivados']), (REFS,['Guardar costo de referencias'])]:
+    for n in wf['nodes']:
+        if n['name'] in nombres:
+            n.update({'type':'n8n-nodes-base.code','typeVersion':2,'parameters':{'jsCode':'return $input.all();'}})
+
+PASOS_COSTO = [
+    (AVATAR,'Crear avatar','avatar','HeyGen',"$('Inicio').first().json.voz.duracion_s * aj.costoAvatarSegUsd"),
+    (SONIDO,'Voz (HeyGen)','voz','HeyGen',"$('Textos de voz').itemMatching(k).json.costo_voz_usd"),
+    (SONIDO,'Voz (ElevenLabs)','voz','ElevenLabs',"$('Textos de voz').itemMatching(k).json.costo_voz_usd"),
+    (PROD,'Generar imagen','imágenes','OpenAI',"aj.costoImagenUsd"),
+    (PROD,'Revisar plano','revisión visual','OpenAI',"aj.costoRevisionUsd"),
+    (PROD,'Revisar archivo','revisión de archivo','OpenAI',"aj.costoRevisionUsd"),
+    (PROD,'Animar (Gemini Omni)','clips','Gemini Omni',"Number($('Un ítem por plano').itemMatching(k).json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd"),
+    (PROD,'Renderizar','montaje','Creatomate (créditos)','0'),
+    (SONIDO,'Voz (Gemini TTS)','voz','Gemini TTS','aj.costoVozUsdPorPlano'),
+    (SONIDO,'Pedir descarga','música','Epidemic Sound (suscripción)','0'),
+    (SONIDO,'Pedir efecto','efectos','Epidemic Sound (suscripción)','0'),
+    (REFS,'Generar principal','referencia principal','OpenAI','aj.costoImagenUsd'),
+    (REFS,'Generar vista','referencia vista','OpenAI','aj.costoImagenUsd'),
+    (DERIV,'Imagen de miniatura','miniatura','OpenAI','aj.costoMiniaturaUsd'),
+    (DERIV,'Renderizar miniatura','montaje de miniatura','Creatomate (créditos)','0'),
+    (DERIV,'Renderizar corte','montaje de corte','Creatomate (créditos)','0'),
+    (ORQ,'Crítico de nichos','crítico de nichos','OpenAI','aj.costoCriticoUsd'),
+    (RADAR,'Analista de tendencias','radar','OpenAI','aj.costoRadarUsd'),
+    (CLAUDE,'Respuesta','texto','Claude (plan)','0'),
+]
+for wf, origen, concepto, servicio, usd in PASOS_COSTO:
+    f = reabrir(wf); p = 'Cooper · costo ' + origen
+    # El radar lleva varios canales; conservar el emparejamiento por índice.
+    vid = "('canal:' + $('Encargo del analista').all()[k].json.canal_id)" if wf['id']==W['radar'] else "(e.video_id || ('canal:' + e.canal_id))"
+    code(f,p,"const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:" + vid + ", concepto:" + JS(concepto) + ", servicio:" + JS(servicio) + ", usd:" + usd + ", estimado:true, paso_id:String($execution.id)+':'+" + JS(origen) + "+':'+$runIndex+':'+k }}));")
+    call(f,p+' registrar',W['costo'],each=True)
+    code(f,p+' seguir',"return $('" + origen + "').all().map((i,k) => ({...i, pairedItem:{item:k}}));")
+    f.chain(p,p+' registrar',p+' seguir')
+    # Solo salida de éxito; las salidas de error del HTTP mantienen su destino original.
+    outs=f.conn.setdefault(origen,{'main':[[]]})['main']
+    f.conn[p+' seguir']={'main':[outs[0]]}; outs[0]=[{'node':p,'type':'main','index':0}]
+# Upsert por paso, durable frente al reintento de la escritura del mismo gasto.
+n = next(n for n in COSTO_COOPER['nodes'] if n['name']=='Guardar costo atribuido')
+n['parameters'].update({'operation':'upsert','matchType':'allConditions','filters':{'conditions':[{'keyName':'paso_id','condition':'eq','keyValue':'={{ $json.paso_id }}'}]}})
+
+# También las filas heredadas de verificación/crítico reciben el ID del paso emisor.
+for wf in [ORQ, PROD, REFS, RADAR, DERIV, SONIDO, CLAUDE, AVATAR]:
+    f = reabrir(wf)
+    for n in list(f.nodes):
+        if n['type'].endswith('.executeWorkflow') and n['parameters']['workflowId']['value'] == W['costo']:
+            nombre = 'Cooper · identificar ' + n['name']
+            code(f,nombre,"return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));")
+            antes(f,n['name'],nombre,nombre)
+
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
-TIEMPO = {'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
-          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600}
+TIEMPO = {'FabAvatar0000001': 1800, 'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
+          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600, 'FabNoticia000001': 600, 'FabRadar00000001': 3600}
 # Expresiones de n8n: un salto de línea real dentro de un texto entre comillas no es JavaScript válido
 # (el crítico del guion fallaba en silencio por eso). Se escapan todos los que estén dentro de comillas.
 def escapar_saltos(ex):
@@ -3006,21 +3322,66 @@ def recorrer(v):
     if isinstance(v, list): return [recorrer(x) for x in v]
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT]:
+# Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
+for extension in ['texto_flujos.py', 'noticia_flujos.py']:
+    exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
+
+# Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.
+for wf in [ORQ, PROD, PUB, REDES, CONFIRMAR, VALIDAR_PRESENTACION]:
+    f = reabrir(wf)
+    targets = [n for n in f.nodes if n['type'].endswith('.dataTable') and n['parameters'].get('operation') in ['insert','update'] and n['parameters']['dataTableId']['value'] == T['videos']]
+    for n in targets:
+        p = 'Cooper · sello ' + n['name']
+        code(f,p,"return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k }}));")
+        antes(f,n['name'],p,p)
+        call(f,p+' aviso',W['progreso'],each=True)
+        despues(f,n['name'],p+' aviso',p+' aviso')
+# Fuera del FX, las consultas legadas son del operador. Las filas eliminadas no se reactivan.
+for wf in [ORQ, PROD, PUB, RADAR, RUTINA, REFS, REDES, YT]:
+    for n in wf['nodes']:
+        p=n['parameters']
+        if n['type'].endswith('.dataTable') and p.get('operation') in ['get','update'] and p['dataTableId']['value'] in [T['videos'],T['canales']]:
+            p.setdefault('filters',{}).setdefault('conditions',[]).append({'keyName':'eliminado','condition':'neq','keyValue':True})
+
+
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]:
     for n in wf['nodes']:
         n['parameters'] = recorrer(n['parameters'])
 
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
-                           'saveDataErrorExecution': 'all', 'saveDataSuccessExecution': 'all'})
+                           'saveDataErrorExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
+
+def conservar_identificadores(wf, anterior):
+    prev = {n['name']: n for n in anterior.get('nodes', [])}
+    def ids(v, old, ruta):
+        if isinstance(v, dict):
+            for k, x in v.items():
+                o = old.get(k) if isinstance(old, dict) else None
+                if k == 'id' and isinstance(x, str) and len(x) == 36:
+                    v[k] = o or str(uuid.uuid5(uuid.NAMESPACE_URL, ruta + '/' + k))
+                else:
+                    ids(x, o, ruta + '/' + k)
+        elif isinstance(v, list):
+            for i, x in enumerate(v):
+                ids(x, old[i] if isinstance(old, list) and i < len(old) else None, ruta + '/' + str(i))
+    for n in wf['nodes']:
+        old = prev.get(n['name'], {})
+        ruta = wf['id'] + '/' + n['name']
+        n['id'] = old.get('id') or str(uuid.uuid5(uuid.NAMESPACE_URL, ruta))
+        if 'webhookId' in n:
+            n['webhookId'] = old.get('webhookId') or str(uuid.uuid5(uuid.NAMESPACE_URL, ruta + '/webhook'))
+        ids(n['parameters'], old.get('parameters'), ruta)
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     for wf in ALL:
         fn = os.path.join(OUT, wf['id'] + '.json')
+        anterior = json.load(open(fn)) if os.path.exists(fn) else {}
+        conservar_identificadores(wf, anterior)
         with open(fn, 'w') as fh:
             json.dump(wf, fh, ensure_ascii=False, indent=2)
     print('\n'.join(f"{w['id']}  {w['name']}  ({len(w['nodes'])} nodos)" for w in ALL))

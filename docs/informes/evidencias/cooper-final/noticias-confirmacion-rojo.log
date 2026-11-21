@@ -1,0 +1,49 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/noticias.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-final/cooper
+
+ ❯ tests/noticias.test.ts (3 tests | 2 failed) 50ms
+   × activa y desactiva noticias desde Cooper sin alterar la biblia ni otros canales 39ms
+   × un pedido de noticia conserva la modalidad y el simulador no inventa verificaciones 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/noticias.test.ts > activa y desactiva noticias desde Cooper sin alterar la biblia ni otros canales
+AssertionError: expected undefined to be defined
+ ❯ tests/noticias.test.ts:34:18
+     32|     await responderChat(user, { texto, canalId, adjuntos: [] });
+     33|     const card = estadoChat(user).tarjetas.at(-1)!;
+     34|     expect(card).toBeDefined();
+       |                  ^
+     35|     expect(JSON.parse(db().select().from(chatActions).where(eq(chatAct…
+     36|       .toEqual({ campo: "modo_noticia", valor: active });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/noticias.test.ts > un pedido de noticia conserva la modalidad y el simulador no inventa verificaciones
+AssertionError: expected undefined to deeply equal { modo_noticia: true }
+
+- Expected:
+{
+  "modo_noticia": true,
+}
+
++ Received:
+undefined
+
+ ❯ tests/noticias.test.ts:92:118
+     90|   const card = estadoChat(user).tarjetas.at(-1)!;
+     91|   expect(card).toBeDefined();
+     92|   expect(JSON.parse(db().select().from(chatActions).where(eq(chatActio…
+       |                                                                                                                      ^
+     93|   await confirmarChat(user, card.id, true);
+     94|   expect(db().select().from(videos).where(eq(videos.title, "Quiero un …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  20:29:49
+   Duration  1.15s (transform 686ms, setup 29ms, import 982ms, tests 50ms, environment 0ms)

@@ -6,7 +6,7 @@ const dir = path.join(__dirname, '..', 'workflows', 'v2');
 const wf = id => JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8'));
 const codeOf = (w, name) => w.nodes.find(n => n.name === name).parameters.jsCode;
 
-function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {} } = {}) {
+function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {}, runIndex = 0 } = {}) {
   // Simula el entorno de un nodo Code de n8n: $('Nodo') con first/last/item/all/isExecuted, $json, $input.
   const $ = name => ({
     first: () => ({ json: nodes[name] }), last: () => ({ json: nodes[name] }), item: { json: nodes[name] },
@@ -17,8 +17,8 @@ function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {} } 
     isExecuted: nodes[name] !== undefined || all[name] !== undefined || pasadas[name] !== undefined,
   });
   const $input = { all: () => (all.$input || [json]).map(j => ({ json: j })), item: { json, binary } };
-  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', js);
-  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' });
+  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', '$env', 'require', '$runIndex', js);
+  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { id:'ejecucion-prueba', resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' }, env, require, runIndex);
   return Array.isArray(r) ? r : [r];
 }
 
@@ -570,7 +570,7 @@ test('escala: topes de 24 h por canal y de toda la fábrica', () => {
 
 test('escala: todo flujo es válido — nodos únicos, conexiones existentes, sin huérfanos, HTTP con tiempo límite', () => {
   for (const id of ['FabAjustes000001', 'FabLlamarClaude1', 'FabRetornoClaud1', 'FabAprobacion001', 'FabOrquestador01', 'FabProduccion001', 'FabSonido0000001',
-    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1']) {
+    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1', 'FabTextoGPT0001', 'FabNoticia000001', 'FabRadar00000001']) {
     const w = wf(id); const nombres = w.nodes.map(n => n.name);
     assert.strictEqual(new Set(nombres).size, nombres.length, id + ': nombres repetidos');
     const destinos = new Set(Object.values(w.connections).flatMap(c => Object.values(c).flat(2)).map(x => x.node));
@@ -579,7 +579,8 @@ test('escala: todo flujo es válido — nodos únicos, conexiones existentes, si
       assert.ok(destinos.has(n.name) || w.connections[n.name], id + ': huérfano ' + n.name);
       if (n.type.endsWith('httpRequest')) assert.ok(n.parameters.options?.timeout, id + ': sin timeout ' + n.name);
       if (n.type.endsWith('.code')) {   // el entorno de Code de n8n no trae estas funciones (verificado en vivo)
-        const sinComentarios = n.parameters.jsCode.split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
+        // crypto está permitido desde el puente Cooper; no habilitar otros módulos.
+        const sinComentarios = n.parameters.jsCode.replace(/require\('crypto'\)/g, 'crypto').split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
         assert.doesNotMatch(sinComentarios, /\bnew URL\(|URLSearchParams|TextEncoder|TextDecoder|structuredClone|\batob\(|\bbtoa\(|\bfetch\(|setTimeout|require\(/, id + ': función no disponible en ' + n.name);
       }
       if (n.type.endsWith('.code')) assert.doesNotThrow(() => new Function('$', '$json', '$input', '$now', '$binary', 'crypto', n.parameters.jsCode), id + ': JS inválido en ' + n.name);
@@ -775,7 +776,7 @@ test('banco de roles: Claude lee su rol y los modelos de GPT llevan el suyo incr
   const fab = fs.readFileSync(path.join(__dirname, '..', 'skill', 'FABRICA.md'), 'utf8');
   for (const r of ['investigador', 'guionista', 'director-visual', 'editor-publicacion', 'analista']) {
     assert.ok(fab.includes(r + '.md'), 'FABRICA no nombra ' + r); assert.ok(fs.existsSync(path.join(__dirname, '..', 'skill', 'roles', r + '.md')), r); }
-  const critico = JSON.stringify(nodo(ORQ, 'Crítico del guion').parameters); assert.match(critico, /LA ARITMÉTICA CUADRA/);
+  const critico = JSON.stringify(nodo(ORQ, 'Texto · Crítico del guion').parameters); assert.match(critico, /LA ARITMÉTICA CUADRA/);
   const PRD = wf('FabProduccion001');
   for (const n of ['Revisar plano', 'Revisar archivo']) assert.match(JSON.stringify(nodo(PRD, n).parameters), /Eres el revisor visual/, n);
   const guionista = fs.readFileSync(path.join(__dirname, '..', 'skill', 'roles', 'guionista.md'), 'utf8');
@@ -885,12 +886,12 @@ test('costo: sin texto en las imágenes, respaldo de escena para el archivo y re
 
 test('cifras verificadas: busca en la web antes del crítico, obliga a reescribir si hay cifras por corregir y pasa los datos a Claude', () => {
   const O = wf('FabOrquestador01'); const nodo = n => O.nodes.find(x => x.name === n);
-  const body = nodo('Verificar cifras').parameters.jsonBody;
+  const body = nodo('Texto · Verificar cifras').parameters.jsCode;
   assert.match(body, /type: 'web_search'/); assert.match(body, /Eres el verificador de datos/); assert.match(body, /notas_del_guionista/);
   assert.strictEqual(O.connections['Temas del canal'].main[0][0].node, 'Puntuar ganchos');
   assert.strictEqual(O.connections['Puntuar ganchos'].main[0][0].node, '¿Verificar cifras?');
-  assert.strictEqual(O.connections['Cifras verificadas'].main[0][0].node, 'Crítico del guion');
-  assert.match(nodo('Crítico del guion').parameters.jsonBody, /verificacion_de_cifras/);
+  assert.strictEqual(O.connections['Cifras verificadas'].main[0][0].node, 'Texto · Crítico del guion');
+  assert.match(nodo('Texto · Crítico del guion').parameters.jsCode, /verificacion_de_cifras/);
   // Respuesta real (forma de la prueba en vivo): búsquedas, razonamiento y un mensaje con el JSON.
   const texto = JSON.stringify({ cifras: [{ dato: 'IGV', valor_guion: '1,53', valor_verificado: '1,53', estado: 'ok' }, { dato: 'margen', valor_guion: '4-5', valor_verificado: '', estado: 'vieja', fecha: '2024-11' }],
     faltantes: [{ dato: 'Precio de lista Petroperú gasohol regular', valor: '15.6293 soles/galón', fecha: '2026-11-18', fuente_url: 'https://www.petroperu.com.pe/x.pdf' }], cuenta: ['S/ 10', 'IGV 1,53'], resumen: 'ok' });
@@ -963,8 +964,8 @@ test('skills de YouTube: el gancho se puntúa y colapsa las filas del canal (el 
   const r = { ganchos: ['Los grifos son interesantes.', 'De tus 10 soles, el grifo se queda con menos de lo que crees.'], gancho_elegido: 1, titulo: 'T', guion: 'g', rubrica: { gancho: 8 } };
   const out = run(codeOf(O, 'Puntuar ganchos'), { all: { $input: [{ tema: 'a' }, { tema: 'b' }, { tema: 'c' }] }, nodes: { Inicio: { resultado: r } } });
   assert.strictEqual(out.length, 1); assert.strictEqual(out[0].json.elegido.formula, 'El dato');
-  assert.match(nodoDe(O, 'Crítico del guion').parameters.jsonBody, /puntaje_ganchos/);
-  assert.match(nodoDe(O, 'Crítico del guion').parameters.jsonBody, /La boleta/);   // el crítico GPT lleva las 21 fórmulas incrustadas
+  assert.match(nodoDe(O, 'Texto · Crítico del guion').parameters.jsCode, /puntaje_ganchos/);
+  assert.match(nodoDe(O, 'Texto · Crítico del guion').parameters.jsCode, /La boleta/);   // el crítico GPT lleva las 21 fórmulas incrustadas
   const msg = run(codeOf(O, 'Mensaje de guion'), { nodes: { Inicio: { video_id: 'v', resultado: r } } })[0].json;
   assert.match(msg.aviso, /🪝 Gancho: \d+\/100 (FUERTE|SIRVE|DÉBIL) · El dato/); assert.match(msg.mensaje, /alerta \d+\/100/);
 });
@@ -1163,4 +1164,480 @@ test('radar de tendencias: consultas por canal, encargo al analista, guardado po
   // Los especialistas existen y el contrato los nombra.
   for (const red of ['tiktok', 'instagram', 'youtube']) assert.ok(fs.existsSync(path.join(__dirname, '..', 'skill', 'roles', `especialista-${red}.md`)));
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'skill', 'FABRICA.md'), 'utf8'), /especialista-tiktok\.md/);
+});
+
+const FX = wf('FabCooperAPI0001'), PROGRESO = wf('FabCooperProgr01'), COSTO = wf('FabCooperCosto01');
+const contratoCooper = require('../cooper/src/contratos/cooper-v1.json');
+const cryptoCooper = require('node:crypto');
+const tokenCooper = cryptoCooper.randomBytes(32).toString('hex');
+const envCooper = { COOPER_N8N_TOKEN: tokenCooper, COOPER_WEBHOOK_SECRET: tokenCooper, COOPER_ADMIN_EMAIL: 'admin@example.test' };
+const solicitudCooper = (evento, datos = {}, extra = {}) => ({ version: 'cooper-v1', id_evento: cryptoCooper.randomUUID(), evento, dueno_email: 'ana@example.test', admin: false, datos, ...extra });
+const canalCooper = { canal_id: 'c-ana', dueno_email: 'ana@example.test', nombre: 'Ciencia', nicho: 'Ciencia', estado: 'activo', biblia_ruta: 'trabajo:j', costo_usd: 999, presupuesto_largo_usd: 999 };
+const videoCooper = { video_id: 'v-ana', canal_id: 'c-ana', dueno_email: 'ana@example.test', tema: 'Cielo', etapa: 'aprobacion_guion', guion_cooper: 'Guion', cooper_actualizado_en: 1, costo_usd: 999 };
+function resolverCooper(b, { canales = [canalCooper], videos = [videoCooper], aprobaciones = [] } = {}) {
+  return run(codeOf(FX, 'Resolver'), { nodes: { Autenticar: { solicitud: b, admin: b.admin, dueno_email: b.dueno_email } },
+    all: { 'Canales autorizados': canales, 'Videos autorizados': videos, Aprobaciones: aprobaciones } })[0].json;
+}
+test('Cooper: token obligatorio, fallo cerrado y admin contrastado con entorno', () => {
+  const auth = (body, authorization, env = envCooper) => run(codeOf(FX, 'Autenticar'), { json: { body, headers: { authorization } }, env })[0].json;
+  assert.strictEqual(auth(solicitudCooper('estado'), '').status, 401);
+  assert.strictEqual(auth(solicitudCooper('estado'), 'Bearer ' + tokenCooper, {}).status, 401);
+  assert.strictEqual(auth(solicitudCooper('estado'), 'Bearer ' + tokenCooper).status, 200);
+  assert.strictEqual(auth(solicitudCooper('estado', {}, { admin: true }), 'Bearer ' + tokenCooper).status, 403);
+  assert.strictEqual(auth(solicitudCooper('gastos'), 'Bearer ' + tokenCooper).status, 403);
+  assert.strictEqual(auth(solicitudCooper('gastos', {}, { admin: true, dueno_email: envCooper.COOPER_ADMIN_EMAIL }), 'Bearer ' + tokenCooper).status, 200);
+  assert.strictEqual(auth(solicitudCooper('inventado'), 'Bearer ' + tokenCooper).status, 400);
+});
+test('Cooper: estado proyecta solo recursos propios y jamás columnas internas', () => {
+  const result = resolverCooper(solicitudCooper('estado'), { canales: [canalCooper, { ...canalCooper, canal_id:'otro', dueno_email:'otro@example.test' }],
+    videos: [videoCooper, { ...videoCooper, video_id:'otro', canal_id:'otro', dueno_email:'otro@example.test' }] });
+  assert.deepStrictEqual(result.respuesta.videos.map(v=>v.id), ['v-ana']);
+  assert.ok(!JSON.stringify(result.respuesta).match(/costo|presupuesto|999|servicio/));
+  assert.strictEqual(result.respuesta.videos[0].stage, 3);
+});
+test('Cooper: cada mutación de recursos rechaza al dueño ajeno', () => {
+  for (const evento of Object.keys(contratoCooper.eventos).filter(x=>x!=='nuevo_canal')) {
+    const out = resolverCooper(solicitudCooper(evento, { id:'v-ana', recursoId:'v-ana', tipo:'video', texto:'Cambio' }, { dueno_email:'otro@example.test' }));
+    assert.strictEqual(out.status, 404, evento);
+  }
+});
+test('Cooper: el administrador puede consultar todo y las filas sin dueño quedan excluidas', () => {
+  const out = resolverCooper(solicitudCooper('estado',{}, { admin:true, dueno_email:'admin@example.test' }), {
+    canales:[canalCooper, {...canalCooper, canal_id:'sin', dueno_email:''}], videos:[videoCooper] });
+  assert.strictEqual(out.respuesta.canales.length,1);
+  assert.strictEqual(out.respuesta.videos.length,1);
+});
+test('Cooper: mapea todas las órdenes al Orquestador sin aceptar identidades de datos', () => {
+  for (const evento of Object.keys(contratoCooper.eventos).filter(x=>!['aprobar_guion','aprobar_final'].includes(x))) {
+    const isVideo = ['corregir','programar','referencias'].includes(evento);
+    const datos = { id:'nuevo-id', recursoId:isVideo?'v-ana':'c-ana', texto: evento==='programar'?new Date(Date.now()+7200000).toISOString():'3 videos por semana',
+      parametros:{ perfil:'ciencia', redes:['youtube'] }, dueno_email:'falso@example.test' };
+    if(evento==='eliminar') Object.assign(datos,{id:'v-ana',tipo:'video'});
+    const out=resolverCooper(solicitudCooper(evento,datos));
+    assert.strictEqual(out.accion,'orden',evento); assert.strictEqual(out.evento.evento,evento);
+    assert.strictEqual(out.evento.dueno_email,'ana@example.test');
+  }
+});
+test('Cooper: las dos aprobaciones usan contexto persistido y exigen etapa y decisión pendientes', () => {
+  for(const etapa of ['guion','final']) {
+    const b=solicitudCooper('aprobar_'+etapa,{id:'v-ana',contexto:{falso:true}});
+    const videos=[{...videoCooper,etapa:'aprobacion_'+etapa}];
+    assert.strictEqual(resolverCooper(b,{videos}).status,409);
+    const aprobaciones=[{aprobacion_id:'ap1',video_id:'v-ana',etapa,estado:'pendiente',pedido:JSON.stringify({contexto:{verificado:true}})}];
+    const out=resolverCooper(b,{videos,aprobaciones});
+    assert.strictEqual(out.evento.evento,'aprobado'); assert.strictEqual(out.evento.etapa,etapa);
+    assert.deepStrictEqual(out.evento.contexto,{verificado:true});
+    assert.strictEqual(resolverCooper(b,{videos:[{...videoCooper,etapa:'produccion'}],aprobaciones}).status,409);
+  }
+});
+test('Cooper: validación de campos, programación y eliminación durante producción', () => {
+  for(const [evento,datos] of [
+    ['ajustar_biblia',{parametros:{campo:'constructor.prototype'}}], ['configurar_redes',{}], ['programar',{texto:'ayer'}], ['metas',{texto:'muchos'}],
+  ]) assert.strictEqual(resolverCooper(solicitudCooper(evento,{id:'x',recursoId:evento==='programar'?'v-ana':'c-ana',texto:'texto',...datos})).status,400);
+  assert.strictEqual(resolverCooper(solicitudCooper('eliminar',{id:'v-ana',tipo:'video'}),{videos:[{...videoCooper,etapa:'produccion'}]}).status,409);
+});
+test('Cooper: consultas textuales excluyen gastos y eliminados', () => {
+  for(const event of ['reporte','pendientes','tendencias']) {
+    const out=resolverCooper(solicitudCooper(event),{videos:[{...videoCooper,eliminado:true}]});
+    assert.ok(!JSON.stringify(out.respuesta).match(/999|presupuesto|costo|Cielo/));
+  }
+});
+test('Cooper: gasto por día, semana y mes con dueño y solo administrador', () => {
+  const code=codeOf(FX,'Agregar gastos');
+  assert.strictEqual(run(code,{nodes:{Autenticar:{admin:false}}})[0].json.status,403);
+  const now=new Date().toISOString();
+  const out=run(code,{nodes:{Autenticar:{admin:true}}, all:{$input:[
+    {dueno_email:'ana@example.test',usd:0.002,createdAt:now,estimado:true},
+    {dueno_email:'ana@example.test',usd:1,createdAt:now}, {dueno_email:'luis@example.test',usd:2,createdAt:now,estimado:false},
+    {dueno_email:'ana@example.test',usd:-7,createdAt:now}, {usd:50,createdAt:now},
+  ]}})[0].json.respuesta;
+  assert.deepStrictEqual(out.gastos,[{dueno_email:'ana@example.test',dia:1.002,semana:1.002,mes:1.002},{dueno_email:'luis@example.test',dia:2,semana:2,mes:2}]);
+  assert.strictEqual(out.estimados,true);
+});
+test('Cooper: HMAC firma exactamente los bytes transmitidos y no incluye costos', () => {
+  const event=run(codeOf(PROGRESO,'Progreso público'),{nodes:{Inicio:{...videoCooper,cooper_evento_id:'evento-1'}}})[0].json;
+  const signed=run(codeOf(PROGRESO,'Firmar progreso'),{nodes:{'Progreso público':event},env:envCooper})[0].json;
+  const digest=cryptoCooper.createHmac('sha256',tokenCooper).update(signed.timestamp+'.'+signed.cuerpo).digest('hex');
+  assert.strictEqual(signed.firma,'sha256='+digest);assert.deepStrictEqual(JSON.parse(signed.cuerpo),event);
+  assert.ok(!signed.cuerpo.includes('999'));
+  const http=PROGRESO.nodes.find(n=>n.name==='Avisar a Cooper');
+  assert.strictEqual(http.parameters.contentType,'raw'); assert.strictEqual(http.parameters.body,'={{ $json.cuerpo }}');
+});
+test('Cooper: atribución de costo consulta el dueño de las tablas y rechaza huérfanos', () => {
+  const args={nodes:{Inicio:{video_id:'v-ana',usd:0.1,concepto:'voz',servicio:'prueba',dueno_email:'falso'},'Video del costo':videoCooper,'Canal del costo':canalCooper}};
+  assert.strictEqual(run(codeOf(COSTO,'Costo atribuido'),args)[0].json.dueno_email,'ana@example.test');
+  assert.throws(()=>run(codeOf(COSTO,'Costo atribuido'),{nodes:{...args.nodes,'Canal del costo':{}}}),/sin dueño/);
+  assert.strictEqual(COSTO.nodes.find(n=>n.name==='Guardar costo atribuido').parameters.operation,'upsert');
+});
+test('Cooper: todas las escrituras de etapa avisan tras persistir y existen las doce etapas', () => {
+  assert.deepStrictEqual(Object.values(contratoCooper.etapas),Array.from({length:12},(_,i)=>i));
+  for(const id of ['FabOrquestador01','FabProduccion001','FabPublicacion01','FabRedes00000001','FabConfirmar0001']) {
+    const flow=wf(id);
+    for(const n of flow.nodes.filter(n=>n.type.endsWith('.dataTable') && ['insert','update'].includes(n.parameters.operation) && n.parameters.dataTableId.value==='VIfMDnjzrrw1p2EA')) {
+      const next=flow.connections[n.name].main[0][0].node;
+      assert.strictEqual(flow.nodes.find(x=>x.name===next).parameters.workflowId.value,'FabCooperProgr01',id+':'+n.name);
+    }
+  }
+});
+test('Cooper: reserva antes de despachar y confirmación antes de aceptar; no guarda tokens en ejecuciones', () => {
+  const edges=n=>FX.connections[n].main.flat().map(x=>x.node);
+  assert.deepStrictEqual(edges('¿Autorizado?'),['¿Consultar recibo?','Responder']);
+  assert.deepStrictEqual(edges('Consultar orden'),['Recibo anterior']);
+  assert.deepStrictEqual(edges('Recibo anterior'),['Canales autorizados','Aceptado','En proceso']);
+  assert.match(codeOf(FX,'Firmar consulta de orden'),/fase:'consultar'/);
+  assert.deepStrictEqual(edges('Reservar orden'),['Estado de reserva']);
+  assert.deepStrictEqual(edges('Entregar al Orquestador'),['Firmar confirmación']);
+  assert.deepStrictEqual(edges('Confirmar orden'),['Aceptado']);
+  assert.strictEqual(FX.settings.saveDataErrorExecution,'none'); assert.strictEqual(FX.settings.saveDataSuccessExecution,'none');
+  for(const id of ['FabCooperAPI0001','FabCooperProgr01','FabCooperCosto01']) {
+    const flow=wf(id), names=new Set(flow.nodes.map(n=>n.name));
+    for(const [name, outputs] of Object.entries(flow.connections)) {
+      assert.ok(names.has(name)); for(const edge of outputs.main.flat()) assert.ok(names.has(edge.node),edge.node);
+    }
+  }
+});
+test('Cooper: atribuye trabajos desde tablas y rechaza huérfanos sin confiar en el pedido', () => {
+  const fila = { job_id:'j', video_id:'v', canal_id:'c', dueno_email:'falso@example.test' };
+  const ejecutar = (video, canal, datos=fila) => run(codeOf(CL,'Atribuir trabajo'), { nodes: {
+    'Preparar trabajo':{fila:datos}, 'Video del trabajo':video, 'Canal del trabajo':canal }, env:envCooper })[0].json;
+  assert.strictEqual(ejecutar({dueno_email:'ana@example.test',canal_id:'c'}, {dueno_email:'ana@example.test'}).dueno_email,'ana@example.test');
+  assert.throws(() => ejecutar({}, {dueno_email:'ana@example.test'}), /sin dueño/);
+  assert.throws(() => ejecutar({dueno_email:'ana@example.test',canal_id:'c'}, {dueno_email:'otra@example.test'}), /sin dueño/);
+  assert.strictEqual(ejecutar({}, {}, {job_id:'investigacion',video_id:'',canal_id:''}).dueno_email,envCooper.COOPER_ADMIN_EMAIL);
+});
+test('Cooper: todos los nodos Code compilan y todo el grafo apunta a nodos existentes', () => {
+  for (const filename of fs.readdirSync(dir).filter(x=>x.endsWith('.json'))) {
+    const flow = JSON.parse(fs.readFileSync(path.join(dir,filename),'utf8'));
+    const names = new Set(flow.nodes.map(n=>n.name));
+    assert.strictEqual(names.size,flow.nodes.length,filename);
+    for (const node of flow.nodes) if(node.parameters.jsCode) assert.doesNotThrow(()=>new Function(node.parameters.jsCode),filename+':'+node.name);
+    for(const [source,kinds] of Object.entries(flow.connections)) {
+      assert.ok(names.has(source),filename+':'+source);
+      for(const edges of Object.values(kinds)) for(const edge of edges.flat()) assert.ok(names.has(edge.node),filename+':'+edge.node);
+    }
+  }
+});
+test('Cooper: cada clip se cobra con su duración y cada gasto conserva el ID emisor', () => {
+  const p = wf('FabProduccion001');
+  const out = run(codeOf(p,'Cooper · costo Animar (Gemini Omni)'), { nodes: { Inicio:{video_id:'v-ana'}, 'Leer ajustes':aj },
+    all: { $input:[{},{}], 'Un ítem por plano':[{plano:{duracion_clip_s:4}},{plano:{duracion_clip_s:9}}] } });
+  assert.strictEqual(out[0].json.usd,4*aj.costoClipSegUsd);assert.strictEqual(out[1].json.usd,9*aj.costoClipSegUsd);
+  const stamp=codeOf(ORQ,'Cooper · identificar Guardar costo (crítico)');
+  const once=run(stamp,{json:{usd:0.02}})[0].json;
+  assert.strictEqual(run(stamp,{json:once})[0].json.paso_id,once.paso_id);
+});
+
+test('Integración: la fábrica sigue rechazando los recursos de demostración', () => {
+  for (const proveedor of ['simulada']) {
+    const out = resolverCooper(solicitudCooper('nuevo_video', {
+      id: 'video-presentador', recursoId: 'c-ana', texto: 'Ensayo',
+      presentacion: { version: 1, presencia: 'completo', avatar: { proveedor, id: 'ficticio', recurso_id: 'local', tipo: 'propio' }, voz: null },
+    }));
+    assert.strictEqual(out.status, 422);
+    assert.strictEqual(out.accion, 'responder');
+  }
+});
+
+const presentacionReal = (presencia = 'partes', proveedor = 'gemini') => ({version:1,presencia,
+  avatar:{recurso_id:'avatar-local',proveedor:'heygen',id:'look-elegido',tipo:'propio'},
+  voz:{recurso_id:'voz-local',proveedor,id:proveedor === 'gemini' ? 'Charon' : 'voz-clonada',tipo:proveedor === 'gemini' ? 'catalogo' : 'propio'}});
+const encendido = {...aj,allowAvatar:true,allowVoz:true,allowMontaje:true,allowDrive:true,allowImagenes:true};
+const planPresentacion = (p, cambios = {}, ajustes = encendido) => run(codeOf(PROD,'Plan de producción'),{nodes:{Inicio:{video_id:'v-ana',formato:'largo',presupuesto_usd:20,
+  presentacion:p,storyboard:{planos:storyboard.planos.map((p,i)=>({...p,tipo:'imagen',usa_avatar:i===0}))},...cambios},'Leer ajustes':ajustes}})[0].json;
+const expNodo = (flow,name,key,ctx) => {
+  const expr=flow.nodes.find(n=>n.name===name).parameters[key];
+  return run('return {json:('+expr.slice(3,-2)+')};',ctx)[0].json;
+};
+
+test('presentación: FX valida referencias, conserva la orden y no acepta simulados ni contratos incompletos', () => {
+  const p=presentacionReal();
+  const request=solicitudCooper('nuevo_video',{id:'v-presentacion',recursoId:'c-ana',texto:'Ensayo',presentacion:p});
+  const out=resolverCooper(request);
+  assert.strictEqual(out.status,200); assert.deepStrictEqual(out.evento.presentacion,p);
+  assert.strictEqual(out.evento.cooper_orden_id,request.id_evento);
+  for (const bad of [{...p,version:2},{...p,avatar:{...p.avatar,proveedor:'gemini'}},{...p,voz:{...p.voz,tipo:'propio'}},{...p,evidencia:'privada'}])
+    assert.strictEqual(resolverCooper({...request,datos:{...request.datos,presentacion:bad}}).status,400);
+  assert.strictEqual(resolverCooper({...request,datos:{...request.datos,presentacion:undefined,avatarId:'sin-resolver'}}).status,422);
+});
+
+test('presentación: nuevo video persiste el contrato y se recupera para storyboard, corrección y producción', () => {
+  const p=presentacionReal(),e={video_id:'v-ana',canal_id:'c-ana',tema:'Ensayo',presentacion:p,cooper_orden_id:'orden'};
+  const nuevo=run(codeOf(ORQ,'Nuevo video'),{nodes:{Inicio:e,'Buscar canal':{canal_id:'c-ana',dueno_email:'ana@example.test'},'Buscar biblia':{resultado:'{}'}}})[0].json;
+  assert.deepStrictEqual(JSON.parse(nuevo.fila.presentacion),p);assert.strictEqual(nuevo.fila.cooper_orden_id,'orden');
+  assert.deepStrictEqual(nuevo.pedido.datos.presentacion,p);
+  for (const [name,v,b,c] of [['Pedir storyboard','Video','Biblia del video','Canal del video'],['Pedir storyboard corregido','Video (rehacer)','Biblia (rehacer)','Canal (rehacer)']]) {
+    const out=run(codeOf(ORQ,name),{nodes:{Inicio:e,[v]:{presentacion:JSON.stringify(p),presupuesto_usd:5},[b]:{resultado:'{}'},[c]:{},'Leer ajustes':aj}})[0].json;
+    assert.deepStrictEqual(out.datos.presentacion,p);assert.match(out.datos.presentacion_instrucciones,/usa_avatar/);
+  }
+  const out=run(codeOf(ORQ,'Encargo de producción'),{nodes:{Inicio:e,'Video (producción)':{presentacion:JSON.stringify(p)},'Biblia (producción)':{resultado:'{}'}},all:{'Trabajos (producción)':[]}})[0].json;
+  assert.deepStrictEqual(out.presentacion,p);
+});
+
+test('presentación: completo cubre todas las narraciones; partes respeta el subconjunto del storyboard', () => {
+  const full=planPresentacion(presentacionReal('completo'));
+  assert.deepStrictEqual(full.planos.map(p=>p.tipo),['avatar','avatar']);
+  const part=planPresentacion(presentacionReal());
+  assert.deepStrictEqual(part.planos.map(p=>p.tipo),['avatar','imagen']);
+  assert.deepStrictEqual(part.planos[0].presentacion,part.presentacion);
+  assert.throws(()=>planPresentacion(presentacionReal(),{storyboard:{planos:storyboard.planos}}),/solo algunas/);
+  assert.throws(()=>planPresentacion({...presentacionReal(),avatar:null},{storyboard:{planos:[{id:'p',tipo:'avatar',texto_narrado:'Hola'}]}}),/sin presentación/);
+});
+
+test('presentación: interruptores y presupuesto cero paran sin perder la elección', () => {
+  const p=presentacionReal();
+  for (const [settings,bloqueo] of [[{allowAvatar:false},'avatar_apagado'],[{allowVoz:false},'voz_apagada'],[{allowMontaje:false},'produccion_pausada']]) {
+    const out=planPresentacion(p,{}, {...encendido,...settings});assert.strictEqual(out.bloqueo,bloqueo);assert.deepStrictEqual(out.presentacion,p);
+  }
+  const out=planPresentacion(p,{presupuesto_usd:0});assert.strictEqual(out.bloqueo,'presupuesto');assert.strictEqual(out.dentro,false);
+  assert.deepStrictEqual(out.presentacion,p);
+});
+
+test('presentación: cada voz usa su transporte y el catálogo usa Ajustes.modeloVoz', async () => {
+  const calls=[];
+  const fake=async (url,body) => {calls.push({url,body});return {data:{audio_url:'https://media.example.test/voz.wav',duration:2}};};
+  for (const proveedor of ['gemini','heygen','elevenlabs']) {
+    const p=presentacionReal('completo',proveedor),plan=planPresentacion(p);
+    const textos=run(codeOf(SON,'Textos de voz'),{nodes:{Inicio:{video_id:'v-ana',presentacion:p,planos:plan.planos.map(plano=>({plano,plano_id:plano.id}))},'Leer ajustes':encendido}});
+    assert.strictEqual(textos.length,2);
+    for (const {json:t} of textos) {assert.strictEqual(t.voz,p.voz.id);assert.strictEqual(t.proveedor,proveedor);}
+    const name={gemini:'Voz (Gemini TTS)',heygen:'Voz (HeyGen)',elevenlabs:'Voz (ElevenLabs)'}[proveedor];
+    const node=SON.nodes.find(n=>n.name===name),ctx={json:textos[0].json,nodes:{'Leer ajustes':{...encendido,modeloVoz:'modelo-configurado'}}};
+    const body=expNodo(SON,name,'jsonBody',ctx);
+    const url=node.parameters.url.startsWith('=') ? expNodo(SON,name,'url',ctx) : node.parameters.url;
+    await fake(url,body);
+    assert.ok(!node.retryOnFail,'No repetir síntesis incierta');
+    if(proveedor==='gemini'){assert.strictEqual(body.model,'modelo-configurado');assert.strictEqual(body.generation_config.speech_config[0].voice,'Charon');}
+    if(proveedor==='heygen'){assert.strictEqual(body.voice_id,'voz-clonada');assert.ok(!body.text.includes('<short pause>'));}
+    if(proveedor==='elevenlabs'){assert.match(url,/voz-clonada\/with-timestamps\?output_format=pcm_24000$/);assert.strictEqual(body.model_id,'eleven_multilingual_v2');}
+  }
+  assert.strictEqual(calls.length,3);
+});
+
+test('presentación: PCM ElevenLabs se mide como WAV y HeyGen exige duración acreditada', () => {
+  const pcm=Buffer.alloc(48000);for(let i=0;i<24000;i++)pcm.writeInt16LE(2000,i*2);
+  const normal=run(codeOf(SON,'PCM ElevenLabs'),{json:{audio_base64:pcm.toString('base64')}})[0].json;
+  const w=run(codeOf(SON,'WAV'),{json:normal,nodes:{'Textos de voz':{plano_id:'p1',texto:'Hola',proveedor:'elevenlabs'}}})[0];
+  assert.ok(Math.abs(w.json.duracion_s-1)<0.01);assert.strictEqual(w.binary.archivo.mimeType,'audio/wav');
+  assert.throws(()=>run(codeOf(SON,'Voz HeyGen lista'),{json:{data:{audio_url:'https://a'}},nodes:{'Textos de voz':{}}}),/audio válido/);
+});
+
+test('presentación: HeyGen recibe look y la voz elegida, sondeo acotado y errores sin montaje', () => {
+  const av=wf('FabAvatar0000001'),p=presentacionReal(),e={video_id:'v-ana',plano:{id:'p1',tipo:'avatar'},presentacion:p,formato:'short',voz:{url:'https://audio.example.test/elegida.wav',duracion_s:4}};
+  const request=run(codeOf(av,'Pedido de avatar'),{nodes:{Inicio:e,'Leer ajustes':encendido}})[0].json;
+  assert.deepStrictEqual(request,{type:'avatar',avatar_id:'look-elegido',audio_url:e.voz.url,resolution:'1080p',aspect_ratio:'9:16'});
+  assert.ok(!request.voice_id);assert.ok(!request.script);
+  assert.throws(()=>run(codeOf(av,'Trabajo avatar'),{json:{data:{id:'no-video-id'}}}),/trabajo/);
+  assert.strictEqual(run(codeOf(av,'Estado avatar'),{json:{data:{status:'processing'}}})[0].json.status,'processing');
+  assert.throws(()=>run(codeOf(av,'Estado avatar'),{json:{data:{status:'failed'}}}),/falló/);
+  assert.throws(()=>run(codeOf(av,'Estado avatar'),{json:{data:{status:'processing'}},runIndex:80}),/conciliar/);
+  assert.throws(()=>run(codeOf(av,'Estado avatar'),{json:{data:{status:'completed'}}}),/sin video/);
+  const result=run(codeOf(av,'Avatar listo'),{nodes:{Inicio:e,'Estado avatar':{id:'remote',video_url:'https://video.example.test/a.mp4',duration:4},'Leer ajustes':encendido}})[0].json;
+  assert.strictEqual(result.costo_avatar_usd,4*aj.costoAvatarSegUsd);assert.strictEqual(result.plano_id,'p1');
+});
+
+test('presentación: montaje usa videos solo en planos avatar y una sola voz por escena', () => {
+  for(const presencia of ['completo','partes']) {
+    const plan=planPresentacion(presentacionReal(presencia));
+    const planos=plan.planos.map(p=>({plano_id:p.id,plano:p,url:`https://media.example.test/${p.id}.${p.tipo==='avatar'?'mp4':'png'}`}));
+    const voces=plan.planos.map(p=>({plano_id:p.id,url:`https://media.example.test/${p.id}.wav`,duracion_s:3}));
+    const out=run(codeOf(PROD,'Composición Creatomate'),{json:{voces,planos},nodes:{'Plan de producción':plan}})[0].json;
+    const scenes=out.source.elements.filter(e=>e.type==='composition');assert.strictEqual(scenes.length,2);
+    assert.deepStrictEqual(scenes.map(e=>e.elements[0].type),presencia==='completo'?['video','video']:['video','image']);
+    for(const e of scenes){assert.strictEqual(e.elements.filter(x=>x.type==='audio').length,1);if(e.elements[0].type==='video'){assert.strictEqual(e.elements[0].volume,'0%');assert.strictEqual(e.elements[0].loop,false);}}
+    assert.throws(()=>run(codeOf(PROD,'Composición Creatomate'),{json:{voces,planos:planos.slice(1)},nodes:{'Plan de producción':plan}}),/Faltan/);
+  }
+});
+
+test('presentación: el costo real de la duración de voz se comprueba antes de pedir avatares', () => {
+  const plan=planPresentacion(presentacionReal('completo'),{presupuesto_usd:1});
+  const out=run(codeOf(PROD,'Preparar avatares'),{nodes:{'Plan de producción':plan,'Leer ajustes':encendido,'Gasto de planos':{usd:0},'Sonido y emoción':{voces:plan.planos.map(p=>({plano_id:p.id,url:'https://audio.example.test/a',duracion_s:20,costo_voz_usd:0.01}))}}})[0].json;
+  assert.strictEqual(out.bloqueo,'presupuesto');assert.strictEqual(out.pedidos.length,2);
+});
+
+test('presentación: consulta firmada usa la selección persistida y parada corta el grafo', () => {
+  const v=wf('FabPresentacion1'),p=presentacionReal();
+  const context={nodes:{Inicio:{video_id:'v-ana'},'Video de presentación':{video_id:'v-ana',cooper_orden_id:'orden',dueno_email:'ana@example.test',presentacion:JSON.stringify(p)},'Leer ajustes':encendido}};
+  const out=run(codeOf(v,'Consulta de presentación'),context)[0].json;
+  assert.deepStrictEqual(out.consulta.presentacion,p);assert.strictEqual(out.consulta.orden_id,'orden');
+  context.nodes['Leer ajustes']={...encendido,allowAvatar:false};
+  assert.strictEqual(run(codeOf(v,'Consulta de presentación'),context)[0].json.consulta.bloqueo,'avatar_apagado');
+  const stop=run(codeOf(v,'Estado detenido'),{nodes:{'Consultar Cooper':{estado:'cancelada',aviso:'Consentimiento revocado'}}})[0].json;
+  assert.strictEqual(stop.estado,'cancelado');
+  assert.throws(()=>run(codeOf(v,'Detener presentación'),{nodes:{'Consultar Cooper':{aviso:'Consentimiento revocado'}}}),/revocado/);
+  for (const [flow,destinos] of [[PROD,['Renderizar','¿Todo encendido?','¿Hay avatares?']],[SON,['Textos de voz','Voz (Gemini TTS)','Voz (HeyGen)','Voz (ElevenLabs)']],[wf('FabAvatar0000001'),['Pedido de avatar','Crear avatar','Consultar avatar','Avatar listo']]]) {
+    for(const destino of destinos){const p='Presentación · '+destino;assert.ok(flow.nodes.some(n=>n.name===p+' validar'));
+      const parents=Object.entries(flow.connections).filter(([,k])=>k.main?.flat().some(e=>e.node===destino)).map(([name])=>name);
+      assert.deepStrictEqual(parents,[p+' seguir']);}
+  }
+});
+
+test('presentación: gastos de avatar y cada voz se atribuyen al dueño y son idempotentes por paso', () => {
+  const av=wf('FabAvatar0000001'),cost=wf('FabCooperCosto01');
+  for(const [flow,name,extra,all] of [[av,'Crear avatar',{voz:{duracion_s:5}},{}],[SON,'Voz (HeyGen)',{}, {'Textos de voz':[{costo_voz_usd:0.2}]}],[SON,'Voz (ElevenLabs)',{}, {'Textos de voz':[{costo_voz_usd:0.3}]}]]) {
+    const ctx={nodes:{Inicio:{video_id:'v-ana',...extra},'Leer ajustes':encendido},all};
+    const c=run(codeOf(flow,'Cooper · costo '+name),ctx)[0].json;
+    assert.ok(c.usd>0);assert.strictEqual(c.paso_id,run(codeOf(flow,'Cooper · costo '+name),ctx)[0].json.paso_id);
+    const row=run(codeOf(cost,'Costo atribuido'),{nodes:{Inicio:c,'Video del costo':{dueno_email:'ana@example.test'},'Canal del costo':{dueno_email:'ana@example.test'}}})[0].json;
+    assert.strictEqual(row.dueno_email,'ana@example.test');assert.strictEqual(row.estimado,true);
+  }
+});
+
+test('presentación: contrato completo con transportes ficticios de voz, avatar y montaje', async () => {
+  const av=wf('FabAvatar0000001');
+  const pcm=Buffer.alloc(48000);for(let i=0;i<24000;i++)pcm.writeInt16LE(2000,i*2);
+  for(const presencia of ['completo','partes']) for(const proveedor of ['gemini','heygen','elevenlabs']) {
+    const plan=planPresentacion(presentacionReal(presencia,proveedor)),calls=[];
+    const transport=async (url,body) => {
+      calls.push({url,body});
+      if(url.includes('/interactions')) {assert.strictEqual(body.generation_config.speech_config[0].voice,'Charon');return {steps:[{type:'model_output',content:[{type:'audio',mime_type:'audio/l16;rate=24000',data:pcm.toString('base64')}]}]};}
+      if(url.includes('/models/audio/tts')) {assert.strictEqual(body.voice_id,'voz-clonada');return {data:{audio_url:'https://media.example.test/heygen.wav',duration:1}};}
+      if(url.includes('/with-timestamps')) {assert.match(url,/voz-clonada/);return {audio_base64:pcm.toString('base64')};}
+      if(url==='https://api.heygen.com/v3/videos') {assert.strictEqual(body.avatar_id,'look-elegido');assert.match(body.audio_url,/\.wav$/);return {data:{video_id:'render-avatar',status:'waiting'}};}
+      if(url==='https://api.heygen.com/v3/videos/render-avatar') return {data:{id:'render-avatar',status:'completed',video_url:'https://media.example.test/avatar.mp4',duration:1}};
+      if(url==='https://api.creatomate.com/v2/renders') {assert.strictEqual(body.source.elements.filter(e=>e.type==='composition').length,2);return {id:'montaje',status:'planned'};}
+      throw new Error('Transporte no autorizado en prueba: '+url);
+    };
+    const send=async(flow,name,ctx) => {
+      const n=flow.nodes.find(n=>n.name===name),p=n.parameters;
+      const url=p.url.startsWith('=') ? expNodo(flow,name,'url',ctx) : p.url;
+      return transport(url,p.jsonBody ? expNodo(flow,name,'jsonBody',ctx) : undefined);
+    };
+    const textos=run(codeOf(SON,'Textos de voz'),{nodes:{Inicio:{...plan,planos:plan.planos.map(plano=>({plano,plano_id:plano.id}))},'Leer ajustes':encendido}});
+    const voces=[];
+    for(const {json:texto} of textos) {
+      const nodes={'Textos de voz':texto,'Leer ajustes':encendido},ctx={nodes,json:texto};
+      const name={gemini:'Voz (Gemini TTS)',heygen:'Voz (HeyGen)',elevenlabs:'Voz (ElevenLabs)'}[proveedor];
+      let response=await send(SON,name,ctx),voice;
+      if(proveedor==='heygen') voice=run(codeOf(SON,'Voz HeyGen lista'),{nodes,json:response})[0].json;
+      else {
+        if(proveedor==='elevenlabs')response=run(codeOf(SON,'PCM ElevenLabs'),{json:response})[0].json;
+        const wav=run(codeOf(SON,'WAV'),{nodes,json:response})[0];
+        assert.strictEqual(wav.binary.archivo.mimeType,'audio/wav');
+        voice={...wav.json,url:'https://media.example.test/'+texto.plano_id+'.wav'};
+      }
+      voces.push(voice);
+    }
+    const planos=[];
+    for(const plano of plan.planos) {
+      if(plano.tipo!=='avatar'){planos.push({plano_id:plano.id,plano,url:'https://media.example.test/imagen.png'});continue;}
+      const entrada={...plan,plano,voz:voces.find(v=>v.plano_id===plano.id)};
+      const nodes={Inicio:entrada,'Leer ajustes':encendido};
+      const pedido=run(codeOf(av,'Pedido de avatar'),{nodes})[0].json;
+      const creado=await send(av,'Crear avatar',{nodes,json:pedido});
+      nodes['Trabajo avatar']=run(codeOf(av,'Trabajo avatar'),{json:creado})[0].json;
+      const respuesta=await send(av,'Consultar avatar',{nodes});
+      nodes['Estado avatar']=run(codeOf(av,'Estado avatar'),{json:respuesta})[0].json;
+      planos.push(run(codeOf(av,'Avatar listo'),{nodes})[0].json);
+    }
+    const composed=run(codeOf(PROD,'Composición Creatomate'),{nodes:{'Plan de producción':plan},json:{planos,voces}})[0].json;
+    const rendered=await send(PROD,'Renderizar',{json:composed});assert.strictEqual(rendered.status,'planned');
+    assert.strictEqual(calls.filter(c=>c.url==='https://api.heygen.com/v3/videos').length,presencia==='completo'?2:1);
+    assert.strictEqual(composed.planos,composed.esperados);
+  }
+});
+
+// Fase 6: se ejecuta el código generado que consumirá n8n, con transportes ficticios.
+const TXT = wf('FabTextoGPT0001'), NOT = wf('FabNoticia000001');
+const respuestaTexto = value => ({ status:'completed', output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(value)}]}] });
+const fuenteNoticia = () => ({ url:'https://observatorio.example.test/boletin', titulo:'Boletín primario', fecha:new Date().toISOString() });
+const noticiaFixture = () => ({ titulo:'Nueva medición del observatorio', fecha:new Date().toISOString(), hechos:[{id:'h1',dato:'La medición es de 12 unidades.',estado:'ok',fuentes:[fuenteNoticia()]}], fuentes_consultadas:[fuenteNoticia().url],verificado:true,verificado_en:new Date().toISOString() });
+const noticiasJS = fs.readFileSync(path.join(__dirname,'../tools/cooper/noticia.js'),'utf8');
+const evaluarNoticia = (js,json) => run(noticiasJS + '\n' + js,{json})[0]?.json;
+
+test('texto: todos los roles usan Codex primero y un único respaldo Responses con plazo', () => {
+  for (const [flow,name] of [[ORQ,'Crítico de nichos'],[ORQ,'Crítico del guion'],[ORQ,'Verificar cifras'],[wf('FabRadar00000001'),'Analista de tendencias']]) {
+    const n=flow.nodes.find(n=>n.name===name);
+    assert.equal(n.parameters.workflowId.value,TXT.id);
+    assert.equal(n.parameters.mode,'each');
+  }
+  const edges=name=>TXT.connections[name].main.map(a=>a.map(x=>x.node));
+  assert.deepEqual(edges('Pedido de texto'),[['Intentar Codex']]);
+  assert.deepEqual(edges('¿Codex respondió?'),[['Resultado de texto'],['Permitir respaldo']]);
+  assert.deepEqual(edges('Permitir respaldo'),[['Respaldo OpenAI']]);
+  const http=TXT.nodes.find(n=>n.name==='Respaldo OpenAI');
+  assert.equal(http.parameters.url,'https://api.openai.com/v1/responses');
+  assert.match(http.parameters.jsonBody,/web_search_call.action.sources/);
+  assert.equal(TXT.nodes.find(n=>n.name==='Intentar Codex').parameters.options.timeout,45000);
+  assert.equal(TXT.settings.saveDataErrorExecution,'none');
+  assert.equal(TXT.settings.saveDataSuccessExecution,'none');
+});
+test('texto: éxito local evita API; fallo, 429, timeout o JSON inválido seleccionan respaldo', () => {
+  const pedido={tarea:'radar',local:{buscar_web:false},costo_estimado_usd:0.25};
+  const bueno={...respuestaTexto({ideas:[],resumen:'ensayo'}),ruta:'codex'};
+  const evalua=json=>run(codeOf(TXT,'Evaluar Codex'),{json,nodes:{'Pedido de texto':pedido}})[0].json.ok;
+  assert.equal(evalua(bueno),true);
+  for(const bad of [{error:'timeout'},{error:'ocupado'},{ruta:'codex',output:[]},respuestaTexto({sin:'contrato'})]) assert.equal(evalua(bad),false);
+  const local=run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':pedido,'Evaluar Codex':{ok:true},'Intentar Codex':bueno}})[0].json;
+  assert.deepEqual(local.texto_uso,{ruta:'codex',motivo_respaldo:'',usd:0,ahorro_estimado_usd:0.25,estimado:true});
+  const api=run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':pedido,'Evaluar Codex':{ok:false},'Respaldo OpenAI':respuestaTexto({ideas:[],resumen:'ensayo'})}})[0].json;
+  assert.equal(api.texto_uso.usd,0.25); assert.equal(api.texto_uso.ahorro_estimado_usd,0); assert.equal(api.ruta,'openai_api');
+  assert.throws(()=>run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':pedido,'Evaluar Codex':{ok:false},'Respaldo OpenAI':{error:'sin servicio'}}}),/ambas rutas/);
+  assert.throws(()=>run(codeOf(TXT,'Permitir respaldo'),{nodes:{'Pedido de texto':{api_permitida:false}}}),/apagado/);
+});
+test('texto: una noticia sin evidencia de búsqueda del proveedor vuelve al respaldo', () => {
+  const n=noticiaFixture(), pedido={tarea:'radar_noticia',local:{buscar_web:true}};
+  const r={...respuestaTexto({noticia:n}),ruta:'codex',busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas};
+  const evalua=json=>run(codeOf(TXT,'Evaluar Codex'),{json,nodes:{'Pedido de texto':pedido}})[0].json.ok;
+  assert.equal(evalua(r),true);
+  assert.equal(evalua({...r,busqueda_real:false}),false);
+  assert.equal(evalua({...r,fuentes_consultadas:[]}),false);
+  const p={...pedido,costo_estimado_usd:0.25};
+  assert.throws(()=>run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':p,'Evaluar Codex':{ok:false},'Respaldo OpenAI':respuestaTexto({noticia:n})}}),/búsqueda web/);
+});
+test('noticia: radar acepta solo hechos del día con URLs realmente consultadas', () => {
+  const acepta=n=>run(codeOf(NOT,'Noticia candidata'),{nodes:{'Radar de noticia':{...respuestaTexto({noticia:n}),fuentes_consultadas:[fuenteNoticia().url]}}})[0].json.noticia;
+  assert.equal(acepta(noticiaFixture()).hechos.length,1);
+  for(const n of [null,{...noticiaFixture(),hechos:[]},{...noticiaFixture(),fecha:new Date(Date.now()-48*3600000).toISOString()},{...noticiaFixture(),fecha:new Date(Date.now()+3600000).toISOString()}, {...noticiaFixture(),hechos:[{id:'h1',dato:'rumor',fuentes:[{...fuenteNoticia(),url:'https://inventada.test/x'}]}]}]) assert.throws(()=>acepta(n),/Noticia detenida/);
+});
+test('noticia: verificador bloquea contradicciones, omisiones, fuentes inventadas y salida vacía', () => {
+  const n=noticiaFixture();
+  const valida=(value,r={})=>run(codeOf(NOT,'Noticia verificada'),{nodes:{Inicio:{canal_id:'c'},'Noticia candidata':{noticia:n},'Verificador de noticia':{...respuestaTexto(value),busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas,...r}}})[0].json.noticia;
+  assert.equal(valida({verificado:true,hechos:n.hechos}).verificado,true);
+  for (const value of [{},{verificado:false,hechos:n.hechos},{verificado:true,hechos:[]},{verificado:true,hechos:[{...n.hechos[0],estado:'contradictorio'}]},{verificado:true,hechos:[{...n.hechos[0],dato:'13 unidades'}]}]) assert.throws(()=>valida(value),/Noticia detenida/);
+  assert.throws(()=>valida({verificado:true,hechos:n.hechos},{fuentes_consultadas:[]}),/Noticia detenida/);
+});
+test('noticia: certificación cubre todo el guion y su huella rechaza cambios posteriores', () => {
+  const n=noticiaFixture(), guion={titulo:n.titulo,guion:'La medición es de 12 unidades.'};
+  const cert=covered=>run(codeOf(ORQ,'Certificar guion noticia'),{nodes:{Inicio:{resultado:guion},'Video (crítico)':{noticia:JSON.stringify(n)},'Verificar guion noticia':{...respuestaTexto({verificado:true,guion_cubierto:covered,hechos:n.hechos}),busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas}}})[0].json;
+  assert.throws(()=>cert(false),/afirmaciones sin verificar/);
+  const v={...cert(true),modo_noticia:true};
+  assert.doesNotThrow(()=>evaluarNoticia('exigirGuion($json.v,$json.g); return [{json:{ok:true}}];',{v,g:guion}));
+  assert.throws(()=>evaluarNoticia('exigirGuion($json.v,$json.g);',{v,g:{...guion,guion:'Son 13 unidades.'}}),/versión verificada/);
+  assert.throws(()=>evaluarNoticia('exigirGuion($json.v,null);',{v:{...v,noticia_guion_hash:''}}),/versión verificada/);
+});
+test('noticia: solo recursos didácticos propios; bloquea archivo, avatar y URLs de medios', () => {
+  const plano={id:'p1',tipo:'imagen',origen_visual:'generado',recurso_didactico:'cifra',prompt_imagen:'Diagrama de 12 unidades'};
+  assert.doesNotThrow(()=>evaluarNoticia('exigirVisuales($json);',{planos:[plano]}));
+  for(const bad of [{...plano,tipo:'archivo'},{...plano,tipo:'avatar'},{...plano,origen_visual:'medio'}, {...plano,referencia:'https://medio.test/foto.jpg'}, {...plano,recurso_didactico:'fotografia'}]) assert.throws(()=>evaluarNoticia('exigirVisuales($json);',{planos:[bad]}),/nunca imágenes de medios/);
+});
+test('noticia: las puertas no dependen del crítico y publicación consulta la fila persistida', () => {
+  const edges=(w,n)=>w.connections[n].main.flat().map(x=>x.node);
+  assert(edges(ORQ,'Video (crítico)').includes('¿Verificar guion noticia?'));
+  assert.deepEqual(ORQ.connections['¿Verificar guion noticia?'].main[0].map(x=>x.node),['Invalidar · Encargo de guion noticia entrada']);
+  assert.match(codeOf(ORQ,'Noticia · Canal (publicar) validar'),/exigirGuion\(v,null\)/);
+  assert.match(codeOf(PROD,'Noticia · Plan de producción validar'),/exigirGuion/);
+  assert.match(codeOf(wf('FabRedes00000001'),'Noticia · Subir a redes validar'),/exigirGuion/);
+  assert.match(codeOf(ORQ,'Nuevo video'),/typeof e.modo_noticia === 'boolean'/);
+});
+test('Cooper: modo noticia exige booleano y recurso autorizado', () => {
+  // Reutiliza el mismo contrato/fixture de autorización que el resto del puente.
+  const args={nodes:{Autenticar:{solicitud:{evento:'ajustar_biblia',datos:{id:'orden',recursoId:'c-ana',texto:'Activar',parametros:{campo:'modo_noticia',valor:true}}},dueno_email:'ana@example.test',admin:false},'Canales autorizados':{canal_id:'c-ana',dueno_email:'ana@example.test'},'Videos autorizados':{}}};
+  const result=run(codeOf(FX,'Resolver'),args)[0].json;
+  assert.equal(result.evento.campo,'modo_noticia'); assert.equal(result.evento.valor,'true');
+  args.nodes.Autenticar.solicitud.datos.parametros.valor='false';
+  assert.equal(run(codeOf(FX,'Resolver'),args)[0].json.status,400);
+  args.nodes.Autenticar.solicitud.datos.recursoId='ajeno';
+  assert.equal(run(codeOf(FX,'Resolver'),args)[0].json.status,404);
+});
+test('noticia: verifica storyboard completo e invalida certificados antes de corregir', () => {
+  const n=noticiaFixture(), storyboard={planos:[{id:'p1',tipo:'imagen',origen_visual:'generado',recurso_didactico:'cifra',prompt_imagen:'12 unidades'}]};
+  const cert=covered=>run(codeOf(ORQ,'Certificar storyboard noticia'),{nodes:{Inicio:{resultado:storyboard},'Video de storyboard noticia':{noticia:JSON.stringify(n)},'Verificar storyboard noticia':{...respuestaTexto({verificado:true,guion_cubierto:covered,hechos:n.hechos}),busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas}}})[0].json;
+  assert.throws(()=>cert(false),/storyboard sin respaldo/);
+  const v={...cert(true),modo_noticia:true,noticia_guion_hash:'huella'};
+  assert.doesNotThrow(()=>evaluarNoticia('exigirStoryboard($json.v,$json.s);',{v,s:storyboard}));
+  assert.throws(()=>evaluarNoticia('exigirStoryboard($json.v,$json.s);',{v,s:{planos:[{...storyboard.planos[0],texto_pantalla:'13'}]}}),/storyboard distinto/);
+  for (const step of ['Claude: corregir','Claude: corregir (crítico)','Claude: storyboard corregido']) {
+    const flow=codeOf(ORQ,'Invalidar · '+step+' campos');
+    assert.match(flow,/noticia_storyboard_hash:''/);
+  }
 });

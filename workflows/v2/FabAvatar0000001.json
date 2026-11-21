@@ -1,0 +1,996 @@
+{
+  "id": "FabAvatar0000001",
+  "name": "FX · Renderizar avatar",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "955fae62-4705-5ecf-89ec-b15dd7dc8e57",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "a8f4333a-8395-5020-83b2-6e9f7534227f",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n\nconst e=$('Inicio').first().json, aj=$('Leer ajustes').first().json, p=validarPresentacion(e.presentacion);\nif (!aj.allowAvatar || !p?.avatar || e.plano?.tipo !== 'avatar' || !/^https:\\/\\//.test(e.voz?.url) || !(e.voz.duracion_s>0)) throw new Error('Avatar sin autorización o audio');\nreturn [{json:{type:'avatar',avatar_id:p.avatar.id,audio_url:e.voz.url,resolution:'1080p',aspect_ratio:e.formato === 'short' ? '9:16' : '16:9'}}];\n"
+      },
+      "id": "ef7fcabd-91b2-5375-aad1-cb05c06ae882",
+      "name": "Pedido de avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heygen.com/v3/videos",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ 'cooper-avatar-' + $execution.id }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}"
+      },
+      "id": "678449d5-c67a-55d9-8583-7e78bbdf9f88",
+      "name": "Crear avatar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredHeyGen001",
+          "name": "HeyGen (x-api-key)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst id=$json.data?.video_id;\nif (typeof id !== 'string' || !/^[\\w-]{1,160}$/.test(id)) throw new Error('HeyGen no devolvió el trabajo');\nreturn [{json:{id}}];\n"
+      },
+      "id": "46db92c6-68c2-5083-99df-d1a9f6a4870c",
+      "name": "Trabajo avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 15,
+        "unit": "seconds"
+      },
+      "id": "ef0d1cff-9165-5d80-ac03-db685bafcc20",
+      "name": "Esperar avatar",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        0
+      ],
+      "webhookId": "cc076c29-a271-5faa-a583-13c6eea50ee3"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.heygen.com/v3/videos/' + encodeURIComponent($('Trabajo avatar').first().json.id) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "4d50b089-5b40-5b10-90f5-fe282d5bf0e2",
+      "name": "Consultar avatar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredHeyGen001",
+          "name": "HeyGen (x-api-key)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst d=$json.data;\nif (!d || !['waiting','pending','processing','completed','failed'].includes(d.status)) throw new Error('Estado de avatar inválido');\nif (d.status === 'failed') throw new Error('El render de avatar falló');\nif ($runIndex >= 80) throw new Error('Avatar pendiente: conciliar antes de repetir');\nif (d.status === 'completed' && (!/^https:\\/\\//.test(d.video_url) || !(d.duration>0))) throw new Error('Avatar sin video válido');\nreturn [{json:d}];\n"
+      },
+      "id": "4d9ad591-a739-5932-8561-118126283c59",
+      "name": "Estado avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "de1958ad-adce-5f55-b357-9e890e253e8f",
+              "leftValue": "={{ $json.status === 'completed' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c80a90a8-28f2-5ae0-b9fa-960c06d7f64c",
+      "name": "¿Avatar listo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json, d=$('Estado avatar').last().json;\nif (d.duration + 0.25 < e.voz.duracion_s) throw new Error('Avatar más corto que su narración');\nreturn [{json:{video_id:e.video_id,plano_id:e.plano.id,plano:e.plano,url:d.video_url,duracion_s:d.duration,remoto_id:d.id,\n  costo_avatar_usd:e.voz.duracion_s * $('Leer ajustes').first().json.costoAvatarSegUsd,intento:1,nota_revision:''}}];\n"
+      },
+      "id": "604cd60f-a21b-5354-9de2-01a146893368",
+      "name": "Avatar listo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const p=$('Avatar listo').first().json; return [{json:{video_id:p.video_id,plano_id:p.plano_id,tipo:'avatar',usa_avatar:true,presentacion:JSON.stringify(p.plano.presentacion),archivo_url:p.url,estado:'listo',costo_usd:p.costo_avatar_usd,intentos:1,nota_revision:''}}];"
+      },
+      "id": "a3b7946f-b28b-5b1a-ae65-c3df0ec89dc9",
+      "name": "Fila avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "GdWqVXaxFOEiZKQ9"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.video_id }}"
+            },
+            {
+              "keyName": "plano_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.plano_id }}"
+            }
+          ]
+        }
+      },
+      "id": "e76e272c-f1d7-5069-9ac1-18356e67f7c2",
+      "name": "Guardar avatar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:$('Avatar listo').first().json}];"
+      },
+      "id": "fc1ca351-e90c-55d6-9d4e-c9b9747343e6",
+      "name": "Devolver avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "de75a64a-d538-5848-8d62-9eff828652e0",
+      "name": "Presentación · Pedido de avatar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"avatar\"}, pairedItem:{item:k}}));"
+      },
+      "id": "5350b850-dc8d-5aa1-b223-c138c83f1d4c",
+      "name": "Presentación · Pedido de avatar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "cbc0d138-e5b9-50fc-886e-19e939d51438",
+      "name": "Presentación · Pedido de avatar validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Pedido de avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "5d68db4d-9cf5-5bbd-85a8-582b3a2aaad9",
+      "name": "Presentación · Pedido de avatar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "a585eea8-5770-5949-85d6-bd75609f4289",
+      "name": "Presentación · Crear avatar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"avatar\"}, pairedItem:{item:k}}));"
+      },
+      "id": "b661dc15-3a03-5e52-9ff1-279c6593e33b",
+      "name": "Presentación · Crear avatar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c47ea853-7550-5bdf-953d-7fb15199eec6",
+      "name": "Presentación · Crear avatar validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Crear avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "33e6e675-7a02-5964-920b-dc124ae7782c",
+      "name": "Presentación · Crear avatar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "03d775cc-c7b5-52b2-9ef7-3118b56f0fe7",
+      "name": "Presentación · Consultar avatar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"avatar\"}, pairedItem:{item:k}}));"
+      },
+      "id": "d0475f89-2643-5cef-88a4-1ef3e01dbc49",
+      "name": "Presentación · Consultar avatar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "26c71aac-6118-5490-920a-ac0b95d3bbf7",
+      "name": "Presentación · Consultar avatar validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Consultar avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "cd9a084f-dc18-530a-b61b-ec4f54376816",
+      "name": "Presentación · Consultar avatar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "a1103a00-a447-5556-846b-c462d6f80e2c",
+      "name": "Presentación · Avatar listo entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"avatar\"}, pairedItem:{item:k}}));"
+      },
+      "id": "3f05a61f-f321-56bd-8950-310d6fb43ccd",
+      "name": "Presentación · Avatar listo consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "02e1756e-99b2-5186-9360-f0b807d6282b",
+      "name": "Presentación · Avatar listo validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Avatar listo entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "61e59603-0361-5e20-ba17-588ee1069725",
+      "name": "Presentación · Avatar listo seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"avatar\", servicio:\"HeyGen\", usd:$('Inicio').first().json.voz.duracion_s * aj.costoAvatarSegUsd, estimado:true, paso_id:String($execution.id)+':'+\"Crear avatar\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "06c6dfcb-f7ab-5568-be9c-1bc2ebfb5789",
+      "name": "Cooper · costo Crear avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "174ea662-9abc-54f5-871a-b13d8b184a33",
+      "name": "Cooper · costo Crear avatar registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Crear avatar').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "d50c5dba-8975-5462-b151-12ec171093b9",
+      "name": "Cooper · costo Crear avatar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Crear avatar registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "cd681d4b-c762-5da4-9ea9-bc46022d19a4",
+      "name": "Cooper · identificar Cooper · costo Crear avatar registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido de avatar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Crear avatar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear avatar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Crear avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trabajo avatar": {
+      "main": [
+        [
+          {
+            "node": "Esperar avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar avatar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar avatar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar avatar": {
+      "main": [
+        [
+          {
+            "node": "Estado avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado avatar": {
+      "main": [
+        [
+          {
+            "node": "¿Avatar listo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Avatar listo?": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Avatar listo entrada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avatar listo": {
+      "main": [
+        [
+          {
+            "node": "Fila avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fila avatar": {
+      "main": [
+        [
+          {
+            "node": "Guardar avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar avatar": {
+      "main": [
+        [
+          {
+            "node": "Devolver avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Pedido de avatar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Pedido de avatar seguir": {
+      "main": [
+        [
+          {
+            "node": "Pedido de avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Crear avatar entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Crear avatar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Crear avatar consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Crear avatar validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Crear avatar validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Crear avatar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Crear avatar seguir": {
+      "main": [
+        [
+          {
+            "node": "Crear avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar avatar entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar avatar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar avatar consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar avatar validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar avatar validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar avatar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar avatar seguir": {
+      "main": [
+        [
+          {
+            "node": "Consultar avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Avatar listo entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Avatar listo consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Avatar listo consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Avatar listo validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Avatar listo validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Avatar listo seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Avatar listo seguir": {
+      "main": [
+        [
+          {
+            "node": "Avatar listo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Crear avatar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Crear avatar registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Crear avatar registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Crear avatar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Crear avatar seguir": {
+      "main": [
+        [
+          {
+            "node": "Trabajo avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Crear avatar registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Crear avatar registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 1800,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

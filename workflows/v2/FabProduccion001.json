@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst planos = (e.storyboard?.planos || []).filter(p => p && p.id).map(p => ({ ...p }));\n// Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se\n// mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el\n// storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.\nconst seg = p => Math.max(4, Math.min(8, Math.round(String(p.texto_narrado || '').replace(/\\[[^\\]]*\\]/g, '').split(/\\s+/).filter(Boolean).length / 2.5)));\nconst movimiento = { animados: [] };\nif (e.formato === 'short' && aj.allowClips) {\n  const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;\n  const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);\n  const mueve = p => ['clip', 'archivo'].includes(p.tipo);\n  const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)\n    + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;\n  const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))\n    .filter(x => x.p.tipo === 'imagen').sort((a, b) => b.peso - a.peso);\n  for (const x of orden) {\n    const clips = planos.filter(p => p.tipo === 'clip').length; const cuota = planos.filter(mueve).length / planos.length;\n    if (clips >= topeClips || (cuota >= aj.movimientoMinShort && mueve(planos[0]))) break;\n    const extra = seg(x.p) * aj.costoClipSegUsd;\n    if (costoActual() + extra > presupuesto0 * (aj.avisoGastoPct || 1)) continue;\n    x.p.tipo = 'clip'; x.p.duracion_clip_s = seg(x.p); movimiento.animados.push(x.p.id);\n  }\n  planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = seg(p); });\n  movimiento.cuota = Math.round(planos.filter(mueve).length / Math.max(1, planos.length) * 100) / 100;\n}\nplanos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = 8; });\nconst n = t => planos.filter(p => p.tipo === t).length;\nconst segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.duracion_clip_s, 0);\n// Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.\n// Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.\nconst revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;\nconst costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa\n  + segClips * aj.costoClipSegUsd + n('avatar') * 1 + planos.length * aj.costoVozUsdPorPlano;\nconst faltan = [];\nif (!aj.allowImagenes) faltan.push('imágenes (OpenAI)');\nif (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');\nif (n('avatar') && !aj.allowAvatar) faltan.push('avatar (HeyGen)');\nif (!aj.allowVoz) faltan.push('voz (Gemini TTS)');\nif (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');\nif (!aj.allowMontaje) faltan.push('montaje (Creatomate)');\nconst presupuesto = Number(e.presupuesto_usd) || (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd);\nif (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);\nreturn [{ json: { ...e, planos, movimiento, costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,\n  dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];\n"
+        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\n// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nif (e.modo_noticia) { exigirNoticia(e.noticia); exigirVisuales(e.storyboard); if (e.noticia_guion_hash !== huellaGuion(e.guion) || e.presentacion?.avatar) throw new Error('Noticia sin guion verificado o con avatar incompatible'); }\nconst presentacion = validarPresentacion(e.presentacion);\nconst planos = planosPresentacion((e.storyboard?.planos || []).filter(p => p && p.id), presentacion);\nif (new Set(planos.map(p => p.id)).size !== planos.length) throw new Error('IDs de plano duplicados');\n// Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se\n// mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el\n// storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.\nconst seg = p => Math.max(4, Math.min(8, Math.round(String(p.texto_narrado || '').replace(/\\[[^\\]]*\\]/g, '').split(/\\s+/).filter(Boolean).length / 2.5)));\nconst movimiento = { animados: [] };\nif (e.formato === 'short' && aj.allowClips) {\n  const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;\n  const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);\n  const mueve = p => ['clip', 'archivo', 'avatar'].includes(p.tipo);\n  const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)\n    + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;\n  const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))\n    .filter(x => x.p.tipo === 'imagen').sort((a, b) => b.peso - a.peso);\n  for (const x of orden) {\n    const clips = planos.filter(p => p.tipo === 'clip').length; const cuota = planos.filter(mueve).length / planos.length;\n    if (clips >= topeClips || (cuota >= aj.movimientoMinShort && mueve(planos[0]))) break;\n    const extra = seg(x.p) * aj.costoClipSegUsd;\n    if (costoActual() + extra > presupuesto0 * (aj.avisoGastoPct || 1)) continue;\n    x.p.tipo = 'clip'; x.p.duracion_clip_s = seg(x.p); movimiento.animados.push(x.p.id);\n  }\n  planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = seg(p); });\n  movimiento.cuota = Math.round(planos.filter(mueve).length / Math.max(1, planos.length) * 100) / 100;\n}\nplanos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = 8; });\nconst n = t => planos.filter(p => p.tipo === t).length;\nconst segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.duracion_clip_s, 0);\n// Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.\n// Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.\nconst revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;\nconst costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa\n  + segClips * aj.costoClipSegUsd + planos.filter(p => p.tipo === 'avatar').reduce((a,p) => a + Math.max(1, String(p.texto_narrado).split(/\\s+/).length / 2.5) * aj.costoAvatarSegUsd, 0)\n  + planos.reduce((a,p) => a + costoVozPresentacion(p.texto_narrado, presentacion, aj), 0);\nif (!Number.isFinite(costo)) throw new Error('Configura las tarifas de presentación');\nconst faltan = [];\nif (planos.some(p => p.tipo !== 'avatar') && !aj.allowImagenes) faltan.push('imágenes (OpenAI)');\nif (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');\nif ((n('avatar') || presentacion?.avatar) && !aj.allowAvatar) faltan.push('avatar (HeyGen)');\nif (!aj.allowVoz) faltan.push('voz (Gemini TTS)');\nif (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');\nif (!aj.allowMontaje) faltan.push('montaje (Creatomate)');\nconst presupuesto = Number(e.presupuesto_usd ?? (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd));\nif (!Number.isFinite(presupuesto) || presupuesto < 0) throw new Error('Presupuesto inválido');\nif (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);\nreturn [{ json: { ...e, presentacion, planos, movimiento, bloqueo: presentacion?.avatar && !aj.allowAvatar ? 'avatar_apagado' : !aj.allowVoz ? 'voz_apagada' : costo > presupuesto ? 'presupuesto' : faltan.length ? 'produccion_pausada' : '', costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,\n  dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];\n"
       },
       "id": "54ae661f-22a0-4937-b004-1da6292d115d",
       "name": "Plan de producción",
@@ -312,7 +312,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Guion, storyboard y biblia quedan junto al video: cualquier versión se puede rehacer o auditar.\nconst e = $('Plan de producción').first().json;\nconst json = (nombre, obj) => ({ json: { nombre }, binary: { archivo: { data: Buffer.from(JSON.stringify(obj, null, 2)).toString('base64'), mimeType: 'application/json', fileName: nombre } } });\nreturn [json('storyboard.json', e.storyboard || {}), json('biblia.json', e.biblia || {}), json('guion.json', e.guion || {})];\n"
+        "jsCode": "\n// Guion, storyboard y biblia quedan junto al video: cualquier versión se puede rehacer o auditar.\nconst e = $('Plan de producción').first().json;\nconst json = (nombre, obj) => ({ json: { nombre }, binary: { archivo: { data: Buffer.from(JSON.stringify(obj, null, 2)).toString('base64'), mimeType: 'application/json', fileName: nombre } } });\nreturn [json('storyboard.json', { ...e.storyboard, presentacion:e.presentacion, planos:e.planos }), json('biblia.json', e.biblia || {}), json('guion.json', e.guion || {})];\n"
       },
       "id": "cc51cd6a-339b-4904-9e89-03dffe140954",
       "name": "Archivos del encargo",
@@ -439,6 +439,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1331,10 +1336,10 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, intento: 0, nota_revision: 'avatar: falta decidir HeyGen' } };"
+        "jsCode": "return { json: { video_id: $json.video_id, plano_id: $json.plano.id, url: '', plano: $json.plano, intento: 0, nota_revision: 'pendiente de sincronización con la voz elegida' } };"
       },
-      "id": "9979891a-385a-4539-97f2-d19ed34e355f",
-      "name": "Avatar pendiente",
+      "id": "4680f304-bb67-5939-991d-81a8a64d4629",
+      "name": "Plano para avatar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -1344,7 +1349,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst plan = $('Plan de producción').first().json.planos || [];\nconst ids = plan.map(p => p.id);\nconst listos = new Map();\nfor (const fuente of ['Archivo aprobado', 'Plano aprobado', 'Avatar pendiente']) {\n  if (!$(fuente).isExecuted) continue;\n  for (let pasada = 0; pasada < 500; pasada++) {\n    let items; try { items = $(fuente).all(0, pasada); } catch (e) { break; }\n    if (!items || !items.length) break;\n    for (const it of items) if (it.json.plano_id) listos.set(it.json.plano_id, it.json);\n  }\n}\nif (!ids.length || ids.some(id => !listos.has(id))) return [];   // aún faltan planos: esta llegada no sigue\nreturn [{ json: { planos: ids.map(id => listos.get(id)) } }];\n"
+        "jsCode": "\nconst plan = $('Plan de producción').first().json.planos || [];\nconst ids = plan.map(p => p.id);\nconst listos = new Map();\nfor (const fuente of ['Archivo aprobado', 'Plano aprobado', 'Plano para avatar']) {\n  if (!$(fuente).isExecuted) continue;\n  for (let pasada = 0; pasada < 500; pasada++) {\n    let items; try { items = $(fuente).all(0, pasada); } catch (e) { break; }\n    if (!items || !items.length) break;\n    for (const it of items) if (it.json.plano_id) listos.set(it.json.plano_id, it.json);\n  }\n}\nif (!ids.length || ids.some(id => !listos.has(id))) return [];   // aún faltan planos: esta llegada no sigue\nreturn [{ json: { planos: ids.map(id => listos.get(id)) } }];\n"
       },
       "id": "503afba3-0e9a-4df0-be71-680bd46fde61",
       "name": "Juntar planos",
@@ -1357,7 +1362,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst aj = $('Leer ajustes').first().json;\nreturn $('Juntar planos').first().json.planos.map(p => ({ json: { video_id: p.video_id, plano_id: p.plano_id, tipo: p.plano?.tipo || '',\n  archivo_url: p.url || '', estado: p.url ? 'listo' : 'pendiente', intentos: p.intento || 0, nota_revision: String(p.nota_revision || '').slice(0, 500),\n  costo_usd: Math.round(((['imagen', 'clip'].includes(p.plano?.tipo) ? (p.intento || 1) * aj.costoImagenUsd : 0)\n    + (p.plano?.tipo === 'clip' ? (p.plano.duracion_clip_s || 8) * aj.costoClipSegUsd : 0) + (p.revisiones || 0) * aj.costoRevisionUsd) * 1000) / 1000 } }));\n"
+        "jsCode": "\nconst aj = $('Leer ajustes').first().json;\nreturn $('Juntar planos').first().json.planos.map(p => ({ json: { video_id: p.video_id, plano_id: p.plano_id, tipo: p.plano?.tipo || '', usa_avatar:p.plano?.tipo === 'avatar', presentacion:JSON.stringify(p.plano?.presentacion || null),\n  archivo_url: p.url || '', estado: p.url ? 'listo' : 'pendiente', intentos: p.intento || 0, nota_revision: String(p.nota_revision || '').slice(0, 500),\n  costo_usd: Math.round(((['imagen', 'clip'].includes(p.plano?.tipo) ? (p.intento || 1) * aj.costoImagenUsd : 0)\n    + (p.plano?.tipo === 'clip' ? (p.plano.duracion_clip_s || 8) * aj.costoClipSegUsd : 0) + (p.revisiones || 0) * aj.costoRevisionUsd) * 1000) / 1000 } }));\n"
       },
       "id": "4f7bb131-b8c6-45b5-aa3c-bd38484b0c8d",
       "name": "Filas de planos",
@@ -1679,6 +1684,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -1703,7 +1713,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Plan de producción').first().json;\nreturn [{ json: { video_id: e.video_id, biblia: e.biblia || {}, musica: e.storyboard?.musica || {}, efectos: e.storyboard?.efectos || [],\n  carpeta: $('Carpeta del video').first().json.id, planos: $('Juntar planos').first().json.planos } }];\n"
+        "jsCode": "\nconst e = $('Plan de producción').first().json;\nreturn [{ json: { video_id: e.video_id, presentacion: e.presentacion, biblia: e.biblia || {}, musica: e.storyboard?.musica || {}, efectos: e.storyboard?.efectos || [],\n  carpeta: $('Carpeta del video').first().json.id, planos: $('Juntar planos').first().json.planos } }];\n"
       },
       "id": "62c4d0b4-37da-4d59-8e4f-a1900b91430b",
       "name": "Encargo de sonido",
@@ -1745,7 +1755,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// componer(): arma la composición de Creatomate. La usan el video principal y los cortes verticales.\n// Cada escena dura lo que su voz (+ un respiro). Encima: subtítulos (Shorts, cortes o si la biblia lo pide), título de\n// capítulo en los largos y efectos del storyboard; debajo, la música hasta el final. Estilo desde biblia.montaje.\nfunction componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {\n  const m = plan.biblia?.montaje || {};\n  const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));\n  const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);\n  const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));\n  const listos = planos.filter(p => p.url && voces[p.plano_id]?.url && orden.includes(p.plano_id))\n    .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\n  const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);\n  const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';\n  const RESPIRO = vertical ? 0.15 : 0.35;   // en Shorts el respiro largo alargaba el video (67 s para 45 previstos)\n  const limpio = t => String(t || '').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/<[^>]+>/g, '').replace(/\\s{2,}/g, ' ').trim();\n  // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).\n  const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };\n  let total = 0;\n  const escenas = listos.map((p, i) => {\n    const voz = voces[p.plano_id];\n    const dur = Math.round((voz.duracion_s + RESPIRO) * 100) / 100; total += dur;\n    const video = p.plano.tipo === 'clip' || p.plano.tipo === 'archivo';\n    const mov = p.plano.movimiento || '';\n    const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]\n      : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;\n    const els = [\n      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: true } : {}), animations: anim },\n      { type: 'audio', source: voz.url, duration: null },   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)\n    ];\n    if (subtitulos) {\n      const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;\n      let t = 0;\n      for (const x of partes) { const d = Math.round(voz.duracion_s * x.length / letras * 100) / 100;\n        els.push({ type: 'text', text: x, time: Math.round(t * 100) / 100, duration: d, y: vertical ? '72%' : '86%', width: '86%', x_alignment: '50%',\n          font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });\n        t += d; }\n    }\n    // Cifra clave en grande (storyboard: texto_pantalla), para que el espectador siga la cuenta sin perderse.\n    if (p.plano.texto_pantalla) els.push({ type: 'text', text: String(p.plano.texto_pantalla).slice(0, 40), time: 0, duration: dur, y: vertical ? '30%' : '20%', width: '88%', x_alignment: '50%',\n      font_family: fuente, font_weight: '800', font_size: vertical ? '11 vmin' : '8 vmin', fill_color: m.color_cifra || '#22C55E', stroke_color: '#000000', stroke_width: '1.6 vmin',\n      animations: [{ time: 'start', duration: 0.35, type: 'scale', start_scale: '70%', end_scale: '100%', easing: 'quadratic-out' }] });\n    if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',\n      font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',\n      animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });\n    for (const x of efectos[p.plano_id] || []) els.push({ type: 'audio', source: x.url, time: 0, duration: Math.min(dur, x.duracion_s || dur), volume: m.efectos_volumen || '35%', audio_fade_out: 0.4 });\n    return { type: 'composition', track: 1, name: p.plano_id, duration: dur,\n      transition: i && (p.plano.transicion || m.transicion) === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined, elements: els };\n  });\n  total = Math.round(total * 100) / 100;\n  const elementos = [...escenas];\n  if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: total, source: son.musica.url,\n    volume: m.musica_volumen || '16%', audio_fade_in: 1, audio_fade_out: 2.5 });\n  const creditos = [son.musica?.credito, ...(son.efectos || []).map(x => x && x.credito), ...listos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)]\n    .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);\n  return { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },\n    listos: listos.length, esperados: orden.length, total, subtitulos, creditos };\n}\n\nconst e = $('Plan de producción').first().json;\nconst c = componer({ plan: e, planos: $('Juntar planos').first().json.planos, son: $json, vertical: e.formato === 'short' });\nreturn [{ json: { source: c.source, video_id: e.video_id, canal_id: e.canal_id, planos: c.listos, esperados: c.esperados,\n  duracion_estimada_s: c.total, subtitulos: c.subtitulos, creditos: c.creditos } }];\n"
+        "jsCode": "\n// componer(): arma la composición de Creatomate. La usan el video principal y los cortes verticales.\n// Cada escena dura lo que su voz (+ un respiro). Encima: subtítulos (Shorts, cortes o si la biblia lo pide), título de\n// capítulo en los largos y efectos del storyboard; debajo, la música hasta el final. Estilo desde biblia.montaje.\nfunction componer({ plan, planos, son, vertical, soloIds, forzarSubtitulos }) {\n  const m = plan.biblia?.montaje || {};\n  const voces = Object.fromEntries((son.voces || []).map(v => [v.plano_id, v]));\n  const efectos = {}; for (const x of son.efectos || []) if (x && x.url) (efectos[x.plano] ||= []).push(x);\n  const orden = (plan.planos || []).map(p => p.id).filter(id => !soloIds || soloIds.includes(id));\n  const listos = planos.filter(p => p.url && (voces[p.plano_id]?.url || !p.plano.texto_narrado && Number(p.plano.duracion_s) > 0) && orden.includes(p.plano_id))\n    .sort((a, b) => orden.indexOf(a.plano_id) - orden.indexOf(b.plano_id));\n  if (listos.length !== orden.length) throw new Error('Faltan planos o voces para montar');\n  const subtitulos = forzarSubtitulos || (m.subtitulos ?? vertical);\n  const fuente = m.fuente || 'Montserrat', color = m.color_texto || '#FFFFFF';\n  const RESPIRO = vertical ? 0.15 : 0.35;   // en Shorts el respiro largo alargaba el video (67 s para 45 previstos)\n  const limpio = t => String(t || '').replace(/\\[[^\\]]{1,30}\\]/g, '').replace(/<[^>]+>/g, '').replace(/\\s{2,}/g, ' ').trim();\n  // Subtítulos: frases cortas repartidas en el tiempo de la voz según su largo (sin marcas de tiempo por palabra).\n  const trozos = (t, max) => { const w = limpio(t).split(' ').filter(Boolean); const r = []; for (let i = 0; i < w.length; i += max) r.push(w.slice(i, i + max).join(' ')); return r; };\n  let total = 0;\n  const escenas = listos.map((p, i) => {\n    const voz = voces[p.plano_id] || {duracion_s:Number(p.plano.duracion_s)};\n    if (!Number.isFinite(voz.duracion_s) || voz.duracion_s <= 0) throw new Error('Duración de voz inválida');\n    const dur = Math.round((voz.duracion_s + (p.plano.tipo === 'avatar' ? 0 : RESPIRO)) * 100) / 100; total += dur;\n    const video = ['clip', 'archivo', 'avatar'].includes(p.plano.tipo);\n    const mov = p.plano.movimiento || '';\n    const anim = video ? undefined : mov.includes('zoom') ? [{ type: 'scale', scope: 'element', start_scale: '100%', end_scale: '112%', easing: 'linear' }]\n      : mov.includes('paneo') ? [{ type: 'pan', scope: 'element', start_x: '45%', end_x: '55%', easing: 'linear' }] : undefined;\n    const els = [\n      { type: video ? 'video' : 'image', source: p.url, fit: 'cover', ...(video ? { volume: '0%', loop: p.plano.tipo !== 'avatar' } : {}), animations: anim },\n      ...(voz.url ? [{ type: 'audio', source: voz.url, duration: null }] : []),   // atada a su escena (Creatomate avisaba que seguía sonando debajo de la siguiente)\n    ];\n    if (subtitulos) {\n      const partes = trozos(p.plano.texto_narrado, vertical ? 4 : 8); const letras = partes.reduce((a, x) => a + x.length, 0) || 1;\n      let t = 0;\n      for (const x of partes) { const d = Math.round(voz.duracion_s * x.length / letras * 100) / 100;\n        els.push({ type: 'text', text: x, time: Math.round(t * 100) / 100, duration: d, y: vertical ? '72%' : '86%', width: '86%', x_alignment: '50%',\n          font_family: fuente, font_weight: '700', font_size: vertical ? '7.5 vmin' : '5 vmin', fill_color: color, stroke_color: '#000000', stroke_width: '1.2 vmin' });\n        t += d; }\n    }\n    // Cifra clave en grande (storyboard: texto_pantalla), para que el espectador siga la cuenta sin perderse.\n    if (p.plano.texto_pantalla) els.push({ type: 'text', text: String(p.plano.texto_pantalla).slice(0, 40), time: 0, duration: dur, y: vertical ? '30%' : '20%', width: '88%', x_alignment: '50%',\n      font_family: fuente, font_weight: '800', font_size: vertical ? '11 vmin' : '8 vmin', fill_color: m.color_cifra || '#22C55E', stroke_color: '#000000', stroke_width: '1.6 vmin',\n      animations: [{ time: 'start', duration: 0.35, type: 'scale', start_scale: '70%', end_scale: '100%', easing: 'quadratic-out' }] });\n    if (!vertical && p.plano.capitulo) els.push({ type: 'text', text: String(p.plano.capitulo).slice(0, 60), time: 0, duration: Math.min(2.5, dur), y: '14%', width: '80%',\n      font_family: fuente, font_weight: '700', font_size: '6 vmin', fill_color: color, background_color: 'rgba(0,0,0,0.45)', x_padding: '3 vmin', y_padding: '1.5 vmin',\n      animations: [{ time: 'start', duration: 0.4, type: 'fade' }, { time: 'end', duration: 0.4, type: 'fade', reversed: true }] });\n    for (const x of efectos[p.plano_id] || []) els.push({ type: 'audio', source: x.url, time: 0, duration: Math.min(dur, x.duracion_s || dur), volume: m.efectos_volumen || '35%', audio_fade_out: 0.4 });\n    return { type: 'composition', track: 1, name: p.plano_id, duration: dur,\n      transition: i && (p.plano.transicion || m.transicion) === 'fundido' ? { type: 'fade', duration: 0.5 } : undefined, elements: els };\n  });\n  total = Math.round(total * 100) / 100;\n  const elementos = [...escenas];\n  if (son.musica?.url) elementos.push({ type: 'audio', track: 2, time: 0, duration: total, source: son.musica.url,\n    volume: m.musica_volumen || '16%', audio_fade_in: 1, audio_fade_out: 2.5 });\n  const creditos = [son.musica?.credito, ...(son.efectos || []).map(x => x && x.credito), ...listos.filter(p => p.fuente).map(p => `${p.fuente.banco}: ${p.fuente.autor} (${p.fuente.pagina})`)]\n    .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);\n  return { source: { output_format: 'mp4', width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080, frame_rate: 30, elements: elementos },\n    listos: listos.length, esperados: orden.length, total, subtitulos, creditos };\n}\n\nconst e = $('Plan de producción').first().json;\nconst c = componer({ plan: e, planos: $json.planos || $('Juntar planos').first().json.planos, son: $json, vertical: e.formato === 'short' });\nreturn [{ json: { source: c.source, video_id: e.video_id, canal_id: e.canal_id, planos: c.listos, esperados: c.esperados,\n  duracion_estimada_s: c.total, subtitulos: c.subtitulos, creditos: c.creditos } }];\n"
       },
       "id": "bb8485ef-f9be-4f3c-8230-2ef5b2cb0113",
       "name": "Composición Creatomate",
@@ -1924,7 +1934,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Una fila por concepto en «costos». Los montos de pago por uso son estimados con los precios de Ajustes;\n// música, efectos y montaje van dentro de suscripciones (0 US$, se anotan para saber qué se usó).\nconst aj = $('Leer ajustes').first().json; const g = $('Gasto de planos').first().json;\nconst son = $('Sonido y emoción').first().json; const vid = $('Plan de producción').first().json.video_id;\nconst filas = [\n  ['imágenes', 'OpenAI', g.imagenes * aj.costoImagenUsd],\n  ['clips', 'Gemini Omni', (g.seg_clips ?? g.clips * 8) * aj.costoClipSegUsd],\n  ['revisión visual', 'OpenAI', g.revisiones * aj.costoRevisionUsd],\n  ['voz', 'Gemini TTS', (son.voces || []).length * aj.costoVozUsdPorPlano],\n  ['música', 'Epidemic Sound (suscripción)', 0],\n  ['efectos', 'Epidemic Sound (suscripción)', 0],\n  ['montaje', 'Creatomate (créditos)', 0],\n].filter(([c, s, usd], i) => usd > 0 || i >= 4);\nreturn filas.map(([concepto, servicio, usd]) => ({ json: { video_id: vid, concepto, servicio, usd: Math.round(usd * 1000) / 1000 } }));\n"
+        "jsCode": "\n// Una fila por concepto en «costos». Los montos de pago por uso son estimados con los precios de Ajustes;\n// música, efectos y montaje van dentro de suscripciones (0 US$, se anotan para saber qué se usó).\nconst aj = $('Leer ajustes').first().json; const g = $('Gasto de planos').first().json;\nconst son = $('Sonido y emoción').first().json; const vid = $('Plan de producción').first().json.video_id;\nconst filas = [\n  ['imágenes', 'OpenAI', g.imagenes * aj.costoImagenUsd],\n  ['clips', 'Gemini Omni', (g.seg_clips ?? g.clips * 8) * aj.costoClipSegUsd],\n  ['revisión visual', 'OpenAI', g.revisiones * aj.costoRevisionUsd],\n  ['voz', 'Voz elegida', (son.voces || []).reduce((a,v)=>a+(v.costo_voz_usd ?? aj.costoVozUsdPorPlano),0)],\n  ['avatar', 'HeyGen', ($('Presentación lista').isExecuted ? $('Presentación lista').first().json.planos : []).reduce((a,p)=>a+(p.costo_avatar_usd || 0),0)],\n  ['música', 'Epidemic Sound (suscripción)', 0],\n  ['efectos', 'Epidemic Sound (suscripción)', 0],\n  ['montaje', 'Creatomate (créditos)', 0],\n].filter(([c, s, usd], i) => usd > 0 || ['música','efectos','montaje'].includes(c));\nreturn filas.map(([concepto, servicio, usd]) => ({ json: { video_id: vid, concepto, servicio, usd: Math.round(usd * 1000) / 1000 } }));\n"
       },
       "id": "21870f17-3fa3-43c9-bd9b-9c88a5fef0bd",
       "name": "Costos del video",
@@ -1937,27 +1947,12 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+        "jsCode": "return $input.all();"
       },
       "id": "6050dc28-4004-478f-97b0-ec9f1d800c14",
       "name": "Guardar costos",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         16500,
         0
@@ -1992,6 +1987,11 @@
               "keyName": "video_id",
               "condition": "eq",
               "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
             }
           ]
         },
@@ -2016,7 +2016,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Plan de producción').first().json;\nreturn [{ json: { plan: e, planos: $('Juntar planos').first().json.planos, son: $('Sonido y emoción').first().json, carpeta: $('Carpeta del video').first().json.id } }];\n"
+        "jsCode": "\nconst e = $('Plan de producción').first().json;\nreturn [{ json: { plan: e, planos: $('Presentación lista').first().json.planos, son: $('Sonido y emoción').first().json, carpeta: $('Carpeta del video').first().json.id } }];\n"
       },
       "id": "f3c7a9c7-8412-4dff-a99b-6a89795e6a21",
       "name": "Encargo de derivados",
@@ -2105,27 +2105,12 @@
     },
     {
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
-        "dataTableId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "vk7TvbIvNcTbmkVv"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+        "jsCode": "return $input.all();"
       },
       "id": "1b4b3fc9-7c81-42cf-be7f-d39f7f0589c6",
       "name": "Guardar costo de derivados",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         18040,
         0
@@ -2133,7 +2118,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst c = $('Composición Creatomate').first().json; const r = $('Consultar render').last().json; const e = $('Plan de producción').first().json;\nconst son = $('Sonido y emoción').first().json; const d = $('Derivados').first().json;\nreturn [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: r.url, duracion_s: r.duration, ancho: r.width, alto: r.height,\n  planos: c.planos, esperados: c.esperados, creditos: c.creditos, subtitulos: c.subtitulos, duracion_estimada_s: c.duracion_estimada_s,\n  voces: (son.voces || []).map(v => ({ plano_id: v.plano_id, ppm: v.palabras_por_minuto, duracion_s: v.duracion_s })),\n  usa_musica: !!son.musica?.url, costo_usd: Math.round(($('Costo total').first().json.costo_usd + (d.costo_usd || 0)) * 100) / 100, presupuesto: e.presupuesto,\n  formato: e.formato, carpeta: $('Carpeta del video').first().json.id, tema: e.tema,\n  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {}, miniatura_texto: e.storyboard?.miniatura?.texto || '',\n  movimiento_real: (() => { const l = $('Juntar planos').first().json.planos; return l.length ? Math.round(l.filter(p => p.url && ['clip', 'archivo'].includes(p.plano?.tipo)).length / l.length * 100) / 100 : 1; })() } }];\n"
+        "jsCode": "\nconst c = $('Composición Creatomate').first().json; const r = $('Consultar render').last().json; const e = $('Plan de producción').first().json;\nconst son = $('Sonido y emoción').first().json; const d = $('Derivados').first().json;\nreturn [{ json: { video_id: c.video_id, canal_id: c.canal_id, render_url: r.url, duracion_s: r.duration, ancho: r.width, alto: r.height,\n  planos: c.planos, esperados: c.esperados, creditos: c.creditos, subtitulos: c.subtitulos, duracion_estimada_s: c.duracion_estimada_s,\n  voces: (son.voces || []).map(v => ({ plano_id: v.plano_id, ppm: v.palabras_por_minuto, duracion_s: v.duracion_s })),\n  usa_musica: !!son.musica?.url, costo_usd: Math.round(($('Costo total').first().json.costo_usd + (d.costo_usd || 0)) * 100) / 100, presupuesto: e.presupuesto,\n  formato: e.formato, carpeta: $('Carpeta del video').first().json.id, tema: e.tema,\n  cortes: d.cortes || [], miniatura_url: d.miniatura_url || '', avisos_derivados: d.avisos || [], publicacion: e.storyboard?.publicacion || {}, miniatura_texto: e.storyboard?.miniatura?.texto || '',\n  movimiento_real: (() => { const l = $('Presentación lista').first().json.planos; return l.length ? Math.round(l.filter(p => p.url && ['clip', 'archivo', 'avatar'].includes(p.plano?.tipo)).length / l.length * 100) / 100 : 1; })() } }];\n"
       },
       "id": "296681b1-76ef-4de7-b302-5b23e5324c1d",
       "name": "Encargo de calidad",
@@ -2171,6 +2156,1363 @@
       "typeVersion": 1.2,
       "position": [
         18480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "3af2471a-af7f-5901-acc7-872f5190b96e",
+      "name": "Cooper · Sonido y emoción entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'sonido' } }];"
+      },
+      "id": "55cfe2cb-d816-5611-b1c1-fd750164294f",
+      "name": "Cooper · Sonido y emoción etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ac6a3228-04a8-59a5-951b-34722224f53a",
+      "name": "Cooper · Sonido y emoción guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Sonido y emoción entrada').all();"
+      },
+      "id": "de3ab38a-c5d2-5160-9d1d-93206c2fa4b2",
+      "name": "Cooper · Sonido y emoción seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "7fed09cd-770e-5c8f-97af-ba81aebbaeeb",
+      "name": "Cooper · Composición Creatomate entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { etapa:'montaje' } }];"
+      },
+      "id": "5446c2ec-8aa5-5d0f-b51f-3ff5de94ae2c",
+      "name": "Cooper · Composición Creatomate etapa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "18485e66-bb17-5095-a223-94fe1ad5a0f7",
+      "name": "Cooper · Composición Creatomate guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Cooper · Composición Creatomate entrada').all();"
+      },
+      "id": "b63740b4-1728-5a06-8386-96051a95b44e",
+      "name": "Cooper · Composición Creatomate seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Plan de producción').first().json, son=$('Sonido y emoción').first().json, aj=$('Leer ajustes').first().json;\nconst planos=e.planos.filter(p=>p.tipo === 'avatar');\nconst voces=new Map(son.voces.map(v=>[v.plano_id,v]));\nif (planos.some(p=>!voces.get(p.id)?.url)) throw new Error('Falta voz para el avatar');\nconst costoAvatar=planos.reduce((a,p)=>a+voces.get(p.id).duracion_s*aj.costoAvatarSegUsd,0);\nconst costoVoz=son.voces.reduce((a,v)=>a+(v.costo_voz_usd ?? aj.costoVozUsdPorPlano),0);\nconst costo=$('Gasto de planos').first().json.usd+costoVoz+costoAvatar;\nreturn [{json:{bloqueo:costo>e.presupuesto ? 'presupuesto' : '', hay:planos.length>0,\n  pedidos:planos.map(p=>({video_id:e.video_id,plano:p,presentacion:e.presentacion,formato:e.formato,voz:voces.get(p.id)}))}}];\n"
+      },
+      "id": "459511b8-7727-5224-8dc8-f5de54557a04",
+      "name": "Preparar avatares",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "767d955b-4040-5f80-8109-3ca4eb0c5047",
+              "leftValue": "={{ $json.hay === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "34e25f99-4a7f-5625-808e-ce146e5a1631",
+      "name": "¿Hay avatares?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Preparar avatares').first().json.pedidos.map(p=>({json:p}));"
+      },
+      "id": "7ac28d0c-eb6f-5ae9-ab3f-18a798e02120",
+      "name": "Pedidos de avatar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAvatar0000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "842a7734-ba3c-540d-8e5b-f92aaca58076",
+      "name": "Renderizar avatares",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst son=$('Sonido y emoción').first().json;\nconst listos=$('Renderizar avatares').isExecuted ? $('Renderizar avatares').all().map(i=>i.json) : [];\nconst originales=$('Juntar planos').first().json.planos;\nconst planos=originales.map(p=>p.plano.tipo === 'avatar' ? listos.find(a=>a.plano_id===p.plano_id) : p);\nif (planos.some(p=>!p?.url)) throw new Error('Faltan planos para el montaje');\nreturn [{json:{...son,planos}}];\n"
+      },
+      "id": "a35de05d-1109-519d-bf05-a3e17c5ffd8d",
+      "name": "Presentación lista",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "daded510-2559-5617-bf92-c65386db8468",
+      "name": "Presentación · ¿Todo encendido? entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"medios\", bloqueo:$('Plan de producción').first().json.bloqueo}, pairedItem:{item:k}}));"
+      },
+      "id": "c2b81b9d-635b-5d3b-bdcc-e372e0235e8a",
+      "name": "Presentación · ¿Todo encendido? consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "3797042c-aefc-5e75-9664-54779dc8f65b",
+      "name": "Presentación · ¿Todo encendido? validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · ¿Todo encendido? entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "c98fdfe9-38aa-54ef-bf44-71926282936f",
+      "name": "Presentación · ¿Todo encendido? seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "936bf801-96f2-5922-a3f7-22d09d3c3e7e",
+      "name": "Presentación · ¿Hay avatares? entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"medios\", bloqueo:$('Preparar avatares').first().json.bloqueo}, pairedItem:{item:k}}));"
+      },
+      "id": "4f9b1bb1-c6d2-5bd7-9ec8-bbed0375efbc",
+      "name": "Presentación · ¿Hay avatares? consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "5a5c3db5-9ed9-541d-9adc-f46be0fe776e",
+      "name": "Presentación · ¿Hay avatares? validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · ¿Hay avatares? entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "942b12b0-a2a0-52aa-b654-fedabe33c253",
+      "name": "Presentación · ¿Hay avatares? seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "e814dc43-d53d-5469-a36b-95e21f468a21",
+      "name": "Presentación · Generar imagen entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"medios\"}, pairedItem:{item:k}}));"
+      },
+      "id": "f6751847-7472-5729-b435-75306e001586",
+      "name": "Presentación · Generar imagen consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "a673e53b-5e65-5562-94ee-e4816f8b95e5",
+      "name": "Presentación · Generar imagen validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Generar imagen entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "93c4db88-7993-595c-af81-486931e72f39",
+      "name": "Presentación · Generar imagen seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "7f5687ae-99da-5a82-a7b3-9da09fd54be8",
+      "name": "Presentación · Animar (Gemini Omni) entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"medios\"}, pairedItem:{item:k}}));"
+      },
+      "id": "447f323d-2955-5799-b111-9167ebe40f39",
+      "name": "Presentación · Animar (Gemini Omni) consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "ca303460-3ead-55ac-a76d-7b3ea25436fd",
+      "name": "Presentación · Animar (Gemini Omni) validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Animar (Gemini Omni) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "fc29c363-c129-5199-9701-d6f5e8659554",
+      "name": "Presentación · Animar (Gemini Omni) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "583fc34a-7c63-576e-90e7-95c20bd214c8",
+      "name": "Presentación · Renderizar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"montaje\"}, pairedItem:{item:k}}));"
+      },
+      "id": "b41cecd5-91fe-53b4-9db6-afe225ddadf7",
+      "name": "Presentación · Renderizar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "0a157ee8-3272-5c64-949b-3e84d4d1a3bd",
+      "name": "Presentación · Renderizar validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Renderizar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "48bfd043-e36e-54a8-b1b2-c2964d238742",
+      "name": "Presentación · Renderizar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "b0a8d5f4-e275-5c6e-bd14-a04a7173fd1a",
+      "name": "Presentación · Encargo de calidad entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"montaje\"}, pairedItem:{item:k}}));"
+      },
+      "id": "a6f168e1-82af-5204-a34e-a92538ffe0e0",
+      "name": "Presentación · Encargo de calidad consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "ce149bb6-42ec-5cb9-8252-9d50fdf93875",
+      "name": "Presentación · Encargo de calidad validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Encargo de calidad entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "d184ad64-9f06-58ce-88f8-a3dbcb1bb6b2",
+      "name": "Presentación · Encargo de calidad seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "c625fa43-e18f-5196-8b79-2d09df58b670",
+      "name": "Presentación · Derivados entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"montaje\"}, pairedItem:{item:k}}));"
+      },
+      "id": "f7972454-46d7-58b5-883a-8cde0300326a",
+      "name": "Presentación · Derivados consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f1ff6ea5-c941-5114-a4f6-8b32e0aa3731",
+      "name": "Presentación · Derivados validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Presentación · Derivados entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+      },
+      "id": "f033b6c8-4f64-5760-b745-19a0628c73cf",
+      "name": "Presentación · Derivados seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"imágenes\", servicio:\"OpenAI\", usd:aj.costoImagenUsd, estimado:true, paso_id:String($execution.id)+':'+\"Generar imagen\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "6ea33e89-e9c5-599c-8676-9e4175867386",
+      "name": "Cooper · costo Generar imagen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "7b1767ad-2fba-55c3-a298-deb9e8acae72",
+      "name": "Cooper · costo Generar imagen registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Generar imagen').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "94b21fbb-98d9-521c-a021-753ced613995",
+      "name": "Cooper · costo Generar imagen seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"revisión visual\", servicio:\"OpenAI\", usd:aj.costoRevisionUsd, estimado:true, paso_id:String($execution.id)+':'+\"Revisar plano\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "4f4842d7-1d96-537c-8032-c59e3abae089",
+      "name": "Cooper · costo Revisar plano",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "8663b358-c92e-585a-8b0d-1c209c148606",
+      "name": "Cooper · costo Revisar plano registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Revisar plano').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "803fd451-c171-5892-a80c-254346012015",
+      "name": "Cooper · costo Revisar plano seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"revisión de archivo\", servicio:\"OpenAI\", usd:aj.costoRevisionUsd, estimado:true, paso_id:String($execution.id)+':'+\"Revisar archivo\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "f67def5b-fc6c-5ca2-9852-b8b478503e44",
+      "name": "Cooper · costo Revisar archivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "d4efd7de-f6a4-59bf-860a-89a0365b730f",
+      "name": "Cooper · costo Revisar archivo registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Revisar archivo').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "8493f845-39f6-529a-81cb-7e28d5200409",
+      "name": "Cooper · costo Revisar archivo seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"clips\", servicio:\"Gemini Omni\", usd:Number($('Un ítem por plano').itemMatching(k).json.plano?.duracion_clip_s || 8) * aj.costoClipSegUsd, estimado:true, paso_id:String($execution.id)+':'+\"Animar (Gemini Omni)\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "865533d7-dcab-5da6-baa8-c85914341737",
+      "name": "Cooper · costo Animar (Gemini Omni)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f75a9718-ec55-5d03-a3a3-98e4f087fba6",
+      "name": "Cooper · costo Animar (Gemini Omni) registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Animar (Gemini Omni)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "c4e2680b-68bb-5d8b-bc8e-a20928d1d47b",
+      "name": "Cooper · costo Animar (Gemini Omni) seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"montaje\", servicio:\"Creatomate (créditos)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Renderizar\"+':'+$runIndex+':'+k }}));"
+      },
+      "id": "aef9cda0-3c72-56be-a25f-2bd165295b81",
+      "name": "Cooper · costo Renderizar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "1c86a364-190a-547a-94a8-0f589117f794",
+      "name": "Cooper · costo Renderizar registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Renderizar').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+      },
+      "id": "9ac9e4ef-f50a-53b1-b68b-238253b25d12",
+      "name": "Cooper · costo Renderizar seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Generar imagen registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "c282549a-496e-53dd-bb53-d1ba9135db15",
+      "name": "Cooper · identificar Cooper · costo Generar imagen registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Revisar plano registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "c60c6988-f7a6-57ec-9575-d16c577de48d",
+      "name": "Cooper · identificar Cooper · costo Revisar plano registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Revisar archivo registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "6e59a5c2-2785-5dd3-8754-bb4532d223c7",
+      "name": "Cooper · identificar Cooper · costo Revisar archivo registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Animar (Gemini Omni) registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "458454e9-a0fe-573d-8c73-620cc0b3fa58",
+      "name": "Cooper · identificar Cooper · costo Animar (Gemini Omni) registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, paso_id:i.json.paso_id || (String($execution.id)+':' + \"Cooper · costo Renderizar registrar\" + ':' + $runIndex + ':' + k)}, pairedItem:{item:k}}));"
+      },
+      "id": "fab85bc6-e678-54df-8caa-147f2d8f4a9b",
+      "name": "Cooper · identificar Cooper · costo Renderizar registrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "60ca50ba-d403-59b6-8ac2-e6d39c620609",
+      "name": "Noticia · Plan de producción entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "db20f0fe-a955-5fa1-befc-426f05039afa",
+      "name": "Noticia · Plan de producción video",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst v=$('Noticia · Plan de producción video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,$('Inicio').first().json.guion); if (v.modo_noticia) { exigirStoryboard(v,$('Inicio').first().json.storyboard); if ($('Inicio').first().json.modo_noticia !== true) throw new Error('Modalidad de noticia incompatible'); } return $('Noticia · Plan de producción entrada').all();"
+      },
+      "id": "55c3e3e4-2d65-5310-a040-70763c3ff7d7",
+      "name": "Noticia · Plan de producción validar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en producción\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "d2173d60-71b0-5248-99cf-b3814d5fab0d",
+      "name": "Cooper · sello Video en producción",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c220bc60-1065-573d-b79d-2cd31926e7ee",
+      "name": "Cooper · sello Video en producción aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video detenido\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "effbcc57-c894-5d0c-b664-03a674bb2f2c",
+      "name": "Cooper · sello Video detenido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "4eda689b-53e0-5142-8b86-6eb7c29d8b5a",
+      "name": "Cooper · sello Video detenido aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Costo en la tabla\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "b98870ec-bc2b-54ea-8acb-030d673151a1",
+      "name": "Cooper · sello Costo en la tabla",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "73aeca28-d21b-5287-9233-0fb0ffa56136",
+      "name": "Cooper · sello Costo en la tabla aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Sonido y emoción guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "9ee0b027-766b-5bda-95a1-cac87f21584a",
+      "name": "Cooper · sello Cooper · Sonido y emoción guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c8046bf7-827a-5a08-beac-3089c3879af7",
+      "name": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Composición Creatomate guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "58c7a859-8e9b-542f-9f6b-be4f5b4cc16e",
+      "name": "Cooper · sello Cooper · Composición Creatomate guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "91e65c95-d4e1-5217-995c-2cf81e6a8f32",
+      "name": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
         0
       ]
     }
@@ -2246,7 +3588,7 @@
       "main": [
         [
           {
-            "node": "Plan de producción",
+            "node": "Noticia · Plan de producción entrada",
             "type": "main",
             "index": 0
           }
@@ -2257,7 +3599,7 @@
       "main": [
         [
           {
-            "node": "¿Todo encendido?",
+            "node": "Presentación · ¿Todo encendido? entrada",
             "type": "main",
             "index": 0
           }
@@ -2388,18 +3730,7 @@
       "main": [
         [
           {
-            "node": "Video en producción",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Video en producción": {
-      "main": [
-        [
-          {
-            "node": "Un ítem por plano",
+            "node": "Cooper · sello Video en producción",
             "type": "main",
             "index": 0
           }
@@ -2428,7 +3759,7 @@
         ],
         [
           {
-            "node": "Avatar pendiente",
+            "node": "Plano para avatar",
             "type": "main",
             "index": 0
           }
@@ -2555,7 +3886,7 @@
       "main": [
         [
           {
-            "node": "Archivo elegido",
+            "node": "Cooper · costo Revisar archivo",
             "type": "main",
             "index": 0
           }
@@ -2617,7 +3948,7 @@
       "main": [
         [
           {
-            "node": "Generar imagen",
+            "node": "Presentación · Generar imagen entrada",
             "type": "main",
             "index": 0
           }
@@ -2628,7 +3959,7 @@
       "main": [
         [
           {
-            "node": "Extraer imagen",
+            "node": "Cooper · costo Generar imagen",
             "type": "main",
             "index": 0
           }
@@ -2650,7 +3981,7 @@
       "main": [
         [
           {
-            "node": "Animar (Gemini Omni)",
+            "node": "Presentación · Animar (Gemini Omni) entrada",
             "type": "main",
             "index": 0
           }
@@ -2668,7 +3999,7 @@
       "main": [
         [
           {
-            "node": "Extraer clip",
+            "node": "Cooper · costo Animar (Gemini Omni)",
             "type": "main",
             "index": 0
           }
@@ -2792,7 +4123,7 @@
       "main": [
         [
           {
-            "node": "Veredicto",
+            "node": "Cooper · costo Revisar plano",
             "type": "main",
             "index": 0
           }
@@ -2839,7 +4170,7 @@
         ]
       ]
     },
-    "Avatar pendiente": {
+    "Plano para avatar": {
       "main": [
         [
           {
@@ -2939,7 +4270,7 @@
       "main": [
         [
           {
-            "node": "Video detenido",
+            "node": "Cooper · sello Video detenido",
             "type": "main",
             "index": 0
           }
@@ -2950,7 +4281,7 @@
       "main": [
         [
           {
-            "node": "Sonido y emoción",
+            "node": "Cooper · Sonido y emoción entrada",
             "type": "main",
             "index": 0
           }
@@ -2961,7 +4292,7 @@
       "main": [
         [
           {
-            "node": "Composición Creatomate",
+            "node": "Cooper · Composición Creatomate entrada",
             "type": "main",
             "index": 0
           }
@@ -2972,7 +4303,7 @@
       "main": [
         [
           {
-            "node": "Renderizar",
+            "node": "Presentación · Renderizar entrada",
             "type": "main",
             "index": 0
           }
@@ -2983,7 +4314,7 @@
       "main": [
         [
           {
-            "node": "Esperar render",
+            "node": "Cooper · costo Renderizar",
             "type": "main",
             "index": 0
           }
@@ -3068,18 +4399,7 @@
       "main": [
         [
           {
-            "node": "Costo en la tabla",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Costo en la tabla": {
-      "main": [
-        [
-          {
-            "node": "Encargo de derivados",
+            "node": "Cooper · sello Costo en la tabla",
             "type": "main",
             "index": 0
           }
@@ -3090,7 +4410,7 @@
       "main": [
         [
           {
-            "node": "Derivados",
+            "node": "Presentación · Derivados entrada",
             "type": "main",
             "index": 0
           }
@@ -3130,7 +4450,7 @@
         ],
         [
           {
-            "node": "Encargo de calidad",
+            "node": "Presentación · Encargo de calidad entrada",
             "type": "main",
             "index": 0
           }
@@ -3141,7 +4461,7 @@
       "main": [
         [
           {
-            "node": "Encargo de calidad",
+            "node": "Presentación · Encargo de calidad entrada",
             "type": "main",
             "index": 0
           }
@@ -3153,6 +4473,854 @@
         [
           {
             "node": "Calidad y publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Sonido y emoción guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción seguir": {
+      "main": [
+        [
+          {
+            "node": "Sonido y emoción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate entrada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate etapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate etapa": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Composición Creatomate guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate seguir": {
+      "main": [
+        [
+          {
+            "node": "Preparar avatares",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación lista": {
+      "main": [
+        [
+          {
+            "node": "Composición Creatomate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar avatares": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Hay avatares? entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay avatares?": {
+      "main": [
+        [
+          {
+            "node": "Pedidos de avatar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Presentación lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos de avatar": {
+      "main": [
+        [
+          {
+            "node": "Renderizar avatares",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Renderizar avatares": {
+      "main": [
+        [
+          {
+            "node": "Presentación lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Todo encendido? entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Todo encendido? consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Todo encendido? consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Todo encendido? validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Todo encendido? validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Todo encendido? seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Todo encendido? seguir": {
+      "main": [
+        [
+          {
+            "node": "¿Todo encendido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Hay avatares? entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Hay avatares? consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Hay avatares? consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Hay avatares? validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Hay avatares? validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · ¿Hay avatares? seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · ¿Hay avatares? seguir": {
+      "main": [
+        [
+          {
+            "node": "¿Hay avatares?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Generar imagen entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Generar imagen consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Generar imagen consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Generar imagen validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Generar imagen validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Generar imagen seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Generar imagen seguir": {
+      "main": [
+        [
+          {
+            "node": "Generar imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Animar (Gemini Omni) entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Animar (Gemini Omni) consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Animar (Gemini Omni) consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Animar (Gemini Omni) validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Animar (Gemini Omni) validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Animar (Gemini Omni) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Animar (Gemini Omni) seguir": {
+      "main": [
+        [
+          {
+            "node": "Animar (Gemini Omni)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Renderizar entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Renderizar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Renderizar consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Renderizar validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Renderizar validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Renderizar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Renderizar seguir": {
+      "main": [
+        [
+          {
+            "node": "Renderizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Encargo de calidad entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Encargo de calidad consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Encargo de calidad consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Encargo de calidad validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Encargo de calidad validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Encargo de calidad seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Encargo de calidad seguir": {
+      "main": [
+        [
+          {
+            "node": "Encargo de calidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Derivados entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Derivados consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Derivados consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Derivados validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Derivados validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Derivados seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Derivados seguir": {
+      "main": [
+        [
+          {
+            "node": "Derivados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar imagen": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Generar imagen registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar imagen registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar imagen seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Generar imagen seguir": {
+      "main": [
+        [
+          {
+            "node": "Extraer imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar plano": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Revisar plano registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar plano registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar plano seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar plano seguir": {
+      "main": [
+        [
+          {
+            "node": "Veredicto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar archivo": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Revisar archivo registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar archivo registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar archivo seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Revisar archivo seguir": {
+      "main": [
+        [
+          {
+            "node": "Archivo elegido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Animar (Gemini Omni)": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Animar (Gemini Omni) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Animar (Gemini Omni) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Animar (Gemini Omni) seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Animar (Gemini Omni) seguir": {
+      "main": [
+        [
+          {
+            "node": "Extraer clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · identificar Cooper · costo Renderizar registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · costo Renderizar seguir": {
+      "main": [
+        [
+          {
+            "node": "Esperar render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Generar imagen registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Generar imagen registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Revisar plano registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar plano registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Revisar archivo registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Revisar archivo registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Animar (Gemini Omni) registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Animar (Gemini Omni) registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · identificar Cooper · costo Renderizar registrar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · costo Renderizar registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia · Plan de producción entrada": {
+      "main": [
+        [
+          {
+            "node": "Noticia · Plan de producción video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia · Plan de producción video": {
+      "main": [
+        [
+          {
+            "node": "Noticia · Plan de producción validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia · Plan de producción validar": {
+      "main": [
+        [
+          {
+            "node": "Plan de producción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en producción": {
+      "main": [
+        [
+          {
+            "node": "Video en producción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en producción aviso": {
+      "main": [
+        [
+          {
+            "node": "Un ítem por plano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video en producción": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video en producción aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video detenido": {
+      "main": [
+        [
+          {
+            "node": "Video detenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video detenido aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Video detenido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video detenido aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Costo en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Costo en la tabla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Costo en la tabla aviso": {
+      "main": [
+        [
+          {
+            "node": "Encargo de derivados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Costo en la tabla aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Sonido y emoción guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Sonido y emoción guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Composición Creatomate guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Composición Creatomate guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
             "type": "main",
             "index": 0
           }

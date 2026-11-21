@@ -1,0 +1,247 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --reporter=verbose
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-revision/cooper
+
+ ✓ tests/cooper.test.ts > Identidad y autorización > crea al primer administrador y mantiene usuarios normales 1ms
+ ✓ tests/cooper.test.ts > Identidad y autorización > rechaza correos no permitidos y cuentas desactivadas 1ms
+ ✓ tests/cooper.test.ts > Identidad y autorización > solo dueño o admin; chat siempre exige dueño 0ms
+ ✓ tests/cooper.test.ts > Identidad y autorización > nunca incluye gasto en el estado normal y la consulta está protegida 2ms
+ ✓ tests/cooper.test.ts > Identidad y autorización > bloquea lectura de gasto, modificación, aprobación y borrado ajenos en las rutas 12ms
+ ✓ tests/cooper.test.ts > Identidad y autorización > limita diez cuentas sin dar permisos administrativos por correo arbitrario 3ms
+ ✓ tests/cooper.test.ts > Etapas y fábrica > tiene doce etapas y dos puertas de aprobación 1ms
+ ✓ tests/cooper.test.ts > Etapas y fábrica > avanza con reloj, pausa, aprueba una sola vez y espera publicación programada 5ms
+ ✓ tests/cooper.test.ts > Etapas y fábrica > corregir vuelve a producción y conserva indicaciones 1ms
+ ✓ tests/cooper.test.ts > Etapas y fábrica > no programa una fecha inválida o pasada 0ms
+ ✓ tests/cooper.test.ts > Etapas y fábrica > el contrato HTTP atribuye propietario y usa el mismo ID sin gasto ficticio 2ms
+ ✓ tests/cooper.test.ts > Etapas y fábrica > no envía HTTP si el recurso pertenece a otro usuario 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > crear un video en un canal no crea otro canal 1ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea nuevo_canal uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea nuevo_video uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea corregir uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea ajustar_biblia uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea programar uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea referencias uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea configurar_redes uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea metas uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > mapea adoptar_cuenta uno a uno 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > responde estado sin acceder a otro espacio 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > responde reporte sin acceder a otro espacio 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > responde pendientes sin acceder a otro espacio 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > responde tendencias sin acceder a otro espacio 0ms
+ ✓ tests/cooper.test.ts > Chat determinista > es determinista y no revela costos 1ms
+ ✓ tests/cooper.test.ts > Chat determinista > rechaza una selección de canal ajeno aunque se fuerce desde el chat 1ms
+ ✓ tests/cooper.test.ts > Chat determinista > registra los eventos del orquestador por dueño 0ms
+ ✓ tests/cooper.test.ts > Archivos, identidad y entradas > protege adjuntos y rechaza transcripción ajena 1ms
+ ✓ tests/cooper.test.ts > Archivos, identidad y entradas > requiere consentimiento y mantiene la creación privada 2ms
+ ✓ tests/cooper.test.ts > Archivos, identidad y entradas > compartir permite la foto, nunca la evidencia ni modificar al otro 13ms
+ ✓ tests/cooper.test.ts > Archivos, identidad y entradas > valida E.164, MIME y CSRF 2ms
+ ✓ tests/cooper.test.ts > Administración y validación reforzada > permite al administrador editar un canal ajeno desde gestión, manteniendo el chat aislado 1ms
+ ✓ tests/cooper.test.ts > Administración y validación reforzada > no eleva el rol mediante el perfil 1ms
+ ✓ tests/cooper.test.ts > Selección de presentador por video > conserva avatar, voz y presencia en cada producción 1ms
+ ✓ tests/cooper.test.ts > Selección de presentador por video > rechaza una voz o avatar que no están disponibles 1ms
+ × tests/revision-seguridad.test.ts > R01 rechaza publicar un adjunto ajeno como foto de una voz 16ms
+   → expected 200 to be 400 // Object.is equality
+ × tests/revision-seguridad.test.ts > R01 protege también referencias compartidas corruptas anteriores a la corrección 1ms
+   → expected 200 to be 404 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como image/png 1ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como image/jpeg 1ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como image/webp 1ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/wav 0ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/ogg 0ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/webm 0ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/mp4 0ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como video/mp4 0ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como application/pdf 0ms
+   → expected 200 to be 415 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 rechaza base64 no canónico 0ms
+   → expected 200 to be 400 // Object.is equality
+ × tests/revision-seguridad.test.ts > R03 conserva tamaño máximo y descargas sin interpretación 39ms
+   → the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ × tests/revision-seguridad.test.ts > R04 vuelve a comprobar la sesión tras esperar a la fábrica 2ms
+   → expected false to be true // Object.is equality
+ × tests/revision-seguridad.test.ts > R04 limita conexiones SSE simultáneas y libera cupos al cancelar 5ms
+   → expected [ 200, 200, 200, 200, 200 ] to deeply equal [ 200, 200, 200, 200, 429 ]
+ × tests/revision-sesion.test.ts > R02 nunca autentica una cookie de ensayo en producción aunque se configuren las banderas 37ms
+   → promise resolved "{ …(9) }" instead of rejecting
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R01 rechaza publicar un adjunto ajeno como foto de una voz
+AssertionError: expected 200 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 200
+
+ ❯ tests/revision-seguridad.test.ts:38:26
+     36| it("R01 rechaza publicar un adjunto ajeno como foto de una voz", async…
+     37|   const created = await route("POST", "activos", { kind: "voz", name: …
+     38|   expect(created.status).toBe(400);
+       |                          ^
+     39| });
+     40| it("R01 protege también referencias compartidas corruptas anteriores a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R01 protege también referencias compartidas corruptas anteriores a la corrección
+AssertionError: expected 200 to be 404 // Object.is equality
+
+- Expected
++ Received
+
+- 404
++ 200
+
+ ❯ tests/revision-seguridad.test.ts:42:62
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como image/png
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como image/jpeg
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como image/webp
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/wav
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/ogg
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/webm
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como audio/mp4
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como video/mp4
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza HTML etiquetado como application/pdf
+AssertionError: expected 200 to be 415 // Object.is equality
+
+- Expected
++ Received
+
+- 415
++ 200
+
+ ❯ tests/revision-seguridad.test.ts:45:157
+     43| });
+     44| it.each(["image/png", "image/jpeg", "image/webp", "audio/wav", "audio/…
+     45|   expect((await route("POST", "archivos", { name: "falso", mime, data:…
+       |                                                                                                                                                             ^
+     46| });
+     47| it("R03 rechaza base64 no canónico", async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R03 rechaza base64 no canónico
+AssertionError: expected 200 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 200
+
+ ❯ tests/revision-seguridad.test.ts:48:109
+     46| });
+     47| it("R03 rechaza base64 no canónico", async () => {
+     48|   expect((await route("POST", "archivos", { name: "texto", mime: "text…
+       |                                                                                                             ^
+     49| });
+     50| it("R03 conserva tamaño máximo y descargas sin interpretación", async …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R03 conserva tamaño máximo y descargas sin interpretación
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/revision-seguridad.test.ts:55:59
+     53|   expect(uploaded.status).toBe(200);
+     54|   const download = await route("GET", `archivos/${(await uploaded.json…
+     55|   expect(download.headers.get("content-security-policy")).toContain("s…
+       |                                                           ^
+     56| });
+     57| it("R04 vuelve a comprobar la sesión tras esperar a la fábrica", async…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R04 vuelve a comprobar la sesión tras esperar a la fábrica
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/revision-seguridad.test.ts:62:44
+     60|   const response = await stream(new Request("http://localhost/api/even…
+     61|   const reader = response.body!.getReader();
+     62|   try { expect((await reader.read()).done).toBe(true); }
+       |                                            ^
+     63|   finally { controller.abort(); await reader.cancel(); }
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  tests/revision-seguridad.test.ts > R04 limita conexiones SSE simultáneas y libera cupos al cancelar
+AssertionError: expected [ 200, 200, 200, 200, 200 ] to deeply equal [ 200, 200, 200, 200, 429 ]
+
+- Expected
++ Received
+
+  [
+    200,
+    200,
+    200,
+    200,
+-   429,
++   200,
+  ]
+
+ ❯ tests/revision-seguridad.test.ts:69:42
+     67|   try {
+     68|     for (let i = 0; i < 5; i++) responses.push(await stream(new Reques…
+     69|     expect(responses.map(r => r.status)).toEqual([200, 200, 200, 200, …
+       |                                          ^
+     70|   } finally { for (const response of responses) await response.body?.c…
+     71|   const next = await stream(new Request("http://localhost/api/eventos"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  tests/revision-sesion.test.ts > R02 nunca autentica una cookie de ensayo en producción aunque se configuren las banderas
+AssertionError: promise resolved "{ …(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "active": true,
++   "email": "admin@example.test",
++   "home": "chat",
++   "id": "c5f21992-1b36-4b97-9c99-885d3a8f0c27",
++   "image": "",
++   "name": "Administrador de ensayo",
++   "role": "admin",
++   "theme": "oscuro",
++   "whatsapp": "",
+  }
+
+ ❯ tests/revision-sesion.test.ts:20:30
+     18|   const payload = Buffer.from(JSON.stringify({ email: user.email, expi…
+     19|   state.cookie = `${payload}.${createHmac("sha256", secret).update(pay…
+     20|   await expect(currentUser()).rejects.toMatchObject({ status: 401 });
+       |                              ^
+     21| });
+     22|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  16 failed | 37 passed (53)
+   Start at  16:11:54
+   Duration  1.50s (transform 321ms, setup 20ms, import 1.02s, tests 216ms, environment 0ms)

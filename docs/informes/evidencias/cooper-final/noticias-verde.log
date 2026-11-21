@@ -1,0 +1,10 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/noticias.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-final/cooper
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  20:30:30
+   Duration  717ms (transform 282ms, setup 20ms, import 551ms, tests 64ms, environment 0ms)

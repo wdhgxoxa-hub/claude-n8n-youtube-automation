@@ -1,0 +1,40 @@
+/ oscuro mobile: {"performance":0.96,"accessibility":1,"best-practices":1}; advertencias=0
+/canales oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos/f7d35497-c84e-4b1c-bea6-f81655bc81a9 oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/avatares oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/perfil oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/admin oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/entrar oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/ oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/canales oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos/f7d35497-c84e-4b1c-bea6-f81655bc81a9 oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/avatares oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/perfil oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/admin oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/entrar oscuro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/ claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/canales claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos/f7d35497-c84e-4b1c-bea6-f81655bc81a9 claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/avatares claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/perfil claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/admin claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/entrar claro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/ claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/canales claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/videos/f7d35497-c84e-4b1c-bea6-f81655bc81a9 claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/avatares claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/perfil claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/admin claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+/entrar claro desktop: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+file:///home/david/Proyectos/cooper-wt/cooper-final/cooper/scripts/auditoria.mjs:198
+    throw new Error(
+          ^
+
+Error: La auditoría requiere rendimiento >=100, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.
+    at file:///home/david/Proyectos/cooper-wt/cooper-final/cooper/scripts/auditoria.mjs:198:11
+
+Node.js v24.22.3

@@ -1,0 +1,26 @@
+✔ la CLI usa el correo exacto de Google al simular sin --admin (100.953127ms)
+✔ planifica sin escribir y conserva costos conciliados y dueños explícitos (1.503799ms)
+✔ huérfanos y contradicciones se rechazan antes de escribir (0.575968ms)
+✔ nombres duplicados y tipos incompatibles no se migran (0.220285ms)
+✔ segunda ejecución vacía y reversa aditiva idempotente (0.692449ms)
+✔ la reversa no pisa cambios posteriores ni otro destino (0.360101ms)
+✔ cambio entre plan y escritura detiene la aplicación (0.207132ms)
+✔ la decisión explícita de asignar todo al administrador conserva reversa e idempotencia (0.35296ms)
+✔ Codex simulado: stdin literal, sandbox, autenticación ChatGPT y entorno sin claves (27.857369ms)
+✔ búsqueda requiere evento real, no basta afirmarlo en el texto (78.617957ms)
+✔ Codex simulado: codex_fallo (25.374207ms)
+✔ Codex simulado: respuesta_invalida (27.171421ms)
+✔ Codex simulado: salida_excesiva (33.887094ms)
+✔ mata una ejecución lenta y devuelve timeout acotado (155.996759ms)
+✔ cancela el proceso cuando se desconecta el cliente (104.819315ms)
+✔ HTTP local: rechaza token, Origin, tareas y argumentos ajenos sin ejecutar (26.293534ms)
+✔ HTTP: respuesta compatible y logs sin prompt, cabeceras ni stderr (59.371455ms)
+✔ HTTP: saturación devuelve 429, y libera la plaza al terminar (5.27802ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 611.830188

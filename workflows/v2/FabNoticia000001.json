@@ -1,0 +1,428 @@
+{
+  "id": "FabNoticia000001",
+  "name": "F · Noticia del día verificada",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "9c4447cf-3e1e-5353-b525-5dc2a2a5e480",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "db0f2ecd-98ef-544b-bb11-95a75b8ad509",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json, aj=$('Leer ajustes').first().json;\nif (!e.canal_id || !e.nicho) throw new Error('Noticia sin canal o nicho');\nreturn [{json:{tarea:'radar_noticia',costo_estimado_usd:aj.costoRadarUsd,body:{model:aj.modeloCritico,\n  tools:[{type:'web_search'}],max_tool_calls:8,input:[{role:'user',content:[{type:'input_text',text:\n  'Busca la noticia más relevante DEL DÍA del nicho ' + String(e.nicho).slice(0,450) + '. Ahora: ' + new Date().toISOString() + ', zona America/Lima. ' +\n  'Solo hechos de fuentes primarias identificables. Nunca inventes datos ni uses imágenes de medios. Devuelve SOLO JSON {\"noticia\":{\"titulo\":\"\",\"fecha\":\"ISO con zona de la publicación de hoy\",\"hechos\":[{\"id\":\"h1\",\"dato\":\"afirmación completa\",\"fuentes\":[{\"url\":\"https://...\",\"titulo\":\"título de fuente\",\"fecha\":\"ISO\"}]}]}}. Si no hay noticia contrastable hoy devuelve {\"noticia\":null}. Hasta 12 hechos. Las URLs deben haberse consultado en esta búsqueda.'}]}]}}}];\n"
+      },
+      "id": "f5ca4b1f-2962-5a12-9371-673202db5a9c",
+      "name": "Encargo de noticia",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabTextoGPT0001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "e988e713-d9ac-5eec-ade3-be53cf83d0cc",
+      "name": "Radar de noticia",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compartido con los nodos de n8n; no depende del sistema de archivos ni de red.\nfunction leerTexto(respuesta) {\n  const texto = (respuesta?.output || []).filter(x => x.type === 'message')\n    .flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\\n');\n  try { return JSON.parse(texto); } catch { return null; }\n}\nfunction textoValido(tarea, respuesta) {\n  if (respuesta?.error || respuesta?.status === 'incomplete') return false;\n  const v = leerTexto(respuesta);\n  if (!v || typeof v !== 'object' || Array.isArray(v)) return false;\n  switch (tarea) {\n    case 'critico_nicho': return Array.isArray(v.sin_fuente) && Array.isArray(v.riesgos) && typeof v.veredicto === 'string';\n    case 'critico': return ['gancho','promesa','claridad','emocion','exactitud','originalidad'].every(k => Number.isFinite(v[k]) && v[k] >= 0 && v[k] <= 10) && Array.isArray(v.problemas);\n    case 'verificador': return Array.isArray(v.cifras) && Array.isArray(v.faltantes) && Array.isArray(v.cuenta);\n    case 'radar': return Array.isArray(v.ideas) && typeof v.resumen === 'string';\n    case 'radar_noticia': return v.noticia === null || typeof v.noticia?.titulo === 'string' && Array.isArray(v.noticia.hechos);\n    case 'verificador_noticia': return typeof v.verificado === 'boolean' && Array.isArray(v.hechos);\n    default: return false;\n  }\n}\nfunction fuentesRespuesta(respuesta) {\n  return [...new Set((respuesta?.output || []).flatMap(x => x.type === 'web_search_call'\n    ? (x.action?.sources || []).map(s => s.url).concat(x.action?.url || [])\n    : (x.content || []).flatMap(c => (c.annotations || []).filter(a => a.type === 'url_citation').map(a => a.url)))\n    .filter(u => typeof u === 'string' && /^https:\\/\\//.test(u)))];\n}\n// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst r=$('Radar de noticia').first().json;\nconst n=leerTexto(r)?.noticia;\nreturn [{json:{noticia:validarNoticia(n && {...n,fuentes_consultadas:r.fuentes_consultadas})}}];\n"
+      },
+      "id": "810aad3e-004a-5111-9493-62b84e7e508f",
+      "name": "Noticia candidata",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst n=$('Noticia candidata').first().json.noticia, aj=$('Leer ajustes').first().json;\nreturn [{json:{tarea:'verificador_noticia',costo_estimado_usd:aj.costoVerificacionUsd,body:{model:aj.modeloCritico,\n  tools:[{type:'web_search'}],max_tool_calls:12,input:[{role:'user',content:[{type:'input_text',text:\n  'Verifica independientemente CADA hecho de esta noticia en fuentes primarias actuales. Abre las fuentes y busca contradicciones. ' +\n  'No cambies id ni dato. Devuelve SOLO JSON {\"verificado\":true,\"hechos\":[{\"id\":\"h1\",\"dato\":\"mismo dato\",\"estado\":\"ok|sin_fuente|contradictorio\",\"fuentes\":[{\"url\":\"https://...\",\"titulo\":\"\",\"fecha\":\"ISO\"}]}],\"resumen\":\"\"}. ' +\n  'verificado solo true si TODOS se sostienen, sin dudas ni contradicciones. Las URLs deben haberse consultado. Fecha actual: ' + new Date().toISOString() + '\\n' + JSON.stringify(n)}]}]}}}];\n"
+      },
+      "id": "5994a852-6a76-5342-83a6-8e103bfc363c",
+      "name": "Encargo de verificación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabTextoGPT0001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "e7ad4033-2799-518b-a3f6-806dc933a4de",
+      "name": "Verificador de noticia",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compartido con los nodos de n8n; no depende del sistema de archivos ni de red.\nfunction leerTexto(respuesta) {\n  const texto = (respuesta?.output || []).filter(x => x.type === 'message')\n    .flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\\n');\n  try { return JSON.parse(texto); } catch { return null; }\n}\nfunction textoValido(tarea, respuesta) {\n  if (respuesta?.error || respuesta?.status === 'incomplete') return false;\n  const v = leerTexto(respuesta);\n  if (!v || typeof v !== 'object' || Array.isArray(v)) return false;\n  switch (tarea) {\n    case 'critico_nicho': return Array.isArray(v.sin_fuente) && Array.isArray(v.riesgos) && typeof v.veredicto === 'string';\n    case 'critico': return ['gancho','promesa','claridad','emocion','exactitud','originalidad'].every(k => Number.isFinite(v[k]) && v[k] >= 0 && v[k] <= 10) && Array.isArray(v.problemas);\n    case 'verificador': return Array.isArray(v.cifras) && Array.isArray(v.faltantes) && Array.isArray(v.cuenta);\n    case 'radar': return Array.isArray(v.ideas) && typeof v.resumen === 'string';\n    case 'radar_noticia': return v.noticia === null || typeof v.noticia?.titulo === 'string' && Array.isArray(v.noticia.hechos);\n    case 'verificador_noticia': return typeof v.verificado === 'boolean' && Array.isArray(v.hechos);\n    default: return false;\n  }\n}\nfunction fuentesRespuesta(respuesta) {\n  return [...new Set((respuesta?.output || []).flatMap(x => x.type === 'web_search_call'\n    ? (x.action?.sources || []).map(s => s.url).concat(x.action?.url || [])\n    : (x.content || []).flatMap(c => (c.annotations || []).filter(a => a.type === 'url_citation').map(a => a.url)))\n    .filter(u => typeof u === 'string' && /^https:\\/\\//.test(u)))];\n}\n// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst r=$('Verificador de noticia').first().json;\nreturn [{json:{canal_id:$('Inicio').first().json.canal_id,noticia:validarVerificacion($('Noticia candidata').first().json.noticia,leerTexto(r),r)}}];\n"
+      },
+      "id": "6ef8e0e5-09fb-5494-a498-ae6155301d72",
+      "name": "Noticia verificada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$('Radar de noticia').first().json; const u=r.texto_uso; return [{json:{...u,video_id:$('Inicio').first().json.video_id || ('canal:' + $('Inicio').first().json.canal_id),concepto:\"radar de noticia\",servicio:u.ruta === 'codex' ? 'Codex (plan ChatGPT)' : 'OpenAI API',paso_id:String($execution.id)+':Radar de noticia'}}];"
+      },
+      "id": "01ca1514-3a63-5d49-b4f2-9859995abf26",
+      "name": "Costo · Radar de noticia",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "ca662e94-a76a-5bf5-a918-16ffdf59038b",
+      "name": "Costo · Radar de noticia registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Radar de noticia').all();"
+      },
+      "id": "9fa8d5b3-fee2-5ea2-955d-82e263c59c8c",
+      "name": "Costo · Radar de noticia seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$('Verificador de noticia').first().json; const u=r.texto_uso; return [{json:{...u,video_id:$('Inicio').first().json.video_id || ('canal:' + $('Inicio').first().json.canal_id),concepto:\"verificador de noticia\",servicio:u.ruta === 'codex' ? 'Codex (plan ChatGPT)' : 'OpenAI API',paso_id:String($execution.id)+':Verificador de noticia'}}];"
+      },
+      "id": "55b5b5e8-11a6-5344-a3b3-2eb5c22306fc",
+      "name": "Costo · Verificador de noticia",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperCosto01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "9597f62d-7b9d-5940-b42e-8cdb5389caaa",
+      "name": "Costo · Verificador de noticia registrar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Verificador de noticia').all();"
+      },
+      "id": "86db6142-2f06-5dd2-ac90-4e6883217beb",
+      "name": "Costo · Verificador de noticia seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Encargo de noticia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encargo de noticia": {
+      "main": [
+        [
+          {
+            "node": "Radar de noticia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia candidata": {
+      "main": [
+        [
+          {
+            "node": "Encargo de verificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encargo de verificación": {
+      "main": [
+        [
+          {
+            "node": "Verificador de noticia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo · Radar de noticia": {
+      "main": [
+        [
+          {
+            "node": "Costo · Radar de noticia registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo · Radar de noticia registrar": {
+      "main": [
+        [
+          {
+            "node": "Costo · Radar de noticia seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo · Radar de noticia seguir": {
+      "main": [
+        [
+          {
+            "node": "Noticia candidata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Radar de noticia": {
+      "main": [
+        [
+          {
+            "node": "Costo · Radar de noticia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo · Verificador de noticia": {
+      "main": [
+        [
+          {
+            "node": "Costo · Verificador de noticia registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo · Verificador de noticia registrar": {
+      "main": [
+        [
+          {
+            "node": "Costo · Verificador de noticia seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo · Verificador de noticia seguir": {
+      "main": [
+        [
+          {
+            "node": "Noticia verificada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificador de noticia": {
+      "main": [
+        [
+          {
+            "node": "Costo · Verificador de noticia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 600,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -1,0 +1,48 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --project=demostracion --grep integración final
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 108ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 677ms
+  Running TypeScript ...
+  Finished TypeScript in 1704ms ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/4) ...
+  Generating static pages using 19 workers (1/4)
+  Generating static pages using 19 workers (2/4)
+  Generating static pages using 19 workers (3/4)
+✓ Generating static pages using 19 workers (4/4) in 234ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✓  1 [demostracion] › e2e/diseno.spec.ts:395:1 › integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas (24.6s)
+
+  1 passed (27.1s)

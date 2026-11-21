@@ -1,0 +1,35 @@
+{
+  "name": "cooper_aprobacion_guion",
+  "language": "es",
+  "category": "UTILITY",
+  "components": [
+    {
+      "type": "BODY",
+      "text": "El guion de tu video «{{1}}» está listo para revisión en Cooper. Abre el enlace para revisarlo y aprobarlo.",
+      "example": {
+        "body_text": [
+          [
+            "Por qué el cielo es azul"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "FOOTER",
+      "text": "Puedes desactivar estos avisos en tu perfil de Cooper."
+    },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        {
+          "type": "URL",
+          "text": "Revisar guion",
+          "url": "https://cooper.example.org/revisar/whatsapp/{{1}}",
+          "example": [
+            "https://cooper.example.org/revisar/whatsapp/00000000-0000-4000-8000-000000000000.1795176000000.ejemplo_para_revision_de_meta"
+          ]
+        }
+      ]
+    }
+  ]
+}

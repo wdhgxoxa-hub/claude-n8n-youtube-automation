@@ -1,0 +1,1620 @@
+{
+  "codigo": "c05c8e3c552f870d8ccba119b94fca53ef40227b",
+  "png": 130,
+  "matriz": 104,
+  "complementarias": 26,
+  "archivos": [
+    {
+      "archivo": "admin-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/admin",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1479
+      ],
+      "bytes": 116673,
+      "sha256": "69d9b6a2ed725751233edf026dbd6893a9d0669958eef97bf93a27bac4826655"
+    },
+    {
+      "archivo": "admin-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/admin",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1795
+      ],
+      "bytes": 79255,
+      "sha256": "183e89ba3991f5773cafb5fb76066b69cf8d775cfddd06d74071885f8d1f31d6"
+    },
+    {
+      "archivo": "admin-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/admin",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1479
+      ],
+      "bytes": 117783,
+      "sha256": "fe325804e7d3ecc42ca3ff6f863e2e831838e3c159ee21dc45ec478b23954fed"
+    },
+    {
+      "archivo": "admin-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/admin",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1795
+      ],
+      "bytes": 80548,
+      "sha256": "faa7fa76fd4326f82aa1dd71bbc092db058cf0d29b30f95e98df8c5f3cb1878d"
+    },
+    {
+      "archivo": "aprobacion-final-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-2",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1275
+      ],
+      "bytes": 162461,
+      "sha256": "7a1aad16bd15ba53a5ccf05bc6227a2d741c93150fe34cf51482726e576e79a6"
+    },
+    {
+      "archivo": "aprobacion-final-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-2",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1921
+      ],
+      "bytes": 109488,
+      "sha256": "8a2a8360a3164ed5c4efecb90a2e108fc02e817b3d515149fd68e4311c4caf9c"
+    },
+    {
+      "archivo": "aprobacion-final-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-2",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1275
+      ],
+      "bytes": 163602,
+      "sha256": "c1aa96bc3ce6330c8e82056910bd73065a03129dd69576becc807c87ec455b01"
+    },
+    {
+      "archivo": "aprobacion-final-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-2",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1921
+      ],
+      "bytes": 110756,
+      "sha256": "2511cccbe57fdf6eb534400f78ef66a2a3484f236dc8b883c6589c3ffb8bb29e"
+    },
+    {
+      "archivo": "aprobacion-guion-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-1",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1275
+      ],
+      "bytes": 163648,
+      "sha256": "a2bc3440259caa4a08c5f4edc7e77333732675442dfc1cd9e214f2ac8e16b337"
+    },
+    {
+      "archivo": "aprobacion-guion-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-1",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1891
+      ],
+      "bytes": 107225,
+      "sha256": "f900a02253396ab4cb0b68cb0bda381589580d5ac113678d0d722e81364e564f"
+    },
+    {
+      "archivo": "aprobacion-guion-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-1",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1275
+      ],
+      "bytes": 164525,
+      "sha256": "1f781a0e80759bd8976a0671e81c92d50864c1565ad9b8f25fa37966ee9d3ee1"
+    },
+    {
+      "archivo": "aprobacion-guion-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-1",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1891
+      ],
+      "bytes": 108308,
+      "sha256": "d99f75364370f6046303ba966bb24e0182f5f3d5ef1f9b9b0acb7d0295baf1c2"
+    },
+    {
+      "archivo": "avatar-desde-chat-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1626
+      ],
+      "bytes": 154848,
+      "sha256": "9ac24fda97103487a81bd51167d1621779ed969926e8146a6bf297bc583fc9fc"
+    },
+    {
+      "archivo": "avatar-desde-chat-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2334
+      ],
+      "bytes": 123565,
+      "sha256": "af0327f04eac7996c9dc97965c05a8ccc44241b37ac0f9b1e633fff584fd62f7"
+    },
+    {
+      "archivo": "avatar-desde-chat-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1626
+      ],
+      "bytes": 155633,
+      "sha256": "6241cab1e895beac0b168e2d2e26393fb5373e24b32422ad62be46fa4f647bf3"
+    },
+    {
+      "archivo": "avatar-desde-chat-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2334
+      ],
+      "bytes": 124982,
+      "sha256": "d21822eba4a7e681a576a77994ca7f6a053ab3e6f0a3af2958ba567c8d2539aa"
+    },
+    {
+      "archivo": "avatares-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 94530,
+      "sha256": "5eaca757e36162df34886fa8db97ae0101314e9200a3f9d762d354c10b39c90e"
+    },
+    {
+      "archivo": "avatares-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1217
+      ],
+      "bytes": 63794,
+      "sha256": "ce33cb34459a41047ff446ce644628ef099683bbec8e7944bda9bf947039bb8b"
+    },
+    {
+      "archivo": "avatares-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 94980,
+      "sha256": "fb66522ad84f7e743f8dd1c27c3cab2ac4e27e6590ebe3d6898df29ed9ed6117"
+    },
+    {
+      "archivo": "avatares-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1217
+      ],
+      "bytes": 63993,
+      "sha256": "a1a881f1fd05f746f763aed2ff563fc8cd634255c97e0915b3bf6b6a3ff4450c"
+    },
+    {
+      "archivo": "barra-detalle-1024-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        1024,
+        480
+      ],
+      "bytes": 60336,
+      "sha256": "f5894c340ce28e9a4ee17b25eef61919537598ffdf15ce1376a02b00cc55c367"
+    },
+    {
+      "archivo": "barra-detalle-1024.png",
+      "complementaria": true,
+      "dimensiones": [
+        1024,
+        1227
+      ],
+      "bytes": 138042,
+      "sha256": "df82619e4dba1b82a78763fbd2addcac078f17dfd80d908d45286d21bfd155ac"
+    },
+    {
+      "archivo": "barra-detalle-1440-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        1440,
+        480
+      ],
+      "bytes": 61788,
+      "sha256": "37613d970cb941184de7f6503cc9b243948947c6d6669ff4166795fb74531b1e"
+    },
+    {
+      "archivo": "barra-detalle-1440.png",
+      "complementaria": true,
+      "dimensiones": [
+        1440,
+        1247
+      ],
+      "bytes": 145674,
+      "sha256": "5746d312c8e66116b2106245d796756f27144f5e93bb48ca997f3385e899734b"
+    },
+    {
+      "archivo": "barra-detalle-1920-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        1920,
+        480
+      ],
+      "bytes": 62968,
+      "sha256": "bd14cf9ab0317c8017353b0e4c13ecec691800997c70d4c3c8be24d7b10281c8"
+    },
+    {
+      "archivo": "barra-detalle-1920.png",
+      "complementaria": true,
+      "dimensiones": [
+        1920,
+        1248
+      ],
+      "bytes": 150199,
+      "sha256": "954b7eca0959ccc8b7b0dea844875fd201adf7d9c6e06001ae254353851d4386"
+    },
+    {
+      "archivo": "barra-detalle-360-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        360,
+        480
+      ],
+      "bytes": 25098,
+      "sha256": "d9678915bb24e1bab0be5c3e7cde38f1315f9edb18961a9859a920adc2bc5f3c"
+    },
+    {
+      "archivo": "barra-detalle-360.png",
+      "complementaria": true,
+      "dimensiones": [
+        360,
+        480
+      ],
+      "bytes": 27609,
+      "sha256": "f35a81d8e1f382eb3c25fb7ffec6805f2fcdf7120394586580143aa00f47f220"
+    },
+    {
+      "archivo": "barra-detalle-390-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        390,
+        480
+      ],
+      "bytes": 26659,
+      "sha256": "fb573347a23ba28b9424c795af11f3daf7fc2dafe86b16a67ed0fdeebcbe0e4c"
+    },
+    {
+      "archivo": "barra-detalle-390.png",
+      "complementaria": true,
+      "dimensiones": [
+        390,
+        480
+      ],
+      "bytes": 29160,
+      "sha256": "65f64fc656e20e9596645a95c8b365deae8a82108e03dc42939904c6e5e545e5"
+    },
+    {
+      "archivo": "barra-detalle-768-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        768,
+        480
+      ],
+      "bytes": 36107,
+      "sha256": "847014996e625e85df31641f68aab4a99e6c6a61eb6cbc5e3510086d69b3e654"
+    },
+    {
+      "archivo": "barra-detalle-768.png",
+      "complementaria": true,
+      "dimensiones": [
+        768,
+        1807
+      ],
+      "bytes": 135410,
+      "sha256": "158cbc6dd60e1a545fc6ffafb3552ab2ba3873ba8210749af9cc49b29cfd58ec"
+    },
+    {
+      "archivo": "barra-inicio-1024-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        1024,
+        480
+      ],
+      "bytes": 51810,
+      "sha256": "0257bef978509f04721da97e29eb7c8e98f571376e0437d3132e3892dd639aaa"
+    },
+    {
+      "archivo": "barra-inicio-1024.png",
+      "complementaria": true,
+      "dimensiones": [
+        1024,
+        1447
+      ],
+      "bytes": 132334,
+      "sha256": "a58dc28d53ea6094d8dba37c20e74d69352a49b9545e799d5ff9fa78227001a1"
+    },
+    {
+      "archivo": "barra-inicio-1440-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        1440,
+        480
+      ],
+      "bytes": 63921,
+      "sha256": "29fbfb8b038df6a746719615dc7475e5658f594b63947f339e22aa9d59cd7db8"
+    },
+    {
+      "archivo": "barra-inicio-1440.png",
+      "complementaria": true,
+      "dimensiones": [
+        1440,
+        1185
+      ],
+      "bytes": 138284,
+      "sha256": "c53a0213e8d3f803bc2cd93ed3cc70e25dd21908c9de661ea5d644f73af5cdb5"
+    },
+    {
+      "archivo": "barra-inicio-1920-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        1920,
+        480
+      ],
+      "bytes": 63752,
+      "sha256": "4572b1e377f432a05f7593d299c4caaba6c9394a108d6cc679bef6fe36915ed0"
+    },
+    {
+      "archivo": "barra-inicio-1920.png",
+      "complementaria": true,
+      "dimensiones": [
+        1920,
+        1185
+      ],
+      "bytes": 139916,
+      "sha256": "02d081f8891d334f3ef6bcfbfa872faca38ba48f97146a7b79c8627b39bb4da8"
+    },
+    {
+      "archivo": "barra-inicio-360-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        360,
+        480
+      ],
+      "bytes": 16754,
+      "sha256": "2b94051f537b15ff8ce8ca32eeef7d5771dbb90fb64bd9da102ed4e233c139ef"
+    },
+    {
+      "archivo": "barra-inicio-360.png",
+      "complementaria": true,
+      "dimensiones": [
+        360,
+        480
+      ],
+      "bytes": 19484,
+      "sha256": "1553929ef94754a41505fb080c882f14b0977c00e0bdf215c0b3e62d9a32091b"
+    },
+    {
+      "archivo": "barra-inicio-390-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        390,
+        480
+      ],
+      "bytes": 17178,
+      "sha256": "f94a9a6d8ffba7e6652306751ea28fc6fb649b62358fe6dc55eb20de1bede998"
+    },
+    {
+      "archivo": "barra-inicio-390.png",
+      "complementaria": true,
+      "dimensiones": [
+        390,
+        480
+      ],
+      "bytes": 19892,
+      "sha256": "79edbea808fb0c67fc04343d390cba261d0573f8e6e6aff1d3e77d5c8650d654"
+    },
+    {
+      "archivo": "barra-inicio-768-final.png",
+      "complementaria": true,
+      "dimensiones": [
+        768,
+        480
+      ],
+      "bytes": 51755,
+      "sha256": "ca76fab90946b134e9d5dbd05b758bf9de34820b028adb34239d9ea6c727fb9b"
+    },
+    {
+      "archivo": "barra-inicio-768.png",
+      "complementaria": true,
+      "dimensiones": [
+        768,
+        1493
+      ],
+      "bytes": 132625,
+      "sha256": "0ca7ceb61c117e194da6875015b4751b15241fe225050bbfe985959e877911ba"
+    },
+    {
+      "archivo": "canal-noticias-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1169
+      ],
+      "bytes": 102130,
+      "sha256": "4dc1ac588e170b3b4bccaa3d0b8556758ace30c12cb30f33da91750b58b6b286"
+    },
+    {
+      "archivo": "canal-noticias-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1634
+      ],
+      "bytes": 69455,
+      "sha256": "7196d99a3a4e85ea186f607c4a0daa9a92288af912a0f6f928c8457b2f32c957"
+    },
+    {
+      "archivo": "canal-noticias-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1169
+      ],
+      "bytes": 102182,
+      "sha256": "4e88e8aad97d00de757250a9f5d1f261311612f6ee87129758d8493a6325e721"
+    },
+    {
+      "archivo": "canal-noticias-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1634
+      ],
+      "bytes": 69791,
+      "sha256": "73737160afc6dbf6f343d255301a4c7ca4ab3801f1be07cf8a1d443bbbda49ab"
+    },
+    {
+      "archivo": "canales-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1169
+      ],
+      "bytes": 105300,
+      "sha256": "112e312db047815cd4b38dee12b850d9deebadc07ef5fd59d1b30747a9021086"
+    },
+    {
+      "archivo": "canales-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1634
+      ],
+      "bytes": 69764,
+      "sha256": "64444549a346afb4ec962ddc505fd94ad8e18b146c7993237dcd0e9e269d8e82"
+    },
+    {
+      "archivo": "canales-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1169
+      ],
+      "bytes": 105426,
+      "sha256": "76f84938205293df1a29b02852537897cc21001a28c994f973927f56209d9f6a"
+    },
+    {
+      "archivo": "canales-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/canales",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1634
+      ],
+      "bytes": 70143,
+      "sha256": "824b6fcb4d696ed3087a69ccaff2a38da061600effbf6ce8975aa4a704d5d9c8"
+    },
+    {
+      "archivo": "chat-foto-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1242
+      ],
+      "bytes": 148164,
+      "sha256": "2cd55f93142f27507d5e7bbc5e5128c402a482d074f3b3aef5143c1557016cf9"
+    },
+    {
+      "archivo": "chat-foto-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1150
+      ],
+      "bytes": 51206,
+      "sha256": "de35db6ef8f5534bb6541d73e35f6c77d64bc628b2a6c71e527a37afb1961996"
+    },
+    {
+      "archivo": "chat-foto-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1242
+      ],
+      "bytes": 148675,
+      "sha256": "b28b965ea1d648159b9bee71ed1fcdcc6851b2776b9851efab54bdcef70e4a02"
+    },
+    {
+      "archivo": "chat-foto-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1150
+      ],
+      "bytes": 51321,
+      "sha256": "3396ea5512c7cc0b28896b24f6a44dd0336f96fec3449b28d6c23ed8bb079c2f"
+    },
+    {
+      "archivo": "chat-noticia-confirmacion-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1120
+      ],
+      "bytes": 146061,
+      "sha256": "b8788b0315fe170c8bd54101acd2a0a94ec8c4bbb0e978d8275710f28e7694db"
+    },
+    {
+      "archivo": "chat-noticia-confirmacion-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1061
+      ],
+      "bytes": 51015,
+      "sha256": "dc58488b4ba7b53db4ca8e2c77a59bef52ef5c930f3050fd1de5fe4e7c18926d"
+    },
+    {
+      "archivo": "chat-noticia-confirmacion-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1120
+      ],
+      "bytes": 146932,
+      "sha256": "a2539e563422d61c51c7da501026d4152c3a50fd747239a6bc9798a43c9004d2"
+    },
+    {
+      "archivo": "chat-noticia-confirmacion-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1061
+      ],
+      "bytes": 51405,
+      "sha256": "baa1dc59b682f8481b01ea5e641a5744a9b9a2007f03a7610ba0dfbaa4a66764"
+    },
+    {
+      "archivo": "crear-avatar-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1580
+      ],
+      "bytes": 151226,
+      "sha256": "5aedeef829b27448aa679117313e31368f22d7ca499efa95bb7b2856701a00c9"
+    },
+    {
+      "archivo": "crear-avatar-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2250
+      ],
+      "bytes": 116888,
+      "sha256": "d468dd866a3ca4032160caa9811e423f4cc57c09d90a2cb1f4af97c9092fe8cb"
+    },
+    {
+      "archivo": "crear-avatar-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1580
+      ],
+      "bytes": 151249,
+      "sha256": "3ad6fdff6c231fb15a50b6cf44bca82636d6468db5153f4ebaef75a21922c361"
+    },
+    {
+      "archivo": "crear-avatar-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2250
+      ],
+      "bytes": 117753,
+      "sha256": "bc310db82f09bf848a274e36eba253826ab1bd36060a3f1962633d2ee0e054d0"
+    },
+    {
+      "archivo": "crear-voz-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1487
+      ],
+      "bytes": 120873,
+      "sha256": "0c26865790fe4dc9b9c943753a10ff26a3ee7a3c3578511044023aa5396e380c"
+    },
+    {
+      "archivo": "crear-voz-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1879
+      ],
+      "bytes": 84942,
+      "sha256": "f25d822ac6c331ddbe3624e64e6cdc85a496e53e0df27eb6c4008f720dc23a33"
+    },
+    {
+      "archivo": "crear-voz-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1487
+      ],
+      "bytes": 121371,
+      "sha256": "33e606c819cf107dfcb8518d6b4f1c9da0b0ad638c4323a4f4e62cba88fba15f"
+    },
+    {
+      "archivo": "crear-voz-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1909
+      ],
+      "bytes": 87809,
+      "sha256": "2852310a8e78b5ea6344f650df39fc2d7fcbc580eeb6179982ff5f7520b126f5"
+    },
+    {
+      "archivo": "detalle-video-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-0",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1247
+      ],
+      "bytes": 155157,
+      "sha256": "fb39ec50339681eb435f063cb99358fcf1c7df33e08d1288f68775204ff05ddb"
+    },
+    {
+      "archivo": "detalle-video-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-0",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1889
+      ],
+      "bytes": 104105,
+      "sha256": "5395894f5f7199723f108be522599df17b8db4e4511f6b7c1f13a59b59a39f09"
+    },
+    {
+      "archivo": "detalle-video-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-0",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1247
+      ],
+      "bytes": 156149,
+      "sha256": "1e0fcceecfaf62b50433e619d0febc44f5cabba3d0494b1e76468f6e68990f4f"
+    },
+    {
+      "archivo": "detalle-video-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-0",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1889
+      ],
+      "bytes": 104956,
+      "sha256": "5e41d0723755398299076da91d95012172e081519c523e68b9c782a248ceddbf"
+    },
+    {
+      "archivo": "entrada-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/entrar",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 60384,
+      "sha256": "ac620bd338372052f11924375abaaadbd8fc386928d5155be7d70e5d4f3050bb"
+    },
+    {
+      "archivo": "entrada-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/entrar",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 35966,
+      "sha256": "67c7c6e1fc736fd91ab48abc0e6953c0908367fe2746fb61ea540a6800daefde"
+    },
+    {
+      "archivo": "entrada-error-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/entrar?error=AccessDenied",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 64919,
+      "sha256": "aedb7f754657e0e04595e1583baeb1881986eaa87aba3a21963d1b522f30fa5d"
+    },
+    {
+      "archivo": "entrada-error-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/entrar?error=AccessDenied",
+      "demo": true,
+      "dimensiones": [
+        390,
+        866
+      ],
+      "bytes": 39459,
+      "sha256": "a4932488c8dd53f85745f516479cd4058981bd15ebc39701aeffb8fdd460a440"
+    },
+    {
+      "archivo": "entrada-error-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/entrar?error=AccessDenied",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 65487,
+      "sha256": "586182c49e9d5f256d7bf59b94a5b20de51c50f302cecd4311b3b3ebbd95133e"
+    },
+    {
+      "archivo": "entrada-error-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/entrar?error=AccessDenied",
+      "demo": true,
+      "dimensiones": [
+        390,
+        866
+      ],
+      "bytes": 40337,
+      "sha256": "22ac734a69b9c98cd2370205349904d4605f26b38489a877279ed29075d65b02"
+    },
+    {
+      "archivo": "entrada-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/entrar",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 60786,
+      "sha256": "4358116d50716147e04385fbcb350b00c74e97b1f6ec0d7f8b8caffbe87bb352"
+    },
+    {
+      "archivo": "entrada-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/entrar",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 36857,
+      "sha256": "75cdc09815bab2a3c33db456a0369fc917947db66ef48e7b3567e800f07afd58"
+    },
+    {
+      "archivo": "fabrica-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1120
+      ],
+      "bytes": 131603,
+      "sha256": "f43c040ab66e4ef656b165a49b05353f683ca0f967703000b2db8487403f16d9"
+    },
+    {
+      "archivo": "fabrica-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1294
+      ],
+      "bytes": 76434,
+      "sha256": "58429096aa87a5daeb2612d13824e2e17a27b16195bad421be4e26aca6dc7ee4"
+    },
+    {
+      "archivo": "fabrica-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1120
+      ],
+      "bytes": 132261,
+      "sha256": "3719b5f4509908fd9d2b9ea122b5cd884819ac36f837dd383638251393c48207"
+    },
+    {
+      "archivo": "fabrica-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1294
+      ],
+      "bytes": 77096,
+      "sha256": "c2cc1477ca582c849da57626ded1cd217bfb0f824844dddf0bfe9f76a6eef115"
+    },
+    {
+      "archivo": "inicio-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1120
+      ],
+      "bytes": 131603,
+      "sha256": "f43c040ab66e4ef656b165a49b05353f683ca0f967703000b2db8487403f16d9"
+    },
+    {
+      "archivo": "inicio-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        881
+      ],
+      "bytes": 36419,
+      "sha256": "9ff766ae43ab06307f2aeeb062cb954e75c3dcd6071b26c816b8bb6cb66f9331"
+    },
+    {
+      "archivo": "inicio-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1120
+      ],
+      "bytes": 132261,
+      "sha256": "3719b5f4509908fd9d2b9ea122b5cd884819ac36f837dd383638251393c48207"
+    },
+    {
+      "archivo": "inicio-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/",
+      "demo": true,
+      "dimensiones": [
+        390,
+        881
+      ],
+      "bytes": 36470,
+      "sha256": "e5dd559861ec7d308e0e1c61f1366efe1f6ddf5055fd27fcaf7a9b18d20628af"
+    },
+    {
+      "archivo": "no-encontrado-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/inexistente",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 19507,
+      "sha256": "11bfa628097b74ee3d1cb7ed08928797c74c1e730023a6ec317718ee7a9ea82b"
+    },
+    {
+      "archivo": "no-encontrado-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/inexistente",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 14924,
+      "sha256": "2d0a9caf2a192ececf18ef9368ad21976a742fa234a9ab97a72431202e0eaab2"
+    },
+    {
+      "archivo": "no-encontrado-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/inexistente",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 19618,
+      "sha256": "37b0514ea466f7f2e621f8dca549d5577373d1ccb3e2b98ab7fe68d926225554"
+    },
+    {
+      "archivo": "no-encontrado-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/inexistente",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 15142,
+      "sha256": "a34378b6f4339308405e4e638e3ae2da18be39bbf5d00b59dc4f50795420245d"
+    },
+    {
+      "archivo": "noticia-pausada-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos/964d2886-2ffc-4119-925d-e3af1192ec43",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1304
+      ],
+      "bytes": 158377,
+      "sha256": "a1ddd172f44455b48d6a95dd36d249883abf6a2ba0e56af84820ef96eadd0a96"
+    },
+    {
+      "archivo": "noticia-pausada-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos/964d2886-2ffc-4119-925d-e3af1192ec43",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1903
+      ],
+      "bytes": 110195,
+      "sha256": "d1c1b56561be2216dd6d11c2953ebda95466123544299f4c8ab625c2cdaf55fe"
+    },
+    {
+      "archivo": "noticia-pausada-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos/964d2886-2ffc-4119-925d-e3af1192ec43",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1304
+      ],
+      "bytes": 159261,
+      "sha256": "e1df4543bb10c9004b01d438ab41fbeeec38c5a637b27027d5817b34532c0c8e"
+    },
+    {
+      "archivo": "noticia-pausada-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos/964d2886-2ffc-4119-925d-e3af1192ec43",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1903
+      ],
+      "bytes": 110583,
+      "sha256": "02e60e2a378bb223255b7f85502e6090f9e264d97a5ef97189244b4b931ea803"
+    },
+    {
+      "archivo": "pedir-video-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1328
+      ],
+      "bytes": 105975,
+      "sha256": "dd9ece9f2060a04b21ec60b1578814db776ce3a7ec3e69d9729bb9e0830f9db1"
+    },
+    {
+      "archivo": "pedir-video-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1476
+      ],
+      "bytes": 65159,
+      "sha256": "e247d6466db9827cf904ad3ad80643779d0c1f6337b09b783e2bcecd977cf435"
+    },
+    {
+      "archivo": "pedir-video-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1328
+      ],
+      "bytes": 106802,
+      "sha256": "505f369e7d2685f31fa9bdef1eddc297e8669c05321128c1eb15f3efc54ab09b"
+    },
+    {
+      "archivo": "pedir-video-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1476
+      ],
+      "bytes": 65663,
+      "sha256": "727f5873723286f38c8cc293bed97c1319f3b71ae4f2063f9ec0ed46b170fd5a"
+    },
+    {
+      "archivo": "perfil-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1345
+      ],
+      "bytes": 104940,
+      "sha256": "47116b2fe3960911621e34c2d6ba4f67a91fb1c12c426ee8d6e19871597009bf"
+    },
+    {
+      "archivo": "perfil-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1665
+      ],
+      "bytes": 70112,
+      "sha256": "ad8262cd319fd0d98ae1118b81319ec7d7507d328b88c7b41c80b2b65eb76e49"
+    },
+    {
+      "archivo": "perfil-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1345
+      ],
+      "bytes": 106423,
+      "sha256": "4ff9785186afa7a6f84ec432816b19703bf65411475ab8f7f8d71d0404268acd"
+    },
+    {
+      "archivo": "perfil-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1665
+      ],
+      "bytes": 71800,
+      "sha256": "bbbc647acef54c836ea1e9b5dcf8d7897c9e7686f9edf40c9aa2afb7e21606de"
+    },
+    {
+      "archivo": "presentacion-revocada-1440.png",
+      "complementaria": true,
+      "dimensiones": [
+        1440,
+        1304
+      ],
+      "bytes": 153010,
+      "sha256": "7c223ddc278012507f86c7f2edcf9437f75d0c83e93b4dd43aede7b80b040dd7"
+    },
+    {
+      "archivo": "presentacion-revocada-390.png",
+      "complementaria": true,
+      "dimensiones": [
+        390,
+        1968
+      ],
+      "bytes": 105866,
+      "sha256": "74b51adfffb4fe72e567eced614d82d96d8a58696516a58efc54d02f6a61f81c"
+    },
+    {
+      "archivo": "publicado-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-3",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1247
+      ],
+      "bytes": 165203,
+      "sha256": "4e18aaecf8202b6a62b89c80d1c939fbb70a7a2e84990d056a3c040000282a54"
+    },
+    {
+      "archivo": "publicado-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-3",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1899
+      ],
+      "bytes": 112056,
+      "sha256": "d53357e87a0c4976d7e8d6b1934a0e27cca5abdb968d21bd1a1a5e108d5cc215"
+    },
+    {
+      "archivo": "publicado-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-3",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1247
+      ],
+      "bytes": 166511,
+      "sha256": "8bd6a3ab479325f584bec028c14d212b4fb73c258a2c68a35aecec393f83818e"
+    },
+    {
+      "archivo": "publicado-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos/demo-bfc83e48-611e-4aa3-89d2-6873dd0d6db8-3",
+      "demo": true,
+      "dimensiones": [
+        390,
+        1899
+      ],
+      "bytes": 112767,
+      "sha256": "128485a22fe813c976dfdf0e1dc0912e8bdf5cbc01da2b90cba2d4a00acb41ea"
+    },
+    {
+      "archivo": "videos-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 81167,
+      "sha256": "e7b245a2434241e29803d0c87f7c9e78198e5d49ea3e948b09394c13706e4fd8"
+    },
+    {
+      "archivo": "videos-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 39597,
+      "sha256": "1e7a16314216b967ca59a061809d0ed93e96145695c46172a40d4229766ee6b4"
+    },
+    {
+      "archivo": "videos-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 82011,
+      "sha256": "b72930eb367572765354012795b9cfda43b40e212120e8962ce1ea4117a84043"
+    },
+    {
+      "archivo": "videos-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/videos",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 40081,
+      "sha256": "3a82d16f19e7e05e75e3715d05306f749661b65265c3c8aa74efcc7ccd2800c9"
+    },
+    {
+      "archivo": "voces-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 70826,
+      "sha256": "2a6a0c2217de0953cd02dda8b51cea037ac7f94aa1a23304c8d9cd204200cffd"
+    },
+    {
+      "archivo": "voces-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        939
+      ],
+      "bytes": 36782,
+      "sha256": "c0ff5ea1c16bdbedc51f751eb58d0d3d495966375e5e1c3c9d3ad681eebd327b"
+    },
+    {
+      "archivo": "voces-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 71442,
+      "sha256": "91c3607a469174b634d8c9a6427dea2fa3e6919dff2b300b011bbd7680a826ea"
+    },
+    {
+      "archivo": "voces-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/avatares",
+      "demo": true,
+      "dimensiones": [
+        390,
+        939
+      ],
+      "bytes": 37183,
+      "sha256": "5a7df15141a79f1663d5d5221ad88d6219f95fce8dcefb98fc2a613f6d29fc38"
+    },
+    {
+      "archivo": "whatsapp-codigo-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1725
+      ],
+      "bytes": 115632,
+      "sha256": "751fa789fac7c1a2a5092f2a1e673e82c6b99f5a02fee98d57907ca33719445e"
+    },
+    {
+      "archivo": "whatsapp-codigo-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2046
+      ],
+      "bytes": 81285,
+      "sha256": "d062b446cfc61b48bf186876e655301e78780aea379c181b824497158c0634d1"
+    },
+    {
+      "archivo": "whatsapp-codigo-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1725
+      ],
+      "bytes": 117228,
+      "sha256": "a0cf3e7615bea9c50074cd4604b8f9e52e29e37a1811ad93826709c252cedc0f"
+    },
+    {
+      "archivo": "whatsapp-codigo-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2046
+      ],
+      "bytes": 83239,
+      "sha256": "73b228b850d74e02267fd0ed5c60a11650987694760f2509f999b270682fd76a"
+    },
+    {
+      "archivo": "whatsapp-enlace-vencido-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/revisar/whatsapp/invalido",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 21658,
+      "sha256": "29e8ccc16f5344cfbde780b6faadd98cf97af5dc2a201d349a94227ec08df7f5"
+    },
+    {
+      "archivo": "whatsapp-enlace-vencido-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/revisar/whatsapp/invalido",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 16573,
+      "sha256": "abd757529147c7a7f68e78be8fb90a3306233184b370c90881b1ff7cc033b352"
+    },
+    {
+      "archivo": "whatsapp-enlace-vencido-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/revisar/whatsapp/invalido",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1000
+      ],
+      "bytes": 21838,
+      "sha256": "db6f3fcae459eacf8caa91b46128b9e33a28b3109933ccbeafa07a22ba829821"
+    },
+    {
+      "archivo": "whatsapp-enlace-vencido-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/revisar/whatsapp/invalido",
+      "demo": true,
+      "dimensiones": [
+        390,
+        844
+      ],
+      "bytes": 16829,
+      "sha256": "e78566da57efeed8f9697cf7e156048295cd79d635345a84a0036fa22117def2"
+    },
+    {
+      "archivo": "whatsapp-preferencias-claro-1440.png",
+      "tema": "claro",
+      "ancho": 1440,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1689
+      ],
+      "bytes": 111790,
+      "sha256": "adbfb79306790a5953ec155ce52b6bdb6fa725f3d8c9e5d072e2c47d8a7330a4"
+    },
+    {
+      "archivo": "whatsapp-preferencias-claro-390.png",
+      "tema": "claro",
+      "ancho": 390,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2009
+      ],
+      "bytes": 77729,
+      "sha256": "6ad96cb80e352e237d69c99c33e90dec1d38b9846f4e46cd17fb36b88f8c472f"
+    },
+    {
+      "archivo": "whatsapp-preferencias-oscuro-1440.png",
+      "tema": "oscuro",
+      "ancho": 1440,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        1440,
+        1689
+      ],
+      "bytes": 113082,
+      "sha256": "8c0ec69c3fc487b062ba3aaae5e0fb7bcbb7b0d6becc3a9c846c0f2834a6e77b"
+    },
+    {
+      "archivo": "whatsapp-preferencias-oscuro-390.png",
+      "tema": "oscuro",
+      "ancho": 390,
+      "ruta": "/perfil",
+      "demo": true,
+      "dimensiones": [
+        390,
+        2009
+      ],
+      "bytes": 79388,
+      "sha256": "99de291d523f95b98dc7b6418e025a24c5e1f299890845af40212270a53b0b17"
+    }
+  ]
+}

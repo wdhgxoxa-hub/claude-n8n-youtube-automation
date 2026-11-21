@@ -379,6 +379,48 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Actualizar video\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "7b7bb4f8-35db-57a0-9633-5b5dca9e13f4",
+      "name": "Cooper · sello Actualizar video",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "1fe09a4e-61ab-5943-81da-b399f969bff7",
+      "name": "Cooper · sello Actualizar video aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -506,7 +548,7 @@
       "main": [
         [
           {
-            "node": "Actualizar video",
+            "node": "Cooper · sello Actualizar video",
             "type": "main",
             "index": 0
           }
@@ -518,6 +560,33 @@
         [
           {
             "node": "Avisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Actualizar video": {
+      "main": [
+        [
+          {
+            "node": "Actualizar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Actualizar video aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Actualizar video": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Actualizar video aviso",
             "type": "main",
             "index": 0
           }
