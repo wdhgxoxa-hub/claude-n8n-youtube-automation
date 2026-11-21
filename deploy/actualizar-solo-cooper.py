@@ -168,6 +168,9 @@ def deploy(image, expected):
                   'respaldo_sha256': digest(output / 'respaldo/cooper.sqlite'), 'reversa_aislada': 'PASS',
                   'migraciones_antes': baseline.get('__drizzle_migrations'),
                   'migraciones_despues': migrated.get('__drizzle_migrations'),
+                  'tablas_anteriores_conservadas': sum(t != '__drizzle_migrations' and not t.startswith('sqlite_') for t in baseline),
+                  'servicios_antes': before, 'servicios_despues': after,
+                  'imagen_id_desplegada': inspect('cooper-cooper-1', '{{.Image}}'),
                   'servicios_ajenos_sin_cambios': before == after, 'caddy_sin_cambios': True,
                   'fecha_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}
         save(output / 'resultado.json', result)
