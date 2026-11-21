@@ -1697,3 +1697,10 @@ test('pulido: piezas usa los archivos finales de sonido/avatar y el orden del mo
  const datos=JSON.parse(run(codeOf(PROD,'Cooper · piezas terminadas'),{nodes})[0].json.cooper_escenas);
  assert.deepEqual(datos,[{id:'p1',orden:0,imagen:p1.url,clip:'',voz:''},{id:'p2',orden:1,imagen:'',clip:p2.url,voz:'https://cdn.test/voz.wav'}]);
 });
+test('pulido: conserva el porcentaje medio visto de YouTube sin recortarlo a 100 %',()=>{
+ const out=run(codeOf(APR,'Cooper · historial YouTube'),{all:{'Pedidos de retención':[{video_id:'v'}],$input:[{columnHeaders:[{name:'views'},{name:'likes'},{name:'comments'},{name:'averageViewPercentage'}],rows:[[12,2,0,125]]}]}})[0].json;
+ const historial=JSON.parse(out.metricas_youtube);
+ assert.equal(historial[0].retencion,1.25);
+ const vista=run(OBS+'return [{json:medicionCooper($json)}];',{json:historial[0]})[0].json;
+ assert.equal(vista.retencion,1.25);
+});

@@ -28,7 +28,8 @@ export const medicionSchema = z.object({
   vistas: contador,
   meGusta: contador,
   comentarios: contador,
-  retencion: z.number().min(0).max(1).nullable(),
+  // El porcentaje medio visto puede superar el 100 % por repeticiones.
+  retencion: contador,
 });
 export const publicacionSchema = z.object({
   id: z.string().max(300),

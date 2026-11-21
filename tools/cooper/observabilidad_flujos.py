@@ -70,7 +70,7 @@ return $input.all().map((i,k)=>{const v=pedidos[k],r=i.json,prev=jsonCooper(v.me
  const nombres=(r.columnHeaders || []).map(c=>c.name), fila=r.rows?.[0];
  const campos=fila?Object.fromEntries(nombres.map((n,j)=>[n,fila[j]])):null;
  const ret=numeroCooper(campos?.averageViewPercentage);
- const dato=campos?{fecha,vistas:numeroCooper(campos.views),meGusta:numeroCooper(campos.likes),comentarios:numeroCooper(campos.comments),retencion:ret===null?null:Math.min(1,ret/100)}:null;
+ const dato=campos?{fecha,vistas:numeroCooper(campos.views),meGusta:numeroCooper(campos.likes),comentarios:numeroCooper(campos.comments),retencion:ret===null?null:ret/100}:null;
  return {json:{video_id:v.video_id,metricas_consultadas_en:fecha,metricas_youtube:JSON.stringify(dato?[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10)),dato].slice(-90):prev)}};
 });
 """)

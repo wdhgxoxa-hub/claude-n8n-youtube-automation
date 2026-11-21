@@ -7,6 +7,7 @@ import { aplicarEstado } from "@/servicios/puente";
 import { estadoRemotoSchema } from "@/contratos/puente";
 import {
   enlaceIncrustado,
+  medicionSchema,
   observabilidadSchema,
   sinObservabilidad,
 } from "@/contratos/observabilidad";
@@ -103,4 +104,21 @@ it("sincroniza medios y métricas aunque la etapa no cambie; aísla dueños y co
   expect(estado(user).videos[0].observabilidad.miniatura).toContain(
     "portada.png",
   );
+});
+
+it("conserva retención media superior a 100 % y mantiene acotada la curva de audiencia", () => {
+  const punto = {
+    fecha: "2026-11-21T00:00:00Z",
+    vistas: 12,
+    meGusta: 2,
+    comentarios: 0,
+    retencion: 1.25,
+  };
+  expect(medicionSchema.parse(punto).retencion).toBe(1.25);
+  expect(
+    medicionSchema.safeParse({
+      ...punto,
+      curvaRetencion: [{ segundo: 1, porcentaje: 1.25 }],
+    }).success,
+  ).toBe(false);
 });

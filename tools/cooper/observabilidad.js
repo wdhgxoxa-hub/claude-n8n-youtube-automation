@@ -12,7 +12,7 @@ function curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({se
 function medicionCooper(value) {
   const fecha = fechaCooper(value.fecha); if (!fecha) return null;
   const r = numeroCooper(value.retencion);
-  return { fecha, curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r !== null && r <= 1 ? r : null };
+  return { fecha, curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };
 }
 function leccionesCooper(canal, trabajos) {
   return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && t.estado === 'ok').slice(-100).flatMap(t => {
