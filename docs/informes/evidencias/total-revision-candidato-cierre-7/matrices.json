@@ -1,0 +1,86 @@
+[
+  {
+    "ronda": "cierre-7",
+    "fuente": "22ece8e1f078b149944118feeabbb6c803992ff4",
+    "fecha_lima": "2026-11-21T16:15:24.335526-05:00",
+    "archivo": "pantallas-1440-claro.json",
+    "sha256": "ce532cf8c1cccfb9a45837b551133158c609b732bbfbed411f7b1617f7cb1382",
+    "muestras": 22,
+    "caso_aprobado": "✓  83 [movimiento-integrado] › movimiento/pantallas.spec.ts:66:5 › 1440 claro: pantallas, scroll, pausa, vídeo y CPU 1x (2.1m)",
+    "fps_minimo": 60.00186452074875,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0,
+    "png_antes": {
+      "1440-claro-01-inicio.png": "4c5ba0d37cddb47bfcc0f0b19d0ae79fcbf4aaaacbd1cfbb98b495306eb0a8af",
+      "1440-claro-02-marcas.png": "943cd142415518d049403304deb212c0a445a59aed2d38e04f5e45438b62a48c",
+      "1440-claro-09-cuentas.png": "5918c43f42e12e2969ceb620b934789aa10956a352e1371693abbaf3f791cf57",
+      "1440-claro-16-publicados.png": "16aea058524f2adcd2b5b6bd8e5f1fb14e5dbb9ac7c87e485294cd5c61c8850d",
+      "1440-claro-17-aprendizaje.png": "16b1822cbbd0a2aa73232b3f6b258d8a5a00d4fc9f5941a2f3c433ff07f6ca69",
+      "1440-claro-21-admin.png": "a2cdbaf2e8f68d0d0e3cd0fb240232ebad4eeafa251f7e017143d3795fa36f5f"
+    }
+  },
+  {
+    "ronda": "cierre-7",
+    "fuente": "22ece8e1f078b149944118feeabbb6c803992ff4",
+    "fecha_lima": "2026-11-21T16:12:52.438178-05:00",
+    "archivo": "pantallas-1440-oscuro.json",
+    "sha256": "1272168b11812cbe54103e77e9fc398107896f22e37c0cf20b34a55a4da460fb",
+    "muestras": 22,
+    "caso_aprobado": "✓  82 [movimiento-integrado] › movimiento/pantallas.spec.ts:66:5 › 1440 oscuro: pantallas, scroll, pausa, vídeo y CPU 1x (2.2m)",
+    "fps_minimo": 59.99999999999999,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0,
+    "png_antes": {
+      "1440-oscuro-01-inicio.png": "8c899026643442b9476119186e65b2886031de883abe64faa94bdb24ff24a4b7",
+      "1440-oscuro-02-marcas.png": "dac3fcaf3fa656e1482de67931d0337bcfeec5fbfa7a7ccb991e5a45bf45d93b",
+      "1440-oscuro-09-cuentas.png": "edcae150d500a0549e9c9aad4c6e4ffeb84dae254d12792bc1883ab054e9b630",
+      "1440-oscuro-16-publicados.png": "3a04b5cfe025157ad10280464b8991cab91ac0ff51390bddee0716b5b758ae7f",
+      "1440-oscuro-17-aprendizaje.png": "c0b129834729a0f0c2917d3a007b2e6aae076f1af5db8e2b0c2e5416bc061afa",
+      "1440-oscuro-21-admin.png": "5f1d5ec9cab7f49719218aa8053c3a9db2e83618e912a9d29a07a7bfa128ccc9"
+    }
+  },
+  {
+    "ronda": "cierre-7",
+    "fuente": "22ece8e1f078b149944118feeabbb6c803992ff4",
+    "fecha_lima": "2026-11-21T16:20:26.698554-05:00",
+    "archivo": "pantallas-390-claro.json",
+    "sha256": "257d51406300cf87300c02f2d2bd89c8e7b625a9730a31ab490ce946260f72f8",
+    "muestras": 22,
+    "caso_aprobado": "✓  85 [movimiento-integrado] › movimiento/pantallas.spec.ts:66:5 › 390 claro: pantallas, scroll, pausa, vídeo y CPU 4x (2.5m)",
+    "fps_minimo": 59.99900828085486,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0,
+    "png_antes": {
+      "390-claro-01-inicio.png": "8436277af3d05d4378f12d01481b6d2971aaa1f461c495aafb22dba75de1da76",
+      "390-claro-02-marcas.png": "be80ee3e4f86572a2a1253dc4b9a20d7459d95a10ef1ac4dcf193853251cc2ad",
+      "390-claro-09-cuentas.png": "e790a9a5706fb7fd44f56aeea26b01bf245b3f25cf8b89e0d925af48fad12e6e",
+      "390-claro-16-publicados.png": "166c4c2387535aee9aa70345aad3f5a97e2adcabacfbefb6668ff933caea09eb",
+      "390-claro-17-aprendizaje.png": "2476ce0e98d95b7aa1ea254dba4a430547a740b4634cb8dd40a24e1e2b3940e5",
+      "390-claro-21-admin.png": "a8dce7ba421da08b1e4be055d396c91953ee22d5ac2543efb31adbd1cf391507"
+    }
+  },
+  {
+    "ronda": "cierre-7",
+    "fuente": "22ece8e1f078b149944118feeabbb6c803992ff4",
+    "fecha_lima": "2026-11-21T16:17:45.196652-05:00",
+    "archivo": "pantallas-390-oscuro.json",
+    "sha256": "0a19a90cf6cfeea5bf48a4a23d4ff6b49765cc3b06d60360e546a3515c2f50bd",
+    "muestras": 22,
+    "caso_aprobado": "✓  84 [movimiento-integrado] › movimiento/pantallas.spec.ts:66:5 › 390 oscuro: pantallas, scroll, pausa, vídeo y CPU 4x (2.6m)",
+    "fps_minimo": 59.99900828085486,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0,
+    "png_antes": {
+      "390-oscuro-01-inicio.png": "46acb1075c66b05b7fa901fbb516e5703b8ce4992ce3d98218876b8395619ff6",
+      "390-oscuro-02-marcas.png": "97d689b25ee592765b7468d3ddb45c74a577e5b6aaa9ef3ce2603324d09c3778",
+      "390-oscuro-09-cuentas.png": "bc9e1b490cb3edce094a89cb8dab1e62b9a216cc96e46edcecbcf073dd00fcdf",
+      "390-oscuro-16-publicados.png": "f9c1916d1e9e971cd1de946e6f7bc8511d1810da2339363df76cfca0ecc7e280",
+      "390-oscuro-17-aprendizaje.png": "0efd3d4b66daa78ed6daec36eafc295217e25e1e083310fa175420713d6faa19",
+      "390-oscuro-21-admin.png": "7d1b961d5a7c0f53a7baf13e2df6c30a4d30335b67d4d50424ca64e4333b2d04"
+    }
+  }
+]

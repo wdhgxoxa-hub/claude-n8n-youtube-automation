@@ -1,0 +1,690 @@
+{
+  "ronda": "cierre-7",
+  "metodo": "Un fotograma nativo por ruta, 0.7s antes de la siguiente marca; inspección posterior confirma contenido, no basta ruta programada.",
+  "estado": "revision_visual_completa",
+  "recorridos": [
+    {
+      "archivo": "cierre-7/recorrido-completo-1440.webm",
+      "sha256": "864d498729e019203329cac16b0afd751030a1abfd019d67eafd2892bcf605dd",
+      "duracion_s": 40.84,
+      "timeline_sha256": "37973269ea6d260db397d4ca68e636011ae639dd5dc1929e99d61920287a6524",
+      "fotogramas": [
+        {
+          "archivo": "1440-00.png",
+          "ruta_programada": "/entrar",
+          "segundo": 0.856,
+          "intervalo": [
+            0,
+            1.556
+          ],
+          "sha256": "12589cc7576a25e6765da02e8829985a29eb93368312d8eab7c21e36367b05fe",
+          "estado_visual": "revisado_original",
+          "observacion": "Entrada con propuesta y botón Google en dos columnas, textos completos; no se realiza login.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.087389-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-00.png"
+        },
+        {
+          "archivo": "1440-01.png",
+          "ruta_programada": "/",
+          "segundo": 4.424,
+          "intervalo": [
+            1.556,
+            5.124
+          ],
+          "sha256": "900a0dbba759680397ea74b5fddf49300b098f821a4993302546f462d7026436",
+          "estado_visual": "revisado_original",
+          "observacion": "Inicio con modal del recorrido, paso 3 de 3: mascota, título y botones completos sobre fondo atenuado.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.087811-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-01.png"
+        },
+        {
+          "archivo": "1440-02.png",
+          "ruta_programada": "/marcas",
+          "segundo": 8.913,
+          "intervalo": [
+            5.124,
+            9.613
+          ],
+          "sha256": "6cadac0991ecb119b8714a94cbfe03b5f812ab1c94071fc8d897aa39d56a3c2b",
+          "estado_visual": "revisado_original",
+          "observacion": "Marcas desplazada al formulario de conexión y calendario, etiquetas legibles y navegación lateral estable.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.088213-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-02.png"
+        },
+        {
+          "archivo": "1440-03.png",
+          "ruta_programada": "/canales",
+          "segundo": 10.504,
+          "intervalo": [
+            9.613,
+            11.204
+          ],
+          "sha256": "b736778aafd971f76b02abe4a2c970f2fd77474aeec03ca78fb38db71d96b2f5",
+          "estado_visual": "revisado_original",
+          "observacion": "Tus canales, tarjetas de Recuperación y Ensayo junto a formulario Nuevo canal, sin superposición.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.088485-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-03.png"
+        },
+        {
+          "archivo": "1440-04.png",
+          "ruta_programada": "/canales/2edca6ba-fcdd-4f11-9ea7-ccaa1a388e50",
+          "segundo": 12.089,
+          "intervalo": [
+            11.204,
+            12.789
+          ],
+          "sha256": "7bbb306fdde5ff8f0d83a26c5e95485d0e56fc075e9c54ef36cc3bc0889922d8",
+          "estado_visual": "revisado_original",
+          "observacion": "Biblia del canal Recuperación, selector y campos de tema/público visibles.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.088757-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-04.png"
+        },
+        {
+          "archivo": "1440-05.png",
+          "ruta_programada": "/radar",
+          "segundo": 13.672,
+          "intervalo": [
+            12.789,
+            14.372
+          ],
+          "sha256": "f4bd4d84d48b26a5b0ea868b32ab8da1d9a1537fa19b0e024af4c9ab89bee00e",
+          "estado_visual": "revisado_original",
+          "observacion": "Radar con competencia por investigar y límite sobre homónimos no confirmados; texto legible.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.089130-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-05.png"
+        },
+        {
+          "archivo": "1440-06.png",
+          "ruta_programada": "/rutina",
+          "segundo": 15.237,
+          "intervalo": [
+            14.372,
+            15.937
+          ],
+          "sha256": "0b3f34e8d3c6484f5c7a53a2a028470c39dc61e3003d392f262fba5614c59287",
+          "estado_visual": "revisado_original",
+          "observacion": "Rutina y metas: decisiones guardadas y metas semanales en dos columnas.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.089441-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-06.png"
+        },
+        {
+          "archivo": "1440-07.png",
+          "ruta_programada": "/redes",
+          "segundo": 16.787,
+          "intervalo": [
+            15.937,
+            17.487
+          ],
+          "sha256": "82279868e70d5542683c04c2f66d8dc4ba2e1249d4adaa293b4530ca0b4d77d7",
+          "estado_visual": "revisado_original",
+          "observacion": "Especialistas y redes: recomendación y conexión pendiente diferenciadas.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.089781-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-07.png"
+        },
+        {
+          "archivo": "1440-08.png",
+          "ruta_programada": "/referencias",
+          "segundo": 18.37,
+          "intervalo": [
+            17.487,
+            19.07
+          ],
+          "sha256": "99c3546f87b60f90d460a048b863656275284e5ea330ebfc52f03d48c89b0723",
+          "estado_visual": "revisado_original",
+          "observacion": "Referencias con escenarios y personajes separados por líneas, estado pendiente explícito.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.090067-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-08.png"
+        },
+        {
+          "archivo": "1440-09.png",
+          "ruta_programada": "/cuentas",
+          "segundo": 19.953,
+          "intervalo": [
+            19.07,
+            20.653
+          ],
+          "sha256": "d640963d2e8961583561b624560879c1d9e8ce3ad9dceae8403caaa2add127f5",
+          "estado_visual": "revisado_original",
+          "observacion": "Adoptar cuenta muestra identidad y formulario; selector y etiquetas íntegros.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.090379-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-09.png"
+        },
+        {
+          "archivo": "1440-10.png",
+          "ruta_programada": "/programados",
+          "segundo": 21.522,
+          "intervalo": [
+            20.653,
+            22.222
+          ],
+          "sha256": "1683f1002047df9b413d4f44cfcde2fd1f51682b746be0f12e49455c232e6f9c",
+          "estado_visual": "revisado_original",
+          "observacion": "Programados con lista de publicaciones por red y fechas completas.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.090731-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-10.png"
+        },
+        {
+          "archivo": "1440-11.png",
+          "ruta_programada": "/decisiones",
+          "segundo": 23.087,
+          "intervalo": [
+            22.222,
+            23.787
+          ],
+          "sha256": "e8c787909ae79a180c91630b14e8e898b5d04d761770d2c62f9e58d63ef7ed7e",
+          "estado_visual": "revisado_original",
+          "observacion": "Decisiones, video pendiente y selector de decisión legibles.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.091000-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-11.png"
+        },
+        {
+          "archivo": "1440-12.png",
+          "ruta_programada": "/incidencias",
+          "segundo": 24.677,
+          "intervalo": [
+            23.787,
+            25.377
+          ],
+          "sha256": "1dd348275fa1fa7b6b1d6076a5962a9a4281a1dad59a4bf863fb8e40a9135a87",
+          "estado_visual": "revisado_original",
+          "observacion": "Incidencias con explicación de noticia simulada y enlace de revisión; sin pantalla de error.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.091276-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-12.png"
+        },
+        {
+          "archivo": "1440-13.png",
+          "ruta_programada": "/avisos",
+          "segundo": 26.235,
+          "intervalo": [
+            25.377,
+            26.935
+          ],
+          "sha256": "109335518feb9ba437f0e14ecefb116f6710c1e6b6a0f1e36c749f5c1cf41682",
+          "estado_visual": "revisado_original",
+          "observacion": "Avisos muestra estado vacío y explicación de entrega/lectura, completo.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.091609-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-13.png"
+        },
+        {
+          "archivo": "1440-14.png",
+          "ruta_programada": "/videos",
+          "segundo": 27.804,
+          "intervalo": [
+            26.935,
+            28.504
+          ],
+          "sha256": "3d140e028d1181fcecc9056dd6efaa752051d962300783f716cde6499f9861bc",
+          "estado_visual": "revisado_original",
+          "observacion": "Tus videos presenta lista de historias y progreso por etapa, filas separadas.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.091925-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-14.png"
+        },
+        {
+          "archivo": "1440-15.png",
+          "ruta_programada": "/videos/1a906547-b1b1-49c9-b3e6-9ae5fc57f72d",
+          "segundo": 29.385,
+          "intervalo": [
+            28.504,
+            30.085
+          ],
+          "sha256": "710b108908c77e58a9ff9a186b1219586db6ed656a80b761739ea8c2bcab83bb",
+          "estado_visual": "revisado_original",
+          "observacion": "Detalle de historia con maqueta marcada simulada, guion y etapas separados.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.092259-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-15.png"
+        },
+        {
+          "archivo": "1440-16.png",
+          "ruta_programada": "/publicados",
+          "segundo": 31.003,
+          "intervalo": [
+            30.085,
+            31.703
+          ],
+          "sha256": "6de2fe3d74a43c076b8deb4006cd8fbfec24b5f6c635111568269f6fca1fd106",
+          "estado_visual": "revisado_original",
+          "observacion": "Publicados con filtros, seis publicaciones/seis orígenes y primeras tarjetas visibles.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.092745-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-16.png"
+        },
+        {
+          "archivo": "1440-17.png",
+          "ruta_programada": "/aprendizaje",
+          "segundo": 32.588,
+          "intervalo": [
+            31.703,
+            33.288
+          ],
+          "sha256": "63bfc6533cb7b0363fc9729775f4cb9708bc19b0dc0276659a32456251bca0dd",
+          "estado_visual": "revisado_original",
+          "observacion": "Aprendizaje con aviso ficticio, control de medición, filtros y comienzo de lecciones legibles.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.093080-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-17.png"
+        },
+        {
+          "archivo": "1440-18.png",
+          "ruta_programada": "/avatares",
+          "segundo": 34.176,
+          "intervalo": [
+            33.288,
+            34.876
+          ],
+          "sha256": "7d6ff752355b55bef7216170c03cfe4c819f922a5f98ad9d697d53707f07bf00",
+          "estado_visual": "revisado_original",
+          "observacion": "Avatares: cuatro tarjetas de estudio y controles visibles, sin superposición.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.093400-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-18.png"
+        },
+        {
+          "archivo": "1440-19.png",
+          "ruta_programada": "/perfil",
+          "segundo": 35.736,
+          "intervalo": [
+            34.876,
+            36.436
+          ],
+          "sha256": "618de89e3a31a25748a84ad67d0b4c25bdf2666b9f37e27c46a0339c767cf729",
+          "estado_visual": "revisado_original",
+          "observacion": "Perfil: identidad ficticia y preferencias de apariencia en columnas, campos íntegros.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.093664-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-19.png"
+        },
+        {
+          "archivo": "1440-20.png",
+          "ruta_programada": "/admin",
+          "segundo": 37.303,
+          "intervalo": [
+            36.436,
+            38.003
+          ],
+          "sha256": "a0376a6e6bcf4c52215fb72a42a4cc715adae797d5e7d30d20e26c5e17d6f512",
+          "estado_visual": "revisado_original",
+          "observacion": "Administración: aviso de gasto de ejemplo, total USD 8.40 y filas de usuarios separados.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.093920-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-20.png"
+        },
+        {
+          "archivo": "1440-21.png",
+          "ruta_programada": "/admin/fabrica",
+          "segundo": 40.14,
+          "intervalo": [
+            38.003,
+            40.84
+          ],
+          "sha256": "59ba7620ed4de55726d2aa8ffb46d540548e0458dfbb0750652991ab96eb6823",
+          "estado_visual": "revisado_original",
+          "observacion": "Ajustes de fábrica con controles de producción en dos columnas, encabezados completos.",
+          "fecha_revision_lima": "2026-11-21T16:34:58.094206-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/1440-21.png"
+        }
+      ],
+      "fotogramas_revisados": 22,
+      "copia_final_contrastada": true,
+      "limite": "Revisión por 22 fotogramas nativos de rutas, no observación humana de todos los cuadros. Decodificación integral a cargo del verificador del orquestador."
+    },
+    {
+      "archivo": "cierre-7/recorrido-completo-390.webm",
+      "sha256": "9674307bf8ea6266f7ea8fe5c6d2de6a0114c69448fa6e14d3093d128506f71d",
+      "duracion_s": 46.64,
+      "timeline_sha256": "003981a2949174c5a9e7735e594a2407b03c207a4af46e30a8173b9590d6508f",
+      "fotogramas": [
+        {
+          "archivo": "390-00.png",
+          "ruta_programada": "/entrar",
+          "segundo": 1.064,
+          "intervalo": [
+            0,
+            1.764
+          ],
+          "sha256": "d4a9ab01f27804ede20de33d64f1bb967d2dc63ca4bae97189c4d2ffd1708e68",
+          "estado_visual": "revisado_original",
+          "observacion": "Entrada apilada: propuesta, animación y botón Google caben en 390 px; sin login.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.907366-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-00.png"
+        },
+        {
+          "archivo": "390-01.png",
+          "ruta_programada": "/",
+          "segundo": 6.048,
+          "intervalo": [
+            1.764,
+            6.748
+          ],
+          "sha256": "06d4cd89d78154abed54eed898377c2de783b9f69490b1ecfca7c29fe2c9ac7f",
+          "estado_visual": "revisado_original",
+          "observacion": "Inicio con pestaña Fábrica activa, avance del 25% y tarjeta del video separados; modal ya cerrado.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.907686-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-01.png"
+        },
+        {
+          "archivo": "390-02.png",
+          "ruta_programada": "/marcas",
+          "segundo": 10.828,
+          "intervalo": [
+            6.748,
+            11.528
+          ],
+          "sha256": "f732b6821f588c2823818fe4b58ec4bc29077ead4a27f786edc533613a840e92",
+          "estado_visual": "revisado_original",
+          "observacion": "Marcas desplazada al formulario de conexión y calendario; campos y botón completos, pestañas con desplazamiento local.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.907907-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-02.png"
+        },
+        {
+          "archivo": "390-03.png",
+          "ruta_programada": "/canales",
+          "segundo": 12.66,
+          "intervalo": [
+            11.528,
+            13.36
+          ],
+          "sha256": "930e5c5ccf5d4de63de04975918edf9c14479bcce473d5ae49436695881750f1",
+          "estado_visual": "revisado_original",
+          "observacion": "Canales con tarjetas apiladas de Recuperación y Ensayo; nombre largo distribuido en dos líneas.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.908128-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-03.png"
+        },
+        {
+          "archivo": "390-04.png",
+          "ruta_programada": "/canales/2edca6ba-fcdd-4f11-9ea7-ccaa1a388e50",
+          "segundo": 14.562,
+          "intervalo": [
+            13.36,
+            15.262
+          ],
+          "sha256": "412622fcb45aa62f5196c73b35a1856db44fff42cd864501dfeadb260716f12f",
+          "estado_visual": "revisado_original",
+          "observacion": "Biblia: pestañas en tres filas, selector y comienzo del formulario legibles.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.908447-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-04.png"
+        },
+        {
+          "archivo": "390-05.png",
+          "ruta_programada": "/radar",
+          "segundo": 16.361,
+          "intervalo": [
+            15.262,
+            17.061
+          ],
+          "sha256": "4fc6c850f9aa4faf3b5f4b84f2de5973ca0f9427aaf0094260cb624da8e1664d",
+          "estado_visual": "revisado_original",
+          "observacion": "Radar: selector, estado Por investigar y explicación de competencia íntegros.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.908703-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-05.png"
+        },
+        {
+          "archivo": "390-06.png",
+          "ruta_programada": "/rutina",
+          "segundo": 18.181,
+          "intervalo": [
+            17.061,
+            18.881
+          ],
+          "sha256": "81673694930db8504c5729920f492bea89ac865c841d144381953ff3387b5564",
+          "estado_visual": "revisado_original",
+          "observacion": "Rutina y metas muestra decisión guardada y límite del simulador en una columna.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.908916-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-06.png"
+        },
+        {
+          "archivo": "390-07.png",
+          "ruta_programada": "/redes",
+          "segundo": 19.995,
+          "intervalo": [
+            18.881,
+            20.695
+          ],
+          "sha256": "0a722c4d8d0309772cbf93d8f83fda0b9277aac39e0941d535d46eebaa103dd2",
+          "estado_visual": "revisado_original",
+          "observacion": "Especialistas y redes: título en dos líneas y recomendación con hora/formato legibles.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.909134-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-07.png"
+        },
+        {
+          "archivo": "390-08.png",
+          "ruta_programada": "/referencias",
+          "segundo": 21.817,
+          "intervalo": [
+            20.695,
+            22.517
+          ],
+          "sha256": "a1ff707d8f40e51a5e899542bd84ce51fdf9e5000b742264463eaaa1edf4505c",
+          "estado_visual": "revisado_original",
+          "observacion": "Referencias con escenario de ejemplo y estado pendiente visibles.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.909350-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-08.png"
+        },
+        {
+          "archivo": "390-09.png",
+          "ruta_programada": "/cuentas",
+          "segundo": 23.646,
+          "intervalo": [
+            22.517,
+            24.346
+          ],
+          "sha256": "15755368f9b3a56ca781c04fa6e7488b06e70aa5353fbdcbe6f0deb43937d42f",
+          "estado_visual": "revisado_original",
+          "observacion": "Adoptar cuenta con identidad y comienzo del formulario apilados, sin desbordamiento.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.909559-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-09.png"
+        },
+        {
+          "archivo": "390-10.png",
+          "ruta_programada": "/programados",
+          "segundo": 25.446,
+          "intervalo": [
+            24.346,
+            26.146
+          ],
+          "sha256": "62f18a4abb8732d5db4bd6804ddde7df5b8fc8a60e6adf9d13adee48cf6cd534",
+          "estado_visual": "revisado_original",
+          "observacion": "Programados: publicaciones por red, títulos y fechas completos en una columna.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.909777-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-10.png"
+        },
+        {
+          "archivo": "390-11.png",
+          "ruta_programada": "/decisiones",
+          "segundo": 27.243,
+          "intervalo": [
+            26.146,
+            27.943
+          ],
+          "sha256": "7e2bccada7987e7d618ef9b7575216f8a9c286fd71e68d6f49d255a5557473a1",
+          "estado_visual": "revisado_original",
+          "observacion": "Decisiones con video pendiente, enlace y selector que caben en el ancho disponible.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.909980-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-11.png"
+        },
+        {
+          "archivo": "390-12.png",
+          "ruta_programada": "/incidencias",
+          "segundo": 29.093,
+          "intervalo": [
+            27.943,
+            29.793
+          ],
+          "sha256": "c8496890fe564564dc2c64446922cdba7d1fe41b5d034d0a37d5e6be44e8aac8",
+          "estado_visual": "revisado_original",
+          "observacion": "Incidencias: explicación de noticia simulada y revisión completas; sin página de error.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.910202-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-12.png"
+        },
+        {
+          "archivo": "390-13.png",
+          "ruta_programada": "/avisos",
+          "segundo": 30.893,
+          "intervalo": [
+            29.793,
+            31.593
+          ],
+          "sha256": "b4c09fbdcf96d089c7b50d2030ed2c9f7807967815bc6f5b9cf9214548e03a28",
+          "estado_visual": "revisado_original",
+          "observacion": "Avisos conserva estado vacío y significado de entrega/lectura, texto legible.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.910402-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-13.png"
+        },
+        {
+          "archivo": "390-14.png",
+          "ruta_programada": "/videos",
+          "segundo": 32.563,
+          "intervalo": [
+            31.593,
+            33.263
+          ],
+          "sha256": "b9fee68e66136a8951b9677cbef1a83e3318484c29d23157bc0b3b3aecdfb177",
+          "estado_visual": "revisado_original",
+          "observacion": "Videos: filas de historias con miniaturas, títulos y enlaces visibles sin superposición.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.910611-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-14.png"
+        },
+        {
+          "archivo": "390-15.png",
+          "ruta_programada": "/videos/1a906547-b1b1-49c9-b3e6-9ae5fc57f72d",
+          "segundo": 34.311,
+          "intervalo": [
+            33.263,
+            35.011
+          ],
+          "sha256": "fb154edf5ffe4cd02f0dfee4d5d2a8391f2c6be25e2f6070b5be98da10abcaf5",
+          "estado_visual": "revisado_original",
+          "observacion": "Detalle: título largo y maqueta simulada ajustados a móvil; guion visible debajo.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.910836-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-15.png"
+        },
+        {
+          "archivo": "390-16.png",
+          "ruta_programada": "/publicados",
+          "segundo": 36.234,
+          "intervalo": [
+            35.011,
+            36.934
+          ],
+          "sha256": "f270fb030056ab433a18527a81ddae50dc86ac8e65f1252f3a8836f11484c150",
+          "estado_visual": "revisado_original",
+          "observacion": "Publicados: filtros en columna y pestañas de redes completas; sin desbordamiento horizontal global observado.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.910898-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-16.png"
+        },
+        {
+          "archivo": "390-17.png",
+          "ruta_programada": "/aprendizaje",
+          "segundo": 38.05,
+          "intervalo": [
+            36.934,
+            38.75
+          ],
+          "sha256": "692ef7bd53d92db708ae8ef81dd3b799e03fcd955e3e674ff662aeab132014c6",
+          "estado_visual": "revisado_original",
+          "observacion": "Aprendizaje con aviso ficticio, control de medición y filtros en columna, etiquetas íntegras.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.910967-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-17.png"
+        },
+        {
+          "archivo": "390-18.png",
+          "ruta_programada": "/avatares",
+          "segundo": 39.727,
+          "intervalo": [
+            38.75,
+            40.427
+          ],
+          "sha256": "2c96aca272943b0a1592788b952756f8c67d57e228a1f0e7e6915e53c1d5bc0a",
+          "estado_visual": "revisado_original",
+          "observacion": "Avatares en dos columnas, nombres y controles de previsualización visibles.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.911042-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-18.png"
+        },
+        {
+          "archivo": "390-19.png",
+          "ruta_programada": "/perfil",
+          "segundo": 41.416,
+          "intervalo": [
+            40.427,
+            42.116
+          ],
+          "sha256": "58909efde7f09c0a8e718f4a940d6b6e57d47c1cbb84139c1584a54a4bfd5160",
+          "estado_visual": "revisado_original",
+          "observacion": "Perfil: identidad y formulario apilados; nombre, campo WhatsApp y ayuda legibles.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.911090-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-19.png"
+        },
+        {
+          "archivo": "390-20.png",
+          "ruta_programada": "/admin",
+          "segundo": 43.113,
+          "intervalo": [
+            42.116,
+            43.813
+          ],
+          "sha256": "22826f85dc75e20474870453e44b7a3daedff95f39a56029ceb8d65ef9f9912c",
+          "estado_visual": "revisado_original",
+          "observacion": "Administración: aviso de gasto y total USD 8.40 completos; tabla de usuarios cabe en el contenedor.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.911155-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-20.png"
+        },
+        {
+          "archivo": "390-21.png",
+          "ruta_programada": "/admin/fabrica",
+          "segundo": 45.94,
+          "intervalo": [
+            43.813,
+            46.64
+          ],
+          "sha256": "ef20cb8ec87a958b04057bae5ccbaea97832c309a6f7d675a4bfd3c526f53750",
+          "estado_visual": "revisado_original",
+          "observacion": "Ajustes: encabezado en dos líneas, pestañas reordenadas y controles en una columna.",
+          "fecha_revision_lima": "2026-11-21T16:35:54.911212-05:00",
+          "hallazgo": null,
+          "archivo_local_derivado": "/home/david/Proyectos/cooper-wt/total-revision-rondas-cierre/.cache/revision-rondas/recorridos/cierre-7/390-21.png"
+        }
+      ],
+      "fotogramas_revisados": 22,
+      "copia_final_contrastada": true,
+      "limite": "Revisión por 22 fotogramas nativos de rutas, no observación humana de todos los cuadros. Decodificación integral a cargo del verificador del orquestador."
+    }
+  ],
+  "alcance": "44 fotogramas nativos vistos, 22 rutas de cada recorrido, sobre candidato anterior 22ece8e. Decodificación integral no realizada en esta revisión."
+}

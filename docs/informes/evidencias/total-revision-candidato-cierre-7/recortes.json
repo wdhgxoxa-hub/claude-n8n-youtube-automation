@@ -1,0 +1,28 @@
+[
+  {
+    "archivo": "publicados-390-oscuro-tabla.png",
+    "sha256": "f7ec8af4ec6b693dba6d4562ef6f5db871982c65a9996853ace50589dc6c6457",
+    "origen": "cierre-7/390-oscuro-16-publicados.png",
+    "origen_sha256": "f9c1916d1e9e971cd1de946e6f7bc8511d1810da2339363df76cfca0ecc7e280",
+    "recorte_xyxy": [
+      0,
+      1600,
+      390,
+      2400
+    ],
+    "inspeccion": "recorte nativo visto tras inspeccionar original completo"
+  },
+  {
+    "archivo": "publicados-390-claro-tabla.png",
+    "sha256": "be4472eb78809dccf68e1011de22b90ff0902d503f38fb4bfd5928b5162aaf49",
+    "origen": "cierre-7/390-claro-16-publicados.png",
+    "origen_sha256": "166c4c2387535aee9aa70345aad3f5a97e2adcabacfbefb6668ff933caea09eb",
+    "recorte_xyxy": [
+      0,
+      1600,
+      390,
+      2400
+    ],
+    "inspeccion": "recorte nativo visto tras inspeccionar original completo"
+  }
+]

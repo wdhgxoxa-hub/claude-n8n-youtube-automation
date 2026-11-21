@@ -1,0 +1,92 @@
+{
+  "estado": "CANDIDATO_ANTERIOR_SIN_APROBACION_FINAL",
+  "fuente": "22ece8e1f078b149944118feeabbb6c803992ff4",
+  "fecha_lima": "2026-11-21T16:38:48.794561-05:00",
+  "ronda": "cierre-7",
+  "playwright_stats": {
+    "startTime": "2026-11-21T21:00:15.151Z",
+    "duration": 1990892.577,
+    "expected": 92,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "playwright_errors": [],
+  "playwright_sha256": "628a09ab748ab7a528c023e788fd67df67fa75e3962fec22b998fd11f49b46d5",
+  "sentinel": [
+    {
+      "ancho": 1440,
+      "informe_sha256": "ca611cc9d7c1e927b573cf88c9b52aa2bc8bc9b90183e6c5ba8b8466b86aa5d1",
+      "pantallas": 36,
+      "acciones_caos": 6521,
+      "modulos": [
+        {
+          "nombre": "recorridos",
+          "hallazgos": 4
+        },
+        {
+          "nombre": "caos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "estabilidad",
+          "hallazgos": 0
+        }
+      ],
+      "hallazgos": [
+        {
+          "tipo": "cobertura",
+          "gravedad": "info",
+          "titulo": "Vista sin URL propia: solo la revisa recorridos"
+        }
+      ],
+      "observador_sha256": "a7d9acfe90e8b129944705ab2d69d65c17c4f7bb1b643d1c37397b90149f5c3d",
+      "peticiones_fallidas_por_error": {
+        "net::ERR_ABORTED": 3633
+      }
+    },
+    {
+      "ancho": 390,
+      "informe_sha256": "361af2953d929008ee6525407631f2428a2a5b7708b1b0c64db7202c8bb3797f",
+      "pantallas": 35,
+      "acciones_caos": 9170,
+      "modulos": [
+        {
+          "nombre": "recorridos",
+          "hallazgos": 5
+        },
+        {
+          "nombre": "caos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "estabilidad",
+          "hallazgos": 0
+        }
+      ],
+      "hallazgos": [
+        {
+          "tipo": "cobertura",
+          "gravedad": "info",
+          "titulo": "Vista sin URL propia: solo la revisa recorridos"
+        },
+        {
+          "tipo": "cobertura",
+          "gravedad": "info",
+          "titulo": "Vista sin URL propia: solo la revisa recorridos"
+        }
+      ],
+      "observador_sha256": "520ea6b06ddc009333b65ede79dec38d023691ada8879a318dbee8a7efdb6d29",
+      "peticiones_fallidas_por_error": {
+        "net::ERR_ABORTED": 3137
+      }
+    }
+  ],
+  "muestras_originales_revisadas": 24,
+  "huellas_original_copia_contrastadas": 24,
+  "fotogramas_recorridos_revisados": 44,
+  "recorridos_contrastados": 2,
+  "decodificacion_integral_realizada": false,
+  "cierre_8_muestras_revisadas": 0,
+  "limite": "Orquestador comunica candidato posterior b3e608e con más cambios y rondas propias. No se inspeccionó ese árbol, no se trasladan resultados ni aprobación. No se tocó su ejecución."
+}
