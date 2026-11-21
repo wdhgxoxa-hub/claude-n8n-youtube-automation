@@ -6,9 +6,12 @@ import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
 const animationAudit = process.argv.includes("--animacion");
-const outputDir = animationAudit
-  ? ".cache/animacion/lighthouse"
-  : ".cache/auditoria";
+const coverageAudit = process.argv.includes("--cobertura");
+const outputDir = coverageAudit
+  ? ".cache/cobertura/lighthouse"
+  : animationAudit
+    ? ".cache/animacion/lighthouse"
+    : ".cache/auditoria";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -93,18 +96,32 @@ try {
     if (!profile.ok())
       throw new Error("No se pudo configurar el tema de ensayo.");
     for (const formFactor of ["mobile", "desktop"]) {
-      const paths = process.argv.includes("--rapida")
-        ? ["/"]
-        : [
-            "/",
-            "/canales",
-            "/videos",
-            `/videos/${video.id}`,
-            "/avatares",
-            "/perfil",
-            "/admin",
-            "/entrar",
-          ];
+      const paths = coverageAudit
+        ? [
+            `/canales/${channel.id}`,
+            "/radar",
+            "/rutina",
+            "/redes",
+            "/referencias",
+            "/cuentas",
+            "/programados",
+            "/decisiones",
+            "/incidencias",
+            "/avisos",
+            "/admin/fabrica",
+          ]
+        : process.argv.includes("--rapida")
+          ? ["/"]
+          : [
+              "/",
+              "/canales",
+              "/videos",
+              `/videos/${video.id}`,
+              "/avatares",
+              "/perfil",
+              "/admin",
+              "/entrar",
+            ];
       for (const path of paths) {
         const mobile = formFactor === "mobile";
         const result = await lighthouse(base + path, {
