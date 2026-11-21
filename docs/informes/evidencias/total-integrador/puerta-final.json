@@ -1,5 +1,5 @@
 {
-  "inicio": "2026-11-21T21:03:29.341Z",
+  "inicio": "2026-11-21T21:50:00.982Z",
   "herramientas": {
     "node": "24.22.3",
     "npm": "12.2.2",
@@ -14,23 +14,23 @@
       "comando": "npm ci",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 6785,
-      "sha256": "6bc688c743252de3d9354a34a6e2b5896276d4f58e9fc95fbdb801f58ce1c5a9"
+      "duracion_ms": 4845,
+      "sha256": "41713bee207894d4bd258e05c4eace8746c26e7fa50ec57e5c7a23eafb510efe"
     },
     {
       "nombre": "preparacion",
       "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 4538,
-      "sha256": "1e37cba625f4e12b266d0b2a5daf4c666675b425a29c28e819ecc9c407af1f18"
+      "duracion_ms": 3962,
+      "sha256": "d0ce39ffb587f19e7e6a6b7c5a5a4cccd0182a898011ab381150687f225c071f"
     },
     {
       "nombre": "lint",
       "comando": "npm run lint",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 3901,
+      "duracion_ms": 3513,
       "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
     },
     {
@@ -38,7 +38,7 @@
       "comando": "npm run typecheck",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 4561,
+      "duracion_ms": 3920,
       "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
     },
     {
@@ -46,38 +46,38 @@
       "comando": "npm test",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 33579,
-      "sha256": "d1a45d7707014940aa9a2f888ebcf966dbe83696fa6facaf5318964499b463d9"
+      "duracion_ms": 31579,
+      "sha256": "bad1615e8f66197548c04cebfd64f97eb8f234b2d4751119e608ec1ed95a9ce4"
     },
     {
       "nombre": "e2e",
       "comando": "npm run test:e2e",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 924939,
-      "sha256": "a17e2385c6f774eec71c6b979d7a37c6495e7d7eb7a15d8ee8a79010b667492e"
+      "duracion_ms": 876371,
+      "sha256": "06369e41d0eca4eca62493a5980da4d5fa4466a09096aaa9341f6806dab4fb1b"
     },
     {
       "nombre": "build",
       "comando": "npm run build",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 3588,
-      "sha256": "85bd2f240f072d0b0ed8790df3d75bf33bac58affb8ac39b16701c75053e45e7"
+      "duracion_ms": 3243,
+      "sha256": "7d311d3edd596fc7f2d88b54bbaa2aa2f46b6bca1803001f7eb20574a7b31c09"
     },
     {
       "nombre": "flujos",
       "comando": "/usr/local/bin/node --test tests/flujos_v2.test.cjs",
       "rc": 0,
       "advertencias": 0,
-      "duracion_ms": 2820,
-      "sha256": "76a96a5184ee071e640a37a09687a031a2c06444ec3a9ef8b61031e3d966bf24"
+      "duracion_ms": 2639,
+      "sha256": "9a22b18353dd5c90df095d2c16e5274417f676aaf8c7f8080bde821a4c6a63a7"
     }
   ],
   "resultado": "PASS",
   "origen": {
-    "commit": "b3e608eec138a03fce419a66954497b8fc2c50ea",
-    "archivo_sha256": "a3fa8da5ca0aee45a93d0f6e4f1a608971f92be1aa304818e3f68170d042d2b8",
+    "commit": "5e8e26020d6fdf69538de91194860c006d5f6b29",
+    "archivo_sha256": "a39f202e60692238aca610cc6f734e946f4da52193dcef17faa02f06c1379e3c",
     "fuente_git_limpia": true,
     "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8"
   },
@@ -86,5 +86,5 @@
     "e2e": 103,
     "flujos": 235
   },
-  "fin": "2026-11-21T21:19:54.362Z"
+  "fin": "2026-11-21T22:05:31.359Z"
 }

@@ -1,0 +1,27 @@
+{
+  "resultado": "PASS",
+  "fecha_utc": "2026-11-21T22:00:59.821941+00:00",
+  "fuente_imagen": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "fuente_aceptacion": "5e8e26020d6fdf69538de91194860c006d5f6b29",
+  "corte_revisado": "62888231717a58a313047b3a60798498b6278ed3",
+  "diferencias_cooper_desde_imagen": [
+    "cooper/README.md",
+    "cooper/pulido/estres.spec.ts"
+  ],
+  "explicacion": {
+    "cooper/README.md": "Recuento documentado de catorce migraciones; no ejecutable.",
+    "cooper/pulido/estres.spec.ts": "Selector del arnés móvil/escritorio; sin cambiar aplicación ni cobertura."
+  },
+  "entradas_runtime_sin_cambios": [
+    "cooper/src",
+    "cooper/drizzle",
+    "cooper/public",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "cooper/tsconfig.json",
+    "deploy/Containerfile",
+    ".dockerignore"
+  ],
+  "imagen_no_reconstruida": "Los cambios posteriores afectan documentación/pruebas/helpers operativos externos; runtime idéntico a b3."
+}

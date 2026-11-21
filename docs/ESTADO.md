@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 17:03 (Lima).
+Última actualización: 2026-11-21 17:06 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — puerta completa repetida después del selector móvil:** archivo limpio `5e8e260`, 467 unitarias/103 E2E/235 flujos, instalación/lint/tipos/build PASS y cero errores, advertencias u omisiones. Runtime idéntico a la imagen b3; solo cambia el arnés y la documentación posterior. Dos rondas completas secuenciales en curso, sin publicación ni activación. [Puerta final](informes/evidencias/total-integrador/puerta-final.json), [equivalencia](informes/evidencias/total-integrador/final/equivalencia-runtime-b3.json).
 
 - **Recuperación canónica complementaria acreditada localmente:** helper `beaa5cab…` del integrador, imagen b3 y siete servicios mixtos: aplicación → recuperación post-PASS → reinicio explícito con override PASS. CAS intacto, escritura posterior archivada y snapshot restaurado, anterior global ausente, 1 GiB/swap0 y limpieza propia. 221 regresiones sin advertencias. No hubo VPS ni cambios productivos; no acredita recreación genérica sin override. [Recibos y orden de recuperación](informes/total-recuperacion-cas.md).
 
