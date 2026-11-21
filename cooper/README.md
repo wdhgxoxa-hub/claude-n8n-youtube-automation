@@ -1,6 +1,8 @@
-# Cooper — integración 3
+# Cooper — cooper-total
 
-La tercera integración reúne Pulido, Memoria, Cobertura, Marcas y Animación. Procedimiento local y lote n8n reservado a Claude: [integración 3](../docs/cooper-integracion3-despliegue.md). La secuencia integrada añade `0008_observabilidad`, `0009_memoria` y `0010_marcas` a las ocho migraciones originales. Las bases experimentales de Marcas con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas.
+Esta integración añade aprendizaje con métricas reales, competencia pública por canal, chat por el plan de la PC, conciliación, seguimiento durable de biblioteca, reutilización de montajes y resultados unificados. El [informe vigente](../docs/informes/cooper-total.md) y [ESTADO](../docs/ESTADO.md) distinguen lo implementado, probado y desplegado de la aceptación humana pendiente. El lote n8n lo aplica el orquestador con respaldo y reversa comprobados.
+
+La secuencia actual contiene trece migraciones. Conserva las ocho originales y `0008_observabilidad`, `0009_memoria`, `0010_marcas`, `0011_montajes_fabrica` y `0017_biblioteca`; no se renumeran diarios aplicados. Las bases experimentales con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas. El procedimiento de la [integración 3](../docs/cooper-integracion3-despliegue.md) se conserva como antecedente de las once migraciones de la PC.
 
 Recorrido conjunto reproducible, con todas las E2E anteriores, memoria, Marcas, movimiento, estrés y videos continuos a 1440/390 px:
 
@@ -10,7 +12,7 @@ COOPER_MOVIMIENTO_RONDA=ronda-1 COOPER_MOVIMIENTO_SALIDA=.cache/videos-integraci
 COOPER_MOVIMIENTO_SALIDA=.cache/videos-integracion3 node scripts/indice-movimiento.mjs
 ```
 
-La revisión y los hashes de Sentinel están fijados en este repositorio; sus fuentes privadas se preparan únicamente en una caché ignorada desde un checkout local autorizado ([contrato](ci/sentinel.md)). `npm run preparar:pruebas` prepara su entorno Python y ambos Chromium; para reproducir desde cero use `npm run ci:limpia` ([procedimiento](#puerta-reproducible-desde-cero)). Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas.
+La revisión y los hashes de Sentinel están fijados en este repositorio; sus fuentes privadas se preparan únicamente en una caché ignorada desde un checkout local autorizado ([contrato](ci/sentinel.md)). `npm run preparar:pruebas` prepara Python, ambos Chromium, Firefox y WebKit; para reproducir desde cero use `npm run ci:limpia` ([procedimiento](#puerta-reproducible-desde-cero)). Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas. La [revisión final](../docs/cooper-revision-rondas.md) verifica informes, decodificación completa y huellas antes de la inspección visual.
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). La puesta en vivo inicial se conserva en [cooper-vivo](../docs/informes/cooper-vivo.md). La instalación local usa la integración 3, con once migraciones y respaldo previo: [estado, evidencias y límites respecto del VPS](../docs/informes/cooper-integracion3.md). El arranque automático local permanece deshabilitado tras el corte al VPS; esta misión inició solo la web de la PC.
 

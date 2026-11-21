@@ -1,8 +1,9 @@
 # Cooper — fábrica y gestión de marcas
 
-La aplicación actual vive en [`cooper/`](cooper/README.md) y la fábrica usa 32 flujos en `workflows/v2/`, con Data Tables de n8n, revisión humana y adaptadores de proveedores. El texto histórico de abajo describe la primera versión y sus cuatro borradores; no es la guía del VPS actual.
+La aplicación actual vive en [`cooper/`](cooper/README.md) y la fábrica usa 33 flujos canónicos en `workflows/v2/`, con Data Tables de n8n, revisión humana y adaptadores de proveedores. El texto histórico de abajo describe la primera versión y sus cuatro borradores; no es la guía del VPS actual.
 
 - [Estado vigente](docs/ESTADO.md) y [auditoría total](docs/informes/faltantes-total.md).
+- [Integración cooper-total: cambios, pruebas y despliegue](docs/informes/cooper-total.md).
 - [Especificación](docs/cooper-especificacion.md), [entrega](cooper/ENTREGA.md) y [contrato del cerebro](skill/FABRICA.md).
 - [Operación, copias y recuperación](docs/cooper-operacion.md), [conciliación sin duplicados](docs/cooper-conciliacion.md).
 - [Lote n8n y reversa](docs/cooper-cobertura-despliegue.md). Las activaciones reales requieren los controles y permisos indicados en el estado.
