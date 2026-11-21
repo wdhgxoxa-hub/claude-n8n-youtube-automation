@@ -1,5 +1,6 @@
 import type { Competencia } from "./competencia-schema";
 export function diferenciacionCompetencia(nombre: string): string;
+export function urlPublicaCompetencia(url: unknown): string;
 export function competenciaVacia(nombre: string, motivo?: string): Competencia;
 export function normalizarCompetencia(
   raw: unknown,

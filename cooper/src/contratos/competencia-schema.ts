@@ -21,6 +21,7 @@ export const competenciaSchema = z.object({
         red: texto,
         url: texto,
         pais: texto,
+        fuente_identidad: texto.optional(),
         patron: texto,
         muestras: z.array(z.object(publicacion)).max(15),
         outliers: z

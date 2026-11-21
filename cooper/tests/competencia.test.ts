@@ -126,6 +126,47 @@ it("una búsqueda parcial nunca certifica ausencia de homónimos ni acepta perfi
     ).estado,
   ).toBe("sin_datos");
 });
+it("conserva identidades enlazadas por fuentes primarias abiertas sin inventar métricas del perfil bloqueado", () => {
+  const { raw, respuesta } = fixture();
+  const primarias = raw.competidores.map((c, i) => ({
+    ...c,
+    fuente_identidad: `https://editorial-ficticia${i}.example.org/canal`,
+    muestras: [],
+  }));
+  const evidencia = {
+    ...respuesta,
+    fuentes_consultadas: [
+      ...primarias.map((c) => c.fuente_identidad),
+      ...raw.comprobaciones.map((c) => c.url),
+    ],
+  };
+  const c = normalizarCompetencia(
+    { ...raw, competidores: primarias },
+    evidencia,
+    "Margen Real",
+    now,
+  );
+  expect(c.estado).toBe("parcial");
+  expect(c.competidores).toHaveLength(3);
+  expect(
+    c.competidores.every(
+      (p) => p.muestras.length === 0 && p.outliers.length === 0,
+    ),
+  ).toBe(true);
+  expect(c.competidores.map((p) => p.fuente_identidad)).toEqual(
+    primarias.map((p) => p.fuente_identidad),
+  );
+  evidencia.fuentes_consultadas = ["https://127.0.0.1/privado"];
+  for (const p of primarias) p.fuente_identidad = "https://127.0.0.1/privado";
+  expect(
+    normalizarCompetencia(
+      { ...raw, competidores: primarias },
+      evidencia,
+      "Margen Real",
+      now,
+    ).competidores,
+  ).toHaveLength(0);
+});
 it("la proyección pública elimina propiedades remotas, gasto e instrucciones añadidas", () => {
   const { raw, respuesta } = fixture(),
     c = normalizarCompetencia(raw, respuesta, "Margen Real", now);

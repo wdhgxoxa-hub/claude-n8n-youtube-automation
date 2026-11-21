@@ -55,6 +55,7 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
       red: "youtube",
       url: `https://www.youtube.com/@ensayo${i}`,
       pais: "Perú",
+      fuente_identidad: `https://editorial-ficticia${i}.example.org/canal`,
       patron: "Hipótesis de gancho visual, pendiente de probar.",
       muestras: [],
       outliers:
@@ -92,6 +93,11 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
     page.getByRole("link", { name: "Competidor ficticio 1" }),
   ).toBeVisible();
   await expect(page.getByText("600 vistas", { exact: false })).toBeVisible();
+  await expect(
+    page.getByRole("link", {
+      name: "Fuente de identidad de Competidor ficticio 1",
+    }),
+  ).toHaveAttribute("href", "https://editorial-ficticia1.example.org/canal");
   await expect(
     page.getByRole("link", { name: "Homónimo ficticio" }),
   ).toBeVisible();

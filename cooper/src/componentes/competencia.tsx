@@ -1,14 +1,29 @@
 import type { Competencia } from "@/contratos/competencia-schema";
-import { competenciaVacia } from "@/contratos/competencia.mjs";
+import {
+  competenciaVacia,
+  urlPublicaCompetencia,
+} from "@/contratos/competencia.mjs";
 const etiquetas = {
   pendiente: "Por investigar",
   sin_datos: "Sin datos comprobados",
   parcial: "Investigación parcial",
   listo: "Investigación disponible",
 };
-function Fuente({ url, children }: { url: string; children: React.ReactNode }) {
-  return /^https:\/\/(?:www\.|m\.)?(youtube\.com|youtu\.be|tiktok\.com|instagram\.com|facebook\.com)\//i.test(
-    url,
+function Fuente({
+  url,
+  children,
+  primaria = false,
+}: {
+  url: string;
+  children: React.ReactNode;
+  primaria?: boolean;
+}) {
+  return (
+    primaria
+      ? Boolean(urlPublicaCompetencia(url))
+      : /^https:\/\/(?:www\.|m\.)?(youtube\.com|youtu\.be|tiktok\.com|instagram\.com|facebook\.com)\//i.test(
+          url,
+        )
   ) ? (
     <a className="text-link" href={url} target="_blank" rel="noreferrer">
       {children}
@@ -61,6 +76,13 @@ export function PanelCompetencia({
                 {p.pais ? ` · ${p.pais}` : " · País sin confirmar"}
               </p>
               <p>{p.patron}</p>
+              {p.fuente_identidad && (
+                <p>
+                  <Fuente url={p.fuente_identidad} primaria>
+                    Fuente de identidad de {p.nombre}
+                  </Fuente>
+                </p>
+              )}
               {p.outliers.length ? (
                 p.outliers.map((v) => (
                   <p key={v.url}>
