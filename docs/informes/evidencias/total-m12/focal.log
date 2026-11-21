@@ -1,0 +1,16 @@
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/total-m12/cooper
+
+ ✓ tests/volumen.test.ts (6 tests) 1980ms
+   ✓ H19: conserva lectura completa, orden de datos y aislamiento con volumen  336ms
+ ✓ tests/puente.test.ts (19 tests) 622ms
+     ✓ SSE reemite el evento persistido y omite eventos de otros dueños y costos  505ms
+ ✓ tests/revision-seguridad.test.ts (18 tests) 351ms
+ ✓ tests/whatsapp.test.ts (36 tests) 360ms
+ ✓ tests/resultados.test.ts (8 tests) 86ms
+
+ Test Files  5 passed (5)
+      Tests  87 passed (87)
+   Start at  12:28:13
+   Duration  6.23s (transform 470ms, setup 48ms, import 2.21s, tests 3.40s, environment 0ms)
+

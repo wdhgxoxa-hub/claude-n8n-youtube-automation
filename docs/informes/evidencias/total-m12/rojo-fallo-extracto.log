@@ -1,0 +1,19 @@
+Extracto literal del fallo; completo local: cooper/.cache/m12-rojo-completo.log
+Number of calls: 10000
+
+ ❯ tests/volumen.test.ts:17:25
+     15|   try {
+     16|     await cicloMensajeria(AHORA_VOLUMEN);
+     17|     expect(encolar).not.toHaveBeenCalled();
+       |                         ^
+     18|     expect(db().select().from(whatsappOutbox).all()).toEqual(antes);
+     19|     expect(db().select().from(whatsappAttempts).all()).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  12:25:40
+   Duration  4.57s (transform 421ms, setup 28ms, import 786ms, tests 2.75s, environment 0ms)
+

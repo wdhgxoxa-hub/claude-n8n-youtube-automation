@@ -29,7 +29,10 @@ import {
   type MensajeWhatsApp,
 } from "./proveedor";
 import { tokenRevision, urlRevision } from "./enlaces";
-export function revision(video: Video) {
+type RevisionVideo = Pick<Video, "stage" | "remoteUpdatedAt" | "updatedAt">;
+export type VideoAviso = RevisionVideo &
+  Pick<Video, "id" | "ownerId" | "productionState">;
+export function revision(video: RevisionVideo) {
   return `${video.stage}:${video.remoteUpdatedAt || video.updatedAt}`;
 }
 export function claveAccion(job: AvisoWhatsApp) {
@@ -100,7 +103,11 @@ export function avisoVigente(
     throw new ErrorHttp(409, "Esta revisión ya recibió una respuesta.");
   return { user, contacto: c, video };
 }
-export function encolarVideo(video: Video, botones = false, now = Date.now()) {
+export function encolarVideo(
+  video: VideoAviso,
+  botones = false,
+  now = Date.now(),
+) {
   const kind =
     video.stage === 3
       ? "guion"

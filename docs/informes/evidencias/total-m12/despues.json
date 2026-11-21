@@ -1,0 +1,285 @@
+{
+  "fecha": "2026-11-21T17:28:13.286Z",
+  "revision": "802680608cff689054989f988d57142613baf7ff",
+  "node": "v24.22.3",
+  "fixture": {
+    "videos": 10000,
+    "mensajes": 10000,
+    "duenos": 10,
+    "canales": 100,
+    "avisos": 7524
+  },
+  "memoria": "Delta heap y RSS al volver de cada llamada, GC previo; no pico por operación. maxRSS es del proceso completo con fixture/importaciones.",
+  "maxRssProcesoMiB": 692.16796875,
+  "limites": {
+    "lecturaMs": 1000,
+    "lecturaHeapMiB": 128,
+    "cicloMs": 250,
+    "cicloHeapMiB": 32
+  },
+  "cumple": true,
+  "huellas": {
+    "datos_usuario": "20915985b11c5471b624a8099fccb3f03d81f156b133acf6f41fc8562c7271fb",
+    "datos_admin": "a31ed6e80dab414108f8a97dae0510480d4d256a00cade3d2093b38cab9fe4ae",
+    "resultados_usuario": "9a8f41287d00a9c56c0f13a8d32a0bd914556a69792e82228b94b29ca0ab04e5",
+    "resultados_admin": "b6ecc27ad56fa4b21a1cc6269d09e51a9385f2eccf9001c470ad9fc4781391c5"
+  },
+  "mediciones": {
+    "datos_usuario": {
+      "muestras": [
+        {
+          "ms": 20.72436000000016,
+          "heapDeltaMiB": 16.43065643310547,
+          "rssAntesMiB": 540.88671875,
+          "rssDespuesMiB": 541.07421875
+        },
+        {
+          "ms": 18.912503000000015,
+          "heapDeltaMiB": 17.376190185546875,
+          "rssAntesMiB": 546.01953125,
+          "rssDespuesMiB": 546.01953125
+        },
+        {
+          "ms": 20.044308999999885,
+          "heapDeltaMiB": 17.42774200439453,
+          "rssAntesMiB": 546.08203125,
+          "rssDespuesMiB": 546.08203125
+        },
+        {
+          "ms": 19.592135000000326,
+          "heapDeltaMiB": 17.417770385742188,
+          "rssAntesMiB": 546.08203125,
+          "rssDespuesMiB": 546.08203125
+        },
+        {
+          "ms": 18.899963999999727,
+          "heapDeltaMiB": 16.97784423828125,
+          "rssAntesMiB": 546.13671875,
+          "rssDespuesMiB": 546.13671875
+        },
+        {
+          "ms": 17.01147499999979,
+          "heapDeltaMiB": 17.461929321289062,
+          "rssAntesMiB": 546.28125,
+          "rssDespuesMiB": 546.28125
+        },
+        {
+          "ms": 19.227720000000318,
+          "heapDeltaMiB": 17.423240661621094,
+          "rssAntesMiB": 546.14453125,
+          "rssDespuesMiB": 546.14453125
+        }
+      ],
+      "medianaMs": 19.227720000000318,
+      "maxMs": 20.72436000000016,
+      "maxHeapMiB": 17.461929321289062,
+      "cumple": true
+    },
+    "datos_admin": {
+      "muestras": [
+        {
+          "ms": 143.9793420000001,
+          "heapDeltaMiB": 96.77632904052734,
+          "rssAntesMiB": 548.3203125,
+          "rssDespuesMiB": 580.9453125
+        },
+        {
+          "ms": 135.73193100000026,
+          "heapDeltaMiB": 96.8868408203125,
+          "rssAntesMiB": 581.1875,
+          "rssDespuesMiB": 581.375
+        },
+        {
+          "ms": 128.79545000000007,
+          "heapDeltaMiB": 94.32164764404297,
+          "rssAntesMiB": 597.35546875,
+          "rssDespuesMiB": 597.54296875
+        },
+        {
+          "ms": 126.85563400000001,
+          "heapDeltaMiB": 95.54956817626953,
+          "rssAntesMiB": 597.59765625,
+          "rssDespuesMiB": 597.78515625
+        },
+        {
+          "ms": 130.7147369999998,
+          "heapDeltaMiB": 95.94304656982422,
+          "rssAntesMiB": 597.8359375,
+          "rssDespuesMiB": 597.8359375
+        },
+        {
+          "ms": 127.43016200000011,
+          "heapDeltaMiB": 96.6986312866211,
+          "rssAntesMiB": 597.9609375,
+          "rssDespuesMiB": 597.9609375
+        },
+        {
+          "ms": 132.926598,
+          "heapDeltaMiB": 96.22213745117188,
+          "rssAntesMiB": 597.96875,
+          "rssDespuesMiB": 597.96875
+        }
+      ],
+      "medianaMs": 130.7147369999998,
+      "maxMs": 143.9793420000001,
+      "maxHeapMiB": 96.8868408203125,
+      "cumple": true
+    },
+    "resultados_usuario": {
+      "muestras": [
+        {
+          "ms": 10.573024999999689,
+          "heapDeltaMiB": 9.730194091796875,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        },
+        {
+          "ms": 11.173361999999543,
+          "heapDeltaMiB": 9.727020263671875,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        },
+        {
+          "ms": 14.439261999999871,
+          "heapDeltaMiB": 9.715545654296875,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        },
+        {
+          "ms": 14.029625999999553,
+          "heapDeltaMiB": 9.725387573242188,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        },
+        {
+          "ms": 11.877241999999569,
+          "heapDeltaMiB": 9.730430603027344,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        },
+        {
+          "ms": 11.077422999999726,
+          "heapDeltaMiB": 9.715644836425781,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        },
+        {
+          "ms": 15.119690999999875,
+          "heapDeltaMiB": 9.735710144042969,
+          "rssAntesMiB": 597.98046875,
+          "rssDespuesMiB": 597.98046875
+        }
+      ],
+      "medianaMs": 11.877241999999569,
+      "maxMs": 15.119690999999875,
+      "maxHeapMiB": 9.735710144042969,
+      "cumple": true
+    },
+    "resultados_admin": {
+      "muestras": [
+        {
+          "ms": 97.19199500000013,
+          "heapDeltaMiB": 34.33003234863281,
+          "rssAntesMiB": 599.02734375,
+          "rssDespuesMiB": 600.71484375
+        },
+        {
+          "ms": 98.01731399999971,
+          "heapDeltaMiB": 37.24073791503906,
+          "rssAntesMiB": 600.63671875,
+          "rssDespuesMiB": 600.63671875
+        },
+        {
+          "ms": 94.58975400000054,
+          "heapDeltaMiB": 35.294639587402344,
+          "rssAntesMiB": 600.71875,
+          "rssDespuesMiB": 602.40625
+        },
+        {
+          "ms": 103.63928399999986,
+          "heapDeltaMiB": 37.372032165527344,
+          "rssAntesMiB": 602.375,
+          "rssDespuesMiB": 602.375
+        },
+        {
+          "ms": 93.68843099999958,
+          "heapDeltaMiB": 35.87676239013672,
+          "rssAntesMiB": 602.40234375,
+          "rssDespuesMiB": 604.08984375
+        },
+        {
+          "ms": 91.78140499999972,
+          "heapDeltaMiB": 37.242919921875,
+          "rssAntesMiB": 604.0390625,
+          "rssDespuesMiB": 604.0390625
+        },
+        {
+          "ms": 98.76184600000033,
+          "heapDeltaMiB": 39.14421844482422,
+          "rssAntesMiB": 604.1328125,
+          "rssDespuesMiB": 604.1328125
+        }
+      ],
+      "medianaMs": 97.19199500000013,
+      "maxMs": 103.63928399999986,
+      "maxHeapMiB": 39.14421844482422,
+      "cumple": true
+    },
+    "ciclo_estable": {
+      "muestras": [
+        {
+          "ms": 18.690738999999667,
+          "heapDeltaMiB": 0.7953948974609375,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        },
+        {
+          "ms": 20.280894000000444,
+          "heapDeltaMiB": 0.7920379638671875,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        },
+        {
+          "ms": 20.742582000000766,
+          "heapDeltaMiB": 0.7959518432617188,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        },
+        {
+          "ms": 21.76529699999992,
+          "heapDeltaMiB": 0.7981719970703125,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        },
+        {
+          "ms": 19.558936999999787,
+          "heapDeltaMiB": 0.7851715087890625,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        },
+        {
+          "ms": 19.454012000000148,
+          "heapDeltaMiB": 0.801055908203125,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        },
+        {
+          "ms": 19.038712999999916,
+          "heapDeltaMiB": 0.7910842895507812,
+          "rssAntesMiB": 604.09375,
+          "rssDespuesMiB": 604.09375
+        }
+      ],
+      "medianaMs": 19.558936999999787,
+      "maxMs": 21.76529699999992,
+      "maxHeapMiB": 0.801055908203125,
+      "cumple": true
+    }
+  },
+  "verificaciones": [
+    "aislamiento",
+    "orden",
+    "historial completo",
+    "idempotencia durable"
+  ]
+}

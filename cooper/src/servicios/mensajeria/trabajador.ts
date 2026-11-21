@@ -1,13 +1,60 @@
-import { eq } from "drizzle-orm";
+import { and, eq, inArray, ne, notExists, or, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { users, videos } from "@/db/schema";
+import { users, videos, whatsappContacts, whatsappOutbox } from "@/db/schema";
 import { proveedorMensajeria } from "./proveedor";
 import { contacto, cuentaActiva, preferencias } from "./cuentas";
 import { encolarVideo, encolarGasto, procesarCola } from "./cola";
 let lastCosts = 0;
 export async function cicloMensajeria(now = Date.now()) {
-  for (const video of db().select().from(videos).all())
-    encolarVideo(video, false, now);
+  const ambitos = db()
+    .select()
+    .from(whatsappContacts)
+    .where(
+      and(
+        ne(whatsappContacts.verifiedAt, 0),
+        ne(whatsappContacts.consentAt, 0),
+      ),
+    )
+    .all()
+    .flatMap((c) => {
+      const p = preferencias(c.preferences);
+      const etapas = [p.guion && 3, p.final && 9, p.publicado && 11].filter(
+        (etapa): etapa is number => etapa !== false,
+      );
+      if (!etapas.length) return [];
+      // Misma clave durable que encolarVideo; incluye reverificación y reloj remoto.
+      // No usar un cursor temporal: preferencias nuevas pueden habilitar videos antiguos.
+      const clave = sql<string>`'aviso:' || ${videos.ownerId} || ':' || ${videos.id} || ':' || ${videos.stage} || ':' || coalesce(nullif(${videos.remoteUpdatedAt}, 0), ${videos.updatedAt}) || ':' || ${String(c.verifiedAt)}`;
+      return [
+        and(
+          eq(videos.ownerId, c.ownerId),
+          inArray(videos.stage, etapas),
+          notExists(
+            db()
+              .select({ id: whatsappOutbox.id })
+              .from(whatsappOutbox)
+              .where(eq(whatsappOutbox.dedupeKey, clave)),
+          ),
+        ),
+      ];
+    });
+  if (ambitos.length) {
+    const pendientes = db()
+      .select({
+        id: videos.id,
+        ownerId: videos.ownerId,
+        stage: videos.stage,
+        productionState: videos.productionState,
+        remoteUpdatedAt: videos.remoteUpdatedAt,
+        updatedAt: videos.updatedAt,
+      })
+      .from(videos)
+      .where(and(eq(videos.productionState, "activa"), or(...ambitos)))
+      // Conserva el orden de descubrimiento previo (rowid), también entre dueños.
+      .orderBy(sql`${videos}.rowid`)
+      .all();
+    for (const video of pendientes) encolarVideo(video, false, now);
+  }
   if (now - lastCosts >= 60000) {
     lastCosts = now;
     const admin = db()

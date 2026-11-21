@@ -1,0 +1,19 @@
+Extracto literal del fallo; completo local: cooper/.cache/m12-focal-completo.log
+Number of calls: 7524
+
+ ❯ tests/volumen.test.ts:24:25
+     22|   try {
+     23|     await cicloMensajeria(AHORA_VOLUMEN);
+     24|     expect(encolar).not.toHaveBeenCalled();
+       |                         ^
+     25|     expect(db().select().from(whatsappOutbox).all()).toEqual(antes);
+     26|     expect(db().select().from(whatsappAttempts).all()).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 84 passed (85)
+   Start at  12:26:22
+   Duration  20.80s (transform 1.32s, setup 52ms, import 9.17s, tests 10.03s, environment 0ms)
+
