@@ -7,7 +7,7 @@ import { resolve } from "node:path";
 import { randomBytes } from "node:crypto";
 import { N8nApi } from "../../tools/cooper/n8n-api.mjs";
 
-export const ADMIN = "wdhgxoxa@gmail.com";
+export const ADMIN = "wdhg.xoxa@gmail.com";
 export const OTHER = "ana@example.test";
 export const CONTAINER = "cooper-ensayo-n8n";
 const IMAGE = "ghcr.io/n8n-io/n8n:2.47.4";

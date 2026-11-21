@@ -185,7 +185,7 @@ async function main() {
   const value = (key) =>
     args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
   const url = value("--url");
-  const admin = value("--admin") || "wdhgxoxa@gmail.com";
+  const admin = value("--admin") || "wdhg.xoxa@gmail.com";
   const simulate = args.includes("--simular");
   if (
     !url ||

@@ -4,7 +4,7 @@
 
 ## Resultado y commits
 
-El ensayo usa n8n **2.47.4** real en Podman, su API REST, nueve Data Tables y el grafo regenerado. Cooper corre en producción local con `COOPER_FABRICA=n8n`; únicamente la emisión de sesiones, los datos, los medios seleccionados y los fallos inducidos son ficticios. Administrador: **wdhgxoxa@gmail.com**, según la decisión recibida. Segunda cuenta: `ana@example.test`. El propietario interno de n8n es `owner@example.test`, con contraseña aleatoria de ensayo; no es un login Google.
+El ensayo usa n8n **2.47.4** real en Podman, su API REST, nueve Data Tables y el grafo regenerado. Cooper corre en producción local con `COOPER_FABRICA=n8n`; únicamente la emisión de sesiones, los datos, los medios seleccionados y los fallos inducidos son ficticios. Administrador confirmado para el paso a vivo: **wdhg.xoxa@gmail.com**, exactamente como lo devuelve Google. El ensayo original utilizó la variante sin punto; sus evidencias históricas se conservan sin editar. La CLI y el ejecutor de futuros ensayos ya usan el correo corregido. Segunda cuenta: `ana@example.test`. El propietario interno de n8n es `owner@example.test`, con contraseña aleatoria de ensayo; no es un login Google.
 
 | Commit | Contenido |
 | --- | --- |
@@ -61,12 +61,12 @@ El recurso de demostración devuelve 422 recuperable. Un avatar con referencia f
 
 ## Comando exacto de migración en vivo — solo Claude
 
-No ejecutado en vivo por esta misión. Desde la raíz del worktree aprobado, con entradas/cron cerrados y respaldo previo. Claude prepara **fuera de Git** `N8N_URL` (origen base, sin `/api/v1`), `N8N_API_KEY` exportada y `RESPALDO_COOPER` (directorio privado existente). La clave requiere `dataTable:list`, `dataTableColumn:create`, `dataTableRow:read` y `dataTableRow:update`. No imprimirla ni pasarla como argumento.
+No ejecutado en vivo por la misión de ensayo. Walter autorizó posteriormente el paso a vivo con el correo con punto; ver [estado de esa misión](cooper-vivo.md). Desde la raíz del worktree aprobado, con entradas/cron cerrados y respaldo previo. Claude prepara **fuera de Git** `N8N_URL` (origen base, sin `/api/v1`), `N8N_API_KEY` exportada y `RESPALDO_COOPER` (directorio privado existente). La clave requiere `dataTable:list`, `dataTableColumn:create`, `dataTableRow:read` y `dataTableRow:update`. No imprimirla ni pasarla como argumento.
 
 ```bash
-node tools/migrar_dueno.mjs --url "$N8N_URL" --admin wdhgxoxa@gmail.com --asignar-todo-al-admin --simular
-node tools/migrar_dueno.mjs --url "$N8N_URL" --admin wdhgxoxa@gmail.com --asignar-todo-al-admin --aplicar --respaldo "$RESPALDO_COOPER/duenos-antes.json"
-node tools/migrar_dueno.mjs --url "$N8N_URL" --admin wdhgxoxa@gmail.com --simular
+node tools/migrar_dueno.mjs --url "$N8N_URL" --admin wdhg.xoxa@gmail.com --asignar-todo-al-admin --simular
+node tools/migrar_dueno.mjs --url "$N8N_URL" --admin wdhg.xoxa@gmail.com --asignar-todo-al-admin --aplicar --respaldo "$RESPALDO_COOPER/duenos-antes.json"
+node tools/migrar_dueno.mjs --url "$N8N_URL" --admin wdhg.xoxa@gmail.com --simular
 ```
 
 La última orden debe mostrar cero columnas y cero filas pendientes. `--asignar-todo-al-admin` aplica **la decisión histórica expresa de Walter**, incluso ante un dueño previo distinto, dejando su preimagen en el diario. Usarla solo una vez sobre el histórico con entradas cerradas; después de incorporar cuentas ajenas, omitirla. Sin esa opción el script conserva dueños explícitos, deriva los demás por canal/video y rechaza contradicciones. Rechaza además tablas ausentes/duplicadas, tipos incompatibles, identificadores duplicados, fechas inválidas y huérfanos antes de escribir.
@@ -98,7 +98,7 @@ La reversa valida el origen, compara los valores posteriores con el diario y se 
 - No se probaron OAuth Google/YouTube, Telegram/WhatsApp, cron de producción, APIs de pago, calidad facial/vocal, render audiovisual ni publicación externa. El guion/final pendiente y la referencia HeyGen son fixtures; la vista previa de Cooper sigue siendo una maqueta.
 - La migración es aditiva y por REST; no transforma biblias ni reconstruye decisiones históricas. Los importes de ensayo son ficticios. Las tarifas de producción siguen siendo estimaciones, no facturas conciliadas.
 - La red, el volumen, los puertos y los procesos son exclusivos. El runner interno y el enlace por stdio son mecanismos de ensayo; no son un diseño de despliegue. HTTPS, proxy/SSE, respaldo operativo y runners de producción pertenecen al paso operativo posterior.
-- **Decisiones ya resueltas:** administrador y pertenencia de todo el histórico a `wdhgxoxa@gmail.com`. No se solicita de nuevo esa confirmación.
+- **Decisiones ya resueltas:** administrador y pertenencia de todo el histórico a `wdhg.xoxa@gmail.com`. No se solicita de nuevo esa confirmación.
 - **Pendientes de Walter:** autorizar el momento del paso a vivo tras la revisión de Claude; revisar decisiones históricas incompletas; decidir proveedores, recursos de producción, tarifas/presupuesto y política de retención. Hasta entonces, mantener los servicios de pago apagados.
 
 ## Fuentes oficiales

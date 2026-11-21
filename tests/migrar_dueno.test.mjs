@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { createServer } from "node:http";
+import { fileURLToPath } from "node:url";
 import {
   planMigration,
   applyMigration,
@@ -40,6 +43,49 @@ function fixture() {
   };
   return { api, data, tables, calls };
 }
+test("la CLI usa el correo exacto de Google al simular sin --admin", async (t) => {
+  const f = fixture();
+  const methods = [];
+  const server = createServer((req, res) => {
+    methods.push(req.method);
+    const path = new URL(req.url, "http://localhost").pathname;
+    const table = path.match(/^\/api\/v1\/data-tables\/([^/]+)\/rows$/)?.[1];
+    const data = path === "/api/v1/data-tables" ? f.tables : f.data[table];
+    res.writeHead(data ? 200 : 404, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ data: data ?? [] }));
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const child = spawn(
+    process.execPath,
+    [
+      fileURLToPath(new URL("../tools/migrar_dueno.mjs", import.meta.url)),
+      "--url",
+      `http://127.0.0.1:${server.address().port}`,
+      "--simular",
+    ],
+    { env: { N8N_API_KEY: "clave-ficticia-solo-para-prueba-local" } },
+  );
+  let stdout = "";
+  child.stdout.on("data", (chunk) => {
+    stdout += chunk;
+  });
+  child.stderr.resume();
+  const rc = await new Promise((resolve, reject) => {
+    child.once("error", reject);
+    child.once("close", resolve);
+  });
+  assert.equal(rc, 0);
+  const plan = JSON.parse(stdout);
+  assert.equal(plan.simular, true);
+  assert.equal(plan.filas.length, 3);
+  assert(
+    plan.filas.every(
+      (row) => row.cambios.dueno_email === "wdhg.xoxa@gmail.com",
+    ),
+  );
+  assert(methods.every((method) => method === "GET"));
+});
 test("planifica sin escribir y conserva costos conciliados y dueños explícitos", async () => {
   const f = fixture();
   f.data.fab_canales[0].dueno_email = "ana@example.test";
