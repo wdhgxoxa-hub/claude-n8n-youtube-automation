@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 15:37 (Lima).
+Última actualización: 2026-11-21 15:46 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — adaptador efímero de copia final preparado:** reutiliza el bundle certificado, exige release `e942dc9`, siete servicios saludables y bloqueo compartido; crea snapshot etiquetado sin poda y acredita identidades/configuración/activaciones/versiones antes y después. 14 pruebas sintéticas más las 12 del wrapper aprobadas sin advertencias. Plan de réplica PC exige el mismo ID final antes de registrar el recibo. Implementado y probado localmente, sin ejecutar en VPS; pendiente de la secuencia aceptada app→infra→n8n. [Informe](informes/total-integrador-producto.md#novena-revisión-adaptador-efímero-de-copia-final).
 
 - **21-11-2026, Lima — cierre Radar y clon SQLite con WAL integrados en revisión:** incorporados el helper autónomo de restauración y los recibos históricos de sondas/memoria, preservando el estado de integración actual. 189 pruebas operativas aprobadas sin advertencias. Los 25 archivos del bundle operativo certificado permanecen idénticos; no cambia la app ni invalida el ensayo de infraestructura. Integrado en la rama propia de producto, pendiente de incorporar al corte raíz; sin ejecución ni despliegue remoto. [Alcance](informes/total-integrador-producto.md#octava-revisión-cierre-radar-y-copia-íntegra-de-sqlite-con-wal).
 
