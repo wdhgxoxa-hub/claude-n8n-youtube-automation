@@ -4,6 +4,8 @@ Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en
 
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado integrado, puerta completa, capturas y pasos manuales de Walter: [informe final de integración](../docs/informes/cooper-integracion.md).
 
+Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. Cambios locales pendientes de revisión e integración.
+
 ## Arranque
 
 Requiere Node.js 24 y npm 12 (versiones usadas en la entrega). Ejecuta desde `cooper/`:

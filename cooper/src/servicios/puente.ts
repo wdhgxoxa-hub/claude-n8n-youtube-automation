@@ -47,11 +47,16 @@ export function aplicarEstado(
             ownerId: owner.id,
             name: channel.nombre,
             niche: channel.nicho,
+            newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
             createdAt: Date.now(),
           })
           .onConflictDoUpdate({
             target: channels.id,
-            set: { name: channel.nombre, niche: channel.nicho },
+            set: {
+              name: channel.nombre,
+              niche: channel.nicho,
+              newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
+            },
           })
           .run();
       }
@@ -78,6 +83,7 @@ export function aplicarEstado(
         if (existing && existing.remoteUpdatedAt >= video.actualizado_en)
           continue;
         const fields = {
+          newsMode: video.modo_noticia ?? existing?.newsMode ?? false,
           stage:
             existing?.productionState === "cancelada"
               ? existing.stage

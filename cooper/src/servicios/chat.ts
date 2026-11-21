@@ -40,6 +40,22 @@ export class ChatSimulado implements ProveedorChat {
     const after = text.includes(":")
       ? text.slice(text.indexOf(":") + 1).trim()
       : text;
+    if (
+      /\b(?:activa|activar|desactiva|desactivar)\b.*modo noticia/.test(clean)
+    ) {
+      if (!channel)
+        return { texto: "Primero crea un canal para activar el modo noticia." };
+      const activa = !/\bdesactiva(?:r)?\b/.test(clean);
+      return {
+        texto: "",
+        orden: {
+          evento: "ajustar_biblia" as const,
+          recursoId: input.canalId ?? channel.id,
+          texto: activa ? "Activar modo noticia" : "Desactivar modo noticia",
+          parametros: { campo: "modo_noticia", valor: activa },
+        },
+      };
+    }
     let evento: Orden["evento"] | undefined;
     if (/(?:crea|crear|abre|nuevo)\s+(?:un\s+)?canal/.test(clean))
       evento = "nuevo_canal";
@@ -66,7 +82,15 @@ export class ChatSimulado implements ProveedorChat {
         };
       return {
         texto: "",
-        orden: { evento, recursoId, texto: after, nombre: after.slice(0, 80) },
+        orden: {
+          evento,
+          recursoId,
+          texto: after,
+          nombre: after.slice(0, 80),
+          ...(evento === "nuevo_video" && /\bnoticia\b/.test(clean)
+            ? { parametros: { modo_noticia: true } }
+            : {}),
+        },
       };
     }
     if (

@@ -36,6 +36,13 @@
       "when": 1795176004000,
       "tag": "0004_presentacion",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1795176005000,
+      "tag": "0005_noticias",
+      "breakpoints": true
     }
   ]
 }
