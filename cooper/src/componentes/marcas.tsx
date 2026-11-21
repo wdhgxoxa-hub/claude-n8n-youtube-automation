@@ -8,7 +8,7 @@ import { api, Heading, Notice, useEspacio } from "./espacio";
 import type { EstadoMarcas } from "@/servicios/marcas/servicio";
 import type { Marca, PiezaMarca } from "@/db/schema";
 import { formatos, redes, rubros } from "@/servicios/marcas/opciones";
-import { crearPlantillaTienda } from "@/servicios/marcas/tienda";
+import { crearPlantillaTienda } from "@/servicios/marcas/tienda-contenido";
 import { PanelMarcaTienda } from "./marca-tienda";
 type MarcaVista = EstadoMarcas["marcas"][number];
 const nombreRubro = {

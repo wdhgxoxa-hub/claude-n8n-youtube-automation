@@ -112,8 +112,10 @@ test("Tienda de ropa: creación explícita, edición persistente y aislamiento",
     .getByLabel("Nombre de la marca", { exact: true })
     .fill("Tienda de ropa · Guía editada de ensayo");
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  // El texto DOM inicial del textarea forma parte de su label anidado;
+  // el nombre accesible del control sigue siendo «Tono».
   await page
-    .getByLabel("Tono", { exact: true })
+    .getByRole("textbox", { name: "Tono", exact: true })
     .fill("Cercano, con detalles comprobados de cada prenda. Guía de ensayo.");
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await page
@@ -228,6 +230,10 @@ for (const width of [390, 1440]) {
     page,
   }) => {
     test.setTimeout(120000);
+    const issues: unknown[] = [];
+    const cdp = await page.context().newCDPSession(page);
+    cdp.on("Audits.issueAdded", (issue) => issues.push(issue));
+    await cdp.send("Audits.enable");
     await prepararCuenta(page);
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -338,5 +344,6 @@ for (const width of [390, 1440]) {
     expect(actual.cuentas).toEqual([]);
     expect(actual.piezas).toEqual([]);
     expect(errores).toEqual([]);
+    expect(issues).toEqual([]);
   });
 }

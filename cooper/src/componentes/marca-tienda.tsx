@@ -6,7 +6,7 @@ import {
   pendientesTienda,
   pilaresTienda,
   requisitosCatalogoTienda,
-} from "@/servicios/marcas/tienda";
+} from "@/servicios/marcas/tienda-contenido";
 import styles from "./marca-tienda.module.css";
 
 const conversionSinDatos = calcularConversionTienda();

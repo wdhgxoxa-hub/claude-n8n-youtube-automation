@@ -19,6 +19,7 @@ import {
   pilaresTienda,
   tiendaSchema,
 } from "@/servicios/marcas/tienda";
+import { calcularConversionTienda as calcularConversionPresentacion } from "@/servicios/marcas/tienda-contenido";
 
 let admin: User, ana: User, luis: User;
 beforeAll(() => {
@@ -134,6 +135,7 @@ it("mantiene métricas ausentes y divisiones por cero como null", () => {
     ticketMedio: null,
   };
   expect(calcularConversionTienda()).toEqual(ausentes);
+  expect(calcularConversionPresentacion()).toEqual(ausentes);
   expect(
     calcularConversionTienda({
       sesiones: 0,
@@ -151,6 +153,12 @@ it("mantiene métricas ausentes y divisiones por cero como null", () => {
 
 it("calcula conversiones por sesiones y ticket por pedidos, separando el ejemplo de los ceros reales", () => {
   expect(calcularConversionTienda(metricasConversionEjemplo)).toEqual({
+    tasaCarrito: 12,
+    tasaCheckout: 6,
+    tasaConversion: 3,
+    ticketMedio: 120,
+  });
+  expect(calcularConversionPresentacion(metricasConversionEjemplo)).toEqual({
     tasaCarrito: 12,
     tasaCheckout: 6,
     tasaConversion: 3,
