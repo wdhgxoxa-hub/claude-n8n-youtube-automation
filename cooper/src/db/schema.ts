@@ -247,7 +247,7 @@ export const whatsappOutbox = sqliteTable("whatsapp_outbox", {
     .references(() => users.id),
   phone: text("phone").notNull(),
   kind: text("kind", {
-    enum: ["verificacion", "guion", "final", "publicado", "gasto"],
+    enum: ["verificacion", "guion", "final", "publicado", "gasto", "marca"],
   }).notNull(),
   resourceId: text("resource_id").notNull().default(""),
   revision: text("revision").notNull().default(""),
@@ -307,5 +307,115 @@ export const whatsappAttempts = sqliteTable("whatsapp_attempts", {
   ownerId: text("owner_id")
     .notNull()
     .references(() => users.id),
+  createdAt: integer("created_at").notNull(),
+});
+
+// Marcas son privadas del dueño; el rol admin siempre se revalida en servidor.
+export const marcas = sqliteTable("marcas", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  nombre: text("nombre").notNull(),
+  rubro: text("rubro")
+    .$type<"iglesia-reformada" | "moda" | "general">()
+    .notNull(),
+  zona: text("zona").notNull(),
+  guia: text("guia", { mode: "json" })
+    .$type<import("@/servicios/marcas/tipos").Guia>()
+    .notNull(),
+  estudio: text("estudio", { mode: "json" }).$type<
+    import("@/servicios/marcas/tipos").Estudio | null
+  >(),
+  createdAt: integer("created_at").notNull(),
+});
+export const cuentasMarca = sqliteTable("cuentas_marca", {
+  id: text("id").primaryKey(),
+  marcaId: text("marca_id")
+    .notNull()
+    .references(() => marcas.id, { onDelete: "cascade" }),
+  red: text("red").$type<import("@/servicios/marcas/tipos").Red>().notNull(),
+  alias: text("alias").notNull(),
+  remoto: text("remoto").notNull(),
+  pagina: text("pagina").notNull().default(""),
+  tipo: text("tipo").notNull().default(""),
+  estado: text("estado")
+    .$type<"pendiente" | "conectada" | "revocada">()
+    .notNull()
+    .default("pendiente"),
+  simulada: integer("simulada", { mode: "boolean" }).notNull().default(true),
+  verificada: integer("verificada").notNull().default(0),
+});
+export const piezasMarca = sqliteTable("piezas_marca", {
+  id: text("id").primaryKey(),
+  marcaId: text("marca_id")
+    .notNull()
+    .references(() => marcas.id),
+  cuentaId: text("cuenta_id")
+    .notNull()
+    .references(() => cuentasMarca.id),
+  datos: text("datos", { mode: "json" })
+    .$type<import("@/servicios/marcas/tipos").PiezaDatos>()
+    .notNull(),
+  guia: text("guia", { mode: "json" })
+    .$type<import("@/servicios/marcas/tipos").Guia>()
+    .notNull(),
+  revision: integer("revision").notNull().default(1),
+  estado: text("estado")
+    .$type<
+      | "borrador"
+      | "pendiente"
+      | "programada"
+      | "enviando"
+      | "procesando"
+      | "publicada"
+      | "revision"
+      | "cancelada"
+    >()
+    .notNull()
+    .default("borrador"),
+  aprobadaPor: text("aprobada_por").notNull().default(""),
+  aprobadaRevision: integer("aprobada_revision").notNull().default(0),
+  programada: integer("programada").notNull(),
+  leaseAt: integer("lease_at").notNull().default(0),
+  remoto: text("remoto").notNull().default(""),
+  mediosIds: text("medios_ids", { mode: "json" })
+    .$type<string[]>()
+    .notNull()
+    .default([]),
+  checkpoint: text("checkpoint", { mode: "json" })
+    .$type<import("@/servicios/marcas/tipos").Checkpoint>()
+    .notNull()
+    .default({}),
+  metricas: text("metricas", { mode: "json" }).$type<
+    import("@/servicios/marcas/tipos").Metricas | null
+  >(),
+  aviso: text("aviso").notNull().default(""),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+export const citasMarca = sqliteTable("citas_marca", {
+  id: text("id").primaryKey(),
+  referencia: text("referencia").notNull(),
+  version: text("version").notNull(),
+  texto: text("texto").notNull(),
+  fuente: text("fuente").notNull(),
+  revisadaPor: text("revisada_por")
+    .notNull()
+    .references(() => users.id),
+  createdAt: integer("created_at").notNull(),
+});
+export type Marca = typeof marcas.$inferSelect;
+export type CuentaMarca = typeof cuentasMarca.$inferSelect;
+export type PiezaMarca = typeof piezasMarca.$inferSelect;
+export const marcaIngestas = sqliteTable("marca_ingestas", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  mediaId: text("media_id").notNull(),
+  caption: text("caption").notNull(),
+  estado: text("estado").notNull().default("pendiente"),
+  intentos: integer("intentos").notNull().default(0),
   createdAt: integer("created_at").notNull(),
 });

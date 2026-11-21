@@ -71,6 +71,13 @@
       "when": 1795176009000,
       "tag": "0009_memoria",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1795176010000,
+      "tag": "0010_marcas",
+      "breakpoints": true
     }
   ]
 }

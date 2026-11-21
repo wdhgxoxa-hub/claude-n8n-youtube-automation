@@ -5,9 +5,12 @@ import { resolve } from "node:path";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
+const marcasAudit = process.argv.includes("--marcas");
 const animationAudit = process.argv.includes("--animacion");
 const coverageAudit = process.argv.includes("--cobertura");
-const outputDir = coverageAudit
+const outputDir = marcasAudit
+  ? ".cache/auditoria-marcas"
+  : coverageAudit
   ? ".cache/cobertura/lighthouse"
   : animationAudit
     ? ".cache/animacion/lighthouse"
@@ -79,6 +82,12 @@ try {
       },
     })
   ).json();
+  if (marcasAudit) {
+    const response = await context.request.post("/api/marcas", {
+      data: { nombre: "Congregación de ensayo", rubro: "iglesia-reformada" },
+    });
+    if (!response.ok()) throw new Error("No se pudo crear la marca ficticia.");
+  }
   const cdp = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   await cdp.contexts()[0].addCookies(await context.cookies());
   const summaries = [];
@@ -96,7 +105,9 @@ try {
     if (!profile.ok())
       throw new Error("No se pudo configurar el tema de ensayo.");
     for (const formFactor of ["mobile", "desktop"]) {
-      const paths = coverageAudit
+      const paths = marcasAudit
+        ? ["/marcas"]
+        : coverageAudit
         ? [
             `/canales/${channel.id}`,
             "/radar",

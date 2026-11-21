@@ -8,6 +8,8 @@ WhatsApp Business: verificación de número, preferencias, enlaces firmados, bot
 
 Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). El puente está activo y una llamada real corta del crítico pasó desde el contenedor. El modo noticia permanece apagado en todos los canales. En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. El ensayo completo de noticias y del respaldo pago queda pendiente.
 
+Marcas y redes: [guía de uso, fuentes oficiales y lote n8n](../docs/cooper-marcas.md). Marcas privadas, estudio de cuentas, plantillas propias, especialistas, calendario, aprobación de Walter y métricas; modo simulado por defecto. [Informe de la misión](../docs/informes/cooper-marcas.md).
+
 ## Arranque
 
 Requiere Node.js 24 y npm 12 (versiones usadas en la entrega). Ejecuta desde `cooper/`:

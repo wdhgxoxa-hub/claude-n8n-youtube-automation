@@ -10,4 +10,4 @@ for (const file of readdirSync("whatsapp/plantillas")) {
   const template = JSON.parse(readFileSync(resolve("whatsapp/plantillas", file), "utf8").replaceAll("https://cooper.example.org", origin.origin));
   writeFileSync(resolve(destination, file), JSON.stringify(template, null, 2) + "\n", { flag: "wx" });
 }
-console.log("Cinco plantillas generadas para revisión manual de Meta.");
+console.log("Plantillas generadas para revisión manual de Meta.");

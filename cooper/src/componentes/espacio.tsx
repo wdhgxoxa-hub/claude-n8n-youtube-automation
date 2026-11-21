@@ -23,6 +23,7 @@ import {
   House,
   ChartNoAxesCombined,
   BookOpen,
+  Palette,
   Clapperboard,
   Radio,
   UsersRound,
@@ -66,6 +67,7 @@ const cargarMovimiento = () =>
   import("./movimiento-funciones").then((module) => module.default);
 const nav = [
   { path: "/", label: "Inicio", icon: House },
+  { path: "/marcas", label: "Marcas", icon: Palette },
   { path: "/canales", label: "Canales", icon: Radio },
   { path: "/radar", label: "Operación", icon: Settings2 },
   { path: "/videos", label: "Videos", icon: Clapperboard },
@@ -131,7 +133,11 @@ export function Espacio({
       };
       source.addEventListener("estado", (event) => {
         try {
-          setData(JSON.parse(event.data));
+          const next: Estado = JSON.parse(event.data);
+          // Los latidos idénticos no necesitan repintar todos los enlaces y controles.
+          setData((previous) =>
+            JSON.stringify(previous) === event.data ? previous : next,
+          );
           setConnected(true);
           attempts = 0;
         } catch {

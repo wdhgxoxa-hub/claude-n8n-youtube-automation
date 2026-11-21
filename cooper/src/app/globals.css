@@ -3883,3 +3883,266 @@ input:is([type="checkbox"], [type="radio"]):checked {
 .operation-page .checkbox input {
   flex: 0 0 auto;
 }
+
+/* Marcas: archivo lateral de identidades y mesa de publicaciones. */
+.marcas-page {
+  max-width: 1440px;
+}
+.marcas-demo {
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+.marcas-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 32px;
+  margin-top: 28px;
+}
+.marcas-archivo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.marca-selector {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  gap: 14px;
+  padding: 16px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: inherit;
+  background: transparent;
+}
+.marca-selector.selected {
+  border-color: var(--line);
+  background: var(--surface);
+}
+.marca-selector strong,
+.marca-selector small {
+  display: block;
+}
+.marca-selector small {
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.marca-muestra {
+  width: 28px;
+  height: 48px;
+  border: 3px solid;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.marca-mesa {
+  min-width: 0;
+}
+.marca-identidad {
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 28px;
+}
+.marca-identidad h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  margin-bottom: 12px;
+}
+.marca-identidad p {
+  max-width: 55ch;
+}
+.marca-identidad small,
+.marca-pieza time {
+  color: var(--muted);
+}
+.marca-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  margin: 28px 0;
+}
+.marca-tabs button {
+  padding: 14px 16px;
+  color: var(--muted);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  white-space: nowrap;
+}
+.marca-tabs button.active {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.marca-conexion,
+.marca-compositor {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+}
+.marca-conexion summary,
+.marca-compositor summary,
+.marca-previa summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 30px;
+}
+.marca-conexion ol {
+  padding-left: 20px;
+  line-height: 1.8;
+  max-width: 70ch;
+  margin: 16px 0;
+}
+.marca-cuenta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.marca-cuenta > div {
+  flex: 1;
+}
+.marca-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.marcas-page label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+.marcas-page label.choice {
+  flex-direction: row;
+}
+.marcas-page fieldset {
+  border: 0;
+  padding: 0;
+}
+.marcas-page fieldset:not([hidden]) {
+  display: grid;
+  gap: 20px;
+}
+.marcas-page input,
+.marcas-page select,
+.marcas-page textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+.marcas-page select[multiple] {
+  min-height: 100px;
+}
+.marca-editor {
+  max-width: 720px;
+  margin: 24px auto;
+}
+.marca-editor h2 {
+  margin: 24px 0;
+}
+.marca-pasos {
+  display: flex;
+  gap: 16px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+.marca-pasos [aria-current] {
+  color: var(--text);
+  font-weight: 700;
+}
+.marca-calendario-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.marca-pieza {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.marca-pieza h4 {
+  font-size: 22px;
+  margin: 10px 0;
+}
+.marca-caption {
+  white-space: pre-wrap;
+  max-width: 65ch;
+}
+.marca-galeria {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 16px;
+}
+.marca-galeria img,
+.marca-galeria video {
+  width: min(100%, 300px);
+  height: auto;
+  border-radius: 8px;
+}
+.marca-previa {
+  margin-top: 20px;
+}
+.marca-estudio {
+  max-width: 76ch;
+  line-height: 1.8;
+}
+.marca-estudio ul {
+  padding-left: 24px;
+}
+.marca-estudio article,
+.marca-aprendizaje {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+.marca-vacia {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 32px;
+}
+.marca-vacia h2 {
+  margin: 20px 0;
+}
+@media (max-width: 900px) {
+  .marcas-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .marcas-archivo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .marcas-archivo > p {
+    grid-column: 1/-1;
+  }
+  .marca-identidad {
+    flex-wrap: wrap;
+  }
+  .marca-pasos {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .marca-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .marca-tabs button {
+    padding: 14px 10px;
+  }
+  .marca-selector {
+    padding: 12px 8px;
+  }
+}
+
+.marcas-page .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}

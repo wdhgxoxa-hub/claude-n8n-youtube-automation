@@ -1802,3 +1802,22 @@ test('cobertura: conservar listas editables y mostrar solo la recomendación má
  const c=resolverCooper(solicitudCooper('operacion'),{trabajos}).respuesta.canales[0];assert.strictEqual(c.biblia['voz.palabras_prohibidas'],'primera\nsegunda');assert.strictEqual(c.especialistas.length,1);assert.strictEqual(c.especialistas[0].recomendacion,'Versión 1');
  const canales=[{...canalCooper,tendencias:JSON.stringify({ideas:[{titulo:'Sin fecha'}]})}];assert.strictEqual(controlCooper('idea',{ideaId:'0:'},{canales}).status,409);
 });
+
+test('marcas: lote inactivo, firma exacta y sin salida cuando está apagado', () => {
+  const crypto = require('node:crypto');
+  for (const [wid, accion] of [['CooperMarcasPub1', 'publicar'], ['CooperMarcasMet1', 'metricas']]) {
+    const flujo = wf(wid), js = codeOf(flujo, 'Firmar trabajo de marcas');
+    assert.equal(flujo.active, false);
+    assert.deepEqual(run(js), []);
+    assert.throws(() => run(js, { env: { COOPER_MARCAS_HABILITAR: '1' } }));
+    const secret = 'ficticio-'.repeat(8);
+    const result = run(js, { env: { COOPER_MARCAS_HABILITAR: '1', COOPER_MARCAS_URL: 'https://cooper.example.test', COOPER_MARCAS_WORKER_SECRET: secret } })[0].json;
+    assert.equal(result.url, 'https://cooper.example.test/api/marcas/operar');
+    assert.deepEqual(JSON.parse(result.cuerpo), { accion });
+    assert.equal(result.firma, crypto.createHmac('sha256', secret).update(result.tiempo + '.' + result.cuerpo).digest('hex'));
+    assert.equal(JSON.stringify(result).includes(secret), false);
+    assert.equal(flujo.settings.saveDataSuccessExecution, 'none');
+    assert.ok(flujo.connections.Reloj.main[0].some(n => n.node === 'Firmar trabajo de marcas'));
+    assert.ok(flujo.connections['Firmar trabajo de marcas'].main[0].some(n => n.node === 'Atender marcas en Cooper'));
+  }
+});
