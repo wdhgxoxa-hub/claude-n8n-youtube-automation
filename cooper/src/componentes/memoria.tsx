@@ -78,6 +78,7 @@ export function MemoriaChat({
   return (
     <section className="memory-card" aria-label="Memoria de Cooper">
       <div className="memory-heading">
+        {!ultimo && <h2 className="sr-only">Recuerdos de Cooper</h2>}
         {ultimo && pendiente && (
           <div className="memory-last">
             <h2>Donde lo dejamos</h2>

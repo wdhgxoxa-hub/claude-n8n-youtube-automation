@@ -127,6 +127,8 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
     await expect(
       vista.getByRole("region", { name: "Recuerdos del equipo" }),
     ).toContainText("Luz de barrio");
+    await vista.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(() => vista.evaluate(() => window.scrollY)).toBe(0);
     await vista.screenshot({
       path: ".cache/capturas-memoria/admin.png",
       fullPage: true,
@@ -168,5 +170,24 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
   ).json();
   expect(respuesta.texto).toContain("No tengo una idea guardada");
   expect(respuesta.texto).not.toContain("Luz de barrio");
+  expect(
+    (
+      await page.request.post("/api/chat", {
+        data: { texto: "Prefiero ilustraciones", canalId: canal.id },
+      })
+    ).status(),
+  ).toBe(200);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Ver lo recordado", exact: true })
+    .click();
+  await expect(memoria).toContainText("Prefiero ilustraciones");
+  await expect(
+    page.getByRole("heading", { name: "Donde lo dejamos" }),
+  ).toHaveCount(0);
+  expect(
+    (await new AxeBuilder({ page }).include(".memory-card").analyze())
+      .violations,
+  ).toEqual([]);
   expect(errors).toEqual([]);
 });
