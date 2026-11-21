@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "estado": "REVISADO_CON_PRECONDICIONES",
+  "fecha_lima": "2026-11-21T16:17:48-05:00",
+  "fuente_bundle": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "revision_documental_padre": "90f474a",
+  "alcance": {
+    "vps_accedido": false,
+    "entorno_real_leido": false,
+    "entrada_diff_privados_leidos": false,
+    "codigo_modificado": false,
+    "artefactos_certificados_modificados": false
+  },
+  "bundle": {
+    "archivos": 25,
+    "codigo_sha256": "0dfb5e21050d50f2aff2020673e21756ee5f84b1765067b28df4ebf6c2d988bb",
+    "codigo_exactamente_igual_a_fuente_git": true,
+    "wrapper_sha256": "f3eaefa3b7f6ce663300fc387762732cedf3d63501831d31e712d2c44b537126",
+    "manifiesto_sha256": "9464aacfd474a73483f9823e72989b3e791f1930572501bc96d480db64bf54bf",
+    "tar_sha256": "7cb25bf563a5ca2333ff18f35cc116b946717fcb9281424a15b53339241c6b71",
+    "archivos_sha256": {
+      "contratos/cooper-tablas-produccion.json": "de59f568dc845eb78b9945738eb6cbb41a54c4db51361f289593b0de137796c3",
+      "deploy/actualizar-solo-cooper.py": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+      "deploy/aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+      "deploy/aplicar-n8n-total.py": "7a49a45203de0b8f1953dffbc0b6e75afa4772bce4ff08fd76887641edae9171",
+      "deploy/configurar-marcas-worker.py": "f7d3922a222771ef67f3ba60572a32f58c24521829881d1a89febc94e3f3e970",
+      "deploy/ensayar-confirmacion.py": "c22a76471595d64f9ba1bf17d72941377d9b77980654cc33d603119fa88314f8",
+      "deploy/ensayar-migracion.py": "f22e612b90ca417335614d520bd3a2fed306d57b61dc3bf72247ac8591046527",
+      "deploy/ensayar-motor-n8n.py": "13949cff3d864ba6b5d0b37a1044ad8bd3183e99b6d0c735d1f9b8d781814bdf",
+      "deploy/ensayar-n8n.py": "f36fb31a97e130476298d4125b782016764f3e8ee2fdc90ffb8e544c6a3354f9",
+      "deploy/esperar-vps.py": "263cf4d06eab5c3ee310741d872b7e556cbea5cb8050bd8d0da390bfd3b6baff",
+      "deploy/esquema-n8n.py": "78e5e6d13b8b619d94d803c63cbff5c89f3a090df7e82874a0823af054426c38",
+      "deploy/generar-monitor.py": "5b901cbb1af6052385d174dfb830fa46711e6e07d1773fb4bd25e15d91fffcb7",
+      "deploy/infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3",
+      "deploy/monitor.py": "83c9a61efb1e4954bfd7413a531cf4778d0697fbdf2e4c3ccd3c5c34895cdc06",
+      "deploy/n8n-columnas.cjs": "7d4b371a85b68f7e954bd3cfe3f1843522a4a328a6abbabca271efc6742816bc",
+      "deploy/operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+      "deploy/preparar-activaciones-n8n.py": "6266c27906ee5d0ce9db63e4c2fd08372e3f8b1c1d9f08ef85a76337c5424e8d",
+      "deploy/preparar-ajuste-texto.py": "d9af55423d298348b899729fa9a8805c759b913e13af0c47a3a6dd069312afdf",
+      "deploy/preparar-delta-n8n.py": "dbf87567f2675335c2dac45fd07bff1479eb25c0fe08693e1e709de55899820b",
+      "deploy/preparar-n8n-total.py": "ff551961116a62cabf8d60f75440b7f0425e0368cca07f859fd152ade796d6b6",
+      "deploy/preparar-radar-resolver.py": "ef04fb8d22a068500d8973ea91c7f8d1a40bde20258091ca43e5ddef1a3c3d20",
+      "deploy/preparar-resolver-api.py": "5943829426180e2edba661deda15a025bbf7ea979a64873ac3bbca0a8ef69205",
+      "deploy/registrar-replica.py": "e09e38d4a2f268f12be8eb99f12e23e10848554d6f699bb52111001de16f2e03",
+      "deploy/replicar-pc.py": "1637a518790c39dd7af1b6c012a98d914fe53b826451bcf9afc2feb7a9919449",
+      "tools/cooper/comparar_esquema_productivo.py": "b9a93671156741c78f699b4bca7385db9bea1624cafbcd70a44f0110da8a6ce5"
+    }
+  },
+  "controles": {
+    "infra": {
+      "sha256": "4fa6d2e28c448ab4eadde60405409c6a0a619447f71298efafe7f2337b5f7021",
+      "bundle": "/home/operador/total-integrador-20261121/aplicadores-certificados-b3e608e/bundle",
+      "insumos_sha256": {
+        "ensayo": "da9eba06a191b25010727a229b7a56af28811c87f0679b39c02db6f2b7ba69f6",
+        "imagen_archivo": "9ea269e6746e197c5626ae04fa6835bbcf9eb18274d7d0192225582e8e493d20",
+        "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+        "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+        "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+        "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+      },
+      "salida": "/var/lib/cooper-operacion/total-integrador-infra-resultado.json",
+      "entradas_referenciadas_leidas": false
+    },
+    "n8n": {
+      "sha256": "dee9193c6ea88bf2229eef7c57867ec83c5cc153a9aa89a3381b6495e99b5089",
+      "bundle": "/home/operador/total-integrador-20261121/aplicadores-certificados-b3e608e/bundle",
+      "insumos_sha256": {
+        "entrada": "269d8f7c04981396d34ad266059da27f5e0ee34b8a4d2cf640040d3be7299588",
+        "diff": "fce48e519b629f9e8821730826e0a925b499ef9377567128a5ba3458eb3dd4eb",
+        "ensayo": "bc27d98468b94965991e3c9ba044449f73bb07032a77e55b3e8e76e07e895241",
+        "manifiesto": "805d80776fb32a9a09ca0cadec6bc2eb865b4ed892da9aee528ad194d3b49134",
+        "plan": "87f4453924da08e8da1105b317433d651e601182bd476104e3d4e978a3e3174d"
+      },
+      "salida": "/var/lib/cooper-operacion/total-integrador-n8n-resultado.json",
+      "entradas_referenciadas_leidas": false
+    }
+  },
+  "copia_final": {
+    "adaptador_sha256": "142a92efc7b07322c9f0f329864a088b487db590f20fb1a8f9db50f7c178b58c",
+    "control_sha256": "1169ec74653085cab3854bb3538e8eab762ff102386f13dc0d697fc892274669",
+    "tar_sha256": "bc4b9ee679f6a45144b870c36ee80f8cd19bb79683c91d44776fa6d8be98894b",
+    "preflight_publico_sha256": "69461869ea97d8229e44227914bf441863946e5ea7c8cfe174184bb025059772",
+    "preflight_resultado": "rc=0; snapshot=null",
+    "imagen_exigida": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea"
+  },
+  "preflight_n8n": {
+    "recibo_publico_sha256": "9990e71819430e9480765a36641c9349cb5a01020e610b57e4c91cd7ae54a364",
+    "estado": "PREFLIGHT_PASS",
+    "no_acredita_CAS_vivo": true
+  },
+  "preflight_infra": {
+    "estado": "PENDIENTE_TRANSFERENCIA_IMAGEN",
+    "fuente_estado": "Mensaje del integrador; no se accedió al VPS",
+    "no_es_fallo_del_ensayo": true
+  },
+  "pruebas_locales": [
+    {
+      "grupo": "deploy/tests/test_*.py",
+      "cantidad": 190,
+      "rc": 0,
+      "advertencias": 0
+    },
+    {
+      "grupo": "wrapper b3",
+      "cantidad": 12,
+      "rc": 0,
+      "advertencias": 0
+    },
+    {
+      "grupo": "copia final b3",
+      "cantidad": 14,
+      "rc": 0,
+      "advertencias": 0
+    }
+  ],
+  "contratos_revisados": {
+    "orden": [
+      "app",
+      "infra",
+      "n8n",
+      "copia_final",
+      "replica_PC"
+    ],
+    "lock_compartido": "/var/lib/cooper-operacion/operacion.lock",
+    "lock_externo_anidado": false,
+    "release_tiene_precedencia_sobre_entorno": true,
+    "infra_reversa_conserva_imagen_por_servicio": true,
+    "n8n_CAS_antes_respaldo_y_despues_parada": true,
+    "copia_final_snapshot_sin_poda": true,
+    "replica_exige_mismo_snapshot_antes_registro": true
+  },
+  "precondiciones_operador": [
+    "Gate y dos rondas finales aceptadas para la fuente b3 antes de ejecutar.",
+    "Comprobar SHA del helper app y nueva imagen b3 contra artefacto aceptado.",
+    "Comprobar metadatos frescos: salud de siete servicios y ausencia de mantenimiento.",
+    "Cooper y chat-cooper previos deben compartir imagen efectiva; su Config.Image debe resolver al Image acreditado.",
+    "release.json.image previo debe corresponder a la misma imagen efectiva observada; conservar cualquier discrepancia como bloqueo.",
+    "Ejecutar preflight infra cuando la transferencia de imagen esté completa; no reutilizar recibo de imagen anterior.",
+    "Aceptar cada fase mediante su recibo nuevo y detener la secuencia ante fallo o CAS obsoleto.",
+    "Comparar el snapshot restaurado en PC con el snapshot final concreto antes de registrar réplica."
+  ],
+  "limites": [
+    "Revisión local de código, controles públicos y regresiones; no certifica estado vivo ni despliegue.",
+    "El helper app no restaura una mezcla previa entre Cooper y chat-cooper: la precondición de igualdad es necesaria.",
+    "Cada fase adquiere su lock; la secuencia completa no es una transacción única.",
+    "El respaldo app tiene su propio directorio solo-cooper; revertir.sh histórico no interpreta ese recibo.",
+    "Las copias de datos no sustituyen la custodia separada de artefactos, configuración y entorno."
+  ],
+  "pendientes_de_Walter": []
+}

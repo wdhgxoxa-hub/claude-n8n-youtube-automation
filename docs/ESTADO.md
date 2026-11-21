@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:11 (Lima).
+Última actualización: 2026-11-21 16:19 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — secuencia b3 revisada sin acceso remoto:** los 25 archivos del bundle coinciden exactamente con `b3e608e`; controles públicos infra/n8n y copia final enlazan los hashes correctos. 190 pruebas operativas y 26 de adaptadores PASS, cero advertencias. No se cambia código ni artefactos. Antes del corte el integrador acreditará imagen anterior coherente entre Cooper, su relé y release; preflight infra pendiente de terminar la transferencia de imagen. Revisión local aprobada con esas precondiciones, sin atribuir despliegue ni CAS vivo. [Recibo seguro](informes/evidencias/total-integrador/revision-secuencia-b3.json).
 
 - **21-11-2026, Lima — cierre tardío H19 integrado y aceptación reiniciada:** auditoría de cinco refs detectó que el puente de `7837b84` conservaba el código con OOM a 1 GiB sin swap. Corrección de seis sentencias por transacción incorporada por raíz en `dce1b03`; ensayos sin swap en `b3e608e`. Pasan 59 pruebas focales de aplicación, lint/tipos, 190 operativas y 239 flujos/volumen; bundle y copia final b3 regenerados con 26 regresiones adicionales. Los otros cierres son evidencia histórica, sin runtime pendiente ni sustitución de Sentinel moderno. Implementado/integrado y probado localmente; nueva imagen, puerta, rondas y despliegue siguen a cargo del integrador. [Selección y huellas](informes/total-integrador-cierres-tardios.md).
 
