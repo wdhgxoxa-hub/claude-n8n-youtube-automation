@@ -21,7 +21,7 @@ def modulo_ensayo():
 
 def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
     if 'modalidad' in diff:
-        operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api') and 'plan_publicacion' in diff,
+        operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total') and 'plan_publicacion' in diff,
                         'El delta exige modalidad y plan de publicación certificados')
     operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS', 'Falta ensayo y reversa satisfactorios')
     operar.require(ensayo.get('entrada_sha256') == operar.digest(entrada), 'El lote difiere del ensayado')
@@ -41,8 +41,9 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
         operar.require(ensayo.get('publicacion') == 'PASS' and ensayo.get('publicar_sha256') == operar.digest(plan),
                         'La publicación difiere del ensayo')
         operar.require(publicar == diff['plan_publicacion'] == ensayo.get('publicados'), 'Orden de publicación distinto')
-        if diff.get('modalidad') in ('delta_cooper_total', 'ajuste_texto_api'):
-            helper = 'preparar-ajuste-texto.py' if diff['modalidad'] == 'ajuste_texto_api' else 'preparar-delta-n8n.py'
+        if diff.get('modalidad') in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total'):
+            helper = {'ajuste_texto_api': 'preparar-ajuste-texto.py', 'delta_cooper_total': 'preparar-delta-n8n.py',
+                      'activaciones_cooper_total': 'preparar-activaciones-n8n.py'}[diff['modalidad']]
             spec = importlib.util.spec_from_file_location('delta_n8n', Path(__file__).with_name(helper))
             delta = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(delta)
@@ -77,7 +78,8 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
     snapshot = None
     resultado = {'entrada_sha256': operar.digest(entrada), 'manifiesto_sha256': operar.digest(manifiesto),
                  'ensayo_y_reversa_previa': 'PASS', 'flujos_importados': len(ids),
-                 'republicados_originales': publicar, 'entradas_pausadas_reabiertas': [],
+                 'republicados_originales': publicar, 'entradas_pausadas_reabiertas': diff.get('activar_previamente_pausados', []),
+                 'disparadores_habilitados': diff.get('disparadores_habilitados', []),
                  'pausados_por_credencial': sorted(set(diff['republicar_originales']) - set(publicar)),
                  'pasos_bloqueados_por_credencial': diff.get('bloqueos_explicitos', []),
                  'disparadores_dependencias_pausados': diff.get('disparadores_dependencias_pausados', [])}
@@ -86,6 +88,11 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         resultado['snapshot_previo'] = snapshot
         operar.write_json(salida, {**resultado, 'estado': 'respaldado'})
         before = validar.inventory(op.data / 'n8n/database.sqlite')
+        if diff.get('modalidad') == 'activaciones_cooper_total':
+            spec = importlib.util.spec_from_file_location('activaciones_n8n', Path(__file__).with_name('preparar-activaciones-n8n.py'))
+            activaciones = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(activaciones)
+            activaciones.permiso_cerrado(op.data / 'n8n/database.sqlite')
         if diff.get('modalidad') == 'ajuste_texto_api':
             spec = importlib.util.spec_from_file_location('ajuste_texto', Path(__file__).with_name('preparar-ajuste-texto.py'))
             ajuste = importlib.util.module_from_spec(spec)
@@ -107,6 +114,9 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         validar.validate_import(before, after, ids)
         cli('node', '/lote/publicar.cjs')
         published = validar.inventory(op.data / 'n8n/database.sqlite', before['columnas'])
+        if diff.get('modalidad') == 'activaciones_cooper_total':
+            activaciones.permiso_cerrado(op.data / 'n8n/database.sqlite')
+            resultado['allowTextoApi'] = False
         if diff.get('modalidad') == 'ajuste_texto_api':
             ajuste.validar_actual(op.data / 'n8n/database.sqlite', diff, despues=True)
             resultado['allowTextoApi'] = False
