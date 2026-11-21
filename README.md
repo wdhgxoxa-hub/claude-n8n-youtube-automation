@@ -1,4 +1,15 @@
-# Claude + n8n + HeyGen YouTube Automation
+# Cooper — fábrica y gestión de marcas
+
+La aplicación actual vive en [`cooper/`](cooper/README.md) y la fábrica usa 32 flujos en `workflows/v2/`, con Data Tables de n8n, revisión humana y adaptadores de proveedores. El texto histórico de abajo describe la primera versión y sus cuatro borradores; no es la guía del VPS actual.
+
+- [Estado vigente](docs/ESTADO.md) y [auditoría total](docs/informes/faltantes-total.md).
+- [Especificación](docs/cooper-especificacion.md), [entrega](cooper/ENTREGA.md) y [contrato del cerebro](skill/FABRICA.md).
+- [Operación, copias y recuperación](docs/cooper-operacion.md), [conciliación sin duplicados](docs/cooper-conciliacion.md).
+- [Lote n8n y reversa](docs/cooper-cobertura-despliegue.md). Las activaciones reales requieren los controles y permisos indicados en el estado.
+
+## Documentación histórica de la primera versión
+
+### Claude + n8n + HeyGen YouTube Automation
 
 Send a topic to Telegram, review the script, and hand it off to HeyGen. This checkout imports as four drafts. Claude calls and YouTube uploads come disabled. Follow the [n8n setup](docs/03-n8n-setup.md) to connect your accounts and verify each workflow.
 
