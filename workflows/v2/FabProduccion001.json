@@ -3364,7 +3364,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
+        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id||e.canal_id?[{json:{video_id:video_id||'',canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
       },
       "id": "104f57e6-35b6-5ec9-8a5f-54fc507d446d",
       "name": "Cooper · atribuir ejecución",
@@ -3415,7 +3415,7 @@
           "conditions": [
             {
               "id": "17e8f9fb-2881-5464-9ba9-2fdfd7c9b92f",
-              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id) }}",
+              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id || $('Inicio').first().json.canal_id) }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -3447,6 +3447,170 @@
       "typeVersion": 2,
       "position": [
         880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: falta encender\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: falta encender\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: falta encender\"})}};});\n"
+      },
+      "id": "ea0706fb-97ae-5672-ad09-f6ae325d00a2",
+      "name": "Cooper · aviso Aviso: falta encender",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "0643b6a6-9df9-519e-9f40-b95b1f8d751d",
+      "name": "Cooper · aviso Aviso: falta encender guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: sobre presupuesto\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: sobre presupuesto\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: sobre presupuesto\"})}};});\n"
+      },
+      "id": "7ae5a762-7526-54b2-8d36-869d7e50f00b",
+      "name": "Cooper · aviso Aviso: sobre presupuesto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "19fdd5af-abd1-55c0-bf7a-b6650ce49474",
+      "name": "Cooper · aviso Aviso: sobre presupuesto guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Permiso de gasto · avisar\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Permiso de gasto · avisar\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Permiso de gasto · avisar\"})}};});\n"
+      },
+      "id": "7d6a2f23-6904-5ad0-ae5d-9ea377058447",
+      "name": "Cooper · aviso Permiso de gasto · avisar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1fe2824f-b45f-587e-933f-710c48eb1aa3",
+      "name": "Cooper · aviso Permiso de gasto · avisar guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: render fallido\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: render fallido\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: render fallido\"})}};});\n"
+      },
+      "id": "4eeca6cb-28a6-5a08-b059-a148dbea4dd3",
+      "name": "Cooper · aviso Aviso: render fallido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "683e0517-78e6-5f52-a596-7cf9cfbb03ca",
+      "name": "Cooper · aviso Aviso: render fallido guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
         0
       ]
     },
@@ -3731,6 +3895,11 @@
         [
           {
             "node": "Permiso de gasto · esperar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · aviso Permiso de gasto · avisar",
             "type": "main",
             "index": 0
           }
@@ -5415,6 +5584,83 @@
         [
           {
             "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso: falta encender": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: falta encender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: falta encender": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: falta encender guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso: sobre presupuesto": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: sobre presupuesto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: sobre presupuesto": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: sobre presupuesto guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Permiso de gasto · avisar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Permiso de gasto · avisar guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso: render fallido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: render fallido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: render fallido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: render fallido guardar",
             "type": "main",
             "index": 0
           }

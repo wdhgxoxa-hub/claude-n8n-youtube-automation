@@ -1,0 +1,797 @@
+{
+  "entorno": "Chromium local; laboratorio, sin métricas de campo",
+  "mediciones": [
+    {
+      "path": "/canales/3e70bae2-c957-4eef-a303-cf195b771cf0",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:12:27.727Z",
+      "scores": {
+        "performance": 0.92,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 3324.6670000000004,
+        "total-blocking-time": 48,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/radar",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:12:33.849Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1239.5757543029786,
+        "total-blocking-time": 44,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/rutina",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:12:39.647Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1085.0538543029784,
+        "total-blocking-time": 61,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/redes",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:12:45.216Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1054.5117543029785,
+        "total-blocking-time": 44,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/referencias",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:12:50.820Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1233.7697543029785,
+        "total-blocking-time": 59,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/cuentas",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:12:56.614Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1079.4375043029784,
+        "total-blocking-time": 33,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/programados",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:13:02.118Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1080.4508543029785,
+        "total-blocking-time": 30,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/decisiones",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:13:07.673Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1079.3796543029785,
+        "total-blocking-time": 50,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/incidencias",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:13:13.254Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1084.8839543029785,
+        "total-blocking-time": 70,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avisos",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:13:18.873Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1235.2353543029785,
+        "total-blocking-time": 63,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin/fabrica",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:13:24.536Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 618.8185,
+        "total-blocking-time": 28.5,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales/3e70bae2-c957-4eef-a303-cf195b771cf0",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:13:30.216Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 342.1905543029785,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/radar",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:13:36.090Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 348.4849543029785,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/rutina",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:13:41.727Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 163.54385,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/redes",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:13:47.449Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 299.41980430297855,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/referencias",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:13:53.150Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 163.92445,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/cuentas",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:13:58.930Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 165.45995,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/programados",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:14:04.567Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 163.18145,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/decisiones",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:14:10.192Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.46135,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/incidencias",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:14:15.907Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 165.04125,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avisos",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:14:21.668Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 454.7073499999999,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin/fabrica",
+      "theme": "oscuro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:14:27.242Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 163.16915,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales/3e70bae2-c957-4eef-a303-cf195b771cf0",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:14:32.943Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1081.6836543029785,
+        "total-blocking-time": 53,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/radar",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:14:38.710Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1081.3528543029784,
+        "total-blocking-time": 56,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/rutina",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:14:44.217Z",
+      "scores": {
+        "performance": 0.99,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1239.5479543029787,
+        "total-blocking-time": 119,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/redes",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:14:50.010Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1232.0941543029785,
+        "total-blocking-time": 54,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/referencias",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:14:55.600Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1077.9606043029785,
+        "total-blocking-time": 53,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/cuentas",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:15:01.174Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1230.9645543029785,
+        "total-blocking-time": 43,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/programados",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:15:06.675Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1079.9843543029785,
+        "total-blocking-time": 63,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/decisiones",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:15:12.202Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1231.2437543029785,
+        "total-blocking-time": 31,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/incidencias",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:15:17.850Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1240.2499543029785,
+        "total-blocking-time": 42,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avisos",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:15:23.368Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1228.6519543029785,
+        "total-blocking-time": 51,
+        "cumulative-layout-shift": 0.007286786957898069
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin/fabrica",
+      "theme": "claro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-21T10:15:29.006Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 615.1886,
+        "total-blocking-time": 18,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/canales/3e70bae2-c957-4eef-a303-cf195b771cf0",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:15:34.617Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 383.7205043029785,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/radar",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:15:40.499Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 383.9247543029785,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/rutina",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:15:46.083Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.42265,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/redes",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:15:51.683Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 425.6353543029785,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/referencias",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:15:57.327Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.1538,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/cuentas",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:16:02.906Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.13735,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/programados",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:16:08.654Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 164.1396,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/decisiones",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:16:14.253Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 167.31975,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/incidencias",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:16:20.220Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 163.5333,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/avisos",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:16:25.802Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 424.92315430297856,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/admin/fabrica",
+      "theme": "claro",
+      "formFactor": "desktop",
+      "fecha": "2026-11-21T10:16:31.421Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 165.0057,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "warnings": [],
+      "failedAudits": []
+    }
+  ]
+}

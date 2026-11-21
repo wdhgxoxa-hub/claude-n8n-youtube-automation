@@ -23,7 +23,7 @@ carpeta.mkdir(parents=True, exist_ok=True)
 objetivo = Objetivo(nombre='cooper-pulido-e2e', url_interfaz=config['url'], url_api_base=config['fixture'],
     ruta_openapi='/no-openapi', destino=ComprobacionDestino('/destino','destino','cooper-e2e-aislado'),
     pantallas=tuple(config['pantallas']), duracion_por_prueba_s=config.get('duracion', 45),
-    exclusiones=Exclusiones(textos=('Cerrar sesión',), selectores=('iframe', 'a[href^="/api/archivos/"]', 'a[href^="/api/revision-archivo/"]', 'button[aria-label^="Modo noticia:"]')))
+    exclusiones=Exclusiones(textos=('Cerrar sesión','Crear avatar','Crear voz','Cargar presentadores del estudio','Confirmar solicitud'), selectores=('iframe', 'a[href^="/api/archivos/"]', 'a[href^="/api/revision-archivo/"]', 'button[aria-label^="Modo noticia:"]', '.team-row button', '.allowed-list button', '.asset-actions button')))
 class GuardianSesion(Guardian):
     def proteger_contexto(self, contexto, registrar):
         super().proteger_contexto(contexto, registrar)
@@ -48,7 +48,18 @@ modulos=[]
 medidas_caos=[]
 for nombre in config.get('modulos',['recorridos','caos','estabilidad']):
     guardian.verificar_destino()
-    modulo=importlib.import_module('sentinel.pruebas.'+nombre).MODULO
+    paquete=importlib.import_module('sentinel.pruebas.'+nombre)
+    modulo=paquete.MODULO
+    if nombre == 'estabilidad' and config.get('esperar_operacion'):
+        # Next entrega HTML antes de cargar la consulta de operación. La primera muestra
+        # debe comparar pantallas listas; no una shell de servidor contra React hidratado.
+        navegar=paquete._navegar
+        def navegar_listo(pagina,url,guardian,timeout_ms):
+            modo=navegar(pagina,url,guardian,timeout_ms)
+            if pagina.locator('.operation-page:visible').count():
+                pagina.wait_for_function("() => [...document.querySelectorAll('.operation-page')].some(p=>p.getClientRects().length && !p.innerText.includes('Consultando la fábrica…'))",timeout=timeout_ms)
+            return modo
+        paquete._navegar=navegar_listo
     if nombre == 'caos':
         # Observación adicional de la API instalada: conserva íntegro su evaluador.
         evaluar = modulo._hallazgos

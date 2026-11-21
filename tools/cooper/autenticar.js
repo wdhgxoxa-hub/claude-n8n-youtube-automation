@@ -12,5 +12,5 @@ if (!b || b.version !== 'cooper-v1' || !/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{
   return fail(400, 'Solicitud inválida');
 // El rol procede del servidor, y además se contrasta con el único administrador configurado en n8n.
 const admin = b.admin && b.dueno_email.toLowerCase() === String($env.COOPER_ADMIN_EMAIL || '').toLowerCase();
-if (b.admin && !admin || b.evento === 'gastos' && !admin) return fail(403, 'Consulta no permitida');
+if (b.admin && !admin || ['gastos','ajustes'].includes(b.evento) && !admin) return fail(403, 'Consulta no permitida');
 return [{ json: { status: 200, solicitud: b, admin, dueno_email: b.dueno_email.toLowerCase() } }];

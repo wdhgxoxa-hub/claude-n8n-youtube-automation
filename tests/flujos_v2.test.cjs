@@ -585,7 +585,7 @@ test('escala: topes de 24 h por canal y de toda la fábrica', () => {
 
 test('escala: todo flujo es válido — nodos únicos, conexiones existentes, sin huérfanos, HTTP con tiempo límite', () => {
   for (const id of ['FabAjustes000001', 'FabLlamarClaude1', 'FabRetornoClaud1', 'FabAprobacion001', 'FabOrquestador01', 'FabProduccion001', 'FabSonido0000001',
-    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1', 'FabTextoGPT0001', 'FabNoticia000001', 'FabRadar00000001']) {
+    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1', 'FabTextoGPT0001', 'FabNoticia000001', 'FabRadar00000001', 'FabCooperAPI0001']) {
     const w = wf(id); const nombres = w.nodes.map(n => n.name);
     assert.strictEqual(new Set(nombres).size, nombres.length, id + ': nombres repetidos');
     const destinos = new Set(Object.values(w.connections).flatMap(c => Object.values(c).flat(2)).map(x => x.node));
@@ -595,10 +595,10 @@ test('escala: todo flujo es válido — nodos únicos, conexiones existentes, si
       if (n.type.endsWith('httpRequest')) assert.ok(n.parameters.options?.timeout, id + ': sin timeout ' + n.name);
       if (n.type.endsWith('.code')) {   // el entorno de Code de n8n no trae estas funciones (verificado en vivo)
         // crypto está permitido desde el puente Cooper; no habilitar otros módulos.
-        const sinComentarios = n.parameters.jsCode.replace(/require\('crypto'\)/g, 'crypto').split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
+        const sinComentarios = n.parameters.jsCode.replace(/require\(['"]crypto['"]\)/g, 'crypto').split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
         assert.doesNotMatch(sinComentarios, /\bnew URL\(|URLSearchParams|TextEncoder|TextDecoder|structuredClone|\batob\(|\bbtoa\(|\bfetch\(|setTimeout|require\(/, id + ': función no disponible en ' + n.name);
       }
-      if (n.type.endsWith('.code')) assert.doesNotThrow(() => new Function('$', '$json', '$input', '$now', '$binary', 'crypto', n.parameters.jsCode), id + ': JS inválido en ' + n.name);
+      if (n.type.endsWith('.code')) assert.doesNotThrow(() => new Function('$', '$json', '$input', '$now', '$binary', n.parameters.jsCode), id + ': JS inválido en ' + n.name);
     }
   }
 });
@@ -1189,9 +1189,9 @@ const envCooper = { COOPER_N8N_TOKEN: tokenCooper, COOPER_WEBHOOK_SECRET: tokenC
 const solicitudCooper = (evento, datos = {}, extra = {}) => ({ version: 'cooper-v1', id_evento: cryptoCooper.randomUUID(), evento, dueno_email: 'ana@example.test', admin: false, datos, ...extra });
 const canalCooper = { canal_id: 'c-ana', dueno_email: 'ana@example.test', nombre: 'Ciencia', nicho: 'Ciencia', estado: 'activo', biblia_ruta: 'trabajo:j', costo_usd: 999, presupuesto_largo_usd: 999 };
 const videoCooper = { video_id: 'v-ana', canal_id: 'c-ana', dueno_email: 'ana@example.test', tema: 'Cielo', etapa: 'aprobacion_guion', guion_cooper: 'Guion', cooper_actualizado_en: 1, costo_usd: 999 };
-function resolverCooper(b, { canales = [canalCooper], videos = [videoCooper], aprobaciones = [] } = {}) {
-  return run(codeOf(FX, 'Resolver'), { nodes: { Autenticar: { solicitud: b, admin: b.admin, dueno_email: b.dueno_email } },
-    all: { 'Canales autorizados': canales, 'Videos autorizados': videos, Aprobaciones: aprobaciones } })[0].json;
+function resolverCooper(b, { canales = [canalCooper], videos = [videoCooper], aprobaciones = [], trabajos = [], eventos = [], publicaciones = [], conexiones = [], ajustes = aj } = {}) {
+  return run(codeOf(FX, 'Resolver'), { nodes: { 'Ajustes de Cooper': ajustes, Autenticar: { solicitud: b, admin: b.admin, dueno_email: b.dueno_email } },
+    all: { 'Canales autorizados': canales, 'Videos autorizados': videos, Aprobaciones: aprobaciones, 'Lecciones de Cooper': trabajos, 'Historial de Cooper': eventos, 'Decisiones de Cooper': aprobaciones, 'Publicaciones de Cooper': publicaciones, 'Conexiones de Cooper': conexiones } })[0].json;
 }
 test('Cooper: token obligatorio, fallo cerrado y admin contrastado con entorno', () => {
   const auth = (body, authorization, env = envCooper) => run(codeOf(FX, 'Autenticar'), { json: { body, headers: { authorization } }, env })[0].json;
@@ -1212,7 +1212,7 @@ test('Cooper: estado proyecta solo recursos propios y jamás columnas internas',
 });
 test('Cooper: cada mutación de recursos rechaza al dueño ajeno', () => {
   for (const evento of Object.keys(contratoCooper.eventos).filter(x=>x!=='nuevo_canal')) {
-    const out = resolverCooper(solicitudCooper(evento, { id:'v-ana', recursoId:'v-ana', tipo:'video', texto:'Cambio' }, { dueno_email:'otro@example.test' }));
+    const out = resolverCooper(solicitudCooper(evento, { id:'v-ana', recursoId:'v-ana', canalId:'c-ana', accion:'referencias', confirmado:true, tipo:'video', texto:'Cambio' }, { dueno_email:'otro@example.test' }));
     assert.strictEqual(out.status, 404, evento);
   }
 });
@@ -1228,8 +1228,9 @@ test('Cooper: mapea todas las órdenes al Orquestador sin aceptar identidades de
     const datos = { id:'nuevo-id', recursoId:isVideo?'v-ana':'c-ana', texto: evento==='programar'?new Date(Date.now()+7200000).toISOString():'3 videos por semana',
       parametros:{ perfil:'ciencia', redes:['youtube'] }, dueno_email:'falso@example.test' };
     if(evento==='eliminar') Object.assign(datos,{id:'v-ana',tipo:'video'});
+    if(evento==='control_fabrica')Object.assign(datos,{accion:'referencias',canalId:'c-ana',confirmado:true});
     const out=resolverCooper(solicitudCooper(evento,datos));
-    assert.strictEqual(out.accion,'orden',evento); assert.strictEqual(out.evento.evento,evento);
+    assert.strictEqual(out.accion,'orden',evento); assert.strictEqual(out.evento.evento,evento==='control_fabrica'?'referencias':evento);
     assert.strictEqual(out.evento.dueno_email,'ana@example.test');
   }
 });
@@ -1703,4 +1704,101 @@ test('pulido: conserva el porcentaje medio visto de YouTube sin recortarlo a 100
  assert.equal(historial[0].retencion,1.25);
  const vista=run(OBS+'return [{json:medicionCooper($json)}];',{json:historial[0]})[0].json;
  assert.equal(vista.retencion,1.25);
+});
+
+// Cobertura operativa: contratos de productor y consumidor, aislamiento y guardias.
+const controlCooper=(accion,datos={},opts={})=>resolverCooper(solicitudCooper('control_fabrica',{accion,canalId:'c-ana',confirmado:true,id:'nuevo-video',...datos}),opts);
+test('cobertura: biblia, radar, metas, referencias y especialistas salen de sus tablas y sin datos privados',()=>{
+ const tendencias=JSON.stringify({fecha:new Date().toISOString(),resumen:'Radar diario',ideas:[{titulo:'Lluvia',gancho:'Mira el suelo',por_que:'Pregunta frecuente',fuente:'Universidad',fuente_url:'https://example.test/fuente'}],sonidos:[]});
+ const trabajos=[{job_id:'j',canal_id:'c-ana',modo:'crear_biblia',resultado:JSON.stringify({resultado:{estilo_visual:{descripcion:'Luz lateral'},voz:{tono:'Cercano'},personajes:[{id:'ana',nombre:'Ana',referencias_urls:['https://example.test/ana.png']}],api_key:'privado'}})}, {job_id:'story',canal_id:'c-ana',video_id:'v-ana',modo:'storyboard',estado:'ok',resultado:JSON.stringify({resultado:{formato:'short',publicacion:{youtube:{hora:17,descripcion:'Abrir con pregunta',sonido:'Ambiente'}}}})}];
+ const out=resolverCooper(solicitudCooper('operacion'),{canales:[{...canalCooper,tendencias}],trabajos});
+ assert.strictEqual(out.status,200);const c=out.respuesta.canales[0];assert.strictEqual(c.biblia['voz.tono'],'Cercano');assert.strictEqual(c.referencias[0].nombre,'Ana');assert.strictEqual(c.especialistas[0].hora,'17');assert.strictEqual(c.radar.ideas[0].fuente,'Universidad');assert.ok(!JSON.stringify(out.respuesta).match(/api_key|privado|999|presupuesto/));
+ assert.strictEqual(controlCooper('idea',{ideaId:c.radar.ideas[0].id},{canales:[{...canalCooper,tendencias}]}).evento.tema,'Lluvia');
+ assert.strictEqual(controlCooper('idea',{ideaId:'0:2000'},{canales:[{...canalCooper,tendencias:JSON.stringify({fecha:'2000',ideas:[{titulo:'Viejo'}]})}]}).status,409);
+});
+test('cobertura: controles estructurados conservan rutas del Orquestador y rechazan campos peligrosos',()=>{
+ for(const [accion,datos,evento]of [['biblia',{campo:'voz.tono',valor:'Cercano'},'ajustar_biblia'],['redes',{perfil:'ciencia',redes:['youtube'],zona:'America/Lima'},'configurar_redes'],['metas',{videos_semana:3,formato:'short',retencion_min:0.5,auto:true},'metas'],['referencias',{},'referencias'],['adoptar',{cuenta:'@ciencia',red:'youtube'},'adoptar_cuenta']]){
+ const out=controlCooper(accion,datos);assert.strictEqual(out.accion,'orden',accion);assert.strictEqual(out.evento.evento,evento);assert.strictEqual(out.evento.dueno_email,'ana@example.test');
+ }
+ assert.strictEqual(controlCooper('biblia',{campo:'__proto__.x',valor:'x'}).status,400);
+ assert.strictEqual(controlCooper('metas',{videos_semana:3,formato:'short',retencion_min:.5,auto:true,gasto_semana_usd:100}).status,403);
+ assert.strictEqual(controlCooper('referencias',{confirmado:false}).status,400);
+ assert.strictEqual(controlCooper('adoptar',{cuenta:'https://interno.test',red:'youtube'}).status,400);
+});
+test('cobertura: ajustes son administrativos, verifican revisión y nunca permiten cambiar destinos o secretos',()=>{
+ const admin={admin:true,dueno_email:'admin@example.test'};
+ assert.strictEqual(resolverCooper(solicitudCooper('ajustes')).status,403);
+ const estado=resolverCooper(solicitudCooper('ajustes',{},admin)).respuesta;
+ assert.ok(!Object.hasOwn(estado.valores,'chatId'));assert.ok(!Object.hasOwn(estado.valores,'routineUrl'));
+ const pedir=valores=>resolverCooper(solicitudCooper('control_fabrica',{accion:'ajustes',revision:estado.revision,valores,confirmado:true},admin));
+ assert.strictEqual(pedir({allowVoz:true,presupuestoShortUsd:3}).evento.accion,'ajustes');
+ for(const valores of [{routineUrl:'https://ajeno'},{allowVoz:'true'},{maxVideosDiaTotal:-1},{'calendario.zona':'No/Existe'}])assert.strictEqual(pedir(valores).status,400);
+ assert.strictEqual(resolverCooper(solicitudCooper('control_fabrica',{accion:'ajustes',revision:'vieja',valores:{allowVoz:true},confirmado:true},admin)).status,409);
+ const effective=run(codeOf(AJ,'Ajustes efectivos'),{nodes:{Ajustes:aj},all:{$input:[{id:1,detalle:JSON.stringify({valores:{allowVoz:true,presupuestoShortUsd:3}})},{id:2,detalle:JSON.stringify({valores:{baseUrl:'https://ajeno'}})}]}})[0].json;
+ assert.strictEqual(effective.allowVoz,true);assert.strictEqual(effective.baseUrl,aj.baseUrl);
+});
+test('cobertura: todas las decisiones reanudan únicamente el formulario propio con multipart y sin repetir',()=>{
+ const ap={aprobacion_id:'ap-cobertura',canal_id:'c-ana',video_id:'v-ana',estado:'pendiente',etapa:'storyboard',url:aj.baseUrl+'/form-waiting/42?signature=ficticia',pedido:'{}'};
+ const r=controlCooper('decidir',{id:ap.aprobacion_id,decision:'aprobar',cambios:''},{aprobaciones:[ap]});
+ assert.strictEqual(r.evento.accion,'decision');assert.strictEqual(r.evento.datos.data['field-0'],'Aprobar');
+ for(const url of ['https://ajeno.test/form-waiting/42',aj.baseUrl+'/api/v1/workflows',aj.baseUrl+'/form-waiting/../../api'])assert.strictEqual(controlCooper('decidir',{id:ap.aprobacion_id,decision:'aprobar'},{aprobaciones:[{...ap,url}]}).status,409);
+ assert.strictEqual(controlCooper('decidir',{id:ap.aprobacion_id,decision:'aprobar'},{aprobaciones:[{...ap,estado:'decidida'}]}).status,409);
+ assert.strictEqual(controlCooper('decidir',{id:ap.aprobacion_id,decision:'aprobar'},{aprobaciones:[{...ap,etapa:'gasto'}]}).status,403);
+ assert.strictEqual(controlCooper('decidir',{id:ap.aprobacion_id,decision:'cambios',cambios:''},{aprobaciones:[ap]}).status,400);
+ const node=FX.nodes.find(n=>n.name==='Responder decisión de Cooper');assert.strictEqual(node.parameters.contentType,'multipart-form-data');assert.ok(!node.retryOnFail);assert.strictEqual(node.parameters.options.redirect.redirect.followRedirects,false);
+});
+test('cobertura: programados distingue borradores y omisiones; Telegram solo afirma aceptación con recibo',()=>{
+ const conf=wf('FabConfirmar0001'),p={request_id:'r',video_id:'v-ana',plataformas:'tiktok,youtube',tipo:'video'};
+ const o=run(codeOf(conf,'Leer resultados'),{all:{'Por confirmar':[p],'Publicaciones recientes':[p],$input:[{status:'completed',results:[{platform:'tiktok',success:true,fallback_to_inbox:true},{platform:'youtube',success:true,skipped:true}]}]}})[0].json;
+ const pubs=JSON.parse(o.resultado).publicaciones;assert.ok(pubs.every(p=>!p.publicado));assert.strictEqual(pubs[0].estado,'borrador');
+ const out=resolverCooper(solicitudCooper('operacion'),{publicaciones:[{...p,...o}]}).respuesta.publicaciones;assert.deepStrictEqual(out.map(p=>p.estado),['borrador','omitido']);
+ const n=ORQ.nodes.find(n=>n.name==='Cooper · aviso Aviso: investigando');
+ const r=run(n.parameters.jsCode,{nodes:{Inicio:{canal_id:'c-ana'}},json:{message_id:42}})[0].json;assert.strictEqual(JSON.parse(r.detalle).estado,'enviado');assert.strictEqual(r.canal_id,'c-ana');
+});
+test('cobertura: rutina guarda motivos públicos, incluso apagado, y reintento no vuelve a subir publicaciones',()=>{
+ const rut=wf('FabRutina0000001');const p=run(codeOf(rut,'Plan del día'),{nodes:{'Leer ajustes':aj},all:{'Videos en curso':[],'Canales activos':[{canal_id:'c',metas:'{"auto":false}'}],$input:[]}})[0].json;
+ assert.strictEqual(p.decisiones[0].decision,'En pausa');assert.ok(!JSON.stringify(p.decisiones).match(/USD|US\$|presupuesto/));
+ const retry=controlCooper('reintentar',{videoId:'v-ana'},{videos:[{...videoCooper,estado:'error_publicacion',error:'timeout'}]});assert.strictEqual(retry.evento.accion,'consultar');
+ assert.strictEqual(controlCooper('reintentar',{videoId:'v-ana'},{videos:[{...videoCooper,estado:'cancelado',error:'timeout'}]}).status,409);
+});
+
+test('cobertura: puertas web sin formulario cierran guion/final y referencias conservan identidad',()=>{
+ const ap={aprobacion_id:'ap-web',canal_id:'c-ana',video_id:'v-ana',estado:'pendiente',etapa:'guion',url:'',pedido:JSON.stringify({contexto:{guion:'Texto'}})};
+ for(const decision of ['aprobar','cambios']){
+  const out=controlCooper('decidir',{id:ap.aprobacion_id,decision,cambios:'Más claro'},{aprobaciones:[ap],videos:[{...videoCooper,etapa:'aprobacion_guion'}]});
+  assert.strictEqual(out.evento.evento,decision==='aprobar'?'aprobado':'cambios');assert.strictEqual(out.evento.aprobacion_id,'ap-web');assert.strictEqual(out.evento.contexto.guion,'Texto');
+ }
+ assert.strictEqual(controlCooper('decidir',{id:ap.aprobacion_id,decision:'aprobar'},{aprobaciones:[ap],videos:[{...videoCooper,estado:'cancelado'}]}).status,409);
+ const trabajos=[{job_id:'j',resultado:JSON.stringify({resultado:{personajes:[{id:'ana',descripcion_fija:'Antes',prompts_referencia:['perfil']} ]}})}];
+ const ref=controlCooper('referencia',{id:'ana',tipo:'personajes',descripcion:'Después',urls:['https://example.test/a.png']},{trabajos});
+ assert.strictEqual(ref.evento.evento,'ajustar_biblia');const valor=JSON.parse(ref.evento.valor);assert.strictEqual(valor.length,1);assert.deepStrictEqual(valor[0].prompts_referencia,['perfil']);assert.strictEqual(valor[0].descripcion_fija,'Después');
+ assert.strictEqual(controlCooper('referencia',{id:'ana',tipo:'personajes',descripcion:'x',urls:['file:///etc/passwd']},{trabajos}).status,400);
+ assert.strictEqual(controlCooper('biblia',{campo:'voz.palabras_prohibidas',valor:'uno\ndos'}).evento.valor,'["uno","dos"]');
+ assert.strictEqual(controlCooper('biblia',{campo:'montaje.duracion_plano_s.short',valor:'-1'}).status,400);
+ const n=wf('FabErrores000001').nodes.find(n=>n.name==='Cooper · aviso Avisar error');
+ assert.strictEqual(JSON.parse(run(n.parameters.jsCode,{json:{message_id:1}})[0].json.detalle).estado,'enviado');
+});
+
+test('cobertura: radar y renovación se acotan al canal; conexiones no exponen credenciales',()=>{
+ assert.strictEqual(controlCooper('radar').status,409);
+ assert.strictEqual(controlCooper('radar',{}, {ajustes:{...aj,allowRadar:true}}).evento.canal_id,'c-ana');
+ const ra=wf('FabRadar00000001');const pedidos=run(codeOf(ra,'Pedidos de radar'),{nodes:{Inicio:{accion:'correr',canal_id:'c-ana'}},all:{$input:[{canal_id:'c-ana',nicho:'a'},{canal_id:'otro',nicho:'b'}]}});assert.strictEqual(pedidos.length,1);assert.strictEqual(pedidos[0].json.canal_id,'c-ana');
+ const ap={aprobacion_id:'ap-uno',canal_id:'c-ana',video_id:'v-ana',estado:'pendiente',etapa:'storyboard',url:aj.baseUrl+'/form-waiting/42'};
+ assert.strictEqual(controlCooper('renovar',{id:'ap-uno'},{aprobaciones:[ap]}).evento.aprobacion_id,'ap-uno');
+ assert.strictEqual(controlCooper('renovar',{id:'ap-uno'},{aprobaciones:[{...ap,canal_id:'otro'}]}).status,409);
+ const conexiones=[{canal_id:'c-ana',estado:'pendiente',nonce:'a'.repeat(32),refresh_token:'secreto-ficticio',updatedAt:new Date().toISOString()},{canal_id:'otro',estado:'conectado',canal_youtube:'Cuenta ajena'}];
+ const op=resolverCooper(solicitudCooper('operacion'),{conexiones,ajustes:{...aj,googleClientId:'cliente-ficticio'}}).respuesta;
+ assert.strictEqual(new URL(op.canales[0].conexion.url).origin,'https://accounts.google.com');assert.ok(!JSON.stringify(op).includes('secreto-ficticio'));assert.ok(!JSON.stringify(op).includes('Cuenta ajena'));
+ const error=resolverCooper(solicitudCooper('operacion'),{eventos:[{tipo:'incidencia_cooper',evento:'error-global',detalle:JSON.stringify({tipo:'ejecucion',resumen:'Falló un servicio'})}]}).respuesta;assert.strictEqual(error.fallos.length,0);
+});
+
+test('cobertura: los cierres web compiten por la decisión pendiente antes de avanzar',()=>{
+ const cierres=ORQ.nodes.filter(n=>n.name.startsWith('Cooper · cerrar ')&&n.name.endsWith(' guardar'));assert.strictEqual(cierres.length,4);
+ for(const n of cierres){assert.ok(n.parameters.filters.conditions.some(c=>c.keyName==='estado'&&c.keyValue==='pendiente'));assert.ok(!n.alwaysOutputData);}
+});
+
+test('cobertura: conservar listas editables y mostrar solo la recomendación más reciente',()=>{
+ const trabajos=[{job_id:'j',resultado:JSON.stringify({resultado:{voz:{palabras_prohibidas:['primera','segunda']}}})},...['2026-11-20','2026-11-21'].map((createdAt,k)=>({job_id:'story-'+k,createdAt,canal_id:'c-ana',video_id:'v-ana',modo:'storyboard',estado:'listo',resultado:JSON.stringify({resultado:{publicacion:{youtube:{recomendacion:'Versión '+k}}}})}))];
+ const c=resolverCooper(solicitudCooper('operacion'),{trabajos}).respuesta.canales[0];assert.strictEqual(c.biblia['voz.palabras_prohibidas'],'primera\nsegunda');assert.strictEqual(c.especialistas.length,1);assert.strictEqual(c.especialistas[0].recomendacion,'Versión 1');
+ const canales=[{...canalCooper,tendencias:JSON.stringify({ideas:[{titulo:'Sin fecha'}]})}];assert.strictEqual(controlCooper('idea',{ideaId:'0:'},{canales}).status,409);
 });

@@ -266,7 +266,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
+        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id||e.canal_id?[{json:{video_id:video_id||'',canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
       },
       "id": "49ac38cd-35ba-5836-8069-a67960cf3e76",
       "name": "Cooper · atribuir ejecución",
@@ -317,7 +317,7 @@
           "conditions": [
             {
               "id": "a1bfe7f4-33dc-516f-babb-fe22df7a2311",
-              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id) }}",
+              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id || $('Inicio').first().json.canal_id) }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",

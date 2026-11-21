@@ -1,10 +1,16 @@
-import { z } from "zod";
+import { z } from "./validacion";
 import { observabilidadSchema, leccionSchema } from "./observabilidad";
 import contrato from "./cooper-v1.json";
 export { contrato };
 export type EventoPuente = keyof typeof contrato.eventos;
 export type ConsultaPuente =
-  "estado" | "reporte" | "pendientes" | "tendencias" | "gastos";
+  | "estado"
+  | "reporte"
+  | "pendientes"
+  | "tendencias"
+  | "gastos"
+  | "operacion"
+  | "ajustes";
 const id = z
   .string()
   .min(1)

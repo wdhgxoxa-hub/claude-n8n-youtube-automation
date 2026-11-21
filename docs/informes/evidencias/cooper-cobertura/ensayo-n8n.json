@@ -1,0 +1,29 @@
+{
+  "commit_ensayo": "5069e54",
+  "instancia": "n8n 2.47.4 local aislada, sin salida a proveedores",
+  "log_local": "cooper/.cache/ensayo-cobertura-6.log",
+  "sha256_log": "3e9818a14d5a6fa845ed8ffa38221fc3e6d4b2c584997c0e1d9ad4089d4b820c",
+  "comprobaciones": [
+    "PASS instancia aislada y propietario ficticio por REST",
+    "PASS migración: simulación sin escritura, 111 filas, paginación, idempotencia y reversa",
+    "PASS dos canales del administrador, uno de Ana y videos en varias etapas",
+    "PASS 30 workflows importados por REST; FX y subflujos publicados, proveedores apagados",
+    "PASS sesiones Auth.js de dos cuentas y consulta aislada desde Cooper hacia n8n",
+    "PASS token inválido, rol falsificado, recursos ajenos y gasto exclusivo del administrador",
+    "PASS creación de canal y videos con dos cuentas, persistencia y callback HMAC emitido por n8n",
+    "PASS firma inválida sin efecto, callback duplicado idempotente, contenido cambiado y dueño ajeno rechazados",
+    "PASS callback con dos fallos de transporte recuperado por los reintentos reales de n8n sin duplicar eventos",
+    "PASS aprobaciones de guion y final cierran decisiones y avanzan por el Orquestador real",
+    "PASS programación, eliminación en reposo y rechazo de borrado durante producción",
+    "PASS eliminación de canal y costo idempotente atribuido por tablas, ignorando un dueño enviado falso",
+    "PASS 422 recuperable de recurso simulado y presentación real ficticia pausada con interruptores apagados, sin gasto",
+    "PASS confirmación caída tras despacho real: reserva bloqueada, recuperación firmada y reentrega sin repetir",
+    "PASS SSE del dueño sin videos ajenos, costos, IDs remotos ni enlaces internos",
+    "PASS reentrega confirmada de creación, aprobación y eliminación sin repetir sus efectos",
+    "PASS navegador móvil con sesión local, aislamiento y presentación pausada visible",
+    "PASS cobertura: consulta por dueño, ajustes efectivos y revisión obsoleta en n8n",
+    "PASS cobertura: biblia, metas y plataformas aplicadas por el Orquestador",
+    "PASS cobertura: formulario nativo reanudado una sola vez y rutina consultable"
+  ],
+  "nota": "El ensayo completo precede los ajustes posteriores de listas/vigencia y la corrección de CSP; estos se cubren en la puerta y las rondas finales."
+}

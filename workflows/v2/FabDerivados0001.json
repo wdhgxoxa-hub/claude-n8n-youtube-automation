@@ -1006,20 +1006,63 @@
         660,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json;return [{json:{tipo:'ejecucion_cooper',evento:String($execution.id),canal_id:e.canal_id||'',video_id:e.video_id||e.plan?.video_id||'',detalle:'{}'}}];"
+      },
+      "id": "1ad73d9d-dfda-500d-8811-42bd291282b5",
+      "name": "Cooper · atribuir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "e34b67c7-e263-5fc3-a293-807e52d71be9",
+      "name": "Cooper · guardar auxiliar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "b81cb984-81ae-5ef2-b748-5fa99b27f59b",
+      "name": "Cooper · seguir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Leer ajustes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Leer ajustes": {
       "main": [
         [
@@ -1544,6 +1587,50 @@
         [
           {
             "node": "Cooper · costo Renderizar corte registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · seguir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · seguir auxiliar",
             "type": "main",
             "index": 0
           }

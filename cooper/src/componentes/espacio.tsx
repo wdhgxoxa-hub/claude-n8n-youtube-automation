@@ -67,6 +67,7 @@ const cargarMovimiento = () =>
 const nav = [
   { path: "/", label: "Inicio", icon: House },
   { path: "/canales", label: "Canales", icon: Radio },
+  { path: "/radar", label: "Operación", icon: Settings2 },
   { path: "/videos", label: "Videos", icon: Clapperboard },
   { path: "/publicados", label: "Publicados", icon: ChartNoAxesCombined },
   { path: "/aprendizaje", label: "Aprendizaje", icon: BookOpen },

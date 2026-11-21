@@ -410,7 +410,7 @@ export class FabricaN8n implements Fabrica {
   }
 
   constructor(private opciones = { timeoutMs: 10000, backoffMs: 250 }) {}
-  private async request(
+  async request(
     user: User,
     event: EventoPuente | ConsultaPuente,
     payload: Record<string, unknown>,
@@ -419,9 +419,18 @@ export class FabricaN8n implements Fabrica {
     const token = process.env.COOPER_N8N_TOKEN;
     if (!url || !token)
       throw new ErrorHttp(503, "La fábrica todavía no está conectada.");
-    const approval = event === "aprobar_guion" || event === "aprobar_final";
+    const decision =
+      event === "control_fabrica" && payload.accion === "decidir";
+    const approval =
+      event === "aprobar_guion" || event === "aprobar_final" || decision;
     const digest = createHash("sha256")
-      .update(JSON.stringify([user.id, event, payload]))
+      .update(
+        JSON.stringify([
+          user.id,
+          event,
+          decision ? { id: payload.id } : payload,
+        ]),
+      )
       .digest("hex");
     const id = approval
       ? `${digest.slice(0, 8)}-${digest.slice(8, 12)}-4${digest.slice(13, 16)}-a${digest.slice(17, 20)}-${digest.slice(20, 32)}`
@@ -436,9 +445,15 @@ export class FabricaN8n implements Fabrica {
     });
     const encoded = JSON.stringify(request);
     if (
-      !["estado", "reporte", "pendientes", "tendencias", "gastos"].includes(
-        event,
-      )
+      ![
+        "estado",
+        "reporte",
+        "pendientes",
+        "tendencias",
+        "gastos",
+        "operacion",
+        "ajustes",
+      ].includes(event)
     )
       db()
         .insert(bridgeCommands)
@@ -450,6 +465,18 @@ export class FabricaN8n implements Fabrica {
         })
         .onConflictDoNothing()
         .run();
+    if (decision) {
+      const anterior = db()
+        .select()
+        .from(bridgeCommands)
+        .where(eq(bridgeCommands.id, request.id_evento))
+        .get();
+      if (anterior && anterior.request !== encoded)
+        throw new ErrorHttp(
+          409,
+          "Esta decisión ya tiene otra respuesta. Actualiza para ver el resultado.",
+        );
+    }
     for (let attempt = 0; attempt < 3; attempt++) {
       if (
         db()

@@ -405,6 +405,47 @@
         440,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aprobación · avisar\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aprobación · avisar\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aprobación · avisar\"})}};});\n"
+      },
+      "id": "96d83d4b-35ff-5fe9-946a-cff34b5752a2",
+      "name": "Cooper · aviso Aprobación · avisar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "e58b62d0-ee78-5683-b008-71e882a608fc",
+      "name": "Cooper · aviso Aprobación · avisar guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -424,6 +465,11 @@
         [
           {
             "node": "Aprobación · esperar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · aviso Aprobación · avisar",
             "type": "main",
             "index": 0
           }
@@ -553,6 +599,17 @@
         [
           {
             "node": "¿Decide Cooper?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aprobación · avisar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aprobación · avisar guardar",
             "type": "main",
             "index": 0
           }

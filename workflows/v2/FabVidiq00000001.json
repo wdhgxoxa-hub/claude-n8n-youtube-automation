@@ -473,20 +473,63 @@
         3300,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json;return [{json:{tipo:'ejecucion_cooper',evento:String($execution.id),canal_id:e.canal_id||'',video_id:e.video_id||e.plan?.video_id||'',detalle:'{}'}}];"
+      },
+      "id": "9101844c-6dce-50eb-92ba-642c51e2832e",
+      "name": "Cooper · atribuir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "49dcd854-c4c7-5bda-a082-7ceb1f0a8811",
+      "name": "Cooper · guardar auxiliar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "f23b1fc9-f48f-5503-a98e-d68862f68697",
+      "name": "Cooper · seguir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Iniciar vidIQ",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Iniciar vidIQ": {
       "main": [
         [
@@ -612,6 +655,50 @@
         [
           {
             "node": "Resumen de cuenta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · seguir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Iniciar vidIQ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · seguir auxiliar",
             "type": "main",
             "index": 0
           }

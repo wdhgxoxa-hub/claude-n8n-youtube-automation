@@ -1,0 +1,583 @@
+{
+  "commit_codigo": "5381a01fc4d959f117c3e539f02e6825a2848367",
+  "commit_pruebas": "e7c160e",
+  "playwright": {
+    "startTime": "2026-11-21T10:39:52.640Z",
+    "duration": 421970.139,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "capturas": 132,
+  "sentinel": {
+    "herramienta": "Sistema Sentinel API local",
+    "modulos": [
+      {
+        "nombre": "recorridos",
+        "hallazgos": 0
+      },
+      {
+        "nombre": "caos",
+        "hallazgos": 0
+      },
+      {
+        "nombre": "estabilidad",
+        "hallazgos": 0
+      }
+    ],
+    "medidas_caos": [
+      {
+        "url": "http://127.0.0.1:34543/canales/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+        "acciones": 234,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/radar",
+        "acciones": 248,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/rutina",
+        "acciones": 275,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          30,
+          30,
+          60,
+          30,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/redes",
+        "acciones": 183,
+        "fps": [
+          60,
+          60,
+          61,
+          60,
+          60,
+          60,
+          60,
+          20
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/referencias",
+        "acciones": 56,
+        "fps": [
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/cuentas",
+        "acciones": 182,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/programados",
+        "acciones": 182,
+        "fps": [
+          60,
+          60,
+          60,
+          30,
+          20,
+          30,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/decisiones",
+        "acciones": 51,
+        "fps": [
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/incidencias",
+        "acciones": 155,
+        "fps": [
+          60,
+          60,
+          60,
+          30,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/avisos",
+        "acciones": 242,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          30,
+          60,
+          30,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/admin/fabrica",
+        "acciones": 139,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/",
+        "acciones": 243,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/canales",
+        "acciones": 95,
+        "fps": [
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/videos",
+        "acciones": 41,
+        "fps": [
+          61,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/publicados",
+        "acciones": 261,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          30,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/aprendizaje",
+        "acciones": 41,
+        "fps": [
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/avatares",
+        "acciones": 277,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          30,
+          30,
+          30,
+          30,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/admin",
+        "acciones": 323,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/perfil",
+        "acciones": 397,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          30,
+          30,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          60,
+          30,
+          30,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-0",
+        "acciones": 301,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          30,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-3",
+        "acciones": 314,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          20,
+          60,
+          30,
+          30,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-1",
+        "acciones": 219,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-2",
+        "acciones": 203,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/redes?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+        "acciones": 92,
+        "fps": [
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/rutina?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+        "acciones": 341,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          30,
+          30,
+          30,
+          30,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/cuentas?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+        "acciones": 93,
+        "fps": [
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/canales/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+        "acciones": 302,
+        "fps": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/redes?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+        "acciones": 3,
+        "fps": [],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/rutina?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+        "acciones": 302,
+        "fps": [
+          60,
+          60,
+          60,
+          30,
+          30,
+          30,
+          60,
+          30,
+          60,
+          30,
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      },
+      {
+        "url": "http://127.0.0.1:34543/cuentas?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+        "acciones": 91,
+        "fps": [
+          60,
+          60,
+          60,
+          60
+        ],
+        "congelada": false,
+        "estrellada": false
+      }
+    ],
+    "pantallas": [
+      "/canales/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+      "/radar",
+      "/rutina",
+      "/redes",
+      "/referencias",
+      "/cuentas",
+      "/programados",
+      "/decisiones",
+      "/incidencias",
+      "/avisos",
+      "/admin/fabrica",
+      "/",
+      "/canales",
+      "/videos",
+      "/publicados",
+      "/aprendizaje",
+      "/avatares",
+      "/admin",
+      "/perfil",
+      "/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-0",
+      "/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-3",
+      "/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-1",
+      "/videos/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-2",
+      "/redes?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+      "/rutina?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+      "/cuentas?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciencia",
+      "/canales/demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+      "/redes?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+      "/rutina?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad",
+      "/cuentas?canal=demo-fc3c0d06-0fe6-42ac-a667-3f2c3bcec1dc-ciudad"
+    ],
+    "hallazgos": []
+  },
+  "estabilidad": {
+    "muestras": 107,
+    "duracion_s": 160,
+    "memoria_inicial_bytes": 5534984.0,
+    "memoria_final_bytes": 6334732.0,
+    "caida": ""
+  },
+  "resumen_caos": {
+    "acciones": 5886,
+    "fps_min": 20,
+    "fps_max": 61,
+    "congeladas": 0,
+    "estrelladas": 0
+  }
+}

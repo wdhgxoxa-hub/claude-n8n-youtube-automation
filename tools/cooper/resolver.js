@@ -5,6 +5,7 @@ const canales = $('Canales autorizados').all().map(i => i.json).filter(c => c.ca
 const videos = $('Videos autorizados').all().map(i => i.json).filter(v => v.video_id && own(v) && !v.eliminado && canales.some(c => c.canal_id === v.canal_id));
 const filasCooper = nombre => $(nombre).isExecuted ? $(nombre).all().map(i=>i.json) : [];
 const planosCooper=filasCooper('Piezas de Cooper'), pubsCooper=filasCooper('Publicaciones de Cooper'), eventosCooper=filasCooper('Historial de Cooper'), decisionesCooper=filasCooper('Decisiones de Cooper'), trabajosCooper=filasCooper('Lecciones de Cooper');
+/* RESOLVER_COBERTURA */
 const safeVideo = v => ({ id: v.video_id, dueno_email: v.dueno_email, canal_id: v.canal_id, titulo: String(v.tema || ''),
   observabilidad:observabilidadCooper(v,planosCooper,pubsCooper,eventosCooper,decisionesCooper), modo_noticia:v.modo_noticia === true, stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });
 if (b.evento === 'estado') return [{ json: { accion: 'responder', status: 200, respuesta: {
