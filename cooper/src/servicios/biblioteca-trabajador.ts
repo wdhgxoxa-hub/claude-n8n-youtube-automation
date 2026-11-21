@@ -6,6 +6,9 @@ import { proveedorAvatar, proveedorVoz } from "./proveedores";
 import type { TrabajoMedio } from "./proveedores/tipos";
 
 const INTERVALO = 10000;
+// La simulación es local: no necesita el enfriamiento de la API remota.
+// Conserva una transición observable antes de que el siguiente ciclo la consulte.
+const INTERVALO_SIMULADO = 1000;
 const RESERVA = 60000;
 const LIMITE_CONSULTA = 35000;
 const LOTE = 2;
@@ -53,6 +56,7 @@ export function reservarMedio(ownerId?: string) {
           ownerId: assets.ownerId,
           kind: assets.kind,
           provider: assets.provider,
+          simulated: assets.simulated,
           providerId: assets.providerId,
           status: assets.status,
           failures: assets.pollFailures,
@@ -63,7 +67,14 @@ export function reservarMedio(ownerId?: string) {
             habilitado(ownerId),
             lte(assets.pollNextAt, now),
             lte(assets.pollLeaseUntil, now),
-            lte(assets.polledAt, now - INTERVALO),
+            or(
+              lte(assets.polledAt, now - INTERVALO),
+              and(
+                eq(assets.simulated, true),
+                eq(assets.provider, "simulada"),
+                lte(assets.polledAt, now - INTERVALO_SIMULADO),
+              ),
+            ),
           ),
         )
         .orderBy(asc(assets.pollNextAt), asc(assets.polledAt), asc(assets.id))
@@ -140,7 +151,11 @@ async function sondear(a: Reserva, consultar: Consultar) {
         pollFailures: 0,
         pollNextAt:
           Date.now() +
-          (trabajo.estado === "verificacion_proveedor" ? 300000 : INTERVALO),
+          (trabajo.estado === "verificacion_proveedor"
+            ? 300000
+            : a.simulated && a.provider === "simulada"
+              ? INTERVALO_SIMULADO
+              : INTERVALO),
       })
       .where(vigente(a))
       .run();

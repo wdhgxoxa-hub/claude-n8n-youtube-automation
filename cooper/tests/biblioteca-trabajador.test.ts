@@ -124,6 +124,65 @@ it("el temporizador avanza avatar y voz sin navegador ni SSE y arranca una sola 
   expect(fetch).not.toHaveBeenCalled();
 });
 
+it.each(["avatar", "voz"] as const)(
+  "consulta %s simulado desde el primer segundo, sin saltar la reserva",
+  async (kind) => {
+    vi.useFakeTimers();
+    const a = activo({ kind, polledAt: Date.now() });
+    const respuesta = diferida();
+    const consultar = vi.fn(() => respuesta.promise);
+    await vi.advanceTimersByTimeAsync(999);
+    await cicloBiblioteca({ consultar });
+    expect(consultar).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    const ciclo = cicloBiblioteca({ consultar });
+    await cicloBiblioteca({ consultar });
+    expect(consultar).toHaveBeenCalledTimes(1);
+    respuesta.resolve({ id: a.providerId, estado: "listo" });
+    await ciclo;
+    expect(leer(a.id)?.status).toBe("listo");
+    expect(fetch).not.toHaveBeenCalled();
+  },
+);
+
+it.each([false, true])(
+  "conserva diez segundos para el adaptador remoto aunque simulated sea %s",
+  async (simulated) => {
+    vi.useFakeTimers();
+    const a = activo({
+      provider: "heygen",
+      simulated,
+      reviewedAt: Date.now(),
+      reviewedBy: owner.id,
+      polledAt: Date.now(),
+    });
+    const consultar = vi.fn(async (): Promise<TrabajoMedio> => ({
+      id: a.providerId,
+      estado: "entrenando",
+    }));
+    await vi.advanceTimersByTimeAsync(9999);
+    await cicloBiblioteca({ consultar });
+    expect(consultar).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    await cicloBiblioteca({ consultar });
+    expect(consultar).toHaveBeenCalledTimes(1);
+    expect(leer(a.id)?.pollNextAt).toBe(Date.now() + 10000);
+    expect(fetch).not.toHaveBeenCalled();
+  },
+);
+
+it("el temporizador recoge una simulación recién creada sin sumar diez segundos de API", async () => {
+  vi.useFakeTimers();
+  iniciarBiblioteca();
+  await vi.advanceTimersByTimeAsync(4999);
+  const a = activo({ kind: "voz", polledAt: Date.now() });
+  await vi.advanceTimersByTimeAsync(1);
+  expect(leer(a.id)?.status).toBe("entrenando");
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(leer(a.id)?.status).toBe("listo");
+  expect(fetch).not.toHaveBeenCalled();
+});
+
 it("excluye el mismo recurso entre ciclos concurrentes y limita cada lote a dos", async () => {
   const a = activo();
   const respuesta = diferida();
