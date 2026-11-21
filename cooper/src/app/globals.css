@@ -2110,7 +2110,7 @@ main:focus {
   }
   .mobile-tabs button[aria-selected="true"] {
     color: var(--accent);
-    border-color: var(--accent);
+    border-color: transparent;
   }
   .studio {
     display: block;
@@ -2341,9 +2341,12 @@ main:focus {
     letter-spacing: -1.8px;
   }
   .login-headline p,
-  .login-track,
   .login-story > small {
     display: none;
+  }
+  .login-track {
+    display: flex;
+    margin: 0 0 20px;
   }
   .login-entry {
     padding: 40px 28px 80px;
