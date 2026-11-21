@@ -58,6 +58,8 @@ La recuperación de infraestructura después de una aplicación PASS quedó inte
 
 [Preflight técnico Marcas](evidencias/total-integrador/final/preflight-marcas-b3.json) del 21-11-2026 16:53 Lima: trabajadores de publicación/métricas inactivos y sin versión publicada, cuentas/piezas/ingestas en cero, marcador ausente. Se preparará el worker mediante el helper certificado antes de app→infra, en modo simulado e interruptor 0. El helper anexa configuración sin abrir el entorno para lectura; no activa workflows ni publica en redes. No tiene reversa automática del anexo: puede conservarse bloqueado tras una reversa de servicios. Este paso sigue pendiente de ejecutar después de aceptación y push.
 
+La recuperación de Cooper posterior a PASS también quedó incorporada: `80a34ba`/`00a8492`, helper exacto ensayado b3→cbf y 241 regresiones propias más cuatro validaciones del paquete. Sella SQLite, WAL y medios; conserva escrituras posteriores y limita la reversa a Cooper y su relé. [Informe y receta](total-integrador-recuperacion-app.md). El extra público está [preparado en VPS y verificado](evidencias/total-integrador/final/stage-recuperacion-app-b3.json): 27 archivos acreditados, bundle de 25 intacto; no se creó estado de operación ni se cambió servicio alguno. La secuencia será Marcas → preparar app → actualizar → sellar PASS → infra → n8n. Cada ejecución usa `python3 -B` para no alterar el bundle.
+
 ## Limitaciones reales
 
 No se inicia OAuth ni se fabrica una sesión de producción. La aceptación pública y el control de acceso sin sesión son distintos del recorrido privado autenticado. Los proveedores pagos y la publicación permanecen fuera del alcance autorizado.

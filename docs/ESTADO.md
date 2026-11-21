@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 17:22 (Lima).
+Última actualización: 2026-11-21 17:36 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 
 - **Recuperación app posterior a PASS implementada y probada localmente:** extra separado con preparación/sello, manifiesto completo WAL/medios y recuperación exclusiva de Cooper/chat-cooper. Ciclo real b3→cbf tras escrituras PASS: cinco servicios ajenos intactos, datos posteriores archivados/restaurables, release previa y ningún puntero global. 20 focales/241 regresiones sin advertencias. Helpers certificados/bundle/producto intactos; integración y ejecución remota a cargo del integrador, todavía no acreditadas. [Receta y evidencia](informes/total-recuperacion-app.md).
 

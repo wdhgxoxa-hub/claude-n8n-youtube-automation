@@ -1,0 +1,29 @@
+{
+  "fecha_utc": "2026-11-21T22:36:22.327605+00:00",
+  "commits_integrados": [
+    "80a34ba",
+    "00a8492"
+  ],
+  "archivo_sha256": "4eee6ba392e8f4b6722b031440fe7a170c3c7fb8bbc47cb2cac79cc5efce408e",
+  "staging": {
+    "resultado": "STAGING_PASS",
+    "archivos": {
+      "codigo.json": "c2e09b6a3cfed67c3304ad615562ae6abca210902865d01cc2c66daed7d254f5",
+      "COMANDOS.md": "22d8f889dacd4e1011765396a485206f26a66e52bc1142429b3d7cd81d1b7719",
+      "preflight.py": "787c89cbd01b08ddd974e612f49016b5169b85b634f90339a41c7a4b26e69c06",
+      "recuperar-app.py": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04"
+    },
+    "servicios_modificados": false,
+    "entorno_leido": false,
+    "ejecucion_recuperacion": false
+  },
+  "preflight": {
+    "estado": "PREFLIGHT_PASS",
+    "archivos_publicos": 27,
+    "entorno_consumido": false,
+    "estado_operativo_creado": false,
+    "mutaciones": false
+  },
+  "preparacion_operativa_ejecutada": false,
+  "servicios_modificados": false
+}
