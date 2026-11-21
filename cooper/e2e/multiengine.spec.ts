@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from "@playwright/test";
+import { test, expect, type Page, type Locator, type Request } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { execFileSync } from "node:child_process";
 import type { Estado } from "../src/servicios/datos";
@@ -58,20 +58,34 @@ async function teclado(page: Page, target: Locator, backwards = false) {
 }
 
 const errores = new WeakMap<Page, string[]>();
-const precargas = new WeakMap<Page, Set<string>>();
+const precargas = new WeakMap<Page, { pendientes: Set<Request>; actividad: number }>();
 async function esperarPrecargas(page: Page) {
-  await expect.poll(() => precargas.get(page)?.size ?? 0).toBe(0);
+  // Next programa las precargas por lotes. Un hueco vacío entre dos lotes no
+  // significa que hayan terminado; recargar ahí aborta el siguiente en WebKit.
+  // Esperamos silencio real de RSC sin silenciar errores ni contar el SSE.
+  const desde = performance.now();
+  await expect.poll(() => {
+    const estado = precargas.get(page)!;
+    return estado.pendientes.size === 0 &&
+      performance.now() - Math.max(desde, estado.actividad) >= 500;
+  }).toBe(true);
 }
 test.beforeEach(async ({ page }) => {
   const list: string[] = [];
   errores.set(page, list);
-  const pendientes = new Set<string>();
-  precargas.set(page, pendientes);
+  const estado = { pendientes: new Set<Request>(), actividad: performance.now() };
+  precargas.set(page, estado);
   page.on("request", (r) => {
-    if (r.url().includes("_rsc=")) pendientes.add(r.url());
+    if (r.url().includes("_rsc=")) {
+      estado.pendientes.add(r);
+      estado.actividad = performance.now();
+    }
   });
-  page.on("requestfinished", (r) => pendientes.delete(r.url()));
-  page.on("requestfailed", (r) => pendientes.delete(r.url()));
+  const terminar = (r: Request) => {
+    if (estado.pendientes.delete(r)) estado.actividad = performance.now();
+  };
+  page.on("requestfinished", terminar);
+  page.on("requestfailed", terminar);
   page.on("pageerror", (e) => list.push(e.message));
   // Ninguna URL de un fixture debe salir a Internet.
   await page.route(/^https?:\/\/(?!127\.0\.0\.1[:/])/, (route) =>
