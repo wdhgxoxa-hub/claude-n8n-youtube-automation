@@ -14,7 +14,7 @@ function preparar() {
 }
 const f = preparar();
 const codigo = nombre => f.nodes.find(n => n.name === nombre).parameters.jsCode;
-const rpc = result => ({ statusCode: 200, body: JSON.stringify({ jsonrpc: '2.0', id: 1, result }) });
+const rpc = (result, id=1) => ({ statusCode: 200, body: JSON.stringify({ jsonrpc: '2.0', id, result }) });
 const ejecutar = (nombre, actual, nodos = {}) => new Function('$', '$json', '$execution', codigo(nombre))(
   n => ({ isExecuted: !!nodos[n], all: () => (nodos[n] || []).map(json => ({ json })) }), actual, { id: 'ENSAYO' });
 
@@ -31,6 +31,7 @@ test('la sonda solo usa endpoint fijo, referencia de credencial y diagnóstico s
     assert.equal(n.parameters.url, 'https://mcp.vidiq.com/mcp');
     assert.equal(n.parameters.options.redirect.redirect.followRedirects, false);
     assert.equal(n.parameters.authentication, 'genericCredentialType');
+    assert.equal(n.parameters.options.response.response.responseFormat, 'text');
     assert.deepEqual(Object.keys(n.credentials), ['httpHeaderAuth']);
     assert.deepEqual(Object.keys(n.credentials.httpHeaderAuth).sort(), ['id', 'name']);
     assert.equal(n.retryOnFail, undefined);
@@ -48,7 +49,7 @@ test('descubrir herramientas no autoriza investigaciones, cambios ni argumentos 
     { name: 'vidiq_outliers', inputSchema: {} },
     { name: 'vidiq_update_competitors', inputSchema: {} },
   ];
-  const pedidos = ejecutar('Pedidos gratuitos', rpc({ tools }));
+  const pedidos = ejecutar('Pedidos gratuitos', rpc({ tools },2));
   assert.deepEqual(pedidos.map(p => p.json.nombre), ['vidiq_balance', 'vidiq_user_channels']);
   assert.equal(ejecutar('Pedidos gratuitos', { statusCode: 401, body: '{}' })[0].json.sin_pedidos, true);
 });
@@ -57,9 +58,9 @@ test('diagnóstico descarta cabeceras, tokens, textos y datos de cuenta sin conv
   const secreto = 'valor-ficticio-que-no-debe-salir';
   const nodos = {
     Inicializar: [rpc({ protocolVersion: '2025-03-26' })],
-    'Listar herramientas': [rpc({ tools: [{ name: 'vidiq_balance', inputSchema: {} }] })],
-    'Pedidos gratuitos': [{ nombre: 'vidiq_balance' }, { nombre: 'vidiq_user_channels' }],
-    'Leer cuenta sin créditos': [rpc({ structuredContent: { credits: { remaining: 20, reset: null }, token: secreto, email: secreto, _credits: { used: 0 } } }), rpc({ structuredContent: { channels: ['UC1234567890123456789012'], token: secreto } })],
+    'Listar herramientas': [rpc({ tools: [{ name: 'vidiq_balance', inputSchema: {} }] },2)],
+    'Pedidos gratuitos': [{ nombre: 'vidiq_balance',id:10 }, { nombre: 'vidiq_user_channels',id:11 }],
+    'Leer cuenta sin créditos': [rpc({ structuredContent: { credits: { remaining: 20, reset: null }, token: secreto, email: secreto, _credits: { used: 0 } } },10), rpc({ structuredContent: { channels: ['UC1234567890123456789012'], token: secreto } },11)],
   };
   const resultado = ejecutar('Diagnóstico mínimo', {}, nodos)[0].json;
   assert.equal(JSON.stringify(resultado).includes(secreto), false);
@@ -70,6 +71,23 @@ test('diagnóstico descarta cabeceras, tokens, textos y datos de cuenta sin conv
   assert.equal(d.consultas[1].creditos_usados, null);
   assert.deepEqual(d.consultas[1].canales, ['UC1234567890123456789012']);
   assert.equal(d.investigacion_invocada, false);
+});
+test('JSON y SSE multilínea preservan el ID de la llamada y no confunden notificaciones ni otras respuestas', () => {
+  const tools=[{name:'vidiq_balance',inputSchema:{}}];
+  const json=rpc({tools},2);
+  const sse={statusCode:200,body:'event: message\r\ndata: {"jsonrpc":"2.0","id":2,\r\ndata: "result":'+JSON.stringify({tools})+'}\r\n\r\ndata: {"jsonrpc":"2.0","method":"notifications/progress"}\r\n\r\ndata: {"jsonrpc":"2.0","id":999,"result":{"tools":[]}}\r\n\r\n'};
+  assert.deepEqual(ejecutar('Pedidos gratuitos',sse),ejecutar('Pedidos gratuitos',json));
+  assert.equal(ejecutar('Pedidos gratuitos',rpc({tools},999))[0].json.sin_pedidos,true);
+  const nodos={'Pedidos gratuitos':[{nombre:'vidiq_balance',id:10}],'Leer cuenta sin créditos':[rpc({structuredContent:{credits:{remaining:500}}},999)]};
+  const d=JSON.parse(ejecutar('Diagnóstico mínimo',{},nodos)[0].json.resultado);
+  assert.equal(d.consultas[0].ok,false);assert.deepEqual(d.consultas[0].saldo,{});
+});
+test('un error estructurado conserva solo código HTTP y categoría, nunca mensaje ni cabeceras', () => {
+  const nodos={'Pedidos gratuitos':[{nombre:'vidiq_balance',id:10}],
+    'Leer cuenta sin créditos':[{error:{httpCode:'401',message:'valor-privado-ficticio',headers:{authorization:'valor-privado-ficticio'}}}]};
+  const resultado=ejecutar('Diagnóstico mínimo',{},nodos)[0].json;
+  assert.ok(!JSON.stringify(resultado).includes('valor-privado-ficticio'));
+  const d=JSON.parse(resultado.resultado);assert.equal(d.consultas[0].http,401);assert.equal(d.consultas[0].categoria,'no_autorizado');
 });
 
 test('el diagnóstico separa fallos del nodo sin mostrar el mensaje ni atribuirlos al proveedor', () => {

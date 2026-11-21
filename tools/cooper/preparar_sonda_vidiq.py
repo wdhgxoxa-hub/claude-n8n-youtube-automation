@@ -21,20 +21,26 @@ SETTINGS = {'executionOrder': 'v1', 'timezone': 'America/Lima',
             'saveDataErrorExecution': 'none', 'saveManualExecutions': False,
             'saveExecutionProgress': False}
 LECTOR = r"""
-const leer = r => {
- const t=String(r?.body ?? r?.data ?? '');
- const lineas=t.split('\n').filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trim());
- let rpc={}; for(const x of lineas.length?lineas:[t]) { try {const p=JSON.parse(x);if(p.id!==undefined)rpc=p;}catch{}}
+const leer = (r, esperado) => {
+ const cuerpo=r?.body ?? r?.data ?? '', t=typeof cuerpo==='string'?cuerpo:JSON.stringify(cuerpo);
+ // Streamable HTTP permite JSON o SSE; un evento SSE puede tener varias líneas data:.
+ const eventos=t.replace(/\r\n/g,'\n').split(/\n\n+/).map(b=>b.split('\n').filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trimStart()).join('\n')).filter(Boolean);
+ let rpc={}; for(const x of eventos.length?eventos:[t]) { try {const p=JSON.parse(x);if(p.id===esperado&&p.jsonrpc==='2.0')rpc=p;}catch{}}
  let datos=rpc.result?.structuredContent;
  if(!datos)for(const c of rpc.result?.content || [])if(c.type==='text'){try{datos=JSON.parse(c.text);break;}catch{}}
- const status=Number(r?.statusCode || 0), error=!!(r?.error || rpc.error || rpc.result?.isError);
+ const codigo=Number(r?.statusCode || r?.error?.httpCode || r?.error?.statusCode || 0);
+ const status=Number.isInteger(codigo)&&codigo>=100&&codigo<=599?codigo:0, error=!!(r?.error || rpc.error || rpc.result?.isError);
  // Clasificar dentro de n8n; nunca devolver el mensaje (puede contener datos del transporte).
  const nodo=typeof r?.error==='string'?r.error:JSON.stringify(r?.error || {});
  const fallo_nodo=!r?.error?null:/JSON.*(?:valid|v[aá]lid)|valid.*JSON/i.test(nodo)?'json_invalido':
   /paired.?item|expression|expresi[oó]n|referenced node/i.test(nodo)?'expresion':
   /credential|credencial/i.test(nodo)?'credencial_nodo':/timed?\s*out|timeout|ETIMEDOUT/i.test(nodo)?'timeout':
   /authoriz|unauthoriz|forbidden|401|403/i.test(nodo)?'autorizacion':
-  /ENOTFOUND|ECONN|socket|network|certificate/i.test(nodo)?'red':'otro';
+  /ENOTFOUND|ECONN|socket|network|certificate/i.test(nodo)?'red':
+  /invalid character.*header|header.*invalid/i.test(nodo)?'cabecera_invalida':
+  /bad request|request.*invalid|parameters/i.test(nodo)?'solicitud_invalida':
+  /not.*found|does not exist/i.test(nodo)?'recurso_no_encontrado':
+  /service.*(?:not able|failed|unavailable)|bad gateway/i.test(nodo)?'servicio':'otro';
  const texto=JSON.stringify(rpc.error || rpc.result?.content || []);
  const categoria=status===401?'no_autorizado':status===403?'sin_permiso':status===429?'limite_temporal':
   /expired|expiration|caduc/i.test(texto)?'acceso_caducado':/verif|authorize|connect.*channel/i.test(texto)?'requiere_conexion':
@@ -88,7 +94,7 @@ def preparar(tabla):
         'protocolVersion': '2025-03-26', 'capabilities': {},
         'clientInfo': {'name': 'cooper-sonda-gratuita', 'version': '1'}}}, True)
     agregar(nodo('Comprobar inicio', 'code', {'jsCode': LECTOR + r"""
-const r=leer($json);return [{json:{ok:r.status===200&&!r.error&&!!r.rpc.result?.protocolVersion,
+const r=leer($json,1);return [{json:{ok:r.status===200&&!r.error&&!!r.rpc.result?.protocolVersion,
  protocolo:/^20\d\d-\d\d-\d\d$/.test(r.rpc.result?.protocolVersion)?r.rpc.result.protocolVersion:'2025-03-26'}}];
 """}))
     agregar(nodo('¿Autorizado?', 'if', {'conditions': {'options': {'version': 2},
@@ -98,7 +104,7 @@ const r=leer($json);return [{json:{ok:r.status===200&&!r.error&&!!r.rpc.result?.
     http('Notificar inicio', {'jsonrpc': '2.0', 'method': 'notifications/initialized'})
     http('Listar herramientas', {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list', 'params': {}})
     agregar(nodo('Pedidos gratuitos', 'code', {'jsCode': LECTOR + '\nconst permitidas=' + json.dumps(GRATUITAS) + r""";
-const r=leer($json);const pedidos=[];
+const r=leer($json,2);const pedidos=[];
 if(r.status===200&&!r.error)for(const nombre of permitidas){
  const t=(r.rpc.result?.tools || []).find(t=>t.name===nombre);if(!t)continue;
  const requeridos=t.inputSchema?.required || [];
@@ -113,7 +119,7 @@ return pedidos.length?pedidos:[{json:{sin_pedidos:true}}];
         'combinator': 'and'}}, 2.2))
     http('Leer cuenta sin créditos', "={{ JSON.stringify({jsonrpc:'2.0',id:$json.id,method:'tools/call',params:{name:$json.nombre,arguments:$json.args}}) }}")
     agregar(nodo('Diagnóstico mínimo', 'code', {'jsCode': LECTOR + r"""
-const inicio=leer(salida('Inicializar')[0]), lista=leer(salida('Listar herramientas')[0]);
+const inicio=leer(salida('Inicializar')[0],1), lista=leer(salida('Listar herramientas')[0],2);
 const nombres=['vidiq_balance','vidiq_user_channels','vidiq_list_competitors'];
 const pedidos=salida('Pedidos gratuitos').filter(p=>nombres.includes(p.nombre));
 const respuestas=salida('Leer cuenta sin créditos');
@@ -124,7 +130,7 @@ const balance=v=>{const datos={};const visitar=(x,ruta='',n=0)=>{if(!x||typeof x
   if(y&&typeof y==='object')visitar(y,p,n+1);
   else if(/credit|balance|remaining|renew|addon|reset|unlimited/i.test(p)&&
    (y===null||typeof y==='number'||typeof y==='boolean'||y==='unlimited'||/^\d{4}-\d\d-\d\d(?:T[\d:.+-]+Z?)?$/.test(String(y))))datos[p]=y;}};visitar(v);return datos;};
-const consultas=pedidos.map((p,k)=>{const r=leer(respuestas[k]);return {herramienta:p.nombre,http:r.status,
+const consultas=pedidos.map((p,k)=>{const r=leer(respuestas[k],p.id);return {herramienta:p.nombre,http:r.status,
  ok:r.status===200&&!r.error&&!!r.rpc.result,categoria:r.categoria,fallo_nodo:r.fallo_nodo,
  creditos_usados:typeof r.datos?._credits?.used==='number'?r.datos._credits.used:null,
  ...(p.nombre==='vidiq_balance'?{saldo:balance(r.datos)}:{canales:ids(r.datos)})};});
