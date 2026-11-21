@@ -48,7 +48,7 @@ try {
       if (width === 1440) result.pantallas.push({ ruta: path, destino: "/entrar", acceso_privado: false });
     }
     await page.goto(origin + "/entrar?error=AccessDenied", { waitUntil: "networkidle" });
-    assert.ok(await page.getByRole("alert").isVisible());
+    assert.ok(await page.getByRole("alert").filter({ hasText: "No pudimos darte acceso." }).isVisible());
     assert.equal((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations.length, 0);
     if (width === 1440) {
       for (const path of ["/api/estado", "/api/eventos", "/api/memoria", "/api/marcas", "/api/operacion", "/api/admin/fabrica"]) {
