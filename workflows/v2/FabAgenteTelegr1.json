@@ -40,7 +40,10 @@
           "value": "gpt-6-astra"
         },
         "responsesApiEnabled": true,
-        "options": {}
+        "options": {
+          "timeout": 45000,
+          "maxRetries": 0
+        }
       },
       "id": "64439966-4696-448b-b0ff-4d700d266a2a",
       "name": "Modelo",
@@ -1230,8 +1233,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 300,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

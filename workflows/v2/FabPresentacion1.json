@@ -138,47 +138,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
-        "options": {
-          "timeout": 10000
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "x-cooper-timestamp",
-              "value": "={{ $json.timestamp }}"
-            },
-            {
-              "name": "x-cooper-signature",
-              "value": "={{ $json.firma }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "contentType": "raw",
-        "rawContentType": "application/json",
-        "body": "={{ $json.cuerpo }}"
-      },
-      "id": "24677950-7b09-5aa6-b838-dc9390b877d1",
-      "name": "Consultar Cooper",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1540,
-        0
-      ],
-      "retryOnFail": true,
-      "maxTries": 5,
-      "waitBetweenTries": 2000
-    },
-    {
-      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -329,6 +288,478 @@
         440,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items=$input.all(); if(items.length!==1) throw new Error('El callback requiere un único evento'); return items;"
+      },
+      "id": "d15d9808-f0ff-5fb2-b495-84fe60b2e2fb",
+      "name": "Consultar Cooper · preparar transporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$json.respuesta; if(!r || typeof r!=='object' || Array.isArray(r)) throw new Error('Respuesta de callback inválida'); return [{json:r}];"
+      },
+      "id": "24677950-7b09-5aa6-b838-dc9390b877d1",
+      "name": "Consultar Cooper",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "c0f460fe-00f6-5262-8993-a280174c8ed0",
+      "name": "Consultar Cooper · intento 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,1)}];"
+      },
+      "id": "4c485e4a-7684-5a01-bbc8-9e22734c8425",
+      "name": "Consultar Cooper · evaluar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f4e66636-e141-5bcf-8812-11a09d04e44f",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "26fbb3ca-babe-5f90-9886-1f1570eebba9",
+      "name": "Consultar Cooper · reintentar 1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "74841877-0bf4-53e8-a572-6ba1a4b8b805",
+      "name": "Consultar Cooper · backoff 1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "webhookId": "e718bedc-9dec-55ef-8eee-da47b9d8d926"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Consultar Cooper · preparar transporte\").all();"
+      },
+      "id": "a0c6987c-c21f-59b3-a792-f73943ef9717",
+      "name": "Consultar Cooper · restaurar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "2da2f090-71af-517d-b325-4fca2303bc5d",
+      "name": "Consultar Cooper · intento 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,2)}];"
+      },
+      "id": "131a6f6b-1f39-5bd7-ba4a-0cba6dd5794e",
+      "name": "Consultar Cooper · evaluar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "46e16805-e33f-5c79-b892-c7d85def93c4",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f35287ba-8940-554d-b257-7379a12a21d9",
+      "name": "Consultar Cooper · reintentar 2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "b286e9a5-fd62-587b-b90b-42aa044ac6ba",
+      "name": "Consultar Cooper · backoff 2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        0
+      ],
+      "webhookId": "f7e89b33-4c54-589c-a0f9-c3297e23dddb"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Consultar Cooper · preparar transporte\").all();"
+      },
+      "id": "cbb223e2-15da-58c6-9180-e456a007b692",
+      "name": "Consultar Cooper · restaurar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "218ae3e0-a009-5abd-a62b-d55c53b370e4",
+      "name": "Consultar Cooper · intento 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,3)}];"
+      },
+      "id": "a06a2ec3-0189-530e-bc26-b42cabff1029",
+      "name": "Consultar Cooper · evaluar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "99ce50da-e0c1-552a-af8a-1dfc3d53d85c",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "01b73efa-8fbd-57e4-9be1-0fd6b08cd794",
+      "name": "Consultar Cooper · reintentar 3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "ba856701-d724-5695-9bea-b46f67f3fe20",
+      "name": "Consultar Cooper · backoff 3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        0
+      ],
+      "webhookId": "6f8d77c8-7738-569c-9b99-17bfbd933d0d"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Consultar Cooper · preparar transporte\").all();"
+      },
+      "id": "eff32625-4dba-5998-b3e1-76b7a57b90d3",
+      "name": "Consultar Cooper · restaurar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "46c029cc-e759-5448-ab7b-e66f70d8e7b1",
+      "name": "Consultar Cooper · intento 4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,4)}];"
+      },
+      "id": "473c9f00-0ff4-5e4a-b4be-a2125aff8021",
+      "name": "Consultar Cooper · evaluar 4",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
     }
   ],
   "connections": {
@@ -398,18 +829,7 @@
       "main": [
         [
           {
-            "node": "Consultar Cooper",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Consultar Cooper": {
-      "main": [
-        [
-          {
-            "node": "¿Presentación permitida?",
+            "node": "Consultar Cooper · preparar transporte",
             "type": "main",
             "index": 0
           }
@@ -477,6 +897,236 @@
           }
         ]
       ]
+    },
+    "Consultar Cooper": {
+      "main": [
+        [
+          {
+            "node": "¿Presentación permitida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · preparar transporte": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · intento 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · intento 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · evaluar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · evaluar 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · reintentar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · reintentar 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · backoff 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · backoff 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · restaurar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · restaurar 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · intento 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · intento 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · evaluar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · evaluar 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · reintentar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · reintentar 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · backoff 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · backoff 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · restaurar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · restaurar 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · intento 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · intento 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · evaluar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · evaluar 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · reintentar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · reintentar 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · backoff 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · backoff 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · restaurar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · restaurar 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · intento 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · intento 4": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper · evaluar 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Cooper · evaluar 4": {
+      "main": [
+        [
+          {
+            "node": "Consultar Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -486,8 +1136,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 300,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

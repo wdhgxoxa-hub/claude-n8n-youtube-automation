@@ -192,10 +192,7 @@
           "id": "FabCredOpenAI001",
           "name": "OpenAI"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 2,
-      "waitBetweenTries": 5000
+      }
     },
     {
       "parameters": {
@@ -252,10 +249,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -302,10 +296,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -339,10 +330,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -452,10 +440,7 @@
           "id": "FabCredOpenAI001",
           "name": "OpenAI"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 2,
-      "waitBetweenTries": 5000
+      }
     },
     {
       "parameters": {
@@ -512,10 +497,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -562,10 +544,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -599,10 +578,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -1505,8 +1481,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 1800,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

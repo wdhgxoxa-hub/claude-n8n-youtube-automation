@@ -62,7 +62,13 @@
         "method": "POST",
         "url": "={{ $('Pedido de texto').first().json.url + '/v1/texto' }}",
         "options": {
-          "timeout": "={{ $('Pedido de texto').first().json.tarea === 'radar' && $('Pedido de texto').first().json.local.buscar_web ? 190000 : 45000 }}"
+          "timeout": "={{ $('Pedido de texto').first().json.tarea === 'radar' && $('Pedido de texto').first().json.local.buscar_web ? 190000 : 45000 }}",
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendHeaders": true,
         "headerParameters": {
@@ -152,7 +158,13 @@
         "method": "POST",
         "url": "https://api.openai.com/v1/responses",
         "options": {
-          "timeout": 180000
+          "timeout": 180000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -295,7 +307,9 @@
     "executionTimeout": 300,
     "errorWorkflow": "FabErrores000001",
     "saveDataErrorExecution": "none",
-    "saveDataSuccessExecution": "none"
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

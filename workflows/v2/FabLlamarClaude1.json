@@ -140,7 +140,13 @@
         "method": "POST",
         "url": "={{ $('Preparar trabajo').first().json.routineUrl }}",
         "options": {
-          "timeout": 15000
+          "timeout": 15000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -171,9 +177,6 @@
           "name": "Claude Routine"
         }
       },
-      "retryOnFail": true,
-      "maxTries": 4,
-      "waitBetweenTries": 5000,
       "onError": "continueErrorOutput"
     },
     {
@@ -191,7 +194,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{ json: { estado: 'envio_incierto', resultado: JSON.stringify({ error: 'No se confirmó la recepción de la routine; conciliar antes de repetir el pedido.' }) } }];"
+        "jsCode": "return [{json:{estado:'enviado',resultado:JSON.stringify({estado:'incierto',error:'No se confirmó la recepción; conciliar el trabajo antes de repetir.'})}}];"
       },
       "id": "a244b481-9ebb-499a-943a-57899dfdbda6",
       "name": "Fallo al despertar",
@@ -250,7 +253,7 @@
         "resource": "message",
         "operation": "sendMessage",
         "chatId": "={{ $('Leer ajustes').first().json.chatId }}",
-        "text": "={{ String('No se confirmó la recepción de Claude (' + $('Preparar trabajo').first().json.payload.modo + '). Revisa el trabajo antes de repetir el pedido.' ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }}",
+        "text": "No se confirmó la recepción del encargo de Claude. Puede seguir ejecutándose; consulta el trabajo antes de volver a enviarlo.",
         "additionalFields": {
           "disable_web_page_preview": true,
           "appendAttribution": false,
@@ -833,8 +836,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 300,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

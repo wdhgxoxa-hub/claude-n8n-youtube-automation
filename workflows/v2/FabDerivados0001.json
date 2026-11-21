@@ -385,7 +385,13 @@
         "method": "POST",
         "url": "https://api.openai.com/v1/responses",
         "options": {
-          "timeout": 180000
+          "timeout": 180000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -463,7 +469,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 300000
+          "timeout": 300000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendQuery": true,
         "queryParameters": {
@@ -500,7 +512,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendQuery": true,
         "queryParameters": {
@@ -532,10 +550,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -544,7 +559,13 @@
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleDriveOAuth2Api",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendBody": true,
         "specifyBody": "json",
@@ -563,10 +584,7 @@
           "id": "5fXmeNSyBH0EFFf7",
           "name": "Google Drive account"
         }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 3000
+      }
     },
     {
       "parameters": {
@@ -586,7 +604,13 @@
         "method": "POST",
         "url": "https://api.creatomate.com/v2/renders",
         "options": {
-          "timeout": 60000
+          "timeout": 60000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -630,7 +654,13 @@
         "method": "GET",
         "url": "={{ 'https://api.creatomate.com/v2/renders/' + ($('Renderizar miniatura').first().json.id || $('Renderizar miniatura').first().json[0]?.id || 'x') }}",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
@@ -1645,8 +1675,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 3600,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

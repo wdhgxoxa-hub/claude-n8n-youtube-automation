@@ -5,6 +5,8 @@ const fs = require('fs'); const path = require('path');
 const dir = path.join(__dirname, '..', 'workflows', 'v2');
 const wf = id => JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8'));
 const codeOf = (w, name) => w.nodes.find(n => n.name === name).parameters.jsCode;
+const todosLosFlujos = () => fs.readdirSync(dir).filter(name => name.endsWith('.json')).sort()
+  .map(name => JSON.parse(fs.readFileSync(path.join(dir, name), 'utf8')));
 
 function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {}, runIndex = 0, clock = Date } = {}) {
   // Simula el entorno de un nodo Code de n8n: $('Nodo') con first/last/item/all/isExecuted, $json, $input.
@@ -658,12 +660,12 @@ test('redes: escala — 60 canales con 3 largos cada uno se agendan sin pasar to
 
 test('redes: filas por envío, estado del video y resumen por red', () => {
   const pedidos = [{ tipo: 'principal', plataformas: 'youtube', titulo: 'T', url_video: 'u', programado: '' }, { tipo: 'corte 1', plataformas: 'tiktok', titulo: 'C', url_video: 'u2', programado: '' }];
-  const filas = run(codeOf(RED, 'Filas de publicación'), { nodes: { Inicio: { video_id: 'v', canal_id: 'c' } }, all: { 'Plan de publicación': pedidos, $input: [{ request_id: 'r1', status: 'processing' }, { error: { message: 'cuota' } }] } }).map(i => i.json);
-  assert.strictEqual(filas[0].estado, 'enviado'); assert.strictEqual(filas[1].estado, 'error'); assert.match(filas[1].resultado, /cuota/);
+  const filas = run(codeOf(RED, 'Filas de publicación'), { nodes: { Inicio: { video_id: 'v', canal_id: 'c' } }, all: { 'Fiabilidad · comprobar turno': pedidos, $input: [{ request_id: 'r1', status: 'processing' }, { error: { message: 'cuota' } }] } }).map(i => i.json);
+  assert.strictEqual(filas[0].estado, 'enviado'); assert.strictEqual(filas[1].estado, 'incierto'); assert.match(filas[1].resultado, /conciliar/);
   const v = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': filas } })[0].json;
-  assert.strictEqual(v.estado, 'publicado'); assert.match(v.error, /corte 1/);
-  const r = run(codeOf(RED, 'Resumen de publicación'), { nodes: { Inicio: { video_id: 'v' } }, all: { 'Plan de publicación': pedidos, 'Filas de publicación': filas, 'Estado en redes': [{ status: 'completed', results: [{ platform: 'youtube', success: true, url: 'https://youtu.be/x' }] }] } })[0].json.texto;
-  assert.match(r, /✓ principal → youtube \(completed\)\n   youtube: https:\/\/youtu\.be\/x/); assert.match(r, /✗ corte 1: cuota/);
+  assert.strictEqual(v.estado, 'error_publicacion'); assert.match(v.error, /inciertos/);
+  const r = run(codeOf(RED, 'Resumen de publicación'), { nodes: { Inicio: { video_id: 'v' } }, all: { 'Fiabilidad · comprobar turno': pedidos, 'Filas de publicación': filas, 'Estado en redes': [{ status: 'completed', results: [{ platform: 'youtube', success: true, url: 'https://youtu.be/x' }] }] } })[0].json.texto;
+  assert.match(r, /✓ principal → youtube \(completed\)\n   youtube: https:\/\/youtu\.be\/x/); assert.match(r, /✗ corte 1: Resultado incierto/);
 });
 
 test('orquestador: configurar redes valida perfil y lista', () => {
@@ -977,13 +979,13 @@ test('publicación programada: el video queda «programado» (no «publicado») 
   const v = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': filas } })[0].json;
   assert.strictEqual(v.estado, 'programado'); assert.strictEqual(v.etapa, 'programado');
   const ya = run(codeOf(RED, 'Video publicado'), { all: { 'Filas de publicación': [{ ...filas[0], estado: 'enviado' }] } })[0].json;
-  assert.strictEqual(ya.estado, 'publicado');
+  assert.strictEqual(ya.estado, 'en_proceso'); assert.strictEqual(ya.etapa, 'publicacion');
   const p = run(codeOf(RED, 'Pedidos de estado'), { all: { 'Filas de publicación': filas } });
   assert.deepStrictEqual(p.map(i => i.json), [{ nada: true }]);
   assert.ok(!JSON.stringify(RED).includes('ninguno'));
   const sal = RED.connections['¿Hay que consultar?'].main;
   assert.strictEqual(sal[0][0].node, 'Estado en redes'); assert.strictEqual(sal[1][0].node, 'Resumen de publicación');
-  const fp = run(codeOf(RED, 'Filas de publicación'), { all: { $input: [{ success: true, job_id: 'jj', request_id: 'rr' }], 'Plan de publicación': [{ tipo: 'principal', plataformas: 'youtube', programado: '2026-11-20T21:00:00Z' }] }, nodes: { Inicio: { video_id: 'v', canal_id: 'c' } } })[0].json;
+  const fp = run(codeOf(RED, 'Filas de publicación'), { all: { $input: [{ success: true, job_id: 'jj', request_id: 'rr' }], 'Fiabilidad · comprobar turno': [{ tipo: 'principal', plataformas: 'youtube', programado: '2026-11-20T21:00:00Z' }] }, nodes: { Inicio: { video_id: 'v', canal_id: 'c' } } })[0].json;
   assert.strictEqual(fp.job_id, 'jj'); assert.strictEqual(fp.estado, 'programado');
 });
 
@@ -1420,7 +1422,7 @@ test('Cooper: HMAC firma exactamente los bytes transmitidos y no incluye costos'
   const digest=cryptoCooper.createHmac('sha256',tokenCooper).update(signed.timestamp+'.'+signed.cuerpo).digest('hex');
   assert.strictEqual(signed.firma,'sha256='+digest);assert.deepStrictEqual(JSON.parse(signed.cuerpo),event);
   assert.ok(!signed.cuerpo.includes('999'));
-  const http=PROGRESO.nodes.find(n=>n.name==='Avisar a Cooper');
+  const http=PROGRESO.nodes.find(n=>n.name==='Avisar a Cooper · intento 1');
   assert.strictEqual(http.parameters.contentType,'raw'); assert.strictEqual(http.parameters.body,'={{ $json.cuerpo }}');
 });
 test('Cooper: atribución de costo consulta el dueño de las tablas y rechaza huérfanos', () => {
@@ -2247,4 +2249,378 @@ test('confirmar elimina errores privados, URLs de API y consultas sensibles ante
   assert.strictEqual(C.settings.saveDataSuccessExecution,'none');assert.strictEqual(C.settings.saveDataErrorExecution,'none');
   assert.strictEqual(C.settings.saveManualExecutions,false);assert.strictEqual(C.settings.saveExecutionProgress,false);
   assert.ok(C.nodes.filter(n=>n.type==='n8n-nodes-base.httpRequest').every(n=>n.parameters.method==='GET'));
+});
+
+test('auditoría: todos los flujos se entregan inactivos, con plazo y vigilante sin autorrecursión', () => {
+  const flujos = todosLosFlujos(), ids = new Set(flujos.map(f => f.id));
+  assert.strictEqual(ids.size, flujos.length, 'IDs de workflow repetidos');
+  const vigilante = flujos.find(f => f.id === 'FabErrores000001');
+  assert.ok(vigilante.nodes.some(n => n.type === 'n8n-nodes-base.errorTrigger'));
+  for (const flujo of flujos) {
+    assert.strictEqual(flujo.active, false, flujo.id + ': activación no autorizada');
+    assert.ok(Number.isInteger(flujo.settings.executionTimeout)
+      && flujo.settings.executionTimeout > 0 && flujo.settings.executionTimeout <= 3600,
+    flujo.id + ': falta un plazo de ejecución acotado');
+    if (flujo.id === vigilante.id) assert.notStrictEqual(flujo.settings.errorWorkflow, vigilante.id, 'El vigilante no puede llamarse a sí mismo');
+    else assert.strictEqual(flujo.settings.errorWorkflow, vigilante.id, flujo.id + ': error sin vigilante');
+  }
+});
+
+test('auditoría: las exportaciones versionadas coinciden con el generador sin escribir archivos', () => {
+  const comprobar = [
+    'import json, pathlib, runpy',
+    'g = runpy.run_path("tools/generar_flujos_v2.py")',
+    'carpeta = pathlib.Path("workflows/v2")',
+    'esperados = {w["id"] + ".json" for w in g["ALL"]}',
+    'existentes = {p.name for p in carpeta.glob("*.json")}',
+    'assert existentes == esperados, "Inventario de exportaciones distinto del generador"',
+    'for flujo in g["ALL"]:',
+    '    anterior = json.loads((carpeta / (flujo["id"] + ".json")).read_text())',
+    '    g["conservar_identificadores"](flujo, anterior)',
+    '    assert flujo == anterior, "Regenerar " + flujo["id"]',
+    'print("exportaciones reproducibles")',
+  ].join('\n');
+  assert.strictEqual(execFileSync('python3', ['-B', '-c', comprobar], {
+    cwd: RAIZ_REPO, encoding: 'utf8', timeout: 30000,
+  }).trim(), 'exportaciones reproducibles');
+});
+
+test('auditoría: cada nodo es alcanzable desde una entrada y cada referencia interna existe', () => {
+  const flujos = todosLosFlujos(), ids = new Set(flujos.map(f => f.id));
+  for (const flujo of flujos) {
+    const nombres = new Set(flujo.nodes.map(n => n.name));
+    const idsNodos = new Set(flujo.nodes.map(n => n.id));
+    assert.strictEqual(idsNodos.size, flujo.nodes.length, flujo.id + ': IDs de nodo repetidos');
+    const enlaces = new Map(flujo.nodes.map(n => [n.name, new Set()]));
+    for (const [origen, salidas] of Object.entries(flujo.connections)) {
+      assert.ok(nombres.has(origen), flujo.id + ': origen inexistente ' + origen);
+      for (const [tipo, grupos] of Object.entries(salidas)) for (const enlace of grupos.flat()) {
+        assert.ok(nombres.has(enlace.node), flujo.id + ': destino inexistente ' + enlace.node);
+        enlaces.get(origen).add(enlace.node);
+        // Los conectores de IA apuntan del recurso al agente que los consume.
+        if (tipo.startsWith('ai_')) enlaces.get(enlace.node).add(origen);
+      }
+    }
+    const pendientes = flujo.nodes.filter(n => /trigger$|\.webhook$/i.test(n.type)).map(n => n.name);
+    assert.ok(pendientes.length, flujo.id + ': no tiene entrada');
+    const visitados = new Set(pendientes);
+    while (pendientes.length) for (const destino of enlaces.get(pendientes.pop())) {
+      if (!visitados.has(destino)) { visitados.add(destino); pendientes.push(destino); }
+    }
+    for (const nodo of flujo.nodes) {
+      assert.ok(visitados.has(nodo.name), flujo.id + ': nodo inaccesible ' + nodo.name);
+      const referencia = nodo.parameters.workflowId?.value;
+      if (referencia && !referencia.startsWith('=')) assert.ok(ids.has(referencia), flujo.id + ': subflujo inexistente ' + referencia);
+    }
+  }
+});
+
+test('auditoría: toda petición HTTP tiene timeout y los reintentos están acotados', () => {
+  for (const flujo of todosLosFlujos()) for (const nodo of flujo.nodes.filter(n => n.type.endsWith('.httpRequest'))) {
+    const contexto = flujo.id + ': ' + nodo.name;
+    const timeout = nodo.parameters.options?.timeout;
+    assert.ok(Number.isInteger(timeout) && timeout > 0 && timeout <= 600000, contexto + ': timeout inválido');
+    if (nodo.retryOnFail) {
+      assert.ok(Number.isInteger(nodo.maxTries) && nodo.maxTries >= 2 && nodo.maxTries <= 5, contexto + ': reintentos sin límite');
+      assert.ok(Number.isFinite(nodo.waitBetweenTries) && nodo.waitBetweenTries > 0 && nodo.waitBetweenTries <= 60000, contexto + ': reintento inmediato o sin límite');
+    }
+    const lote = nodo.parameters.options?.batching?.batch;
+    if (lote) assert.ok(Number.isInteger(lote.batchSize) && lote.batchSize > 0
+      && Number.isFinite(lote.batchInterval) && lote.batchInterval >= 0, contexto + ': ritmo inválido');
+  }
+});
+
+test('auditoría: no se repiten solicitudes con efectos inciertos salvo el receptor idempotente de Cooper', () => {
+  for (const flujo of todosLosFlujos()) for (const nodo of flujo.nodes.filter(n => n.type.endsWith('.httpRequest'))) {
+    const metodo = nodo.parameters.method || 'GET';
+    const consulta = ['GET', 'HEAD', 'OPTIONS'].includes(metodo);
+    const receptorCooper = nodo.parameters.url === '={{ $env.COOPER_WEBHOOK_URL }}';
+    if (!consulta && !receptorCooper) assert.ok(!nodo.retryOnFail,
+      flujo.id + ': ' + nodo.name + ' podría repetir un efecto aceptado tras perderse la respuesta');
+  }
+});
+
+test('auditoría: ninguna ejecución conserva cargas con tokens, firmas o datos de proveedores', () => {
+  for (const flujo of todosLosFlujos()) {
+    assert.strictEqual(flujo.settings.saveDataErrorExecution, 'none', flujo.id + ': conserva errores crudos');
+    assert.strictEqual(flujo.settings.saveDataSuccessExecution, 'none', flujo.id + ': conserva respuestas crudas');
+    assert.strictEqual(flujo.settings.saveExecutionProgress, false, flujo.id + ': conserva progreso crudo');
+    assert.strictEqual(flujo.settings.saveManualExecutions, false, flujo.id + ': conserva ejecuciones manuales');
+  }
+});
+
+test('auditoría: el vigilante no envía secretos ficticios ni query de URLs al canal de avisos', () => {
+  const error = wf('FabErrores000001');
+  const valores = ['token-ficticio-a', 'firma-ficticia-b', 'clave-ficticia-c', 'token-ficticio-d'];
+  const salida = run(codeOf(error, 'Mensaje de error'), { json: {
+    workflow: { name: 'F · Auditoría' },
+    execution: {
+      lastNodeExecuted: 'Proveedor',
+      url: 'https://n8n.example.test/execution/123?signature=' + valores[1] + '#detalle',
+      error: { message: '401 Authorization: Bearer ' + valores[0] + ' api_key=' + valores[2] + ' access_token=' + valores[3] },
+    },
+  } })[0].json.texto;
+  assert.match(salida, /Auditoría/);
+  assert.match(salida, /Proveedor/);
+  assert.match(salida, /credencial o permiso fue rechazado/);
+  assert.match(salida, /https:\/\/n8n\.example\.test\/execution\/123/);
+  for (const secreto of valores) assert.ok(!salida.includes(secreto), 'El aviso filtró un valor sensible ficticio');
+  assert.doesNotMatch(salida, /signature=|#detalle|Authorization|access_token|api_key/);
+  const activacion = run(codeOf(error, 'Mensaje de error'), { json: {
+    workflow: { name: 'F · Auditoría' },
+    trigger: { error: { message: '429 ' + valores[0], node: { name: 'Reloj' } } },
+  } })[0].json.texto;
+  assert.match(activacion, /Reloj/);
+  assert.match(activacion, /más despacio/);
+  assert.ok(!activacion.includes(valores[0]));
+});
+
+const politicaFiable = () => new Function('require',
+  fs.readFileSync(path.join(RAIZ_REPO, 'tools/cooper/fiabilidad.js'), 'utf8')
+  + '\nreturn {evaluarRespuestaFiable,clavePublicacionFiable,publicacionYaReservada,elegirReservasPublicacion};')(require);
+
+test('auditoría: backoff exponencial acotado, sólo transitorios y cuatro intentos como máximo', () => {
+  const { evaluarRespuestaFiable: evaluar } = politicaFiable();
+  const ahora = Date.parse('2026-11-21T12:00:00Z');
+  for (const codigo of [408, 425, 429, 500, 502, 503, 504, 599]) {
+    assert.deepStrictEqual([1, 2, 3].map(i => evaluar({ statusCode: codigo }, i, ahora, 0).esperaSegundos), [2, 8, 32]);
+    assert.deepStrictEqual([1, 2, 3].map(i => evaluar({ statusCode: codigo }, i, ahora, 0.99).esperaSegundos), [4, 10, 34]);
+    assert.throws(() => evaluar({ statusCode: codigo }, 4, ahora, 0), /agotado/);
+  }
+  assert.strictEqual(evaluar({ error: { message: 'ECONNRESET valor-ficticio' } }, 1, ahora, 0).reintentar, true);
+  for (const codigo of [301, 400, 401, 403, 404, 409, 422]) {
+    assert.throws(() => evaluar({ statusCode: codigo, body: 'valor-ficticio-secreto' }, 1),
+      error => /no recuperable/.test(error.message) && !error.message.includes('valor-ficticio'));
+  }
+  for (const intento of [0, 5, 1.5]) assert.throws(() => evaluar({ statusCode: 503 }, intento), /inválido/);
+  const recibido = { estado: 'aceptada', orden_id: 'ficticia' };
+  assert.deepStrictEqual(evaluar({ statusCode: 200, body: recibido }, 4),
+    { reintentar: false, esperaSegundos: 0, respuesta: recibido, codigo: 200 });
+});
+
+test('auditoría: Retry-After numérico o fecha se respeta y fuera de presupuesto detiene', () => {
+  const { evaluarRespuestaFiable: evaluar } = politicaFiable();
+  const ahora = Date.parse('2026-11-21T12:00:00Z');
+  const pedir = valor => evaluar({ statusCode: 429, headers: { 'Retry-After': valor } }, 1, ahora, 0);
+  assert.strictEqual(pedir('30').esperaSegundos, 30);
+  assert.strictEqual(pedir('2.5').esperaSegundos, 3);
+  assert.strictEqual(pedir(new Date(ahora + 45000).toUTCString()).esperaSegundos, 45);
+  assert.strictEqual(pedir(new Date(ahora - 45000).toUTCString()).esperaSegundos, 2);
+  for (const valor of ['61', '-1', 'no-es-fecha', new Date(ahora + 86400000).toUTCString()]) {
+    assert.throws(() => pedir(valor), /Retry-After/);
+  }
+});
+
+test('auditoría: cada callback reintenta los mismos bytes firmados y recupera el cuerpo sin volver al despacho', () => {
+  let callbacks = 0;
+  for (const flujo of todosLosFlujos()) for (const preparador of flujo.nodes.filter(n => n.name.endsWith(' · preparar transporte'))) {
+    callbacks++;
+    const nombre = preparador.name.replace(/ · preparar transporte$/, '');
+    const firmado = { cuerpo: '{"id":"evento-ficticio"}', timestamp: '1234', firma: 'firma-ficticia' };
+    assert.deepStrictEqual(run(codeOf(flujo, preparador.name), { json: firmado })[0].json, firmado);
+    assert.throws(() => run(codeOf(flujo, preparador.name), { all: { $input: [firmado, firmado] } }), /único evento/);
+    const peticion = flujo.nodes.find(n => n.name === nombre + ' · intento 1').parameters;
+    for (let intento = 1; intento <= 4; intento++) {
+      const http = flujo.nodes.find(n => n.name === nombre + ' · intento ' + intento);
+      assert.deepStrictEqual(http.parameters, peticion, flujo.id + ': no cambiar firma ni cuerpo entre intentos');
+      assert.ok(!http.retryOnFail);
+      assert.deepStrictEqual(http.parameters.options.response.response,
+        { fullResponse: true, neverError: true, responseFormat: 'json' });
+      if (intento < 4) {
+        const temporal = run(codeOf(flujo, nombre + ' · evaluar ' + intento), { json: { statusCode: 503 } })[0].json;
+        assert.strictEqual(temporal.reintentar, true);
+        const espera = flujo.nodes.find(n => n.name === nombre + ' · backoff ' + intento);
+        assert.strictEqual(espera.type, 'n8n-nodes-base.wait');
+        assert.strictEqual(espera.parameters.amount, '={{ $json.esperaSegundos }}');
+        assert.deepStrictEqual(run(codeOf(flujo, nombre + ' · restaurar ' + intento), {
+          json: temporal, nodes: { [preparador.name]: firmado },
+        })[0].json, firmado);
+      }
+      const recibido = { estado: 'aceptada' };
+      const evaluado = run(codeOf(flujo, nombre + ' · evaluar ' + intento), { json: { statusCode: 200, body: recibido } })[0].json;
+      assert.deepStrictEqual(run(codeOf(flujo, nombre), { json: evaluado })[0].json, recibido);
+    }
+    assert.throws(() => run(codeOf(flujo, nombre + ' · evaluar 4'), { json: { statusCode: 503 } }), /agotado/);
+  }
+  assert.strictEqual(callbacks, 5, 'Las reservas, consultas, confirmaciones, progreso y presentación llevan transporte seguro');
+});
+
+test('auditoría: una publicación aceptada o incierta bloquea nuevas subidas incluso fuera del calendario reciente', () => {
+  const { clavePublicacionFiable: clave, publicacionYaReservada: reservada } = politicaFiable();
+  const youtube = clave('v', 'principal', 'youtube');
+  assert.strictEqual(youtube, clave('v', 'principal', 'youtube'));
+  assert.notStrictEqual(youtube, clave('v', 'corte 1', 'youtube'));
+  assert.notStrictEqual(youtube, clave('v', 'principal', 'tiktok'));
+  assert.throws(() => clave('', 'principal', 'youtube'), /identidad/);
+  assert.strictEqual(reservada('v', 'principal', 'youtube', [], [{ evento: youtube }]), true);
+  const inicio = { video_id: 'v', canal_id: 'c', tema: 'Tema', formato: 'short', perfil: 'ficticio',
+    redes: 'youtube,tiktok', contexto: { render_url: 'https://example.test/video.mp4' } };
+  const plan = (historico, reservas) => run(codeOf(RED, 'Plan de publicación'), {
+    nodes: { Inicio: inicio, 'Leer ajustes': aj },
+    all: { 'Agenda del canal': [], 'Fiabilidad · publicaciones del video': historico,
+      'Fiabilidad · reservas de publicación': reservas },
+  }).map(item => item.json);
+  const historico = [{ video_id: 'v', tipo: 'principal', plataformas: 'youtube',
+    estado: 'publicado', request_id: 'ficticio', createdAt: '2020-01-01T00:00:00Z' }];
+  const parcial = plan(historico, []);
+  assert.deepStrictEqual(parcial.map(p => p.plataformas), ['tiktok']);
+  assert.strictEqual(parcial[0].clave_publicacion, clave('v', 'principal', 'tiktok'));
+  const bloqueado = plan(historico, [{ evento: clave('v', 'principal', 'tiktok') }]);
+  assert.strictEqual(bloqueado[0].nada, true);
+  assert.match(bloqueado[0].motivo, /conciliar/);
+  assert.deepStrictEqual(plan([], []).map(p => p.plataformas), ['youtube', 'tiktok']);
+});
+
+test('auditoría: reservas concurrentes eligen un único ganador por clave y fallan si no se acredita la escritura', () => {
+  const { elegirReservasPublicacion: elegir } = politicaFiable();
+  const pedidos = [{ clave_publicacion: 'a', plataformas: 'youtube' }, { clave_publicacion: 'b', plataformas: 'tiktok' }];
+  const primero = [{ evento: 'a', id: 10 }, { evento: 'b', id: 12 }];
+  const segundo = [{ evento: 'a', id: 11 }, { evento: 'b', id: 13 }];
+  for (const visibles of [[...primero, ...segundo], [...segundo, ...primero]]) {
+    assert.deepStrictEqual(elegir(pedidos, primero, visibles), pedidos);
+    assert.deepStrictEqual(elegir(pedidos, segundo, visibles), []);
+  }
+  assert.deepStrictEqual(elegir([pedidos[0], pedidos[0]], [primero[0]], [primero[0]]), [pedidos[0]]);
+  for (const [propias, visibles] of [[[], primero], [primero, []],
+    [[{ evento: 'a' }], [{ evento: 'a' }]], [[{ evento: 'a', id: 10 }], [{ evento: 'a', id: 11 }]],
+    [[primero[0], primero[0]], [primero[0]]]]) {
+    assert.throws(() => elegir([pedidos[0]], propias, visibles), /reserva/);
+  }
+});
+
+test('auditoría: ninguna ruta a Upload-Post evita persistir y verificar su reserva antes del efecto', () => {
+  const alcanza = omitido => {
+    const pendientes = ['Inicio'], vistos = new Set();
+    while (pendientes.length) {
+      const actual = pendientes.pop();
+      if (actual === omitido || vistos.has(actual)) continue;
+      if (actual === 'Subir a redes') return true;
+      vistos.add(actual);
+      for (const enlace of RED.connections[actual]?.main.flat() || []) pendientes.push(enlace.node);
+    }
+    return false;
+  };
+  assert.strictEqual(alcanza(), true);
+  for (const nodo of ['Fiabilidad · guardar reservas', 'Fiabilidad · verificar reservas', 'Fiabilidad · comprobar turno']) {
+    assert.strictEqual(alcanza(nodo), false, 'Subida sin pasar por ' + nodo);
+  }
+  const reservas = RED.nodes.find(n => n.name === 'Fiabilidad · guardar reservas');
+  assert.strictEqual(reservas.parameters.operation, 'insert');
+  assert.ok(!reservas.continueOnFail && !reservas.onError && !reservas.retryOnFail);
+});
+
+test('auditoría: el diagnóstico durable sólo conserva IDs y categoría y el aviso sobrevive a fallo de su tabla', () => {
+  const error = wf('FabErrores000001');
+  const mensaje = run(codeOf(error, 'Mensaje de error'), { json: {
+    workflow: { id: 'flujo-ficticio', name: 'F · Prueba' }, execution: {
+      id: 'ejecucion-ficticia', retryOf: 'anterior', lastNodeExecuted: 'Proveedor',
+      error: { message: '429 api_key=valor-ficticio-secreto', stack: 'pila-privada' },
+    },
+  } })[0].json;
+  assert.deepStrictEqual(mensaje.diagnostico, { version: 1, flujo: 'flujo-ficticio',
+    nodo: 'Proveedor', categoria: 'cuota', ejecucion: 'ejecucion-ficticia', reintento_de: 'anterior' });
+  const fila = run(codeOf(error, 'Fiabilidad · diagnóstico mínimo'), { json: mensaje })[0].json;
+  assert.strictEqual(fila.tipo, 'incidencia_tecnica');
+  assert.deepStrictEqual(JSON.parse(fila.detalle), mensaje.diagnostico);
+  assert.doesNotMatch(JSON.stringify(fila), /valor-ficticio-secreto|api_key|pila-privada/);
+  const guardar = error.nodes.find(n => n.name === 'Fiabilidad · guardar diagnóstico');
+  assert.strictEqual(guardar.onError, 'continueRegularOutput');
+  assert.ok(!guardar.retryOnFail, 'El diagnóstico no genera nuevas escrituras por reintento');
+  const recuperado = run(codeOf(error, 'Fiabilidad · recuperar aviso'), {
+    json: { error: 'tabla no disponible' }, nodes: { 'Mensaje de error': mensaje },
+  })[0].json;
+  assert.deepStrictEqual(recuperado, mensaje);
+});
+
+test('auditoría: dos retornos de Claude compiten por enviado y sólo el que actualizó despacha', () => {
+  const guardar = RET.nodes.find(n => n.name === 'Guardar resultado');
+  assert.strictEqual(guardar.parameters.matchType, 'allConditions');
+  assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'job_id' && c.condition === 'eq'));
+  assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'estado' && c.condition === 'eq' && c.keyValue === 'enviado'));
+  assert.strictEqual(guardar.alwaysOutputData, true);
+  assert.deepStrictEqual(RET.connections['Guardar resultado'].main[0].map(e => e.node), ['Fiabilidad · ganó el retorno']);
+  const condicion = RET.nodes.find(n => n.name === 'Fiabilidad · ganó el retorno').parameters.conditions.conditions[0].leftValue;
+  const evaluar = json => run('return [{json:{ganador:' + condicion.slice(3, -2) + '}}];', { json })[0].json.ganador;
+  assert.strictEqual(evaluar({ job_id: 'j', estado: 'listo' }), true);
+  assert.strictEqual(evaluar({ job_id: 'j', estado: 'error' }), true);
+  assert.strictEqual(evaluar({}), false);
+  assert.strictEqual(evaluar({ job_id: 'j', estado: 'enviado' }), false);
+  assert.deepStrictEqual(RET.connections['Fiabilidad · ganó el retorno'].main.map(s => s.map(e => e.node)),
+    [['Responder recibido'], ['Fiabilidad · responder duplicado']]);
+  assert.ok(!RET.connections['Fiabilidad · responder duplicado'], 'Un duplicado no despacha otro evento');
+});
+
+test('auditoría: un timeout al despertar Claude conserva el trabajo para aceptar un retorno tardío', () => {
+  const incierto = run(codeOf(CL, 'Fallo al despertar'), { json: { error: { message: 'timeout clave=ficticia' } } })[0].json;
+  assert.strictEqual(incierto.estado, 'enviado');
+  assert.strictEqual(JSON.parse(incierto.resultado).estado, 'incierto');
+  assert.doesNotMatch(incierto.resultado, /clave=ficticia/);
+  assert.ok(!CL.nodes.find(n => n.name === 'Despertar routine').retryOnFail);
+  assert.doesNotMatch(CL.nodes.find(n => n.name === 'Aviso: Claude no respondió').parameters.text, /Reintenté 4 veces/);
+});
+
+test('auditoría: el cron de marcas admite el plazo de una vuelta y la llamada vence antes del workflow', () => {
+  for (const id of ['CooperMarcasPub1', 'CooperMarcasMet1']) {
+    const flujo = wf(id), reloj = flujo.nodes.find(n => n.name === 'Reloj');
+    const intervalo = reloj.parameters.rule.interval[0];
+    const segundos = intervalo.field === 'minutes' ? intervalo.minutesInterval * 60 : intervalo.hoursInterval * 3600;
+    assert.ok(flujo.settings.executionTimeout < segundos, id + ': el cron puede adelantarse al timeout anterior');
+    const llamada = flujo.nodes.find(n => n.name === 'Atender marcas en Cooper');
+    assert.ok(llamada.parameters.options.timeout < flujo.settings.executionTimeout * 1000);
+    assert.ok(!llamada.retryOnFail);
+  }
+});
+
+test('auditoría: YouTube directo comparte reserva con Upload-Post y bloquea recibos, intentos inciertos y competidores', () => {
+  const { clavePublicacionFiable: clave } = politicaFiable();
+  const video = { video_id: 'video-ficticio', canal_id: 'canal-ficticio' };
+  const preparar = (cambios = {}, previas = [], reservas = []) => run(codeOf(ORQ, 'Fiabilidad · preparar YouTube'), {
+    nodes: { 'Video (publicar)': { ...video, ...cambios } },
+    all: { 'Fiabilidad · publicaciones YouTube': previas, $input: reservas },
+  })[0].json;
+  const reserva = preparar();
+  assert.strictEqual(reserva.evento, clave(video.video_id, 'principal', 'youtube'));
+  assert.strictEqual(reserva.tipo, 'reserva_publicacion');
+  assert.strictEqual(JSON.parse(reserva.detalle).estado, 'incierto');
+  assert.throws(() => preparar({ youtube_id: 'recibo-anterior' }), /conciliar/);
+  assert.throws(() => preparar({}, [{ ...video, tipo: 'principal', plataformas: 'youtube', estado: 'publicado' }]), /conciliar/);
+  assert.throws(() => preparar({}, [], [reserva]), /conciliar/);
+  const comprobar = (idPropio, filas) => run(codeOf(ORQ, 'Fiabilidad · comprobar YouTube'), {
+    nodes: { 'Video (publicar)': video, 'Token del canal': { ok: true } },
+    all: { 'Fiabilidad · guardar reserva YouTube': [{ ...reserva, id: idPropio }], $input: filas },
+  });
+  const competencia = [{ ...reserva, id: 100 }, { ...reserva, id: 101 }];
+  assert.deepStrictEqual(comprobar(100, competencia), [{ json: { ok: true } }]);
+  assert.throws(() => comprobar(101, competencia), /Otro intento/);
+  assert.throws(() => comprobar(100, []), /reserva/);
+});
+
+test('auditoría: la apertura de sesión YouTube exige persistir y verificar una reserva', () => {
+  const alcanza = omitido => {
+    const pendientes = ['Inicio'], vistos = new Set();
+    while (pendientes.length) {
+      const actual = pendientes.pop();
+      if (actual === omitido || vistos.has(actual)) continue;
+      if (actual === 'Abrir subida YouTube') return true;
+      vistos.add(actual);
+      for (const enlace of ORQ.connections[actual]?.main.flat() || []) pendientes.push(enlace.node);
+    }
+    return false;
+  };
+  assert.strictEqual(alcanza(), true);
+  for (const nodo of ['Fiabilidad · guardar reserva YouTube', 'Fiabilidad · verificar reserva YouTube', 'Fiabilidad · comprobar YouTube']) {
+    assert.strictEqual(alcanza(nodo), false, 'Abre sesión sin pasar por ' + nodo);
+  }
+  const guardar = ORQ.nodes.find(n => n.name === 'Fiabilidad · guardar reserva YouTube');
+  assert.strictEqual(guardar.parameters.operation, 'insert');
+  assert.ok(!guardar.continueOnFail && !guardar.onError && !guardar.retryOnFail);
+});
+
+test('auditoría: los modelos de chat tienen timeout y no reintentan llamadas pagadas internamente', () => {
+  const modelos = todosLosFlujos().flatMap(f => f.nodes.filter(n => n.type.endsWith('.lmChatOpenAi')));
+  assert.ok(modelos.length);
+  for (const modelo of modelos) {
+    assert.strictEqual(modelo.parameters.options.maxRetries, 0);
+    assert.ok(modelo.parameters.options.timeout > 0 && modelo.parameters.options.timeout <= 45000);
+  }
 });

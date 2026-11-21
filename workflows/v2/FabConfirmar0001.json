@@ -136,7 +136,13 @@
         "method": "GET",
         "url": "={{ 'https://api.upload-post.com/api/uploadposts/status?' + ($json.job_id ? 'job_id=' + encodeURIComponent($json.job_id) : 'request_id=' + encodeURIComponent($json.request_id)) }}",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"

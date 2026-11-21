@@ -361,7 +361,13 @@
         "method": "POST",
         "url": "https://oauth2.googleapis.com/token",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendBody": true,
         "specifyBody": "json",
@@ -383,10 +389,7 @@
           "name": "Google cliente (OAuth)"
         }
       },
-      "onError": "continueRegularOutput",
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 2000
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -453,7 +456,13 @@
         "method": "GET",
         "url": "https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendHeaders": true,
         "headerParameters": {
@@ -647,7 +656,13 @@
         "method": "POST",
         "url": "https://oauth2.googleapis.com/token",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendBody": true,
         "specifyBody": "json",
@@ -676,7 +691,13 @@
         "method": "GET",
         "url": "https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendHeaders": true,
         "headerParameters": {

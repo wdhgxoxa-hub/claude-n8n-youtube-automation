@@ -344,6 +344,11 @@
               "keyName": "resultado",
               "condition": "eq",
               "keyValue": "={{ $('Reserva del retorno').first().json.resultado }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "enviado"
             }
           ]
         },
@@ -527,6 +532,57 @@
       "typeVersion": 1.1,
       "position": [
         4620,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "97dc2044-d1d1-5446-a073-50a659463eb1",
+              "leftValue": "={{ !!$json.job_id && ['listo','error'].includes($json.estado) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9466f9cf-6321-5457-a22b-21a573bd052e",
+      "name": "Fiabilidad · ganó el retorno",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: \"duplicado\" } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "bd573a59-f64e-5f8c-9ede-2c3e2d0228a9",
+      "name": "Fiabilidad · responder duplicado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        440,
         0
       ]
     }
@@ -729,7 +785,7 @@
       "main": [
         [
           {
-            "node": "¿Entrega guardada?",
+            "node": "Fiabilidad · ganó el retorno",
             "type": "main",
             "index": 0
           }
@@ -753,6 +809,24 @@
           }
         ]
       ]
+    },
+    "Fiabilidad · ganó el retorno": {
+      "main": [
+        [
+          {
+            "node": "Responder recibido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fiabilidad · responder duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -762,8 +836,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 300,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

@@ -62,7 +62,13 @@
         "method": "POST",
         "url": "https://api.heygen.com/v3/videos",
         "options": {
-          "timeout": 180000
+          "timeout": 180000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -127,7 +133,13 @@
         "method": "GET",
         "url": "={{ 'https://api.heygen.com/v3/videos/' + encodeURIComponent($('Trabajo avatar').first().json.id) }}",
         "options": {
-          "timeout": 30000
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth"
@@ -985,8 +997,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 1800,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

@@ -3457,6 +3457,8 @@ MARCA_METRICAS = flujo_marcas('CooperMarcasMet1', 'FX · Marcas · Métricas', '
 
 ALL = [MARCA_PUBLICAR, MARCA_METRICAS, COMPETENCIA_YOUTUBE, AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
 
+exec(compile(open(os.path.join(RAIZ, 'tools/cooper/fiabilidad_flujos.py'), encoding='utf-8').read(), 'fiabilidad_flujos.py', 'exec'))
+
 def conservar_identificadores(wf, anterior):
     prev = {n['name']: n for n in anterior.get('nodes', [])}
     def ids(v, old, ruta):

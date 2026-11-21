@@ -2401,7 +2401,13 @@
               "responseFormat": "file"
             }
           },
-          "timeout": 300000
+          "timeout": 300000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         }
       },
       "id": "45934bfb-a337-453b-a3a2-7497b7fe29fa",
@@ -2422,6 +2428,12 @@
           "response": {
             "response": {
               "fullResponse": true
+            }
+          },
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
             }
           }
         },
@@ -2465,7 +2477,13 @@
         "method": "PUT",
         "url": "={{ $('Abrir subida YouTube').first().json.headers.location }}",
         "options": {
-          "timeout": 600000
+          "timeout": 600000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendHeaders": true,
         "headerParameters": {
@@ -9162,6 +9180,166 @@
         9680,
         0
       ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "OMPWHAVyhbtekML0"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "ed28afc8-b955-5985-a09d-23a818d2c77d",
+      "name": "Fiabilidad · publicaciones YouTube",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "tipo",
+              "condition": "eq",
+              "keyValue": "reserva_publicacion"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "7b08a298-7022-5f1e-a76b-4171b3f8afbb",
+      "name": "Fiabilidad · reservas YouTube",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nconst v=$('Video (publicar)').first().json;\nconst previas=$('Fiabilidad · publicaciones YouTube').all().map(i=>i.json),reservas=$input.all().map(i=>i.json);\nif(v.youtube_id || publicacionYaReservada(v.video_id,'principal','youtube',previas,reservas)) throw new Error('YouTube tiene un envío previo o incierto; conciliar antes de volver a subir');\nreturn [{json:{video_id:v.video_id,canal_id:v.canal_id,tipo:'reserva_publicacion',evento:clavePublicacionFiable(v.video_id,'principal','youtube'),detalle:JSON.stringify({estado:'incierto',ejecucion:String($execution.id),tipo:'principal',red:'youtube'})}}];\n"
+      },
+      "id": "f829e128-d7ef-5d33-a9d1-5752770bb238",
+      "name": "Fiabilidad · preparar YouTube",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "bc55bad1-bf94-528e-9d15-d1bd0f470699",
+      "name": "Fiabilidad · guardar reserva YouTube",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "tipo",
+              "condition": "eq",
+              "keyValue": "reserva_publicacion"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "99a169ce-05ae-5898-917b-af2e4aec30a8",
+      "name": "Fiabilidad · verificar reserva YouTube",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nconst v=$('Video (publicar)').first().json,pedido={clave_publicacion:clavePublicacionFiable(v.video_id,'principal','youtube')};\nconst propias=$('Fiabilidad · guardar reserva YouTube').all().map(i=>i.json);\nif(!elegirReservasPublicacion([pedido],propias,$input.all().map(i=>i.json)).length) throw new Error('Otro intento reservó la subida a YouTube; no repetir');\nreturn $('Token del canal').all();\n"
+      },
+      "id": "79d96828-73fa-5cf3-b60e-744c6ab7754e",
+      "name": "Fiabilidad · comprobar YouTube",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
     }
   ],
   "connections": {
@@ -10248,7 +10426,7 @@
       "main": [
         [
           {
-            "node": "Abrir subida YouTube",
+            "node": "Fiabilidad · publicaciones YouTube",
             "type": "main",
             "index": 0
           }
@@ -13383,6 +13561,72 @@
           }
         ]
       ]
+    },
+    "Fiabilidad · comprobar YouTube": {
+      "main": [
+        [
+          {
+            "node": "Abrir subida YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · publicaciones YouTube": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · reservas YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · reservas YouTube": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · preparar YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · preparar YouTube": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · guardar reserva YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · guardar reserva YouTube": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · verificar reserva YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · verificar reserva YouTube": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · comprobar YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -13392,8 +13636,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 900,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

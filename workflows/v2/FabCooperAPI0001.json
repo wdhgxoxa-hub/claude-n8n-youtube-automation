@@ -115,47 +115,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
-        "options": {
-          "timeout": 10000
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "x-cooper-timestamp",
-              "value": "={{ $json.timestamp }}"
-            },
-            {
-              "name": "x-cooper-signature",
-              "value": "={{ $json.firma }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "contentType": "raw",
-        "rawContentType": "application/json",
-        "body": "={{ $json.cuerpo }}"
-      },
-      "id": "e812f2de-6365-598b-a654-3bf21476097f",
-      "name": "Consultar orden",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1320,
-        0
-      ],
-      "retryOnFail": true,
-      "maxTries": 5,
-      "waitBetweenTries": 2000
-    },
-    {
-      "parameters": {
         "mode": "expression",
         "numberOutputs": 3,
         "output": "={{ ({ nueva:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2 }}"
@@ -352,47 +311,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
-        "options": {
-          "timeout": 10000
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "x-cooper-timestamp",
-              "value": "={{ $json.timestamp }}"
-            },
-            {
-              "name": "x-cooper-signature",
-              "value": "={{ $json.firma }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "contentType": "raw",
-        "rawContentType": "application/json",
-        "body": "={{ $json.cuerpo }}"
-      },
-      "id": "5cd377bb-47fc-5c2b-b1b5-3713986bdefd",
-      "name": "Reservar orden",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3520,
-        0
-      ],
-      "retryOnFail": true,
-      "maxTries": 5,
-      "waitBetweenTries": 2000
-    },
-    {
-      "parameters": {
         "mode": "expression",
         "numberOutputs": 3,
         "output": "={{ ({ reservada:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2 }}"
@@ -460,47 +378,6 @@
         4400,
         0
       ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
-        "options": {
-          "timeout": 10000
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "x-cooper-timestamp",
-              "value": "={{ $json.timestamp }}"
-            },
-            {
-              "name": "x-cooper-signature",
-              "value": "={{ $json.firma }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "contentType": "raw",
-        "rawContentType": "application/json",
-        "body": "={{ $json.cuerpo }}"
-      },
-      "id": "2d336a68-e1f8-5dfb-9b77-0a5836b5356a",
-      "name": "Confirmar orden",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        4620,
-        0
-      ],
-      "retryOnFail": true,
-      "maxTries": 5,
-      "waitBetweenTries": 2000
     },
     {
       "parameters": {
@@ -810,6 +687,12 @@
             "redirect": {
               "followRedirects": false
             }
+          },
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
           }
         },
         "sendBody": true,
@@ -1003,6 +886,1422 @@
         2640,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items=$input.all(); if(items.length!==1) throw new Error('El callback requiere un único evento'); return items;"
+      },
+      "id": "ed112050-d1b3-5642-9e6d-fe14f0a8fa4f",
+      "name": "Consultar orden · preparar transporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$json.respuesta; if(!r || typeof r!=='object' || Array.isArray(r)) throw new Error('Respuesta de callback inválida'); return [{json:r}];"
+      },
+      "id": "e812f2de-6365-598b-a654-3bf21476097f",
+      "name": "Consultar orden",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "7de1a1ea-a064-5162-aff5-57e1bce41e8e",
+      "name": "Consultar orden · intento 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,1)}];"
+      },
+      "id": "e9c58099-ee43-552f-8b5e-5b0f4eb16fc2",
+      "name": "Consultar orden · evaluar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14084ef1-a9e6-5345-af71-3f67d04da2bd",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fd1a38a0-5532-5e3d-8f3d-1ee1b47c959a",
+      "name": "Consultar orden · reintentar 1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "50f65a55-4116-5815-bd45-1e2a10d3f7ae",
+      "name": "Consultar orden · backoff 1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "webhookId": "a96efb0d-a0de-5c5b-a5e0-ae7237396b2d"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Consultar orden · preparar transporte\").all();"
+      },
+      "id": "c256c23e-d731-53dc-84a9-2cd2790b43ca",
+      "name": "Consultar orden · restaurar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "0d3d94d1-7ca5-5755-9ee0-2f08837a52b6",
+      "name": "Consultar orden · intento 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,2)}];"
+      },
+      "id": "792315ec-f82e-55e4-8c24-0c83f29c8ef7",
+      "name": "Consultar orden · evaluar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0e0a4b89-8612-594a-827e-7b9f8b2447a4",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "713854f0-3646-5bbc-8558-286a8db0a912",
+      "name": "Consultar orden · reintentar 2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "77d81568-d65b-504a-81cd-61f0c528f1f5",
+      "name": "Consultar orden · backoff 2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        0
+      ],
+      "webhookId": "d6920a45-3d5b-59c3-8627-35212a7c0cd4"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Consultar orden · preparar transporte\").all();"
+      },
+      "id": "c8edabd4-4519-56e9-b6be-29098375dbb8",
+      "name": "Consultar orden · restaurar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "3106bef9-9a42-5bd4-b006-1b10cb15372a",
+      "name": "Consultar orden · intento 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,3)}];"
+      },
+      "id": "cc1d4fcb-2efe-5c81-8958-90e90fee6cae",
+      "name": "Consultar orden · evaluar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dde0f209-5fdf-5eef-82f6-1fbb5f5189ce",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8b9cf7ee-092f-5d6c-9827-dbb078244faf",
+      "name": "Consultar orden · reintentar 3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "603cc61e-797b-5f73-bf03-05aaba782a4d",
+      "name": "Consultar orden · backoff 3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        0
+      ],
+      "webhookId": "48a3514b-14fe-5f68-85c5-e105b58c18f7"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Consultar orden · preparar transporte\").all();"
+      },
+      "id": "352535ff-ac7d-528f-a8b5-6044ebebdd19",
+      "name": "Consultar orden · restaurar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "3b9bdd29-65bc-5905-8457-23b8a6773d4e",
+      "name": "Consultar orden · intento 4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,4)}];"
+      },
+      "id": "a429f3cf-6334-5e9a-994c-9cffa9337329",
+      "name": "Consultar orden · evaluar 4",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items=$input.all(); if(items.length!==1) throw new Error('El callback requiere un único evento'); return items;"
+      },
+      "id": "9f86d10e-2ff4-5bb7-9336-3bfc0f5a7b37",
+      "name": "Reservar orden · preparar transporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$json.respuesta; if(!r || typeof r!=='object' || Array.isArray(r)) throw new Error('Respuesta de callback inválida'); return [{json:r}];"
+      },
+      "id": "5cd377bb-47fc-5c2b-b1b5-3713986bdefd",
+      "name": "Reservar orden",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "6bfd5373-bda8-50f9-a4c3-91b5e8fabaf8",
+      "name": "Reservar orden · intento 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,1)}];"
+      },
+      "id": "3f28fe44-9cde-5325-b978-42dcc163a650",
+      "name": "Reservar orden · evaluar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e929f5f4-583e-5e7f-9c74-067dc4cdb775",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fc9da28f-002d-5dbe-855b-fcd922bd0793",
+      "name": "Reservar orden · reintentar 1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "eaab4a6b-b71d-5ea5-8310-6a0c5ef5a2d3",
+      "name": "Reservar orden · backoff 1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "webhookId": "49e580a9-018c-55c3-8e11-0a1709d55055"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Reservar orden · preparar transporte\").all();"
+      },
+      "id": "df5049d7-26c9-5459-9571-babeb4e3474a",
+      "name": "Reservar orden · restaurar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "0c975da2-8a08-581f-a69d-fa569f27116e",
+      "name": "Reservar orden · intento 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,2)}];"
+      },
+      "id": "8fc9f9c8-032c-5c95-96a3-a92940cd51c2",
+      "name": "Reservar orden · evaluar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "73e02d90-5d14-5622-9ea5-e475b88f9706",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1a69873d-e36a-5883-901e-24b77c437b1a",
+      "name": "Reservar orden · reintentar 2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "c98f0b9c-1a9e-50a8-9898-84a8d6318ae7",
+      "name": "Reservar orden · backoff 2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        0
+      ],
+      "webhookId": "91d0bfac-d0bf-5956-a1e6-62ad7c14421e"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Reservar orden · preparar transporte\").all();"
+      },
+      "id": "87c2d0b2-2ab6-5dac-af48-9fe2f35f378b",
+      "name": "Reservar orden · restaurar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "d363c36a-27f8-5d19-871d-d10185f65988",
+      "name": "Reservar orden · intento 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,3)}];"
+      },
+      "id": "554ea740-1497-57c2-b6f8-9c224508a16c",
+      "name": "Reservar orden · evaluar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "091fd7ae-8d3e-52cd-a809-342201d273ac",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "848e4c67-5b69-57a1-a8ad-cb807b890025",
+      "name": "Reservar orden · reintentar 3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "7bbcc743-ebcf-5a23-a958-b9e5036e3d9c",
+      "name": "Reservar orden · backoff 3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        0
+      ],
+      "webhookId": "e983cdcd-84f4-552c-9ca9-dec362b4c5a3"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Reservar orden · preparar transporte\").all();"
+      },
+      "id": "76c4d3e9-8860-50e6-90bb-2d716106dc74",
+      "name": "Reservar orden · restaurar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "353a8bd0-87a6-5608-b3a8-4f76d3d94ead",
+      "name": "Reservar orden · intento 4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,4)}];"
+      },
+      "id": "3d189f8f-3ec2-54ec-841d-4671c86486cb",
+      "name": "Reservar orden · evaluar 4",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items=$input.all(); if(items.length!==1) throw new Error('El callback requiere un único evento'); return items;"
+      },
+      "id": "0a65f40e-7ca7-586b-892b-8641f5acf596",
+      "name": "Confirmar orden · preparar transporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$json.respuesta; if(!r || typeof r!=='object' || Array.isArray(r)) throw new Error('Respuesta de callback inválida'); return [{json:r}];"
+      },
+      "id": "2d336a68-e1f8-5dfb-9b77-0a5836b5356a",
+      "name": "Confirmar orden",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "ecfa45b9-b8c9-5d58-bd1d-bb7892e8d81f",
+      "name": "Confirmar orden · intento 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4620,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,1)}];"
+      },
+      "id": "9db99fb9-c570-5330-a49f-97908aaf3d4d",
+      "name": "Confirmar orden · evaluar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2f22d3a8-4d57-514c-9ba3-19aea6446036",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "745a13d1-1110-59f0-90b4-b1f1cb6127ec",
+      "name": "Confirmar orden · reintentar 1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "b044a878-5df1-5b6e-a5ca-30d0049f82dd",
+      "name": "Confirmar orden · backoff 1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "webhookId": "e7e0c12d-db14-5b05-b8dc-bb3ba60bc05f"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Confirmar orden · preparar transporte\").all();"
+      },
+      "id": "518dfc03-96e6-5d39-91ab-223f6daa19f0",
+      "name": "Confirmar orden · restaurar 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "a11360cf-e335-5ce7-a1be-de7e532009c2",
+      "name": "Confirmar orden · intento 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4620,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,2)}];"
+      },
+      "id": "b43a08e3-cde5-5f82-9c09-082606455ad2",
+      "name": "Confirmar orden · evaluar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6d2279d2-98d4-52f0-b968-fcd28a59e691",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "056a5e02-f85e-5b93-88fb-25b6fe30efa3",
+      "name": "Confirmar orden · reintentar 2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "a650cc3c-6a5c-5209-b590-adfc331c3ed9",
+      "name": "Confirmar orden · backoff 2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        0
+      ],
+      "webhookId": "96e95321-e7a5-59d4-8185-f5b92f61f311"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Confirmar orden · preparar transporte\").all();"
+      },
+      "id": "181560d7-ca84-5cee-8a5d-9f953e6f46c8",
+      "name": "Confirmar orden · restaurar 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "e1025b65-c0da-5a9d-9391-159f8053ebd1",
+      "name": "Confirmar orden · intento 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4620,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,3)}];"
+      },
+      "id": "82641fe9-f2c7-5149-b924-9de0739ebc24",
+      "name": "Confirmar orden · evaluar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3bd7fcbc-6469-56ab-b8cf-28401e60370f",
+              "leftValue": "={{ $json.reintentar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c97f0996-0e0a-5a97-941a-2a4e775e0c66",
+      "name": "Confirmar orden · reintentar 3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.esperaSegundos }}",
+        "unit": "seconds"
+      },
+      "id": "56996f5d-5140-5a7f-b26f-d607d2031d85",
+      "name": "Confirmar orden · backoff 3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        0
+      ],
+      "webhookId": "daf9958a-e5e5-5363-8426-4d1b1bfc599f"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Confirmar orden · preparar transporte\").all();"
+      },
+      "id": "b9557b6f-3cb1-5591-af97-6f2af1af58b7",
+      "name": "Confirmar orden · restaurar 3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "1b30fd03-2be0-5cb2-b925-054ada2f53d0",
+      "name": "Confirmar orden · intento 4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4620,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nreturn [{json:evaluarRespuestaFiable($json,4)}];"
+      },
+      "id": "07a3075e-4e1d-55a9-bd73-9e6458b4a615",
+      "name": "Confirmar orden · evaluar 4",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
     }
   ],
   "connections": {
@@ -1068,18 +2367,7 @@
       "main": [
         [
           {
-            "node": "Consultar orden",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Consultar orden": {
-      "main": [
-        [
-          {
-            "node": "Recibo anterior",
+            "node": "Consultar orden · preparar transporte",
             "type": "main",
             "index": 0
           }
@@ -1206,18 +2494,7 @@
       "main": [
         [
           {
-            "node": "Reservar orden",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Reservar orden": {
-      "main": [
-        [
-          {
-            "node": "Estado de reserva",
+            "node": "Reservar orden · preparar transporte",
             "type": "main",
             "index": 0
           }
@@ -1275,18 +2552,7 @@
       "main": [
         [
           {
-            "node": "Confirmar orden",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Confirmar orden": {
-      "main": [
-        [
-          {
-            "node": "Aceptado",
+            "node": "Confirmar orden · preparar transporte",
             "type": "main",
             "index": 0
           }
@@ -1561,6 +2827,696 @@
           }
         ]
       ]
+    },
+    "Consultar orden": {
+      "main": [
+        [
+          {
+            "node": "Recibo anterior",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · preparar transporte": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · intento 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · intento 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · evaluar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · evaluar 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · reintentar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · reintentar 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · backoff 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · backoff 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · restaurar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · restaurar 1": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · intento 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · intento 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · evaluar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · evaluar 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · reintentar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · reintentar 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · backoff 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · backoff 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · restaurar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · restaurar 2": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · intento 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · intento 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · evaluar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · evaluar 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · reintentar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · reintentar 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · backoff 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · backoff 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · restaurar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · restaurar 3": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · intento 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · intento 4": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden · evaluar 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden · evaluar 4": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden": {
+      "main": [
+        [
+          {
+            "node": "Estado de reserva",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · preparar transporte": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · intento 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · intento 1": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · evaluar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · evaluar 1": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · reintentar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · reintentar 1": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · backoff 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reservar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · backoff 1": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · restaurar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · restaurar 1": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · intento 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · intento 2": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · evaluar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · evaluar 2": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · reintentar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · reintentar 2": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · backoff 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reservar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · backoff 2": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · restaurar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · restaurar 2": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · intento 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · intento 3": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · evaluar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · evaluar 3": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · reintentar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · reintentar 3": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · backoff 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reservar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · backoff 3": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · restaurar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · restaurar 3": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · intento 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · intento 4": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden · evaluar 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reservar orden · evaluar 4": {
+      "main": [
+        [
+          {
+            "node": "Reservar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden": {
+      "main": [
+        [
+          {
+            "node": "Aceptado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · preparar transporte": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · intento 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · intento 1": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · evaluar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · evaluar 1": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · reintentar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · reintentar 1": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · backoff 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirmar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · backoff 1": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · restaurar 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · restaurar 1": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · intento 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · intento 2": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · evaluar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · evaluar 2": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · reintentar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · reintentar 2": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · backoff 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirmar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · backoff 2": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · restaurar 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · restaurar 2": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · intento 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · intento 3": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · evaluar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · evaluar 3": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · reintentar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · reintentar 3": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · backoff 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirmar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · backoff 3": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · restaurar 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · restaurar 3": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · intento 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · intento 4": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden · evaluar 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar orden · evaluar 4": {
+      "main": [
+        [
+          {
+            "node": "Confirmar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1572,7 +3528,8 @@
     "saveDataSuccessExecution": "none",
     "saveExecutionProgress": false,
     "executionTimeout": 300,
-    "errorWorkflow": "FabErrores000001"
+    "errorWorkflow": "FabErrores000001",
+    "saveManualExecutions": false
   },
   "pinData": {},
   "meta": {

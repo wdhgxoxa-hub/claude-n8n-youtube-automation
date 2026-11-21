@@ -628,11 +628,12 @@
     "executionOrder": "v1",
     "timezone": "America/Lima",
     "callerPolicy": "workflowsFromSameOwner",
-    "executionTimeout": 240,
+    "executionTimeout": 300,
     "saveDataSuccessExecution": "none",
     "saveDataErrorExecution": "none",
     "saveManualExecutions": false,
-    "saveExecutionProgress": false
+    "saveExecutionProgress": false,
+    "errorWorkflow": "FabErrores000001"
   },
   "pinData": {},
   "meta": {

@@ -159,7 +159,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const TITULO = {\"origen\": \"Adaptado al español de title.py de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21).\", \"escritorio\": 60, \"movil\": 40, \"maximo\": 100, \"palabras_miniatura\": 3, \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"definitivo\", \"mejor\", \"poderoso\", \"secreto\", \"revolucionario\", \"alucinante\", \"epico\", \"perfecto\", \"completo\", \"todo\", \"tremendo\", \"impactante\"], \"vacias\": [\"el\", \"la\", \"los\", \"las\", \"un\", \"una\", \"unos\", \"unas\", \"de\", \"del\", \"al\", \"a\", \"en\", \"y\", \"o\", \"que\", \"con\", \"por\", \"para\", \"es\", \"son\", \"se\", \"su\", \"sus\", \"tu\", \"tus\", \"mi\", \"mis\", \"lo\", \"como\", \"este\", \"esta\", \"esto\", \"eso\", \"asi\", \"muy\", \"cuanto\", \"cuanta\", \"por que\", \"porque\", \"shorts\"]};\n\nconst normalT = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');\nconst palabrasT = t => normalT(t).match(/[a-z0-9ñ']+/g) || [];\nfunction revisarTitulo(titulo, miniatura) {\n  const t = String(titulo || '').trim(), n = [...t].length, fallas = [], bien = [];\n  if (n > TITULO.maximo) fallas.push(['largo', `${n} caracteres: el límite de YouTube es ${TITULO.maximo}`]);\n  else if (n > TITULO.escritorio) fallas.push(['largo', `${n} caracteres: la búsqueda de escritorio corta cerca de ${TITULO.escritorio}`]);\n  else bien.push(`${n} caracteres, dentro del corte de escritorio (${TITULO.escritorio})`);\n  if (n > TITULO.movil) { const cab = [...t].slice(0, TITULO.movil).join(''); const cabeza = cab.includes(' ') ? cab.slice(0, cab.lastIndexOf(' ')) : cab; fallas.push(['movil', `en el celular se ve «${cabeza}…»: revisa que el tema sobreviva`]); }\n  const mayus = t.split(/\\s+/).filter(w => [...w].length > 2 && w === w.toUpperCase() && w !== w.toLowerCase() && !/\\d/.test(w));\n  if (mayus.length > 2) fallas.push(['gritos', `${mayus.length} palabras en mayúsculas: más de dos parece spam`]);\n  const vagas = [...new Set(palabrasT(t).filter(w => TITULO.vagas.includes(w)))].sort();\n  if (vagas.length) fallas.push(['vago', `${vagas.join(', ')}: cámbialo por un número, un nombre o una fecha`]);\n  if (/\\d/.test(t)) bien.push('lleva una cifra concreta'); else fallas.push(['sin-cifra', 'sin número, fecha ni nombre: el arreglo más fiable']);\n  if (t.endsWith('?')) bien.push('pregunta abierta');\n  if (!palabrasT(t).slice(0, 3).filter(w => !TITULO.vacias.includes(w)).length) fallas.push(['inicio', 'las tres primeras palabras son relleno: adelanta el tema']);\n  if (miniatura) {\n    const clave = x => new Set(palabrasT(x).filter(w => w.length > 1 && !TITULO.vacias.includes(w)));\n    const m = clave(miniatura); const comunes = [...clave(t)].filter(w => m.has(w)).sort();\n    if (comunes.length) fallas.push(['repite', `la miniatura repite el título en ${comunes.join(', ')}: debe decir lo que el título no dice`]);\n    else bien.push('título y miniatura dicen cosas distintas');\n    if (palabrasT(miniatura).length > TITULO.palabras_miniatura) fallas.push(['miniatura-larga', `${palabrasT(miniatura).length} palabras en la miniatura: ${TITULO.palabras_miniatura} es el techo a tamaño de feed`]);\n  }\n  return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };\n}\n\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst minimoLargo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000;\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora, minimo = 0) => { let d = dia; // conservar también las horas de separación, no solo la fecha local\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && t >= minimo && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { if (minimoLargo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimoLargo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst porRevision = (yt.titulos || []).map(t => revisarTitulo(t)).sort((a, b) => b.puntaje - a.puntaje)[0]?.titulo;   // sin vidIQ: el mejor según yt-empaque\nconst tituloYt = String((vq?.ok && vq.mejor) || porRevision || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = [];\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  const cuando = hueco(red, dia, hora, !vertical && horaFija === null ? minimoLargo : 0); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  // Hora del especialista de cada red (6–23 h, hora del público) si la propuso; si no, la de Ajustes.\n  const horaRed = red => { const h = Number(pub[red]?.hora); return Number.isFinite(h) && h >= 6 && h <= 23 ? h : null; };\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? horaRed(red) ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nconst TITULO = {\"origen\": \"Adaptado al español de title.py de Jakeschincariol/youtube-agent-skill (MIT, commit a2feb21).\", \"escritorio\": 60, \"movil\": 40, \"maximo\": 100, \"palabras_miniatura\": 3, \"vagas\": [\"increible\", \"impresionante\", \"brutal\", \"loco\", \"locura\", \"enorme\", \"masivo\", \"definitivo\", \"mejor\", \"poderoso\", \"secreto\", \"revolucionario\", \"alucinante\", \"epico\", \"perfecto\", \"completo\", \"todo\", \"tremendo\", \"impactante\"], \"vacias\": [\"el\", \"la\", \"los\", \"las\", \"un\", \"una\", \"unos\", \"unas\", \"de\", \"del\", \"al\", \"a\", \"en\", \"y\", \"o\", \"que\", \"con\", \"por\", \"para\", \"es\", \"son\", \"se\", \"su\", \"sus\", \"tu\", \"tus\", \"mi\", \"mis\", \"lo\", \"como\", \"este\", \"esta\", \"esto\", \"eso\", \"asi\", \"muy\", \"cuanto\", \"cuanta\", \"por que\", \"porque\", \"shorts\"]};\n\nconst normalT = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');\nconst palabrasT = t => normalT(t).match(/[a-z0-9ñ']+/g) || [];\nfunction revisarTitulo(titulo, miniatura) {\n  const t = String(titulo || '').trim(), n = [...t].length, fallas = [], bien = [];\n  if (n > TITULO.maximo) fallas.push(['largo', `${n} caracteres: el límite de YouTube es ${TITULO.maximo}`]);\n  else if (n > TITULO.escritorio) fallas.push(['largo', `${n} caracteres: la búsqueda de escritorio corta cerca de ${TITULO.escritorio}`]);\n  else bien.push(`${n} caracteres, dentro del corte de escritorio (${TITULO.escritorio})`);\n  if (n > TITULO.movil) { const cab = [...t].slice(0, TITULO.movil).join(''); const cabeza = cab.includes(' ') ? cab.slice(0, cab.lastIndexOf(' ')) : cab; fallas.push(['movil', `en el celular se ve «${cabeza}…»: revisa que el tema sobreviva`]); }\n  const mayus = t.split(/\\s+/).filter(w => [...w].length > 2 && w === w.toUpperCase() && w !== w.toLowerCase() && !/\\d/.test(w));\n  if (mayus.length > 2) fallas.push(['gritos', `${mayus.length} palabras en mayúsculas: más de dos parece spam`]);\n  const vagas = [...new Set(palabrasT(t).filter(w => TITULO.vagas.includes(w)))].sort();\n  if (vagas.length) fallas.push(['vago', `${vagas.join(', ')}: cámbialo por un número, un nombre o una fecha`]);\n  if (/\\d/.test(t)) bien.push('lleva una cifra concreta'); else fallas.push(['sin-cifra', 'sin número, fecha ni nombre: el arreglo más fiable']);\n  if (t.endsWith('?')) bien.push('pregunta abierta');\n  if (!palabrasT(t).slice(0, 3).filter(w => !TITULO.vacias.includes(w)).length) fallas.push(['inicio', 'las tres primeras palabras son relleno: adelanta el tema']);\n  if (miniatura) {\n    const clave = x => new Set(palabrasT(x).filter(w => w.length > 1 && !TITULO.vacias.includes(w)));\n    const m = clave(miniatura); const comunes = [...clave(t)].filter(w => m.has(w)).sort();\n    if (comunes.length) fallas.push(['repite', `la miniatura repite el título en ${comunes.join(', ')}: debe decir lo que el título no dice`]);\n    else bien.push('título y miniatura dicen cosas distintas');\n    if (palabrasT(miniatura).length > TITULO.palabras_miniatura) fallas.push(['miniatura-larga', `${palabrasT(miniatura).length} palabras en la miniatura: ${TITULO.palabras_miniatura} es el techo a tamaño de feed`]);\n  }\n  return { titulo: t, caracteres: n, puntaje: Math.max(0, Math.min(100, 100 - 14 * fallas.length + 4 * bien.length)), fallas, bien };\n}\n\n// Calendario: un envío por video y red, a la hora fuerte de cada red (hora local del público), sin chocar con lo\n// ya programado del canal. Largo: mañana (margen para que YouTube lo indexe); cortes repartidos 1, 3 y 5 días después.\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json; const c = e.contexto || {}; const pub = c.publicacion || {};\nconst cal = aj.calendario || {}; const zona = e.zona || cal.zona || 'America/Lima'; const H = cal.horas || {};\nconst redes = [...new Set(String(e.redes || 'youtube,tiktok,instagram,facebook').toLowerCase().split(/[\\s,]+/))].filter(r => ['youtube', 'tiktok', 'instagram', 'facebook'].includes(r));\nif (!e.perfil) return [{ json: { nada: true, motivo: 'el canal no tiene perfil de Upload-Post (usa «redes <canal> <perfil> <redes>»)' } }];\n// --- horas locales sin librerías (Intl) ---\nconst partes = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zona, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n  .formatToParts(d).filter(x => x.type !== 'literal').map(x => [x.type, x.value]));\nconst diaLocal = d => { const p = partes(d); return `${p.year}-${p.month}-${p.day}`; };\nconst aUTC = (dia, hora) => { const [y, m, d] = dia.split('-').map(Number); const hh = Math.floor(hora), mm = Math.round((hora - hh) * 60); const meta = Date.UTC(y, m - 1, d, hh, mm); let t = meta;\n  for (let i = 0; i < 3; i++) { const p = partes(new Date(t)); t += meta - Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); } return new Date(t); };\nconst sumarDias = (dia, n) => { const [y, m, d] = dia.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };\nconst ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que Upload-Post lo reciba\n// --- agenda existente del canal: cuántos envíos hay por red y día, y cuándo fue el último largo ---\nconst agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);\nconst ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }\nconst largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));\nconst minimoLargo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000;\nconst maxDia = cal.maxPorRedDia || 2;\nconst hueco = (red, dia, hora, minimo = 0) => { let d = dia; // conservar también las horas de separación, no solo la fecha local\n  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && t >= minimo && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }\n  return null; };\n// --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---\nlet diaBase = diaLocal(ahora);\nif (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));\nelse if (e.formato !== 'short') { if (minimoLargo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimoLargo)); }\nconst horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;\n// --- textos ---\nconst vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};\nconst porRevision = (yt.titulos || []).map(t => revisarTitulo(t)).sort((a, b) => b.puntaje - a.puntaje)[0]?.titulo;   // sin vidIQ: el mejor según yt-empaque\nconst tituloYt = String((vq?.ok && vq.mejor) || porRevision || e.tema || '').slice(0, 100);\nconst creditos = (c.creditos || []).join('\\n');\nconst descYt = [yt.descripcion, creditos, 'Contenido creado con ayuda de IA.'].filter(Boolean).join('\\n\\n').slice(0, 4900);\nconst tags = (yt.tags || []).map(t => String(t).replace(/^#/, '')).filter(Boolean).slice(0, 15).join(',');\nconst hashtags = l => (l || []).map(h => '#' + String(h).replace(/^#/, '').replace(/\\s+/g, '')).join(' ');\nconst texto = (red, def) => { const x = pub[red] || {}; return [x.texto || def, hashtags(x.hashtags)].filter(Boolean).join('\\n\\n').slice(0, 2100); };\nconst comun = { user: e.perfil, is_ai_generated: 'true', async_upload: 'true' };\nconst campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({\n  youtube: { youtube_title: vertical ? (t + ' #Shorts').slice(0, 100) : t, youtube_description: vertical ? [t, 'Sigue el canal para el próximo negocio desarmado con números.', creditos].filter(Boolean).join('\\n\\n').slice(0, 4900) : descYt,\n    tags, categoryId: '27', defaultLanguage: aj.idioma, defaultAudioLanguage: aj.idioma, privacyStatus: aj.privacidadYoutube || 'public', selfDeclaredMadeForKids: 'false', containsSyntheticMedia: 'true' },\n  tiktok: { tiktok_title: texto('tiktok', t), privacy_level: 'PUBLIC_TO_EVERYONE', is_aigc: 'true' },\n  instagram: { instagram_title: texto('instagram', t), media_type: 'REELS', share_to_feed: 'true' },\n  facebook: { facebook_title: String(pub.facebook?.titulo || t).slice(0, 250), facebook_description: texto('facebook', t), facebook_media_type: vertical ? 'REELS' : 'VIDEO' },\n}[red]), ...extra });\nconst envios = []; const sinCupo = []; const repetidos=[];\nconst historico=$('Fiabilidad · publicaciones del video').all().map(i=>i.json), reservas=$('Fiabilidad · reservas de publicación').all().map(i=>i.json);\nconst agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {\n  if(publicacionYaReservada(e.video_id,tipo,red,historico,reservas)){repetidos.push(tipo+' '+red);return;}\n  const cuando = hueco(red, dia, hora, !vertical && horaFija === null ? minimoLargo : 0); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }\n  envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };\nif (e.formato === 'short') {\n  // Hora del especialista de cada red (6–23 h, hora del público) si la propuso; si no, la de Ajustes.\n  const horaRed = red => { const h = Number(pub[red]?.hora); return Number.isFinite(h) && h >= 6 && h <= 23 ? h : null; };\n  for (const red of redes) agendar('principal', c.render_url, red, diaBase, horaFija ?? horaRed(red) ?? (red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19), tituloYt, true);\n} else {\n  for (const red of redes.filter(r => ['youtube', 'facebook'].includes(r)))\n    agendar('principal', c.render_url, red, diaBase, horaFija ?? H[red] ?? 11, tituloYt, false, red === 'youtube' && c.miniatura_url ? { thumbnail_url: c.miniatura_url } : {});\n  // los cortes cuentan desde el día en que de verdad sale el largo (si su hora ya pasó hoy, sale mañana)\n  const diaLargo = envios.length ? diaLocal(envios[0].cuando) : diaBase;\n  (c.cortes || []).filter(k => k.url).forEach((k, i) => { const t = String(k.titulo || tituloYt).slice(0, 95);\n    const dia = sumarDias(diaLargo, (cal.cortesDias || [1, 3, 5])[i] ?? (i + 1) * 2);\n    for (const red of redes) agendar('corte ' + k.corte, k.url, red, dia, red === 'youtube' ? H.youtube_shorts ?? 16 : H[red] ?? 19, t, true); });\n}\nif (!envios.length) return [{ json: { nada: true, motivo: repetidos.length ? 'envíos previos o inciertos; conciliar antes de volver a publicar: '+repetidos.join(', ') : sinCupo.length ? 'sin cupo en el calendario para: ' + sinCupo.join(', ') : 'no hay nada que publicar (revisa las redes del canal y los cortes)' } }];\n// Campos del formulario como pares [nombre, valor]. n8n arma el multipart (un cuerpo hecho a mano lo reempaqueta letra por letra).\n// Hay CASILLAS fijas en «Subir a redes»; las sobrantes repiten `user` con el mismo valor (campo conocido, inofensivo).\nconst CASILLAS = 24;\nreturn envios.map((v, i) => {\n  const inmediato = v.cuando <= ahora;   // nunca ocurre: todo hueco es posterior a «ahora»; queda como resguardo\n  const p = partes(v.cuando); const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00`;\n  const pares = [['video', v.video], ['platform[]', v.red], ...Object.entries(v.campos).filter(([, x]) => x !== undefined && x !== null && x !== '').map(([k, x]) => [k, String(x)]),\n    ...(inmediato ? [] : [['scheduled_date', local], ['timezone', zona]])];\n  if (pares.length > CASILLAS) throw new Error(`demasiados campos para Upload-Post (${pares.length} > ${CASILLAS}); amplía CASILLAS en el generador`);\n  while (pares.length < CASILLAS) pares.push(['user', e.perfil]);\n  return { json: { clave_publicacion:clavePublicacionFiable(e.video_id,v.tipo,v.red), tipo: v.tipo, plataformas: v.red, titulo: v.campos.title, url_video: v.video, pares,\n    programado: inmediato ? '' : v.cuando.toISOString(), hora_local: inmediato ? 'ahora' : local.replace('T', ' ').slice(0, 16), sin_cupo: sinCupo } };\n});\n"
       },
       "id": "e7fb1060-e2e7-4ca3-b4c7-5dcb8786216d",
       "name": "Plan de publicación",
@@ -360,14 +360,11 @@
           "name": "Upload-Post"
         }
       },
-      "onError": "continueRegularOutput",
-      "retryOnFail": true,
-      "maxTries": 2,
-      "waitBetweenTries": 5000
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json; const pedidos = $('Plan de publicación').all().map(i => i.json);\nreturn $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];\n  const id = r.request_id || r.job_id || r.data?.request_id || '';\n  // Upload-Post da job_id a lo programado: su estado se consulta con ?job_id= (con request_id da 404 hasta la hora).\n  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, job_id: String(r.job_id || ''), plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),\n    url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'error',\n    resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: r.error?.message || r.message || r.error || 'sin request_id' }).slice(0, 800),\n    publicado_en: p.programado || new Date().toISOString() } }; });\n"
+        "jsCode": "\nconst e = $('Inicio').first().json; const pedidos = $('Fiabilidad · comprobar turno').all().map(i => i.json);\nreturn $input.all().map((i, k) => { const r = i.json; const p = pedidos[k];\n  const id = r.request_id || r.job_id || r.data?.request_id || '';\n  // Upload-Post da job_id a lo programado: su estado se consulta con ?job_id= (con request_id da 404 hasta la hora).\n  return { json: { video_id: e.video_id, canal_id: e.canal_id, tipo: p.tipo, request_id: id, job_id: String(r.job_id || ''), plataformas: p.plataformas, titulo: String(p.titulo || '').slice(0, 200),\n    url_video: p.url_video, estado: id ? (p.programado ? 'programado' : 'enviado') : 'incierto',\n    resultado: JSON.stringify(id ? { status: r.status || r.message || '' } : { error: 'Resultado incierto: conciliar con el proveedor antes de reenviar' }).slice(0, 800),\n    publicado_en: p.programado || new Date().toISOString() } }; });\n"
       },
       "id": "33e709b8-34b7-4621-86d8-dbb310b2692e",
       "name": "Filas de publicación",
@@ -408,7 +405,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// «publicado» solo si algo salió ya; si todo quedó en el calendario, «programado» hasta que\n// «F · Confirmar publicaciones» compruebe en Upload-Post que salió de verdad.\nconst filas = $('Filas de publicación').all().map(i => i.json); const ok = filas.filter(f => f.request_id);\nconst estado = !ok.length ? 'error_publicacion' : ok.some(f => f.estado === 'enviado') ? 'publicado' : 'programado';\nreturn [{ json: { estado, etapa: estado === 'programado' ? 'programado' : 'publicado',\n  publicado_en: ok[0]?.publicado_en || '', error: ok.length === filas.length ? '' : filas.filter(f => !f.request_id).map(f => f.tipo + ': ' + f.resultado).join('; ').slice(0, 500) } }];\n"
+        "jsCode": "\nconst filas=$('Filas de publicación').all().map(i=>i.json),ok=filas.filter(f=>f.request_id);\n// Un request_id solo confirma aceptación: Confirmar publicaciones acredita la salida real.\nconst estado=ok.length!==filas.length?'error_publicacion':ok.every(f=>f.estado==='programado')?'programado':'en_proceso';\nreturn [{json:{estado,etapa:estado==='programado'?'programado':'publicacion',publicado_en:ok[0]?.publicado_en || '',error:ok.length===filas.length?'':'Hay envíos inciertos; requieren conciliación antes de repetir.'}}];\n"
       },
       "id": "97b6743c-0ff2-42b8-ace4-c25af24d4dfa",
       "name": "Video publicado",
@@ -561,7 +558,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).\nconst filas = $('Filas de publicación').all().map(i => i.json); const pedidos = $('Plan de publicación').all().map(i => i.json);\nconst estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];\nconst enviados = filas.filter(f => f.request_id && f.estado === 'enviado');\nconst lineas = filas.map(f => {\n  if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;\n  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas}: ${pedidos[filas.indexOf(f)]?.hora_local || f.publicado_en}`;\n  const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];\n  const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')\n    : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';\n  return `✓ ${f.tipo} → ${f.plataformas}${st.status ? ' (' + st.status + ')' : ''}${det ? '\\n   ' + det : ''}`; });\nreturn [{ json: { texto: `Publicación de ${$('Inicio').first().json.video_id}:\\n` + lineas.join('\\n') } }];\n"
+        "jsCode": "\n// Un renglón por envío y red: publicado, en proceso o con error (lo que diga Upload-Post).\nconst filas = $('Filas de publicación').all().map(i => i.json); const pedidos = $('Fiabilidad · comprobar turno').all().map(i => i.json);\nconst estados = $('Estado en redes').isExecuted ? $('Estado en redes').all().map(i => i.json) : [];\nconst enviados = filas.filter(f => f.request_id && f.estado === 'enviado');\nconst lineas = filas.map(f => {\n  if (!f.request_id) return `✗ ${f.tipo}: ${JSON.parse(f.resultado || '{}').error || 'error'}`;\n  if (f.estado === 'programado') return `🕒 ${f.tipo} → ${f.plataformas}: ${pedidos[filas.indexOf(f)]?.hora_local || f.publicado_en}`;\n  const st = estados[enviados.indexOf(f)] || {}; const res = st.results || st.result || st.platforms || [];\n  const det = Array.isArray(res) ? res.map(x => `${x.platform}: ${x.success === false ? 'error ' + String(x.error || x.message || '').slice(0, 80) : (x.url || x.post_url || 'ok')}`).join(' · ')\n    : typeof res === 'object' ? Object.entries(res).map(([p, x]) => `${p}: ${x?.success === false ? 'error ' + String(x.error || '').slice(0, 80) : (x?.url || 'ok')}`).join(' · ') : '';\n  return `✓ ${f.tipo} → ${f.plataformas}${st.status ? ' (' + st.status + ')' : ''}${det ? '\\n   ' + det : ''}`; });\nreturn [{ json: { texto: `Publicación de ${$('Inicio').first().json.video_id}:\\n` + lineas.join('\\n') } }];\n"
       },
       "id": "8d51570d-b62b-494d-a0d3-f64e8945eec5",
       "name": "Resumen de publicación",
@@ -968,6 +965,166 @@
         440,
         0
       ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "OMPWHAVyhbtekML0"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "475b4416-9bed-5c19-a710-e3a642d58386",
+      "name": "Fiabilidad · publicaciones del video",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "tipo",
+              "condition": "eq",
+              "keyValue": "reserva_publicacion"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "f42536a2-6585-5279-96c7-340d82883097",
+      "name": "Fiabilidad · reservas de publicación",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json;\nreturn $input.all().map(i=>({json:{video_id:e.video_id,canal_id:e.canal_id,tipo:'reserva_publicacion',evento:i.json.clave_publicacion,detalle:JSON.stringify({estado:'incierto',ejecucion:String($execution.id),tipo:i.json.tipo,red:i.json.plataformas})}}));\n"
+      },
+      "id": "ee3dc82d-2a68-5c06-80c7-3b3ac12fb83b",
+      "name": "Fiabilidad · reservar envíos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "00e6cb57-fb96-5326-9a01-8fcdb69ca795",
+      "name": "Fiabilidad · guardar reservas",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "tipo",
+              "condition": "eq",
+              "keyValue": "reserva_publicacion"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "fb2bd711-6653-560a-bbcd-14f8ebf14eb0",
+      "name": "Fiabilidad · verificar reservas",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política pura de transporte. No envía solicitudes ni conserva errores de proveedores.\nfunction evaluarRespuestaFiable(r, intento, ahora = Date.now(), azar = Math.random()) {\n  if (!Number.isInteger(intento) || intento < 1 || intento > 4) throw new Error('Intento de transporte inválido');\n  const recibido = Number(r?.statusCode || r?.error?.statusCode || r?.error?.httpCode || 0);\n  const codigo = Number.isInteger(recibido) ? recibido : 0;\n  if (codigo >= 200 && codigo < 300) return { reintentar: false, esperaSegundos: 0, respuesta: r.body, codigo };\n  const transitorio = [408, 425, 429].includes(codigo) || (codigo >= 500 && codigo <= 599) || (!codigo && !!r?.error);\n  if (!transitorio) throw new Error('Respuesta HTTP no recuperable; revisar la incidencia sin reenviar la operación');\n  if (intento === 4) throw new Error('Transporte agotado tras cuatro intentos seguros; requiere conciliación');\n  const headers = r.headers || r.error?.headers || {};\n  const raw = Object.entries(headers).find(([k]) => k.toLowerCase() === 'retry-after')?.[1];\n  let retryAfter = 0;\n  if (raw !== undefined) {\n    const texto = String(raw).trim();\n    if (/^\\d+(?:\\.\\d+)?$/.test(texto)) retryAfter = Math.ceil(Number(texto));\n    else {\n      // Date.parse admite basura como \"-1\" o fechas abreviadas: aceptar solo\n      // IMF-fixdate y exigir que la fecha y el día de semana sean coherentes.\n      const instante = Date.parse(texto);\n      if (!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(texto) || !Number.isFinite(instante) || new Date(instante).toUTCString() !== texto) {\n        throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n      }\n      retryAfter = Math.max(0, Math.ceil((instante - ahora) / 1000));\n    }\n    if (!Number.isFinite(retryAfter)) throw new Error('Retry-After inválido; detener antes de incumplir la cuota');\n    // El callback firmado caduca: no esperar indefinidamente ni anticipar Retry-After.\n    if (retryAfter > 60) throw new Error('Retry-After excede el presupuesto; reanudar tras conciliación');\n  }\n  const base = [2, 8, 32][intento - 1];\n  const jitter = Math.min(2, Math.max(0, Math.floor(Number(azar) * 3) || 0));\n  return { reintentar: true, esperaSegundos: Math.max(base + jitter, retryAfter), respuesta: null, codigo };\n}\n\nfunction clavePublicacionFiable(video, tipo, red) {\n  if (!video || !tipo || !red) throw new Error('Publicación sin identidad estable');\n  return 'publicacion:v1:' + require('crypto').createHash('sha256').update(JSON.stringify([String(video), String(tipo), String(red)])).digest('hex');\n}\n\nfunction publicacionYaReservada(video, tipo, red, publicaciones, reservas) {\n  const clave = clavePublicacionFiable(video, tipo, red);\n  return reservas.some(r => r.evento === clave) || publicaciones.some(p => p.video_id === video && p.tipo === tipo && String(p.plataformas || '').split(',').includes(red));\n}\n\nfunction elegirReservasPublicacion(pedidos, propias, reservas) {\n  const vistas = new Set();\n  return pedidos.filter(p => {\n    const clave = p.clave_publicacion;\n    if (!clave || vistas.has(clave)) return false;\n    vistas.add(clave);\n    const mia = propias.filter(r => r.evento === clave);\n    const todas = reservas.filter(r => r.evento === clave);\n    if (mia.length !== 1 || !todas.length || [...mia, ...todas].some(r => !Number.isSafeInteger(Number(r.id)) || Number(r.id) <= 0)) {\n      throw new Error('No se pudo verificar la reserva de publicación; no reenviar');\n    }\n    const id = Number(mia[0].id);\n    if (!todas.some(r => Number(r.id) === id)) throw new Error('La reserva aún no es visible; no reenviar');\n    return id === Math.min(...todas.map(r => Number(r.id)));\n  });\n}\n\nconst pedidos=$('Plan de publicación').all().map(i=>i.json),propias=$('Fiabilidad · guardar reservas').all().map(i=>i.json);\nreturn elegirReservasPublicacion(pedidos,propias,$input.all().map(i=>i.json)).map(p=>({json:p}));\n"
+      },
+      "id": "b771a2bd-4ef9-52db-a4e7-d9e2e9af7700",
+      "name": "Fiabilidad · comprobar turno",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
     }
   ],
   "connections": {
@@ -1026,7 +1183,7 @@
       "main": [
         [
           {
-            "node": "Plan de publicación",
+            "node": "Fiabilidad · publicaciones del video",
             "type": "main",
             "index": 0
           }
@@ -1232,7 +1389,7 @@
       "main": [
         [
           {
-            "node": "Subir a redes",
+            "node": "Fiabilidad · reservar envíos",
             "type": "main",
             "index": 0
           }
@@ -1377,6 +1534,72 @@
           }
         ]
       ]
+    },
+    "Fiabilidad · reservas de publicación": {
+      "main": [
+        [
+          {
+            "node": "Plan de publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · publicaciones del video": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · reservas de publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · comprobar turno": {
+      "main": [
+        [
+          {
+            "node": "Subir a redes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · reservar envíos": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · guardar reservas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · guardar reservas": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · verificar reservas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fiabilidad · verificar reservas": {
+      "main": [
+        [
+          {
+            "node": "Fiabilidad · comprobar turno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1386,8 +1609,10 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": 1800,
     "errorWorkflow": "FabErrores000001",
-    "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "all"
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
   },
   "pinData": {},
   "meta": {

@@ -8,7 +8,7 @@
           "interval": [
             {
               "field": "minutes",
-              "minutesInterval": 1
+              "minutesInterval": 5
             }
           ]
         }
@@ -53,7 +53,13 @@
         "method": "POST",
         "url": "={{ $json.url }}",
         "options": {
-          "timeout": 300000
+          "timeout": 210000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
         },
         "sendHeaders": true,
         "headerParameters": {
@@ -123,7 +129,11 @@
     "timezone": "America/Lima",
     "callerPolicy": "workflowsFromSameOwner",
     "saveDataSuccessExecution": "none",
-    "saveDataErrorExecution": "none"
+    "saveDataErrorExecution": "none",
+    "executionTimeout": 240,
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false,
+    "errorWorkflow": "FabErrores000001"
   },
   "pinData": {},
   "meta": {
