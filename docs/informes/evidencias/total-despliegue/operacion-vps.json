@@ -1,0 +1,40 @@
+{
+  "activacion": "PASS",
+  "reversa_404": "PASS",
+  "rechazo_401": "PASS",
+  "firma": "PASS",
+  "telegram": true,
+  "flujos_ajenos_sin_cambios": 34,
+  "estado": {
+    "fecha": 1795275777,
+    "problemas": [],
+    "notificados": [],
+    "aviso_en": 1795275777,
+    "entrega": true,
+    "salud": "PASS"
+  },
+  "replica_recibo": {
+    "snapshot": "04cd7f6f06672e24e34d7c8baa64139a2870e61cf2504d6217f1f533a6d1112c",
+    "fecha": 1795275893,
+    "restauracion": "PASS"
+  },
+  "unidades": {
+    "cooper-monitor.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "cooper-monitor.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "inactive",
+      "UnitFileState": "static"
+    },
+    "cooper-stack.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "inactive",
+      "UnitFileState": "enabled"
+    }
+  }
+}
