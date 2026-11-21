@@ -50,7 +50,7 @@ def inventory(path, original_columns=None):
 def run_container(data, entry, manifest, column_script, entrypoint, args):
     name = 'cooper-ensayo-n8n-' + uuid.uuid4().hex[:12]
     command = ['podman', 'run', '--rm', '--pull', 'never', '--name', name,
-               '--network', 'none', '--read-only', '--userns', 'keep-id',
+               '--network', 'none', '--cpus', '0.5', '--read-only', '--userns', 'keep-id',
                '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
                '--tmpfs', '/tmp:rw,size=128m,mode=1777',
                '-v', str(data) + ':/home/node/.n8n:rw',

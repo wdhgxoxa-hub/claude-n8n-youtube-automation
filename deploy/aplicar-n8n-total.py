@@ -20,6 +20,9 @@ def modulo_ensayo():
 
 
 def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
+    if 'modalidad' in diff:
+        operar.require(diff['modalidad'] == 'delta_cooper_total' and 'plan_publicacion' in diff,
+                        'El delta exige modalidad y plan de publicación certificados')
     operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS', 'Falta ensayo y reversa satisfactorios')
     operar.require(ensayo.get('entrada_sha256') == operar.digest(entrada), 'El lote difiere del ensayado')
     operar.require(ensayo.get('manifiesto_sha256') == operar.digest(manifiesto), 'El manifiesto difiere del ensayado')
@@ -38,7 +41,14 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
         operar.require(ensayo.get('publicacion') == 'PASS' and ensayo.get('publicar_sha256') == operar.digest(plan),
                         'La publicación difiere del ensayo')
         operar.require(publicar == diff['plan_publicacion'] == ensayo.get('publicados'), 'Orden de publicación distinto')
-        permitidos = set(originales) | {'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001'}
+        if diff.get('modalidad') == 'delta_cooper_total':
+            spec = importlib.util.spec_from_file_location('delta_n8n', Path(__file__).with_name('preparar-delta-n8n.py'))
+            delta = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(delta)
+            permitidos = delta.validar_contrato(workflows, diff)
+        else:
+            operar.require('modalidad' not in diff, 'Modalidad de publicación desconocida')
+            permitidos = set(originales) | {'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001'}
         operar.require(len(set(publicar)) == len(publicar) and set(publicar) == permitidos and permitidos <= ids,
                         'Publicación fuera del plan aprobado')
         guards = {(x['workflow'], x['nodo']) for x in diff.get('bloqueos_explicitos', [])}
