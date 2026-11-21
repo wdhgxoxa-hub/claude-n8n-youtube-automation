@@ -1,0 +1,76 @@
+{
+  "estado": "PASS",
+  "caso": "sin-recursos",
+  "videos": 0,
+  "pedidos": 5,
+  "erroresProveedor": 0,
+  "reintentos": 0,
+  "sincronizaciones": [
+    {
+      "muestra": 0,
+      "ms": 86.35727399999996,
+      "pedidos": 1,
+      "videos": 0
+    },
+    {
+      "muestra": 1,
+      "ms": 17.661665000000028,
+      "pedidos": 1,
+      "videos": 0
+    },
+    {
+      "muestra": 2,
+      "ms": 16.685588999999993,
+      "pedidos": 1,
+      "videos": 0
+    },
+    {
+      "muestra": 3,
+      "ms": 28.244670000000042,
+      "pedidos": 1,
+      "videos": 0
+    },
+    {
+      "muestra": 4,
+      "ms": 15.078435999999954,
+      "pedidos": 1,
+      "videos": 0
+    }
+  ],
+  "lecturas": [
+    {
+      "muestra": 0,
+      "ms": 58.233924,
+      "bytes": 1282,
+      "sha256": "7ab0bfafd5016e1e11bb99a0196616e2df50a4281ec8a78216a9ef2c53a7d405",
+      "videos": 0,
+      "huellas": {
+        "videos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "canales": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "muestra": 1,
+      "ms": 8.252132000000017,
+      "bytes": 1282,
+      "sha256": "7ab0bfafd5016e1e11bb99a0196616e2df50a4281ec8a78216a9ef2c53a7d405",
+      "videos": 0,
+      "huellas": {
+        "videos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "canales": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "muestra": 2,
+      "ms": 5.933396000000016,
+      "bytes": 1282,
+      "sha256": "7ab0bfafd5016e1e11bb99a0196616e2df50a4281ec8a78216a9ef2c53a7d405",
+      "videos": 0,
+      "huellas": {
+        "videos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "canales": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  ],
+  "topologia": "Next standalone real y proveedor/verificador en cgroups separados; solo loopback; sesión y usuarios sintéticos; ninguna ruta añadida"
+}

@@ -1,0 +1,42 @@
+{
+  "fuente": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "etiqueta": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "image_id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+  "archivo": "/home/david/.cache/cooper-ti-operacion-b3/cooper-b3e608e.tar.gz",
+  "archivo_sha256": "9ea269e6746e197c5626ae04fa6835bbcf9eb18274d7d0192225582e8e493d20",
+  "bytes": 269559055,
+  "compresion": "gzip -n -6",
+  "archivo_identidad_verificada": "PASS",
+  "compilacion": {
+    "estado": "PASS",
+    "formato": "docker",
+    "cpu_set": "16-23",
+    "errores": 0,
+    "advertencias": 0,
+    "log_sha256": "c416cfc301cc58f218354e63727d29fd15be3c2e33e729f48817d0a31234fae0"
+  },
+  "motor_reutilizado": {
+    "fuente_prueba_anterior": "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-integrador/motor.json",
+    "archivos_sha256_iguales_desde_a794037": {
+      "deploy/ensayar-motor-n8n.py": "13949cff3d864ba6b5d0b37a1044ad8bd3183e99b6d0c735d1f9b8d781814bdf",
+      "deploy/ensayar-n8n.py": "f36fb31a97e130476298d4125b782016764f3e8ee2fdc90ffb8e544c6a3354f9",
+      "deploy/infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3",
+      "deploy/compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+      "deploy/Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+      "deploy/n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+      "deploy/esquema-n8n.py": "78e5e6d13b8b619d94d803c63cbff5c89f3a090df7e82874a0823af054426c38"
+    },
+    "funciones_operar_iguales_ast_sha256": {
+      "require": "3556eb1cffa77b59708effb35bbbb8700a070e559f026d4a2e1d42d33d8d42dc",
+      "digest": "feffd61d601bd35b4a75d5dc82c6d69f363dfff248a4ebd531bff13f961a4cda",
+      "write_json": "ed417ea69f30eb17ec2695bc033e53915d22149fd1df7358d34396a2fe2de727"
+    },
+    "cambio_operar_ajeno_al_motor": "Operator.compose añade image_overrides para la reversa por servicio; require, digest y write_json no cambiaron.",
+    "recibo_sha256": "0f3b7465f10d6e25c8eefa52d435aad72b5b534cea5a21d637068d350f4a4c78"
+  },
+  "ensayos_cooper_memoria": {
+    "memory_max": 1073741824,
+    "memory_swap_max": 0,
+    "comprobacion": "cgroup real en migración y Compose; mismo override en ensayo mixto"
+  }
+}

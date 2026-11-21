@@ -1,0 +1,76 @@
+{
+  "estado": "PASS",
+  "caso": "administrador",
+  "videos": 9896,
+  "pedidos": 55,
+  "erroresProveedor": 0,
+  "reintentos": 0,
+  "sincronizaciones": [
+    {
+      "muestra": 0,
+      "ms": 40693.551749000006,
+      "pedidos": 11,
+      "videos": 9896
+    },
+    {
+      "muestra": 1,
+      "ms": 41336.915456,
+      "pedidos": 11,
+      "videos": 9896
+    },
+    {
+      "muestra": 2,
+      "ms": 38587.570077,
+      "pedidos": 11,
+      "videos": 9896
+    },
+    {
+      "muestra": 3,
+      "ms": 36816.290217999995,
+      "pedidos": 11,
+      "videos": 9896
+    },
+    {
+      "muestra": 4,
+      "ms": 40750.27055399999,
+      "pedidos": 11,
+      "videos": 9896
+    }
+  ],
+  "lecturas": [
+    {
+      "muestra": 0,
+      "ms": 1642.5296209999942,
+      "bytes": 53189871,
+      "sha256": "1e63bbdeaf88e1fd9d4301d63cf48478f5ce9470ce82ae94443490087e56958c",
+      "videos": 9896,
+      "huellas": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5"
+      }
+    },
+    {
+      "muestra": 1,
+      "ms": 1580.2634379999945,
+      "bytes": 53189871,
+      "sha256": "1e63bbdeaf88e1fd9d4301d63cf48478f5ce9470ce82ae94443490087e56958c",
+      "videos": 9896,
+      "huellas": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5"
+      }
+    },
+    {
+      "muestra": 2,
+      "ms": 1497.4985940000042,
+      "bytes": 53189871,
+      "sha256": "1e63bbdeaf88e1fd9d4301d63cf48478f5ce9470ce82ae94443490087e56958c",
+      "videos": 9896,
+      "huellas": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5"
+      }
+    }
+  ],
+  "topologia": "Next standalone real y proveedor/verificador en cgroups separados; solo loopback; sesión y usuarios sintéticos; ninguna ruta añadida"
+}

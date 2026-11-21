@@ -1,0 +1,25 @@
+{
+  "fuente_imagen": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "aplicador_fuente": "f3750dcced95e202f9141d53b01cc5df6edd78fe",
+  "archivos_sha256": {
+    "deploy/aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+    "deploy/operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "deploy/tests/infra-aplicador.py": "62dd8acb8848cf74f51764ce1cc8c34b546ceef761967541665013c0af653de5",
+    "deploy/ensayar-migracion.py": "f22e612b90ca417335614d520bd3a2fed306d57b61dc3bf72247ac8591046527",
+    "deploy/tests/compose.mjs": "b926ea94ff2ae048f1f5251ddb7afcdc5a16eaa177e2af198dc3689c6e76f231",
+    "deploy/tests/h19-imagen.mjs": "cbfa0f426e6c027758aa62ad5a59d58300a5010ce31a5c972802134a302597a8"
+  },
+  "regresiones_operativas": {
+    "pruebas": 190,
+    "estado": "PASS",
+    "warnings": "error"
+  },
+  "ensayo_mixto": {
+    "salida": 0,
+    "stderr_bytes": 0,
+    "imagenes_previas_distintas": "Cooper/chat-cooper b3; chat-n8n/chat-runner cbf20685",
+    "ids_exactos_restaurados": 7,
+    "actualizacion": "PASS",
+    "limpieza": "PASS"
+  }
+}

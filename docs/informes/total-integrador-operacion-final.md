@@ -1,5 +1,7 @@
 # Aceptación operativa de la imagen integrada final
 
+**Antecedente histórico:** la aceptación vigente de este subfrente está en [operación b3 con corrección H19](total-integrador-operacion-b3.md). e942 quedó sustituida al detectarse el defecto de memoria del puente.
+
 21-11-2026, Lima. La aceptación vigente corresponde a la fuente **`e942dc9eab05242f7967d1c7c8631a3e3171d6da`**, que incluye la corrección de IDs ARIA de Biblia. La imagen `e1244bd` queda como antecedente: su ensayo uniforme no cubría los relés con imágenes distintas y ya no representa el código final.
 
 Este subfrente trabajó en ramas y checkouts propios, con CPU 16–23 y fixtures privados bajo `~/.cache`. No ejecutó SSH ni cambió el VPS. El integrador consolida `docs/ESTADO.md`, la puerta completa, Sentinel y el estado del despliegue.

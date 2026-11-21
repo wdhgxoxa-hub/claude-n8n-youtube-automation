@@ -1,0 +1,67 @@
+{
+  "estado": "PASS",
+  "salida": 0,
+  "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "image_id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+  "casos": [
+    {
+      "caso": "administrador",
+      "videos": 9896,
+      "pedidos": 55,
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "pico_MiB": 740.09,
+      "oom": 0,
+      "oom_kill": 0,
+      "swap_bytes": 0,
+      "log_sha256": "a7e4f109ca6c0df3c7d86a63d97ed85e7ecf0f4f2eb58f0262edefe5bc990a64",
+      "errores_avisos_log": 0
+    },
+    {
+      "caso": "usuario-0",
+      "videos": 999,
+      "pedidos": 5,
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "pico_MiB": 243.68,
+      "oom": 0,
+      "oom_kill": 0,
+      "swap_bytes": 0,
+      "log_sha256": "884f11d4cfb6fe746d8260284c8b712ebb266b97597cad25dbe75f7ef85ca676",
+      "errores_avisos_log": 0
+    },
+    {
+      "caso": "usuario-9",
+      "videos": 900,
+      "pedidos": 5,
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "pico_MiB": 228.96,
+      "oom": 0,
+      "oom_kill": 0,
+      "swap_bytes": 0,
+      "log_sha256": "7a6329cbb5d673ac2b7da12ba0ade570b5e36958efbcbe6c02132e047bdeef65",
+      "errores_avisos_log": 0
+    },
+    {
+      "caso": "sin-recursos",
+      "videos": 0,
+      "pedidos": 5,
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "pico_MiB": 127.48,
+      "oom": 0,
+      "oom_kill": 0,
+      "swap_bytes": 0,
+      "log_sha256": "eb58aa6bf7527217ea75cfb9cfc7e7638282242e6b6e460898d75117945dd8a3",
+      "errores_avisos_log": 0
+    }
+  ],
+  "fixture_original_filas": 10000,
+  "fuente_herramientas": "1c65535",
+  "snapshot_generador": "medir-volumen-n8n.cjs --exportar-snapshots",
+  "cpu": "16-23",
+  "sin_diagnostico_gc_en_aplicacion": true,
+  "sin_rutas_runtime_agregadas": true,
+  "sin_revision_visual": true
+}

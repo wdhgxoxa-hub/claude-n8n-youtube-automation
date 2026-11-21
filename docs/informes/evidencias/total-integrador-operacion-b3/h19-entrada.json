@@ -1,0 +1,32 @@
+{
+  "estado": "PASS",
+  "fixture_sha256": "51fca8c9bfcf878c7ec9fe3f6f0a2537a36d86ef5c1ddd95534956a370fc11c3",
+  "origen_publico": "docs/informes/evidencias/total-volumen-n8n/despues/medicion.json",
+  "origen_sha256": "171c6b7bc7d54ea373894c42ee9a7fb0059e776db1ced2b2d2b886cfbaa09bd9",
+  "casos": {
+    "administrador": {
+      "videos": 9896,
+      "snapshot_sha256": "623be38589a02daa1a0e6923ef06683cc25341ba92edaa16016a3d706fa020e9",
+      "bytes": 51372372,
+      "igual_al_recibo_publico_original": true
+    },
+    "usuario-0": {
+      "videos": 999,
+      "snapshot_sha256": "dc367215a649b3ff3241ecf6915408ab37ad2af64ab955efafaead66f788d793",
+      "bytes": 5185571,
+      "igual_al_recibo_publico_original": true
+    },
+    "usuario-9": {
+      "videos": 900,
+      "snapshot_sha256": "c1c4942fc236069e444ec82db061ae08b8914ed41cdb17194e5593ca61282633",
+      "bytes": 4672566,
+      "igual_al_recibo_publico_original": true
+    },
+    "sin-recursos": {
+      "videos": 0,
+      "snapshot_sha256": "003aac3abc3eab017f738fd5db62208ce88823e2f5cf69d3cb58fcc4c3f96142",
+      "bytes": 26,
+      "igual_al_recibo_publico_original": true
+    }
+  }
+}

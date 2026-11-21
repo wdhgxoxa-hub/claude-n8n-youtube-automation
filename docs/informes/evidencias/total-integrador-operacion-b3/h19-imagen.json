@@ -1,0 +1,96 @@
+{
+  "estado": "PASS",
+  "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "image_id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+  "arnes_sha256": "cbfa0f426e6c027758aa62ad5a59d58300a5010ce31a5c972802134a302597a8",
+  "resultados": [
+    {
+      "caso": "administrador",
+      "estado": "PASS",
+      "memoria_antes": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "199413760",
+        "memory.peak": "230137856",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "memoria_despues": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "674938880",
+        "memory.peak": "776036352",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "contenedor": "false running c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+      "recibo": "administrador.json"
+    },
+    {
+      "caso": "usuario-0",
+      "estado": "PASS",
+      "memoria_antes": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "108044288",
+        "memory.peak": "138997760",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "memoria_despues": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "236847104",
+        "memory.peak": "255516672",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "contenedor": "false running c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+      "recibo": "usuario-0.json"
+    },
+    {
+      "caso": "usuario-9",
+      "estado": "PASS",
+      "memoria_antes": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "105062400",
+        "memory.peak": "136171520",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "memoria_despues": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "240082944",
+        "memory.peak": "240082944",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "contenedor": "false running c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+      "recibo": "usuario-9.json"
+    },
+    {
+      "caso": "sin-recursos",
+      "estado": "PASS",
+      "memoria_antes": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "96980992",
+        "memory.peak": "127574016",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "memoria_despues": {
+        "memory.max": "1073741824",
+        "memory.swap.max": "0",
+        "memory.current": "133672960",
+        "memory.peak": "133672960",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0"
+      },
+      "contenedor": "false running c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+      "recibo": "sin-recursos.json"
+    }
+  ]
+}

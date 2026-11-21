@@ -1,0 +1,41 @@
+{
+  "estado": "PASS",
+  "archivos_sha256": {
+    "codigo-probado.json": "b0523bfad83a3169599b5b9709595c3f9b94b1e613dbc19939ea73d527ae9239",
+    "compose.log": "1886948846dddda9e02d986b561719aa317673f13cbd23f04fcba131a9621c27",
+    "h19-administrador.json": "7e44a45e3495c56e097b2fe830702bcf5b18e50770c1d8948d22749b09a04be3",
+    "h19-entrada.json": "b9608ddd77ffd0462169d7185cd2a18014b33cee1ae6c051bd423d15d022960b",
+    "h19-imagen.json": "9a6ce9f077b3ab4caaa0193870ab0a053974adf4a882b57120bd5c5ddfacba25",
+    "h19-resumen.json": "a6bcdddf5afca1261dcec765b03f6c41cb42af445bf1c69b179a42ff03c16d78",
+    "h19-sin-recursos.json": "9aea0842601ba9b9f1e6c6eaed28f75957a47a592415c898a7bb4381d08c3549",
+    "h19-usuario-0.json": "70d8a525c0b12927f46d10ef9b1739a8d7fad82cc605bb13aee851f3d58c3051",
+    "h19-usuario-9.json": "1a750b5b7d93e8e2c747524d9806ffabd2cc06fe20ada050c14b4dae97447168",
+    "imagen.json": "b6fd32ca6829d16d9643c79dfb2a53e9bfe27464448598917e9361b10d1b230c",
+    "infra-aceptacion.json": "da9eba06a191b25010727a229b7a56af28811c87f0679b39c02db6f2b7ba69f6",
+    "infra-aplicador.json": "5f2b2a8e4cba0ff2ec40cd595f1d3cf74062c7eaaa4484c5174177bc7ee1e2e4",
+    "migracion.json": "763ef368c93f9fb880696637d8603ba89cf124b507cb1ebcb957822190a12b99",
+    "motor.json": "0f3b7465f10d6e25c8eefa52d435aad72b5b534cea5a21d637068d350f4a4c78",
+    "operacion-tests.log": "fc85e4ac7d75e49e65f70ee4d5cfc43025212dedc737e282024d347536767b01"
+  },
+  "recibos_operacion_privados": {
+    "fallo-inyectado.json": {
+      "ruta": "/home/david/.cache/tiop-b3/cooper/.cache/e2e-vps-nUwTZv/aceptacion-infra-1795295361180647286/fallo-inyectado.json",
+      "sha256": "533362c2ddc86d26cc34968b71cc7591ef4417dbfc35b4840cc4ce38e4227b0e",
+      "estado": "FALLO_REVERTIDO"
+    },
+    "actualizacion.json": {
+      "ruta": "/home/david/.cache/tiop-b3/cooper/.cache/e2e-vps-nUwTZv/aceptacion-infra-1795295361180647286/actualizacion.json",
+      "sha256": "6c000b8ea03d08cb68ce843802d37478e277ac94096652565e71a1c18338db59",
+      "estado": "PASS"
+    }
+  },
+  "h19_final_directorio": "/home/david/.cache/cooper-ti-operacion-b3/h19-final",
+  "h19_resultado_sha256": "9a6ce9f077b3ab4caaa0193870ab0a053974adf4a882b57120bd5c5ddfacba25",
+  "h19_primera_pasada": {
+    "ruta": "/home/david/.cache/cooper-ti-operacion-b3/h19/resultado-imagen.json",
+    "sha256": "97440083dc0d4631fbb2005ff6afacd32ab1e043c6c8cde535e1db49ab8a53bc",
+    "estado": "PASS antes de incorporar guardas automáticas de entradas y oom"
+  },
+  "sin_datos_productivos_publicados": true,
+  "remoto_modificado_por_este_frente": false
+}

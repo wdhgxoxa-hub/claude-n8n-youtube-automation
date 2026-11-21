@@ -1,0 +1,76 @@
+{
+  "estado": "PASS",
+  "caso": "usuario-0",
+  "videos": 999,
+  "pedidos": 5,
+  "erroresProveedor": 0,
+  "reintentos": 0,
+  "sincronizaciones": [
+    {
+      "muestra": 0,
+      "ms": 975.962473,
+      "pedidos": 1,
+      "videos": 999
+    },
+    {
+      "muestra": 1,
+      "ms": 610.2786119999998,
+      "pedidos": 1,
+      "videos": 999
+    },
+    {
+      "muestra": 2,
+      "ms": 680.690709,
+      "pedidos": 1,
+      "videos": 999
+    },
+    {
+      "muestra": 3,
+      "ms": 727.1449660000003,
+      "pedidos": 1,
+      "videos": 999
+    },
+    {
+      "muestra": 4,
+      "ms": 643.3416090000001,
+      "pedidos": 1,
+      "videos": 999
+    }
+  ],
+  "lecturas": [
+    {
+      "muestra": 0,
+      "ms": 213.30598800000053,
+      "bytes": 5370176,
+      "sha256": "46777f217d14ad01f9b4aa542df812e1465e3a0c1098cd62c4c70666d0d89e1e",
+      "videos": 999,
+      "huellas": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a"
+      }
+    },
+    {
+      "muestra": 1,
+      "ms": 108.73901899999964,
+      "bytes": 5370176,
+      "sha256": "46777f217d14ad01f9b4aa542df812e1465e3a0c1098cd62c4c70666d0d89e1e",
+      "videos": 999,
+      "huellas": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a"
+      }
+    },
+    {
+      "muestra": 2,
+      "ms": 108.22732999999971,
+      "bytes": 5370176,
+      "sha256": "46777f217d14ad01f9b4aa542df812e1465e3a0c1098cd62c4c70666d0d89e1e",
+      "videos": 999,
+      "huellas": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a"
+      }
+    }
+  ],
+  "topologia": "Next standalone real y proveedor/verificador en cgroups separados; solo loopback; sesión y usuarios sintéticos; ninguna ruta añadida"
+}

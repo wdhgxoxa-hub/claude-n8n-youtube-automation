@@ -1,0 +1,76 @@
+{
+  "estado": "PASS",
+  "caso": "usuario-9",
+  "videos": 900,
+  "pedidos": 5,
+  "erroresProveedor": 0,
+  "reintentos": 0,
+  "sincronizaciones": [
+    {
+      "muestra": 0,
+      "ms": 868.855911,
+      "pedidos": 1,
+      "videos": 900
+    },
+    {
+      "muestra": 1,
+      "ms": 547.9191469999998,
+      "pedidos": 1,
+      "videos": 900
+    },
+    {
+      "muestra": 2,
+      "ms": 494.06539599999996,
+      "pedidos": 1,
+      "videos": 900
+    },
+    {
+      "muestra": 3,
+      "ms": 514.6223050000003,
+      "pedidos": 1,
+      "videos": 900
+    },
+    {
+      "muestra": 4,
+      "ms": 532.8483510000001,
+      "pedidos": 1,
+      "videos": 900
+    }
+  ],
+  "lecturas": [
+    {
+      "muestra": 0,
+      "ms": 189.08795299999974,
+      "bytes": 4839001,
+      "sha256": "63bc578685da3f6ab958b0c28bc6475640c930b9367ab5df47430703f40ca856",
+      "videos": 900,
+      "huellas": {
+        "videos": "af90f37ed6d9093c97bde11abc43dd43bb123ad59a37591e97a927c3ced9ae65",
+        "canales": "6195f78cd788dea83c49c5f445101c4e1815c7773674c25fe8baa9cfc6340bde"
+      }
+    },
+    {
+      "muestra": 1,
+      "ms": 154.3820310000001,
+      "bytes": 4839001,
+      "sha256": "63bc578685da3f6ab958b0c28bc6475640c930b9367ab5df47430703f40ca856",
+      "videos": 900,
+      "huellas": {
+        "videos": "af90f37ed6d9093c97bde11abc43dd43bb123ad59a37591e97a927c3ced9ae65",
+        "canales": "6195f78cd788dea83c49c5f445101c4e1815c7773674c25fe8baa9cfc6340bde"
+      }
+    },
+    {
+      "muestra": 2,
+      "ms": 102.84762499999988,
+      "bytes": 4839001,
+      "sha256": "63bc578685da3f6ab958b0c28bc6475640c930b9367ab5df47430703f40ca856",
+      "videos": 900,
+      "huellas": {
+        "videos": "af90f37ed6d9093c97bde11abc43dd43bb123ad59a37591e97a927c3ced9ae65",
+        "canales": "6195f78cd788dea83c49c5f445101c4e1815c7773674c25fe8baa9cfc6340bde"
+      }
+    }
+  ],
+  "topologia": "Next standalone real y proveedor/verificador en cgroups separados; solo loopback; sesión y usuarios sintéticos; ninguna ruta añadida"
+}
