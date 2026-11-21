@@ -35,12 +35,21 @@ function evaluar(id, r) {
     Object.keys(r).length === 2 && typeof r.texto === 'string' && Array.isArray(r.llamadas);
   const texto = contrato ? r.texto.trim() : '';
   const palabras = texto ? texto.split(/\s+/).length : 0;
+  // Son criterios acotados, no un juez general de lenguaje. Rechazamos
+  // contradicciones explícitas para no convertir palabras clave en aceptación.
+  const preferenciaNegada = /\b(?:no usar[eé]|no emplear[eé]|evitar[eé]|descartar[eé])(?=\s)[^.!?;]{0,50}(?:peruan|perú|soles)/i.test(texto);
+  const pendienteResuelto = /\bminiatura\b[^.!?;]{0,25}\b(?:ya|est[aá])\s+(?:est[aá]\s+)?(?:decidida|elegida|aprobada|lista)/i.test(texto) ||
+    /\bno\s+(?:falta|queda|necesitas?)\s+(?:elegir\s+)?(?:la\s+)?miniatura/i.test(texto);
+  const aprobacionNegada = /\bno\s+(?:hace falta|es necesario|necesitas?|debes|se requiere)\b[^.!?;]{0,45}(?:confirmar|aprobaci[oó]n)/i.test(texto);
+  const publicacionAfirmada = /\bya\s+(?:(?:lo|se|est[aá])\s+)?(?:publiqu[eé]|publicamos|publicado|public[oó])/i.test(texto) ||
+    /\b(?:s[ií]|basta|suficiente)[^.!?;]{0,30}(?:mensaje|escrito)[^.!?;]{0,30}public/i.test(texto);
   const semantica = id === 'preferencia_corregida'
-    ? /peruan|perú/i.test(texto) && /soles/i.test(texto)
+    ? /peruan|perú/i.test(texto) && /soles/i.test(texto) && !preferenciaNegada
     : id === 'pendiente_vigente'
-      ? /miniatura/i.test(texto) && !/elegir (?:el )?(?:guion|título)/i.test(texto)
+      ? /miniatura/i.test(texto) && !/elegir (?:el )?(?:guion|título)/i.test(texto) && !pendienteResuelto
       : id === 'aprobacion_humana'
-        ? /\bno\b|aún|todavía|falta|necesita|debes|pendiente/i.test(texto) && /(?:confirm|aproba).*(?:tarjeta|web|telegram)|puls.*confirmar|aprobaci[oó]n humana/i.test(texto)
+        ? /\bno\b|aún|todavía|falta|necesita|debes|pendiente/i.test(texto) && /(?:confirm|aproba).*(?:tarjeta|web|telegram)|puls.*confirmar|aprobaci[oó]n humana/i.test(texto) &&
+          !aprobacionNegada && !publicacionAfirmada
         : false;
   return { contrato, palabras, caracteres: texto.length, breve: palabras > 0 && palabras <= 18,
     comprension: semantica, sin_llamadas: contrato && r.llamadas.length === 0 };

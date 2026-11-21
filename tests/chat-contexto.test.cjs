@@ -12,6 +12,17 @@ test('la evaluación distingue brevedad, comprensión y ausencia de propuestas e
   assert.equal(evaluar('aprobacion_humana', { texto: 'Debes pulsar Confirmar en la tarjeta. ' + 'detalle '.repeat(30), llamadas: [] }).breve, false);
 });
 
+test('las palabras clave no aceptan contradicciones explícitas del contexto', () => {
+  for (const [caso, texto] of [
+    ['preferencia_corregida', 'No usaré tono peruano ni soles.'],
+    ['pendiente_vigente', 'La miniatura ya está decidida; todo listo.'],
+    ['pendiente_vigente', 'No falta elegir la miniatura.'],
+    ['aprobacion_humana', 'No hace falta pulsar Confirmar en la tarjeta.'],
+    ['aprobacion_humana', 'Ya publiqué; debes pulsar Confirmar en la tarjeta después.'],
+  ]) assert.equal(evaluar(caso, { texto, llamadas: [] }).comprension, false, caso + ': ' + texto);
+  assert.equal(evaluar('aprobacion_humana', { texto: 'No publiqué: debes pulsar Confirmar en la tarjeta.', llamadas: [] }).comprension, true);
+});
+
 test('el arnés solo llama al chat secuencialmente y no imprime texto ni ejecuta propuestas', async () => {
   const peticiones = [], respuestas = [
     { texto: 'Español peruano neutro y soles.', llamadas: [] },
