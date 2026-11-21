@@ -1,0 +1,184 @@
+{
+  "fecha_lima": "2026-11-21 15:07",
+  "commit_codigo": "be2b242",
+  "resultado": "PASS_FOCAL_NO_APRUEBA_RONDA",
+  "entorno": {
+    "imagen_ci": "localhost/cooper-ci:bfd5e79283bd",
+    "red": "none",
+    "cpus": "12-23",
+    "datos": "Cuentas y contenidos ficticios de demo; sin proveedores ni VPS"
+  },
+  "incidente_original": {
+    "ronda": "cierre-3",
+    "resultado": "85 PASS / 1 FAIL / 6 no ejecutadas",
+    "sentinel_sha256": "84d800441fda8c394498e1de51594f293ca121612a4948a635fd1ad4b599f8b6",
+    "reproduccion_completa": false,
+    "limitacion": "Las semillas aisladas no repitieron el error de /publicados; el control causal reproduce el POST de montajes y su misma consola."
+  },
+  "antes": {
+    "origen_sha256": "e08c13a92440dcb6e8901be898c564832f033b78253bd5c3f48211d818229f95",
+    "semillas": [
+      1528974480,
+      1528974481
+    ],
+    "intentos": [
+      {
+        "intento": 1,
+        "rondas": [
+          {
+            "semilla": 1528974480,
+            "pedidas": 338,
+            "hechas": 155,
+            "url_final": "/canales"
+          },
+          {
+            "semilla": 1528974481,
+            "pedidas": 74,
+            "hechas": 74,
+            "url_final": "/publicados"
+          }
+        ],
+        "errores_consola": 0,
+        "bloqueos_cliente": 0
+      },
+      {
+        "intento": 2,
+        "rondas": [
+          {
+            "semilla": 1528974480,
+            "pedidas": 338,
+            "hechas": 160,
+            "url_final": "/canales"
+          },
+          {
+            "semilla": 1528974481,
+            "pedidas": 74,
+            "hechas": 74,
+            "url_final": "/publicados"
+          }
+        ],
+        "errores_consola": 0,
+        "bloqueos_cliente": 0
+      },
+      {
+        "intento": 3,
+        "rondas": [
+          {
+            "semilla": 1528974480,
+            "pedidas": 338,
+            "hechas": 200,
+            "url_final": "/canales"
+          },
+          {
+            "semilla": 1528974481,
+            "pedidas": 74,
+            "hechas": 74,
+            "url_final": "/publicados"
+          }
+        ],
+        "errores_consola": 0,
+        "bloqueos_cliente": 0
+      }
+    ],
+    "control_causal": {
+      "control": "Actualizar montajes desde fábrica",
+      "excluido": false,
+      "peticiones_post": [
+        {
+          "metodo": "POST",
+          "ruta": "/api/marcas/montajes",
+          "fallo": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "errores_consola": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ],
+      "hallazgos_guardian": [
+        {
+          "tipo": "seguridad",
+          "gravedad": "info",
+          "titulo": "escritura bloqueada: POST /api/marcas/montajes"
+        }
+      ]
+    }
+  },
+  "despues": {
+    "origen_sha256": "b9c7850c4a72f632b1eaf77e8978696d36fee553b906637c09b958ddfb3adaeb",
+    "semillas": [
+      1528974480,
+      1528974481
+    ],
+    "intentos": [
+      {
+        "intento": 1,
+        "rondas": [
+          {
+            "semilla": 1528974480,
+            "pedidas": 338,
+            "hechas": 140,
+            "url_final": "/marcas"
+          },
+          {
+            "semilla": 1528974481,
+            "pedidas": 74,
+            "hechas": 74,
+            "url_final": "/publicados"
+          }
+        ],
+        "errores_consola": 0,
+        "bloqueos_cliente": 0
+      },
+      {
+        "intento": 2,
+        "rondas": [
+          {
+            "semilla": 1528974480,
+            "pedidas": 338,
+            "hechas": 1,
+            "url_final": "/videos/demo-d5825be3-0ba1-41f5-be9c-b35d4e241803-3"
+          },
+          {
+            "semilla": 1528974481,
+            "pedidas": 74,
+            "hechas": 74,
+            "url_final": "/publicados"
+          }
+        ],
+        "errores_consola": 0,
+        "bloqueos_cliente": 0
+      },
+      {
+        "intento": 3,
+        "rondas": [
+          {
+            "semilla": 1528974480,
+            "pedidas": 338,
+            "hechas": 134,
+            "url_final": "/marcas"
+          },
+          {
+            "semilla": 1528974481,
+            "pedidas": 74,
+            "hechas": 74,
+            "url_final": "/publicados"
+          }
+        ],
+        "errores_consola": 0,
+        "bloqueos_cliente": 0
+      }
+    ],
+    "control_causal": {
+      "control": "Actualizar montajes desde fábrica",
+      "excluido": true,
+      "peticiones_post": [],
+      "errores_consola": [],
+      "hallazgos_guardian": []
+    }
+  },
+  "pruebas": {
+    "rojo": "1 fallo esperado entre 3 pruebas al faltar la exclusión",
+    "verde": "3/3; conserva bloqueo/evaluación de POST directo y hashes privados",
+    "producto_identico": "git diff --quiet 06705b0 HEAD -- cooper/src cooper/drizzle cooper/public salió 0",
+    "puerta_completa": "A cargo del orquestador tras integrar; no sustituida por focal"
+  }
+}

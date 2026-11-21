@@ -1,0 +1,114 @@
+{
+  "estado": "HISTORICO_NO_APROBACION_FINAL",
+  "fecha_lima": "2026-11-21T15:52:51.650022-05:00",
+  "fuente": "3ca4abdc3fe72a3c289f48f32d89ae87e0587159",
+  "playwright_sha256": "d6fd28736a50958729eb1472a7fc6531d42afeb9d4156c001da574071ae75a86",
+  "playwright_stats": {
+    "startTime": "2026-11-21T20:19:25.570Z",
+    "duration": 1964505.2989999999,
+    "expected": 92,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "playwright_errors": [],
+  "sentinel": [
+    {
+      "ancho": 1440,
+      "sha256": "9410219f2fd0758f335fe3897eaa60bcca4a7818a8e9b4a8e37a6ddb3bd558ef",
+      "modulos": [
+        {
+          "nombre": "recorridos",
+          "hallazgos": 4
+        },
+        {
+          "nombre": "caos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "estabilidad",
+          "hallazgos": 0
+        }
+      ],
+      "pantallas": 36,
+      "acciones_caos": 5658,
+      "hallazgos": [
+        {
+          "tipo": "cobertura",
+          "gravedad": "info",
+          "titulo": "Vista sin URL propia: solo la revisa recorridos"
+        }
+      ],
+      "peticiones_fallidas_sha256": "4997818504af2bf4fb41c896ad1b3bf56ce8f38251759c112000af702e2d18f5",
+      "bloqueos_cliente": 0,
+      "peticiones_fallidas_total": 3685,
+      "peticiones_fallidas_por_error": {
+        "net::ERR_ABORTED": 3685
+      }
+    },
+    {
+      "ancho": 390,
+      "sha256": "91e819670fafa7b3ce08701bcd9e281889d187557559b357ec664e11cc3352e7",
+      "modulos": [
+        {
+          "nombre": "recorridos",
+          "hallazgos": 5
+        },
+        {
+          "nombre": "caos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "estabilidad",
+          "hallazgos": 0
+        }
+      ],
+      "pantallas": 35,
+      "acciones_caos": 8867,
+      "hallazgos": [
+        {
+          "tipo": "cobertura",
+          "gravedad": "info",
+          "titulo": "Vista sin URL propia: solo la revisa recorridos"
+        },
+        {
+          "tipo": "cobertura",
+          "gravedad": "info",
+          "titulo": "Vista sin URL propia: solo la revisa recorridos"
+        }
+      ],
+      "peticiones_fallidas_sha256": "29fe79433852cc7680c32fb425658c58fc7b6939b9104ed189a2487e0cc884a1",
+      "bloqueos_cliente": 0,
+      "peticiones_fallidas_total": 2970,
+      "peticiones_fallidas_por_error": {
+        "net::ERR_ABORTED": 2970
+      }
+    }
+  ],
+  "recuperacion_sha256": "be61fe53fa6b05547c6aa0346b4c3a2cfeb8e2087bcc6d8b2e9eec5685329e68",
+  "recuperacion": {
+    "fecha_lima": "2026-11-21T15:52:10.464019-05:00",
+    "fuente": "3ca4abdc3fe72a3c289f48f32d89ae87e0587159",
+    "supervisor_rc": 143,
+    "supervisor_causa": "no demostrada; contenedor continuó ejecutándose",
+    "podman_wait_rc": 0,
+    "contenedor_rc": "0",
+    "espera_stderr": "",
+    "stats": {
+      "startTime": "2026-11-21T20:19:25.570Z",
+      "duration": 1964505.2989999999,
+      "expected": 92,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errores_globales": [],
+    "estado": "EVIDENCIA_HISTORICA_H19",
+    "cierre_6": "NO_INICIADO"
+  },
+  "muestras_visuales": 24,
+  "huellas_contrastadas": 24,
+  "decodificacion_completa_videos_realizada": false,
+  "recorridos_por_fotogramas_realizados": false,
+  "limite": "H19 requiere cambio de producto y dos rondas nuevas. La causa de 143 del supervisor no está demostrada."
+}

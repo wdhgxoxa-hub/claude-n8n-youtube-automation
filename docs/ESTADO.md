@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:06 (Lima).
+Última actualización: 2026-11-21 16:11 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — cierre tardío H19 integrado y aceptación reiniciada:** auditoría de cinco refs detectó que el puente de `7837b84` conservaba el código con OOM a 1 GiB sin swap. Corrección de seis sentencias por transacción incorporada por raíz en `dce1b03`; ensayos sin swap en `b3e608e`. Pasan 59 pruebas focales de aplicación, lint/tipos, 190 operativas y 239 flujos/volumen; bundle y copia final b3 regenerados con 26 regresiones adicionales. Los otros cierres son evidencia histórica, sin runtime pendiente ni sustitución de Sentinel moderno. Implementado/integrado y probado localmente; nueva imagen, puerta, rondas y despliegue siguen a cargo del integrador. [Selección y huellas](informes/total-integrador-cierres-tardios.md).
 
 - **21-11-2026, Lima — capacidad H19 incorporada tras cierre tardío:** corrección del OOM reproducido con 10.000 videos sin swap, seis sentencias reutilizables por transacción; regresiones de aislamiento, rollback, observabilidad y avisos aprobadas. 59 focales y 190 operativas sin avisos. Migración y Compose exigen 1 GiB/swap0; corte `b3e608e` en nueva puerta, dos rondas e imagen. El PASS anterior `4e029e7` queda histórico, no acredita esta combinación. Sin push ni despliegue de esta misión. [Seguimiento](informes/total-integrador.md).
 

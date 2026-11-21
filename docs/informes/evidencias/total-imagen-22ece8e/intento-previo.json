@@ -1,0 +1,8 @@
+{
+  "estado": "RECHAZADO_ANTES_DE_MUTACION",
+  "motivo": "Invocación sin COOPER_LAB=1 explícito en el entorno del arnés",
+  "config_leida": false,
+  "servicios_iniciados": false,
+  "correccion": "Declarar COOPER_LAB=1 antes de invocar el ensayo privado",
+  "cambios_producto": false
+}

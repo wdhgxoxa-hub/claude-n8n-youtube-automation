@@ -1,0 +1,35 @@
+{
+  "fecha_utc": "2026-11-21T19:14:34.780912+00:00",
+  "fuente_commit": "bfd5e79283bdd2c571937a9f30d8ff512015430f",
+  "etiqueta": "localhost/cooper:bfd5e79",
+  "imagen_id": "sha256:c49ab59a02361557751ca58b3f853cb201f57241f46b745af007253a651d0db0",
+  "formato": "docker",
+  "bytes": 267692019,
+  "archivo_sha256": "7de4ab10c82939be0732483cbffd29eee3c12b0b2f40d342b76a57046bc53240",
+  "fuentes_archive_sha256": "a20f72b5f9871e60c0f463b8e84239a9f2123224767885fc6ceb40a8fc51feef",
+  "log_construccion_sha256": "1bb2f3818c470e3d7ffb3383d23c7abc8a273292dbb0812a7495bfaf992361ac",
+  "advertencias": 0,
+  "migraciones": 13,
+  "producto_rutas": [
+    "cooper/src",
+    "cooper/drizzle",
+    "cooper/public",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "deploy/Containerfile"
+  ],
+  "producto_objetos": {
+    "cooper/src": "c878e9a3701bf5cd2065f08af4e144f82f3e0842",
+    "cooper/drizzle": "23c8d128cb3afe95b0953c30a9eea66b4ce0eef5",
+    "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+    "cooper/package.json": "45ab9d385e70d5defc238ccbdc8d6c2bdc36285d",
+    "cooper/package-lock.json": "f5864ce4698f755d0a8c8a45f96f4253e44ad4ed",
+    "cooper/next.config.ts": "dc9b20b04b185f9b1ac40551be4307a4e8ca2c29",
+    "deploy/Containerfile": "90e5320ecfc107ac7d32cdd4110fb67fab5e032e"
+  },
+  "producto_objetos_sha256": "e11c361684ba96d7e887b706fa9f995726833051b3316be8811065d87f5351e8",
+  "algoritmo_producto": "SHA256 de JSON UTF-8 de producto_objetos, claves ordenadas, separadores coma y dos puntos sin espacios",
+  "estado": "CONSTRUIDA; puerta, aceptación y despliegue pendientes",
+  "antecedente": "Sustituye 719409f por corrección de cifras partidas en tablas móviles; sin migraciones nuevas."
+}

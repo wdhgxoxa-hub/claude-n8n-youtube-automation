@@ -1,0 +1,47 @@
+{
+  "fecha_utc": "2026-11-21T20:51:31.724346+00:00",
+  "fuente_commit": "22ece8e1f078b149944118feeabbb6c803992ff4",
+  "etiqueta": "localhost/cooper:22ece8e1f078b149944118feeabbb6c803992ff4",
+  "imagen_id": "sha256:160671f7218a412ddeade2a0ed5d634b33772be3057e14f6d50cef70395e4159",
+  "formato": "docker",
+  "bytes": 269723823,
+  "archivo_sha256": "02bb9b4d27d1fdeddc6ed62492a7021c033618d1b66efd4f5ad5e7057b9eb6a7",
+  "fuentes_archive_sha256": "826c4a4184bb4952b23788c58c0b17ba863fd5c51b9b20f1b2c10c2bba35b731",
+  "log_construccion_sha256": "3f971fc98bdc9d20e156126d4aedb5d48f61e69cd7fd309de1e6c896c409270b",
+  "advertencias": 0,
+  "migraciones": 13,
+  "producto_rutas": [
+    "cooper/src",
+    "cooper/drizzle",
+    "cooper/public",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "deploy/Containerfile"
+  ],
+  "producto_objetos": {
+    "cooper/src": "0fd26f11262507bc7e9a805e468cc2bd8a681b02",
+    "cooper/drizzle": "23c8d128cb3afe95b0953c30a9eea66b4ce0eef5",
+    "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+    "cooper/package.json": "45ab9d385e70d5defc238ccbdc8d6c2bdc36285d",
+    "cooper/package-lock.json": "f5864ce4698f755d0a8c8a45f96f4253e44ad4ed",
+    "cooper/next.config.ts": "dc9b20b04b185f9b1ac40551be4307a4e8ca2c29",
+    "deploy/Containerfile": "90e5320ecfc107ac7d32cdd4110fb67fab5e032e"
+  },
+  "producto_objetos_sha256": "aaefde0cf0d2432e2cc9733c0a154c9be3bb037ad0288e88726b5a8e488511d0",
+  "algoritmo_producto": "SHA256 de JSON UTF-8 de producto_objetos, claves ordenadas, separadores coma y dos puntos sin espacios",
+  "estado": "CONSTRUIDA; migración, Compose y aplicador PASS; puerta, rondas y activación pendientes",
+  "antecedente": "Sustituye bfd5e79 tras corregir OOM de H19 reutilizando sentencias SQLite; sin migraciones nuevas.",
+  "identidad_archivo": "PASS",
+  "cpuset_construccion": "0-1",
+  "aceptacion_operativa": {
+    "migracion_reversion": "PASS",
+    "memory_max": 1073741824,
+    "memory_swap_max": 0,
+    "compose_bloques": 8,
+    "aplicador_fallo_reversa_actualizacion": "PASS",
+    "motor_corte_filas": 146,
+    "traslado_vps": "PASS",
+    "activada": false
+  }
+}

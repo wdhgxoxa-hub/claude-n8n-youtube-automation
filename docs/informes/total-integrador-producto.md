@@ -194,3 +194,7 @@ Huellas entregadas:
 - Paquete público `copia-final.tar.gz`: `dcbdf6b722dc08878db3d1e4bd47ba837d758f5a73d7602e627b5789a0df96f5`.
 
 Se consultaron [Compose start](https://docs.docker.com/reference/cli/docker/compose/start/), [Docker inspect](https://docs.docker.com/reference/cli/docker/inspect/) y [restauración restic por ID](https://restic.readthedocs.io/en/stable/050_restore.html). Esta entrega acredita implementación y pruebas sintéticas; la copia/réplica final real queda pendiente de la aceptación y ejecución del integrador. **Pendientes de Walter:** ninguno nuevo.
+
+## Décima revisión: cinco cierres tardíos y nueva fuente tras H19
+
+21-11-2026, Lima. La revisión contra `7837b84` detectó el defecto real de memoria del puente; se comunicó antes de editar y raíz autorizó `122f020`/`69ce3bb`, integrados como `dce1b03`/`b3e608e`. Las herramientas y evidencia completa se conservan en `1c65535`; los demás cierres seleccionados son históricos. [Informe de selección, semántica, pruebas, límites y hashes](total-integrador-cierres-tardios.md). Bundle y copia final fueron regenerados localmente para b3e608e, sin VPS; raíz repite la aceptación de la nueva fuente. No se añaden decisiones de Walter.

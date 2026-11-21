@@ -1,0 +1,22 @@
+{
+  "restauracion_verificada": "PASS",
+  "clonado": "PASS",
+  "integridad_y_claves_foraneas": "PASS",
+  "origen_intacto": true,
+  "manifiesto_origen_sha256": "b1de8f0d724737c2109e894f70b2fe64b594ec1f96d0ae0b890bb6fccbfe199b",
+  "manifiesto_clon_sha256": "4ef1f75f8347a80946b4571229bd4f9c1437d89525ff2493b387c4d68727681f",
+  "wal_incorporados": [
+    "cooper/cooper.sqlite-wal",
+    "n8n/database.sqlite-wal"
+  ],
+  "bases": {
+    "cooper/cooper.sqlite": {
+      "sha256": "8617949db683051eb1e90645cf78daa4fb9efe8cae072aa5f1f6422071090c45",
+      "tablas": 28
+    },
+    "n8n/database.sqlite": {
+      "sha256": "60a0160f69066a3a7e4f5ef40862fc335ff6eb37d517a457a3e4faa3e544e726",
+      "tablas": 187
+    }
+  }
+}

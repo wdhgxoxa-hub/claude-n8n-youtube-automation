@@ -1,0 +1,9 @@
+PASS salud, TLS verificado, cabeceras, editor privado y Cooper 1 GiB sin swap
+PASS login ficticio con cookie Auth.js Secure y datos de ensayo
+PASS Marcas: JPEG y reel sintéticos con audio, HMAC válido/inválido y reinicio sin publicación
+PASS runner externo 2.47.6, firma real n8n→Cooper, SSE sin buffering y rechazo de firma inválida
+PASS desconexión y cinco reconexiones SSE sin agotar cupos
+PASS restic cifrado, retención, restauración, conteos y hashes; reinicio saludable
+PASS exportación PC, importación en volumen vacío y arranque de datos restaurados
+PASS actualización y reversión conjunta de imagen/datos conservando estado anterior
+Evidencia local: /home/david/.cache/cooper-final4/cooper/.cache/e2e-vps-WUXdW3

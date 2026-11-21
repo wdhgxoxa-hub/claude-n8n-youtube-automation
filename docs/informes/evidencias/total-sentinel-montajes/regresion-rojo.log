@@ -1,0 +1,14 @@
+.F.
+======================================================================
+FAIL: test_controles_mutantes_excluidos_sin_bloquear_filtros_ni_caos (__main__.ExclusionesCooper.test_controles_mutantes_excluidos_sin_bloquear_filtros_ni_caos)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/ensayo/tests/test_sentinel_exclusiones.py", line 109, in test_controles_mutantes_excluidos_sin_bloquear_filtros_ni_caos
+    self.assertTrue(page.locator(selector).evaluate('(el)=>window.__sentinelExcluido(el)'))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.058s
+
+FAILED (failures=1)

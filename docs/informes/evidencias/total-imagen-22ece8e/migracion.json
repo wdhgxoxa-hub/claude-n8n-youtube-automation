@@ -1,0 +1,16 @@
+{
+  "actualizacion": "PASS",
+  "reversion": "PASS",
+  "red": "none",
+  "puertos": [],
+  "memory_max": 1073741824,
+  "memory_swap_max": 0,
+  "imagen_nueva": "localhost/cooper:22ece8e1f078b149944118feeabbb6c803992ff4",
+  "imagen_anterior": "localhost/cooper:retroceso-vps-cbf2068",
+  "respaldo_sha256": "46fe24a5d662514d9915780a2b11c9cbfb5e3b7e8fd34302a72ad8f91c032cfa",
+  "migraciones_antes": 11,
+  "migraciones_despues": 13,
+  "tablas_anteriores_conservadas": 27,
+  "integridad": "PASS",
+  "claves_foraneas": "PASS"
+}

@@ -1,0 +1,18 @@
+test_enlaza_configuracion_y_manifiesto_sin_proyectar_entorno (test_aplicar_infra.ImageIdentityTest.test_enlaza_configuracion_y_manifiesto_sin_proyectar_entorno) ... ok
+test_rechaza_configuracion_distinta_aun_con_etiqueta_correcta (test_aplicar_infra.ImageIdentityTest.test_rechaza_configuracion_distinta_aun_con_etiqueta_correcta) ... ok
+test_rechaza_enlace_manifiesto_config_falso (test_aplicar_infra.ImageIdentityTest.test_rechaza_enlace_manifiesto_config_falso) ... ok
+test_rechaza_etiqueta_ajena (test_aplicar_infra.ImageIdentityTest.test_rechaza_etiqueta_ajena) ... ok
+test_rechaza_manifiesto_ajeno (test_aplicar_infra.ImageIdentityTest.test_rechaza_manifiesto_ajeno) ... ok
+test_recibo_anterior_no_permite_identidad_distinta (test_aplicar_infra.ImageIdentityTest.test_recibo_anterior_no_permite_identidad_distinta) ... ok
+test_runtime_distinto_exige_archivo_y_prueba_criptografica (test_aplicar_infra.ImageIdentityTest.test_runtime_distinto_exige_archivo_y_prueba_criptografica) ... ok
+test_actualizacion_exige_imagenes_y_preserva_cooper (test_aplicar_infra.InfraTest.test_actualizacion_exige_imagenes_y_preserva_cooper) ... ok
+test_arranca_proxy_al_final_y_recrea_relays (test_aplicar_infra.InfraTest.test_arranca_proxy_al_final_y_recrea_relays) ... ok
+test_fallo_restaura_archivos_y_datos_reales_del_fixture (test_aplicar_infra.InfraTest.test_fallo_restaura_archivos_y_datos_reales_del_fixture) ... ok
+test_no_corta_si_existen_ejecuciones (test_aplicar_infra.InfraTest.test_no_corta_si_existen_ejecuciones) ... ok
+test_rechaza_candidato_distinto_antes_de_operar (test_aplicar_infra.InfraTest.test_rechaza_candidato_distinto_antes_de_operar) ... ok
+test_reversa_incompleta_conserva_marcador (test_aplicar_infra.InfraTest.test_reversa_incompleta_conserva_marcador) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.028s
+
+OK

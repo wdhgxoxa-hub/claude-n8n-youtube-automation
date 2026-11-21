@@ -1,0 +1,38 @@
+[
+  {
+    "archivo": "pantallas-1440-claro.json",
+    "sha256": "7c3b0b4bc52585a708b6c00d5d7a50bcf9691fa3f9e6787018e610c15f65751f",
+    "muestras": 22,
+    "fps_minimo": 60.00376883176133,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0
+  },
+  {
+    "archivo": "pantallas-1440-oscuro.json",
+    "sha256": "bd60e59e7dd54ece001631bab42e9a6b85f8c52a7db2609102291a2a12d4fae3",
+    "muestras": 22,
+    "fps_minimo": 60.00222156985647,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0
+  },
+  {
+    "archivo": "pantallas-390-claro.json",
+    "sha256": "cd664b6e6b1b892307e0c871cd7273c1665ef21949f7a32cdbb7af40b0947748",
+    "muestras": 22,
+    "fps_minimo": 59.99900828085486,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0
+  },
+  {
+    "archivo": "pantallas-390-oscuro.json",
+    "sha256": "819f120874eb7ad78ac25bc69c07be5071719dd313313448853628229aeb83bc",
+    "muestras": 22,
+    "fps_minimo": 59.999008280854845,
+    "frame_maximo_ms": 16.800000000000182,
+    "cls_maximo": 0,
+    "long_tasks": 0
+  }
+]

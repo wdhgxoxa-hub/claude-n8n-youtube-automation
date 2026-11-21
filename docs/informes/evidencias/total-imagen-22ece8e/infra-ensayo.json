@@ -1,0 +1,53 @@
+{
+  "estado": "PASS",
+  "compose_bloques": 8,
+  "servicios": {
+    "n8n": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+    },
+    "runner": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "anterior": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f"
+    },
+    "caddy": {
+      "version": "2.11.8",
+      "imagen": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "anterior": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    }
+  },
+  "archivos": {
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "motor": {
+    "migracion": "PASS",
+    "reversion": "PASS",
+    "idempotencia": "PASS",
+    "imagen_nueva": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+    "imagen_anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6",
+    "red": "none",
+    "puertos": [],
+    "cpus": 0.5,
+    "triggers_arrancados": false,
+    "integridad_y_claves_foraneas": "PASS",
+    "flujos_preservados": 45,
+    "tablas_negocio_preservadas": 9,
+    "filas_negocio_preservadas": 146,
+    "migraciones_antes": 342,
+    "migraciones_despues": 342,
+    "respaldo_sha256": "44dd221a64c46ad741f37747427c7803f489d84d2c351bf880d53beb60028146",
+    "restauracion_sha256": "44dd221a64c46ad741f37747427c7803f489d84d2c351bf880d53beb60028146",
+    "workflow_ids_active_version_sha256": "d14e7acefee211b645eba3938bff70f3c219444e1401704aa49adfd20bcbaae5",
+    "tablas_negocio_sha256": "dcf5e2174450101441e0627f9ae69a4526c66387489aef92db7e57af571fef18"
+  },
+  "cooper_image_id": "sha256:160671f7218a412ddeade2a0ed5d634b33772be3057e14f6d50cef70395e4159",
+  "cooper_artefacto": {
+    "sha256": "02bb9b4d27d1fdeddc6ed62492a7021c033618d1b66efd4f5ad5e7057b9eb6a7",
+    "etiqueta": "localhost/cooper:22ece8e1f078b149944118feeabbb6c803992ff4"
+  }
+}

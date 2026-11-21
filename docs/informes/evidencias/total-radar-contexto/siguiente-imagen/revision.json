@@ -1,0 +1,25 @@
+{
+  "estado": "REVISION_PREPARATORIA",
+  "imagen_anterior_descartada": "localhost/cooper:bfd5e79",
+  "imagen_siguiente": null,
+  "tag_requerido": "localhost/cooper:<SHA40>",
+  "motor_preservado": "146 filas, 45 workflows, 342 migraciones; corte38b362f",
+  "configuracion_y_aplicador_sin_cambios": {
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3",
+    "aplicar-infra.py": "9273e7d6e60114948ec7413dfbe92bbf2311cbbe1ff0879fb5d4706e8c5738cd",
+    "operar.py": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b"
+  },
+  "repetir": [
+    "H19 compilado con1GiB y swap0",
+    "migracion Cooper11→13 y reversa",
+    "8 bloques Compose con nueva imagen y swap0",
+    "aplicador infra con fallo/reversa/aplicacion",
+    "puerta completa y dos rondas secuenciales masrevisionvisual",
+    "hash de archivo antes/despuesdeltraslado"
+  ],
+  "vps_mutado": false,
+  "recibo_aprobacion_nueva_imagen_generado": false
+}
