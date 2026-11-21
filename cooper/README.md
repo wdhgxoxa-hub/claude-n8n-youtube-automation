@@ -210,6 +210,14 @@ Para la cadena completa de fábrica: `npm run test:ensayo:total` ejecuta tres co
 
 La ampliación `npm run test:ensayo:ramas` recorre tres veces avatar completo/parcial con voces Gemini/HeyGen/ElevenLabs, clips inline/URI, YouTube directo, música/efectos, noticia y reels de Marcas. Ejecuta además errores terminales y caídas SIGKILL en puntos durables. Usa el contenedor exclusivo `cooper-total-n8n-ramas`, red interna, datos ficticios y transportes sin red. Marcas ejecuta el receptor y worker reales en una SQLite separada y produce MP4 sintéticos con FFmpeg, con publicación simulada. Evidencia en `.cache/total-n8n-ramas/`; [resultados, diff y reversa](../docs/informes/total-n8n-ramas.md). Requiere FFmpeg/FFprobe locales además de los requisitos del ensayo total. `COOPER_RAMAS_CASOS=clips,noticia COOPER_TOTAL_RONDAS=1 npm run test:ensayo:ramas` sirve solo para diagnóstico parcial y no acreditan la misión. Nunca se recupera automáticamente un envío remoto incierto: Marcas lo conserva para revisión.
 
+### MP4 real local sin coste de API
+
+`npm run test:render:local` reutiliza el runner integral en una instancia separada `cooper-total-render-real`, sin salida de red, con datos ficticios. Genera clips gráficos originales con ImageMagick/FFmpeg y narración española con Piper ya instalado. El montaje y sus subtítulos vienen del nodo real de composición de n8n; entrega H.264/AAC vertical 1080×1920 y una adaptación horizontal 1920×1080. Se detiene en **aprobación final**, sin publicar. Las revisiones de texto/imagen y avisos siguen simulados; no se presenta como una prueba de proveedores cloud.
+
+Requiere los binarios locales `ffmpeg`, `ffprobe`, `magick`, `python3`, `unshare`, Podman y la imagen n8n ya disponible. La voz usa la instalación existente en `~/.local/share/directora/herramientas/medios/`: `venv/bin/python` y `voces/es_ES-davefx-medium.onnx` con su JSON. No instala ni descarga voces. El helper `python3 ../tools/cooper/voz_local.py --help` permite seleccionar otra instalación existente para la síntesis independiente. Si faltan dependencias, falla sin respaldo externo.
+
+Los dos MP4, WAV, SVG/PNG, SRT/ASS, composición, capturas, ffprobe, medidas de audio y trazas quedan en `.cache/total-render-real/<fecha>/`. Las URLs del ensayo son identificadores que se resuelven exclusivamente contra los archivos locales; no sirven contenido por Internet ni alimentan Cooper de producción. [Resultado, reproducción, costes y limitaciones](../docs/informes/total-render-real.md).
+
 ```bash
 npm ci
 npm run lint

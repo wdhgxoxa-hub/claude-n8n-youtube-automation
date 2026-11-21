@@ -14,14 +14,21 @@ import {
 } from "./ensayo-infra.mjs";
 import { adaptarTransportes } from "./ensayo-total-transportes.mjs";
 import { trazarPasos } from "./ensayo-total-traza.mjs";
+import {
+  adaptarMediosLocales,
+  postWebhookRegistrado,
+  relayMediosLocales,
+} from "./ensayo-render-transportes.mjs";
 
 assertNoEnvFiles();
 const ramas = process.argv.includes("--ramas");
-const CONTAINER = ramas ? "cooper-total-n8n-ramas" : "cooper-total-n8n-e2e";
-const rounds = Number(process.env.COOPER_TOTAL_RONDAS || 3);
+const renderLocal = process.argv.includes("--render-local");
+assert.ok(!(ramas && renderLocal), "Los modos ramas y render local se ejecutan por separado");
+const CONTAINER = renderLocal ? "cooper-total-render-real" : ramas ? "cooper-total-n8n-ramas" : "cooper-total-n8n-e2e";
+const rounds = renderLocal ? 1 : Number(process.env.COOPER_TOTAL_RONDAS || 3);
 assert.ok(Number.isInteger(rounds) && rounds >= 1 && rounds <= 10);
 const dir = resolve(
-  ramas ? ".cache/total-n8n-ramas" : ".cache/total-n8n-e2e",
+  renderLocal ? ".cache/total-render-real" : ramas ? ".cache/total-n8n-ramas" : ".cache/total-n8n-e2e",
   new Date().toISOString().replaceAll(":", "-"),
 );
 mkdirSync(dir, { recursive: true });
@@ -33,14 +40,21 @@ const evidence = {
   rondas: [],
   sustituciones: [],
   pruebas: [],
+  modo: renderLocal
+    ? "medios locales reales; detener en aprobación final"
+    : "transportes ficticios",
 };
-let instance, receiver;
+const medios = renderLocal
+  ? await (await import("./ensayo-render-medios.mjs")).crearMediosLocales(dir)
+  : null;
+let instance, receiver, relay;
 const save = () =>
   writeFileSync(`${dir}/resultado.json`, JSON.stringify(evidence, null, 2));
 let closed;
 async function cleanup() {
   if (closed) return;
   closed = true;
+  await stopChild(relay?.child);
   await stopChild(receiver);
   if (instance) {
     podman("stop", CONTAINER);
@@ -52,6 +66,9 @@ async function cleanup() {
     );
   }
   evidence.fin = new Date().toISOString();
+  if (medios) evidence.medios = medios.resumen();
+  if (relay)
+    evidence.relay = { solicitudes: relay.solicitudes, errores: relay.errores };
   save();
 }
 for (const sig of ["SIGINT", "SIGTERM"])
@@ -73,6 +90,10 @@ try {
     redInterna: true,
   };
   console.log("Instancia aislada lista: " + url);
+  if (medios) {
+    relay = relayMediosLocales(CONTAINER, medios.atender);
+    await relay.ready;
+  }
   // Receptor ficticio que comprueba la firma real del subflujo de progreso. Nunca imprime el secreto.
   const receiverCode = `const http=require('node:http'),crypto=require('node:crypto');http.createServer(async(req,res)=>{let b='';for await(const c of req)b+=c;const t=req.headers['x-cooper-timestamp'];const sig=crypto.createHmac('sha256',process.env.COOPER_WEBHOOK_SECRET).update(t+'.'+b).digest('hex');const ok='sha256='+sig===req.headers['x-cooper-signature'] && Math.abs(Date.now()-Number(t))<300000;res.writeHead(ok?200:401,{'content-type':'application/json'});res.end(JSON.stringify({ok,permitido:ok}));}).listen(8889,'127.0.0.1',()=>console.log('ready'));`;
   async function restartReceiver() {
@@ -113,7 +134,8 @@ try {
     });
   // Snapshot de prueba copiado a cada base; ninguna columna de OAuth contiene datos.
   const snapshotPath =
-    process.env.COOPER_TOTAL_COPIA || "../tests/fixtures/n8n-total-datos.json";
+    (!renderLocal && process.env.COOPER_TOTAL_COPIA) ||
+    "../tests/fixtures/n8n-total-datos.json";
   assert.ok(
     snapshotPath.endsWith(".json"),
     "La copia debe ser el JSON saneado del exportador",
@@ -176,7 +198,9 @@ try {
     (a, b) =>
       Number(b.id === "FabErrores000001") - Number(a.id === "FabErrores000001"),
   )) {
-    const adapted = adaptarTransportes(source, { noticia: ramas });
+    const adapted = renderLocal
+      ? adaptarMediosLocales(source)
+      : adaptarTransportes(source, { noticia: ramas });
     evidence.sustituciones.push(...adapted.sustituciones);
     let encoded = JSON.stringify(adapted.workflow);
     for (const [a, b] of Object.entries(replacements))
@@ -207,6 +231,11 @@ try {
           )
           .replace(/https:\/\/[^'\s]+/g, "http://127.0.0.1:9/solo-ensayo")
           .replace(/maxVideosDiaPorCanal:\s*3/, "maxVideosDiaPorCanal: 20");
+        if (renderLocal)
+          n.parameters.jsCode = n.parameters.jsCode.replace(
+            /(allow(?:Redes|Analytics|Radar|Vidiq):\s*)true/g,
+            "$1false",
+          );
       }
       if (source.id === "FabRetornoClaud1" && n.type.endsWith(".webhook")) {
         n.disabled = false;
@@ -259,7 +288,8 @@ try {
     "FabRetornoClaud1",
     "FabConfirmar0001",
   ])
-    await publish(ids[id]);
+    if (!renderLocal || ["FabOrquestador01", "FabRetornoClaud1"].includes(id))
+      await publish(ids[id]);
   async function wrapper(name, id) {
     const w = {
       name: "ENSAYO TOTAL " + name,
@@ -308,17 +338,17 @@ try {
     await api.request("POST", `/workflows/${saved.id}/publish`, {});
   }
   await wrapper("orquestador", ids.FabOrquestador01);
-  await wrapper("radar", ids.FabRadar00000001);
-  await wrapper("metricas", ids.FabAprendizaje01);
-  await wrapper("confirmar", ids.FabConfirmar0001);
+  if (!renderLocal) {
+    await wrapper("radar", ids.FabRadar00000001);
+    await wrapper("metricas", ids.FabAprendizaje01);
+    await wrapper("confirmar", ids.FabConfirmar0001);
+  }
   const call = async (name, data) => {
-    const response = await fetch(`${url}/webhook/total-e2e-${name}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      signal: AbortSignal.timeout(30000),
-    });
-    assert.equal(response.status, 200, await response.text());
+    const response = await postWebhookRegistrado(
+      `${url}/webhook/total-e2e-${name}`,
+      data,
+    );
+    assert.equal(response.status, 200, response.text);
   };
   const expectedErrors = new Set();
   const errors = async () => {
@@ -350,7 +380,7 @@ try {
         return false;
       },
       label,
-      90000,
+      renderLocal ? 600000 : 90000,
     );
   const job = (mode, channel, video) =>
     wait(
@@ -570,22 +600,24 @@ try {
     const channel = (await rows("canales")).find(
       (c) => c.canal_id === canal_id,
     );
-    await api.update(tables.canales, channel, {
-      uploadpost_perfil: "perfil-total-ficticio",
-      redes: "youtube",
-      plataformas: "youtube",
-    });
-    await step("radar", { canal_id, nicho: channel.nicho }, async () => {
-      await call("radar", { canal_id, accion: "correr" });
-      const c = await wait(
-        async () =>
-          (await rows("canales")).find(
-            (c) => c.canal_id === canal_id && c.tendencias,
-          ),
-        "radar guardado",
-      );
-      return JSON.parse(c.tendencias);
-    });
+    if (!renderLocal)
+      await api.update(tables.canales, channel, {
+        uploadpost_perfil: "perfil-total-ficticio",
+        redes: "youtube",
+        plataformas: "youtube",
+      });
+    if (!renderLocal)
+      await step("radar", { canal_id, nicho: channel.nicho }, async () => {
+        await call("radar", { canal_id, accion: "correr" });
+        const c = await wait(
+          async () =>
+            (await rows("canales")).find(
+              (c) => c.canal_id === canal_id && c.tendencias,
+            ),
+          "radar guardado",
+        );
+        return JSON.parse(c.tendencias);
+      });
     const guion = {
       titulo: "Cielo al atardecer: la luz cambia",
       tema_elegido: "Cielo al atardecer",
@@ -615,7 +647,7 @@ try {
         });
         const t = await job("guion", canal_id, video_id);
         const pedido = await payloadTrabajo(t.job_id);
-        assert.ok(pedido.datos.tendencias?.ideas.length);
+        if (!renderLocal) assert.ok(pedido.datos.tendencias?.ideas.length);
         assert.equal(pedido.datos.nicho, "Ciencia cotidiana");
         await callback(t, guion);
         return { job_id: t.job_id, pedido, guion };
@@ -627,9 +659,11 @@ try {
         tipo: i === 3 ? "imagen" : "archivo",
         busqueda: "atardecer cielo",
         texto_narrado:
-          i === 1
-            ? "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana."
-            : "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+          renderLocal && i === 3
+            ? "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos."
+            : i === 1
+              ? "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana."
+              : "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
         prompt_imagen: "Diagrama propio de luz al atardecer",
         encuadre: "general",
         movimiento: "zoom lento",
@@ -678,6 +712,21 @@ try {
         aprobacion: JSON.parse(a.pedido),
       };
     });
+    if (renderLocal) {
+      assert.equal(
+        (await rows("publicaciones")).filter((p) => p.video_id === video_id)
+          .length,
+        0,
+      );
+      assert.equal(
+        relay.errores,
+        0,
+        "El transporte de medios no debe ocultar fallos",
+      );
+      roundEvidence.resultado = "PASS";
+      save();
+      continue;
+    }
     await step(
       "aprobación final y publicación simulada",
       { video_id },
@@ -874,15 +923,22 @@ try {
   assert.equal(
     pendientes.length,
     ramas ? 0 : rounds,
-    "Solo debe quedar la aprobación humana del siguiente guion por corrida",
+    renderLocal
+      ? "Debe quedar la aprobación final humana sin responder"
+      : "Solo debe quedar la aprobación humana del siguiente guion por corrida",
   );
   assert.ok(
-    pendientes.every(
-      (a) => a.etapa === "guion" && a.video_id.endsWith("-siguiente"),
+    pendientes.every((a) =>
+      renderLocal
+        ? a.etapa === "final"
+        : a.etapa === "guion" && a.video_id.endsWith("-siguiente"),
     ),
   );
   for (const v of propios(videos)) {
-    if (v.video_id.endsWith("-siguiente"))
+    if (renderLocal) {
+      assert.equal(v.etapa, "aprobacion_final");
+      assert.notEqual(v.estado, "publicado");
+    } else if (v.video_id.endsWith("-siguiente"))
       assert.equal(v.etapa, "aprobacion_guion");
     else
       assert.equal(
@@ -892,6 +948,31 @@ try {
       );
   }
   const traza = await trazarPasos(api, execs);
+  if (renderLocal) {
+    const calidad = traza
+      .filter((p) => p.nodo === "Chequeos objetivos")
+      .flatMap((p) => p.salida.flat());
+    assert.equal(
+      calidad.length,
+      rounds,
+      "Debe ejecutarse el control de calidad real",
+    );
+    for (const { json } of calidad) {
+      assert.equal(json.aprobado_qc, true);
+      assert.deepEqual(json.fallas, []);
+      assert.deepEqual(json.avisos, []);
+    }
+    assert.equal(
+      (await rows("publicaciones")).filter((p) =>
+        /^total-r\d+$/.test(p.canal_id),
+      ).length,
+      0,
+    );
+    evidence.pruebas.push(
+      "MP4 generado antes de calidad; aprobación final pendiente; ninguna publicación propia",
+      "Chequeos objetivos reales: cero fallas y cero avisos",
+    );
+  }
   writeFileSync(`${dir}/pasos-motor.json`, JSON.stringify(traza, null, 2));
   evidence.traza = { archivo: "pasos-motor.json", pasos: traza.length };
   evidence.ejecuciones = execs.map((e) => ({

@@ -1,5 +1,7 @@
 require('./n8n_ramas_transportes.test.cjs');
+require('./render_medios.test.cjs');
 require('./n8n_e2e_estados.test.cjs');
+require('./render_transportes.test.cjs');
 // Pruebas de la lógica de los nodos Code de los flujos v2 con datos ficticios.
 require('./n8n_e2e_regresiones.test.cjs');
 require('./copiar_datos_ensayo.test.cjs');

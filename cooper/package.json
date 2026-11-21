@@ -20,7 +20,8 @@
     "ci:limpia": "node scripts/ci-limpia.mjs",
     "evaluar:chat": "tsx scripts/evaluar-chat.ts",
     "test:ensayo:total": "node scripts/ensayo-total.mjs",
-    "test:ensayo:ramas": "node scripts/ensayo-total.mjs --ramas"
+    "test:ensayo:ramas": "node scripts/ensayo-total.mjs --ramas",
+    "test:render:local": "node scripts/ensayo-total.mjs --render-local"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",
