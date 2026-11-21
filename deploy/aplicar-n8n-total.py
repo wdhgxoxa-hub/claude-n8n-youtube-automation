@@ -19,6 +19,13 @@ def modulo_ensayo():
     return module
 
 
+def modulo_conservacion():
+    spec = importlib.util.spec_from_file_location('conservar_n8n', Path(__file__).with_name('preparar-n8n-total.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
     if diff.get('modalidad') == 'solo_columnas':
         operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS' and ensayo.get('modalidad') == 'solo_columnas', 'Falta ensayo y reversa de solo columnas')
@@ -38,6 +45,11 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
     ids = {w['id'] for w in workflows}
     operar.require(len(ids) == len(workflows) == ensayo['flujos_importados'], 'IDs duplicados o cantidad distinta')
     operar.require(all(w.get('active') is False for w in workflows), 'La entrada debe estar inactiva')
+    conservados = None
+    if 'politica_disparadores' in diff:
+        operar.require('modalidad' not in diff and 'plan_publicacion' in diff,
+                        'La conservación exige un lote completo con plan explícito')
+        conservados = modulo_conservacion().validar_conservacion(workflows, diff)
     originales = diff['republicar_originales']
     operar.require(len(set(originales)) == len(originales) and set(originales) <= ids, 'Publicación fuera del lote')
     # No fabricar ni sustituir credenciales ausentes para conservar un indicador activo.
@@ -58,7 +70,7 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
             permitidos = delta.validar_contrato(workflows, diff)
         else:
             operar.require('modalidad' not in diff, 'Modalidad de publicación desconocida')
-            permitidos = set(originales) | {'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001'}
+            permitidos = conservados if conservados is not None else set(originales) | {'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001'}
         operar.require(len(set(publicar)) == len(publicar) and set(publicar) == permitidos and permitidos <= ids,
                         'Publicación fuera del plan aprobado')
         guards = {(x['workflow'], x['nodo']) for x in diff.get('bloqueos_explicitos', [])}
@@ -77,6 +89,9 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
                       ('puerta_esquema_sha256', Path(validar.esquema.__file__))]:
         operar.require(ensayo.get(key) == operar.digest(path), 'La puerta de esquema difiere del ensayo')
     workflows = json.loads(entrada.read_text())
+    conservacion = modulo_conservacion() if 'politica_disparadores' in diff else None
+    if conservacion:
+        conservacion.validar_actual(op.data / 'n8n/database.sqlite', diff)
     destino = op.state / ('lote-ejecucion-' + str(time.time_ns()))
     destino.mkdir(mode=0o700)
     for origen, nombre in [(entrada, 'entrada.json'), (manifiesto, 'columnas.json'),
@@ -97,11 +112,17 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
                  'pausados_por_credencial': sorted(set(diff['republicar_originales']) - set(publicar)),
                  'pasos_bloqueados_por_credencial': diff.get('bloqueos_explicitos', []),
                  'disparadores_dependencias_pausados': diff.get('disparadores_dependencias_pausados', [])}
+    if conservacion:
+        resultado.update({'politica_disparadores': diff['politica_disparadores'],
+                          'disparadores_preservados': diff['disparadores_preservados'],
+                          'disparadores_nuevos_bloqueados': diff['disparadores_nuevos_bloqueados']})
     try:
         snapshot = op.snapshot(resume=False, tag='reversion')
         resultado['snapshot_previo'] = snapshot
         operar.write_json(salida, {**resultado, 'estado': 'respaldado'})
         before = validar.inventory(op.data / 'n8n/database.sqlite')
+        if conservacion:
+            conservacion.validar_actual(op.data / 'n8n/database.sqlite', diff)
         if diff.get('modalidad') == 'activaciones_cooper_total':
             spec = importlib.util.spec_from_file_location('activaciones_n8n', Path(__file__).with_name('preparar-activaciones-n8n.py'))
             activaciones = importlib.util.module_from_spec(spec)
@@ -139,6 +160,9 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         if not solo_columnas:
             cli('node', '/lote/publicar.cjs')
         published = validar.inventory(op.data / 'n8n/database.sqlite', before['columnas'])
+        if conservacion:
+            conservacion.validar_actual(op.data / 'n8n/database.sqlite', diff, despues=True)
+            resultado['nodos_conservados_y_entrada_exacta'] = 'PASS'
         if diff.get('modalidad') == 'activaciones_cooper_total':
             activaciones.permiso_cerrado(op.data / 'n8n/database.sqlite')
             resultado['allowTextoApi'] = False
