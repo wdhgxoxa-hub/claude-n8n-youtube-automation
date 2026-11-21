@@ -17,6 +17,7 @@ from sentinel.guardian.guardian import Guardian
 output = Path(sys.argv[1]).resolve()
 output.mkdir(parents=True, exist_ok=True)
 origin = 'https://cooper.cooperestudio.com'
+total_failures = 0
 for width in (1440, 390):
     folder = output / str(width)
     folder.mkdir(exist_ok=True)
@@ -55,5 +56,5 @@ for width in (1440, 390):
     (folder / 'informe.json').write_text(guardian.redactar(json.dumps(result, ensure_ascii=False, indent=2)) + '\n')
     failures = sum(h['gravedad'] != 'info' for h in unique.values())
     print(json.dumps({'ancho': width, 'fallos': failures}), flush=True)
-    if failures:
-        raise SystemExit(1)
+    total_failures += failures
+raise SystemExit(1 if total_failures else 0)
