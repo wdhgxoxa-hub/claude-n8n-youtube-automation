@@ -76,4 +76,16 @@ Si el monitor recién instalado falla, reponer únicamente su archivo anterior c
 
 Pruebas locales: `PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s deploy/tests -p 'test_*.py'`. Ejercitan fallos de transporte/restauración, conservación de la copia previa, HMAC real cruzado Python→JavaScript, replay, mensajes inválidos, deduplicación, recuperación, mantenimiento y coordinación de relés. El informe distingue esas pruebas de la copia real y del despliegue remoto.
 
+## Clones SQLite para ensayos
+
+Restaurar siempre el snapshot completo antes de trasladar las bases a un laboratorio. Un archivo `.sqlite` puede ser íntegro y, aun así, omitir filas, versiones publicadas o migraciones confirmadas que todavía están en su `-wal`. El manifiesto de restic/Operator incluye ambos; copiar únicamente `.sqlite` invalida la identidad del corte.
+
+```bash
+python3 deploy/preparar-clon-restaurado.py --restauracion RESTAURADA/datos --salida CLON_NUEVO
+```
+
+El helper exige el manifiesto completo antes de crear el destino; usa SQLite backup para incorporar WAL y cambia únicamente el clon a journal DELETE. Verifica integridad, claves foráneas, todas las tablas/conteos y que la restauración original permanezca intacta. Produce `CLON_NUEVO/datos/{cooper/cooper.sqlite,n8n/database.sqlite}` autónomas, un nuevo manifiesto y un recibo con hashes. No consulta ni muestra filas. El ensayo posterior recibe esos archivos mediante `--base`; nunca debe recibir una base viva ni un traslado manual incompleto.
+
+Regresión: con dos transacciones confirmadas y la última en WAL, el clon conserva filas, versión publicada y migraciones incluso al trasladar solo su `.sqlite`. Un WAL omitido del disco o del manifiesto se rechaza antes de crear el destino. Contratos oficiales consultados el 21-11-2026: [SQLite backup API](https://www.sqlite.org/backup.html) y [WAL](https://www.sqlite.org/wal.html).
+
 Fuentes oficiales consultadas el 21-11-2026: [repositorios restic](https://restic.readthedocs.io/en/stable/045_working_with_repos.html), [restauración restic](https://restic.readthedocs.io/en/stable/050_restore.html), [timers systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html), [TLS y certificados en Python](https://docs.python.org/3/library/ssl.html), [webhook n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/), [Code n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/) y [Telegram sendMessage](https://core.telegram.org/bots/api#sendmessage).
