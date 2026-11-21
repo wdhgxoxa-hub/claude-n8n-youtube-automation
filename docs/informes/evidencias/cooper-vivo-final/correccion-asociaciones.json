@@ -1,0 +1,32 @@
+{
+  "corrections": [
+    {
+      "workflow": "FabAvatar0000001",
+      "node": "Crear avatar",
+      "expectedCredentialIds": []
+    },
+    {
+      "workflow": "FabAvatar0000001",
+      "node": "Consultar avatar",
+      "expectedCredentialIds": []
+    },
+    {
+      "workflow": "FabSonido0000001",
+      "node": "Voz (HeyGen)",
+      "expectedCredentialIds": []
+    },
+    {
+      "workflow": "FabSonido0000001",
+      "node": "Voz (ElevenLabs)",
+      "expectedCredentialIds": []
+    },
+    {
+      "workflow": "FabTextoGPT0001",
+      "node": "Respaldo OpenAI",
+      "expectedCredentialIds": [
+        "FabCredOpenAI001"
+      ]
+    }
+  ],
+  "fallbackApiInvoked": false
+}

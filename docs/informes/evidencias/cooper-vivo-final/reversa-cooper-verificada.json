@@ -1,0 +1,8 @@
+{
+  "http": 200,
+  "stderr": false,
+  "migrations": 8,
+  "integrity": "ok",
+  "productionDatabaseUntouched": true,
+  "oldBuildWithAdditiveJournal": true
+}

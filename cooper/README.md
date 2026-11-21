@@ -1,12 +1,12 @@
 # Cooper — fases 1, 2, 3 y 4
 
-Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). Desde `cooper-ensayo` se activó contra n8n vivo el 20 de noviembre de 2026: [informe, validaciones y reversa](../docs/informes/cooper-vivo.md).
+Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). La puesta en vivo inicial se conserva en [cooper-vivo](../docs/informes/cooper-vivo.md). El servicio local usa ahora `cooper-final`: [estado final, evidencias y reversa compatible con las ocho migraciones](../docs/informes/cooper-vivo-final.md).
 
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado de esta integración, puerta completa, capturas y pasos manuales de Walter: [cooper-final.md](../docs/informes/cooper-final.md).
 
 WhatsApp Business: verificación de número, preferencias, enlaces firmados, botones, cola durable y transporte real/simulado en [cooper-whatsapp.md](../docs/cooper-whatsapp.md). Desactivado para envíos reales por defecto; requiere alta y plantillas aprobadas por Meta.
 
-Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. Integrado localmente en `cooper-final`; activación real pendiente de Walter.
+Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). El puente está activo y una llamada real corta del crítico pasó desde el contenedor. El modo noticia permanece apagado en todos los canales. En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. El ensayo completo de noticias y del respaldo pago queda pendiente.
 
 ## Arranque
 

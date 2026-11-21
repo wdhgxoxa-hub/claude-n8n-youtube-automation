@@ -1,0 +1,26 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "http": 200,
+      "title": "Cooper · Tu estudio de creación",
+      "overflow": false,
+      "svg": 3
+    },
+    {
+      "width": 1440,
+      "http": 200,
+      "title": "Cooper · Tu estudio de creación",
+      "overflow": false,
+      "svg": 3
+    }
+  ],
+  "errors": [],
+  "statuses": {
+    "/entrar": 200,
+    "/api/auth/session": 200,
+    "/api/auth/providers": 200,
+    "/admin": 307
+  },
+  "authenticated": false
+}

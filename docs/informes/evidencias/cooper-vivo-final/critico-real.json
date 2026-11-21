@@ -1,0 +1,15 @@
+{
+  "origin": "journalctl puente-codex.service",
+  "fromContainer": "videos-n8n",
+  "http": 200,
+  "contractValid": true,
+  "executions": [
+    {
+      "id": "13fd2aa3-4320-4e3d-a007-a3494e446568",
+      "tarea": "critico",
+      "ruta": "codex",
+      "resultado": "ok",
+      "duracion_ms": 6859
+    }
+  ]
+}

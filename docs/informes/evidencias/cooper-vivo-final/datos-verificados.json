@@ -1,0 +1,19 @@
+{
+  "pendingUnchanged": [
+    400,
+    540
+  ],
+  "running": 0,
+  "businessTablesPreserved": [
+    "fab_canales",
+    "fab_videos",
+    "fab_planos",
+    "fab_eventos",
+    "fab_costos",
+    "fab_trabajos",
+    "youtube",
+    "publicaciones",
+    "fab_aprobaciones"
+  ],
+  "n8nIntegrity": "ok"
+}

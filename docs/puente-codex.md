@@ -35,7 +35,11 @@ El subflujo de texto no conserva datos de ejecución en éxito/error para evitar
 
 Cada tarea completada registra en `fab_costos` dueño, paso, servicio efectivo, `ruta`, `usd`, `ahorro_estimado_usd` y `motivo_respaldo`. El registro por paso conserva el upsert existente. Codex: USD incremental estimado 0 y ahorro igual a la tarifa configurada de la tarea; API: tarifa estimada y ahorro 0. Son estimaciones por tarea de `Ajustes`, no precios oficiales por token ni una lectura de la factura. No incluyen el precio fijo del plan, infraestructura ni consumo de intentos fallidos/incompletos. No sumarlos como beneficio neto ni tratar una cuota ChatGPT como ilimitada. No se muestran proveedores o costos a usuarios normales.
 
-## Preparación pendiente de Walter
+## Estado local y preparación de otros entornos
+
+El 20-11-2026 se instaló `puente-codex.service` de usuario, con autenticación y escucha exclusiva en `127.0.0.1:8789`. `videos-n8n` accede mediante Pasta. Una llamada real corta del crítico devolvió un resultado válido por Codex; el respaldo API está configurado con la credencial OpenAI existente, sin invocarlo durante la aceptación. [Evidencias, límites, identidad usada y reversa](informes/cooper-vivo-final.md). La [unidad versionada](../deploy/systemd/puente-codex.service) usa código instalado en `~/.local/lib/cooper/puente-codex` y configuración privada externa.
+
+Para preparar un entorno adicional:
 
 - Usuario de sistema dedicado y sin acceso a repositorios, claves de la fábrica o documentos privados. Su entorno de Codex debe tener una sesión ChatGPT ya preparada por Walter, sin conectores/MCP/plugins adicionales; una configuración administrada puede prevalecer sobre flags. No ejecutar el puente con el perfil personal de trabajo ni compartir archivos de autenticación.
 - Verificar la versión instalada de Codex con los flags documentados. La ayuda local de esta misión los admite; no se ensayó la sesión ni la cuota reales. `forced_login_method=chatgpt` puede cerrar una sesión que use otra autenticación: usar el perfil dedicado.
