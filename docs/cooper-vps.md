@@ -170,3 +170,19 @@ Consultadas el 20-11-2026 y contrastadas con las imágenes y herramientas del en
 - [Docker en Ubuntu](https://docs.docker.com/engine/install/ubuntu/), [Compose](https://docs.docker.com/reference/compose-file/services/), [firewall y publicación de puertos](https://docs.docker.com/engine/network/packet-filtering-firewalls/), [socket Podman](https://docs.podman.io/en/latest/markdown/podman-system-service.1.html).
 - [Ubuntu UFW](https://ubuntu.com/server/docs/how-to/security/firewalls/), [actualizaciones automáticas](https://ubuntu.com/server/docs/how-to/software/automatic-updates/), [configuración oficial fail2ban](https://github.com/fail2ban/fail2ban/blob/master/config/jail.conf).
 - Next 16.4.6: guías locales `node_modules/next/dist/docs/01-app/03-api-reference/05-config/01-next-config-js/output.md` y `03-file-conventions/route.md`, consultadas antes de cambiar empaquetado y salud.
+
+## Configuración después de integrar las fases
+
+`cooper-final` añade al entorno explícito de Compose las variables de chat y WhatsApp de `deploy/.env.example`. El chat del VPS permanece en `COOPER_CHAT=simulada` hasta que Walter configure `ANTHROPIC_API_KEY` (principal), `OPENAI_API_KEY` (respaldo/transcripción) y elija `claude` u `openai`. `COOPER_MENSAJERIA=simulada` mantiene Meta apagado. El consumidor puede pausarse con `COOPER_MENSAJERIA_PAUSA=1` antes de reiniciar. Las claves de chat/Meta solo entran a Cooper, nunca al runner de código de n8n.
+
+`PUENTE_CODEX_URL` y `PUENTE_CODEX_TOKEN` llegan a n8n y a la lista permitida del runner. El Compose base **no instala Codex ni crea su sesión o túnel**. El operador debe preparar el servicio dedicado descrito en [puente Codex](puente-codex.md) y hacerlo accesible en el loopback del espacio de red de n8n; el loopback del host no sirve desde el contenedor. Hasta resolver y probar esa conexión, dejar `allowTextoApi=false` y no activar tareas que necesiten el puente. Un respaldo API autorizado permite operar sin Codex, pero ya consume API.
+
+Las migraciones SQLite finales son `0005_chat_ia`, `0006_whatsapp`, `0007_noticias` sobre la base del ensayo/vivo. Los diarios experimentales con otro `0005` se rechazan de forma segura. Una actualización del checkout no importa workflows ni migra las Data Tables de n8n: ambas operaciones quedan separadas para Walter, con copia y reversión.
+
+Ensayo de la imagen elegida, sin cambiar la etiqueta histórica de fase 5:
+
+```bash
+COOPER_VPS_TEST_IMAGE=localhost/cooper:COMMIT_REVISADO node deploy/tests/compose.mjs
+```
+
+El contrato del entorno efectivo se comprueba con `python3 -W error -m unittest discover -s deploy/tests -p 'test_integracion.py'`: Docker Compose resuelve solo el `.env.example` con valores ficticios y no arranca servicios. [Documentación oficial de variables en Compose](https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/).

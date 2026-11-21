@@ -4,11 +4,11 @@ El canal puede pedir noticias del día de su nicho. El proceso exige hechos veri
 
 ## Desde Cooper
 
-En **Canales**, el botón «Modo noticia» activa o desactiva la modalidad para los próximos videos. En el chat, con el canal seleccionado: «Activa modo noticia», «Desactiva modo noticia» o «Quiero un video de la noticia del día». El chat actual sigue siendo determinista; reconoce estas expresiones, sin prometer comprensión general.
+En **Canales**, el botón «Modo noticia» activa o desactiva la modalidad para los próximos videos. En el chat, con el canal seleccionado: «Activa modo noticia», «Desactiva modo noticia» o «Quiero un video de la noticia del día». El chat real dispone de herramientas tipadas para ambas acciones; el simulador reconoce estas expresiones. Toda mutación del chat requiere pulsar Confirmar en su tarjeta, incluida la modalidad de noticias.
 
 El evento existente `ajustar_biblia` transmite `parametros: {campo:"modo_noticia", valor:true|false}` y actualiza la modalidad del canal, sin sustituir su biblia. `nuevo_video` admite `parametros.modo_noticia` booleano; si falta, hereda el canal. La modalidad queda congelada en el video: desactivar el canal no relaja los controles de una noticia en curso. Cooper y FX validan tipo, dueño y recurso. El estado remoto añade `modo_noticia` opcional, compatible con emisores anteriores.
 
-En modo simulado, el video queda detenido en Verificación con un aviso explícito; no produce noticias ni inventa fuentes. La migración SQLite `0005_noticias` conserva los datos existentes.
+En modo simulado, el video queda detenido en Verificación con un aviso explícito; no produce noticias ni inventa fuentes. La migración SQLite `0007_noticias` conserva los datos existentes.
 
 ## Recorrido de fábrica
 

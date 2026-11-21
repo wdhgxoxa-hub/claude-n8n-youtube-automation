@@ -2,11 +2,11 @@
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). Desde `cooper-ensayo` se activó contra n8n vivo el 20 de noviembre de 2026: [informe, validaciones y reversa](../docs/informes/cooper-vivo.md).
 
-Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado integrado, puerta completa, capturas y pasos manuales de Walter: [informe final de integración](../docs/informes/cooper-integracion.md).
+Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado de esta integración, puerta completa, capturas y pasos manuales de Walter: [cooper-final.md](../docs/informes/cooper-final.md).
 
 WhatsApp Business: verificación de número, preferencias, enlaces firmados, botones, cola durable y transporte real/simulado en [cooper-whatsapp.md](../docs/cooper-whatsapp.md). Desactivado para envíos reales por defecto; requiere alta y plantillas aprobadas por Meta.
 
-Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. Cambios locales pendientes de revisión e integración.
+Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. Integrado localmente en `cooper-final`; activación real pendiente de Walter.
 
 ## Arranque
 
@@ -127,7 +127,7 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales, incluidos los flujos de presentación implementados.
 4. WhatsApp implementado con transporte simulado por defecto; alta, revisión de plantillas y ensayo real pendientes de Walter.
 5. VPS preparado en `deploy/`: TLS, proxy SSE, copias/restauración, retención y endurecimiento operativo. Requiere revisión y aplicación en Ubuntu por el operador; [guía](../docs/cooper-vps.md) e [informe](../docs/informes/cooper-fase5.md).
-6. Radar de noticias verificadas y rutas de modelos del ecosistema.
+6. Noticias verificadas, puente Codex y respaldo API implementados. Falta preparar el servicio privado, aplicar columnas/importar workflows y ensayar con cuentas reales; [guía](../docs/cooper-modo-noticia.md).
 
 OAuth real requiere las credenciales del equipo; las pruebas automatizadas usan sesiones locales firmadas y no automatizan una cuenta Google. El paso a vivo conservó Ajustes y no creó videos ni invocó proveedores de pago. Las sesiones y el emisor E2E permanecen fuera de producción.
 
@@ -140,9 +140,9 @@ La demostración fuerza fábrica, medios, transcripción, consultas de chat y ga
 
 ## Integración verificada
 
-Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`, `0005_chat_ia`, `0006_whatsapp`, `0007_noticias`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
+Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`, `0005_chat_ia`, `0006_whatsapp`, `0007_noticias`. Es compatible con bases del ensayo/vivo hasta `0004_presentacion` y con `0005_chat_ia`. Las bases experimentales de ramas independientes con `0005_whatsapp` o `0005_noticias` se rechazan por diario incompatible: respaldar y preparar una migración de datos específica; nunca renombrar el diario para forzarlas. También admite bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
 
-`npm run test:e2e` genera 98 PNG finales en `.cache/capturas-final/`: 72 de las 18 pantallas/estados a 1440 y 390 px en dos temas, 24 de la barra en páginas largas/pantallas bajas y 2 de revocación. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
+`npm run test:e2e` genera 130 PNG en `.cache/capturas-final2/`: 72 de las 18 pantallas/estados anteriores, 32 de los ocho estados nuevos de chat, fotos, noticias y WhatsApp a 1440 y 390 px en dos temas, 24 de la barra en páginas largas/pantallas bajas y 2 de revocación. Los estados nuevos también pasan axe a 360 y 768 px. `manifest.json` y `manifest-nuevas.json` describen las dos matrices. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
 
 ## Movimiento del estudio
 

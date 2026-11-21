@@ -56,7 +56,7 @@ const env = {
   CONTAINER_ENGINE: "podman",
   COOPER_LAB: "1",
   COMPOSE_PROJECT_NAME: project,
-  COOPER_IMAGE: "localhost/cooper:fase5",
+  COOPER_IMAGE: process.env.COOPER_VPS_TEST_IMAGE ?? "localhost/cooper:fase5",
   DATA_ROOT: resolve(run, "datos"),
   STATE_ROOT: resolve(run, "operacion"),
   COOPER_DOMAIN: "cooper.test",

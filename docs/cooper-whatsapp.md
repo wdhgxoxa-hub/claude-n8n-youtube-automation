@@ -42,7 +42,7 @@ El archivo [`.env.example`](../cooper/.env.example) contiene únicamente nombres
 
 `ProveedorMensajeria`, `WhatsAppCloudAPI` y `WhatsAppSimulada` están en [proveedor.ts](../cooper/src/servicios/mensajeria/proveedor.ts). Cloud API usa únicamente `POST https://graph.facebook.com/v27.0/{PHONE_NUMBER_ID}/messages`, Bearer en cabecera, timeout de diez segundos y redirecciones prohibidas. No hay SDK adicional. [Referencia oficial de Messages](https://developers.facebook.com/documentation/business-messaging/whatsapp/reference/whatsapp-business-phone-number/message-api).
 
-La migración aditiva `0005_whatsapp` sigue a `0004_presentacion`. Se aplica con el mecanismo existente al abrir la base o con `npm run db:migrate`. No editar migraciones ya aplicadas. El consumidor arranca desde `src/instrumentation.ts` en un servidor Node persistente y revisa la cola cada quince segundos, aunque no haya navegadores abiertos. No corre durante `next build`. El avance de la fábrica simulada conserva su dependencia previa de SSE; el despacho de avisos no la tiene.
+En la integración final, la migración aditiva `0006_whatsapp` sigue a `0005_chat_ia`. Las bases experimentales con el antiguo `0005_whatsapp` necesitan una migración específica con respaldo; no alterar su diario. Se aplica con el mecanismo existente al abrir la base o con `npm run db:migrate`. No editar migraciones ya aplicadas. El consumidor arranca desde `src/instrumentation.ts` en un servidor Node persistente y revisa la cola cada quince segundos, aunque no haya navegadores abiertos. No corre durante `next build`. El avance de la fábrica simulada conserva su dependencia previa de SSE; el despacho de avisos no la tiene.
 
 ## Plantillas en español para revisión
 
