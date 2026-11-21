@@ -47,18 +47,26 @@ export function Grabador({
       stream.current = captured;
       const r = new MediaRecorder(captured);
       recorder.current = r;
-      const chunks: BlobPart[] = [];
+      const chunks: Blob[] = [];
       r.ondataavailable = (e) => chunks.push(e.data);
       r.onstop = () => {
         if (timeout.current) clearTimeout(timeout.current);
         stream.current?.getTracks().forEach((t) => t.stop());
         setRecording(false);
         onRecording?.(false);
-        const mime = r.mimeType.split(";")[0];
+        // Firefox puede vaciar recorder.mimeType al detenerse; el Blob conserva su formato.
+        const mime = (
+          chunks.find((chunk) => chunk.type)?.type || r.mimeType
+        ).split(";")[0];
         void onAudio(
           new File(
             chunks,
-            "grabacion." + (mime.includes("mp4") ? "mp4" : "webm"),
+            "grabacion." +
+              (mime.includes("mp4")
+                ? "mp4"
+                : mime.includes("ogg")
+                  ? "ogg"
+                  : "webm"),
             { type: mime },
           ),
         ).catch((e) =>

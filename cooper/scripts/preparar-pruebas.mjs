@@ -48,7 +48,13 @@ ejecutar(python, ["-m", "playwright", "install", "chromium"], {
 });
 ejecutar(
   process.execPath,
-  ["node_modules/@playwright/test/cli.js", "install", "chromium"],
+  [
+    "node_modules/@playwright/test/cli.js",
+    "install",
+    "chromium",
+    "firefox",
+    "webkit",
+  ],
   {
     ...opciones,
     env: { ...entornoLimpio(), PLAYWRIGHT_BROWSERS_PATH: browsers },

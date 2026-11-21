@@ -10,5 +10,7 @@ RUN uv venv --python 3.14.7 /opt/sentinel-deps && uv pip sync --python /opt/sent
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential ffmpeg ca-certificates && /opt/sentinel-deps/bin/python -m playwright install-deps chromium
 RUN npm install --global npm@12.2.2 --no-fund --update-notifier=false
+# Playwright JS coincide con package-lock.json; bibliotecas solo en la imagen local.
+RUN npx --yes --package=playwright@1.65.1 playwright install-deps firefox webkit
 WORKDIR /ensayo/cooper
 CMD ["node", "scripts/puerta.mjs"]

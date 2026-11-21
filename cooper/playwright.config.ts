@@ -36,6 +36,7 @@ export default defineConfig({
     {
       name: "chromium",
       testIgnore: [
+        "multiengine.spec.ts",
         "diseno.spec.ts",
         "animacion.spec.ts",
         "resultados.spec.ts",
@@ -57,6 +58,30 @@ export default defineConfig({
         extraHTTPHeaders: { Referer: demoURL },
       },
     },
+    ...(["firefox", "webkit"] as const).flatMap((browserName) =>
+      (["oscuro", "claro"] as const).flatMap((theme) =>
+        [390, 1440].map((width) => ({
+          name: `${browserName}-${theme}-${width}`,
+          testMatch: "multiengine.spec.ts",
+          metadata: { theme },
+          use: {
+            browserName,
+            permissions: [],
+            launchOptions: {
+              args: [],
+              firefoxUserPrefs: {
+                "media.navigator.streams.fake": true,
+                "media.navigator.permission.disabled": true,
+              },
+            },
+            viewport: { width, height: 900 },
+            // Viewport adaptable: no representa un iPhone ni Firefox móvil real.
+            baseURL: demoURL,
+            extraHTTPHeaders: { Referer: demoURL },
+          },
+        })),
+      ),
+    ),
   ],
   webServer: [
     {
