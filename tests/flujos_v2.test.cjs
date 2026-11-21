@@ -26,6 +26,65 @@ const ORQ = wf('FabOrquestador01'), CL = wf('FabLlamarClaude1'), RET = wf('FabRe
 const PROD = wf('FabProduccion001'), PUB = wf('FabPublicacion01'), AJ = wf('FabAjustes000001');
 const aj = run(codeOf(AJ, 'Ajustes'))[0].json;
 
+test('analytics y renovación no conservan tokens en ejecuciones automáticas ni manuales', () => {
+  for (const id of ['FabAprendizaje01', 'FabYouTube000001']) {
+    const s = wf(id).settings;
+    assert.strictEqual(s.saveDataSuccessExecution, 'none');
+    assert.strictEqual(s.saveDataErrorExecution, 'none');
+    assert.strictEqual(s.saveManualExecutions, false);
+    assert.strictEqual(s.saveExecutionProgress, false);
+  }
+});
+
+test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones contra evidencia real', () => {
+  const { execFileSync } = require('node:child_process');
+  const carpeta = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'cooper-aprendizaje-'));
+  const script = path.join(__dirname, '..', 'tools/cooper/preparar_ensayo_aprendizaje.py');
+  try {
+    execFileSync('python3', [script, '--salida', carpeta, '--video-id', 'video-permitido']);
+    const captura = JSON.parse(fs.readFileSync(path.join(carpeta, 'CoopEnsayoApr01.json')));
+    const token = JSON.parse(fs.readFileSync(path.join(carpeta, 'CoopEnsayoTok01.json')));
+    for (const f of [captura, token]) {
+      assert.strictEqual(f.active, false);
+      assert.strictEqual(f.settings.saveManualExecutions, false);
+      assert.strictEqual(f.settings.saveDataSuccessExecution, 'none');
+      assert.strictEqual(f.settings.saveDataErrorExecution, 'none');
+      assert.ok(!f.settings.errorWorkflow);
+      assert.ok(!f.nodes.some(n => /telegram|webhook|scheduleTrigger/.test(n.type)));
+      for (const n of f.nodes.filter(n => n.type.endsWith('.executeWorkflow')))
+        assert.strictEqual(n.parameters.workflowId.value, token.id);
+      for (const n of f.nodes.filter(n => n.type.endsWith('.httpRequest'))) {
+        assert.match(n.parameters.url, /youtubeanalytics.googleapis.com|api.upload-post.com\/api\/uploadposts\/post-analytics\/|oauth2.googleapis.com\/token/);
+        if (n.parameters.method === 'POST') assert.strictEqual(n.parameters.url, 'https://oauth2.googleapis.com/token');
+      }
+    }
+    assert.deepStrictEqual(run(codeOf(captura, 'Leer ajustes'))[0].json, { allowAnalytics: true });
+    const fecha = new Date(Date.now() - 3 * 86400000).toISOString();
+    const candidatos = ['video-permitido', 'video-ajeno'].map(video_id => ({ video_id, youtube_id: 'id', publicado_en: fecha }));
+    assert.deepStrictEqual(run(codeOf(captura, 'Toca medir'), { all: { $input: candidatos } }).map(x => x.json.video_id), ['video-permitido']);
+    assert.deepStrictEqual(token.nodes.filter(n => n.type.endsWith('.dataTable')).map(n => n.parameters.operation), ['get']);
+    const observada = { video_id: 'video-permitido', canal_id: 'canal-a', red: 'youtube', ventana: '72h', fecha, metricas: { vistas: 123 }, creativo: {} };
+    const tarea = run(codeOf(captura, 'Claude: aprender'), { json: { canal_id: 'canal-a', datos: { evidencias: [observada] } } })[0].json;
+    assert.strictEqual(tarea.estado, 'bloqueado');
+    assert.strictEqual(JSON.parse(tarea.resultado)._aprendizaje.evidencias[0].metricas.vistas, 123);
+    const propuesta = { lecciones: [{ regla: 'Probar un gancho concreto', causa: 'Hipótesis pendiente de contraste', correccion: 'Acortar la introducción', origenes: [{ video_id: observada.video_id, red: 'youtube', ventana: '72h', metrica: 'vistas', valor: 99999 }] }] };
+    const archivo = path.join(carpeta, 'propuesta.json');
+    fs.writeFileSync(archivo, JSON.stringify(propuesta));
+    execFileSync('python3', [script, '--salida', carpeta, '--job-id', tarea.job_id, '--lecciones', archivo]);
+    const guardar = JSON.parse(fs.readFileSync(path.join(carpeta, 'CoopEnsayoLec01.json')));
+    assert.ok(!guardar.nodes.some(n => /httpRequest|executeWorkflow$/.test(n.type)));
+    const res = run(codeOf(guardar, 'Validar evidencia'), { all: { $input: [tarea] } })[0].json;
+    assert.strictEqual(res.estado, 'listo');
+    const leccion = JSON.parse(res.resultado).resultado.lecciones[0];
+    assert.strictEqual(leccion.origenes[0].valor, 123);
+    assert.strictEqual(leccion.nivel, 'hipotesis');
+    assert.throws(() => run(codeOf(guardar, 'Validar evidencia'), { all: { $input: [{ ...tarea, canal_id: 'canal-ajeno' }] } }), /otro canal/);
+    assert.throws(() => run(codeOf(guardar, 'Validar evidencia'), { all: { $input: [{ ...tarea, estado: 'listo' }] } }), /pendiente/);
+  } finally {
+    fs.rmSync(carpeta, { recursive: true, force: true });
+  }
+});
+
 // Formulario tal como lo arma n8n en «Subir a redes» (mismo texto que un multipart, para comprobar campos).
 const cuerpoDe = o => o.pares.map(([k, x]) => `name="${k}"\r\n\r\n${x}\r\n`).join('');
 

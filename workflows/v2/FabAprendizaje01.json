@@ -1090,11 +1090,12 @@
     "executionOrder": "v1",
     "timezone": "America/Lima",
     "callerPolicy": "workflowsFromSameOwner",
-    "saveDataSuccessExecution": "all",
-    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
     "saveExecutionProgress": false,
     "executionTimeout": 1800,
-    "errorWorkflow": "FabErrores000001"
+    "errorWorkflow": "FabErrores000001",
+    "saveManualExecutions": false
   },
   "pinData": {},
   "meta": {

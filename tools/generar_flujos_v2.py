@@ -3351,7 +3351,9 @@ for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, EST
 
 for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
-                           'saveDataErrorExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all'})
+                           'saveDataErrorExecution': 'none' if wf['id'] in [W['cooper'],W['texto'],W['aprende'],W['yt']] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] in [W['cooper'],W['texto'],W['aprende'],W['yt']] else 'all'})
+    if wf['id'] in [W['aprende'],W['yt']]:
+        wf['settings'].update({'saveManualExecutions': False, 'saveExecutionProgress': False})
 
 
 # Marcas: Cooper conserva autorización, revisiones y checkpoints; n8n despierta
