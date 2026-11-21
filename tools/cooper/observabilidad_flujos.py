@@ -28,7 +28,7 @@ dt_update(f,'Cooper · guardar piezas','videos','video_id',"={{ $('Plan de produ
 f.chain('Composición Creatomate','Cooper · piezas terminadas','Cooper · guardar piezas')
 # Confirmación conserva una fila por red incluso cuando otra red del mismo envío falla.
 cambiar(CONFIRMAR,'Leer resultados',"resultado: JSON.stringify(listo ? { status: st, urls } : { status: st || 'failed', errores }).slice(0, 800)",
- "resultado: JSON.stringify({ status: st, urls, errores, publicaciones: res.map(x=>({red:String(x.platform || ''),url:x.post_url || x.url || '',publicado:x.success === true})) })")
+ "resultado: JSON.stringify({ status: st, urls, errores, publicaciones: res.map(x=>({red:redPublica(x.platform),url:urlPublica(x.post_url || x.url),publicado:x.success === true})) })")
 # Medición diaria acotada y justa: primero publicaciones que llevan más tiempo sin intentar actualizarse.
 f = reabrir(APRENDE)
 for nombre in ['Publicaciones','Videos publicados']:

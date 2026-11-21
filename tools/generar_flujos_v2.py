@@ -2625,7 +2625,25 @@ iff(f, '¿Hay por confirmar?', '$json.nada !== true')
 http(f, 'Consultar Upload-Post', 'GET', "={{ 'https://api.upload-post.com/api/uploadposts/status?' + ($json.job_id ? 'job_id=' + encodeURIComponent($json.job_id) : 'request_id=' + encodeURIComponent($json.request_id)) }}", timeout=30000, cred=CRED_UPLOADPOST)
 f.nodes[-1].update({'onError': 'continueRegularOutput'})
 code(f, 'Leer resultados', r"""
-// Traduce la respuesta de Upload-Post: completo y sin fallos → publicado; fallido → error; lo demás sigue esperando.
+// No conservar texto crudo, URLs de API ni parámetros del proveedor.
+const redesPublicas = new Set(['youtube','tiktok','instagram','facebook','x','twitter','linkedin','threads','pinterest','reddit','bluesky']);
+const redPublica = valor => redesPublicas.has(valor) ? valor : 'red';
+function urlPublica(valor) {
+  const s = typeof valor === 'string' && valor.length <= 2000 ? valor : '';
+  let m;
+  if ((m = s.match(/^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?([^#]*)/))) {
+    const ids = m[1].split('&').filter(x => /^v=[A-Za-z0-9_-]{11}$/.test(x));
+    return ids.length === 1 ? 'https://www.youtube.com/watch?' + ids[0] : '';
+  }
+  if ((m = s.match(/^https:\/\/(?:www\.|m\.)?youtube\.com\/(shorts|live)\/([A-Za-z0-9_-]{11})(?:[/?#]|$)/))) return 'https://www.youtube.com/' + m[1] + '/' + m[2];
+  if ((m = s.match(/^https:\/\/youtu\.be\/([A-Za-z0-9_-]{11})(?:[/?#]|$)/))) return 'https://youtu.be/' + m[1];
+  if ((m = s.match(/^https:\/\/(?:www\.)?instagram\.com\/(p|reel|reels)\/([A-Za-z0-9_-]{5,32})(?:[/?#]|$)/))) return 'https://www.instagram.com/' + m[1] + '/' + m[2] + '/';
+  if ((m = s.match(/^https:\/\/(?:www\.)?tiktok\.com\/@([A-Za-z0-9_.]{1,32})\/video\/(\d{6,30})(?:[/?#]|$)/))) return 'https://www.tiktok.com/@' + m[1] + '/video/' + m[2];
+  if ((m = s.match(/^https:\/\/(?:www\.)?(x|twitter)\.com\/([A-Za-z0-9_]{1,15})\/status\/(\d{6,30})(?:[/?#]|$)/))) return 'https://x.com/' + m[2] + '/status/' + m[3];
+  if ((m = s.match(/^https:\/\/(?:www\.)?facebook\.com\/reel\/(\d{6,30})(?:[/?#]|$)/))) return 'https://www.facebook.com/reel/' + m[1];
+  return '';
+}
+// Traduce solo estados terminados; lo demás sigue esperando.
 const pedidos = $('Por confirmar').all().map(i => i.json);
 const todas = $('Publicaciones recientes').all().map(i => i.json);
 const cambios = [];
@@ -2637,10 +2655,11 @@ $input.all().forEach((it, k) => {
   if (!['completed', 'failed'].includes(st) || !res.length) return;   // pendiente o en proceso: se mira en una hora
   const fallo = st === 'failed' || res.some(x => x.success !== true);
   const listo = !fallo;
-  const urls = res.map(x => x.post_url || x.url || '').filter(Boolean);
-  const errores = res.filter(x => x.success !== true).map(x => `${x.platform}: ${String(x.error_message || x.error || x.message || 'error').slice(0, 120)}`);
+  const urls = res.map(x => urlPublica(x.post_url || x.url)).filter(Boolean);
+  const errores = res.filter(x => x.success !== true || x.skipped === true || x.fallback_to_inbox === true).map(x => redPublica(x.platform) + ': ' + (x.fallback_to_inbox === true ? 'quedó en borrador' : x.skipped === true ? 'se omitió esta red' : 'el proveedor no confirmó la publicación'));
+  const youtube = res.find(x => x.platform === 'youtube' && x.success === true && /^[A-Za-z0-9_-]{11}$/.test(x.platform_post_id || ''));
   cambios.push({ request_id: p.request_id, video_id: p.video_id, plataformas: p.plataformas, tipo: p.tipo,
-    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: (res.find(x => x.platform === 'youtube' && x.success === true) || {}).platform_post_id || '',
+    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: youtube?.platform_post_id || '',
     resultado: JSON.stringify(listo ? { status: st, urls } : { status: st || 'failed', errores }).slice(0, 800) });
 });
 if (!cambios.length) return [{ json: { nada: true } }];
@@ -2673,8 +2692,10 @@ f.add('Actualizar video', 'n8n-nodes-base.dataTable', 1.1,
        'filters': {'conditions': [{'keyName': 'video_id', 'condition': 'eq', 'keyValue': "={{ $json.video_id }}"}]},
        'columns': AUTOMAP, 'options': {}})
 code(f, 'Aviso corto', r"""
+const id = valor => typeof valor === 'string' && /^[A-Za-z0-9_-]{1,80}$/.test(valor) ? valor : 'video';
+const redes = valor => String(valor || '').split(',').filter(x => /^(youtube|tiktok|instagram|facebook|x|twitter|linkedin|threads|pinterest|reddit|bluesky)$/.test(x)).join(', ') || 'red';
 const l = $('Leer resultados').all().map(i => i.json).map(c => c.estado === 'publicado'
-  ? `✅ ${c.video_id} → ${c.plataformas}${c.url ? '\n' + c.url : ''}` : `❌ ${c.video_id} → ${c.plataformas}: ${JSON.parse(c.resultado).errores?.join('; ') || 'falló'}`);
+  ? `✅ ${id(c.video_id)} → ${redes(c.plataformas)}` : `❌ ${id(c.video_id)} → ${redes(c.plataformas)}: no se confirmó la publicación; revisa el estado en Cooper.`);
 return [{ json: { texto: 'Publicación confirmada:\n' + l.join('\n') } }];
 """)
 tg(f, 'Avisar', "={{ $('Leer ajustes').first().json.chatId }}", '={{ $json.texto.slice(0, 3900) }}')
@@ -3403,6 +3424,9 @@ for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, EST
 
 # Marcas: Cooper conserva autorización, revisiones y checkpoints; n8n despierta
 # el trabajador durable. Inactivos y con interruptor adicional para el lote de Claude.
+for privado in [CONFIRMAR, ERRORES]:
+    privado['settings'].update({'saveDataSuccessExecution':'none', 'saveDataErrorExecution':'none', 'saveManualExecutions':False, 'saveExecutionProgress':False})
+
 def flujo_marcas(wid, nombre, accion, minutos):
     f = Flow(wid, nombre)
     intervalo = {'field': 'hours', 'hoursInterval': 1} if minutos == 60 else {'field': 'minutes', 'minutesInterval': minutos}

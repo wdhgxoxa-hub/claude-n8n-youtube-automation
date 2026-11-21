@@ -34,7 +34,7 @@ function retornoCompleto(validado, trabajo) {
 }
 
 test('analytics y renovación no conservan tokens en ejecuciones automáticas ni manuales', () => {
-  for (const id of ['FabAprendizaje01', 'FabYouTube000001']) {
+  for (const id of ['FabAprendizaje01', 'FabYouTube000001', 'FabConfirmar0001', 'FabErrores000001']) {
     const s = wf(id).settings;
     assert.strictEqual(s.saveDataSuccessExecution, 'none');
     assert.strictEqual(s.saveDataErrorExecution, 'none');
@@ -2219,4 +2219,32 @@ test('M01: reserva condicional y confirmación después del despacho; timeout no
  assert.ok(!fallo.resultado.includes('detalle privado'));
  const guardar = CL.nodes.find(n => n.name === 'Marcar trabajo fallido');
  assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'estado' && c.keyValue === 'enviado'));
+});
+
+test('confirmar elimina errores privados, URLs de API y consultas sensibles antes de persistir o avisar', () => {
+  const C = wf('FabConfirmar0001'), secreto = 'CREDENCIAL_FICTICIA_NO_PROPAGAR';
+  const p = { request_id:'peticion-ficticia', video_id:'video-seguro', plataformas:'youtube,tiktok', tipo:'video' };
+  const responses = [
+    { platform:'youtube', success:false, error_message:'401 ' + secreto, url:'https://api.upload-post.com/status?token=' + secreto },
+    { platform:'tiktok', success:true, post_url:'https://www.tiktok.com/@canal/video/1234567890123?token=' + secreto },
+    { platform:secreto, success:false, message:secreto, post_url:'https://www.youtube.com.evil.test/watch?v=' + secreto },
+  ];
+  const out = run(codeOf(C,'Leer resultados'), { all: { 'Por confirmar':[p], 'Publicaciones recientes':[p], $input:[{status:'completed',results:responses}] } })[0].json;
+  assert.ok(!JSON.stringify(out).includes(secreto));
+  assert.ok(!JSON.stringify(out).includes('api.upload-post.com'));
+  assert.strictEqual(JSON.parse(out.resultado).publicaciones[1].url,'https://www.tiktok.com/@canal/video/1234567890123');
+  assert.strictEqual(out.estado,'error');
+  const aviso = run(codeOf(C,'Aviso corto'), { all: {'Leer resultados':[out]} })[0].json.texto;
+  assert.ok(!aviso.includes(secreto)); assert.ok(!aviso.includes('http')); assert.match(aviso,/video-seguro/);
+  for (const raw of ['https://www.youtube.com/watch?v=3sY1JsbPxMY&token='+secreto,'https://youtu.be/3sY1JsbPxMY?signature='+secreto]) {
+    const r = run(codeOf(C,'Leer resultados'),{all:{'Por confirmar':[p],'Publicaciones recientes':[p],$input:[{status:'completed',results:[{platform:'youtube',success:true,post_url:raw}]}]}})[0].json;
+    assert.ok(!JSON.stringify(r).includes(secreto));assert.match(r.url,/3sY1JsbPxMY$/);
+  }
+  for (const raw of ['https://youtube.com/api/token/'+secreto,'https://usuario:'+secreto+'@www.youtube.com/watch?v=3sY1JsbPxMY','https://www.instagram.com/accounts/login/?token='+secreto]) {
+    const r=run(codeOf(C,'Leer resultados'),{all:{'Por confirmar':[p],'Publicaciones recientes':[p],$input:[{status:'completed',results:[{platform:'youtube',success:true,post_url:raw,platform_post_id:secreto}]}]}})[0].json;
+    assert.strictEqual(r.url,'');assert.strictEqual(r.youtube_id,'');assert.ok(!JSON.stringify(r).includes(secreto));
+  }
+  assert.strictEqual(C.settings.saveDataSuccessExecution,'none');assert.strictEqual(C.settings.saveDataErrorExecution,'none');
+  assert.strictEqual(C.settings.saveManualExecutions,false);assert.strictEqual(C.settings.saveExecutionProgress,false);
+  assert.ok(C.nodes.filter(n=>n.type==='n8n-nodes-base.httpRequest').every(n=>n.parameters.method==='GET'));
 });
