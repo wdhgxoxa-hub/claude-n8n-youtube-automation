@@ -1,0 +1,286 @@
+{
+  "resultado": "PASS",
+  "commit_fuente": "1c2f2b350550e2ea177848cd73104004cb09c711",
+  "equivalencia_cooper": "Árbol cooper/ idéntico a e942dc9 por git diff --exit-code",
+  "codigo_integrado": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+  "imagen_herramientas": "localhost/cooper-ci:863803598c05",
+  "entorno": "Checkout archivado propio; caché privada verificada; puertos libres; sin OAuth, servicios externos ni datos reales",
+  "afinidad": "8-15",
+  "comando": "node scripts/e2e.mjs marcas.spec.ts montajes.spec.ts multiengine.spec.ts accesibilidad.spec.ts -g \"Marcas:|reutiliza montaje|entrada, teclado|axe: todas las rutas\" --max-failures=1 --reporter=list,json",
+  "estadisticas": {
+    "startTime": "2026-11-21T20:25:56.110Z",
+    "duration": 499398.39999999997,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "pruebas": [
+    {
+      "titulo": "Marcas: alta, estudio, pieza, revisión, edición y matriz accesible",
+      "archivo": "marcas.spec.ts",
+      "proyecto": "chromium",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 8776,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "Marcas: Sentinel 1440 recorre sus cinco secciones con el guardián activo",
+      "archivo": "marcas.spec.ts",
+      "proyecto": "chromium",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 158217,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "Marcas: Sentinel 390 recorre sus cinco secciones con el guardián activo",
+      "archivo": "marcas.spec.ts",
+      "proyecto": "chromium",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 157427,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambia la fábrica",
+      "archivo": "montajes.spec.ts",
+      "proyecto": "chromium",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 3922,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "axe: todas las rutas, oscuro, 360px",
+      "archivo": "accesibilidad.spec.ts",
+      "proyecto": "demostracion",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 17887,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "axe: todas las rutas, oscuro, 1440px",
+      "archivo": "accesibilidad.spec.ts",
+      "proyecto": "demostracion",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 18842,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "axe: todas las rutas, claro, 360px",
+      "archivo": "accesibilidad.spec.ts",
+      "proyecto": "demostracion",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 16992,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "axe: todas las rutas, claro, 1440px",
+      "archivo": "accesibilidad.spec.ts",
+      "proyecto": "demostracion",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 18598,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "firefox-oscuro-390",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 11190,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "firefox-oscuro-1440",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 11593,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "firefox-claro-390",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 11004,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "firefox-claro-1440",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 11624,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "webkit-oscuro-390",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 10558,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "webkit-oscuro-1440",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 11839,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "webkit-claro-390",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 10630,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "titulo": "entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales",
+      "archivo": "multiengine.spec.ts",
+      "proyecto": "webkit-claro-1440",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracion_ms": 12220,
+          "retry": 0
+        }
+      ]
+    }
+  ],
+  "advertencias": 0,
+  "sha256_playwright": "120c6c32e45c91988544f473e9a4d39322db417b7c7e1f5e57244518dd3ed460",
+  "sha256_log": "4b3154d9865ba6cf6df9d55cadce310ee244189aaa1a9303a40b139a843d337d",
+  "sentinel": [
+    {
+      "ancho": 1440,
+      "modulos": [
+        {
+          "nombre": "recorridos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "caos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "estabilidad",
+          "hallazgos": 0
+        }
+      ],
+      "acciones_caos": 3296,
+      "hallazgos": 0,
+      "sha256_informe": "4cdfc7a7dc35936ea5189bbc6489b8b9349f4e9e7f1c9fa2c58fd0a3825158ed",
+      "sha256_red": "9b2f282ec872c1e031d2805a835ee9555e86fdf5b7a7cb0d2091146486539a94",
+      "eventos_red": 883,
+      "errores_consola": 0
+    },
+    {
+      "ancho": 390,
+      "modulos": [
+        {
+          "nombre": "recorridos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "caos",
+          "hallazgos": 0
+        },
+        {
+          "nombre": "estabilidad",
+          "hallazgos": 0
+        }
+      ],
+      "acciones_caos": 3413,
+      "hallazgos": 0,
+      "sha256_informe": "46ebb3bd97f5dc273b0b9e9b04d763831c09deecd5c33f2435031a81cf982f26",
+      "sha256_red": "97765ba0938404596ee6f6b45d0019a1d0fcede1708cee306418f50047338e36",
+      "eventos_red": 816,
+      "errores_consola": 0
+    }
+  ],
+  "alcance": "16 recorridos focales con videos; no equivale a puerta ni ronda completa",
+  "contrato_adicional": {
+    "navegador_real": 3,
+    "saneamiento": 5,
+    "opcion": "-W error",
+    "resultado": "PASS"
+  }
+}

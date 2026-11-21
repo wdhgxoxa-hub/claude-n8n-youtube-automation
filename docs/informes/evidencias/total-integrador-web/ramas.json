@@ -10040,6 +10040,336 @@
       ],
       "evidencia": "rendimiento-integracion.json",
       "nota": "Sustituye la exclusión de rendimiento como activo del corte original. El resto de la matriz sigue describiendo su SHA objetivo histórico; no es una nueva auditoría de todas las puntas."
+    },
+    {
+      "fecha_lima": "2026-11-21T15:27:49.453027-05:00",
+      "commit_objetivo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+      "cierre_helper": {
+        "origenes": [
+          "c0772dc",
+          "3596d5bd"
+        ],
+        "equivalente": "af3a5ed9a8c4616ec52645d4b7c0cdef565e3560",
+        "estado": "integrado_por_contenido",
+        "evidencia": "Producto recuperó helper Radar/consulta/Resolver adaptado al CAS moderno; prueba de carrera y reversa, retryOnFail ausente=false y fuente real 6 HTTP/330 s. Integrado por root en af3a5ed, ancestro del objetivo."
+      },
+      "faltantes_aplicacion_en_ramas_cerradas": 0,
+      "faltantes_helpers_operativos_en_ramas_cerradas": 0,
+      "limite": "No vuelve a seguir refs de rondas/QA sin cierre ni acredita la puerta o despliegue del objetivo."
     }
-  ]
+  ],
+  "resumen_cierre_actual": {
+    "fecha_lima": "2026-11-21T15:36:10.165209-05:00",
+    "commit_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+    "commit_integrado_observado": "34d6c7a2fab3180ad54df31a6789cac4041d244e",
+    "ramas_totales": 55,
+    "deltas": [
+      {
+        "rama": "total-competencia-revision",
+        "sha": "d876b330e16f9657bc736b5cbb64fb94ab65153f",
+        "sha_previo": null,
+        "estado": "documentacion_con_ensayo_pendiente",
+        "commits": [
+          "d876b33"
+        ],
+        "detalle": "Memo documental de auditoría con aceptación Radar y límites de volumen; declara ensayo H19 pendiente de ejecución. Sin runtime nuevo ni cierre completo."
+      },
+      {
+        "rama": "total-radar-contexto",
+        "sha": "39ac4067b3e87bb0b240186a181c8eb6703df0bb",
+        "sha_previo": "6f6af6465f3240250aad150c3f68b72488ee5595",
+        "estado": "delta_operativo_cerrado_en_revision_producto",
+        "commits": [
+          "e29bba5",
+          "9dc7ce0",
+          "39ac406"
+        ],
+        "detalle": "Helper WAL de clon autónomo y recibos públicos de 146 filas/memoria. Producto asignado a integración; no cambia Cooper ni se aplica desde este frente."
+      },
+      {
+        "rama": "total-revision-rondas-cierre",
+        "sha": "ccd539d19381709136a93694559cf4af4ffca431",
+        "sha_previo": "65a5996887bf98ccde28ab093494222ad7672f52",
+        "estado": "codigo_equivalente_evidencia_parcial",
+        "commits": [
+          "be2b242",
+          "ccd539d"
+        ],
+        "equivalente_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+        "detalle": "Exclusión mutante montajes ya cubierta por 1c2f2b3/e942dc9 y pruebas originales. Recibo documenta ronda rechazada y revisión parcial; no acredita aceptación completa."
+      }
+    ],
+    "faltantes_aplicacion_en_ramas_cerradas": 0,
+    "faltantes_helpers_operativos_en_ramas_cerradas": 1,
+    "responsable_helper": "total-integrador-producto: e29bba5 y cierres posteriores",
+    "limite": "Barrido de puntas por SHA; no se importan ni persiguen nuevas rondas/QA sin cierre. La matriz base de 54 refs se conserva como corte histórico."
+  },
+  "barrido_posterior": {
+    "fecha_lima": "2026-11-21T15:36:10.165209-05:00",
+    "commit_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+    "commit_integrado_observado": "34d6c7a2fab3180ad54df31a6789cac4041d244e",
+    "ramas_totales": 55,
+    "refs": [
+      {
+        "rama": "total-accesibilidad",
+        "sha": "a64bd51fc12dd19262ef36e4abb85b7e772be1d7"
+      },
+      {
+        "rama": "total-aprendizaje",
+        "sha": "688a1579b88684ed19e39de0d25cc6cb999f543c"
+      },
+      {
+        "rama": "total-aprendizaje-aceptacion",
+        "sha": "632bd1fee71e66a7e2bfd2b4e5ef225052740846"
+      },
+      {
+        "rama": "total-auditoria",
+        "sha": "ad67618acdc4aba4c5d6329cd0d93ab4e259759f"
+      },
+      {
+        "rama": "total-chat-vps",
+        "sha": "3ba2508e5cf26bcd5416738fb3e4298e434d2714"
+      },
+      {
+        "rama": "total-chatfix",
+        "sha": "1002cc032616be613f1cedc9b4d2449e3266b209"
+      },
+      {
+        "rama": "total-cierre-aceptacion",
+        "sha": "4f13622f237c6523d8f29b352199479f49100db7"
+      },
+      {
+        "rama": "total-competencia",
+        "sha": "16e70d472a7b08b1d5b45c07b3fc4ee119bf7b62"
+      },
+      {
+        "rama": "total-competencia-aceptacion",
+        "sha": "f5d12463f99c23ed0167d52546ce54d25af34744"
+      },
+      {
+        "rama": "total-competencia-cierre",
+        "sha": "1cdd904efb3a621cff612c11b68d64d1fc797734"
+      },
+      {
+        "rama": "total-competencia-navegacion",
+        "sha": "ba6769c660021a46998f20cb63fcc9d1882542ee"
+      },
+      {
+        "rama": "total-competencia-orquestada",
+        "sha": "39537a7fc49e81dac1a61dfa6e6dd9361aeaaeb6"
+      },
+      {
+        "rama": "total-competencia-revision",
+        "sha": "d876b330e16f9657bc736b5cbb64fb94ab65153f"
+      },
+      {
+        "rama": "total-competencia-youtube",
+        "sha": "bb261a37d4be4004a6f78ef4e1c058c76e7aaa98"
+      },
+      {
+        "rama": "total-despliegue",
+        "sha": "f62e3cd391598f59c5d39b90412fac85225d281f"
+      },
+      {
+        "rama": "total-despliegue-aceptacion",
+        "sha": "d26b6147cf879c633b432034d74b79e2174de19c"
+      },
+      {
+        "rama": "total-final-aceptacion-fcfab3b",
+        "sha": "5f23df85dc092809bc26766dca923684179dccdc"
+      },
+      {
+        "rama": "total-final2-aceptacion-719409f",
+        "sha": "b5ff17d8a5fd08bb35c3e3f1de94ac4c4c28a886"
+      },
+      {
+        "rama": "total-final3-aceptacion-bfd5e79",
+        "sha": "bfd5e79283bdd2c571937a9f30d8ff512015430f"
+      },
+      {
+        "rama": "total-guia",
+        "sha": "ff0dd3eb0e564b7f776335825353674305eb83ff"
+      },
+      {
+        "rama": "total-identidad-viva",
+        "sha": "fed13607a82e3cd190917b592063a8ff5b32ba2d"
+      },
+      {
+        "rama": "total-infra-segura",
+        "sha": "533703d1c2a43cc2c8af07fa0580c0d44cfb21cd"
+      },
+      {
+        "rama": "total-m01",
+        "sha": "1b00e5f9b06406dcd573b8ea6c7c8a64e87310af"
+      },
+      {
+        "rama": "total-m03",
+        "sha": "f6fb304cd02a1b3e5f7c20ec8d43efa15bfa8389"
+      },
+      {
+        "rama": "total-m05",
+        "sha": "c25546a38ec1639e003044bea039981f8092feb5"
+      },
+      {
+        "rama": "total-m06",
+        "sha": "fc362c5469711d53baef192a6c32d77921ae63f3"
+      },
+      {
+        "rama": "total-m07",
+        "sha": "799117733ea9e74acf8f6d4c85234af8d2bb71e4"
+      },
+      {
+        "rama": "total-m08",
+        "sha": "9a4f09204544703fd408c5985610aead110195f2"
+      },
+      {
+        "rama": "total-m09",
+        "sha": "e5cbc3a3b12a2b3ae3a3513fb188495294b02965"
+      },
+      {
+        "rama": "total-m10",
+        "sha": "66b366727e5aa37d16d5aaa58e174bd0f1f16e01"
+      },
+      {
+        "rama": "total-m11",
+        "sha": "b96b7eb94c4f149670e5021c5609f61088d59d2d"
+      },
+      {
+        "rama": "total-m12",
+        "sha": "ed73dcb4e867bdf11019e687052c1b8ef3c04986"
+      },
+      {
+        "rama": "total-marcas-runtime",
+        "sha": "2dac9d5d4e8d93e924c7c9a4e2acc3b7ed63f636"
+      },
+      {
+        "rama": "total-margen-estrategia",
+        "sha": "390d5518fbdc6265b689dd2ad21997bb106b4bae"
+      },
+      {
+        "rama": "total-n8n-auditoria",
+        "sha": "ff3465f6ebdeee4d11f2b05a938d714c743ec451"
+      },
+      {
+        "rama": "total-n8n-e2e",
+        "sha": "2dabc3a6b136afce79cc5309f33b5da8f6918b72"
+      },
+      {
+        "rama": "total-n8n-lote",
+        "sha": "e3394168008778684752467c4b5de45d64f06ed0"
+      },
+      {
+        "rama": "total-n8n-ramas",
+        "sha": "4629bdd7acc79f4be0d66568eb4a590205beda93"
+      },
+      {
+        "rama": "total-operacion",
+        "sha": "a496077990a5962e87384ac4eb139892d2e91f50"
+      },
+      {
+        "rama": "total-qa-produccion",
+        "sha": "de397f3195856c10b6a9959171ff42da4328d9ec"
+      },
+      {
+        "rama": "total-radar-contexto",
+        "sha": "39ac4067b3e87bb0b240186a181c8eb6703df0bb"
+      },
+      {
+        "rama": "total-render-real",
+        "sha": "5f6129672d375211467a81e53a07d33064500c12"
+      },
+      {
+        "rama": "total-rendimiento",
+        "sha": "42c58819f6db2e391079f59e073ece5bb470f3b5"
+      },
+      {
+        "rama": "total-resultados-e2e",
+        "sha": "f0b21a87671cbdb430069ae70118c6ec36a8f3a3"
+      },
+      {
+        "rama": "total-resultados-movil",
+        "sha": "b2033945c1fc3ef0193ac93377344ac3438005ee"
+      },
+      {
+        "rama": "total-retorno-2476",
+        "sha": "71be3c706266f27ce257c4a524fa062377564a34"
+      },
+      {
+        "rama": "total-revision-cierre",
+        "sha": "f8aa9667a8c00fe143d6a9125a57cd991829b09c"
+      },
+      {
+        "rama": "total-revision-final",
+        "sha": "00168c10e5d90ae955a2265b3c4b4579c5dc3784"
+      },
+      {
+        "rama": "total-revision-rondas-cierre",
+        "sha": "ccd539d19381709136a93694559cf4af4ffca431"
+      },
+      {
+        "rama": "total-seguridad",
+        "sha": "cb9c478a2776313e390db3c4e77ead2909439404"
+      },
+      {
+        "rama": "total-sentinel",
+        "sha": "70f4983f393f858d10e93a7751ef214172db7ffb"
+      },
+      {
+        "rama": "total-sentinel-guardia",
+        "sha": "7592d70dbb4a681a90f9c7c9f6164c503e55a0bc"
+      },
+      {
+        "rama": "total-sentinel-privado",
+        "sha": "55bf5e9698bddfab8570a0a00fe5972fb71ed5b0"
+      },
+      {
+        "rama": "total-vidiq-parser",
+        "sha": "a2ee9f05fe9d2cdfafe396cc31fa07a64c5f7db8"
+      },
+      {
+        "rama": "total-volumen-n8n",
+        "sha": "38a1017cccbbe82dd278b91e5db10ebbbf9a4a78"
+      }
+    ],
+    "deltas": [
+      {
+        "rama": "total-competencia-revision",
+        "sha": "d876b330e16f9657bc736b5cbb64fb94ab65153f",
+        "sha_previo": null,
+        "estado": "documentacion_con_ensayo_pendiente",
+        "commits": [
+          "d876b33"
+        ],
+        "detalle": "Memo documental de auditoría con aceptación Radar y límites de volumen; declara ensayo H19 pendiente de ejecución. Sin runtime nuevo ni cierre completo."
+      },
+      {
+        "rama": "total-radar-contexto",
+        "sha": "39ac4067b3e87bb0b240186a181c8eb6703df0bb",
+        "sha_previo": "6f6af6465f3240250aad150c3f68b72488ee5595",
+        "estado": "delta_operativo_cerrado_en_revision_producto",
+        "commits": [
+          "e29bba5",
+          "9dc7ce0",
+          "39ac406"
+        ],
+        "detalle": "Helper WAL de clon autónomo y recibos públicos de 146 filas/memoria. Producto asignado a integración; no cambia Cooper ni se aplica desde este frente."
+      },
+      {
+        "rama": "total-revision-rondas-cierre",
+        "sha": "ccd539d19381709136a93694559cf4af4ffca431",
+        "sha_previo": "65a5996887bf98ccde28ab093494222ad7672f52",
+        "estado": "codigo_equivalente_evidencia_parcial",
+        "commits": [
+          "be2b242",
+          "ccd539d"
+        ],
+        "equivalente_codigo": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+        "detalle": "Exclusión mutante montajes ya cubierta por 1c2f2b3/e942dc9 y pruebas originales. Recibo documenta ronda rechazada y revisión parcial; no acredita aceptación completa."
+      }
+    ],
+    "faltantes_aplicacion_en_ramas_cerradas": 0,
+    "faltantes_helpers_operativos_en_ramas_cerradas": 1,
+    "responsable_helper": "total-integrador-producto: e29bba5 y cierres posteriores",
+    "limite": "Barrido de puntas por SHA; no se importan ni persiguen nuevas rondas/QA sin cierre. La matriz base de 54 refs se conserva como corte histórico."
+  }
 }

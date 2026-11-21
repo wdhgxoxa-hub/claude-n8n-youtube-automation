@@ -350,3 +350,102 @@ Estos tres commits solo cambian `docs/informes/`; no ejecutan proveedores, n8n n
 Diagnóstico de Sentinel anterior: el recibo público `06705b0` acredita un bloqueo de recurso en caos Publicados 1440 sobre `bfd5e79`, pero no conserva URL, método ni tipo suficientes para atribuir su causa. Publicados ya usaba datos SSR en ese corte; el cambio posterior no demuestra causalidad. Se mantienen guardián y umbrales. Si reaparece, registrar únicamente origen/ruta saneados, método, tipo y localización de consola, sin query, cookies ni cabeceras.
 
 Revisión visual prevista: capturas originales de seis vistas en claro/oscuro y 1440/390, más estados e interacciones y recorrido continuo de cada ronda. La decodificación de videos y los índices técnicos no sustituyen la inspección visual; no se declara aceptada una ronda hasta revisar su salida cerrada. No se añaden decisiones nuevas para Walter.
+
+## Corrección del contrato Sentinel tras el fallo de Marcas
+
+21-11-2026, Lima. La primera ronda de `rondas-rendimiento` sobre `e1244bd`
+terminó con 31 aprobadas, un fallo y 91 no ejecutadas. No acredita una ronda
+limpia. El guardián registró `POST /api/marcas/montajes` bloqueado y caos reportó
+`ERR_BLOCKED_BY_CLIENT.Inspector` en el mismo calendario, semilla 1479559273,
+541 acciones. Las pruebas funcionales de la puerta paralela no reproducían
+siempre ese clic aleatorio.
+
+Commit `1c2f2b3`: se corrige el contrato de controles de solo lectura, sin
+cambiar aplicación, fuentes privadas, guardián, evaluador, semilla ni umbrales.
+El botón «Actualizar montajes desde fábrica» sincroniza revisiones mediante
+POST y faltaba en las exclusiones. Se centralizan además los controles mutantes
+que solo se excluían en el ensayo particular de Marcas y «Añadir cuenta».
+La [comparación dirigida antes/después](evidencias/total-integrador-web/sentinel-montajes-reproduccion.json)
+reproduce el clic real sobre un DOM/servidor sintéticos con la misma revisión
+verificada de Sentinel: antes intentaba la escritura, el servidor recibía cero,
+y `requestfailed`/consola coincidían en ruta y código; después no se intenta la
+escritura. Una petición que eluda la interfaz sigue bloqueada y el evaluador
+original la sigue marcando como error medio. No hay filtro genérico de consola.
+
+Auditoría de controles y cobertura conservada:
+
+| Control | Efecto que lo excluye de la lectura | Cobertura dirigida existente |
+| --- | --- | --- |
+| Actualizar montajes desde fábrica | POST que sincroniza revisiones | `e2e/montajes.spec.ts`: obtiene nueva revisión, exige selección y conserva reproducción MP4/lectura privada |
+| Añadir cuenta | Alta de cuenta de una marca | `e2e/marcas.spec.ts` y `e2e/montajes.spec.ts`: alta y verificación posterior |
+| Verificar conexión | Cambia el estado de cuenta | `e2e/marcas.spec.ts`: confirmación visible y posterior uso de la cuenta |
+| Desconectar | Revoca cuenta y cancela cola | `tests/marcas.test.ts`: desconexión cancela la pieza programada |
+| Estudiar la cuenta | Actualiza la muestra de estudio | `e2e/marcas.spec.ts`: muestra simulada de seis publicaciones |
+| Proponer texto con el especialista | Genera propuesta de pieza | `e2e/marcas.spec.ts`: propuesta no vacía y guardado/revisión posterior |
+| Pedir cambios | Registra decisión de revisión | Control ya excluido en Marcas; `e2e/cooper.spec.ts` conserva el recorrido dirigido del mismo control de revisión de video. No se atribuye ese recorrido a la revisión de una pieza de Marcas |
+
+Los botones de guardar/enviar/aprobar ya los excluye el guardián original.
+«Continuar», las cinco secciones de Marcas, filtros, selectores, evidencia,
+«Editar pieza» y «Actualizar» de lectura permanecen disponibles. Se comprobó
+sobre navegador real que «Abrir publicación» externo ya queda excluido por
+el guardián original y el enlace interno permanece permitido. Esto no demuestra
+que el bloqueo de Publicados del orquestador tuviera la misma causa: aquel
+recibo carece de la trazabilidad necesaria y no se silenció su hallazgo.
+
+El adaptador añade `red-observada.json`: módulo, instante relativo, origen/ruta,
+método, tipo de recurso, código de red y localización de consola. Omite query,
+fragmento, userinfo, cabeceras, cookies, cuerpos y texto libre. Observa errores
+sin interceptar peticiones ni modificar los hallazgos. Se consultaron las APIs
+oficiales de [BrowserContext](https://playwright.dev/python/docs/api/class-browsercontext),
+[Request](https://playwright.dev/python/docs/api/class-request) y
+[ConsoleMessage](https://playwright.dev/python/docs/api/class-consolemessage).
+
+Verificación focal del contrato: **3/3 pruebas de navegador real y 5/5 de
+saneamiento, con `-W error`**, más comparación determinista antes/después.
+Los archivos privados siguen coincidiendo con las nueve huellas del manifiesto.
+Pruebas de aplicación/navegadores y revisión visual se registran por separado
+cuando terminan; estos resultados no sustituyen la puerta ni dos rondas completas.
+
+La matriz conserva además un seguimiento sobre `e942dc9`: el helper Radar/Resolver
+pendiente quedó integrado por producto en `af3a5ed`, ancestro del objetivo,
+con CAS moderno, carrera y reversa acreditados. En ese corte quedan **cero
+faltantes de aplicación y cero helpers operativos de ramas cerradas**. Las dos
+refs sin cierre no se siguen ni se convierten en trabajo terminado.
+
+Aceptación focal sobre `1c2f2b3`: **16/16 PASS en 8,3 minutos**, sin fallos,
+omisiones, reintentos ni advertencias. [Recibo y hashes](evidencias/total-integrador-web/sentinel-focal.json).
+El árbol `cooper/` es idéntico al integrado `e942dc9`. Checkout archivado propio,
+imagen de herramientas CI y caché privada verificada; CPU 8–15 liberadas al
+terminar, sin tocar los otros procesos. Se conservan videos en
+`.cache/sentinel-focal/checkout/cooper/test-results/` del worktree delegado.
+
+- Marcas funcional y Sentinel a 1440/390: cero hallazgos, 3.296/3.413 acciones.
+- Montajes: MP4 por gesto Space, tiempo de reproducción, lectura privada y
+  selección de la revisión actual tras sincronizar la fábrica.
+- Axe: todas las rutas, claro/oscuro, 360/1440; sin `duplicate-id-aria`.
+- Ocho entradas Firefox/WebKit, claro/oscuro y 390/1440: teclado, chat,
+  reconexión SSE y las dos aprobaciones manuales.
+
+Los fixes del integrador `bb74925`, `f1df4f7` y `a987b2f` están incluidos
+(respectivamente `66f2f5f`, `e2e87ed`, `c62947c` en esta rama). Solo `f1df4f7`
+cambia aplicación: IDs/labels de Biblia por instancia. Este frente no duplica
+esos commits al entregar su corrección. Puerta y dos rondas completas continúan
+en el checkout nuevo del integrador; aún no se aceptó visualmente ninguna.
+
+### Barrido posterior al cierre focal
+
+Se registraron 55 refs (52 originales y tres posteriores), por SHA fijo, contra
+código `e942dc9` y el commit documental integrado `34d6c7a`. La matriz conserva
+el corte histórico de 54 y añade `barrido_posterior` con las 55 puntas observadas.
+No se modificaron worktrees concurrentes.
+
+| Ref y punta | Delta | Tratamiento |
+| --- | --- | --- |
+| `total-radar-contexto`, `39ac406` | `e29bba5`: clon autónomo SQLite con WAL y cuatro regresiones; `9dc7ce0`: copia final de 146 filas/ensayos; `39ac406`: memoria VPS | Nuevo helper operativo cerrado, asignado expresamente a producto. No aplicado por este frente. No cambia la aplicación |
+| `total-revision-rondas-cierre`, `ccd539d` | `be2b242`: exclusión del montaje; `ccd539d`: recibo causal y visual parcial | Código ya cubierto por `1c2f2b3`/`e942dc9`; evidencia histórica de ronda rechazada, sin declarar ronda limpia |
+| `total-competencia-revision`, `d876b33` | Memo y conciliación de auditoría; ampliación H19 todavía pendiente | Documentación sin runtime nuevo. No se considera cerrado el ensayo aún pendiente |
+
+Resultado de este nuevo barrido: ningún resto de aplicación; un helper operativo
+posterior en integración por producto (`e29bba5`). No contradice el cierre anterior
+del helper Radar/Resolver: son cambios distintos y cortes distintos. El integrador
+recibió el aviso antes de iniciar su despliegue. No se agregan decisiones de Walter.

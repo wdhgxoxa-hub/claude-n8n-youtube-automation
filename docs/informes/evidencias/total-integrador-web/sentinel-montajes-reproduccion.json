@@ -1,0 +1,50 @@
+{
+  "origen": "HTTP y DOM sintéticos de tests/test_sentinel_exclusiones.py; sin Cooper vivo ni proveedores",
+  "resultados": [
+    {
+      "caso": "antes",
+      "control": "Actualizar montajes desde fábrica",
+      "excluido": false,
+      "intentos_ui": 1,
+      "escrituras_servidor": 0,
+      "hallazgos": [
+        {
+          "titulo": "escritura bloqueada: POST /api/marcas/montajes",
+          "gravedad": "info"
+        }
+      ],
+      "eventos": [
+        {
+          "tipo": "peticion_fallida",
+          "modulo": "clic_dirigido",
+          "segundos": 3.3032,
+          "origen": "http://127.0.0.1:34233",
+          "ruta": "/api/marcas/montajes",
+          "metodo": "POST",
+          "recurso": "fetch",
+          "codigo": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "tipo": "consola_error",
+          "modulo": "clic_dirigido",
+          "segundos": 3.3033,
+          "origen": "http://127.0.0.1:34233",
+          "ruta": "/api/marcas/montajes",
+          "linea": 0,
+          "columna": 0,
+          "codigo": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ]
+    },
+    {
+      "caso": "despues",
+      "control": "Actualizar montajes desde fábrica",
+      "excluido": true,
+      "intentos_ui": 0,
+      "escrituras_servidor": 0,
+      "hallazgos": [],
+      "eventos": []
+    }
+  ],
+  "guardia_y_evaluadores": "Revisión original verificada por manifiesto; sin modificaciones ni filtros"
+}
