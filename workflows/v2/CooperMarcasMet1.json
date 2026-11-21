@@ -1,0 +1,133 @@
+{
+  "id": "CooperMarcasMet1",
+  "name": "FX · Marcas · Métricas",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "aa0c66bb-4e5a-53fd-8d2e-07e0864c6f6c",
+      "name": "Reloj",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "c78503af-8b9b-5303-b9d5-fef8bd86fafc",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nif ($env.COOPER_MARCAS_HABILITAR !== '1') return [];\nconst accion = \"metricas\";\nconst secret = $env.COOPER_MARCAS_WORKER_SECRET || '';\nif (secret.length < 32) throw new Error('Configurar el secreto dedicado de Marcas');\nconst origin = String($env.COOPER_MARCAS_URL || '').replace(/\\/$/, '');\nif (!/^https:\\/\\/[a-z0-9.-]+(?::\\d+)?$/i.test(origin)) throw new Error('Configurar origen HTTPS de Cooper');\nconst cuerpo = JSON.stringify({accion}), tiempo = String(Date.now());\nconst firma = require('crypto').createHmac('sha256', secret).update(tiempo + '.' + cuerpo).digest('hex');\nreturn [{json:{url:origin + '/api/marcas/operar', cuerpo, tiempo, firma}}];\n"
+      },
+      "id": "cf204d45-6e09-5789-a20b-71204a36ea3a",
+      "name": "Firmar trabajo de marcas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 300000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-cooper-time",
+              "value": "={{ $json.tiempo }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.cuerpo }}"
+      },
+      "id": "f0c2ab63-7b53-51f2-96e9-ee71fa2c74f7",
+      "name": "Atender marcas en Cooper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Reloj": {
+      "main": [
+        [
+          {
+            "node": "Firmar trabajo de marcas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firmar trabajo de marcas": {
+      "main": [
+        [
+          {
+            "node": "Atender marcas en Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Firmar trabajo de marcas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

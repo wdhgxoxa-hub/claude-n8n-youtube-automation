@@ -3354,7 +3354,37 @@ for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, EST
                            'saveDataErrorExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
+# Marcas: Cooper conserva autorización, revisiones y checkpoints; n8n despierta
+# el trabajador durable. Inactivos y con interruptor adicional para el lote de Claude.
+def flujo_marcas(wid, nombre, accion, minutos):
+    f = Flow(wid, nombre)
+    intervalo = {'field': 'hours', 'hoursInterval': 1} if minutos == 60 else {'field': 'minutes', 'minutesInterval': minutos}
+    f.add('Reloj', 'n8n-nodes-base.scheduleTrigger', 1.2,
+          {'rule': {'interval': [intervalo]}})
+    trigger(f)
+    code(f, 'Firmar trabajo de marcas', r"""
+if ($env.COOPER_MARCAS_HABILITAR !== '1') return [];
+const accion = """ + JS(accion) + r""";
+const secret = $env.COOPER_MARCAS_WORKER_SECRET || '';
+if (secret.length < 32) throw new Error('Configurar el secreto dedicado de Marcas');
+const origin = String($env.COOPER_MARCAS_URL || '').replace(/\/$/, '');
+if (!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(origin)) throw new Error('Configurar origen HTTPS de Cooper');
+const cuerpo = JSON.stringify({accion}), tiempo = String(Date.now());
+const firma = require('crypto').createHmac('sha256', secret).update(tiempo + '.' + cuerpo).digest('hex');
+return [{json:{url:origin + '/api/marcas/operar', cuerpo, tiempo, firma}}];
+""")
+    http(f, 'Atender marcas en Cooper', 'POST', '={{ $json.url }}',
+         body='={{ $json.cuerpo }}', auth=False, timeout=300000,
+         headers={'x-cooper-time':'={{ $json.tiempo }}', 'x-cooper-signature':'={{ $json.firma }}'})
+    f.chain('Reloj', 'Firmar trabajo de marcas', 'Atender marcas en Cooper')
+    f.link('Inicio', 'Firmar trabajo de marcas')
+    result = f.dump()
+    result['settings'].update({'saveDataSuccessExecution':'none', 'saveDataErrorExecution':'none'})
+    return result
+MARCA_PUBLICAR = flujo_marcas('CooperMarcasPub1', 'FX · Marcas · Publicación y adjuntos', 'publicar', 1)
+MARCA_METRICAS = flujo_marcas('CooperMarcasMet1', 'FX · Marcas · Métricas', 'metricas', 60)
+
+ALL = [MARCA_PUBLICAR, MARCA_METRICAS, AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
 
 def conservar_identificadores(wf, anterior):
     prev = {n['name']: n for n in anterior.get('nodes', [])}
