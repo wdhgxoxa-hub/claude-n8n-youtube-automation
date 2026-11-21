@@ -1,0 +1,1818 @@
+{
+  "version": 1,
+  "consulta_lima": "2026-11-21",
+  "estado": "investigacion_publica_no_desplegada",
+  "metrica": "vistas_acumuladas_publicas_en_la_consulta",
+  "formula": "media = suma(vistas disponibles) / n; ratio = vistas / media. El video evaluado está incluido en la media.",
+  "umbral_exploratorio_ratio": 2,
+  "alcance_umbral": "2× identifica un destacado de la muestra; no es significancia estadística ni garantía de crecimiento.",
+  "limites_globales": [
+    "No sumar ni comparar contadores absolutos entre canales, países o plataformas para elegir un ganador.",
+    "Separar Shorts y Videos y preferir series homogéneas. Las muestras VOD heterogéneas se rotulan y no prueban rendimiento de un subformato ni de una duración.",
+    "Máximo de la muestra no significa máximo histórico del canal. Cada regla de selección consta por separado.",
+    "Las vistas no miden margen, ingresos, retención, CTR ni visitas a un negocio.",
+    "Las lecciones editoriales son hipótesis externas; ninguna está validada en Margen Real."
+  ],
+  "fuentes_metodologicas": [
+    {
+      "url": "https://support.google.com/youtube/answer/12942217",
+      "consulta": "2026-11-21",
+      "uso": "Comparar el mismo tipo de contenido; separar atracción, vistas y permanencia."
+    },
+    {
+      "url": "https://support.google.com/youtube/answer/9314415",
+      "consulta": "2026-11-21",
+      "uso": "Retención por video y comparación de duración similar; datos pueden tardar 1–2 días."
+    },
+    {
+      "url": "https://support.google.com/youtube/answer/10059070",
+      "consulta": "2026-11-21",
+      "uso": "Shorts admite hasta 3 minutos; vistas públicas y engaged views no son intercambiables."
+    },
+    {
+      "url": "https://support.google.com/youtube/answer/12220281",
+      "consulta": "2026-11-21",
+      "uso": "Definiciones públicas de vistas actualizadas; conservar fecha y métrica, no empalmar series históricas ciegamente."
+    }
+  ],
+  "canales": [
+    {
+      "id": "infomercado",
+      "nombre": "Infomercado - Negocios y Emprendimientos",
+      "pais": "Perú",
+      "pais_fuente": "https://www.youtube.com/channel/UCodT5dbWWPzJX8a9h6qDZ6A",
+      "url": "https://www.youtube.com/@infomercadoperu",
+      "relacion": "competidor peruano activo; historias empresariales en Shorts",
+      "vigencia": "reciente",
+      "formato": "short",
+      "seleccion": "Primeros ocho Shorts de historias de emprendimiento, en orden de publicación descendente, con al menos 7 días cumplidos al 2026-11-21. Se excluyen noticias/GTA, piezas de menos de 7 días y Meche Correa (aparece en Videos, no en Shorts). Comprobado contra pestaña Shorts y catálogo oficial.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@infomercadoperu/shorts",
+        "https://infomercado.pe/videos/"
+      ],
+      "metodo": "GET HTML público de YouTube, sin API, cookies ni autenticación; extracción exclusiva de título, vistas, duración y fecha del reproductor. Selección comprobada en páginas públicas.",
+      "limites": [
+        "Solo ocho piezas de una serie; no es promedio de todo el canal ni máximo histórico.",
+        "Antigüedades aproximadas de 9 a 32 días; no se equiparó una ventana de vistas de 7 días.",
+        "Los contadores de Shorts no se comparan con Videos ni prueban retención, ingresos o causalidad.",
+        "No se vio el video ni se escuchó apertura; ganchos inferidos de título y descripción pública.",
+        "Algunas duraciones del catálogo oficial difieren en un segundo de videoDetails; se usa YouTube como dato principal."
+      ],
+      "lectura_editorial": "La serie confirma que historias locales caben en 1:52–2:52. En esta muestra, dos negocios automotrices sobresalen: SV Tuning y GPC. Ensayar sectores/productos reconocibles y números de operación verificables; no concluir que el rubro o el gancho causó las vistas.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 3924,
+        "mediana_vistas": 2877.5,
+        "duracion_min_s": 112,
+        "duracion_max_s": 172,
+        "mediana_duracion_s": 132.5,
+        "ranking_ids": [
+          "EJiXBBaIpls",
+          "lsqC_JAqNz8",
+          "Qdym53gtVUQ",
+          "WR61fs-Y7SI",
+          "s_dh1FUvg-I",
+          "nJUBVcL1ZQY",
+          "hAGYf74Zec4",
+          "Yf7zEGGNiKg"
+        ]
+      },
+      "videos": [
+        {
+          "id": "hAGYf74Zec4",
+          "url": "https://www.youtube.com/watch?v=hAGYf74Zec4",
+          "titulo": "Historia de emprendimienti: Barbarian #emprendimiento #emprendedor #perú #cerveza #barbarian",
+          "vistas": 1630,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 158,
+          "publicado_en": "2026-11-12T15:00:28-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.210854-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: capital inicial pequeño y marca cervecera. Las afirmaciones del competidor no están verificadas para reutilizarse como hechos.",
+          "ratio_media_muestra": 0.415392
+        },
+        {
+          "id": "s_dh1FUvg-I",
+          "url": "https://www.youtube.com/watch?v=s_dh1FUvg-I",
+          "titulo": "Historia de emprendimiento: Trova #emprendimiento #emprendedor #futbol #peru #historia",
+          "vistas": 2724,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 144,
+          "publicado_en": "2026-11-07T15:00:19-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.164683-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: problema cotidiano al organizar partidos y escala de usuarios. Inferencia de promesa: negocio nacido de una fricción local.",
+          "ratio_media_muestra": 0.69419
+        },
+        {
+          "id": "EJiXBBaIpls",
+          "url": "https://www.youtube.com/watch?v=EJiXBBaIpls",
+          "titulo": "Historia de emprendimiento: SV Tuning #emprendimiento #emprendedor #Perú #autos #automotriz",
+          "vistas": 10041,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 161,
+          "publicado_en": "2026-11-05T15:00:06-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.261318-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: oficio especializado y escala comercial (abastecimiento a talleres), con identidad arequipeña. Inferencia de promesa: descubrir el negocio detrás de autos aspiracionales.",
+          "ratio_media_muestra": 2.558869
+        },
+        {
+          "id": "Qdym53gtVUQ",
+          "url": "https://www.youtube.com/watch?v=Qdym53gtVUQ",
+          "titulo": "Historia de emprendimiento: La Sirena de Juan #emprendimiento #emprendedor #restaurante #chef",
+          "vistas": 4044,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 172,
+          "publicado_en": "2026-11-03T15:00:15-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.281406-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: paso de trabajo inicial humilde a restaurante con clientes famosos. Inferencia de promesa: cambio de estatus del fundador.",
+          "ratio_media_muestra": 1.030581
+        },
+        {
+          "id": "nJUBVcL1ZQY",
+          "url": "https://www.youtube.com/watch?v=nJUBVcL1ZQY",
+          "titulo": "Historia de emprendimiento: La Fidelia #emprendimiento #emprendedor #perú #infusiones #gourmet",
+          "vistas": 1865,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 113,
+          "publicado_en": "2026-10-27T16:00:09-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.868618-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: rechazo de financiamiento y apuesta patrimonial. Inferencia de promesa: riesgo personal y superación.",
+          "ratio_media_muestra": 0.47528
+        },
+        {
+          "id": "Yf7zEGGNiKg",
+          "url": "https://www.youtube.com/watch?v=Yf7zEGGNiKg",
+          "titulo": "Historia de emprendimiento: Be Balance #emprendimiento #emprendedor #perú #gimnasio #fitness",
+          "vistas": 1311,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 115,
+          "publicado_en": "2026-10-24T16:00:26-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.828051-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: empleos iniciales y crecimiento a varias sedes. Inferencia de promesa: transformación de trabajador a empresario.",
+          "ratio_media_muestra": 0.334098
+        },
+        {
+          "id": "lsqC_JAqNz8",
+          "url": "https://www.youtube.com/watch?v=lsqC_JAqNz8",
+          "titulo": "Historia de emprednimiento: GPC #emprednimiento #emprendedor #perú #auto #automotriz",
+          "vistas": 6746,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 121,
+          "publicado_en": "2026-10-23T05:14:53-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.845272-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: contraste entre escasez inicial y red comercial nacional. Inferencia de promesa: transformación cuantificada y producto reconocible.",
+          "ratio_media_muestra": 1.719164
+        },
+        {
+          "id": "WR61fs-Y7SI",
+          "url": "https://www.youtube.com/watch?v=WR61fs-Y7SI",
+          "titulo": "Historia de emprendimiento: Boticas Perú #emprendimiento #emprendedor #perú #botica #farmacéutica",
+          "vistas": 3031,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 112,
+          "publicado_en": "2026-10-20T16:00:33-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:52.872619-05:00",
+          "canal_youtube_id": "UCodT5dbWWPzJX8a9h6qDZ6A",
+          "gancho_inferido": "Descripción: expansión de botica de barrio a cadena. Inferencia de promesa: escala empresarial de un negocio familiar.",
+          "ratio_media_muestra": 0.772426
+        }
+      ]
+    },
+    {
+      "id": "pqs",
+      "nombre": "PQS",
+      "pais": "Perú",
+      "pais_fuente": "https://fundacionromero.org.pe/proyectos/pqs/",
+      "url": "https://www.youtube.com/@PQSpe",
+      "relacion": "referencia peruana histórica de entrevistas educativas; actividad reciente no acreditada",
+      "vigencia": "historica",
+      "formato": "entrevista",
+      "seleccion": "Primeras ocho entrevistas de 15 a 30 minutos, por orden descendente de la pestaña Videos pública (primera página de 30). Excluye tutoriales de 2 minutos, webinars largos y entrevista de 50 minutos. Fechas 2022-01-28 a 2022-10-13; sirve como archivo local, no tendencia reciente.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@PQSpe/videos"
+      ],
+      "metodo": "GET HTML público de YouTube, sin API, cookies ni autenticación; extracción exclusiva de título, vistas, duración y fecha del reproductor. Selección comprobada en páginas públicas.",
+      "limites": [
+        "Muestra de ocho entrevistas; no promedio global del canal.",
+        "Material de 2022; no evidencia de lo que funciona hoy.",
+        "Ninguna pieza supera 2× la media de la muestra.",
+        "No se vio ni escuchó apertura; gancho inferido del título y descripción.",
+        "La selección de formato favorece entrevistas intermedias y no captura las otras series."
+      ],
+      "lectura_editorial": "Preguntas concretas de negocio y acceso a expertos identificables son reutilizables. El máximo de 1,64× no sustenta una receta viral; evitar importar una entrevista larga o fecha antigua como pronóstico de crecimiento.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 395.25,
+        "mediana_vistas": 371.5,
+        "duracion_min_s": 1074,
+        "duracion_max_s": 1795,
+        "mediana_duracion_s": 1257.0,
+        "ranking_ids": [
+          "i_hSjiUkqzQ",
+          "_9fyXeeGwls",
+          "SLZllvXqmkc",
+          "qBJCsKxu0zg",
+          "b0Aslnu9QAc",
+          "3SXRYKD5aTg",
+          "Ht74UnPZeOU",
+          "O3GL82dDtEU"
+        ]
+      },
+      "videos": [
+        {
+          "id": "i_hSjiUkqzQ",
+          "url": "https://www.youtube.com/watch?v=i_hSjiUkqzQ",
+          "titulo": "Entrevista con Nikolai Martínez, especialista de la Dirección de Signos Distintivos del Indecopi",
+          "vistas": 649,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1770,
+          "publicado_en": "2022-10-13T17:32:50-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:53.575309-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título y descripción: especialista identificado de Indecopi para explicar registros de marcas. Inferencia: autoridad institucional y utilidad.",
+          "ratio_media_muestra": 1.641999
+        },
+        {
+          "id": "3SXRYKD5aTg",
+          "url": "https://www.youtube.com/watch?v=3SXRYKD5aTg",
+          "titulo": "Entrevista: 5 pasos para invertir en la Bolsa de Valores",
+          "vistas": 301,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1795,
+          "publicado_en": "2022-06-23T16:41:54-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:53.527594-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título: lista numerada de pasos para empezar a invertir. Inferencia: reducción de complejidad; no recomendación de inversión.",
+          "ratio_media_muestra": 0.761543
+        },
+        {
+          "id": "_9fyXeeGwls",
+          "url": "https://www.youtube.com/watch?v=_9fyXeeGwls",
+          "titulo": "¿Cuáles son los retos para establecer una Fintech en Perú?",
+          "vistas": 649,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1306,
+          "publicado_en": "2022-03-02T13:51:59-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:53.616458-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título y descripción: barreras locales explicadas por cofundadora de una fintech. Inferencia: pregunta concreta y experiencia de primera mano.",
+          "ratio_media_muestra": 1.641999
+        },
+        {
+          "id": "O3GL82dDtEU",
+          "url": "https://www.youtube.com/watch?v=O3GL82dDtEU",
+          "titulo": "Comité de Startups IAB:  ¿Cómo se seleccionaron y cuáles son los objetivos de los integrantes?",
+          "vistas": 64,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1229,
+          "publicado_en": "2022-02-17T14:49:43-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:53.555481-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título: selección y objetivos de un comité sectorial. Inferencia: interés institucional específico.",
+          "ratio_media_muestra": 0.161923
+        },
+        {
+          "id": "SLZllvXqmkc",
+          "url": "https://www.youtube.com/watch?v=SLZllvXqmkc",
+          "titulo": "Diseño del comportamiento: ¿Cómo aplicarlo a tu negocio? [Entrevista]",
+          "vistas": 611,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1261,
+          "publicado_en": "2022-02-15T14:49:52-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:54.234440-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título: aplicación de una disciplina al negocio. Inferencia: utilidad práctica frente a teoría.",
+          "ratio_media_muestra": 1.545857
+        },
+        {
+          "id": "qBJCsKxu0zg",
+          "url": "https://www.youtube.com/watch?v=qBJCsKxu0zg",
+          "titulo": "Tendencias de negocios para el 2022 [Entrevista]",
+          "vistas": 390,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1249,
+          "publicado_en": "2022-02-03T14:03:29-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:54.130915-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título: tendencias asociadas a un año. Inferencia: urgencia temporal que envejece.",
+          "ratio_media_muestra": 0.986717
+        },
+        {
+          "id": "Ht74UnPZeOU",
+          "url": "https://www.youtube.com/watch?v=Ht74UnPZeOU",
+          "titulo": "LlamaPunkz, el cryptoarte de llamas en formato NFT [Entrevistas]",
+          "vistas": 145,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1074,
+          "publicado_en": "2022-01-28T13:54:21-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:54.208868-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título: proyecto NFT con identidad de llamas. Inferencia: novedad temática de la época.",
+          "ratio_media_muestra": 0.366856
+        },
+        {
+          "id": "b0Aslnu9QAc",
+          "url": "https://www.youtube.com/watch?v=b0Aslnu9QAc",
+          "titulo": "¿Cómo las MYPES pueden acceder a créditos e impulsar su reactivación? [Entrevistas]",
+          "vistas": 353,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1253,
+          "publicado_en": "2022-01-28T13:21:36-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:54.261394-05:00",
+          "canal_youtube_id": "UCuWe4Efhg1aDZKM9rjttLYA",
+          "gancho_inferido": "Título: acceso a financiamiento para pequeñas empresas. Inferencia: solución a una necesidad operativa.",
+          "ratio_media_muestra": 0.893106
+        }
+      ]
+    },
+    {
+      "id": "emprende-trome",
+      "nombre": "Emprende Trome (serie de Trome Perú)",
+      "pais": "Perú",
+      "pais_fuente": "https://www.youtube.com/watch?v=gC9E-q37AZQ",
+      "url": "https://www.youtube.com/channel/UChzS9L4GwAe0lRFallqbaGg",
+      "relacion": "referencia peruana histórica; serie dentro de un canal generalista",
+      "vigencia": "historica",
+      "formato": "reportaje_corto",
+      "seleccion": "Muestra de conveniencia: cuatro perfiles cortos de Emprende Trome localizados por buscador, duración <5 minutos. Se apartó la entrevista de Micha/Maido de 25:18. Fechas 2016-2019; sesgo de indexación y antigüedad no controlados.",
+      "fuentes_seleccion": [
+        "https://trome.com/emprende-trome/"
+      ],
+      "metodo": "GET HTML público de YouTube, sin API, cookies ni autenticación; extracción exclusiva de título, vistas, duración y fecha del reproductor. Selección comprobada en páginas públicas.",
+      "limites": [
+        "No es muestra aleatoria ni los últimos videos de la serie.",
+        "No es promedio del canal Trome, que mezcla noticias y entretenimiento.",
+        "Cuatro piezas muy antiguas con distintas edades; ranking solo exploratorio.",
+        "No se vio ni escuchó apertura; gancho inferido del título y descripción."
+      ],
+      "lectura_editorial": "Caja China destaca dentro de esta pequeña muestra histórica; asociar una historia a un producto concreto facilita explicar el negocio. No atribuir esa diferencia a formato ni extrapolarla a 2026.",
+      "resumen": {
+        "n": 4,
+        "media_vistas": 33765,
+        "mediana_vistas": 3351.5,
+        "duracion_min_s": 131,
+        "duracion_max_s": 230,
+        "mediana_duracion_s": 214.0,
+        "ranking_ids": [
+          "xl8i0nzgPz8",
+          "rXvE1zyb9Lg",
+          "Qvut5JDs3no",
+          "gC9E-q37AZQ"
+        ]
+      },
+      "videos": [
+        {
+          "id": "xl8i0nzgPz8",
+          "url": "https://www.youtube.com/watch?v=xl8i0nzgPz8",
+          "titulo": "EMPRENDE trome: El rey de 'La Caja China'",
+          "vistas": 127102,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 222,
+          "publicado_en": "2016-06-02T12:41:42-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:54.942468-05:00",
+          "canal_youtube_id": "UChzS9L4GwAe0lRFallqbaGg",
+          "gancho_inferido": "Título: liderazgo asociado a un producto gastronómico concreto. Descripción: empresario explica su recorrido. Inferencia: curiosidad por el negocio detrás de un objeto reconocible.",
+          "ratio_media_muestra": 3.764312
+        },
+        {
+          "id": "gC9E-q37AZQ",
+          "url": "https://www.youtube.com/watch?v=gC9E-q37AZQ",
+          "titulo": "Tappers.pe: ‘Comida de casa a la oficina’ | Emprende Trome",
+          "vistas": 1255,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 230,
+          "publicado_en": "2019-10-12T07:00:05-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:54.919557-05:00",
+          "canal_youtube_id": "UChzS9L4GwAe0lRFallqbaGg",
+          "gancho_inferido": "Título y descripción: llevar comida casera al trabajo mediante entrega. Inferencia: solución comercial a una necesidad cotidiana.",
+          "ratio_media_muestra": 0.037169
+        },
+        {
+          "id": "Qvut5JDs3no",
+          "url": "https://www.youtube.com/watch?v=Qvut5JDs3no",
+          "titulo": "Emprende Trome: 'Barra Sullorqui' - La deliciosa receta del éxito",
+          "vistas": 2047,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 131,
+          "publicado_en": "2018-01-25T14:55:56-08:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:55.004527-05:00",
+          "canal_youtube_id": "UChzS9L4GwAe0lRFallqbaGg",
+          "gancho_inferido": "Título y descripción: negocio gastronómico local y aprendizaje previo. Inferencia: recorrido del fundador y consejo práctico.",
+          "ratio_media_muestra": 0.060625
+        },
+        {
+          "id": "rXvE1zyb9Lg",
+          "url": "https://www.youtube.com/watch?v=rXvE1zyb9Lg",
+          "titulo": "Emprende trome: 'Ahmé' - El triunfo del negocio propio de alpargatas",
+          "vistas": 4656,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 206,
+          "publicado_en": "2016-06-01T09:32:21-07:00",
+          "edad_visible": null,
+          "consultado_en": "2026-11-21T13:15:55.555894-05:00",
+          "canal_youtube_id": "UChzS9L4GwAe0lRFallqbaGg",
+          "gancho_inferido": "Título y descripción: cambio de empleo a negocio de calzado. Inferencia: independencia laboral.",
+          "ratio_media_muestra": 0.137894
+        }
+      ]
+    },
+    {
+      "id": "adrian-saenz",
+      "nombre": "Adrián Sáenz",
+      "pais": "España",
+      "pais_fuente": "https://www.youtube.com/@AdrianSaenz/about",
+      "url": "https://www.youtube.com/@AdrianSaenz/videos",
+      "relacion": "Referencia hispana de tutoriales y experimentos de negocio",
+      "vigencia": "reciente",
+      "formato": "video",
+      "seleccion": "Primeros 8 de la sección /videos en orden visible con edad ≥1 mes y ≤1 año, duración 4–60 minutos y vistas públicas disponibles. Es aproximación por etiquetas de edad, no días exactos.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@AdrianSaenz/videos"
+      ],
+      "metodo": "GET HTML público de YouTube /videos sin sesión ni API; metadatos visibles. No se reprodujo el audiovisual.",
+      "limites": [
+        "Muestra de ocho, no media ni máximos del catálogo completo.",
+        "Vistas acumuladas redondeadas y edades aproximadas; no se iguala exposición a 7 o 28 días.",
+        "Duración 4–60 min excluye entrevistas largas, pero mezcla temas; no hay control causal.",
+        "Ganchos inferidos exclusivamente del título; CTR, retención e ingresos no disponibles.",
+        "Las afirmaciones de riqueza o rentabilidad de los títulos pertenecen al creador y no se verificaron."
+      ],
+      "lectura_editorial": "Prueba en primera persona, herramienta concreta y restricción de tiempo en los títulos. Higgsfield supera 2× la media; esto no verifica sus promesas de ingresos ni atribuye el resultado al gancho.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 423500.0,
+        "mediana_vistas": 453000.0,
+        "duracion_min_s": 860,
+        "duracion_max_s": 2824,
+        "mediana_duracion_s": 1664.5,
+        "ranking_ids": [
+          "fJzUnSEnKNs",
+          "nCu2xSFVvv8",
+          "2gk1RXw0gSM",
+          "R9HLtrNlRj4",
+          "d5KV-iAYDXU",
+          "0g8krWW4Of8",
+          "fUnHXOfbVcI",
+          "uI4CKhT1cvo"
+        ]
+      },
+      "videos": [
+        {
+          "id": "uI4CKhT1cvo",
+          "url": "https://www.youtube.com/watch?v=uI4CKhT1cvo",
+          "titulo": "El Mejor Negocio Para Empezar Partiendo Desde Cero",
+          "vistas": 103000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "103 mil vistas",
+          "duracion_s": 2458,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 0.243211
+        },
+        {
+          "id": "nCu2xSFVvv8",
+          "url": "https://www.youtube.com/watch?v=nCu2xSFVvv8",
+          "titulo": "6 Formas De Ganar Dinero Con Claude Siendo Estudiante",
+          "vistas": 527000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "527 mil vistas",
+          "duracion_s": 1421,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 1.244392
+        },
+        {
+          "id": "fJzUnSEnKNs",
+          "url": "https://www.youtube.com/watch?v=fJzUnSEnKNs",
+          "titulo": "La Gente Se Está Haciendo Millonaria Con Higgsfield (Así Lo Hacen)",
+          "vistas": 940000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "940 mil vistas",
+          "duracion_s": 1257,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 2.219599
+        },
+        {
+          "id": "0g8krWW4Of8",
+          "url": "https://www.youtube.com/watch?v=0g8krWW4Of8",
+          "titulo": "Dame 14 Minutos y Te Doy 1000 Horas De Conocimiento Sobre IA",
+          "vistas": 243000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "243 mil vistas",
+          "duracion_s": 860,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 0.57379
+        },
+        {
+          "id": "2gk1RXw0gSM",
+          "url": "https://www.youtube.com/watch?v=2gk1RXw0gSM",
+          "titulo": "7 Máquinas Que Puedes Comprar Para Ganar Dinero",
+          "vistas": 505000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "505 mil vistas",
+          "duracion_s": 1989,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 1.192444
+        },
+        {
+          "id": "fUnHXOfbVcI",
+          "url": "https://www.youtube.com/watch?v=fUnHXOfbVcI",
+          "titulo": "Si ganas mucho dinero haciendo dropshipping, mira este vídeo",
+          "vistas": 164000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "164 mil vistas",
+          "duracion_s": 2824,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 0.387249
+        },
+        {
+          "id": "d5KV-iAYDXU",
+          "url": "https://www.youtube.com/watch?v=d5KV-iAYDXU",
+          "titulo": "He Creado Un Juego Que Paga Por Jugar",
+          "vistas": 425000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "425 mil vistas",
+          "duracion_s": 1237,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 1.003542
+        },
+        {
+          "id": "R9HLtrNlRj4",
+          "url": "https://www.youtube.com/watch?v=R9HLtrNlRj4",
+          "titulo": "He Creado Un Canal De YouTube Solo Con Claude",
+          "vistas": 481000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "481 mil vistas",
+          "duracion_s": 1908,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.663830+00:00",
+          "ratio_media_muestra": 1.135773
+        }
+      ],
+      "candidatos_en_orden_visible": [
+        {
+          "id": "3FjLEXRFnqI",
+          "vistas": 5800.0,
+          "vistas_texto": "5.8 mil vistas",
+          "duracion_s": 125,
+          "edad_visible": "hace 1 hora"
+        },
+        {
+          "id": "JWJY-csNUi8",
+          "vistas": 108000.0,
+          "vistas_texto": "108 mil vistas",
+          "duracion_s": 5555,
+          "edad_visible": "hace 2 días"
+        },
+        {
+          "id": "UMYv-LFiIXw",
+          "vistas": 137000.0,
+          "vistas_texto": "137 mil vistas",
+          "duracion_s": 1579,
+          "edad_visible": "hace 4 días"
+        },
+        {
+          "id": "TErNfbIn2hM",
+          "vistas": 77000.0,
+          "vistas_texto": "77 mil vistas",
+          "duracion_s": 3826,
+          "edad_visible": "hace 7 días"
+        },
+        {
+          "id": "DIrdZgIhmZk",
+          "vistas": 103000.0,
+          "vistas_texto": "103 mil vistas",
+          "duracion_s": 6556,
+          "edad_visible": "hace 9 días"
+        },
+        {
+          "id": "WHoS1nknHUM",
+          "vistas": 474000.0,
+          "vistas_texto": "474 mil vistas",
+          "duracion_s": 849,
+          "edad_visible": "hace 2 semanas"
+        },
+        {
+          "id": "NOp6IwxlNOc",
+          "vistas": 49000.0,
+          "vistas_texto": "49 mil vistas",
+          "duracion_s": 5072,
+          "edad_visible": "hace 2 semanas"
+        },
+        {
+          "id": "DBdC5Y5vNuo",
+          "vistas": 102000.0,
+          "vistas_texto": "102 mil vistas",
+          "duracion_s": 274,
+          "edad_visible": "hace 2 semanas"
+        },
+        {
+          "id": "RR0806XzmOg",
+          "vistas": 469000.0,
+          "vistas_texto": "469 mil vistas",
+          "duracion_s": 1730,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "fxr3vWjruR8",
+          "vistas": 181000.0,
+          "vistas_texto": "181 mil vistas",
+          "duracion_s": 5924,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "LycpBgBiWKw",
+          "vistas": 324000.0,
+          "vistas_texto": "324 mil vistas",
+          "duracion_s": 1936,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "TyQsZpf4DlI",
+          "vistas": 200000.0,
+          "vistas_texto": "200 mil vistas",
+          "duracion_s": 1196,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "_cL6dYjz5H0",
+          "vistas": 281000.0,
+          "vistas_texto": "281 mil vistas",
+          "duracion_s": 1330,
+          "edad_visible": "hace 4 semanas"
+        },
+        {
+          "id": "ny7qgjwBkdg",
+          "vistas": 196000.0,
+          "vistas_texto": "196 mil vistas",
+          "duracion_s": 9912,
+          "edad_visible": "hace 4 semanas"
+        },
+        {
+          "id": "uI4CKhT1cvo",
+          "vistas": 103000.0,
+          "vistas_texto": "103 mil vistas",
+          "duracion_s": 2458,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "nCu2xSFVvv8",
+          "vistas": 527000.0,
+          "vistas_texto": "527 mil vistas",
+          "duracion_s": 1421,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "sdcb5llAj5Y",
+          "vistas": 156000.0,
+          "vistas_texto": "156 mil vistas",
+          "duracion_s": 4986,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "fJzUnSEnKNs",
+          "vistas": 940000.0,
+          "vistas_texto": "940 mil vistas",
+          "duracion_s": 1257,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "0g8krWW4Of8",
+          "vistas": 243000.0,
+          "vistas_texto": "243 mil vistas",
+          "duracion_s": 860,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "hVUWiBgaDHI",
+          "vistas": 40000.0,
+          "vistas_texto": "40 mil vistas",
+          "duracion_s": 6069,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "2gk1RXw0gSM",
+          "vistas": 505000.0,
+          "vistas_texto": "505 mil vistas",
+          "duracion_s": 1989,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "fUnHXOfbVcI",
+          "vistas": 164000.0,
+          "vistas_texto": "164 mil vistas",
+          "duracion_s": 2824,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "1hkTJ8wg9bY",
+          "vistas": 169000.0,
+          "vistas_texto": "169 mil vistas",
+          "duracion_s": 5836,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "d5KV-iAYDXU",
+          "vistas": 425000.0,
+          "vistas_texto": "425 mil vistas",
+          "duracion_s": 1237,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "R9HLtrNlRj4",
+          "vistas": 481000.0,
+          "vistas_texto": "481 mil vistas",
+          "duracion_s": 1908,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "b5VTu29RTIk",
+          "vistas": 846000.0,
+          "vistas_texto": "846 mil vistas",
+          "duracion_s": 5870,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "1IiTges2IUY",
+          "vistas": 174000.0,
+          "vistas_texto": "174 mil vistas",
+          "duracion_s": 1034,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "-xKnTA6afVg",
+          "vistas": 269000.0,
+          "vistas_texto": "269 mil vistas",
+          "duracion_s": 1522,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "_rAc7NhL8fY",
+          "vistas": 1100000.0,
+          "vistas_texto": "1.1 millones de vistas",
+          "duracion_s": 5699,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "gfvOBMxeIR8",
+          "vistas": 486000.0,
+          "vistas_texto": "486 mil vistas",
+          "duracion_s": 1411,
+          "edad_visible": "hace 2 meses"
+        }
+      ],
+      "canal_youtube_id": "UCVt4ugq2txl_szlXAO7B3-g"
+    },
+    {
+      "id": "eduardo-rosas",
+      "nombre": "Eduardo Rosas",
+      "pais": "México",
+      "pais_fuente": "https://www.youtube.com/@EduardoRosas/about",
+      "url": "https://www.youtube.com/@EduardoRosas/videos",
+      "relacion": "Referencia adyacente hispana de finanzas prácticas; mercado mexicano inferido de SAT y productos citados",
+      "vigencia": "publicaciones_de_5_a_8_meses",
+      "formato": "video",
+      "seleccion": "Primeros 8 de la sección /videos en orden visible con edad ≥1 mes y ≤1 año, duración 4–60 minutos y vistas públicas disponibles. Es aproximación por etiquetas de edad, no días exactos.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@EduardoRosas/videos"
+      ],
+      "metodo": "GET HTML público de YouTube /videos sin sesión ni API; metadatos visibles. No se reprodujo el audiovisual.",
+      "limites": [
+        "Muestra de ocho, no media ni máximos del catálogo completo.",
+        "Vistas acumuladas redondeadas y edades aproximadas; no se iguala exposición a 7 o 28 días.",
+        "Duración 4–60 min excluye entrevistas largas, pero mezcla temas; no hay control causal.",
+        "Ganchos inferidos exclusivamente del título; CTR, retención e ingresos no disponibles.",
+        "Las afirmaciones de riqueza o rentabilidad de los títulos pertenecen al creador y no se verificaron.",
+        "La pieza más reciente visible tiene cinco meses: captura actual no acredita cadencia reciente."
+      ],
+      "lectura_editorial": "Comparación de opciones y resolución de una tarea concreta. Declaración SAT lidera a 1,44×; ningún video de esta muestra alcanza 2×. Usar el mecanismo de explicación, sin trasladar normativa mexicana a Perú.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 31875.0,
+        "mediana_vistas": 33000.0,
+        "duracion_min_s": 535,
+        "duracion_max_s": 1305,
+        "mediana_duracion_s": 1007.5,
+        "ranking_ids": [
+          "UWCZSdXzZuo",
+          "eQJvfNPIJN4",
+          "JK9Ok7Be75s",
+          "aGuWyJZDsiQ",
+          "tsJCN0CXRrM",
+          "jr91hRgfGZ4",
+          "MB8b5ygThbU",
+          "TsHlVhE2Wxk"
+        ]
+      },
+      "videos": [
+        {
+          "id": "aGuWyJZDsiQ",
+          "url": "https://www.youtube.com/watch?v=aGuWyJZDsiQ",
+          "titulo": "Como Elon Musk y SpaceX Buscaron Arruinar el S&P 500",
+          "vistas": 33000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "33 mil vistas",
+          "duracion_s": 912,
+          "publicado_en": null,
+          "edad_visible": "hace 5 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 1.035294
+        },
+        {
+          "id": "TsHlVhE2Wxk",
+          "url": "https://www.youtube.com/watch?v=TsHlVhE2Wxk",
+          "titulo": "Problema Interno Bruto: Cómo el PIB Arruina una Economía",
+          "vistas": 16000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "16 mil vistas",
+          "duracion_s": 961,
+          "publicado_en": null,
+          "edad_visible": "hace 5 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 0.501961
+        },
+        {
+          "id": "MB8b5ygThbU",
+          "url": "https://www.youtube.com/watch?v=MB8b5ygThbU",
+          "titulo": "Cómo Calcular los Impuestos de tus Inversiones",
+          "vistas": 20000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "20 mil vistas",
+          "duracion_s": 1259,
+          "publicado_en": null,
+          "edad_visible": "hace 7 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 0.627451
+        },
+        {
+          "id": "JK9Ok7Be75s",
+          "url": "https://www.youtube.com/watch?v=JK9Ok7Be75s",
+          "titulo": "Ahorra Aquí Antes de que BAJEN Más las Tasas",
+          "vistas": 35000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "35 mil vistas",
+          "duracion_s": 790,
+          "publicado_en": null,
+          "edad_visible": "hace 7 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 1.098039
+        },
+        {
+          "id": "UWCZSdXzZuo",
+          "url": "https://www.youtube.com/watch?v=UWCZSdXzZuo",
+          "titulo": "Cómo Presentar tu Declaración Anual del SAT",
+          "vistas": 46000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "46 mil vistas",
+          "duracion_s": 1273,
+          "publicado_en": null,
+          "edad_visible": "hace 7 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 1.443137
+        },
+        {
+          "id": "jr91hRgfGZ4",
+          "url": "https://www.youtube.com/watch?v=jr91hRgfGZ4",
+          "titulo": "Mini Retiros: La Alternativa Para No Esperar Hasta Los 65",
+          "vistas": 32000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "32 mil vistas",
+          "duracion_s": 1305,
+          "publicado_en": null,
+          "edad_visible": "hace 7 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 1.003922
+        },
+        {
+          "id": "tsJCN0CXRrM",
+          "url": "https://www.youtube.com/watch?v=tsJCN0CXRrM",
+          "titulo": "Cuídate de la TRANSFERENCIA DE RIQUEZA que Ocurre Durante las Crisis",
+          "vistas": 33000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "33 mil vistas",
+          "duracion_s": 1054,
+          "publicado_en": null,
+          "edad_visible": "hace 8 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 1.035294
+        },
+        {
+          "id": "eQJvfNPIJN4",
+          "url": "https://www.youtube.com/watch?v=eQJvfNPIJN4",
+          "titulo": "La MENTIRA del nuevo 13% de Openbank",
+          "vistas": 40000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "40 mil vistas",
+          "duracion_s": 535,
+          "publicado_en": null,
+          "edad_visible": "hace 8 meses",
+          "consultado_en": "2026-11-21T18:14:53.754063+00:00",
+          "ratio_media_muestra": 1.254902
+        }
+      ],
+      "candidatos_en_orden_visible": [
+        {
+          "id": "aGuWyJZDsiQ",
+          "vistas": 33000.0,
+          "vistas_texto": "33 mil vistas",
+          "duracion_s": 912,
+          "edad_visible": "hace 5 meses"
+        },
+        {
+          "id": "TsHlVhE2Wxk",
+          "vistas": 16000.0,
+          "vistas_texto": "16 mil vistas",
+          "duracion_s": 961,
+          "edad_visible": "hace 5 meses"
+        },
+        {
+          "id": "MB8b5ygThbU",
+          "vistas": 20000.0,
+          "vistas_texto": "20 mil vistas",
+          "duracion_s": 1259,
+          "edad_visible": "hace 7 meses"
+        },
+        {
+          "id": "JK9Ok7Be75s",
+          "vistas": 35000.0,
+          "vistas_texto": "35 mil vistas",
+          "duracion_s": 790,
+          "edad_visible": "hace 7 meses"
+        },
+        {
+          "id": "UWCZSdXzZuo",
+          "vistas": 46000.0,
+          "vistas_texto": "46 mil vistas",
+          "duracion_s": 1273,
+          "edad_visible": "hace 7 meses"
+        },
+        {
+          "id": "jr91hRgfGZ4",
+          "vistas": 32000.0,
+          "vistas_texto": "32 mil vistas",
+          "duracion_s": 1305,
+          "edad_visible": "hace 7 meses"
+        },
+        {
+          "id": "tsJCN0CXRrM",
+          "vistas": 33000.0,
+          "vistas_texto": "33 mil vistas",
+          "duracion_s": 1054,
+          "edad_visible": "hace 8 meses"
+        },
+        {
+          "id": "eQJvfNPIJN4",
+          "vistas": 40000.0,
+          "vistas_texto": "40 mil vistas",
+          "duracion_s": 535,
+          "edad_visible": "hace 8 meses"
+        },
+        {
+          "id": "2i1tKFJVx08",
+          "vistas": 34000.0,
+          "vistas_texto": "34 mil vistas",
+          "duracion_s": 1220,
+          "edad_visible": "hace 8 meses"
+        },
+        {
+          "id": "SkHPWkxzE7o",
+          "vistas": 16000.0,
+          "vistas_texto": "16 mil vistas",
+          "duracion_s": 679,
+          "edad_visible": "hace 8 meses"
+        },
+        {
+          "id": "XpRv04_hl7g",
+          "vistas": 72000.0,
+          "vistas_texto": "72 mil vistas",
+          "duracion_s": 965,
+          "edad_visible": "hace 8 meses"
+        },
+        {
+          "id": "Pmu2EPd0NAs",
+          "vistas": 30000.0,
+          "vistas_texto": "30 mil vistas",
+          "duracion_s": 620,
+          "edad_visible": "hace 9 meses"
+        },
+        {
+          "id": "uOPwt64j7Vw",
+          "vistas": 23000.0,
+          "vistas_texto": "23 mil vistas",
+          "duracion_s": 636,
+          "edad_visible": "hace 9 meses"
+        },
+        {
+          "id": "C1K8Tz1KiDg",
+          "vistas": 153000.0,
+          "vistas_texto": "153 mil vistas",
+          "duracion_s": 1163,
+          "edad_visible": "hace 9 meses"
+        },
+        {
+          "id": "TU1xG7DPmMk",
+          "vistas": 22000.0,
+          "vistas_texto": "22 mil vistas",
+          "duracion_s": 288,
+          "edad_visible": "hace 9 meses"
+        },
+        {
+          "id": "qkAnE0JfbgI",
+          "vistas": 115000.0,
+          "vistas_texto": "115 mil vistas",
+          "duracion_s": 1829,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "N_jV1UzPO-A",
+          "vistas": 103000.0,
+          "vistas_texto": "103 mil vistas",
+          "duracion_s": 1023,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "j0x83HY6GvU",
+          "vistas": 32000.0,
+          "vistas_texto": "32 mil vistas",
+          "duracion_s": 790,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "w5GI1L2ZtYM",
+          "vistas": 45000.0,
+          "vistas_texto": "45 mil vistas",
+          "duracion_s": 1787,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "mLOv9NEGOYQ",
+          "vistas": 36000.0,
+          "vistas_texto": "36 mil vistas",
+          "duracion_s": 1165,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "mpJ5b1DThiA",
+          "vistas": 98000.0,
+          "vistas_texto": "98 mil vistas",
+          "duracion_s": 643,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "Yg46TkMPDp8",
+          "vistas": 47000.0,
+          "vistas_texto": "47 mil vistas",
+          "duracion_s": 985,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "Q7X5P0QRYyM",
+          "vistas": 50000.0,
+          "vistas_texto": "50 mil vistas",
+          "duracion_s": 1298,
+          "edad_visible": "hace 10 meses"
+        },
+        {
+          "id": "4Onf37KpZ-c",
+          "vistas": 30000.0,
+          "vistas_texto": "30 mil vistas",
+          "duracion_s": 871,
+          "edad_visible": "hace 11 meses"
+        },
+        {
+          "id": "oW9UW1ZvK74",
+          "vistas": 271000.0,
+          "vistas_texto": "271 mil vistas",
+          "duracion_s": 1095,
+          "edad_visible": "hace 11 meses"
+        },
+        {
+          "id": "dWUNNIYElC8",
+          "vistas": 123000.0,
+          "vistas_texto": "123 mil vistas",
+          "duracion_s": 1250,
+          "edad_visible": "hace 11 meses"
+        },
+        {
+          "id": "E6bGs_J35WA",
+          "vistas": 102000.0,
+          "vistas_texto": "102 mil vistas",
+          "duracion_s": 1877,
+          "edad_visible": "hace 11 meses"
+        },
+        {
+          "id": "FejyUKhOSSs",
+          "vistas": 106000.0,
+          "vistas_texto": "106 mil vistas",
+          "duracion_s": 1516,
+          "edad_visible": "hace 11 meses"
+        },
+        {
+          "id": "56LqjUE-S4Q",
+          "vistas": 21000.0,
+          "vistas_texto": "21 mil vistas",
+          "duracion_s": 683,
+          "edad_visible": "hace 11 meses"
+        },
+        {
+          "id": "To8cI3r9dcA",
+          "vistas": 41000.0,
+          "vistas_texto": "41 mil vistas",
+          "duracion_s": 932,
+          "edad_visible": "hace 1 año"
+        }
+      ],
+      "canal_youtube_id": "UCBxr1muciHdRtlygUhruARw"
+    },
+    {
+      "id": "luis-mi-negocios",
+      "nombre": "Luis Mi Negocios",
+      "pais": "México",
+      "pais_fuente": "https://www.youtube.com/@luisminegocios/about",
+      "url": "https://www.youtube.com/@luisminegocios/videos",
+      "relacion": "Referencia adyacente hispana de negocios y finanzas; mercado mexicano explícito en títulos",
+      "vigencia": "reciente",
+      "formato": "video",
+      "seleccion": "Primeros 8 de la sección /videos en orden visible con edad ≥1 mes y ≤1 año, duración 4–60 minutos y vistas públicas disponibles. Es aproximación por etiquetas de edad, no días exactos.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@luisminegocios/videos"
+      ],
+      "metodo": "GET HTML público de YouTube /videos sin sesión ni API; metadatos visibles. No se reprodujo el audiovisual.",
+      "limites": [
+        "Muestra de ocho, no media ni máximos del catálogo completo.",
+        "Vistas acumuladas redondeadas y edades aproximadas; no se iguala exposición a 7 o 28 días.",
+        "Duración 4–60 min excluye entrevistas largas, pero mezcla temas; no hay control causal.",
+        "Ganchos inferidos exclusivamente del título; CTR, retención e ingresos no disponibles.",
+        "Las afirmaciones de riqueza o rentabilidad de los títulos pertenecen al creador y no se verificaron."
+      ],
+      "lectura_editorial": "Evitar una pérdida y anticipar una decisión de calendario son los ganchos de título de Buen Fin y recesión. No prueba que la alarma o la urgencia generen las vistas ni verifica la premisa financiera.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 259125.0,
+        "mediana_vistas": 75000.0,
+        "duracion_min_s": 287,
+        "duracion_max_s": 1506,
+        "mediana_duracion_s": 903.0,
+        "ranking_ids": [
+          "AOyXGvxi9Kk",
+          "uPva96daO-w",
+          "CXkzptTG_RM",
+          "y1bUp4o5Y04",
+          "PWhnRQnImLI",
+          "9tq0-HYRZPM",
+          "dl6cDLbXGYs",
+          "vujBQSFdNrA"
+        ]
+      },
+      "videos": [
+        {
+          "id": "uPva96daO-w",
+          "url": "https://www.youtube.com/watch?v=uPva96daO-w",
+          "titulo": "Prepara TU BOLSILLO para una RECESIÓN en 2027: Te digo COMO",
+          "vistas": 710000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "710 mil vistas",
+          "duracion_s": 934,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 2.73999
+        },
+        {
+          "id": "9tq0-HYRZPM",
+          "url": "https://www.youtube.com/watch?v=9tq0-HYRZPM",
+          "titulo": "Lo que Warren Buffett ENTIENDE del DINERO que el 99% IGNORA",
+          "vistas": 34000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "34 mil vistas",
+          "duracion_s": 646,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 0.131211
+        },
+        {
+          "id": "PWhnRQnImLI",
+          "url": "https://www.youtube.com/watch?v=PWhnRQnImLI",
+          "titulo": "¿300,000 pesos en GBM? Esto es lo que obtienes con su ASESORÍA",
+          "vistas": 55000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "55 mil vistas",
+          "duracion_s": 287,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 0.212253
+        },
+        {
+          "id": "dl6cDLbXGYs",
+          "url": "https://www.youtube.com/watch?v=dl6cDLbXGYs",
+          "titulo": "¿Vale la pena INVERTIR en NVIDIA? La analicé con IA",
+          "vistas": 22000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "22 mil vistas",
+          "duracion_s": 1146,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 0.084901
+        },
+        {
+          "id": "AOyXGvxi9Kk",
+          "url": "https://www.youtube.com/watch?v=AOyXGvxi9Kk",
+          "titulo": "No COMPRES en El BUEN FIN sin ver esto antes",
+          "vistas": 1000000,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "millón de vistas",
+          "duracion_s": 593,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 3.859141
+        },
+        {
+          "id": "vujBQSFdNrA",
+          "url": "https://www.youtube.com/watch?v=vujBQSFdNrA",
+          "titulo": "¿Por qué META subió 35%? ¿Todavía vale la pena invertir?",
+          "vistas": 22000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "22 mil vistas",
+          "duracion_s": 1506,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 0.084901
+        },
+        {
+          "id": "y1bUp4o5Y04",
+          "url": "https://www.youtube.com/watch?v=y1bUp4o5Y04",
+          "titulo": "El producto financiero que el SAT premia cada año",
+          "vistas": 95000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "95 mil vistas",
+          "duracion_s": 1075,
+          "publicado_en": null,
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 0.366618
+        },
+        {
+          "id": "CXkzptTG_RM",
+          "url": "https://www.youtube.com/watch?v=CXkzptTG_RM",
+          "titulo": "Esto pasa cuando NO PAGAS tu deuda al BANCO",
+          "vistas": 135000.0,
+          "precision_vistas": "redondeadas_por_youtube",
+          "vistas_texto": "135 mil vistas",
+          "duracion_s": 872,
+          "publicado_en": null,
+          "edad_visible": "hace 2 meses",
+          "consultado_en": "2026-11-21T18:14:53.655765+00:00",
+          "ratio_media_muestra": 0.520984
+        }
+      ],
+      "candidatos_en_orden_visible": [
+        {
+          "id": "S5MJo5gqMpI",
+          "vistas": 1300.0,
+          "vistas_texto": "1.3 mil vistas",
+          "duracion_s": 444,
+          "edad_visible": "hace 2 horas"
+        },
+        {
+          "id": "Nq5Pb-J7YGY",
+          "vistas": 24000.0,
+          "vistas_texto": "24 mil vistas",
+          "duracion_s": 484,
+          "edad_visible": "hace 2 días"
+        },
+        {
+          "id": "4p6CWkMm1pQ",
+          "vistas": 58000.0,
+          "vistas_texto": "58 mil vistas",
+          "duracion_s": 673,
+          "edad_visible": "hace 6 días"
+        },
+        {
+          "id": "qtEj2hXtaF8",
+          "vistas": 57000.0,
+          "vistas_texto": "57 mil vistas",
+          "duracion_s": 630,
+          "edad_visible": "hace 7 días"
+        },
+        {
+          "id": "pHi48yHbX3c",
+          "vistas": 27000.0,
+          "vistas_texto": "27 mil vistas",
+          "duracion_s": 528,
+          "edad_visible": "hace 9 días"
+        },
+        {
+          "id": "R1VUHOcDl3c",
+          "vistas": 62000.0,
+          "vistas_texto": "62 mil vistas",
+          "duracion_s": 475,
+          "edad_visible": "hace 13 días"
+        },
+        {
+          "id": "WZXxqXUmP7I",
+          "vistas": 20000.0,
+          "vistas_texto": "20 mil vistas",
+          "duracion_s": 398,
+          "edad_visible": "hace 13 días"
+        },
+        {
+          "id": "N5Yz6oD_KP0",
+          "vistas": 191000.0,
+          "vistas_texto": "191 mil vistas",
+          "duracion_s": 1124,
+          "edad_visible": "hace 2 semanas"
+        },
+        {
+          "id": "KGOW3kiX49E",
+          "vistas": 220000.0,
+          "vistas_texto": "220 mil vistas",
+          "duracion_s": 707,
+          "edad_visible": "hace 2 semanas"
+        },
+        {
+          "id": "_aM_GR6MCus",
+          "vistas": 87000.0,
+          "vistas_texto": "87 mil vistas",
+          "duracion_s": 3857,
+          "edad_visible": "hace 2 semanas"
+        },
+        {
+          "id": "DTSdzpogcE0",
+          "vistas": 64000.0,
+          "vistas_texto": "64 mil vistas",
+          "duracion_s": 591,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "Pp51JkKLhR0",
+          "vistas": 10000.0,
+          "vistas_texto": "10 mil vistas",
+          "duracion_s": 623,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "-Fy9Ms1q0-I",
+          "vistas": 79000.0,
+          "vistas_texto": "79 mil vistas",
+          "duracion_s": 617,
+          "edad_visible": "hace 3 semanas"
+        },
+        {
+          "id": "tgAwW5r2IFw",
+          "vistas": 180000.0,
+          "vistas_texto": "180 mil vistas",
+          "duracion_s": 666,
+          "edad_visible": "hace 4 semanas"
+        },
+        {
+          "id": "uPva96daO-w",
+          "vistas": 710000.0,
+          "vistas_texto": "710 mil vistas",
+          "duracion_s": 934,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "9tq0-HYRZPM",
+          "vistas": 34000.0,
+          "vistas_texto": "34 mil vistas",
+          "duracion_s": 646,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "PWhnRQnImLI",
+          "vistas": 55000.0,
+          "vistas_texto": "55 mil vistas",
+          "duracion_s": 287,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "dl6cDLbXGYs",
+          "vistas": 22000.0,
+          "vistas_texto": "22 mil vistas",
+          "duracion_s": 1146,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "AOyXGvxi9Kk",
+          "vistas": 1000000,
+          "vistas_texto": "millón de vistas",
+          "duracion_s": 593,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "vujBQSFdNrA",
+          "vistas": 22000.0,
+          "vistas_texto": "22 mil vistas",
+          "duracion_s": 1506,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "y1bUp4o5Y04",
+          "vistas": 95000.0,
+          "vistas_texto": "95 mil vistas",
+          "duracion_s": 1075,
+          "edad_visible": "hace 1 mes"
+        },
+        {
+          "id": "vszHfywnHAE",
+          "vistas": null,
+          "vistas_texto": null,
+          "duracion_s": 1410,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "CXkzptTG_RM",
+          "vistas": 135000.0,
+          "vistas_texto": "135 mil vistas",
+          "duracion_s": 872,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "du_QJD2so2k",
+          "vistas": 61000.0,
+          "vistas_texto": "61 mil vistas",
+          "duracion_s": 622,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "OKei8x2HaLA",
+          "vistas": 30000.0,
+          "vistas_texto": "30 mil vistas",
+          "duracion_s": 767,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "_QWIY7zFbAs",
+          "vistas": 73000.0,
+          "vistas_texto": "73 mil vistas",
+          "duracion_s": 791,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "dha-scS7hHo",
+          "vistas": 26000.0,
+          "vistas_texto": "26 mil vistas",
+          "duracion_s": 771,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "-mF8VtdvGGY",
+          "vistas": 443000.0,
+          "vistas_texto": "443 mil vistas",
+          "duracion_s": 830,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "P4TmxeRY2fI",
+          "vistas": 17000.0,
+          "vistas_texto": "17 mil vistas",
+          "duracion_s": 1155,
+          "edad_visible": "hace 2 meses"
+        },
+        {
+          "id": "TJHa6vuis0I",
+          "vistas": 28000.0,
+          "vistas_texto": "28 mil vistas",
+          "duracion_s": 707,
+          "edad_visible": "hace 3 meses"
+        }
+      ],
+      "canal_youtube_id": "UCDOSaJ0pnglwzfkR6fYbisA"
+    },
+    {
+      "id": "emprende-aprendiendo",
+      "nombre": "Emprende Aprendiendo",
+      "pais": null,
+      "pais_fuente": "https://www.youtube.com/@EmprendeAprendiendo/about",
+      "url": "https://www.youtube.com/@EmprendeAprendiendo/videos",
+      "relacion": "Referencia hispana de explicación empresarial",
+      "vigencia": "reciente",
+      "formato": "video",
+      "seleccion": "Primeros ocho de pestaña Videos en orden por defecto (recientes), excluye Shorts; todos muestran edad >=1 mes. Formato largo, no normalizado por edad.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@EmprendeAprendiendo/videos"
+      ],
+      "metodo": "GET HTML público /videos y watch sin autenticación ni API; fecha, contador entero y segundos de watch.",
+      "limites": [
+        "Ocho videos, no promedio histórico ni máximo absoluto del canal; edades diferentes.",
+        "No se reprodujo el audiovisual: el gancho se infiere de metadatos públicos.",
+        "No hay retención, CTR, ingresos ni vistas a igual edad.",
+        "Mezcla explicaciones, noticias y una clase; no demuestra efecto causal de duración."
+      ],
+      "lectura_editorial": "Los agentes OpenAI/Meta destacan en esta muestra. El título conecta un cambio con marcas conocidas; probar una consecuencia operativa local, sin deducir que la IA o la duración causan vistas.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 77397.625,
+        "mediana_vistas": 25998.5,
+        "duracion_min_s": 366,
+        "duracion_max_s": 3368,
+        "mediana_duracion_s": 992.0,
+        "ranking_ids": [
+          "AHc8XgXoZEQ",
+          "0zEgPR_OqiY",
+          "VzRPo1b86PU",
+          "RxeMzjOvcQw",
+          "6Bi0Ly9Fs2E",
+          "M-kgMxgw9Po",
+          "xkVE6Pg5qug",
+          "DePdWNvVfX8"
+        ]
+      },
+      "videos": [
+        {
+          "id": "xkVE6Pg5qug",
+          "url": "https://www.youtube.com/watch?v=xkVE6Pg5qug",
+          "titulo": "Por qué compran empresas que la IA podría destruir",
+          "vistas": 14595,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 976,
+          "publicado_en": "2026-10-20T10:41:17-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 0.188572
+        },
+        {
+          "id": "M-kgMxgw9Po",
+          "url": "https://www.youtube.com/watch?v=M-kgMxgw9Po",
+          "titulo": "¿Qué gana Tesla con un coche que vuela?",
+          "vistas": 17095,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 366,
+          "publicado_en": "2026-10-16T11:13:32-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 0.220872
+        },
+        {
+          "id": "VzRPo1b86PU",
+          "url": "https://www.youtube.com/watch?v=VzRPo1b86PU",
+          "titulo": "La Nueva Forma de Comprar Empresas",
+          "vistas": 30891,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1008,
+          "publicado_en": "2026-10-13T07:30:13-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 0.399121
+        },
+        {
+          "id": "DePdWNvVfX8",
+          "url": "https://www.youtube.com/watch?v=DePdWNvVfX8",
+          "titulo": "¿Por qué Apple no hace AirPods negros?",
+          "vistas": 10079,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 597,
+          "publicado_en": "2026-10-08T08:49:24-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 0.130224
+        },
+        {
+          "id": "RxeMzjOvcQw",
+          "url": "https://www.youtube.com/watch?v=RxeMzjOvcQw",
+          "titulo": "Así se Convirtió Freepik en Magnific",
+          "vistas": 29403,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1183,
+          "publicado_en": "2026-10-06T09:22:20-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 0.379895
+        },
+        {
+          "id": "AHc8XgXoZEQ",
+          "url": "https://www.youtube.com/watch?v=AHc8XgXoZEQ",
+          "titulo": "Así va a cambiar internet con los agentes de OpenAI y Meta",
+          "vistas": 403565,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 599,
+          "publicado_en": "2026-10-03T07:30:07-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 5.214178
+        },
+        {
+          "id": "0zEgPR_OqiY",
+          "url": "https://www.youtube.com/watch?v=0zEgPR_OqiY",
+          "titulo": "Todo lo que se de Marketing en una Masterclass",
+          "vistas": 90959,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 3368,
+          "publicado_en": "2026-07-14T09:36:13-07:00",
+          "edad_visible": "hace 4 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 1.175217
+        },
+        {
+          "id": "6Bi0Ly9Fs2E",
+          "url": "https://www.youtube.com/watch?v=6Bi0Ly9Fs2E",
+          "titulo": "Estoy lanzando una Startup de IA en 2026",
+          "vistas": 22594,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1639,
+          "publicado_en": "2026-06-23T07:12:28-07:00",
+          "edad_visible": "hace 4 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCyM-2pRapEv6V2q7UNO9icg",
+          "ratio_media_muestra": 0.291921
+        }
+      ]
+    },
+    {
+      "id": "detras-del-margen",
+      "nombre": "Detrás del Margen",
+      "pais": "México",
+      "pais_fuente": "https://www.youtube.com/@Detras_del_Margen/about",
+      "url": "https://www.youtube.com/@Detras_del_Margen/videos",
+      "relacion": "Competidor temático cercano",
+      "vigencia": "reciente",
+      "formato": "video",
+      "seleccion": "Primeros ocho de pestaña Videos en orden por defecto (recientes), todos edad >=1 mes; excluye Shorts; no normalizado por edad.",
+      "fuentes_seleccion": [
+        "https://www.youtube.com/@Detras_del_Margen/videos"
+      ],
+      "metodo": "GET HTML público /videos y watch sin autenticación ni API; fecha, contador entero y segundos de watch.",
+      "limites": [
+        "Ocho videos, no promedio histórico ni máximo absoluto del canal; edades diferentes.",
+        "No se reprodujo el audiovisual: el gancho se infiere de metadatos públicos.",
+        "No hay retención, CTR, ingresos ni vistas a igual edad.",
+        "Solo 4–241 vistas por video; razones altas sobre una base diminuta no prueban tracción."
+      ],
+      "lectura_editorial": "OXXO destaca con 241 vistas sobre una media de 55,75. Contraste entre venta y resultado, pero escala pequeña: referencia temática, no caso probado de crecimiento.",
+      "resumen": {
+        "n": 8,
+        "media_vistas": 55.75,
+        "mediana_vistas": 26.0,
+        "duracion_min_s": 670,
+        "duracion_max_s": 1070,
+        "mediana_duracion_s": 962.5,
+        "ranking_ids": [
+          "gJHGN6EcqLA",
+          "af78mbBiEzE",
+          "FQHL60SgSa0",
+          "dz4DCv33qTo",
+          "Bhs88lVO8z8",
+          "_bVh5P3r5sw",
+          "Nb3Xxt2qlX4",
+          "3MKK4lXovms"
+        ]
+      },
+      "videos": [
+        {
+          "id": "3MKK4lXovms",
+          "url": "https://www.youtube.com/watch?v=3MKK4lXovms",
+          "titulo": "Un autolavado puede estar lleno… y casi no ganar",
+          "vistas": 4,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 787,
+          "publicado_en": "2026-10-18T12:59:34-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 0.071749
+        },
+        {
+          "id": "_bVh5P3r5sw",
+          "url": "https://www.youtube.com/watch?v=_bVh5P3r5sw",
+          "titulo": "De cada $100 en el súper, ¿cuánto queda?",
+          "vistas": 20,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 715,
+          "publicado_en": "2026-09-30T20:30:23-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 0.358744
+        },
+        {
+          "id": "Nb3Xxt2qlX4",
+          "url": "https://www.youtube.com/watch?v=Nb3Xxt2qlX4",
+          "titulo": "Una farmacia vende millones… ¿pero cuánto gana?",
+          "vistas": 18,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 670,
+          "publicado_en": "2026-09-25T12:59:17-07:00",
+          "edad_visible": "hace 1 mes",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 0.32287
+        },
+        {
+          "id": "Bhs88lVO8z8",
+          "url": "https://www.youtube.com/watch?v=Bhs88lVO8z8",
+          "titulo": "Todos necesitan funerarias. ¿Por qué pueden perder dinero?",
+          "vistas": 25,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 968,
+          "publicado_en": "2026-09-19T14:06:58-07:00",
+          "edad_visible": "hace 2 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 0.44843
+        },
+        {
+          "id": "dz4DCv33qTo",
+          "url": "https://www.youtube.com/watch?v=dz4DCv33qTo",
+          "titulo": "El verdadero negocio de una plaza comercial",
+          "vistas": 27,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 996,
+          "publicado_en": "2026-09-10T15:00:11-07:00",
+          "edad_visible": "hace 2 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 0.484305
+        },
+        {
+          "id": "FQHL60SgSa0",
+          "url": "https://www.youtube.com/watch?v=FQHL60SgSa0",
+          "titulo": "De cada $100 que vende una taquería, ¿cuánto queda?",
+          "vistas": 31,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 957,
+          "publicado_en": "2026-09-07T01:00:15-07:00",
+          "edad_visible": "hace 2 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 0.556054
+        },
+        {
+          "id": "gJHGN6EcqLA",
+          "url": "https://www.youtube.com/watch?v=gJHGN6EcqLA",
+          "titulo": "El verdadero negocio de OXXO no está en sus productos",
+          "vistas": 241,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 1070,
+          "publicado_en": "2026-08-28T11:00:03-07:00",
+          "edad_visible": "hace 2 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 4.32287
+        },
+        {
+          "id": "af78mbBiEzE",
+          "url": "https://www.youtube.com/watch?v=af78mbBiEzE",
+          "titulo": "Por qué una gasolinera puede vender millones y ganar tan poco",
+          "vistas": 80,
+          "precision_vistas": "contador_entero_publico",
+          "duracion_s": 991,
+          "publicado_en": "2026-08-23T18:29:54-07:00",
+          "edad_visible": "hace 2 meses",
+          "consultado_en": "2026-11-21",
+          "canal_youtube_id": "UCDkSYS48yvDsurRZHsL6c-Q",
+          "ratio_media_muestra": 1.434978
+        }
+      ]
+    }
+  ]
+}

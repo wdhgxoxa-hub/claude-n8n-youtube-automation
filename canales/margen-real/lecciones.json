@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "fecha_lima": "2026-11-21",
+  "origen": "investigacion_externa",
+  "confirmadas": [],
+  "politica": "Estos objetos son hipótesis para revisión, no filas de aprendizaje propio. No sustituir biblia.lecciones ni cargarlos como confirmados. El contrato aprender exige patrón en al menos tres videos propios; además conservar fuente, ventana y límites.",
+  "hipotesis": [
+    {
+      "id": "H01",
+      "regla_propuesta": "Hacer reconocible el negocio peruano antes de explicar la cuenta.",
+      "estado": "hipotesis_no_validada",
+      "competidores_ids": [
+        "infomercado",
+        "emprende-trome"
+      ],
+      "videos_fuente_ids": [
+        "EJiXBBaIpls",
+        "lsqC_JAqNz8",
+        "xl8i0nzgPz8"
+      ],
+      "fundamento": "Un oficio, producto o local reconocible puede facilitar que el público identifique el tema.",
+      "prueba_propuesta": "Probar tres casos con unidad de venta visible y ciudad; medir permanencia inicial frente a piezas propias comparables.",
+      "videos_propios_de_validacion": []
+    },
+    {
+      "id": "H02",
+      "regla_propuesta": "Plantear el costo omitido como una pregunta comprobable.",
+      "estado": "hipotesis_no_validada",
+      "competidores_ids": [
+        "luis-mi-negocios",
+        "detras-del-margen"
+      ],
+      "videos_fuente_ids": [
+        "AOyXGvxi9Kk",
+        "gJHGN6EcqLA"
+      ],
+      "fundamento": "Prevención de pérdida y contraste entre ventas/resultado aparecen en los títulos destacados; la causa de sus vistas es desconocida.",
+      "prueba_propuesta": "Alternar costo omitido y resultado por unidad en tres pares de cortes de temas equivalentes; comparar a siete días. Registrar diferencias de tema y distribución.",
+      "videos_propios_de_validacion": []
+    },
+    {
+      "id": "H03",
+      "regla_propuesta": "Resolver una decisión concreta con las mismas unidades y periodo.",
+      "estado": "hipotesis_no_validada",
+      "competidores_ids": [
+        "eduardo-rosas",
+        "pqs"
+      ],
+      "videos_fuente_ids": [
+        "UWCZSdXzZuo",
+        "i_hSjiUkqzQ"
+      ],
+      "fundamento": "Los tutoriales/preguntas prácticas son referencias de claridad; ninguna de esas muestras alcanza 2×.",
+      "prueba_propuesta": "Tres explicaciones de decisiones operativas; revisar dudas recurrentes, guardados si disponibles y retención donde aparece la cuenta.",
+      "videos_propios_de_validacion": []
+    },
+    {
+      "id": "H04",
+      "regla_propuesta": "Conectar un cambio verificable con su efecto en el costo o la venta del caso local.",
+      "estado": "hipotesis_no_validada",
+      "competidores_ids": [
+        "emprende-aprendiendo",
+        "adrian-saenz"
+      ],
+      "videos_fuente_ids": [
+        "AHc8XgXoZEQ",
+        "fJzUnSEnKNs"
+      ],
+      "fundamento": "Marcas/herramientas conocidas pueden atraer interés; no se probaron ingresos prometidos ni transferencia a Perú.",
+      "prueba_propuesta": "Solo incluir cambios documentados que alteren una partida del caso; medir resultado en tres piezas propias sin inventar noticia ni urgencia.",
+      "videos_propios_de_validacion": []
+    },
+    {
+      "id": "H05",
+      "regla_propuesta": "Probar piezas compactas que conserven una cuenta completa.",
+      "estado": "hipotesis_no_validada",
+      "competidores_ids": [
+        "infomercado",
+        "detras-del-margen"
+      ],
+      "videos_fuente_ids": [
+        "EJiXBBaIpls",
+        "af78mbBiEzE"
+      ],
+      "fundamento": "El benchmark contiene Shorts 112–172 s y explicaciones de varios minutos; no determina una duración óptima propia.",
+      "prueba_propuesta": "Primer piloto 8–12 min y cortes 35–55 s por capacidad editorial. Si faltan datos legibles, ampliar duración. Posterior ensayo 90–150 s solo tras revisar retención y capacidad, sin activarlo ahora.",
+      "videos_propios_de_validacion": []
+    }
+  ],
+  "piloto": {
+    "estado": "propuesta_no_programada",
+    "semanas": 4,
+    "documentales_por_semana": 1,
+    "cortes_por_semana": 2,
+    "duracion_documental_s": [
+      480,
+      720
+    ],
+    "duracion_corte_s": [
+      35,
+      55
+    ],
+    "activar_rutina": false,
+    "publicar": false,
+    "medicion_dias": [
+      2,
+      7,
+      28
+    ],
+    "nota_medicion": "M7 ya mide 2/7 días cuando está autorizado; 28 es revisión propuesta. No se cambia scheduler ni allowAnalytics.",
+    "criterio_decision": "Comparar igual formato y edad; mantener media y mediana. Con diez antecedentes propios comparables, probar umbral interno de 1,25× mediana a siete días y permanencia sin deterioro repetido en tres piezas. Es criterio editorial propuesto, no significancia estadística. Sin suficientes datos, resultado inconcluso y sin escalar cadencia.",
+    "linea_base_actual": "Dos Shorts públicos de menos de tres días; insuficientes para atribuir éxito o fijar metas de vistas/seguidores."
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "consulta_lima": "2026-11-21",
+  "cuenta_de_la_mision": {
+    "nombre": "Margen Real",
+    "pais_declarado_por_la_mision": "Perú",
+    "youtube_url": "https://www.youtube.com/@MargenRealtv",
+    "youtube_channel_id": "UCjG7RP3o2RGGju9YnH6lnFg",
+    "youtube_pais_publico": null,
+    "promesa_publica_parafraseada": "Explicar costos, márgenes y estrategias de negocios cotidianos mediante documentales con cifras; anuncia documental semanal.",
+    "tiktok_url_suministrada": "https://www.tiktok.com/@margenreal",
+    "vinculo_youtube_tiktok_verificado": false,
+    "advertencia": "La misión identifica TikTok MargenReal, pero el perfil público oEmbed dice margen; confirmar la URL/ID del dueño antes de vincular. No hay prueba pública de vinculación."
+  },
+  "evidencia_publica": {
+    "observed_at": "2026-11-21 America/Lima",
+    "method": "HTML público YouTube leído sin autenticación; solo proyección de identidad y metadatos visibles; API TikTok oEmbed documentada, sin credenciales.",
+    "identities": [
+      {
+        "url": "https://www.youtube.com/@MargenRealtv/about",
+        "country": null,
+        "canonicalChannelUrl": "http://www.youtube.com/@MargenRealtv",
+        "channelId": "UCjG7RP3o2RGGju9YnH6lnFg",
+        "videoCountText": "2 videos",
+        "subscriberCountText": null,
+        "viewCountText": null,
+        "joinedDateText": "Se unió el 25 sep 2026"
+      },
+      {
+        "url": "https://www.youtube.com/@MARGENREAL/about",
+        "country": "España",
+        "canonicalChannelUrl": "http://www.youtube.com/@MARGENREAL",
+        "channelId": "UCsVmYzwaARnTo9_uJ8XBS7g",
+        "videoCountText": null,
+        "subscriberCountText": null,
+        "viewCountText": null,
+        "joinedDateText": "Se unió el 26 jun 2013"
+      },
+      {
+        "url": "https://www.youtube.com/@MargenReal-x5c/about",
+        "country": null,
+        "canonicalChannelUrl": "http://www.youtube.com/@MargenReal-x5c",
+        "channelId": "UCBPNMfrXGxT7dqGvor_UYAg",
+        "videoCountText": "4 videos",
+        "subscriberCountText": "4 suscriptores",
+        "viewCountText": "48 vistas",
+        "joinedDateText": "Se unió el 15 nov 2026"
+      },
+      {
+        "url": "https://www.youtube.com/@EscueladeMargen/about",
+        "country": null,
+        "canonicalChannelUrl": "http://www.youtube.com/@EscueladeMargen",
+        "channelId": "UC44g8kzJpbY6kSgGsOg6SqA",
+        "videoCountText": "1 video",
+        "subscriberCountText": null,
+        "viewCountText": null,
+        "joinedDateText": "Se unió el 3 nov 2026"
+      },
+      {
+        "url": "https://www.youtube.com/@EmprendeAprendiendo/about",
+        "country": null,
+        "canonicalChannelUrl": "http://www.youtube.com/@EmprendeAprendiendo",
+        "channelId": "UCyM-2pRapEv6V2q7UNO9icg",
+        "videoCountText": "1,006 videos",
+        "subscriberCountText": "2.27 M de suscriptores",
+        "viewCountText": "235,582,774 vistas",
+        "joinedDateText": "Se unió el 23 may 2017"
+      }
+    ],
+    "own_shorts": [
+      {
+        "url": "https://www.youtube.com/shorts/XaNPu8nxWqM",
+        "title": "Margen del grifo: ¿cuánto se queda de tus 10 soles de gasolina? #Shorts",
+        "views": "Sin vistas",
+        "lengthSeconds": "56",
+        "viewCount": "0",
+        "channelId": "UCjG7RP3o2RGGju9YnH6lnFg",
+        "publishDate": "2026-11-20T13:00:40-08:00"
+      },
+      {
+        "url": "https://www.youtube.com/shorts/3sY1JsbPxMY",
+        "title": "Pollería de barrio: ¿cuánto le queda al dueño de cada 10 soles? #Shorts",
+        "views": "300 vistas",
+        "lengthSeconds": "67",
+        "viewCount": "301",
+        "channelId": "UCjG7RP3o2RGGju9YnH6lnFg",
+        "publishDate": "2026-11-19T17:18:03-08:00"
+      }
+    ],
+    "tiktok_oembed": {
+      "title": "margen's Creator Profile",
+      "author_url": "https://www.tiktok.com/@margenreal",
+      "author_name": "margen",
+      "provider_name": "TikTok"
+    },
+    "tiktok_docs": "https://developers.tiktok.com/docs/en/embed-creator-profiles",
+    "tiktok_endpoint": "https://www.tiktok.com/oembed?url=https://www.tiktok.com/@margenreal",
+    "cross_platform_link_verified": false
+  },
+  "homonimo_mexicano": {
+    "estado": "no_confirmado",
+    "nota": "El ejemplo mexicano de la misión no quedó acreditado. @MARGENREAL declara España; no asignar México a otros homónimos sin evidencia."
+  },
+  "diferenciacion_propuesta": {
+    "nombre_visible": "Margen Real | Negocios del Perú",
+    "descriptor": "Negocios peruanos, cuentas en soles y costos a la vista.",
+    "firma_editorial": "¿Cuánto queda de verdad?",
+    "identificacion": "Conservar @MargenRealtv y su channel ID; añadir Perú en nombre visible, descripción y primera pantalla solo después de revisión. Enlazar TikTok únicamente tras confirmar propiedad y URL.",
+    "mecanismo": "Un negocio, una unidad de venta y una cuenta trazable: ventas, costos, resultado y punto de equilibrio; ciudad, periodo y fuente visibles.",
+    "estado": "propuesta_no_aplicada"
+  }
+}
