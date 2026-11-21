@@ -337,7 +337,7 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
   const video = state.videos[0];
   video.observabilidad = {
     montaje: "https://media.example.test/ensayo.webm",
-    miniatura: "",
+    miniatura: "https://media.example.test/ensayo.png",
     escenas: [
       {
         id: "p1",
@@ -367,8 +367,10 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
     ],
     incidencias: [],
   };
+  let solicitudesVideo = 0;
   await page.route("https://media.example.test/**", (r) => {
     const url = r.request().url();
+    if (url.endsWith(".webm")) solicitudesVideo++;
     return r.fulfill(
       url.endsWith(".png")
         ? {
@@ -410,6 +412,12 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
     page.getByRole("region", { name: "Vista previa simulada" }),
   ).toHaveCount(0);
   const player = page.locator(".real-player video");
+  await expect(player).toHaveAttribute("preload", "none");
+  await expect(player).toHaveAttribute(
+    "poster",
+    "https://media.example.test/ensayo.png",
+  );
+  expect(solicitudesVideo).toBe(0);
   await player.evaluate(async (el) => {
     const v = el as HTMLVideoElement;
     v.muted = true;
@@ -418,6 +426,11 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
   await expect
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).currentTime))
     .toBeGreaterThan(0.1);
+  expect(solicitudesVideo).toBeGreaterThan(0);
+  await expect(page.getByLabel("Clip de la escena 1")).toHaveAttribute(
+    "poster",
+    "https://media.example.test/ensayo.png",
+  );
   await expect(
     page.getByRole("region", { name: "Piezas por escena" }),
   ).toBeVisible();

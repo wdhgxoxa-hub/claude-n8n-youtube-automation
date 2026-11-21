@@ -1254,6 +1254,8 @@ function Pieza({
   editar: () => void;
   accion: (v: string) => Promise<void>;
 }) {
+  const [revisionAbierta, setRevisionAbierta] = useState<number | null>(null);
+  const previaAbierta = revisionAbierta === p.revision;
   return (
     <article className="marca-pieza" id={`pieza-${p.id}`}>
       <div>
@@ -1322,31 +1324,42 @@ function Pieza({
         </div>
       </div>
       {p.mediosIds.length > 0 && (
-        <details className="marca-previa">
+        <details
+          className="marca-previa"
+          open={previaAbierta}
+          onToggle={(e) =>
+            setRevisionAbierta(e.currentTarget.open ? p.revision : null)
+          }
+        >
           <summary>Vista previa de la pieza</summary>
-          <div className="marca-galeria">
-            {p.mediosIds.map((id, i) =>
-              p.datos.formato === "reel" ? (
-                <video
-                  key={id}
-                  src={`/api/marcas/medio/${p.id}?i=${i}`}
-                  controls
-                  preload="metadata"
-                  aria-label={p.datos.titulo}
-                />
-              ) : (
-                <Image
-                  key={id}
-                  src={`/api/marcas/medio/${p.id}?i=${i}`}
-                  alt={`${p.datos.titulo}, pieza ${i + 1}`}
-                  loading="eager"
-                  width={1080}
-                  height={p.datos.formato === "historia" ? 1920 : 1350}
-                  unoptimized
-                />
-              ),
-            )}
-          </div>
+          {previaAbierta && (
+            <div className="marca-galeria">
+              {p.mediosIds.map((id, i) =>
+                p.datos.formato === "reel" ? (
+                  <video
+                    key={id}
+                    src={`/api/marcas/medio/${p.id}?i=${i}`}
+                    controls
+                    playsInline
+                    preload="none"
+                    width={720}
+                    height={1280}
+                    aria-label={p.datos.titulo}
+                  />
+                ) : (
+                  <Image
+                    key={id}
+                    src={`/api/marcas/medio/${p.id}?i=${i}`}
+                    alt={`${p.datos.titulo}, pieza ${i + 1}`}
+                    loading="eager"
+                    width={1080}
+                    height={p.datos.formato === "historia" ? 1920 : 1350}
+                    unoptimized
+                  />
+                ),
+              )}
+            </div>
+          )}
         </details>
       )}
     </article>

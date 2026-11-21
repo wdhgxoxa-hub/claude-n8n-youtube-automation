@@ -102,6 +102,10 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   await expect(
     page.getByText("Borrador guardado.", { exact: false }),
   ).toBeVisible();
+  let solicitudesMedios = 0;
+  page.on("request", (request) => {
+    if (request.url().includes("/api/marcas/medio/")) solicitudesMedios++;
+  });
   await page
     .getByRole("button", {
       name: "Preparar vista previa y enviar a Walter",
@@ -111,6 +115,8 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   await expect(
     page.getByText("Pieza lista para la revisión de Walter.", { exact: true }),
   ).toBeVisible();
+  await expect(page.locator(".marca-galeria img")).toHaveCount(0);
+  expect(solicitudesMedios).toBe(0);
   await page.getByText("Vista previa de la pieza", { exact: true }).click();
   await expect(
     page.getByRole("img", {
@@ -118,6 +124,14 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
       exact: true,
     }),
   ).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .locator(".marca-galeria img")
+        .evaluate((image) => (image as HTMLImageElement).naturalWidth),
+    )
+    .toBeGreaterThan(0);
+  expect(solicitudesMedios).toBeGreaterThan(0);
   mkdirSync(".cache/capturas-marcas", { recursive: true });
   for (const theme of ["oscuro", "claro"]) {
     await page.evaluate(

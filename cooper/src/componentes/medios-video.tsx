@@ -1,10 +1,8 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import {
-  enlaceIncrustado,
-  type Observabilidad,
-} from "@/contratos/observabilidad";
+import type { Observabilidad } from "@/contratos/observabilidad";
+import { enlaceIncrustado } from "@/lib/enlaces-medios";
 export function MediosVideo({
   datos,
   titulo,
@@ -21,7 +19,7 @@ export function MediosVideo({
             key={datos.montaje}
             controls
             playsInline
-            preload="metadata"
+            preload={datos.miniatura ? "none" : "metadata"}
             poster={datos.miniatura || undefined}
             src={datos.montaje}
             onError={() => setFallo(true)}
@@ -67,6 +65,7 @@ export function MediosVideo({
                       controls
                       playsInline
                       preload="none"
+                      poster={e.imagen || undefined}
                       src={e.clip}
                       aria-label={`Clip de la escena ${e.orden + 1}`}
                     />
