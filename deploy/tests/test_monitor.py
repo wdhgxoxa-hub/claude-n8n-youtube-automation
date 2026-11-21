@@ -110,6 +110,16 @@ class MonitorTest(unittest.TestCase):
         packet = monitor.envelope(['disco_bajo'], now, self.env['COOPER_WEBHOOK_SECRET'])
         self.assertFalse(self.execute_node(packet, {'avisos': {packet['firma']: now}})['enviar'])
 
+    def test_rechaza_json_sin_esquema_sin_lanzar_excepcion(self):
+        import hashlib
+        import hmac
+        import time
+        valid = {'version': 1, 'fecha': int(time.time()), 'problemas': [], 'prueba': True}
+        for report in [None, [], 1, 'texto', {**valid, 'destinatario': 'ajeno'}]:
+            payload = json.dumps(report)
+            firma = hmac.new(self.env['COOPER_WEBHOOK_SECRET'].encode(), ('cooper-monitor-v1\n' + payload).encode(), hashlib.sha256).hexdigest()
+            self.assertEqual(self.execute_node({'payload': payload, 'firma': firma})['codigo'], 401)
+
     def test_workflow_solo_referencia_credencial_y_no_se_activa(self):
         wf = generador.workflow('credencial-ficticia', 'Telegram de prueba', '123')
         self.assertFalse(wf['active'])

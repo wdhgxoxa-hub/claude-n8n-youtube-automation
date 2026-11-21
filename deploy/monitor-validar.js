@@ -10,6 +10,7 @@ const expected = crypto.createHmac('sha256', secret).update('cooper-monitor-v1\n
 if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return fail();
 let report;
 try { report = JSON.parse(payload); } catch { return fail(); }
+if (!report || typeof report !== 'object' || Array.isArray(report) || Object.keys(report).sort().join(',') !== 'fecha,problemas,prueba,version') return fail();
 const labels = {
   servicio_cooper: 'Cooper no está saludable', servicio_n8n: 'n8n no está saludable',
   servicio_runner: 'El ejecutor no está saludable', servicio_caddy: 'HTTPS no está saludable',
