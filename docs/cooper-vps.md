@@ -1,6 +1,6 @@
 # Cooper y n8n en un VPS
 
-Preparación de fase 5 para **Ubuntu 24.04 LTS dedicado**. No se ha ejecutado en el VPS ni en n8n vivo. La guía conserva n8n y su runner en **2.47.4**. Cooper usa una imagen de Node **24.22.3**, construida en varias etapas y ejecutada como UID 1000. No hay réplicas: SQLite, límites de sesión e idempotencia necesitan una sola instancia de Cooper.
+Guía de fase 5 para **Ubuntu 24.04 LTS dedicado**. La migración real del 21 de noviembre de 2026 y sus pendientes están en [el informe del VPS](informes/cooper-vps-real.md). La guía conserva n8n y su runner en **2.47.4**. Cooper usa una imagen de Node **24.22.3**, construida en varias etapas y ejecutada como UID 1000. No hay réplicas: SQLite, límites de sesión e idempotencia necesitan una sola instancia de Cooper.
 
 ## Elegir el servidor
 
@@ -26,7 +26,7 @@ ssh -N -L 8443:127.0.0.1:8443 operador@IP_DEL_VPS
 
 En la PC del operador, resolver temporalmente `flujos.sudominio` a `127.0.0.1` y abrir `https://flujos.sudominio:8443`. El certificado válido es el del mismo dominio público; Caddy lo obtiene por 80/443. Retirar esa resolución al cerrar la operación. No exponer 8443 en firewall ni panel del proveedor. Usar la cuenta administrativa de n8n y MFA. Los miembros de Cooper no reciben cuentas de editor.
 
-Caddy conserva SSE con `flush_interval -1`, sin compresión ni búfer de respuesta y sin límite de tiempo total de stream. Limita cuerpo a 9 MB en Cooper y 16 MB en webhooks, y espera de cabeceras. Cooper conserva CSP por nonce, autorización y límites por usuario: 4 SSE, 90 mutaciones/minuto y 300 lecturas/minuto. No se prometen límites globales de IP ni protección contra DDoS. No se registran cuerpos, cookies ni cabeceras de autorización en el proxy.
+Caddy conserva SSE con `flush_interval -1`, sin compresión ni búfer de respuesta y sin límite de tiempo total de stream. Limita cuerpo a 9 MB en Cooper y 16 MB en webhooks, y espera de cabeceras. Cooper conserva CSP por nonce, autorización y límites por usuario: 4 SSE, 90 mutaciones/minuto y 300 lecturas/minuto. No se prometen límites globales de IP ni protección contra DDoS. No se habilita `access_log`; los diagnósticos operativos del proxy pueden incluir metadatos de solicitudes fallidas, por lo que deben mantenerse privados y no exportarse sin revisión.
 
 ## Primer despliegue — operador, después de revisión
 

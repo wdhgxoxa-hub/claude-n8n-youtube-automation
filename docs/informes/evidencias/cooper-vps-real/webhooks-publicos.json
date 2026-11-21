@@ -1,0 +1,7 @@
+{
+  "fecha": 1795271178,
+  "hmac_https": "PASS; solo consulta",
+  "whatsapp_desafio_https": "PASS",
+  "whatsapp_token_invalido": 403,
+  "meta_firma_pendiente": true
+}

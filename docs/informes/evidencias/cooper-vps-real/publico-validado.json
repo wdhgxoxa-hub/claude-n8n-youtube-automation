@@ -1,0 +1,26 @@
+{
+  "fecha": 1795271086,
+  "verificacion_tls": "CA publica, hostname y vigencia; sin excepciones",
+  "salud_https": 200,
+  "cabeceras_seguridad": "PASS",
+  "raiz_redirige_entrar": 307,
+  "pagina_login": 200,
+  "redireccion_google": "PASS; no se siguio ni inicio sesion",
+  "callback_google": "https://cooper.cooperestudio.com/api/auth/callback/google",
+  "/api/eventos": 401,
+  "/api/estado": 401,
+  "flujos/": 404,
+  "flujos/rest/settings": 404,
+  "flujos/api/v1/workflows": 404,
+  "flujos/webhook/cooper/v1": 404,
+  "certificados": {
+    "cooper.cooperestudio.com": {
+      "vigente_hasta": "Feb 19 13:24:44 2027 GMT",
+      "protocolo": "TLSv1.3"
+    },
+    "flujos.cooperestudio.com": {
+      "vigente_hasta": "Feb 19 13:24:44 2027 GMT",
+      "protocolo": "TLSv1.3"
+    }
+  }
+}
