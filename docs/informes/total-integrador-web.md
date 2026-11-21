@@ -210,3 +210,14 @@ que los demás selectores de `status` ya distinguen el mensaje mediante nombre
 accesible o texto, o están acotados a su recurso. Se conservaron sin cambios.
 El error-context de la puerta confirma la misma ambigüedad entre banner y
 contenido; ESLint focal con cero advertencias y `git diff --check`: PASS.
+
+Commit `bb7fd05`: las dos búsquedas del compositor en `multiengine.spec.ts`
+usan ahora el textbox accesible de nombre exacto dentro de `main`, y esperan
+unicidad y visibilidad antes de interactuar. En el fallo WebKit móvil el árbol
+accesible mostraba un solo textbox; `getByLabel` encontraba además otro nodo
+SSR que no aparecía en dicho árbol. Se inspeccionó también la captura del fallo.
+No se atribuye una causa concreta al DOM retenido sin una reproducción adicional.
+El selector sigue fallando si existen dos compositores accesibles, no usa
+`first()` y conserva el recorrido real por Tab y las dos aprobaciones manuales.
+ESLint focal sin advertencias y `git diff --check`: PASS; ejecución en motores
+delegada a la puerta/rondas del integrador sobre su snapshot final.
