@@ -1,0 +1,10 @@
+{
+  "puerta": "PASS",
+  "unitarias": 284,
+  "e2e": 43,
+  "flujos": 147,
+  "tunel": 5,
+  "errores": 0,
+  "advertencias": 0,
+  "vps": "transporte probado; overlay aplicación pendiente despliegue integrado"
+}

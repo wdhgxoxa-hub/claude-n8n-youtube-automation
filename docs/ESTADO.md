@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 10:28 (Lima).
+Última actualización: 2026-11-21 10:40 (Lima).
 
 ## Qué es
 
@@ -11,6 +11,7 @@
 
 - **cooper-total / Operación:** implementados réplica cifrada en PC, restauración antes de promover copia, monitor firmado para Telegram y arranque protegido por mantenimiento. Copia real VPS y recuperación externa verificadas el 21-11 a las 10:17 Lima: snapshot `04cd7f6f`, 25 archivos y dos bases; los cuatro servicios volvieron saludables. Puerta del frente: 284 unitarias, 43 E2E, 147 flujos y 36 pruebas de operación; cero errores/advertencias. Código entregado al orquestador; timers y monitor aún pendientes de instalación coordinada. [Informe](informes/total-operacion.md).
 - **Cooper total, frente aprendizaje:** implementado y probado localmente el ciclo de métricas 24h/72h/7d, evidencia creativa y lecciones por canal con lectura obligatoria del siguiente guion, trazabilidad en Aprendizaje y ensayo seguro sin producción ni llamadas de IA. Puerta completa: 285 unitarias, 44 E2E, 154 regresiones de flujos; cero errores/advertencias. **Pendiente de integración y validación/despliegue remoto por el orquestador.** [Informe](informes/total-aprendizaje.md).
+- **Cooper total / Chat VPS:** túnel privado instalado y probado con el plan real de la PC, caída y recuperación; puerta 284 unitarias/43 E2E/147 flujos sin errores ni advertencias. Overlay del destino privado pendiente del despliegue integrado; sesión Google real pendiente, sin iniciar OAuth. [Informe](informes/total-chat-vps.md).
 
 - Fases 1–6: web, chat por los planes de Claude/Codex, puente firmado con n8n, avatares/voces, WhatsApp, preparación VPS y modo noticia. Proveedores con gasto y modo noticia requieren su activación correspondiente.
 - **Integración 3:** Pulido, Memoria, Cobertura, Marcas y Animación fusionados en orden; `version-chatgpt` y `main` publicados en el remoto propio `mio`, por excepción expresa de Walter. [Informe y evidencia](informes/cooper-integracion3.md).

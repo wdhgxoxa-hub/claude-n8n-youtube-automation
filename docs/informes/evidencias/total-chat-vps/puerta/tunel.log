@@ -1,0 +1,13 @@
+✔ une tokens distintos mediante socket privado y conserva respuesta (29.195209ms)
+✔ rechaza identidad incorrecta, Origin, rutas arbitrarias y cuerpos excesivos (6.508064ms)
+✔ PC apagada responde indisponible y recupera sin reiniciar VPS (3.892845ms)
+✔ no sigue redirecciones del destino (2.438571ms)
+✔ rechaza directorio de socket accesible a otros (1.263565ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 112.085072
