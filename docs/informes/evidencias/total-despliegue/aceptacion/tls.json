@@ -1,0 +1,9 @@
+{
+  "host": "cooper.cooperestudio.com",
+  "tls": "TLSv1.3",
+  "validacion_ca_y_hostname": true,
+  "valido_hasta": "Feb 19 13:24:44 2027 GMT",
+  "valido_desde": "Nov 21 13:24:45 2026 GMT",
+  "http_estado": 301,
+  "http_location": "https://cooper.cooperestudio.com/entrar"
+}

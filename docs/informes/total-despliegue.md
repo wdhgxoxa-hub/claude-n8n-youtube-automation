@@ -1,3 +1,55 @@
+# total-despliegue — aceptación de Cooper integrado
+
+Actualizado: **2026-11-21 11:28 (Lima)**. Rama y worktree `total-despliegue`.
+
+## Estado de esta continuación
+
+**Implementado y probado; imagen cargada, todavía no aplicada.** El intento de corte fue rechazado por el bloqueo operativo del orquestador, que mantiene el VPS en mantenimiento. No se detuvo ni modificó ningún servicio desde este frente. No se hizo push ni merge. Las acciones históricas de otros trabajos se conservan al final de este documento.
+
+La imagen procede de `cbf20685e07bf07566573825418d87799bed5ad9`, descendiente de `cooper-integracion3` (`de397f3`). Su árbol `cooper/` es idéntico al de la puerta final. Se construyó desde `git archive`, sin entornos, bases ni sesiones privadas. Podman usa formato Docker para conservar `HEALTHCHECK`; el primer intento OCI emitió un aviso y fue sustituido antes de desplegar. [Fuente, imagen y transporte](evidencias/total-despliegue/aceptacion/fuentes.json).
+
+## Cambios y commits
+
+- `8e20fec`: ajusta la evaluación de memoria/chat al contrato vigente de una frase de hasta 18 palabras y segunda frase solo para decidir; conserva las comprobaciones de aislamiento.
+- `cbf2068`, `53f2839`, `a1232b3`, `03998e7`: corte exclusivo de Cooper y su relé; bloqueo compartido, rechazo de imagen cambiada o stack no saludable, respaldo frío, ensayo real sin red, reversa automática y conservación de datos del intento. Nunca opera n8n/runner/Caddy; verifica sus identidades antes/después.
+- `403a9f0`, `72f0dfd`, `ca873fd`: aceptación pública con Playwright y Sentinel, videos a 1440/390 px, protección de rutas/APIs y Google OIDC; sin OAuth ni cookies fabricadas.
+- `b71bef6`: [procedimiento reproducible y alcance de la reversa](../cooper-despliegue-aislado.md).
+
+## Puerta final
+
+Ejecutada completa y secuencialmente: `cd cooper && npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build`; después, desde la raíz, `node --test tests/flujos_v2.test.cjs`.
+
+| Paso | Resultado |
+| --- | --- |
+| npm ci | rc 0; cero vulnerabilidades |
+| lint | rc 0; cero errores/advertencias |
+| typecheck | rc 0 |
+| unitarias | 284/284, 30 archivos |
+| Playwright | 43/43; sin omisiones ni reintentos |
+| build | rc 0 |
+| flujos v2 | 148/148 |
+| despliegue Python, `-W error` | 48/48; incluye fallo con recuperación y rechazo de mantenimiento incompleto |
+
+Los siete pasos de la puerta terminaron sin errores ni advertencias. [Resultados y tiempos](evidencias/total-despliegue/aceptacion/puerta.json), registros individuales y manifiesto SHA-256 en la misma carpeta. La primera ejecución encontró el texto antiguo del test; la segunda encontró Chromium de Sentinel ausente. Se corrigió el test y se instaló el navegador requerido, luego se repitió toda la puerta. No se desactivaron pruebas ni guardianes.
+
+## Validación pública previa
+
+TLS 1.3 con CA/hostname verificados, certificado hasta 19-feb-2027 y HTTP→HTTPS 301: [evidencia](evidencias/total-despliegue/aceptacion/tls.json). Google declara OIDC y el callback exacto `https://cooper.cooperestudio.com/api/auth/callback/google`; no se inició autenticación.
+
+La sonda previa contra la imagen antigua se detuvo al llegar a una ruta nueva todavía inexistente. No se presenta como aceptación de la versión nueva. Los recorridos finales se ejecutarán al terminar el corte. El navegador compartido no está disponible y no se encontró Chromium de usuario accesible por Playwright; no se leyeron cookies, sesiones ni archivos `.env` reales.
+
+## Pendientes de Walter y coordinación
+
+1. **Orquestador:** terminar su mantenimiento y devolver el stack saludable para aplicar el corte exclusivo. No se elude su bloqueo ni se inicia n8n desde este frente.
+2. **Walter:** completar el login Google y facilitar una sesión existente autorizada para el recorrido privado de producción. La misión prohíbe iniciar OAuth; la entrada y los rechazos anónimos no acreditan ese login ni las pantallas privadas.
+3. Revisión humana en teléfono/Safari y los pendientes anteriores de Meta, medios/publicación, presupuestos y aceptación de los otros frentes permanecen vigentes.
+
+---
+
+# Registro histórico previo (hasta 11:02 Lima)
+
+Lo que sigue conserva el trabajo anterior. Sus referencias a imagen final no desplegada y operación n8n pertenecen a ese cierre histórico, no a esta continuación limitada a Cooper.
+
 # cooper-total — operación instalada y ensayos de despliegue
 
 Actualizado: 21-11-2026, 11:10 (Lima). Frente `total-despliegue`, continuación de `total-operacion`. La aplicación final todavía no se ha desplegado por este frente; el orquestador conserva el turno de escritura en el VPS.

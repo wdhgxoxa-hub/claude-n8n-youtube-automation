@@ -1,0 +1,11 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/total-despliegue/cooper
+
+
+ Test Files  30 passed (30)
+      Tests  284 passed (284)
+   Start at  11:12:18
+   Duration  16.08s (transform 579ms, setup 274ms, import 7.45s, tests 6.04s, environment 2ms)
+

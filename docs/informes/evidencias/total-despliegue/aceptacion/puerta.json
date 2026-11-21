@@ -1,0 +1,37 @@
+[
+  {
+    "paso": "01-ci",
+    "codigo": 0,
+    "segundos": 5.06
+  },
+  {
+    "paso": "02-lint",
+    "codigo": 0,
+    "segundos": 3.24
+  },
+  {
+    "paso": "03-typecheck",
+    "codigo": 0,
+    "segundos": 3.91
+  },
+  {
+    "paso": "04-test",
+    "codigo": 0,
+    "segundos": 16.36
+  },
+  {
+    "paso": "05-e2e",
+    "codigo": 0,
+    "segundos": 406.43
+  },
+  {
+    "paso": "06-build",
+    "codigo": 0,
+    "segundos": 3.74
+  },
+  {
+    "paso": "07-flujos",
+    "codigo": 0,
+    "segundos": 1.08
+  }
+]

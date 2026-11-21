@@ -1,0 +1,62 @@
+[1/3] STEP 1/6: FROM docker.io/library/node:24.22.3-bookworm-slim AS dependencias
+[1/3] STEP 2/6: RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ ca-certificates && rm -r /var/lib/apt/lists/*
+--> Using cache 548bc232b9f31734c84abdbdd87e14d16f052257c9f793ae403b37c0ba402d32
+--> 548bc232b9f3
+[1/3] STEP 3/6: ENV npm_config_update_notifier=false
+--> Using cache 4d82e22b19eba69a6d7d53a84a10ea9ef7bb08843127d310eef67992ec4e3345
+--> 4d82e22b19eb
+[1/3] STEP 4/6: WORKDIR /app
+--> Using cache 29450e9ea10c84b39e84e979ee8023975969879d4b5f277d088bd313e888d7d8
+--> 29450e9ea10c
+[1/3] STEP 5/6: COPY cooper/package.json cooper/package-lock.json ./
+--> Using cache d6a355db9109b683cb08d6e6cb84d26f01a3d1db29bcd66529b9b19cccd1db06
+--> d6a355db9109
+[1/3] STEP 6/6: RUN npm ci --no-audit --no-fund
+--> Using cache 325751a25ee4761d75f01da0281aa0fc19f2d88ae70251cb0033292a3d9399f3
+--> 325751a25ee4
+[2/3] STEP 1/4: FROM 325751a25ee4761d75f01da0281aa0fc19f2d88ae70251cb0033292a3d9399f3 AS construir
+[2/3] STEP 2/4: ENV NEXT_TELEMETRY_DISABLED=1 COOPER_STANDALONE=1
+--> Using cache 5dd99ba423b33b59b8456099b524435f81e69c023b76539731393aa3a5dd9744
+--> 5dd99ba423b3
+[2/3] STEP 3/4: COPY cooper/ ./
+--> Using cache 00e98cfa278613c81ee3f207f555361ae5e8f73b5b963a3aa7e28ce46d749b10
+--> 00e98cfa2786
+[2/3] STEP 4/4: RUN mkdir -p public && npm run build
+--> Using cache 66db5d18214313f6530b435bc8c1401f25231e62d8d4f7d95797d7aa343e2768
+--> 66db5d182143
+[3/3] STEP 1/11: FROM docker.io/library/node:24.22.3-bookworm-slim AS ejecutar
+[3/3] STEP 2/11: ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
+--> Using cache 13cfa8c80618d382a45b077be001105cad0ad40cf184765e4158a77d5edb606f
+--> 13cfa8c80618
+[3/3] STEP 3/11: WORKDIR /app
+--> Using cache 09818a6a5927f6763edbaeb980b050d8b61ff5277332d4a3a2666af9e28b8cd5
+--> 09818a6a5927
+[3/3] STEP 4/11: COPY --from=construir --chown=node:node /app/.next/standalone ./
+--> Using cache 7382cd65855cad445883ef2e48bff19a0f0643b8153d7076981a5439eac8e76d
+--> 7382cd65855c
+[3/3] STEP 5/11: COPY --from=construir --chown=node:node /app/.next/static ./.next/static
+--> Using cache 743c95116060f81bac6228f0e7e203058b3d20e45e4900ff76aa413eb83dcb3c
+--> 743c95116060
+[3/3] STEP 6/11: COPY --from=construir --chown=node:node /app/public ./public
+--> Using cache 3bd7cfde20976adbd80e823049bc0ce8bbff84aaf758cffd87e0ef7400cf3882
+--> 3bd7cfde2097
+[3/3] STEP 7/11: COPY --from=construir --chown=node:node /app/drizzle ./drizzle
+--> Using cache 1357d8f0e71273bff5d63bbd156003fc6ab99631266e948f8da70157ac497259
+--> 1357d8f0e712
+[3/3] STEP 8/11: USER node
+--> Using cache 5f5081efbfbec92e56967c333fd99536db10dde3c47328fd7c117d49a94a7a39
+--> 5f5081efbfbe
+[3/3] STEP 9/11: EXPOSE 3000
+--> Using cache 54a27f76faad5694f442eefb57aa5af3bc73a9ec782cafc9213dc313ae309f6e
+--> 54a27f76faad
+[3/3] STEP 10/11: HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 CMD node -e "fetch('http://127.0.0.1:3000/api/salud').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
+--> Using cache f7f72a14769502f8b17e186bb0457f23857e0f2e692da417e15224be174bdab3
+--> f7f72a147695
+[3/3] STEP 11/11: CMD ["node", "server.js"]
+--> Using cache f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d
+[3/3] COMMIT localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9
+--> f43ff6fa3760
+Successfully tagged localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9
+Successfully tagged localhost/cooper:reversion-1795274961625058712
+Successfully tagged localhost/cooper:9c6ff870794b8a6f31585e399fcf90ff966412e8
+f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d

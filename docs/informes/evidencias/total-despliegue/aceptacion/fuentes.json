@@ -1,0 +1,12 @@
+{
+  "commit": "cbf20685e07bf07566573825418d87799bed5ad9",
+  "contexto": "/home/david/Proyectos/cooper-wt/total-despliegue/cooper/.cache/total-despliegue-aceptacion/fuentes-5oito358",
+  "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+  "arbol_cooper": "d9adf99d2ec96575d1a6ac1a724654cfa144b082",
+  "ancestro_integracion3": true,
+  "transporte_sha256": "8d890bfca1979f62a9f6b246e3132e628b25607df2a49bcc71eadab38274a2f7",
+  "transporte_bytes": 98595634,
+  "imagen_config_local": "sha256:f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d",
+  "imagen_manifiesto_docker": "sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e",
+  "formato_imagen": "docker"
+}

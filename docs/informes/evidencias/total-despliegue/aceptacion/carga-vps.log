@@ -1,0 +1,2 @@
+Loaded image: localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9
+sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e|[CMD-SHELL node -e "fetch('http://127.0.0.1:3000/api/salud').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]

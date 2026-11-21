@@ -1,0 +1,53 @@
+test_failed_upgrade_restores_data_and_preserves_attempt (test_actualizar_solo_cooper.ScopedDeployment.test_failed_upgrade_restores_data_and_preserves_attempt) ... ok
+test_rejects_incomplete_maintenance_recovery (test_actualizar_solo_cooper.ScopedDeployment.test_rejects_incomplete_maintenance_recovery) ... ok
+test_rejects_other_image_before_stopping (test_actualizar_solo_cooper.ScopedDeployment.test_rejects_other_image_before_stopping) ... ok
+test_start_never_operates_factory_or_proxy (test_actualizar_solo_cooper.ScopedDeployment.test_start_never_operates_factory_or_proxy) ... ok
+test_stop_only_cooper_and_its_relay (test_actualizar_solo_cooper.ScopedDeployment.test_stop_only_cooper_and_its_relay) ... ok
+test_upgrade_and_rollback_rehearsal (test_actualizar_solo_cooper.ScopedDeployment.test_upgrade_and_rollback_rehearsal) ... ok
+test_conserva_datos_originales_y_reversion_con_migracion_aditiva (test_ensayar_migracion.MigracionTest.test_conserva_datos_originales_y_reversion_con_migracion_aditiva) ... ok
+test_no_acepta_perdida_de_filas_como_migracion (test_ensayar_migracion.MigracionTest.test_no_acepta_perdida_de_filas_como_migracion) ... ok
+test_importa_aislado_y_restaura_bytes_metadatos_y_filas (test_ensayar_n8n.EnsayoN8nTest.test_importa_aislado_y_restaura_bytes_metadatos_y_filas) ... ok
+test_no_admite_entrada_activa_ni_reutilizar_destino (test_ensayar_n8n.EnsayoN8nTest.test_no_admite_entrada_activa_ni_reutilizar_destino) ... ok
+test_rechaza_flujo_activo_cambio_ajeno_o_filas_modificadas (test_ensayar_n8n.EnsayoN8nTest.test_rechaza_flujo_activo_cambio_ajeno_o_filas_modificadas) ... ok
+test_completa_solo_con_ssh_y_dns_correctos (test_esperar_vps.EsperaTest.test_completa_solo_con_ssh_y_dns_correctos) ... ok
+test_dns_ajeno_o_mixto_impide_continuar (test_esperar_vps.EsperaTest.test_dns_ajeno_o_mixto_impide_continuar) ... ok
+test_exige_llave_y_host_conocido_antes_de_dns (test_esperar_vps.EsperaTest.test_exige_llave_y_host_conocido_antes_de_dns) ... ok
+test_no_conecta_sin_ip_o_con_ip_no_publica (test_esperar_vps.EsperaTest.test_no_conecta_sin_ip_o_con_ip_no_publica) ... ok
+test_timeout_no_aborta_la_espera (test_esperar_vps.EsperaTest.test_timeout_no_aborta_la_espera) ... ok
+test_propaga_configuracion_de_chat_whatsapp_y_texto (test_integracion.IntegracionTest.test_propaga_configuracion_de_chat_whatsapp_y_texto) ... ok
+test_avisa_recuperacion_tras_caida_del_transporte (test_monitor.MonitorTest.test_avisa_recuperacion_tras_caida_del_transporte) ... ok
+test_deduplica_y_avisa_recuperacion (test_monitor.MonitorTest.test_deduplica_y_avisa_recuperacion) ... ok
+test_edad_exige_restauracion_y_rechaza_futuro (test_monitor.MonitorTest.test_edad_exige_restauracion_y_rechaza_futuro) ... ok
+test_hmac_real_acepta_prueba_y_rechaza_alteracion (test_monitor.MonitorTest.test_hmac_real_acepta_prueba_y_rechaza_alteracion) ... ok
+test_no_alerta_durante_mantenimiento (test_monitor.MonitorTest.test_no_alerta_durante_mantenimiento) ... ok
+test_prueba_no_suprime_alerta_real (test_monitor.MonitorTest.test_prueba_no_suprime_alerta_real) ... ok
+test_rechaza_json_sin_esquema_sin_lanzar_excepcion (test_monitor.MonitorTest.test_rechaza_json_sin_esquema_sin_lanzar_excepcion) ... ok
+test_rechaza_vencido_codigos_ajenos_y_replay (test_monitor.MonitorTest.test_rechaza_vencido_codigos_ajenos_y_replay) ... ok
+test_recibo_filtra_datos_y_exige_fecha_y_snapshot (test_monitor.MonitorTest.test_recibo_filtra_datos_y_exige_fecha_y_snapshot) ... ok
+test_reintenta_notificacion_fallida (test_monitor.MonitorTest.test_reintenta_notificacion_fallida) ... ok
+test_restauracion_invalida_no_promueve_repo (test_monitor.MonitorTest.test_restauracion_invalida_no_promueve_repo) ... ok
+test_rsync_fallido_conserva_copia_vigente (test_monitor.MonitorTest.test_rsync_fallido_conserva_copia_vigente) ... ok
+test_salud_detecta_disco_copias_y_contenedor (test_monitor.MonitorTest.test_salud_detecta_disco_copias_y_contenedor) ... ok
+test_snapshot_mas_reciente_se_compara_por_instante_no_zona (test_monitor.MonitorTest.test_snapshot_mas_reciente_se_compara_por_instante_no_zona) ... ok
+test_workflow_solo_referencia_credencial_y_no_se_activa (test_monitor.MonitorTest.test_workflow_solo_referencia_credencial_y_no_se_activa) ... ok
+test_actualizacion_fallida_cierra_servicios_y_conserva_reversion (test_operar.CopiasTest.test_actualizacion_fallida_cierra_servicios_y_conserva_reversion) ... ok
+test_compose_incorpora_tunel_solo_si_esta_habilitado (test_operar.CopiasTest.test_compose_incorpora_tunel_solo_si_esta_habilitado) ... ok
+test_config_no_ejecuta_shell (test_operar.CopiasTest.test_config_no_ejecuta_shell) ... ok
+test_copia_detiene_relays_antes_de_los_contenedores (test_operar.CopiasTest.test_copia_detiene_relays_antes_de_los_contenedores) ... ok
+test_copia_incluye_adjuntos_conteos_y_hashes (test_operar.CopiasTest.test_copia_incluye_adjuntos_conteos_y_hashes) ... ok
+test_importacion_no_sobrescribe_instalacion (test_operar.CopiasTest.test_importacion_no_sobrescribe_instalacion) ... ok
+test_importar_pc_sin_caddy_prepara_volumenes (test_operar.CopiasTest.test_importar_pc_sin_caddy_prepara_volumenes) ... ok
+test_no_sobrescribe_destino (test_operar.CopiasTest.test_no_sobrescribe_destino) ... ok
+test_rechaza_enlaces_fuera_del_volumen (test_operar.CopiasTest.test_rechaza_enlaces_fuera_del_volumen) ... ok
+test_rechaza_origen_modificado_durante_copia (test_operar.CopiasTest.test_rechaza_origen_modificado_durante_copia) ... ok
+test_rechaza_permisos_de_secretos_abiertos (test_operar.CopiasTest.test_rechaza_permisos_de_secretos_abiertos) ... ok
+test_reinicia_servicios_tras_fallo_de_copia (test_operar.CopiasTest.test_reinicia_servicios_tras_fallo_de_copia) ... ok
+test_restauracion_rechaza_corrupcion (test_operar.CopiasTest.test_restauracion_rechaza_corrupcion) ... ok
+test_restauracion_rechaza_filas_ausentes (test_operar.CopiasTest.test_restauracion_rechaza_filas_ausentes) ... ok
+test_reversion_no_borra_datos_si_copia_no_es_valida (test_operar.CopiasTest.test_reversion_no_borra_datos_si_copia_no_es_valida) ... ok
+test_wal_contiene_transacciones_confirmadas (test_operar.CopiasTest.test_wal_contiene_transacciones_confirmadas) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 0.382s
+
+OK
