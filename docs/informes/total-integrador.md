@@ -24,7 +24,7 @@ Se compara ascendencia, `git cherry` y contenido. La historia de Sentinel fue sa
 
 ## Verificación y despliegue
 
-La [puerta completa final](evidencias/total-integrador/puerta-final.json) sobre el archivo Git limpio `4e029e7` terminó PASS a las 15:59 Lima: instalación, lint, tipos, 464 unitarias, 103 E2E, build y 235 pruebas de flujos; cero errores, advertencias u omisiones. La aplicación del artefacto e942 es idéntica. En ejecución: dos rondas completas Sentinel + Playwright con videos; pendientes su revisión técnica/visual y la posterior publicación y activación. Ninguna evidencia histórica se presenta como prueba nueva de esta combinación.
+La [puerta completa del corte anterior](evidencias/total-integrador/puerta-validacion-4e029e7.json) sobre el archivo Git limpio `4e029e7` terminó PASS a las 15:59 Lima: instalación, lint, tipos, 464 unitarias, 103 E2E, build y 235 pruebas de flujos; cero errores, advertencias u omisiones. El cierre tardío H19 encontró un defecto de capacidad real después de esa puerta; la imagen e942 queda sustituida. En ejecución: puerta y dos rondas completas sobre `b3e608e`, nueva imagen y ensayos con 1 GiB/swap0; pendientes su revisión técnica/visual y la posterior publicación y activación. Ninguna evidencia histórica se presenta como prueba nueva de esta combinación.
 
 Aceptaciones independientes ya terminadas:
 
@@ -45,6 +45,8 @@ Aceptación operativa final sobre la imagen `e942dc9`: migración 11→14, ocho 
 Últimos cierres integrados: helper WAL de Radar (`54b9ac7`) y cierres/documentación `d33b60c`, `2be2dc5`, `abb94c1`; las 189 pruebas operativas pasan. Los recibos históricos de esos cierres no sustituyen las aceptaciones nuevas de esta misión.
 
 La puerta sobre e942 terminó con 102/103 E2E: el selector Radar de la corrección anterior abreviaba «Ciencia cotidiana» como «Ciencia». `4e029e7` identifica la única región accesible que contiene el encabezado exacto, conservando la comprobación de estado visible. Se interrumpió la ronda paralela diagnóstica y se reiniciaron puerta y dos rondas desde un archivo Git limpio de ese commit. La aplicación y el artefacto e942 son idénticos; se conservan [fallo](evidencias/total-integrador/puerta-cierre-diagnostico.json) e [interrupción](evidencias/total-integrador/rondas-cierre-interrumpidas.json).
+
+La auditoría tardía incorporó `fd585f0`/`22ece8e` como `dce1b03`: reutiliza seis sentencias por transacción y evita el OOM/137 reproducido con 10.000 videos sin swap. Tres regresiones conservan aislamiento, 409, reversa, observabilidad y encolado. `b3e608e` integra además límites efectivos 1 GiB/swap0 en migración y Compose. 59 focales y 190 operativas pasan. Se interrumpió solo la ronda propia [conservando el diagnóstico](evidencias/total-integrador/rondas-validacion-interrumpidas.json) y se reinició todo desde archivo limpio `b3e608e`; ni e942 ni sus rondas se presentan como aceptación final.
 
 ## Limitaciones reales
 

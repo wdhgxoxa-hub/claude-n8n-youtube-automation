@@ -1,0 +1,19 @@
+{
+  "fecha_utc": "2026-11-21T21:04:26.054928+00:00",
+  "origen": "4e029e73f680435cd0814301457a03c6574b1cce",
+  "estado": "INTERRUMPIDO_NO_ACEPTADO",
+  "motivo": "Cierre tardío H19 confirma OOM con 10.000 videos sin swap y aporta corrección runtime integrada en dce1b03; aceptación reiniciada sobre b3e608e.",
+  "ultima_prueba_terminada": [
+    "108",
+    "movimiento-integrado"
+  ],
+  "fallos_hasta_interrupcion": [],
+  "rondas_iniciadas": 1,
+  "log_sha256": "be4dabce68775ac8c2821e4d8274a25950ceabeabd792bddb733245cca285561",
+  "interrupcion": {
+    "contenedor_propio": "cooper-integrador-rondas-validacion",
+    "stop_timeout_segundos": 20,
+    "terminacion_final": "SIGKILL tras SIGTERM sin cierre; rc137 provocado, no OOM atribuido a esta ronda"
+  },
+  "aceptacion_final": false
+}

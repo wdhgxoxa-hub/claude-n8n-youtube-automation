@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:02 (Lima).
+Última actualización: 2026-11-21 16:06 (Lima).
 
 ## Qué es
 
@@ -9,7 +9,9 @@
 
 ## Hecho
 
-- **21-11-2026, Lima — puerta completa de integración aprobada:** fuente limpia `4e029e7`, 464 unitarias, 103 E2E y 235 pruebas de flujos; instalación, lint, tipos y build también PASS, cero errores/advertencias/omisiones. Aplicación idéntica a la imagen e942 aceptada operativamente. Las dos rondas completas y sus revisiones siguen en curso; aún sin push ni activación de esta misión. [Recibo](informes/evidencias/total-integrador/puerta-final.json).
+- **21-11-2026, Lima — capacidad H19 incorporada tras cierre tardío:** corrección del OOM reproducido con 10.000 videos sin swap, seis sentencias reutilizables por transacción; regresiones de aislamiento, rollback, observabilidad y avisos aprobadas. 59 focales y 190 operativas sin avisos. Migración y Compose exigen 1 GiB/swap0; corte `b3e608e` en nueva puerta, dos rondas e imagen. El PASS anterior `4e029e7` queda histórico, no acredita esta combinación. Sin push ni despliegue de esta misión. [Seguimiento](informes/total-integrador.md).
+
+- **21-11-2026, Lima — puerta completa de integración aprobada:** fuente limpia `4e029e7`, 464 unitarias, 103 E2E y 235 pruebas de flujos; instalación, lint, tipos y build también PASS, cero errores/advertencias/omisiones. Aplicación idéntica a la imagen e942 aceptada operativamente. Las dos rondas completas y sus revisiones siguen en curso; aún sin push ni activación de esta misión. [Recibo](informes/evidencias/total-integrador/puerta-validacion-4e029e7.json).
 
 - **21-11-2026, Lima — adaptador efímero de copia final preparado:** reutiliza el bundle certificado, exige release `e942dc9`, siete servicios saludables y bloqueo compartido; crea snapshot etiquetado sin poda y acredita identidades/configuración/activaciones/versiones antes y después. 14 pruebas sintéticas más las 12 del wrapper aprobadas sin advertencias. Plan de réplica PC exige el mismo ID final antes de registrar el recibo. Implementado y probado localmente, sin ejecutar en VPS; pendiente de la secuencia aceptada app→infra→n8n. [Informe](informes/total-integrador-producto.md#novena-revisión-adaptador-efímero-de-copia-final).
 
