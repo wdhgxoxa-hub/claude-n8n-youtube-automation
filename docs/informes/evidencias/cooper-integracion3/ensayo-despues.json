@@ -1,0 +1,9 @@
+{
+  "integridad": "ok",
+  "claves_foraneas": 0,
+  "migraciones_antes": 8,
+  "migraciones_despues": 11,
+  "tablas_previas_conservadas": true,
+  "tablas_comprobadas": 21,
+  "migracion_repetida": "idempotente"
+}

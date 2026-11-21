@@ -1,0 +1,769 @@
+{
+  "herramienta": "Sistema Sentinel API local",
+  "modulos": [
+    {
+      "nombre": "recorridos",
+      "hallazgos": 4
+    },
+    {
+      "nombre": "caos",
+      "hallazgos": 0
+    },
+    {
+      "nombre": "estabilidad",
+      "hallazgos": 0
+    }
+  ],
+  "medidas_caos": [
+    {
+      "url": "http://127.0.0.1:36029/",
+      "acciones": 347,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/marcas",
+      "acciones": 348,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/canales",
+      "acciones": 162,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/canales/demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+      "acciones": 346,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/videos",
+      "acciones": 0,
+      "fps": [],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/videos/ede75522-c06a-4f7b-9288-77a86842a0ad",
+      "acciones": 343,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/publicados",
+      "acciones": 248,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/aprendizaje",
+      "acciones": 345,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/avatares",
+      "acciones": 342,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/perfil",
+      "acciones": 342,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/admin",
+      "acciones": 339,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/radar",
+      "acciones": 248,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/rutina",
+      "acciones": 181,
+      "fps": [
+        61,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/redes",
+      "acciones": 340,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/referencias",
+      "acciones": 257,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/cuentas",
+      "acciones": 169,
+      "fps": [
+        60,
+        60,
+        60,
+        61,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/programados",
+      "acciones": 180,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/decisiones",
+      "acciones": 96,
+      "fps": [
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/incidencias",
+      "acciones": 81,
+      "fps": [
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/avisos",
+      "acciones": 153,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/admin/fabrica",
+      "acciones": 338,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/redes?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+      "acciones": 240,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/rutina?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+      "acciones": 177,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/cuentas?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+      "acciones": 241,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/canales/demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+      "acciones": 331,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/redes?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+      "acciones": 174,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/rutina?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+      "acciones": 331,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/cuentas?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+      "acciones": 149,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/canales/demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+      "acciones": 329,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/redes?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+      "acciones": 328,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/rutina?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+      "acciones": 243,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/cuentas?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+      "acciones": 95,
+      "fps": [
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/canales/demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+      "acciones": 323,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/redes?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+      "acciones": 321,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/rutina?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+      "acciones": 272,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    },
+    {
+      "url": "http://127.0.0.1:36029/cuentas?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+      "acciones": 136,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    }
+  ],
+  "pantallas": [
+    "/",
+    "/marcas",
+    "/canales",
+    "/canales/demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+    "/videos",
+    "/videos/ede75522-c06a-4f7b-9288-77a86842a0ad",
+    "/publicados",
+    "/aprendizaje",
+    "/avatares",
+    "/perfil",
+    "/admin",
+    "/radar",
+    "/rutina",
+    "/redes",
+    "/referencias",
+    "/cuentas",
+    "/programados",
+    "/decisiones",
+    "/incidencias",
+    "/avisos",
+    "/admin/fabrica",
+    "/redes?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+    "/rutina?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+    "/cuentas?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciencia",
+    "/canales/demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+    "/redes?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+    "/rutina?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+    "/cuentas?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciencia",
+    "/canales/demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+    "/redes?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+    "/rutina?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+    "/cuentas?canal=demo-be9736ce-499d-4d2f-9aac-9c86379ba810-ciudad",
+    "/canales/demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+    "/redes?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+    "/rutina?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad",
+    "/cuentas?canal=demo-338271f0-d0e5-4381-816b-0395b9ea8ae9-ciudad"
+  ],
+  "hallazgos": [
+    {
+      "tipo": "cobertura",
+      "gravedad": "info",
+      "titulo": "Vista sin URL propia: solo la revisa recorridos",
+      "modulo": "recorridos",
+      "lugar": "http://127.0.0.1:36029/",
+      "reproducir": [
+        "Abrir http://127.0.0.1:36029/",
+        "Pulsar «Fábrica (10)»"
+      ],
+      "evidencia": [
+        "evidencias/recorridos/02-F-brica-10.png"
+      ],
+      "detalle": "Al pulsar «Fábrica (10)» cambia el contenido pero no la URL: los demás módulos no pueden abrir esta vista por ruta."
+    },
+    {
+      "tipo": "cobertura",
+      "gravedad": "info",
+      "titulo": "Vista sin URL propia: solo la revisa recorridos",
+      "modulo": "recorridos",
+      "lugar": "http://127.0.0.1:36029/marcas",
+      "reproducir": [
+        "Abrir http://127.0.0.1:36029/marcas",
+        "Pulsar «Aprendizaje»"
+      ],
+      "evidencia": [
+        "evidencias/recorridos/06-marcas-Aprendizaje.png"
+      ],
+      "detalle": "Al pulsar «Aprendizaje» cambia el contenido pero no la URL: los demás módulos no pueden abrir esta vista por ruta."
+    }
+  ]
+}

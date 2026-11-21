@@ -1,0 +1,1133 @@
+{
+  "fecha": "2026-11-21T14:53:12.976Z",
+  "clips": [
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/recorrido-completo-1440.webm",
+      "bytes": 11007330,
+      "sha256": "2a9f04782b74f3a19ebc82f41575454bad87a14aef9d8f62d48fca89c1afd250"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/recorrido-completo-390.webm",
+      "bytes": 6169134,
+      "sha256": "3d154bc5e8e18fa86880494626a6302685ebd8adfbaea1b8d5312ef9e3829d4c"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/recorrido-completo-1440.webm",
+      "bytes": 10877918,
+      "sha256": "6da04522c904b7e442bea9d7bdf8f18467077952e0238cd3e4ecfd142d5badc9"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/recorrido-completo-390.webm",
+      "bytes": 6121229,
+      "sha256": "11513cd79e50788aba5967655ad4d057623f4e3d02553bac33afd666de286494"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-00-entrar.webm",
+      "bytes": 664456,
+      "sha256": "d163570ec126ac7a23e802e7ee0e2e24301826a039f11a914bb531f77600583d"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-01-inicio.webm",
+      "bytes": 1033440,
+      "sha256": "f383f378983427519b6d1fa701bfba7bc97e39aa1b324b79c8ad4f34bd18882a"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-02-marcas.webm",
+      "bytes": 1599359,
+      "sha256": "1c2473499b1a104d3761573937c16c198a05ca0583756e45b6f6e3094af9bb80"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-03-canales.webm",
+      "bytes": 1136386,
+      "sha256": "035a03f3ed56c30691ea04f7852c39e273b5bc523c46be81be83fc672782dc8c"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-04-canales.webm",
+      "bytes": 1184684,
+      "sha256": "4b7270542e391ed586bd1f7779a4db0d911eeb7923d9db2156dd550cfc245065"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-05-radar.webm",
+      "bytes": 1251243,
+      "sha256": "9d4f6aab2353b20772afdedecd2a67f4dbfbc2ca58320cf67eaed24c9d5d62a2"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-06-rutina.webm",
+      "bytes": 1246568,
+      "sha256": "3822837c4ff625a30fa1923aa8328b5018294f02cc3261e06bd73c14d731f2ce"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-07-redes.webm",
+      "bytes": 1620060,
+      "sha256": "c7df22f4cb3aa31f90a1cfd53a2908fe962393b951d57f4a8c6f5a042263fd8c"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-08-referencias.webm",
+      "bytes": 1096204,
+      "sha256": "374b4b3207e4eaf251196b34a1aae0f254c39a5c3d0cd7779cc70cd941ad34ba"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-09-cuentas.webm",
+      "bytes": 1278062,
+      "sha256": "4303d1bcc4e2cb068f3e5bf90b550c9519d5b80c2678c48f8741c66ff981d0f8"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-10-programados.webm",
+      "bytes": 974227,
+      "sha256": "ab143a30212ed3009eb26224404746fe90436ad41c117e0549f6549cd8188b68"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-11-decisiones.webm",
+      "bytes": 887118,
+      "sha256": "f75ac62f53e0ec47d4d7d2849ceb4effe2c781eba2ee6b5cb8cc38c515e7b97a"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-12-incidencias.webm",
+      "bytes": 884735,
+      "sha256": "5fafa2d81e195fef619a836b7cc61263d5c6e549aaed543392d7f3963f32b17c"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-13-avisos.webm",
+      "bytes": 923369,
+      "sha256": "80e77beb6b8740810f40a03dae5201af53ac8ca88383c5530a09d749ae6bf706"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-14-videos.webm",
+      "bytes": 1111731,
+      "sha256": "be8b4c03f27eae8691425972d1fa45b600fe4ae78ac43dd7ef84926916b4b5f0"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-15-videos.webm",
+      "bytes": 1247366,
+      "sha256": "2b1360bf47bb45a0bdf36a56af5c8b65b7b3ffc1593a073bf0d444eff7377cb6"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-16-publicados.webm",
+      "bytes": 1176278,
+      "sha256": "f22f507724b4a7bb1a84e03b9b5494252db79348096b41439ec17208c7ccb9e8"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-17-aprendizaje.webm",
+      "bytes": 1542216,
+      "sha256": "3d75edc98c14c8cde4bd89d8c422546869d3dec4fc849e1474cf5499a809746c"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-18-avatares.webm",
+      "bytes": 1181591,
+      "sha256": "7957e6d112813e63f796f3fdff88473e517258ff0d44c8112b93fb7842178343"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-19-perfil.webm",
+      "bytes": 930982,
+      "sha256": "105aa3dc7d72ab97c291aed4e8ed2303688eb4b535d5288d83a05dec4d406344"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-20-admin.webm",
+      "bytes": 970605,
+      "sha256": "1aa3278a88b2655d529f04f83495858025d82af063e928588216dd70838d8215"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-claro-21-admin.webm",
+      "bytes": 1203236,
+      "sha256": "8e0e6e98ed439cebb8802472facef6069f5c3f28ef6e133a2ef87d4d3fc8d87d"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-estados.webm",
+      "bytes": 605319,
+      "sha256": "e8561a802069ae171ce50c72dc02f01007bc6a9dcad937a9ca1c2ff53357ef55"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-interacciones.webm",
+      "bytes": 4136455,
+      "sha256": "83d2eb93655a21ae01c0993fc728d69917024955c1518b73f987b2d960938252"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-00-entrar.webm",
+      "bytes": 665478,
+      "sha256": "8e3b2399f41d85766c7c77446c84980a62d3389556773be04528a32b0947d26e"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-01-inicio.webm",
+      "bytes": 909582,
+      "sha256": "9c4ea173f7bcc1076e622a3cc8f4135e562685155b7fe6e6005d6957c1be9a2e"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-02-marcas.webm",
+      "bytes": 1510805,
+      "sha256": "18069be787702a756d17d557077a420be083536eb4b97b9fea45ab2267dec9a0"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-03-canales.webm",
+      "bytes": 1024131,
+      "sha256": "e56cc2294e78771e44110c2dc7173a97e33a0dba9896163a8e5931d097f34ee2"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-04-canales.webm",
+      "bytes": 1033240,
+      "sha256": "d87fc230c954ceaafd4f691d564274245f72390a8478d7c946b40d9a9ebb563b"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-05-radar.webm",
+      "bytes": 1039890,
+      "sha256": "c0d8338fcf74f573a6103cf0091a64df0747ddc0cf54d1416d1f7da80851e201"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-06-rutina.webm",
+      "bytes": 1149423,
+      "sha256": "282a2b3baa436b912de12469866d6aba4ba76fc55a9f772490565a418e08b048"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-07-redes.webm",
+      "bytes": 1361008,
+      "sha256": "3b916a3593dd99395e21f8a70cca0aa26f1e324acccdde8132c27047b8f2971b"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-08-referencias.webm",
+      "bytes": 987008,
+      "sha256": "f0fea8eb39e0e2b0d39bf074e5dc9d196076bf1e27e24bde970b5f3e2a0d58e5"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-09-cuentas.webm",
+      "bytes": 1189157,
+      "sha256": "7263b9683db9a0870f652538b0cb42f4d0bbb1cb78481a81a14f87d6025817d0"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-10-programados.webm",
+      "bytes": 844102,
+      "sha256": "a2f5de9242eca21bbc7640f5a802883991a04ae62711dd7ed1fc270dd776f581"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-11-decisiones.webm",
+      "bytes": 803598,
+      "sha256": "a0aa94352ffc1d6d184063c0c1d6ef4f2faebd1b1016d1034d525bc258c65e9e"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-12-incidencias.webm",
+      "bytes": 778130,
+      "sha256": "211a0c15bfab127eb4becce21ab2b2364e126371de75c9c9e0e3ec89ae6ceeb9"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-13-avisos.webm",
+      "bytes": 804558,
+      "sha256": "c60ae672d40bfeef6d3057710d0536f824dbe1d45d769644bfc44a2319331617"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-14-videos.webm",
+      "bytes": 922115,
+      "sha256": "388bd7d43d007a922c772362909dcf1492272043cb9b23dca50b54277f9e20fd"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-15-videos.webm",
+      "bytes": 1188401,
+      "sha256": "b01f22ba73186ff690383cc2a3aead9aefe9bb8d7f32b377621982c5e2d4e3c2"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-16-publicados.webm",
+      "bytes": 1114845,
+      "sha256": "e0b174d81fd18314d5e6d2472da30da12b4f605cbb714306023800b13340311a"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-17-aprendizaje.webm",
+      "bytes": 1474260,
+      "sha256": "690823583350d7f4b0449dab882d657e7c56b232fb504b5fbc1f3917ecf6101d"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-18-avatares.webm",
+      "bytes": 1061421,
+      "sha256": "1ba809cd8e10bf51f175de042cf6a4c015a06baf1e5669b9a6744b3ba6ffce57"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-19-perfil.webm",
+      "bytes": 782631,
+      "sha256": "2439df0f6dd734bd44d0120e137cddea80e4c20bbea77d39ae0a72de8a4f11e4"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-20-admin.webm",
+      "bytes": 915501,
+      "sha256": "116be25bf1da44e584bd8890f8f4e1202202ddae561f8f90373e84e6b485709b"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/1440-oscuro-21-admin.webm",
+      "bytes": 1118353,
+      "sha256": "bbce7e52e4c3f48c44525cc40b0cd77ac017fa1514003206d18438f53e07efbd"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-00-entrar.webm",
+      "bytes": 422118,
+      "sha256": "914486db2822430372c5cc484fbc1bb69a94396b97ca2eb211b8b4785df3d352"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-01-inicio.webm",
+      "bytes": 476960,
+      "sha256": "f1cbbbb2852a0deb403f6240fe08e2aed176f17a5633e6fb2fd04a7692390b7a"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-02-marcas.webm",
+      "bytes": 887325,
+      "sha256": "1957c0f7f366fabcd68b25a1b3ad6284b02abf8b36d5fb69c8dc3b277adcb077"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-03-canales.webm",
+      "bytes": 691864,
+      "sha256": "131702bf33578a05692887701d6cf2c10ccbeedc8996053017c8b032bb892fb3"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-04-canales.webm",
+      "bytes": 695647,
+      "sha256": "248aeb375cd464ab8a76afb910d76e893a0b86f229754afaec69a2c9eae813c9"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-05-radar.webm",
+      "bytes": 792182,
+      "sha256": "047bf369f787ac505b57e9a5e29ea60379b0390149fe9e6d3e985ff9a6d73610"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-06-rutina.webm",
+      "bytes": 730408,
+      "sha256": "d4438e65900006e60806b4fdf9ae4512e93ceb77eb4099264a6aaa40349d7f20"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-07-redes.webm",
+      "bytes": 784735,
+      "sha256": "2475a326b6febe91a52005a9494608ffa796063c98f05901659b97a7d524dc32"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-08-referencias.webm",
+      "bytes": 768454,
+      "sha256": "daf5f3e77ce93c9102463d18c7182687f0c7554f6492012f7da1e2212d493bcc"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-09-cuentas.webm",
+      "bytes": 748995,
+      "sha256": "e139187952b81d780b532876a0ef324c781c44cf7c1c8c9c109f5ee72a37c5e9"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-10-programados.webm",
+      "bytes": 647871,
+      "sha256": "d5abc5b4b9f03d52355a373683607b98bb5bc33f3966c803b2b50d09d057e4a6"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-11-decisiones.webm",
+      "bytes": 576967,
+      "sha256": "299a46373ddec2bf0d0852665bfc51a1a0fa9f5a51e4c8ab4b734a3062638478"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-12-incidencias.webm",
+      "bytes": 540538,
+      "sha256": "41af2e1a709423a8493a1e973091868d4620ed967aee36d6b563d034251bc640"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-13-avisos.webm",
+      "bytes": 513331,
+      "sha256": "43ffd55aaf8844f8262289ba2f160ff303edab1880a96647f16f6d82186052b8"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-14-videos.webm",
+      "bytes": 611275,
+      "sha256": "78dee224911afe75131e2c51a74bbe43c35bd457b2b81eab46ca2154e9da490b"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-15-videos.webm",
+      "bytes": 775976,
+      "sha256": "f34ebd986130f4b725595660091f2fccaedd5401c0b752d67f13325993f45e3e"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-16-publicados.webm",
+      "bytes": 682702,
+      "sha256": "56b6faf524c8c139af5cf6b7d148f976b8ce35b1ec389d1aa2fc3c845d4b4f55"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-17-aprendizaje.webm",
+      "bytes": 978146,
+      "sha256": "906e583ad87593226c210758deb6000d81853d730a8004b5c789c2da1412beb5"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-18-avatares.webm",
+      "bytes": 664409,
+      "sha256": "c76feed326a2c2d778dff4aed51c6458932d5bd0c97f7626493abd301ea946d3"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-19-perfil.webm",
+      "bytes": 446126,
+      "sha256": "b6f4e41ee5fd4b047cae885ea1039a133e3f14041bcbdc809f575c168cd3f489"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-20-admin.webm",
+      "bytes": 611330,
+      "sha256": "bb5e1d75e70913f49008e54e0485c1ecd731aa4e58bb4f51c11571d10bba8653"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-claro-21-admin.webm",
+      "bytes": 720926,
+      "sha256": "47b3f8722e52563b9ea598a1854b7029ddd6ca5f4cae68473edd87ffaa323741"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-estados.webm",
+      "bytes": 272541,
+      "sha256": "951754fbb40d767698773a47cb56a0547423a93e68ce4363f79485194119bda9"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-interacciones.webm",
+      "bytes": 1932733,
+      "sha256": "80956b55c3de679776c8001acdee569b86ce32c1271acda2c3f19fcabef7ae1b"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-00-entrar.webm",
+      "bytes": 429943,
+      "sha256": "af161e152834154a7528eec024d1a24f91c367d33f81c36ca94ef449aee20303"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-01-inicio.webm",
+      "bytes": 432354,
+      "sha256": "0f146b59f6c70371db930d4177a3fdcdcd3e1cb1b0507130792131478037b891"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-02-marcas.webm",
+      "bytes": 846878,
+      "sha256": "b27c56e8b0f73424edfd3062ffab06788d769d2cd573a5f50576ce08b6978f04"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-03-canales.webm",
+      "bytes": 657402,
+      "sha256": "0587cce9d40722e330a0accc48115f359ea38f03ad4a105bde1398a498294e44"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-04-canales.webm",
+      "bytes": 619385,
+      "sha256": "bd769970582a3055d29a8b92d0704321e30bb5330d8b26d16caa9f71f74dbe3b"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-05-radar.webm",
+      "bytes": 726316,
+      "sha256": "f0df3a392439abfbed6c9e831353c444a5dbc16e0ca1bfed54b83de1ef36f617"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-06-rutina.webm",
+      "bytes": 686056,
+      "sha256": "d2e416ad02666f97649121280df46e4e4c7117198c7e0f78534f3099f8936486"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-07-redes.webm",
+      "bytes": 810357,
+      "sha256": "f4f1a2443951d11b920b5d96cbc42c6db11312db40661f02bd9402c360dfbb59"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-08-referencias.webm",
+      "bytes": 716455,
+      "sha256": "c7f3aca8256a1856c3be736a48a83c1c2fd7d02af79cae783ed5322b7fa3d925"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-09-cuentas.webm",
+      "bytes": 716005,
+      "sha256": "a95958885559432b8dbe28e1a07ed946bad071f09d16c5bcf99188bc4793c926"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-10-programados.webm",
+      "bytes": 584118,
+      "sha256": "d61b2e711b9d9c876d3579d76f8164793b89f164ebaefb43ce3afb1fcb36e3a9"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-11-decisiones.webm",
+      "bytes": 546027,
+      "sha256": "2ee2366baad98f07ef142da5e2ed4f9449059b02627e1bfff6360932ad6ab048"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-12-incidencias.webm",
+      "bytes": 523395,
+      "sha256": "77d80911ef69991202c242dce36202725d1909511cc161cf44c5af032bc5559a"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-13-avisos.webm",
+      "bytes": 500898,
+      "sha256": "86ee563e68569aa01660d226259d56810b1fb22886d2ad3bb4c4e6130850f3d7"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-14-videos.webm",
+      "bytes": 567631,
+      "sha256": "4c911cc099e549036f4a0cc89c93f2e4cf3f9cf459715549474fbabccefdf3dd"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-15-videos.webm",
+      "bytes": 725911,
+      "sha256": "3ec23f4eb1fef9594fb6e97e68e2354eaefa2dcf63443356ec843241b39db857"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-16-publicados.webm",
+      "bytes": 629691,
+      "sha256": "3ac48229e7e8655f49631c8836e279cc2a2af2e93ce0f4116b0126e9510f4751"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-17-aprendizaje.webm",
+      "bytes": 958134,
+      "sha256": "e2431866e7639c3f9b66ad39a3f72e2234b421e0d9452f689b3933a085765f36"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-18-avatares.webm",
+      "bytes": 639824,
+      "sha256": "9302fb92cb9e7f0ac3cefc805b5919bdf4ff246e40cf42917f244436f67b1854"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-19-perfil.webm",
+      "bytes": 412581,
+      "sha256": "27ea15bf478a8e5d7c584b6a2760b91f10bddbe03bd1dff0470734db01fba41d"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-20-admin.webm",
+      "bytes": 579174,
+      "sha256": "fb7a42ad22729b851e64aa47262fca20fff4d8aff324da20ec48d80b5b1a02dc"
+    },
+    {
+      "ronda": "ronda-4",
+      "archivo": "ronda-4/390-oscuro-21-admin.webm",
+      "bytes": 695936,
+      "sha256": "1d6cbf12283528e7685a62f68576580f28e0329fa3bea09d0e16ec4c2afbfbaa"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-00-entrar.webm",
+      "bytes": 671251,
+      "sha256": "897b203a434108e99733ebeccaeaa8d299fc001bde489c59b8af08aadb13fc37"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-01-inicio.webm",
+      "bytes": 942658,
+      "sha256": "5d557c3df363955993c6a5e5d01ca921eda8a2b08883015dda88e15cc991ff1e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-02-marcas.webm",
+      "bytes": 1578671,
+      "sha256": "a4e9bbaf9ea2d6764abf1f8d41085e14d76cd4dd1db5a890e626a2e4c268d680"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-03-canales.webm",
+      "bytes": 1126541,
+      "sha256": "b74e5b648aaa181e963a027463ba9b140101dfe1d10dc8087bffc278dd1fc852"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-04-canales.webm",
+      "bytes": 1195139,
+      "sha256": "071c48541c05b78e60954055cea87a9a59eb03ce6e0ce418285f5867dac3e2d4"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-05-radar.webm",
+      "bytes": 1424607,
+      "sha256": "b73d3fcf9e44f1bed80ccaca5657203f69e1c2c11c833c058ab69085655dbc8e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-06-rutina.webm",
+      "bytes": 1255681,
+      "sha256": "37deea9cacfefa576a88537be2eebd7248be12df32ce78b71e39e97af326c292"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-07-redes.webm",
+      "bytes": 1426779,
+      "sha256": "dc2a60c0b23ab67ef5b0011d43b77ba85d8a2680b3b59fcb800662fdd78db3e4"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-08-referencias.webm",
+      "bytes": 1271928,
+      "sha256": "907c797f7b2c5b524e4d48ead950dc121b3fc8149451a3907df2ef4e6b592ec7"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-09-cuentas.webm",
+      "bytes": 1286697,
+      "sha256": "aea0584f41524348322f98d67728a7f36e18d30ab6809ceafd68cb574fe80e97"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-10-programados.webm",
+      "bytes": 1002148,
+      "sha256": "20bd1b22ffafe8988da6bb55a4a8cc139e8f1362334c359db8c3a426d095d9ab"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-11-decisiones.webm",
+      "bytes": 908507,
+      "sha256": "3ec01fb7fc86e8c06a1ed5e22453fd6580ac95c33ad784fa556eb2ab602c14b6"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-12-incidencias.webm",
+      "bytes": 893594,
+      "sha256": "1c16a04c5a5cf4a254a6ae14101bf2e69ae98df617b1ac66abbf123b4eea3a39"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-13-avisos.webm",
+      "bytes": 890169,
+      "sha256": "bca909067228837f8570cf7de9f08284170778b15412e5e29bd42d0d6cc50147"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-14-videos.webm",
+      "bytes": 1079335,
+      "sha256": "ee399d5aace36cb7e1f88bb1943d25eb894f22dc258858e38294c49279ed22f9"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-15-videos.webm",
+      "bytes": 1346660,
+      "sha256": "0834d181d366c4ed2eb1b1d98edabbc8ddcadda3d0a7a866432a15e03f0d4196"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-16-publicados.webm",
+      "bytes": 1243467,
+      "sha256": "48e75b2d387ba673b4c37ee832909c450abd1da8a77983e1bb231e163d5e012a"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-17-aprendizaje.webm",
+      "bytes": 1542326,
+      "sha256": "664a07f0bae9088435f594a163585765f533af2cf03901af0ed65058e744f12c"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-18-avatares.webm",
+      "bytes": 1176268,
+      "sha256": "54fcf7b6bc445609111e821032620aa014aafb30e895102c53928c49924bb4ef"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-19-perfil.webm",
+      "bytes": 930357,
+      "sha256": "0559279aeb5122f54771b8ac11e2e9f1e21e5a29edc009e47f0dea098cbf55ec"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-20-admin.webm",
+      "bytes": 1067832,
+      "sha256": "027d8c3ae48605aa36170884e61233fcd5dfb17a8e58d940a801555dcebf4531"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-claro-21-admin.webm",
+      "bytes": 1195369,
+      "sha256": "f0c90362c6f4258835c5841150c91d25c61f14728ec1c6ec0b9b73643042f1b7"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-estados.webm",
+      "bytes": 480775,
+      "sha256": "4551c682495b3c7b57a8808e5818a16da68f1f34f72503bc0f30c9ecfc9b1285"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-interacciones.webm",
+      "bytes": 4152495,
+      "sha256": "8d701034387438fc61140c0bb32063d8786832eeb7eebe91a86669e0efe7ffc4"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-00-entrar.webm",
+      "bytes": 686584,
+      "sha256": "4306b3a13d3b2a055bc214188dc5e6bf13d8a1f45313648c9b1d0fd8f67d179a"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-01-inicio.webm",
+      "bytes": 883493,
+      "sha256": "a9bc648a05bdd94b4ddf73d60369683eb0ea2946e77ca1110cfa713f6a5b8ab1"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-02-marcas.webm",
+      "bytes": 1457927,
+      "sha256": "d5de026867ae8c0ec6579ed91400d69aa8b5355af24a5d33c36e460cd656f7e8"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-03-canales.webm",
+      "bytes": 1030595,
+      "sha256": "f9853f1f6f6064c908fc67a18de99898d086e01fd822bcc595cefccae32099b6"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-04-canales.webm",
+      "bytes": 1006061,
+      "sha256": "ee7abe0c8d904fec1ca26e8f32e09a97d84bc534e8fabf32a62b879f83b6e32f"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-05-radar.webm",
+      "bytes": 1042674,
+      "sha256": "432acb19efe29d001605838fbf8c0ada04635d83695ac34911528e39c6eb65ab"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-06-rutina.webm",
+      "bytes": 1109478,
+      "sha256": "60aaf1d344a12a700bdd89632250a00da3f080e77419a96b616fea7dafeae3f4"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-07-redes.webm",
+      "bytes": 1307628,
+      "sha256": "9d35428788dfee6f3a136099011ad7c368e3eba9609f8e61db0cd64c234ded1d"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-08-referencias.webm",
+      "bytes": 977584,
+      "sha256": "ba1c6e66192f3a1ccdc1abd79e43ff307eb6663e166cbd97d6e6095ba9bfd788"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-09-cuentas.webm",
+      "bytes": 1122909,
+      "sha256": "77e5ee1bc2830f22486485778a9f833bfbc283262514fae28edd68d1fce2db87"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-10-programados.webm",
+      "bytes": 834789,
+      "sha256": "1fa7820678b89a55a74d7f6b38eb826bacfce119a0e5b821ca07f8704ce5742e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-11-decisiones.webm",
+      "bytes": 778610,
+      "sha256": "5604c57b69e1d14d7b7e454330557d2bb04abc7815cc652107a0145a008d6570"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-12-incidencias.webm",
+      "bytes": 826693,
+      "sha256": "18ca981ffe6accef071d3472ae4a4591d339deec0eebf37c675ecb439320b20c"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-13-avisos.webm",
+      "bytes": 795656,
+      "sha256": "c562d47319c6c192a9f6ba304c4716bb668a9b6b41fb47fe9a400f8a768253e7"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-14-videos.webm",
+      "bytes": 992118,
+      "sha256": "4e788135dec36304c57176c0262f93368ef5100b526a916168d1437e1e2a7538"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-15-videos.webm",
+      "bytes": 1220416,
+      "sha256": "9ae8d61c6a62fe4b63f22a78dee352e6945fb4b031185e50a5c825edac904ed5"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-16-publicados.webm",
+      "bytes": 1159629,
+      "sha256": "f20c00de55ad7a661a3d78c9b14cc20f24b87d6c69a6e15052c7d5c03f73c187"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-17-aprendizaje.webm",
+      "bytes": 1556590,
+      "sha256": "8f72e19f7886dc034e1cf69588c6b2287bbb002d7d6815fcfd7daf064a644455"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-18-avatares.webm",
+      "bytes": 1073532,
+      "sha256": "e1d7b4f22117175e28cabb18ac6f759c23dc8ca4c43ae05195eadf6ca0c7a935"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-19-perfil.webm",
+      "bytes": 776754,
+      "sha256": "b1c6faec8b47298897438c5e1b686661c10fff1e49c9bcd93f78cd8760701070"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-20-admin.webm",
+      "bytes": 912287,
+      "sha256": "1338659d79bcd889f605fa79ef42f85663113d4ba8a401e57a0e4e8fe590b371"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/1440-oscuro-21-admin.webm",
+      "bytes": 1053958,
+      "sha256": "f6b6e7961eca7c479428a70be16aa59c09dbd48e9821198b8cf4e7139ff4e68b"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-00-entrar.webm",
+      "bytes": 448116,
+      "sha256": "a450f3ac306c18c0ee85acae67453b351041f1efae66a336e55d897e209de72e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-01-inicio.webm",
+      "bytes": 473615,
+      "sha256": "3c0a78d41796656e3645f5e780c84d4afab942de5b54808c8a55a8012b2d824b"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-02-marcas.webm",
+      "bytes": 775062,
+      "sha256": "8ceb9f969fba9e4e6917892f0f0ca035870af92f8fc036e96d96f43de670da0e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-03-canales.webm",
+      "bytes": 702880,
+      "sha256": "a598f60fd6126e95531217f99e9c0d41211fd321bc166894a6bbfe6f75961972"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-04-canales.webm",
+      "bytes": 760875,
+      "sha256": "b3029b5c5aa5fc577a10823e0ba2515a7dd8e792450529e6c77a5a87981e93c8"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-05-radar.webm",
+      "bytes": 781218,
+      "sha256": "6070703438a504a64c5c78095e4554c54e7f777799f486ffba3c0be062c7de1c"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-06-rutina.webm",
+      "bytes": 728850,
+      "sha256": "993135f1aac77f3ff5c11957373c97ae5edfdea47ed9df754fa08a9b02de8f41"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-07-redes.webm",
+      "bytes": 711380,
+      "sha256": "36a447cef7505abbae1225dd0ea46f1eca1100174456251f8a818f102fd49aa7"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-08-referencias.webm",
+      "bytes": 751227,
+      "sha256": "ccf88fe7f73931ea154982f8b5126e08978e63412bd1296988a4b6af132f2eab"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-09-cuentas.webm",
+      "bytes": 713277,
+      "sha256": "72e7247a725bd244df6cf84aa3abb5596c407ea3cc86fb6844b9993dea46ba2d"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-10-programados.webm",
+      "bytes": 651124,
+      "sha256": "46fcaa47558e75ef1c40651887b0046a9f1f13ed10ac3c565dd0920e53f5810b"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-11-decisiones.webm",
+      "bytes": 578959,
+      "sha256": "eecba0c83d78620f62571c2e573f53f11d58d4bf74c2cad46ee966312b23d0c6"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-12-incidencias.webm",
+      "bytes": 547356,
+      "sha256": "aba5632e5173073aa924a28311d0c3a3fc8a780243c51fb71240288c32b3ce89"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-13-avisos.webm",
+      "bytes": 526372,
+      "sha256": "bf324242821ec7b3d6a1791c547aad586f099571a78fd73b73f86713122182d9"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-14-videos.webm",
+      "bytes": 640182,
+      "sha256": "d8724dfd1e90b70dc6054a26d9efe6106c00f4d11c92db5d2dc4db2ca801144d"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-15-videos.webm",
+      "bytes": 740049,
+      "sha256": "b45fcc1ec715d1043e0daa8f1ff07ddb539b9a705627eac21ef3005231a98963"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-16-publicados.webm",
+      "bytes": 670315,
+      "sha256": "3d551ca02428032a2cfad032d8f7251f719e829dfec465740f18c2c5c030b47f"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-17-aprendizaje.webm",
+      "bytes": 979517,
+      "sha256": "c1394df42a2df876084780bfdde65436b079c18b2c8c269f4c36670046e9b292"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-18-avatares.webm",
+      "bytes": 661369,
+      "sha256": "b7acf794597ac9190fa69cbd5ec0e7fbf3c4c74ee737ddea686ddacad10a43d8"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-19-perfil.webm",
+      "bytes": 401335,
+      "sha256": "5a143fe835bcd87fdc0566b28557cccc4a735a9f14fac163db7328cd1b8ad4ad"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-20-admin.webm",
+      "bytes": 625980,
+      "sha256": "94ae9edcbb976c98ff14029e727f19f0db2815a578de2ec13ea918d3d2eb5098"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-claro-21-admin.webm",
+      "bytes": 714471,
+      "sha256": "8eeedbf819358582d18eba996737381506b54f506a770e9b7daebae4b8688c1e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-estados.webm",
+      "bytes": 235151,
+      "sha256": "ff2b72444f79d7d634d6d36914f4f0db97224632bd737e371cb2c1d5ad0c534d"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-interacciones.webm",
+      "bytes": 1834149,
+      "sha256": "49c1594bcdde617ce188a78c9ae947f087d0c2271c497f4416b631bc715de375"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-00-entrar.webm",
+      "bytes": 432418,
+      "sha256": "79cebabb392ce6305cf13f906ce41c9d21796801ddce53f54b91b0cc3d573378"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-01-inicio.webm",
+      "bytes": 445798,
+      "sha256": "c8ba19fa5a6bf1b48d48617ce2519c9750d2a93d73240bb2a81484bc5dab4efa"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-02-marcas.webm",
+      "bytes": 838055,
+      "sha256": "02c4344b0258b888363cec55631fa6710d3e67acb4a2f4e01e4f2025b08e4717"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-03-canales.webm",
+      "bytes": 645677,
+      "sha256": "3f42de81320505cbdbc301774a29713a011b15b947dab1143e6d6896bcebbd09"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-04-canales.webm",
+      "bytes": 638606,
+      "sha256": "1dfb4be387d44de382c6d63ffddb2ba32a052cfb2cd7bb148bad3c4d48ec1757"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-05-radar.webm",
+      "bytes": 746862,
+      "sha256": "6c2732a3a19ea60cffb166cfca518c637b361b0a73e4cd3f0d4bf3e84afd5bb3"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-06-rutina.webm",
+      "bytes": 724437,
+      "sha256": "03a09432cd16b5895504bc7b4b3b59978f1e0cfd264825ca19cd4df08b7cfbad"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-07-redes.webm",
+      "bytes": 700083,
+      "sha256": "a49fcb5fa6efaceb6f5c75aba8274ba3b983c53720651af15d5652006c716ac4"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-08-referencias.webm",
+      "bytes": 719751,
+      "sha256": "186dba0dc82f16c57b7dcd351b59f3c1256896d80a570c1f4c6368d1941690ba"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-09-cuentas.webm",
+      "bytes": 633025,
+      "sha256": "cacb716a69cba8b73a93ddc99d1940c25bd3108a93787d77ffdff26f0bd764bc"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-10-programados.webm",
+      "bytes": 574108,
+      "sha256": "a520adfdd64345e75f19d115e8e4b5577dc82b9768244fff23faef0f8338a325"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-11-decisiones.webm",
+      "bytes": 540027,
+      "sha256": "a41eda7b28036f3c8a044126647599abdb9527f09eb57ea067983469be90af1a"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-12-incidencias.webm",
+      "bytes": 512064,
+      "sha256": "1292d6a779edadb76a6b02dfc333f46b6dad2954fc2125d534aa84d4f48a061c"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-13-avisos.webm",
+      "bytes": 492472,
+      "sha256": "c959f1a696ac376b8761b51635c9f110852a1e8b114fcd8bfa57533e94b5c1ee"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-14-videos.webm",
+      "bytes": 568081,
+      "sha256": "6d7b72028fc8476e134c2f3698ba64784f7a78508b6bf88437adfac87b6b4343"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-15-videos.webm",
+      "bytes": 726594,
+      "sha256": "4894874e423f51be28b77c09a3b7e816029f27cf17fcf7bc103d5d7788162ac4"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-16-publicados.webm",
+      "bytes": 662415,
+      "sha256": "dfda7dc3bd0dcda42cb696c1d81b0aa0ee7adaf5af04cd0317b6f47217278d6e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-17-aprendizaje.webm",
+      "bytes": 963696,
+      "sha256": "ab1f0ecd43bb1fa141fe78d36851fca1fd96ea9349ba2148d8816a974479adc6"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-18-avatares.webm",
+      "bytes": 618361,
+      "sha256": "e3abae73471a8d2c4e5ceadb332c5e676c50299c2ebd034d85da039fbc4b199a"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-19-perfil.webm",
+      "bytes": 360376,
+      "sha256": "bdf47801e558906b3a7a9e6cfc7f33a153bd276d153997187ad7f19edfe26638"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-20-admin.webm",
+      "bytes": 571098,
+      "sha256": "62e5c9822ab6393ccc1e7e82df543ca46d562b2125cff450e170d456f91f7c0e"
+    },
+    {
+      "ronda": "ronda-5",
+      "archivo": "ronda-5/390-oscuro-21-admin.webm",
+      "bytes": 697153,
+      "sha256": "0d8ac7ffa31b600adfe27a2d4faa6859ce98b948eff99367336220b5b6e67d48"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Cooper — fases 1, 2, 3 y 4
+# Cooper — integración 3
 
 La tercera integración reúne Pulido, Memoria, Cobertura, Marcas y Animación. Procedimiento local y lote n8n reservado a Claude: [integración 3](../docs/cooper-integracion3-despliegue.md). La secuencia integrada añade `0008_observabilidad`, `0009_memoria` y `0010_marcas` a las ocho migraciones originales. Las bases experimentales de Marcas con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas.
 
@@ -12,7 +12,7 @@ COOPER_MOVIMIENTO_SALIDA=.cache/videos-integracion3 node scripts/indice-movimien
 
 Sentinel usa su propia versión de Chromium en `.cache/sentinel-browsers`, que puede prepararse con `PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/sentinel-browsers" ~/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python -m playwright install chromium`. Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas.
 
-Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). La puesta en vivo inicial se conserva en [cooper-vivo](../docs/informes/cooper-vivo.md). El servicio local usa ahora `cooper-final`: [estado final, evidencias y reversa compatible con las ocho migraciones](../docs/informes/cooper-vivo-final.md).
+Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). La puesta en vivo inicial se conserva en [cooper-vivo](../docs/informes/cooper-vivo.md). La instalación local usa la integración 3, con once migraciones y respaldo previo: [estado, evidencias y límites respecto del VPS](../docs/informes/cooper-integracion3.md). El arranque automático local permanece deshabilitado tras el corte al VPS; esta misión inició solo la web de la PC.
 
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado de esta integración, puerta completa, capturas y pasos manuales de Walter: [cooper-final.md](../docs/informes/cooper-final.md).
 

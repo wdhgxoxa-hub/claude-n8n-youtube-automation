@@ -1,0 +1,42 @@
+[
+  {
+    "archivo": "galeria-rojo.log",
+    "sha256_original": "011a76f39a52b68c868555a3272bd1d3b3374a7b6d39ff1889046c1048fc37ae",
+    "sha256_normalizado": "42edbed2b3cf90e62f53ddc937deefba33219849bf3d7ad8cdeb5954adb07a61"
+  },
+  {
+    "archivo": "galeria-verde.log",
+    "sha256_original": "d03c1c6d40f2d056f3e75eb13d577510641bf96258ecf193dd9e9a537e4de036",
+    "sha256_normalizado": "69915ef873fa7e9674017f2d3c88aeed6651d18974cfff6b4a1fca77a8c48cfe"
+  },
+  {
+    "archivo": "canales-rojo.log",
+    "sha256_original": "7e3ca62a7e3bd67efcf26ced95b5bb7ece5f0cd7d8ffe02ec7e89ae5e7c2d66d",
+    "sha256_normalizado": "17c5279210a65c1826fb4678e4101a8e8792b7d559e4a844c4156a7e250bb33e"
+  },
+  {
+    "archivo": "canales-verde.log",
+    "sha256_original": "0901e4efa50654c4a15eed84b36dd8491b90496b034ef0996ceef4e5f74b9f2d",
+    "sha256_normalizado": "ee3987ae03670c9302b08f938ef56503ea1ce87c1ffb6287f45f3d088ab4af30"
+  },
+  {
+    "archivo": "instalacion-build.log",
+    "sha256_original": "c08979443ad5657cb34d6101cec33f3d1c57eb2e7ad291ec84938537a4ffdd36",
+    "sha256_normalizado": "944142b8b97eb38dbee55163c85afd98fc279540f65106d8dc929b97b8f5c529"
+  },
+  {
+    "archivo": "puerta/unitarias.log",
+    "sha256_original": "5d2a16134f6bc03236666c8da5eedcde6994b28b2dea19166448001e66379074",
+    "sha256_normalizado": "b221f858199da1cf4858ed32893f5421ad1035e4ee742a9caac5b6f1c16b1e88"
+  },
+  {
+    "archivo": "puerta/e2e.log",
+    "sha256_original": "700bf414ea0c55d7ec439da6d20d479460755aff7cba13357022325ffd1e5001",
+    "sha256_normalizado": "128b2785dd52e324637e008ba4a1ea02a45f08bb0a0120775d9e69cb68390b26"
+  },
+  {
+    "archivo": "puerta/build.log",
+    "sha256_original": "cee1b20dec34fb99d3c6311592aca85f9e17104c572d868cffd42460057b6883",
+    "sha256_normalizado": "c7d4ab6be1edff76b9ed65aca73e897cde43bb6b5a05ac96ef6c49b5eeb96524"
+  }
+]

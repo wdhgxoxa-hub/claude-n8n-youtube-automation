@@ -1,0 +1,27 @@
+[
+  {
+    "rama": "cooper-pulido",
+    "commit": "88e8d2c452c8658111f1cd3641d8d5a005e09384",
+    "integrada": true
+  },
+  {
+    "rama": "cooper-memoria",
+    "commit": "a2ae99d8c03d529094627bc72f2a15e671db75a5",
+    "integrada": true
+  },
+  {
+    "rama": "cooper-cobertura",
+    "commit": "d98d497733f0863dc1b8be34d16d1b62e6314fae",
+    "integrada": true
+  },
+  {
+    "rama": "cooper-marcas",
+    "commit": "57a1a282825484b96a461bd8e64dca4d3b119049",
+    "integrada": true
+  },
+  {
+    "rama": "cooper-animacion2",
+    "commit": "da4d2ebdbce36202fce6bd9c18a40f112c52b927",
+    "integrada": true
+  }
+]

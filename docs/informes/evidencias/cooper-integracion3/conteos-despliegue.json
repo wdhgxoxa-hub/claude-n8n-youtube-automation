@@ -1,0 +1,89 @@
+{
+  "tablas": {
+    "users": {
+      "antes": 1,
+      "despues": 1
+    },
+    "allowed_emails": {
+      "antes": 1,
+      "despues": 1
+    },
+    "channels": {
+      "antes": 2,
+      "despues": 2
+    },
+    "videos": {
+      "antes": 5,
+      "despues": 5
+    },
+    "messages": {
+      "antes": 2,
+      "despues": 2
+    },
+    "attachments": {
+      "antes": 0,
+      "despues": 0
+    },
+    "assets": {
+      "antes": 0,
+      "despues": 0
+    },
+    "expenses": {
+      "antes": 0,
+      "despues": 0
+    },
+    "events": {
+      "antes": 0,
+      "despues": 0
+    },
+    "bridge_commands": {
+      "antes": 0,
+      "despues": 0
+    },
+    "bridge_receipts": {
+      "antes": 0,
+      "despues": 0
+    },
+    "identity_challenges": {
+      "antes": 1,
+      "despues": 1
+    },
+    "public_media": {
+      "antes": 0,
+      "despues": 0
+    },
+    "chat_sessions": {
+      "antes": 1,
+      "despues": 1
+    },
+    "chat_actions": {
+      "antes": 0,
+      "despues": 0
+    },
+    "whatsapp_contacts": {
+      "antes": 0,
+      "despues": 0
+    },
+    "whatsapp_outbox": {
+      "antes": 0,
+      "despues": 0
+    },
+    "whatsapp_deliveries": {
+      "antes": 0,
+      "despues": 0
+    },
+    "whatsapp_inbox": {
+      "antes": 0,
+      "despues": 0
+    },
+    "whatsapp_actions": {
+      "antes": 0,
+      "despues": 0
+    },
+    "whatsapp_attempts": {
+      "antes": 0,
+      "despues": 0
+    }
+  },
+  "conservadas": 21
+}

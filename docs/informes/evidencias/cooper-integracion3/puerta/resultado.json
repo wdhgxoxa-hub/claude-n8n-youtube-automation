@@ -1,0 +1,83 @@
+{
+  "commit": "5df225fee93016c678ef415da82e288c4e019a85",
+  "pasos": [
+    {
+      "nombre": "ci",
+      "comando": "npm ci",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3/cooper",
+      "inicio": "2026-11-21T14:37:19.003558+00:00",
+      "fin": "2026-11-21T14:37:25.639951+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "cab445cb40e9bd91d2d0390446be5861f932624ba73d2c88d5bcdf1b31e805c9",
+      "sha256_original": "cab445cb40e9bd91d2d0390446be5861f932624ba73d2c88d5bcdf1b31e805c9"
+    },
+    {
+      "nombre": "lint",
+      "comando": "npm run lint",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3/cooper",
+      "inicio": "2026-11-21T14:37:25.640148+00:00",
+      "fin": "2026-11-21T14:37:28.316094+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007",
+      "sha256_original": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "tipos",
+      "comando": "npm run typecheck",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3/cooper",
+      "inicio": "2026-11-21T14:37:28.316352+00:00",
+      "fin": "2026-11-21T14:37:29.865834+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f",
+      "sha256_original": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "unitarias",
+      "comando": "npm test",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3/cooper",
+      "inicio": "2026-11-21T14:37:29.866029+00:00",
+      "fin": "2026-11-21T14:37:45.089757+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "b221f858199da1cf4858ed32893f5421ad1035e4ee742a9caac5b6f1c16b1e88",
+      "sha256_original": "5d2a16134f6bc03236666c8da5eedcde6994b28b2dea19166448001e66379074"
+    },
+    {
+      "nombre": "e2e",
+      "comando": "npm run test:e2e",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3/cooper",
+      "inicio": "2026-11-21T14:37:45.089973+00:00",
+      "fin": "2026-11-21T14:43:55.111719+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "128b2785dd52e324637e008ba4a1ea02a45f08bb0a0120775d9e69cb68390b26",
+      "sha256_original": "700bf414ea0c55d7ec439da6d20d479460755aff7cba13357022325ffd1e5001"
+    },
+    {
+      "nombre": "build",
+      "comando": "npm run build",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3/cooper",
+      "inicio": "2026-11-21T14:43:55.112928+00:00",
+      "fin": "2026-11-21T14:43:57.523492+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "c7d4ab6be1edff76b9ed65aca73e897cde43bb6b5a05ac96ef6c49b5eeb96524",
+      "sha256_original": "cee1b20dec34fb99d3c6311592aca85f9e17104c572d868cffd42460057b6883"
+    },
+    {
+      "nombre": "flujos",
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "directorio": "/home/david/Proyectos/cooper-wt/cooper-integracion3",
+      "inicio": "2026-11-21T14:43:57.523700+00:00",
+      "fin": "2026-11-21T14:43:58.470068+00:00",
+      "rc": 0,
+      "advertencias": [],
+      "sha256": "2620bfa8c8653916c51258f4c812fb28614941853d2fd17cc8b4bf9e0b695520",
+      "sha256_original": "2620bfa8c8653916c51258f4c812fb28614941853d2fd17cc8b4bf9e0b695520"
+    }
+  ],
+  "normalizacion": "Copias versionadas: finales de l\u00ednea LF, sin espacios finales ni l\u00edneas vac\u00edas al final; contenido diagn\u00f3stico intacto. Originales en cooper/.cache/integracion3/puerta/."
+}

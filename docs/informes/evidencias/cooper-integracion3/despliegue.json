@@ -1,0 +1,65 @@
+{
+  "anterior": "a6df1890ad8fbd736f61c3a41dc8856d07459ccb",
+  "destino": "6ac683f31af46d00a2c46f0c4b7d753ffc256b8e",
+  "respaldo": "/home/david/.cache/cooper-integracion3/respaldo-20261121-095409",
+  "inicio": "2026-11-21T14:54:09.582050+00:00",
+  "servicio_antes": [
+    "ActiveState=inactive",
+    "SubState=dead",
+    "UnitFileState=disabled"
+  ],
+  "base_antes": {
+    "integridad": "ok",
+    "claves_foraneas": 0,
+    "migraciones": 8,
+    "sha256": "1e6ae884276b70a481a1a55cd2cfb1689209ed90c41e53700a205d3da14df817"
+  },
+  "salud": {
+    "estado": 200,
+    "ok": true
+  },
+  "http": {
+    "/entrar": {
+      "estado": 200,
+      "ruta_final": "/entrar"
+    },
+    "/": {
+      "estado": 200,
+      "ruta_final": "/entrar"
+    },
+    "/marcas": {
+      "estado": 200,
+      "ruta_final": "/entrar"
+    },
+    "/radar": {
+      "estado": 200,
+      "ruta_final": "/entrar"
+    },
+    "/api/estado": {
+      "estado": 401,
+      "ruta_final": "/api/estado"
+    },
+    "/api/marcas": {
+      "estado": 401,
+      "ruta_final": "/api/marcas"
+    },
+    "/api/operacion": {
+      "estado": 401,
+      "ruta_final": "/api/operacion"
+    }
+  },
+  "base_despues": {
+    "integridad": "ok",
+    "claves_foraneas": 0,
+    "migraciones": 11
+  },
+  "servicio": [
+    "ActiveState=active",
+    "SubState=running",
+    "UnitFileState=disabled",
+    "NRestarts=0",
+    "ExecMainStatus=0"
+  ],
+  "resultado": "PASS",
+  "fin": "2026-11-21T14:54:24.124319+00:00"
+}

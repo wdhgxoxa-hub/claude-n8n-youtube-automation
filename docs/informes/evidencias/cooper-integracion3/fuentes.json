@@ -1,0 +1,48 @@
+{
+  "arboles": {
+    "0577c44": {
+      "cooper/src": "fac06c714fb7ba354aa16907597c2e98f1cad265",
+      "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+      "cooper/drizzle": "dd68619a4824c16ce9bc93a969e185fb8c2bb585",
+      "cooper/e2e": "1b6e57f7354cadbc6e116ea2373ffceafcecbb30",
+      "cooper/movimiento": "c73c3b6bd5abcb60df515ec9737bc57fffc355b3"
+    },
+    "5df225f": {
+      "cooper/src": "fac06c714fb7ba354aa16907597c2e98f1cad265",
+      "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+      "cooper/drizzle": "dd68619a4824c16ce9bc93a969e185fb8c2bb585",
+      "cooper/e2e": "1b6e57f7354cadbc6e116ea2373ffceafcecbb30",
+      "cooper/movimiento": "c73c3b6bd5abcb60df515ec9737bc57fffc355b3"
+    },
+    "6ac683f31af46d00a2c46f0c4b7d753ffc256b8e": {
+      "cooper/src": "fac06c714fb7ba354aa16907597c2e98f1cad265",
+      "cooper/public": "a9b0a03456a0b7f110a2042ec8c55b5867752198",
+      "cooper/drizzle": "dd68619a4824c16ce9bc93a969e185fb8c2bb585",
+      "cooper/e2e": "1b6e57f7354cadbc6e116ea2373ffceafcecbb30",
+      "cooper/movimiento": "c73c3b6bd5abcb60df515ec9737bc57fffc355b3"
+    }
+  },
+  "iguales": true,
+  "cambios_posteriores_solo_documentacion": [
+    "docs/cooper-vps.md",
+    "docs/informes/cooper-vps-real.md",
+    "docs/informes/evidencias/cooper-vps-real/SHA256SUMS",
+    "docs/informes/evidencias/cooper-vps-real/corte.json",
+    "docs/informes/evidencias/cooper-vps-real/diagnosticos-operativos.json",
+    "docs/informes/evidencias/cooper-vps-real/espera-flujos.json",
+    "docs/informes/evidencias/cooper-vps-real/espera.json",
+    "docs/informes/evidencias/cooper-vps-real/host-preparado.json",
+    "docs/informes/evidencias/cooper-vps-real/migracion-validada.json",
+    "docs/informes/evidencias/cooper-vps-real/parada-cooper.json",
+    "docs/informes/evidencias/cooper-vps-real/pc-final.json",
+    "docs/informes/evidencias/cooper-vps-real/publico-validado.json",
+    "docs/informes/evidencias/cooper-vps-real/puente-validado.json",
+    "docs/informes/evidencias/cooper-vps-real/red-validada.json",
+    "docs/informes/evidencias/cooper-vps-real/respaldo-corte.json",
+    "docs/informes/evidencias/cooper-vps-real/restauracion-final-validada.json",
+    "docs/informes/evidencias/cooper-vps-real/servicios-validados.json",
+    "docs/informes/evidencias/cooper-vps-real/snapshot-final.json",
+    "docs/informes/evidencias/cooper-vps-real/ultima-copia.json",
+    "docs/informes/evidencias/cooper-vps-real/webhooks-publicos.json"
+  ]
+}

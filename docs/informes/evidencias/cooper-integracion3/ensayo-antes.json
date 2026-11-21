@@ -1,0 +1,30 @@
+{
+  "integridad": "ok",
+  "claves_foraneas": 0,
+  "migraciones": 8,
+  "tablas": {
+    "__drizzle_migrations": 8,
+    "users": 1,
+    "allowed_emails": 1,
+    "channels": 2,
+    "videos": 5,
+    "messages": 2,
+    "attachments": 0,
+    "assets": 0,
+    "expenses": 0,
+    "events": 0,
+    "bridge_commands": 0,
+    "bridge_receipts": 0,
+    "identity_challenges": 1,
+    "public_media": 0,
+    "chat_sessions": 1,
+    "chat_actions": 0,
+    "whatsapp_contacts": 0,
+    "whatsapp_outbox": 0,
+    "whatsapp_deliveries": 0,
+    "whatsapp_inbox": 0,
+    "whatsapp_actions": 0,
+    "whatsapp_attempts": 0
+  },
+  "sha256": "1e6ae884276b70a481a1a55cd2cfb1689209ed90c41e53700a205d3da14df817"
+}

@@ -1,0 +1,96 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --project=demostracion operacion.spec.ts -g nombres repetidos
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 17ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 470ms
+  Running TypeScript ...
+  Finished TypeScript in 1087ms ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4)
+  Generating static pages using 23 workers (2/4)
+  Generating static pages using 23 workers (3/4)
+✓ Generating static pages using 23 workers (4/4) in 84ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✘  1 [demostracion] › e2e/operacion.spec.ts:30:1 › canales con nombres repetidos conservan menús accesibles distintos (464ms)
+
+
+  1) [demostracion] › e2e/operacion.spec.ts:30:1 › canales con nombres repetidos conservan menús accesibles distintos
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      40 |   await expect(menus).toHaveCount(2);
+      41 |   const names = await menus.evaluateAll((nodes) => nodes.map((node) => node.getAttribute("aria-label")));
+    > 42 |   expect(new Set(names).size).toBe(2);
+         |                               ^
+      43 |   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+      44 | });
+      45 | test("operación: biblia, metas, redes, referencias y adopción con confirmación y persistencia", async ({
+        at /home/david/Proyectos/cooper-wt/cooper-integracion3/cooper/e2e/operacion.spec.ts:42:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/operacion-canales-con-nomb-5c080--menús-accesibles-distintos-demostracion/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/operacion-canales-con-nomb-5c080--menús-accesibles-distintos-demostracion/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/operacion-canales-con-nomb-5c080--menús-accesibles-distintos-demostracion/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/operacion-canales-con-nomb-5c080--menús-accesibles-distintos-demostracion/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [demostracion] › e2e/operacion.spec.ts:30:1 › canales con nombres repetidos conservan menús accesibles distintos

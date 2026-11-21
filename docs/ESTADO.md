@@ -1,39 +1,45 @@
-# ESTADO — Fábrica de videos + Cooper (se actualiza en cada conversación)
-Última actualización: 2026-11-21 07:30 (Lima)
+# ESTADO — Fábrica de videos + Cooper
+
+Última actualización: 2026-11-21 09:55 (Lima).
 
 ## Qué es
-- Fábrica de videos en n8n (canal de pruebas: Margen Real) + Cooper (web y chat en cooper/) para Walter y su equipo (3–4 personas). Todo es de Walter: sus marcas y cuentas. Sin clientes externos.
-- Claude dirige y revisa; Codex (gpt-6-astra, razonamiento xhigh) hace el trabajo pesado en misiones (docs/misiones/), con informes en docs/informes/.
+
+- Fábrica de videos en n8n (canal de pruebas: Margen Real) + Cooper (web y chat en `cooper/`) para Walter y su equipo de 3–4 personas. Marcas y cuentas propias, sin clientes externos.
+- Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
-- Fases 1–6 de Cooper programadas y en GitHub (main/version-chatgpt): web con animaciones, chat con suscripción de Claude (respaldo Codex), puente firmado con n8n, avatares/voces (simulados hasta autorizar gasto), WhatsApp, VPS, modo noticia (apagado), GPT por plan ChatGPT vía Codex.
-- Cooper corre en la PC: http://localhost:3000 (cooper.service). Admin: wdhg.xoxa@gmail.com.
-- Google OAuth: cliente «Cooper web» (proyecto n8n-videos), callbacks localhost y cooper.cooperestudio.com.
-- Meta: portafolio «Cooper Estudio», app «Cooper», usuario de sistema cooper-bot con token permanente (~/.config/cooper/whatsapp-token), número +51 939 484 675 registrado, 4 plantillas en revisión.
-- Contabo: Cloud VPS 4 (UE, mensual €5.50), pedido 15717272, esperando IP. Dominio cooperestudio.com (Cloudflare).
-- cooper-memoria: memoria privada por usuario/canal, recuperación más allá de 30 mensajes, tarjeta «Donde lo dejamos», consulta administrativa y borrado sin reutilizar mensajes anteriores implementados en la rama aislada `cooper-memoria`. Código: `fb1a25c`, interfaz: `612ea85`, cierre probado: `56d864f`. Puerta completa: 247 unitarias, 34 E2E y 130 pruebas de flujos, sin errores ni advertencias. Validación y condiciones de integración en [informe](informes/cooper-memoria.md); no desplegado.
-- cooper-cobertura: pulido y memoria reunidos en el worktree/rama propios `cooper-cobertura`; once pantallas de operación, 30 flujos/1.203 nodos auditados, 121 decisiones/esperas, 58 ajustes y nueve tablas cubiertos. Chat breve conservado. Puerta conjunta: 259 unitarias, 40 E2E y 146 pruebas de flujos; dos rondas finales de Sentinel/Playwright limpias (17/17 cada una), 44 mediciones Lighthouse sin advertencias. Código `5381a01`, ensayo `e7c160e`; [informe y tabla de cobertura](informes/cooper-cobertura.md), [lote con respaldo/reversa para Claude](cooper-cobertura-despliegue.md). Sin despliegue, fusión a `version-chatgpt` ni push de esta misión.
-- cooper-animacion2: dirección propia de movimiento en todas las pantallas, cuatro ilustraciones Lottie originales, fábrica animada, bienvenida, celebración y pausa/reducido completos. Código `f852849` sobre cobertura `d98d497`; puerta: 263 unitarias, 40 E2E y 146 pruebas de flujos, cero errores/advertencias. Dos rondas completas limpias (10/10 cada una), 168 muestras cerca de 60 fps, móvil con CPU 4×; Sentinel: 32.939 acciones sin errores ni advertencias. Lighthouse: 84 mediciones, rendimiento 96–100 y accesibilidad/buenas prácticas 100. 176 videos a 1440/390 px decodificados y con índice en el worktree propio. [Informe, métricas y videos](informes/cooper-animacion-fuerte.md). Implementado y probado; sin integración, push ni despliegue. La prueba en teléfono físico sigue pendiente.
-- Regla permanente en `AGENTS.md`: cada misión de Codex actualiza este ESTADO al terminar, preservando hecho, en curso, pendientes de Walter e ideas.
 
-- cooper-marcas: módulo privado, cuentas, diseños, revisiones y métricas integrado en la rama de integración; flujos inactivos y proveedores simulados. [Informe](informes/cooper-marcas.md). Migración conciliada como `0010_marcas`.
+- Fases 1–6: web, chat por los planes de Claude/Codex, puente firmado con n8n, avatares/voces, WhatsApp, preparación VPS y modo noticia. Proveedores con gasto y modo noticia requieren su activación correspondiente.
+- **Integración 3:** Pulido, Memoria, Cobertura, Marcas y Animación fusionados en orden; `version-chatgpt` y `main` publicados en el remoto propio `mio`, por excepción expresa de Walter. [Informe y evidencia](informes/cooper-integracion3.md).
+- **Cooper actualizado en la PC:** <http://localhost:3000>, unidad `cooper.service` activa, respaldo previo protegido y SQLite migrado de ocho a once entradas. Arranque automático deshabilitado, conservando el estado establecido por la migración al VPS. Solo se reanudó la web local; n8n local no se reactivó. Administrador: wdhg.xoxa@gmail.com.
+- Puerta integrada: 284 unitarias, 43 E2E, 147 pruebas de flujos, lint, tipos, instalación y build; cero errores/advertencias. Dos rondas conjuntas Sentinel + Playwright de 58/58, 176 muestras de pantallas y 188 videos, incluidos recorridos completos a 1440/390 px. Lighthouse: 88 mediciones, rendimiento 97–100 y accesibilidad/buenas prácticas 100, sin advertencias. [Índice local](../cooper/.cache/videos-integracion3/index.html).
+- Pulido: medios reales, Publicados y Aprendizaje, chat breve. Memoria: recuerdos privados por usuario/canal, recuperación más allá de 30 mensajes, tarjeta de regreso, consulta administrativa y borrado. Cobertura: pantallas de operación e inventario integrado de 32 flujos/1.211 nodos, 121 decisiones/esperas, 58 ajustes y nueve Data Tables. Informes históricos: [memoria](informes/cooper-memoria.md), [cobertura](informes/cooper-cobertura.md).
+- Animación: ilustraciones originales, fábrica animada, bienvenida, celebración y pausa/movimiento reducido. Corregidos el solapamiento de la galería y las etiquetas repetidas de canales; regresiones y accesibilidad verificadas. [Informe de movimiento](informes/cooper-animacion-fuerte.md).
+- Marcas: espacio privado con cuentas, diseños, revisiones, calendario, Publicados y Aprendizaje propios; proveedores simulados y migración integrada `0010_marcas`. [Informe](informes/cooper-marcas.md). No hay publicación real activada.
+- **VPS migrado por la misión concurrente `cooper-vps-real`** (`1883fb3`, conservado en la integración): servicios y datos instalados, HTTPS y copias comprobados. El servidor mantiene el código anterior; integración 3 no lo despliega. Su aceptación real sigue pendiente. [Informe del VPS](informes/cooper-vps-real.md).
+- Google OAuth: cliente «Cooper web» del proyecto n8n-videos; revisar callbacks localhost y dominio definitivo al aceptar el VPS. No se hicieron logins durante integración 3.
+- Meta: portafolio «Cooper Estudio», app «Cooper», usuario cooper-bot y número +51 939 484 675. Configuración de firmas, plantillas y pago pendientes según el cierre del VPS; no se realizaron pagos ni envíos en esta misión.
+- Contabo Cloud VPS 4, pedido 15717272; dominio cooperestudio.com en Cloudflare. IP/SSH/DNS ya resueltos por la misión VPS, sin revalidación remota en integración 3.
+- Regla permanente: actualizar este ESTADO al terminar cada misión, conservando hechos, trabajo en curso, pendientes e ideas.
 
-## En curso (Codex)
-- cooper-vps-real: espera IP → instala n8n+Cooper+Caddy+copias → migra desde la PC.
-- Revisión e integración de `cooper-cobertura` en `version-chatgpt`: incluye pulido y memoria y ya pasó la puerta conjunta. Sigue pendiente terminar la misión VPS; `cooper-vps-real` y `version-chatgpt` permanecen en `16341ab` al cierre. Conservar las migraciones 0008 observabilidad / 0009 memoria y el respaldo real del destino antes de instalar el lote.
-- Revisión de movimiento e integración de `cooper-animacion2`: incluye cobertura, memoria y pulido. Lista para Claude; la fase B del VPS continúa pendiente de IP, SSH y DNS, de modo que todavía no se cumple la condición para fusionar a `version-chatgpt`.
+## En curso
 
-## Pendiente de Walter
-1. Método de pago en Meta (Cooper Estudio > Facturación y pagos).
-2. Cuando llegue la IP: ejecutar el comando ssh-copy-id (~/.config/cooper/ssh-copy-id.txt) con la contraseña del servidor.
-3. Probar Cooper en su Chrome (localhost:3000) y entrar con Google.
-4. Aprobar en Telegram el guion del Short v-mwp2bjgj-7fvq.
-5. Tras integrar memoria, revisar los recuerdos con conversaciones ficticias usando el proveedor del plan. Las evaluaciones locales no miden la calidad semántica del modelo real; la síntesis añade una llamada por turno y hasta 12 segundos.
-6. Tras la revisión e integración de cobertura, fijar presupuestos/modelos/interruptores y perfiles de publicación, conceder permisos OAuth cuando corresponda y autorizar una producción real de validación. El ensayo local no valida la calidad editorial ni la entrega real de avisos.
-7. Revisar con Claude los videos de movimiento y probar la experiencia en un teléfono físico de gama media (y Safari si se utiliza). Tras la integración y autorización de producción, validar la celebración con una publicación real y medir rendimiento en el destino.
+- Claude: revisar e instalar el lote n8n de integración 3 en el destino elegido, con respaldo real previo, mapa de IDs y reversa. Contiene 32 exportaciones inactivas; **no se aplicó en vivo**. [Procedimiento](cooper-cobertura-despliegue.md).
+- Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas, repositorio de copias fuera del VPS y conexión del chat con los planes de la PC.
+- La PC conserva la base del corte; no sincroniza escrituras posteriores del VPS. Elegir el destino de producción y conciliar los datos antes de cualquier reversa o actualización del servidor. [Instalación y reversa local](cooper-integracion3-despliegue.md).
 
-7. Marcas: asignar activos y permisos, aprobar plantilla WhatsApp, cotejar corpus bíblico, definir guías y primer ensayo real; conservar medios y conciliar resultados inciertos.
+## Pendientes de Walter
 
-## Ideas conversadas (aún no construidas)
-- Manejo de redes de sus marcas (iglesia a la que asiste, futura tienda de ropa, cuentas de su equipo) en cualquier red: estudiar la cuenta, calendario, avisos (domingos, grupos en casa, eventos), fotos/videos/avatares, especialista por rubro (p. ej. reformado), aprobación de Walter y publicación automática por n8n.
-- Microserie con IA (aplazada).
+1. Resolver pago de Meta, configurar firma y plantillas WhatsApp con Claude; mantener mensajería pausada hasta aceptar la configuración.
+2. Probar Google, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya no son un pendiente de alta; no repetir el acceso root antiguo.
+3. Revisar con Claude las dos esperas históricas y las diez entradas pausadas del VPS; elegir cuáles reabrir. El guion del Short `v-mwp2bjgj-7fvq` sigue como pendiente histórico, sin reanudación ni aprobación en esta misión.
+4. Validar memoria con conversaciones ficticias usando el proveedor del plan: las pruebas locales no miden calidad semántica real. La síntesis añade una llamada por turno y hasta 12 segundos.
+5. Fijar presupuestos, modelos, interruptores, perfiles de publicación y permisos OAuth; autorizar por separado un ensayo real de producción, medios y celebración. Operación puede mostrar indisponibilidad hasta instalar el nuevo puente.
+6. Revisar los videos y probar un teléfono físico de gama media y Safari si se utiliza. La emulación local no sustituye esa aceptación.
+7. Marcas: definir identidad/dueños, asignar activos y permisos, cotejar corpus bíblico y guía pastoral, aprobar plantilla WhatsApp y decidir retención/conciliación de medios y primer ensayo real.
+8. Elegir repositorio de copias remoto, custodiar las claves offline y probar recuperación fuera del VPS. Si se requiere IA de los planes allí, completar el túnel restringido a los puentes de la PC y validar desde los contenedores.
+
+## Ideas conversadas
+
+- Gestión de redes de sus marcas (iglesia, futura tienda de ropa y equipo): primera implementación disponible en modo simulado. La activación real multirred, permisos, calendario editorial y especialistas por rubro siguen pendientes de las decisiones anteriores.
+- Microserie con IA: aplazada.

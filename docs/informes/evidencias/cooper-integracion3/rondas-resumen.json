@@ -1,0 +1,110 @@
+[
+  {
+    "ronda": "ronda-4",
+    "pruebas": {
+      "startTime": "2026-11-21T13:39:18.511Z",
+      "duration": 1725206.132,
+      "expected": 58,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "pantallas": 88,
+    "fps_min": 59.99900828085486,
+    "fps_max": 60.00757781643829,
+    "p95_max_ms": 16.800000000000182,
+    "frame_max_ms": 16.800000000000182,
+    "tareas_largas": 0,
+    "cls_max": 0,
+    "videos": 94,
+    "sentinel": [
+      {
+        "ancho": 1440,
+        "rutas": 37,
+        "acciones": 6185,
+        "hallazgos_no_informativos": 0,
+        "avisos_info": 1,
+        "fps_min": 20,
+        "fps_max": 61,
+        "congeladas": 0,
+        "caidas": 0,
+        "muestras_estabilidad": 106,
+        "caida_estabilidad": false,
+        "sha256_informe": "79a324a8ad712a69b55e8747f34a5f2aa8d22d16436247a394a3119efed89c91",
+        "muestras_fps": 271,
+        "muestras_fps_menor_45": 16
+      },
+      {
+        "ancho": 390,
+        "rutas": 36,
+        "acciones": 9591,
+        "hallazgos_no_informativos": 0,
+        "avisos_info": 2,
+        "fps_min": 60,
+        "fps_max": 61,
+        "congeladas": 0,
+        "caidas": 0,
+        "muestras_estabilidad": 87,
+        "caida_estabilidad": false,
+        "sha256_informe": "ef77c4cfe6684fcf6f575aad0adb23962ec97ac4f691ec599babbfe49da64457",
+        "muestras_fps": 418,
+        "muestras_fps_menor_45": 0
+      }
+    ],
+    "sha256_playwright": "cef08bc0d2b9a62ea0c734e09af6fc3b6b841916b0f94a4e836174f862ea9098"
+  },
+  {
+    "ronda": "ronda-5",
+    "pruebas": {
+      "startTime": "2026-11-21T14:08:33.545Z",
+      "duration": 1725385.4100000001,
+      "expected": 58,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "pantallas": 88,
+    "fps_min": 59.50857816154198,
+    "fps_max": 60.00716118518606,
+    "p95_max_ms": 16.800000000000182,
+    "frame_max_ms": 33.399999999999864,
+    "tareas_largas": 0,
+    "cls_max": 0,
+    "videos": 94,
+    "sentinel": [
+      {
+        "ancho": 1440,
+        "rutas": 37,
+        "acciones": 6258,
+        "hallazgos_no_informativos": 0,
+        "avisos_info": 1,
+        "fps_min": 20,
+        "fps_max": 61,
+        "congeladas": 0,
+        "caidas": 0,
+        "muestras_estabilidad": 106,
+        "caida_estabilidad": false,
+        "sha256_informe": "989ec697de76f59baff642f1c2670ebc18b895628db0b64cc1839c0921f5b8b2",
+        "muestras_fps": 291,
+        "muestras_fps_menor_45": 19
+      },
+      {
+        "ancho": 390,
+        "rutas": 36,
+        "acciones": 8895,
+        "hallazgos_no_informativos": 0,
+        "avisos_info": 2,
+        "fps_min": 60,
+        "fps_max": 61,
+        "congeladas": 0,
+        "caidas": 0,
+        "muestras_estabilidad": 87,
+        "caida_estabilidad": false,
+        "sha256_informe": "54f3b4575705c8b78b6f65b4e71f6d99dec659a9866ea66e9b903ea3390483e0",
+        "muestras_fps": 393,
+        "muestras_fps_menor_45": 0
+      }
+    ],
+    "sha256_playwright": "580629719057e5cc619f5aa085324625bc065a71ff59e6d05770a409c38e79cb"
+  }
+]

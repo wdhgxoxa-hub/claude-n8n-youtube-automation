@@ -1,0 +1,29 @@
+{
+  "fecha": "2026-11-21T14:54:01.412997+00:00",
+  "commit": "6ac683f31af46d00a2c46f0c4b7d753ffc256b8e",
+  "anteriores": {
+    "main": "1883fb3335cae5530943e2d34780ab0b0dbcf513",
+    "version-chatgpt": "1883fb3335cae5530943e2d34780ab0b0dbcf513",
+    "mio/main": "1883fb3335cae5530943e2d34780ab0b0dbcf513",
+    "mio/version-chatgpt": "1883fb3335cae5530943e2d34780ab0b0dbcf513"
+  },
+  "remoto": "mio",
+  "ramas": [
+    "version-chatgpt",
+    "main"
+  ],
+  "push_atomico": true,
+  "preservados": [
+    {
+      "archivo": "docs/ESTADO.md",
+      "respaldo": "/home/david/Proyectos/claude-n8n-youtube-automation/.cache/integracion3-preservados/docs/ESTADO.md",
+      "sha256": "ef31bd9ac877557b2082e08852e8011ae82461e7ef7672e020f90dde48232a65"
+    },
+    {
+      "archivo": "docs/misiones/cooper-memoria.md",
+      "respaldo": "/home/david/Proyectos/claude-n8n-youtube-automation/.cache/integracion3-preservados/docs/misiones/cooper-memoria.md",
+      "sha256": "519e77ac8e4bed7f5b436c95672c6afd869aa4038648d37b4ebcb0fb6651c851"
+    }
+  ],
+  "remotos_verificados": true
+}

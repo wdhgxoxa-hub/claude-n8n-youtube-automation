@@ -1,0 +1,94 @@
+{
+  "width": 390,
+  "height": 900,
+  "pasos": [
+    {
+      "ruta": "/entrar",
+      "segundos": 0
+    },
+    {
+      "ruta": "/",
+      "segundos": 1.702
+    },
+    {
+      "ruta": "/marcas",
+      "segundos": 6.603
+    },
+    {
+      "ruta": "/canales",
+      "segundos": 11.313
+    },
+    {
+      "ruta": "/canales/d8dabfa9-b576-49e7-aba1-7ff0446f2f7c",
+      "segundos": 13.073
+    },
+    {
+      "ruta": "/radar",
+      "segundos": 14.892
+    },
+    {
+      "ruta": "/rutina",
+      "segundos": 16.638
+    },
+    {
+      "ruta": "/redes",
+      "segundos": 18.42
+    },
+    {
+      "ruta": "/referencias",
+      "segundos": 20.19
+    },
+    {
+      "ruta": "/cuentas",
+      "segundos": 21.957
+    },
+    {
+      "ruta": "/programados",
+      "segundos": 23.673
+    },
+    {
+      "ruta": "/decisiones",
+      "segundos": 25.404
+    },
+    {
+      "ruta": "/incidencias",
+      "segundos": 27.141
+    },
+    {
+      "ruta": "/avisos",
+      "segundos": 28.92
+    },
+    {
+      "ruta": "/videos",
+      "segundos": 30.636
+    },
+    {
+      "ruta": "/videos/ede75522-c06a-4f7b-9288-77a86842a0ad",
+      "segundos": 32.321
+    },
+    {
+      "ruta": "/publicados",
+      "segundos": 34.055
+    },
+    {
+      "ruta": "/aprendizaje",
+      "segundos": 35.871
+    },
+    {
+      "ruta": "/avatares",
+      "segundos": 37.569
+    },
+    {
+      "ruta": "/perfil",
+      "segundos": 39.271
+    },
+    {
+      "ruta": "/admin",
+      "segundos": 40.974
+    },
+    {
+      "ruta": "/admin/fabrica",
+      "segundos": 42.688
+    }
+  ]
+}

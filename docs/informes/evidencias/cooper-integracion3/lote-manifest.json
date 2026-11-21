@@ -1,0 +1,355 @@
+{
+  "origen": "6ac683f31af46d00a2c46f0c4b7d753ffc256b8e",
+  "base_referencia": "16341ab09145d44b9e1f084f6142c707e422fac3",
+  "respaldo_real": false,
+  "archivos": [
+    {
+      "ruta": "entrada/contratos/cooper-migracion-tablas.json",
+      "sha256": "7314477317b5fe4da786af16985a49e2eb83eb49163f4796aa5dc8079a411f31"
+    },
+    {
+      "ruta": "reversa-versionada/contratos/cooper-migracion-tablas.json",
+      "sha256": "387fb0ad0915b953b3c809cd50eec56f5bc53afd269721df3a78f30e15b3bcde"
+    },
+    {
+      "ruta": "entrada/contratos/cooper-tablas-ensayo.json",
+      "sha256": "61c54a24b4c76ded0f2e804b358306b319973267a65a055a670d3773234a1685"
+    },
+    {
+      "ruta": "reversa-versionada/contratos/cooper-tablas-ensayo.json",
+      "sha256": "61c54a24b4c76ded0f2e804b358306b319973267a65a055a670d3773234a1685"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0000_inicio.sql",
+      "sha256": "54961e6f6f08d000d4db33f78c67c2253125883f4bfc696eac6844b6468efc07"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0000_inicio.sql",
+      "sha256": "54961e6f6f08d000d4db33f78c67c2253125883f4bfc696eac6844b6468efc07"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0001_presentadores.sql",
+      "sha256": "7b576a8e7b76720b9888425a13de135489010baaae999359132ca7b48941f342"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0001_presentadores.sql",
+      "sha256": "7b576a8e7b76720b9888425a13de135489010baaae999359132ca7b48941f342"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0002_puente.sql",
+      "sha256": "2f9d128472c57127189d256c084121aaa574df63e50532b0240cbd3b3e1cfbd8"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0002_puente.sql",
+      "sha256": "2f9d128472c57127189d256c084121aaa574df63e50532b0240cbd3b3e1cfbd8"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0003_medios_reales.sql",
+      "sha256": "ffaca1dcfa841bffaf0be3bed3d741438ddc2558414e2cea4ead51ddeaf4c623"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0003_medios_reales.sql",
+      "sha256": "ffaca1dcfa841bffaf0be3bed3d741438ddc2558414e2cea4ead51ddeaf4c623"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0004_presentacion.sql",
+      "sha256": "cbeb55d64b44740b8f9fc20bd8e986a30a0b457191ea6d64859e388b4f014660"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0004_presentacion.sql",
+      "sha256": "cbeb55d64b44740b8f9fc20bd8e986a30a0b457191ea6d64859e388b4f014660"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0005_chat_ia.sql",
+      "sha256": "3f98d53f8951e271cbff8df757522e18dfd3b3f6ba363659b17881f60e9c73d7"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0005_chat_ia.sql",
+      "sha256": "3f98d53f8951e271cbff8df757522e18dfd3b3f6ba363659b17881f60e9c73d7"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0006_whatsapp.sql",
+      "sha256": "1e435e50b5d5355cbc09fde4195affef5dddac92a540fb05b565b53058a279a9"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0006_whatsapp.sql",
+      "sha256": "1e435e50b5d5355cbc09fde4195affef5dddac92a540fb05b565b53058a279a9"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0007_noticias.sql",
+      "sha256": "efa68a5e360540e488917ec400d0e24ef57d7b732aaed9c809f5d077e47cb9ce"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/0007_noticias.sql",
+      "sha256": "efa68a5e360540e488917ec400d0e24ef57d7b732aaed9c809f5d077e47cb9ce"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0008_observabilidad.sql",
+      "sha256": "e4ff85846ea48794ba93128386ea545134bd87cb3da46c292dd52deb2e3dc3ba"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0009_memoria.sql",
+      "sha256": "3df66fb77fe5ac9c1647e6be4dba3dbc71a121bd3b20a1322ac00ab2dafd28c6"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/0010_marcas.sql",
+      "sha256": "e9f67de3d58e5d0d7131562dae846c6d571656c0e5a73cdac4a5729046c0a8dc"
+    },
+    {
+      "ruta": "entrada/cooper/drizzle/meta/_journal.json",
+      "sha256": "934fd7823733eb20b9235b8a95c24d9d617d8bf0296a8a6b8b8cf336f7554c96"
+    },
+    {
+      "ruta": "reversa-versionada/cooper/drizzle/meta/_journal.json",
+      "sha256": "8c618c05666bca838ead2e96b003775fe5745737b2a729d497af96279f16dcfb"
+    },
+    {
+      "ruta": "entrada/workflows/v2/CooperMarcasMet1.json",
+      "sha256": "df228227057b36bd2e69120e6a7d1f90d2b46dbdc1a67c96eaf06e3b9fc0fd4e"
+    },
+    {
+      "ruta": "entrada/workflows/v2/CooperMarcasPub1.json",
+      "sha256": "e2a1ec5ab52e0245188d0752372971d344896b1bb8640979abe505e68d9902df"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabAgenteTelegr1.json",
+      "sha256": "0450a30362705242cfc4a2da2ca6d699270ff3e09f5d60daeec991d77667a56c"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabAgenteTelegr1.json",
+      "sha256": "0450a30362705242cfc4a2da2ca6d699270ff3e09f5d60daeec991d77667a56c"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabAjustes000001.json",
+      "sha256": "ed9420226f06584d56d7968c49f2921c5ebd6cad8bfd61cbd3b8987eb9086d6e"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabAjustes000001.json",
+      "sha256": "0c4536c164c356aa7f71350f91376a883d4942681294265e2430df09a7a22b00"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabAprendizaje01.json",
+      "sha256": "fc1e55350b3269633b6557ec440b7da522f1d43c7a642d3ef34958f583eb6f50"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabAprendizaje01.json",
+      "sha256": "2cfdb45fa0c12263668ed0ec483a047f427cc947615e1b7bc58d4fbf7e6ac6af"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabAprobacion001.json",
+      "sha256": "cb8e27cbaea1708f43b9b5484b52f481fc4ee22442a9f3fedf68e03866429e9f"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabAprobacion001.json",
+      "sha256": "2d8a0db3afd0c249725344621110c6057a54d36ff3356b3303d0fd3f71673297"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabAvatar0000001.json",
+      "sha256": "b178a0cfddb0328b77392f844797dd77dd43a26863ec02c558aee4b6ab352526"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabAvatar0000001.json",
+      "sha256": "b178a0cfddb0328b77392f844797dd77dd43a26863ec02c558aee4b6ab352526"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabChatWeb000001.json",
+      "sha256": "a99889fdd7892954a746abe0ee11f5863e517b5356c5404dfc7e61ecaa6ad51d"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabChatWeb000001.json",
+      "sha256": "a99889fdd7892954a746abe0ee11f5863e517b5356c5404dfc7e61ecaa6ad51d"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabConfirmar0001.json",
+      "sha256": "f92c6aef366f395a4afc1a6e0a1de874662b2548895f9b9229f8df77d4e9f90f"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabConfirmar0001.json",
+      "sha256": "a607b13df7bf01365be2cdb22502627fb56485b058c107a43b5875156b7bb5b8"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabCooperAPI0001.json",
+      "sha256": "71f35e2a1d084e196b01184be8755aff84dc5a5f81f862986ac16396c7961ca4"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabCooperAPI0001.json",
+      "sha256": "c05ff465d183547a8611f2ca3f9177c3373b1ba2a043e15ddd086ddba396ff95"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabCooperCosto01.json",
+      "sha256": "f1f032ff318d7192832818d6d0394a0449dd1af45bb16ac194fec18d539fdcfb"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabCooperCosto01.json",
+      "sha256": "f1f032ff318d7192832818d6d0394a0449dd1af45bb16ac194fec18d539fdcfb"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabCooperProgr01.json",
+      "sha256": "c82aaa1b69ba9b8cce78b2f0b35546ab702dfb9e867016e653329428e318503e"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabCooperProgr01.json",
+      "sha256": "c82aaa1b69ba9b8cce78b2f0b35546ab702dfb9e867016e653329428e318503e"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabDerivados0001.json",
+      "sha256": "b6eb3247ab389cde420ae0f4922e28b21ddb3d40b8237e2dc3c57d801dbd8bc1"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabDerivados0001.json",
+      "sha256": "6857da2d4f1eb1308d2c745f1284a64b0a47ddd6c40e361dcc2c187ceb49af64"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabErrores000001.json",
+      "sha256": "0395a78eb5997d11ba0e93a477791a8823222a36f6dd33d03b891f59af281d38"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabErrores000001.json",
+      "sha256": "6ee932fb2d9f5c88cdd51cbc439771ab7625f104f484785967ba21ea5d925e94"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabEstado0000001.json",
+      "sha256": "e479e9edfdae1bdefb0857ff2fe17021d0b7432fa7806a4439b2cb7df78b76d9"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabEstado0000001.json",
+      "sha256": "e479e9edfdae1bdefb0857ff2fe17021d0b7432fa7806a4439b2cb7df78b76d9"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabLlamarClaude1.json",
+      "sha256": "e4930fc754eb865d59a0711ac0dd8a2b324411a77b621f50d9236c08cd25c605"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabLlamarClaude1.json",
+      "sha256": "d70f6a93e06be38e1b9c82a32fda064623cb2916bb1fa7527ab3e80660983ccc"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabNoticia000001.json",
+      "sha256": "2a01cd098fe9755e6dc1645b459db69a1fe232bd6cd8cf8c23d2c60fb3cf031f"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabNoticia000001.json",
+      "sha256": "369063347d6bd79de09e6013107dd6c92892a47524de007dfde1209b82a224b7"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabOrquestador01.json",
+      "sha256": "74f53fbc2556f985bbcb354a123b9edae3191cffa0b6336366c92837d1a96274"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabOrquestador01.json",
+      "sha256": "51194dd590d90f4559ecc57bf356f93006fe66c5169b654ed0711d68a0b76c1e"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabPendientes001.json",
+      "sha256": "37be37601dbe40bf86d5a0da9c5e0a16cfe62d5c192a8175c55b1a07af7bcb52"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabPendientes001.json",
+      "sha256": "37be37601dbe40bf86d5a0da9c5e0a16cfe62d5c192a8175c55b1a07af7bcb52"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabPresentacion1.json",
+      "sha256": "66b2e92a269381fb81c8b7a6efaa5ce9ea6ac5adfb792dc57b20c665ceb80569"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabPresentacion1.json",
+      "sha256": "66b2e92a269381fb81c8b7a6efaa5ce9ea6ac5adfb792dc57b20c665ceb80569"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabProduccion001.json",
+      "sha256": "d29f7b6030cf33832e714e74ed4cf87c856ccec3a7c8a9cf3594c16b370a8459"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabProduccion001.json",
+      "sha256": "1aa83cb3d08a1e5cb3eedb01568cb34f48e1b05e51947bfde4140ba8f284835b"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabPublicacion01.json",
+      "sha256": "9969506ee80cc88f2445bd16b72f13cdda8dd1eb042aaf4ae4446594376cecd7"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabPublicacion01.json",
+      "sha256": "60cebdab1e82b71a3ca3c22a02a13d2b507d3561e6ff2708dda91225b097b660"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabRadar00000001.json",
+      "sha256": "7dfcfdb7dd999b1e06b013ccb654e7c49adf0f23296745b107b4987d2a7c2899"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabRadar00000001.json",
+      "sha256": "31097a4f7842fbbff4ed8b1d550abcd2b062874530bfd8058a15195aceb2a277"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabRedes00000001.json",
+      "sha256": "0d36c9d158240e8956dfaf3e91059d09ed5118e27a30c23ea5a71311dd7a8913"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabRedes00000001.json",
+      "sha256": "b2f7b169a4c70a6304d5bdc815659c4679e564dbfbdf3eba2d77fba3b2f80d5e"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabReenviar00001.json",
+      "sha256": "a4820726ccec0901f47364bce491ececa88b8001b16663ca268bea948efd4a16"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabReenviar00001.json",
+      "sha256": "e79ea5427fd8329c5d106323c13dc2ddca7e7a44fcb5192c22fa2c5101b42db8"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabReferencias01.json",
+      "sha256": "d3cfeeefe4b135afd111e8762113e0fbc08d93abd5ed05190cdc25b0ed6c19a6"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabReferencias01.json",
+      "sha256": "b9d2a69f1d92b0e68edbd039ac56e0b9b512b9146296067befae12a0794eab77"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabRetornoClaud1.json",
+      "sha256": "9703c0ad9b040d89a68bad0d6b29f4484392892c5ac41252ef36420bb113c1bb"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabRetornoClaud1.json",
+      "sha256": "9703c0ad9b040d89a68bad0d6b29f4484392892c5ac41252ef36420bb113c1bb"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabRutina0000001.json",
+      "sha256": "ea547b2d5a1d225116cc0a8552d0055f719d41eed36f1bcebbec1e8b9bd062eb"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabRutina0000001.json",
+      "sha256": "d0c1a7c03609d5a71f2ca8fa643fe637d22255a11a17b679b52d386fa00cc11e"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabSonido0000001.json",
+      "sha256": "04c109f8bd37f5c37c644332a92d42183b44e8eca4a3e9c06f57e64a4038c6cc"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabSonido0000001.json",
+      "sha256": "6b05be054c9166639f0fff903c89211669f509234aba3f72a13242ec7ee8be84"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabTextoGPT0001.json",
+      "sha256": "812e2d50a3a4fab979f847872b300ca3ba93b821f3564cba7625e7235160155b"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabTextoGPT0001.json",
+      "sha256": "812e2d50a3a4fab979f847872b300ca3ba93b821f3564cba7625e7235160155b"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabVidiq00000001.json",
+      "sha256": "84ddb798ad4ae5444d9497c7a41c1aef960c377f9ca596ad063aa441e77ef739"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabVidiq00000001.json",
+      "sha256": "b0b484a752e9d4bb3f1bee05e25a1b77fde7d795d5c1c9fc354ed8c648535e07"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabYouTube000001.json",
+      "sha256": "eb35852a9075a2d15a433ca6fee81abcbc0a623646577921792c4f0f10dc521e"
+    },
+    {
+      "ruta": "reversa-versionada/workflows/v2/FabYouTube000001.json",
+      "sha256": "36a1d6177652cabbb329506c2b81869f7e40add33c8fe42fcbbb06bd56f1318c"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "ancho": 1440,
+    "estado": 200,
+    "desbordamiento": false,
+    "errores_consola": 0,
+    "errores_pagina": 0,
+    "violaciones_axe": 0
+  },
+  {
+    "ancho": 390,
+    "estado": 200,
+    "desbordamiento": false,
+    "errores_consola": 0,
+    "errores_pagina": 0,
+    "violaciones_axe": 0
+  }
+]
