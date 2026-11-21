@@ -450,6 +450,13 @@ export function Marcas({
                         key={`${marca.id}-${editar?.id ?? "nueva"}-${editar?.revision ?? 0}`}
                         marca={marca}
                         archivos={data.archivos}
+                        montajes={data.montajes}
+                        actualizarMontajes={() =>
+                          ejecutar(
+                            () => api("marcas/montajes", {}),
+                            "Montajes actualizados. Selecciona la revisión que vas a usar.",
+                          )
+                        }
                         citas={data.citas}
                         pieza={editar}
                         busy={busy}
@@ -843,6 +850,8 @@ function EditorMarca({
 function EditorPieza({
   marca,
   archivos,
+  montajes,
+  actualizarMontajes,
   citas,
   pieza,
   busy,
@@ -852,6 +861,8 @@ function EditorPieza({
 }: {
   marca: MarcaVista;
   archivos: EstadoMarcas["archivos"];
+  montajes: EstadoMarcas["montajes"];
+  actualizarMontajes: () => Promise<void>;
   citas: EstadoMarcas["citas"];
   pieza?: PiezaMarca;
   busy: boolean;
@@ -863,6 +874,10 @@ function EditorPieza({
     [titulo, setTitulo] = useState(pieza?.datos.titulo ?? ""),
     [error, setError] = useState(""),
     [working, setWorking] = useState(false),
+    [videoId, setVideoId] = useState(pieza?.datos.videoId ?? ""),
+    [revisionMontaje, setRevisionMontaje] = useState(
+      pieza?.datos.montaje?.revision ?? "",
+    ),
     [ids, setIds] = useState<string[]>(pieza?.datos.adjuntos ?? []);
   async function sugerir() {
     setWorking(true);
@@ -882,8 +897,8 @@ function EditorPieza({
     >
       <summary>{pieza ? "Editar borrador" : "Crear una publicación"}</summary>
       <p>
-        Los adjuntos del chat o de WhatsApp aparecen aquí. Para un video con
-        avatar, adjunta el archivo final de la fábrica y su referencia.
+        Usa tus adjuntos o selecciona un montaje aprobado de la fábrica. Walter
+        revisa la publicación antes de programarla.
       </p>
       <Notice error={error} />
       <form
@@ -897,7 +912,7 @@ function EditorPieza({
           void guardar({
             cuentaId: f.get("cuentaId"),
             plantilla: f.get("plantilla"),
-            formato: f.get("formato"),
+            formato: videoId ? "reel" : f.get("formato"),
             titulo,
             texto,
             detalle: f.get("detalle"),
@@ -918,8 +933,9 @@ function EditorPieza({
             programada: f.get("fecha")
               ? new Date(String(f.get("fecha"))).toISOString()
               : undefined,
-            origen: f.get("videoId") ? "fabrica" : "web",
-            videoId: f.get("videoId"),
+            origen: videoId ? "fabrica" : "web",
+            videoId,
+            montaje: videoId ? { revision: revisionMontaje } : undefined,
           });
         }}
       >
@@ -936,7 +952,11 @@ function EditorPieza({
           </label>
           <label>
             Formato
-            <select name="formato" defaultValue={pieza?.datos.formato}>
+            <select
+              name="formato"
+              defaultValue={pieza?.datos.formato}
+              disabled={!!videoId}
+            >
               {formatos.map((f) => (
                 <option key={f}>{f}</option>
               ))}
@@ -1054,9 +1074,66 @@ function EditorPieza({
           </label>
         )}
         <label>
+          Montaje aprobado de fábrica
+          <select
+            value={videoId ? `${videoId}:${revisionMontaje}` : ""}
+            onChange={(e) => {
+              const v = montajes.find(
+                (v) => `${v.id}:${v.revision}` === e.target.value,
+              );
+              setVideoId(v?.id ?? "");
+              setRevisionMontaje(v?.revision ?? "");
+              if (v) setIds([]);
+            }}
+          >
+            <option value="">Usar adjuntos y plantilla</option>
+            {videoId &&
+              !montajes.some(
+                (v) => v.id === videoId && v.revision === revisionMontaje,
+              ) && (
+                <option value={`${videoId}:${revisionMontaje}`} disabled>
+                  Revisión anterior no disponible: vuelve a seleccionar
+                </option>
+              )}
+            {montajes
+              .filter((v) => v.ownerId === marca.ownerId)
+              .map((v) => (
+                <option
+                  key={`${v.id}:${v.revision}`}
+                  value={`${v.id}:${v.revision}`}
+                >
+                  {v.titulo} · {v.revision.slice(0, 8)}
+                </option>
+              ))}
+          </select>
+        </label>
+        <p>
+          MP4 de hasta 50 MiB, conservado sin cambios como reel. El título y el
+          texto acompañan la publicación; no se añaden al video. Si el enlace
+          caducó, actualiza la lista. Si no se recupera, Walter debe revisar el
+          original.
+        </p>
+        <button
+          type="button"
+          className="button"
+          disabled={busy || working}
+          onClick={() => void actualizarMontajes()}
+        >
+          Actualizar montajes desde fábrica
+        </button>
+        {videoId && (
+          <p>
+            <Link href={`/videos/${encodeURIComponent(videoId)}`}>
+              Revisar video de origen
+            </Link>{" "}
+            · Revisión {revisionMontaje.slice(0, 8)}
+          </p>
+        )}
+        <label>
           Fotos, fondos o videos del dueño
           <select
             multiple
+            disabled={!!videoId}
             value={ids}
             onChange={(e) =>
               setIds(Array.from(e.target.selectedOptions, (o) => o.value))
@@ -1080,7 +1157,7 @@ function EditorPieza({
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
-            disabled={working || busy}
+            disabled={working || busy || !!videoId}
             onChange={async (e) => {
               const f = e.target.files?.[0];
               if (!f) return;
@@ -1097,10 +1174,6 @@ function EditorPieza({
               }
             }}
           />
-        </label>
-        <label>
-          Referencia del video de fábrica (opcional)
-          <input name="videoId" defaultValue={pieza?.datos.videoId} />
         </label>
         <p>
           <Link href="/">Abrir chat</Link> ·{" "}
@@ -1145,6 +1218,15 @@ function Pieza({
         <p>
           {p.datos.formato} · {p.estado} · Revisión {p.revision}
         </p>
+        {p.datos.montaje && (
+          <p>
+            Montaje de fábrica sin cambios ·{" "}
+            <Link href={`/videos/${encodeURIComponent(p.datos.videoId)}`}>
+              Ver origen
+            </Link>{" "}
+            · Revisión {p.datos.montaje.revision.slice(0, 8)}
+          </p>
+        )}
         <p className="marca-caption">{p.datos.texto}</p>
         {p.aviso && <p role="status">{p.aviso}</p>}
         {p.metricas && (

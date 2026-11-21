@@ -8,6 +8,7 @@ import { assets, attachments, users, chatActions } from "../src/db/schema";
 import { eq } from "drizzle-orm";
 import { crearReto } from "../src/servicios/biblioteca";
 import { VozSimulada } from "../src/servicios/proveedores/simulados";
+import { fixtureMontaje } from "./fixture-montaje";
 async function prepararRevisionDemo() {
   if (
     process.env.COOPER_DEMO !== "1" ||
@@ -128,6 +129,8 @@ const server = createServer(async (req, res) => {
         .onConflictDoNothing()
         .run();
     }
+    if (input.montaje === "crear" || input.montaje === "cambiar")
+      await fixtureMontaje(user, input.montaje);
     await prepararRevisionDemo();
     const secure = process.env.AUTH_URL?.startsWith("https://") === true;
     const salt = `${secure ? "__Secure-" : ""}authjs.session-token`;
