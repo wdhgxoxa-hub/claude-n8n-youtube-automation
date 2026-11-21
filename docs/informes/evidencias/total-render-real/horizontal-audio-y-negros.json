@@ -1,0 +1,17 @@
+{
+  "sonoridad": {
+    "input_i": "-16.81",
+    "input_tp": "-4.42",
+    "input_lra": "2.20",
+    "input_thresh": "-27.11",
+    "output_i": "-16.11",
+    "output_tp": "-3.56",
+    "output_lra": "1.90",
+    "output_thresh": "-26.37",
+    "normalization_type": "dynamic",
+    "target_offset": "0.11"
+  },
+  "cuadros_negros": 0,
+  "decodificacion_errores": 0,
+  "decodificacion_advertencias": 0
+}

@@ -1,0 +1,47 @@
+{
+  "commit": "534260268fbd4fa43f777ed7501a2618b59a04fb",
+  "comandos": [
+    {
+      "comando": "npm ci",
+      "rc": 0,
+      "segundos": 5.28,
+      "log": "npm-ci.log"
+    },
+    {
+      "comando": "npm run lint",
+      "rc": 0,
+      "segundos": 3.09,
+      "log": "lint.log"
+    },
+    {
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "segundos": 3.76,
+      "log": "typecheck.log"
+    },
+    {
+      "comando": "npm test",
+      "rc": 0,
+      "segundos": 22.4,
+      "log": "unitarias.log"
+    },
+    {
+      "comando": "npm run test:e2e",
+      "rc": 0,
+      "segundos": 423.37,
+      "log": "e2e.log"
+    },
+    {
+      "comando": "npm run build",
+      "rc": 0,
+      "segundos": 4.42,
+      "log": "build.log"
+    },
+    {
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "segundos": 1.31,
+      "log": "flujos.log"
+    }
+  ]
+}

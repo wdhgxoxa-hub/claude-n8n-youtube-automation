@@ -1,0 +1,48 @@
+{
+  "formato": "vertical",
+  "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/vertical/cooper-cielo.mp4",
+  "sha256": "a403f89a7cf34d85e564178cdeb0b26548e21f804d372cf83643f0fe5ed21cbf",
+  "bytes": 2194048,
+  "ancho": 1080,
+  "alto": 1920,
+  "duracion_s": 22.300167,
+  "duracion_composicion_s": 22.21,
+  "fps": 30,
+  "sonoridad_lufs": -16.81,
+  "pico_dbtp": -4.42,
+  "subtitulos": 18,
+  "capturas": [
+    {
+      "archivo": "fotograma-1-a.png",
+      "segundo": 1.992
+    },
+    {
+      "archivo": "fotograma-1-b.png",
+      "segundo": 5.579
+    },
+    {
+      "archivo": "fotograma-2-a.png",
+      "segundo": 9.692
+    },
+    {
+      "archivo": "fotograma-2-b.png",
+      "segundo": 12.793
+    },
+    {
+      "archivo": "fotograma-3-a.png",
+      "segundo": 16.697
+    },
+    {
+      "archivo": "fotograma-3-b.png",
+      "segundo": 20.005
+    }
+  ],
+  "comprobaciones": [
+    "H264 yuv420p",
+    "AAC estéreo 48 kHz",
+    "30 fps",
+    "duración y sincronía <150ms",
+    "subtítulos visibles y pista mov_text cotejada",
+    "decodificación completa"
+  ]
+}

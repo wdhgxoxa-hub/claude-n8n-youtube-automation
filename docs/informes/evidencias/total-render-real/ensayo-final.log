@@ -1,0 +1,9 @@
+npm notice run cooper@0.1.0 test:render:local
+npm notice run node scripts/ensayo-total.mjs --render-local
+Instancia aislada lista: http://127.0.0.1:39569
+R1 nicho e idea: 1157ms
+R1 aprobar canal y crear biblia: 1585ms
+R1 guion: 872ms
+R1 aprobar guion y storyboard: 1892ms
+R1 imágenes voz render y calidad: 49269ms
+Evidencia: /home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z

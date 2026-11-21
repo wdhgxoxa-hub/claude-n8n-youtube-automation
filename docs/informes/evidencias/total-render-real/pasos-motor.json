@@ -1,0 +1,2355 @@
+[
+  {
+    "ejecucion": "2",
+    "flujo": "F · Orquestador",
+    "nodo": "Pedir nichos",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:01.028Z",
+    "duracionMs": 12,
+    "entrada": [
+      {
+        "json": {
+          "evento": "nuevo_canal",
+          "cooper": true,
+          "canal_id": "total-r1",
+          "criterios": "Ciencia cotidiana",
+          "dueno_email": "total@example.test"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "modo": "investigar_nichos",
+            "canal_id": "total-r1",
+            "dueno_email": "total@example.test",
+            "video_id": "",
+            "datos": {
+              "criterios": "Ciencia cotidiana",
+              "rechazos": []
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "7",
+    "flujo": "F · Retorno de Claude",
+    "nodo": "Fila actualizada",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:01.505Z",
+    "duracionMs": 7,
+    "entrada": [
+      {
+        "json": {
+          "job_id": "investigar_nichos-mwqs7fbh-rvd7v",
+          "video_id": "",
+          "canal_id": "total-r1",
+          "modo": "investigar_nichos",
+          "estado": "enviado",
+          "resultado": "",
+          "dueno_email": "total@example.test",
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:01.174Z",
+          "updatedAt": "2026-11-21T19:09:01.174Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "estado": "listo",
+            "resultado": "{\"resultado\":{\"canal\":{\"nombre_propuesto\":\"Ciencia de prueba 1\",\"nicho\":\"Ciencia cotidiana\",\"publico\":\"Curiosos\",\"promesa\":\"Explicaciones con dibujos\",\"formatos\":[\"short\"]},\"evidencia\":[],\"primeros_temas\":[\"Cielo al atardecer\"]},\"avisos\":[]}"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "10",
+    "flujo": "F · Aprobación (Telegram y computadora)",
+    "nodo": "Aprobación · preparar",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:01.869Z",
+    "duracionMs": 4,
+    "entrada": [
+      {
+        "json": {}
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "aprobacion_id": "ap-mwqs7fw1-ayjkw",
+            "etapa": "canal",
+            "video_id": "",
+            "canal_id": "total-r1",
+            "job_id": "investigar_nichos-mwqs7fbh-rvd7v",
+            "resumen": "Propuesta de canal: Ciencia de prueba 1\nNicho: Ciencia cotidiana\nPúblico: Curiosos\nPromesa: Explicaciones con dibujos\n\nEvidencia:\n\n\nPrimeros temas:\n– Cielo al atardecer",
+            "url": "http://localhost:5678/form-waiting/10",
+            "estado": "pendiente",
+            "cambios": "",
+            "decidido_en": "",
+            "aviso": "🧭 Propuesta de canal: Ciencia de prueba 1\nCiencia cotidiana\n\nÁbrelo para ver la evidencia y decidir.",
+            "pedido": "{\"dueno_email\":\"total@example.test\",\"canal_id\":\"total-r1\",\"etapa\":\"canal\",\"mensaje\":\"Propuesta de canal: Ciencia de prueba 1\\nNicho: Ciencia cotidiana\\nPúblico: Curiosos\\nPromesa: Explicaciones con dibujos\\n\\nEvidencia:\\n\\n\\nPrimeros temas:\\n– Cielo al atardecer\",\"aviso\":\"🧭 Propuesta de canal: Ciencia de prueba 1\\nCiencia cotidiana\\n\\nÁbrelo para ver la evidencia y decidir.\",\"contexto\":{\"canal\":{\"nombre_propuesto\":\"Ciencia de prueba 1\",\"nicho\":\"Ciencia cotidiana\",\"publico\":\"Curiosos\",\"promesa\":\"Explicaciones con dibujos\",\"formatos\":[\"short\"]},\"evidencia\":[],\"primeros_temas\":[\"Cielo al atardecer\"]},\"job_id\":\"investigar_nichos-mwqs7fbh-rvd7v\"}"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "10",
+    "flujo": "F · Aprobación (Telegram y computadora)",
+    "nodo": "Aprobación · cerrar",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:02.203Z",
+    "duracionMs": 19,
+    "entrada": [
+      {
+        "json": {
+          "aprobacion_id": "ap-mwqs7fw1-ayjkw",
+          "estado": "aprobado",
+          "cambios": "",
+          "decidido_en": "2026-11-21T19:09:02.202Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "aprobacion_id": "ap-mwqs7fw1-ayjkw",
+            "etapa": "canal",
+            "video_id": "",
+            "canal_id": "total-r1",
+            "job_id": "investigar_nichos-mwqs7fbh-rvd7v",
+            "resumen": "Propuesta de canal: Ciencia de prueba 1\nNicho: Ciencia cotidiana\nPúblico: Curiosos\nPromesa: Explicaciones con dibujos\n\nEvidencia:\n\n\nPrimeros temas:\n– Cielo al atardecer",
+            "url": "http://localhost:5678/form-waiting/10",
+            "estado": "aprobado",
+            "cambios": "",
+            "decidido_en": "2026-11-21T19:09:02.202Z",
+            "aviso": "🧭 Propuesta de canal: Ciencia de prueba 1\nCiencia cotidiana\n\nÁbrelo para ver la evidencia y decidir.",
+            "pedido": "{\"dueno_email\":\"total@example.test\",\"canal_id\":\"total-r1\",\"etapa\":\"canal\",\"mensaje\":\"Propuesta de canal: Ciencia de prueba 1\\nNicho: Ciencia cotidiana\\nPúblico: Curiosos\\nPromesa: Explicaciones con dibujos\\n\\nEvidencia:\\n\\n\\nPrimeros temas:\\n– Cielo al atardecer\",\"aviso\":\"🧭 Propuesta de canal: Ciencia de prueba 1\\nCiencia cotidiana\\n\\nÁbrelo para ver la evidencia y decidir.\",\"contexto\":{\"canal\":{\"nombre_propuesto\":\"Ciencia de prueba 1\",\"nicho\":\"Ciencia cotidiana\",\"publico\":\"Curiosos\",\"promesa\":\"Explicaciones con dibujos\",\"formatos\":[\"short\"]},\"evidencia\":[],\"primeros_temas\":[\"Cielo al atardecer\"]},\"job_id\":\"investigar_nichos-mwqs7fbh-rvd7v\"}",
+            "id": 1,
+            "createdAt": "2026-11-21T19:09:01.878Z",
+            "updatedAt": "2026-11-21T19:09:02.212Z"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "12",
+    "flujo": "F · Orquestador",
+    "nodo": "Nuevo canal",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:02.445Z",
+    "duracionMs": 19,
+    "entrada": [
+      {
+        "json": {
+          "dueno_email": "total@example.test",
+          "canal_id": "total-r1",
+          "etapa": "canal",
+          "aviso": "🧭 Propuesta de canal: Ciencia de prueba 1\nCiencia cotidiana\n\nÁbrelo para ver la evidencia y decidir.",
+          "contexto": {
+            "canal": {
+              "nombre_propuesto": "Ciencia de prueba 1",
+              "nicho": "Ciencia cotidiana",
+              "publico": "Curiosos",
+              "promesa": "Explicaciones con dibujos",
+              "formatos": [
+                "short"
+              ]
+            },
+            "evidencia": [],
+            "primeros_temas": [
+              "Cielo al atardecer"
+            ]
+          },
+          "job_id": "investigar_nichos-mwqs7fbh-rvd7v",
+          "evento": "aprobado",
+          "clave": "aprobado:canal",
+          "salida": 2
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "dueno_email": "total@example.test",
+            "canal_id": "total-r1",
+            "nombre": "Ciencia de prueba 1",
+            "nicho": "Ciencia cotidiana",
+            "estado": "creando_biblia",
+            "biblia_ruta": "",
+            "presupuesto_largo_usd": 5,
+            "presupuesto_short_usd": 2.5,
+            "plataformas": "youtube",
+            "formato_defecto": "short",
+            "metas": "{\"videos_semana\":3,\"formato\":\"short\",\"gasto_semana_usd\":10,\"retencion_min\":0.5,\"auto\":false}",
+            "cuenta": ""
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "17",
+    "flujo": "F · Retorno de Claude",
+    "nodo": "Fila actualizada",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:02.797Z",
+    "duracionMs": 2,
+    "entrada": [
+      {
+        "json": {
+          "job_id": "crear_biblia-mwqs7ggb-u6qnd",
+          "video_id": "",
+          "canal_id": "total-r1",
+          "modo": "crear_biblia",
+          "estado": "enviado",
+          "resultado": "",
+          "dueno_email": "total@example.test",
+          "id": 3,
+          "createdAt": "2026-11-21T19:09:02.633Z",
+          "updatedAt": "2026-11-21T19:09:02.633Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "estado": "listo",
+            "resultado": "{\"resultado\":{\"voz\":{\"descripcion\":\"Narrador claro\",\"gemini_voice\":\"Charon\"},\"estilo_visual\":{\"descripcion\":\"Ilustración didáctica\",\"paleta_hex\":[\"#112233\"]},\"personajes\":[],\"escenarios\":[],\"montaje\":{\"subtitulos\":true}},\"avisos\":[]}"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "18",
+    "flujo": "F · Orquestador",
+    "nodo": "Canal activo",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:03.011Z",
+    "duracionMs": 17,
+    "entrada": [
+      {
+        "json": {
+          "evento": "claude_ok",
+          "modo": "crear_biblia",
+          "job_id": "crear_biblia-mwqs7ggb-u6qnd",
+          "dueno_email": "total@example.test",
+          "video_id": "",
+          "canal_id": "total-r1",
+          "resultado": {
+            "voz": {
+              "descripcion": "Narrador claro",
+              "gemini_voice": "Charon"
+            },
+            "estilo_visual": {
+              "descripcion": "Ilustración didáctica",
+              "paleta_hex": [
+                "#112233"
+              ]
+            },
+            "personajes": [],
+            "escenarios": [],
+            "montaje": {
+              "subtitulos": true
+            }
+          },
+          "avisos": [],
+          "clave": "claude_ok:crear_biblia",
+          "salida": 4
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "estado": "activo",
+            "biblia_ruta": "trabajo:crear_biblia-mwqs7ggb-u6qnd"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "22",
+    "flujo": "F · Orquestador",
+    "nodo": "Pedir guion",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:03.638Z",
+    "duracionMs": 17,
+    "entrada": [
+      {
+        "json": {
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "tema": "Cielo al atardecer",
+          "formato": "short",
+          "etapa": "guion",
+          "estado": "en_proceso",
+          "drive_carpeta": "",
+          "youtube_id": "",
+          "error": "",
+          "publicar_en": null,
+          "publicado_en": null,
+          "storyboard": null,
+          "render_url": null,
+          "drive_url": null,
+          "miniatura_url": null,
+          "publicacion_id": null,
+          "version": 1,
+          "costo_usd": 0,
+          "presupuesto_usd": 2.5,
+          "intentos": 0,
+          "retencion": null,
+          "retencion_media": null,
+          "dueno_email": "total@example.test",
+          "eliminado": null,
+          "guion_cooper": null,
+          "cooper_actualizado_en": 1795288143521,
+          "cooper_evento_id": "22:Guardar video:0:0",
+          "presentacion": "null",
+          "cooper_orden_id": "",
+          "modo_noticia": false,
+          "noticia": "",
+          "noticia_guion_hash": "",
+          "noticia_storyboard_hash": "",
+          "cooper_escenas": null,
+          "metricas_youtube": null,
+          "metricas_consultadas_en": null,
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:03.527Z",
+          "updatedAt": "2026-11-21T19:09:03.527Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "modo": "guion",
+            "canal_id": "total-r1",
+            "video_id": "total-v1",
+            "datos": {
+              "modo_noticia": false,
+              "presentacion": null,
+              "tema": "Cielo al atardecer",
+              "elegir_tema": false,
+              "temas_recientes": [],
+              "nicho": "Ciencia cotidiana",
+              "formato": "short",
+              "biblia": {
+                "voz": {
+                  "descripcion": "Narrador claro",
+                  "gemini_voice": "Charon"
+                },
+                "estilo_visual": {
+                  "descripcion": "Ilustración didáctica",
+                  "paleta_hex": [
+                    "#112233"
+                  ]
+                },
+                "personajes": [],
+                "escenarios": [],
+                "montaje": {
+                  "subtitulos": true
+                }
+              },
+              "aprendizaje": [],
+              "aprendizaje_instrucciones": "Usa las lecciones como contexto del guion, respetando la biblia y las fuentes. No conviertas una observación aislada en regla ni cambies la biblia automáticamente; las propuestas requieren evidencia repetida en al menos tres videos.",
+              "tendencias": null,
+              "duracion_objetivo_s": 50,
+              "vidiq": "skip",
+              "indicaciones": "",
+              "documental_url": ""
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "29",
+    "flujo": "F · Retorno de Claude",
+    "nodo": "Fila actualizada",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:03.979Z",
+    "duracionMs": 3,
+    "entrada": [
+      {
+        "json": {
+          "job_id": "guion-mwqs7hbp-lces5",
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "modo": "guion",
+          "estado": "enviado",
+          "resultado": "",
+          "dueno_email": "total@example.test",
+          "id": 4,
+          "createdAt": "2026-11-21T19:09:03.755Z",
+          "updatedAt": "2026-11-21T19:09:03.755Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "estado": "listo",
+            "resultado": "{\"resultado\":{\"titulo\":\"Cielo al atardecer: la luz cambia\",\"tema_elegido\":\"Cielo al atardecer\",\"ganchos\":[\"¿Por qué cambia el color del cielo cuando cae la tarde?\"],\"gancho_elegido\":0,\"guion\":\"La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.\",\"rubrica\":{\"gancho\":9,\"promesa\":9,\"claridad\":9,\"emocion\":9,\"exactitud\":9,\"originalidad\":9}},\"avisos\":[]}"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "30",
+    "flujo": "F · Orquestador",
+    "nodo": "Mensaje de guion",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:04.242Z",
+    "duracionMs": 25,
+    "entrada": [
+      {
+        "json": {
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "tema": "Cielo al atardecer",
+          "formato": "short",
+          "etapa": "guion",
+          "estado": "en_proceso",
+          "drive_carpeta": "",
+          "youtube_id": "",
+          "error": "",
+          "publicar_en": null,
+          "publicado_en": null,
+          "storyboard": null,
+          "render_url": null,
+          "drive_url": null,
+          "miniatura_url": null,
+          "publicacion_id": null,
+          "version": 1,
+          "costo_usd": 0,
+          "presupuesto_usd": 2.5,
+          "intentos": 0,
+          "retencion": null,
+          "retencion_media": null,
+          "dueno_email": "total@example.test",
+          "eliminado": null,
+          "guion_cooper": null,
+          "cooper_actualizado_en": 1795288143521,
+          "cooper_evento_id": "22:Guardar video:0:0",
+          "presentacion": "null",
+          "cooper_orden_id": "",
+          "modo_noticia": false,
+          "noticia": "",
+          "noticia_guion_hash": "",
+          "noticia_storyboard_hash": "",
+          "cooper_escenas": null,
+          "metricas_youtube": null,
+          "metricas_consultadas_en": null,
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:03.527Z",
+          "updatedAt": "2026-11-21T19:09:03.527Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "etapa": "guion",
+            "mensaje": "Guion: Cielo al atardecer: la luz cambia\nGancho: ¿Por qué cambia el color del cielo cuando cae la tarde? (alerta 40/100 DÉBIL · La pregunta · flojo en riesgo)\nRúbrica: gancho 9 · promesa 9 · claridad 9 · emocion 9 · exactitud 9 · originalidad 9\n\nLa luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+            "aviso": "✍️ Guion listo · Cielo al atardecer: la luz cambia\n🔎 Tema elegido por la fábrica: \n\nGancho: «¿Por qué cambia el color del cielo cuando cae la tarde?»\nPuntaje: 9/10\n🪝 Gancho: 40/100 DÉBIL · La pregunta\n\nÁbrelo para leerlo completo y decidir.",
+            "contexto": {
+              "titulo": "Cielo al atardecer: la luz cambia",
+              "tema_elegido": "Cielo al atardecer",
+              "ganchos": [
+                "¿Por qué cambia el color del cielo cuando cae la tarde?"
+              ],
+              "gancho_elegido": 0,
+              "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+              "rubrica": {
+                "gancho": 9,
+                "promesa": 9,
+                "claridad": 9,
+                "emocion": 9,
+                "exactitud": 9,
+                "originalidad": 9
+              }
+            },
+            "video_id": "total-v1",
+            "canal_id": "total-r1"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "33",
+    "flujo": "F · Aprobación (Telegram y computadora)",
+    "nodo": "Aprobación · preparar",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:04.570Z",
+    "duracionMs": 10,
+    "entrada": [
+      {
+        "json": {
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "tema": "Cielo al atardecer",
+          "formato": "short",
+          "etapa": "aprobacion_guion",
+          "estado": "en_proceso",
+          "drive_carpeta": "",
+          "youtube_id": "",
+          "error": "",
+          "publicar_en": null,
+          "publicado_en": null,
+          "storyboard": null,
+          "render_url": null,
+          "drive_url": null,
+          "miniatura_url": null,
+          "publicacion_id": null,
+          "version": 1,
+          "costo_usd": 0,
+          "presupuesto_usd": 2.5,
+          "intentos": 0,
+          "retencion": null,
+          "retencion_media": null,
+          "dueno_email": "total@example.test",
+          "eliminado": null,
+          "guion_cooper": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+          "cooper_actualizado_en": 1795288144493,
+          "cooper_evento_id": "30:Guardar tema elegido:0:0",
+          "presentacion": "null",
+          "cooper_orden_id": "",
+          "modo_noticia": false,
+          "noticia": "",
+          "noticia_guion_hash": "",
+          "noticia_storyboard_hash": "",
+          "cooper_escenas": null,
+          "metricas_youtube": null,
+          "metricas_consultadas_en": null,
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:03.527Z",
+          "updatedAt": "2026-11-21T19:09:04.503Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "aprobacion_id": "ap-mwqs7hz3-vnj80",
+            "etapa": "guion",
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "job_id": "",
+            "resumen": "Guion: Cielo al atardecer: la luz cambia\nGancho: ¿Por qué cambia el color del cielo cuando cae la tarde? (alerta 40/100 DÉBIL · La pregunta · flojo en riesgo)\nRúbrica: gancho 9 · promesa 9 · claridad 9 · emocion 9 · exactitud 9 · originalidad 9\n\nLa luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+            "url": "",
+            "estado": "pendiente",
+            "cambios": "",
+            "decidido_en": "",
+            "aviso": "✍️ Guion listo · Cielo al atardecer: la luz cambia\n🔎 Tema elegido por la fábrica: \n\nGancho: «¿Por qué cambia el color del cielo cuando cae la tarde?»\nPuntaje: 9/10\n🪝 Gancho: 40/100 DÉBIL · La pregunta\n\nÁbrelo para leerlo completo y decidir.",
+            "pedido": "{\"etapa\":\"guion\",\"mensaje\":\"Guion: Cielo al atardecer: la luz cambia\\nGancho: ¿Por qué cambia el color del cielo cuando cae la tarde? (alerta 40/100 DÉBIL · La pregunta · flojo en riesgo)\\nRúbrica: gancho 9 · promesa 9 · claridad 9 · emocion 9 · exactitud 9 · originalidad 9\\n\\nLa luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.\",\"aviso\":\"✍️ Guion listo · Cielo al atardecer: la luz cambia\\n🔎 Tema elegido por la fábrica: \\n\\nGancho: «¿Por qué cambia el color del cielo cuando cae la tarde?»\\nPuntaje: 9/10\\n🪝 Gancho: 40/100 DÉBIL · La pregunta\\n\\nÁbrelo para leerlo completo y decidir.\",\"contexto\":{\"titulo\":\"Cielo al atardecer: la luz cambia\",\"tema_elegido\":\"Cielo al atardecer\",\"ganchos\":[\"¿Por qué cambia el color del cielo cuando cae la tarde?\"],\"gancho_elegido\":0,\"guion\":\"La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.\",\"rubrica\":{\"gancho\":9,\"promesa\":9,\"claridad\":9,\"emocion\":9,\"exactitud\":9,\"originalidad\":9}},\"video_id\":\"total-v1\",\"canal_id\":\"total-r1\"}"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "37",
+    "flujo": "F · Orquestador",
+    "nodo": "Pedir storyboard",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:05.463Z",
+    "duracionMs": 17,
+    "entrada": [
+      {
+        "json": {
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "tema": "Cielo al atardecer",
+          "formato": "short",
+          "etapa": "storyboard",
+          "estado": "en_proceso",
+          "drive_carpeta": "",
+          "youtube_id": "",
+          "error": "",
+          "publicar_en": null,
+          "publicado_en": null,
+          "storyboard": null,
+          "render_url": null,
+          "drive_url": null,
+          "miniatura_url": null,
+          "publicacion_id": null,
+          "version": 1,
+          "costo_usd": 0,
+          "presupuesto_usd": 2.5,
+          "intentos": 0,
+          "retencion": null,
+          "retencion_media": null,
+          "dueno_email": "total@example.test",
+          "eliminado": null,
+          "guion_cooper": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+          "cooper_actualizado_en": 1795288145145,
+          "cooper_evento_id": "37:Cooper · Canal del video guardar:0:0",
+          "presentacion": "null",
+          "cooper_orden_id": "",
+          "modo_noticia": false,
+          "noticia": "",
+          "noticia_guion_hash": "",
+          "noticia_storyboard_hash": "",
+          "cooper_escenas": null,
+          "metricas_youtube": null,
+          "metricas_consultadas_en": null,
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:03.527Z",
+          "updatedAt": "2026-11-21T19:09:05.154Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "modo": "storyboard",
+            "canal_id": "total-r1",
+            "video_id": "total-v1",
+            "datos": {
+              "modo_noticia": false,
+              "noticia": null,
+              "noticia_instrucciones": "Si modo_noticia: cada plano tipo imagen o clip, origen_visual generado, recurso_didactico mapa|cifra|esquema, hecho_ids de los hechos verificados; solo imágenes didácticas propias sin URLs, fotos de medios ni avatares. No inventes cifras.",
+              "guion": {
+                "titulo": "Cielo al atardecer: la luz cambia",
+                "tema_elegido": "Cielo al atardecer",
+                "ganchos": [
+                  "¿Por qué cambia el color del cielo cuando cae la tarde?"
+                ],
+                "gancho_elegido": 0,
+                "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+                "rubrica": {
+                  "gancho": 9,
+                  "promesa": 9,
+                  "claridad": 9,
+                  "emocion": 9,
+                  "exactitud": 9,
+                  "originalidad": 9
+                }
+              },
+              "biblia": {
+                "voz": {
+                  "descripcion": "Narrador claro",
+                  "gemini_voice": "Charon"
+                },
+                "estilo_visual": {
+                  "descripcion": "Ilustración didáctica",
+                  "paleta_hex": [
+                    "#112233"
+                  ]
+                },
+                "personajes": [],
+                "escenarios": [],
+                "montaje": {
+                  "subtitulos": true
+                }
+              },
+              "formato": "short",
+              "notas": "",
+              "tendencias": null,
+              "presentacion": null,
+              "presentacion_instrucciones": "Respeta presencia: completo en todas las escenas narradas; partes solo algunas. Marca usa_avatar boolean en cada plano. La voz elegida narra todos. No cambies IDs ni proveedores.",
+              "presupuesto_usd": 2.5,
+              "costos": {
+                "imagen_usd": 0.06,
+                "clip_seg_usd": 0.07
+              }
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "46",
+    "flujo": "F · Retorno de Claude",
+    "nodo": "Fila actualizada",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:05.874Z",
+    "duracionMs": 3,
+    "entrada": [
+      {
+        "json": {
+          "job_id": "storyboard-mwqs7iqt-2mstk",
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "modo": "storyboard",
+          "estado": "enviado",
+          "resultado": "",
+          "dueno_email": "total@example.test",
+          "id": 5,
+          "createdAt": "2026-11-21T19:09:05.595Z",
+          "updatedAt": "2026-11-21T19:09:05.595Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "estado": "listo",
+            "resultado": "{\"resultado\":{\"planos\":[{\"id\":\"p01\",\"tipo\":\"archivo\",\"busqueda\":\"atardecer cielo\",\"texto_narrado\":\"La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.\",\"prompt_imagen\":\"Diagrama propio de luz al atardecer\",\"encuadre\":\"general\",\"movimiento\":\"zoom lento\",\"personajes\":[],\"escenario\":\"cielo\",\"transicion\":\"corte\",\"texto_pantalla\":\"\"},{\"id\":\"p02\",\"tipo\":\"archivo\",\"busqueda\":\"atardecer cielo\",\"texto_narrado\":\"Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.\",\"prompt_imagen\":\"Diagrama propio de luz al atardecer\",\"encuadre\":\"general\",\"movimiento\":\"zoom lento\",\"personajes\":[],\"escenario\":\"cielo\",\"transicion\":\"corte\",\"texto_pantalla\":\"\"},{\"id\":\"p03\",\"tipo\":\"imagen\",\"busqueda\":\"atardecer cielo\",\"texto_narrado\":\"El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.\",\"prompt_imagen\":\"Diagrama propio de luz al atardecer\",\"encuadre\":\"general\",\"movimiento\":\"zoom lento\",\"personajes\":[],\"escenario\":\"cielo\",\"transicion\":\"corte\",\"texto_pantalla\":\"\"}],\"musica\":{},\"efectos\":[],\"cortes\":[],\"miniatura\":{},\"publicacion\":{\"youtube\":{\"titulos\":[\"Cielo al atardecer: la luz cambia\"],\"descripcion\":\"Ensayo con datos ficticios\"}}},\"avisos\":[]}"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "49",
+    "flujo": "F · Aprobación (Telegram y computadora)",
+    "nodo": "Aprobación · preparar",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:06.271Z",
+    "duracionMs": 7,
+    "entrada": [
+      {
+        "json": {
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "tema": "Cielo al atardecer",
+          "formato": "short",
+          "etapa": "storyboard",
+          "estado": "en_proceso",
+          "drive_carpeta": "",
+          "youtube_id": "",
+          "error": "",
+          "publicar_en": null,
+          "publicado_en": null,
+          "storyboard": null,
+          "render_url": null,
+          "drive_url": null,
+          "miniatura_url": null,
+          "publicacion_id": null,
+          "version": 1,
+          "costo_usd": 0,
+          "presupuesto_usd": 2.5,
+          "intentos": 0,
+          "retencion": null,
+          "retencion_media": null,
+          "dueno_email": "total@example.test",
+          "eliminado": null,
+          "guion_cooper": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+          "cooper_actualizado_en": 1795288145721,
+          "cooper_evento_id": "37:Video en storyboard:0:0",
+          "presentacion": "null",
+          "cooper_orden_id": "",
+          "modo_noticia": false,
+          "noticia": "",
+          "noticia_guion_hash": "",
+          "noticia_storyboard_hash": "",
+          "cooper_escenas": null,
+          "metricas_youtube": null,
+          "metricas_consultadas_en": null,
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:03.527Z",
+          "updatedAt": "2026-11-21T19:09:05.727Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "aprobacion_id": "ap-mwqs7jad-58muv",
+            "etapa": "storyboard",
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "job_id": "",
+            "resumen": "Storyboard listo: 3 planos (2 archivo, 1 imagen).\nCosto estimado: US$?\n\np01 [archivo, general] La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras \np02 [archivo, general] Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cáli\np03 [imagen, general] El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega con",
+            "url": "http://localhost:5678/form-waiting/49",
+            "estado": "pendiente",
+            "cambios": "",
+            "decidido_en": "",
+            "aviso": "🎬 Storyboard listo · 3 escenas\n2 clips de archivo · 1 imágenes\nCosto estimado: US$?\n\nÁbrelo para ver escena por escena y decidir. Al aprobar empieza el gasto.",
+            "pedido": {
+              "caracteres": 1992,
+              "sha256": "e870e848d2beba427be94a370f026c7eeedc09227d52c69b9b9cfb3822e06ae6"
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "49",
+    "flujo": "F · Aprobación (Telegram y computadora)",
+    "nodo": "Aprobación · cerrar",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:06.580Z",
+    "duracionMs": 18,
+    "entrada": [
+      {
+        "json": {
+          "aprobacion_id": "ap-mwqs7jad-58muv",
+          "estado": "aprobado",
+          "cambios": "",
+          "decidido_en": "2026-11-21T19:09:06.579Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "aprobacion_id": "ap-mwqs7jad-58muv",
+            "etapa": "storyboard",
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "job_id": "",
+            "resumen": "Storyboard listo: 3 planos (2 archivo, 1 imagen).\nCosto estimado: US$?\n\np01 [archivo, general] La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras \np02 [archivo, general] Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cáli\np03 [imagen, general] El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega con",
+            "url": "http://localhost:5678/form-waiting/49",
+            "estado": "aprobado",
+            "cambios": "",
+            "decidido_en": "2026-11-21T19:09:06.579Z",
+            "aviso": "🎬 Storyboard listo · 3 escenas\n2 clips de archivo · 1 imágenes\nCosto estimado: US$?\n\nÁbrelo para ver escena por escena y decidir. Al aprobar empieza el gasto.",
+            "pedido": {
+              "caracteres": 1992,
+              "sha256": "e870e848d2beba427be94a370f026c7eeedc09227d52c69b9b9cfb3822e06ae6"
+            },
+            "id": 3,
+            "createdAt": "2026-11-21T19:09:06.288Z",
+            "updatedAt": "2026-11-21T19:09:06.588Z"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "51",
+    "flujo": "F · Orquestador",
+    "nodo": "Encargo de producción",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:07.120Z",
+    "duracionMs": 19,
+    "entrada": [
+      {
+        "json": {
+          "job_id": "guion-mwqs7hbp-lces5",
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "modo": "guion",
+          "estado": "listo",
+          "resultado": "{\"resultado\":{\"titulo\":\"Cielo al atardecer: la luz cambia\",\"tema_elegido\":\"Cielo al atardecer\",\"ganchos\":[\"¿Por qué cambia el color del cielo cuando cae la tarde?\"],\"gancho_elegido\":0,\"guion\":\"La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.\",\"rubrica\":{\"gancho\":9,\"promesa\":9,\"claridad\":9,\"emocion\":9,\"exactitud\":9,\"originalidad\":9}},\"avisos\":[]}",
+          "dueno_email": "total@example.test",
+          "id": 4,
+          "createdAt": "2026-11-21T19:09:03.755Z",
+          "updatedAt": "2026-11-21T19:09:03.990Z"
+        }
+      },
+      {
+        "json": {
+          "job_id": "storyboard-mwqs7iqt-2mstk",
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "modo": "storyboard",
+          "estado": "listo",
+          "resultado": "{\"resultado\":{\"planos\":[{\"id\":\"p01\",\"tipo\":\"archivo\",\"busqueda\":\"atardecer cielo\",\"texto_narrado\":\"La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.\",\"prompt_imagen\":\"Diagrama propio de luz al atardecer\",\"encuadre\":\"general\",\"movimiento\":\"zoom lento\",\"personajes\":[],\"escenario\":\"cielo\",\"transicion\":\"corte\",\"texto_pantalla\":\"\"},{\"id\":\"p02\",\"tipo\":\"archivo\",\"busqueda\":\"atardecer cielo\",\"texto_narrado\":\"Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.\",\"prompt_imagen\":\"Diagrama propio de luz al atardecer\",\"encuadre\":\"general\",\"movimiento\":\"zoom lento\",\"personajes\":[],\"escenario\":\"cielo\",\"transicion\":\"corte\",\"texto_pantalla\":\"\"},{\"id\":\"p03\",\"tipo\":\"imagen\",\"busqueda\":\"atardecer cielo\",\"texto_narrado\":\"El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.\",\"prompt_imagen\":\"Diagrama propio de luz al atardecer\",\"encuadre\":\"general\",\"movimiento\":\"zoom lento\",\"personajes\":[],\"escenario\":\"cielo\",\"transicion\":\"corte\",\"texto_pantalla\":\"\"}],\"musica\":{},\"efectos\":[],\"cortes\":[],\"miniatura\":{},\"publicacion\":{\"youtube\":{\"titulos\":[\"Cielo al atardecer: la luz cambia\"],\"descripcion\":\"Ensayo con datos ficticios\"}}},\"avisos\":[]}",
+          "dueno_email": "total@example.test",
+          "id": 5,
+          "createdAt": "2026-11-21T19:09:05.595Z",
+          "updatedAt": "2026-11-21T19:09:05.883Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "modo_noticia": false,
+            "noticia": null,
+            "noticia_guion_hash": "",
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "tema": "Cielo al atardecer",
+            "version": 1,
+            "formato": "short",
+            "presupuesto_usd": 2.5,
+            "presentacion": null,
+            "storyboard": {
+              "planos": [
+                {
+                  "id": "p01",
+                  "tipo": "archivo",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                },
+                {
+                  "id": "p02",
+                  "tipo": "archivo",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                },
+                {
+                  "id": "p03",
+                  "tipo": "imagen",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                }
+              ],
+              "musica": {},
+              "efectos": [],
+              "cortes": [],
+              "miniatura": {},
+              "publicacion": {
+                "youtube": {
+                  "titulos": [
+                    "Cielo al atardecer: la luz cambia"
+                  ],
+                  "descripcion": "Ensayo con datos ficticios"
+                }
+              }
+            },
+            "guion": {
+              "titulo": "Cielo al atardecer: la luz cambia",
+              "tema_elegido": "Cielo al atardecer",
+              "ganchos": [
+                "¿Por qué cambia el color del cielo cuando cae la tarde?"
+              ],
+              "gancho_elegido": 0,
+              "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+              "rubrica": {
+                "gancho": 9,
+                "promesa": 9,
+                "claridad": 9,
+                "emocion": 9,
+                "exactitud": 9,
+                "originalidad": 9
+              }
+            },
+            "biblia": {
+              "voz": {
+                "descripcion": "Narrador claro",
+                "gemini_voice": "Charon"
+              },
+              "estilo_visual": {
+                "descripcion": "Ilustración didáctica",
+                "paleta_hex": [
+                  "#112233"
+                ]
+              },
+              "personajes": [],
+              "escenarios": [],
+              "montaje": {
+                "subtitulos": true
+              }
+            },
+            "notas": ""
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "57",
+    "flujo": "M4–M6 · Producción",
+    "nodo": "Plan de producción",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:07.328Z",
+    "duracionMs": 11,
+    "entrada": [
+      {
+        "json": {
+          "chatId": "8667738444",
+          "routineUrl": "http://127.0.0.1:9/solo-ensayo",
+          "retornoUrl": "http://127.0.0.1:9/solo-ensayo",
+          "allowClaude": true,
+          "allowImagenes": true,
+          "allowRevisionVisual": false,
+          "allowClips": false,
+          "allowVoz": true,
+          "allowMusica": false,
+          "allowArchivo": true,
+          "allowEfectos": false,
+          "allowCritico": false,
+          "allowTextoApi": false,
+          "allowVerificacion": false,
+          "allowReferencias": false,
+          "allowAvatar": false,
+          "allowMontaje": true,
+          "allowDrive": true,
+          "allowYoutube": false,
+          "allowAnalytics": false,
+          "allowVidiq": false,
+          "allowRadar": false,
+          "allowMiniaturas": false,
+          "allowCortes": false,
+          "allowRedes": false,
+          "privacidadYoutube": "public",
+          "modeloTexto": "gpt-6-astra",
+          "modeloImagen": "gpt-image-2.6-sunburst",
+          "modeloClip": "gemini-omni-1.2-flash",
+          "costoAvatarSegUsd": 0.1,
+          "costoVozHeygenCaracterUsd": 0.0001,
+          "costoVozElevenCaracterUsd": 0.0003,
+          "modeloVoz": "gemini-3.8-flash-tts",
+          "modeloCritico": "gpt-6-astra",
+          "vozGemini": "Charon",
+          "costoImagenUsd": 0.06,
+          "costoClipSegUsd": 0.07,
+          "costoRevisionUsd": 0.01,
+          "costoCriticoUsd": 0.02,
+          "costoRadarUsd": 0.05,
+          "costoVerificacionUsd": 0.25,
+          "costoVozUsdPorPlano": 0.002,
+          "avisoGastoPct": 0.8,
+          "presupuestoLargoUsd": 5,
+          "maxVideosDiaPorCanal": 20,
+          "maxVideosDiaTotal": 40,
+          "presupuestoShortUsd": 2.5,
+          "movimientoMinShort": 0.6,
+          "clipsMaxShort": 4,
+          "maxIntentosPlano": 2,
+          "driveCarpetaRaizId": "1Asm7vpt16gjt7uSp5FxaNO1Nfnb4fp1k",
+          "costoMiniaturaUsd": 0.06,
+          "idioma": "es",
+          "calendario": {
+            "zona": "America/Lima",
+            "horas": {
+              "youtube": 11,
+              "youtube_shorts": 16,
+              "tiktok": 19,
+              "instagram": 20,
+              "facebook": 21
+            },
+            "diasEntreLargos": 2,
+            "cortesDias": [
+              1,
+              3,
+              5
+            ],
+            "maxPorRedDia": 2
+          },
+          "baseUrl": "http://127.0.0.1:9/solo-ensayo",
+          "googleClientId": "405080624452-o72pmo2ti4ofdhm9seje5nfb27l11kdr.apps.googleusercontent.com"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "modo_noticia": false,
+            "noticia": null,
+            "noticia_guion_hash": "",
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "tema": "Cielo al atardecer",
+            "version": 1,
+            "formato": "short",
+            "presupuesto_usd": 2.5,
+            "presentacion": null,
+            "storyboard": {
+              "planos": [
+                {
+                  "id": "p01",
+                  "tipo": "archivo",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                },
+                {
+                  "id": "p02",
+                  "tipo": "archivo",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                },
+                {
+                  "id": "p03",
+                  "tipo": "imagen",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                }
+              ],
+              "musica": {},
+              "efectos": [],
+              "cortes": [],
+              "miniatura": {},
+              "publicacion": {
+                "youtube": {
+                  "titulos": [
+                    "Cielo al atardecer: la luz cambia"
+                  ],
+                  "descripcion": "Ensayo con datos ficticios"
+                }
+              }
+            },
+            "guion": {
+              "titulo": "Cielo al atardecer: la luz cambia",
+              "tema_elegido": "Cielo al atardecer",
+              "ganchos": [
+                "¿Por qué cambia el color del cielo cuando cae la tarde?"
+              ],
+              "gancho_elegido": 0,
+              "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+              "rubrica": {
+                "gancho": 9,
+                "promesa": 9,
+                "claridad": 9,
+                "emocion": 9,
+                "exactitud": 9,
+                "originalidad": 9
+              }
+            },
+            "biblia": {
+              "voz": {
+                "descripcion": "Narrador claro",
+                "gemini_voice": "Charon"
+              },
+              "estilo_visual": {
+                "descripcion": "Ilustración didáctica",
+                "paleta_hex": [
+                  "#112233"
+                ]
+              },
+              "personajes": [],
+              "escenarios": [],
+              "montaje": {
+                "subtitulos": true
+              }
+            },
+            "notas": "",
+            "planos": [
+              {
+                "id": "p01",
+                "tipo": "archivo",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              {
+                "id": "p02",
+                "tipo": "archivo",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              {
+                "id": "p03",
+                "tipo": "imagen",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              }
+            ],
+            "movimiento": {
+              "animados": []
+            },
+            "bloqueo": "",
+            "costo_estimado_usd": 0.13,
+            "presupuesto": 2.5,
+            "dentro": true,
+            "faltan": [],
+            "chatId": "8667738444"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "57",
+    "flujo": "M4–M6 · Producción",
+    "nodo": "Extraer imagen",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:15.761Z",
+    "duracionMs": 18,
+    "entrada": [
+      {
+        "json": {
+          "output": [
+            {
+              "type": "image_generation_call",
+              "status": "completed",
+              "result": {
+                "caracteres": 182552,
+                "sha256": "9a6d79fdc54a6f85de1f7b4fc28dd9dfe45e31a4facd4506353f75e0d226cdb1"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "video_id": "total-v1",
+            "plano": {
+              "id": "p03",
+              "tipo": "imagen",
+              "busqueda": "atardecer cielo",
+              "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+              "prompt_imagen": "Diagrama propio de luz al atardecer",
+              "encuadre": "general",
+              "movimiento": "zoom lento",
+              "personajes": [],
+              "escenario": "cielo",
+              "transicion": "corte",
+              "texto_pantalla": ""
+            },
+            "intento": 1,
+            "prompt": "Diagrama propio de luz al atardecer. Encuadre general, ángulo a la altura de los ojos, luz undefined. Estilo: Ilustración didáctica. paleta #112233. Sin texto, letras, cifras ni logos dentro de la imagen: las cifras las pone el montaje encima.",
+            "referencias": [],
+            "salida": 0
+          },
+          "binarios": {
+            "imagen": {
+              "mimeType": "image/png",
+              "fileName": "p03.png"
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "57",
+    "flujo": "M4–M6 · Producción",
+    "nodo": "URL del plano",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:15.890Z",
+    "duracionMs": 18,
+    "entrada": [
+      {
+        "json": {
+          "id": "permiso-57-Compartirenlace-0-0",
+          "type": "anyone",
+          "role": "reader"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "video_id": "total-v1",
+            "plano": {
+              "id": "p03",
+              "tipo": "imagen",
+              "busqueda": "atardecer cielo",
+              "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+              "prompt_imagen": "Diagrama propio de luz al atardecer",
+              "encuadre": "general",
+              "movimiento": "zoom lento",
+              "personajes": [],
+              "escenario": "cielo",
+              "transicion": "corte",
+              "texto_pantalla": ""
+            },
+            "intento": 1,
+            "prompt": "Diagrama propio de luz al atardecer. Encuadre general, ángulo a la altura de los ojos, luz undefined. Estilo: Ilustración didáctica. paleta #112233. Sin texto, letras, cifras ni logos dentro de la imagen: las cifras las pone el montaje encima.",
+            "referencias": [],
+            "salida": 0,
+            "url": "https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "66",
+    "flujo": "M5 · Sonido y emoción",
+    "nodo": "WAV",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:24.533Z",
+    "duracionMs": 78,
+    "entrada": [
+      {
+        "json": {
+          "steps": [
+            {
+              "type": "model_output",
+              "content": [
+                {
+                  "type": "audio",
+                  "mime_type": "audio/l16;rate=24000",
+                  "data": {
+                    "caracteres": 505268,
+                    "sha256": "0c81ed8547b80d5371cffff80faeb0a386d30ec2642d457d25c45503c8f871e1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "steps": [
+            {
+              "type": "model_output",
+              "content": [
+                {
+                  "type": "audio",
+                  "mime_type": "audio/l16;rate=24000",
+                  "data": {
+                    "caracteres": 440624,
+                    "sha256": "819f096caf322b0e826dc6a4164053f6f55c44a9bb9d270aa884cdb7322979fe"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "steps": [
+            {
+              "type": "model_output",
+              "content": [
+                {
+                  "type": "audio",
+                  "mime_type": "audio/l16;rate=24000",
+                  "data": {
+                    "caracteres": 469604,
+                    "sha256": "e0d8c858e2dc919f435b8f85b2a111ea7c837a1749b6abaee5674ea0b1a8b3f6"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "video_id": "total-v1",
+            "plano_id": "p01",
+            "texto": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+            "estilo": "Narrador claro, en español latino neutro",
+            "voz": "Charon",
+            "proveedor": "gemini",
+            "presentacion": null,
+            "costo_voz_usd": 0.002,
+            "duracion_s": 7.82,
+            "palabras_por_minuto": 169
+          },
+          "binarios": {
+            "archivo": {
+              "mimeType": "audio/wav",
+              "fileName": "p01.wav"
+            }
+          }
+        },
+        {
+          "json": {
+            "video_id": "total-v1",
+            "plano_id": "p02",
+            "texto": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+            "estilo": "Narrador claro, en español latino neutro",
+            "voz": "Charon",
+            "proveedor": "gemini",
+            "presentacion": null,
+            "costo_voz_usd": 0.002,
+            "duracion_s": 6.74,
+            "palabras_por_minuto": 187
+          },
+          "binarios": {
+            "archivo": {
+              "mimeType": "audio/wav",
+              "fileName": "p02.wav"
+            }
+          }
+        },
+        {
+          "json": {
+            "video_id": "total-v1",
+            "plano_id": "p03",
+            "texto": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+            "estilo": "Narrador claro, en español latino neutro",
+            "voz": "Charon",
+            "proveedor": "gemini",
+            "presentacion": null,
+            "costo_voz_usd": 0.002,
+            "duracion_s": 7.2,
+            "palabras_por_minuto": 183
+          },
+          "binarios": {
+            "archivo": {
+              "mimeType": "audio/wav",
+              "fileName": "p03.wav"
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "66",
+    "flujo": "M5 · Sonido y emoción",
+    "nodo": "Voz lista",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:24.984Z",
+    "duracionMs": 60,
+    "entrada": [
+      {
+        "json": {
+          "id": "permiso-66-Compartirvoz-0-0",
+          "type": "anyone",
+          "role": "reader"
+        }
+      },
+      {
+        "json": {
+          "id": "permiso-66-Compartirvoz-0-1",
+          "type": "anyone",
+          "role": "reader"
+        }
+      },
+      {
+        "json": {
+          "id": "permiso-66-Compartirvoz-0-2",
+          "type": "anyone",
+          "role": "reader"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "plano_id": "p01",
+            "costo_voz_usd": 0.002,
+            "duracion_s": 7.82,
+            "palabras_por_minuto": 169,
+            "url": "https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934"
+          }
+        },
+        {
+          "json": {
+            "plano_id": "p02",
+            "costo_voz_usd": 0.002,
+            "duracion_s": 6.74,
+            "palabras_por_minuto": 187,
+            "url": "https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93"
+          }
+        },
+        {
+          "json": {
+            "plano_id": "p03",
+            "costo_voz_usd": 0.002,
+            "duracion_s": 7.2,
+            "palabras_por_minuto": 183,
+            "url": "https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "66",
+    "flujo": "M5 · Sonido y emoción",
+    "nodo": "Resultado sonido",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:25.106Z",
+    "duracionMs": 9,
+    "entrada": [
+      {
+        "json": {
+          "voces": [
+            {
+              "plano_id": "p01",
+              "costo_voz_usd": 0.002,
+              "duracion_s": 7.82,
+              "palabras_por_minuto": 169,
+              "url": "https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934"
+            },
+            {
+              "plano_id": "p02",
+              "costo_voz_usd": 0.002,
+              "duracion_s": 6.74,
+              "palabras_por_minuto": 187,
+              "url": "https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93"
+            },
+            {
+              "plano_id": "p03",
+              "costo_voz_usd": 0.002,
+              "duracion_s": 7.2,
+              "palabras_por_minuto": 183,
+              "url": "https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a"
+            }
+          ]
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "voces": [
+              {
+                "plano_id": "p01",
+                "costo_voz_usd": 0.002,
+                "duracion_s": 7.82,
+                "palabras_por_minuto": 169,
+                "url": "https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934"
+              },
+              {
+                "plano_id": "p02",
+                "costo_voz_usd": 0.002,
+                "duracion_s": 6.74,
+                "palabras_por_minuto": 187,
+                "url": "https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93"
+              },
+              {
+                "plano_id": "p03",
+                "costo_voz_usd": 0.002,
+                "duracion_s": 7.2,
+                "palabras_por_minuto": 183,
+                "url": "https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a"
+              }
+            ],
+            "musica": null,
+            "efectos": []
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "57",
+    "flujo": "M4–M6 · Producción",
+    "nodo": "Composición Creatomate",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:25.527Z",
+    "duracionMs": 19,
+    "entrada": [
+      {
+        "json": {
+          "voces": [
+            {
+              "plano_id": "p01",
+              "costo_voz_usd": 0.002,
+              "duracion_s": 7.82,
+              "palabras_por_minuto": 169,
+              "url": "https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934"
+            },
+            {
+              "plano_id": "p02",
+              "costo_voz_usd": 0.002,
+              "duracion_s": 6.74,
+              "palabras_por_minuto": 187,
+              "url": "https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93"
+            },
+            {
+              "plano_id": "p03",
+              "costo_voz_usd": 0.002,
+              "duracion_s": 7.2,
+              "palabras_por_minuto": 183,
+              "url": "https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a"
+            }
+          ],
+          "musica": null,
+          "efectos": [],
+          "planos": [
+            {
+              "video_id": "total-v1",
+              "plano_id": "p01",
+              "url": "https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4",
+              "plano": {
+                "id": "p01",
+                "tipo": "archivo",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              "fuente": {
+                "banco": "Pexels",
+                "autor": "Cooper · gráfico original local (sin stock)",
+                "pagina": "https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4"
+              },
+              "intento": 0
+            },
+            {
+              "video_id": "total-v1",
+              "plano_id": "p02",
+              "url": "https://render-local.invalid/local-6a100fb2f008482af838358d.mp4",
+              "plano": {
+                "id": "p02",
+                "tipo": "archivo",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              "fuente": {
+                "banco": "Pexels",
+                "autor": "Cooper · gráfico original local (sin stock)",
+                "pagina": "https://render-local.invalid/local-6a100fb2f008482af838358d.mp4"
+              },
+              "intento": 0
+            },
+            {
+              "video_id": "total-v1",
+              "plano_id": "p03",
+              "url": "https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996",
+              "plano": {
+                "id": "p03",
+                "tipo": "imagen",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              "intento": 1,
+              "revisiones": 0,
+              "nota_revision": ""
+            }
+          ]
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "source": {
+              "output_format": "mp4",
+              "width": 1080,
+              "height": 1920,
+              "frame_rate": 30,
+              "elements": [
+                {
+                  "type": "composition",
+                  "track": 1,
+                  "name": "p01",
+                  "duration": 7.97,
+                  "elements": [
+                    {
+                      "type": "video",
+                      "source": "https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4",
+                      "fit": "cover",
+                      "volume": "0%",
+                      "loop": true
+                    },
+                    {
+                      "type": "audio",
+                      "source": "https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934",
+                      "duration": null
+                    },
+                    {
+                      "type": "text",
+                      "text": "La luz del sol",
+                      "time": 0,
+                      "duration": 0.86,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "cruza el aire y",
+                      "time": 0.86,
+                      "duration": 0.92,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "sus colores se dispersan",
+                      "time": 1.78,
+                      "duration": 1.48,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "en distintas direcciones mientras",
+                      "time": 3.26,
+                      "duration": 2.03,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "observamos el cielo desde",
+                      "time": 5.29,
+                      "duration": 1.54,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "nuestra ventana.",
+                      "time": 6.83,
+                      "duration": 0.99,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    }
+                  ]
+                },
+                {
+                  "type": "composition",
+                  "track": 1,
+                  "name": "p02",
+                  "duration": 6.89,
+                  "elements": [
+                    {
+                      "type": "video",
+                      "source": "https://render-local.invalid/local-6a100fb2f008482af838358d.mp4",
+                      "fit": "cover",
+                      "volume": "0%",
+                      "loop": true
+                    },
+                    {
+                      "type": "audio",
+                      "source": "https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93",
+                      "duration": null
+                    },
+                    {
+                      "type": "text",
+                      "text": "Al atardecer la luz",
+                      "time": 0,
+                      "duration": 1.17,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "recorre un camino mucho",
+                      "time": 1.17,
+                      "duration": 1.42,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "mayor por el aire",
+                      "time": 2.59,
+                      "duration": 1.05,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "y por eso vemos",
+                      "time": 3.64,
+                      "duration": 0.93,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "colores cálidos cerca del",
+                      "time": 4.57,
+                      "duration": 1.55,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "horizonte.",
+                      "time": 6.12,
+                      "duration": 0.62,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    }
+                  ]
+                },
+                {
+                  "type": "composition",
+                  "track": 1,
+                  "name": "p03",
+                  "duration": 7.35,
+                  "elements": [
+                    {
+                      "type": "image",
+                      "source": "https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996",
+                      "fit": "cover",
+                      "animations": [
+                        {
+                          "type": "scale",
+                          "scope": "element",
+                          "start_scale": "100%",
+                          "end_scale": "112%",
+                          "easing": "linear"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "audio",
+                      "source": "https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a",
+                      "duration": null
+                    },
+                    {
+                      "type": "text",
+                      "text": "El azul se dispersa",
+                      "time": 0,
+                      "duration": 1.26,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "más que el rojo.",
+                      "time": 1.26,
+                      "duration": 1.06,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "Cuando el sol está",
+                      "time": 2.32,
+                      "duration": 1.19,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "bajo, la luz directa",
+                      "time": 3.51,
+                      "duration": 1.32,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "que llega conserva más",
+                      "time": 4.83,
+                      "duration": 1.45,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    },
+                    {
+                      "type": "text",
+                      "text": "tonos cálidos.",
+                      "time": 6.28,
+                      "duration": 0.92,
+                      "y": "72%",
+                      "width": "86%",
+                      "x_alignment": "50%",
+                      "font_family": "Montserrat",
+                      "font_weight": "700",
+                      "font_size": "7.5 vmin",
+                      "fill_color": "#FFFFFF",
+                      "stroke_color": "#000000",
+                      "stroke_width": "1.2 vmin"
+                    }
+                  ]
+                }
+              ]
+            },
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "planos": 3,
+            "esperados": 3,
+            "duracion_estimada_s": 22.21,
+            "subtitulos": true,
+            "creditos": [
+              "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4)",
+              "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-6a100fb2f008482af838358d.mp4)"
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "57",
+    "flujo": "M4–M6 · Producción",
+    "nodo": "Consultar render",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:53.042Z",
+    "duracionMs": 44,
+    "entrada": [
+      {
+        "json": {
+          "id": "local-a403f89a7cf34d85e564178c",
+          "status": "succeeded",
+          "url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+          "duration": 22.300167,
+          "width": 1080,
+          "height": 1920
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "id": "local-a403f89a7cf34d85e564178c",
+            "status": "succeeded",
+            "url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+            "duration": 22.300167,
+            "width": 1080,
+            "height": 1920
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "57",
+    "flujo": "M4–M6 · Producción",
+    "nodo": "Render · limitar espera",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:53.086Z",
+    "duracionMs": 18,
+    "entrada": [
+      {
+        "json": {
+          "id": "local-a403f89a7cf34d85e564178c",
+          "status": "succeeded",
+          "url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+          "duration": 22.300167,
+          "width": 1080,
+          "height": 1920
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "id": "local-a403f89a7cf34d85e564178c",
+            "status": "succeeded",
+            "url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+            "duration": 22.300167,
+            "width": 1080,
+            "height": 1920,
+            "consultas_render": 1
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "93",
+    "flujo": "M7 · Calidad y publicación",
+    "nodo": "Chequeos objetivos",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:54.273Z",
+    "duracionMs": 9,
+    "entrada": [
+      {
+        "json": {
+          "chatId": "8667738444",
+          "routineUrl": "http://127.0.0.1:9/solo-ensayo",
+          "retornoUrl": "http://127.0.0.1:9/solo-ensayo",
+          "allowClaude": true,
+          "allowImagenes": true,
+          "allowRevisionVisual": false,
+          "allowClips": false,
+          "allowVoz": true,
+          "allowMusica": false,
+          "allowArchivo": true,
+          "allowEfectos": false,
+          "allowCritico": false,
+          "allowTextoApi": false,
+          "allowVerificacion": false,
+          "allowReferencias": false,
+          "allowAvatar": false,
+          "allowMontaje": true,
+          "allowDrive": true,
+          "allowYoutube": false,
+          "allowAnalytics": false,
+          "allowVidiq": false,
+          "allowRadar": false,
+          "allowMiniaturas": false,
+          "allowCortes": false,
+          "allowRedes": false,
+          "privacidadYoutube": "public",
+          "modeloTexto": "gpt-6-astra",
+          "modeloImagen": "gpt-image-2.6-sunburst",
+          "modeloClip": "gemini-omni-1.2-flash",
+          "costoAvatarSegUsd": 0.1,
+          "costoVozHeygenCaracterUsd": 0.0001,
+          "costoVozElevenCaracterUsd": 0.0003,
+          "modeloVoz": "gemini-3.8-flash-tts",
+          "modeloCritico": "gpt-6-astra",
+          "vozGemini": "Charon",
+          "costoImagenUsd": 0.06,
+          "costoClipSegUsd": 0.07,
+          "costoRevisionUsd": 0.01,
+          "costoCriticoUsd": 0.02,
+          "costoRadarUsd": 0.05,
+          "costoVerificacionUsd": 0.25,
+          "costoVozUsdPorPlano": 0.002,
+          "avisoGastoPct": 0.8,
+          "presupuestoLargoUsd": 5,
+          "maxVideosDiaPorCanal": 20,
+          "maxVideosDiaTotal": 40,
+          "presupuestoShortUsd": 2.5,
+          "movimientoMinShort": 0.6,
+          "clipsMaxShort": 4,
+          "maxIntentosPlano": 2,
+          "driveCarpetaRaizId": "1Asm7vpt16gjt7uSp5FxaNO1Nfnb4fp1k",
+          "costoMiniaturaUsd": 0.06,
+          "idioma": "es",
+          "calendario": {
+            "zona": "America/Lima",
+            "horas": {
+              "youtube": 11,
+              "youtube_shorts": 16,
+              "tiktok": 19,
+              "instagram": 20,
+              "facebook": 21
+            },
+            "diasEntreLargos": 2,
+            "cortesDias": [
+              1,
+              3,
+              5
+            ],
+            "maxPorRedDia": 2
+          },
+          "baseUrl": "http://127.0.0.1:9/solo-ensayo",
+          "googleClientId": "405080624452-o72pmo2ti4ofdhm9seje5nfb27l11kdr.apps.googleusercontent.com"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "render_url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+            "duracion_s": 22.300167,
+            "ancho": 1080,
+            "alto": 1920,
+            "planos": 3,
+            "esperados": 3,
+            "creditos": [
+              "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4)",
+              "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-6a100fb2f008482af838358d.mp4)"
+            ],
+            "subtitulos": true,
+            "duracion_estimada_s": 22.21,
+            "voces": [
+              {
+                "plano_id": "p01",
+                "ppm": 169,
+                "duracion_s": 7.82
+              },
+              {
+                "plano_id": "p02",
+                "ppm": 187,
+                "duracion_s": 6.74
+              },
+              {
+                "plano_id": "p03",
+                "ppm": 183,
+                "duracion_s": 7.2
+              }
+            ],
+            "usa_musica": false,
+            "costo_usd": 0.07,
+            "presupuesto": 2.5,
+            "formato": "short",
+            "carpeta": "archivo-57-Carpetadelvideo-0-0",
+            "tema": "Cielo al atardecer",
+            "cortes": [],
+            "miniatura_url": "",
+            "avisos_derivados": [],
+            "publicacion": {
+              "youtube": {
+                "titulos": [
+                  "Cielo al atardecer: la luz cambia"
+                ],
+                "descripcion": "Ensayo con datos ficticios"
+              }
+            },
+            "miniatura_texto": "",
+            "movimiento_real": 0.67,
+            "fallas": [],
+            "avisos": [],
+            "aprobado_qc": true
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ejecucion": "98",
+    "flujo": "F · Aprobación (Telegram y computadora)",
+    "nodo": "Aprobación · preparar",
+    "pasada": 0,
+    "inicio": "2026-11-21T19:09:54.959Z",
+    "duracionMs": 5,
+    "entrada": [
+      {
+        "json": {
+          "video_id": "total-v1",
+          "canal_id": "total-r1",
+          "tema": "Cielo al atardecer",
+          "formato": "short",
+          "etapa": "aprobacion_final",
+          "estado": "en_proceso",
+          "drive_carpeta": "https://drive.google.com/drive/folders/archivo-57-Carpetadelvideo-0-0",
+          "youtube_id": "",
+          "error": "",
+          "publicar_en": null,
+          "publicado_en": null,
+          "storyboard": null,
+          "render_url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+          "drive_url": null,
+          "miniatura_url": "",
+          "publicacion_id": null,
+          "version": 1,
+          "costo_usd": 0.07,
+          "presupuesto_usd": 2.5,
+          "intentos": 0,
+          "retencion": null,
+          "retencion_media": null,
+          "dueno_email": "total@example.test",
+          "eliminado": null,
+          "guion_cooper": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+          "cooper_actualizado_en": 1795288194337,
+          "cooper_evento_id": "93:Cooper · Aprobación final guardar:0:0",
+          "presentacion": "null",
+          "cooper_orden_id": "",
+          "modo_noticia": false,
+          "noticia": "",
+          "noticia_guion_hash": "",
+          "noticia_storyboard_hash": "",
+          "cooper_escenas": "[{\"id\":\"p01\",\"orden\":0,\"imagen\":\"\",\"clip\":\"https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4\",\"voz\":\"https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934\"},{\"id\":\"p02\",\"orden\":1,\"imagen\":\"\",\"clip\":\"https://render-local.invalid/local-6a100fb2f008482af838358d.mp4\",\"voz\":\"https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93\"},{\"id\":\"p03\",\"orden\":2,\"imagen\":\"https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996\",\"clip\":\"\",\"voz\":\"https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a\"}]",
+          "metricas_youtube": null,
+          "metricas_consultadas_en": null,
+          "id": 2,
+          "createdAt": "2026-11-21T19:09:03.527Z",
+          "updatedAt": "2026-11-21T19:09:54.364Z"
+        }
+      }
+    ],
+    "salida": [
+      [
+        {
+          "json": {
+            "aprobacion_id": "ap-mwqs8kur-abgst",
+            "etapa": "final",
+            "video_id": "total-v1",
+            "canal_id": "total-r1",
+            "job_id": "",
+            "resumen": "Video total-v1 listo (22 s, ~US$0.07).\nRevísalo: https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\nTítulos propuestos:\n1. Cielo al atardecer: la luz cambia — 90/100 · sin-cifra\nCarpeta: https://drive.google.com/drive/folders/archivo-57-Carpetadelvideo-0-0\n\n¿Lo apruebo para publicarlo?",
+            "url": "",
+            "estado": "pendiente",
+            "cambios": "",
+            "decidido_en": "",
+            "aviso": "🎞️ Video listo · 22 s · US$0.07\n▶️ https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\n\nSi te gusta, apruébalo para publicarlo.",
+            "pedido": "{\"etapa\":\"final\",\"video_id\":\"total-v1\",\"canal_id\":\"total-r1\",\"aviso\":\"🎞️ Video listo · 22 s · US$0.07\\n▶️ https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\\n\\nSi te gusta, apruébalo para publicarlo.\",\"contexto\":{\"render_url\":\"https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\",\"creditos\":[\"Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4)\",\"Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-6a100fb2f008482af838358d.mp4)\"],\"cortes\":[],\"miniatura_url\":\"\",\"publicacion\":{\"youtube\":{\"titulos\":[\"Cielo al atardecer: la luz cambia\"],\"descripcion\":\"Ensayo con datos ficticios\"}},\"formato\":\"short\"},\"mensaje\":\"Video total-v1 listo (22 s, ~US$0.07).\\nRevísalo: https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\\nTítulos propuestos:\\n1. Cielo al atardecer: la luz cambia — 90/100 · sin-cifra\\nCarpeta: https://drive.google.com/drive/folders/archivo-57-Carpetadelvideo-0-0\\n\\n¿Lo apruebo para publicarlo?\"}"
+          }
+        }
+      ]
+    ]
+  }
+]

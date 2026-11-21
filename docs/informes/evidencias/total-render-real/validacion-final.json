@@ -1,0 +1,19 @@
+{
+  "fecha_lima": "2026-11-21 14:17",
+  "commit_verificado": "534260268fbd4fa43f777ed7501a2618b59a04fb",
+  "puerta": "PASS",
+  "comandos": 7,
+  "unitarias": 284,
+  "e2e": 43,
+  "flujos": 176,
+  "errores": 0,
+  "advertencias": 0,
+  "n8n_ejecuciones_exitosas": 99,
+  "medios_sha256_verificados": 2,
+  "qc_fallas": 0,
+  "qc_avisos": 0,
+  "publicaciones_propias": 0,
+  "contenedor": "exited",
+  "integrado_main_version_chatgpt": false,
+  "desplegado": false
+}

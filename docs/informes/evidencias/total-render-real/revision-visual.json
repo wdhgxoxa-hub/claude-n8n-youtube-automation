@@ -1,0 +1,35 @@
+{
+  "fecha_lima": "2026-11-21",
+  "capturas_revisadas": 12,
+  "formatos": [
+    "9:16",
+    "16:9"
+  ],
+  "observacion": "Títulos y subtítulos legibles en las doce capturas; tres gráficos distintos, sin texto cortado. Adaptación horizontal por recorte central; primer y segundo clip con zoom codificado; tercera imagen fija. Gráficos esquemáticos, sin escala física. No equivale a aprobación editorial o escucha humana.",
+  "clips": [
+    {
+      "clip": "clip-1.mp4",
+      "segundos": [
+        1,
+        10
+      ],
+      "sha256_fotogramas": [
+        "07f0c972b201389830523ea40210cfc01198be2d5ec8fc14b83a8a566697fa84",
+        "23723d80b3936cb4eb8a63a6ddabd4bf5a919bbbbedd62f27bcf1e02dfa2d763"
+      ],
+      "movimiento_observado": true
+    },
+    {
+      "clip": "clip-2.mp4",
+      "segundos": [
+        1,
+        10
+      ],
+      "sha256_fotogramas": [
+        "66819aedc453b6a9ce7905cd8928f84a846bc28324ffb31a596b3c7e6b07780a",
+        "d7f6e7d096261404906a5f7c7f98eea1b59c5379da4fe76bae0b8667f513ab0e"
+      ],
+      "movimiento_observado": true
+    }
+  ]
+}

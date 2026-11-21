@@ -1,0 +1,16 @@
+{
+  "proveedor": "piper-local",
+  "version": "1.8.0",
+  "modelo": "es_ES-davefx-medium.onnx",
+  "modelo_sha256": "6658b03b1a6c316ee4c265a9896abc1393353c2d9e1bca7d66c2c442e222a917",
+  "config_sha256": "0e0dda87c732f6f38771ff274a6380d9252f327dca77aa2963d5fbdf9ec54842",
+  "texto_sha256": "2310b4405d41a3da39506089ac91c1dfb3dffb30919ad3aa0b82f909edbf1fa7",
+  "wav_sha256": "46e19a88415e68445de952723c0b4dfc1941c27a894050320cdff3617ea4bb9a",
+  "frecuencia_hz": 22050,
+  "canales": 1,
+  "formato": "pcm_s16le",
+  "muestras": 161792,
+  "duracion_s": 7.337506,
+  "aislamiento_red": "unshare --user --map-root-user --net",
+  "costo_api_usd": 0
+}

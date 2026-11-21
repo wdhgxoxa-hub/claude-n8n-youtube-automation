@@ -1,0 +1,2426 @@
+{
+  "version": 1,
+  "inicio": "2026-11-21T19:08:46.211Z",
+  "fuente": "Snapshot ficticio copiado para ensayos; no contiene datos de producción ni credenciales",
+  "rondas": [
+    {
+      "ronda": 1,
+      "canal_id": "total-r1",
+      "video_id": "total-v1",
+      "pasos": [
+        {
+          "paso": "nicho e idea",
+          "inicio": "2026-11-21T19:09:00.374Z",
+          "duracionMs": 1156,
+          "entrada": {
+            "criterios": "Ciencia cotidiana"
+          },
+          "salida": {
+            "job_id": "investigar_nichos-mwqs7fbh-rvd7v",
+            "propuesta": {
+              "canal": {
+                "nombre_propuesto": "Ciencia de prueba 1",
+                "nicho": "Ciencia cotidiana",
+                "publico": "Curiosos",
+                "promesa": "Explicaciones con dibujos",
+                "formatos": [
+                  "short"
+                ]
+              },
+              "evidencia": [],
+              "primeros_temas": [
+                "Cielo al atardecer"
+              ]
+            }
+          }
+        },
+        {
+          "paso": "aprobar canal y crear biblia",
+          "inicio": "2026-11-21T19:09:01.531Z",
+          "duracionMs": 1585,
+          "entrada": {
+            "canal": {
+              "nombre_propuesto": "Ciencia de prueba 1",
+              "nicho": "Ciencia cotidiana",
+              "publico": "Curiosos",
+              "promesa": "Explicaciones con dibujos",
+              "formatos": [
+                "short"
+              ]
+            },
+            "evidencia": [],
+            "primeros_temas": [
+              "Cielo al atardecer"
+            ]
+          },
+          "salida": {
+            "aprobacion": {
+              "aprobacion_id": "ap-mwqs7fw1-ayjkw",
+              "etapa": "canal",
+              "contexto": {
+                "canal": {
+                  "nombre_propuesto": "Ciencia de prueba 1",
+                  "nicho": "Ciencia cotidiana",
+                  "publico": "Curiosos",
+                  "promesa": "Explicaciones con dibujos",
+                  "formatos": [
+                    "short"
+                  ]
+                },
+                "evidencia": [],
+                "primeros_temas": [
+                  "Cielo al atardecer"
+                ]
+              }
+            },
+            "job_id": "crear_biblia-mwqs7ggb-u6qnd",
+            "biblia": {
+              "voz": {
+                "descripcion": "Narrador claro",
+                "gemini_voice": "Charon"
+              },
+              "estilo_visual": {
+                "descripcion": "Ilustración didáctica",
+                "paleta_hex": [
+                  "#112233"
+                ]
+              },
+              "personajes": [],
+              "escenarios": [],
+              "montaje": {
+                "subtitulos": true
+              }
+            }
+          }
+        },
+        {
+          "paso": "guion",
+          "inicio": "2026-11-21T19:09:03.128Z",
+          "duracionMs": 871,
+          "entrada": {
+            "canal_id": "total-r1",
+            "video_id": "total-v1",
+            "tema": "Cielo al atardecer"
+          },
+          "salida": {
+            "job_id": "guion-mwqs7hbp-lces5",
+            "pedido": {
+              "contrato": "fabrica-v2",
+              "modo": "guion",
+              "job_id": "guion-mwqs7hbp-lces5",
+              "video_id": "total-v1",
+              "canal_id": "total-r1",
+              "datos": {
+                "modo_noticia": false,
+                "presentacion": null,
+                "tema": "Cielo al atardecer",
+                "elegir_tema": false,
+                "temas_recientes": [],
+                "nicho": "Ciencia cotidiana",
+                "formato": "short",
+                "biblia": {
+                  "voz": {
+                    "descripcion": "Narrador claro",
+                    "gemini_voice": "Charon"
+                  },
+                  "estilo_visual": {
+                    "descripcion": "Ilustración didáctica",
+                    "paleta_hex": [
+                      "#112233"
+                    ]
+                  },
+                  "personajes": [],
+                  "escenarios": [],
+                  "montaje": {
+                    "subtitulos": true
+                  }
+                },
+                "aprendizaje": [],
+                "aprendizaje_instrucciones": "Usa las lecciones como contexto del guion, respetando la biblia y las fuentes. No conviertas una observación aislada en regla ni cambies la biblia automáticamente; las propuestas requieren evidencia repetida en al menos tres videos.",
+                "tendencias": null,
+                "duracion_objetivo_s": 50,
+                "vidiq": "skip",
+                "indicaciones": "",
+                "documental_url": ""
+              }
+            },
+            "guion": {
+              "titulo": "Cielo al atardecer: la luz cambia",
+              "tema_elegido": "Cielo al atardecer",
+              "ganchos": [
+                "¿Por qué cambia el color del cielo cuando cae la tarde?"
+              ],
+              "gancho_elegido": 0,
+              "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+              "rubrica": {
+                "gancho": 9,
+                "promesa": 9,
+                "claridad": 9,
+                "emocion": 9,
+                "exactitud": 9,
+                "originalidad": 9
+              }
+            }
+          }
+        },
+        {
+          "paso": "aprobar guion y storyboard",
+          "inicio": "2026-11-21T19:09:04.000Z",
+          "duracionMs": 1892,
+          "entrada": {
+            "titulo": "Cielo al atardecer: la luz cambia",
+            "tema_elegido": "Cielo al atardecer",
+            "ganchos": [
+              "¿Por qué cambia el color del cielo cuando cae la tarde?"
+            ],
+            "gancho_elegido": 0,
+            "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+            "rubrica": {
+              "gancho": 9,
+              "promesa": 9,
+              "claridad": 9,
+              "emocion": 9,
+              "exactitud": 9,
+              "originalidad": 9
+            }
+          },
+          "salida": {
+            "aprobacion": {
+              "aprobacion_id": "ap-mwqs7hz3-vnj80",
+              "etapa": "guion",
+              "contexto": {
+                "titulo": "Cielo al atardecer: la luz cambia",
+                "tema_elegido": "Cielo al atardecer",
+                "ganchos": [
+                  "¿Por qué cambia el color del cielo cuando cae la tarde?"
+                ],
+                "gancho_elegido": 0,
+                "guion": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+                "rubrica": {
+                  "gancho": 9,
+                  "promesa": 9,
+                  "claridad": 9,
+                  "emocion": 9,
+                  "exactitud": 9,
+                  "originalidad": 9
+                }
+              }
+            },
+            "job_id": "storyboard-mwqs7iqt-2mstk",
+            "storyboard": {
+              "planos": [
+                {
+                  "id": "p01",
+                  "tipo": "archivo",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                },
+                {
+                  "id": "p02",
+                  "tipo": "archivo",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                },
+                {
+                  "id": "p03",
+                  "tipo": "imagen",
+                  "busqueda": "atardecer cielo",
+                  "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+                  "prompt_imagen": "Diagrama propio de luz al atardecer",
+                  "encuadre": "general",
+                  "movimiento": "zoom lento",
+                  "personajes": [],
+                  "escenario": "cielo",
+                  "transicion": "corte",
+                  "texto_pantalla": ""
+                }
+              ],
+              "musica": {},
+              "efectos": [],
+              "cortes": [],
+              "miniatura": {},
+              "publicacion": {
+                "youtube": {
+                  "titulos": [
+                    "Cielo al atardecer: la luz cambia"
+                  ],
+                  "descripcion": "Ensayo con datos ficticios"
+                }
+              }
+            }
+          }
+        },
+        {
+          "paso": "imágenes voz render y calidad",
+          "inicio": "2026-11-21T19:09:05.892Z",
+          "duracionMs": 49267,
+          "entrada": {
+            "planos": [
+              {
+                "id": "p01",
+                "tipo": "archivo",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "La luz del sol cruza el aire y sus colores se dispersan en distintas direcciones mientras observamos el cielo desde nuestra ventana.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              {
+                "id": "p02",
+                "tipo": "archivo",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "Al atardecer la luz recorre un camino mucho mayor por el aire y por eso vemos colores cálidos cerca del horizonte.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              },
+              {
+                "id": "p03",
+                "tipo": "imagen",
+                "busqueda": "atardecer cielo",
+                "texto_narrado": "El azul se dispersa más que el rojo. Cuando el sol está bajo, la luz directa que llega conserva más tonos cálidos.",
+                "prompt_imagen": "Diagrama propio de luz al atardecer",
+                "encuadre": "general",
+                "movimiento": "zoom lento",
+                "personajes": [],
+                "escenario": "cielo",
+                "transicion": "corte",
+                "texto_pantalla": ""
+              }
+            ],
+            "musica": {},
+            "efectos": [],
+            "cortes": [],
+            "miniatura": {},
+            "publicacion": {
+              "youtube": {
+                "titulos": [
+                  "Cielo al atardecer: la luz cambia"
+                ],
+                "descripcion": "Ensayo con datos ficticios"
+              }
+            }
+          },
+          "salida": {
+            "video": {
+              "id": 2,
+              "createdAt": "2026-11-21T19:09:03.527Z",
+              "updatedAt": "2026-11-21T19:09:54.364Z",
+              "video_id": "total-v1",
+              "canal_id": "total-r1",
+              "tema": "Cielo al atardecer",
+              "formato": "short",
+              "etapa": "aprobacion_final",
+              "estado": "en_proceso",
+              "drive_carpeta": "https://drive.google.com/drive/folders/archivo-57-Carpetadelvideo-0-0",
+              "youtube_id": "",
+              "error": "",
+              "publicar_en": null,
+              "publicado_en": null,
+              "storyboard": null,
+              "render_url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+              "drive_url": null,
+              "miniatura_url": "",
+              "publicacion_id": null,
+              "version": 1,
+              "costo_usd": 0.07,
+              "presupuesto_usd": 2.5,
+              "intentos": 0,
+              "retencion": null,
+              "retencion_media": null,
+              "dueno_email": "total@example.test",
+              "eliminado": null,
+              "guion_cooper": "La luz cruza el aire y sus colores se dispersan. Al atardecer recorre un camino mayor y vemos colores cálidos.",
+              "cooper_actualizado_en": 1795288194337,
+              "cooper_evento_id": "93:Cooper · Aprobación final guardar:0:0",
+              "presentacion": "null",
+              "cooper_orden_id": "",
+              "modo_noticia": false,
+              "noticia": "",
+              "noticia_guion_hash": "",
+              "noticia_storyboard_hash": "",
+              "cooper_escenas": "[{\"id\":\"p01\",\"orden\":0,\"imagen\":\"\",\"clip\":\"https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4\",\"voz\":\"https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934\"},{\"id\":\"p02\",\"orden\":1,\"imagen\":\"\",\"clip\":\"https://render-local.invalid/local-6a100fb2f008482af838358d.mp4\",\"voz\":\"https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93\"},{\"id\":\"p03\",\"orden\":2,\"imagen\":\"https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996\",\"clip\":\"\",\"voz\":\"https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a\"}]",
+              "metricas_youtube": null,
+              "metricas_consultadas_en": null
+            },
+            "planos": [
+              {
+                "id": 1,
+                "createdAt": "2026-11-21T19:09:15.955Z",
+                "updatedAt": "2026-11-21T19:09:15.955Z",
+                "video_id": "total-v1",
+                "plano_id": "p01",
+                "tipo": "archivo",
+                "prompt": null,
+                "estado": "listo",
+                "url": null,
+                "archivo_id": null,
+                "error": null,
+                "version": null,
+                "orden": null,
+                "costo_usd": 0,
+                "duracion_s": null,
+                "intentos": 0,
+                "archivo_url": "https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4",
+                "nota_revision": "",
+                "presentacion": "null",
+                "usa_avatar": false
+              },
+              {
+                "id": 2,
+                "createdAt": "2026-11-21T19:09:15.960Z",
+                "updatedAt": "2026-11-21T19:09:15.960Z",
+                "video_id": "total-v1",
+                "plano_id": "p02",
+                "tipo": "archivo",
+                "prompt": null,
+                "estado": "listo",
+                "url": null,
+                "archivo_id": null,
+                "error": null,
+                "version": null,
+                "orden": null,
+                "costo_usd": 0,
+                "duracion_s": null,
+                "intentos": 0,
+                "archivo_url": "https://render-local.invalid/local-6a100fb2f008482af838358d.mp4",
+                "nota_revision": "",
+                "presentacion": "null",
+                "usa_avatar": false
+              },
+              {
+                "id": 3,
+                "createdAt": "2026-11-21T19:09:15.961Z",
+                "updatedAt": "2026-11-21T19:09:15.961Z",
+                "video_id": "total-v1",
+                "plano_id": "p03",
+                "tipo": "imagen",
+                "prompt": null,
+                "estado": "listo",
+                "url": null,
+                "archivo_id": null,
+                "error": null,
+                "version": null,
+                "orden": null,
+                "costo_usd": 0.06,
+                "duracion_s": null,
+                "intentos": 1,
+                "archivo_url": "https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996",
+                "nota_revision": "",
+                "presentacion": "null",
+                "usa_avatar": false
+              }
+            ],
+            "aprobacion": {
+              "etapa": "final",
+              "video_id": "total-v1",
+              "canal_id": "total-r1",
+              "aviso": "🎞️ Video listo · 22 s · US$0.07\n▶️ https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\n\nSi te gusta, apruébalo para publicarlo.",
+              "contexto": {
+                "render_url": "https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4",
+                "creditos": [
+                  "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4)",
+                  "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-6a100fb2f008482af838358d.mp4)"
+                ],
+                "cortes": [],
+                "miniatura_url": "",
+                "publicacion": {
+                  "youtube": {
+                    "titulos": [
+                      "Cielo al atardecer: la luz cambia"
+                    ],
+                    "descripcion": "Ensayo con datos ficticios"
+                  }
+                },
+                "formato": "short"
+              },
+              "mensaje": "Video total-v1 listo (22 s, ~US$0.07).\nRevísalo: https://render-local.invalid/local-a403f89a7cf34d85e564178c.mp4\nTítulos propuestos:\n1. Cielo al atardecer: la luz cambia — 90/100 · sin-cifra\nCarpeta: https://drive.google.com/drive/folders/archivo-57-Carpetadelvideo-0-0\n\n¿Lo apruebo para publicarlo?"
+            }
+          }
+        }
+      ],
+      "resultado": "PASS"
+    }
+  ],
+  "sustituciones": [
+    {
+      "workflow_id": "FabErrores000001",
+      "nodo_id": "7349e58e-2ab0-48ec-b37b-561759890f66",
+      "nodo": "Avisar error",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabAprendizaje01",
+      "nodo_id": "997c7729-8896-427a-8cb1-20b023f2575b",
+      "nodo": "Retención",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "metricas-youtube",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabAprendizaje01",
+      "nodo_id": "9bb3d580-4ea3-459c-8c7d-daaa4390f466",
+      "nodo": "Métricas en redes",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabAprendizaje01",
+      "nodo_id": "71ae2d0c-1860-53a1-97a1-1d41d4b46e1f",
+      "nodo": "Cooper · métricas YouTube",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "metricas-youtube",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabAprobacion001",
+      "nodo_id": "3b605382-b64a-47b3-9991-82c46c1d2e85",
+      "nodo": "Aprobación · avisar",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabAvatar0000001",
+      "nodo_id": "678449d5-c67a-55d9-8583-7e78bbdf9f88",
+      "nodo": "Crear avatar",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "heygen",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabAvatar0000001",
+      "nodo_id": "4d50b089-5b40-5b10-90f5-fe282d5bf0e2",
+      "nodo": "Consultar avatar",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "heygen",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabConfirmar0001",
+      "nodo_id": "b04e6f94-80c4-4451-863d-a17b4c36866f",
+      "nodo": "Consultar Upload-Post",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabConfirmar0001",
+      "nodo_id": "0e096ad0-9574-45c0-a781-c648c657826f",
+      "nodo": "Avisar",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "23ba4e7e-0b10-4bb6-ace7-d45cfc660c87",
+      "nodo": "Renderizar corte",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "creatomate",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "c383523b-03ac-4157-a91a-920bcd0a4713",
+      "nodo": "Consultar cortes",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "creatomate",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "6d865a6e-2ef5-466c-824e-ffd94059cd1a",
+      "nodo": "Consultar otra vez",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "creatomate",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "7b63341a-8cf6-4a4d-9dbd-a23c23247e54",
+      "nodo": "Imagen de miniatura",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "openai",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "b452c391-3390-4e02-b464-f4e1256ebabe",
+      "nodo": "Subir base",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "3c0fd47e-b6dc-4fc6-849d-ed8965db5bee",
+      "nodo": "Nombrar base",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "7c1b9f5f-9aa3-4382-8cf0-ad7cb24b2e19",
+      "nodo": "Compartir base",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "39901e62-782f-46f9-be6e-700c396ba88c",
+      "nodo": "Renderizar miniatura",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "creatomate",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabDerivados0001",
+      "nodo_id": "43859e93-2d7d-49c7-91a2-c94712bb9d84",
+      "nodo": "Consultar miniatura",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "creatomate",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabLlamarClaude1",
+      "nodo_id": "8749329a-1a51-457f-bd81-7a12f82fd1c0",
+      "nodo": "Despertar routine",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "claude",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabLlamarClaude1",
+      "nodo_id": "26c964af-293c-48f8-a0c0-49b9fbad6c5f",
+      "nodo": "Aviso: Claude no respondió",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "e919647a-8b47-4b28-91f5-80794b6abe2f",
+      "nodo": "Aviso: investigando",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "ed6ab61a-c139-481d-9860-a5b928c89b38",
+      "nodo": "Aviso: canal listo",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "ef929fa7-8b48-4905-b0b9-26c7fe7054e5",
+      "nodo": "Aviso: escribiendo",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "353093d0-48e6-4410-bea6-1858836b9ae5",
+      "nodo": "Aviso: canal no listo",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "83a23a30-9ac8-4c5b-ba74-b1c4c3bba5df",
+      "nodo": "Aviso: tope diario",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "1d724395-13e2-4c97-a74b-1844432ebed6",
+      "nodo": "Resumen de aprendizaje",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "45934bfb-a337-453b-a3a2-7497b7fe29fa",
+      "nodo": "Descargar render",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "descarga",
+      "soportado": false
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "3acab0b6-58db-4e18-b070-af604aa5066c",
+      "nodo": "Abrir subida YouTube",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "28a16bb6-77f2-4bf5-9452-efecf2df7064",
+      "nodo": "Subir a YouTube",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "4ab20590-0bfa-42ae-a6b3-77f5577e8815",
+      "nodo": "Aviso: subido",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "cbe1c408-0584-46ae-8a25-221d2dee9921",
+      "nodo": "Aviso: YouTube apagado",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "37a38b6e-f9da-4162-a895-cf4bb53b84d0",
+      "nodo": "Aviso: publicando",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "01fe3b26-b77a-4427-97d0-2fb555c64167",
+      "nodo": "Aviso: canal sin YouTube",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "2a4523b5-d002-490f-8a10-5f4060dfe793",
+      "nodo": "Aviso: corrigiendo",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "cee0a379-7c52-49c2-af3b-2e5ec202c3b5",
+      "nodo": "Aviso: sin versión",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "80443491-1600-484f-b62a-430a08fe28f4",
+      "nodo": "Aviso: ajuste guardado",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "0cb3f5d1-6a92-4f79-926e-d461dd67857d",
+      "nodo": "Aviso: ajuste inválido",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "aa8bcb6f-b894-4adc-bccc-24108055eb32",
+      "nodo": "Aviso: programado",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "93b425c6-4a30-4144-bc06-ff558dc5e385",
+      "nodo": "Aviso: fecha inválida",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "315d9d6f-6660-4204-b447-e776c61a37d6",
+      "nodo": "Aviso: metas",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "dc65cd8b-9b92-4960-8bcb-820426a5d775",
+      "nodo": "Aviso: metas inválidas",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "40bb7326-6b64-42e3-a21f-927468b40e32",
+      "nodo": "Aviso: adopción en marcha",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "f66e9990-e3ff-4093-8883-d992b6eb2f11",
+      "nodo": "Aviso: cuenta no reconocida",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "8e4944b1-b756-40a3-a37d-5c9718f706ec",
+      "nodo": "Aviso: redes guardadas",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "388ee071-b839-40d3-98da-b591842abba1",
+      "nodo": "Aviso: redes inválidas",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabOrquestador01",
+      "nodo_id": "1987b7a9-3814-4013-bb65-d025bf266d85",
+      "nodo": "Aviso: evento",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "23973f20-ddc1-4319-880d-d0edcc216e04",
+      "nodo": "Aviso: falta encender",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "928e6a5e-1fc1-4588-8213-15376241d936",
+      "nodo": "Aviso: sobre presupuesto",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "45fa70e4-6986-45c3-ac1c-29a88aff8e0b",
+      "nodo": "Carpeta del canal: buscar",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "18f5e2c0-66fe-4f02-bbae-2e790ee11328",
+      "nodo": "Carpeta del canal: crear",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "b5a161b0-327a-4a64-a30b-3aaff9f1ecad",
+      "nodo": "Carpeta del video",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "8c175c35-1f66-4c2a-a36d-8ed80cd1b030",
+      "nodo": "Encargo: subir",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "015c9d5a-759e-487e-b01d-d7273377cc18",
+      "nodo": "Encargo: nombrar",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "4256a1d8-8002-4f7c-b02d-ed0e219546e4",
+      "nodo": "Buscar en Pexels",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:archivo",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "276f5f29-7285-492c-b4f4-e3aac776b3ad",
+      "nodo": "Buscar en Pixabay",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "pixabay",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "a37b6bbd-bfd3-4d0c-b809-b7b5743dad44",
+      "nodo": "Revisar archivo",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "openai",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "dd9270b0-d325-4c90-a85b-5f26bc51494f",
+      "nodo": "Generar imagen",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:imagen",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "59799d49-100d-4999-993d-bb5f8ad9865e",
+      "nodo": "Animar (Gemini Omni)",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "gemini",
+      "soportado": false
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "7f6b86e2-99f9-48b0-abfb-086807d8c39a",
+      "nodo": "Descargar clip",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "descarga",
+      "soportado": false
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "6526263b-a145-428b-aedd-0fea7231721f",
+      "nodo": "Subir a Drive",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:guardar",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "547d1464-3085-4d3a-8471-d19de445ad80",
+      "nodo": "Nombrar en Drive",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "32c8360e-3814-4289-a763-2da3d75691cf",
+      "nodo": "Compartir enlace",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "a8e93b60-95a8-456a-ae6d-980eff3e0538",
+      "nodo": "Revisar plano",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "openai",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "3a9868ab-657d-4775-8e4f-657336f6b396",
+      "nodo": "Permiso de gasto · avisar",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "4038886e-0c84-41f0-965e-0f7f7614414f",
+      "nodo": "Renderizar",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:render",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "73f1d0da-05e3-402c-bf61-225dd9239456",
+      "nodo": "Consultar render",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:consultar",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabProduccion001",
+      "nodo_id": "bc4a733a-8c88-4ef5-bdc8-f5191e9bc6b2",
+      "nodo": "Aviso: render fallido",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabPublicacion01",
+      "nodo_id": "2bb50ef9-29af-4758-a650-195de7cbd71d",
+      "nodo": "Aviso: no pasó calidad",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRadar00000001",
+      "nodo_id": "ec0469fd-6aea-41f2-affa-e2072b05f7d3",
+      "nodo": "Aviso: radar",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRedes00000001",
+      "nodo_id": "84602866-5ae8-497f-8edc-d9f7a314e73f",
+      "nodo": "Subir a redes",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRedes00000001",
+      "nodo_id": "4a147d99-da52-46aa-a92f-9f05c093e0c2",
+      "nodo": "Estado en redes",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRedes00000001",
+      "nodo_id": "cbd0f12f-b91d-40e7-9a0a-1d9323e1bd9a",
+      "nodo": "Aviso: publicado",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRedes00000001",
+      "nodo_id": "25448a4d-3ca7-42e7-aada-cbe583d239a1",
+      "nodo": "Aviso: nada que publicar",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReenviar00001",
+      "nodo_id": "5bdb97f5-180d-430b-aa29-13c9f9834e0d",
+      "nodo": "Probar enlace",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "descarga",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReenviar00001",
+      "nodo_id": "10c94d4e-412c-4092-9531-8a08c9dc36da",
+      "nodo": "Reenviar tarjeta",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "fc735d51-380b-4ee8-9008-a5741c2e828a",
+      "nodo": "Generar principal",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "openai",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "cd8b4a24-5b45-48ae-902c-e4a2427b15e8",
+      "nodo": "Subir principal",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "66682eb8-d030-40f6-91a0-440175dd5041",
+      "nodo": "Nombrar principal",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "816427c4-a248-46f2-b44c-8e767cd17f02",
+      "nodo": "Compartir principal",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "414d5f26-00c1-4422-860c-cd8bacd35e28",
+      "nodo": "Generar vista",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "openai",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "56b0ca94-724d-4af5-a7c0-024dd4ab385f",
+      "nodo": "Subir vista",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "b43b18da-39a6-4265-9bc6-b2e47fa46b67",
+      "nodo": "Nombrar vista",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "80d4e7ac-856f-4c1d-a791-7b5369695c5d",
+      "nodo": "Compartir vista",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "70c08981-586c-4f6f-8c93-11eee2d65af7",
+      "nodo": "Aviso: referencias listas",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabReferencias01",
+      "nodo_id": "e92755f2-880e-4a96-9ec5-1a0242d8ba03",
+      "nodo": "Aviso: referencias pendientes",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRutina0000001",
+      "nodo_id": "33ecc54d-5e69-4c9a-bf8a-2979f82bd6af",
+      "nodo": "Aviso: atascados",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRutina0000001",
+      "nodo_id": "a0dc3c06-05c8-461c-9254-80af67016f17",
+      "nodo": "Enviar reporte semanal",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabRutina0000001",
+      "nodo_id": "cb3a730f-05d3-4736-952c-478bc79db9b5",
+      "nodo": "Aviso: plan del día",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "7a8008a0-08c8-47ec-9384-d990cfaca00b",
+      "nodo": "Voz (Gemini TTS)",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:voz",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "438a5906-a5ec-43f3-9857-e62956ad7ba0",
+      "nodo": "Subir voz a Drive",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "local:guardar",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "3fc6983e-8211-460c-bf3f-59eb31275037",
+      "nodo": "Nombrar voz",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "0187ad17-337b-4a6d-b57f-71940fbdb3ba",
+      "nodo": "Compartir voz",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "drive",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "bbcf6a9c-ed64-4eea-9536-7959561339a0",
+      "nodo": "Iniciar Epidemic",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "epidemic",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "b876b4d2-d7c5-497f-ad4a-5adefa789ba0",
+      "nodo": "Epidemic listo",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "epidemic",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "b29968fa-6c3f-419a-87ab-eeee8d6d35dd",
+      "nodo": "Buscar música",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "epidemic",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "368ce1f8-76a0-47c7-b98d-505f2cc60adf",
+      "nodo": "Pedir descarga",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "epidemic",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "284369c3-adfe-4124-ab56-128e6bf59c4f",
+      "nodo": "Buscar efecto",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "epidemic",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "9980d90f-e2c6-448e-ab11-99be063e015c",
+      "nodo": "Pedir efecto",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "epidemic",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "7522b4b5-9427-59a9-8f2a-9c5b3442b3df",
+      "nodo": "Voz (HeyGen)",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "heygen",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabSonido0000001",
+      "nodo_id": "44ac67ec-bc17-52cf-add5-56188bcd54eb",
+      "nodo": "Voz (ElevenLabs)",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "elevenlabs",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabTextoGPT0001",
+      "nodo_id": "c32eecdc-193a-54fb-926e-952f8fa09b2b",
+      "nodo": "Intentar Codex",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "texto",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabTextoGPT0001",
+      "nodo_id": "10b7676a-78fd-5a41-bb03-8a06b98c4a63",
+      "nodo": "Respaldo OpenAI",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "texto",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabVidiq00000001",
+      "nodo_id": "9026f97d-8034-4cef-a4e0-bc672f9fc3b1",
+      "nodo": "Iniciar vidIQ",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "vidiq",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabVidiq00000001",
+      "nodo_id": "00ff4e36-c562-4fe7-982d-fca40a9eff4f",
+      "nodo": "vidIQ listo",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "vidiq",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabVidiq00000001",
+      "nodo_id": "8a861dee-d11b-4aae-8853-0fa7f8a3e816",
+      "nodo": "Palabras clave",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "vidiq",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabVidiq00000001",
+      "nodo_id": "03b740f2-6cd3-4d53-b38c-ee60f7d51742",
+      "nodo": "Videos que destacan",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "vidiq",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabVidiq00000001",
+      "nodo_id": "db4380ca-2780-4c08-99af-bf9f272196dc",
+      "nodo": "Puntuar título",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "vidiq",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabVidiq00000001",
+      "nodo_id": "ae02fc06-57cd-4b91-a6a7-ebb1e9f5e8c3",
+      "nodo": "Consultar cuenta",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "vidiq",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabYouTube000001",
+      "nodo_id": "c854d943-b427-47cf-b007-8441710d57e7",
+      "nodo": "Renovar token",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabYouTube000001",
+      "nodo_id": "d1a71b71-9ffb-416b-913d-73441fe0bb91",
+      "nodo": "Canal en YouTube",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabYouTube000001",
+      "nodo_id": "4007d29c-a0db-4564-8b02-aefaa5c2fd25",
+      "nodo": "Canjear código",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabYouTube000001",
+      "nodo_id": "18aa9616-4f56-40a3-8ddb-5e54630cf182",
+      "nodo": "Qué canal es",
+      "tipo_original": "n8n-nodes-base.httpRequest",
+      "proveedor": "bloqueado-render-local",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabYouTube000001",
+      "nodo_id": "701090ac-4687-486e-83cd-9c6cab967ef8",
+      "nodo": "Aviso: conectado",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    },
+    {
+      "workflow_id": "FabYouTube000001",
+      "nodo_id": "22883f18-abe1-4cc5-8b92-ecde8bb39550",
+      "nodo": "Aviso: no conectado",
+      "tipo_original": "n8n-nodes-base.telegram",
+      "proveedor": "telegram",
+      "soportado": true
+    }
+  ],
+  "pruebas": [
+    "Copia histórica intacta después de todas las corridas",
+    "MP4 generado antes de calidad; aprobación final pendiente; ninguna publicación propia",
+    "Chequeos objetivos reales: cero fallas y cero avisos"
+  ],
+  "modo": "medios locales reales; detener en aprobación final",
+  "instancia": {
+    "url": "http://127.0.0.1:39569",
+    "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+    "contenedor": "cooper-total-render-real",
+    "volumen": "/home/david/.cache/cooper-total-render-real/run-XJnN1H/n8n",
+    "redInterna": true
+  },
+  "copia": {
+    "archivo": "../tests/fixtures/n8n-total-datos.json",
+    "origen": "Snapshot ficticio copiado para ensayos; no contiene datos de producción ni credenciales",
+    "sha256": "24bec9c71495ea119aabdfaf177ee5ffd3707239f4bad08664e2d9f1e26873c8",
+    "filas": 3,
+    "credenciales": 0
+  },
+  "formularios": [
+    {
+      "ejecucion": "10",
+      "etapa": "canal",
+      "estadoPrevio": "waiting",
+      "inicio": "2026-11-21T19:09:02.117Z",
+      "fin": "2026-11-21T19:09:02.163Z",
+      "http": 200
+    },
+    {
+      "ejecucion": "49",
+      "etapa": "storyboard",
+      "estadoPrevio": "waiting",
+      "inicio": "2026-11-21T19:09:06.519Z",
+      "fin": "2026-11-21T19:09:06.547Z",
+      "http": 200
+    }
+  ],
+  "errores": [],
+  "estadosFinales": {
+    "trabajos": [
+      {
+        "job_id": "investigar_nichos-mwqs7fbh-rvd7v",
+        "canal_id": "total-r1",
+        "video_id": "",
+        "modo": "investigar_nichos",
+        "estado": "listo"
+      },
+      {
+        "job_id": "crear_biblia-mwqs7ggb-u6qnd",
+        "canal_id": "total-r1",
+        "video_id": "",
+        "modo": "crear_biblia",
+        "estado": "listo"
+      },
+      {
+        "job_id": "guion-mwqs7hbp-lces5",
+        "canal_id": "total-r1",
+        "video_id": "total-v1",
+        "modo": "guion",
+        "estado": "listo"
+      },
+      {
+        "job_id": "storyboard-mwqs7iqt-2mstk",
+        "canal_id": "total-r1",
+        "video_id": "total-v1",
+        "modo": "storyboard",
+        "estado": "listo"
+      }
+    ],
+    "videos": [
+      {
+        "video_id": "total-v1",
+        "canal_id": "total-r1",
+        "etapa": "aprobacion_final",
+        "estado": "en_proceso"
+      }
+    ],
+    "aprobaciones": [
+      {
+        "aprobacion_id": "ap-mwqs7fw1-ayjkw",
+        "video_id": "",
+        "canal_id": "total-r1",
+        "etapa": "canal",
+        "estado": "aprobado"
+      },
+      {
+        "aprobacion_id": "ap-mwqs7hz3-vnj80",
+        "video_id": "total-v1",
+        "canal_id": "total-r1",
+        "etapa": "guion",
+        "estado": "decidida"
+      },
+      {
+        "aprobacion_id": "ap-mwqs7jad-58muv",
+        "video_id": "total-v1",
+        "canal_id": "total-r1",
+        "etapa": "storyboard",
+        "estado": "aprobado"
+      },
+      {
+        "aprobacion_id": "ap-mwqs8kur-abgst",
+        "video_id": "total-v1",
+        "canal_id": "total-r1",
+        "etapa": "final",
+        "estado": "pendiente"
+      }
+    ]
+  },
+  "traza": {
+    "archivo": "pasos-motor.json",
+    "pasos": 27
+  },
+  "ejecuciones": [
+    {
+      "id": "99",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.876Z",
+      "stoppedAt": "2026-11-21T19:09:54.925Z"
+    },
+    {
+      "id": "98",
+      "workflowId": "lTHlR3UQFjdaEtg2",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.814Z",
+      "stoppedAt": "2026-11-21T19:09:54.984Z"
+    },
+    {
+      "id": "97",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.627Z",
+      "stoppedAt": "2026-11-21T19:09:54.720Z"
+    },
+    {
+      "id": "96",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.536Z",
+      "stoppedAt": "2026-11-21T19:09:54.764Z"
+    },
+    {
+      "id": "95",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.406Z",
+      "stoppedAt": "2026-11-21T19:09:54.483Z"
+    },
+    {
+      "id": "94",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.220Z",
+      "stoppedAt": "2026-11-21T19:09:54.260Z"
+    },
+    {
+      "id": "93",
+      "workflowId": "UedHWTLcDQSaQBq8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:54.108Z",
+      "stoppedAt": "2026-11-21T19:09:54.825Z"
+    },
+    {
+      "id": "92",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.955Z",
+      "stoppedAt": "2026-11-21T19:09:54.023Z"
+    },
+    {
+      "id": "91",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.919Z",
+      "stoppedAt": "2026-11-21T19:09:54.048Z"
+    },
+    {
+      "id": "90",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.750Z",
+      "stoppedAt": "2026-11-21T19:09:53.789Z"
+    },
+    {
+      "id": "89",
+      "workflowId": "r88w0zQqcJwfmZsM",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.679Z",
+      "stoppedAt": "2026-11-21T19:09:53.842Z"
+    },
+    {
+      "id": "88",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.513Z",
+      "stoppedAt": "2026-11-21T19:09:53.569Z"
+    },
+    {
+      "id": "87",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.467Z",
+      "stoppedAt": "2026-11-21T19:09:53.619Z"
+    },
+    {
+      "id": "86",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:53.322Z",
+      "stoppedAt": "2026-11-21T19:09:53.393Z"
+    },
+    {
+      "id": "85",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:52.948Z",
+      "stoppedAt": "2026-11-21T19:09:53.007Z"
+    },
+    {
+      "id": "84",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:25.765Z",
+      "stoppedAt": "2026-11-21T19:09:25.874Z"
+    },
+    {
+      "id": "83",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:25.690Z",
+      "stoppedAt": "2026-11-21T19:09:25.918Z"
+    },
+    {
+      "id": "82",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:25.598Z",
+      "stoppedAt": "2026-11-21T19:09:25.627Z"
+    },
+    {
+      "id": "81",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:25.410Z",
+      "stoppedAt": "2026-11-21T19:09:25.449Z"
+    },
+    {
+      "id": "80",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:25.370Z",
+      "stoppedAt": "2026-11-21T19:09:25.480Z"
+    },
+    {
+      "id": "79",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:25.261Z",
+      "stoppedAt": "2026-11-21T19:09:25.294Z"
+    },
+    {
+      "id": "78",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:24.448Z",
+      "stoppedAt": "2026-11-21T19:09:24.490Z"
+    },
+    {
+      "id": "77",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:24.371Z",
+      "stoppedAt": "2026-11-21T19:09:24.426Z"
+    },
+    {
+      "id": "76",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:24.274Z",
+      "stoppedAt": "2026-11-21T19:09:24.348Z"
+    },
+    {
+      "id": "75",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.637Z",
+      "stoppedAt": "2026-11-21T19:09:16.666Z"
+    },
+    {
+      "id": "74",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.608Z",
+      "stoppedAt": "2026-11-21T19:09:16.695Z"
+    },
+    {
+      "id": "73",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.518Z",
+      "stoppedAt": "2026-11-21T19:09:16.563Z"
+    },
+    {
+      "id": "72",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.485Z",
+      "stoppedAt": "2026-11-21T19:09:16.590Z"
+    },
+    {
+      "id": "71",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.388Z",
+      "stoppedAt": "2026-11-21T19:09:16.439Z"
+    },
+    {
+      "id": "70",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.360Z",
+      "stoppedAt": "2026-11-21T19:09:16.464Z"
+    },
+    {
+      "id": "69",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.274Z",
+      "stoppedAt": "2026-11-21T19:09:16.298Z"
+    },
+    {
+      "id": "68",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.232Z",
+      "stoppedAt": "2026-11-21T19:09:16.315Z"
+    },
+    {
+      "id": "67",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.175Z",
+      "stoppedAt": "2026-11-21T19:09:16.198Z"
+    },
+    {
+      "id": "66",
+      "workflowId": "HNc1ZHxkW6sZTOP6",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.118Z",
+      "stoppedAt": "2026-11-21T19:09:25.115Z"
+    },
+    {
+      "id": "65",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:16.059Z",
+      "stoppedAt": "2026-11-21T19:09:16.087Z"
+    },
+    {
+      "id": "64",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:15.702Z",
+      "stoppedAt": "2026-11-21T19:09:15.741Z"
+    },
+    {
+      "id": "63",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:15.316Z",
+      "stoppedAt": "2026-11-21T19:09:15.363Z"
+    },
+    {
+      "id": "62",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:15.291Z",
+      "stoppedAt": "2026-11-21T19:09:15.382Z"
+    },
+    {
+      "id": "61",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:07.652Z",
+      "stoppedAt": "2026-11-21T19:09:07.674Z"
+    },
+    {
+      "id": "60",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:07.385Z",
+      "stoppedAt": "2026-11-21T19:09:07.446Z"
+    },
+    {
+      "id": "59",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:07.364Z",
+      "stoppedAt": "2026-11-21T19:09:07.469Z"
+    },
+    {
+      "id": "58",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:07.252Z",
+      "stoppedAt": "2026-11-21T19:09:07.289Z"
+    },
+    {
+      "id": "57",
+      "workflowId": "21Gckq7z71zfprNj",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:07.165Z",
+      "stoppedAt": "2026-11-21T19:09:54.116Z"
+    },
+    {
+      "id": "56",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:07.022Z",
+      "stoppedAt": "2026-11-21T19:09:07.076Z"
+    },
+    {
+      "id": "55",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.992Z",
+      "stoppedAt": "2026-11-21T19:09:07.093Z"
+    },
+    {
+      "id": "54",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.900Z",
+      "stoppedAt": "2026-11-21T19:09:06.954Z"
+    },
+    {
+      "id": "53",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.871Z",
+      "stoppedAt": "2026-11-21T19:09:06.976Z"
+    },
+    {
+      "id": "52",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.729Z",
+      "stoppedAt": "2026-11-21T19:09:06.749Z"
+    },
+    {
+      "id": "51",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.635Z",
+      "stoppedAt": "2026-11-21T19:09:07.217Z"
+    },
+    {
+      "id": "50",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.178Z",
+      "stoppedAt": "2026-11-21T19:09:06.252Z"
+    },
+    {
+      "id": "49",
+      "workflowId": "lTHlR3UQFjdaEtg2",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.151Z",
+      "stoppedAt": "2026-11-21T19:09:06.649Z"
+    },
+    {
+      "id": "48",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:06.037Z",
+      "stoppedAt": "2026-11-21T19:09:06.060Z"
+    },
+    {
+      "id": "47",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.924Z",
+      "stoppedAt": "2026-11-21T19:09:06.179Z"
+    },
+    {
+      "id": "46",
+      "workflowId": "I5ySRt9utssPD4xg",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.853Z",
+      "stoppedAt": "2026-11-21T19:09:05.939Z"
+    },
+    {
+      "id": "45",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.744Z",
+      "stoppedAt": "2026-11-21T19:09:05.765Z"
+    },
+    {
+      "id": "44",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.627Z",
+      "stoppedAt": "2026-11-21T19:09:05.670Z"
+    },
+    {
+      "id": "43",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.530Z",
+      "stoppedAt": "2026-11-21T19:09:05.555Z"
+    },
+    {
+      "id": "42",
+      "workflowId": "MSk3SF4uCZMN4IvO",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.487Z",
+      "stoppedAt": "2026-11-21T19:09:05.682Z"
+    },
+    {
+      "id": "41",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.366Z",
+      "stoppedAt": "2026-11-21T19:09:05.417Z"
+    },
+    {
+      "id": "40",
+      "workflowId": "VZ0n781UkTKnhefI",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.340Z",
+      "stoppedAt": "2026-11-21T19:09:05.439Z"
+    },
+    {
+      "id": "39",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.167Z",
+      "stoppedAt": "2026-11-21T19:09:05.189Z"
+    },
+    {
+      "id": "38",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:05.047Z",
+      "stoppedAt": "2026-11-21T19:09:05.068Z"
+    },
+    {
+      "id": "37",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.940Z",
+      "stoppedAt": "2026-11-21T19:09:05.795Z"
+    },
+    {
+      "id": "36",
+      "workflowId": "ACR2j0gl5trRiJjF",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.896Z",
+      "stoppedAt": "2026-11-21T19:09:04.956Z"
+    },
+    {
+      "id": "35",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.529Z",
+      "stoppedAt": "2026-11-21T19:09:04.565Z"
+    },
+    {
+      "id": "34",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.474Z",
+      "stoppedAt": "2026-11-21T19:09:04.536Z"
+    },
+    {
+      "id": "33",
+      "workflowId": "lTHlR3UQFjdaEtg2",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.449Z",
+      "stoppedAt": "2026-11-21T19:09:04.633Z"
+    },
+    {
+      "id": "32",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.340Z",
+      "stoppedAt": "2026-11-21T19:09:04.368Z"
+    },
+    {
+      "id": "31",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.171Z",
+      "stoppedAt": "2026-11-21T19:09:04.196Z"
+    },
+    {
+      "id": "30",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:04.045Z",
+      "stoppedAt": "2026-11-21T19:09:04.592Z"
+    },
+    {
+      "id": "29",
+      "workflowId": "I5ySRt9utssPD4xg",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.931Z",
+      "stoppedAt": "2026-11-21T19:09:04.060Z"
+    },
+    {
+      "id": "28",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.791Z",
+      "stoppedAt": "2026-11-21T19:09:03.829Z"
+    },
+    {
+      "id": "27",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.702Z",
+      "stoppedAt": "2026-11-21T19:09:03.722Z"
+    },
+    {
+      "id": "26",
+      "workflowId": "MSk3SF4uCZMN4IvO",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.664Z",
+      "stoppedAt": "2026-11-21T19:09:03.839Z"
+    },
+    {
+      "id": "25",
+      "workflowId": "ui8XqcQFbiigL7LK",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.548Z",
+      "stoppedAt": "2026-11-21T19:09:03.618Z"
+    },
+    {
+      "id": "24",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.361Z",
+      "stoppedAt": "2026-11-21T19:09:03.391Z"
+    },
+    {
+      "id": "23",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.284Z",
+      "stoppedAt": "2026-11-21T19:09:03.338Z"
+    },
+    {
+      "id": "22",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.212Z",
+      "stoppedAt": "2026-11-21T19:09:03.936Z"
+    },
+    {
+      "id": "21",
+      "workflowId": "ACR2j0gl5trRiJjF",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.149Z",
+      "stoppedAt": "2026-11-21T19:09:03.237Z"
+    },
+    {
+      "id": "20",
+      "workflowId": "a0vtOQKAsPzs3iVd",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:03.124Z",
+      "stoppedAt": "2026-11-21T19:09:03.426Z"
+    },
+    {
+      "id": "19",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.946Z",
+      "stoppedAt": "2026-11-21T19:09:02.974Z"
+    },
+    {
+      "id": "18",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.849Z",
+      "stoppedAt": "2026-11-21T19:09:03.150Z"
+    },
+    {
+      "id": "17",
+      "workflowId": "I5ySRt9utssPD4xg",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.777Z",
+      "stoppedAt": "2026-11-21T19:09:02.862Z"
+    },
+    {
+      "id": "16",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.669Z",
+      "stoppedAt": "2026-11-21T19:09:02.708Z"
+    },
+    {
+      "id": "15",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.556Z",
+      "stoppedAt": "2026-11-21T19:09:02.584Z"
+    },
+    {
+      "id": "14",
+      "workflowId": "MSk3SF4uCZMN4IvO",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.517Z",
+      "stoppedAt": "2026-11-21T19:09:02.722Z"
+    },
+    {
+      "id": "13",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.388Z",
+      "stoppedAt": "2026-11-21T19:09:02.416Z"
+    },
+    {
+      "id": "12",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:02.265Z",
+      "stoppedAt": "2026-11-21T19:09:02.751Z"
+    },
+    {
+      "id": "11",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.797Z",
+      "stoppedAt": "2026-11-21T19:09:01.848Z"
+    },
+    {
+      "id": "10",
+      "workflowId": "lTHlR3UQFjdaEtg2",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.772Z",
+      "stoppedAt": "2026-11-21T19:09:02.290Z"
+    },
+    {
+      "id": "9",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.689Z",
+      "stoppedAt": "2026-11-21T19:09:01.711Z"
+    },
+    {
+      "id": "8",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.571Z",
+      "stoppedAt": "2026-11-21T19:09:01.794Z"
+    },
+    {
+      "id": "7",
+      "workflowId": "I5ySRt9utssPD4xg",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.463Z",
+      "stoppedAt": "2026-11-21T19:09:01.586Z"
+    },
+    {
+      "id": "6",
+      "workflowId": "jqGrIKmM2WnFaDa8",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.232Z",
+      "stoppedAt": "2026-11-21T19:09:01.294Z"
+    },
+    {
+      "id": "5",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.089Z",
+      "stoppedAt": "2026-11-21T19:09:01.113Z"
+    },
+    {
+      "id": "4",
+      "workflowId": "MSk3SF4uCZMN4IvO",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:01.052Z",
+      "stoppedAt": "2026-11-21T19:09:01.307Z"
+    },
+    {
+      "id": "3",
+      "workflowId": "12V20XObOsbVu0Wp",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:00.917Z",
+      "stoppedAt": "2026-11-21T19:09:00.947Z"
+    },
+    {
+      "id": "2",
+      "workflowId": "l0oMNfTsXagWa3NP",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:00.754Z",
+      "stoppedAt": "2026-11-21T19:09:01.424Z"
+    },
+    {
+      "id": "1",
+      "workflowId": "ACR2j0gl5trRiJjF",
+      "status": "success",
+      "startedAt": "2026-11-21T19:09:00.669Z",
+      "stoppedAt": "2026-11-21T19:09:00.782Z"
+    }
+  ],
+  "resultado": "PASS",
+  "contenedorFinal": "exited",
+  "fin": "2026-11-21T19:09:58.523Z",
+  "medios": {
+    "coste_api_usd": 0,
+    "proveedor_voz": "Piper local es_ES-davefx-medium",
+    "archivos": [
+      {
+        "formato": "vertical",
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/vertical/cooper-cielo.mp4",
+        "sha256": "a403f89a7cf34d85e564178cdeb0b26548e21f804d372cf83643f0fe5ed21cbf",
+        "bytes": 2194048,
+        "ancho": 1080,
+        "alto": 1920,
+        "duracion_s": 22.300167,
+        "duracion_composicion_s": 22.21,
+        "fps": 30,
+        "sonoridad_lufs": -16.81,
+        "pico_dbtp": -4.42,
+        "subtitulos": 18,
+        "capturas": [
+          {
+            "archivo": "fotograma-1-a.png",
+            "segundo": 1.992
+          },
+          {
+            "archivo": "fotograma-1-b.png",
+            "segundo": 5.579
+          },
+          {
+            "archivo": "fotograma-2-a.png",
+            "segundo": 9.692
+          },
+          {
+            "archivo": "fotograma-2-b.png",
+            "segundo": 12.793
+          },
+          {
+            "archivo": "fotograma-3-a.png",
+            "segundo": 16.697
+          },
+          {
+            "archivo": "fotograma-3-b.png",
+            "segundo": 20.005
+          }
+        ],
+        "comprobaciones": [
+          "H264 yuv420p",
+          "AAC estéreo 48 kHz",
+          "30 fps",
+          "duración y sincronía <150ms",
+          "subtítulos visibles y pista mov_text cotejada",
+          "decodificación completa"
+        ]
+      },
+      {
+        "formato": "horizontal",
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/horizontal/cooper-cielo.mp4",
+        "sha256": "d951778596c7fa8b29a8e6445156e9cbe8095c8872c969f41377a01a0ba3c216",
+        "bytes": 3563845,
+        "ancho": 1920,
+        "alto": 1080,
+        "duracion_s": 22.300167,
+        "duracion_composicion_s": 22.21,
+        "fps": 30,
+        "sonoridad_lufs": -16.81,
+        "pico_dbtp": -4.42,
+        "subtitulos": 18,
+        "capturas": [
+          {
+            "archivo": "fotograma-1-a.png",
+            "segundo": 1.992
+          },
+          {
+            "archivo": "fotograma-1-b.png",
+            "segundo": 5.579
+          },
+          {
+            "archivo": "fotograma-2-a.png",
+            "segundo": 9.692
+          },
+          {
+            "archivo": "fotograma-2-b.png",
+            "segundo": 12.793
+          },
+          {
+            "archivo": "fotograma-3-a.png",
+            "segundo": 16.697
+          },
+          {
+            "archivo": "fotograma-3-b.png",
+            "segundo": 20.005
+          }
+        ],
+        "comprobaciones": [
+          "H264 yuv420p",
+          "AAC estéreo 48 kHz",
+          "30 fps",
+          "duración y sincronía <150ms",
+          "subtítulos visibles y pista mov_text cotejada",
+          "decodificación completa"
+        ]
+      }
+    ],
+    "operaciones": [
+      {
+        "op": "archivo",
+        "inicio": "2026-11-21T19:09:07.707Z"
+      },
+      {
+        "op": "archivo",
+        "inicio": "2026-11-21T19:09:11.590Z"
+      },
+      {
+        "op": "imagen",
+        "inicio": "2026-11-21T19:09:15.406Z"
+      },
+      {
+        "op": "guardar",
+        "inicio": "2026-11-21T19:09:15.801Z"
+      },
+      {
+        "op": "voz",
+        "inicio": "2026-11-21T19:09:16.723Z"
+      },
+      {
+        "op": "voz",
+        "inicio": "2026-11-21T19:09:19.834Z"
+      },
+      {
+        "op": "voz",
+        "inicio": "2026-11-21T19:09:21.566Z"
+      },
+      {
+        "op": "guardar",
+        "inicio": "2026-11-21T19:09:24.686Z"
+      },
+      {
+        "op": "guardar",
+        "inicio": "2026-11-21T19:09:24.739Z"
+      },
+      {
+        "op": "guardar",
+        "inicio": "2026-11-21T19:09:24.792Z"
+      },
+      {
+        "op": "render",
+        "inicio": "2026-11-21T19:09:25.980Z"
+      },
+      {
+        "op": "consultar",
+        "inicio": "2026-11-21T19:09:53.056Z"
+      }
+    ],
+    "recursos": [
+      {
+        "id": "local-4ed09d22711fe81266b73fbd",
+        "extension": "png",
+        "sha256": "4ed09d22711fe81266b73fbd994335d1138a85d82af36959dccf08e862ebdfb0",
+        "bytes": 186440,
+        "scene": 1,
+        "origen": "Gráfico vectorial original generado localmente",
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-4ed09d22711fe81266b73fbd.png"
+      },
+      {
+        "id": "local-eb61dc2ae664650c1c70bc31",
+        "extension": "mp4",
+        "sha256": "eb61dc2ae664650c1c70bc31afcafc6bd958b8359169ae04217cd9d8597a717a",
+        "bytes": 1064210,
+        "scene": 1,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-eb61dc2ae664650c1c70bc31.mp4"
+      },
+      {
+        "id": "local-de281a20dd4351e47729122e",
+        "extension": "png",
+        "sha256": "de281a20dd4351e47729122eb19e230bdbcfdf16d42664d5a81f7b7fdae199ec",
+        "bytes": 184305,
+        "scene": 2,
+        "origen": "Gráfico vectorial original generado localmente",
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-de281a20dd4351e47729122e.png"
+      },
+      {
+        "id": "local-6a100fb2f008482af838358d",
+        "extension": "mp4",
+        "sha256": "6a100fb2f008482af838358d08c8cb9db790ee18a5c497b4d70772f2f4194373",
+        "bytes": 1012394,
+        "scene": 2,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-6a100fb2f008482af838358d.mp4"
+      },
+      {
+        "id": "local-ec0ab39ea03755746f978996",
+        "extension": "png",
+        "sha256": "ec0ab39ea03755746f97899619f5fc0682df8c5b63a854d63638a1866d84f324",
+        "bytes": 136914,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-ec0ab39ea03755746f978996.png"
+      },
+      {
+        "id": "local-cbe1ce9d6186a28c7a003934",
+        "extension": "wav",
+        "sha256": "cbe1ce9d6186a28c7a003934180f3e36bfe2e882436555817d6606097b91104f",
+        "bytes": 375220,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-cbe1ce9d6186a28c7a003934.wav"
+      },
+      {
+        "id": "local-989440a61d902b2506c99a93",
+        "extension": "wav",
+        "sha256": "989440a61d902b2506c99a93e7cc7725c0bacf1373e0f116887482f21b6e7239",
+        "bytes": 323488,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-989440a61d902b2506c99a93.wav"
+      },
+      {
+        "id": "local-a8bfa906d6fd7b0b8585615a",
+        "extension": "wav",
+        "sha256": "a8bfa906d6fd7b0b8585615af904fbea1f25464691640f10331094ce2a04f708",
+        "bytes": 345474,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-a8bfa906d6fd7b0b8585615a.wav"
+      },
+      {
+        "id": "local-a403f89a7cf34d85e564178c",
+        "extension": "mp4",
+        "sha256": "a403f89a7cf34d85e564178cdeb0b26548e21f804d372cf83643f0fe5ed21cbf",
+        "bytes": 2194048,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-a403f89a7cf34d85e564178c.mp4"
+      },
+      {
+        "id": "local-d951778596c7fa8b29a8e644",
+        "extension": "mp4",
+        "sha256": "d951778596c7fa8b29a8e6445156e9cbe8095c8872c969f41377a01a0ba3c216",
+        "bytes": 3563845,
+        "archivo": "/home/david/Proyectos/cooper-wt/total-render-real/cooper/.cache/total-render-real/2026-11-21T19-08-46.211Z/medios/local-d951778596c7fa8b29a8e644.mp4"
+      }
+    ]
+  },
+  "relay": {
+    "solicitudes": 12,
+    "errores": 0
+  }
+}

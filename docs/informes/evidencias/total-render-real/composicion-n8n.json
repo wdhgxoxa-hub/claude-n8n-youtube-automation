@@ -1,0 +1,357 @@
+{
+  "source": {
+    "output_format": "mp4",
+    "width": 1080,
+    "height": 1920,
+    "frame_rate": 30,
+    "elements": [
+      {
+        "type": "composition",
+        "track": 1,
+        "name": "p01",
+        "duration": 7.97,
+        "elements": [
+          {
+            "type": "video",
+            "source": "https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4",
+            "fit": "cover",
+            "volume": "0%",
+            "loop": true
+          },
+          {
+            "type": "audio",
+            "source": "https://drive.google.com/uc?export=download&id=local-cbe1ce9d6186a28c7a003934",
+            "duration": null
+          },
+          {
+            "type": "text",
+            "text": "La luz del sol",
+            "time": 0,
+            "duration": 0.86,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "cruza el aire y",
+            "time": 0.86,
+            "duration": 0.92,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "sus colores se dispersan",
+            "time": 1.78,
+            "duration": 1.48,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "en distintas direcciones mientras",
+            "time": 3.26,
+            "duration": 2.03,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "observamos el cielo desde",
+            "time": 5.29,
+            "duration": 1.54,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "nuestra ventana.",
+            "time": 6.83,
+            "duration": 0.99,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          }
+        ]
+      },
+      {
+        "type": "composition",
+        "track": 1,
+        "name": "p02",
+        "duration": 6.89,
+        "elements": [
+          {
+            "type": "video",
+            "source": "https://render-local.invalid/local-6a100fb2f008482af838358d.mp4",
+            "fit": "cover",
+            "volume": "0%",
+            "loop": true
+          },
+          {
+            "type": "audio",
+            "source": "https://drive.google.com/uc?export=download&id=local-989440a61d902b2506c99a93",
+            "duration": null
+          },
+          {
+            "type": "text",
+            "text": "Al atardecer la luz",
+            "time": 0,
+            "duration": 1.17,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "recorre un camino mucho",
+            "time": 1.17,
+            "duration": 1.42,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "mayor por el aire",
+            "time": 2.59,
+            "duration": 1.05,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "y por eso vemos",
+            "time": 3.64,
+            "duration": 0.93,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "colores cálidos cerca del",
+            "time": 4.57,
+            "duration": 1.55,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "horizonte.",
+            "time": 6.12,
+            "duration": 0.62,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          }
+        ]
+      },
+      {
+        "type": "composition",
+        "track": 1,
+        "name": "p03",
+        "duration": 7.35,
+        "elements": [
+          {
+            "type": "image",
+            "source": "https://drive.google.com/uc?export=download&id=local-ec0ab39ea03755746f978996",
+            "fit": "cover",
+            "animations": [
+              {
+                "type": "scale",
+                "scope": "element",
+                "start_scale": "100%",
+                "end_scale": "112%",
+                "easing": "linear"
+              }
+            ]
+          },
+          {
+            "type": "audio",
+            "source": "https://drive.google.com/uc?export=download&id=local-a8bfa906d6fd7b0b8585615a",
+            "duration": null
+          },
+          {
+            "type": "text",
+            "text": "El azul se dispersa",
+            "time": 0,
+            "duration": 1.26,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "más que el rojo.",
+            "time": 1.26,
+            "duration": 1.06,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "Cuando el sol está",
+            "time": 2.32,
+            "duration": 1.19,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "bajo, la luz directa",
+            "time": 3.51,
+            "duration": 1.32,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "que llega conserva más",
+            "time": 4.83,
+            "duration": 1.45,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          },
+          {
+            "type": "text",
+            "text": "tonos cálidos.",
+            "time": 6.28,
+            "duration": 0.92,
+            "y": "72%",
+            "width": "86%",
+            "x_alignment": "50%",
+            "font_family": "Montserrat",
+            "font_weight": "700",
+            "font_size": "7.5 vmin",
+            "fill_color": "#FFFFFF",
+            "stroke_color": "#000000",
+            "stroke_width": "1.2 vmin"
+          }
+        ]
+      }
+    ]
+  },
+  "video_id": "total-v1",
+  "canal_id": "total-r1",
+  "planos": 3,
+  "esperados": 3,
+  "duracion_estimada_s": 22.21,
+  "subtitulos": true,
+  "creditos": [
+    "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-eb61dc2ae664650c1c70bc31.mp4)",
+    "Pexels: Cooper · gráfico original local (sin stock) (https://render-local.invalid/local-6a100fb2f008482af838358d.mp4)"
+  ]
+}

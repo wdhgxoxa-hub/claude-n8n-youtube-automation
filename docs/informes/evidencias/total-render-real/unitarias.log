@@ -1,0 +1,46 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/total-render-real/cooper
+
+ ✓ tests/whatsapp.test.ts (36 tests) 380ms
+ ✓ tests/marcas.test.ts (21 tests) 2262ms
+   ✓ render escapa texto y compone un reel real sin proveedor pago  1739ms
+ ✓ tests/medios.test.ts (20 tests) 95ms
+ ✓ tests/puente.test.ts (19 tests) 609ms
+     ✓ SSE reemite el evento persistido y omite eventos de otros dueños y costos  507ms
+ ✓ tests/cooper.test.ts (37 tests) 110ms
+ ✓ tests/chat-locales.test.ts (11 tests) 1360ms
+   ✓ valida el sobre entero antes de emitir texto o propuestas; no acepta herramientas del sistema  411ms
+   ✓ el JSON del ejecutable pasa por dueño, esquema de herramienta y confirmación real de Cooper  396ms
+ ✓ tests/chat-memoria.test.ts (17 tests) 221ms
+ ✓ tests/chat-ia.test.ts (18 tests) 190ms
+ ✓ tests/chat-proveedores.test.ts (6 tests) 33ms
+ ✓ tests/operacion.test.ts (8 tests) 82ms
+ ✓ tests/presentacion.test.ts (5 tests) 187ms
+ ✓ tests/chat-evaluacion.test.ts (30 tests) 271ms
+ ✓ tests/revision-seguridad.test.ts (18 tests) 290ms
+ ✓ tests/noticias.test.ts (3 tests) 73ms
+ ✓ tests/chat-http.test.ts (4 tests) 70ms
+ ✓ tests/revision-migraciones.test.ts (2 tests) 40ms
+ ✓ tests/observabilidad.test.ts (3 tests) 45ms
+ ✓ tests/integracion-medios.test.ts (3 tests) 51ms
+ ✓ tests/chat-memoria-http.test.ts (2 tests) 58ms
+ ✓ tests/demo.test.ts (4 tests) 57ms
+ ✓ tests/revision-fabrica.test.ts (1 test) 121ms
+ ✓ tests/revision-db.test.ts (2 tests) 429ms
+   ✓ R06 espera un escritor SQLite sin fallar al pasar de lectura a escritura  385ms
+ ✓ tests/chat-memoria-migracion.test.ts (1 test) 9ms
+ ✓ tests/integracion-demo.test.ts (1 test) 48ms
+ ✓ tests/revision-http.test.ts (3 tests) 40ms
+ ✓ tests/integracion-puente.test.ts (1 test) 649ms
+   ✓ I03 conciliación del puente espera al escritor SQLite antes de leer y modificar  648ms
+ ✓ tests/movimiento-assets.test.ts (4 tests) 96ms
+ ✓ tests/revision-sesion.test.ts (1 test) 120ms
+ ✓ tests/revision-encabezados.test.tsx (1 test) 19ms
+ ✓ tests/salud.test.ts (2 tests) 19ms
+
+ Test Files  30 passed (30)
+      Tests  284 passed (284)
+   Start at  14:08:58
+   Duration  22.12s (transform 2.10s, setup 354ms, import 10.67s, tests 8.03s, environment 2ms)
