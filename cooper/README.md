@@ -228,3 +228,22 @@ node scripts/auditoria.mjs --cobertura
 ```
 
 El adaptador conserva el guardián y los evaluadores de Sentinel. Excluye controles que escriben datos del caos de solo lectura; Playwright verifica las mutaciones de forma dirigida. Para estabilidad espera que la pantalla termine de consultar antes de medir la memoria inicial. Capturas e informes quedan en `.cache/capturas-cobertura/<ronda>/` y `.cache/cobertura/lighthouse/`. El [informe de cobertura](../docs/informes/cooper-cobertura.md) enumera cada flujo, decisión, ajuste y tabla, junto con pruebas y límites reales.
+
+## Dirección de movimiento protagonista
+
+La [partitura de Cooper](../docs/diseno/movimiento-cooper.md) documenta referencias actuales, decisiones propias y alternativas sin movimiento. Ilustraciones originales Lottie (recibir, reaccionar, celebrar y fábrica) con posters SVG, motor ligero diferido al entrar al viewport, pausa persistente, suspensión fuera de vista/pestaña y preferencia reducida en vivo. Las cabeceras de todas las pantallas, incluidas las de Operación, tienen una escena del oficio; el recorrido de bienvenida es voluntario. Una transición recibida a Publicado activa una celebración única; seleccionar un video publicado no la repite.
+
+```bash
+# Fuente editable y reproducible de los activos propios
+node scripts/generar-movimiento.mjs
+# Dos rondas aisladas: vídeos, FPS/long tasks, axe, interacción y Sentinel
+COOPER_MOVIMIENTO_RONDA=ronda-1 npm run test:e2e -- --config=playwright.movimiento.config.ts
+COOPER_MOVIMIENTO_RONDA=ronda-2 npm run test:e2e -- --config=playwright.movimiento.config.ts
+node scripts/indice-movimiento.mjs
+# Tras construir, 21 rutas × dos temas × móvil/escritorio, umbral de rendimiento 95
+node scripts/auditoria.mjs --movimiento
+```
+
+Sentinel usa su API local existente (`~/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python`, configurable con `SENTINEL_PYTHON`) y Chromium propio en `.cache/sentinel-browsers`. Preparación local: `PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/sentinel-browsers" "$HOME/Proyectos/Sistema-Sentinel/codigo/.venv/bin/python" -m playwright install chromium`. El guardián solo permite el destino E2E loopback; no contacta la fábrica real. No se leen archivos de credenciales.
+
+Evidencia fuera de Git: `.cache/videos-movimiento/index.html` permite abrir los videos sin autoplay; `indice.json` incluye SHA-256. Cada ronda conserva métricas, capturas, videos y reportes Sentinel. La cadencia del WebM de Playwright es distinta de los FPS medidos por requestAnimationFrame. CPU 4× aproxima carga móvil; no sustituye un ensayo en teléfono físico. Resultados finales y pendientes en [el informe](../docs/informes/cooper-animacion-fuerte.md).
