@@ -106,8 +106,10 @@ test('subflujo nativo tiene ocho GET máximos, permiso por canal y cero registro
   assert.equal(f.active, false);
   assert.ok(!f.nodes.some(n => /webhook|scheduleTrigger|telegram|dataTable/.test(n.type)));
   const llamadas = f.nodes.filter(n => n.type.endsWith('.executeWorkflow'));
-  assert.equal(llamadas.length, 1); assert.equal(llamadas[0].parameters.workflowId.value, 'FabYouTube000001');
-  for (const n of f.nodes.filter(n => n.type.endsWith('.httpRequest'))) {
+  assert.deepEqual(llamadas.map(n=>n.parameters.workflowId.value).sort(), ['FabAjustes000001','FabYouTube000001']);
+  const lecturas=f.nodes.filter(n => n.type.endsWith('.httpRequest') && n.parameters.url!=='https://mcp.vidiq.com/mcp');
+  assert.equal(lecturas.length,4); // 3 identidades + 3 playlists + 1 videos + 1 búsqueda.
+  for (const n of lecturas) {
     assert.equal(n.parameters.method, 'GET');
     assert.match(n.parameters.url, /^https:\/\/www.googleapis.com\/youtube\/v3\/(channels|playlistItems|videos|search)$/);
     assert.equal(n.parameters.options.timeout, 20000);

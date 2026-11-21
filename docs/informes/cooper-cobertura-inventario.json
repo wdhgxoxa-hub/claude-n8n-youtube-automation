@@ -1023,7 +1023,7 @@
     {
       "id": "CooperMarcasMet1",
       "nombre": "FX · Marcas · Métricas",
-      "sha256": "df228227057b36bd2e69120e6a7d1f90d2b46dbdc1a67c96eaf06e3b9fc0fd4e",
+      "sha256": "62ead72e0e35dc273dd409534375d61d35a29f74146cbab84393ad00aacbbda3",
       "pantalla": "/marcas",
       "accion": "Consultar métricas de publicaciones de marcas con reservas y reintentos acotados",
       "estado": "completo",
@@ -1098,7 +1098,7 @@
     {
       "id": "CooperMarcasPub1",
       "nombre": "FX · Marcas · Publicación y adjuntos",
-      "sha256": "e2a1ec5ab52e0245188d0752372971d344896b1bb8640979abe505e68d9902df",
+      "sha256": "39da3eff94aadc1403eee6c14c2f6ef9a8bf64c4e7e4451474e5b740e3b926a5",
       "pantalla": "/marcas",
       "accion": "Despertar el trabajador firmado para publicaciones aprobadas e ingesta; bloqueado por configuración",
       "estado": "completo",
@@ -1173,7 +1173,7 @@
     {
       "id": "FabAgenteTelegr1",
       "nombre": "F · Agente de Telegram",
-      "sha256": "0450a30362705242cfc4a2da2ca6d699270ff3e09f5d60daeec991d77667a56c",
+      "sha256": "af34efc42ccb758f8d48fc4aa7a38839424587ab9b2c19f244c04d1a30bb0600",
       "pantalla": "/",
       "accion": "Chat breve con herramientas; avisos en /avisos",
       "estado": "completo",
@@ -1536,7 +1536,7 @@
     {
       "id": "FabAjustes000001",
       "nombre": "F · Ajustes de la fábrica",
-      "sha256": "ed9420226f06584d56d7968c49f2921c5ebd6cad8bfd61cbd3b8987eb9086d6e",
+      "sha256": "771e2eddac757209ff4ec3abe026184bf1506a796685d9343a19348dd5440ce4",
       "pantalla": "/admin/fabrica",
       "accion": "Editar ajustes con revisión, confirmación y registro",
       "estado": "completo",
@@ -1611,7 +1611,7 @@
     {
       "id": "FabAprendizaje01",
       "nombre": "M7 · Aprendizaje (24 h, 72 h y 7 días)",
-      "sha256": "63d08a21fe4e44ea699451477c1027ccb5c2f90443de0d2e8f60896162122321",
+      "sha256": "a8bfcd0afeeeb4902f52ed665a42f2d722a3b08a5f0a2c294569c06bd430b29e",
       "pantalla": "/aprendizaje",
       "accion": "Retención, lecciones e incidencias; /publicados para métricas",
       "estado": "completo",
@@ -1796,7 +1796,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Retención"
+                "Datos del video publicado"
               ]
             },
             {
@@ -1919,7 +1919,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Claude: aprender"
+                "Preparar trabajo de aprendizaje"
               ]
             }
           ],
@@ -1927,12 +1927,20 @@
           "estado": "completo"
         },
         {
-          "nombre": "Claude: aprender",
-          "tipo": "n8n-nodes-base.executeWorkflow",
+          "nombre": "Preparar trabajo de aprendizaje",
+          "tipo": "n8n-nodes-base.code",
           "decision": false,
           "tabla": null,
           "operacion_tabla": null,
-          "salidas": [],
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Guardar trabajo de aprendizaje"
+              ]
+            }
+          ],
           "pantalla": "/aprendizaje",
           "estado": "completo"
         },
@@ -2125,6 +2133,124 @@
           ],
           "pantalla": "/aprendizaje",
           "estado": "completo"
+        },
+        {
+          "nombre": "Datos del video publicado",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reponer pedidos de retención"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reponer pedidos de retención",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Retención"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Guardar trabajo de aprendizaje",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "insert",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Pedido al plan de aprendizaje"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pedido al plan de aprendizaje",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Analizar con el plan de la PC"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Analizar con el plan de la PC",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Validar aprendizaje del plan"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Validar aprendizaje del plan",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Guardar lecciones del plan"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Guardar lecciones del plan",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "update",
+          "salidas": [],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -2135,7 +2261,7 @@
     {
       "id": "FabAprobacion001",
       "nombre": "F · Aprobación (Telegram y computadora)",
-      "sha256": "cb8e27cbaea1708f43b9b5484b52f481fc4ee22442a9f3fedf68e03866429e9f",
+      "sha256": "4ed3ecbd97a56d6af62d18c78ff797502e4833b4f8ef0fb952e7c2f3a0a5bebb",
       "pantalla": "/decisiones",
       "accion": "Aprobar o pedir cambios; reanudar la espera nativa o cerrar la puerta web",
       "estado": "completo",
@@ -2443,7 +2569,7 @@
     {
       "id": "FabAvatar0000001",
       "nombre": "FX · Renderizar avatar",
-      "sha256": "b178a0cfddb0328b77392f844797dd77dd43a26863ec02c558aee4b6ab352526",
+      "sha256": "53b98c61b9de8d4685e8fc8658aef3bee617c4038080f15b348bb46fb5b36fea",
       "pantalla": "/avatares",
       "accion": "Elegir avatar y voz; consentimiento, revocación y progreso en detalle de video",
       "estado": "completo",
@@ -3049,7 +3175,7 @@
     {
       "id": "FabChatWeb000001",
       "nombre": "F · Chat de la fábrica (computadora)",
-      "sha256": "a99889fdd7892954a746abe0ee11f5863e517b5356c5404dfc7e61ecaa6ad51d",
+      "sha256": "601df7b37cb290994a036fc5fe0dc5aa3678695bc424fb43695beb5024888131",
       "pantalla": "/",
       "accion": "Chat de Cooper; el chat legado de n8n no se incrusta",
       "estado": "completo",
@@ -3122,9 +3248,522 @@
       "tipos_registrados": []
     },
     {
+      "id": "FabCompYouTube01",
+      "nombre": "FX · Competencia pública de YouTube",
+      "sha256": "83e066c23a1d73bfeb52326d40d322f55db493d17077f842fa02ece7c9c7fd86",
+      "pantalla": "/radar",
+      "accion": "Competidores y muestras públicas por canal, vidIQ con cuota renovable comprobada y respaldo gratuito",
+      "estado": "completo",
+      "nodos": [
+        {
+          "nombre": "Inicio",
+          "tipo": "n8n-nodes-base.executeWorkflowTrigger",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Candidatos del canal"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Candidatos del canal",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Hay candidatos YouTube?"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Hay candidatos YouTube?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Permiso existente del canal"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Competencia nativa comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Permiso existente del canal",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Permiso YouTube disponible?"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Permiso YouTube disponible?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Tres cuentas públicas"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Competencia nativa comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Tres cuentas públicas",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Identidades de YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Identidades de YouTube",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Listas de competidores"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Listas de competidores",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Hay listas de competidores?"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Hay listas de competidores?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Publicaciones de competidores"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Homónimos de YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Publicaciones de competidores",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "IDs públicos observados"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "IDs públicos observados",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Hay publicaciones observadas?"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Hay publicaciones observadas?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Métricas públicas de YouTube"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Homónimos de YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Métricas públicas de YouTube",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Homónimos de YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Homónimos de YouTube",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Competencia nativa comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Competencia nativa comprobada",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Ajustes de investigación incluida"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Ajustes de investigación incluida",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿vidIQ habilitado?"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿vidIQ habilitado?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Iniciar vidIQ de competencia"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Competencia con cuota comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Iniciar vidIQ de competencia",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Notificar vidIQ de competencia"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Notificar vidIQ de competencia",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Catálogo vidIQ de competencia"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Catálogo vidIQ de competencia",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cuota renovable antes"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cuota renovable antes",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Guardia vidIQ de competencia"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Guardia vidIQ de competencia",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Cuota renovable acreditada?"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Cuota renovable acreditada?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Un pedido de destacados incluido"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Competencia con cuota comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Un pedido de destacados incluido",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cuota renovable después"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cuota renovable después",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Competencia con cuota comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Competencia con cuota comprobada",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [],
+          "pantalla": "/radar",
+          "estado": "completo"
+        }
+      ],
+      "tipos_registrados": []
+    },
+    {
       "id": "FabConfirmar0001",
       "nombre": "F · Confirmar publicaciones",
-      "sha256": "f92c6aef366f395a4afc1a6e0a1de874662b2548895f9b9229f8df77d4e9f90f",
+      "sha256": "72edc97b3ad99455dd5f3eeeb8e9381e987352a46fbf8676f215dc083815cf75",
       "pantalla": "/programados",
       "accion": "Estado por red, borrador/omisión y consulta sin volver a subir",
       "estado": "completo",
@@ -3481,7 +4120,7 @@
     {
       "id": "FabCooperAPI0001",
       "nombre": "FX · API de Cooper",
-      "sha256": "a8005c5f0c5ae665033f12497be963e82bb977525cc0ba24aff1f17b58e0e7ef",
+      "sha256": "667a7e2147510fa9f48365b32128b61c33a6ced7327f4d05acca04b31b401a37",
       "pantalla": "/radar",
       "accion": "Puente firmado de todas las pantallas; autorización y recibos idempotentes",
       "estado": "completo",
@@ -3583,25 +4222,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Consultar orden"
-              ]
-            }
-          ],
-          "pantalla": "/radar",
-          "estado": "completo"
-        },
-        {
-          "nombre": "Consultar orden",
-          "tipo": "n8n-nodes-base.httpRequest",
-          "decision": false,
-          "tabla": null,
-          "operacion_tabla": null,
-          "salidas": [
-            {
-              "tipo": "main",
-              "salida": 0,
-              "destinos": [
-                "Recibo anterior"
+                "Consultar orden · preparar transporte"
               ]
             }
           ],
@@ -3791,25 +4412,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Reservar orden"
-              ]
-            }
-          ],
-          "pantalla": "/radar",
-          "estado": "completo"
-        },
-        {
-          "nombre": "Reservar orden",
-          "tipo": "n8n-nodes-base.httpRequest",
-          "decision": false,
-          "tabla": null,
-          "operacion_tabla": null,
-          "salidas": [
-            {
-              "tipo": "main",
-              "salida": 0,
-              "destinos": [
-                "Estado de reserva"
+                "Reservar orden · preparar transporte"
               ]
             }
           ],
@@ -3895,25 +4498,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Confirmar orden"
-              ]
-            }
-          ],
-          "pantalla": "/radar",
-          "estado": "completo"
-        },
-        {
-          "nombre": "Confirmar orden",
-          "tipo": "n8n-nodes-base.httpRequest",
-          "decision": false,
-          "tabla": null,
-          "operacion_tabla": null,
-          "salidas": [
-            {
-              "tipo": "main",
-              "salida": 0,
-              "destinos": [
-                "Aceptado"
+                "Confirmar orden · preparar transporte"
               ]
             }
           ],
@@ -4338,6 +4923,1095 @@
           ],
           "pantalla": "/radar",
           "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · preparar transporte",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · intento 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Recibo anterior"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · intento 1",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · evaluar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · evaluar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · reintentar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · reintentar 1",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · backoff 1"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Consultar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · backoff 1",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · restaurar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · restaurar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · intento 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · intento 2",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · evaluar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · evaluar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · reintentar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · reintentar 2",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · backoff 2"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Consultar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · backoff 2",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · restaurar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · restaurar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · intento 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · intento 3",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · evaluar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · evaluar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · reintentar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · reintentar 3",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · backoff 3"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Consultar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · backoff 3",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · restaurar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · restaurar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · intento 4"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · intento 4",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden · evaluar 4"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar orden · evaluar 4",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · preparar transporte",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · intento 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Estado de reserva"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · intento 1",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · evaluar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · evaluar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · reintentar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · reintentar 1",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · backoff 1"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Reservar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · backoff 1",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · restaurar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · restaurar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · intento 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · intento 2",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · evaluar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · evaluar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · reintentar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · reintentar 2",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · backoff 2"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Reservar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · backoff 2",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · restaurar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · restaurar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · intento 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · intento 3",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · evaluar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · evaluar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · reintentar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · reintentar 3",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · backoff 3"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Reservar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · backoff 3",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · restaurar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · restaurar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · intento 4"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · intento 4",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden · evaluar 4"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar orden · evaluar 4",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · preparar transporte",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · intento 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Aceptado"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · intento 1",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · evaluar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · evaluar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · reintentar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · reintentar 1",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · backoff 1"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Confirmar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · backoff 1",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · restaurar 1"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · restaurar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · intento 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · intento 2",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · evaluar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · evaluar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · reintentar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · reintentar 2",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · backoff 2"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Confirmar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · backoff 2",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · restaurar 2"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · restaurar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · intento 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · intento 3",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · evaluar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · evaluar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · reintentar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · reintentar 3",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · backoff 3"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Confirmar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · backoff 3",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · restaurar 3"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · restaurar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · intento 4"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · intento 4",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden · evaluar 4"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Confirmar orden · evaluar 4",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Confirmar orden"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -4351,7 +6025,7 @@
     {
       "id": "FabCooperCosto01",
       "nombre": "FX · Registrar costo por dueño",
-      "sha256": "f1f032ff318d7192832818d6d0394a0449dd1af45bb16ac194fec18d539fdcfb",
+      "sha256": "bbcc1448c7797e7b2d482282643a31456741d677c9b6fbe9c694fd0e9d9eaeaf",
       "pantalla": "/admin",
       "accion": "Costos por dueño; /admin/fabrica fija presupuestos y límites",
       "estado": "completo",
@@ -4444,7 +6118,7 @@
     {
       "id": "FabCooperProgr01",
       "nombre": "FX · Progreso de Cooper",
-      "sha256": "c82aaa1b69ba9b8cce78b2f0b35546ab702dfb9e867016e653329428e318503e",
+      "sha256": "7c91f950accb1498e244223140be94e30a91a88444a021749044db031f49a31e",
       "pantalla": "/videos/[id]",
       "accion": "Etapa persistida, reconexión y progreso por SSE",
       "estado": "completo",
@@ -4521,7 +6195,35 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Avisar a Cooper"
+                "Avisar a Cooper · preparar transporte"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Conservar fila",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · preparar transporte",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · intento 1"
               ]
             }
           ],
@@ -4530,7 +6232,7 @@
         },
         {
           "nombre": "Avisar a Cooper",
-          "tipo": "n8n-nodes-base.httpRequest",
+          "tipo": "n8n-nodes-base.code",
           "decision": false,
           "tabla": null,
           "operacion_tabla": null,
@@ -4547,12 +6249,329 @@
           "estado": "completo"
         },
         {
-          "nombre": "Conservar fila",
+          "nombre": "Avisar a Cooper · intento 1",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · evaluar 1"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · evaluar 1",
           "tipo": "n8n-nodes-base.code",
           "decision": false,
           "tabla": null,
           "operacion_tabla": null,
-          "salidas": [],
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · reintentar 1"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · reintentar 1",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · backoff 1"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Avisar a Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · backoff 1",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · restaurar 1"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · restaurar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · intento 2"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · intento 2",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · evaluar 2"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · evaluar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · reintentar 2"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · reintentar 2",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · backoff 2"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Avisar a Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · backoff 2",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · restaurar 2"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · restaurar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · intento 3"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · intento 3",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · evaluar 3"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · evaluar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · reintentar 3"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · reintentar 3",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · backoff 3"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Avisar a Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · backoff 3",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · restaurar 3"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · restaurar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · intento 4"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · intento 4",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper · evaluar 4"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Avisar a Cooper · evaluar 4",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar a Cooper"
+              ]
+            }
+          ],
           "pantalla": "/videos/[id]",
           "estado": "completo"
         }
@@ -4564,7 +6583,7 @@
     {
       "id": "FabDerivados0001",
       "nombre": "M6 · Derivados (cortes y miniatura)",
-      "sha256": "b6eb3247ab389cde420ae0f4922e28b21ddb3d40b8237e2dc3c57d801dbd8bc1",
+      "sha256": "5ae68128f7f0955202627b65aeabe8f0a89c4d8838bbb000140190dcc8b22b77",
       "pantalla": "/videos/[id]",
       "accion": "Cortes y miniatura en galería; interruptores y costes en /admin/fabrica",
       "estado": "completo",
@@ -5504,7 +7523,7 @@
     {
       "id": "FabErrores000001",
       "nombre": "F · Vigilante de errores",
-      "sha256": "9df0304f85ab2c6553261fd1e24c54a8725872bbc9e7c79faf686cd0b82f152f",
+      "sha256": "35c9dc56b7a675c32b66f09f30dd2bc98da4198f28c86d9bc77ccda60d629016",
       "pantalla": "/incidencias",
       "accion": "Causa sencilla, siguiente acción y reintento seguro; fallos globales solo admin",
       "estado": "completo",
@@ -5539,7 +7558,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Avisar error"
+                "Fiabilidad · diagnóstico mínimo"
               ]
             }
           ],
@@ -5666,19 +7685,74 @@
           "salidas": [],
           "pantalla": "/incidencias",
           "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · diagnóstico mínimo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · guardar diagnóstico"
+              ]
+            }
+          ],
+          "pantalla": "/incidencias",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · guardar diagnóstico",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "insert",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · recuperar aviso"
+              ]
+            }
+          ],
+          "pantalla": "/incidencias",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · recuperar aviso",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Avisar error"
+              ]
+            }
+          ],
+          "pantalla": "/incidencias",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
         "aviso_cooper",
         "correccion",
         "ejecucion",
-        "incidencia_cooper"
+        "incidencia_cooper",
+        "incidencia_tecnica"
       ]
     },
     {
       "id": "FabEstado0000001",
       "nombre": "F · Estado y reportes",
-      "sha256": "e479e9edfdae1bdefb0857ff2fe17021d0b7432fa7806a4439b2cb7df78b76d9",
+      "sha256": "e4af1b549c655d8bdfa9ffb04d468f9a8ef58c8b5ee2e3b2ad9377adacfceaae",
       "pantalla": "/videos",
       "accion": "Estado por canal/video; métricas en /publicados y gasto solo admin",
       "estado": "completo",
@@ -5857,7 +7931,7 @@
     {
       "id": "FabLlamarClaude1",
       "nombre": "FX · Llamar a Claude",
-      "sha256": "32e939f681be15c08fe20355243566a79126fee6e11c83889113993eac1246b2",
+      "sha256": "7f82e51d871c0f9d797a134315bf97a8e0a778a2e85ded972e8167808843946c",
       "pantalla": "/videos/[id]",
       "accion": "Investigación/guion/storyboard y errores; modelo e interruptor administrativos",
       "estado": "completo",
@@ -6317,7 +8391,7 @@
     {
       "id": "FabNoticia000001",
       "nombre": "F · Noticia del día verificada",
-      "sha256": "2a01cd098fe9755e6dc1645b459db69a1fe232bd6cd8cf8c23d2c60fb3cf031f",
+      "sha256": "1c57778d9a1c020fca2456fc19e22bf6eb7fd2125da83575fe654891a94fd97d",
       "pantalla": "/radar",
       "accion": "Noticia verificada, fuente y encargo; interruptor por canal",
       "estado": "completo",
@@ -6653,7 +8727,7 @@
     {
       "id": "FabOrquestador01",
       "nombre": "F · Orquestador",
-      "sha256": "ff60575183e09b1e5cb2401533b9a58cd6cc81b5b8ebe1b081e99171a14a42d1",
+      "sha256": "fc8ebeedf2029414815e936cc6bc3a6efad9957ca0e0fc8ce011b5bec5dda783",
       "pantalla": "/videos/[id]",
       "accion": "Canales, creación, corrección, decisiones, programación y eliminación en reposo",
       "estado": "completo",
@@ -6687,7 +8761,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Ruta"
+                "¿Falló el especialista?"
               ]
             }
           ],
@@ -7529,7 +9603,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Lecciones antes del guion"
+                "Pedido de competencia previa"
               ]
             }
           ],
@@ -8693,7 +10767,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Abrir subida YouTube"
+                "Fiabilidad · publicaciones YouTube"
               ]
             },
             {
@@ -12851,6 +14925,78 @@
           "estado": "completo"
         },
         {
+          "nombre": "Pedido de competencia previa",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Radar antes de la idea"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Radar antes de la idea",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Canal con competencia"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Canal con competencia",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "canales",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Exigir competencia previa"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Exigir competencia previa",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Lecciones antes del guion"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
           "nombre": "Lecciones antes del guion",
           "tipo": "n8n-nodes-base.dataTable",
           "decision": false,
@@ -12862,6 +15008,67 @@
               "salida": 0,
               "destinos": [
                 "Nuevo video"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Falló el especialista?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Especialista · fallo durable"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Ruta"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Especialista · fallo durable",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Especialista · guardar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Especialista · guardar fallo",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "videos",
+          "operacion_tabla": "update",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Especialista · guardar fallo aviso"
               ]
             }
           ],
@@ -13651,6 +15858,148 @@
           ],
           "pantalla": "/videos/[id]",
           "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Especialista · guardar fallo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Especialista · guardar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Especialista · guardar fallo aviso",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": []
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · publicaciones YouTube",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "publicaciones",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · reservas YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · reservas YouTube",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · preparar YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · preparar YouTube",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · guardar reserva YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · guardar reserva YouTube",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "insert",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · verificar reserva YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · verificar reserva YouTube",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · comprobar YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · comprobar YouTube",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Abrir subida YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -13661,13 +16010,15 @@
         "ejecucion",
         "ejecucion_cooper",
         "incidencia_cooper",
+        "principal",
+        "reserva_publicacion",
         "verificador"
       ]
     },
     {
       "id": "FabPendientes001",
       "nombre": "FX · Pendientes",
-      "sha256": "37be37601dbe40bf86d5a0da9c5e0a16cfe62d5c192a8175c55b1a07af7bcb52",
+      "sha256": "0930f5c930339c61fa98a529b34ae782d3c8a651c238baf19b7d0e6013b09386",
       "pantalla": "/decisiones",
       "accion": "Todas las decisiones autorizadas, con detalle y acciones",
       "estado": "completo",
@@ -13724,7 +16075,7 @@
     {
       "id": "FabPresentacion1",
       "nombre": "FX · Validar presentación",
-      "sha256": "66b2e92a269381fb81c8b7a6efaa5ce9ea6ac5adfb792dc57b20c665ceb80569",
+      "sha256": "30fe45bfb3b94fc2071a2311f906c4022c10fc03158a5a0a2b9534cf9e87aa7b",
       "pantalla": "/avatares",
       "accion": "Consentimiento y elección; explicación de bloqueos en /incidencias",
       "estado": "completo",
@@ -13837,25 +16188,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Consultar Cooper"
-              ]
-            }
-          ],
-          "pantalla": "/avatares",
-          "estado": "completo"
-        },
-        {
-          "nombre": "Consultar Cooper",
-          "tipo": "n8n-nodes-base.httpRequest",
-          "decision": false,
-          "tabla": null,
-          "operacion_tabla": null,
-          "salidas": [
-            {
-              "tipo": "main",
-              "salida": 0,
-              "destinos": [
-                "¿Presentación permitida?"
+                "Consultar Cooper · preparar transporte"
               ]
             }
           ],
@@ -13978,6 +16311,369 @@
           ],
           "pantalla": "/avatares",
           "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · preparar transporte",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · intento 1"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Presentación permitida?"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · intento 1",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · evaluar 1"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · evaluar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · reintentar 1"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · reintentar 1",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · backoff 1"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Consultar Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · backoff 1",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · restaurar 1"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · restaurar 1",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · intento 2"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · intento 2",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · evaluar 2"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · evaluar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · reintentar 2"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · reintentar 2",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · backoff 2"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Consultar Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · backoff 2",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · restaurar 2"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · restaurar 2",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · intento 3"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · intento 3",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · evaluar 3"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · evaluar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · reintentar 3"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · reintentar 3",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · backoff 3"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Consultar Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · backoff 3",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · restaurar 3"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · restaurar 3",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · intento 4"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · intento 4",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper · evaluar 4"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar Cooper · evaluar 4",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/avatares",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -13988,7 +16684,7 @@
     {
       "id": "FabProduccion001",
       "nombre": "M4–M6 · Producción",
-      "sha256": "d29f7b6030cf33832e714e74ed4cf87c856ccec3a7c8a9cf3594c16b370a8459",
+      "sha256": "0cfd88b78c69bacde61ae4cc05db3e1efd114ac5c5d49577dd1498fc0c2c054f",
       "pantalla": "/videos/[id]",
       "accion": "Planos, render y sonido; decisión de gasto solo admin, controles en /admin/fabrica",
       "estado": "completo",
@@ -14065,7 +16761,7 @@
               "tipo": "main",
               "salida": 1,
               "destinos": [
-                "Aviso: falta encender"
+                "Pausa · Aviso: falta encender"
               ]
             }
           ],
@@ -14108,7 +16804,7 @@
               "tipo": "main",
               "salida": 1,
               "destinos": [
-                "Aviso: sobre presupuesto"
+                "Pausa · Aviso: sobre presupuesto"
               ]
             }
           ],
@@ -14740,7 +17436,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Descargar clip"
+                "Clip · preparar archivo"
               ]
             },
             {
@@ -15346,7 +18042,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "¿Render listo?"
+                "Render · limitar espera"
               ]
             }
           ],
@@ -15389,7 +18085,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Aviso: render fallido"
+                "Render · fallo durable"
               ]
             },
             {
@@ -16998,6 +19694,459 @@
           "estado": "completo"
         },
         {
+          "nombre": "Render · limitar espera",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Render listo?"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Render · fallo durable",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Render · guardar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Render · guardar fallo",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "videos",
+          "operacion_tabla": "update",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Render · guardar fallo aviso"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Render · conservar fallo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Aviso: render fallido"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pausa · Aviso: falta encender",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Pausa · Aviso: falta encender guardar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pausa · Aviso: falta encender guardar",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "videos",
+          "operacion_tabla": "update",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Pausa · Aviso: falta encender guardar aviso"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pausa · Aviso: falta encender continuar",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Aviso: falta encender"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pausa · Aviso: sobre presupuesto",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Pausa · Aviso: sobre presupuesto guardar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pausa · Aviso: sobre presupuesto guardar",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "videos",
+          "operacion_tabla": "update",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Pausa · Aviso: sobre presupuesto guardar aviso"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Pausa · Aviso: sobre presupuesto continuar",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Aviso: sobre presupuesto"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clip · preparar archivo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Referencia de clip válida?"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Referencia de clip válida?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Clip · consultar entrada"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Clip · fallo durable"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clip · consultar entrada",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Presentación · Consultar archivo de clip entrada"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar archivo de clip",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Clip · estado archivo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clip · estado archivo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Consulta de clip válida?"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Consulta de clip válida?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Archivo de clip activo?"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Clip · fallo durable"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Archivo de clip activo?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Descargar clip"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Esperar archivo de clip"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Esperar archivo de clip",
+          "tipo": "n8n-nodes-base.wait",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Clip · consultar entrada"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clip · fallo durable",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Clip · guardar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clip · guardar fallo",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "videos",
+          "operacion_tabla": "update",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · sello Clip · guardar fallo aviso"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Presentación · Consultar archivo de clip entrada",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Presentación · Consultar archivo de clip consulta"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Presentación · Consultar archivo de clip consulta",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Presentación · Consultar archivo de clip validar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Presentación · Consultar archivo de clip validar",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Presentación · Consultar archivo de clip seguir"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Presentación · Consultar archivo de clip seguir",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar archivo de clip"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
           "nombre": "Cooper · sello Video en producción",
           "tipo": "n8n-nodes-base.code",
           "decision": false,
@@ -17208,6 +20357,148 @@
           ],
           "pantalla": "/videos/[id]",
           "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Render · guardar fallo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Render · guardar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Render · guardar fallo aviso",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Render · conservar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Pausa · Aviso: falta encender guardar",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Pausa · Aviso: falta encender guardar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Pausa · Aviso: falta encender guardar aviso",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Pausa · Aviso: falta encender continuar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Pausa · Aviso: sobre presupuesto guardar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar aviso",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Pausa · Aviso: sobre presupuesto continuar"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Clip · guardar fallo",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Clip · guardar fallo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Cooper · sello Clip · guardar fallo aviso",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": []
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -17221,7 +20512,7 @@
     {
       "id": "FabPublicacion01",
       "nombre": "M7 · Calidad y publicación",
-      "sha256": "9969506ee80cc88f2445bd16b72f13cdda8dd1eb042aaf4ae4446594376cecd7",
+      "sha256": "3ead80f172e1cc5fb97411d10c458f5f319eb43d462389fb8cd28330114fd350",
       "pantalla": "/videos/[id]",
       "accion": "Calidad y revisión final; errores y correcciones en /aprendizaje",
       "estado": "completo",
@@ -17772,7 +21063,9 @@
       "tipos_registrados": [
         "aviso_cooper",
         "calidad",
+        "correccion",
         "correccion_cooper",
+        "ejecucion",
         "ejecucion_cooper",
         "incidencia_cooper"
       ]
@@ -17780,7 +21073,7 @@
     {
       "id": "FabRadar00000001",
       "nombre": "F · Radar de tendencias",
-      "sha256": "7dfcfdb7dd999b1e06b013ccb654e7c49adf0f23296745b107b4987d2a7c2899",
+      "sha256": "a3a0d76e4bea76089f10c82dfbad53be9a325607029c6537117ec51a09a78ca0",
       "pantalla": "/radar",
       "accion": "Ideas, fuente, sonidos, solicitar lectura y usar idea para pedir video",
       "estado": "completo",
@@ -17887,7 +21180,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "vidIQ: radar"
+                "Encargo público de competencia"
               ]
             }
           ],
@@ -17991,7 +21284,15 @@
           "decision": false,
           "tabla": "canales",
           "operacion_tabla": "update",
-          "salidas": [],
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Avisar radar público?"
+              ]
+            }
+          ],
           "pantalla": "/radar",
           "estado": "completo"
         },
@@ -18024,7 +21325,8 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Cooper · aviso Aviso: radar"
+                "Cooper · aviso Aviso: radar",
+                "Resultado del radar público"
               ]
             }
           ],
@@ -18319,6 +21621,131 @@
           "salidas": [],
           "pantalla": "/radar",
           "estado": "completo"
+        },
+        {
+          "nombre": "Encargo público de competencia",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Investigar competencia pública"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Investigar competencia pública",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Competencia comprobada"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Competencia comprobada",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Consultar YouTube por canal"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Resultado del radar público",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Avisar radar público?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Mensaje de radar"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Resultado del radar público"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Consultar YouTube por canal",
+          "tipo": "n8n-nodes-base.executeWorkflow",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Competencia con YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Competencia con YouTube",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Solo tendencias"
+              ]
+            }
+          ],
+          "pantalla": "/radar",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -18328,7 +21755,7 @@
     {
       "id": "FabRedes00000001",
       "nombre": "M8 · Publicación en redes",
-      "sha256": "0d36c9d158240e8956dfaf3e91059d09ed5118e27a30c23ea5a71311dd7a8913",
+      "sha256": "9620977d7aa950837731db75c56466bee0097da8c8a467245d46ac9ebd58103d",
       "pantalla": "/redes",
       "accion": "Especialistas, plataformas y perfil; agenda y resultados en /programados",
       "estado": "completo",
@@ -18441,7 +21868,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Plan de publicación"
+                "Fiabilidad · publicaciones del video"
               ]
             }
           ],
@@ -18826,7 +22253,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Subir a redes"
+                "Fiabilidad · reservar envíos"
               ]
             }
           ],
@@ -19003,17 +22430,126 @@
           ],
           "pantalla": "/redes",
           "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · publicaciones del video",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "publicaciones",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · reservas de publicación"
+              ]
+            }
+          ],
+          "pantalla": "/redes",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · reservas de publicación",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Plan de publicación"
+              ]
+            }
+          ],
+          "pantalla": "/redes",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · reservar envíos",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · guardar reservas"
+              ]
+            }
+          ],
+          "pantalla": "/redes",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · guardar reservas",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "insert",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · verificar reservas"
+              ]
+            }
+          ],
+          "pantalla": "/redes",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · verificar reservas",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "eventos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fiabilidad · comprobar turno"
+              ]
+            }
+          ],
+          "pantalla": "/redes",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Fiabilidad · comprobar turno",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Subir a redes"
+              ]
+            }
+          ],
+          "pantalla": "/redes",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
         "aviso_cooper",
-        "ejecucion_cooper"
+        "ejecucion_cooper",
+        "reserva_publicacion"
       ]
     },
     {
       "id": "FabReenviar00001",
       "nombre": "FX · Reenviar pendientes",
-      "sha256": "a4820726ccec0901f47364bce491ececa88b8001b16663ca268bea948efd4a16",
+      "sha256": "dbb59a11af4cb26d48d6cfe0eb44d683b643e070a911377424e2650ae0771a58",
       "pantalla": "/decisiones",
       "accion": "Renovar/reenviar una decisión propia; no rehacer un permiso de gasto muerto",
       "estado": "completo",
@@ -19313,7 +22849,7 @@
     {
       "id": "FabReferencias01",
       "nombre": "M1 · Referencias del canal",
-      "sha256": "d3cfeeefe4b135afd111e8762113e0fbc08d93abd5ed05190cdc25b0ed6c19a6",
+      "sha256": "44cbbf0a823d35472f0de590a7129c343c843e28b40fff13eb88ee927c9f2ba8",
       "pantalla": "/referencias",
       "accion": "Personajes/escenarios, descripción, enlaces y generación de referencias",
       "estado": "completo",
@@ -20092,7 +23628,7 @@
     {
       "id": "FabRetornoClaud1",
       "nombre": "F · Retorno de Claude",
-      "sha256": "c8faec5a500a6f5df0fc5dee2c5d78a2172a15850fb7d99c9d7e842d9d056014",
+      "sha256": "57ed974c989de917555624727b56737266a887998eced4625676d72e781848e8",
       "pantalla": "/videos/[id]",
       "accion": "Resultado validado avanza la etapa; fallos en /incidencias",
       "estado": "completo",
@@ -20169,6 +23705,24 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
+                "Clasificar retorno"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clasificar retorno",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
                 "¿Trabajo pendiente?"
               ]
             }
@@ -20187,17 +23741,124 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Fila actualizada"
+                "Reserva del retorno"
               ]
             },
             {
               "tipo": "main",
               "salida": 1,
               "destinos": [
-                "Responder rechazo"
+                "Responder estado"
               ]
             }
           ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reserva del retorno",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Reservar retorno"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reservar retorno",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "update",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Reserva propia?"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Reserva propia?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Evento"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Releer trabajo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Releer trabajo",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Clasificar concurrente"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Clasificar concurrente",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Responder estado"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Responder estado",
+          "tipo": "n8n-nodes-base.respondToWebhook",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [],
           "pantalla": "/videos/[id]",
           "estado": "completo"
         },
@@ -20230,7 +23891,32 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
+                "¿Entrega guardada?"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Entrega guardada?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
                 "Responder recibido"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Responder revisión"
               ]
             }
           ],
@@ -20243,15 +23929,7 @@
           "decision": false,
           "tabla": null,
           "operacion_tabla": null,
-          "salidas": [
-            {
-              "tipo": "main",
-              "salida": 0,
-              "destinos": [
-                "Evento"
-              ]
-            }
-          ],
+          "salidas": [],
           "pantalla": "/videos/[id]",
           "estado": "completo"
         },
@@ -20279,6 +23957,49 @@
           "decision": false,
           "tabla": null,
           "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "¿Orquestador concluido?"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "¿Orquestador concluido?",
+          "tipo": "n8n-nodes-base.if",
+          "decision": true,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Fila actualizada"
+              ]
+            },
+            {
+              "tipo": "main",
+              "salida": 1,
+              "destinos": [
+                "Responder revisión"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Responder revisión",
+          "tipo": "n8n-nodes-base.respondToWebhook",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
           "salidas": [],
           "pantalla": "/videos/[id]",
           "estado": "completo"
@@ -20299,7 +24020,7 @@
     {
       "id": "FabRutina0000001",
       "nombre": "F · Rutina diaria y reporte semanal",
-      "sha256": "ea547b2d5a1d225116cc0a8552d0055f719d41eed36f1bcebbec1e8b9bd062eb",
+      "sha256": "6883b2cb80f40ede84c70a50a5d4e57d354f6e18cc5e5288c97e1c24bfec3143",
       "pantalla": "/rutina",
       "accion": "Metas, automatización, decisiones diarias, motivos, frenos y video encargado",
       "estado": "completo",
@@ -20746,7 +24467,7 @@
     {
       "id": "FabSonido0000001",
       "nombre": "M5 · Sonido y emoción",
-      "sha256": "04c109f8bd37f5c37c644332a92d42183b44e8eca4a3e9c06f57e64a4038c6cc",
+      "sha256": "a2dd2d28f2517caa92fede6dd9e5ab84bc3863a800adb3376b984f4713adff66",
       "pantalla": "/videos/[id]",
       "accion": "Reproductores y piezas de voz; estilo en biblia y servicios en /admin/fabrica",
       "estado": "completo",
@@ -22090,7 +25811,7 @@
     {
       "id": "FabTextoGPT0001",
       "nombre": "FX · Texto GPT con respaldo",
-      "sha256": "812e2d50a3a4fab979f847872b300ca3ba93b821f3564cba7625e7235160155b",
+      "sha256": "3185b5846bcd1e4ac363b358b0fccfa2f9369fc0efbab2e87a1ca0505d03a7f7",
       "pantalla": "/admin/fabrica",
       "accion": "Modelo y respaldo API; resultado dentro del paso que lo solicitó",
       "estado": "completo",
@@ -22262,7 +25983,7 @@
     {
       "id": "FabVidiq00000001",
       "nombre": "FX · vidIQ",
-      "sha256": "84ddb798ad4ae5444d9497c7a41c1aef960c377f9ca596ad063aa441e77ef739",
+      "sha256": "3cb564001710c42f40883bbf750f5b1738a4269ad140b64a2301e7dd225a3d9d",
       "pantalla": "/radar",
       "accion": "Ideas y fuentes; adopción en /cuentas, título elegido en el video",
       "estado": "completo",
@@ -22588,7 +26309,7 @@
     {
       "id": "FabYouTube000001",
       "nombre": "FX · YouTube por canal",
-      "sha256": "eb35852a9075a2d15a433ca6fee81abcbc0a623646577921792c4f0f10dc521e",
+      "sha256": "5af7d61ee334b00a57007ad95e034e368cc9a7f76fdfc0ca40bc54f10040ad23",
       "pantalla": "/redes",
       "accion": "Estado y preparación de enlace; autorización interactiva del propietario en Google",
       "estado": "completo",

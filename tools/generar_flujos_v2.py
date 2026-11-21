@@ -3377,7 +3377,8 @@ for wf in [ORQ, PROD, REFS, RADAR, DERIV, SONIDO, CLAUDE, AVATAR]:
 
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
 TIEMPO = {'FabAvatar0000001': 1800, 'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
-          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600, 'FabNoticia000001': 600, 'FabRadar00000001': 3600}
+          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600, 'FabNoticia000001': 600, 'FabRadar00000001': 3600,
+          'FabCompYouTube01': 330}
 # Expresiones de n8n: un salto de línea real dentro de un texto entre comillas no es JavaScript válido
 # (el crítico del guion fallaba en silencio por eso). Se escapan todos los que estén dentro de comillas.
 def escapar_saltos(ex):
@@ -3397,7 +3398,7 @@ def recorrer(v):
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
 # Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
-for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'aprendizaje_flujos.py', 'e2e_estados_flujos.py', 'ramas_flujos.py']:
+for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'vidiq_competencia_flujos.py', 'aprendizaje_flujos.py', 'e2e_estados_flujos.py', 'ramas_flujos.py']:
     exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
 
 # Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.

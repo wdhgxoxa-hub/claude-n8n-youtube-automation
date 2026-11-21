@@ -15,6 +15,7 @@ MAPA = {
     'FabAprobacion001': ('/decisiones', 'Aprobar o pedir cambios; reanudar la espera nativa o cerrar la puerta web'),
     'FabAvatar0000001': ('/avatares', 'Elegir avatar y voz; consentimiento, revocación y progreso en detalle de video'),
     'FabChatWeb000001': ('/', 'Chat de Cooper; el chat legado de n8n no se incrusta'),
+    'FabCompYouTube01': ('/radar', 'Competidores y muestras públicas por canal, vidIQ con cuota renovable comprobada y respaldo gratuito'),
     'FabConfirmar0001': ('/programados', 'Estado por red, borrador/omisión y consulta sin volver a subir'),
     'FabCooperAPI0001': ('/radar', 'Puente firmado de todas las pantallas; autorización y recibos idempotentes'),
     'FabCooperCosto01': ('/admin', 'Costos por dueño; /admin/fabrica fija presupuestos y límites'),
