@@ -8,6 +8,15 @@ Inventario final: **20 hallazgos A** (siete cubiertos por los frentes y trece re
 
 La instrucción específica «Solo lectura salvo ese informe» prevalece sobre el cierre documental común: este es el único archivo versionado modificado. Reúne la entrega de `total-auditoria`; no se crea otro informe ni se modifica `docs/ESTADO.md`. Al final se deja el texto de estado para el orquestador. No hubo push, merge, despliegue, reanudación, OAuth, pagos, mensajes ni publicaciones. Los archivos de misión ajenos sin seguimiento se preservan.
 
+## Conciliación del orquestador, 21-11-2026 12:53 Lima
+
+Este inventario conserva el corte original y sus referencias. Los informes de cada frente y el [cierre de cooper-total](cooper-total.md) acreditan las implementaciones posteriores; una propuesta de esta auditoría no certifica su integración ni su despliegue.
+
+- **H20/M13 se reclasifica como ampliación opcional B:** la especificación exige gasto por usuario y alerta (`docs/cooper-especificacion.md:17`); el contrato excluye conciliación de facturas (`docs/cooper-puente-n8n.md:110`) y la interfaz declara tarifas estimadas (`cooper/src/componentes/admin.tsx:100`). Importar recibos y conciliar cargos sería una función nueva. No se presenta el ahorro estimado como ahorro contable comprobado.
+- **H07, clave administrativa anterior:** el informe de consolidación acredita sustitución local y acceso con la nueva clave, pero no revocación (`cooper-consolidar.md:118`, `:122`). La copia reciente del VPS solo contiene una clave administrativa por metadatos; no hay un ID anterior en el recibo histórico que permita vincularla de forma inequívoca. No se revocó la única clave por conjetura. Identificar la anterior en la instalación correcta y revocarla queda B; no se afirma que siga activa.
+- **H18:** matriz automatizada Firefox/WebKit implementada, 24/24 recorridos focales correctos; corrige el MIME del audio en Firefox. La puerta integrada y sus rondas finales se registran en el informe de cierre. Teléfono, Safari y tecnologías de asistencia físicos conservan B09.
+- **H19:** prueba con 10.000 videos y 10.000 mensajes implementada; ciclo estable de avisos de 884,67 a 19,56 ms de mediana sin cambiar los resultados consultados. No acredita paginación de Data Tables ni rendimiento de red/renderizado. [Mediciones y alcance](total-m12.md).
+
 ## Criterios y alcance
 
 - **A:** Codex puede cerrar el trabajo técnico con código, configuración autorizada o ensayos sin comprar servicios, conceder permisos ni decidir por Walter. Esta auditoría solo lo documenta.

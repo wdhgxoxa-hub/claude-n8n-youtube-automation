@@ -1,0 +1,10 @@
+{
+  "fecha_utc": "2026-11-21T17:52:05.666278+00:00",
+  "herramienta": "CUA",
+  "resultado": "HOST_NO_DISPONIBLE",
+  "navegadores": 0,
+  "mensaje": "The browser access host is unavailable",
+  "oauth_iniciado": false,
+  "sesion_produccion_fabricada": false,
+  "aceptacion_privada": "PENDIENTE_SESION_LEGITIMA"
+}
