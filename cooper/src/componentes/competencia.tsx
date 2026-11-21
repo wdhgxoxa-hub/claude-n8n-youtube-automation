@@ -107,8 +107,8 @@ export function PanelCompetencia({
                 ))
               ) : (
                 <p className="muted">
-                  Sin publicaciones destacadas comprobables con una muestra
-                  comparable.
+                  No se confirmó un destacado en esta muestra. Revisa los
+                  límites de la investigación.
                 </p>
               )}
               {p.muestras.length > 0 && (

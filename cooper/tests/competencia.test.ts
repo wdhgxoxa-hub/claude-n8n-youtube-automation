@@ -135,6 +135,22 @@ it("rechaza métricas sin URL consultada, muestras repetidas, antiguas o de otro
     "sin_datos",
   );
 });
+it("investiga destacados sin exigir que exista uno cuando la muestra y homónimos están completos", () => {
+  const { raw, respuesta } = fixture();
+  for (const c of raw.competidores) for (const v of c.muestras) v.vistas = 100;
+  const c = normalizarCompetencia(raw, respuesta, "Margen Real", now);
+  expect(c.estado).toBe("listo");
+  expect(c.competidores.every((p) => p.outliers.length === 0)).toBe(true);
+  raw.comprobaciones.pop();
+  expect(normalizarCompetencia(raw, respuesta, "Margen Real", now).estado).toBe(
+    "parcial",
+  );
+  raw.comprobaciones = fixture().raw.comprobaciones;
+  raw.competidores[0].muestras.pop();
+  expect(normalizarCompetencia(raw, respuesta, "Margen Real", now).estado).toBe(
+    "parcial",
+  );
+});
 it("exige analizar cada competidor y distingue falta de muestra de ausencia de outlier", () => {
   const { raw, respuesta } = fixture();
   raw.competidores[1].muestras = [];

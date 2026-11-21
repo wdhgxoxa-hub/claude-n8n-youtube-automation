@@ -34,14 +34,14 @@ const cuentas=$input.all().flatMap(i=>i.json.statusCode===200?(i.json.body?.item
 return cuentas.length?cuentas.map(c=>({json:{cuenta:c.id,playlist:c.contentDetails.relatedPlaylists.uploads}})):[{json:{sin_listas:true}}];
 """)
 iff(f, '¿Hay listas de competidores?', '$json.sin_listas !== true')
-lectura_competencia('Publicaciones de competidores', 'playlistItems', "={{ JSON.stringify({part:'contentDetails',playlistId:$json.playlist,maxResults:4,fields:'items(contentDetails/videoId)'}) }}")
+lectura_competencia('Publicaciones de competidores', 'playlistItems', "={{ JSON.stringify({part:'contentDetails',playlistId:$json.playlist,maxResults:10,fields:'items(contentDetails/videoId)'}) }}")
 code(f, 'IDs públicos observados', r"""
 const ids=[...new Set($input.all().flatMap(i=>i.json.statusCode===200?(i.json.body?.items||[]):[])
- .map(v=>v.contentDetails?.videoId).filter(id=>/^[\w-]{11}$/.test(id||'')))].slice(0,12);
+ .map(v=>v.contentDetails?.videoId).filter(id=>/^[\w-]{11}$/.test(id||'')))].slice(0,30);
 return [{json:{ids:ids.join(','),hay:ids.length>0}}];
 """)
 iff(f, '¿Hay publicaciones observadas?', '$json.hay === true')
-lectura_competencia('Métricas públicas de YouTube', 'videos', "={{ JSON.stringify({part:'snippet,statistics,contentDetails',id:$json.ids,fields:'items(id,snippet(channelId,title,publishedAt),statistics(viewCount,likeCount,commentCount),contentDetails/duration)'}) }}")
+lectura_competencia('Métricas públicas de YouTube', 'videos', "={{ JSON.stringify({part:'snippet,statistics,contentDetails,liveStreamingDetails',id:$json.ids,fields:'items(id,snippet(channelId,title,publishedAt,liveBroadcastContent),statistics(viewCount,likeCount,commentCount),contentDetails/duration,liveStreamingDetails/actualStartTime)'}) }}")
 lectura_competencia('Homónimos de YouTube', 'search', "={{ JSON.stringify({part:'snippet',type:'channel',q:'\"'+$('Inicio').first().json.nombre+'\"',maxResults:5,fields:'items(id/channelId,snippet(channelTitle,title))'}) }}")
 code(f, 'Competencia nativa comprobada', COMPETENCIA_JS + r"""
 const salida=n=>$(n).isExecuted?$(n).all().map(i=>i.json):[];

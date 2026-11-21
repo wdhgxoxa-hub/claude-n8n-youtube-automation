@@ -260,10 +260,7 @@ function normalizarEvidenciaCompetencia(
     limitaciones.push(
       "Falta completar la búsqueda de cuentas homónimas en YouTube y TikTok; no equivale a que no existan.",
     );
-  if (!competidores.some((c) => c.outliers.length))
-    limitaciones.push(
-      "Sin muestra comparable para confirmar videos destacados: mínimo tres publicaciones anteriores del mismo formato y el doble de su mediana.",
-    );
+  // Buscar destacados no obliga a que existan: una muestra completa sin ninguno es válida.
   return {
     ...base,
     estado: limitaciones.length ? "parcial" : "listo",
@@ -308,6 +305,26 @@ export function normalizarCompetenciaYouTube(
       ? Number(v)
       : null;
   const perfil = (id) => "https://www.youtube.com/channel/" + id;
+  const formato = (v) => {
+    // Ayuda oficial 15424877 (21/11/2026): Shorts <=3 minutos y orientación cuadrada/vertical.
+    // >180 descarta Short; <=180 no lo acredita. Los directos quedan fuera de esta comparación.
+    const d = /^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/.exec(
+      v.contentDetails?.duration || "",
+    );
+    const segundos =
+      d && d.slice(1).some(Boolean)
+        ? Number(d[1] || 0) * 86400 +
+          Number(d[2] || 0) * 3600 +
+          Number(d[3] || 0) * 60 +
+          Number(d[4] || 0)
+        : null;
+    return Number.isFinite(segundos) &&
+      segundos > 180 &&
+      v.snippet?.liveBroadcastContent === "none" &&
+      !v.liveStreamingDetails
+      ? "largo"
+      : "sin_clasificar";
+  };
   const candidatos = new Set(
     lista(datos?.candidatos).filter(idCanal).slice(0, 3),
   );
@@ -328,7 +345,7 @@ export function normalizarCompetenciaYouTube(
       )
         return [];
       return items(l.respuesta)
-        .slice(0, 4)
+        .slice(0, 10)
         .map((v) => v?.contentDetails?.videoId)
         .filter(idVideo)
         .map((id) => [id, cuenta.id]);
@@ -349,10 +366,10 @@ export function normalizarCompetenciaYouTube(
         ? c.snippet.country
         : "",
       patron:
-        "Muestra reciente de la cuenta. La duración no acredita el formato ni demuestra por qué obtuvo esas vistas.",
+        "Muestra reciente de la cuenta. Más de tres minutos acredita video largo, salvo directos; una duración menor no demuestra que sea Short ni explica sus vistas.",
       muestras: videos
         .filter((v) => v.snippet?.channelId === c.id)
-        .slice(0, 4)
+        .slice(0, 10)
         .map((v) => ({
           titulo: v.snippet.title,
           url: "https://www.youtube.com/watch?v=" + v.id,
@@ -361,7 +378,7 @@ export function normalizarCompetenciaYouTube(
           likes: entero(v.statistics?.likeCount),
           comentarios: entero(v.statistics?.commentCount),
           duracion: v.contentDetails?.duration,
-          formato: "sin_clasificar",
+          formato: formato(v),
         })),
     })),
     homonimos: [],
@@ -418,9 +435,14 @@ export function normalizarCompetenciaYouTube(
     ahora,
     "youtube_data_api",
   );
-  c.limitaciones.push(
-    "YouTube no informa el formato Short mediante estos recursos: las muestras sin clasificar no acreditan outliers. Retención y seguidores ganados de competidores no son públicos.",
-  );
+  if (
+    c.competidores.some((p) =>
+      p.muestras.some((v) => v.formato === "sin_clasificar"),
+    )
+  )
+    c.limitaciones.push(
+      "YouTube no informa el formato Short mediante estos recursos: las muestras sin clasificar no acreditan outliers. Retención y seguidores ganados de competidores no son públicos.",
+    );
   if (!cuentas.length)
     c.limitaciones.push(
       "No se obtuvo identidad pública mediante el permiso existente. Revisa conexión, cuota y candidatos del canal.",
@@ -461,6 +483,7 @@ export function combinarCompetenciaYouTube(
         .flatMap((p) => (p.url === c.url ? p.muestras : []))
         .find((x) => x.url === v.url);
       if (
+        v.formato === "sin_clasificar" &&
         conocida &&
         ["short", "largo", "reel", "imagen"].includes(conocida.formato)
       )

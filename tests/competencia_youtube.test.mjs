@@ -57,6 +57,26 @@ test('el contrato web sigue rechazando afirmaciones nativas sin prueba de apertu
     { ruta: 'youtube_data_api', busqueda_real: true, fuentes_consultadas: [perfil(ids[0])] }, 'Margen Real', ahora);
   assert.equal(c.estado, 'sin_datos'); assert.equal(c.competidores.length, 0);
 });
+test('diez muestras por cuenta no aumentan peticiones y >180 segundos excluye Shorts, sin mezclar directos', () => {
+  const d = evidencia();
+  d.videos = ok(ids.flatMap((id,k) => Array.from({length:10},(_,j) => ({
+    id: `${k}${j}`+'v'.repeat(9), snippet:{channelId:id,title:'Largo ficticio',liveBroadcastContent:'none',publishedAt:new Date(ahora-j*86400000).toISOString()},
+    contentDetails:{duration:'PT3M1S'},statistics:{viewCount:'100'},
+  }))));
+  d.listas = ids.map(id => ({cuenta:id,playlist:'UU'+id.slice(2),respuesta:ok(d.videos.body.items.filter(v=>v.snippet.channelId===id).map(v=>({contentDetails:{videoId:v.id}})))}));
+  let c = normalizarCompetenciaYouTube(d,'Margen Real',ahora);
+  assert.equal(c.competidores.flatMap(p=>p.muestras).length,30);
+  assert.ok(c.competidores.every(p=>p.muestras.every(v=>v.formato==='largo')));
+  assert.ok(c.competidores.every(p=>p.outliers.length===0));
+  assert.equal(c.estado,'parcial'); // TikTok sigue pendiente.
+  d.videos.body.items[0].contentDetails.duration='PT3M';
+  d.videos.body.items[1].contentDetails.duration='PT';
+  d.videos.body.items[2].liveStreamingDetails={actualStartTime:'2026-11-18T12:00:00Z'};
+  d.videos.body.items[3].snippet.liveBroadcastContent='upcoming';
+  c=normalizarCompetenciaYouTube(d,'Margen Real',ahora);
+  assert.ok(c.competidores[0].muestras.slice(0,4).every(v=>v.formato==='sin_clasificar'));
+  assert.ok(c.competidores[0].muestras.slice(4).every(v=>v.formato==='largo'));
+});
 test('solo el formato web comprobado habilita comparaciones y ambas redes mantienen su puerta', () => {
   const nativa = normalizarCompetenciaYouTube(evidencia(), 'Margen Real', ahora);
   const raw = { competidores: nativa.competidores.map(c => ({ ...c, muestras: c.muestras.map(v => ({ ...v, formato: 'short' })) })),
@@ -94,4 +114,7 @@ test('subflujo nativo tiene ocho GET máximos, permiso por canal y cero registro
   assert.equal(radar.nodes.find(n => n.name === 'Consultar YouTube por canal').parameters.mode, 'each');
   assert.equal(radar.connections['Competencia comprobada'].main[0][0].node, 'Consultar YouTube por canal');
   assert.equal(radar.connections['Competencia con YouTube'].main[0][0].node, 'Solo tendencias');
+  assert.match(f.nodes.find(n=>n.name==='Publicaciones de competidores').parameters.jsonQuery,/maxResults:10/);
+  assert.match(f.nodes.find(n=>n.name==='IDs públicos observados').parameters.jsCode,/slice\(0,30\)/);
+  assert.match(f.nodes.find(n=>n.name==='Métricas públicas de YouTube').parameters.jsonQuery,/liveStreamingDetails/);
 });
