@@ -129,6 +129,9 @@ await writeFile(
               }
             : {}),
           cpus: 0.5,
+          ...(process.env.COOPER_ENSAYO_CPUSET
+            ? { cpuset: process.env.COOPER_ENSAYO_CPUSET }
+            : {}),
           // Solo loopback mediante Caddy; no se publican backend ni broker.
         },
       ]),

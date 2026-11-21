@@ -49,6 +49,10 @@ def boot(image, data, engine):
             '-e', 'COOPER_MENSAJERIA_PAUSA=1', '-e', 'COOPER_BIBLIOTECA_PAUSA=1',
             '-e', 'COOPER_MARCAS_HABILITAR=0', '-e', 'COOPER_CHAT_API_RESPALDO=0',
             '-e', 'AUTH_SECRET=' + secrets.token_hex(32), '-e', 'AUTH_TRUST_HOST=true', image]
+    cpu_set = os.getenv('COOPER_ENSAYO_CPUSET')
+    if cpu_set:
+        operar.require(bool(re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*', cpu_set)), 'Afinidad CPU inválida')
+        args[-1:-1] = ['--cpuset-cpus', cpu_set]
     try:
         command(args)
         end = time.monotonic() + 90

@@ -61,6 +61,10 @@ def run_container(data, entry, manifest, column_script, entrypoint, args):
                '-e', 'N8N_DIAGNOSTICS_ENABLED=false', '-e', 'N8N_VERSION_NOTIFICATIONS_ENABLED=false',
                '-e', 'N8N_TEMPLATES_ENABLED=false', '-e', 'N8N_LOG_LEVEL=error',
                '--entrypoint', entrypoint, IMAGE, *args]
+    cpu_set = os.getenv('COOPER_ENSAYO_CPUSET')
+    if cpu_set:
+        operar.require(bool(re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*', cpu_set)), 'Afinidad CPU inválida')
+        command[2:2] = ['--cpuset-cpus', cpu_set]
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=180)
         operar.require(result.returncode == 0, 'Falló paso CLI aislado; salida privada suprimida')
