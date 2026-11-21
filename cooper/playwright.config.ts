@@ -26,12 +26,22 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      testIgnore: ["diseno.spec.ts", "animacion.spec.ts", "resultados.spec.ts"],
+      testIgnore: [
+        "diseno.spec.ts",
+        "animacion.spec.ts",
+        "resultados.spec.ts",
+        "operacion.spec.ts",
+      ],
       use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "demostracion",
-      testMatch: ["diseno.spec.ts", "animacion.spec.ts", "resultados.spec.ts"],
+      testMatch: [
+        "diseno.spec.ts",
+        "animacion.spec.ts",
+        "resultados.spec.ts",
+        "operacion.spec.ts",
+      ],
       use: { ...devices["Desktop Chrome"], baseURL: demoURL },
     },
   ],

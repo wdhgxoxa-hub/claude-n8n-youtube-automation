@@ -48,7 +48,18 @@ modulos=[]
 medidas_caos=[]
 for nombre in config.get('modulos',['recorridos','caos','estabilidad']):
     guardian.verificar_destino()
-    modulo=importlib.import_module('sentinel.pruebas.'+nombre).MODULO
+    paquete=importlib.import_module('sentinel.pruebas.'+nombre)
+    modulo=paquete.MODULO
+    if nombre == 'estabilidad' and config.get('esperar_operacion'):
+        # Next entrega HTML antes de cargar la consulta de operación. La primera muestra
+        # debe comparar pantallas listas; no una shell de servidor contra React hidratado.
+        navegar=paquete._navegar
+        def navegar_listo(pagina,url,guardian,timeout_ms):
+            modo=navegar(pagina,url,guardian,timeout_ms)
+            if pagina.locator('.operation-page:visible').count():
+                pagina.wait_for_function("() => [...document.querySelectorAll('.operation-page')].some(p=>p.getClientRects().length && !p.innerText.includes('Consultando la fábrica…'))",timeout=timeout_ms)
+            return modo
+        paquete._navegar=navegar_listo
     if nombre == 'caos':
         # Observación adicional de la API instalada: conserva íntegro su evaluador.
         evaluar = modulo._hallazgos

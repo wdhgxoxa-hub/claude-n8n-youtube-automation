@@ -501,6 +501,8 @@ try {
   };
   const { scenarios } = await import("./ensayo-escenarios.mjs");
   await scenarios(context);
+  const { cobertura } = await import("./ensayo-cobertura.mjs");
+  await cobertura(context);
 } catch (error) {
   exitCode = 1;
   if (error.detail) console.error(`Validación REST de ensayo: ${error.detail}`);

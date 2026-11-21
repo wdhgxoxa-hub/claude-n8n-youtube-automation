@@ -121,6 +121,9 @@ export function Canales() {
                   </button>
                 </div>
                 <p>{c.niche}</p>
+                <Link className="button secondary" href={`/canales/${c.id}`}>
+                  Abrir biblia y operación
+                </Link>
                 <button
                   className="button secondary"
                   aria-pressed={c.newsMode}
@@ -146,57 +149,14 @@ export function Canales() {
                     Ver producción <ArrowUpRight size={14} />
                   </Link>
                 </div>
-                <details>
-                  <summary>Identidad y conexiones</summary>
-                  <dl className="channel-data">
-                    {[
-                      ["Biblia", c.bible],
-                      ["Redes", c.networks],
-                      ["Metas", c.goals],
-                      ["Cuenta", c.account],
-                    ].map(([label, value]) => (
-                      <div key={label}>
-                        <dt>{label}</dt>
-                        <dd>{value || "Por definir"}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                  {(c.ownerId === data.user.id ||
-                    data.user.role === "admin") && (
-                    <form
-                      onSubmit={(e) => void execute(e, c.id)}
-                      className="stack"
-                    >
-                      <label>
-                        Qué quieres ajustar
-                        <select name="evento">
-                          <option value="ajustar_biblia">
-                            Biblia del canal
-                          </option>
-                          <option value="configurar_redes">
-                            Redes sociales
-                          </option>
-                          <option value="metas">Metas</option>
-                          <option value="adoptar_cuenta">
-                            Cuenta existente
-                          </option>
-                        </select>
-                      </label>
-                      <label>
-                        Instrucciones
-                        <textarea
-                          name="texto"
-                          required
-                          maxLength={6000}
-                          rows={3}
-                        />
-                      </label>
-                      <button className="button secondary" disabled={busy}>
-                        Guardar cambios
-                      </button>
-                    </form>
-                  )}
-                </details>
+                <nav
+                  aria-label={`Operación de ${c.name}`}
+                  className="button-row"
+                >
+                  <Link href={`/redes?canal=${c.id}`}>Redes</Link>
+                  <Link href={`/rutina?canal=${c.id}`}>Metas</Link>
+                  <Link href={`/cuentas?canal=${c.id}`}>Adoptar cuenta</Link>
+                </nav>
               </article>
             ))
           ) : (
