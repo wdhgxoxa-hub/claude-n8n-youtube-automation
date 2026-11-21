@@ -1791,3 +1791,8 @@ test('cobertura: radar y renovación se acotan al canal; conexiones no exponen c
  assert.strictEqual(new URL(op.canales[0].conexion.url).origin,'https://accounts.google.com');assert.ok(!JSON.stringify(op).includes('secreto-ficticio'));assert.ok(!JSON.stringify(op).includes('Cuenta ajena'));
  const error=resolverCooper(solicitudCooper('operacion'),{eventos:[{tipo:'incidencia_cooper',evento:'error-global',detalle:JSON.stringify({tipo:'ejecucion',resumen:'Falló un servicio'})}]}).respuesta;assert.strictEqual(error.fallos.length,0);
 });
+
+test('cobertura: los cierres web compiten por la decisión pendiente antes de avanzar',()=>{
+ const cierres=ORQ.nodes.filter(n=>n.name.startsWith('Cooper · cerrar ')&&n.name.endsWith(' guardar'));assert.strictEqual(cierres.length,4);
+ for(const n of cierres){assert.ok(n.parameters.filters.conditions.some(c=>c.keyName==='estado'&&c.keyValue==='pendiente'));assert.ok(!n.alwaysOutputData);}
+});

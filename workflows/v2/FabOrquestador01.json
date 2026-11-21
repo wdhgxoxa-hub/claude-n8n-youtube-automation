@@ -4782,6 +4782,11 @@
               "keyName": "aprobacion_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.aprobacion_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "pendiente"
             }
           ]
         },
@@ -4880,6 +4885,11 @@
               "keyName": "aprobacion_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.aprobacion_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "pendiente"
             }
           ]
         },
@@ -7957,6 +7967,11 @@
               "keyName": "aprobacion_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.aprobacion_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "pendiente"
             }
           ]
         },
@@ -8055,6 +8070,11 @@
               "keyName": "aprobacion_id",
               "condition": "eq",
               "keyValue": "={{ $('Inicio').first().json.aprobacion_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "pendiente"
             }
           ]
         },

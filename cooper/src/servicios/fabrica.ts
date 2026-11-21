@@ -465,6 +465,18 @@ export class FabricaN8n implements Fabrica {
         })
         .onConflictDoNothing()
         .run();
+    if (decision) {
+      const anterior = db()
+        .select()
+        .from(bridgeCommands)
+        .where(eq(bridgeCommands.id, request.id_evento))
+        .get();
+      if (anterior && anterior.request !== encoded)
+        throw new ErrorHttp(
+          409,
+          "Esta decisión ya tiene otra respuesta. Actualiza para ver el resultado.",
+        );
+    }
     for (let attempt = 0; attempt < 3; attempt++) {
       if (
         db()

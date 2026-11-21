@@ -150,3 +150,8 @@ if(!filas.length)filas.push({});
 const [resumen,sugerencia]=motivoOperacion(e.execution?.error?.message||e.trigger?.error?.message||'');
 return filas.map(v=>({json:{video_id:v.video_id||'',canal_id:v.canal_id||'',tipo:'incidencia_cooper',evento:String(e.execution?.id||$execution.id)+':error',detalle:JSON.stringify({tipo:'ejecucion',resumen,sugerencia,proceso:textoOperacion(e.workflow?.name||'Preparación de la fábrica')})}}));
 """
+
+# Un cierre condicional impide dos avances si web/chat u operadores compiten.
+for n in ORQ['nodes']:
+ if n['name'].startswith('Cooper · cerrar ') and n['name'].endswith(' guardar'):
+  n['parameters']['filters']['conditions'].append({'keyName':'estado','condition':'eq','keyValue':'pendiente'})

@@ -322,14 +322,29 @@ it("una decisión remota reserva el mismo identificador aunque cambie la respues
       return Response.json({ aceptado: true });
     }),
   );
-  for (const decision of ["aprobar", "cambios"])
-    await controlar(user, {
+  await controlar(user, {
+    accion: "decidir",
+    id: "ap-una",
+    decision: "aprobar",
+    cambios: "",
+    confirmado: true,
+  });
+  await expect(
+    controlar(user, {
       accion: "decidir",
       id: "ap-una",
-      decision,
+      decision: "cambios",
       cambios: "Más claridad",
       confirmado: true,
-    });
+    }),
+  ).rejects.toMatchObject({ status: 409 });
+  await controlar(user, {
+    accion: "decidir",
+    id: "ap-una",
+    decision: "aprobar",
+    cambios: "",
+    confirmado: true,
+  });
   expect(solicitudes).toHaveLength(2);
   expect(solicitudes[0].id_evento).toBe(solicitudes[1].id_evento);
 });
