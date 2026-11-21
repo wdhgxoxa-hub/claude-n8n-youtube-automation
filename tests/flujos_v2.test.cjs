@@ -2292,7 +2292,7 @@ test('auditoría: las exportaciones versionadas coinciden con el generador sin e
   }).trim(), 'exportaciones reproducibles');
 });
 
-test('auditoría: cada nodo es alcanzable desde una entrada y cada referencia interna existe', () => {
+test('auditoría: cada nodo es alcanzable o legado deshabilitado y cada referencia interna existe', () => {
   const flujos = todosLosFlujos(), ids = new Set(flujos.map(f => f.id));
   for (const flujo of flujos) {
     const nombres = new Set(flujo.nodes.map(n => n.name));
@@ -2315,7 +2315,7 @@ test('auditoría: cada nodo es alcanzable desde una entrada y cada referencia in
       if (!visitados.has(destino)) { visitados.add(destino); pendientes.push(destino); }
     }
     for (const nodo of flujo.nodes) {
-      assert.ok(visitados.has(nodo.name), flujo.id + ': nodo inaccesible ' + nodo.name);
+      assert.ok(visitados.has(nodo.name) || nodo.disabled === true, flujo.id + ': nodo inaccesible activo ' + nodo.name);
       const referencia = nodo.parameters.workflowId?.value;
       if (referencia && !referencia.startsWith('=')) assert.ok(ids.has(referencia), flujo.id + ': subflujo inexistente ' + referencia);
     }
@@ -2325,7 +2325,12 @@ test('auditoría: cada nodo es alcanzable desde una entrada y cada referencia in
 test('auditoría: toda petición HTTP tiene timeout y los reintentos están acotados', () => {
   for (const flujo of todosLosFlujos()) for (const nodo of flujo.nodes.filter(n => n.type.endsWith('.httpRequest'))) {
     const contexto = flujo.id + ': ' + nodo.name;
-    const timeout = nodo.parameters.options?.timeout;
+    const rawTimeout = nodo.parameters.options?.timeout;
+    const timeouts = typeof rawTimeout === 'string' ? [
+      run('return [{json:{value:(' + rawTimeout.slice(3,-2) + ')}}];', {nodes:{'Pedido de texto':{tarea:'radar',local:{buscar_web:true}}}})[0].json.value,
+      run('return [{json:{value:(' + rawTimeout.slice(3,-2) + ')}}];', {nodes:{'Pedido de texto':{tarea:'critico',local:{buscar_web:false}}}})[0].json.value,
+    ] : [rawTimeout];
+    for (const timeout of timeouts)
     assert.ok(Number.isInteger(timeout) && timeout > 0 && timeout <= 600000, contexto + ': timeout inválido');
     if (nodo.retryOnFail) {
       assert.ok(Number.isInteger(nodo.maxTries) && nodo.maxTries >= 2 && nodo.maxTries <= 5, contexto + ': reintentos sin límite');
@@ -2362,15 +2367,15 @@ test('auditoría: el vigilante no envía secretos ficticios ni query de URLs al 
   const salida = run(codeOf(error, 'Mensaje de error'), { json: {
     workflow: { name: 'F · Auditoría' },
     execution: {
-      lastNodeExecuted: 'Proveedor',
+      id: '123', lastNodeExecuted: 'Proveedor',
       url: 'https://n8n.example.test/execution/123?signature=' + valores[1] + '#detalle',
       error: { message: '401 Authorization: Bearer ' + valores[0] + ' api_key=' + valores[2] + ' access_token=' + valores[3] },
     },
   } })[0].json.texto;
   assert.match(salida, /Auditoría/);
   assert.match(salida, /Proveedor/);
-  assert.match(salida, /credencial o permiso fue rechazado/);
-  assert.match(salida, /https:\/\/n8n\.example\.test\/execution\/123/);
+  assert.match(salida, /una clave fue rechazada/);
+  assert.match(salida, /https:\/\/flujos\.cooperestudio\.com\/execution\/123/);
   for (const secreto of valores) assert.ok(!salida.includes(secreto), 'El aviso filtró un valor sensible ficticio');
   assert.doesNotMatch(salida, /signature=|#detalle|Authorization|access_token|api_key/);
   const activacion = run(codeOf(error, 'Mensaje de error'), { json: {
@@ -2539,28 +2544,21 @@ test('auditoría: el diagnóstico durable sólo conserva IDs y categoría y el a
   assert.deepStrictEqual(recuperado, mensaje);
 });
 
-test('auditoría: dos retornos de Claude compiten por enviado y sólo el que actualizó despacha', () => {
+test('auditoría: la confirmación conserva el CAS por estado y huella de M01', () => {
   const guardar = RET.nodes.find(n => n.name === 'Guardar resultado');
   assert.strictEqual(guardar.parameters.matchType, 'allConditions');
   assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'job_id' && c.condition === 'eq'));
-  assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'estado' && c.condition === 'eq' && c.keyValue === 'enviado'));
+  assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'estado' && c.condition === 'eq' && c.keyValue === 'retorno_en_curso'));
+  assert.ok(guardar.parameters.filters.conditions.some(c => c.keyName === 'resultado' && c.condition === 'eq'));
   assert.strictEqual(guardar.alwaysOutputData, true);
-  assert.deepStrictEqual(RET.connections['Guardar resultado'].main[0].map(e => e.node), ['Fiabilidad · ganó el retorno']);
-  const condicion = RET.nodes.find(n => n.name === 'Fiabilidad · ganó el retorno').parameters.conditions.conditions[0].leftValue;
-  const evaluar = json => run('return [{json:{ganador:' + condicion.slice(3, -2) + '}}];', { json })[0].json.ganador;
-  assert.strictEqual(evaluar({ job_id: 'j', estado: 'listo' }), true);
-  assert.strictEqual(evaluar({ job_id: 'j', estado: 'error' }), true);
-  assert.strictEqual(evaluar({}), false);
-  assert.strictEqual(evaluar({ job_id: 'j', estado: 'enviado' }), false);
-  assert.deepStrictEqual(RET.connections['Fiabilidad · ganó el retorno'].main.map(s => s.map(e => e.node)),
-    [['Responder recibido'], ['Fiabilidad · responder duplicado']]);
-  assert.ok(!RET.connections['Fiabilidad · responder duplicado'], 'Un duplicado no despacha otro evento');
+  assert.deepStrictEqual(RET.connections['Guardar resultado'].main[0].map(e => e.node), ['¿Entrega guardada?']);
+  assert.deepStrictEqual(RET.connections['¿Entrega guardada?'].main.map(s => s.map(e => e.node)), [['Responder recibido'], ['Responder revisión']]);
+  assert.ok(!RET.connections['Responder recibido']);
 });
 
 test('auditoría: un timeout al despertar Claude conserva el trabajo para aceptar un retorno tardío', () => {
   const incierto = run(codeOf(CL, 'Fallo al despertar'), { json: { error: { message: 'timeout clave=ficticia' } } })[0].json;
-  assert.strictEqual(incierto.estado, 'enviado');
-  assert.strictEqual(JSON.parse(incierto.resultado).estado, 'incierto');
+  assert.strictEqual(incierto.estado, 'envio_incierto');
   assert.doesNotMatch(incierto.resultado, /clave=ficticia/);
   assert.ok(!CL.nodes.find(n => n.name === 'Despertar routine').retryOnFail);
   assert.doesNotMatch(CL.nodes.find(n => n.name === 'Aviso: Claude no respondió').parameters.text, /Reintenté 4 veces/);

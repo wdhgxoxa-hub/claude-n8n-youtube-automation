@@ -68,8 +68,9 @@ mensaje = nodo_fiable(ERRORES, 'Mensaje de error')['parameters']['jsCode']
 mensaje = mensaje.replace("return [{ json: { texto } }];", """
 const indice=motivos.findIndex(([r])=>r.test(original));
 const categoria=['cuota','timeout','credenciales','saldo','red','proveedor','parametros'][indice] || 'no_clasificado';
-return [{json:{texto,diagnostico:{version:1,flujo:String(wf.id || '').slice(0,80),
- nodo:String(nodo).slice(0,120),categoria,ejecucion:String(ex.id || '').slice(0,80),reintento_de:String(ex.retryOf || '').slice(0,80)}}}];
+const idSeguro=v=>/^[a-zA-Z0-9_-]{1,80}$/.test(String(v || ''))?String(v):'';
+return [{json:{texto,diagnostico:{version:1,flujo:idSeguro(wf.id),
+ nodo:String(nodo).slice(0,120),categoria,ejecucion:idSeguro(ex.id),reintento_de:idSeguro(ex.retryOf)}}}];
 """)
 nodo_fiable(ERRORES, 'Mensaje de error')['parameters']['jsCode'] = mensaje
 nodo_fiable(ERRORES, 'Avisar error')['onError'] = 'continueRegularOutput'
@@ -81,11 +82,7 @@ code(f, 'Fiabilidad · recuperar aviso', "return $('Mensaje de error').all();")
 antes(f, 'Avisar error', 'Fiabilidad · diagnóstico mínimo', 'Fiabilidad · recuperar aviso')
 f.chain('Fiabilidad · diagnóstico mínimo', 'Fiabilidad · guardar diagnóstico', 'Fiabilidad · recuperar aviso')
 
-# Un timeout del disparador no demuestra que Claude no haya recibido el encargo.
-# Mantenerlo pendiente permite aceptar su retorno tardío sin crear otro trabajo.
-nodo_fiable(CLAUDE, 'Fallo al despertar')['parameters']['jsCode'] = "return [{json:{estado:'enviado',resultado:JSON.stringify({estado:'incierto',error:'No se confirmó la recepción; conciliar el trabajo antes de repetir.'})}}];"
-nodo_fiable(CLAUDE, 'Aviso: Claude no respondió')['parameters']['text'] = tg_texto("No se confirmó la recepción del encargo de Claude. Puede seguir ejecutándose; consulta el trabajo antes de volver a enviarlo.")
-
+# M01 conserva envio_incierto y actualiza solo la fila aún enviada tras timeout.
 # M01 ya reserva por estado y huella, despacha una vez y confirma la entrega.
 # Conservar ese CAS: Guardar resultado exige retorno_en_curso, nunca enviado.
 

@@ -31,7 +31,7 @@ function contextoAprendizaje(video, trabajos, planos) {
   const resultado = modo => { const r = parseAprendizaje(propios.find(t => modo.includes(t.modo))?.resultado); return r.resultado || r; };
   const guion = resultado(['guion','corregir_guion']), storyboard = resultado(['storyboard']);
   return { titulo: String(guion.titulo || video.tema || '').slice(0,500), guion: typeof guion.guion === 'string' ? guion.guion.slice(0,10000) : null, extracto_acotado:true,
-    planos: (storyboard.planos || planos.filter(p => p.video_id === video.video_id).map(p => parseAprendizaje(p.plano, p))).slice(0,80).map(p => ({ id:String(p.id || p.plano_id || ''), texto:String(p.texto_narrado || '').slice(0,500), duracion_s:Number(p.duracion_s) || null, encuadre:String(p.encuadre || '').slice(0,100), texto_pantalla:String(p.texto_pantalla || '').slice(0,200) })),
+    planos: (Array.isArray(storyboard.planos) ? storyboard.planos : planos.filter(p => p.video_id === video.video_id).map(p => parseAprendizaje(p.plano, p))).filter(p => p && typeof p === 'object' && !Array.isArray(p)).slice(0,80).map(p => ({ id:String(p.id || p.plano_id || ''), texto:String(p.texto_narrado || '').slice(0,500), duracion_s:Number(p.duracion_s) || null, encuadre:String(p.encuadre || '').slice(0,100), texto_pantalla:String(p.texto_pantalla || '').slice(0,200) })),
     miniatura: storyboard.miniatura ? { texto:String(storyboard.miniatura.texto || '').slice(0,200), descripcion:String(storyboard.miniatura.prompt_imagen || '').slice(0,2000) } : null };
 }
 function acotarEvidenciasAprendizaje(nuevas, anteriores) {
@@ -65,6 +65,6 @@ function validarAprendizaje(resultado, contexto, jobId) {
 }
 function leccionesParaGuion(trabajos, canal) {
   return trabajos.filter(t => t.canal_id === canal && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).sort((a,b) => String(b.updatedAt || b.createdAt).localeCompare(String(a.updatedAt || a.createdAt))).flatMap(t => {
-    const r=parseAprendizaje(t.resultado); return (r.resultado?.evidencia_version === 1 ? r.resultado.lecciones : []).filter(l=>l.id && l.origenes?.length);
+    const r=parseAprendizaje(t.resultado); return (r.resultado?.evidencia_version === 1 && Array.isArray(r.resultado.lecciones) ? r.resultado.lecciones : []).filter(l=>l && typeof l === 'object' && !Array.isArray(l) && l.id && l.origenes?.length);
   }).slice(0,30);
 }

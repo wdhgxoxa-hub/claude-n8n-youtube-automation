@@ -25,7 +25,14 @@ return $input.all().map((i,k)=>{const p=pedidos[k], r=leerTexto(i.json), compete
  const ideas=competenciaVigente(competencia) ? (Array.isArray(r?.ideas)?r.ideas:[]).filter(x=>fuentes.has(x.fuente_url) && typeof x.titulo==='string' && typeof x.gancho==='string').slice(0,5).map(x=>({titulo:x.titulo.slice(0,200),gancho:x.gancho.slice(0,500),red:['youtube','tiktok','instagram','facebook'].includes(x.red)?x.red:'youtube',formato:x.formato==='largo'?'largo':'short',por_que:String(x.por_que||'').slice(0,600),fuente:'Publicación pública consultada',fuente_url:x.fuente_url})) : [];
  return {json:{canal_id:p.canal_id,nombre:p.nombre,ok:true,creditos:0,tendencias:JSON.stringify({fecha:competencia.fecha,resumen:competencia.resumen,competencia,ideas,sonidos:[],formatos:[]})}};});
 """)
-# Mantener los nodos anteriores desconectados como referencia revisable del lote.
+# Mantener las rutas anteriores desconectadas y explícitamente inactivas para revisión.
+legados = {'vidIQ: radar','Encargo del analista','Analista de tendencias','Radar del canal',
+ 'Cooper · costo Analista de tendencias','Cooper · costo Analista de tendencias registrar',
+ 'Cooper · costo Analista de tendencias seguir','Cooper · identificar Cooper · costo Analista de tendencias registrar',
+ 'Texto · Analista de tendencias'}
+for legado in f.nodes:
+    if legado['name'] in legados:
+        legado['disabled'] = True
 f.conn['¿Hay canales?']['main'][0] = [{'node':'Encargo público de competencia','type':'main','index':0}]
 f.chain('Encargo público de competencia','Investigar competencia pública','Competencia comprobada','Solo tendencias')
 n=next(n for n in f.nodes if n['name']=='Solo tendencias')

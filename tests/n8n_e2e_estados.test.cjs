@@ -18,16 +18,16 @@ const run = (w, name, json = {}, nodes = {}, runIndex = 0) => {
 };
 const destinations = (w, name, output = 0) => (w.connections[name]?.main[output] || []).map(x => x.node);
 
-test('ensayo: callback exige el mismo modo y un trabajo todavía enviado', () => {
-  const expression = node(callback, '¿Trabajo pendiente?').parameters.conditions.conditions[0].leftValue.slice(3, -2);
-  const accept = (job, received) => new Function('$', '$json', 'return (' + expression + ')')(
-    () => ({ first: () => ({ json: received }) }), job,
-  );
+test('ensayo: callback valida modo y conserva la reserva durable de M01', () => {
+  const classify = (job, received) => new Function('$', '$input', node(callback, 'Clasificar retorno').parameters.jsCode)(
+    () => ({ first: () => ({ json: received }) }), { all: () => [{ json: job }] },
+  )[0].json.accion;
   const job = { job_id: 'guion-abc-xyz', modo: 'guion', estado: 'enviado' };
-  assert.equal(accept(job, job), true);
-  assert.equal(accept(job, { ...job, modo: 'crear_biblia' }), false);
-  assert.equal(accept({ ...job, estado: 'listo' }, job), false);
-  assert.equal(accept(job, { ...job, job_id: 'guion-otro-xyz' }), false);
+  assert.equal(classify(job, job), 'reservar');
+  assert.equal(classify({ ...job, estado: 'envio_incierto' }, job), 'reservar');
+  assert.equal(classify(job, { ...job, modo: 'crear_biblia' }), 'rechazar');
+  assert.equal(classify({ ...job, estado: 'listo' }, job), 'rechazar');
+  assert.equal(classify(job, { ...job, job_id: 'guion-otro-xyz' }), 'rechazar');
 });
 
 test('ensayo: render pendiente tiene un límite durable de 40 consultas', () => {
