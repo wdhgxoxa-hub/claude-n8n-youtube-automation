@@ -1,0 +1,30 @@
+{
+  "fecha_lima": "2026-11-21T11:25:17.462467-05:00",
+  "commit_codigo": "c726b3083865718c41a32a9eb32fe09580c919b7",
+  "node": "24.22.3",
+  "npm": "12.2.2",
+  "comandos": [
+    "cd cooper && npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
+    "node --test tests/flujos_v2.test.cjs"
+  ],
+  "codigos_salida": [
+    0,
+    0
+  ],
+  "unitarias": 285,
+  "e2e": 46,
+  "flujos": 160,
+  "errores": 0,
+  "advertencias": 0,
+  "datos": "ficticios; sin acceso al VPS en este cierre",
+  "archivos": {
+    "puerta-cierre.log": "5b34bcc0f687f6d8c6ac7bb1dccada9c64fc8ef77181935d9ab3d9ba9d816968",
+    "flujos-cierre.log": "f2e893c8c921cdcac65f5cfa9b6c8f06b9629221bcda0833427a482a019afffc",
+    "resultados-cierre.log": "b8005ed7ede1a45e4603524cf68a24b22f39a0e8c60e997506243e769bbd4fe1",
+    "puerta-cierre-previa.log": "1c2b22b4abe4d10ce0a71b40a7a475b3bf53f894f0ca45a7b6d9185f18c01fad",
+    "resultados-cierre-previa.log": "440514099f4379c494e5a8f8ec27e8cf05b93ab22a095fe9ed0211d0f99fdc83",
+    "cierre-390.png": "a986604409a74af49b5063139f7b832df59f9838b517d127477a089df327a268",
+    "cierre-1440.png": "cee9507b2f23b6ce64aef3cb5950ff78e52aef849abad498dcff05078e151349"
+  },
+  "normalizacion_logs": "Saltos de línea y espacios finales normalizados; contenido y resultados conservados. Originales en cooper/.cache."
+}

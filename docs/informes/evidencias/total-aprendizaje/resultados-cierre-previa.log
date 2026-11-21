@@ -1,0 +1,109 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs e2e/resultados.spec.ts
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 64ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 732ms
+  Running TypeScript ...
+  Finished TypeScript in 1738ms ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4)
+  Generating static pages using 23 workers (2/4)
+  Generating static pages using 23 workers (3/4)
+✓ Generating static pages using 23 workers (4/4) in 98ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 5 tests using 1 worker
+
+  ✘  1 [demostracion] › e2e/resultados.spec.ts:21:1 › Aprendizaje activa y pausa la medición con persistencia y permiso administrativo (2.7s)
+  ✓  2 [demostracion] › e2e/resultados.spec.ts:90:1 › Publicados presenta intervalos YouTube en segundos sin recortar repeticiones (1.3s)
+  ✓  3 [demostracion] › e2e/resultados.spec.ts:141:1 › Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección (2.5s)
+  ✓  4 [demostracion] › e2e/resultados.spec.ts:198:1 › el montaje real se reproduce y sustituye la maqueta; galería y embeds usan URLs exactas (1.6s)
+  ✓  5 [demostracion] › e2e/resultados.spec.ts:353:1 › Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejora (1.5s)
+
+
+  1) [demostracion] › e2e/resultados.spec.ts:21:1 › Aprendizaje activa y pausa la medición con persistencia y permiso administrativo
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "Los ajustes cambiaron"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <p role="alert">…</p> aka getByText('Los ajustes cambiaron.')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      52 |     );
+      53 |     await control.click();
+    > 54 |     await expect(page.getByRole("alert")).toContainText(
+         |                                           ^
+      55 |       "Los ajustes cambiaron",
+      56 |     );
+      57 |     await expect(control).toBeChecked({ checked: !activo });
+        at /home/david/Proyectos/cooper-wt/total-aprendizaje/cooper/e2e/resultados.spec.ts:54:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/resultados-Aprendizaje-act-5fc9f-ia-y-permiso-administrativo-demostracion/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/resultados-Aprendizaje-act-5fc9f-ia-y-permiso-administrativo-demostracion/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/resultados-Aprendizaje-act-5fc9f-ia-y-permiso-administrativo-demostracion/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/resultados-Aprendizaje-act-5fc9f-ia-y-permiso-administrativo-demostracion/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [demostracion] › e2e/resultados.spec.ts:21:1 › Aprendizaje activa y pausa la medición con persistencia y permiso administrativo
+  4 passed (12.9s)

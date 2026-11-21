@@ -1,0 +1,58 @@
+{
+  "base": "de397f3",
+  "commit_fuentes": "b5690227860a508093f7b29c2f21d48b018b2bbb",
+  "integrar_con_fuentes": true,
+  "aplicado_al_vps": false,
+  "flujos": [
+    {
+      "archivo": "workflows/v2/FabAprendizaje01.json",
+      "id": "FabAprendizaje01",
+      "nombre": "M7 · Aprendizaje (24 h, 72 h y 7 días)",
+      "sha256": "771e30efd139db75950206a5df373e221696f6815d87b2f0a2ef55ad4d509efd",
+      "activo": false
+    },
+    {
+      "archivo": "workflows/v2/FabCooperAPI0001.json",
+      "id": "FabCooperAPI0001",
+      "nombre": "FX · API de Cooper",
+      "sha256": "7c8d8bf993abcf789af562a60d23e9f7782e476648ee85e381525d234537d077",
+      "activo": false
+    },
+    {
+      "archivo": "workflows/v2/FabErrores000001.json",
+      "id": "FabErrores000001",
+      "nombre": "F · Vigilante de errores",
+      "sha256": "6d171698432ca84415e9214cd7a9a69e293e68bbdf9a3c5834ca2d15945ed31a",
+      "activo": false
+    },
+    {
+      "archivo": "workflows/v2/FabLlamarClaude1.json",
+      "id": "FabLlamarClaude1",
+      "nombre": "FX · Llamar a Claude",
+      "sha256": "63e1f0b67d3b342ede0a93abc41b9b62c4e8ae8e5262fb2870051664a2f2709d",
+      "activo": false
+    },
+    {
+      "archivo": "workflows/v2/FabOrquestador01.json",
+      "id": "FabOrquestador01",
+      "nombre": "F · Orquestador",
+      "sha256": "2ca6bff41a0d7f80c930dcf5b451630ab7f8e0d1fa4f98d76a97b53458f07667",
+      "activo": false
+    },
+    {
+      "archivo": "workflows/v2/FabRetornoClaud1.json",
+      "id": "FabRetornoClaud1",
+      "nombre": "F · Retorno de Claude",
+      "sha256": "fa796caf6688e28ef820926c513abe4fbbb07924f271b13dc3f607d25bcf0cc1",
+      "activo": false
+    },
+    {
+      "archivo": "workflows/v2/FabYouTube000001.json",
+      "id": "FabYouTube000001",
+      "nombre": "FX · YouTube por canal",
+      "sha256": "d3ea3a223e871239331d265de72bf154b541524f7045b5513563300c0fb54176",
+      "activo": false
+    }
+  ],
+  "patch_sha256": "a3735923917f89c86f879b850f87fc1a797e2004480d1fc04f1d025aac87f8ee"
+}
