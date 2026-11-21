@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 class IntegracionTest(unittest.TestCase):
     def test_propaga_configuracion_de_chat_whatsapp_y_texto(self):
         names = [
-            'COOPER_CHAT', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY',
+            'COOPER_CHAT', 'COOPER_CHAT_API_RESPALDO', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY',
             'COOPER_CHAT_MODELO_CLAUDE', 'COOPER_CHAT_MODELO_OPENAI',
             'COOPER_MENSAJERIA', 'COOPER_MENSAJERIA_PAUSA', 'WHATSAPP_TOKEN',
             'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_APP_SECRET', 'WHATSAPP_VERIFY_TOKEN',
@@ -33,7 +33,7 @@ class IntegracionTest(unittest.TestCase):
             self.assertEqual(services['cooper']['environment'].get(name), env[name], name)
         allowed = json.loads((ROOT / 'deploy/n8n-task-runners.json').read_text())['task-runners'][0]['allowed-env']
         for name in bridge:
-            for service in ['n8n', 'runner']:
+            for service in ['cooper', 'n8n', 'runner']:
                 self.assertEqual(services[service]['environment'].get(name), env[name], f'{service}: {name}')
             self.assertIn(name, allowed)
         # Ninguna clave de chat/Meta debe entrar al runner de código.
