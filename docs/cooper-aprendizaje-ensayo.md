@@ -16,6 +16,8 @@ python3 tools/cooper/preparar_ensayo_aprendizaje.py \
 
 Produce `CoopEnsayoTok01.json`, `CoopEnsayoApr01.json` y un manifest con hashes. No lee `.env`, no se conecta a ninguna API y solo usa referencias públicas del generador. Aplicar el mapa de IDs de tablas/credenciales del lote integrado antes de importar. Nunca sustituir referencias por valores de tokens. Las columnas de observabilidad de integración 3 deben existir.
 
+En n8n 2.47, el modo CLI exige una versión publicada de sus subflujos. Publicar temporalmente **solo** `CoopEnsayoTok01` mediante la CLI oficial: contiene únicamente un trigger interno, sin webhook, calendario ni nodo de publicación. La captura raíz y el guardado de lecciones siguen inactivos. Al terminar las sondas, despublicar y eliminar el getter temporal. No activar producción para satisfacer esta dependencia.
+
 Usar el respaldo y rollback ya comprobados del despliegue. Además, registrar los valores previos de `retencion_media`, `metricas_youtube`, `metricas_consultadas_en` de los videos elegidos; `metricas_historial` y `metricas_consultadas_en` de sus publicaciones; y los IDs de trabajos existentes. Esos registros no contienen tokens. Asegurar que los tres IDs de ensayo no estén ocupados; no sobrescribir un flujo ajeno. Importar los dos JSON como inactivos en el mismo proyecto/propietario. Revisar que ningún nodo apunte a un flujo distinto de `CoopEnsayoTok01`.
 
 ## 2. Capturar sin salir del circuito de lectura

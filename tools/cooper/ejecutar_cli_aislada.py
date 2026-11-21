@@ -15,7 +15,7 @@ CONFIG={'task-runners':[{
 }]}
 
 def ejecutar(wid, base='file:/var/lib/cooper/n8n/database.sqlite?mode=ro'):
- if wid not in ['CoopEnsayoApr01','CoopEnsayoLec01','CoopSondaVidIQ01','CoopSondaYtComp1']:
+ if wid not in ['CoopEnsayoApr01','CoopEnsayoLec01','CoopSondaVidIQ01','CoopSondaYtComp1','CoopRadarReal001']:
   raise ValueError('ID no autorizado')
  with sqlite3.connect(base,uri=True) as c:
   previo=c.execute('SELECT COALESCE(MAX(id),0) FROM execution_entity').fetchone()[0]
