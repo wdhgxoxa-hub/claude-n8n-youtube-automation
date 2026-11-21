@@ -1,0 +1,38 @@
+{
+  "base_git": "af2774c",
+  "lote_previo_entrada_sha256": "269d8f7c04981396d34ad266059da27f5e0ee34b8a4d2cf640040d3be7299588",
+  "allowTextoApi": false,
+  "overrides_true": 0,
+  "dependencias_publicadas": 6,
+  "credenciales_existentes": 4,
+  "sources": {
+    "FabAjustes000001": {
+      "nombre": "F · Ajustes de la fábrica",
+      "contenido_sha256": "e76afaae3e1523fc0392bcfec15a1075330788885082a6fecb218f6ed235d6f3"
+    },
+    "FabCompYouTube01": {
+      "nombre": "FX · Competencia pública de YouTube",
+      "contenido_sha256": "e1fdcfcc2758462963e1df7e318029f223e6ccd64643afdc9b60aed2104ccd46"
+    },
+    "FabRadar00000001": {
+      "nombre": "F · Radar de tendencias",
+      "contenido_sha256": "26f9c6ef8f3d646e7af9c5521edfcf2c2d52c759821011afff1f87613a3ad237"
+    },
+    "FabYouTube000001": {
+      "nombre": "FX · YouTube por canal",
+      "contenido_sha256": "9d9e6159b5b16bca056b2ae53f89199fda98572bac617a989a7f0a1777e02753"
+    },
+    "YgWu9aUDsB2VYaz3": {
+      "nombre": "FX · Texto GPT con respaldo",
+      "contenido_sha256": "738eee06db0f5bbadf76599c6bcc2fb8bf3eaa3b6d44c06f597b42c0adbd3eb3"
+    },
+    "rvwLNNS309MEi8cL": {
+      "nombre": "F · Noticia del día verificada",
+      "contenido_sha256": "dfdf98140203f8534c5ae351fdee54e3e51fc2609e37605dbaa813776c40ec4a"
+    },
+    "z74zUkz2BR8k0GLR": {
+      "nombre": "FX · Registrar costo por dueño",
+      "contenido_sha256": "4aa597d8336ea2c3b4ebc3e1bf944ec6ca00fdf940762193e3573a95ca27d08a"
+    }
+  }
+}

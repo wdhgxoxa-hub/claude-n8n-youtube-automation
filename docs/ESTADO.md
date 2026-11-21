@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 17:36 (Lima).
+Última actualización: 2026-11-21 18:16 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — horario Radar preparado y probado localmente:** extra separado habilita únicamente `Cada mañana (radar)` a las 07:40 America/Lima, con permiso de texto cerrado, credenciales existentes y CAS de siete fuentes. 254 regresiones operativas sin advertencias; CLI real sin red acredita importación/publicación, reversa posterior a PASS y fallo inyectado con restauración byte a byte, nueve tablas y 44 workflows ajenos preservados. Bundle, imagen b3, workflows y generador intactos. Aún sin integración ni despliegue desde este frente; ejecutar después del lote certificado y antes de Marcas, con nueva copia/CAS. [Informe](informes/total-cierre-radar.md), [receta](cooper-horario-radar.md).
 
 - **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 

@@ -1,0 +1,41 @@
+{
+  "estado": "PASS",
+  "red": "none",
+  "puertos": [],
+  "servidor_cron": false,
+  "aplicador_certificado": "sin cambios; adaptador de política y Operator offline",
+  "activacion": "PASS",
+  "reversa_post_PASS": "PASS",
+  "fallo_inyectado_revertido_bytes": "PASS",
+  "tablas_negocio_preservadas": 9,
+  "workflows_ajenos_preservados": 44,
+  "credenciales_valores_leidos": false,
+  "horario": "7:40; zona del workflow conservada",
+  "extra_sha256": "df5621f98aec16a95622cc9f4b3f21c67ee9de037f418beb9cc5697ee8cbe21a",
+  "helpers_sha256": {
+    "operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "preparar-n8n-total.py": "ff551961116a62cabf8d60f75440b7f0425e0368cca07f859fd152ade796d6b6",
+    "preparar-resolver-api.py": "5943829426180e2edba661deda15a025bbf7ea979a64873ac3bbca0a8ef69205",
+    "preparar-activaciones-n8n.py": "6266c27906ee5d0ce9db63e4c2fd08372e3f8b1c1d9f08ef85a76337c5424e8d",
+    "preparar-ajuste-texto.py": "d9af55423d298348b899729fa9a8805c759b913e13af0c47a3a6dd069312afdf",
+    "ensayar-n8n.py": "f36fb31a97e130476298d4125b782016764f3e8ee2fdc90ffb8e544c6a3354f9",
+    "aplicar-n8n-total.py": "7a49a45203de0b8f1953dffbc0b6e75afa4772bce4ff08fd76887641edae9171",
+    "esquema-n8n.py": "78e5e6d13b8b619d94d803c63cbff5c89f3a090df7e82874a0823af054426c38",
+    "n8n-columnas.cjs": "7d4b371a85b68f7e954bd3cfe3f1843522a4a328a6abbabca271efc6742816bc",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "fuentes_sha256": {
+    "FabAjustes000001": "2d63afa506d86bcfc19005baf3f3bed67bdfca1198ba59362d225cc90669a4dc",
+    "FabCompYouTube01": "8f3f30813a4cfa317c876df9224699a50f3b3f8c37e85913430a09e39679a59a",
+    "FabRadar00000001": "628dbdb929ff07964d88eb4ef95168fd30a3328bb3186fecdf16a82c8e599d53",
+    "FabYouTube000001": "ee8a9e2ac0fa1bf857d60112a88f59d8fae234eab5efb4582e2272ab12c99a21",
+    "YgWu9aUDsB2VYaz3": "bb31f2ff092538272a53efa009daa4e132fb27fb29fc01e4cd81a05af4386b73",
+    "rvwLNNS309MEi8cL": "18eaee29f9890c05f29db8fd71d8afde090994c84336757b1e16c419f9618162",
+    "z74zUkz2BR8k0GLR": "3d97a2215082108ed48fdd43202a5cf36efdd4d3e509ad7336d90c794a4aa945"
+  },
+  "recibos_sha256": {
+    "activado": "658bb47eef2ecee15db47dfc50cc3da8942d114a0e5417676089c710cf7ac8f3",
+    "revertido": "369815757e7c43601e300df62670209fe628272bf6c17355b7b2ff755f7713de",
+    "fallo": "b00d97e36b303ff69e2ad4026bf7a9c31df0a10f1501d01d463564ba5e47a9e4"
+  }
+}
