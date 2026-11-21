@@ -1,0 +1,13 @@
+▶ Radar íntegro: normaliza ítems de subflujos con metadata sin perder datos ni canal
+  ✔ la implementación anterior falla por metadata al devolver el ítem completo (880.778453ms)
+  ✔ un canal devuelve y persiste la respuesta nativa sin metadata superior (495.474818ms)
+  ✔ varios canales conservan su pareja y el respaldo web ante respuesta ajena (665.056768ms)
+✔ Radar íntegro: normaliza ítems de subflujos con metadata sin perder datos ni canal (24327.829316ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24384.702628

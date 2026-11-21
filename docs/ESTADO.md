@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **Radar, causa reproducida y corregida:** n8n añadía `metadata` a la respuesta del subflujo y el nodo Code rechazaba devolver el ítem entero. Salida normalizada y cuatro comprobaciones por motor (2.47.4/2.47.6), incluido fallo previo, varios canales y persistencia exacta. Integrado localmente; delta remoto con vidIQ y Resolver pendiente. [Informe](informes/total-radar-contexto.md).
+
 - **21-11-2026, Lima — revisión de integración de producto:** recuperado el empaquetador offline de competencia con altas/bajas explícitas y los complementos faltantes de `total-chatfix`, conservando la política vigente de 18 palabras. Pruebas focales: 76 de chat, 173 de flujos y dos del empaquetador; lint y tipos aprobados. Informe/ensayos históricos de chatfix recuperados con alcance separado. Implementado y probado en `total-integrador-producto`; pendiente de integrar y de la puerta completa conjunta, sin despliegue propio. [Informe](informes/total-integrador-producto.md).
 
 - **21-11-2026 (Lima), integración Sentinel en curso:** incorporadas las ampliaciones propias cerradas de `total-sentinel` en `total-integrador-web`: caos móvil, inventario de controles, videos por prueba, recuperación de Aprendizaje y navegación persistente de Marcas. Se conserva la caché privada y el guardián sin alteraciones; las rondas de esta combinación quedan a cargo del integrador. [Evidencia histórica del frente](informes/total-sentinel.md).
