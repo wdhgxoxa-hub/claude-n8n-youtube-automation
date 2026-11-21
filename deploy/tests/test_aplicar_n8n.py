@@ -56,6 +56,10 @@ class AplicarTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'manifiesto'):
             self.validar()
 
+    def test_credencial_ausente_mantiene_el_flujo_inactivo(self):
+        self.diff['credenciales_faltantes'] = [{'workflow': 'uno', 'nombre': 'Voz ausente'}]
+        self.assertEqual(self.validar(), ({'uno'}, []))
+
     def test_fallo_despues_de_importar_restaura_datos_y_reabre_stack(self):
         base = Path(self.tmp.name)
         data, state, restore = (base / n for n in ('datos', 'estado', 'restaurado'))

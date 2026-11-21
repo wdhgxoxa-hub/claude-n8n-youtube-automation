@@ -27,8 +27,11 @@ def validar_entradas(entrada, diff, ensayo, manifiesto):
     ids = {w['id'] for w in workflows}
     operar.require(len(ids) == len(workflows) == ensayo['flujos_importados'], 'IDs duplicados o cantidad distinta')
     operar.require(all(w.get('active') is False for w in workflows), 'La entrada debe estar inactiva')
-    publicar = diff['republicar_originales']
-    operar.require(len(set(publicar)) == len(publicar) and set(publicar) <= ids, 'Publicación fuera del lote')
+    originales = diff['republicar_originales']
+    operar.require(len(set(originales)) == len(originales) and set(originales) <= ids, 'Publicación fuera del lote')
+    # No fabricar ni sustituir credenciales ausentes para conservar un indicador activo.
+    bloqueados = {c['workflow'] for c in diff.get('credenciales_faltantes', [])}
+    publicar = [wid for wid in originales if wid not in bloqueados]
     return ids, publicar
 
 
@@ -51,13 +54,14 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida):
     snapshot = None
     resultado = {'entrada_sha256': operar.digest(entrada), 'manifiesto_sha256': operar.digest(manifiesto),
                  'ensayo_y_reversa_previa': 'PASS', 'flujos_importados': len(ids),
-                 'republicados_originales': publicar, 'entradas_pausadas_reabiertas': []}
+                 'republicados_originales': publicar, 'entradas_pausadas_reabiertas': [],
+                 'pausados_por_credencial': sorted(set(diff['republicar_originales']) - set(publicar))}
     try:
         snapshot = op.snapshot(resume=False, tag='reversion')
         resultado['snapshot_previo'] = snapshot
         operar.write_json(salida, {**resultado, 'estado': 'respaldado'})
         before = validar.inventory(op.data / 'n8n/database.sqlite')
-        operar.require({wid for wid in ids if wid in before['flujos'] and before['flujos'][wid][0]} == set(publicar),
+        operar.require({wid for wid in ids if wid in before['flujos'] and before['flujos'][wid][0]} == set(diff['republicar_originales']),
                         'Cambió la publicación desde el diff; preparar otro lote')
 
         def cli(entrypoint, *args):
