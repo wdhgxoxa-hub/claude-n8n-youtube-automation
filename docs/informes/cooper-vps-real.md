@@ -26,11 +26,14 @@ para la copia fría solicitada.
 | --- | --- |
 | `a51fb52` | Transmitir a Cooper el bloqueo de respaldo API y la configuración del puente; regresión roja/verde. |
 | `05d8337` | Sondeo acotado de SSH/DNS, cinco pruebas sin red y guía operativa del dominio real. |
+| `d10e3ab` | Informe de fase A y evidencia de puerta/restauración/Compose. |
 
 La aplicación no cambió respecto de la base. La imagen preparada es
 `localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76`, ID
 `e8226b1db7f4f6f4a47526bf2fd4fc4597f8414bd37f47f17036f953cfbfe16e`.
-El commit del informe añade únicamente evidencia y documentación.
+Los commits del informe añaden únicamente evidencia y documentación.
+La preparación y el informe se publicaron atómicamente en `main` y
+`version-chatgpt` del remoto propio `mio`; no se modificó el upstream `origin`.
 
 ## Fase A ejecutada
 
