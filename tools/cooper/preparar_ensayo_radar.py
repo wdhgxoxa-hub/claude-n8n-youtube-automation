@@ -20,6 +20,7 @@ def preparar(canal, tabla):
     f = {'id': ID, 'name': 'Ensayo Cooper · radar público de un canal', 'active': False,
          'nodes': [], 'connections': {}, 'settings': copy.deepcopy(SETTINGS),
          'staticData': None, 'pinData': {}, 'tags': []}
+    f['settings']['executionTimeout'] = 480
     f['nodes'] = [
         nodo('Inicio manual', 'manualTrigger', {}, 1),
         nodo('Canal autorizado', 'code', {'jsCode': 'return [{json:{accion:"antes_idea",canal_id:' + json.dumps(canal) + '}}];'}),
@@ -36,6 +37,8 @@ const estados=filas.map(x=>{let c;try{c=JSON.parse(x.tendencias || '{}').compete
  return {estado:['listo','parcial','sin_datos'].includes(c?.estado)?c.estado:'sin_respuesta',
   fecha:typeof c?.fecha==='string'?c.fecha:null,
   competidores:Array.isArray(c?.competidores)?c.competidores.length:0,
+  fuente:['web_publica','youtube_data_api','youtube_data_api_y_web'].includes(c?.fuente)?c.fuente:null,
+  muestras:Array.isArray(c?.competidores)?c.competidores.reduce((s,p)=>s+(Array.isArray(p.muestras)?p.muestras.length:0),0):0,
   outliers:Array.isArray(c?.competidores)?c.competidores.reduce((s,p)=>s+(Array.isArray(p.outliers)?p.outliers.length:0),0):0,
   homonimos:Array.isArray(c?.homonimos)?c.homonimos.length:0};});
 return [{json:{job_id:'radar-real-diag-'+String($execution.id),video_id:'',canal_id:canal,modo:'radar_diagnostico',

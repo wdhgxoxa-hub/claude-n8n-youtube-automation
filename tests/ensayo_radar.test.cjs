@@ -18,6 +18,7 @@ test('el ensayo del radar solo ejecuta antes_idea en un canal y descarta ejecuci
   assert.equal(f.settings.saveDataSuccessExecution, 'none');
   assert.equal(f.settings.saveDataErrorExecution, 'none');
   assert.equal(f.settings.saveManualExecutions, false);
+  assert.equal(f.settings.executionTimeout, 480);
   assert.deepEqual(new Function(codigo('Canal autorizado'))(), [{ json: { accion: 'antes_idea', canal_id: 'canal-ensayo' } }]);
   const hijos = f.nodes.filter(n => n.type.endsWith('.executeWorkflow'));
   assert.equal(hijos.length, 1);

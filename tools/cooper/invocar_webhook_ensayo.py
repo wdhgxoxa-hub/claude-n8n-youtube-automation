@@ -79,7 +79,8 @@ def invocar(workflow):
         raise ValueError('La entrada interna no respondió 200')
     previous_ids = {item[0] for item in previous}
     executions = []
-    for _ in range(42 if wid == 'CoopRadarReal001' else 36):
+    # Radar encadena investigación web (180 s) y lecturas nativas (hasta 240 s).
+    for _ in range(96 if wid == 'CoopRadarReal001' else 36):
         executions = [{'id': eid, 'estado': status} for eid, status in metadata(wid)
                       if eid not in previous_ids]
         if executions and all(e['estado'] in TERMINALES for e in executions):

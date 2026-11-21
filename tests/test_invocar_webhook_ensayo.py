@@ -45,6 +45,16 @@ class Invocacion(unittest.TestCase):
              patch.object(m, 'interno', return_value=200), patch.object(m.time, 'sleep'):
             self.assertFalse(m.invocar(self.workflow())['ok'])
 
+    def test_radar_espera_acotada_para_web_y_lecturas_nativas(self):
+        workflow = self.workflow()
+        workflow['id'] = 'CoopRadarReal001'
+        with patch.object(m, 'metadata', return_value=[]), \
+             patch.object(m, 'publico', return_value=404), \
+             patch.object(m, 'interno', return_value=200), patch.object(m.time, 'sleep') as sleep:
+            self.assertFalse(m.invocar(workflow)['ok'])
+            self.assertEqual(sleep.call_count, 96)
+            self.assertTrue(all(call.args == (5,) for call in sleep.call_args_list))
+
     def test_rechaza_ids_y_rutas_ajenos(self):
         workflow = self.workflow()
         workflow['id'] = 'FabPublicacion01'
