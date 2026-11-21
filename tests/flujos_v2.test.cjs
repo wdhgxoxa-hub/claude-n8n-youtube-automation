@@ -90,6 +90,16 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
   }
 });
 
+test('competencia: publicar radar conserva entrada interna y detiene el horario pendiente de aceptación', () => {
+  const ra=wf('FabRadar00000001');
+  const horarios=ra.nodes.filter(n=>n.type==='n8n-nodes-base.scheduleTrigger');
+  assert.ok(horarios.length>0);
+  assert.ok(horarios.every(n=>n.disabled===true));
+  const entradas=ra.nodes.filter(n=>n.type==='n8n-nodes-base.executeWorkflowTrigger');
+  assert.ok(entradas.length>0);
+  assert.ok(entradas.every(n=>n.disabled!==true));
+});
+
 test('competencia: cada idea consulta radar público antes del guion y nunca permite respaldo pago', () => {
   const ra=wf('FabRadar00000001'), texto=wf('FabTextoGPT0001');
   const destinos=(w,n)=>(w.connections[n]?.main||[]).flat().map(x=>x.node);

@@ -5,6 +5,11 @@ cambiar(TEXTO, 'Pedido de texto', 'api_permitida:aj.allowTextoApi === true', 'ap
 n=next(n for n in TEXTO['nodes'] if n['name']=='Intentar Codex')
 n['parameters']['options']['timeout']="={{ $('Pedido de texto').first().json.tarea === 'radar' && $('Pedido de texto').first().json.local.buscar_web ? 190000 : 45000 }}"
 f = reabrir(RADAR)
+# Publicar permite los pedidos internos; el horario queda detenido hasta aceptar
+# las fuentes reales y revisar también su rama de noticias, que conserva APIs.
+for n in f.nodes:
+    if n['type'] == 'n8n-nodes-base.scheduleTrigger':
+        n['disabled'] = True
 n=next(n for n in f.nodes if n['name']=='¿Solo ver?')
 n['parameters']['conditions']['conditions'][0]['leftValue']="={{ !['correr','antes_idea'].includes($('Inicio').first().json.accion) }}"
 code(f, 'Encargo público de competencia', COMPETENCIA_JS + r"""
