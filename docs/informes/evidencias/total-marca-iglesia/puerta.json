@@ -1,0 +1,91 @@
+{
+  "inicio": "2026-11-21T23:08:22.730Z",
+  "herramientas": {
+    "node": "24.22.3",
+    "npm": "12.2.2",
+    "python": "3.14.7",
+    "uv": "0.12.24",
+    "sistema": "debian 12",
+    "sentinel": "6764bbdcab91719947e93ba1cc476cbefafb58e8"
+  },
+  "pasos": [
+    {
+      "nombre": "ci",
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 15532,
+      "sha256": "da65e9fc1d3a04734e1523f7dfd78fd00e30ff5b196642040b2eedaee4e20c3b"
+    },
+    {
+      "nombre": "preparacion",
+      "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 61587,
+      "sha256": "440a2a8723237823ddd854e7622c6bda5430481c3cbd17fd7ebd1dc594c39f53"
+    },
+    {
+      "nombre": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 5340,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "typecheck",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 5490,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "unitarias",
+      "comando": "npm test",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 43578,
+      "sha256": "775e8278dae7188b16b2765582673c51eb0aba996748e5f82998df1eabb77de1"
+    },
+    {
+      "nombre": "e2e",
+      "comando": "npm run test:e2e",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 963621,
+      "sha256": "99c66b4a3accd45993926e5ffdd6296620f99f1c9a3730e39b70dcc8ed570451"
+    },
+    {
+      "nombre": "build",
+      "comando": "npm run build",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 3067,
+      "sha256": "ff85fe947e585e7d8a649bb34db9efe264f0eeecc6f42533a315a74136916ad0"
+    },
+    {
+      "nombre": "flujos",
+      "comando": "/usr/local/bin/node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 2711,
+      "sha256": "256beca3b774811c5b0ded236e3fde9cef94a6dd8fb1d5974267e27d4d732fff"
+    }
+  ],
+  "resultado": "PASS",
+  "origen": {
+    "commit": "370506d1f1f34a99fca455d4d7254d9717700091",
+    "archivo_sha256": "248fb42e654616078e2dcf15bf5e3d88bafc673e72c0a0114de1a6c628b14390",
+    "limpio": true,
+    "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+    "sentinel_fuentes": "caché privada verificada, fuera del archivo y de la imagen"
+  },
+  "pruebas": {
+    "unitarias": 492,
+    "e2e": 104,
+    "flujos": 235
+  },
+  "fin": "2026-11-21T23:26:43.878Z"
+}
