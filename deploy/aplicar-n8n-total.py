@@ -29,7 +29,7 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
         operar.require(isinstance(ensayo.get('plan_columnas'), list), 'Falta plan de columnas ensayado')
         return set(), []
     if 'modalidad' in diff:
-        operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total') and 'plan_publicacion' in diff,
+        operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total', 'resolver_api') and 'plan_publicacion' in diff,
                         'El delta exige modalidad y plan de publicación certificados')
     operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS', 'Falta ensayo y reversa satisfactorios')
     operar.require(ensayo.get('entrada_sha256') == operar.digest(entrada), 'El lote difiere del ensayado')
@@ -49,9 +49,9 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
         operar.require(ensayo.get('publicacion') == 'PASS' and ensayo.get('publicar_sha256') == operar.digest(plan),
                         'La publicación difiere del ensayo')
         operar.require(publicar == diff['plan_publicacion'] == ensayo.get('publicados'), 'Orden de publicación distinto')
-        if diff.get('modalidad') in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total'):
+        if diff.get('modalidad') in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total', 'resolver_api'):
             helper = {'ajuste_texto_api': 'preparar-ajuste-texto.py', 'delta_cooper_total': 'preparar-delta-n8n.py',
-                      'activaciones_cooper_total': 'preparar-activaciones-n8n.py'}[diff['modalidad']]
+                      'activaciones_cooper_total': 'preparar-activaciones-n8n.py', 'resolver_api': 'preparar-resolver-api.py'}[diff['modalidad']]
             spec = importlib.util.spec_from_file_location('delta_n8n', Path(__file__).with_name(helper))
             delta = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(delta)
@@ -112,6 +112,11 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
             ajuste = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(ajuste)
             ajuste.validar_actual(op.data / 'n8n/database.sqlite', diff)
+        if diff.get('modalidad') == 'resolver_api':
+            spec = importlib.util.spec_from_file_location('resolver_api', Path(__file__).with_name('preparar-resolver-api.py'))
+            resolver_api = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(resolver_api)
+            resolver_api.validar_actual(op.data / 'n8n/database.sqlite', diff)
         operar.require({wid for wid in ids if wid in before['flujos'] and before['flujos'][wid][0]} == set(diff['republicar_originales']),
                         'Cambió la publicación desde el diff; preparar otro lote')
 
@@ -141,6 +146,11 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
             ajuste.validar_actual(op.data / 'n8n/database.sqlite', diff, despues=True)
             resultado['allowTextoApi'] = False
             resultado['unico_cambio_de_contenido'] = 'PASS'
+        if diff.get('modalidad') == 'resolver_api':
+            resolver_api.validar_actual(op.data / 'n8n/database.sqlite', diff, despues=True)
+            resultado['unico_cambio_de_contenido'] = 'Resolver.parameters.jsCode'
+            resultado['resolver_antes_sha256'] = diff['resolver_antes_sha256']
+            resultado['resolver_despues_sha256'] = diff['resolver_despues_sha256']
         operar.require(before['datos'] == published['datos'], 'Cambió una tabla de negocio')
         operar.require(all(bool(published['flujos'][wid][0]) == (wid in publicar) for wid in ids), 'Estado publicado distinto del plan')
         operar.require(all(published['flujos'][wid] == meta for wid, meta in before['flujos'].items() if wid not in ids), 'Cambió un workflow ajeno')
