@@ -1,0 +1,154 @@
+{
+  "base": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "fecha": "2026-11-21T17:24:43.774Z",
+  "zona": "America/Lima",
+  "modo": "COOPER_DEMO=1; adaptadores simulados; sesión ficticia; red del navegador limitada al ensayo loopback",
+  "playwright": "1.65.1",
+  "chromium": "159.0.8154.6",
+  "erroresPagina": [],
+  "capturas": [
+    {
+      "archivo": "01-entrada.png",
+      "ruta": "/entrar",
+      "paso": "Entrada pública; no pulsar Google.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "4667627f2322fdb984f534e317751dd955279f8d147086de468322b6ed9e4c51"
+    },
+    {
+      "archivo": "02-inicio.png",
+      "ruta": "/",
+      "paso": "Inicio con demostración integrada, sin cambios.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "b8c201c09941d5374c6d4361b5d203a4bd5e17b15a61d5308f6f382d080e100e"
+    },
+    {
+      "archivo": "03-fabrica-movil.png",
+      "ruta": "/",
+      "paso": "Inicio: pestaña Fábrica a 390 px.",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "captura": "página completa",
+      "sha256": "909a9f3d4a17b9a5025a5e0e601546ab0de5f42c9eed12d11aae2fb054ee00fa"
+    },
+    {
+      "archivo": "04-chat-confirmacion.png",
+      "ruta": "/",
+      "paso": "Propuesta de nuevo canal, sin confirmar.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "82873d36aafee1bca0bef5e063706f66f5621468e75e7ca052733021ebecac84"
+    },
+    {
+      "archivo": "05-aprobacion-guion.png",
+      "ruta": "/videos/demo-1d8d24dc-760c-44fa-a675-7deb34f73a4c-1",
+      "paso": "Detalle de video de demostración en etapa 4, sin aprobar.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "34e346740f847751d395822ad492581b31b42199d72481e5c44ea9de3d84daf5"
+    },
+    {
+      "archivo": "06-aprobacion-final.png",
+      "ruta": "/videos/demo-1d8d24dc-760c-44fa-a675-7deb34f73a4c-2",
+      "paso": "Detalle de video de demostración en etapa 10, sin aprobar.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "d3311657f52eead2ff52c783007ae614eafc7114c6a2efcc1ef4f2cd81997a9d"
+    },
+    {
+      "archivo": "07-publicados.png",
+      "ruta": "/publicados",
+      "paso": "Estado integrado de demostración.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "cd92861b8d24b2cda8f5171dbc43e1487d90046794566bfeff2089fa29b20028"
+    },
+    {
+      "archivo": "08-aprendizaje.png",
+      "ruta": "/aprendizaje",
+      "paso": "Estado integrado de demostración.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "51b78b864691a6ba92e510b75ebeba6f77d19511419a72de1daf90a9bbb231af"
+    },
+    {
+      "archivo": "09-radar.png",
+      "ruta": "/radar",
+      "paso": "Estado integrado de demostración.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "2b36b257c7cdcbe4250f64c8784593f6bed1fd48a53d305df5fe90b37a0c11ea"
+    },
+    {
+      "archivo": "10-marca-alta.png",
+      "ruta": "/marcas",
+      "paso": "Primer paso del alta, con nombre ficticio.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "73283f957561bff9f0ecf06ef261b996f5800e78f5cd0050503ec9f35f0bdb91"
+    },
+    {
+      "archivo": "11-marca-cuenta.png",
+      "ruta": "/marcas",
+      "paso": "Cuenta ficticia verificada por el simulador.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "elemento de la página",
+      "sha256": "dda881d38ba0d89c81b20b357799ddb48b2431765a87246e40c388e6bd1bbf9b"
+    },
+    {
+      "archivo": "12-marca-revision.png",
+      "ruta": "/marcas",
+      "paso": "Pieza ficticia pendiente; vista previa abierta; no aprobar.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "elemento de la página",
+      "sha256": "2c9803b0b9764ed0fa2e2417bae47b79efcc91aec85058cc7d4c3dd997bd69e6"
+    },
+    {
+      "archivo": "13-whatsapp.png",
+      "ruta": "/perfil",
+      "paso": "Perfil sin teléfono ni código: configuración simulada.",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "captura": "página completa",
+      "sha256": "30c9eb76d7e123d4489a13ef9fc897affb856612ae3a9c870ebb0072fe5cfcc2"
+    }
+  ]
+}
