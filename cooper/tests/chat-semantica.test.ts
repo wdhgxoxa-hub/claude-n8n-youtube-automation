@@ -97,7 +97,7 @@ it("no registra errores privados y corta después de tres fallos sin reintentar"
   expect(JSON.stringify(observador.mediciones)).not.toContain("mensaje remoto");
   expect(errorSeguro(new ErrorHttp(504, "detalle privado"))).toBe("HTTP_504");
 });
-it("cancela al vencer la fase y conserva el error medido", async () => {
+it("propaga la cancelación y conserva el error medido", async () => {
   vi.useFakeTimers();
   try {
     const proveedor: ProveedorChat = {
@@ -214,4 +214,45 @@ it("un JSON de síntesis inválido queda FAIL y conserva apuntes", async () => {
   expect(JSON.stringify(salida.resultados[30].memoria)).toContain(
     "Faros de papel",
   );
+});
+
+it("distingue una preferencia antigua citada como historia de una preferencia aún vigente", () => {
+  const corregida =
+    "Faros de papel. Prefiere videos de noventa segundos (corrige la preferencia anterior de un minuto).";
+  expect(criteriosMemoria(32, corregida).anteriorRetirada).toBe(true);
+  expect(
+    criteriosMemoria(
+      32,
+      "Faros de papel. Prefiere un minuto. Prefiere noventa segundos.",
+    ).anteriorRetirada,
+  ).toBe(false);
+  expect(
+    criteriosMemoria(
+      34,
+      "No recuerdo Faros de papel; no eran noventa segundos.",
+    ).recuerdaTitulo,
+  ).toBe(false);
+  expect(
+    criteriosMemoria(
+      34,
+      "No recuerdo Faros de papel; no eran noventa segundos.",
+    ).recuerdaCorreccion,
+  ).toBe(false);
+});
+it("una síntesis vacía válida no se confunde con un fallo de transporte", async () => {
+  const salida = await evaluar(
+    modelo(() => ({
+      role: "assistant",
+      texto: JSON.stringify({
+        pendientes: [],
+        videos: [],
+        decisiones: [],
+        preferencias: [],
+      }),
+    })),
+  );
+  expect(salida.resultados[30].estado).toBe("FAIL");
+  expect(salida.resultados[30].controles.sintesisAceptada).toBe(true);
+  expect(salida.resultados[30].controles.idea).toBe(false);
+  expect(salida.resultados[30].mediciones[0].estado).toBe("OK");
 });

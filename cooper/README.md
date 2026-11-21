@@ -262,7 +262,7 @@ El contexto reciente reutiliza `messages`: últimos 30 mensajes recordables del 
 
 Fuentes oficiales consultadas: [Sonnet 5.5](https://platform.claude.com/docs/en/models/sonnet-5-5/overview), [Messages](https://platform.claude.com/docs/en/api/messages/create), [versión de API 2026-10-21](https://platform.claude.com/docs/en/api/migration-2026-10-21), [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming), [resultados de herramientas](https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls), [visión](https://platform.claude.com/docs/en/build-with-claude/vision). OpenAI Docs: [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol), [Responses](https://developers.openai.com/api/reference/resources/responses/methods/create/), [function calling](https://developers.openai.com/api/docs/guides/function-calling), [streaming](https://developers.openai.com/api/docs/guides/streaming-responses), [transcripción](https://developers.openai.com/api/docs/guides/speech-to-text). Los adaptadores conservan bloques de pensamiento/firmas de Claude y razonamiento cifrado de Responses únicamente para continuar herramientas en servidor; OpenAI usa `store: false`.
 
-La evaluación versionada está en `tests/fixtures/chat-30.json`; `npm test` produce `.cache/evaluacion-chat-30.json`. Sus 30 conversaciones verifican selección determinista, confirmaciones, memoria, audio y aislamiento (incluidas llamadas hostiles inyectadas). **No es una medición del acierto de Claude/OpenAI**: requiere ensayo posterior autorizado con APIs reales y datos ficticios. Los transportes HTTP, el fallback y el parsing incremental se comprueban por separado con respuestas ficticias. No se han realizado llamadas pagadas ni despliegues.
+La evaluación versionada está en `tests/fixtures/chat-30.json`; `npm test` produce `.cache/evaluacion-chat-30.json`. Sus 30 conversaciones verifican selección determinista, confirmaciones, memoria, audio y aislamiento (incluidas llamadas hostiles inyectadas). **No es una medición del acierto de Claude/OpenAI**. El ensayo acotado con proveedor del plan y datos ficticios se describe en [evaluación semántica M09](#evaluación-semántica-con-el-plan-m09). Los transportes HTTP, el fallback y el parsing incremental se comprueban por separado con respuestas ficticias. No se han realizado llamadas pagadas ni despliegues.
 
 ## Memoria de largo plazo
 
@@ -279,6 +279,27 @@ Migración aditiva `0009_memoria`: añade ámbito a los mensajes y corte de olvi
 Evaluación: `tests/chat-memoria*.test.ts` simula días 1, 2 y 5, más de 30 mensajes, reapertura SQLite, dos marcas, usuarios diferentes, ambigüedad, correcciones, borrado y fallos del sintetizador. Produce `.cache/evaluacion-memoria.json`. Playwright añade el recorrido de recuerdos y Administración, capturas y axe en seis anchuras y ambos temas (`.cache/capturas-memoria/`). Los proveedores de evaluación son ficticios: no miden la precisión de Claude/Codex/OpenAI reales.
 
 Cada misión actualiza [ESTADO](../docs/ESTADO.md) al cerrar y registra su evidencia en `docs/informes/`; regla permanente en [AGENTS.md](../AGENTS.md).
+
+## Evaluación semántica con el plan (M09)
+
+El arnés reutiliza `tests/fixtures/chat-30.json` y añade siete casos de memoria: recuerdo inicial, corrección de duración, pendiente resuelto, regreso al día cinco tras 40 mensajes, segunda idea, ambigüedad y olvido. Usa el contexto y los controles de acceso de Cooper y llama a `resumirMemoria` con su límite vigente de 12 segundos. Los días son fechas ficticias persistidas; no se espera cinco días reales.
+
+```bash
+# Primero: pruebas del arnés y las 30 conversaciones deterministas, sin red.
+npm test -- --run tests/chat-semantica.test.ts tests/chat-evaluacion.test.ts
+# Preparación: 37 filas NOT_RUN, sin invocar al proveedor.
+npm run evaluar:chat
+# Solo dentro de una misión que autorice usar una sesión de plan ya vigente:
+npm run evaluar:chat -- --real --autorizar-plan
+```
+
+El modo real usa directamente `ChatClaudeCli`, con el aislamiento existente del CLI y comprobación de `auth status`; no usa la cadena de respaldo. No inicia OAuth ni lee `.env`, claves o archivos de sesión. Solo el CLI de confianza accede a su autenticación local. El proceso elimina variables heredadas salvo PATH/HOME/LANG/TMPDIR, fija una SQLite nueva en `.cache/total-m09/`, bloquea `fetch` y no ofrece ejecutores de herramientas. El catálogo de nombres/argumentos se presenta como propuestas; se valida con `prepararLlamada`, sin crear tarjetas ni despachar acciones. Se comprueba que canales, videos y tarjetas permanezcan iguales.
+
+Límite local: 40 invocaciones al adaptador (37 previstas), una a la vez, 15 minutos totales, 45 segundos por respuesta y 12 por síntesis; sin reintentos del arnés y parada después de tres errores consecutivos. No mide la cuota restante del plan ni los intentos internos del CLI. Ante sesión no disponible deja todos los casos `NOT_RUN` y sale con código 3. El modo real sale con código 2 si encuentra fallos o casos sin ejecutar; esos resultados no alteran ni sustituyen las pruebas deterministas. Código 0 de preparación tampoco significa evaluación real aprobada.
+
+Cada ejecución conserva `resultado.json`: SHA, fecha, modo, límites, resultados/respuestas por caso, criterios, errores saneados y p50/p95 por fase. Se registra el tiempo del adaptador (incluye arranque y autenticación), el primer evento y el tiempo total del caso; **no** se atribuye esa cifra a latencia de red pura, de SSE o del turno completo de producción. El CLI devuelve el JSON completo, por lo que su primer evento no es tiempo al primer token. La síntesis se mide aparte, sin confundir una caída o JSON inválido con éxito de los apuntes.
+
+La rúbrica comprueba herramienta/argumentos, canarios de otros ámbitos, hechos esperados y brevedad (hasta dos frases y 40 palabras; texto vacío con propuesta = `NA`). Es orientativa: una sola muestra por caso, sin juez externo y sin umbral de aceptación semántica aprobado. Los 30 casos originales conservan su prueba integral de confirmaciones y accesos hostiles; este ensayo observa la primera propuesta, sin segunda ronda de herramientas ni confirmaciones. Revisar las respuestas y los límites antes de aceptar calidad. La evidencia real y los pendientes se conservan en [total-m09](../docs/informes/total-m09.md); los resultados ficticios del arnés nunca se presentan como acierto del proveedor.
 
 ## Publicados, aprendizaje y ensayo masivo
 

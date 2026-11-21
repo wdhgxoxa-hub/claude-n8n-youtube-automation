@@ -22,7 +22,10 @@ import {
   leerRecuerdos,
   resumirMemoria,
 } from "../src/servicios/chat/memoria";
-import { resumenSchema } from "../src/servicios/chat/memoria-tipos";
+import {
+  memoriaVacia,
+  resumenSchema,
+} from "../src/servicios/chat/memoria-tipos";
 import { ErrorHttp } from "../src/lib/permisos";
 import type {
   EntradaModelo,
@@ -361,6 +364,15 @@ export function criteriosMemoria(
   r?: MensajeModelo,
 ) {
   const n = normal(contenido);
+  const vigente = n
+    .replace(
+      /\((?:corrige|sustituye|reemplaza) la preferencia anterior de (?:un minuto|60 segundos|sesenta segundos)\)/g,
+      "",
+    )
+    .replace(
+      /(?:en vez de|en lugar de) (?:un minuto|60 segundos|sesenta segundos)/g,
+      "",
+    );
   switch (id) {
     case 31:
       return {
@@ -371,15 +383,18 @@ export function criteriosMemoria(
     case 32:
       return {
         corregida: /noventa|90/.test(n),
-        anteriorRetirada: !/un minuto|60 segundos|sesenta/.test(n),
+        anteriorRetirada: !/un minuto|60 segundos|sesenta/.test(vigente),
         ideaConservada: n.includes("faros de papel"),
       };
     case 33:
       return { pendienteRetirado: !n.includes("ilustraciones") };
     case 34:
       return {
-        recuerdaTitulo: n.includes("faros de papel"),
-        recuerdaCorreccion: /noventa|90/.test(n),
+        recuerdaTitulo:
+          n.includes("faros de papel") &&
+          !/no (?:recuerdo|era|pensamos|habiamos pensado)/.test(n),
+        recuerdaCorreccion:
+          /noventa|90/.test(n) && !/no[^.!?]{0,35}(?:noventa|90)/.test(n),
         noEjecuta: !r?.llamadas?.length,
       };
     case 35:
@@ -519,7 +534,9 @@ export async function evaluar(
             ),
           )
           .get();
-        const resumen = resumenSchema.parse(JSON.parse(fila?.summary ?? "{}"));
+        const resumen = resumenSchema.parse(
+          JSON.parse(fila?.summary ?? JSON.stringify(memoriaVacia())),
+        );
         r.memoria = resumen;
         // guardar() evita escribir si el resumen coincide con los apuntes: el método
         // persistido por sí solo no demuestra si esta síntesis fue válida.

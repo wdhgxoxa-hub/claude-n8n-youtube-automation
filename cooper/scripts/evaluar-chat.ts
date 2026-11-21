@@ -87,6 +87,8 @@ async function main() {
   const { resultados, llamadas } = await evaluar(proveedor, {
     alTerminar: (r) => {
       informe.resultados[r.id - 1] = r;
+      informe.estado = "EN_CURSO";
+      informe.llamadas += r.mediciones.length;
       guardar();
       console.log(
         `Caso ${r.id}: ${r.estado}; ${r.mediciones.map((m) => `${m.fase} ${Math.round(m.proveedorMs)} ms`).join(", ")}`,
