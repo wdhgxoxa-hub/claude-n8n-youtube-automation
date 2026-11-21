@@ -6,7 +6,7 @@ Misión `total-n8n-auditoria`, 21-11-2026 (Lima). Preparación local; no autoriz
 
 ## Contenido y verificación
 
-Después de guardar en commits el generador, los 32 JSON y esta guía:
+Después de guardar en commits el generador, los 33 JSON integrados y esta guía:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 tools/cooper/preparar_lote_auditoria.py
@@ -14,9 +14,9 @@ cd cooper/.cache/lote-total-n8n-auditoria
 sha256sum --check SHA256SUMS
 ```
 
-El programa sigue el formato de `preparar_lote_cobertura.py`, pero este lote solo lleva workflows. Lee `HEAD` y la base `de397f3` por Git, exige 32 exportaciones actuales y rechaza cambios pendientes dentro de `workflows/v2/`, incluidos archivos nuevos. No lee archivos de entorno, credenciales, datos de ejecución ni la red. Rechaza una carpeta de salida existente; `--salida` permite crear otra. `--base` permite seleccionar expresamente otra referencia ancestral, que queda registrada con su SHA completo.
+El programa sigue el formato de `preparar_lote_cobertura.py`, pero este lote solo lleva workflows. Lee `HEAD` y la base `de397f3` por Git, exige 33 exportaciones actuales (incluida Competencia pública de YouTube) y rechaza cambios pendientes dentro de `workflows/v2/`, incluidos archivos nuevos. No lee archivos de entorno, credenciales, datos de ejecución ni la red. Rechaza una carpeta de salida existente; `--salida` permite crear otra. `--cantidad-esperada` fija explícitamente otro contrato de cantidad; un desajuste falla. `--base` permite seleccionar expresamente otra referencia ancestral, que queda registrada con su SHA completo.
 
-- `entrada/workflows/v2/`: 32 workflows de HEAD, todos con `active=false`.
+- `entrada/workflows/v2/`: 33 workflows de HEAD, todos con `active=false`.
 - `reversa-versionada/workflows/v2/`: workflows de la base, también inactivos. **Es referencia de código; no es un respaldo real del VPS.**
 - `diff-semantico.patch` y `cambios.json`: comparación de fuentes versionadas, sin IDs regenerables de nodos/condiciones. Conserva parámetros, conexiones, IDs de workflows, referencias, estado activo y configuración; un cambio en ellos sigue siendo visible. No compara contra la instalación real.
 - `altas.txt` y `bajas.txt`: diferencias de archivos entre commits, incluso si no hay ninguna. Una baja no ordena borrar un workflow del destino.

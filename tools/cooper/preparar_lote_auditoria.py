@@ -74,7 +74,7 @@ def leer_workflows(root, commit):
     return result
 
 
-def preparar(output, *, root=ROOT, base=BASE, expected_count=32):
+def preparar(output, *, root=ROOT, base=BASE, expected_count=33):
     root, output = Path(root).resolve(), Path(output).resolve()
     if output.exists():
         raise ValueError('La carpeta de salida ya existe; elegir otra para conservar la evidencia.')
@@ -149,9 +149,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--salida', type=Path, default=ROOT / 'cooper/.cache/lote-total-n8n-auditoria')
     parser.add_argument('--base', default=BASE)
+    parser.add_argument('--cantidad-esperada', type=int, default=33)
     args = parser.parse_args()
     try:
-        result = preparar(args.salida, base=args.base)
+        result = preparar(args.salida, base=args.base, expected_count=args.cantidad_esperada)
     except (ValueError, subprocess.CalledProcessError, json.JSONDecodeError) as error:
         # No imprimir stdout/stderr de Git: solo diagnóstico local y no contenido.
         parser.exit(1, f'No se preparó el lote: {error if isinstance(error, ValueError) else "referencia Git no disponible o base no ancestral"}\n')
