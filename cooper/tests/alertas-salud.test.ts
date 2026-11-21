@@ -345,6 +345,24 @@ it("respuesta tardía de un consumidor vencido no pisa la evaluación del suceso
     new Date(base + 120001).toISOString(),
   );
 });
+it("reintenta una recuperación incierta aunque el aviso inicial tampoco tuvo recibo", async () => {
+  vi.stubEnv("COOPER_FABRICA", "n8n");
+  configurar();
+  const consultar = vi.fn(async () => salud());
+  const enviar = vi.fn(async () => ({
+    entrega: "incierto" as "incierto" | "enviado",
+  }));
+  await cicloAlertasSalud({ ahora: base, consultar, enviar });
+  consultar.mockResolvedValue(salud(false));
+  await cicloAlertasSalud({ ahora: base + 60000, consultar, enviar });
+  await cicloAlertasSalud({ ahora: base + 120000, consultar, enviar });
+  expect(enviar).toHaveBeenCalledTimes(2);
+  enviar.mockResolvedValue({ entrega: "enviado" });
+  await cicloAlertasSalud({ ahora: base + 361 * 60000, consultar, enviar });
+  await cicloAlertasSalud({ ahora: base + 362 * 60000, consultar, enviar });
+  expect(enviar).toHaveBeenCalledTimes(3);
+  expect(leerTelegramSalud(admin).entrega).toBe("enviado");
+});
 it("transporte fijo confirma recibo y no propaga secretos, HTML ni gasto", async () => {
   vi.stubEnv("COOPER_TELEGRAM_BOT_TOKEN", "123:ficticio");
   vi.stubEnv("COOPER_TELEGRAM_CHAT_ID", "12345");

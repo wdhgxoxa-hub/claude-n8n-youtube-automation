@@ -29,6 +29,7 @@ interface Estado {
   intento: number;
   proximoEnvio: number;
   intentados: string[];
+  avisoPosible: boolean;
   entrega: Entrega;
   notificados: string[];
   pendientes: string[];
@@ -42,6 +43,7 @@ const inicial = (): Estado => ({
   intento: 0,
   proximoEnvio: 0,
   intentados: [],
+  avisoPosible: false,
   entrega: "sin_envios",
   notificados: [],
   pendientes: [],
@@ -322,7 +324,7 @@ export async function cicloAlertasSalud(options: OpcionesCiclo = {}) {
     const send =
       changed ||
       uncertainChange ||
-      (codes.length > 0 && due) ||
+      ((codes.length > 0 || current.avisoPosible) && due) ||
       current.entrega === "fallido";
     guardarEstado(user, {
       ...current,
@@ -332,9 +334,7 @@ export async function cicloAlertasSalud(options: OpcionesCiclo = {}) {
     });
     if (
       !send ||
-      (!codes.length &&
-        !current.notificados.length &&
-        !(current.entrega === "incierto" && current.intentados.length))
+      (!codes.length && !current.notificados.length && !current.avisoPosible)
     )
       return;
     // 429 respeta su plazo incluso si se cambia la configuración. Un incidente
@@ -351,6 +351,7 @@ export async function cicloAlertasSalud(options: OpcionesCiclo = {}) {
       intento: now,
       entrega: "incierto",
       intentados: codes,
+      avisoPosible: current.avisoPosible || codes.length > 0,
       proximoEnvio: now + config.recordatorioMinutos * MINUTO,
     });
     const result = await (options.enviar ?? enviarTelegramSalud)(
@@ -366,6 +367,12 @@ export async function cicloAlertasSalud(options: OpcionesCiclo = {}) {
           enviado: result.entrega === "enviado" ? now : latest.enviado,
           notificados:
             result.entrega === "enviado" ? codes : latest.notificados,
+          avisoPosible:
+            result.entrega === "enviado"
+              ? codes.length > 0
+              : result.entrega === "fallido"
+                ? current.avisoPosible
+                : latest.avisoPosible,
           proximoEnvio:
             result.entrega === "enviado"
               ? 0
