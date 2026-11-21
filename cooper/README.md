@@ -10,7 +10,7 @@ COOPER_MOVIMIENTO_RONDA=ronda-1 COOPER_MOVIMIENTO_SALIDA=.cache/videos-integraci
 COOPER_MOVIMIENTO_SALIDA=.cache/videos-integracion3 node scripts/indice-movimiento.mjs
 ```
 
-Sentinel y sus dependencias están fijados en este repositorio. `npm run preparar:pruebas` prepara su entorno Python y ambos Chromium; para reproducir desde cero use `npm run ci:limpia` ([procedimiento](#puerta-reproducible-desde-cero)). Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas.
+La revisión y los hashes de Sentinel están fijados en este repositorio; sus fuentes privadas se preparan únicamente en una caché ignorada desde un checkout local autorizado ([contrato](ci/sentinel.md)). `npm run preparar:pruebas` prepara su entorno Python y ambos Chromium; para reproducir desde cero use `npm run ci:limpia` ([procedimiento](#puerta-reproducible-desde-cero)). Su guardián permanece activo. Los videos, capturas, sesiones y pruebas usan datos ficticios en puertos libres, sin acceso a la instalación de producción. El índice solo incorpora rondas aprobadas.
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). La puesta en vivo inicial se conserva en [cooper-vivo](../docs/informes/cooper-vivo.md). La instalación local usa la integración 3, con once migraciones y respaldo previo: [estado, evidencias y límites respecto del VPS](../docs/informes/cooper-integracion3.md). El arranque automático local permanece deshabilitado tras el corte al VPS; esta misión inició solo la web de la PC.
 
@@ -137,16 +137,19 @@ Requiere Git, tar, Node 24 y un motor local Podman (predeterminado) o Docker ope
 Linux x86_64, conexión a los registros públicos y espacio para la imagen/navegadores.
 No instala herramientas globales. Exporta **solo HEAD** con `git archive` a una carpeta
 nueva `.cache/ci-limpia-*/checkout`; los cambios sin commit no forman parte del ensayo.
-No modifica el worktree, no monta HOME, sockets ni archivos privados, no publica puertos
-ni imágenes y no configura un servicio de CI remoto. Conserva el checkout y los artefactos.
+El preparador requiere primero una copia local autorizada de Sentinel: `npm run preparar:sentinel -- --repo /ruta/al/checkout`.
+La copia verificada se incorpora solo a `.cache/sentinel` del ensayo, fuera del tar y del contexto
+de imagen. No monta el repositorio privado, HOME, sockets ni credenciales, no publica puertos
+ni imágenes y no configura un servicio de CI remoto. Conserva el checkout y los artefactos;
+ese checkout contiene la caché privada y no debe publicarse.
 
 La imagen Debian 12 fija Node 24.22.3 y uv 0.12.24 por digest; instala CPython 3.14.7,
 FFmpeg y las bibliotecas oficiales de Chromium. Para compilar SQLite reutiliza las cabeceras
 del propio Node mediante `npm_package_config_node_gyp_nodedir`, sin descargar ni cambiar
 propietarios de archivos bajo el contenedor sin capacidades. `ci/versiones.json` fija npm 12.2.2; `package-lock.json` fija las dependencias JavaScript y Playwright;
 `ci/sentinel-requirements.txt` fija las cinco dependencias Python con SHA-256 y solo wheels.
-`vendor/sentinel/origen.json` conserva la revisión y los hashes del guardián y los tres
-módulos originales. El caos usa `gremlins.js` 2.2.0 desde el lockfile npm de Cooper;
+`ci/sentinel-origen.json` conserva la revisión y los hashes del guardián y los tres
+módulos originales; sus fuentes no forman parte del repositorio público. El caos usa `gremlins.js` 2.2.0 desde el lockfile npm de Cooper;
 su bundle se comprueba por SHA-256 antes de ejecutar Sentinel. El `postinstall` de
 `core-js` solo presenta un aviso de financiación y queda denegado explícitamente en
 `allowScripts`; se mantienen las autorizaciones de compilación de SQLite y esbuild. Los paquetes del sistema se obtienen del repositorio Debian vigente:
@@ -163,7 +166,9 @@ los seis comandos restantes. Los `.env` reales en la raíz o `cooper/` se rechaz
 sin abrirlos; utilice el ensayo limpio para conservar su configuración de desarrollo.
 
 El preflight valida sistema, herramientas, hashes y el lanzamiento de ambos Chromium antes
-de las E2E. No usa ni instala nada en `~/Proyectos/Sistema-Sentinel`. Cada lenguaje conserva
+de las E2E. El preparador puede leer los objetos Git fijados del checkout privado
+`~/Proyectos/Sistema-Sentinel/codigo`; nunca lee sus fuentes de trabajo ni instala allí.
+La ejecución solo consume `.cache/sentinel`, verificada contra el manifiesto público. Cada lenguaje conserva
 el navegador que exige su versión de Playwright; no se enlazan cachés ajenas. Las suites usan
 cuentas, sesiones, puertos libres, SQLite y proveedores ficticios. El arnés transmite solo
 variables de herramientas, sin credenciales, configuración de proveedores ni `NODE_OPTIONS`.
@@ -184,8 +189,9 @@ Documentación oficial consultada: [Playwright CI](https://playwright.dev/docs/c
 [Podman run](https://docs.podman.io/en/latest/markdown/podman-run.1.html),
 [configuración actual de node-gyp](https://github.com/nodejs/node-gyp#environment-variables),
 [gremlins.js](https://github.com/marmelab/gremlins.js).
-Publicar CI o redistribuir la copia interna de Sentinel exige decisión de Walter;
-esta misión deja únicamente el arnés local.
+Sin un checkout autorizado que contenga la revisión fijada, la puerta falla explícitamente.
+Un CI remoto necesita una provisión privada aprobada por Walter; las fuentes de Sentinel
+no se redistribuyen en Cooper. Este procedimiento deja únicamente el arnés local.
 
 ## Verificación
 
@@ -357,6 +363,6 @@ node scripts/indice-movimiento.mjs
 node scripts/auditoria.mjs --movimiento
 ```
 
-Sentinel usa la copia íntegra fijada en `vendor/sentinel`, Python en `.cache/sentinel-venv` y Chromium en `.cache/sentinel-browsers`. Preparación: `npm run preparar:pruebas`; no requiere rutas personales ni acepta `SENTINEL_CODIGO`/`SENTINEL_PYTHON` externos. El guardián solo permite el destino E2E loopback; no contacta la fábrica real. No se leen archivos de credenciales.
+Sentinel usa únicamente la caché privada verificada en `.cache/sentinel`, Python en `.cache/sentinel-venv` y Chromium en `.cache/sentinel-browsers`. Preparación: `npm run preparar:sentinel -- --repo /checkout/autorizado` y `npm run preparar:pruebas`; la ruta externa solo se admite al preparar, nunca durante la ejecución, que tampoco acepta `SENTINEL_CODIGO`/`SENTINEL_PYTHON` externos. El guardián solo permite el destino E2E loopback; no contacta la fábrica real. No se leen archivos de credenciales.
 
 Evidencia fuera de Git: `.cache/videos-movimiento/index.html` permite abrir los videos sin autoplay; `indice.json` incluye SHA-256. Cada ronda conserva métricas, capturas, videos y reportes Sentinel. La cadencia del WebM de Playwright es distinta de los FPS medidos por requestAnimationFrame. CPU 4× aproxima carga móvil; no sustituye un ensayo en teléfono físico. Resultados finales y pendientes en [el informe](../docs/informes/cooper-animacion-fuerte.md).

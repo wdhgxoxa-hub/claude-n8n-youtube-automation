@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .cache/
+vendor/sentinel/src/
 .env*
 !.env.example
 data/

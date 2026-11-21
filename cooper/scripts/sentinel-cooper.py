@@ -8,11 +8,12 @@ import hashlib
 import os
 from pathlib import Path
 import sys
+sys.dont_write_bytecode = True
 from urllib.parse import urlsplit
 from sentinel_exclusiones import TEXTOS, SELECTORES
+from sentinel_cache import comprobar_sentinel
 
 config = json.loads(Path(sys.argv[1]).read_text())
-raiz = Path(__file__).resolve().parents[1] / 'vendor/sentinel'
 cooper = Path(__file__).resolve().parents[1]
 # Ruta del bundle npm fijado: jamás heredar una instalación personal de Sentinel.
 os.environ['SENTINEL_NODE'] = str(cooper / 'node_modules')
@@ -20,10 +21,7 @@ gremlins = cooper / 'node_modules/gremlins.js/dist/gremlins.min.js'
 versiones = json.loads((cooper / 'ci/versiones.json').read_text())
 if hashlib.sha256(gremlins.read_bytes()).hexdigest() != versiones['gremlinsSha256']:
     raise ValueError('gremlins.js no coincide con la distribución fijada')
-for archivo, esperado in json.loads((raiz / 'origen.json').read_text())['archivos'].items():
-    if hashlib.sha256((raiz / archivo).read_bytes()).hexdigest() != esperado:
-        raise ValueError('Sentinel modificado: ' + archivo)
-sys.path.insert(0, str(raiz / 'src'))
+sys.path.insert(0, str(comprobar_sentinel()))
 from sentinel.contrato import Objetivo, ComprobacionDestino, Contexto, Exclusiones
 from sentinel.guardian.guardian import Guardian
 

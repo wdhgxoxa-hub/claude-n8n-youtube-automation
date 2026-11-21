@@ -3,6 +3,11 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { raiz } from "./entorno-pruebas.mjs";
+import {
+  cacheSentinel,
+  copiarCacheVerificada,
+  prepararSentinel,
+} from "./sentinel-cache.mjs";
 
 // Único argumento permitido: motor local. Nunca pasar entornos ni montajes arbitrarios.
 const motor = process.argv[2] ?? "podman";
@@ -28,7 +33,10 @@ if (
         .split("/")
         .some(
           (part) => /^\.env(?:\.|$)/.test(part) && part !== ".env.example",
-        ) || /^(credentials|credenciales)\//.test(name),
+        ) ||
+      /^(credentials|credenciales)\//.test(name) ||
+      name.startsWith("cooper/vendor/sentinel/src/") ||
+      /(?:^|\/)\.cache\/sentinel\//.test(name),
   )
 )
   throw new Error(
@@ -41,6 +49,12 @@ mkdirSync(checkout);
 const archive = resolve(dir, "fuentes.tar");
 run("git", ["archive", "--format=tar", `--output=${archive}`, sha]);
 run("tar", ["-xf", archive, "-C", checkout]);
+prepararSentinel();
+const sentinel = copiarCacheVerificada(
+  cacheSentinel,
+  resolve(checkout, "cooper/.cache/sentinel"),
+  resolve(checkout, "cooper/ci/sentinel-origen.json"),
+);
 writeFileSync(
   resolve(checkout, "ci-origen.json"),
   JSON.stringify(
@@ -50,6 +64,9 @@ writeFileSync(
         .update(readFileSync(archive))
         .digest("hex"),
       limpio: true,
+      sentinel_revision: sentinel,
+      sentinel_fuentes:
+        "caché privada verificada, fuera del archivo y de la imagen",
     },
     null,
     2,

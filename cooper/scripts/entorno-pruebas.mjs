@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { comprobarSentinel } from "./sentinel-cache.mjs";
+export { comprobarSentinel } from "./sentinel-cache.mjs";
 
 export const raiz = resolve(import.meta.dirname, "..");
 export const versiones = JSON.parse(
@@ -54,21 +56,6 @@ export function comprobarArchivosEntorno(directorio = raiz) {
         "Hay archivos .env reales. Use el checkout limpio de ci:limpia; no se leyeron sus valores.",
       );
   }
-}
-
-export function comprobarSentinel(
-  directorio = resolve(raiz, "vendor/sentinel"),
-) {
-  const origen = JSON.parse(
-    readFileSync(resolve(directorio, "origen.json"), "utf8"),
-  );
-  for (const [archivo, esperado] of Object.entries(origen.archivos)) {
-    const actual = createHash("sha256")
-      .update(readFileSync(resolve(directorio, archivo)))
-      .digest("hex");
-    if (actual !== esperado) throw new Error(`Sentinel modificado: ${archivo}`);
-  }
-  return origen.revision;
 }
 
 export function comprobarGremlins(

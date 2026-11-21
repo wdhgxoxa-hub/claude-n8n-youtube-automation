@@ -1,5 +1,6 @@
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { prepararSentinel } from "./sentinel-cache.mjs";
 import {
   comprobarHerramientas,
   comprobarInstalacion,
@@ -12,6 +13,7 @@ import {
   versiones,
 } from "./entorno-pruebas.mjs";
 
+prepararSentinel();
 console.log(JSON.stringify(comprobarHerramientas()));
 mkdirSync(resolve(raiz, ".cache"), { recursive: true });
 const opciones = { stdio: "inherit" };

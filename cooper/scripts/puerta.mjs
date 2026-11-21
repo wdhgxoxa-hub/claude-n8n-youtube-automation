@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
+import { prepararSentinel } from "./sentinel-cache.mjs";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -51,6 +52,7 @@ export function comprobarResultados(unitarias, e2e, flujos) {
 }
 
 async function main() {
+  prepararSentinel();
   const salida = resolve(raiz, ".cache/puerta");
   mkdirSync(salida, { recursive: true });
   const env = { ...entornoLimpio(), COOPER_CI_REPORTES: "1" };

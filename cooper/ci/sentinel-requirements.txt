@@ -1,4 +1,4 @@
-# Dependencias de los módulos Sentinel usados por Cooper. Origen: vendor/sentinel/origen.json
+# Dependencias de los módulos Sentinel usados por Cooper. Origen: ci/sentinel-origen.json
 # Solo wheels; hashes del uv.lock original. No resolver versiones nuevas.
 greenlet==3.5.6 \
     --hash=sha256:06c0e933290fba8ffe53ead4ae1b8044b0e9754b75cebf381aa2bc3e50d82fac \

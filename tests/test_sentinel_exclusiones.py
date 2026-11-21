@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import sys
+sys.dont_write_bytecode = True
 import tempfile
 from threading import Thread
 import unittest
@@ -15,7 +16,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 COOPER = ROOT / 'cooper'
 sys.path.insert(0, str(COOPER / 'scripts'))
-sys.path.insert(0, str(COOPER / 'vendor/sentinel/src'))
+from sentinel_cache import comprobar_sentinel
+sys.path.insert(0, str(comprobar_sentinel()))
 from sentinel_exclusiones import TEXTOS, SELECTORES
 from sentinel.contrato import Objetivo, ComprobacionDestino, Exclusiones
 from sentinel.guardian.guardian import Guardian
@@ -132,10 +134,10 @@ class ExclusionesCooper(unittest.TestCase):
             evaluated = Caos()._hallazgos(guardian, observed, page, Path(tmp), 0)
         self.assertTrue(any(f.tipo == 'error_consola' and f.gravedad == 'media' for f in evaluated))
 
-    def test_vendor_conserva_sus_hashes(self):
-        vendor = COOPER / 'vendor/sentinel'
-        for name, expected in json.loads((vendor / 'origen.json').read_text())['archivos'].items():
-            self.assertEqual(hashlib.sha256((vendor / name).read_bytes()).hexdigest(), expected)
+    def test_cache_conserva_hashes_del_manifiesto_publico(self):
+        cache = COOPER / '.cache/sentinel'
+        for name, expected in json.loads((COOPER / 'ci/sentinel-origen.json').read_text())['archivos'].items():
+            self.assertEqual(hashlib.sha256((cache / name).read_bytes()).hexdigest(), expected)
 
 
 if __name__ == '__main__':
