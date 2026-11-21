@@ -28,6 +28,12 @@ def preparar(output, base=BASE):
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
             manifest['archivos'].append({'ruta': str(dest.relative_to(output)), 'sha256': hashlib.sha256(data).hexdigest()})
+    # Diff aplicable sobre la referencia de código; nunca equivale al respaldo del destino.
+    scope = ['workflows/v2', 'cooper/drizzle', 'contratos/cooper-migracion-tablas.json', 'contratos/cooper-tablas-ensayo.json']
+    for nombre, inicio, fin in [('cambios.diff', base, head), ('reversa.diff', head, base)]:
+        data = git('diff', '--binary', inicio, fin, '--', *scope)
+        (output / nombre).write_bytes(data)
+        manifest['archivos'].append({'ruta': nombre, 'sha256': hashlib.sha256(data).hexdigest()})
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     (output / 'LEER-ANTES.md').write_text((ROOT / 'docs/cooper-cobertura-despliegue.md').read_text().replace('`16341ab`', '`' + base + '`'))
     return manifest
