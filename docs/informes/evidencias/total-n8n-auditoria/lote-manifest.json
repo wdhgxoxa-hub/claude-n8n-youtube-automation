@@ -1,0 +1,422 @@
+{
+  "activacion_automatica": false,
+  "archivos": [
+    {
+      "ruta": "LEER-ANTES.md",
+      "sha256": "c296abab520106b089af944a92a829f8e7e6ccc76386a66892283bfab20e5300"
+    },
+    {
+      "ruta": "altas.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ruta": "bajas.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ruta": "cambios.json",
+      "sha256": "939aba8deeafb86c92b8e7987e41c8e935d7b6fd8aca16727810a5630f30f324"
+    },
+    {
+      "ruta": "diff-semantico.patch",
+      "sha256": "c5f69d0caa37829aed992ef93889f67937a64cab2cbe9065826e92698d67701d"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/CooperMarcasMet1.json",
+      "sha256": "82568b2da7cc393f5b20cd8166d8c02031753a73ad79b19017a3c138b1a79f95",
+      "sha256_fuente": "62ead72e0e35dc273dd409534375d61d35a29f74146cbab84393ad00aacbbda3"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/CooperMarcasPub1.json",
+      "sha256": "305d9992ca643509e3ca33c237067782d23aaccaf22b87e6c15ef2ad929202aa",
+      "sha256_fuente": "39da3eff94aadc1403eee6c14c2f6ef9a8bf64c4e7e4451474e5b740e3b926a5"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabAgenteTelegr1.json",
+      "sha256": "153553d772f322798abddcfad79cf97a99021acfbda8501f18bf61edf644250c",
+      "sha256_fuente": "af34efc42ccb758f8d48fc4aa7a38839424587ab9b2c19f244c04d1a30bb0600"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabAjustes000001.json",
+      "sha256": "36be9a5a4c0d7c977e9c98bac97b9c3ffe8f1427920859d32be560b1f6f6eedc",
+      "sha256_fuente": "bbc0362f7f5e25e8b88344d6c42ef2dcee4ad0995145c54f46a7b2bca659f330"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabAprendizaje01.json",
+      "sha256": "038c6d6fab47ad9b5978cc002886c2a1ed6781a094d644032dd00e30a3dc9d95",
+      "sha256_fuente": "5f6024db5f045d81910bb1d439ba94b833979c4db52d79a5739df15e913951cd"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabAprobacion001.json",
+      "sha256": "b9bdab56e45b9bca155f91583514046f828c7595d625ed464b7a921652a84f8b",
+      "sha256_fuente": "4ed3ecbd97a56d6af62d18c78ff797502e4833b4f8ef0fb952e7c2f3a0a5bebb"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabAvatar0000001.json",
+      "sha256": "69bcaad04d1c198a2a93efd8f46fb5906ed5fb08993175efe3045579a598e49e",
+      "sha256_fuente": "d285ac96b7eb9c2f2ddcfcc3f3b83f1f3518f0597373fb06ce6719dba6b1dfe1"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabChatWeb000001.json",
+      "sha256": "4e8aaa62ba17238717cd11a7eef88bd170c16108ca6b88a7913818e640d1d3f8",
+      "sha256_fuente": "601df7b37cb290994a036fc5fe0dc5aa3678695bc424fb43695beb5024888131"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabConfirmar0001.json",
+      "sha256": "7428161122ff9f07fc86734ac360d605ceb2ce57ab43821c547bc053861616d1",
+      "sha256_fuente": "006be22e24ad0c6eb0bd6f1f7c3bf8ec1cb27328403ba12e6c430104b518844c"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabCooperAPI0001.json",
+      "sha256": "985b3485e098d094ba24212a5d6410975394b14921c07c684443caa0958afe9a",
+      "sha256_fuente": "32a1aa2cba2359579a804459c1f0a71375ab68f8c67cee1cb0ebdbb00b7d08c5"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabCooperCosto01.json",
+      "sha256": "62a27e9509d272c893095713cabba3386f7d562485b92f64e30ceeedc6210db9",
+      "sha256_fuente": "bbcc1448c7797e7b2d482282643a31456741d677c9b6fbe9c694fd0e9d9eaeaf"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabCooperProgr01.json",
+      "sha256": "e3f7fceeba51ddb62bf7e1124b3320dc0b2fd7e86964dfd3b95d5c23f39ad5db",
+      "sha256_fuente": "7c91f950accb1498e244223140be94e30a91a88444a021749044db031f49a31e"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabDerivados0001.json",
+      "sha256": "a0bc4c649e875bdadd3386d70753e671ead708355ff6ae1fbf1be7dd0d549a83",
+      "sha256_fuente": "f7b26284791216c76a4e7a983e5d7442162820daedfae342e240c225aa93b0be"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabErrores000001.json",
+      "sha256": "f5a664400f0385e72a5166daeabfdc95d9aadf3e425cba23955dc6f44ff79d59",
+      "sha256_fuente": "3c1bde54ef5475b6732b1885ddf1a1f3c98258aa2c06752c15afd52bc4072aa6"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabEstado0000001.json",
+      "sha256": "ab3b57e880135e9347c4e0149d3ee01cb6a489857b15ab4a78e743ba215fe09a",
+      "sha256_fuente": "e4af1b549c655d8bdfa9ffb04d468f9a8ef58c8b5ee2e3b2ad9377adacfceaae"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabLlamarClaude1.json",
+      "sha256": "14ef2d1e63d8d32b443139346729a3850cbc7cb3c5dc78b41b877d3d3328e574",
+      "sha256_fuente": "774f4d50d326eacaf91ff792db448fc9251f438997c860825785949a654f3a05"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabNoticia000001.json",
+      "sha256": "b72154395599e5bb6a84b78a072c57c0a6004f13c868ffac2747619b1f5a4d69",
+      "sha256_fuente": "90c36815841819948fba78c19ed143bf84aa74b49a00b5f25bc546914830af87"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabOrquestador01.json",
+      "sha256": "7e7371221b565fdb42cdfb1467dc8df663b806f11ffe7d2ee5983bae0029f5be",
+      "sha256_fuente": "eb8b8e3b5427c32478798f7b649273bab0c8dc2cadafb693b2497939c283ae69"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabPendientes001.json",
+      "sha256": "ca9d49011074b8630edaf854747da2e483e993701b12eb1f7825cebe19fa297a",
+      "sha256_fuente": "0930f5c930339c61fa98a529b34ae782d3c8a651c238baf19b7d0e6013b09386"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabPresentacion1.json",
+      "sha256": "3104e71405a204b610df1f07d60e5202d87dd416ab609f72ab39f02500c4deb0",
+      "sha256_fuente": "30fe45bfb3b94fc2071a2311f906c4022c10fc03158a5a0a2b9534cf9e87aa7b"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabProduccion001.json",
+      "sha256": "ebb42ca262cc102b86e05e5ba77c55fab01c09be356a462421dd57a7952cf100",
+      "sha256_fuente": "b9c6cbeda5bf0a156cd38322ba58cb53aa954587eaf6ad48a73935fa331e53c6"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabPublicacion01.json",
+      "sha256": "e56b68085de877133a52975abd72b02e3be53151f725b9edfa71089786dd2e1f",
+      "sha256_fuente": "d701391bd36cf0d043b461b039bb8edfa8897b0a47a28036dd413aae41402387"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabRadar00000001.json",
+      "sha256": "5a515778653b793ae4857fb2dcdb5896fb9f569d7581797a6283b05721790300",
+      "sha256_fuente": "f4dce487c2b6e438eb25de756dad834ad3510ac76b550b1d3f5cddb90bb10fa4"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabRedes00000001.json",
+      "sha256": "29bcedf698ec4ef1615e832c7915b79a868b64dd97e325fd90cadf362ec5307b",
+      "sha256_fuente": "63cc3e79e426f4e952dae5137e18865574bf4ab1ba4474ace2d8ed7651a7c4aa"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabReenviar00001.json",
+      "sha256": "0dc569f04dcf404a5077b8b438defa475bff114bf512f287f2f72533f9473e5c",
+      "sha256_fuente": "dbb59a11af4cb26d48d6cfe0eb44d683b643e070a911377424e2650ae0771a58"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabReferencias01.json",
+      "sha256": "bcb6254030bca8b514cf1e2e042c7676f5c3a7a2f59a6c61f81ce864788ee4f1",
+      "sha256_fuente": "8e11512ad350a92df328f20f6d77848b54ae3c9834675dbe068fe67dc563efd7"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabRetornoClaud1.json",
+      "sha256": "3b4d8ca803b9cff8fc1fab6fe458e250ff2894b7eba52cbdcb1c20c07eb82912",
+      "sha256_fuente": "9167608ae6e8e7e94b3da032605c301d30423f1258748075174963d6628992d3"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabRutina0000001.json",
+      "sha256": "0d0ddb286f1940e49ef843d9b4a627111201181906d54bfbd436a7550ab51da8",
+      "sha256_fuente": "6883b2cb80f40ede84c70a50a5d4e57d354f6e18cc5e5288c97e1c24bfec3143"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabSonido0000001.json",
+      "sha256": "978b66b66b61bd1775fe464fd96f0c85929aecdc5d43c7e5b7e19ff410fd8a57",
+      "sha256_fuente": "356e55f69435648b936bff5b4097f641ccbbe90c3071a3d16618cf71dc0fa0ce"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabTextoGPT0001.json",
+      "sha256": "a9326cc880f9ad604ad64d885fd9c4221d83cb21730a15acb20f5254648f4282",
+      "sha256_fuente": "02bc99e27a4b6738531acaf1543cff897634c8472b55af578d9865b125d9cce0"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabVidiq00000001.json",
+      "sha256": "c8c9cb1a4e3c361fb6292e3832ac742338be659fa9176b1598aae48fc7ac3a4d",
+      "sha256_fuente": "8d25bd3283cf29871b81e8798678503059aa4b94e5759100a318d9966d065dfa"
+    },
+    {
+      "commit_fuente": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+      "ruta": "entrada/workflows/v2/FabYouTube000001.json",
+      "sha256": "ad8a8501d6ac3e7eb0bad73fcd5bded82e4fe8af39c08876145eb0635eff5caf",
+      "sha256_fuente": "5b58f3b2349f3c20253cda89535cf85c6584cbabe3f31f2a7e110aff8b472934"
+    },
+    {
+      "ruta": "mapa-ids.json",
+      "sha256": "d9ce91510a9d7c923ab3624b6db6ad7a88527a0b383af11145648c0db7b732d2"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/CooperMarcasMet1.json",
+      "sha256": "c7d8b3e343c19cbbd70043b8c3f63424a6935749473422f1b0464a59dfc00841",
+      "sha256_fuente": "df228227057b36bd2e69120e6a7d1f90d2b46dbdc1a67c96eaf06e3b9fc0fd4e"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/CooperMarcasPub1.json",
+      "sha256": "46476b4e0d457010f8ab4e94b4c54afac8fc066a1053cdb1d3b94cc8422ab086",
+      "sha256_fuente": "e2a1ec5ab52e0245188d0752372971d344896b1bb8640979abe505e68d9902df"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabAgenteTelegr1.json",
+      "sha256": "2d82435504efa0a3bc9e9c8c54b313c891d7142c3e39877802a9c360554cf01f",
+      "sha256_fuente": "0450a30362705242cfc4a2da2ca6d699270ff3e09f5d60daeec991d77667a56c"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabAjustes000001.json",
+      "sha256": "8ed8639e46548c5b9eee45a69afdd3c15a12a8cfad6838366078378bf9804308",
+      "sha256_fuente": "ed9420226f06584d56d7968c49f2921c5ebd6cad8bfd61cbd3b8987eb9086d6e"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabAprendizaje01.json",
+      "sha256": "1efeebe978c1b34e8b00302840d32c2ef730add3330479c3d65d35f5d98318ec",
+      "sha256_fuente": "fc1e55350b3269633b6557ec440b7da522f1d43c7a642d3ef34958f583eb6f50"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabAprobacion001.json",
+      "sha256": "569bbe2f18f4710c70d9713da04b27f89f351351c3432405f47ff468bc13b7ca",
+      "sha256_fuente": "cb8e27cbaea1708f43b9b5484b52f481fc4ee22442a9f3fedf68e03866429e9f"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabAvatar0000001.json",
+      "sha256": "f484612c751f31ec4c52ba11d79eaef4d73712b99ac65aff38ca6e8d37dc5f6a",
+      "sha256_fuente": "b178a0cfddb0328b77392f844797dd77dd43a26863ec02c558aee4b6ab352526"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabChatWeb000001.json",
+      "sha256": "8befb4684a0fb697446a318defd083ef0941d76cb986f3710dcdd82fcc45f051",
+      "sha256_fuente": "a99889fdd7892954a746abe0ee11f5863e517b5356c5404dfc7e61ecaa6ad51d"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabConfirmar0001.json",
+      "sha256": "a2acaf3c47ade3ce83a776e893bdbc24e269ba47f421fc062426665727496f41",
+      "sha256_fuente": "f92c6aef366f395a4afc1a6e0a1de874662b2548895f9b9229f8df77d4e9f90f"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabCooperAPI0001.json",
+      "sha256": "4f3cb82a7761ae399042031709fb8a5989e6d04a9a8f2b6f6f7f23de37e985e6",
+      "sha256_fuente": "71f35e2a1d084e196b01184be8755aff84dc5a5f81f862986ac16396c7961ca4"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabCooperCosto01.json",
+      "sha256": "cd15cf443e50ef9c43d18a7865a5995be9f33a6ed768ac9d774bbaac3c16c262",
+      "sha256_fuente": "f1f032ff318d7192832818d6d0394a0449dd1af45bb16ac194fec18d539fdcfb"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabCooperProgr01.json",
+      "sha256": "03664ab6144d1daa1abbd2c95dbcd8a86b3d0fddddaed0331b863a655ed431ff",
+      "sha256_fuente": "c82aaa1b69ba9b8cce78b2f0b35546ab702dfb9e867016e653329428e318503e"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabDerivados0001.json",
+      "sha256": "a801711a50715cb8c362d71ad5032e4d5e56ee0aad8e13e49d0f2b21955b7966",
+      "sha256_fuente": "b6eb3247ab389cde420ae0f4922e28b21ddb3d40b8237e2dc3c57d801dbd8bc1"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabErrores000001.json",
+      "sha256": "239b68a44beff18fa17a39eeb9f94cbc1afdb6ad341bd0e9d47a7e993c97c1b2",
+      "sha256_fuente": "0395a78eb5997d11ba0e93a477791a8823222a36f6dd33d03b891f59af281d38"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabEstado0000001.json",
+      "sha256": "2fc9ed15e90b56f7b4e830cf94a7ae8ebed589e540e0882efedc2b2f9a441bd8",
+      "sha256_fuente": "e479e9edfdae1bdefb0857ff2fe17021d0b7432fa7806a4439b2cb7df78b76d9"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabLlamarClaude1.json",
+      "sha256": "103d4a2cc60b68bbb264a3a64da9c94e27f8dcd7cd590a8c86306cf11dd08114",
+      "sha256_fuente": "e4930fc754eb865d59a0711ac0dd8a2b324411a77b621f50d9236c08cd25c605"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabNoticia000001.json",
+      "sha256": "7e2ec78bc968167179de5d4fb177e405cbff139cfe9df1b67bd5cec95d09d977",
+      "sha256_fuente": "2a01cd098fe9755e6dc1645b459db69a1fe232bd6cd8cf8c23d2c60fb3cf031f"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabOrquestador01.json",
+      "sha256": "b7240171caab27d76b44b6a99c32e2491a4ce74c010b4a7b1cc43fc9a4301be7",
+      "sha256_fuente": "74f53fbc2556f985bbcb354a123b9edae3191cffa0b6336366c92837d1a96274"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabPendientes001.json",
+      "sha256": "0efab05327a667d5c38b9d2dcf55a3c8396d2f1a71aabd0766f1903d3fe743cf",
+      "sha256_fuente": "37be37601dbe40bf86d5a0da9c5e0a16cfe62d5c192a8175c55b1a07af7bcb52"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabPresentacion1.json",
+      "sha256": "5bcfe69d4de960dea5e10c1bcf74d263608520a7909ab3c9b3c561aeb6191215",
+      "sha256_fuente": "66b2e92a269381fb81c8b7a6efaa5ce9ea6ac5adfb792dc57b20c665ceb80569"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabProduccion001.json",
+      "sha256": "21aa5cf11de3d7574af51a2cc2b2750bdcf5c1781ba175498d9839d41999879f",
+      "sha256_fuente": "d29f7b6030cf33832e714e74ed4cf87c856ccec3a7c8a9cf3594c16b370a8459"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabPublicacion01.json",
+      "sha256": "451eb2f51e8e2bd59bcf1844259dccf6d6c925cf057e6e3ab048e39a8bab0cff",
+      "sha256_fuente": "9969506ee80cc88f2445bd16b72f13cdda8dd1eb042aaf4ae4446594376cecd7"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabRadar00000001.json",
+      "sha256": "558aa969adf5e39690625f2549ba8e9c3bbc2466a45290c57e0023aea84a43a3",
+      "sha256_fuente": "7dfcfdb7dd999b1e06b013ccb654e7c49adf0f23296745b107b4987d2a7c2899"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabRedes00000001.json",
+      "sha256": "2a3b0c446a82be50ef1c4ea9fd3c2af31f625e7d3873618970c2ee1899f06688",
+      "sha256_fuente": "0d36c9d158240e8956dfaf3e91059d09ed5118e27a30c23ea5a71311dd7a8913"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabReenviar00001.json",
+      "sha256": "1d0018af77a3cf64e7fb2e5320e5597640df2a32c2b6136a770165db140cf943",
+      "sha256_fuente": "a4820726ccec0901f47364bce491ececa88b8001b16663ca268bea948efd4a16"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabReferencias01.json",
+      "sha256": "cb896cb984c78dd5e54a904c7992c37a19ea34bcebcca5d7fe2419a2edad9fd7",
+      "sha256_fuente": "d3cfeeefe4b135afd111e8762113e0fbc08d93abd5ed05190cdc25b0ed6c19a6"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabRetornoClaud1.json",
+      "sha256": "72d9420ceb8336a0cfac1fda5f503e814e08754d2520f086ca5d2ac550f55796",
+      "sha256_fuente": "9703c0ad9b040d89a68bad0d6b29f4484392892c5ac41252ef36420bb113c1bb"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabRutina0000001.json",
+      "sha256": "bfa0f0e1b850aae83ff98941e60e48b9726a081078f5d4dd456f345bd5ad4af2",
+      "sha256_fuente": "ea547b2d5a1d225116cc0a8552d0055f719d41eed36f1bcebbec1e8b9bd062eb"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabSonido0000001.json",
+      "sha256": "af679771e6f1818a9a43a3e7f0874afea51184674433c9b417a8fa2a6750bb11",
+      "sha256_fuente": "04c109f8bd37f5c37c644332a92d42183b44e8eca4a3e9c06f57e64a4038c6cc"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabTextoGPT0001.json",
+      "sha256": "4f0176e16509beba2bf75d3031f36ee2dbc7d06347f9a1f94a647b1498fd0c6a",
+      "sha256_fuente": "812e2d50a3a4fab979f847872b300ca3ba93b821f3564cba7625e7235160155b"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabVidiq00000001.json",
+      "sha256": "9a4a7505577bedef83c863517a639b484f44ce4a8e1f42dfc01af3f7da2c05ce",
+      "sha256_fuente": "84ddb798ad4ae5444d9497c7a41c1aef960c377f9ca596ad063aa441e77ef739"
+    },
+    {
+      "commit_fuente": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "ruta": "reversa-versionada/workflows/v2/FabYouTube000001.json",
+      "sha256": "b86e16e3d8918a23ff87210d579727385673aee617e1377368bac364d966e816",
+      "sha256_fuente": "eb35852a9075a2d15a433ca6fee81abcbc0a623646577921792c4f0f10dc521e"
+    }
+  ],
+  "base_referencia": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "diff_semantico": "Conserva todo salvo IDs internos de nodos y condiciones n8n.",
+  "mision": "total-n8n-auditoria",
+  "origen": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+  "respaldo_real": false,
+  "total_entrada": 32,
+  "total_reversa_versionada": 32,
+  "transformacion": "active=false; activeVersionId=null si existe; sin activeVersion",
+  "version": 1
+}

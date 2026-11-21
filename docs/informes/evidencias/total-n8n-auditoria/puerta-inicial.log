@@ -1,0 +1,211 @@
+
+added 358 packages, and audited 365 packages in 8s
+
+found 0 vulnerabilities
+npm notice
+npm notice New patch version of npm available! 12.2.2 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+npm notice run cooper@0.1.0 lint
+npm notice run eslint . --max-warnings 0
+npm notice run cooper@0.1.0 typecheck
+npm notice run tsc --noEmit
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/total-n8n-auditoria/cooper
+
+
+ Test Files  30 passed (30)
+      Tests  284 passed (284)
+   Start at  13:17:10
+   Duration  19.66s (transform 1.51s, setup 326ms, import 9.64s, tests 7.00s, environment 2ms)
+
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs
+BEWARE: your OS is not officially supported by Playwright; downloading fallback build for ubuntu24.04-x64.
+Downloading Chrome for Testing 159.0.8154.6 (playwright chromium v1255)[2m from https://cdn.playwright.dev/builds/cft/159.0.8154.6/linux64/chrome-linux64.zip[22m
+|                                                                                |   0% of 199.3 MiB
+|■■■■■■■■                                                                        |  10% of 199.3 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 199.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 199.3 MiB
+Chrome for Testing 159.0.8154.6 (playwright chromium v1255) downloaded to /home/david/Proyectos/cooper-wt/total-n8n-auditoria/cooper/.cache/browsers/chromium-1255
+BEWARE: your OS is not officially supported by Playwright; downloading fallback build for ubuntu24.04-x64.
+Downloading FFmpeg (playwright ffmpeg v1013)[2m from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1013/ffmpeg-linux.zip[22m
+|                                                                                |   0% of 2.2 MiB
+|■■■■■■■■                                                                        |  10% of 2.2 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.2 MiB
+FFmpeg (playwright ffmpeg v1013) downloaded to /home/david/Proyectos/cooper-wt/total-n8n-auditoria/cooper/.cache/browsers/ffmpeg-1013
+BEWARE: your OS is not officially supported by Playwright; downloading fallback build for ubuntu24.04-x64.
+Downloading Chrome Headless Shell 159.0.8154.6 (playwright chromium-headless-shell v1255)[2m from https://cdn.playwright.dev/builds/cft/159.0.8154.6/linux64/chrome-headless-shell-linux64.zip[22m
+|                                                                                |   0% of 125.7 MiB
+|■■■■■■■■                                                                        |  10% of 125.7 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 125.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 125.7 MiB
+Chrome Headless Shell 159.0.8154.6 (playwright chromium-headless-shell v1255) downloaded to /home/david/Proyectos/cooper-wt/total-n8n-auditoria/cooper/.cache/browsers/chromium_headless_shell-1255
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 53ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.8s
+  Running TypeScript ...
+  Finished TypeScript in 4.9s ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4) 
+  Generating static pages using 23 workers (2/4) 
+  Generating static pages using 23 workers (3/4) 
+✓ Generating static pages using 23 workers (4/4) in 102ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 43 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/chat-planes.spec.ts:3:1 › respuesta completa mantiene la boca y la espera se puede cancelar (16.9s)
+  ✓   2 [chromium] › e2e/cooper.spec.ts:37:1 › entrada pública, cabeceras y protección de rutas (789ms)
+  ✓   3 [chromium] › e2e/cooper.spec.ts:91:1 › conversa, pide un video, observa SSE y aprueba las dos puertas (8.3s)
+  ✓   4 [chromium] › e2e/cooper.spec.ts:145:1 › chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajenas (2.1s)
+  ✓   5 [chromium] › e2e/cooper.spec.ts:197:1 › boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream (5.4s)
+  ✓   6 [chromium] › e2e/cooper.spec.ts:258:1 › aísla usuarios, gasto, chat, SSE y acciones de video (589ms)
+  ✓   7 [chromium] › e2e/cooper.spec.ts:304:1 › adjuntos y grabación con transcripción editable (1.6s)
+  ✓   8 [chromium] › e2e/cooper.spec.ts:347:1 › una foto del chat abre el avatar privado sin omitir verificación (1.7s)
+  ✓   9 [chromium] › e2e/cooper.spec.ts:399:1 › biblioteca propia, verificación simulada, privacidad y compartir (12.5s)
+  ✓  10 [chromium] › e2e/cooper.spec.ts:448:1 › perfil guarda tema, inicio y WhatsApp; móvil y teclado (2.9s)
+  ✓  11 [chromium] › e2e/cooper.spec.ts:478:1 › administración, gastos por periodo, alerta y revocación inmediata (2.7s)
+  ✓  12 [chromium] › e2e/cooper.spec.ts:526:1 › auditoría AA de todas las pantallas, anchuras y ambos temas (37.9s)
+  ✓  13 [chromium] › e2e/cooper.spec.ts:608:1 › elige avatar, voz y presencia al pedir un video desde la biblioteca (1.5s)
+  ✓  14 [chromium] › e2e/cooper.spec.ts:643:1 › bienvenida vacía: las tres acciones quedan antes del compositor (764ms)
+  ✓  15 [chromium] › e2e/cooper.spec.ts:664:1 › identidad con frase renovable, formulario accesible y entrenamiento en vivo (14.9s)
+  ✓  16 [chromium] › e2e/cooper.spec.ts:769:1 › modo noticia por canal se detiene sin verificación real (3.6s)
+  ✓  17 [chromium] › e2e/marcas.spec.ts:7:1 › Marcas: alta, estudio, pieza, revisión, edición y matriz accesible (9.6s)
+  ✘  18 [chromium] › e2e/marcas.spec.ts:145:1 › Marcas: Sentinel recorre la instancia efímera con su guardián activo (1.4s)
+  ✓  19 [chromium] › e2e/memoria.spec.ts:12:1 › recuerdos privados, regreso al estudio, revisión administrativa y borrado (9.1s)
+  ✓  20 [chromium] › e2e/revision.spec.ts:15:1 › R08 recupera SSE después de una respuesta HTTP temporal (1.6s)
+  ✓  21 [chromium] › e2e/revision.spec.ts:35:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar (451ms)
+  ✓  22 [chromium] › e2e/revision.spec.ts:53:1 › privacidad en HTML, JSON y carga de sesión Auth.js (583ms)
+  ✓  23 [chromium] › e2e/revision.spec.ts:125:1 › R12 conserva el correo de invitación cuando falla la red (1.2s)
+  ✓  24 [chromium] › e2e/revision.spec.ts:145:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar (402ms)
+  ✓  25 [chromium] › e2e/revision.spec.ts:178:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras (45.6s)
+  ✓  26 [chromium] › e2e/whatsapp.spec.ts:5:1 › WhatsApp: verificar número, elegir avisos, revocar al cambiar y revisar accesibilidad (3.6s)
+  ✓  27 [demostracion] › e2e/animacion.spec.ts:37:3 › evidencia de movimiento › entrada, fábrica, mirada, chat, audio y adjunto en movimiento (10.1s)
+  ✓  28 [demostracion] › e2e/animacion.spec.ts:186:1 › pausa y movimiento reducido detienen efectos activos, incluso al navegar (3.0s)
+  ✓  29 [demostracion] › e2e/animacion.spec.ts:251:1 › fluidez local y propiedades de animación sin cambios de geometría (6.6s)
+  ✓  30 [demostracion] › e2e/animacion.spec.ts:340:1 › avance por evento: relleno, destello único y porcentaje final (1.8s)
+  ✓  31 [demostracion] › e2e/diseno.spec.ts:33:1 › demostración: siete pantallas, dos tamaños y fábrica seleccionable (8.6s)
+  ✓  32 [demostracion] › e2e/diseno.spec.ts:110:1 › movimiento opcional, teclado y retícula en seis anchuras (1.2s)
+  ✓  33 [demostracion] › e2e/diseno.spec.ts:169:1 › capturas finales: todas las pantallas y formularios demo en ambos temas (37.9s)
+  ✓  34 [demostracion] › e2e/diseno.spec.ts:293:1 › I08 identidad se hidrata en Lima y Cooper no emite errores SVG (13.0s)
+  ✓  35 [demostracion] › e2e/diseno.spec.ts:325:1 › la barra lateral cubre páginas largas y permite navegar con poca altura (5.4s)
+  ✓  36 [demostracion] › e2e/diseno.spec.ts:400:1 › integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas (27.0s)
+  ✓  37 [demostracion] › e2e/operacion.spec.ts:30:1 › canales con nombres repetidos conservan menús accesibles distintos (740ms)
+  ✓  38 [demostracion] › e2e/operacion.spec.ts:59:1 › operación: biblia, metas, redes, referencias y adopción con confirmación y persistencia (6.2s)
+  ✓  39 [demostracion] › e2e/operacion.spec.ts:109:1 › operación: una idea produce un video, los ajustes registran cambios y el fallo de lectura se recupera (3.6s)
+  ✓  40 [demostracion] › e2e/operacion.spec.ts:160:1 › operación: la aprobación exige confirmar y el estado no muestra datos administrativos (1.3s)
+  ✓  41 [demostracion] › e2e/operacion.spec.ts:177:1 › operación: referencias editables y solicitudes de radar y conexión permanecen en el simulador (4.0s)
+  ✓  42 [demostracion] › e2e/resultados.spec.ts:20:1 › Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección (2.5s)
+  ✓  43 [demostracion] › e2e/resultados.spec.ts:77:1 › el montaje real se reproduce y sustituye la maqueta; galería y embeds usan URLs exactas (1.3s)
+
+
+  1) [chromium] › e2e/marcas.spec.ts:145:1 › Marcas: Sentinel recorre la instancia efímera con su guardián activo 
+
+    Error: {"nombre": "recorridos", "hallazgos": 1}
+    {"nombre": "caos", "hallazgos": 1}
+    {"nombre": "estabilidad", "hallazgos": 1}
+    {"fallos": 3, "informe": "/home/david/Proyectos/cooper-wt/total-n8n-auditoria/cooper/.cache/sentinel-marcas/informe.json"}
+
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      236 |     );
+      237 |     writeFileSync(resolve(folder, "ejecucion.log"), result.log);
+    > 238 |     expect(result.code, result.log).toBe(0);
+          |                                     ^
+      239 |   } finally {
+      240 |     unlinkSync(session);
+      241 |   }
+        at /home/david/Proyectos/cooper-wt/total-n8n-auditoria/cooper/e2e/marcas.spec.ts:238:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/marcas-Marcas-Sentinel-rec-0277b-mera-con-su-guardián-activo-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/marcas-Marcas-Sentinel-rec-0277b-mera-con-su-guardián-activo-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/marcas-Marcas-Sentinel-rec-0277b-mera-con-su-guardián-activo-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/marcas-Marcas-Sentinel-rec-0277b-mera-con-su-guardián-activo-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e/marcas.spec.ts:145:1 › Marcas: Sentinel recorre la instancia efímera con su guardián activo 
+  42 passed (5.4m)

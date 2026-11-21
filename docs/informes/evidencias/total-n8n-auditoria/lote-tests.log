@@ -1,0 +1,15 @@
+✔ lote: ambas direcciones inactivas, fuentes HEAD intactas y hashes verificables (122.43182ms)
+✔ lote: diff ignora UUID internos y registra altas, bajas y mapa sin inventar destino (91.147218ms)
+✔ lote: cambios reales de condiciones, IDs de negocio y referencias no se ocultan (90.265946ms)
+✔ lote: rechaza cambios de workflows pendientes, incluidos archivos sin seguimiento (135.736665ms)
+✔ lote: reproducible, no sobrescribe evidencia y no incluye otros archivos del repositorio (219.185794ms)
+✔ lote: rechaza IDs duplicados y conteo distinto del contrato (182.424747ms)
+✔ lote: solo acepta una base ancestral de HEAD (99.663098ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1001.943307

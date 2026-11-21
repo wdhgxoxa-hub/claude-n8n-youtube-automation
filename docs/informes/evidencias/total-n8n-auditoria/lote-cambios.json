@@ -1,0 +1,194 @@
+[
+  {
+    "estado": "modificado",
+    "id_base": "CooperMarcasMet1",
+    "id_entrada": "CooperMarcasMet1",
+    "ruta": "workflows/v2/CooperMarcasMet1.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "CooperMarcasPub1",
+    "id_entrada": "CooperMarcasPub1",
+    "ruta": "workflows/v2/CooperMarcasPub1.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabAgenteTelegr1",
+    "id_entrada": "FabAgenteTelegr1",
+    "ruta": "workflows/v2/FabAgenteTelegr1.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabAjustes000001",
+    "id_entrada": "FabAjustes000001",
+    "ruta": "workflows/v2/FabAjustes000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabAprendizaje01",
+    "id_entrada": "FabAprendizaje01",
+    "ruta": "workflows/v2/FabAprendizaje01.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabAprobacion001",
+    "id_entrada": "FabAprobacion001",
+    "ruta": "workflows/v2/FabAprobacion001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabAvatar0000001",
+    "id_entrada": "FabAvatar0000001",
+    "ruta": "workflows/v2/FabAvatar0000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabChatWeb000001",
+    "id_entrada": "FabChatWeb000001",
+    "ruta": "workflows/v2/FabChatWeb000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabConfirmar0001",
+    "id_entrada": "FabConfirmar0001",
+    "ruta": "workflows/v2/FabConfirmar0001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabCooperAPI0001",
+    "id_entrada": "FabCooperAPI0001",
+    "ruta": "workflows/v2/FabCooperAPI0001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabCooperCosto01",
+    "id_entrada": "FabCooperCosto01",
+    "ruta": "workflows/v2/FabCooperCosto01.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabCooperProgr01",
+    "id_entrada": "FabCooperProgr01",
+    "ruta": "workflows/v2/FabCooperProgr01.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabDerivados0001",
+    "id_entrada": "FabDerivados0001",
+    "ruta": "workflows/v2/FabDerivados0001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabErrores000001",
+    "id_entrada": "FabErrores000001",
+    "ruta": "workflows/v2/FabErrores000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabEstado0000001",
+    "id_entrada": "FabEstado0000001",
+    "ruta": "workflows/v2/FabEstado0000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabLlamarClaude1",
+    "id_entrada": "FabLlamarClaude1",
+    "ruta": "workflows/v2/FabLlamarClaude1.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabNoticia000001",
+    "id_entrada": "FabNoticia000001",
+    "ruta": "workflows/v2/FabNoticia000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabOrquestador01",
+    "id_entrada": "FabOrquestador01",
+    "ruta": "workflows/v2/FabOrquestador01.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabPendientes001",
+    "id_entrada": "FabPendientes001",
+    "ruta": "workflows/v2/FabPendientes001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabPresentacion1",
+    "id_entrada": "FabPresentacion1",
+    "ruta": "workflows/v2/FabPresentacion1.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabProduccion001",
+    "id_entrada": "FabProduccion001",
+    "ruta": "workflows/v2/FabProduccion001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabPublicacion01",
+    "id_entrada": "FabPublicacion01",
+    "ruta": "workflows/v2/FabPublicacion01.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabRadar00000001",
+    "id_entrada": "FabRadar00000001",
+    "ruta": "workflows/v2/FabRadar00000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabRedes00000001",
+    "id_entrada": "FabRedes00000001",
+    "ruta": "workflows/v2/FabRedes00000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabReenviar00001",
+    "id_entrada": "FabReenviar00001",
+    "ruta": "workflows/v2/FabReenviar00001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabReferencias01",
+    "id_entrada": "FabReferencias01",
+    "ruta": "workflows/v2/FabReferencias01.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabRetornoClaud1",
+    "id_entrada": "FabRetornoClaud1",
+    "ruta": "workflows/v2/FabRetornoClaud1.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabRutina0000001",
+    "id_entrada": "FabRutina0000001",
+    "ruta": "workflows/v2/FabRutina0000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabSonido0000001",
+    "id_entrada": "FabSonido0000001",
+    "ruta": "workflows/v2/FabSonido0000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabTextoGPT0001",
+    "id_entrada": "FabTextoGPT0001",
+    "ruta": "workflows/v2/FabTextoGPT0001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabVidiq00000001",
+    "id_entrada": "FabVidiq00000001",
+    "ruta": "workflows/v2/FabVidiq00000001.json"
+  },
+  {
+    "estado": "modificado",
+    "id_base": "FabYouTube000001",
+    "id_entrada": "FabYouTube000001",
+    "ruta": "workflows/v2/FabYouTube000001.json"
+  }
+]

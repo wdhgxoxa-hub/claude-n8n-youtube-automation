@@ -1,0 +1,35 @@
+{
+  "fecha_lima": "2026-11-21 13:32",
+  "rama": "total-n8n-auditoria",
+  "codigo_probado": "83e41e635f5f2b66dc2566c789adf7b64f119cca",
+  "puerta_cooper": {
+    "rc": 0,
+    "ci": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "vitest": 284,
+    "e2e": 43,
+    "build": "PASS",
+    "errores": 0,
+    "advertencias": 0
+  },
+  "flujos": {
+    "rc": 0,
+    "pass": 167,
+    "fail": 0,
+    "advertencias": 0
+  },
+  "auditor": {
+    "rc": 0,
+    "pass": 8
+  },
+  "lote": {
+    "rc": 0,
+    "pass": 7,
+    "sha256_correctos": 71
+  },
+  "integrado": false,
+  "desplegado": false,
+  "vps": "solo lectura",
+  "limite": "Pruebas de contratos n8n y web simulada; no ensayo del lote en motor n8n ni efectos externos reales."
+}
