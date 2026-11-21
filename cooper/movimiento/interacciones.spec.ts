@@ -90,20 +90,29 @@ for (const width of [1440, 390])
     if (width === 390) await p.getByRole("tab", { name: /Fábrica/ }).click();
     await p
       .getByRole("button", { name: /12 Por qué el cielo cambia de color/ })
+      // El administrador puede ver ejemplos de varias cuentas de la suite conjunta.
+      .first()
       .click();
     await expect(p.getByRole("progressbar")).toHaveAttribute(
       "aria-valuenow",
       "12",
     );
     await expect(p.locator(".publication-celebration")).toHaveCount(0);
-    await p.getByRole("button", { name: /08 El mar también respira/ }).click();
+    await p
+      .getByRole("button", { name: /08 El mar también respira/ })
+      .first()
+      .click();
     await p.waitForTimeout(750);
     await p.screenshot({ path: `${dir}/${width}-fabrica.png`, fullPage: true });
     if (width === 390)
       await p.getByRole("tab", { name: "Chat", exact: true }).click();
     // Evento local explícitamente ficticio: comprobar transición, no llegada inicial ni recarga.
     const state = await (await p.request.get("/api/estado")).json();
-    state.videos[0].stage = 11;
+    const candidate = state.videos.find(
+      (video: { stage: number }) => video.stage < 11,
+    );
+    expect(candidate).toBeDefined();
+    candidate.stage = 11;
     await p.route("**/api/eventos", async (route) => {
       await new Promise((r) => setTimeout(r, 650));
       await route.fulfill({
