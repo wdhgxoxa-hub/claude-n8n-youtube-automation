@@ -13,7 +13,7 @@ export class TranscripcionOpenAI implements ProveedorTranscripcion {
       `grabacion.${extension}`,
     );
     form.set("model", "gpt-transcribe");
-    form.set("language", "es");
+    form.append("languages[]", "es");
     const response = await solicitar(
       this.transporte,
       "https://api.openai.com/v1/audio/transcriptions",

@@ -313,7 +313,8 @@ it("transcripción usa multipart con el modelo documentado y devuelve texto edit
   expect(url).toBe("https://api.openai.com/v1/audio/transcriptions");
   const form = init?.body as FormData;
   expect(form.get("model")).toBe("gpt-transcribe");
-  expect(form.get("language")).toBe("es");
+  expect(form.get("language")).toBeNull();
+  expect(form.getAll("languages[]")).toEqual(["es"]);
   expect((form.get("file") as File).name).toBe("grabacion.webm");
   expect(new Headers(init?.headers).has("content-type")).toBe(false);
 });
