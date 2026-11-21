@@ -71,6 +71,9 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
   mkdirSync(".cache/capturas-memoria", { recursive: true });
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
+    // Retomar enfoca el compositor y desplaza la página; normaliza solo la captura.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
     await page.screenshot({
       path: `.cache/capturas-memoria/tarjeta-${width}.png`,
       fullPage: true,

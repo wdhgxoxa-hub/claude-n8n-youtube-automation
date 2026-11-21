@@ -401,3 +401,57 @@ it("una tarjeta cancelada no se recuerda como decisión ejecutada", async () => 
   });
   expect(leerRecuerdos(ana)[0].resumen.decisiones).toEqual([]);
 });
+
+it("el turno completo sintetiza con el mismo proveedor antes de emitir fin", async () => {
+  // Ejercita la rama de producción sin CLI, red ni credenciales reales.
+  vi.stubEnv("COOPER_CHAT", "auto");
+  let respuestas = 0,
+    sintesis = 0,
+    final = false;
+  const resumen = {
+    ...memoriaVacia(),
+    videos: [
+      { titulo: "Lluvia en Lima", detalle: "Idea para conversar mañana" },
+    ],
+  };
+  const proveedor = new ChatSimulado((e) => {
+    if (e.herramientas.length) {
+      respuestas++;
+      return "Podemos trabajar con esa idea.";
+    }
+    sintesis++;
+    expect(e.mensajes[0].texto).toContain(
+      "Se me ocurre explorar la lluvia en Lima",
+    );
+    return JSON.stringify(resumen);
+  });
+  const respuesta = await responderChat(
+    ana,
+    {
+      texto: "Se me ocurre explorar la lluvia en Lima",
+      canalId: canal,
+      adjuntos: [],
+    },
+    (evento) => {
+      if (evento.tipo === "fin") {
+        final = true;
+        expect(leerRecuerdos(ana)[0].resumen).toEqual(resumen);
+      }
+    },
+    AbortSignal.timeout(1000),
+    proveedor,
+  );
+  expect(respuesta.texto).toContain("Podemos trabajar");
+  expect({ respuestas, sintesis, final }).toEqual({
+    respuestas: 1,
+    sintesis: 1,
+    final: true,
+  });
+  expect(
+    db()
+      .select()
+      .from(chatMemories)
+      .where(eq(chatMemories.ownerId, ana.id))
+      .get()?.method,
+  ).toBe("resumen");
+});
