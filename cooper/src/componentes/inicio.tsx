@@ -4,7 +4,14 @@ import { IlustracionViva } from "./ilustracion-viva";
 import { AnimatePresence, m as motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, useEffect, type FormEvent } from "react";
+import {
+  useRef,
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
 import { ArrowUp, Paperclip, X, AudioLines, ArrowUpRight } from "lucide-react";
 import {
   CooperCara,
@@ -19,9 +26,19 @@ import { Grabador, subir } from "./grabador";
 import { leerSSE } from "@/lib/stream";
 import type { EventoChat, TarjetaChat } from "@/servicios/chat/tipos";
 import { MemoriaChat } from "./memoria";
+function observarVistaMovil(notify: () => void) {
+  const media = window.matchMedia("(max-width: 767px)");
+  media.addEventListener("change", notify);
+  return () => media.removeEventListener("change", notify);
+}
 export function Inicio() {
   const { data, refresh } = useEspacio();
   const reduced = useMovimientoReducido();
+  const mobile = useSyncExternalStore(
+    observarVistaMovil,
+    () => window.matchMedia("(max-width: 767px)").matches,
+    () => false,
+  );
   const [tab, setTab] = useState(data.user.home),
     [text, setText] = useState(""),
     [busy, setBusy] = useState(false),
@@ -54,6 +71,29 @@ export function Inicio() {
   const fileInput = useRef<HTMLInputElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const chatTab = useRef<HTMLButtonElement>(null);
+  const factoryTab = useRef<HTMLButtonElement>(null);
+  const focusComposer = useRef(false);
+  useEffect(() => {
+    if (focusComposer.current && (!mobile || tab === "chat") && !busy) {
+      focusComposer.current = false;
+      textarea.current?.focus();
+    }
+  }, [tab, mobile, busy, text]);
+  function cambiarPestana(event: KeyboardEvent<HTMLButtonElement>) {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const next =
+      event.key === "Home"
+        ? "chat"
+        : event.key === "End"
+          ? "fabrica"
+          : tab === "chat"
+            ? "fabrica"
+            : "chat";
+    setTab(next);
+    (next === "chat" ? chatTab : factoryTab).current?.focus();
+  }
   const [historical] = useState(() => new Set(data.messages.map((m) => m.id)));
   useEffect(() => {
     const list = end.current?.parentElement;
@@ -61,7 +101,7 @@ export function Inicio() {
   }, [data.messages.length, partial, cards.length]);
   async function send(e: FormEvent) {
     e.preventDefault();
-    if (!text.trim() || sending.current) return;
+    if (!text.trim() || sending.current || busy || uploading) return;
     sending.current = true;
     setBusy(true);
     setError("");
@@ -92,7 +132,24 @@ export function Inicio() {
           AbortSignal.timeout(90000),
         ]),
       });
-      if (!response.ok) throw new Error((await response.json()).error);
+      if (!response.ok) {
+        const fallback =
+          "No pudimos confirmar la respuesta. Revisa las tarjetas pendientes antes de repetir el pedido.";
+        let failure: unknown;
+        try {
+          failure = await response.json();
+        } catch {
+          throw new Error(fallback);
+        }
+        throw new Error(
+          failure &&
+            typeof failure === "object" &&
+            "error" in failure &&
+            typeof failure.error === "string"
+            ? failure.error
+            : fallback,
+        );
+      }
       let complete = false;
       for await (const raw of leerSSE(response)) {
         const event = raw as EventoChat;
@@ -127,7 +184,11 @@ export function Inicio() {
       setError(
         controller.current?.signal.aborted
           ? "Cancelaste la espera. Revisa las tarjetas pendientes antes de repetir el pedido."
-          : (e as Error).message,
+          : e instanceof Error && e.name === "TimeoutError"
+            ? "La respuesta tardó demasiado. Revisa las tarjetas pendientes antes de repetir el pedido."
+            : e instanceof TypeError
+              ? "No pudimos conectar. Tu mensaje sigue aquí; revisa tu conexión antes de enviarlo otra vez."
+              : (e as Error).message,
       );
       setState("reposo");
       speech = "";
@@ -153,8 +214,10 @@ export function Inicio() {
       setPartial("");
       setCards([]);
       sending.current = false;
+      focusComposer.current =
+        document.activeElement === document.body ||
+        !!document.activeElement?.closest(".composer, .chat-confirmation");
       setBusy(false);
-      textarea.current?.focus();
     }
   }
   async function confirmar(id: string, aceptar: boolean) {
@@ -169,6 +232,9 @@ export function Inicio() {
       await refresh().catch(() =>
         setError("Recarga para ver el resultado de la acción."),
       );
+      focusComposer.current =
+        document.activeElement === document.body ||
+        !!document.activeElement?.closest(".chat-confirmation");
       setBusy(false);
     }
   }
@@ -228,21 +294,32 @@ export function Inicio() {
           setVideo("");
           setTab("chat");
           setText(texto);
-          textarea.current?.focus();
+          if (tab === "chat") textarea.current?.focus();
+          else focusComposer.current = true;
         }}
       />
       <div className="mobile-tabs" role="tablist" aria-label="Vista de inicio">
         <button
+          id="pestana-chat"
+          ref={chatTab}
           role="tab"
+          aria-controls="panel-chat"
           aria-selected={tab === "chat"}
+          tabIndex={tab === "chat" ? 0 : -1}
+          onKeyDown={cambiarPestana}
           onClick={() => setTab("chat")}
         >
           {tab === "chat" && <Indicador id="vista-inicio" />}
           Chat
         </button>
         <button
+          id="pestana-fabrica"
+          ref={factoryTab}
           role="tab"
+          aria-controls="panel-fabrica"
           aria-selected={tab === "fabrica"}
+          tabIndex={tab === "fabrica" ? 0 : -1}
+          onKeyDown={cambiarPestana}
           onClick={() => setTab("fabrica")}
         >
           {tab === "fabrica" && <Indicador id="vista-inicio" />}
@@ -250,17 +327,24 @@ export function Inicio() {
         </button>
       </div>
       <div className={`studio tab-${tab}`}>
-        <section className="chat-pane" aria-label="Chat con Cooper">
+        <section
+          id="panel-chat"
+          className="chat-pane"
+          role={mobile ? "tabpanel" : undefined}
+          aria-label={mobile ? undefined : "Chat con Cooper"}
+          aria-labelledby={mobile ? "pestana-chat" : undefined}
+          tabIndex={mobile ? 0 : undefined}
+        >
           <div className="chat-heading">
             <div className="cooper-badge">
               <CooperCara size={56} estado={state} texto={spoken} />
             </div>
             <div>
               <h2>Cooper</h2>
-              <p>
+              <p role="status" aria-atomic="true">
                 {state === "escuchando"
                   ? "Te escucho…"
-                  : state === "pensando"
+                  : busy
                     ? waiting
                       ? "Sigo preparando tu respuesta. Puedes cancelar la espera."
                       : "Preparando tu solicitud…"
@@ -275,6 +359,7 @@ export function Inicio() {
             tabIndex={0}
             aria-label="Conversación con Cooper"
             aria-live="polite"
+            aria-busy={busy}
           >
             {data.messages.length === 0 && !submitted && !partial ? (
               <div className="chat-welcome">
@@ -475,6 +560,7 @@ export function Inicio() {
                 placeholder="Cuéntame tu idea…"
                 maxLength={6000}
                 rows={2}
+                aria-describedby="ayuda-mensaje"
                 onKeyDown={(e) => {
                   if (
                     e.key === "Enter" &&
@@ -638,15 +724,19 @@ export function Inicio() {
                 )}
               </div>
             </form>
-            <p className="composer-caption">
+            <p className="composer-caption" role="status">
               {data.chat.simulado ? "Chat de demostración. " : ""}
               {uploading
                 ? "Guardando archivo…"
                 : "Cooper propone. Tú tienes la última palabra."}
             </p>
+            <p className="sr-only" id="ayuda-mensaje">
+              Pulsa Entrar para enviar o Mayús y Entrar para escribir otra
+              línea.
+            </p>
           </div>
         </section>
-        <FabricaVista />
+        <FabricaVista tabPanel={mobile} />
       </div>
     </>
   );

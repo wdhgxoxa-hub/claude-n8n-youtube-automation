@@ -48,16 +48,39 @@ export async function api<T = unknown>(
   data?: unknown,
   method = "POST",
 ): Promise<T> {
-  const response = await fetch(`/api/${path}`, {
-    method,
-    signal: AbortSignal.timeout(15000),
-    headers:
-      data === undefined ? undefined : { "Content-Type": "application/json" },
-    body: data === undefined ? undefined : JSON.stringify(data),
-  });
-  const value = await response.json();
+  let response: Response;
+  try {
+    response = await fetch(`/api/${path}`, {
+      method,
+      signal: AbortSignal.timeout(15000),
+      headers:
+        data === undefined ? undefined : { "Content-Type": "application/json" },
+      body: data === undefined ? undefined : JSON.stringify(data),
+    });
+  } catch (error) {
+    throw new Error(
+      error instanceof Error && error.name === "TimeoutError"
+        ? "No recibimos respuesta a tiempo. Revisa si el cambio se guardó antes de intentarlo otra vez."
+        : "No pudimos conectar. Comprueba tu conexión y revisa si el cambio se guardó.",
+    );
+  }
+  let value: unknown;
+  try {
+    value = await response.json();
+  } catch {
+    throw new Error(
+      "No pudimos confirmar el resultado. Revisa si el cambio se guardó.",
+    );
+  }
   if (!response.ok)
-    throw new Error(value.error ?? "No se pudo completar la solicitud.");
+    throw new Error(
+      value &&
+        typeof value === "object" &&
+        "error" in value &&
+        typeof value.error === "string"
+        ? value.error
+        : "No se pudo completar la solicitud.",
+    );
   return value as T;
 }
 const Context = createContext<{
@@ -133,7 +156,9 @@ export function Espacio({
     () => false,
   );
   const menuButton = useRef<HTMLButtonElement>(null);
-  const sidebar = useRef<HTMLElement>(null);
+  const sidebar = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLElement>(null);
+  const previousPath = useRef(path);
   const refresh = useCallback(async () => {
     receive(await api<Estado>("estado", undefined, "GET"));
   }, [receive]);
@@ -249,6 +274,11 @@ export function Espacio({
       opener?.focus();
     };
   }, [menu]);
+  useEffect(() => {
+    if (previousPath.current === path) return;
+    previousPath.current = path;
+    content.current?.focus({ preventScroll: true });
+  }, [path]);
   const pending = data.videos.filter(
     (v) => v.productionState === "activa" && esperaAprobacion(v.stage),
   ).length;
@@ -263,16 +293,20 @@ export function Espacio({
               className="workspace"
               data-motion={isPaused || hidden || reduced ? "paused" : "playing"}
             >
-              <a className="skip" href="#contenido">
+              <a className="skip" href="#contenido" inert={menu}>
                 Saltar al contenido
               </a>
-              <aside
+              <div
                 ref={sidebar}
-                role={menu ? "dialog" : undefined}
+                role={menu ? "dialog" : "complementary"}
                 aria-modal={menu || undefined}
                 aria-label="Navegación del estudio"
                 id="navegacion"
                 className={`sidebar ${menu ? "is-open" : ""}`}
+                onClick={(event) => {
+                  if ((event.target as HTMLElement).closest("a[href]"))
+                    setMenu(false);
+                }}
               >
                 <div className="sidebar-content">
                   <Link href="/" className="brand" aria-label="Cooper, inicio">
@@ -405,7 +439,7 @@ export function Espacio({
                     </div>
                   </div>
                 </div>
-              </aside>
+              </div>
               {menu && (
                 <button
                   className="drawer-backdrop"
@@ -428,8 +462,12 @@ export function Espacio({
                   </button>
                   <span>Estudio Cooper</span>
                   <div className="topbar-right">
-                    <span className={`connection ${connected ? "online" : ""}`}>
-                      <i />
+                    <span
+                      className={`connection ${connected ? "online" : ""}`}
+                      role="status"
+                      aria-atomic="true"
+                    >
+                      <i aria-hidden="true" />
                       {connected ? "En vivo" : "Reconectando"}
                     </span>
                     <button
@@ -444,7 +482,7 @@ export function Espacio({
                     </span>
                   </div>
                 </header>
-                <main id="contenido" tabIndex={-1}>
+                <main ref={content} id="contenido" tabIndex={-1}>
                   <div key={path} className="route-choreography">
                     {children}
                   </div>
@@ -522,18 +560,20 @@ export function Empty({
   );
 }
 export function Notice({
+  id,
   error,
   message,
 }: {
+  id?: string;
   error?: string;
   message?: string;
 }) {
   return error ? (
-    <p className="notice error notice-enter" role="alert">
+    <p id={id} className="notice error notice-enter" role="alert">
       {error}
     </p>
   ) : message ? (
-    <p className="notice notice-enter" role="status">
+    <p id={id} className="notice notice-enter" role="status">
       {message}
     </p>
   ) : null;

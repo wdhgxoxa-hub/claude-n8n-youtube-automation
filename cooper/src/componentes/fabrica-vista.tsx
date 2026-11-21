@@ -150,7 +150,7 @@ export function VideoMini({
     </Link>
   );
 }
-export function FabricaVista() {
+export function FabricaVista({ tabPanel = false }: { tabPanel?: boolean }) {
   const { data, connected } = useEspacio();
   const [selected, setSelected] = useState("");
   const reduced = useMovimientoReducido();
@@ -163,7 +163,14 @@ export function FabricaVista() {
   );
   const completed = active?.stage === 11 ? 12 : (active?.stage ?? 0);
   return (
-    <section className="factory-pane" aria-label="Fábrica en vivo">
+    <section
+      id="panel-fabrica"
+      className="factory-pane"
+      role={tabPanel ? "tabpanel" : undefined}
+      aria-label={tabPanel ? undefined : "Fábrica en vivo"}
+      aria-labelledby={tabPanel ? "pestana-fabrica" : undefined}
+      tabIndex={tabPanel ? 0 : undefined}
+    >
       <div className="section-top">
         <div>
           <h2>La fábrica</h2>

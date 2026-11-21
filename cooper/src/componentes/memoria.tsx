@@ -1,5 +1,5 @@
 "use client";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Recuerdo } from "@/servicios/chat/memoria-tipos";
 import { api, Notice } from "./espacio";
 
@@ -54,6 +54,17 @@ export function MemoriaChat({
   const [borrando, setBorrando] = useState(false);
   const [error, setError] = useState("");
   const [aviso, setAviso] = useState("");
+  const borrarButton = useRef<HTMLButtonElement>(null);
+  const conservarButton = useRef<HTMLButtonElement>(null);
+  const restoreFocus = useRef(false);
+  useEffect(() => {
+    if (borrando) return;
+    if (confirmar) conservarButton.current?.focus();
+    else if (restoreFocus.current) {
+      restoreFocus.current = false;
+      borrarButton.current?.focus();
+    }
+  }, [confirmar, borrando]);
   const ultimo = recuerdos.find(
     (r) => r.resumen.pendientes.length || r.resumen.videos.length,
   );
@@ -107,7 +118,13 @@ export function MemoriaChat({
             className="button secondary small"
             aria-expanded={abierta}
             aria-controls={id}
-            onClick={() => setAbierta(!abierta)}
+            onClick={() => {
+              setAbierta(!abierta);
+              if (abierta) {
+                restoreFocus.current = false;
+                setConfirmar(false);
+              }
+            }}
           >
             {abierta ? "Ocultar recuerdos" : "Ver lo recordado"}
           </button>
@@ -119,13 +136,24 @@ export function MemoriaChat({
           al conversar.
         </p>
         <Recuerdos recuerdos={recuerdos} />
-        <p className="helper">
+        <p className="helper" id={`${id}-borrado`}>
           Al borrarlos, Cooper dejará de usar también tus mensajes anteriores
           como contexto. El historial visible, los canales y los videos se
           conservan.
         </p>
         {confirmar ? (
-          <div className="button-row">
+          <div
+            className="button-row"
+            role="group"
+            aria-label="Confirmación de borrado"
+            aria-describedby={`${id}-borrado`}
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && !borrando) {
+                event.preventDefault();
+                setConfirmar(false);
+              }
+            }}
+          >
             <button
               className="button danger small"
               disabled={busy || borrando}
@@ -134,6 +162,7 @@ export function MemoriaChat({
               Confirmar borrado de recuerdos
             </button>
             <button
+              ref={conservarButton}
               className="button secondary small"
               disabled={borrando}
               onClick={() => setConfirmar(false)}
@@ -143,9 +172,11 @@ export function MemoriaChat({
           </div>
         ) : (
           <button
+            ref={borrarButton}
             className="button secondary small"
             disabled={busy || borrando}
             onClick={() => {
+              restoreFocus.current = true;
               setConfirmar(true);
               setAviso("");
             }}
@@ -155,6 +186,9 @@ export function MemoriaChat({
         )}
       </div>
       <Notice error={error} />
+      <p className="sr-only" role="status">
+        {borrando ? "Borrando recuerdos…" : ""}
+      </p>
       {aviso && (
         <p className="helper" role="status">
           {aviso}
@@ -202,8 +236,10 @@ export function MemoriaAdmin({
       <div>
         <button
           className="button secondary"
-          disabled={!persona || busy}
+          disabled={!persona}
+          aria-disabled={busy || undefined}
           onClick={async () => {
+            if (busy) return;
             setBusy(true);
             setError("");
             setRecuerdos(null);
@@ -226,6 +262,15 @@ export function MemoriaAdmin({
         </button>
       </div>
       <Notice error={error} />
+      <p className="sr-only" role="status">
+        {busy
+          ? "Consultando recuerdos…"
+          : recuerdos
+            ? recuerdos.length
+              ? "Recuerdos cargados. Revisa el resultado a continuación."
+              : "Esta persona todavía no tiene recuerdos guardados."
+            : ""}
+      </p>
       {recuerdos && <Recuerdos recuerdos={recuerdos} />}
     </section>
   );
