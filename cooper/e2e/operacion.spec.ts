@@ -90,7 +90,7 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
   await page.route("**/api/operacion", (route) => route.fulfill({ json: op }));
   await page.reload();
   await expect(
-    page.getByRole("link", { name: "Competidor ficticio 1" }),
+    page.getByRole("link", { name: "Competidor ficticio 1", exact: true }),
   ).toBeVisible();
   await expect(page.getByText("600 vistas", { exact: false })).toBeVisible();
   await expect(
