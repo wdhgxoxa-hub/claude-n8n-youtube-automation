@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 17:36 (Lima).
+Última actualización: 2026-11-21 18:21 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — WhatsApp con chat durable implementado:** `3ae1c59` en rama propia `total-whatsapp-listo`. Webhook firmado, texto al chat privado con respuesta corta, aprobación actual de plantillas, ventana de 24 h, pausa y reintentos seguros. Migración aditiva `0019_whatsapp_chat`; puerta completa sobre archivo limpio: **524 unitarias, 103 E2E y 235 flujos**, cero errores, advertencias, omisiones y reintentos. Implementado y probado localmente. No integrado ni desplegado por este frente. [Informe](informes/total-whatsapp-listo.md).
 
 - **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 
@@ -99,6 +101,8 @@
 
 ## En curso
 
+- `total-whatsapp-listo`: puerta local completa aprobada y entrega lista para revisión. Integración y despliegue a cargo del responsable de cierre, conservando la pausa real hasta la configuración/aceptación de Meta; sin cambios en el VPS desde este frente.
+
 - Integración `total-integrador`: incorpora frentes cerrados desde `a69e374`, preservando los worktrees activos. Verificación y despliegue autorizados en curso; el cierre distinguirá las pruebas nuevas de evidencias históricas.
 
 - **H19, condición de memoria real comprobada:** Cooper VPS tiene 1 GiB de RAM y el host no tiene swap, aunque el cgroup permite hasta 1 GiB de swap si existiera. El candidato conserva esos límites. Un ensayo que usó swap no acredita esa condición; competencia repetirá sin swap. Consulta read-only, sin cambiar servicios, límites o imagen. [Recibo](informes/total-memoria-vps.md).
@@ -113,7 +117,7 @@
 
 ## Pendientes de Walter
 
-1. Resolver pago de Meta, configurar App Secret/firma y plantillas WhatsApp con Claude; mantener mensajería real pausada hasta aceptar la configuración.
+1. Resolver pago de Meta, entregar `WHATSAPP_APP_SECRET` por canal privado y configurar el webhook definitivo con `messages`; revisar aprobación de plantillas y autorizar un ensayo real después del despliegue aceptado. [Tres pasos exactos](whatsapp-activacion-meta.md). Mantener mensajería real pausada hasta aceptar la configuración; no repetir el alta ya registrada.
 2. Probar Google, aislamiento, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya están resueltos; no repetir el acceso root antiguo.
 3. Revisar con Claude las esperas 400/540, la asociación de la routine externa y las siete entradas históricas que siguen cerradas. Tres entradas seguras ya se reabrieron con pruebas. El guion del Short `v-mwp2bjgj-7fvq` sigue pendiente, sin reanudación ni aprobación en esta misión.
 4. Aceptar memoria/chat desde su sesión: 37/37 conversaciones ficticias con plan real no garantizan todas las respuestas futuras. La síntesis conserva su límite de doce segundos.
