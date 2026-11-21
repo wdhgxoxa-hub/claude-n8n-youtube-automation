@@ -34,7 +34,11 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
   await expect(
     page.getByRole("heading", { name: "Competencia e identidad" }),
   ).toBeVisible();
-  await expect(page.getByText("Por investigar", { exact: true })).toBeVisible();
+  await expect(
+    page
+      .getByRole("region", { name: "Competencia de Ciencia", exact: true })
+      .getByText("Por investigar", { exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Cuentas con el mismo nombre" }),
   ).toBeVisible();

@@ -83,14 +83,17 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
     page.getByText("Pieza lista para la revisión de Walter.", { exact: true }),
   ).toBeVisible();
   await page.getByText("Vista previa de la pieza", { exact: true }).click();
-  const video = page.locator(".marca-pieza video");
+  const video = page.locator(".marca-pieza video:visible");
+  await expect(video).toHaveCount(1);
+  await video.evaluate((v: HTMLVideoElement) => {
+    v.muted = true;
+  });
+  // La reproducción comienza con una acción de teclado; preload="none" evita
+  // descargar el MP4 antes de que el usuario decida reproducirlo.
+  await video.press("Space");
   await expect
     .poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState))
     .toBeGreaterThanOrEqual(2);
-  await video.evaluate(async (v: HTMLVideoElement) => {
-    v.muted = true;
-    await v.play();
-  });
   await expect
     .poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime))
     .toBeGreaterThan(0);
