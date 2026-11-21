@@ -1,0 +1,58 @@
+{
+  "fecha_lima": "2026-11-21 12:10",
+  "rama": "total-m10",
+  "base": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "codigo_probado": "fc3be39e5b8435d3fd71425846b5830f79c0128e",
+  "node": "24.22.3",
+  "npm": "12.2.2",
+  "next": "16.4.6",
+  "puerta": {
+    "comando": "cd cooper && npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
+    "rc": 0,
+    "unitarias": 293,
+    "e2e": 45,
+    "errores": 0,
+    "advertencias": 0,
+    "omitidas": 0
+  },
+  "flujos": {
+    "comando": "node --test tests/flujos_v2.test.cjs",
+    "rc": 0,
+    "pruebas": 147,
+    "omitidas": 0
+  },
+  "visual": {
+    "pantallas": [
+      "publicados",
+      "aprendizaje"
+    ],
+    "anchos": [
+      390,
+      1440
+    ],
+    "temas": [
+      "claro",
+      "oscuro"
+    ],
+    "capturas": 8,
+    "axe_violaciones": 0,
+    "desbordamientos": 0
+  },
+  "integrado": false,
+  "desplegado": false,
+  "archivos_sha256": {
+    "aprendizaje-1440-claro.png": "e1d82b6aa0cf429b758a9f1be3e06bfc9e4721ccf05439980ffb8d2848c49846",
+    "duplicados-rojo.log": "454ea786b757915c59512c50507a1e8108669a51d1564c92dc19f52c8ac06a48",
+    "duplicados-verde.log": "646f99a0e97f9c18d3b37b511ff7fe9e9d13110f4b1585fa7e430563bbe01c96",
+    "flujos.log": "bf004f40d7bb7150c21e4bcc05e248e0345bce87396daf3303c5125e9764fcb6",
+    "publicados-390-oscuro.png": "dadb2ef8559fe050eb3641783de615d3854e55062fc5b2e5c0016e1fc02d1d70",
+    "puerta.log": "af5b712414d494d7f0204d8812922d7275b25c66190932ef2fa37d44bac3d317"
+  },
+  "normalizacion_logs": "Solo espacios al final, retornos de terminal y líneas vacías al final; ningún mensaje filtrado.",
+  "logs_originales_sha256": {
+    "duplicados-rojo.log": "ee134e2e1a96f12778b919e255eb8447c8f4463e74a0c32aa6c8d99dbb8cd9ea",
+    "duplicados-verde.log": "83e56f0d268c426b8dd70b40a6e0d26b405b4cc70e862d4a3d854a4206302da6",
+    "flujos.log": "bf004f40d7bb7150c21e4bcc05e248e0345bce87396daf3303c5125e9764fcb6",
+    "puerta.log": "f5446a41852bb378ddcb0f9123273ab5faed2e4e17d0dbd225cd9aa4d09b3cf8"
+  }
+}

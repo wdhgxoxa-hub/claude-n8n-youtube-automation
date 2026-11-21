@@ -1,0 +1,10 @@
+npm notice run cooper@0.1.0 npx
+npm notice run 'vitest' run tests/resultados.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/total-m10/cooper
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  11:59:03
+   Duration  936ms (transform 364ms, setup 26ms, import 702ms, tests 118ms, environment 0ms)
