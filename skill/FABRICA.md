@@ -34,7 +34,7 @@ El aprendizaje programado de M7 usa el plan de la PC de forma síncrona y persis
 ## Entrada común
 
 ```
-{ "contrato": "fabrica-v2", "modo": "...", "job_id": "...", "video_id": "...", "canal_id": "...", "datos": { ... } }
+{ "contrato": "fabrica-v2", "modo": "...", "job_id": "...", "retorno_url": "https://flujos.cooperestudio.com/webhook/video-factory/resultado", "video_id": "...", "canal_id": "...", "datos": { ... } }
 ```
 
 ## Modos

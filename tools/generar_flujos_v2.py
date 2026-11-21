@@ -111,7 +111,7 @@ W = {  # flujos
     'yt': 'FabYouTube000001', 'vidiq': 'FabVidiq00000001', 'deriv': 'FabDerivados0001', 'redes': 'FabRedes00000001',
     'errores': 'FabErrores000001', 'pendientes': 'FabPendientes001', 'chat': 'FabChatWeb000001', 'confirmar': 'FabConfirmar0001', 'reenviar': 'FabReenviar00001', 'radar': 'FabRadar00000001',
 }
-BASE = 'https://joining-jeeringly-primp.ngrok-free.dev'
+BASE = 'https://flujos.cooperestudio.com'
 ROUTINE = 'https://api.anthropic.com/v1/claude_code/routines/trig_01RyeTY2hJtwhs5PCFWXxZTA/fire'
 
 
@@ -400,6 +400,7 @@ const modos = ['investigar_nichos','adoptar_cuenta','crear_biblia','guion','corr
 if (!modos.includes(pedido.modo)) throw new Error('Modo desconocido: ' + pedido.modo);
 const job_id = pedido.modo + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
 const payload = { contrato: 'fabrica-v2', modo: pedido.modo, job_id,
+  retorno_url: 'https://flujos.cooperestudio.com/webhook/video-factory/resultado',
   video_id: pedido.video_id || '', canal_id: pedido.canal_id || '', datos: pedido.datos || {} };
 return [{ json: { job_id, payload, permitido: aj.allowClaude === true, routineUrl: aj.routineUrl,
   fila: { job_id, video_id: payload.video_id, canal_id: payload.canal_id, modo: pedido.modo,

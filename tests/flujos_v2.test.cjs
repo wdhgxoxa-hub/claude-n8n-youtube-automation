@@ -2136,3 +2136,9 @@ test('Cooper: el gasto cruza las 19 UTC sin cambiar el día de Lima', () => {
   assert.strictEqual(out.gastos[0].dia,5);
   assert.strictEqual(out.gastos[0].semana,105);
 });
+
+test('Claude: el sobre lleva retorno estable fuera de los datos no confiables', () => {
+ const p=run(codeOf(CL,'Preparar trabajo'),{nodes:{Inicio:{modo:'guion',datos:{retorno_url:'https://ajeno.test/'}},'Leer ajustes':{allowClaude:true}}})[0].json.payload;
+ assert.strictEqual(p.retorno_url,'https://flujos.cooperestudio.com/webhook/video-factory/resultado');
+ assert.strictEqual(aj.baseUrl,'https://flujos.cooperestudio.com');
+});
