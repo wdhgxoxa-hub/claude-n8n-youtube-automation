@@ -1,0 +1,11 @@
+test_exige_toda_la_bateria_sin_reintentos_ni_omisiones (test_verificar_rondas.Informes.test_exige_toda_la_bateria_sin_reintentos_ni_omisiones) ... ok
+test_matriz_no_relaja_los_umbrales_y_rechaza_nan (test_verificar_rondas.Informes.test_matriz_no_relaja_los_umbrales_y_rechaza_nan) ... ok
+test_ronda_fallida_no_genera_indice_y_no_borra_anteriores (test_verificar_rondas.Informes.test_ronda_fallida_no_genera_indice_y_no_borra_anteriores) ... ok
+test_sentinel_no_oculta_bajo_fps_ni_acepta_caos_vacio (test_verificar_rondas.Informes.test_sentinel_no_oculta_bajo_fps_ni_acepta_caos_vacio) ... ok
+test_probe_y_decodificacion_completa_webm_y_mp4 (test_verificar_rondas.Videos.test_probe_y_decodificacion_completa_webm_y_mp4) ... ok
+test_rechaza_video_truncado_o_resolucion_incorrecta (test_verificar_rondas.Videos.test_rechaza_video_truncado_o_resolucion_incorrecta) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.324s
+
+OK
