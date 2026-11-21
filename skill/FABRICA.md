@@ -154,6 +154,12 @@ Compara la imagen con sus referencias y con el texto narrado. `resultado`: `{ "a
 
 ### `aprender`
 
-`datos`: `canal_id`, `videos` (cada uno con su retención por tramo y su shotlist) y `redes` (cada envío a TikTok, Instagram, Facebook o YouTube con sus métricas a los 2 o 7 días: vistas, likes, comentarios, compartidos y guardados).
+`datos`: `canal_id`, `evidencias` por video y red: hito `24h`, `72h` o `7d`, fecha real, demora respecto del hito, vistas, retención, me gusta, comentarios y seguidores ganados cuando la plataforma los entrega. Un dato nulo no equivale a cero. YouTube atribuye los suscriptores al video solo desde su página de reproducción. No uses seguidores del perfil como crecimiento causado por un video.
 
-Busca caídas de retención (fuga del gancho, acantilados y deslizamiento, según `yt-retencion`) y crúzalas con planos, frases y la fórmula del gancho. En `redes`, compara qué cortes, textos y redes rinden mejor. Solo propone una lección si el patrón aparece en 3 o más videos. `resultado`: `{ "lecciones": [ { "regla": "", "evidencia": "", "nivel": "H" } ], "resumen": "" }`.
+Cada evidencia incluye `creativo`: guion, planos, título y descripción de miniatura existentes, más curva de retención. Cruza caídas con frases/planos y la promesa del título/miniatura. Si falta una pieza, dilo: no inventes una explicación causal. La causa siempre es una hipótesis; un patrón requiere tres videos distintos. Cada lección necesita una corrección concreta a probar. No afirmes que ya se corrigió o mejoró sin un guion posterior y sus métricas.
+
+`resultado`: `{ "resumen": "", "lecciones": [{ "regla": "", "causa": "", "correccion": "", "origenes": [{ "video_id": "", "red": "youtube", "ventana": "24h", "metrica": "retencion" }] }] }`. Usa solo referencias recibidas: el servidor toma el valor medido de la evidencia persistida, nunca una cifra propuesta por el modelo. Sin evidencia suficiente devuelve `lecciones: []` con el motivo.
+
+### Lectura obligatoria de aprendizaje al escribir
+
+Cada `guion` recibe `datos.aprendizaje.lecciones` y `biblia.lecciones_automaticas` del mismo canal. Lee todas; distingue hipótesis de patrones. En `resultado.aprendizajes_aplicados`, devuelve una entrada por ID recibido: `{ "id": "", "cambio": "qué frase/gancho/plano cambiaste", "motivo_no_aplica": "si no encaja, por qué" }`. El retorno rechaza un guion que omita una lección requerida. No marques como aplicada una lección que solo mencionas; explica el cambio concreto o su exclusión. Las reglas humanas de la biblia conservan precedencia.

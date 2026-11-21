@@ -1610,8 +1610,8 @@
     },
     {
       "id": "FabAprendizaje01",
-      "nombre": "M7 · Aprendizaje (2 y 7 días)",
-      "sha256": "fc1e55350b3269633b6557ec440b7da522f1d43c7a642d3ef34958f583eb6f50",
+      "nombre": "M7 · Aprendizaje (24 h, 72 h y 7 días)",
+      "sha256": "63d08a21fe4e44ea699451477c1027ccb5c2f90443de0d2e8f60896162122321",
       "pantalla": "/aprendizaje",
       "accion": "Retención, lecciones e incidencias; /publicados para métricas",
       "estado": "completo",
@@ -1724,7 +1724,7 @@
               "tipo": "main",
               "salida": 1,
               "destinos": [
-                "Pedir lecciones"
+                "Trabajos para aprender"
               ]
             }
           ],
@@ -1796,15 +1796,14 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Retención",
-                "Cooper · métricas YouTube"
+                "Retención"
               ]
             },
             {
               "tipo": "main",
               "salida": 1,
               "destinos": [
-                "Pedir lecciones"
+                "Trabajos para aprender"
               ]
             }
           ],
@@ -1822,8 +1821,8 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Pedir lecciones",
-                "Retención media"
+                "Retención media",
+                "Reponer pedidos de métricas"
               ]
             }
           ],
@@ -1902,7 +1901,6 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Videos publicados",
                 "Cooper · historial de redes"
               ]
             }
@@ -1990,7 +1988,15 @@
           "decision": false,
           "tabla": "publicaciones",
           "operacion_tabla": "update",
-          "salidas": [],
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Videos publicados"
+              ]
+            }
+          ],
           "pantalla": "/aprendizaje",
           "estado": "completo"
         },
@@ -2036,7 +2042,87 @@
           "decision": false,
           "tabla": "videos",
           "operacion_tabla": "update",
-          "salidas": [],
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Trabajos para aprender"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Reponer pedidos de métricas",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Cooper · métricas YouTube"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Trabajos para aprender",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Videos para aprender"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Videos para aprender",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "videos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Planos para aprender"
+              ]
+            }
+          ],
+          "pantalla": "/aprendizaje",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Planos para aprender",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "planos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Pedir lecciones"
+              ]
+            }
+          ],
           "pantalla": "/aprendizaje",
           "estado": "completo"
         }
@@ -3395,7 +3481,7 @@
     {
       "id": "FabCooperAPI0001",
       "nombre": "FX · API de Cooper",
-      "sha256": "71f35e2a1d084e196b01184be8755aff84dc5a5f81f862986ac16396c7961ca4",
+      "sha256": "a8005c5f0c5ae665033f12497be963e82bb977525cc0ba24aff1f17b58e0e7ef",
       "pantalla": "/radar",
       "accion": "Puente firmado de todas las pantallas; autorización y recibos idempotentes",
       "estado": "completo",
@@ -5418,7 +5504,7 @@
     {
       "id": "FabErrores000001",
       "nombre": "F · Vigilante de errores",
-      "sha256": "0395a78eb5997d11ba0e93a477791a8823222a36f6dd33d03b891f59af281d38",
+      "sha256": "9df0304f85ab2c6553261fd1e24c54a8725872bbc9e7c79faf686cd0b82f152f",
       "pantalla": "/incidencias",
       "accion": "Causa sencilla, siguiente acción y reintento seguro; fallos globales solo admin",
       "estado": "completo",
@@ -5771,7 +5857,7 @@
     {
       "id": "FabLlamarClaude1",
       "nombre": "FX · Llamar a Claude",
-      "sha256": "e4930fc754eb865d59a0711ac0dd8a2b324411a77b621f50d9236c08cd25c605",
+      "sha256": "32e939f681be15c08fe20355243566a79126fee6e11c83889113993eac1246b2",
       "pantalla": "/videos/[id]",
       "accion": "Investigación/guion/storyboard y errores; modelo e interruptor administrativos",
       "estado": "completo",
@@ -5805,7 +5891,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Preparar trabajo"
+                "Aprendizajes al escribir"
               ]
             }
           ],
@@ -6203,6 +6289,24 @@
           ],
           "pantalla": "/videos/[id]",
           "estado": "completo"
+        },
+        {
+          "nombre": "Aprendizajes al escribir",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Preparar trabajo"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
         }
       ],
       "tipos_registrados": [
@@ -6549,7 +6653,7 @@
     {
       "id": "FabOrquestador01",
       "nombre": "F · Orquestador",
-      "sha256": "74f53fbc2556f985bbcb354a123b9edae3191cffa0b6336366c92837d1a96274",
+      "sha256": "ff60575183e09b1e5cb2401533b9a58cd6cc81b5b8ebe1b081e99171a14a42d1",
       "pantalla": "/videos/[id]",
       "accion": "Canales, creación, corrección, decisiones, programación y eliminación en reposo",
       "estado": "completo",
@@ -7425,7 +7529,7 @@
               "tipo": "main",
               "salida": 0,
               "destinos": [
-                "Nuevo video"
+                "Lecciones antes del guion"
               ]
             }
           ],
@@ -12740,6 +12844,24 @@
               "salida": 0,
               "destinos": [
                 "Cambio final a corrección"
+              ]
+            }
+          ],
+          "pantalla": "/videos/[id]",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Lecciones antes del guion",
+          "tipo": "n8n-nodes-base.dataTable",
+          "decision": false,
+          "tabla": "trabajos",
+          "operacion_tabla": "get",
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Nuevo video"
               ]
             }
           ],
@@ -19970,7 +20092,7 @@
     {
       "id": "FabRetornoClaud1",
       "nombre": "F · Retorno de Claude",
-      "sha256": "9703c0ad9b040d89a68bad0d6b29f4484392892c5ac41252ef36420bb113c1bb",
+      "sha256": "c8faec5a500a6f5df0fc5dee2c5d78a2172a15850fb7d99c9d7e842d9d056014",
       "pantalla": "/videos/[id]",
       "accion": "Resultado validado avanza la etapa; fallos en /incidencias",
       "estado": "completo",

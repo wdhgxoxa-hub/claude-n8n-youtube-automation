@@ -52,8 +52,8 @@ const toca=$input.all().map(i=>i.json).filter(p=>p.request_id && p.publicado_en 
 return toca.length?toca.map(p=>({json:p})):[{json:{nada:true}}];
 """
 code(f,'Cooper · historial de redes',OBS_JS+r"""
-const pedidos=$('Toca medir en redes').all().map(i=>i.json);
-return $input.all().map((i,k)=>({json:{request_id:pedidos[k].request_id,metricas_historial:historialRedesCooper(pedidos[k],i.json,Date.now()),metricas_consultadas_en:new Date().toISOString()}}));
+const pedidos=$('Toca medir en redes').all().map(i=>i.json),ahora=Date.now();
+return $input.all().map((i,k)=>({json:{request_id:pedidos[k].request_id,metricas_historial:historialRedesCooper(pedidos[k],i.json,ahora),metricas_consultadas_en:new Date(ahora).toISOString()}}));
 """)
 dt_update(f,'Cooper · guardar métricas de redes','publicaciones','request_id','={{ $json.request_id }}')
 f.chain('Métricas en redes','Cooper · historial de redes','Cooper · guardar métricas de redes')

@@ -12,16 +12,24 @@ function curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({se
 function medicionCooper(value) {
   const fecha = fechaCooper(value.fecha); if (!fecha) return null;
   const r = numeroCooper(value.retencion);
-  return { fecha, curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };
+  return { fecha, seguidoresGanados:numeroCooper(value.seguidoresGanados), ventana:['24h','72h','7d'].includes(value.ventana)?value.ventana:null, demoraHoras:numeroCooper(value.demora_horas), curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };
 }
 function leccionesCooper(canal, trabajos) {
-  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && t.estado === 'ok').slice(-100).flatMap(t => {
+  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).slice(-100).flatMap(t => {
     const raw = jsonCooper(t.resultado, {}), r = raw.resultado || raw;
     const fecha = fechaCooper(t.updatedAt || t.createdAt); if (!fecha) return [];
+    if (r.evidencia_version === 1) return (r.lecciones || []).slice(0,30).map(l => {
+      const aplicaciones = trabajos.filter(g=>g.canal_id===canal.canal_id && ['guion','corregir_guion'].includes(g.modo) && ['ok','listo'].includes(g.estado)).flatMap(g=>{
+        const raw=jsonCooper(g.resultado,{}), a=(raw.resultado?.aprendizajes_aplicados || []).find(a=>a.id===l.id && a.cambio);
+        return a?[{videoId:String(g.video_id),cambio:textoCooper(a.cambio,1500)}]:[];
+      }).slice(-20);
+      return { id:String(l.id),fecha,resumen:textoCooper(l.regla,3000),ganchos:[],temas:[],causa:textoCooper(l.causa),correccion:textoCooper(l.correccion),nivel:l.nivel==='patron'?'patron':'hipotesis',aplicaciones,
+        origenes:(l.origenes || []).slice(0,20).map(o=>({videoId:String(o.video_id),red:String(o.red).slice(0,40),ventana:o.ventana,fecha:fechaCooper(o.fecha),metrica:o.metrica,valor:numeroCooper(o.valor),demoraHoras:numeroCooper(o.demora_horas) || 0})).filter(o=>o.fecha && o.valor!==null) };
+    });
     const lista = x => (Array.isArray(x) ? x : []).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);
     const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);
     return resumen ? [{id:String(t.job_id),fecha,resumen,ganchos:lista(r.ganchos_que_funcionan || r.ganchos).concat(lista(r.lecciones).filter(x=>/gancho|apertura/i.test(x))).slice(0,20),temas:lista(r.temas_que_funcionan || r.temas).concat(lista(r.lecciones).filter(x=>/tema/i.test(x))).slice(0,20)}] : [];
-  });
+  }).slice(-100);
 }
 function observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {
   const publicadas = publicaciones.filter(p => p.video_id === v.video_id).flatMap(p => {
@@ -38,7 +46,7 @@ function observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {
   const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);
   for (const p of publicadas) if (p.red==='youtube') {
     const porDia=new Map(ytHist.map(m=>[m.fecha.slice(0,10),m]));
-    for (const m of p.historial) { const otro=porDia.get(m.fecha.slice(0,10)); porDia.set(m.fecha.slice(0,10),{...m,retencion:m.retencion ?? otro?.retencion ?? null}); }
+    for (const m of p.historial) { const otro=porDia.get(m.fecha.slice(0,10)); porDia.set(m.fecha.slice(0,10),{...m,retencion:m.retencion ?? otro?.retencion ?? null,seguidoresGanados:m.seguidoresGanados ?? otro?.seguidoresGanados ?? null}); }
     p.historial=[...porDia.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90);
   }
   // Los eventos de resolución explicitan qué revisión fue superada. Avanzar de etapa no basta.
@@ -68,7 +76,8 @@ function historialRedesCooper(p, respuesta, ahora) {
     const m=r.post_metrics;
     // No usar snapshots del perfil como si fueran métricas de un video.
     const curva=curvaCooper(m.retention);
-    const dato={fecha,vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};
+    const horas=(ahora-Date.parse(p.publicado_en || ''))/3600000,ventana=horas>=168?'7d':horas>=72?'72h':horas>=24?'24h':null;
+    const dato={fecha,ventana,demora_horas:ventana?Math.max(0,Math.round(horas-(ventana==='7d'?168:ventana==='72h'?72:24))):null,seguidoresGanados:numeroCooper(m.new_followers),vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};
     const prev=Array.isArray(historial[red])?historial[red]:[];
     historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10)),dato].slice(-90);
   }
