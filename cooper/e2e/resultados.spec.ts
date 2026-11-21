@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import type { Estado } from "../src/servicios/datos";
 import { readFileSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 test.beforeEach(async ({ page }) => {
@@ -19,36 +20,59 @@ test.beforeEach(async ({ page }) => {
 test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección", async ({
   page,
 }) => {
+  // El administrador ve también los ejemplos de cuentas creadas por otras E2E.
+  // Contrastar contra la API comprueba la lista completa sin depender del orden de las suites.
+  const estado: Estado = await (await page.request.get("/api/estado")).json();
+  const publicaciones = estado.videos.flatMap(
+    (v) => v.observabilidad.publicaciones,
+  );
+  const incidencias = estado.videos.flatMap(
+    (v) => v.observabilidad.incidencias,
+  );
+  const pendientes = incidencias.filter((i) => i.estado === "pendiente");
+  const corregidos = incidencias.filter((i) => i.estado === "corregido");
+  expect(pendientes.length).toBeGreaterThan(0);
+  expect(corregidos.length).toBeGreaterThan(0);
   await page.goto("/publicados");
   await expect(
     page.getByRole("heading", { name: "Publicados", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".publication")).toHaveCount(3);
+  await expect(page.locator(".publication:visible")).toHaveCount(
+    publicaciones.length,
+  );
   await page.getByRole("button", { name: "instagram", exact: true }).click();
-  await expect(page.locator(".publication")).toHaveCount(1);
-  await page.getByLabel("Métrica del gráfico").selectOption("retencion");
+  await expect(page.locator(".publication:visible")).toHaveCount(
+    publicaciones.filter((p) => p.red === "instagram").length,
+  );
+  const publicacion = page.locator(".publication:visible").first();
+  await publicacion.getByLabel("Métrica del gráfico").selectOption("retencion");
   await expect(
-    page.getByText("Todavía no hay mediciones de esta métrica."),
+    publicacion.getByText("Todavía no hay mediciones de esta métrica."),
   ).toBeVisible();
-  await page.getByText("Ver datos de evolución").click();
-  await expect(page.getByRole("table")).toBeVisible();
+  await publicacion.getByText("Ver datos de evolución").click();
+  await expect(publicacion.getByRole("table")).toBeVisible();
   await page.goto("/aprendizaje");
   await page.getByRole("button", { name: "Pendientes", exact: true }).click();
-  await expect(
-    page.getByText("Dar más espacio al sonido de la calle."),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Una cifra del guion necesitaba una fuente más reciente."),
-  ).not.toBeVisible();
+  await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
+    pendientes.length,
+  );
+  await expect(page.locator(".incident-state.corregido:visible")).toHaveCount(
+    0,
+  );
   await page.getByRole("button", { name: "Corregidos", exact: true }).click();
-  await expect(
-    page.getByText("Una cifra del guion necesitaba una fuente más reciente."),
-  ).toBeVisible();
-  await expect(
-    page.getByText(
-      "Se sustituyó la cifra y se comprobó su fuente antes de repetir la revisión.",
-    ),
-  ).toBeVisible();
+  await expect(page.locator(".incident-state.corregido:visible")).toHaveCount(
+    corregidos.length,
+  );
+  await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
+    0,
+  );
+  for (const cambio of new Set(corregidos.map((i) => i.cambio)))
+    await expect(
+      page
+        .locator(".learning-section:visible")
+        .getByText(cambio, { exact: true })
+        .first(),
+    ).toBeVisible();
 });
 test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usan URLs exactas", async ({
   page,
