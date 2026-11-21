@@ -41,6 +41,11 @@ document.querySelector('#medir').addEventListener('change',escribir);
 document.querySelector('#investigar').addEventListener('click',escribir);
 document.querySelector('#filtro').addEventListener('change',()=>window.filtros++);
 document.querySelector('#actualizar').addEventListener('click',()=>fetch('/api/operacion').then(()=>window.lecturas++));
+// Cooper navega sus enlaces internos con Next. La fixture conserva también el
+// documento: una recarga HTML completa destruía el contador de la horda al azar.
+document.querySelector('#ajustes').addEventListener('click',event=>{
+  event.preventDefault();history.pushState({},'',event.currentTarget.href);
+});
 </script></html>'''
 
 
@@ -112,6 +117,9 @@ class ExclusionesCooper(unittest.TestCase):
         page.locator('#actualizar').click()
         page.wait_for_function('window.lecturas===1')
         self.assertEqual(page.evaluate('window.filtros'), 1)
+        page.locator('#ajustes').click()
+        self.assertEqual(page.url, self.url + '/admin/fabrica')
+        self.assertEqual(page.evaluate('window.lecturas'), 1)
         page.add_script_tag(path=str(COOPER / 'node_modules/gremlins.js/dist/gremlins.min.js'))
         page.evaluate(_SCRIPT_HORDA, {'nb': 350, 'retraso': 1, 'fpsCadaMs': 250, 'semilla': 1744019315})
         page.wait_for_function('window.__caosEstado.fin', timeout=15000)
