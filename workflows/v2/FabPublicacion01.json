@@ -369,6 +369,176 @@
     },
     {
       "parameters": {
+        "jsCode": "const e=$('Inicio').first().json; return [{json:{video_id:e.video_id,canal_id:e.canal_id || '',evento:String($execution.id)+':calidad',tipo:'incidencia_cooper',detalle:JSON.stringify({tipo:'calidad',resumen:'El montaje no superó el control de calidad; necesita una nueva revisión.'})}}];"
+      },
+      "id": "24a229b6-30ae-570b-8f09-a732db537b24",
+      "name": "Cooper · incidencia de calidad",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7dbe4e4c-e717-5893-848e-3931ba107c64",
+      "name": "Cooper · guardar fallo de calidad",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
+      },
+      "id": "0f2d599a-7298-50e2-b537-8ac22437b344",
+      "name": "Cooper · atribuir ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cbd1ed50-06ed-53f3-9e75-8ee7d6c0d437",
+      "name": "Cooper · guardar atribución",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "59fbdcc2-70de-5a86-a4b5-c4edae7c2135",
+              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fe3eb739-ee05-5f8f-8b3d-153b7759148b",
+      "name": "¿Atribuir ejecución a video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "03596a1e-9a75-5783-958f-ef9255da0646",
+      "name": "Cooper · continuar ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json; return [{json:{video_id:e.video_id,canal_id:e.canal_id || '',tipo:'correccion_cooper',evento:String($execution.id)+':calidad_ok',detalle:JSON.stringify({tipos:['calidad'],cambio:'El nuevo montaje superó el control de calidad de imagen, sonido y duración.'})}}];"
+      },
+      "id": "9bb736ba-9bf1-5781-acfc-c4b291e198e9",
+      "name": "Cooper · calidad superada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "401a0dc1-7f32-523a-805c-8078770e0895",
+      "name": "Cooper · guardar calidad superada",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Marcar fallas\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "47f14b6d-412e-5778-8e5a-9c3d972ac5f1",
@@ -453,17 +623,6 @@
     }
   ],
   "connections": {
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Leer ajustes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Leer ajustes": {
       "main": [
         [
@@ -493,6 +652,11 @@
             "node": "Mensaje final",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Cooper · calidad superada",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -520,6 +684,11 @@
         [
           {
             "node": "Cooper · sello Marcar fallas",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · incidencia de calidad",
             "type": "main",
             "index": 0
           }
@@ -597,6 +766,90 @@
         [
           {
             "node": "Aprobación final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · incidencia de calidad": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar fallo de calidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · continuar ejecución": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "¿Atribuir ejecución a video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Atribuir ejecución a video?": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir ejecución": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar atribución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar atribución": {
+      "main": [
+        [
+          {
+            "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · calidad superada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar calidad superada",
             "type": "main",
             "index": 0
           }

@@ -27,6 +27,16 @@ export function prepararDemo(user: User) {
         {
           id: ciencia,
           ownerId: user.id,
+          learning: JSON.stringify([
+            {
+              id: "demo-leccion",
+              fecha: new Date(now - 86400000).toISOString(),
+              resumen:
+                "Abrir con una pregunta concreta ayudó a sostener la atención en tres historias de ejemplo.",
+              ganchos: ["Una pregunta cotidiana antes de la explicación."],
+              temas: ["Fenómenos que podemos observar en casa."],
+            },
+          ]),
           name: "Ciencia cotidiana",
           niche:
             "Las preguntas pequeñas esconden grandes historias. Ciencia visual para mentes curiosas.",
@@ -92,6 +102,56 @@ export function prepararDemo(user: User) {
           channelId: v.channelId,
           title: v.title,
           stage: v.stage,
+          observability: JSON.stringify({
+            montaje: "",
+            miniatura: "",
+            escenas: [],
+            publicaciones:
+              i === 3
+                ? ["youtube", "tiktok", "instagram"].map((red, k) => ({
+                    id: `demo-${red}`,
+                    red,
+                    url: "",
+                    fecha: new Date(now - 7 * 86400000).toISOString(),
+                    miniatura: "",
+                    historial: [7, 5, 2, 0].map((dias, j) => ({
+                      fecha: new Date(now - dias * 86400000).toISOString(),
+                      vistas: (j + 1) * 1230 + k * 200,
+                      meGusta: (j + 1) * 45,
+                      comentarios: (j + 1) * 8,
+                      retencion: k === 2 ? null : 0.55 + j * 0.03,
+                    })),
+                  }))
+                : [],
+            incidencias:
+              i === 1
+                ? [
+                    {
+                      id: "demo-fallo",
+                      tipo: "verificador",
+                      resumen:
+                        "Una cifra del guion necesitaba una fuente más reciente.",
+                      fecha: new Date(now - 2 * 86400000).toISOString(),
+                      estado: "corregido",
+                      corregidoEn: new Date(now - 86400000).toISOString(),
+                      cambio:
+                        "Se sustituyó la cifra y se comprobó su fuente antes de repetir la revisión.",
+                    },
+                  ]
+                : i === 2
+                  ? [
+                      {
+                        id: "demo-cambio",
+                        tipo: "correccion",
+                        resumen: "Dar más espacio al sonido de la calle.",
+                        fecha: new Date(now - 86400000).toISOString(),
+                        estado: "pendiente",
+                        corregidoEn: null,
+                        cambio: "",
+                      },
+                    ]
+                  : [],
+          }),
           avatarId: i === 2 ? "" : "cooper",
           voiceId: "clara",
           script: `# ${v.title}\n\nApertura · 0:00–0:08\n${v.hook}\n\nDesarrollo · 0:08–0:48\n${v.topic}\n\nCierre · 0:48–1:00\nLa próxima vez que lo veas, detente un momento. Hay una historia ahí.\n\nDirección visual\nPlanos de detalle, luz natural y subtítulos breves. Contrastar el guion antes de producir.`,

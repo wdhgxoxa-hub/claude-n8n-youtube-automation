@@ -1,5 +1,5 @@
 "use client";
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import {
   Plus,
@@ -12,18 +12,22 @@ import {
 } from "lucide-react";
 import { m as motion } from "framer-motion";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
+import { MediosVideo } from "./medios-video";
 import { Portada } from "./portada";
 import { Indicador, useMovimientoReducido } from "./movimiento";
 import { Recorrido, VideoMini } from "./fabrica-vista";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Orden } from "@/servicios/fabrica";
 export function Canales() {
+  const pending = useRef(false);
   const { data, refresh } = useEspacio();
   const [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   async function execute(e: FormEvent<HTMLFormElement>, channelId?: string) {
     e.preventDefault();
+    if (pending.current) return;
+    pending.current = true;
     setError("");
     setBusy(true);
     const form = e.currentTarget;
@@ -45,6 +49,7 @@ export function Canales() {
     } catch (e) {
       setError((e as Error).message);
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -63,6 +68,8 @@ export function Canales() {
     }
   }
   async function cambiarNoticia(id: string, activar: boolean) {
+    if (pending.current) return;
+    pending.current = true;
     setError("");
     setBusy(true);
     try {
@@ -81,6 +88,7 @@ export function Canales() {
     } catch (e) {
       setError((e as Error).message);
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -238,6 +246,7 @@ export function Canales() {
   );
 }
 export function Videos() {
+  const pending = useRef(false);
   const { data, refresh } = useEspacio();
   const [filter, setFilter] = useState("todos"),
     [creating, setCreating] = useState(false),
@@ -254,6 +263,8 @@ export function Videos() {
   );
   async function create(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     const f = new FormData(e.currentTarget);
     try {
@@ -270,6 +281,7 @@ export function Videos() {
     } catch (e) {
       setError((e as Error).message);
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -432,6 +444,7 @@ export function Videos() {
   );
 }
 export function DetalleVideo({ id }: { id: string }) {
+  const pending = useRef(false);
   const { data, refresh } = useEspacio();
   const video = data.videos.find((v) => v.id === id);
   const reduced = useMovimientoReducido();
@@ -441,6 +454,8 @@ export function DetalleVideo({ id }: { id: string }) {
     [playing, setPlaying] = useState(false),
     [changes, setChanges] = useState(false);
   async function act(path: string, value: unknown) {
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     setError("");
     try {
@@ -451,6 +466,7 @@ export function DetalleVideo({ id }: { id: string }) {
     } catch (e) {
       setError((e as Error).message);
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -493,34 +509,43 @@ export function DetalleVideo({ id }: { id: string }) {
       )}
       <div className="detail-layout">
         <div>
-          <section className="preview" aria-label="Vista previa simulada">
-            <motion.div
-              className="preview-art"
-              animate={{ scale: playing && !reduced ? 1.08 : 1 }}
-              transition={{ duration: reduced ? 0 : 8 }}
-            >
-              <Portada title={video.title} />
-            </motion.div>
-            <div className="preview-content">
-              <span>Vista previa simulada</span>
-              <h2>{video.title}</h2>
-              <button
-                className="preview-play"
-                onClick={() => setPlaying(!playing)}
-                aria-label={
-                  playing ? "Pausar vista previa" : "Reproducir vista previa"
-                }
+          {!video.observabilidad.montaje && data.demo && (
+            <section className="preview" aria-label="Vista previa simulada">
+              <motion.div
+                className="preview-art"
+                animate={{ scale: playing && !reduced ? 1.08 : 1 }}
+                transition={{ duration: reduced ? 0 : 8 }}
               >
-                {playing ? <Pause size={22} /> : <Play size={22} />}
-              </button>
-            </div>
-            <div className="preview-footer">
-              <span>9:16 · 60 segundos</span>
-              <span>
-                {playing ? "Reproduciendo maqueta" : "Maqueta de producción"}
-              </span>
-            </div>
-          </section>
+                <Portada title={video.title} />
+              </motion.div>
+              <div className="preview-content">
+                <span>Vista previa simulada</span>
+                <h2>{video.title}</h2>
+                <button
+                  className="preview-play"
+                  onClick={() => setPlaying(!playing)}
+                  aria-label={
+                    playing ? "Pausar vista previa" : "Reproducir vista previa"
+                  }
+                >
+                  {playing ? <Pause size={22} /> : <Play size={22} />}
+                </button>
+              </div>
+              <div className="preview-footer">
+                <span>9:16 · 60 segundos</span>
+                <span>
+                  {playing ? "Reproduciendo maqueta" : "Maqueta de producción"}
+                </span>
+              </div>
+            </section>
+          )}
+          {!video.observabilidad.montaje && !data.demo && (
+            <p className="notice">
+              El video terminado aparecerá aquí cuando la fábrica complete el
+              montaje.
+            </p>
+          )}
+          <MediosVideo datos={video.observabilidad} titulo={video.title} />
           {(video.avatarId || video.voiceId) && (
             <div className="presenter-summary">
               <span>

@@ -1,3 +1,4 @@
+import { leerObservabilidad, leerLecciones } from "@/contratos/observabilidad";
 import { and, desc, eq, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
@@ -31,13 +32,21 @@ export function estado(user: User) {
       .from(channels)
       .where(user.role === "admin" ? undefined : eq(channels.ownerId, user.id))
       .orderBy(desc(channels.createdAt))
-      .all(),
+      .all()
+      .map(({ learning, ...channel }) => ({
+        ...channel,
+        lecciones: leerLecciones(learning),
+      })),
     videos: db()
       .select()
       .from(videos)
       .where(user.role === "admin" ? undefined : eq(videos.ownerId, user.id))
       .orderBy(desc(videos.createdAt))
-      .all(),
+      .all()
+      .map(({ observability, ...video }) => ({
+        ...video,
+        observabilidad: leerObservabilidad(observability),
+      })),
     messages: db()
       .select()
       .from(messages)

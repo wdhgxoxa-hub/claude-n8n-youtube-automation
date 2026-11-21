@@ -4,6 +4,7 @@ import { writeFileSync } from "node:fs";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import {
+  messages,
   allowedEmails,
   users,
   videos,
@@ -25,7 +26,19 @@ import type {
   MensajeModelo,
 } from "@/servicios/chat/tipos";
 import guiones from "./fixtures/chat-30.json";
-const resultado: { id: number; tipo: string; resultado: string }[] = [];
+function mediana(values: number[]) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const n = sorted.length;
+  return n
+    ? (sorted[Math.floor((n - 1) / 2)] + sorted[Math.floor(n / 2)]) / 2
+    : 0;
+}
+const resultado: {
+  id: number;
+  tipo: string;
+  resultado: string;
+  palabras: number[];
+}[] = [];
 function persona(admin = false) {
   const id = randomUUID(),
     email = `${id}@example.test`;
@@ -41,7 +54,8 @@ function persona(admin = false) {
     .returning()
     .get();
 }
-afterAll(() =>
+afterAll(() => {
+  expect(mediana(resultado.flatMap((r) => r.palabras))).toBeLessThanOrEqual(20);
   writeFileSync(
     ".cache/evaluacion-chat-30.json",
     JSON.stringify(
@@ -49,14 +63,17 @@ afterAll(() =>
         proveedor: "simulado",
         conversaciones: resultado,
         total: resultado.length,
+        respuestas: resultado.flatMap((r) => r.palabras).length,
+        medianaPalabras: mediana(resultado.flatMap((r) => r.palabras)),
+        maximoPalabras: Math.max(0, ...resultado.flatMap((r) => r.palabras)),
         descripcion:
           "Evalúa selección determinista, orquestación y defensas. No mide acierto de modelos remotos.",
       },
       null,
       2,
     ),
-  ),
-);
+  );
+});
 it.each(guiones)("conversación $id: $tipo — $texto", async (g) => {
   const user = persona(g.herramienta === "gastos" || g.tipo === "admin_ajeno"),
     other = persona();
@@ -196,6 +213,10 @@ it.each(guiones)("conversación $id: $tipo — $texto", async (g) => {
         return "Videos de un minuto.";
       }),
     );
+    expect(context?.sistema).toContain("máximo 2 frases");
+    expect(context?.sistema).toContain(
+      "solo extiéndete si el usuario pide detalle",
+    );
     expect(JSON.stringify(context)).toContain(g.texto);
     expect(JSON.stringify(context)).toContain(canal);
     expect(JSON.stringify(context)).not.toContain("Video confidencial");
@@ -219,7 +240,20 @@ it.each(guiones)("conversación $id: $tipo — $texto", async (g) => {
       video: db().select().from(videos).where(eq(videos.id, privado)).get(),
     }),
   ).toBe(beforeOther);
-  resultado.push({ id: g.id, tipo: g.tipo, resultado: "PASS" });
+  const respuestas = db()
+    .select()
+    .from(messages)
+    .where(eq(messages.ownerId, user.id))
+    .all()
+    .filter((m) => m.role === "assistant");
+  resultado.push({
+    id: g.id,
+    tipo: g.tipo,
+    resultado: "PASS",
+    palabras: respuestas.map(
+      (m) => m.content.trim().split(/\s+/u).filter(Boolean).length,
+    ),
+  });
 });
 import { contrato } from "@/contratos/puente";
 const contratoEventos = contrato.eventos;

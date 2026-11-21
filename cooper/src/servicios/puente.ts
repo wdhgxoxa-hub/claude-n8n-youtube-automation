@@ -46,6 +46,9 @@ export function aplicarEstado(
           .values({
             id: channel.id,
             ownerId: owner.id,
+            learning: JSON.stringify(
+              channel.lecciones ?? JSON.parse(existing?.learning ?? "[]"),
+            ),
             name: channel.nombre,
             niche: channel.nicho,
             newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
@@ -54,6 +57,9 @@ export function aplicarEstado(
           .onConflictDoUpdate({
             target: channels.id,
             set: {
+              learning: JSON.stringify(
+                channel.lecciones ?? JSON.parse(existing?.learning ?? "[]"),
+              ),
               name: channel.nombre,
               niche: channel.nicho,
               newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
@@ -81,9 +87,22 @@ export function aplicarEstado(
           .get();
         if (existing && existing.ownerId !== owner.id)
           throw new ErrorHttp(409, "Propietario incompatible.");
+        // Los datos de publicación pueden cambiar sin un nuevo paso de producción.
+        if (
+          existing &&
+          video.observabilidad &&
+          video.actualizado_en >= existing.remoteUpdatedAt
+        )
+          tx.update(videos)
+            .set({ observability: JSON.stringify(video.observabilidad) })
+            .where(eq(videos.id, video.id))
+            .run();
         if (existing && existing.remoteUpdatedAt >= video.actualizado_en)
           continue;
         const fields = {
+          observability: JSON.stringify(
+            video.observabilidad ?? JSON.parse(existing?.observability ?? "{}"),
+          ),
           newsMode: video.modo_noticia ?? existing?.newsMode ?? false,
           stage:
             existing?.productionState === "cancelada"
@@ -194,6 +213,9 @@ export function recibirWebhook(input: WebhookPuente, raw: string) {
             stage: input.video.stage,
             script: input.video.script,
             title: input.video.titulo,
+            ...(input.video.observabilidad
+              ? { observability: JSON.stringify(input.video.observabilidad) }
+              : {}),
             remoteUpdatedAt: input.video.actualizado_en,
             updatedAt: Date.now(),
           })
