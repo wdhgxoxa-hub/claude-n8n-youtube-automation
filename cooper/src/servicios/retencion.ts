@@ -253,6 +253,8 @@ function inventariar(
     );
   for (const row of leer(`SELECT p.id, m.owner_id, p.estado, p.medios_ids,
       json_extract(p.datos, '$.adjuntos') AS adjuntos,
+      json_extract(p.datos, '$.videoId') AS video_id,
+      json_extract(p.datos, '$.montaje.revision') AS montaje_revision,
       json_extract(p.guia, '$.logoId') AS logo
       FROM piezas_marca p JOIN marcas m ON m.id = p.marca_id ORDER BY p.id`)) {
     const clave = `piezas_marca:${row.id}`,
@@ -267,6 +269,33 @@ function inventariar(
     }
     for (const id of [...lista(row.adjuntos ?? "[]"), cadena(row.logo)])
       enlazar(`attachments:${id}`, clave, dueno, "original_pieza");
+    // La selección conserva exactamente la revisión, aunque después cambie el video.
+    for (const montaje of sqlite
+      .prepare(
+        "SELECT id FROM montajes_fabrica WHERE owner_id = ? AND video_id = ? AND revision = ?",
+      )
+      .all(dueno, cadena(row.video_id), cadena(row.montaje_revision)) as Fila[])
+      enlazar(`montajes_fabrica:${montaje.id}`, clave, dueno, "montaje_pieza");
+  }
+  for (const row of leer(`SELECT m.id, m.owner_id, m.video_id, m.created_at,
+      length(CAST(m.data AS BLOB)) AS bytes, v.id AS origen
+      FROM montajes_fabrica m LEFT JOIN videos v
+        ON v.id = m.video_id AND v.owner_id = m.owner_id ORDER BY m.id`)) {
+    const clave = agregar(
+      "montajes_fabrica",
+      row,
+      "derivado",
+      numero(row.created_at),
+      numero(row.bytes),
+      row.origen ? [] : ["origen_video_no_disponible"],
+    );
+    if (row.origen)
+      enlazar(
+        clave,
+        `videos:${row.video_id}`,
+        cadena(row.owner_id),
+        "montaje_video",
+      );
   }
   const remotos = leer(`SELECT v.id, v.owner_id,
       (SELECT count(*) FROM json_tree(v.observability) j
@@ -295,7 +324,7 @@ function inventariar(
       "ingesta",
       numero(row.created_at),
     );
-    if (!["completa", "fallida"].includes(cadena(row.estado)))
+    if (!["completa", "fallida", "cancelada"].includes(cadena(row.estado)))
       operacion(cadena(row.owner_id), clave);
   }
   for (const row of leer(

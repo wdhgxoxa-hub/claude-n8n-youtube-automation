@@ -244,20 +244,55 @@ it.each([
   expect(buscar("messages:olvidado").decision).toBe("conservar");
 });
 
-it("retiene memoria activa y permite ensayar ingestas terminadas sin tocar sus cuerpos", () => {
-  sql
-    .prepare(
-      "INSERT INTO chat_memories(owner_id,scope,summary,updated_at) VALUES ('ana','','RESUMEN_PRIVADO',?)",
-    )
-    .run(viejo);
-  sql
-    .prepare(
-      "INSERT INTO marca_ingestas(id,owner_id,media_id,caption,estado,created_at) VALUES ('ingesta','ana','remoto','CAPTION_PRIVADO','completa',?)",
-    )
-    .run(viejo);
-  expect(buscar("marca_ingestas:ingesta").decision).toBe("candidato_simulado");
-  expect(buscar("chat_memories:ana:").bloqueos).toContain("memoria_activa");
-  expect(JSON.stringify(informe())).not.toContain("RESUMEN_PRIVADO");
+it.each(["completa", "fallida", "cancelada"])(
+  "retiene memoria y permite simular la ingesta %s sin tocar sus cuerpos",
+  (estado) => {
+    sql
+      .prepare(
+        "INSERT INTO chat_memories(owner_id,scope,summary,updated_at) VALUES ('ana','','RESUMEN_PRIVADO',?)",
+      )
+      .run(viejo);
+    sql
+      .prepare(
+        "INSERT INTO marca_ingestas(id,owner_id,media_id,caption,estado,created_at) VALUES ('ingesta','ana','remoto','CAPTION_PRIVADO',?,?)",
+      )
+      .run(estado, viejo);
+    expect(buscar("marca_ingestas:ingesta").decision).toBe(
+      "candidato_simulado",
+    );
+    expect(buscar("chat_memories:ana:").bloqueos).toContain("memoria_activa");
+    expect(JSON.stringify(informe())).not.toContain("RESUMEN_PRIVADO");
+  },
+);
+
+it("inventaría montajes privados por revisión y protege su video y piezas sin exportar el contenido", () => {
+  marca();
+  sql.exec(`INSERT INTO channels(id,owner_id,name,niche,created_at) VALUES ('canal','ana','Canal','Nicho',1);
+    INSERT INTO videos(id,owner_id,channel_id,title,script,stage,created_at,updated_at) VALUES ('video','ana','canal','Titulo','GUION_PRIVADO',11,1,1);`);
+  const insertar =
+    sql.prepare(`INSERT INTO montajes_fabrica(id,owner_id,video_id,revision,sha256,size,data,created_at)
+    VALUES (?,'ana',?,?,'HUELLA_PRIVADA',12,'MONTAJE_PRIVADO',?)`);
+  insertar.run("elegido", "video", "revision-1", viejo);
+  insertar.run("nuevo", "video", "revision-2", viejo);
+  insertar.run("sin-origen", "video-retirado", "revision-1", viejo);
+  sql.exec(`UPDATE piezas_marca SET datos='{"videoId":"video","montaje":{"revision":"revision-1"}}',guia='{}',medios_ids='[]';
+    UPDATE marcas SET guia='{}';`);
+  const antes = huella();
+  expect(buscar("montajes_fabrica:elegido")).toMatchObject({
+    categoria: "derivado",
+    bytes: 15,
+    decision: "conservar",
+    referencias: [
+      { origen: "piezas_marca:pieza", dueno: "ana", uso: "montaje_pieza" },
+      { origen: "videos:video", dueno: "ana", uso: "montaje_video" },
+    ],
+  });
+  expect(buscar("montajes_fabrica:nuevo").referencias).toHaveLength(1);
+  expect(buscar("montajes_fabrica:sin-origen").bloqueos).toContain(
+    "origen_video_no_disponible",
+  );
+  expect(JSON.stringify(informe())).not.toContain("PRIVADO");
+  expect(huella()).toBe(antes);
 });
 
 it("libera bloqueos completados y no bloquea mensajes de otro dueño", () => {
