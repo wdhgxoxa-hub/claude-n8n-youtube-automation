@@ -94,7 +94,7 @@ def start(op):
         names += ['chat-cooper', 'chat-n8n', 'chat-runner']
     op.compose('up', '-d', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '240', *names)
     # Ingreso público al final, cuando dependencias y namespaces están recreados.
-    op.compose('up', '-d', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '180', 'caddy')
+    op.compose('up', '-d', '--no-deps', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '180', 'caddy')
 
 
 def apply(op, candidate, receipt, output, simulate_failure=False):
@@ -115,10 +115,11 @@ def apply(op, candidate, receipt, output, simulate_failure=False):
         image_ids[name] = operar.run([op.engine, 'image', 'inspect', value['imagen'], '--format', '{{.Id}}'], env=op.env).strip()
         old_id = operar.run([op.engine, 'image', 'inspect', value['anterior'], '--format', '{{.Id}}'], env=op.env).strip()
         operar.require(previous_services[name]['id'].removeprefix('sha256:') == old_id.removeprefix('sha256:'), 'La versión activa difiere de la reversa ensayada')
-    # Validar la resolución efectiva sin mostrar su contenido privado.
-    config = json.loads(operar.run(['docker', 'compose', '--env-file', str(op.env_file), '-f', str(candidate / 'compose.yaml'), 'config', '--format', 'json'], env=op.env))
-    operar.require(all(config['services'][name]['image'] == item['imagen'] for name, item in images.items()), 'Compose no usa las imágenes ensayadas')
-    del config
+    # Solo referencias públicas: nunca serializar el entorno efectivo de los servicios.
+    resolution_env = {**op.env, 'COOPER_IMAGE': previous_services['cooper']['imagen']}
+    resolved_images = set(operar.run(['docker', 'compose', '--env-file', str(op.env_file), '-f', str(candidate / 'compose.yaml'), 'config', '--images'], env=resolution_env).splitlines())
+    expected_images = {item['imagen'] for item in images.values()} | {previous_services['cooper']['imagen']}
+    operar.require(resolved_images == expected_images, 'Compose no usa las imágenes ensayadas')
     directory = op.state / ('infra-' + str(time.time_ns()))
     backup = directory / 'configuracion-anterior'
     backup.mkdir(parents=True, mode=0o700)
@@ -131,7 +132,9 @@ def apply(op, candidate, receipt, output, simulate_failure=False):
             shutil.copy2(path, backup / name)
     result = {'estado': 'PREPARADO', 'configuracion_anterior': previous, 'servicios_anteriores': previous_services,
               'configuracion_ensayada': receipt['archivos'], 'servicios_nuevos': images,
-              'respaldo_configuracion': str(backup), 'entorno_copiado': False}
+              'respaldo_configuracion': str(backup), 'entorno_copiado': False,
+              'codigo_aplicador_sha256': operar.digest(Path(__file__)),
+              'codigo_operar_sha256': operar.digest(Path(operar.__file__))}
     operar.write_json(output, result)
     snapshot = None
     marker.touch(mode=0o600)

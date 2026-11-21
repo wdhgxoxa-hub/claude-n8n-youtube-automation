@@ -72,7 +72,8 @@ class InfraTest(unittest.TestCase):
 
             def command(args, **_kwargs):
                 if args[1] == 'compose':
-                    return json.dumps({'services': {name: {'image': value['imagen']} for name, value in images.items()}})
+                    self.assertEqual(args[-2:], ['config','--images'])
+                    return '\n'.join([value['imagen'] for value in images.values()] + ['cooper-id'])
                 if args[1:3] == ['image','inspect']:
                     return next(name + ('-nuevo-id' if value['imagen'] == args[3] else '-anterior-id') for name, value in images.items() if args[3] in (value['imagen'], value['anterior']))
                 template, name = args[-2:]
@@ -127,6 +128,7 @@ class InfraTest(unittest.TestCase):
             (op.state / 'chat-tunel.enabled').touch()
             infra.start(op)
             self.assertEqual(op.calls[-1][-1], 'caddy')
+            self.assertIn('--no-deps', op.calls[-1])
             for relay in ('chat-cooper','chat-n8n','chat-runner'):
                 self.assertIn(relay, op.calls[0])
             self.assertTrue(all('--force-recreate' in call for call in op.calls))

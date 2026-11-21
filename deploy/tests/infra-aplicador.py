@@ -67,7 +67,9 @@ def rehearse(fixture, proof):
             operar.require(result['estado'] == 'PASS', 'La actualización real no terminó')
             output = {'aplicador':'PASS','fallo_inyectado_y_reversa':'PASS','archivos_restaurados':'PASS',
                       'datos_restaurados_con_huellas':'PASS','actualizacion':'PASS','red':'interna y loopback',
-                      'recibo_reversa':str(failed),'recibo_actualizacion':str(successful)}
+                      'recibo_reversa':str(failed),'recibo_actualizacion':str(successful),
+                      'codigo_aplicador_sha256':result['codigo_aplicador_sha256'],
+                      'codigo_operar_sha256':result['codigo_operar_sha256']}
             operar.write_json(directory / 'resultado.json', output)
             return output
     finally:
