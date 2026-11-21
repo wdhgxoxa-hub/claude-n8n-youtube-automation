@@ -2,6 +2,8 @@
 
 Consulta de fuentes oficiales: 20 de noviembre de 2026. Implementación para Graph API **v27.0**, versión que muestra la referencia actual de Meta. No se creó una cuenta, se registró un número, se enviaron plantillas a Meta ni se transmitieron mensajes reales durante esta misión.
 
+Alta posterior del 21 de noviembre: [resultado real, plantillas y pendientes](informes/cooper-whatsapp-alta.md). El párrafo anterior describe la implementación de fase 4, no el estado del alta posterior.
+
 ## Qué recibe cada persona
 
 En **Mi perfil**, guardar un teléfono E.164 no activa ningún envío. La persona acepta recibir un código, lo solicita por WhatsApp, lo introduce en Cooper y elige sus avisos: guion, aprobación final y publicación. Solo Walter puede activar el aviso de gasto diario. Por defecto todos están desactivados. Cambiar el teléfono elimina su verificación, preferencias y ventana de atención, cancela la cola pendiente e invalida los enlaces anteriores. Una nueva verificación también invalida enlaces antiguos.
@@ -32,6 +34,7 @@ El archivo [`.env.example`](../cooper/.env.example) contiene únicamente nombres
 | `COOPER_MENSAJERIA_PAUSA` | `1` impide iniciar el consumidor al arrancar Node. Reiniciar para aplicar. No es un interruptor de emergencia sobre solicitudes ya en vuelo. |
 | `WHATSAPP_TOKEN` | Token privado para enviar, solo servidor. |
 | `WHATSAPP_PHONE_NUMBER_ID` | ID del número empresarial, no el teléfono ni el ID de WABA. |
+| `WHATSAPP_WABA_ID` | Cuenta de WhatsApp para administrar plantillas y suscribir la app. El transporte de mensajes sigue usando el ID del número. |
 | `WHATSAPP_APP_SECRET` | Secreto de la aplicación para verificar firmas entrantes. |
 | `WHATSAPP_VERIFY_TOKEN` | Valor privado elegido para el desafío de alta del webhook; no es el token de envío. |
 | `AUTH_SECRET` | Existente; mínimo 32 caracteres para HMAC de códigos y enlaces, con separación de propósitos. Rotarlo invalida códigos y enlaces pendientes. |
@@ -77,6 +80,51 @@ Callback: `https://DOMINIO-DE-COOPER/api/whatsapp/webhook`. Necesita HTTPS públ
 - Rechaza firmas inválidas antes de procesar JSON. Acepta lotes hasta 1 MiB y filtra `metadata.phone_number_id`. No almacena cuerpos completos, textos entrantes, códigos ni enlaces en los registros.
 - Deduplica mensajes por ID persistido. Conserva recibos de entrega, con ID, destinatario, estado, fecha y código numérico de error. Los estados fuera de orden no hacen retroceder `read` a `sent`. Los recibos que llegan antes del retorno HTTP se concilian al guardar el ID remoto.
 - Solo mensajes recientes y de números verificados abren la ventana. Los eventos antiguos no la prolongan. Una revisión recibe como máximo una decisión por WhatsApp, incluso si se pulsan botones de dos avisos distintos o Meta repite el webhook.
+
+### Comando preparado para el dominio público
+
+Antes de ejecutarlo, Claude debe completar `WHATSAPP_APP_SECRET` en el archivo privado y reiniciar `cooper.service`. Publicar exclusivamente la ruta necesaria mediante HTTPS válido. En el panel de la app Meta, configurar el callback `/api/whatsapp/webhook`, su verify token privado y el campo **messages**. La suscripción de la app a la WABA no sustituye esa configuración. No crear un túnel de todo Cooper para resolver este paso.
+
+El comando siguiente suscribe la WABA y fija su callback alternativo usando el [endpoint oficial de overrides](https://developers.facebook.com/documentation/business-messaging/whatsapp/webhooks/override). Sustituir el origen por el dominio controlado por Walter. No imprime tokens ni cuerpos de respuesta y no reintenta una mutación incierta. El secreto de app solo se comprueba localmente; Meta recibe el token de sistema exclusivamente como Bearer y el verify token en el cuerpo del alta.
+
+```bash
+node --env-file="$HOME/.config/cooper/cooper.env" --input-type=module - https://DOMINIO-DE-COOPER <<'JS'
+const origin = new URL(process.argv[2]);
+if (origin.protocol !== "https:" || origin.pathname !== "/" || origin.search ||
+    origin.hash || origin.username || origin.password ||
+    /^(localhost|DOMINIO-DE-COOPER)$/i.test(origin.hostname) ||
+    /(^|\.)example\.(org|com|net)$/i.test(origin.hostname)) {
+  throw new Error("Indica el origen HTTPS público definitivo de Cooper.");
+}
+const { WHATSAPP_TOKEN: token, WHATSAPP_WABA_ID: waba,
+  WHATSAPP_VERIFY_TOKEN: verify, WHATSAPP_APP_SECRET: secret } = process.env;
+if (!token || !/^\d+$/.test(waba ?? "") || !verify || !secret) {
+  throw new Error("Falta configuración privada de WhatsApp.");
+}
+try {
+  const response = await fetch(`https://graph.facebook.com/v27.0/${waba}/subscribed_apps`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      override_callback_uri: new URL("/api/whatsapp/webhook", origin).href,
+      verify_token: verify,
+    }),
+    redirect: "error",
+    signal: AbortSignal.timeout(15000),
+  });
+  const result = await response.json().catch(() => null);
+  const success = response.ok && result?.success === true;
+  console.log(JSON.stringify({ http: response.status, success,
+    code: typeof result?.error?.code === "number" ? result.error.code : null }));
+  if (!success) process.exitCode = 1;
+} catch {
+  console.error("Resultado incierto: comprobar la suscripción antes de repetir.");
+  process.exitCode = 1;
+}
+JS
+```
+
+Después, consultar `GET /v27.0/{WABA_ID}/subscribed_apps` con Bearer y comprobar el ID de la app y el callback. Validar un evento firmado entrante y los recibos de entrega. La aceptación de esta suscripción por sí sola no acredita recepción de mensajes. Para futuras altas, revisar la versión en el [changelog vigente](https://developers.facebook.com/documentation/development/graph-api/changelog); la antigua tabla `/docs/graph-api/changelog/versions/` seguía mostrando v26.0 durante esta misión.
 
 Meta reintenta webhooks fallidos durante hasta siete días. El receptor admite números E.164; los mensajes que solo identifican al usuario por BSUID/username se ignoran sin impedir otros eventos del lote. Dar soporte a esas identidades requiere un vínculo explícito adicional; nunca se deduce la cuenta por nombre visible. [Formato y variantes actuales](https://developers.facebook.com/documentation/business-messaging/whatsapp/webhooks/overview).
 
