@@ -1,0 +1,32 @@
+{
+  "commit": "b88985145fa79f3bd90ce28f70bfc11de4a40488",
+  "matriz": "390 y 1440 px, temas claro y oscuro",
+  "inspeccion": "Cuatro capturas completas revisadas; textos y cifras legibles, sin solapamientos; ejemplos y catálogo desconectado identificados.",
+  "limite": "Datos ficticios y navegador emulado; no certifica un teléfono físico.",
+  "capturas": [
+    {
+      "archivo": ".cache/ci-limpia-Qq2b7X/checkout/cooper/.cache/total-marca-tienda/tienda-1440-claro.png",
+      "ancho": 1440,
+      "alto": 4841,
+      "sha256": "69f2ffeb784830feb0d860121160b21de38f222461c7b86cbc794f03199b9272"
+    },
+    {
+      "archivo": ".cache/ci-limpia-Qq2b7X/checkout/cooper/.cache/total-marca-tienda/tienda-1440-oscuro.png",
+      "ancho": 1440,
+      "alto": 4841,
+      "sha256": "d8039c1f463eb225d6c7ec434aaabcf7536cbba3395a608903d7f3bbe0bb3044"
+    },
+    {
+      "archivo": ".cache/ci-limpia-Qq2b7X/checkout/cooper/.cache/total-marca-tienda/tienda-390-claro.png",
+      "ancho": 390,
+      "alto": 7102,
+      "sha256": "71673316f756d3e45c0b9655767ebe8949027e218282d167e014cdbe48dff759"
+    },
+    {
+      "archivo": ".cache/ci-limpia-Qq2b7X/checkout/cooper/.cache/total-marca-tienda/tienda-390-oscuro.png",
+      "ancho": 390,
+      "alto": 7102,
+      "sha256": "5a2382068a49738304bff457780ca8cf6b5ac6f7ad46525910613f3b85711b08"
+    }
+  ]
+}
