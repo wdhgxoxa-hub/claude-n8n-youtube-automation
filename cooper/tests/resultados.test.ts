@@ -217,3 +217,70 @@ it("no agrupa publicaciones ni lecciones sin identificador por sus títulos", ()
     .where(eq(channels.id, c.id))
     .run();
 });
+
+it("conserva capturas distintas con el mismo ID y elige la versión más reciente de una lección", () => {
+  const v = db()
+    .select()
+    .from(videos)
+    .where(eq(videos.id, `${ana.id}-video`))
+    .get()!;
+  const c = db()
+    .select()
+    .from(channels)
+    .where(eq(channels.id, v.channelId))
+    .get()!;
+  const observabilidad = JSON.parse(v.observability);
+  const p = observabilidad.publicaciones[0];
+  const l = JSON.parse(c.learning)[0];
+  try {
+    db()
+      .update(videos)
+      .set({
+        observability: JSON.stringify({
+          ...observabilidad,
+          publicaciones: [
+            p,
+            { ...p, historial: [{ ...p.historial[0], vistas: 1234 }] },
+          ],
+        }),
+      })
+      .where(eq(videos.id, v.id))
+      .run();
+    db()
+      .update(channels)
+      .set({
+        learning: JSON.stringify([
+          l,
+          { ...l, fecha: "2026-11-22T00:00:00Z", resumen: "Lección revisada" },
+        ]),
+      })
+      .where(eq(channels.id, c.id))
+      .run();
+    const r = leerResultados(ana);
+    const grupos = agruparPublicaciones(
+      r.publicaciones.filter((p) => p.tipo === "video"),
+      r.ambitos,
+    );
+    expect(grupos).toHaveLength(1);
+    expect(grupos[0].registros).toHaveLength(2);
+    expect(
+      grupos[0].registros.map(
+        (p) => p.tipo === "video" && p.publicacion.historial.at(-1)?.vistas,
+      ),
+    ).toEqual([100, 1234]);
+    const lessons = r.aprendizajes.filter((a) => a.tipo === "video");
+    expect(lessons).toHaveLength(1);
+    expect(lessons[0].titulo).toBe("Lección revisada");
+  } finally {
+    db()
+      .update(videos)
+      .set({ observability: v.observability })
+      .where(eq(videos.id, v.id))
+      .run();
+    db()
+      .update(channels)
+      .set({ learning: c.learning })
+      .where(eq(channels.id, c.id))
+      .run();
+  }
+});

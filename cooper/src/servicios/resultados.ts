@@ -73,8 +73,11 @@ export function leerResultados(user: User): Resultados {
       propios.filter((v) => v.channelId === c.id).map((v) => v.id),
     );
     const vistas = new Set<string>();
-    for (const [indice, leccion] of leerLecciones(c.learning).entries()) {
-      const id = leccion.id || `sin-id:${indice}`;
+    const lecciones = leerLecciones(c.learning).sort(
+      (a, b) => Date.parse(b.fecha) - Date.parse(a.fecha),
+    );
+    for (const [indice, leccion] of lecciones.entries()) {
+      const id = leccion.id ? `id:${leccion.id}` : `indice:${indice}`;
       if (vistas.has(id)) continue;
       vistas.add(id);
       const l = {
@@ -117,13 +120,14 @@ export function leerResultados(user: User): Resultados {
       };
       resultado.publicaciones.push({
         ...base,
-        id: `video:${v.id}:${p.red}:${id}`,
+        id: `video:${v.id}:${p.red}:${id}:${indice}`,
         tipo: "video",
         fecha: p.fecha,
         redes: [p.red.toLowerCase()],
         publicacion,
         identidad: huella(
-          (p.url && (enlaceIncrustado(p.url) ?? p.url)) || `${v.id}:${id}`,
+          (p.url && (enlaceIncrustado(p.url) ?? p.url)) ||
+            JSON.stringify([v.id, p.id || null, p.id ? null : indice]),
         ),
       });
     }
