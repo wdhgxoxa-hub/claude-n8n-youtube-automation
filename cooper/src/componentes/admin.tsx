@@ -3,7 +3,10 @@ import { useState, type FormEvent } from "react";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
 import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice } from "./espacio";
+import { motion } from "framer-motion";
+import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 export function Admin({ initial }: { initial: Administracion }) {
+  const reduced = useMovimientoReducido();
   const [data, setData] = useState(initial),
     [period, setPeriod] = useState<"day" | "week" | "month">("day"),
     [error, setError] = useState(""),
@@ -69,7 +72,9 @@ export function Admin({ initial }: { initial: Administracion }) {
         <div className="spend-head">
           <div>
             <span className="muted">Gasto del equipo</span>
-            <p className="spend-total">{money(total)}</p>
+            <p className="spend-total">
+              <NumeroAnimado value={total} money />
+            </p>
           </div>
           <div className="filters">
             {(
@@ -84,6 +89,7 @@ export function Admin({ initial }: { initial: Administracion }) {
                 aria-pressed={period === value}
                 onClick={() => setPeriod(value)}
               >
+                {period === value && <Indicador id="periodo-gasto" />}
                 {label}
               </button>
             ))}
@@ -109,15 +115,20 @@ export function Admin({ initial }: { initial: Administracion }) {
                 <strong>{u.name}</strong>
                 <small>{u.email}</small>
                 <div className="spend-bar">
-                  <div
-                    style={{
-                      width: `${total ? (u[period] / total) * 100 : 0}%`,
+                  <motion.div
+                    initial={false}
+                    animate={{ scaleX: total ? u[period] / total : 0 }}
+                    transition={{
+                      duration: reduced ? 0 : 0.7,
+                      ease: [0.22, 1, 0.36, 1],
                     }}
-                  />
+                  >
+                    <span key={period} className="spend-bar-ink" />
+                  </motion.div>
                 </div>
               </div>
               <span role="cell">
-                {money(u[period])}
+                <NumeroAnimado value={u[period]} money />
                 {u.alert && <small>Alerta diaria</small>}
               </span>
               <span role="cell">

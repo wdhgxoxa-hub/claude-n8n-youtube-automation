@@ -1,5 +1,6 @@
 import { signIn } from "@/auth";
 import { Logo } from "@/marca/Logo";
+import { Revelado } from "@/componentes/titular";
 export default async function Entrar({
   searchParams,
 }: {
@@ -15,11 +16,11 @@ export default async function Entrar({
         </div>
         <div className="login-headline">
           <h1>
-            Las ideas buenas
+            <Revelado texto="Las ideas buenas" />
             <br />
-            no se quedan
+            <Revelado texto="no se quedan" />
             <br />
-            en el chat.
+            <Revelado texto="en el chat." />
           </h1>
           <p>
             Un estudio de creación.

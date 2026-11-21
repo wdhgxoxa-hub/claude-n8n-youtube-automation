@@ -16,7 +16,10 @@ import { CONSENTIMIENTO, ESTADOS_MEDIO } from "@/servicios/medios";
 import { CooperCara } from "@/marca/CooperCara";
 import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir, Grabador } from "./grabador";
+import { Indicador, useMovimientoReducido } from "./movimiento";
 function Retrato({ variant, moving }: { variant: string; moving: boolean }) {
+  const reduced = useMovimientoReducido();
+  moving = moving && !reduced;
   const female = variant === "alma" || variant === "luz";
   return (
     <motion.svg
@@ -67,6 +70,7 @@ function Retrato({ variant, moving }: { variant: string; moving: boolean }) {
   );
 }
 export function Avatares() {
+  const reduced = useMovimientoReducido();
   const { data, refresh } = useEspacio();
   const [tab, setTab] = useState<"avatar" | "voz">("avatar"),
     [preview, setPreview] = useState(""),
@@ -166,6 +170,7 @@ export function Avatares() {
             setPreview("");
           }}
         >
+          {tab === "avatar" && <Indicador id="biblioteca" />}
           Avatares
         </button>
         <button
@@ -176,6 +181,7 @@ export function Avatares() {
             setPreview("");
           }}
         >
+          {tab === "voz" && <Indicador id="biblioteca" />}
           Voces
         </button>
       </div>
@@ -351,7 +357,7 @@ export function Avatares() {
         animate="visible"
         variants={{
           inicio: {},
-          visible: { transition: { staggerChildren: 0.06 } },
+          visible: { transition: { staggerChildren: reduced ? 0 : 0.06 } },
         }}
       >
         {data.catalogo

@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
 import { Portada } from "./portada";
-import { useMovimientoReducido } from "./movimiento";
+import { Indicador, useMovimientoReducido } from "./movimiento";
 import { Recorrido, VideoMini } from "./fabrica-vista";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Orden } from "@/servicios/fabrica";
@@ -349,6 +349,7 @@ export function Videos() {
             aria-pressed={filter === id}
             onClick={() => setFilter(id)}
           >
+            {filter === id && <Indicador id="filtro-videos" />}
             {label}
           </button>
         ))}
