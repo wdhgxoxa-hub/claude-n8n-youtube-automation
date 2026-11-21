@@ -1,0 +1,8 @@
+{
+  "database": "/home/david/.local/share/cooper/cooper.sqlite",
+  "integrity": "ok",
+  "foreignKeyErrors": 0,
+  "migrations": 8,
+  "schemaHash": "1a18e82e3d5160e43b3de27fdc2ff56d1b3e0744854b40c68ae5d7369e04716e",
+  "schemaPreserved": true
+}

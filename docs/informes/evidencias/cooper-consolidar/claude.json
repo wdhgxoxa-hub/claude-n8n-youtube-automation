@@ -1,0 +1,8 @@
+{
+  "provider": "claude-cli",
+  "ok": true,
+  "structuredResponse": true,
+  "toolCalls": 0,
+  "fictionalData": true,
+  "durationMs": 2921
+}

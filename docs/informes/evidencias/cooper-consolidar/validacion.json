@@ -1,0 +1,47 @@
+[
+  {
+    "check": "cooper_salud",
+    "ok": true,
+    "http": 200
+  },
+  {
+    "check": "inicio_redirige_entrada",
+    "ok": true,
+    "http": 307
+  },
+  {
+    "check": "puente_sin_token",
+    "ok": true,
+    "http": 401
+  },
+  {
+    "check": "puente_autenticado",
+    "ok": true,
+    "http": 200
+  },
+  {
+    "check": "n8n_estado",
+    "ok": true,
+    "http": 200,
+    "contract": true,
+    "channels": 2,
+    "videos": 5
+  },
+  {
+    "check": "n8n_tendencias",
+    "ok": true,
+    "http": 200,
+    "contract": true
+  },
+  {
+    "check": "hmac_valida",
+    "ok": true,
+    "http": 200,
+    "estado": "nueva"
+  },
+  {
+    "check": "hmac_invalida",
+    "ok": true,
+    "http": 401
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "sha": "8c5fd561bed288f68944ceff4d1f70a40ee050b0",
+  "steps": [
+    {
+      "step": "ci",
+      "command": "npm ci",
+      "rc": 0,
+      "seconds": 4.4
+    },
+    {
+      "step": "lint",
+      "command": "npm run lint",
+      "rc": 0,
+      "seconds": 1.9
+    },
+    {
+      "step": "typecheck",
+      "command": "npm run typecheck",
+      "rc": 0,
+      "seconds": 0.9
+    },
+    {
+      "step": "test",
+      "command": "npm test",
+      "rc": 0,
+      "seconds": 11.4
+    },
+    {
+      "step": "e2e",
+      "command": "npm run test:e2e",
+      "rc": 0,
+      "seconds": 217.8
+    },
+    {
+      "step": "build",
+      "command": "npm run build",
+      "rc": 0,
+      "seconds": 2.2
+    },
+    {
+      "step": "flujos",
+      "command": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "seconds": 0.9
+    },
+    {
+      "step": "puente",
+      "command": "node --test tests/puente-codex.test.mjs",
+      "rc": 0,
+      "seconds": 0.7
+    }
+  ]
+}

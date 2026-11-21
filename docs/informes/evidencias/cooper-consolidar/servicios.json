@@ -1,0 +1,32 @@
+{
+  "units": [
+    {
+      "Id": "cooper.service",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled",
+      "MainPID": "754469",
+      "Result": "success",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "EnvironmentFiles": "/home/david/.config/cooper/cooper.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/david/.local/share/cooper/app/cooper",
+      "actualCwd": "/home/david/.local/share/cooper/app/cooper"
+    },
+    {
+      "Id": "puente-codex.service",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled",
+      "MainPID": "750670",
+      "Result": "success",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "EnvironmentFiles": "/home/david/.config/cooper/cooper.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/david/.local/share/cooper/app/servicios/puente-codex",
+      "actualCwd": "/home/david/.local/share/cooper/app/servicios/puente-codex"
+    }
+  ],
+  "previousCooperStopTimedOut": true,
+  "configMode": "0o600"
+}

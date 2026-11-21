@@ -1,0 +1,1 @@
+{"origin":"videos-n8n","readOnlyReceipt":true,"results":[{"signature":"valida","http":200,"ok":true},{"signature":"invalida","http":401,"ok":true}]}

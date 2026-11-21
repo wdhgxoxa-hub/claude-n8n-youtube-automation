@@ -1,0 +1,7 @@
+{
+  "entryHttp": 200,
+  "googleRedirect": true,
+  "redirectHost": "accounts.google.com",
+  "blockedBeforeGoogleLoad": true,
+  "oauthLoginPerformed": false
+}

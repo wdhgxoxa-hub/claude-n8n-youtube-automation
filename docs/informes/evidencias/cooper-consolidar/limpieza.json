@@ -1,0 +1,86 @@
+[
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-animacion",
+    "branch": "cooper-animacion",
+    "sha": "b784d98c9a4541afc014cbb9ef79c706e84ce43b",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-chat-ia",
+    "branch": "cooper-chat-ia",
+    "sha": "6b2fc552c72e9f13596f63c77fa109a51b85f2e2",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-chat-planes",
+    "branch": "cooper-chat-planes",
+    "sha": "d994abf78c1980031780b6c9219781aad61e12f1",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-ensayo",
+    "branch": "cooper-ensayo",
+    "sha": "72a78af6cba91044445725485a6b51c37374df76",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-fase2",
+    "branch": "cooper-fase2",
+    "sha": "87139a75dbf82b3608082dc3562e3752e1ebc10b",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-fase3",
+    "branch": "cooper-fase3",
+    "sha": "b1a4e9ce1d62f9021c2512d67a390abc5c5ea65d",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-fase4",
+    "branch": "cooper-fase4",
+    "sha": "0ea769ffed414670ab8fbb0f56cd1a8967842245",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-fase5",
+    "branch": "cooper-fase5",
+    "sha": "2179c6a1b76d5c82a42ea75f59423fbb0da00557",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-fase6",
+    "branch": "cooper-fase6",
+    "sha": "1d6ce516865fca44ac437e27aa054f8c5f4ef9a0",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-final",
+    "branch": "cooper-final",
+    "sha": "d994abf78c1980031780b6c9219781aad61e12f1",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-integracion",
+    "branch": "cooper-integracion",
+    "sha": "23394d9c91cd5000ba9ca883bcf3d98ba4427840",
+    "removed": true,
+    "branchPreserved": true
+  },
+  {
+    "worktree": "/home/david/Proyectos/cooper-wt/cooper-revision",
+    "branch": "cooper-revision",
+    "sha": "d38acf4c713b1145fd65b9df3415c490766d0ce0",
+    "removed": true,
+    "branchPreserved": true
+  }
+]

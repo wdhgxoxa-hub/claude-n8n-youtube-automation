@@ -1,0 +1,12 @@
+[
+  {
+    "command": "git push mio version-chatgpt:main",
+    "rc": 0,
+    "output": "To https://github.com/wdhgxoxa-hub/claude-n8n-youtube-automation.git\n   ed02763..8c5fd56  version-chatgpt -> main\n"
+  },
+  {
+    "command": "git push mio version-chatgpt",
+    "rc": 0,
+    "output": "remote: \nremote: Create a pull request for 'version-chatgpt' on GitHub by visiting:        \nremote:      https://github.com/wdhgxoxa-hub/claude-n8n-youtube-automation/pull/new/version-chatgpt        \nremote: \nTo https://github.com/wdhgxoxa-hub/claude-n8n-youtube-automation.git\n * [new branch]      version-chatgpt -> version-chatgpt\n"
+  }
+]

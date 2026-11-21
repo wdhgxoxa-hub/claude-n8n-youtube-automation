@@ -1,0 +1,10 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/claude-n8n-youtube-automation/cooper
+
+
+ Test Files  23 passed (23)
+      Tests  227 passed (227)
+   Start at  00:19:53
+   Duration  11.14s (transform 429ms, setup 185ms, import 5.34s, tests 3.97s, environment 1ms)

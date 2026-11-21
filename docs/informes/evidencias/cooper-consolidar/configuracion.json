@@ -1,0 +1,66 @@
+{
+  "sources": [
+    {
+      "path": "/home/david/Proyectos/cooper-wt/cooper-integracion/cooper/.env.local",
+      "variables": [
+        "AUTH_GOOGLE_ID",
+        "AUTH_GOOGLE_SECRET",
+        "AUTH_SECRET",
+        "AUTH_URL",
+        "COOPER_ADMIN_EMAIL"
+      ]
+    },
+    {
+      "path": "/home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/.env.local",
+      "variables": [
+        "AUTH_GOOGLE_ID",
+        "AUTH_GOOGLE_SECRET",
+        "AUTH_SECRET",
+        "AUTH_URL",
+        "COOPER_ADMIN_EMAIL",
+        "COOPER_DATABASE_PATH",
+        "COOPER_DEMO",
+        "COOPER_FABRICA",
+        "COOPER_N8N_TOKEN",
+        "COOPER_N8N_URL",
+        "COOPER_TEST_MODE",
+        "COOPER_WEBHOOK_SECRET",
+        "NEXT_TELEMETRY_DISABLED"
+      ]
+    },
+    {
+      "path": "/home/david/.config/cooper/codex.env",
+      "variables": [
+        "PUENTE_CODEX_PORT",
+        "PUENTE_CODEX_TOKEN",
+        "PUENTE_CODEX_URL"
+      ]
+    }
+  ],
+  "conflictingVariableNames": [],
+  "effectiveConfigPreserved": true,
+  "output": "/home/david/.config/cooper/cooper.env",
+  "mode": "0600",
+  "variables": [
+    "AUTH_GOOGLE_ID",
+    "AUTH_GOOGLE_SECRET",
+    "AUTH_SECRET",
+    "AUTH_URL",
+    "COOPER_ADMIN_EMAIL",
+    "COOPER_CHAT",
+    "COOPER_CHAT_API_RESPALDO",
+    "COOPER_CLAUDE_BIN",
+    "COOPER_DATABASE_PATH",
+    "COOPER_DEMO",
+    "COOPER_FABRICA",
+    "COOPER_N8N_TOKEN",
+    "COOPER_N8N_URL",
+    "COOPER_TEST_MODE",
+    "COOPER_WEBHOOK_SECRET",
+    "NEXT_TELEMETRY_DISABLED",
+    "NODE_ENV",
+    "PUENTE_CODEX_PORT",
+    "PUENTE_CODEX_TOKEN",
+    "PUENTE_CODEX_URL"
+  ]
+}
