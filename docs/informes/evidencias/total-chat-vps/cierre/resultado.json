@@ -1,0 +1,22 @@
+{
+  "rama": "total-chat-vps",
+  "codigo_verificado": "b840a0b",
+  "imagen_publica_observada": "localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76",
+  "configuracion_chat_vps": "PASS",
+  "transporte_real": "PASS",
+  "reconexion_automatica_observada": "PASS",
+  "https_publico": "PASS",
+  "chat_en_sesion_google": "NOT_RUN: navegador no disponible; OAuth prohibido",
+  "respuestas_18_palabras": "IMPLEMENTADO: pendiente imagen integrada",
+  "transporte_pruebas": 21,
+  "flujos_pruebas": 147,
+  "cierre_lima": "2026-11-21 11:12",
+  "puerta": "PASS",
+  "puerta_rc": 0,
+  "unitarias": 284,
+  "e2e": 43,
+  "errores": 0,
+  "advertencias": 0,
+  "flujos_rc": 0,
+  "transporte_rc": 0
+}

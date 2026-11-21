@@ -1,0 +1,43 @@
+{
+  "fecha": "2026-11-21T16:07:22.325Z",
+  "origen": "https://cooper.cooperestudio.com",
+  "sesion": "sin sesión; no se inicia OAuth",
+  "resultados": [
+    {
+      "ruta": "/api/salud",
+      "estado": 200,
+      "esperado": 200,
+      "ok": true
+    },
+    {
+      "ruta": "/entrar",
+      "estado": 200,
+      "esperado": 200,
+      "ok": true
+    },
+    {
+      "ruta": "/",
+      "estado": 307,
+      "esperado": 307,
+      "ok": true
+    },
+    {
+      "ruta": "/api/estado",
+      "estado": 401,
+      "esperado": 401,
+      "ok": true
+    },
+    {
+      "ruta": "/api/eventos",
+      "estado": 401,
+      "esperado": 401,
+      "ok": true
+    },
+    {
+      "ruta": "/api/chat",
+      "estado": 401,
+      "esperado": 401,
+      "ok": true
+    }
+  ]
+}

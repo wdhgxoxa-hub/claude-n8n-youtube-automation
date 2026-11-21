@@ -1,0 +1,21 @@
+{
+  "intervalo_lima": "2026-11-21 11:05–11:07",
+  "fuente": "salidas de herramientas de esta continuación",
+  "antes": {
+    "tunel_active": "active",
+    "tunel_reinicios": 0
+  },
+  "interrupcion": {
+    "ssh_rc": 255,
+    "ssh_resultado": "Connection refused",
+    "https_resultado": "ECONNREFUSED",
+    "causa": "no determinada"
+  },
+  "despues": {
+    "tunel_active": "active",
+    "tunel_reinicios": 3,
+    "plan_http": 200,
+    "plan_duracion_ms": 6211
+  },
+  "intervencion_en_servicios": false
+}

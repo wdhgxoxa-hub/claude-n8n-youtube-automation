@@ -1,0 +1,29 @@
+✔ Codex simulado: stdin literal, sandbox, autenticación ChatGPT y entorno sin claves (30.381336ms)
+✔ búsqueda requiere evento real, no basta afirmarlo en el texto (83.929612ms)
+✔ Codex simulado: codex_fallo (27.435446ms)
+✔ Codex simulado: respuesta_invalida (25.148102ms)
+✔ Codex simulado: salida_excesiva (31.924782ms)
+✔ mata una ejecución lenta y devuelve timeout acotado (153.788589ms)
+✔ cancela el proceso cuando se desconecta el cliente (103.859315ms)
+✔ HTTP local: rechaza token, Origin, tareas y argumentos ajenos sin ejecutar (25.932243ms)
+✔ HTTP: respuesta compatible y logs sin prompt, cabeceras ni stderr (57.907619ms)
+✔ HTTP: saturación devuelve 429, y libera la plaza al terminar (5.625088ms)
+✔ chat local: contrato separado, esquema fijo y cero herramientas del CLI (82.31417ms)
+✔ chat y fábrica comparten la única plaza del puente (3.064953ms)
+✔ une tokens distintos mediante socket privado y conserva respuesta (28.474969ms)
+✔ rechaza identidad incorrecta, Origin, rutas arbitrarias y cuerpos excesivos (7.455585ms)
+✔ PC apagada responde indisponible y recupera sin reiniciar VPS (6.349377ms)
+✔ no sigue redirecciones del destino (2.971336ms)
+✔ rechaza directorio de socket accesible a otros (1.432728ms)
+✔ sondea el destino configurado y prohíbe redirecciones en ambas peticiones (2.321692ms)
+✔ rechaza destinos inseguros antes de usar el token y no los imprime (1.77563ms)
+✔ no acredita chat completo si Cooper usa otro proveedor o permite gasto API (1.32126ms)
+✔ la salud y la caída siguen disponibles en relés sin configuración de chat (0.990098ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 698.163968

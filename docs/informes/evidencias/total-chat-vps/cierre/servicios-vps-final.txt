@@ -1,0 +1,9 @@
+cooper-chat-runner-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 Up 2 minutes (healthy)
+cooper-chat-n8n-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 Up 2 minutes (healthy)
+cooper-runner-1 ghcr.io/n8n-io/runners:2.47.4 Up 2 minutes (healthy)
+cooper-chat-cooper-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 Up 2 minutes (healthy)
+cooper-n8n-1 ghcr.io/n8n-io/n8n:2.47.4 Up 2 minutes (healthy)
+cooper-cooper-1 localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76 Up 2 minutes (healthy)
+cooper-caddy-1 caddy:2.11.2-alpine Up 2 minutes (healthy)
+700 operador operador /run/cooper-chat
+600 operador operador /run/cooper-chat/puente.sock
