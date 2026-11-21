@@ -221,3 +221,57 @@ El selector sigue fallando si existen dos compositores accesibles, no usa
 `first()` y conserva el recorrido real por Tab y las dos aprobaciones manuales.
 ESLint focal sin advertencias y `git diff --check`: PASS; ejecución en motores
 delegada a la puerta/rondas del integrador sobre su snapshot final.
+
+## Integración de rendimiento tras su cierre
+
+21-11-2026, 15:03 Lima. La rama `total-rendimiento` cerró en `42c58819`
+después del corte de la matriz. Se creó `total-integrador-web-rendimiento` en
+este worktree propio desde `846402b`, preservando la rama anterior. Los ocho
+commits tenían cambios funcionales faltantes; se avisó al integrador antes de
+continuar para detener y reconstruir imagen/rondas. Código entregado:
+`0dcc306`; cierre histórico incorporado en `9783430`.
+
+La [evidencia de conciliación](evidencias/total-integrador-web/rendimiento-integracion.json)
+relaciona cada commit de origen con su destino. La matriz conserva su corte
+histórico y añade este seguimiento: rendimiento ya no queda excluido como activo.
+
+Decisiones de conflictos:
+
+- SQLite: nueva `0018_rendimiento`, índice 13 del diario, fecha mayor a todas las
+  anteriores. Trece entradas y trece archivos SQL anteriores idénticos byte a
+  byte. Se mantienen períodos de Lima y exclusión de gastos futuros; el agregado
+  SQL y el benchmark usan ambos límites. No se restauró el comportamiento UTC.
+- Operación: datos iniciales autorizados desde el servidor, conservando metadata,
+  Competencia, catálogo sin validadores en cliente y límites/permisos existentes.
+  Las fixtures que interceptan API usan el control público Actualizar. Durante
+  esa consulta se conserva el estado accesible de carga y los datos previos.
+- Marcas: galerías desmontadas mientras están cerradas; al abrirlas, las imágenes
+  conservan carga inmediata y autenticación privada. Video mantiene reproducción
+  y no solicita bytes antes de la acción correspondiente.
+- Movimiento: primera pintura estable y coreografía en navegación, conservando
+  el ref de foco accesible del contenido; poster de bienvenida de una sola fuente.
+- Documentación: cierre original y propuesta Caddy conservados con su alcance.
+  ESTADO retiene todos los hechos y pendientes actuales y añade solo la integración.
+
+Se leyeron las guías oficiales incluidas en Next instalado sobre datos de servidor,
+carga diferida e imágenes autenticadas. Lint y typecheck: PASS, cero advertencias.
+Pruebas de SQLite, períodos, migraciones, Operación, Marcas, medios, retención y
+Resultados: **91/91 PASS en ocho archivos**, 7,51 s. La primera pasada tuvo 90/91:
+la expectativa de redondeo del fixture conservaba la suma histórica con un gasto
+futuro; se verificó el agregado JS sin ese registro y se repitió toda la selección.
+`git diff --check`: PASS. Esta verificación focal no acredita la puerta completa,
+los E2E ni el rendimiento de la combinación; el integrador los ejecuta sobre su
+nuevo snapshot. No se accedió al VPS ni se modificaron worktrees ajenos.
+
+El cierre original acredita 286 unitarias, 44 E2E y 147 flujos sobre `7aab905`;
+sus métricas y límites permanecen históricos. La nueva combinación tiene catorce
+migraciones y exige renovar el ensayo de actualización/reversa de la imagen y base.
+La decisión de integrar y desplegar ya está autorizada por esta misión; la propuesta
+Caddy, medición de campo y aceptación física permanecen en sus pendientes originales.
+
+Se leyó además el recibo público del orquestador `06705b0`: cierre-3 sobre `bfd5e79`
+terminó FAIL, 85 aprobadas, una fallida y seis no ejecutadas; cierre-4 no iniciado.
+Sentinel detectó en Publicados a 1440 px `ERR_BLOCKED_BY_CLIENT.Inspector` durante
+caos (semillas 1528974480/1528974481). Causa aún en diagnóstico; se comunicó como
+riesgo compartido sin atribuirla a rendimiento ni filtrar el guardián. Las 24
+capturas que ese frente revisó sin hallazgos no sustituyen una ronda aprobada.

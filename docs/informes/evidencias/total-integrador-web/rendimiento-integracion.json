@@ -1,0 +1,162 @@
+{
+  "fecha_lima": "2026-11-21T15:04:09.572203-05:00",
+  "base": "846402b2ff6f02f5d7003069a073569e71357bca",
+  "codigo": "0dcc30611295ad6f8f808f73c38f72867222f093",
+  "cierre_origen": "42c58819f6db2e391079f59e073ece5bb470f3b5",
+  "cierre_integrado": "978343095cdccba1b93b57ff596fa21c9bdc4331",
+  "mapa": [
+    {
+      "origen": "f72544bb445f2e960dd18c2bb73a7a35e16e6654",
+      "integrado": "7dbaa498db31b614ec84195ae3c69f3736315dd2"
+    },
+    {
+      "origen": "5ca74945d2852c4fac028685f5c5a622081db3a6",
+      "integrado": "d3078a032ec664017a5fc24e1f7673958ac068d1"
+    },
+    {
+      "origen": "16488e924c22dd801cbf7a80dd06c04e654ad93a",
+      "integrado": "4849fbc940ac122a7767a39c2dcc05e1e93993d6"
+    },
+    {
+      "origen": "15d7e4faaa71b58282c8c6c1f04ca4bc524fc878",
+      "integrado": "582fe8136c97b7faa053f0693dfbdcfc5e3b62a6"
+    },
+    {
+      "origen": "237633411b754dc2dacd193bd188e2c1cdb48179",
+      "integrado": "d4e363a9030bddacabc1b8fe095969982d37ab50"
+    },
+    {
+      "origen": "161f4da4a7ea9c898e9dc382b909aa4a5b375c3f",
+      "integrado": "65d90ae98fd7368d34323d0655d704e97d593303"
+    },
+    {
+      "origen": "e8968d737024a49b5a6abb58c0889b26e9ba4366",
+      "integrado": "ee48a60c35292baecef80d56f6913f95efa6fa8f"
+    },
+    {
+      "origen": "7aab905696017609ee38f79e71f6b8e5f476c746",
+      "integrado": "df5ee742208b6808f34e51d66edd3bcb6a9198a0"
+    }
+  ],
+  "compatibilidad": [
+    "5b9f73cd20ada37995434a8bf85102164e9610b4",
+    "0dcc30611295ad6f8f808f73c38f72867222f093"
+  ],
+  "migraciones": {
+    "anteriores_identicas": [
+      {
+        "archivo": "cooper/drizzle/0000_inicio.sql",
+        "sha256": "54961e6f6f08d000d4db33f78c67c2253125883f4bfc696eac6844b6468efc07"
+      },
+      {
+        "archivo": "cooper/drizzle/0001_presentadores.sql",
+        "sha256": "7b576a8e7b76720b9888425a13de135489010baaae999359132ca7b48941f342"
+      },
+      {
+        "archivo": "cooper/drizzle/0002_puente.sql",
+        "sha256": "2f9d128472c57127189d256c084121aaa574df63e50532b0240cbd3b3e1cfbd8"
+      },
+      {
+        "archivo": "cooper/drizzle/0003_medios_reales.sql",
+        "sha256": "ffaca1dcfa841bffaf0be3bed3d741438ddc2558414e2cea4ead51ddeaf4c623"
+      },
+      {
+        "archivo": "cooper/drizzle/0004_presentacion.sql",
+        "sha256": "cbeb55d64b44740b8f9fc20bd8e986a30a0b457191ea6d64859e388b4f014660"
+      },
+      {
+        "archivo": "cooper/drizzle/0005_chat_ia.sql",
+        "sha256": "3f98d53f8951e271cbff8df757522e18dfd3b3f6ba363659b17881f60e9c73d7"
+      },
+      {
+        "archivo": "cooper/drizzle/0006_whatsapp.sql",
+        "sha256": "1e435e50b5d5355cbc09fde4195affef5dddac92a540fb05b565b53058a279a9"
+      },
+      {
+        "archivo": "cooper/drizzle/0007_noticias.sql",
+        "sha256": "efa68a5e360540e488917ec400d0e24ef57d7b732aaed9c809f5d077e47cb9ce"
+      },
+      {
+        "archivo": "cooper/drizzle/0008_observabilidad.sql",
+        "sha256": "e4ff85846ea48794ba93128386ea545134bd87cb3da46c292dd52deb2e3dc3ba"
+      },
+      {
+        "archivo": "cooper/drizzle/0009_memoria.sql",
+        "sha256": "3df66fb77fe5ac9c1647e6be4dba3dbc71a121bd3b20a1322ac00ab2dafd28c6"
+      },
+      {
+        "archivo": "cooper/drizzle/0010_marcas.sql",
+        "sha256": "e9f67de3d58e5d0d7131562dae846c6d571656c0e5a73cdac4a5729046c0a8dc"
+      },
+      {
+        "archivo": "cooper/drizzle/0011_montajes_fabrica.sql",
+        "sha256": "d051205046569e6e674ca2f452c2d77add240511ee3422a10b4feebfb716a1d3"
+      },
+      {
+        "archivo": "cooper/drizzle/0017_biblioteca.sql",
+        "sha256": "0a8fa5aa504d185d021a0b977692efe3d96d19dfb24be49561aad25b6db6ab45"
+      }
+    ],
+    "diario_anterior_identico": true,
+    "entradas": 14,
+    "nueva": {
+      "idx": 13,
+      "version": "6",
+      "when": 1795176018000,
+      "tag": "0018_rendimiento",
+      "breakpoints": true
+    }
+  },
+  "verificacion": [
+    {
+      "comando": "npm run typecheck",
+      "salida": 0,
+      "advertencias": 0
+    },
+    {
+      "comando": "npm run lint",
+      "salida": 0,
+      "advertencias": 0
+    },
+    {
+      "comando": "npm test -- --run tests/rendimiento-sqlite.test.ts tests/periodos.test.ts tests/revision-migraciones.test.ts tests/operacion.test.ts tests/marcas.test.ts tests/medios.test.ts tests/retencion.test.ts tests/resultados.test.ts",
+      "salida": 0,
+      "archivos": 8,
+      "pruebas": 91,
+      "duracion_s": 7.51,
+      "advertencias": 0,
+      "intento_anterior": "90/91: expectativa antigua de redondeo del fixture sin exclusión del futuro; se comprobó el mismo agregado JS y se repitió la selección completa."
+    },
+    {
+      "comando": "git diff --check",
+      "salida": 0
+    }
+  ],
+  "limites": [
+    "No acredita la puerta completa ni E2E de esta combinación; integrador reconstruye su imagen y ejecuta puerta y dos rondas.",
+    "Evidencia de rendimiento original corresponde a de397f3/7aab905, no a esta integración.",
+    "La migración requiere ensayo de actualización y reversa de imagen/configuración/base con catorce entradas.",
+    "La propuesta Caddy es documentación; no se aplica."
+  ],
+  "sentinel_orquestador": {
+    "commit": "06705b07eceaa9da6e7bc0b72e7c3286f78657e6",
+    "recibo": "docs/informes/evidencias/cooper-total/cierre-3-fallido/resultado.json",
+    "fuente": "bfd5e79283bdd2c571937a9f30d8ff512015430f",
+    "resultado": "FAIL",
+    "aprobadas": 85,
+    "fallidas": 1,
+    "no_ejecutadas": 6,
+    "cierre_4": "NO_INICIADO",
+    "hallazgo": "Publicados 1440: ERR_BLOCKED_BY_CLIENT.Inspector durante caos",
+    "semillas": [
+      1528974480,
+      1528974481
+    ],
+    "causa": "En diagnóstico. No se filtra ni se cambia el guardián."
+  },
+  "documentacion_next": [
+    "node_modules/next/dist/docs/01-app/01-getting-started/06-fetching-data.md",
+    "node_modules/next/dist/docs/01-app/02-guides/lazy-loading.md",
+    "node_modules/next/dist/docs/01-app/03-api-reference/02-components/image.md"
+  ]
+}

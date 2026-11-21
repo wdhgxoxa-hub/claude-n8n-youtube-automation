@@ -9926,5 +9926,54 @@
     "Las ramas activas o cambiantes se registran con SHA; comprobar de nuevo sus puntas antes del push.",
     "No se reintroducen informes/cierres viejos para forzar equivalencia textual ni fuentes privadas Sentinel.",
     "Los JSON generados se concilian desde módulos fuente; la puerta/generación final corresponde al integrador."
+  ],
+  "seguimientos_posteriores": [
+    {
+      "fecha_lima": "2026-11-21T15:04:09.572203-05:00",
+      "rama": "total-rendimiento",
+      "sha_cierre": "42c58819f6db2e391079f59e073ece5bb470f3b5",
+      "estado": "integrada_tras_cierre_posterior",
+      "codigo_destino": "0dcc30611295ad6f8f808f73c38f72867222f093",
+      "mapa": [
+        {
+          "origen": "f72544bb445f2e960dd18c2bb73a7a35e16e6654",
+          "integrado": "7dbaa498db31b614ec84195ae3c69f3736315dd2"
+        },
+        {
+          "origen": "5ca74945d2852c4fac028685f5c5a622081db3a6",
+          "integrado": "d3078a032ec664017a5fc24e1f7673958ac068d1"
+        },
+        {
+          "origen": "16488e924c22dd801cbf7a80dd06c04e654ad93a",
+          "integrado": "4849fbc940ac122a7767a39c2dcc05e1e93993d6"
+        },
+        {
+          "origen": "15d7e4faaa71b58282c8c6c1f04ca4bc524fc878",
+          "integrado": "582fe8136c97b7faa053f0693dfbdcfc5e3b62a6"
+        },
+        {
+          "origen": "237633411b754dc2dacd193bd188e2c1cdb48179",
+          "integrado": "d4e363a9030bddacabc1b8fe095969982d37ab50"
+        },
+        {
+          "origen": "161f4da4a7ea9c898e9dc382b909aa4a5b375c3f",
+          "integrado": "65d90ae98fd7368d34323d0655d704e97d593303"
+        },
+        {
+          "origen": "e8968d737024a49b5a6abb58c0889b26e9ba4366",
+          "integrado": "ee48a60c35292baecef80d56f6913f95efa6fa8f"
+        },
+        {
+          "origen": "7aab905696017609ee38f79e71f6b8e5f476c746",
+          "integrado": "df5ee742208b6808f34e51d66edd3bcb6a9198a0"
+        }
+      ],
+      "compatibilidad": [
+        "5b9f73cd20ada37995434a8bf85102164e9610b4",
+        "0dcc30611295ad6f8f808f73c38f72867222f093"
+      ],
+      "evidencia": "rendimiento-integracion.json",
+      "nota": "Sustituye la exclusión de rendimiento como activo del corte original. El resto de la matriz sigue describiendo su SHA objetivo histórico; no es una nueva auditoría de todas las puntas."
+    }
   ]
 }
