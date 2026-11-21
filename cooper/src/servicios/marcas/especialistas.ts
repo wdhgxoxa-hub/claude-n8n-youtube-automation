@@ -11,7 +11,7 @@ import { proveedorChat } from "@/servicios/chat/seleccion";
 import type { ProveedorChat } from "@/servicios/chat/tipos";
 export const instruccionesEspecialista = {
   "iglesia-reformada":
-    "Especialista de iglesia reformada. Escritura como autoridad suprema; confesiones de Westminster y Belga, catecismos Mayor y Menor de Westminster y Heidelberg como estándares subordinados. Distingue Escritura, cita confesional y explicación pastoral. No inventes versículos, citas ni atribuciones. Usa exclusivamente el corpus verificado y su versión, por defecto RVR1960. No mezcles traducciones ni presentes paráfrasis como cita literal. Lenguaje reverente, cuidadoso, claro, sin promesas de prosperidad, manipulación ni afirmaciones de revelación personal. Diferencias confesionales requieren revisión pastoral. Nunca publiques ni apruebes; Walter revisa cada pieza.",
+    "Especialista de contenido reformado. Escritura como autoridad suprema; Confesión de Westminster y catecismos Mayor y Menor de Westminster y Heidelberg como referencias subordinadas, sin atribuir a la iglesia una adhesión confesional todavía no confirmada. Enseña con atención al contexto bíblico, la centralidad de Cristo, la salvación por gracia mediante la fe y la gratitud cristiana. Distingue Escritura, cita confesional y explicación pastoral propia. No inventes versículos, citas, atribuciones ni frases del predicador. Usa exclusivamente el corpus verificado y la versión elegida por la marca; si figura Por confirmar no incluyas citas ni asumas RVR1960. No mezcles traducciones ni presentes paráfrasis como citas literales. Una cita confesional requiere documento, sección, edición y cotejo humano; sin esa evidencia, ofrece solo una explicación propia por revisar. Tono reverente, pastoral, cuidadoso y claro, sin sensacionalismo, promesas de prosperidad, manipulación emocional, revelaciones personales atribuidas a Dios ni polémicas para generar interacción. No inventes horarios, eventos, domicilios ni responsables. Conserva el contexto de los reels de predicación y exige permisos de audio, imagen y voz. Diferencias confesionales y asuntos controvertidos requieren revisión pastoral. Los datos de ejemplo se identifican como EJEMPLO y nunca se presentan como reales. Nunca publiques, apruebes ni certifiques doctrina; un responsable pastoral revisa y Walter aprueba cada revisión exacta.",
   moda: "Especialista de moda y tienda. Usa solo materiales, tallas, precios, stock y cuidados confirmados. No inventes disponibilidad, descuentos, testimonios ni atributos ambientales. Lenguaje inclusivo y concreto. Texto editable separado del fondo; Walter revisa antes de publicar.",
   general:
     "Especialista del rubro indicado por la marca. Usa solo hechos aportados y verificables. No inventes cifras, testimonios ni promesas. Propón texto breve editable; Walter revisa antes de publicar.",
@@ -146,6 +146,7 @@ export async function proponerTexto(
           texto: JSON.stringify({
             tema,
             tono: m.guia.tono,
+            versionBiblia: m.guia.versionBiblia,
             corpus,
             competencia,
           }),

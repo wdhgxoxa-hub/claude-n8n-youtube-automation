@@ -380,6 +380,9 @@ export const piezasMarca = sqliteTable("piezas_marca", {
     .default("borrador"),
   aprobadaPor: text("aprobada_por").notNull().default(""),
   aprobadaRevision: integer("aprobada_revision").notNull().default(0),
+  revisionDoctrinal: text("revision_doctrinal", { mode: "json" }).$type<
+    import("@/servicios/marcas/tipos").RevisionDoctrinal | null
+  >(),
   programada: integer("programada").notNull(),
   leaseAt: integer("lease_at").notNull().default(0),
   remoto: text("remoto").notNull().default(""),
