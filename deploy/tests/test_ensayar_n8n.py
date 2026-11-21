@@ -58,6 +58,42 @@ class EnsayoN8nTest(unittest.TestCase):
             self.assertEqual(result['columnas_agregadas'], 1)
             self.assertEqual(ensayo.inventory(source)['flujos']['existente'][0], 1)
 
+    def test_solo_columnas_no_importa_no_publica_y_restaura_exactamente(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source, entry, manifest, script = self.fixture(root)
+            entry.write_text('[]')
+            plan = [{'table': 'fab_eventos', 'name': 'evento', 'type': 'string'}]
+            calls = []
+            def run(data, _entry, _manifest, _script, command, args):
+                calls.append(command)
+                self.assertEqual(command, 'node')
+                with closing(sqlite3.connect(data / 'database.sqlite')) as db, db:
+                    if '--aplicar' in args:
+                        db.execute('ALTER TABLE data_table_user_prueba ADD COLUMN evento TEXT')
+                        return json.dumps({'columnas': plan})
+                    fields = [r[1] for r in db.execute('PRAGMA table_info(data_table_user_prueba)')]
+                    return json.dumps({'columnas': [] if 'evento' in fields else plan})
+            with patch.object(ensayo, 'run_container', side_effect=run):
+                result = ensayo.rehearse(source, entry, manifest, script, root / 'ensayo', columns_only=True)
+            self.assertEqual(calls, ['node'] * 3)
+            self.assertEqual(result['modalidad'], 'solo_columnas')
+            self.assertEqual(result['plan_columnas'], plan)
+            self.assertEqual(result['columnas_script_sha256'], ensayo.operar.digest(script))
+            self.assertEqual(result['flujos_importados'], 0)
+            self.assertEqual(result['respaldo_sha256'], result['restauracion_sha256'])
+            self.assertEqual(ensayo.inventory(source)['flujos'], ensayo.inventory(root / 'ensayo/actualizada/database.sqlite')['flujos'])
+
+    def test_solo_columnas_rechaza_workflows_y_plan(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source, entry, manifest, script = self.fixture(root)
+            with self.assertRaisesRegex(RuntimeError, 'Solo columnas'):
+                ensayo.rehearse(source, entry, manifest, script, root / 'ensayo', columns_only=True)
+            entry.write_text('[]')
+            with self.assertRaisesRegex(RuntimeError, 'Solo columnas'):
+                ensayo.rehearse(source, entry, manifest, script, root / 'ensayo', root / 'plan.json', True)
+
     def test_rechaza_flujo_activo_cambio_ajeno_o_filas_modificadas(self):
         before = {'flujos': {'a': [1,'v','v',1], 'b': [1,'b','b',1]}, 'datos': {'t': 'hash'}, 'conteos': {}}
         for flows, hashes in [({'a': [1,'n',None,2], 'b': [1,'b','b',1]}, {'t': 'hash'}),

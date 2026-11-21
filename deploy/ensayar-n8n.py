@@ -134,14 +134,15 @@ def validate_published(before, after, target_ids, order):
         operar.require(before['conteos'].get(name) == after['conteos'].get(name), 'Publicación modificó conteo ajeno')
 
 
-def rehearse(source, entry, manifest, column_script, destination, publish=None):
+def rehearse(source, entry, manifest, column_script, destination, publish=None, columns_only=False):
     operar.require(os.geteuid() != 0, 'Solo Podman rootless')
     source, entry, manifest, column_script, destination = [p.resolve() for p in (source, entry, manifest, column_script, destination)]
     operar.require(all(p.is_file() for p in (source, entry, manifest, column_script)), 'Falta entrada regular')
     operar.require(not destination.exists() and not destination.is_relative_to(source.parent), 'Destino nuevo fuera del origen requerido')
     # La entrada se consume opacamente; no se muestra contenido ni referencias de credenciales.
     workflows = json.loads(entry.read_text())
-    operar.require(isinstance(workflows, list) and workflows, 'Lote vacío o inválido')
+    operar.require(isinstance(workflows, list) and (workflows or columns_only), 'Lote vacío o inválido')
+    operar.require(not columns_only or (workflows == [] and publish is None), 'Solo columnas exige entrada vacía y ninguna publicación')
     ids = {flow['id'] for flow in workflows}
     operar.require(len(ids) == len(workflows) and all(isinstance(x, str) and x for x in ids), 'IDs inválidos o duplicados')
     operar.require(all(flow.get('active') is False for flow in workflows), 'El lote debe entrar inactivo')
@@ -165,7 +166,8 @@ def rehearse(source, entry, manifest, column_script, destination, publish=None):
     operar.require(planned['columnas'] == applied['columnas'], 'Cambió el plan de columnas')
     again = column_result(cli('node', '/ensayo/n8n-columnas.cjs', '/entrada/columnas.json'))
     operar.require(not again['columnas'], 'Columnas no idempotentes')
-    cli('n8n', 'import:workflow', '--input=/entrada/workflows.json')
+    if not columns_only:
+        cli('n8n', 'import:workflow', '--input=/entrada/workflows.json')
     upgraded = inventory(work / 'database.sqlite', baseline['columnas'])
     validate_import(baseline, upgraded, ids)
     if publish is not None:
@@ -187,7 +189,9 @@ def rehearse(source, entry, manifest, column_script, destination, publish=None):
               'tablas_restauradas': len(baseline['conteos']), 'integridad_y_claves_foraneas': 'PASS',
               'respaldo_sha256': original_hash, 'restauracion_sha256': restored_hash,
               'workflow_ids_active_version_sha256': digest(baseline['flujos']),
-              'tablas_negocio_sha256': digest(baseline['datos']), 'entrada_sha256': operar.digest(entry), 'manifiesto_sha256': operar.digest(manifest)}
+              'tablas_negocio_sha256': digest(baseline['datos']), 'entrada_sha256': operar.digest(entry), 'manifiesto_sha256': operar.digest(manifest),
+              'columnas_script_sha256': operar.digest(column_script), 'plan_columnas': applied['columnas'],
+              'modalidad': 'solo_columnas' if columns_only else 'workflows'}
     if publish is not None:
         result.update({'publicacion': 'PASS', 'flujos_publicados': len(order), 'publicados': order,
                        'publicar_sha256': operar.digest(publish), 'versiones_publicadas': 'PASS'})
@@ -201,9 +205,10 @@ if __name__ == '__main__':
     for arg in ('base', 'entrada', 'manifiesto', 'columnas', 'salida'):
         parser.add_argument('--' + arg, required=True, type=Path)
     parser.add_argument('--publicar', type=Path, help='JSON con IDs en orden de dependencias; publicación aislada antes de la reversa')
+    parser.add_argument('--solo-columnas', action='store_true', help='Migración aditiva sin importar ni publicar workflows; entrada JSON []')
     args = parser.parse_args()
     try:
-        print(json.dumps(rehearse(args.base, args.entrada, args.manifiesto, args.columnas, args.salida, args.publicar)))
+        print(json.dumps(rehearse(args.base, args.entrada, args.manifiesto, args.columnas, args.salida, args.publicar, args.solo_columnas)))
     except (OSError, ValueError, KeyError, TypeError, RuntimeError, sqlite3.Error, subprocess.SubprocessError):
         print('Ensayo n8n fallido; copias conservadas y producción intacta. No se muestra salida privada.', file=sys.stderr)
         sys.exit(1)

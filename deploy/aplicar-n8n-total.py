@@ -20,6 +20,14 @@ def modulo_ensayo():
 
 
 def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
+    if diff.get('modalidad') == 'solo_columnas':
+        operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS' and ensayo.get('modalidad') == 'solo_columnas', 'Falta ensayo y reversa de solo columnas')
+        operar.require(ensayo.get('entrada_sha256') == operar.digest(entrada) and json.loads(entrada.read_text()) == [], 'Solo columnas exige entrada vacía ensayada')
+        operar.require(ensayo.get('manifiesto_sha256') == operar.digest(manifiesto), 'El manifiesto difiere del ensayado')
+        operar.require(ensayo.get('columnas_script_sha256') == operar.digest(Path(__file__).with_name('n8n-columnas.cjs')), 'El migrador difiere del ensayado')
+        operar.require(plan is None and diff.get('republicar_originales') == [] and ensayo.get('flujos_importados') == 0, 'Solo columnas no admite publicaciones')
+        operar.require(isinstance(ensayo.get('plan_columnas'), list), 'Falta plan de columnas ensayado')
+        return set(), []
     if 'modalidad' in diff:
         operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total') and 'plan_publicacion' in diff,
                         'El delta exige modalidad y plan de publicación certificados')
@@ -61,6 +69,7 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
 
 def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
     ids, publicar = validar_entradas(entrada, diff, ensayo, manifiesto, plan)
+    solo_columnas = diff.get('modalidad') == 'solo_columnas'
     operar.require(not salida.exists(), 'El recibo debe ser nuevo')
     validar = modulo_ensayo()
     destino = op.state / ('lote-ejecucion-' + str(time.time_ns()))
@@ -106,13 +115,17 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
                               '--entrypoint', entrypoint, 'n8n', *args)
 
         planned = validar.column_result(cli('node', '/lote/columnas.cjs', '/lote/columnas.json'))
+        if solo_columnas:
+            operar.require(planned['columnas'] == ensayo['plan_columnas'], 'Cambió el plan respecto del ensayo; no se aplicaron columnas')
         applied = validar.column_result(cli('node', '/lote/columnas.cjs', '/lote/columnas.json', '--aplicar', '--diario', '/lote/diario.json'))
         operar.require(planned['columnas'] == applied['columnas'], 'El plan de columnas cambió')
         operar.require(not validar.column_result(cli('node', '/lote/columnas.cjs', '/lote/columnas.json'))['columnas'], 'Columnas no idempotentes')
-        cli('n8n', 'import:workflow', '--input=/lote/entrada.json')
+        if not solo_columnas:
+            cli('n8n', 'import:workflow', '--input=/lote/entrada.json')
         after = validar.inventory(op.data / 'n8n/database.sqlite', before['columnas'])
         validar.validate_import(before, after, ids)
-        cli('node', '/lote/publicar.cjs')
+        if not solo_columnas:
+            cli('node', '/lote/publicar.cjs')
         published = validar.inventory(op.data / 'n8n/database.sqlite', before['columnas'])
         if diff.get('modalidad') == 'activaciones_cooper_total':
             activaciones.permiso_cerrado(op.data / 'n8n/database.sqlite')
@@ -126,7 +139,9 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         operar.require(all(published['flujos'][wid] == meta for wid, meta in before['flujos'].items() if wid not in ids), 'Cambió un workflow ajeno')
         op.compose('up', '-d', '--no-build', '--wait', '--wait-timeout', '180')
         resultado.update({'estado': 'PASS', 'columnas_agregadas': len(applied['columnas']),
-                          'columnas_idempotentes': 'PASS', 'flujos_antes': len(before['flujos']),
+                          'columnas_idempotentes': 'PASS', 'plan_columnas': applied['columnas'],
+                          'columnas_script_sha256': operar.digest(Path(__file__).with_name('n8n-columnas.cjs')),
+                          'modalidad': diff.get('modalidad', 'workflows'), 'flujos_antes': len(before['flujos']),
                           'flujos_despues': len(published['flujos']), 'flujos_ajenos_preservados': 'PASS',
                           'tablas_negocio_preservadas': len(before['datos']),
                           'filas_negocio': sum(before['conteos'][x] for x in before['datos']),

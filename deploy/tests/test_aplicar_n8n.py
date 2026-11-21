@@ -75,6 +75,60 @@ class AplicarTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'Orden'):
             lote.validar_entradas(self.entrada, self.diff, self.ensayo, self.manifiesto, plan)
 
+    def solo_columnas(self):
+        self.entrada.write_text('[]')
+        self.diff = {'modalidad': 'solo_columnas', 'republicar_originales': []}
+        self.ensayo.update({'modalidad': 'solo_columnas', 'flujos_importados': 0,
+                           'entrada_sha256': lote.operar.digest(self.entrada), 'plan_columnas': [],
+                           'columnas_script_sha256': lote.operar.digest(Path(lote.__file__).with_name('n8n-columnas.cjs'))})
+
+    def test_columnas_sin_workflows_exige_script_y_plan_ensayados(self):
+        self.solo_columnas()
+        self.assertEqual(self.validar(), (set(), []))
+        self.ensayo['columnas_script_sha256'] = 'otro'
+        with self.assertRaisesRegex(RuntimeError, 'migrador'):
+            self.validar()
+
+    def test_solo_columnas_rechaza_publicaciones_o_ensayo_normal(self):
+        self.solo_columnas()
+        self.diff['republicar_originales'] = ['ajeno']
+        with self.assertRaisesRegex(RuntimeError, 'publicaciones'):
+            self.validar()
+        self.diff['republicar_originales'] = []
+        self.ensayo['modalidad'] = 'workflows'
+        with self.assertRaisesRegex(RuntimeError, 'solo columnas'):
+            self.validar()
+
+    def test_fallo_tras_columnas_restaurado_sin_importar_ni_publicar(self):
+        self.solo_columnas()
+        base = Path(self.tmp.name)
+        data, state, restore = (base / n for n in ('datos', 'estado', 'restaurado'))
+        for folder in (data / 'n8n', state, restore / 'n8n'):
+            folder.mkdir(parents=True)
+        for folder in (data / 'n8n', restore / 'n8n'):
+            (folder / 'database.sqlite').write_bytes(b'original')
+        calls = []
+        def compose(*args):
+            calls.append(args)
+            self.assertNotIn('import:workflow', args)
+            self.assertNotIn('/lote/publicar.cjs', args)
+            if '--aplicar' in args:
+                (data / 'n8n/database.sqlite').write_bytes(b'columnas-agregadas')
+            return '{"columnas":[]}'
+        before = {'flujos': {'ajeno': [True]}, 'columnas': {}}
+        op = SimpleNamespace(data=data, state=state, compose=compose, snapshot=lambda **_: 'b' * 64,
+                             restore=lambda *_: restore, ownership=lambda: None)
+        validar = SimpleNamespace(inventory=lambda *_: before, column_result=lambda _: {'columnas': []},
+                                  validate_import=lambda *_: (_ for _ in ()).throw(RuntimeError('fallo inyectado tras columnas')))
+        recibo = state / 'resultado.json'
+        with patch.object(lote, 'modulo_ensayo', return_value=validar), patch.object(lote.os, 'chown'):
+            with self.assertRaisesRegex(RuntimeError, 'fallo inyectado'):
+                lote.aplicar(op, self.entrada, self.diff, self.ensayo, self.manifiesto, recibo)
+        self.assertEqual((data / 'n8n/database.sqlite').read_bytes(), b'original')
+        self.assertFalse((state / 'mantenimiento').exists())
+        self.assertEqual(json.loads(recibo.read_text())['reversa'], 'PASS')
+        self.assertTrue(any('--aplicar' in args for args in calls))
+
     def test_fallo_despues_de_importar_restaura_datos_y_reabre_stack(self):
         base = Path(self.tmp.name)
         data, state, restore = (base / n for n in ('datos', 'estado', 'restaurado'))
