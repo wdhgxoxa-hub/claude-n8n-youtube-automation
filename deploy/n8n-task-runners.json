@@ -22,7 +22,9 @@
         "COOPER_N8N_TOKEN",
         "COOPER_WEBHOOK_SECRET",
         "COOPER_ADMIN_EMAIL",
-        "COOPER_WEBHOOK_URL"
+        "COOPER_WEBHOOK_URL",
+        "PUENTE_CODEX_URL",
+        "PUENTE_CODEX_TOKEN"
       ],
       "env-overrides": {
         "NODE_FUNCTION_ALLOW_BUILTIN": "crypto",

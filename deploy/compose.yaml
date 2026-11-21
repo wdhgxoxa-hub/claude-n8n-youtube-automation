@@ -51,6 +51,17 @@ services:
       HEYGEN_API_KEY: ${HEYGEN_API_KEY:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:-}
+      COOPER_CHAT: ${COOPER_CHAT:-simulada}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      COOPER_CHAT_MODELO_CLAUDE: ${COOPER_CHAT_MODELO_CLAUDE:-claude-sonnet-5-5}
+      COOPER_CHAT_MODELO_OPENAI: ${COOPER_CHAT_MODELO_OPENAI:-gpt-6.1-sol}
+      COOPER_MENSAJERIA: ${COOPER_MENSAJERIA:-simulada}
+      COOPER_MENSAJERIA_PAUSA: ${COOPER_MENSAJERIA_PAUSA:-0}
+      WHATSAPP_TOKEN: ${WHATSAPP_TOKEN:-}
+      WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
+      WHATSAPP_APP_SECRET: ${WHATSAPP_APP_SECRET:-}
+      WHATSAPP_VERIFY_TOKEN: ${WHATSAPP_VERIFY_TOKEN:-}
       COOPER_GASTO_ALERTA_USD: ${COOPER_GASTO_ALERTA_USD:-25}
     volumes: ["${DATA_ROOT:?Definir DATA_ROOT}/cooper:/data"]
     networks: [backend, salida]
@@ -98,6 +109,8 @@ services:
       COOPER_WEBHOOK_SECRET: ${COOPER_WEBHOOK_SECRET}
       COOPER_ADMIN_EMAIL: ${COOPER_ADMIN_EMAIL}
       COOPER_WEBHOOK_URL: http://cooper:3000/api/n8n/webhook
+      PUENTE_CODEX_URL: ${PUENTE_CODEX_URL:-http://127.0.0.1:8789}
+      PUENTE_CODEX_TOKEN: ${PUENTE_CODEX_TOKEN:-}
     volumes: ["${DATA_ROOT}/n8n:/home/node/.n8n"]
     networks: [backend, salida]
     healthcheck:
@@ -132,6 +145,8 @@ services:
       COOPER_WEBHOOK_SECRET: ${COOPER_WEBHOOK_SECRET}
       COOPER_ADMIN_EMAIL: ${COOPER_ADMIN_EMAIL}
       COOPER_WEBHOOK_URL: http://cooper:3000/api/n8n/webhook
+      PUENTE_CODEX_URL: ${PUENTE_CODEX_URL:-http://127.0.0.1:8789}
+      PUENTE_CODEX_TOKEN: ${PUENTE_CODEX_TOKEN:-}
     volumes: ["./n8n-task-runners.json:/etc/n8n-task-runners.json:ro"]
     networks: [backend]
     depends_on:
