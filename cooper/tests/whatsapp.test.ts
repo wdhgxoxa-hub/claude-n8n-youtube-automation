@@ -837,9 +837,9 @@ describe("Webhook firmado y decisiones", () => {
   });
 });
 
-it("los cinco JSON tienen español, ejemplos, categorías y nombres compatibles con el emisor", () => {
+it("los seis JSON tienen español, ejemplos, categorías y nombres compatibles con el emisor", () => {
   const files = readdirSync("whatsapp/plantillas");
-  expect(files).toHaveLength(5);
+  expect(files).toHaveLength(6);
   for (const file of files) {
     const template = JSON.parse(
       readFileSync(`whatsapp/plantillas/${file}`, "utf8"),

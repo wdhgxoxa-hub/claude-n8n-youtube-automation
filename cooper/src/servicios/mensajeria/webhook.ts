@@ -1,9 +1,12 @@
+import { encolarMarca } from "@/servicios/marcas/whatsapp";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import {
   videos,
+  piezasMarca,
+  marcaIngestas,
   whatsappContacts as contacts,
   whatsappOutbox as outbox,
   whatsappInbox as inbox,
@@ -41,6 +44,18 @@ const webhookSchema = z.object({
                       timestamp,
                       type: z.string(),
                       context: z.object({ id }).optional(),
+                      image: z
+                        .object({
+                          id: z.string().regex(/^\d+$/),
+                          caption: z.string().max(1800).optional(),
+                        })
+                        .optional(),
+                      video: z
+                        .object({
+                          id: z.string().regex(/^\d+$/),
+                          caption: z.string().max(1800).optional(),
+                        })
+                        .optional(),
                       text: z
                         .object({ body: z.string().max(10000) })
                         .optional(),
@@ -241,6 +256,23 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
                 .run();
               continue;
             }
+            const media =
+              message.type === "image"
+                ? message.image
+                : message.type === "video"
+                  ? message.video
+                  : undefined;
+            if (media && c.consentAt)
+              tx.insert(marcaIngestas)
+                .values({
+                  id: message.id,
+                  ownerId: user.id,
+                  mediaId: media.id,
+                  caption: media.caption ?? "",
+                  createdAt: now,
+                })
+                .onConflictDoNothing()
+                .run();
             const reply =
               message.type === "interactive" &&
               message.interactive?.type === "button_reply"
@@ -260,7 +292,7 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
                 !job.interactive ||
                 job.state !== "aceptado" ||
                 job.remoteId !== message.context?.id ||
-                !["guion", "final"].includes(job.kind)
+                !["guion", "final", "marca"].includes(job.kind)
               )
                 continue;
               try {
@@ -295,6 +327,13 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
               c.consentAt &&
               Object.values(preferencias(c.preferences)).some(Boolean)
             ) {
+              if (user.role === "admin")
+                for (const p of tx
+                  .select()
+                  .from(piezasMarca)
+                  .where(eq(piezasMarca.estado, "pendiente"))
+                  .all())
+                  encolarMarca(p.id, true, now);
               // El texto libre abre la ventana; la decisión requiere un botón ligado a una revisión concreta.
               for (const video of tx
                 .select()
@@ -319,7 +358,16 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
         .get();
       if (!job) throw new ErrorHttp(404, "Aviso no disponible.");
       avisoVigente(job, now, true);
-      if (action.decision === "aprobar")
+      if (job.kind === "marca") {
+        const { decidirPieza } = await import("@/servicios/marcas/servicio");
+        decidirPieza(
+          user,
+          action.resourceId,
+          Number(action.revision),
+          action.decision === "aprobar",
+          now,
+        );
+      } else if (action.decision === "aprobar")
         await fabrica().aprobar(user, action.resourceId, action.revision);
       else
         await fabrica().ejecutar(user, {

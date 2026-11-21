@@ -9,6 +9,7 @@ process.env.COOPER_DATABASE_PATH = resolve(
 );
 process.env.COOPER_ADMIN_EMAIL = "admin@example.test";
 process.env.COOPER_FABRICA = "simulada";
+process.env.COOPER_MARCAS = "simulada";
 process.env.COOPER_CHAT = "simulada";
 process.env.COOPER_MENSAJERIA = "simulada";
 process.env.AUTH_SECRET = randomBytes(32).toString("hex");

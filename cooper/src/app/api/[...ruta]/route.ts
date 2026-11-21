@@ -1,3 +1,4 @@
+import { rutaMarcas } from "@/servicios/marcas/servicio";
 import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -80,6 +81,17 @@ async function handle(request: Request, context: Context) {
     if (method !== "GET") {
       sameOrigin(request);
       rateLimit(user.id);
+    }
+    if (section === "marcas") {
+      if (method === "GET") rateLimit(`read:${user.id}`, 300);
+      return json(
+        await rutaMarcas(
+          user,
+          method,
+          ruta.slice(1),
+          method === "GET" ? undefined : await body(request),
+        ),
+      );
     }
     if (method === "GET") {
       rateLimit(`read:${user.id}`, 300);

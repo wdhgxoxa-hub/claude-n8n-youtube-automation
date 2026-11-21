@@ -40,7 +40,9 @@ export function PreferenciasWhatsApp() {
         guion: values.has("guion"),
         final: values.has("final"),
         publicado: values.has("publicado"),
-        ...(data.user.role === "admin" ? { gasto: values.has("gasto") } : {}),
+        ...(data.user.role === "admin"
+          ? { gasto: values.has("gasto"), marca: values.has("marca") }
+          : {}),
       });
       setMessage("Tus avisos están actualizados.");
     });
@@ -144,7 +146,10 @@ export function PreferenciasWhatsApp() {
                 ["final", "Video listo para la aprobación final"],
                 ["publicado", "Video publicado"],
                 ...(data.user.role === "admin"
-                  ? [["gasto", "Alerta de gasto diario"]]
+                  ? [
+                      ["gasto", "Alerta de gasto diario"],
+                      ["marca", "Piezas de marcas para aprobar"],
+                    ]
                   : []),
               ] as [keyof typeof wa.preferencias, string][]
             ).map(([name, label]) => (

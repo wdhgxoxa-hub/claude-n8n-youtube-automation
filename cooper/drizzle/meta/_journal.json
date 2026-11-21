@@ -57,6 +57,13 @@
       "when": 1795176007000,
       "tag": "0007_noticias",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1795176008000,
+      "tag": "0008_marcas",
+      "breakpoints": true
     }
   ]
 }

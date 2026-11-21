@@ -21,6 +21,7 @@ import {
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import {
   House,
+  Palette,
   Clapperboard,
   Radio,
   UsersRound,
@@ -63,6 +64,7 @@ const cargarMovimiento = () =>
   import("./movimiento-funciones").then((module) => module.default);
 const nav = [
   { path: "/", label: "Inicio", icon: House },
+  { path: "/marcas", label: "Marcas", icon: Palette },
   { path: "/canales", label: "Canales", icon: Radio },
   { path: "/videos", label: "Videos", icon: Clapperboard },
   { path: "/avatares", label: "Avatares y voces", icon: UsersRound },

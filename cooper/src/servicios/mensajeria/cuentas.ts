@@ -18,12 +18,14 @@ export const preferenciasSchema = z.object({
   final: z.boolean(),
   publicado: z.boolean(),
   gasto: z.boolean().default(false),
+  marca: z.boolean().default(false),
 });
 export const sinAvisos = {
   guion: false,
   final: false,
   publicado: false,
   gasto: false,
+  marca: false,
 };
 export function preferencias(text: string) {
   return preferenciasSchema.catch(sinAvisos).parse(JSON.parse(text));
@@ -223,7 +225,7 @@ export function guardarPreferencias(
     c.simulated !== proveedorMensajeria().simulada
   )
     throw new ErrorHttp(409, "Verifica tu número antes de activar los avisos.");
-  if (p.gasto && current.role !== "admin")
+  if ((p.gasto || p.marca) && current.role !== "admin")
     throw new ErrorHttp(403, "Aviso no disponible.");
   db()
     .update(contacts)
@@ -245,7 +247,7 @@ export function estadoWhatsApp(user: User) {
       guion: p.guion,
       final: p.final,
       publicado: p.publicado,
-      ...(user.role === "admin" ? { gasto: p.gasto } : {}),
+      ...(user.role === "admin" ? { gasto: p.gasto, marca: p.marca } : {}),
     },
   };
 }

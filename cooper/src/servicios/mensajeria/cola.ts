@@ -1,3 +1,4 @@
+import { piezaAviso } from "@/servicios/marcas/whatsapp";
 import { randomUUID } from "node:crypto";
 import { and, eq, lte, gte, desc, sql } from "drizzle-orm";
 import { db } from "@/db";
@@ -65,6 +66,11 @@ export function avisoVigente(
   if (job.kind === "gasto") {
     if (user.role !== "admin") throw new ErrorHttp(403, "Aviso no disponible.");
     return { user, contacto: c };
+  }
+  if (job.kind === "marca") {
+    if (user.role !== "admin")
+      throw new ErrorHttp(403, "Solo Walter revisa estas piezas.");
+    return { user, contacto: c, pieza: piezaAviso(job) };
   }
   const video = db()
     .select()
@@ -155,7 +161,7 @@ export function construirMensaje(
   job: AvisoWhatsApp,
   now = Date.now(),
 ): MensajeWhatsApp {
-  const { contacto: c, video } = avisoVigente(job, now);
+  const { contacto: c, video, pieza } = avisoVigente(job, now);
   const base = {
     messaging_product: "whatsapp" as const,
     recipient_type: "individual" as const,
@@ -185,7 +191,7 @@ export function construirMensaje(
   const token = tokenRevision(job),
     url = urlRevision(token);
   if (
-    (job.kind === "guion" || job.kind === "final") &&
+    (job.kind === "guion" || job.kind === "final" || job.kind === "marca") &&
     c.incomingAt > now - DIA &&
     c.incomingAt <= now
   ) {
@@ -195,7 +201,7 @@ export function construirMensaje(
       interactive: {
         type: "button",
         body: {
-          text: `Revisa ${job.kind === "guion" ? "el guion" : "la versión final"} de «${video!.title}» en Cooper: ${url}\nSi pides cambios, podrás detallarlos en Cooper.`,
+          text: `Revisa ${job.kind === "guion" ? "el guion" : "la versión final"} de «${pieza?.datos.titulo ?? video!.title}» en Cooper: ${url}\nSi pides cambios, podrás detallarlos en Cooper.`,
         },
         action: {
           buttons: [
@@ -219,6 +225,7 @@ export function construirMensaje(
     final: "cooper_aprobacion_final",
     publicado: "cooper_video_publicado",
     gasto: "cooper_alerta_gasto_admin",
+    marca: "cooper_aprobacion_marca",
   };
   return {
     ...base,
@@ -229,7 +236,13 @@ export function construirMensaje(
       components: [
         {
           type: "body",
-          parameters: [text(job.kind === "gasto" ? job.detail : video!.title)],
+          parameters: [
+            text(
+              job.kind === "gasto"
+                ? job.detail
+                : (pieza?.datos.titulo ?? video!.title),
+            ),
+          ],
         },
         {
           type: "button",

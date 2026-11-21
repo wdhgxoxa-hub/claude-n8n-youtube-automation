@@ -1,0 +1,35 @@
+{
+  "name": "cooper_aprobacion_marca",
+  "language": "es",
+  "category": "UTILITY",
+  "components": [
+    {
+      "type": "BODY",
+      "text": "La pieza «{{1}}» está lista en Cooper. Walter, revisa el contenido y su horario antes de aprobar la publicación.",
+      "example": {
+        "body_text": [
+          [
+            "Por qué el cielo es azul"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "FOOTER",
+      "text": "Puedes desactivar estos avisos en tu perfil de Cooper."
+    },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        {
+          "type": "URL",
+          "text": "Revisar pieza",
+          "url": "https://cooper.example.org/revisar/whatsapp/{{1}}",
+          "example": [
+            "https://cooper.example.org/revisar/whatsapp/00000000-0000-4000-8000-000000000000.1795176000000.ejemplo_para_revision_de_meta"
+          ]
+        }
+      ]
+    }
+  ]
+}

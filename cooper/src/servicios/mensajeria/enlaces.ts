@@ -42,5 +42,9 @@ export function resolverEnlace(user: User, token: string, now = Date.now()) {
   )
     throw new ErrorHttp(404, "Enlace no disponible.");
   avisoVigente(job, now);
-  return job.kind === "gasto" ? "/admin" : `/videos/${job.resourceId}`;
+  return job.kind === "marca"
+    ? `/marcas?pieza=${job.resourceId}#pieza-${job.resourceId}`
+    : job.kind === "gasto"
+      ? "/admin"
+      : `/videos/${job.resourceId}`;
 }
