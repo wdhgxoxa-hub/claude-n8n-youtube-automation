@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 11:20 (Lima).
+Última actualización: 2026-11-21 11:46 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **cooper-total, corte 11:46 Lima:** imagen `970d102` probada con ocho bloques Compose y migración real 8→11/reversa. Bloqueo público del puente Caddy aplicado con reversa real 401→404→401→404, sin reiniciar n8n. Parches n8n/runner 2.47.6 y Caddy 2.11.8 ensayados, todavía sin desplegar. [Informe provisional y evidencias](informes/cooper-total.md).
 
 - **cooper-total, 21-11 11:30 Lima:** lote FINAL3 aplicado al VPS: 32 flujos, cinco columnas y 25 dependencias publicadas; nueve tablas/118 filas y flujos ajenos preservados, siete servicios saludables. Reversa real del intento previo comprobada. Horarios y callbacks pendientes de aceptación siguen pausados. [Recibos](informes/total-n8n-lote.md).
 - **Puerta integrada de cooper-total:** 322 unitarias, 49 E2E, 167 flujos y 70 pruebas de despliegue; cero errores/advertencias. Runtime Marcas, seguridad, seguimiento durable de biblioteca y navegación de resultados integrados; imagen final y dos rondas aún en curso. [Evidencia](informes/evidencias/cooper-total/puerta/resumen.json).

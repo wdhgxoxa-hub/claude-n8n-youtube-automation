@@ -1,0 +1,30 @@
+{
+  "antes_sha256": "f108f74771edc3d149416ff5e5611ee849ed549ae42d8af26699d8ed1ef0a2c4",
+  "nuevo_sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+  "antes_http": [
+    401,
+    404,
+    404
+  ],
+  "aplicado_http": [
+    404,
+    404,
+    404
+  ],
+  "reversa_sha256": "f108f74771edc3d149416ff5e5611ee849ed549ae42d8af26699d8ed1ef0a2c4",
+  "reversa_http": [
+    401,
+    404,
+    404
+  ],
+  "final_http": [
+    404,
+    404,
+    404
+  ],
+  "estado": "PASS",
+  "reversa_real": "PASS",
+  "cooper_https": "PASS",
+  "n8n_reiniciado": false,
+  "fecha_utc": "2026-11-21T16:45:45Z"
+}
