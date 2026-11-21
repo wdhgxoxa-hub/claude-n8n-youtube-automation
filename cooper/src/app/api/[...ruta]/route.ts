@@ -7,7 +7,6 @@ import {
   allowedEmails,
   channels,
   videos,
-  messages,
   attachments,
   assets,
 } from "@/db/schema";
@@ -21,7 +20,12 @@ import {
 import { body, failure, json, rateLimit, sameOrigin } from "@/lib/http";
 import { estado, administracionActual } from "@/servicios/datos";
 import { fabrica, ordenSchema } from "@/servicios/fabrica";
-import { chatSchema, proveedorChat } from "@/servicios/chat";
+import {
+  chatSchema,
+  responderChat,
+  validarPeticion,
+  confirmarChat,
+} from "@/servicios/chat";
 import { proveedorTranscripcion } from "@/servicios/proveedores";
 import {
   crearReto,
@@ -157,39 +161,49 @@ async function handle(request: Request, context: Context) {
         }
         return json(await fabrica().ejecutar(actor, orden));
       }
-      if (section === "chat") {
+      if (section === "chat" && id === "confirmar")
+        return json(await confirmarChat(user, input));
+      if (section === "chat" && !id) {
         const parsed = chatSchema.parse(input);
-        for (const id of parsed.adjuntos)
-          requireOwn(
-            user,
-            db().select().from(attachments).where(eq(attachments.id, id)).get(),
+        validarPeticion(user, parsed);
+        if (!request.headers.get("accept")?.includes("text/event-stream"))
+          return json(
+            await responderChat(user, parsed, undefined, request.signal),
           );
-        const reply = await proveedorChat.responder(user, parsed);
-        const result = reply.orden
-          ? await fabrica().ejecutar(user, reply.orden)
-          : undefined;
-        db().transaction((tx) => {
-          tx.insert(messages)
-            .values({
-              id: randomUUID(),
-              ownerId: user.id,
-              role: "user",
-              content: parsed.texto,
-              attachmentIds: JSON.stringify(parsed.adjuntos),
-              createdAt: Date.now(),
-            })
-            .run();
-          tx.insert(messages)
-            .values({
-              id: randomUUID(),
-              ownerId: user.id,
-              role: "assistant",
-              content: result?.mensaje ?? reply.texto,
-              createdAt: Date.now() + 1,
-            })
-            .run();
+        const cancel = new AbortController();
+        const signal = AbortSignal.any([request.signal, cancel.signal]);
+        const encoder = new TextEncoder();
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            const emit = (evento: unknown) => {
+              if (!signal.aborted)
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify(evento)}\n\n`),
+                );
+            };
+            void responderChat(user, parsed, emit, signal)
+              .catch(() =>
+                emit({
+                  tipo: "error",
+                  texto:
+                    "La respuesta se interrumpió. Revisa las tarjetas pendientes y vuelve a intentarlo.",
+                }),
+              )
+              .finally(() => {
+                if (!signal.aborted) controller.close();
+              });
+          },
+          cancel() {
+            cancel.abort();
+          },
         });
-        return json({ texto: result?.mensaje ?? reply.texto, id: result?.id });
+        return new Response(stream, {
+          headers: {
+            "Content-Type": "text/event-stream; charset=utf-8",
+            "Cache-Control": "private, no-store, no-transform",
+            "X-Accel-Buffering": "no",
+          },
+        });
       }
       if (
         section === "videos" &&

@@ -169,3 +169,27 @@ export const publicMedia = sqliteTable("public_media", {
   previewUrl: text("preview_url").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
+
+export const chatSessions = sqliteTable("chat_sessions", {
+  ownerId: text("owner_id")
+    .primaryKey()
+    .references(() => users.id),
+  channelId: text("channel_id").notNull().default(""),
+  lease: text("lease").notNull().default(""),
+  busyUntil: integer("busy_until").notNull().default(0),
+});
+export const chatActions = sqliteTable("chat_actions", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  tool: text("tool").notNull(),
+  arguments: text("arguments").notNull(),
+  fingerprint: text("fingerprint").notNull(),
+  channelId: text("channel_id").notNull(),
+  title: text("title").notNull(),
+  detail: text("detail").notNull(),
+  status: text("status").notNull().default("pendiente"),
+  expiresAt: integer("expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});

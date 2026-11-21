@@ -13,8 +13,10 @@ import {
 import { requireAdmin } from "@/lib/permisos";
 import { catalogo, revisiones } from "./biblioteca";
 import { proveedorAvatar, proveedorVoz } from "./proveedores";
+import { estadoChat } from "./chat";
 export function estado(user: User) {
   return {
+    chat: estadoChat(user),
     demo: process.env.COOPER_DEMO === "1",
     user,
     catalogo: catalogo(),

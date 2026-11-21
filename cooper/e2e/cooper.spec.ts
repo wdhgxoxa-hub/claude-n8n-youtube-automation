@@ -101,11 +101,13 @@ test("conversa, pide un video, observa SSE y aprueba las dos puertas", async ({
   const message = page.getByRole("textbox", { name: "Mensaje para Cooper" });
   await message.fill("Crea un canal: Ciencia cotidiana");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
+  await page.getByRole("button", { name: "Confirmar", exact: true }).click();
   await expect(
     page.getByText("Tu canal está listo.", { exact: false }),
   ).toBeVisible();
   await message.fill("Quiero un video: Por qué el cielo es azul");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
+  await page.getByRole("button", { name: "Confirmar", exact: true }).click();
   await expect(
     page.getByText("El video ya está en Radar.", { exact: false }),
   ).toBeVisible();
@@ -139,6 +141,119 @@ test("conversa, pide un video, observa SSE y aprueba las dos puertas", async ({
   await page.getByRole("button", { name: "Aprobar", exact: true }).click();
   await expect(page.locator(".journey li.current")).toContainText("Publicado");
   expect(errors).toEqual([]);
+});
+test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajenas", async ({
+  page,
+  browser,
+}) => {
+  await login(page.request);
+  await page.goto("/");
+  const before = await (await page.request.get("/api/estado")).json();
+  await page
+    .getByLabel("Mensaje para Cooper")
+    .fill("Quiero un video: Un viaje a las estrellas");
+  await page.getByRole("button", { name: "Enviar mensaje" }).click();
+  const card = page.getByRole("article", { name: "Producir video" });
+  await expect(card).toContainText("Un viaje a las estrellas");
+  await expect(
+    card.getByRole("button", { name: "Confirmar", exact: true }),
+  ).toBeEnabled();
+  const proposed = await (await page.request.get("/api/estado")).json();
+  expect(proposed.videos).toHaveLength(before.videos.length);
+  const id = proposed.chat.tarjetas.at(-1).id;
+  const other = await browser.newContext({
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT}`,
+  });
+  await login(other.request, "luis@example.test");
+  expect(
+    (
+      await other.request.post("/api/chat/confirmar", {
+        data: { id, aceptar: true },
+      })
+    ).status(),
+  ).toBe(404);
+  await other.close();
+  await page.reload();
+  await expect(card).toBeVisible();
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await noOverflow(page);
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    await page.screenshot({
+      path: `test-results/visual/chat-confirmacion-${width}.png`,
+      fullPage: true,
+    });
+  }
+  await card.getByRole("button", { name: "Cancelar", exact: true }).click();
+  await expect(card).toHaveCount(0);
+  expect(
+    (
+      await page.request.post("/api/chat/confirmar", {
+        data: { id, aceptar: true },
+      })
+    ).status(),
+  ).toBe(409);
+});
+test("boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream", async ({
+  page,
+}) => {
+  await login(page.request);
+  await page.addInitScript(() => {
+    const original = window.fetch;
+    window.fetch = async (input, init) => {
+      if (input === "/api/chat") {
+        const encoder = new TextEncoder();
+        return new Response(
+          new ReadableStream({
+            start(c) {
+              const send = (event: unknown) =>
+                c.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+              setTimeout(
+                () =>
+                  send({ tipo: "texto", texto: "Estoy revisando tu idea. " }),
+                100,
+              );
+              setTimeout(
+                () =>
+                  send({
+                    tipo: "texto",
+                    texto: "Podemos convertirla en un video.",
+                  }),
+                1800,
+              );
+              setTimeout(() => {
+                send({ tipo: "fin" });
+                c.close();
+              }, 2600);
+            },
+          }),
+          { headers: { "Content-Type": "text/event-stream" } },
+        );
+      }
+      return original(input, init);
+    };
+  });
+  await page.goto("/");
+  await page.getByLabel("Mensaje para Cooper").fill("Revisa mi idea");
+  await page.getByRole("button", { name: "Enviar mensaje" }).click();
+  await expect(page.locator(".conversation [aria-busy=true]")).toContainText(
+    "Estoy revisando",
+  );
+  await expect(
+    page.getByRole("img", { name: "Cooper hablando", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: "Cooper pensando", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".conversation [aria-busy=true]")).toContainText(
+    "Podemos convertirla",
+  );
+  await expect(
+    page.getByRole("img", { name: "Cooper reposo", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Enviar mensaje" }),
+  ).toBeDisabled();
 });
 test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
   page,
@@ -219,6 +334,67 @@ test("adjuntos y grabación con transcripción editable", async ({ page }) => {
   await expect(
     page.getByRole("textbox", { name: "Mensaje para Cooper" }),
   ).toHaveValue(/Quiero un nuevo video/);
+  await page
+    .getByLabel("Mensaje para Cooper")
+    .fill("Quiero un video: Idea dictada y revisada");
+  await page.getByRole("button", { name: "Enviar mensaje" }).click();
+  const propuesta = page.getByRole("article", { name: "Producir video" });
+  await expect(propuesta).toContainText("Idea dictada y revisada");
+  await propuesta
+    .getByRole("button", { name: "Cancelar", exact: true })
+    .click();
+});
+test("una foto del chat abre el avatar privado sin omitir verificación", async ({
+  page,
+  browser,
+}) => {
+  await login(page.request);
+  await page.goto("/");
+  await expect(page.locator(".connection")).toHaveText("En vivo");
+  const chooser = page.waitForEvent("filechooser");
+  await page
+    .getByRole("button", { name: "Adjuntar archivo", exact: true })
+    .click();
+  await (
+    await chooser
+  ).setFiles({
+    name: "retrato.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aH1sAAAAASUVORK5CYII=",
+      "base64",
+    ),
+  });
+  await page
+    .getByRole("link", { name: "Usar para mi avatar", exact: true })
+    .click();
+  await expect(
+    page.getByText("Tu foto del chat está preparada.", { exact: false }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Crear avatar", exact: true }).click();
+  await expect(
+    page.getByText("1 fotos recibidas.", { exact: false }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Fotos tuyas (hasta tres)")).not.toHaveAttribute(
+    "required",
+    "",
+  );
+  await expect(
+    page.getByLabel("Declaro que soy la persona de las fotos"),
+  ).not.toBeChecked();
+  await expect(page.locator("blockquote")).toBeVisible();
+  const other = await browser.newContext({
+    baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT}`,
+  });
+  await login(other.request, "luis@example.test");
+  const foreignPage = await other.newPage();
+  await foreignPage.goto(page.url());
+  await expect(
+    foreignPage.getByRole("heading", {
+      name: "Este espacio no está disponible.",
+    }),
+  ).toBeVisible();
+  await other.close();
 });
 test("biblioteca propia, verificación simulada, privacidad y compartir", async ({
   page,

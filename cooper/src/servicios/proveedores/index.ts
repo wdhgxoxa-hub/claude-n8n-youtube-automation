@@ -1,3 +1,4 @@
+import { TranscripcionOpenAI } from "./openai";
 import { ErrorHttp } from "@/lib/permisos";
 import { AvatarHeyGen, VozHeyGen } from "./heygen";
 import { VozGemini, TranscripcionGemini } from "./gemini";
@@ -66,5 +67,6 @@ export function proveedorTranscripcion(
       : (process.env.COOPER_TRANSCRIPCION ?? "simulada");
   if (mode === "simulada") return new TranscripcionSimulada();
   if (mode === "gemini") return new TranscripcionGemini(transporte);
+  if (mode === "openai") return new TranscripcionOpenAI(transporte);
   return invalido();
 }
