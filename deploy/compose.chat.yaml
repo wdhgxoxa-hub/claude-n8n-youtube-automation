@@ -3,7 +3,8 @@ x-rele: &rele
   image: ${COOPER_IMAGE:?Definir COOPER_IMAGE}
   entrypoint: [node, /rele/tunel.mjs]
   restart: unless-stopped
-  user: "1000:1000"
+  # El socket pertenece a operador (UID 1001 en el VPS), no al usuario de datos.
+  user: "${COOPER_RELE_UID:-1001}:${COOPER_RELE_GID:-1001}"
   read_only: true
   cap_drop: [ALL]
   security_opt: [no-new-privileges:true]
