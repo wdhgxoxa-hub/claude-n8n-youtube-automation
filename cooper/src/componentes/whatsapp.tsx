@@ -16,7 +16,8 @@ export function PreferenciasWhatsApp() {
   useEffect(() => {
     if (wa.verificado && !busy && focusPreferences.current) {
       focusPreferences.current = false;
-      preferenceTitle.current?.focus();
+      if (document.activeElement === document.body)
+        preferenceTitle.current?.focus();
     }
   }, [wa.verificado, busy]);
   async function run(task: () => Promise<void>, verification = false) {

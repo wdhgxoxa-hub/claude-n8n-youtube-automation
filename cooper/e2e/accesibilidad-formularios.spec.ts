@@ -30,7 +30,7 @@ async function accesible(page: Page) {
   }
 }
 
-test("Pedir video conserva el foco al abrir y cancelar con teclado", async ({
+test("Pedir video conserva el foco al cancelar y respeta el control elegido mientras guarda", async ({
   page,
 }) => {
   await page.goto("/videos");
@@ -46,6 +46,44 @@ test("Pedir video conserva el foco al abrir y cancelar con teclado", async ({
   await page.keyboard.press("Enter");
   await expect(abrir).toBeFocused();
   await expect(abrir).toHaveAttribute("aria-expanded", "false");
+  const respuesta = await page.request.post("/api/orden", {
+    data: {
+      evento: "nuevo_canal",
+      texto: "Ensayo de foco al guardar",
+      nombre: "Foco de formulario",
+    },
+  });
+  expect(respuesta.ok()).toBe(true);
+  const { id } = await respuesta.json();
+  await page.reload();
+  await abrir.press("Enter");
+  await page
+    .getByRole("combobox", { name: "Canal", exact: true })
+    .selectOption(id);
+  await page.getByLabel("Idea del video").fill("Una idea con foco");
+  const solicitud: { responder?: () => void } = {};
+  await page.route("**/api/orden", async (route) => {
+    await new Promise<void>((resolve) => {
+      solicitud.responder = resolve;
+    });
+    await route.fulfill({ status: 200, json: { id: "video-de-ensayo" } });
+  });
+  const enviar = page.getByRole("button", {
+    name: "Enviar a la fábrica",
+    exact: true,
+  });
+  await enviar.press("Enter");
+  await expect(enviar).toBeDisabled();
+  await expect.poll(() => typeof solicitud.responder).toBe("function");
+  const filtro = page.getByRole("button", {
+    name: "En producción",
+    exact: true,
+  });
+  await filtro.focus();
+  await page.keyboard.press("Enter");
+  solicitud.responder!();
+  await expect(page.locator("#pedir-video")).toHaveCount(0);
+  await expect(filtro).toBeFocused();
 });
 
 test("Alta de marca anuncia cada paso y devuelve el foco al salir", async ({

@@ -111,12 +111,15 @@ export function PantallaOperacion({
   }, [vista]);
   useEffect(() => {
     if (pendiente) confirmacion.current?.focus();
-    else if (!ocupado && restaurarFoco.current) {
+  }, [pendiente]);
+  useEffect(() => {
+    if (!pendiente && !ocupado && restaurarFoco.current) {
       restaurarFoco.current = false;
-      (origen.current?.isConnected
-        ? origen.current
-        : actualizar.current
-      )?.focus();
+      if (document.activeElement === document.body)
+        (origen.current?.isConnected
+          ? origen.current
+          : actualizar.current
+        )?.focus();
     }
   }, [pendiente, ocupado]);
   const canal =

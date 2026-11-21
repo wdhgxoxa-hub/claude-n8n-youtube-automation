@@ -217,7 +217,8 @@ export function Videos() {
   useEffect(() => {
     if (!creating && !busy && restoreFocus.current) {
       restoreFocus.current = false;
-      createButton.current?.focus();
+      if (document.activeElement === document.body)
+        createButton.current?.focus();
     }
   }, [creating, busy]);
   function closeCreate() {

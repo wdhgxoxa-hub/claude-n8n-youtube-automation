@@ -95,7 +95,8 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
     }
     if (!creating && !busy && restoreFocus.current) {
       restoreFocus.current = false;
-      createButton.current?.focus();
+      if (document.activeElement === document.body)
+        createButton.current?.focus();
     }
   }, [creating, busy]);
   async function upload(

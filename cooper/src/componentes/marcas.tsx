@@ -56,10 +56,11 @@ export function Marcas({
   useEffect(() => {
     if (!editor && !busy && restoreEditorFocus.current) {
       restoreEditorFocus.current = false;
-      (editorOrigin.current?.isConnected
-        ? editorOrigin.current
-        : newBrandButton.current
-      )?.focus();
+      if (document.activeElement === document.body)
+        (editorOrigin.current?.isConnected
+          ? editorOrigin.current
+          : newBrandButton.current
+        )?.focus();
     }
   }, [editor, busy]);
   function abrirEditor(editar = false) {
