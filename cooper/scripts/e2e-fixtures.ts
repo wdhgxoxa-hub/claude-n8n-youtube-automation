@@ -77,6 +77,11 @@ db();
 const server = createServer(async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   try {
+    if (req.method === "GET" && req.url === "/destino") {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ destino: "cooper-e2e-aislado" }));
+      return;
+    }
     if (req.method !== "POST" || req.url !== "/sesion")
       throw new ErrorHttp(404, "No encontrado");
     let data = "";
