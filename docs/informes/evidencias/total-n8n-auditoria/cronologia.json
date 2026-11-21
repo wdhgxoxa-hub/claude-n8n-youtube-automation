@@ -1,0 +1,64 @@
+{
+  "solo_lectura": true,
+  "observaciones": [
+    {
+      "fecha_utc": "2026-11-21T18:19:02.577531+00:00",
+      "estadisticas": {
+        "workflows_vivos": 45,
+        "activos": 31,
+        "nodos": 1411,
+        "versionados": 36,
+        "solo_destino": 9,
+        "ejecuciones_7d": [
+          {
+            "status": "error",
+            "total": 24
+          },
+          {
+            "status": "success",
+            "total": 465
+          },
+          {
+            "status": "waiting",
+            "total": 2
+          }
+        ]
+      },
+      "fallos_sin_detalle": [
+        812,
+        814,
+        815,
+        816,
+        820,
+        826,
+        827,
+        828
+      ]
+    },
+    {
+      "fecha_utc": "2026-11-21T18:22:28.123254+00:00",
+      "estadisticas": {
+        "workflows_vivos": 45,
+        "activos": 31,
+        "nodos": 1411,
+        "versionados": 36,
+        "solo_destino": 9,
+        "ejecuciones_7d": [
+          {
+            "status": "error",
+            "total": 16
+          },
+          {
+            "status": "success",
+            "total": 454
+          },
+          {
+            "status": "waiting",
+            "total": 2
+          }
+        ]
+      }
+    }
+  ],
+  "limite": "El servidor siguió operando y hubo cambios concurrentes. Se observa variación de filas retenidas; la causa no se atribuye a esta misión. La exportación final corresponde sólo a su instante."
+}

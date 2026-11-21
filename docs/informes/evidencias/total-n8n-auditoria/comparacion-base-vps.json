@@ -1,0 +1,2173 @@
+{
+  "captura_utc": "2026-11-21T18:19:02.577531+00:00",
+  "referencia_git": "de397f3",
+  "limite": "Diff estructural, no compara código/parámetros libres ni acredita credenciales vigentes. IDs mapeados por nombre y confirmables por el operador.",
+  "mapa_ids": {
+    "jylyhP7MsjovYWUC": "jylyhP7MsjovYWUC",
+    "CooperMarcasMet1": "CooperMarcasMet1",
+    "CooperMarcasPub1": "CooperMarcasPub1",
+    "FabAgenteTelegr1": "FabAgenteTelegr1",
+    "FabAjustes000001": "FabAjustes000001",
+    "FabAprobacion001": "FabAprobacion001",
+    "FabAvatar0000001": "8nqh0n7jewLQOikC",
+    "FabChatWeb000001": "FabChatWeb000001",
+    "FabConfirmar0001": "FabConfirmar0001",
+    "FabCooperAPI0001": "xorCR0lfNlil8Ovy",
+    "FabCooperCosto01": "z74zUkz2BR8k0GLR",
+    "FabCooperProgr01": "gNrGzmHBxJ3OIuQM",
+    "FabDerivados0001": "FabDerivados0001",
+    "FabErrores000001": "FabErrores000001",
+    "FabEstado0000001": "FabEstado0000001",
+    "FabLlamarClaude1": "FabLlamarClaude1",
+    "FabNoticia000001": "rvwLNNS309MEi8cL",
+    "FabOrquestador01": "FabOrquestador01",
+    "FabPendientes001": "FabPendientes001",
+    "FabPresentacion1": "MkC3QS6ogZZ8n24u",
+    "FabProduccion001": "FabProduccion001",
+    "FabPublicacion01": "FabPublicacion01",
+    "FabRadar00000001": "FabRadar00000001",
+    "FabRedes00000001": "FabRedes00000001",
+    "FabReenviar00001": "FabReenviar00001",
+    "FabReferencias01": "FabReferencias01",
+    "FabRetornoClaud1": "FabRetornoClaud1",
+    "FabRutina0000001": "FabRutina0000001",
+    "FabSonido0000001": "FabSonido0000001",
+    "FabTextoGPT0001": "YgWu9aUDsB2VYaz3",
+    "FabVidiq00000001": "FabVidiq00000001",
+    "FabYouTube000001": "FabYouTube000001"
+  },
+  "comparacion": [
+    {
+      "archivo": "workflows/01-telegram-idea-intake.json",
+      "id_versionado": "jylyhP7MsjovYWUC",
+      "id_destino": "jylyhP7MsjovYWUC",
+      "nombre": "01 · Fábrica de videos · Telegram",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "errorWorkflow": {
+          "versionado": null,
+          "vivo": "FabErrores000001"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/02-script-review-approval.json",
+      "id_versionado": null,
+      "id_destino": "CmfUbbCPbVCfFzY3",
+      "nombre": "02 · Fábrica de videos · Revisión de guion",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/03-log-to-spreadsheet.json",
+      "id_versionado": null,
+      "id_destino": "Fo2be7g3JG6j3SfV",
+      "nombre": "03 · Fábrica de videos · Registro en Sheets",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/04-heygen-webhook-youtube-upload.json",
+      "id_versionado": null,
+      "id_destino": "VrlA1ayhq3NxBgI5",
+      "nombre": "04 · Fábrica de videos · HeyGen y YouTube",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/CooperMarcasMet1.json",
+      "id_versionado": "CooperMarcasMet1",
+      "id_destino": "CooperMarcasMet1",
+      "nombre": "FX · Marcas · Métricas",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/CooperMarcasPub1.json",
+      "id_versionado": "CooperMarcasPub1",
+      "id_destino": "CooperMarcasPub1",
+      "nombre": "FX · Marcas · Publicación y adjuntos",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabAgenteTelegr1.json",
+      "id_versionado": "FabAgenteTelegr1",
+      "id_destino": "FabAgenteTelegr1",
+      "nombre": "F · Agente de Telegram",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabAjustes000001.json",
+      "id_versionado": "FabAjustes000001",
+      "id_destino": "FabAjustes000001",
+      "nombre": "F · Ajustes de la fábrica",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabAprendizaje01.json",
+      "id_versionado": "FabAprendizaje01",
+      "id_destino": "FabAprendizaje01",
+      "nombre": "M7 · Aprendizaje (2 y 7 días)",
+      "activo_destino": true,
+      "nodos_solo_versionado": [
+        "Claude: aprender"
+      ],
+      "nodos_solo_destino": [
+        "Analizar con el plan de la PC",
+        "Datos del video publicado",
+        "Guardar lecciones del plan",
+        "Guardar trabajo de aprendizaje",
+        "Pedido al plan de aprendizaje",
+        "Planos para aprender",
+        "Preparar trabajo de aprendizaje",
+        "Reponer pedidos de métricas",
+        "Reponer pedidos de retención",
+        "Trabajos para aprender",
+        "Validar aprendizaje del plan",
+        "Videos para aprender"
+      ],
+      "nodos_configuracion_distinta": {
+        "Cada día": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 0
+          }
+        }
+      },
+      "conexiones_distintas": true,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabAprobacion001.json",
+      "id_versionado": "FabAprobacion001",
+      "id_destino": "FabAprobacion001",
+      "nombre": "F · Aprobación (Telegram y computadora)",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabAvatar0000001.json",
+      "id_versionado": "FabAvatar0000001",
+      "id_destino": "8nqh0n7jewLQOikC",
+      "nombre": "FX · Renderizar avatar",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Consultar avatar": {
+          "type": {
+            "versionado": "n8n-nodes-base.httpRequest",
+            "vivo": "n8n-nodes-base.code"
+          },
+          "typeVersion": {
+            "versionado": 4.2,
+            "vivo": 2
+          },
+          "timeout": {
+            "versionado": 30000,
+            "vivo": null
+          }
+        },
+        "Crear avatar": {
+          "type": {
+            "versionado": "n8n-nodes-base.httpRequest",
+            "vivo": "n8n-nodes-base.code"
+          },
+          "typeVersion": {
+            "versionado": 4.2,
+            "vivo": 2
+          },
+          "timeout": {
+            "versionado": 180000,
+            "vivo": null
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabChatWeb000001.json",
+      "id_versionado": "FabChatWeb000001",
+      "id_destino": "FabChatWeb000001",
+      "nombre": "F · Chat de la fábrica (computadora)",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabConfirmar0001.json",
+      "id_versionado": "FabConfirmar0001",
+      "id_destino": "FabConfirmar0001",
+      "nombre": "F · Confirmar publicaciones",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Cada hora": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 0
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabCooperAPI0001.json",
+      "id_versionado": "FabCooperAPI0001",
+      "id_destino": "xorCR0lfNlil8Ovy",
+      "nombre": "FX · API de Cooper",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Solicitud de Cooper": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 0
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabCooperCosto01.json",
+      "id_versionado": "FabCooperCosto01",
+      "id_destino": "z74zUkz2BR8k0GLR",
+      "nombre": "FX · Registrar costo por dueño",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabCooperProgr01.json",
+      "id_versionado": "FabCooperProgr01",
+      "id_destino": "gNrGzmHBxJ3OIuQM",
+      "nombre": "FX · Progreso de Cooper",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabDerivados0001.json",
+      "id_versionado": "FabDerivados0001",
+      "id_destino": "FabDerivados0001",
+      "nombre": "M6 · Derivados (cortes y miniatura)",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabErrores000001.json",
+      "id_versionado": "FabErrores000001",
+      "id_destino": "FabErrores000001",
+      "nombre": "F · Vigilante de errores",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Error en un flujo": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 0
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": null,
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": null,
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabEstado0000001.json",
+      "id_versionado": "FabEstado0000001",
+      "id_destino": "FabEstado0000001",
+      "nombre": "F · Estado y reportes",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabLlamarClaude1.json",
+      "id_versionado": "FabLlamarClaude1",
+      "id_destino": "FabLlamarClaude1",
+      "nombre": "FX · Llamar a Claude",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [
+        "Aprendizajes al escribir"
+      ],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": true,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabNoticia000001.json",
+      "id_versionado": "FabNoticia000001",
+      "id_destino": "rvwLNNS309MEi8cL",
+      "nombre": "F · Noticia del día verificada",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabOrquestador01.json",
+      "id_versionado": "FabOrquestador01",
+      "id_destino": "FabOrquestador01",
+      "nombre": "F · Orquestador",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [
+        "Canal con competencia",
+        "Exigir competencia previa",
+        "Lecciones antes del guion",
+        "Pedido de competencia previa",
+        "Radar antes de la idea"
+      ],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": true,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabPendientes001.json",
+      "id_versionado": "FabPendientes001",
+      "id_destino": "FabPendientes001",
+      "nombre": "FX · Pendientes",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabPresentacion1.json",
+      "id_versionado": "FabPresentacion1",
+      "id_destino": "MkC3QS6ogZZ8n24u",
+      "nombre": "FX · Validar presentación",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabProduccion001.json",
+      "id_versionado": "FabProduccion001",
+      "id_destino": "FabProduccion001",
+      "nombre": "M4–M6 · Producción",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabPublicacion01.json",
+      "id_versionado": "FabPublicacion01",
+      "id_destino": "FabPublicacion01",
+      "nombre": "M7 · Calidad y publicación",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabRadar00000001.json",
+      "id_versionado": "FabRadar00000001",
+      "id_destino": "FabRadar00000001",
+      "nombre": "F · Radar de tendencias",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [
+        "Competencia comprobada",
+        "Competencia con YouTube",
+        "Consultar YouTube por canal",
+        "Encargo público de competencia",
+        "Investigar competencia pública",
+        "Resultado del radar público",
+        "¿Avisar radar público?"
+      ],
+      "nodos_configuracion_distinta": {
+        "Cada mañana (radar)": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 1
+          }
+        }
+      },
+      "conexiones_distintas": true,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabRedes00000001.json",
+      "id_versionado": "FabRedes00000001",
+      "id_destino": "FabRedes00000001",
+      "nombre": "M8 · Publicación en redes",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabReenviar00001.json",
+      "id_versionado": "FabReenviar00001",
+      "id_destino": "FabReenviar00001",
+      "nombre": "FX · Reenviar pendientes",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabReferencias01.json",
+      "id_versionado": "FabReferencias01",
+      "id_destino": "FabReferencias01",
+      "nombre": "M1 · Referencias del canal",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabRetornoClaud1.json",
+      "id_versionado": "FabRetornoClaud1",
+      "id_destino": "FabRetornoClaud1",
+      "nombre": "F · Retorno de Claude",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [
+        "Clasificar concurrente",
+        "Clasificar retorno",
+        "Releer trabajo",
+        "Reserva del retorno",
+        "Reservar retorno",
+        "Responder estado",
+        "Responder revisión",
+        "¿Entrega guardada?",
+        "¿Orquestador concluido?",
+        "¿Reserva propia?"
+      ],
+      "nodos_configuracion_distinta": {
+        "Avisar al orquestador": {
+          "onError": {
+            "versionado": null,
+            "vivo": "continueRegularOutput"
+          }
+        },
+        "Resultado de Claude": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 0
+          }
+        }
+      },
+      "conexiones_distintas": true,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabRutina0000001.json",
+      "id_versionado": "FabRutina0000001",
+      "id_destino": "FabRutina0000001",
+      "nombre": "F · Rutina diaria y reporte semanal",
+      "activo_destino": false,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabSonido0000001.json",
+      "id_versionado": "FabSonido0000001",
+      "id_destino": "FabSonido0000001",
+      "nombre": "M5 · Sonido y emoción",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Voz (ElevenLabs)": {
+          "type": {
+            "versionado": "n8n-nodes-base.httpRequest",
+            "vivo": "n8n-nodes-base.code"
+          },
+          "typeVersion": {
+            "versionado": 4.2,
+            "vivo": 2
+          },
+          "timeout": {
+            "versionado": 180000,
+            "vivo": null
+          }
+        },
+        "Voz (HeyGen)": {
+          "type": {
+            "versionado": "n8n-nodes-base.httpRequest",
+            "vivo": "n8n-nodes-base.code"
+          },
+          "typeVersion": {
+            "versionado": 4.2,
+            "vivo": 2
+          },
+          "timeout": {
+            "versionado": 180000,
+            "vivo": null
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabTextoGPT0001.json",
+      "id_versionado": "FabTextoGPT0001",
+      "id_destino": "YgWu9aUDsB2VYaz3",
+      "nombre": "FX · Texto GPT con respaldo",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Intentar Codex": {
+          "timeout": {
+            "versionado": 45000,
+            "vivo": null
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {},
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabVidiq00000001.json",
+      "id_versionado": "FabVidiq00000001",
+      "id_destino": "FabVidiq00000001",
+      "nombre": "FX · vidIQ",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {},
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    },
+    {
+      "archivo": "workflows/v2/FabYouTube000001.json",
+      "id_versionado": "FabYouTube000001",
+      "id_destino": "FabYouTube000001",
+      "nombre": "FX · YouTube por canal",
+      "activo_destino": true,
+      "nodos_solo_versionado": [],
+      "nodos_solo_destino": [],
+      "nodos_configuracion_distinta": {
+        "Vuelta de Google": {
+          "disabled": {
+            "versionado": null,
+            "vivo": 1
+          }
+        }
+      },
+      "conexiones_distintas": false,
+      "settings_distintos": {
+        "saveDataErrorExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        },
+        "saveDataSuccessExecution": {
+          "versionado": "all",
+          "vivo": "none"
+        }
+      },
+      "grafo_versionado": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      }
+    }
+  ],
+  "inventario_destino": [
+    {
+      "id": "8nqh0n7jewLQOikC",
+      "nombre": "FX · Renderizar avatar",
+      "activo": true,
+      "nodos": 33,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "CmfUbbCPbVCfFzY3",
+      "nombre": "02 · Fábrica de videos · Revisión de guion",
+      "activo": false,
+      "nodos": 12,
+      "solo_destino": false,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CoopEnsayoApr01",
+      "nombre": "Ensayo Cooper · solo métricas de publicaciones existentes",
+      "activo": false,
+      "nodos": 33,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CoopEnsayoIdYt01",
+      "nombre": "Ensayo Cooper · ID público de publicación confirmada",
+      "activo": false,
+      "nodos": 6,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CoopEnsayoLec01",
+      "nombre": "Ensayo Cooper · guardar lección revisada con evidencia",
+      "activo": false,
+      "nodos": 4,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CoopEnsayoTok01",
+      "nombre": "Ensayo Cooper · permiso existente solo para lectura",
+      "activo": false,
+      "nodos": 6,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [
+        "Renovar token"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CoopRadarReal001",
+      "nombre": "Ensayo Cooper · radar público de un canal",
+      "activo": true,
+      "nodos": 5,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 480,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "CoopSondaVidIQ01",
+      "nombre": "Sonda Cooper · acceso vidIQ sin créditos",
+      "activo": true,
+      "nodos": 11,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 240,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "CoopSondaYtComp1",
+      "nombre": "Sonda Cooper · competencia pública de YouTube",
+      "activo": false,
+      "nodos": 15,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 240,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CooperMarcasMet1",
+      "nombre": "FX · Marcas · Métricas",
+      "activo": false,
+      "nodos": 4,
+      "solo_destino": false,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [
+        {
+          "nodo": "Reloj",
+          "schedule": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ],
+          "cron": null
+        }
+      ],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CooperMarcasPub1",
+      "nombre": "FX · Marcas · Publicación y adjuntos",
+      "activo": false,
+      "nodos": 4,
+      "solo_destino": false,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [
+        {
+          "nodo": "Reloj",
+          "schedule": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ],
+          "cron": null
+        }
+      ],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "CooperMonitor01",
+      "nombre": "FX · Monitor de infraestructura",
+      "activo": true,
+      "nodos": 5,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabAgenteTelegr1",
+      "nombre": "F · Agente de Telegram",
+      "activo": true,
+      "nodos": 20,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabAjustes000001",
+      "nombre": "F · Ajustes de la fábrica",
+      "activo": true,
+      "nodos": 4,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabAprendizaje01",
+      "nombre": "M7 · Aprendizaje (24 h, 72 h y 7 días)",
+      "activo": true,
+      "nodos": 35,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [
+        {
+          "nodo": "Cada día",
+          "schedule": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ],
+          "cron": null
+        }
+      ],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabAprobacion001",
+      "nombre": "F · Aprobación (Telegram y computadora)",
+      "activo": true,
+      "nodos": 17,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabChatWeb000001",
+      "nombre": "F · Chat de la fábrica (computadora)",
+      "activo": false,
+      "nodos": 4,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "FabCompYouTube01",
+      "nombre": "FX · Competencia pública de YouTube",
+      "activo": true,
+      "nodos": 15,
+      "solo_destino": true,
+      "error_workflow": null,
+      "timeout_s": 240,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabConfirmar0001",
+      "nombre": "F · Confirmar publicaciones",
+      "activo": true,
+      "nodos": 20,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [
+        {
+          "nodo": "Cada hora",
+          "schedule": [
+            {
+              "field": "hours",
+              "hoursInterval": 1,
+              "triggerAtMinute": 7
+            }
+          ],
+          "cron": null
+        }
+      ],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabDerivados0001",
+      "nombre": "M6 · Derivados (cortes y miniatura)",
+      "activo": true,
+      "nodos": 50,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 3600,
+      "reintentos_http_mutantes": [
+        "Nombrar base",
+        "Compartir base"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabErrores000001",
+      "nombre": "F · Vigilante de errores",
+      "activo": true,
+      "nodos": 10,
+      "solo_destino": false,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabEstado0000001",
+      "nombre": "F · Estado y reportes",
+      "activo": true,
+      "nodos": 9,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabLlamarClaude1",
+      "nombre": "FX · Llamar a Claude",
+      "activo": true,
+      "nodos": 25,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [
+        "Despertar routine"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabOrquestador01",
+      "nombre": "F · Orquestador",
+      "activo": true,
+      "nodos": 391,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 900,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabPendientes001",
+      "nombre": "FX · Pendientes",
+      "activo": true,
+      "nodos": 3,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabProduccion001",
+      "nombre": "M4–M6 · Producción",
+      "activo": true,
+      "nodos": 174,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 3600,
+      "reintentos_http_mutantes": [
+        "Encargo: nombrar",
+        "Revisar archivo",
+        "Generar imagen",
+        "Animar (Gemini Omni)",
+        "Subir a Drive",
+        "Nombrar en Drive",
+        "Compartir enlace",
+        "Revisar plano"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabPublicacion01",
+      "nombre": "M7 · Calidad y publicación",
+      "activo": true,
+      "nodos": 31,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 600,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabRadar00000001",
+      "nombre": "F · Radar de tendencias",
+      "activo": true,
+      "nodos": 38,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 3600,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [
+        {
+          "nodo": "Cada mañana (radar)",
+          "schedule": [
+            {
+              "field": "days",
+              "triggerAtHour": 7,
+              "triggerAtMinute": 40
+            }
+          ],
+          "cron": null
+        }
+      ],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": [
+          "Analista de tendencias",
+          "Cooper · costo Analista de tendencias",
+          "Cooper · costo Analista de tendencias registrar",
+          "Cooper · costo Analista de tendencias seguir",
+          "Cooper · identificar Cooper · costo Analista de tendencias registrar",
+          "Encargo del analista",
+          "Radar del canal",
+          "Texto · Analista de tendencias",
+          "vidIQ: radar"
+        ]
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabRedes00000001",
+      "nombre": "M8 · Publicación en redes",
+      "activo": true,
+      "nodos": 37,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [
+        "Subir a redes"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabReenviar00001",
+      "nombre": "FX · Reenviar pendientes",
+      "activo": true,
+      "nodos": 16,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabReferencias01",
+      "nombre": "M1 · Referencias del canal",
+      "activo": true,
+      "nodos": 43,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [
+        "Generar principal",
+        "Subir principal",
+        "Nombrar principal",
+        "Compartir principal",
+        "Generar vista",
+        "Subir vista",
+        "Nombrar vista",
+        "Compartir vista"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabRetornoClaud1",
+      "nombre": "F · Retorno de Claude",
+      "activo": false,
+      "nodos": 21,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "FabRutina0000001",
+      "nombre": "F · Rutina diaria y reporte semanal",
+      "activo": false,
+      "nodos": 26,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [
+        {
+          "nodo": "Cada mañana",
+          "schedule": [
+            {
+              "field": "days",
+              "triggerAtHour": 8,
+              "triggerAtMinute": 10
+            }
+          ],
+          "cron": null
+        }
+      ],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "FabSonido0000001",
+      "nombre": "M5 · Sonido y emoción",
+      "activo": true,
+      "nodos": 72,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 1800,
+      "reintentos_http_mutantes": [
+        "Compartir voz",
+        "Iniciar Epidemic",
+        "Epidemic listo",
+        "Buscar música",
+        "Pedir descarga",
+        "Buscar efecto",
+        "Pedir efecto"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabVidiq00000001",
+      "nombre": "FX · vidIQ",
+      "activo": true,
+      "nodos": 18,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [
+        "Iniciar vidIQ",
+        "vidIQ listo",
+        "Palabras clave",
+        "Videos que destacan",
+        "Puntuar título",
+        "Consultar cuenta"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "FabYouTube000001",
+      "nombre": "FX · YouTube por canal",
+      "activo": true,
+      "nodos": 46,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [
+        "Renovar token"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "Fo2be7g3JG6j3SfV",
+      "nombre": "03 · Fábrica de videos · Registro en Sheets",
+      "activo": false,
+      "nodos": 10,
+      "solo_destino": false,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "MkC3QS6ogZZ8n24u",
+      "nombre": "FX · Validar presentación",
+      "activo": true,
+      "nodos": 14,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [
+        "Consultar Cooper"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "VrlA1ayhq3NxBgI5",
+      "nombre": "04 · Fábrica de videos · HeyGen y YouTube",
+      "activo": false,
+      "nodos": 28,
+      "solo_destino": false,
+      "error_workflow": null,
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "YgWu9aUDsB2VYaz3",
+      "nombre": "FX · Texto GPT con respaldo",
+      "activo": true,
+      "nodos": 9,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [
+        "Intentar Codex"
+      ],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "gNrGzmHBxJ3OIuQM",
+      "nombre": "FX · Progreso de Cooper",
+      "activo": true,
+      "nodos": 6,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [
+        "Avisar a Cooper"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "jylyhP7MsjovYWUC",
+      "nombre": "01 · Fábrica de videos · Telegram",
+      "activo": false,
+      "nodos": 16,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": null,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": null
+    },
+    {
+      "id": "rvwLNNS309MEi8cL",
+      "nombre": "F · Noticia del día verificada",
+      "activo": true,
+      "nodos": 18,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 600,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "xorCR0lfNlil8Ovy",
+      "nombre": "FX · API de Cooper",
+      "activo": true,
+      "nodos": 42,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [
+        "Consultar orden",
+        "Reservar orden",
+        "Confirmar orden"
+      ],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    },
+    {
+      "id": "z74zUkz2BR8k0GLR",
+      "nombre": "FX · Registrar costo por dueño",
+      "activo": true,
+      "nodos": 5,
+      "solo_destino": false,
+      "error_workflow": "FabErrores000001",
+      "timeout_s": 300,
+      "reintentos_http_mutantes": [],
+      "timeout_http_no_numerico_o_ausente": [],
+      "credenciales_no_resueltas": [],
+      "tablas_no_resueltas": [],
+      "subflujos_no_resueltos": [],
+      "crons": [],
+      "grafo": {
+        "conexiones_rotas": [],
+        "aislados": [],
+        "inalcanzables_desde_disparador": []
+      },
+      "borrador_difiere_publicado": false
+    }
+  ],
+  "resumen": {
+    "workflows_vivos": 45,
+    "activos": 31,
+    "nodos": 1411,
+    "versionados": 36,
+    "solo_destino": 9,
+    "ejecuciones_7d": [
+      {
+        "status": "error",
+        "total": 24
+      },
+      {
+        "status": "success",
+        "total": 465
+      },
+      {
+        "status": "waiting",
+        "total": 2
+      }
+    ]
+  }
+}

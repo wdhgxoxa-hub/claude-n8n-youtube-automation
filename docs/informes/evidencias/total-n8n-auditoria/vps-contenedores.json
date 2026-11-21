@@ -1,0 +1,101 @@
+{
+  "fecha_utc": "2026-11-21T18:20:58.702476+00:00",
+  "comandos": "docker inspect con formato limitado y docker top pid,comm; sin Config.Env, Cmd ni valores de credenciales",
+  "contenedores": [
+    {
+      "nombre": "/cooper-n8n-1",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+      "red": "cooper_backend",
+      "proyecto": "cooper",
+      "servicio": "n8n",
+      "montajes": "bind:/var/lib/cooper/n8n:/home/node/.n8n;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "92837               tini",
+        "92870               n8n"
+      ]
+    },
+    {
+      "nombre": "/cooper-chat-n8n-1",
+      "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "red": "container:0b117c84f0a129650837798bcee7ba9be17d2566ef70e9905a9b3744c5e9ffa8",
+      "proyecto": "cooper",
+      "servicio": "chat-n8n",
+      "montajes": "bind:/run/cooper-chat:/tunel;bind:/opt/cooper/servicios/puente-codex/tunel.mjs:/rele/tunel.mjs;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "93457               MainThread"
+      ]
+    },
+    {
+      "nombre": "/cooper-runner-1",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+      "red": "cooper_backend",
+      "proyecto": "cooper",
+      "servicio": "runner",
+      "montajes": "bind:/opt/cooper/deploy/n8n-task-runners.json:/etc/n8n-task-runners.json;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "86486               tini",
+        "86537               ld-musl-x86_64.",
+        "94133               n8n task-runner"
+      ]
+    },
+    {
+      "nombre": "/cooper-chat-runner-1",
+      "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "red": "container:faba024a6efab0c800ed1adce976bde46ae605a524e8589b465a5cb892116dfb",
+      "proyecto": "cooper",
+      "servicio": "chat-runner",
+      "montajes": "bind:/run/cooper-chat:/tunel;bind:/opt/cooper/servicios/puente-codex/tunel.mjs:/rele/tunel.mjs;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "86654               MainThread"
+      ]
+    },
+    {
+      "nombre": "/cooper-cooper-1",
+      "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "red": "cooper_backend",
+      "proyecto": "cooper",
+      "servicio": "cooper",
+      "montajes": "bind:/var/lib/cooper/cooper:/data;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "85864               next-server (v",
+        "105246              MainThread"
+      ]
+    },
+    {
+      "nombre": "/cooper-chat-cooper-1",
+      "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "red": "container:ff63935e8896ff30e85286cc6ea82e661a30e78a3813694d3508d090bed35996",
+      "proyecto": "cooper",
+      "servicio": "chat-cooper",
+      "montajes": "bind:/run/cooper-chat:/tunel;bind:/opt/cooper/servicios/puente-codex/tunel.mjs:/rele/tunel.mjs;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "85995               MainThread"
+      ]
+    },
+    {
+      "nombre": "/cooper-caddy-1",
+      "imagen": "docker.io/library/caddy:2.11.2-alpine",
+      "red": "cooper_backend",
+      "proyecto": "cooper",
+      "servicio": "caddy",
+      "montajes": "bind:/var/lib/cooper/caddy-config:/config;bind:/var/lib/cooper/caddy-data:/data;bind:/opt/cooper/deploy/Caddyfile:/etc/caddy/Caddyfile;",
+      "estado": "running",
+      "salud": "healthy",
+      "procesos": [
+        "86365               caddy"
+      ]
+    }
+  ]
+}
