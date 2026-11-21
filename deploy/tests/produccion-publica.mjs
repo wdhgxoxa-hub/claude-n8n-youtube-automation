@@ -57,7 +57,7 @@ try {
       const providers = await context.request.get(origin + "/api/auth/providers");
       assert.equal(providers.status(), 200);
       const provider = (await providers.json()).google;
-      assert.equal(provider.type, "oauth");
+      assert.equal(provider.type, "oidc");
       assert.equal(provider.callbackUrl, origin + "/api/auth/callback/google");
       result.google_configurado = true;
     }
