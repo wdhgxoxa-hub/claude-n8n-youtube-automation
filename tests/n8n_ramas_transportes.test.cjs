@@ -472,3 +472,66 @@ test("ramas: la referencia Files limita origen y ruta antes de usar la credencia
     "Clip · fallo durable",
   ]);
 });
+
+test("ramas: las piezas públicas conservan el avatar final tras ensamblar la presentación completa o por partes", () => {
+  for (const tipos of [
+    ["avatar", "avatar", "avatar"],
+    ["avatar", "archivo", "imagen"],
+  ]) {
+    const planos = tipos.map((tipo, i) => ({
+      video_id: "v-avatar",
+      plano_id: "p" + i,
+      plano: {
+        id: "p" + i,
+        tipo,
+        presentacion: { recurso_privado: "NO_PUBLICAR" },
+        prompt_imagen: "NO_PUBLICAR",
+      },
+      url:
+        tipo === "avatar"
+          ? ""
+          : `https://ensayo.invalid/plano-${i}.${tipo === "archivo" ? "mp4" : "png"}`,
+    }));
+    const voces = planos.map((p) => ({
+      plano_id: p.plano_id,
+      url: `https://ensayo.invalid/voz-${p.plano_id}.wav`,
+    }));
+    const renderizados = planos
+      .filter((p) => p.plano.tipo === "avatar")
+      .map((p) => ({
+        ...p,
+        url: `https://ensayo.invalid/avatar-${p.plano_id}.mp4`,
+      }));
+    const nodos = {
+      "Sonido y emoción": [{ voces }],
+      "Juntar planos": [{ planos }],
+      "Renderizar avatares": renderizados,
+      "Plan de producción": [{ planos: planos.map((p) => p.plano) }],
+    };
+    const final = ejecutar(original(prod, "Presentación lista"), [], nodos);
+    assert.ok(final[0].json.planos.every((p) => p.url));
+    const piezas = ejecutar(
+      original(prod, "Cooper · piezas terminadas"),
+      [{ planos: 3 }],
+      {
+        ...nodos,
+        "Presentación lista": final,
+      },
+    );
+    const escenas = JSON.parse(piezas[0].json.cooper_escenas);
+    assert.equal(escenas.length, 3);
+    assert.ok(
+      escenas.every((p) => p.voz && (p.imagen || p.clip)),
+      "Cada escena conserva voz y medio definitivo",
+    );
+    assert.deepEqual(
+      escenas.map((p) => p.id),
+      planos.map((p) => p.plano_id),
+    );
+    assert.equal(escenas[0].clip, renderizados[0].url);
+    assert.doesNotMatch(
+      JSON.stringify(escenas),
+      /NO_PUBLICAR|presentacion|prompt_imagen/,
+    );
+  }
+});

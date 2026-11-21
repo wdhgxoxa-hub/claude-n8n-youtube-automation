@@ -13,10 +13,11 @@ f.chain('Piezas de Cooper','Publicaciones de Cooper','Historial de Cooper','Deci
 # Persistir las URLs de sonido y de los planos elegidos, sin prompts ni evidencias de identidad.
 f = reabrir(PROD)
 code(f,'Cooper · piezas terminadas',r"""
-const son=$('Sonido y emoción').first().json;
+// La presentación ensamblada es también la entrada de composición. M5 devuelve
+// voces; Juntar planos aún conserva marcadores vacíos para los avatares.
+const son=$('Presentación lista').first().json;
 const orden=$('Plan de producción').first().json.planos.map(p=>p.id);
-// La composición devuelve un conteo; los archivos definitivos (incluido avatar) vienen de sonido.
-const planos=(son.planos || $('Juntar planos').first().json.planos || [])
+const planos=(son.planos || [])
  .filter(p=>orden.includes(p.plano_id)).sort((a,b)=>orden.indexOf(a.plano_id)-orden.indexOf(b.plano_id));
 const voces=son.voces || [];
 return [{json:{cooper_escenas:JSON.stringify(planos.map((p,i)=>({id:String(p.plano_id || p.plano?.id || i),orden:i,
