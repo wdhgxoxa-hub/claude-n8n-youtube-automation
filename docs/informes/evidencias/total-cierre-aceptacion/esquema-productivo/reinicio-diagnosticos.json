@@ -1,0 +1,1 @@
+{"estado": "PASS", "servicios_recreados": ["n8n", "chat-n8n"], "antes": {"ejecutando": 0, "esperas": [400, 540]}, "despues": {"ejecutando": 0, "esperas": [400, 540]}}

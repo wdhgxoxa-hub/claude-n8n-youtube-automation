@@ -1,0 +1,1 @@
+{"estado": "PASS", "workers": [{"id": "CooperMarcasMet1", "activo": false, "version_publicada": null}, {"id": "CooperMarcasPub1", "activo": false, "version_publicada": null}], "conteos": {"cuentas_marca": 0, "piezas_marca": 0, "marca_ingestas": 0}, "marcador_existe": false, "entorno_consultado": false}

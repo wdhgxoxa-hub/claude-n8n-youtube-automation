@@ -1,6 +1,6 @@
 # cooper-total — cierre operativo y aceptación final
 
-Corte: **21-11-2026, 13:17 Lima**. Rama propia `total-cierre-aceptacion`; el orquestador integra los commits. Este frente no hizo push ni merge. La aceptación de imagen e infraestructura continúa; los cambios n8n descritos a continuación sí están desplegados.
+Corte: **21-11-2026, 13:45 Lima**. Rama propia `total-cierre-aceptacion`; el orquestador integra los commits. Este frente no hizo push ni merge. La imagen candidata y la infraestructura pasaron su aceptación aislada; su despliegue espera las dos rondas del orquestador. Los cambios n8n descritos a continuación sí están desplegados.
 
 ## Resultado real en el VPS
 
@@ -72,6 +72,30 @@ El aplicador ahora verifica SHA del archivo, etiqueta exacta, configuración ens
 
 Contrato contrastado con documentación oficial de [Docker/containerd](https://docs.docker.com/engine/storage/containerd/), [Docker inspect](https://docs.docker.com/reference/cli/docker/image/inspect/), [Podman inspect](https://docs.podman.io/en/latest/markdown/podman-image-inspect.1.html) y [manifiesto OCI](https://specs.opencontainers.org/image-spec/manifest/). La aceptación intermedia no acredita la futura imagen ni sustituye las rondas de interfaz del orquestador.
 
+## Aceptación de `719409f` y esquema real — 13:45 Lima
+
+La imagen candidata exacta es `localhost/cooper:719409f`, fuente `719409f813512e10ecdbd3a0218d529dd9198fd8`, configuración `sha256:134f67402247c190c37a32013fc01ecedd483379d3b09be054ea3f3f5d30182d`. Su archivo SHA-256 es `135b173772ba14b48aebcd0889b55c4d67bf6d386d0b9d7760827ac6888e249a` (296.908.810 bytes). Está transportado al VPS, **sin cargar ni activar** por este frente.
+
+- Migración real Cooper **11→13**, preservación de las 27 tablas previas, integridad/claves foráneas, restauración exacta y arranque de la imagen anterior: [PASS](evidencias/total-cierre-aceptacion/imagen-719409f/migracion.json).
+- **Ocho bloques Compose PASS** sobre la imagen exacta, incluido render sintético Marcas, runner 2.47.6, firma/SSE, copias/restauración y reversa: [registro](evidencias/total-cierre-aceptacion/imagen-719409f/compose.log). El Compose ensayado incluye `XDG_CACHE_HOME=/tmp/.cache`: Fontconfig dispone de caché en tmpfs aunque la raíz sea de solo lectura. La prueba exige ausencia de advertencias Fontconfig; no las filtra.
+- Aplicador de infraestructura exacto `9273e7d6e60114948ec7413dfbe92bbf2311cbbe1ff0879fb5d4706e8c5738cd`: **fallo inyectado → reversa real de datos y archivos públicos → actualización PASS**. [Reversa](evidencias/total-cierre-aceptacion/imagen-719409f/infra-reversa.json), [actualización](evidencias/total-cierre-aceptacion/imagen-719409f/infra-actualizacion.json), [resumen](evidencias/total-cierre-aceptacion/imagen-719409f/infra-aplicador.json). El recibo enlaza los hashes exactos de Compose, Caddy, runner y referencias de imágenes.
+
+Se conserva un intento anterior de Compose fallido: el POST del webhook sintético recibió el 404 inequívoco de registro ausente, aunque la metadata ya contenía su publicación; también aparecieron advertencias de caché Fontconfig. El arnés ahora permite repetir únicamente ese 404 si la base demuestra cero ejecuciones del workflow, dentro de diez segundos. No repite una respuesta aceptada, error ambiguo ni ejecución existente. Cinco regresiones cubren esas condiciones. En la repetición real el webhook respondió **200 al primer intento**, por lo que no se atribuye causalmente la desaparición del 404 a la espera. [Registro de intentos](evidencias/total-cierre-aceptacion/imagen-719409f/registro-webhook.json). El intento fallido queda en la caché privada `cooper-final2/cooper/.cache/aceptacion/compose-previa-404.log`.
+
+Competencia identificó la causa del fallo del getter: `fab_eventos` carecía de `canal_id` y `evento`; el getter escribe esos campos antes de consultar Google y Vigilante filtra por `evento`. Era una deriva de esquema, no un fallo de Google. Se contrastaron las nueve tablas con las escrituras y filtros productivos. De las 28 diferencias respecto del fixture, **solo dos son obligatorias**; ocho campos son lecturas opcionales de compatibilidad y dieciocho pertenecen solo al ensayo. No se añadieron campos de tokens ni datos ficticios. El contrato [productivo](../../contratos/cooper-tablas-produccion.json) conserva explícitamente las exclusiones.
+
+Copia fría nueva **`8e477070b8f9bf0b59d892343619fc519d18afd552f8c96f7c758f6c3367080c`**, restaurada en VPS y PC: 25 archivos/dos bases, 45 workflows y 130 filas de negocio. [Copia](evidencias/total-cierre-aceptacion/esquema-productivo/copia.json), [réplica](evidencias/total-cierre-aceptacion/esquema-productivo/replica.json), [restauración](evidencias/total-cierre-aceptacion/esquema-productivo/restauracion.json). Este corte sucede a los tres lotes iniciales; las cuatro filas adicionales pertenecen a la operación/aceptación posterior y no fueron creadas por la migración de columnas.
+
+El modo `--solo-columnas` se ensayó sin red en **2.47.4 y 2.47.6**: agrega exactamente las dos columnas, no importa ni publica workflows, conserva la proyección de todas las columnas anteriores y restaura bytes exactos `9ae5abfb2236c23ac032ddcdd7f9c2cf6c858fd45b72ba8f8369bde75def4154`. [2.47.4](evidencias/total-cierre-aceptacion/esquema-productivo/ensayo-2474.json), [2.47.6](evidencias/total-cierre-aceptacion/esquema-productivo/ensayo-2476.json). El motor candidato también conserva el clon con esquema completo: **45 workflows, nueve tablas/130 filas, 342→342 migraciones**, idempotencia y arranque del motor anterior sobre copia exacta. [Recibo del motor](evidencias/total-cierre-aceptacion/esquema-productivo/motor-45.json).
+
+**Aplicado realmente** con snapshot automático nuevo `4077d2b279cd9adc942cfd76585b7c3b8c011cf8797ec30e029127aed5d9ebc1`: dos columnas, 45→45 workflows, nueve tablas/130 filas previas intactas, hash de proyección `759842c8c3a2b3645bb57b022315c735cb9789277e43582d218daedf333d3200`, stack saludable y esperas **400/540** conservadas. [Recibo real](evidencias/total-cierre-aceptacion/esquema-productivo/aplicacion-vps.json). Esta aplicación exitosa no provocó una caída deliberada en producción. La reversa exacta se acreditó en ambos clones y la ruta automática de fallo conserva su regresión.
+
+La puerta de esquema es obligatoria en los siguientes ensayos y aplicaciones: proyecta las columnas previstas y valida las referencias DataTable vigentes y entrantes **antes de escribir**, vuelve a validar después, y liga contrato/comparador/puerta por SHA-256 al ensayo. Consulta nombres y tipos, nunca filas ni valores mapeados. Un lote incompleto, un tipo incompatible o una referencia dinámica no resuelta detiene la aplicación. Se usa el contrato productivo completo como manifiesto para esta migración; el manifiesto histórico de asignación de dueños no se amplía con campos ajenos a su tarea.
+
+**120 pruebas Python de despliegue, cinco de contrato, tres del migrador y 173 de flujos PASS**, sin advertencias. [Python](evidencias/total-cierre-aceptacion/esquema-productivo/python120.log). El orquestador informó además puerta integrada de 459 unitarias/77 E2E/173 flujos; sus dos rondas ampliadas y el despliegue final siguen en curso. Las sondas de competencia, incluido el error controlado autorizado para Vigilante/Telegram, se aceptan después del esquema y se retiran al terminar. No se declara aquí su resultado por anticipado.
+
+El preflight Marcas confirmó workers inactivos, tres tablas vacías y ausencia de marcador de instalación, sin consultar el entorno. La configuración opaca de su clave se realizará tras la imagen final, repitiendo las precondiciones; publicación real permanece apagada. [Preflight](evidencias/total-cierre-aceptacion/esquema-productivo/marcas-preflight.json).
+
 ## Commits de esta continuación
 
 - `0696e03`: delta acotado y conservación de entradas pausadas.
@@ -84,12 +108,16 @@ Contrato contrastado con documentación oficial de [Docker/containerd](https://d
 - `d2d966a`, `5b8549f`: afinidad CPU separada de las rondas de interfaz, también en el ensayo de motor.
 - `6e13ecd`: identidad criptográfica de imagen entre Docker y Podman.
 - `466992d`: precondición de identidad del alias de laboratorio.
+- `df2be8a`: espera acotada de registro sin duplicar ejecuciones y caché Fontconfig escribible.
+- `a38e176`: migraciones aditivas sin importar workflows.
+- `42c700e`, `f50de67`: contrato/comparador productivo del frente competencia, recogidos por cherry-pick.
+- `f7bf33f`: puerta obligatoria de esquema proyectado y posterior, enlazada al ensayo.
 
 Son IDs de la rama propia. El orquestador recoge los cambios por cherry-pick; sus IDs integrados pueden diferir. No se copiaron entornos reales ni valores de credenciales.
 
 ## Documentación oficial consultada
 
-Los ensayos reutilizan los adaptadores actuales. Se contrastaron las operaciones GET de [estado de Upload-Post](https://docs.upload-post.com/api/upload-status/), [analítica de Upload-Post](https://docs.upload-post.com/api/get-analytics/) y sus [referencias](https://docs.upload-post.com/api/reference/), además de [YouTube Analytics reports.query](https://developers.google.com/youtube/analytics/reference/reports/query) y [métricas disponibles](https://developers.google.com/youtube/analytics/metrics). No se inventaron endpoints ni se habilitó gasto.
+Los ensayos reutilizan los adaptadores actuales. Se contrastaron las operaciones GET de [estado de Upload-Post](https://docs.upload-post.com/api/upload-status/), [analítica de Upload-Post](https://docs.upload-post.com/api/get-analytics/) y sus [referencias](https://docs.upload-post.com/api/reference/), además de [YouTube Analytics reports.query](https://developers.google.com/youtube/analytics/reference/reports/query) y [métricas disponibles](https://developers.google.com/youtube/analytics/metrics). No se inventaron endpoints ni se habilitó gasto. También se contrastó la administración de [Data Tables de n8n](https://docs.n8n.io/build/work-with-data/data-tables/) y la [caché de Fontconfig](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html).
 
 ## Limitaciones y Pendientes de Walter
 

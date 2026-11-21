@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **Esquema n8n corregido y ensayado:** agregadas solo `canal_id` y `evento` a eventos; nueve tablas/130 filas y 45 workflows conservados. Reversa exacta y ambos motores comprobados; futuros lotes exigen contrato y referencias compatibles. La imagen final `719409f` pasó migración 11→13, ocho bloques Compose y avería/reversa/actualización del aplicador exacto; sigue pendiente activarla. [Recibos](informes/total-cierre-aceptacion.md).
+
 - **Sonda vidIQ, parser corregido:** la expresión compacta chocaba con los cierres `}}`; ahora el nodo Code serializa el cuerpo. Evaluador y HTTP Request reales de n8n 2.47.4/2.47.6 pasan con transporte ficticio y red deshabilitada; 181/181 pruebas de flujos/sonda. Los ocho cuerpos canónicos ya pasan y se conservan. Implementado/probado localmente; acceso real vidIQ a cargo de la aceptación de competencia. [Informe](informes/total-vidiq-parser.md).
 
 - **cooper-total, integrado localmente:** frentes originales y remanentes M01/M03/M05–M12. Incluye conciliación sin reenvío, montajes compartidos por referencia, inventario/retención, biblioteca durable, resultados conjuntos, Firefox/WebKit y optimización con 10.000 videos. El ciclo de avisos pasó de 885 a 20 ms sin cambiar resultados. No todo está desplegado aún. [Informe vigente](informes/cooper-total.md), [volumen](informes/total-m12.md).

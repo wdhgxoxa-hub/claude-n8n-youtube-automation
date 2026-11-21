@@ -1,0 +1,12 @@
+{
+  "aplicador": "PASS",
+  "fallo_inyectado_y_reversa": "PASS",
+  "archivos_restaurados": "PASS",
+  "datos_restaurados_con_huellas": "PASS",
+  "actualizacion": "PASS",
+  "red": "interna y loopback",
+  "recibo_reversa": "/home/david/.cache/cooper-final2/cooper/.cache/e2e-vps-JStZfu/aceptacion-infra-1795286003717207403/fallo-inyectado.json",
+  "recibo_actualizacion": "/home/david/.cache/cooper-final2/cooper/.cache/e2e-vps-JStZfu/aceptacion-infra-1795286003717207403/actualizacion.json",
+  "codigo_aplicador_sha256": "9273e7d6e60114948ec7413dfbe92bbf2311cbbe1ff0879fb5d4706e8c5738cd",
+  "codigo_operar_sha256": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b"
+}

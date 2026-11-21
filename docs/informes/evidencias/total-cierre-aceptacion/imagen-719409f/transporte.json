@@ -1,0 +1,8 @@
+{
+  "estado": "PASS",
+  "sha256_local_y_remoto": "135b173772ba14b48aebcd0889b55c4d67bf6d386d0b9d7760827ac6888e249a",
+  "bytes": 296908810,
+  "ruta_vps": "/var/lib/cooper-operacion/imagen-719409f.tar.gz",
+  "cargado": false,
+  "activado": false
+}
