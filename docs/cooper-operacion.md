@@ -1,6 +1,6 @@
 # Operación de Cooper: copias externas, salud y recuperación
 
-Actualizado el 21-11-2026 (Lima). La instalación la coordina el orquestador de `cooper-total`; el frente Operación no cambia servicios del VPS por su cuenta.
+Actualizado el 21-11-2026 (Lima). El orquestador de `cooper-total` integra el código y modifica los flujos n8n. Operación puede instalar sus scripts y probar el reinicio del VPS fuera del lote, según la autorización expresa de esta misión.
 
 ## Copia externa gratuita en la PC
 
@@ -26,13 +26,13 @@ systemctl --user start cooper-replica-pc.service
 
 El timer corre cada hora, es persistente y recupera una ejecución pendiente al volver la sesión. El recibo `ultima-replica.json` registra solo snapshot, fecha e integridad, nunca filas ni claves. `--confirmar-vps` lo envía por SSH a `deploy/registrar-replica.py`; ese receptor admite solo campos conocidos, snapshot hexadecimal y fecha de los últimos cinco minutos. El usuario SSH ya tiene el acceso operativo aprobado; no se amplían sus permisos.
 
-La PC debe estar encendida y su gestor de usuario activo. No es un almacén remoto independiente de esa PC ni custodia offline. La copia diaria del VPS determina el RPO efectivo; la réplica horaria no inventa snapshots más recientes. Si la PC se apaga más de 36 horas, el monitor avisa al recuperar transporte. Una pérdida simultánea de ambos equipos requiere la custodia externa de Walter.
+La PC debe estar encendida y su gestor de usuario activo. En esta instalación se comprobó `Linger=yes`, por lo que el gestor puede arrancar sin una sesión interactiva. No es un almacén remoto independiente de esa PC ni custodia offline. La copia diaria del VPS determina el RPO efectivo; la réplica horaria no inventa snapshots más recientes. Si la PC se apaga más de 36 horas, el monitor avisa al recuperar transporte. Una pérdida simultánea de ambos equipos requiere la custodia externa de Walter.
 
 ## Monitor y Telegram
 
-`deploy/monitor.py` revisa cada cinco minutos los cuatro servicios (estado, healthcheck y política de reinicio), HTTPS con validación de certificado, espacio libre (mínimo 2 GiB y 10%), última copia local verificada (máximo 30 horas) y recibo de réplica externa (36 horas). Durante una operación con candado o marcador de mantenimiento no alerta por la parada deliberada.
+`deploy/monitor.py` revisa cada cinco minutos los cuatro servicios (estado, healthcheck y política de reinicio), HTTPS con validación de certificado, espacio libre (mínimo 2 GiB y 10%), última copia local verificada (máximo 30 horas) y recibo de réplica externa (36 horas). Comprueba los certificados públicos de `COOPER_DOMAIN` y `N8N_DOMAIN` en 443 con CA, hostname y SNI; alerta al quedar **14 días o menos**, ante rechazo TLS o fecha ausente. Usa el código existente `servicio_caddy` («HTTPS no está saludable»), compatible con el receptor ya publicado. No necesita cambiar flujos. Durante una operación con candado o marcador de mantenimiento no alerta por la parada deliberada.
 
-Los mensajes contienen códigos cerrados traducidos al español. Repite una incidencia persistente como máximo cada seis horas, informa cambios y recuperación. Un fallo de entrega conserva el aviso pendiente y vuelve a intentarlo; si n8n se recupera antes del siguiente sondeo, se informa la recuperación aun cuando el aviso inicial no pudo salir. El monitor nunca muestra salida Docker, errores del proveedor ni valores de entorno.
+Los mensajes contienen códigos cerrados traducidos al español. Repite una incidencia persistente como máximo cada seis horas, informa cambios y recuperación. Un fallo de entrega conserva el aviso pendiente y vuelve a intentarlo; si n8n se recupera antes del siguiente sondeo, se informa la recuperación aun cuando el aviso inicial no pudo salir. También reintenta la recuperación si falla varias veces su entrega. El monitor nunca muestra salida Docker, errores del proveedor ni valores de entorno.
 
 El envío usa el webhook **interno** `POST /webhook/cooper/v1/monitor`, bloqueado en el listener público por la regla ya existente de Caddy. El sobre lleva JSON canónico, HMAC-SHA256 con prefijo de dominio y `COOPER_WEBHOOK_SECRET` consumido por el adaptador de configuración existente en tiempo de ejecución. El flujo exige firma constante, timestamp ±5 minutos, esquema cerrado y deduplicación. Un mensaje inválido responde 401 y no llega a Telegram. El destinatario y la credencial se fijan en el workflow, nunca se aceptan desde el cuerpo.
 
@@ -62,6 +62,10 @@ Docker ya está habilitado y los cuatro contenedores tienen `restart: unless-sto
 
 **Crear `/var/lib/cooper-operacion/mantenimiento` antes de una parada que deba persistir tras reinicio.** Las operaciones `actualizar` y `revertir` lo crean antes de detener escritores y solo lo retiran al finalizar con salud correcta; una actualización fallida queda cerrada aun si el VPS reinicia. El monitor también respeta ese marcador. Durante las copias se paran los relés del chat antes de los procesos cuyas redes comparten, y se reanudan únicamente los servicios que estaban activos.
 
+Para ensayar un reinicio real: revisar primero el log `.cache/orquesta/cooper-total.log` del repositorio principal y aplazar si hay cambios n8n en curso. Obtener después `operacion.lock` exclusivo y sin espera, comprobar ausencia de mantenimiento/ejecuciones activas y unidades habilitadas. Registrar el `boot_id` y metadatos de workflows antes de `systemctl reboot`; mantener el candado hasta el cierre de SSH. Al volver, exigir un `boot_id` distinto, salud de los siete contenedores cuando el chat está habilitado, `cooper-stack.service` en `active/exited` y timers activos. Verificar HTTPS, rutas protegidas, transporte firmado y réplica restaurada. No arrancar servicios manualmente durante esta comprobación: ocultaría un fallo del arranque automático.
+
+Si el monitor recién instalado falla, reponer únicamente su archivo anterior conservado en `/var/lib/cooper-operacion/monitor-anterior-c18106f.py`, ejecutar `--prueba` y comprobar el próximo disparo del timer. No restaurar bases ni workflows para revertir una sonda del host.
+
 ## Recuperación
 
 1. Poner el destino en mantenimiento y detener el Compose. Preservar cualquier escritura posterior al snapshot; restaurar un disco no revierte publicaciones ni decisiones externas.
@@ -72,4 +76,4 @@ Docker ya está habilitado y los cuatro contenedores tienen `restart: unless-sto
 
 Pruebas locales: `PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s deploy/tests -p 'test_*.py'`. Ejercitan fallos de transporte/restauración, conservación de la copia previa, HMAC real cruzado Python→JavaScript, replay, mensajes inválidos, deduplicación, recuperación, mantenimiento y coordinación de relés. El informe distingue esas pruebas de la copia real y del despliegue remoto.
 
-Fuentes oficiales consultadas el 21-11-2026: [repositorios restic](https://restic.readthedocs.io/en/stable/045_working_with_repos.html), [restauración restic](https://restic.readthedocs.io/en/stable/050_restore.html), [timers systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html), [webhook n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/), [Code n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/) y [Telegram sendMessage](https://core.telegram.org/bots/api#sendmessage).
+Fuentes oficiales consultadas el 21-11-2026: [repositorios restic](https://restic.readthedocs.io/en/stable/045_working_with_repos.html), [restauración restic](https://restic.readthedocs.io/en/stable/050_restore.html), [timers systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html), [TLS y certificados en Python](https://docs.python.org/3/library/ssl.html), [webhook n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/), [Code n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/) y [Telegram sendMessage](https://core.telegram.org/bots/api#sendmessage).

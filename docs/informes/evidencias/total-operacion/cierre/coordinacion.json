@@ -1,0 +1,12 @@
+{
+  "fecha_lima": "2026-11-21T11:05:32.496581-05:00",
+  "log": "/home/david/Proyectos/claude-n8n-youtube-automation/.cache/orquesta/cooper-total.log",
+  "sha256": "8c699b7f047dade4cc6417035ab1c30ad2f48b33108ffd496b33f91383847b33",
+  "bytes": 1907467,
+  "comandos_recientes": [
+    "/usr/bin/bash -lc \"set -e\ngit cherry-pick 0601218 733fd8b c9252f8\npython3 - <<'PY'\nimport json\nfrom pathlib import Path\nflows=json.loads(Path('.cache/n8n-final/entrada.json').read_text())\nfor f in flows:\n deps=[]\n for n in f['nodes']:\n  if n['type'].endswith('executeWorkflow'):\n   r=n['parameters'].get('workflowId',{});v=r.get('value') if isinstance(r,dict) else r\n   if v and not v.startswith('='):deps.append(v)\n print(json.dumps({'id':f['id'],'deps':sorted(set(deps))}))\nPY\" in /home/david/Proyectos/cooper-wt/cooper-total",
+    "/usr/bin/bash -lc \"rg -n -C 2 '\"'^(<<<<<<<|=======|>>>>>>>)'\"' docs/ESTADO.md\npython3 - <<'PY'\nimport json\nfrom pathlib import Path\nflows=json.loads(Path('.cache/n8n-final/entrada.json').read_text())\nfor f in flows:\n deps=[]\n for n in f['nodes']:\n  if n['type'].endswith('executeWorkflow'):\n   r=n['parameters'].get('workflowId',{});v=r.get('value') if isinstance(r,dict) else r\n   if v and not v.startswith('='):deps.append(v)\n print(json.dumps({'id':f['id'],'deps':sorted(set(deps))}))\nPY\" in /home/david/Proyectos/cooper-wt/cooper-total",
+    "/usr/bin/bash -lc 'cat docs/misiones/AVISO-cooper-total.md\ncat docs/misiones/total-competencia.md\ngit status --short\ngit log -4 --oneline' in /home/david/Proyectos/cooper-wt/total-competencia",
+    "/usr/bin/bash -lc \"set -e\npython3 - <<'PY'\nfrom pathlib import Path\nimport re\np=Path('docs/ESTADO.md');s=p.read_text()\ns=re.sub(r'\"'^<<<<<<< HEAD'\"\\\\n(.*?)\"'^======='\"\\\\n(.*?)\"'^>>>>>>>[''^'\"\\\\n]*\\\\n',lambda m:m.group(1)+m.group(2),s,flags=re.M|re.S)\np.write_text(s)\nPY\ngit add docs/ESTADO.md\ngit cherry-pick --continue\" in /home/david/Proyectos/cooper-wt/cooper-total"
+  ]
+}

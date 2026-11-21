@@ -1,0 +1,109 @@
+{
+  "fecha": 1795277263,
+  "boot_id": "09888ee0-8210-490d-9df5-c3895ef2f2ef",
+  "contenedores": [
+    {
+      "servicio": "cooper",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "n8n",
+      "estado": "running|starting|unless-stopped"
+    },
+    {
+      "servicio": "runner",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "caddy",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "chat-cooper",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "chat-n8n",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "chat-runner",
+      "estado": "running|healthy|unless-stopped"
+    }
+  ],
+  "unidades": {
+    "docker.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "cooper-stack.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "activating",
+      "SubState": "start",
+      "UnitFileState": "enabled"
+    },
+    "cooper-monitor.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "cooper-backup.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  },
+  "workflows": 36,
+  "workflows_metadata_sha256": "738df75a3da84fdbafb591849df35d9a0cf5baf202702baee99bae46ea645a5f",
+  "ejecuciones": [
+    [
+      "error",
+      16
+    ],
+    [
+      "success",
+      456
+    ],
+    [
+      "waiting",
+      2
+    ]
+  ],
+  "integridad_n8n": "ok",
+  "certificados": [
+    {
+      "dominio": "cooper.cooperestudio.com",
+      "vence": "Feb 19 13:24:44 2027 GMT",
+      "dias": 89.89,
+      "verificado": true
+    },
+    {
+      "dominio": "flujos.cooperestudio.com",
+      "vence": "Feb 19 13:24:44 2027 GMT",
+      "dias": 89.89,
+      "verificado": true
+    }
+  ],
+  "http": {
+    "/api/salud": 200,
+    "/entrar": 200,
+    "/api/estado": 401,
+    "/api/operacion": 401
+  },
+  "monitor": {
+    "fecha": 1795277253,
+    "problemas": [],
+    "notificados": [],
+    "aviso_en": 1795277119,
+    "entrega": true,
+    "salud": "PASS"
+  },
+  "monitor_rc": 0,
+  "monitor_sha256": "83c9a61efb1e4954bfd7413a531cf4778d0697fbdf2e4c3ccd3c5c34895cdc06"
+}

@@ -1,0 +1,52 @@
+{
+  "fecha": 1795277136,
+  "boot_id": "63b51263-6972-4aac-a73b-265bc3d5e307",
+  "contenedores": [
+    {
+      "servicio": "cooper",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "n8n",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "runner",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "caddy",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "chat-cooper",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "chat-n8n",
+      "estado": "running|healthy|unless-stopped"
+    },
+    {
+      "servicio": "chat-runner",
+      "estado": "running|healthy|unless-stopped"
+    }
+  ],
+  "workflows": 36,
+  "workflows_metadata_sha256": "738df75a3da84fdbafb591849df35d9a0cf5baf202702baee99bae46ea645a5f",
+  "ejecuciones": [
+    [
+      "error",
+      16
+    ],
+    [
+      "success",
+      456
+    ],
+    [
+      "waiting",
+      2
+    ]
+  ],
+  "mantenimiento": false,
+  "candado_exclusivo": true
+}

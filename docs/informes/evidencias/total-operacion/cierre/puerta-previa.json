@@ -1,0 +1,50 @@
+[
+  {
+    "paso": "01-ci",
+    "comando": [
+      "npm",
+      "ci"
+    ],
+    "rc": 0,
+    "segundos": 4.84
+  },
+  {
+    "paso": "02-lint",
+    "comando": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "rc": 0,
+    "segundos": 2.81
+  },
+  {
+    "paso": "03-tipos",
+    "comando": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "rc": 0,
+    "segundos": 1.0
+  },
+  {
+    "paso": "04-unitarias",
+    "comando": [
+      "npm",
+      "test"
+    ],
+    "rc": 0,
+    "segundos": 16.51
+  },
+  {
+    "paso": "05-e2e",
+    "comando": [
+      "npm",
+      "run",
+      "test:e2e"
+    ],
+    "rc": 1,
+    "segundos": 417.84
+  }
+]

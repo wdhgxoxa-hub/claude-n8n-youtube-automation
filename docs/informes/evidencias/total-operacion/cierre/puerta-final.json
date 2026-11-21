@@ -1,0 +1,104 @@
+{
+  "codigo": "c18106f",
+  "fecha_lima": "2026-11-21T11:20:04.336030-05:00",
+  "pasos": [
+    {
+      "paso": "01-ci",
+      "comando": [
+        "npm",
+        "ci"
+      ],
+      "rc": 0,
+      "segundos": 4.76
+    },
+    {
+      "paso": "02-lint",
+      "comando": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "rc": 0,
+      "segundos": 2.93
+    },
+    {
+      "paso": "03-tipos",
+      "comando": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "rc": 0,
+      "segundos": 1.03
+    },
+    {
+      "paso": "04-unitarias",
+      "comando": [
+        "npm",
+        "test"
+      ],
+      "rc": 0,
+      "segundos": 16.88
+    },
+    {
+      "paso": "05-e2e",
+      "comando": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "rc": 0,
+      "segundos": 400.75
+    },
+    {
+      "paso": "06-build",
+      "comando": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "rc": 0,
+      "segundos": 3.6
+    },
+    {
+      "paso": "07-flujos",
+      "comando": [
+        "node",
+        "--test",
+        "tests/flujos_v2.test.cjs"
+      ],
+      "rc": 0,
+      "segundos": 1.03
+    }
+  ],
+  "diagnosticos": [
+    {
+      "archivo": "01-ci.log",
+      "diagnosticos": 0
+    },
+    {
+      "archivo": "02-lint.log",
+      "diagnosticos": 0
+    },
+    {
+      "archivo": "03-tipos.log",
+      "diagnosticos": 0
+    },
+    {
+      "archivo": "04-unitarias.log",
+      "diagnosticos": 0
+    },
+    {
+      "archivo": "05-e2e.log",
+      "diagnosticos": 0
+    },
+    {
+      "archivo": "06-build.log",
+      "diagnosticos": 0
+    },
+    {
+      "archivo": "07-flujos.log",
+      "diagnosticos": 0
+    }
+  ]
+}

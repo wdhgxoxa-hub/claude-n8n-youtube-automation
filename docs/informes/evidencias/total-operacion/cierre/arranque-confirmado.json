@@ -1,0 +1,56 @@
+{
+  "fecha": 1795277289,
+  "boot_id": "09888ee0-8210-490d-9df5-c3895ef2f2ef",
+  "contenedores": {
+    "cooper": "running|healthy|unless-stopped",
+    "n8n": "running|healthy|unless-stopped",
+    "runner": "running|healthy|unless-stopped",
+    "caddy": "running|healthy|unless-stopped",
+    "chat-cooper": "running|healthy|unless-stopped",
+    "chat-n8n": "running|healthy|unless-stopped",
+    "chat-runner": "running|healthy|unless-stopped"
+  },
+  "unidades": {
+    "docker.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled",
+      "ActiveEnterTimestamp": "Sat 2026-11-21 17:06:40 CET"
+    },
+    "cooper-stack.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "exited",
+      "UnitFileState": "enabled",
+      "ActiveEnterTimestamp": "Sat 2026-11-21 17:07:25 CET"
+    },
+    "cooper-monitor.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled",
+      "ActiveEnterTimestamp": "Sat 2026-11-21 17:06:33 CET"
+    },
+    "cooper-backup.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled",
+      "ActiveEnterTimestamp": "Sat 2026-11-21 17:06:33 CET"
+    }
+  },
+  "workflows": 36,
+  "workflows_metadata_sha256": "738df75a3da84fdbafb591849df35d9a0cf5baf202702baee99bae46ea645a5f",
+  "monitor_rc": 0,
+  "monitor": {
+    "fecha": 1795277287,
+    "problemas": [],
+    "notificados": [],
+    "aviso_en": 1795277119,
+    "entrega": true,
+    "salud": "PASS"
+  }
+}

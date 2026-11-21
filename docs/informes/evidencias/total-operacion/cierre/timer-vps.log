@@ -1,0 +1,16 @@
+Result=success
+ExecMainStartTimestamp=Sat 2026-11-21 17:09:30 CET
+ExecMainExitTimestamp=Sat 2026-11-21 17:09:30 CET
+ExecMainStatus=0
+NextElapseUSecMonotonic=8min 22.180310s
+LastTriggerUSec=Sat 2026-11-21 17:09:30 CET
+ActiveState=active
+UnitFileState=enabled
+{
+  "fecha": 1795277370,
+  "problemas": [],
+  "notificados": [],
+  "aviso_en": 1795277119,
+  "entrega": null,
+  "salud": "PASS"
+}

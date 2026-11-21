@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 11:10 (Lima).
+Última actualización: 2026-11-21 11:20 (Lima).
 
 ## Qué es
 
@@ -9,7 +9,8 @@
 
 ## Hecho
 
-- **cooper-total / Operación:** implementados réplica cifrada en PC, restauración antes de promover copia, monitor firmado para Telegram y arranque protegido por mantenimiento. Copia real VPS y recuperación externa verificadas el 21-11 a las 10:17 Lima: snapshot `04cd7f6f`, 25 archivos y dos bases; los cuatro servicios volvieron saludables. Puerta del frente: 284 unitarias, 43 E2E, 147 flujos y 36 pruebas de operación; cero errores/advertencias. Código entregado al orquestador; timers y monitor aún pendientes de instalación coordinada. [Informe](informes/total-operacion.md).
+- **cooper-total / Operación:** réplica restic cifrada y gratuita en PC habilitada; última restauración real `3cb43d07`, 25 archivos y dos bases, 21-11 a las 11:07 Lima. Monitor/Telegram y timers instalados; corrección `c18106f` desplegada con aviso TLS ≤14 días y reintento persistente. Reinicio real probado fuera del lote: siete contenedores saludables, stack y timers automáticos, 36 workflows sin cambios. Puerta repetida: 284 unitarias, 43 E2E, 147 flujos y 39 pruebas operativas, cero errores/advertencias. Código y corrección recogidos por el orquestador en `cooper-total` (`cf0fe8c`); este frente no hizo push/merge. [Informe y evidencia](informes/total-operacion.md).
+
 - **Cooper total, frente aprendizaje:** implementado y probado localmente el ciclo de métricas 24h/72h/7d, evidencia creativa y lecciones por canal con lectura obligatoria del siguiente guion, trazabilidad en Aprendizaje y ensayo seguro sin producción ni llamadas de IA. Puerta completa: 285 unitarias, 44 E2E, 154 regresiones de flujos; cero errores/advertencias. **Pendiente de integración y validación/despliegue remoto por el orquestador.** [Informe](informes/total-aprendizaje.md).
 - **Cooper total / Chat VPS:** túnel privado instalado y probado con el plan real de la PC, caída y recuperación; puerta 284 unitarias/43 E2E/147 flujos sin errores ni advertencias. Overlay del destino privado pendiente del despliegue integrado; sesión Google real pendiente, sin iniciar OAuth. [Informe](informes/total-chat-vps.md).
 - **Imagen final de cooper-total probada (21-11, 11:02 Lima):** fuente exacta `169d0cd`, migración real 8→11/reversa a imagen previa y siete bloques Compose pasan; TLS, login ficticio, runner/firma/SSE, restic y recuperación comprobados. Vigilante seguro: 148 pruebas de flujos pasan. No equivale a despliegue ni OAuth real. [Evidencia](informes/total-despliegue.md).
@@ -30,12 +31,13 @@
 
 ## En curso
 
-- Orquestador `cooper-total`: integrar/desplegar los frentes y activar el monitor, receptor de recibos y timers de réplica/arranque; ensayar imagen nueva y reversa con copia del respaldo real. El frente Operación no reabrió workflows ni hizo push.
+- Orquestador `cooper-total`: integrar/desplegar los frentes y ensayar imagen nueva/reversa; la corrección del monitor `c18106f` ya está recogida en su rama. Monitor, receptor y timers ya están instalados; reinicio automático comprobado. Operación no reabrió workflows ni hizo push.
+
 - Cooper total: integrar el frente aprendizaje y ejecutar su [ensayo de lectura](cooper-aprendizaje-ensayo.md) sobre publicaciones existentes, con respaldo/reversa, sin reanudar producción. La conexión real y la calidad de las lecciones todavía no se acreditan por las pruebas locales.
 - **Lote cooper-total:** clon aislado publica 25/25 flujos con cuatro pasos sin credencial bloqueados explícitamente y tres entradas externas deshabilitadas; la entrada definitiva FINAL3 ya pasó importación32, publicación25, versiones y reversa exacta187tablas en un único recibo ligado al plan antes de otro intento real. No se ha habilitado producción de medios ni publicado contenido social. [Ensayos](informes/total-despliegue.md).
 
 - Claude: revisar e instalar el lote n8n de integración 3 en el destino elegido, con respaldo real previo, mapa de IDs y reversa. Contiene 32 exportaciones inactivas; **no se aplicó en vivo**. [Procedimiento](cooper-cobertura-despliegue.md).
-- Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas, repositorio de copias fuera del VPS y conexión del chat con los planes de la PC.
+- Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas y conexión del chat con los planes de la PC. La copia fuera del VPS ya está activa y verificada; queda su custodia offline.
 - La PC conserva la base del corte; no sincroniza escrituras posteriores del VPS. Elegir el destino de producción y conciliar los datos antes de cualquier reversa o actualización del servidor. [Instalación y reversa local](cooper-integracion3-despliegue.md).
 
 ## Pendientes de Walter
@@ -47,7 +49,8 @@
 5. Fijar presupuestos, modelos, interruptores, perfiles de publicación y permisos OAuth; autorizar por separado un ensayo real de producción, medios y celebración. Operación puede mostrar indisponibilidad hasta instalar el nuevo puente.
 6. Revisar los videos y probar un teléfono físico de gama media y Safari si se utiliza. La emulación local no sustituye esa aceptación.
 7. Marcas: definir identidad/dueños, asignar activos y permisos, cotejar corpus bíblico y guía pastoral, aprobar plantilla WhatsApp y decidir retención/conciliación de medios y primer ensayo real.
-8. Custodiar claves y configuración privada offline. La réplica restic gratuita a la PC y su recuperación fuera del VPS ya están probadas; la PC debe permanecer disponible para replicar. Si se requiere IA de los planes allí, completar el túnel restringido a los puentes de la PC y validar desde los contenedores.
+8. Mantener disponible la PC para la réplica gratuita ya habilitada y custodiar claves offline; recuperación externa probada. Si necesita aviso durante caída total de VPS/n8n, elegir un canal independiente (pendiente B, sin cuentas ni pagos creados). Conservar la aceptación del túnel de planes a cargo del frente correspondiente.
+
 
 9. Aprendizaje: revisar hipótesis editoriales, reautorizar solo las cuentas cuyo permiso de analytics falle y aprobar los futuros videos con los que contrastar las correcciones. No se inventan métricas de ventanas pasadas ni una mejora causal.
 

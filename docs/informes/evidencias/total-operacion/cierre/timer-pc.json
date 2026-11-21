@@ -1,0 +1,20 @@
+{
+  "fecha": 1795277368,
+  "unidades": {
+    "cooper-replica-pc.service": {
+      "ActiveState": "inactive",
+      "UnitFileState": "static",
+      "Result": "success",
+      "ExecMainStartTimestamp": "Sat 2026-11-21 11:07:16 -05",
+      "ExecMainExitTimestamp": "Sat 2026-11-21 11:07:35 -05",
+      "ExecMainStatus": "0"
+    },
+    "cooper-replica-pc.timer": {
+      "ActiveState": "active",
+      "UnitFileState": "enabled",
+      "NextElapseUSecRealtime": "Sat 2026-11-21 12:01:38 -05",
+      "Result": "success"
+    }
+  },
+  "linger": "Linger=yes"
+}
