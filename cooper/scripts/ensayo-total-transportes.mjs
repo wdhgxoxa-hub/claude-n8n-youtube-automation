@@ -32,7 +32,8 @@ const INTERNOS = new Set([
 
 function familia(workflow, node) {
   if (node.type === TELEGRAM) return "telegram";
-  const key = `${workflow.id}:${node.name}`;
+  const nombreInterno = node.name.replace(/ · intento [1-4]$/, "");
+  const key = `${workflow.id}:${nombreInterno}`;
   if (INTERNOS.has(key)) return null;
   const url = String(node.parameters?.url || "");
   if (node.name === "Despertar routine") return "claude";

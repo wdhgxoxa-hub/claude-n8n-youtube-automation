@@ -63,7 +63,7 @@ test('Radar íntegro: normaliza ítems de subflujos con metadata sin perder dato
     // Publicar registra el webhook de forma asíncrona. Solo repetir ausencia
     // inequívoca sin ejecución nueva; nunca un 200 ni un fallo de ejecución.
     assert.equal(r.body.code,404);
-    assert.match(r.body.message,/^The requested webhook "POST radar-contexto-ficticio" is not registered\.?$/);
+    assert.match(r.body.message,/^(?:The requested webhook "POST radar-contexto-ficticio" is not registered\.?|This webhook is not registered for POST requests\. Did you mean to make a POST request\?)$/);
     assert.equal(await contar(),previas);
     return false;
    },'registro local',10000);

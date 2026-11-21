@@ -535,3 +535,15 @@ test("ramas: las piezas públicas conservan el avatar final tras ensamblar la pr
     );
   }
 });
+
+// El backoff integrado conserva el receptor real firmado: sus clones no son proveedores.
+test('ramas: los intentos del callback de Cooper conservan HTTP y la respuesta completa', async () => {
+  const { adaptarTransportes } = await import('../cooper/scripts/ensayo-total-transportes.mjs');
+  for (const id of ['FabCooperAPI0001','FabCooperProgr01','FabPresentacion1']) {
+    const source = JSON.parse(fs.readFileSync(path.join(__dirname,'../workflows/v2',id+'.json'),'utf8'));
+    const callbacks = source.nodes.filter(n => n.type === 'n8n-nodes-base.httpRequest' && / · intento [1-4]$/.test(n.name));
+    assert.ok(callbacks.length >= 4);
+    const adapted = adaptarTransportes(source).workflow;
+    for (const callback of callbacks) assert.deepEqual(adapted.nodes.find(n => n.name === callback.name), callback);
+  }
+});
