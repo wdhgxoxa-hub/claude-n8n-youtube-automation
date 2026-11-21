@@ -37,10 +37,13 @@ export function Inicio() {
     [cards, setCards] = useState<TarjetaChat[]>([]);
   const controller = useRef<AbortController | null>(null);
   const mouthTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const waitingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [waiting, setWaiting] = useState(false);
   useEffect(
     () => () => {
       controller.current?.abort();
       if (mouthTimer.current) clearTimeout(mouthTimer.current);
+      if (waitingTimer.current) clearTimeout(waitingTimer.current);
     },
     [],
   );
@@ -58,6 +61,10 @@ export function Inicio() {
     setBusy(true);
     setError("");
     setState("pensando");
+    setWaiting(false);
+    let speech = "";
+    if (mouthTimer.current) clearTimeout(mouthTimer.current);
+    waitingTimer.current = setTimeout(() => setWaiting(true), 12000);
     try {
       controller.current = new AbortController();
       setSubmitted(text);
@@ -85,6 +92,9 @@ export function Inicio() {
         if (event.tipo === "tarjeta")
           setCards((old) => [...old, event.tarjeta]);
         if (event.tipo === "texto") {
+          speech += event.texto;
+          setWaiting(false);
+          if (waitingTimer.current) clearTimeout(waitingTimer.current);
           setPartial((old) => old + event.texto);
           setSpoken(event.texto);
           setState("hablando");
@@ -100,12 +110,32 @@ export function Inicio() {
       setText("");
       setFiles([]);
       setTranscript(null);
+      // Los proveedores locales entregan todo el texto junto: la boca continúa tras recibirlo.
+      if (speech) {
+        setSpoken(speech);
+        setState("hablando");
+      }
     } catch (e) {
-      setError((e as Error).message);
+      setError(
+        controller.current?.signal.aborted
+          ? "Cancelaste la espera. Revisa las tarjetas pendientes antes de repetir el pedido."
+          : (e as Error).message,
+      );
       setState("reposo");
+      speech = "";
     } finally {
       if (mouthTimer.current) clearTimeout(mouthTimer.current);
-      setState("reposo");
+      if (waitingTimer.current) clearTimeout(waitingTimer.current);
+      setWaiting(false);
+      if (speech)
+        mouthTimer.current = setTimeout(
+          () => setState("reposo"),
+          Math.min(
+            6000,
+            partituraTexto(speech).reduce((n, p) => n + p.duration, 0),
+          ),
+        );
+      else setState("reposo");
       try {
         await refresh();
       } catch {
@@ -210,7 +240,9 @@ export function Inicio() {
                 {state === "escuchando"
                   ? "Te escucho…"
                   : state === "pensando"
-                    ? "Preparando tu solicitud…"
+                    ? waiting
+                      ? "Sigo preparando tu respuesta. Puedes cancelar la espera."
+                      : "Preparando tu solicitud…"
                     : "De tu lado, de principio a fin."}
               </p>
             </div>
@@ -559,13 +591,25 @@ export function Inicio() {
                       </select>
                     )}
                 </div>
-                <button
-                  className="send"
-                  disabled={busy || uploading || !text.trim()}
-                  aria-label="Enviar mensaje"
-                >
-                  <ArrowUp size={20} />
-                </button>
+                {busy && submitted ? (
+                  <button
+                    type="button"
+                    className="send"
+                    aria-label="Cancelar espera"
+                    title="Cancelar espera"
+                    onClick={() => controller.current?.abort()}
+                  >
+                    <X size={20} />
+                  </button>
+                ) : (
+                  <button
+                    className="send"
+                    disabled={busy || uploading || !text.trim()}
+                    aria-label="Enviar mensaje"
+                  >
+                    <ArrowUp size={20} />
+                  </button>
+                )}
               </div>
             </form>
             <p className="composer-caption">

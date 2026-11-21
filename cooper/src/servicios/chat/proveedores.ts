@@ -272,6 +272,7 @@ export class ChatOpenAI implements ProveedorChat {
 }
 // Solo respalda antes de emitir contenido: nunca duplica texto ni repite herramientas.
 export class ChatConRespaldo implements ProveedorChat {
+  private usandoRespaldo = false;
   constructor(
     private principal: ProveedorChat,
     private respaldo: ProveedorChat,
@@ -280,6 +281,10 @@ export class ChatConRespaldo implements ProveedorChat {
     e: EntradaModelo,
     signal: AbortSignal,
   ): AsyncGenerator<EventoProveedor> {
+    if (this.usandoRespaldo) {
+      yield* this.respaldo.generar(e, signal);
+      return;
+    }
     let emitido = false;
     try {
       for await (const event of this.principal.generar(e, signal)) {
@@ -288,6 +293,7 @@ export class ChatConRespaldo implements ProveedorChat {
       }
     } catch {
       if (signal.aborted || emitido) throw indisponible();
+      this.usandoRespaldo = true;
       yield* this.respaldo.generar(e, signal);
     }
   }

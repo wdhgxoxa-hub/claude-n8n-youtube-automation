@@ -200,11 +200,13 @@ async function handle(request: Request, context: Context) {
                 );
             };
             void responderChat(user, parsed, emit, signal)
-              .catch(() =>
+              .catch((error: unknown) =>
                 emit({
                   tipo: "error",
                   texto:
-                    "La respuesta se interrumpió. Revisa las tarjetas pendientes y vuelve a intentarlo.",
+                    error instanceof ErrorHttp
+                      ? error.message
+                      : "La respuesta se interrumpió. Revisa las tarjetas pendientes y vuelve a intentarlo.",
                 }),
               )
               .finally(() => {

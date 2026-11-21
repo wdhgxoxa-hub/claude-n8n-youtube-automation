@@ -14,8 +14,8 @@ import {
 } from "@/db/schema";
 import { ErrorHttp, requireOwn } from "@/lib/permisos";
 import { canalesPropios, videosPropios } from "./fabrica";
-import { ChatClaude, ChatOpenAI, ChatConRespaldo } from "./chat/proveedores";
-import { ChatSimulado } from "./chat/simulado";
+import { proveedorChat } from "./chat/seleccion";
+import { colaChat } from "./chat/cola";
 import {
   consultar,
   ejecutar,
@@ -34,6 +34,7 @@ import type {
   TarjetaChat,
 } from "./chat/tipos";
 export { ChatSimulado } from "./chat/simulado";
+export { proveedorChat } from "./chat/seleccion";
 export type { ProveedorChat } from "./chat/tipos";
 export const CONSULTAS = [
   "estado",
@@ -53,17 +54,6 @@ export type PeticionChat = z.infer<typeof chatSchema>;
 export const confirmacionSchema = z
   .object({ id: z.uuid(), aceptar: z.boolean() })
   .strict();
-export function proveedorChat(): ProveedorChat {
-  const mode =
-    process.env.COOPER_DEMO === "1"
-      ? "simulada"
-      : (process.env.COOPER_CHAT ?? "claude");
-  if (mode === "simulada") return new ChatSimulado();
-  if (mode === "openai") return new ChatOpenAI();
-  if (mode === "claude")
-    return new ChatConRespaldo(new ChatClaude(), new ChatOpenAI());
-  throw new ErrorHttp(503, "El chat no está configurado. Contacta con Walter.");
-}
 function vigente(user: User) {
   const actual = db().select().from(users).where(eq(users.id, user.id)).get();
   if (
@@ -315,12 +305,13 @@ export async function responderChat(
   raw: PeticionChat,
   emitir: (evento: EventoChat) => void = () => {},
   signal: AbortSignal = AbortSignal.timeout(120000),
-  proveedor = proveedorChat(),
+  proveedor: ProveedorChat = proveedorChat(),
 ) {
   const input = chatSchema.parse(raw),
     activo = validarPeticion(user, input);
   const liberar = reservar(user);
   const control = AbortSignal.any([signal, AbortSignal.timeout(120000)]);
+  let liberarGlobal: (() => void) | undefined;
   let respuesta = "",
     pendiente = "";
   const publicar = (texto: string) => {
@@ -331,6 +322,11 @@ export async function responderChat(
     emitir({ tipo: "texto", texto: seguro });
   };
   try {
+    if (
+      process.env.COOPER_DEMO !== "1" &&
+      process.env.COOPER_CHAT !== "simulada"
+    )
+      liberarGlobal = await colaChat.entrar(user.id, control);
     db()
       .update(chatSessions)
       .set({ channelId: activo.canalId })
@@ -450,8 +446,14 @@ export async function responderChat(
         "La respuesta se interrumpió. Revisa las tarjetas pendientes antes de repetir tu pedido.",
       );
     }
+    if (control.aborted)
+      throw new ErrorHttp(
+        504,
+        "Cooper tardó demasiado. Revisa las tarjetas pendientes y vuelve a intentarlo.",
+      );
     throw error;
   } finally {
+    liberarGlobal?.();
     liberar();
   }
 }
