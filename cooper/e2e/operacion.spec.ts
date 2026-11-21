@@ -27,6 +27,89 @@ async function confirmar(page: Page) {
   ).toHaveCount(0);
 }
 test.beforeEach(async ({ page }) => entrar(page));
+test("radar presenta competencia, diferenciación y límites sin inventar mediciones", async ({
+  page,
+}) => {
+  await page.goto("/radar");
+  await expect(
+    page.getByRole("heading", { name: "Competencia e identidad" }),
+  ).toBeVisible();
+  await expect(page.getByText("Por investigar", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Cuentas con el mismo nombre" }),
+  ).toBeVisible();
+  const op = await (await page.request.get("/api/operacion")).json();
+  op.canales[0].nombre = "Margen Real de ensayo";
+  op.canales[0].radar.ideas = [];
+  op.canales[0].radar.sonidos = [];
+  op.canales[0].radar.resumen = "Sin ideas reales en esta prueba.";
+  op.canales[0].radar.competencia = {
+    version: 1,
+    estado: "listo",
+    fecha: new Date().toISOString(),
+    fuente: "web_publica",
+    resumen: "Investigación ficticia para la prueba de presentación.",
+    diferenciacion: "Margen Real es Perú: cifras en soles y casos peruanos.",
+    competidores: [1, 2, 3].map((i) => ({
+      nombre: `Competidor ficticio ${i}`,
+      red: "youtube",
+      url: `https://www.youtube.com/@ensayo${i}`,
+      pais: "Perú",
+      patron: "Hipótesis de gancho visual, pendiente de probar.",
+      muestras: [],
+      outliers:
+        i === 1
+          ? [
+              {
+                titulo: "Publicación de ensayo",
+                url: "https://www.youtube.com/shorts/ensayo11",
+                fecha: new Date().toISOString(),
+                vistas: 600,
+                formato: "short",
+                mediana: 100,
+                muestra: 3,
+                multiplicador: 6,
+              },
+            ]
+          : [],
+    })),
+    homonimos: [
+      {
+        nombre: "Homónimo ficticio",
+        red: "tiktok",
+        pais: "México",
+        url: "https://www.tiktok.com/@homonimoensayo",
+        diferencia: "Cuenta distinta; no atribuirla al canal peruano.",
+      },
+    ],
+    comprobaciones: [],
+    limitaciones: [],
+    objetivos: ["vistas", "retención", "seguidores"],
+  };
+  await page.route("**/api/operacion", (route) => route.fulfill({ json: op }));
+  await page.reload();
+  await expect(
+    page.getByRole("link", { name: "Competidor ficticio 1" }),
+  ).toBeVisible();
+  await expect(page.getByText("600 vistas", { exact: false })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Homónimo ficticio" }),
+  ).toBeVisible();
+  for (const width of [360, 390, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth + 1,
+      ),
+    ).toBe(true);
+  }
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.screenshot({
+    path: ".cache/competencia-radar-1440.png",
+    fullPage: true,
+  });
+});
 test("canales con nombres repetidos conservan menús accesibles distintos", async ({
   page,
 }) => {

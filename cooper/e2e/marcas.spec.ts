@@ -59,6 +59,30 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     .getByRole("button", { name: "Estudiar la cuenta", exact: true })
     .click();
   await expect(page.getByText(/Muestra: 6 publicaciones/)).toBeVisible();
+  await page.getByRole("button", { name: "Competencia", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Investigar competencia", exact: true })
+    .click();
+  await expect(
+    page.getByText("Investigación actualizada.", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByText("Modo simulado: no se investigaron cuentas reales.", {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible();
+  await page.reload();
+  await page.getByRole("button", { name: "Competencia", exact: true }).click();
+  await expect(
+    page
+      .getByText("Modo simulado: no se investigaron cuentas reales.", {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("button", { name: "Calendario", exact: true }).click();
   await page
     .getByLabel("Título de la pieza", { exact: true })
@@ -191,6 +215,7 @@ test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", a
         "Desconectar",
         "Verificar conexión",
         "Estudiar la cuenta",
+        "Investigar competencia",
         "Proponer texto con el especialista",
         "Pedir cambios",
       ],

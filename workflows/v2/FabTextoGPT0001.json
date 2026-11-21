@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst e = $('Inicio').first().json, aj = $('Leer ajustes').first().json;\nif (!['critico','critico_nicho','verificador','radar','radar_noticia','verificador_noticia'].includes(e.tarea) || !e.body?.input) throw new Error('Pedido de texto inválido');\nif (!Number.isFinite(Number(e.costo_estimado_usd)) || Number(e.costo_estimado_usd) < 0) throw new Error('Tarifa estimada inválida');\nconst prompt = e.body.input.flatMap(m => m.content || []).filter(c => c.type === 'input_text').map(c => c.text).join('\\n');\nif (!prompt || prompt.length > 60000) throw new Error('Texto fuera de límites');\nconst buscar_web = !!e.body.tools?.some(t => t.type === 'web_search');\nconst url = String($env.PUENTE_CODEX_URL || 'http://127.0.0.1:8789');\nif (!/^http:\\/\\/(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::\\d+)?$/.test(url)) throw new Error('El puente debe usar loopback');\nreturn [{json:{...e, local:{tarea:e.tarea,prompt,buscar_web}, url, api_permitida:aj.allowTextoApi === true}}];\n"
+        "jsCode": "\nconst e = $('Inicio').first().json, aj = $('Leer ajustes').first().json;\nif (!['critico','critico_nicho','verificador','radar','radar_noticia','verificador_noticia'].includes(e.tarea) || !e.body?.input) throw new Error('Pedido de texto inválido');\nif (!Number.isFinite(Number(e.costo_estimado_usd)) || Number(e.costo_estimado_usd) < 0) throw new Error('Tarifa estimada inválida');\nconst prompt = e.body.input.flatMap(m => m.content || []).filter(c => c.type === 'input_text').map(c => c.text).join('\\n');\nif (!prompt || prompt.length > 60000) throw new Error('Texto fuera de límites');\nconst buscar_web = !!e.body.tools?.some(t => t.type === 'web_search');\nconst url = String($env.PUENTE_CODEX_URL || 'http://127.0.0.1:8789');\nif (!/^http:\\/\\/(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::\\d+)?$/.test(url)) throw new Error('El puente debe usar loopback');\nreturn [{json:{...e, local:{tarea:e.tarea,prompt,buscar_web}, url, api_permitida:aj.allowTextoApi === true && e.sin_api !== true}}];\n"
       },
       "id": "3315f954-4915-5fe8-9c1e-4df81f9b724a",
       "name": "Pedido de texto",
@@ -62,7 +62,7 @@
         "method": "POST",
         "url": "={{ $('Pedido de texto').first().json.url + '/v1/texto' }}",
         "options": {
-          "timeout": 45000
+          "timeout": "={{ $('Pedido de texto').first().json.tarea === 'radar' && $('Pedido de texto').first().json.local.buscar_web ? 190000 : 45000 }}"
         },
         "sendHeaders": true,
         "headerParameters": {

@@ -1,3 +1,4 @@
+import type { Competencia } from "@/contratos/competencia-schema";
 import { z } from "zod";
 import { and, eq } from "drizzle-orm";
 import { createHash, randomUUID } from "node:crypto";
@@ -116,6 +117,7 @@ export async function proponerTexto(
   m: Marca,
   brief: string,
   proveedor?: ProveedorChat,
+  competencia?: Competencia,
 ) {
   const tema = z.string().trim().min(3).max(2000).parse(brief);
   if (
@@ -140,7 +142,12 @@ export async function proponerTexto(
       mensajes: [
         {
           role: "user",
-          texto: JSON.stringify({ tema, tono: m.guia.tono, corpus }),
+          texto: JSON.stringify({
+            tema,
+            tono: m.guia.tono,
+            corpus,
+            competencia,
+          }),
         },
       ],
       herramientas: [],

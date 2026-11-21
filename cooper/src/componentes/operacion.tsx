@@ -1,4 +1,5 @@
 "use client";
+import { PanelCompetencia } from "./competencia";
 import {
   useCallback,
   useEffect,
@@ -414,6 +415,10 @@ export function PantallaOperacion({
       )}
       {canal && vista === "radar" && (
         <section>
+          <PanelCompetencia
+            nombre={canal.nombre}
+            competencia={canal.radar.competencia}
+          />
           <h2>Ideas para {canal.nombre}</h2>
           <button
             className="button secondary"

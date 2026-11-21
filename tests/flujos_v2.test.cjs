@@ -85,6 +85,34 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
   }
 });
 
+test('competencia: cada idea consulta radar público antes del guion y nunca permite respaldo pago', () => {
+  const ra=wf('FabRadar00000001'), texto=wf('FabTextoGPT0001');
+  const destinos=(w,n)=>w.connections[n].main.flat().map(x=>x.node);
+  assert.deepStrictEqual(destinos(ORQ,'Temas recientes del canal'),['Pedido de competencia previa']);
+  assert.deepStrictEqual(destinos(ORQ,'Exigir competencia previa'),['Nuevo video']);
+  assert.deepStrictEqual(destinos(ra,'¿Hay canales?'),['Encargo público de competencia']);
+  const condicion=(nombre,nodes)=>run('return '+ra.nodes.find(n=>n.name===nombre).parameters.conditions.conditions[0].leftValue.replace(/^=\{\{\s*|\s*\}\}$/g,''),{nodes})[0];
+  for(const accion of ['correr','antes_idea']) assert.strictEqual(condicion('¿Solo ver?',{Inicio:{accion}}),false);
+  assert.strictEqual(condicion('¿Solo ver?',{Inicio:{accion:'ver'}}),true);
+  assert.strictEqual(condicion('¿Avisar radar público?',{Inicio:{accion:'antes_idea'}}),false);
+  assert.strictEqual(condicion('¿Avisar radar público?',{Inicio:{accion:'correr'}}),true);
+  assert.strictEqual(condicion('¿Avisar radar público?',{}),true);
+  const p=run(codeOf(ra,'Encargo público de competencia'),{all:{'Pedidos de radar':[{canal_id:'mr',nombre:'Margen Real',nicho:'negocios'}]}})[0].json;
+  assert.strictEqual(p.sin_api,true);assert.strictEqual(p.costo_estimado_usd,0);assert.match(p.body.input[0].content[0].text,/Perú/);
+  const t=run(codeOf(texto,'Pedido de texto'),{nodes:{Inicio:p,'Leer ajustes':{...aj,allowTextoApi:true}}})[0].json;
+  assert.strictEqual(t.api_permitida,false);assert.strictEqual(t.local.buscar_web,true);
+  assert.throws(()=>run(codeOf(ORQ,'Exigir competencia previa'),{nodes:{'Canal con competencia':{tendencias:'{}'}}}),/Radar pendiente/);
+});
+test('competencia: fallo público se persiste sin ideas ni métricas ficticias y el contexto viaja al guion', () => {
+  const ra=wf('FabRadar00000001');
+  const r=run(codeOf(ra,'Competencia comprobada'),{all:{'Pedidos de radar':[{canal_id:'mr',nombre:'Margen Real'}],$input:[{error:'falla privada'}]}})[0].json;
+  const tendencias=JSON.parse(r.tendencias);assert.strictEqual(tendencias.competencia.estado,'sin_datos');assert.deepStrictEqual(tendencias.ideas,[]);assert.ok(!r.tendencias.includes('falla privada'));
+  const c={version:1,estado:'listo',fecha:new Date().toISOString(),diferenciacion:'Perú'};
+  const v=run(codeOf(ORQ,'Nuevo video'),{nodes:{Inicio:{tema:'Ejemplo',canal_id:'mr'},'Buscar canal':{canal_id:'mr'},'Canal con competencia':{canal_id:'mr',tendencias:JSON.stringify({competencia:c})},'Buscar biblia':{resultado:'{}'},'Leer ajustes':aj},all:{$input:[]}})[0].json;
+  const guion=run(codeOf(ORQ,'Pedir guion'),{nodes:{'Nuevo video':v}})[0].json;
+  assert.deepStrictEqual(guion.datos.competencia,c);
+});
+
 // Formulario tal como lo arma n8n en «Subir a redes» (mismo texto que un multipart, para comprobar campos).
 const cuerpoDe = o => o.pares.map(([k, x]) => `name="${k}"\r\n\r\n${x}\r\n`).join('');
 
@@ -1226,8 +1254,8 @@ test('radar de tendencias: consultas por canal, encargo al analista, guardado po
   const salida = t => ({ output: [{ content: [{ type: 'output_text', text: JSON.stringify(t) }] }] });
   const r = run(codeOf(RA, 'Radar del canal'), { all: { 'Encargo del analista': [enc, { ...enc, canal_id: 'b', nombre: 'B' }], $input: [salida({ resumen: 'r', ideas: [{ titulo: 'Kebab', red: 'tiktok', gancho: 'g' }], sonidos: [] }), { error: 'x' }] } }).map(i => i.json);
   assert.deepStrictEqual(r.map(x => x.ok), [true, false]); assert.strictEqual(JSON.parse(r[0].tendencias).ideas[0].titulo, 'Kebab');
-  const m = run(codeOf(RA, 'Mensaje de radar'), { all: { 'Radar del canal': r } })[0].json.texto;
-  assert.match(m, /Margen Real\nr\n1\. \[tiktok\] Kebab/); assert.match(m, /B: sin radar/);
+  const m = run(codeOf(RA, 'Mensaje de radar'), { all: { 'Competencia comprobada': r.map((x,i)=>({...x,tendencias:JSON.stringify({competencia:{estado:i?'parcial':'listo',competidores:i?[]:[{},{},{}],resumen:i?'Sin muestra comparable.':'r'}})})) } })[0].json.texto;
+  assert.match(m, /Margen Real: investigación disponible · 3 competidores/); assert.match(m, /B: investigación incompleta · 0 competidores/);assert.ok(m.length<=3900);
   const ver = run(codeOf(RA, 'Radar guardado'), { nodes: { Inicio: { accion: 'ver' } }, all: { $input: [{ canal_id: 'mr', nombre: 'Margen Real', tendencias: r[0].tendencias }] } })[0].json.respuesta;
   assert.match(ver, /1\. \[tiktok\] Kebab/);
   // El guionista recibe el radar si tiene menos de 3 días; uno viejo no se usa.
@@ -1633,7 +1661,10 @@ test('texto: todos los roles usan Codex primero y un único respaldo Responses c
   const http=TXT.nodes.find(n=>n.name==='Respaldo OpenAI');
   assert.equal(http.parameters.url,'https://api.openai.com/v1/responses');
   assert.match(http.parameters.jsonBody,/web_search_call.action.sources/);
-  assert.equal(TXT.nodes.find(n=>n.name==='Intentar Codex').parameters.options.timeout,45000);
+  const timeout=TXT.nodes.find(n=>n.name==='Intentar Codex').parameters.options.timeout.slice(3,-2);
+  for (const [tarea,buscar_web,esperado] of [['radar',true,190000],['radar',false,45000],['verificador',true,45000],['critico',false,45000]]) {
+    assert.equal(run('return {timeout:('+timeout+')}',{nodes:{'Pedido de texto':{tarea,local:{buscar_web}}}})[0].timeout,esperado);
+  }
   assert.equal(TXT.settings.saveDataErrorExecution,'none');
   assert.equal(TXT.settings.saveDataSuccessExecution,'none');
 });

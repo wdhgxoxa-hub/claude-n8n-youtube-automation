@@ -277,6 +277,7 @@ function operacionCooper(
         ),
       },
       radar: {
+        competencia: proyectarCompetencia(rad.competencia, c.nombre),
         fecha: fechaCooper(rad.fecha) || "",
         resumen: textoOperacion(rad.resumen),
         ideas: (Array.isArray(rad.ideas) ? rad.ideas : [])

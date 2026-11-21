@@ -94,6 +94,10 @@ Haz, en este orden:
 `notas`: incluye la comprobación de la aritmética si hay cuentas (p. ej. «1 + 4 + 4 + 1 = 10»).
 `capitulos` (solo videos largos; en Shorts, `[]`): empiezan en `0:00`, son 3 o más y duran 10 s o más cada uno (`yt-capitulos`).
 
+### Competencia obligatoria antes del guion
+
+El orquestador investiga cada pedido antes de elegir o escribir una idea y envía `datos.competencia`: 3–5 competidores, publicaciones recientes que al menos duplican la mediana de tres publicaciones anteriores comparables, consultas de homónimos y diferenciación. Solo se aceptan URLs realmente consultadas por el puente de búsqueda; una lectura incompleta queda visible en Radar y detiene la idea sin inventar datos. Lee este contexto en cada guion, incluidos temas manuales, y aplica su diferenciación. Los patrones son hipótesis, no causalidad demostrada; no copies títulos ni guiones. Objetivo: vistas, retención y seguidores propios. Para Margen Real: Perú, soles, cifras y casos peruanos con fecha/fuente; no confundirlo con cuentas mexicanas homónimas. No deduzcas retención ni seguidores ganados privados de competidores. La alternativa pública usa el plan Codex sin respaldo API pago; vidIQ conserva su interruptor y no se activa sin acceso y cuota autorizados.
+
 ### `corregir_guion`
 
 `datos`: `guion` (el resultado anterior completo), `cambios` (texto del operador o del crítico), `biblia`, `cifras_verificadas` (opcional).

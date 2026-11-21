@@ -1,4 +1,5 @@
 "use client";
+import { PanelCompetencia } from "./competencia";
 import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -326,6 +327,7 @@ export function Marcas({
                     {[
                       ["calendario", "Calendario"],
                       ["estudio", "Estudio"],
+                      ["competencia", "Competencia"],
                       ["publicados", "Publicados"],
                       ["aprendizaje", "Aprendizaje"],
                     ].map(([v, label]) => (
@@ -339,6 +341,26 @@ export function Marcas({
                       </button>
                     ))}
                   </nav>
+                  {seccion === "competencia" && (
+                    <div>
+                      <button
+                        className="button secondary"
+                        disabled={busy}
+                        onClick={() =>
+                          void ejecutar(
+                            () => api(`marcas/${marca.id}/competencia`, {}),
+                            "Investigación actualizada.",
+                          )
+                        }
+                      >
+                        Investigar competencia
+                      </button>
+                      <PanelCompetencia
+                        nombre={marca.nombre}
+                        competencia={marca.competencia}
+                      />
+                    </div>
+                  )}
                   {seccion === "estudio" && (
                     <section className="marca-estudio">
                       <BookOpen size={26} />

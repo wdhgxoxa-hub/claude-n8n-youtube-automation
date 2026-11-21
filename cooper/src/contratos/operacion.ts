@@ -1,4 +1,5 @@
 import { z } from "./validacion";
+import { competenciaSchema } from "./competencia-schema";
 import catalogo from "./ajustes-fabrica.json";
 import campos from "./biblia-campos.json";
 export { campos };
@@ -44,6 +45,7 @@ export const operacionSchema = z.object({
       }),
       cuenta: z.object({ red: texto, handle: texto, diagnostico: texto }),
       radar: z.object({
+        competencia: competenciaSchema.optional(),
         fecha,
         resumen: texto,
         ideas: z.array(

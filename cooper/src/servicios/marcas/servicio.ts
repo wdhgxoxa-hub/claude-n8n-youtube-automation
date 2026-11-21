@@ -1,3 +1,8 @@
+import {
+  leerCompetenciaMarca,
+  actualizarCompetenciaMarca,
+} from "../competencia";
+import { competenciaVigente } from "@/contratos/competencia.mjs";
 import { observarImagenes } from "./visual";
 import { randomUUID, createHmac, timingSafeEqual } from "node:crypto";
 import { and, eq, inArray, lte, sql } from "drizzle-orm";
@@ -42,6 +47,7 @@ export function estadoMarcas(user: User) {
     simulada: proveedorRed().simulada,
     marcas: visibles.map((m) => ({
       ...m,
+      competencia: leerCompetenciaMarca(m),
       cuentas: db()
         .select()
         .from(cuentasMarca)
@@ -725,11 +731,25 @@ export async function rutaMarcas(
     return { ok: true };
   }
   if (action === "cuentas") return agregarCuenta(user, id, raw);
+  if (action === "competencia")
+    return actualizarCompetenciaMarca(obtenerMarca(user, id));
   if (action === "estudio") return estudiarMarca(user, id);
   if (action === "piezas") return guardarPieza(user, id, raw);
   if (action === "texto") {
     const { tema } = z.object({ tema: z.string() }).strict().parse(raw);
-    return proponerTexto(obtenerMarca(user, id), tema);
+    const m = obtenerMarca(user, id);
+    const competencia = await actualizarCompetenciaMarca(m);
+    obtenerMarca(user, id);
+    if (
+      process.env.COOPER_CHAT !== "simulada" &&
+      process.env.COOPER_DEMO !== "1" &&
+      !competenciaVigente(competencia)
+    )
+      throw new ErrorHttp(
+        409,
+        "Completa la investigación en Competencia antes de proponer una idea.",
+      );
+    return proponerTexto(m, tema, undefined, competencia);
   }
   if (!action) return guardarMarca(user, raw, id);
   throw new ErrorHttp(404, "Acción no disponible.");
