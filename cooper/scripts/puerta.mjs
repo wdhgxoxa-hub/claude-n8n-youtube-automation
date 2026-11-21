@@ -16,6 +16,9 @@ export function avisos(texto) {
     );
 }
 export function comprobarResultados(unitarias, e2e, flujos) {
+  // Node 24 puede elegir spec incluso con stdout por pipe; ambos reporteros
+  // oficiales conservan el mismo resumen, con prefijo ℹ o # respectivamente.
+  flujos = flujos.replace(/^ℹ /gm, "# ");
   if (
     !unitarias.success ||
     unitarias.numFailedTests ||

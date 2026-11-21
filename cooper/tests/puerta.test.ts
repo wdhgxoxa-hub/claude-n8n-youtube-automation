@@ -97,6 +97,11 @@ describe("puerta reproducible", () => {
       e2e: 43,
       flujos: 147,
     });
+    const spec = flows.replace(/^# /gm, "ℹ ");
+    expect(comprobarResultados(unit, e2e, spec).flujos).toBe(147);
+    expect(() =>
+      comprobarResultados(unit, e2e, spec.replace("ℹ fail 0", "ℹ fail 1")),
+    ).toThrow("fallos");
     expect(() =>
       comprobarResultados({ ...unit, numPendingTests: 1 }, e2e, flows),
     ).toThrow("omisiones");
