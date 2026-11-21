@@ -26,6 +26,7 @@ import {
   type ConsultaPuente,
 } from "@/contratos/puente";
 import { aplicarEstado } from "./puente";
+import { encolarVideo } from "./mensajeria/cola";
 import { medioDisponible } from "./biblioteca";
 import { guionInicial, siguienteEtapa, esperaAprobacion } from "@/lib/etapas";
 export const EVENTOS = [
@@ -53,7 +54,7 @@ export type Orden = z.infer<typeof ordenSchema>;
 export interface Fabrica {
   ejecutar(user: User, orden: Orden): Promise<{ mensaje: string; id: string }>;
   sincronizar(user: User): Promise<void>;
-  aprobar(user: User, id: string): Promise<void>;
+  aprobar(user: User, id: string, revisionEsperada?: string): Promise<void>;
   eliminar(user: User, id: string, tipo: "canal" | "video"): Promise<void>;
 }
 export function canalesPropios(user: User) {
@@ -89,6 +90,14 @@ export function validarOrden(user: User, orden: Orden) {
         .where(eq(channels.id, orden.recursoId ?? ""))
         .get();
   requireOwn(user, resource);
+  if (
+    orden.parametros?.revisionWhatsApp &&
+    resource &&
+    "stage" in resource &&
+    `${resource.stage}:${resource.remoteUpdatedAt || resource.updatedAt}` !==
+      orden.parametros.revisionWhatsApp
+  )
+    throw new ErrorHttp(409, "La revisión cambió. Abre el video desde Cooper.");
   if (
     isVideo &&
     resource &&
@@ -285,16 +294,28 @@ export class FabricaSimulada implements Fabrica {
             .set({ stage: siguienteEtapa(video.stage), updatedAt: now })
             .where(and(eq(videos.id, video.id), eq(videos.stage, video.stage)))
             .run();
+          encolarVideo({
+            ...video,
+            stage: siguienteEtapa(video.stage),
+            updatedAt: now,
+          });
         }
       },
       { behavior: "immediate" },
     );
   }
-  async aprobar(user: User, id: string) {
+  async aprobar(user: User, id: string, revisionEsperada?: string) {
     db().transaction(
       (tx) => {
         const video = tx.select().from(videos).where(eq(videos.id, id)).get();
         requireOwn(user, video);
+        if (
+          revisionEsperada &&
+          video &&
+          `${video.stage}:${video.remoteUpdatedAt || video.updatedAt}` !==
+            revisionEsperada
+        )
+          throw new ErrorHttp(409, "La revisión cambió.");
         if (
           !video ||
           video.productionState === "cancelada" ||
@@ -338,8 +359,10 @@ export class FabricaN8n implements Fabrica {
   sincronizar(user: User) {
     return serializar(user.id, () => this.sincronizarEstado(user));
   }
-  aprobar(user: User, id: string) {
-    return serializar(user.id, () => this.aprobarVideo(user, id));
+  aprobar(user: User, id: string, revisionEsperada?: string) {
+    return serializar(user.id, () =>
+      this.aprobarVideo(user, id, revisionEsperada),
+    );
   }
   eliminar(user: User, id: string, tipo: "canal" | "video") {
     return serializar(user.id, () => this.eliminarRecurso(user, id, tipo));
@@ -506,7 +529,11 @@ export class FabricaN8n implements Fabrica {
       throw new ErrorHttp(502, "No se pudo consultar el gasto de la fábrica.");
     return result.data;
   }
-  private async aprobarVideo(user: User, id: string) {
+  private async aprobarVideo(
+    user: User,
+    id: string,
+    revisionEsperada?: string,
+  ) {
     const video = db().select().from(videos).where(eq(videos.id, id)).get();
     requireOwn(user, video);
     if (
@@ -515,6 +542,12 @@ export class FabricaN8n implements Fabrica {
       !esperaAprobacion(video.stage)
     )
       throw new ErrorHttp(409, "No hay una aprobación pendiente.");
+    if (
+      revisionEsperada &&
+      `${video.stage}:${video.remoteUpdatedAt || video.updatedAt}` !==
+        revisionEsperada
+    )
+      throw new ErrorHttp(409, "La revisión cambió.");
     const event = video.stage === 3 ? "aprobar_guion" : "aprobar_final";
     if (
       !aceptadoSchema.safeParse(

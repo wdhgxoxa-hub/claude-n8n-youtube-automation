@@ -15,6 +15,7 @@ import {
   type WebhookPuente,
   type estadoRemotoSchema,
 } from "@/contratos/puente";
+import { encolarVideo } from "./mensajeria/cola";
 import { comprobarPresentacion } from "./presentacion";
 import { ErrorHttp } from "@/lib/permisos";
 import type { z } from "zod";
@@ -97,6 +98,9 @@ export function aplicarEstado(
           })
           .onConflictDoUpdate({ target: videos.id, set: fields })
           .run();
+        encolarVideo(
+          tx.select().from(videos).where(eq(videos.id, video.id)).get()!,
+        );
       }
     },
     { behavior: "immediate" },
@@ -189,6 +193,9 @@ export function recibirWebhook(input: WebhookPuente, raw: string) {
           })
           .where(and(eq(videos.id, video.id), eq(videos.ownerId, owner.id)))
           .run();
+        encolarVideo(
+          tx.select().from(videos).where(eq(videos.id, video.id)).get()!,
+        );
         const last = tx
           .select({ at: events.createdAt })
           .from(events)

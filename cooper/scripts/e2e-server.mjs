@@ -15,6 +15,7 @@ const env = {
   COOPER_DATABASE_PATH: resolve(dir, "cooper.sqlite"),
   COOPER_FABRICA: "simulada",
   COOPER_CHAT: "simulada",
+  COOPER_MENSAJERIA: "simulada",
   COOPER_AVATAR: "simulada",
   COOPER_VOZ_CLONADA: "simulada",
   COOPER_VOZ_CATALOGO: "simulada",

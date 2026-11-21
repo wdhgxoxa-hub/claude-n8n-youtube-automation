@@ -43,6 +43,13 @@
       "when": 1795176005000,
       "tag": "0005_chat_ia",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1795176006000,
+      "tag": "0006_whatsapp",
+      "breakpoints": true
     }
   ]
 }

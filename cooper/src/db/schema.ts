@@ -193,3 +193,89 @@ export const chatActions = sqliteTable("chat_actions", {
   expiresAt: integer("expires_at").notNull(),
   createdAt: integer("created_at").notNull(),
 });
+
+export const whatsappContacts = sqliteTable("whatsapp_contacts", {
+  ownerId: text("owner_id")
+    .primaryKey()
+    .references(() => users.id),
+  phone: text("phone").notNull().default(""),
+  verifiedAt: integer("verified_at").notNull().default(0),
+  consentAt: integer("consent_at").notNull().default(0),
+  preferences: text("preferences").notNull().default("{}"),
+  incomingAt: integer("incoming_at").notNull().default(0),
+  challengeId: text("challenge_id").notNull().default(""),
+  challengeExpires: integer("challenge_expires").notNull().default(0),
+  challengeAttempts: integer("challenge_attempts").notNull().default(0),
+  simulated: integer("simulated", { mode: "boolean" }).notNull().default(true),
+});
+export const whatsappOutbox = sqliteTable("whatsapp_outbox", {
+  id: text("id").primaryKey(),
+  dedupeKey: text("dedupe_key").notNull().unique(),
+  contactVerifiedAt: integer("contact_verified_at").notNull().default(0),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  phone: text("phone").notNull(),
+  kind: text("kind", {
+    enum: ["verificacion", "guion", "final", "publicado", "gasto"],
+  }).notNull(),
+  resourceId: text("resource_id").notNull().default(""),
+  revision: text("revision").notNull().default(""),
+  detail: text("detail").notNull().default(""),
+  interactive: integer("interactive", { mode: "boolean" })
+    .notNull()
+    .default(false),
+  simulated: integer("simulated", { mode: "boolean" }).notNull().default(true),
+  state: text("state", {
+    enum: [
+      "pendiente",
+      "enviando",
+      "aceptado",
+      "fallido",
+      "incierto",
+      "cancelado",
+    ],
+  })
+    .notNull()
+    .default("pendiente"),
+  attempts: integer("attempts").notNull().default(0),
+  nextAt: integer("next_at").notNull(),
+  leaseAt: integer("lease_at").notNull().default(0),
+  remoteId: text("remote_id").notNull().default(""),
+  delivery: text("delivery").notNull().default(""),
+  errorCode: text("error_code").notNull().default(""),
+  expiresAt: integer("expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+export const whatsappDeliveries = sqliteTable("whatsapp_deliveries", {
+  id: text("id").primaryKey(),
+  remoteId: text("remote_id").notNull(),
+  phone: text("phone").notNull(),
+  state: text("state").notNull(),
+  occurredAt: integer("occurred_at").notNull(),
+  errorCode: text("error_code").notNull().default(""),
+});
+export const whatsappInbox = sqliteTable("whatsapp_inbox", {
+  id: text("id").primaryKey(),
+  createdAt: integer("created_at").notNull(),
+});
+export const whatsappActions = sqliteTable("whatsapp_actions", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  decision: text("decision").notNull(),
+  state: text("state").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+export type AvisoWhatsApp = typeof whatsappOutbox.$inferSelect;
+export const whatsappAttempts = sqliteTable("whatsapp_attempts", {
+  id: text("id").primaryKey(),
+  jobId: text("job_id")
+    .notNull()
+    .references(() => whatsappOutbox.id),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  createdAt: integer("created_at").notNull(),
+});

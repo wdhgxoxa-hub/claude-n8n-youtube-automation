@@ -1,12 +1,14 @@
+import { destinoRevision } from "@/lib/revision-whatsapp";
 import { signIn } from "@/auth";
 import { Logo } from "@/marca/Logo";
 import { Revelado } from "@/componentes/titular";
 export default async function Entrar({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; revision?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, revision } = await searchParams;
+  const redirectTo = destinoRevision(revision);
   return (
     <main className="login">
       <section className="login-story">
@@ -57,7 +59,7 @@ export default async function Entrar({
           <form
             action={async () => {
               "use server";
-              await signIn("google", { redirectTo: "/" });
+              await signIn("google", { redirectTo });
             }}
           >
             <button className="google-button">
