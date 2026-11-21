@@ -11,6 +11,7 @@ COPY cooper/ ./
 RUN mkdir -p public && npm run build
 
 FROM docker.io/library/node:24.22.3-bookworm-slim AS ejecutar
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates ffmpeg fontconfig fonts-dejavu-core && rm -r /var/lib/apt/lists/*
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 WORKDIR /app
 COPY --from=construir --chown=node:node /app/.next/standalone ./

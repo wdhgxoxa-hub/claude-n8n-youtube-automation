@@ -9,6 +9,7 @@ import { mkdir, mkdtemp, writeFile, readFile, access } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { probarRuntimeMarcas } from "./marcas-runtime.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const app = resolve(root, "cooper");
@@ -77,6 +78,9 @@ const env = {
   N8N_ENCRYPTION_KEY: secret(),
   N8N_RUNNERS_AUTH_TOKEN: secret(),
   COOPER_FABRICA: "n8n",
+  COOPER_MARCAS: "simulada",
+  COOPER_MARCAS_HABILITAR: "0",
+  COOPER_MARCAS_WORKER_SECRET: secret(),
   COOPER_COMPOSE_OVERRIDE: override,
   RESTIC_REPOSITORY: resolve(run, "repositorio"),
   RESTIC_PASSWORD_FILE: resolve(run, "restic-password"),
@@ -354,6 +358,7 @@ try {
   console.log(
     "PASS login ficticio con cookie Auth.js Secure y datos de ensayo",
   );
+  await probarRuntimeMarcas({ compose, request, cookie, env, run, Database, until });
 
   // Inicialización de n8n nuevo; endpoints cotejados contra código oficial 2.47.4.
   let n8nCookie;
@@ -433,7 +438,7 @@ try {
         type: "n8n-nodes-base.code",
         typeVersion: 2,
         position: [200, 0],
-        parameters: { jsCode: "return [{json:$input.first().json.body}];" },
+        parameters: { jsCode: "if($env.COOPER_MARCAS_HABILITAR!=='0'||!$env.COOPER_MARCAS_URL?.startsWith('https://')||($env.COOPER_MARCAS_WORKER_SECRET||'').length<32)throw new Error('Entorno de Marcas no propagado al runner');return [{json:$input.first().json.body}];" },
       },
       ...signedNodes,
     ],

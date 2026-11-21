@@ -44,6 +44,10 @@ Migración aditiva `0010_marcas` (integrada después de observabilidad y memoria
 
 Variables, solo nombres en `.env.example`: `COOPER_MARCAS=simulada|real`, `COOPER_META_GRAPH_VERSION`, `COOPER_META_SYSTEM_TOKEN`, `UPLOAD_POST_API_KEY`, `COOPER_MARCAS_WORKER_SECRET`. No hay formulario para claves. El secreto del trabajador debe ser distinto al de Meta/WhatsApp. HTTPS público en `AUTH_URL` para medios firmados de una sola revisión, vigencia máxima 24 h. Los originales permanecen privados.
 
+La imagen de producción instala FFmpeg/FFprobe y DejaVu Sans/Serif con caché Fontconfig. `deploy/compose.yaml` propaga las variables de proveedor exclusivamente a Cooper; n8n y su runner reciben solo `COOPER_MARCAS_HABILITAR`, `COOPER_MARCAS_URL` y el secreto dedicado del trabajador. El runner incluye esos tres nombres en su lista permitida. `COOPER_MARCAS_URL` vacío toma `COOPER_ORIGIN`; no se incorpora una URL de otra instalación. Los valores por defecto conservan `COOPER_MARCAS=simulada` y `COOPER_MARCAS_HABILITAR=0`. Sin secreto dedicado, el endpoint devuelve 503; configurarlo no activa los dos relojes ni los proveedores.
+
+La aceptación de la misma imagen se ejecuta con `COOPER_VPS_TEST_IMAGE=<imagen> node deploy/tests/compose.mjs`. Usa redes sin salida, sesión y cuentas ficticias, compone JPEG y reel con foto/clip/tono sintéticos, comprueba resolución/duración/audio mediante FFprobe, rechaza HMAC inválido o caducado y vuelve a aceptar un trabajo firmado después de reiniciar Cooper. Las piezas permanecen pendientes, sin aprobación ni publicación. Los medios y el recibo seguro se guardan en la carpeta privada del ensayo. Documentación oficial: [FFmpeg](https://ffmpeg.org/ffmpeg.html), [entorno Compose](https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/) y [runners externos n8n](https://docs.n8n.io/deploy/host-n8n/configure-n8n/set-up-task-runners.md).
+
 Flujos generados en `tools/generar_flujos_v2.py`:
 
 - `CooperMarcasPub1`: cada minuto, publicación debida e ingestas de WhatsApp.
