@@ -534,6 +534,16 @@ try {
         JSON.stringify(
           {
             fase: phase,
+            umbralesLaboratorio: {
+              lcpMs: 2500,
+              cls: 0.01,
+              inpMs: 200,
+              fpsMin: 57,
+              frameP95Ms: 25,
+              frameYLongTaskMaxExclusivoMs: 100,
+              ventanasDeMovimiento: ["estable", "interacciones"],
+              exigidos: Boolean(options["exigir-umbrales"]),
+            },
             entorno:
               "Laboratorio Chromium local; build de producción, fixtures simuladas aisladas, CPU móvil 4×, sin limitación de red. No son Core Web Vitals de campo.",
             metodologia: `Contexto frío por ruta, oscuro, movimiento habilitado. rAF de ${duration} ms tras 900 ms de estabilización y otra ventana durante interacciones; mide cadencia del navegador, no fotogramas presentados en un teléfono físico. LCP desde navegación, CLS por ventanas de sesión; Event Timing con clic/teclado. CDP conserva eventos/tiempos sin args de recursos/scripts ni screenshots. Abrir *.trace.json en DevTools Performance o Perfetto.`,
@@ -565,7 +575,7 @@ try {
       (result) =>
         result.lcpMs === null ||
         result.lcpMs > 2500 ||
-        result.cls > 0.1 ||
+        result.cls > 0.01 ||
         result.inpLaboratorio.interaccionesTotales < 2 ||
         result.inpLaboratorio.valorMs > 200 ||
         result.movimiento.fps < 57 ||
