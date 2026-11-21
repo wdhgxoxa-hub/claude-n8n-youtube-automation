@@ -203,6 +203,17 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
     "https://www.tiktok.com/player/v1/123456789?autoplay=0",
   );
   await expect(page.getByAltText("Imagen de la escena 1")).toBeVisible();
+  const gallery = page.getByRole("region", { name: "Piezas por escena" });
+  const bounds = await gallery.boundingBox();
+  const picture = await page
+    .getByAltText("Imagen de la escena 1")
+    .boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(picture).not.toBeNull();
+  expect(picture!.y).toBeGreaterThan(bounds!.y);
+  expect(picture!.y + picture!.height).toBeLessThanOrEqual(
+    bounds!.y + bounds!.height,
+  );
   const voz = page.getByLabel("Voz de la escena 1");
   await voz.evaluate(async (el) => {
     const a = el as HTMLAudioElement;

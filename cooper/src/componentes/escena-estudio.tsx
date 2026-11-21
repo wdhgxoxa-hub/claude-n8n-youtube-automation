@@ -52,7 +52,7 @@ export function EscenaEstudio({ motivo }: { motivo?: string }) {
         <div className="scene-plate plate-back" />
         <div className="scene-plate plate-middle" />
         <div className="scene-plate plate-front">
-          <div className="scene-grid" />
+          <div className="scene-decoration-grid" />
           <div className="scene-traces">
             {[0, 1, 2, 3, 4, 5, 6].map((i) => (
               <i key={i} style={{ "--i": i } as CSSProperties} />
