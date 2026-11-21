@@ -276,7 +276,7 @@ test("perfil guarda tema, inicio y WhatsApp; móvil y teclado", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/perfil");
   await page.getByLabel("Tu nombre").fill("Ana del equipo");
-  await page.getByLabel("WhatsApp").fill("+51987654321");
+  await page.getByRole("textbox", { name: /^WhatsApp/ }).fill("+51987654321");
   await page.getByLabel("Día", { exact: true }).check();
   await page.getByLabel("Al abrir Cooper").selectOption("fabrica");
   await page.getByRole("button", { name: "Guardar perfil" }).click();

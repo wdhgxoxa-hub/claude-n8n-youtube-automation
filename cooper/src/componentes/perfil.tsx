@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Camera, Check } from "lucide-react";
 import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir } from "./grabador";
+import { PreferenciasWhatsApp } from "./whatsapp";
 export function Perfil() {
   const { data, refresh } = useEspacio();
   const [error, setError] = useState(""),
@@ -69,73 +70,76 @@ export function Perfil() {
           </label>
           <small>PNG, JPG o WebP. Hasta 5 MB.</small>
         </aside>
-        <form className="profile-form stack" onSubmit={save}>
-          <Notice error={error} message={message} />
-          <h2>Lo esencial</h2>
-          <label>
-            Tu nombre
-            <input
-              name="name"
-              defaultValue={data.user.name}
-              required
-              maxLength={120}
-            />
-          </label>
-          <label>
-            WhatsApp
-            <input
-              type="tel"
-              name="whatsapp"
-              defaultValue={data.user.whatsapp}
-              placeholder="+51987654321"
-              pattern="\+[1-9][0-9]{7,14}"
-            />
-            <span className="helper">
-              Incluye el código del país. Los avisos por WhatsApp todavía no
-              están activos.
-            </span>
-          </label>
-          <div className="form-divider" />
-          <h2>Tu espacio</h2>
-          <fieldset>
-            <legend>Apariencia</legend>
-            <div className="choice-row">
-              {[
-                ["oscuro", "Noche"],
-                ["claro", "Día"],
-                ["sistema", "Sistema"],
-              ].map(([value, label]) => (
-                <label className="choice" key={value}>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value={value}
-                    defaultChecked={data.user.theme === value}
-                  />
-                  <span
-                    className={`theme-swatch ${value}`}
-                    aria-hidden="true"
-                  />
-                  {label}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <label>
-            Al abrir Cooper
-            <select name="home" defaultValue={data.user.home}>
-              <option value="chat">Conversar con Cooper</option>
-              <option value="fabrica">Ver la fábrica</option>
-            </select>
-            <span className="helper">
-              En celular, esta será tu primera pestaña.
-            </span>
-          </label>
-          <button className="button" disabled={busy}>
-            <Check size={16} />
-            Guardar perfil
-          </button>
-        </form>
+        <div className="profile-settings">
+          <form className="profile-form stack" onSubmit={save}>
+            <Notice error={error} message={message} />
+            <h2>Lo esencial</h2>
+            <label>
+              Tu nombre
+              <input
+                name="name"
+                defaultValue={data.user.name}
+                required
+                maxLength={120}
+              />
+            </label>
+            <label>
+              WhatsApp
+              <input
+                type="tel"
+                name="whatsapp"
+                defaultValue={data.user.whatsapp}
+                placeholder="+51987654321"
+                pattern="\+[1-9][0-9]{7,14}"
+              />
+              <span className="helper">
+                Incluye el código del país. Guarda el perfil y verifica tu
+                número abajo.
+              </span>
+            </label>
+            <div className="form-divider" />
+            <h2>Tu espacio</h2>
+            <fieldset>
+              <legend>Apariencia</legend>
+              <div className="choice-row">
+                {[
+                  ["oscuro", "Noche"],
+                  ["claro", "Día"],
+                  ["sistema", "Sistema"],
+                ].map(([value, label]) => (
+                  <label className="choice" key={value}>
+                    <input
+                      type="radio"
+                      name="theme"
+                      value={value}
+                      defaultChecked={data.user.theme === value}
+                    />
+                    <span
+                      className={`theme-swatch ${value}`}
+                      aria-hidden="true"
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <label>
+              Al abrir Cooper
+              <select name="home" defaultValue={data.user.home}>
+                <option value="chat">Conversar con Cooper</option>
+                <option value="fabrica">Ver la fábrica</option>
+              </select>
+              <span className="helper">
+                En celular, esta será tu primera pestaña.
+              </span>
+            </label>
+            <button className="button" disabled={busy}>
+              <Check size={16} />
+              Guardar perfil
+            </button>
+          </form>
+          <PreferenciasWhatsApp />
+        </div>
       </div>
     </div>
   );

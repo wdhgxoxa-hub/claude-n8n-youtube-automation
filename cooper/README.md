@@ -1,8 +1,10 @@
-# Cooper — fases 1, 2 y 3
+# Cooper — fases 1, 2, 3 y 4
 
 Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
 
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado integrado, puerta completa, capturas y pasos manuales de Walter: [informe final de integración](../docs/informes/cooper-integracion.md).
+
+WhatsApp Business: verificación de número, preferencias, enlaces firmados, botones, cola durable y transporte real/simulado en [cooper-whatsapp.md](../docs/cooper-whatsapp.md). Desactivado para envíos reales por defecto; requiere alta y plantillas aprobadas por Meta.
 
 ## Arranque
 
@@ -121,7 +123,7 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 
 2. Puente implementado y probado localmente; falta aplicar la migración y verificar en una instancia de ensayo antes del despliegue.
 3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales, incluidos los flujos de presentación implementados.
-4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
+4. WhatsApp implementado con transporte simulado por defecto; alta, revisión de plantillas y ensayo real pendientes de Walter.
 5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.
 
@@ -136,6 +138,6 @@ La demostración fuerza fábrica, medios, transcripción, consultas de chat y ga
 
 ## Integración verificada
 
-Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
+Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`, `0005_whatsapp`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
 
 `npm run test:e2e` genera 98 PNG finales en `.cache/capturas-final/`: 72 de las 18 pantallas/estados a 1440 y 390 px en dos temas, 24 de la barra en páginas largas/pantallas bajas y 2 de revocación. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.

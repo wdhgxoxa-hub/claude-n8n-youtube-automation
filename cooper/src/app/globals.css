@@ -2980,3 +2980,20 @@ main:focus {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
+
+.whatsapp-preferences {
+  margin-top: 32px;
+}
+.whatsapp-preferences .choice {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 12px;
+  text-align: left;
+  font-size: 13px;
+}
+.whatsapp-preferences .choice input {
+  position: static;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
