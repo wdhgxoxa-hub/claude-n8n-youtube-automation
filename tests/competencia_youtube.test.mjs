@@ -35,6 +35,8 @@ test('YouTube conserva doce métricas nativas, excluye propio y no deduce format
   assert.equal(c.competidores.flatMap(p => p.muestras).length, 12);
   assert.equal(c.competidores.flatMap(p => p.outliers).length, 0);
   assert.ok(c.competidores.every(p => p.muestras.every(v => v.formato === 'sin_clasificar' && v.likes === 3 && v.comentarios === null)));
+  assert.equal(c.comprobaciones[0].estado, 'consultado');
+  assert.match(c.comprobaciones[0].alcance, /cinco.*HTTP 200/);
   assert.equal(c.homonimos.length, 1); assert.equal(c.homonimos[0].pais, '');
   assert.match(c.diferenciacion, /Perú.*soles/);
   assert.deepEqual(proyectarCompetencia(c, 'Margen Real'), c);
@@ -49,6 +51,8 @@ test('YouTube rechaza respuestas fallidas, cuentas no pedidas y pertenencia disc
   const c = normalizarCompetenciaYouTube(d, 'Margen Real', ahora);
   assert.equal(c.competidores.length, 2);
   assert.equal(c.competidores.flatMap(p => p.muestras).length, 1);
+  d.busqueda.statusCode = 403;
+  assert.equal(normalizarCompetenciaYouTube(d, 'Margen Real', ahora).comprobaciones.length, 0);
   d.propia = undefined;
   assert.equal(normalizarCompetenciaYouTube(d, 'Margen Real', ahora).competidores.length, 0);
 });
@@ -80,13 +84,15 @@ test('diez muestras por cuenta no aumentan peticiones y >180 segundos excluye Sh
 test('solo el formato web comprobado habilita comparaciones y ambas redes mantienen su puerta', () => {
   const nativa = normalizarCompetenciaYouTube(evidencia(), 'Margen Real', ahora);
   const raw = { competidores: nativa.competidores.map(c => ({ ...c, muestras: c.muestras.map(v => ({ ...v, formato: 'short' })) })),
-    comprobaciones: ['youtube', 'tiktok'].map(red => ({ red, consulta: 'Margen Real en ' + red, url: `https://www.${red}.com/results?q=MargenReal` })) };
+    comprobaciones: ['youtube', 'tiktok'].map(red => ({ red, estado: 'consultado', alcance: 'Resultados ficticios leídos para el contrato.', consulta: 'Margen Real en ' + red, url: `https://www.${red}.com/results?q=MargenReal` })) };
   const fuentes = [...raw.competidores.flatMap(c => [c.url, ...c.muestras.map(v => v.url)]), ...raw.comprobaciones.map(c => c.url)];
   const web = normalizarCompetencia(raw, { ruta: 'codex', busqueda_real: true, fuentes_consultadas: fuentes }, 'Margen Real', ahora);
   const combinada = combinarCompetenciaYouTube(web, nativa, 'Margen Real', ahora);
   assert.equal(combinada.estado, 'listo'); assert.equal(combinada.competidores[0].outliers[0].multiplicador, 10);
   assert.equal(combinada.fuente, 'youtube_data_api_y_web');
   assert.equal(nativa.competidores[0].muestras[0].formato, 'sin_clasificar');
+  web.comprobaciones[1].estado = 'inaccesible';
+  assert.equal(combinarCompetenciaYouTube(web, nativa, 'Margen Real', ahora).estado, 'parcial');
   web.comprobaciones = [];
   assert.equal(combinarCompetenciaYouTube(web, nativa, 'Margen Real', ahora).estado, 'parcial');
 });

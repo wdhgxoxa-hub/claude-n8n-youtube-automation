@@ -2,11 +2,15 @@ import { randomUUID } from "node:crypto";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { events, type Marca } from "@/db/schema";
-import { competenciaSchema, type Competencia } from "@/contratos/competencia-schema";
+import {
+  competenciaSchema,
+  type Competencia,
+} from "@/contratos/competencia-schema";
 import {
   competenciaVacia,
   normalizarCompetencia,
   promptCompetencia,
+  proyectarCompetencia,
 } from "@/contratos/competencia.mjs";
 import { cuentaActiva } from "./mensajeria/cuentas";
 export function leerCompetenciaMarca(m: Marca): Competencia {
@@ -22,7 +26,10 @@ export function leerCompetenciaMarca(m: Marca): Competencia {
   for (const f of filas) {
     try {
       const p = JSON.parse(f.payload);
-      if (p.marcaId === m.id) return competenciaSchema.parse(p.competencia);
+      if (p.marcaId === m.id)
+        return competenciaSchema.parse(
+          proyectarCompetencia(p.competencia, m.nombre),
+        );
     } catch {
       /* Una fila inválida no convierte datos en evidencia. */
     }

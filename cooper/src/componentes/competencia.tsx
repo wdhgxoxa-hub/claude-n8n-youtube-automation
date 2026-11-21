@@ -164,7 +164,14 @@ export function PanelCompetencia({
       )}
       {c.comprobaciones.map((p, i) => (
         <p className="muted" key={`${p.red}-${i}`}>
-          <Fuente url={p.url}>Consulta: {p.consulta}</Fuente>
+          <Fuente url={p.fuente_evidencia || p.url} primaria>
+            Consulta: {p.consulta}
+          </Fuente>
+          {p.estado === "consultado"
+            ? " · Consultada"
+            : " · Lectura sin acreditar"}
+          <br />
+          {p.alcance}
         </p>
       ))}
     </section>

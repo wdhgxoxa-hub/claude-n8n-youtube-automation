@@ -38,5 +38,9 @@
   {
     "archivo": "flujos-youtube.log",
     "sha256": "908065b66959841fbf80ca106da4483090054a9836137fff2bad91254f8ce556"
+  },
+  {
+    "archivo": "flujos-homonimos.log",
+    "sha256": "a54ca889e58399a929effb6bbbd05692879a90ed306d7020702bae46d90b5a76"
   }
 ]

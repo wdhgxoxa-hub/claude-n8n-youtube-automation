@@ -52,7 +52,16 @@ export const competenciaSchema = z.object({
     )
     .max(10),
   comprobaciones: z
-    .array(z.object({ red: texto, consulta: texto, url: texto }))
+    .array(
+      z.object({
+        red: texto,
+        consulta: texto,
+        url: texto,
+        estado: z.enum(["consultado", "inaccesible"]),
+        alcance: texto,
+        fuente_evidencia: texto,
+      }),
+    )
     .max(5),
   limitaciones: z.array(texto),
   objetivos: z.array(texto),

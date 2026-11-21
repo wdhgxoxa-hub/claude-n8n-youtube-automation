@@ -65,11 +65,15 @@ function fixture() {
     {
       red: "youtube",
       consulta: '"Margen Real" YouTube',
+      estado: "consultado",
+      alcance: "Resultados ficticios leídos en YouTube.",
       url: "https://www.youtube.com/results?search_query=Margen%20Real",
     },
     {
       red: "tiktok",
       consulta: '"Margen Real" TikTok',
+      estado: "consultado",
+      alcance: "Resultados ficticios leídos en TikTok.",
       url: "https://www.tiktok.com/search?q=Margen%20Real",
     },
   ];
@@ -222,6 +226,85 @@ it("conserva identidades enlazadas por fuentes primarias abiertas sin inventar m
       now,
     ).competidores,
   ).toHaveLength(0);
+});
+it("un evento de apertura bloqueada, sin estado o sin alcance nunca completa TikTok", () => {
+  for (const cambio of [
+    {
+      estado: "inaccesible",
+      alcance: "Bloqueo robots; sin resultados leídos.",
+    },
+    { estado: "", alcance: "Intento sin estado acreditado." },
+    { estado: "consultado", alcance: "" },
+  ]) {
+    const { raw, respuesta } = fixture();
+    Object.assign(raw.comprobaciones[1], cambio);
+    const c = normalizarCompetencia(raw, respuesta, "Margen Real", now);
+    expect(c.comprobaciones[1].estado).toBe("inaccesible");
+    expect(c.estado).toBe("parcial");
+    expect(c.limitaciones.join(" ")).toContain("homónimas");
+    expect(competenciaVigente(c, now)).toBe(false);
+  }
+  const { raw, respuesta } = fixture();
+  const sinEstado = {
+    ...raw,
+    comprobaciones: raw.comprobaciones.map((c) =>
+      Object.fromEntries(Object.entries(c).filter(([k]) => k !== "estado")),
+    ),
+  };
+  expect(
+    normalizarCompetencia(sinEstado, respuesta, "Margen Real", now).estado,
+  ).toBe("parcial");
+});
+it("acepta resultados públicos alternativos con alcance y URL acreditados sin fingir acceso al perfil", () => {
+  const { raw, respuesta } = fixture();
+  const evidencia =
+    "https://www.google.com/search?q=site%3Atiktok.com+Margen+Real";
+  const alternativa = {
+    ...raw,
+    comprobaciones: raw.comprobaciones.map((c) =>
+      c.red === "tiktok"
+        ? {
+            ...c,
+            fuente_evidencia: evidencia,
+            alcance:
+              "Enlaces y fragmentos de la búsqueda pública; perfiles no inspeccionados y resultados no exhaustivos.",
+          }
+        : c,
+    ),
+  };
+  respuesta.fuentes_consultadas = respuesta.fuentes_consultadas.filter(
+    (u) => u !== raw.comprobaciones[1].url,
+  );
+  respuesta.fuentes_consultadas.push(evidencia);
+  const c = normalizarCompetencia(alternativa, respuesta, "Margen Real", now);
+  expect(c.estado).toBe("listo");
+  expect(c.comprobaciones[1]).toMatchObject({
+    estado: "consultado",
+    fuente_evidencia: evidencia,
+  });
+  expect(competenciaSchema.parse(c)).toEqual(c);
+  respuesta.fuentes_consultadas.pop();
+  expect(
+    normalizarCompetencia(alternativa, respuesta, "Margen Real", now).estado,
+  ).toBe("parcial");
+});
+it("filas antiguas sin estado conservan las cuentas pero no vuelven a acreditar vigencia", () => {
+  const { raw, respuesta } = fixture();
+  const c = normalizarCompetencia(raw, respuesta, "Margen Real", now);
+  const antigua = {
+    ...c,
+    comprobaciones: c.comprobaciones.map((p) =>
+      Object.fromEntries(Object.entries(p).filter(([k]) => k !== "estado")),
+    ),
+  };
+  expect(competenciaVigente(antigua as typeof c, now)).toBe(false);
+  const proyeccion = proyectarCompetencia(antigua, "Margen Real");
+  expect(proyeccion.estado).toBe("parcial");
+  expect(proyeccion.competidores).toEqual(c.competidores);
+  expect(
+    proyeccion.comprobaciones.every((p) => p.estado === "inaccesible"),
+  ).toBe(true);
+  expect(competenciaSchema.parse(proyeccion)).toEqual(proyeccion);
 });
 it("la proyección pública elimina propiedades remotas, gasto e instrucciones añadidas", () => {
   const { raw, respuesta } = fixture(),

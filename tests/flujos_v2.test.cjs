@@ -141,12 +141,16 @@ test('competencia: fallo público se persiste sin ideas ni métricas ficticias y
   assert.deepStrictEqual(guion.datos.competencia,c);
 });
 test('competencia: un resultado anterior no sustituye la investigación del pedido actual', () => {
-  const tendencias=JSON.stringify({competencia:{version:1,estado:'listo',fecha:new Date().toISOString()}});
+  const comprobaciones=['youtube','tiktok'].map(red=>({red,estado:'consultado',alcance:'Resultados ficticios leídos',fuente_evidencia:`https://www.${red}.com/results?q=MargenReal`}));
+  const tendencias=JSON.stringify({competencia:{version:1,estado:'listo',fecha:new Date().toISOString(),comprobaciones}});
   const canal={canal_id:'mr',tendencias};
   const ejecutar=resultado=>run(codeOf(ORQ,'Exigir competencia previa'),{nodes:{'Canal con competencia':canal},all:{'Radar antes de la idea':resultado,'Temas recientes del canal':[{tema:'Tema anterior'}]}});
   for(const resultado of [[],[{error:'sin respuesta'}],[{canal_id:'otro',ok:true,tendencias}],[{canal_id:'mr',ok:true,tendencias:'{}'}]])
     assert.throws(()=>ejecutar(resultado),/Radar pendiente/);
   assert.deepStrictEqual(ejecutar([{canal_id:'mr',ok:true,tendencias}]),[{json:{tema:'Tema anterior'}}]);
+  comprobaciones[1].estado='inaccesible';
+  canal.tendencias=JSON.stringify({competencia:{version:1,estado:'listo',fecha:new Date().toISOString(),comprobaciones}});
+  assert.throws(()=>ejecutar([{canal_id:'mr',ok:true,tendencias:canal.tendencias}]),/Radar pendiente/);
 });
 
 // Formulario tal como lo arma n8n en «Subir a redes» (mismo texto que un multipart, para comprobar campos).
