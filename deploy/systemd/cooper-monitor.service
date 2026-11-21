@@ -1,0 +1,12 @@
+[Unit]
+Description=Salud y avisos firmados de Cooper
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/cooper
+ExecStart=/usr/bin/python3 /opt/cooper/deploy/monitor.py
+UMask=0077
+TimeoutStartSec=3min
+Nice=10

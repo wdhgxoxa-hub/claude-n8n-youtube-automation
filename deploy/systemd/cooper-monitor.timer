@@ -1,0 +1,11 @@
+[Unit]
+Description=Revisar Cooper cada cinco minutos
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+RandomizedDelaySec=15s
+Unit=cooper-monitor.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Copia cifrada de Cooper fuera del VPS y restauración en PC
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/.local/lib/cooper/operacion/replicar-pc.py --confirmar-vps
+UMask=0077
+TimeoutStartSec=2h
+Nice=10
+NoNewPrivileges=yes
+PrivateTmp=yes

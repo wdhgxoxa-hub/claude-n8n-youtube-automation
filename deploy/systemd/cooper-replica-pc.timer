@@ -1,0 +1,12 @@
+[Unit]
+Description=Recuperar copia externa de Cooper cada hora y al volver a encender
+
+[Timer]
+OnCalendar=hourly
+OnStartupSec=5min
+Persistent=true
+RandomizedDelaySec=10min
+Unit=cooper-replica-pc.service
+
+[Install]
+WantedBy=timers.target
