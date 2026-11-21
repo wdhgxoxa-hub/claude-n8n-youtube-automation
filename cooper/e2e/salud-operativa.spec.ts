@@ -190,97 +190,104 @@ test("salud administrativa: guarda umbrales, exige revisión y conserva conflict
   const inicial = await page.request.get("/api/admin/salud");
   expect(inicial.status()).toBe(200);
   const original = (await inicial.json()) as PanelSalud;
-  expect(original.telegram.activo).toBe(false);
-  expect(original.configuracion.telegramActivo).toBe(false);
-  await page.goto("/admin");
-  await page.getByRole("link", { name: "Abrir salud de la operación" }).click();
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Salud de la operación" }),
-  ).toBeVisible();
-  const gasto = page.getByRole("spinbutton", {
-    name: "Gasto diario de aviso (USD)",
-    exact: true,
-  });
-  await expect(gasto).toHaveValue(
-    String(original.configuracion.umbrales.gastoDiarioUsd),
-  );
-  await expect(
-    page.getByRole("checkbox", { name: "Activar avisos por Telegram" }),
-  ).not.toBeChecked();
-  await expect(
-    page.getByRole("region", { name: "Servidor VPS", exact: true }),
-  ).toContainText("Sin datos");
-  await gasto.fill("42.75");
-  await page.getByRole("button", { name: "Revisar cambios" }).click();
-  await expect(
-    page.getByRole("button", { name: "Guardar configuración de alertas" }),
-  ).toBeDisabled();
-  await page
-    .getByRole("checkbox", {
-      name: "He revisado los umbrales y la entrega de avisos.",
-    })
-    .check();
-  await page
-    .getByRole("button", { name: "Guardar configuración de alertas" })
-    .click();
-  await expect(
-    page
-      .getByRole("status")
-      .filter({ hasText: "Configuración de alertas guardada." }),
-  ).toBeVisible();
-  await page.reload();
-  await expect(gasto).toHaveValue("42.75");
-  await gasto.fill("55");
-  const saved = (await (
-    await page.request.get("/api/admin/salud")
-  ).json()) as PanelSalud;
-  expect(
-    (
-      await page.request.post("/api/admin/salud", {
-        data: {
-          ...saved.configuracion,
-          umbrales: { ...saved.configuracion.umbrales, gastoDiarioUsd: 70 },
-          confirmado: true,
-        },
+  try {
+    expect(original.telegram.activo).toBe(false);
+    expect(original.configuracion.telegramActivo).toBe(false);
+    await page.goto("/admin");
+    await page
+      .getByRole("link", { name: "Abrir salud de la operación" })
+      .click();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Salud de la operación" }),
+    ).toBeVisible();
+    const gasto = page.getByRole("spinbutton", {
+      name: "Gasto diario de aviso (USD)",
+      exact: true,
+    });
+    await expect(gasto).toHaveValue(
+      String(original.configuracion.umbrales.gastoDiarioUsd),
+    );
+    await expect(
+      page.getByRole("checkbox", { name: "Activar avisos por Telegram" }),
+    ).not.toBeChecked();
+    await expect(
+      page.getByRole("region", { name: "Servidor VPS", exact: true }),
+    ).toContainText("Sin datos");
+    await gasto.fill("42.75");
+    await page.getByRole("button", { name: "Revisar cambios" }).click();
+    await expect(
+      page.getByRole("button", { name: "Guardar configuración de alertas" }),
+    ).toBeDisabled();
+    await page
+      .getByRole("checkbox", {
+        name: "He revisado los umbrales y la entrega de avisos.",
       })
-    ).status(),
-  ).toBe(200);
-  await page.getByRole("button", { name: "Revisar cambios" }).click();
-  await page
-    .getByRole("checkbox", {
-      name: "He revisado los umbrales y la entrega de avisos.",
-    })
-    .check();
-  const conflict = page.waitForResponse(
-    (response) =>
-      response.url().endsWith("/api/admin/salud") &&
-      response.request().method() === "POST",
-  );
-  await page
-    .getByRole("button", { name: "Guardar configuración de alertas" })
-    .click();
-  expect((await conflict).status()).toBe(409);
-  await expect(page.getByRole("alert")).toContainText("Los umbrales cambiaron");
-  await expect(gasto).toHaveValue("55");
-  await page
-    .getByRole("button", { name: "Cargar configuración guardada" })
-    .click();
-  await expect(gasto).toHaveValue("70");
-  // Se restablecen solo los valores que este ensayo modificó, con la revisión vigente.
-  const actual = (await (
-    await page.request.get("/api/admin/salud")
-  ).json()) as PanelSalud;
-  expect(
-    (
-      await page.request.post("/api/admin/salud", {
-        data: {
-          ...original.configuracion,
-          revision: actual.configuracion.revision,
-          confirmado: true,
-        },
+      .check();
+    await page
+      .getByRole("button", { name: "Guardar configuración de alertas" })
+      .click();
+    await expect(
+      page
+        .getByRole("status")
+        .filter({ hasText: "Configuración de alertas guardada." }),
+    ).toBeVisible();
+    await page.reload();
+    await expect(gasto).toHaveValue("42.75");
+    await gasto.fill("55");
+    const saved = (await (
+      await page.request.get("/api/admin/salud")
+    ).json()) as PanelSalud;
+    expect(
+      (
+        await page.request.post("/api/admin/salud", {
+          data: {
+            ...saved.configuracion,
+            umbrales: { ...saved.configuracion.umbrales, gastoDiarioUsd: 70 },
+            confirmado: true,
+          },
+        })
+      ).status(),
+    ).toBe(200);
+    await page.getByRole("button", { name: "Revisar cambios" }).click();
+    await page
+      .getByRole("checkbox", {
+        name: "He revisado los umbrales y la entrega de avisos.",
       })
-    ).status(),
-  ).toBe(200);
+      .check();
+    const conflict = page.waitForResponse(
+      (response) =>
+        response.url().endsWith("/api/admin/salud") &&
+        response.request().method() === "POST",
+    );
+    await page
+      .getByRole("button", { name: "Guardar configuración de alertas" })
+      .click();
+    expect((await conflict).status()).toBe(409);
+    await expect(page.getByRole("main").getByRole("alert")).toContainText(
+      "Los umbrales cambiaron",
+    );
+    await expect(gasto).toHaveValue("55");
+    await page
+      .getByRole("button", { name: "Cargar configuración guardada" })
+      .click();
+    await expect(gasto).toHaveValue("70");
+  } finally {
+    // Se restablecen solo los valores que este ensayo modificó, con la revisión vigente.
+    const actual = (await (
+      await page.request.get("/api/admin/salud")
+    ).json()) as PanelSalud;
+    expect(
+      (
+        await page.request.post("/api/admin/salud", {
+          data: {
+            ...original.configuracion,
+            revision: actual.configuracion.revision,
+            confirmado: true,
+          },
+        })
+      ).status(),
+    ).toBe(200);
+  }
 });
 
 test("salud: un usuario normal no puede leer costes, umbrales ni el panel administrativo", async ({
@@ -296,36 +303,46 @@ test("salud: un usuario normal no puede leer costes, umbrales ni el panel admini
     ).status(),
   ).toBe(200);
   const other = await browser.newContext();
-  const origin = new URL((await page.request.get("/api/admin/salud")).url())
-    .origin;
-  await login(other.request, "salud@example.test");
-  const response = await other.request.get(`${origin}/api/admin/salud`);
-  expect(response.status()).toBe(403);
-  expect(await response.json()).toEqual({
-    error: "Esta sección es solo para el administrador.",
-  });
-  expect(
-    (
-      await other.request.post(`${origin}/api/admin/salud`, {
-        headers: { origin },
-        data: { confirmado: true },
-      })
-    ).status(),
-  ).toBe(403);
-  const foreign = await other.newPage();
-  await foreign.goto(`${origin}/admin/salud`);
-  await expect(
-    foreign.getByRole("heading", { name: "Este espacio no está disponible." }),
-  ).toBeVisible();
-  await expect(
-    foreign.getByRole("heading", { name: "Fábrica · Producción y costes" }),
-  ).toHaveCount(0);
-  const estado = await other.request.get(`${origin}/api/estado`);
-  expect(estado.status()).toBe(200);
-  const publicData = JSON.stringify(await estado.json());
-  expect(publicData).not.toContain("gastoDiarioUsd");
-  expect(publicData).not.toContain("telegramActivo");
-  await other.close();
+  try {
+    const origin = new URL((await page.request.get("/api/admin/salud")).url())
+      .origin;
+    await login(other.request, "salud@example.test");
+    const response = await other.request.get(`${origin}/api/admin/salud`);
+    expect(response.status()).toBe(403);
+    expect(await response.json()).toEqual({
+      error: "Esta sección es solo para el administrador.",
+    });
+    expect(
+      (
+        await other.request.post(`${origin}/api/admin/salud`, {
+          headers: { origin },
+          data: { confirmado: true },
+        })
+      ).status(),
+    ).toBe(403);
+    const foreign = await other.newPage();
+    await foreign.goto(`${origin}/admin/salud`);
+    await expect(
+      foreign.getByRole("heading", {
+        name: "Este espacio no está disponible.",
+      }),
+    ).toBeVisible();
+    await expect(
+      foreign.getByRole("heading", { name: "Fábrica · Producción y costes" }),
+    ).toHaveCount(0);
+    const estado = await other.request.get(`${origin}/api/estado`);
+    expect(estado.status()).toBe(200);
+    const publicData = JSON.stringify(await estado.json());
+    expect(publicData).not.toContain("gastoDiarioUsd");
+    expect(publicData).not.toContain("telegramActivo");
+  } finally {
+    await other.close();
+    expect(
+      (
+        await page.request.delete("/api/admin/permitidos/salud%40example.test")
+      ).status(),
+    ).toBe(200);
+  }
 });
 
 for (const degradada of [false, true]) {
@@ -460,12 +477,12 @@ test("salud: refresco periódico conserva los cambios y permite recuperar una co
   ).toBeVisible();
   fallar = true;
   await page.getByRole("button", { name: "Actualizar salud" }).click();
-  await expect(page.getByRole("alert")).toHaveText(
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText(
     "La consulta de salud no está disponible.",
   );
   await expect(gasto).toHaveValue("39");
   fallar = false;
   await page.getByRole("button", { name: "Actualizar salud" }).click();
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.getByRole("main").getByRole("alert")).toHaveCount(0);
   await expect(gasto).toHaveValue("39");
 });
