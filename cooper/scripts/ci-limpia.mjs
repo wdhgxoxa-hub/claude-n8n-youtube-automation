@@ -94,6 +94,12 @@ run(
     "--rm",
     "--shm-size=1g",
     "--cap-drop=ALL",
+    // Firefox crea su sandbox de usuario y chroot dentro del contenedor.
+    // Sin estas capacidades falla al escribir uid_map antes de abrir la página.
+    "--cap-add=SETUID",
+    "--cap-add=SETGID",
+    "--cap-add=SETFCAP",
+    "--cap-add=SYS_CHROOT",
     "--security-opt=no-new-privileges",
     "--volume",
     `${checkout}:/ensayo:rw`,

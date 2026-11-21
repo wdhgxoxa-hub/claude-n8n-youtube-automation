@@ -147,7 +147,7 @@ export function comprobarInstalacion() {
     [
       "--input-type=module",
       "-e",
-      "import {chromium} from '@playwright/test'; const b=await chromium.launch(); await b.close();",
+      "import {chromium,firefox,webkit} from '@playwright/test'; for (const motor of [chromium,firefox,webkit]) { const b=await motor.launch(); try { const p=await b.newPage(); await p.goto('data:text/html,<title>preflight</title>'); if (await p.title() !== 'preflight') throw new Error('El motor no abrió la página de prueba'); } finally { await b.close(); } }",
     ],
     {
       env: { ...entornoLimpio(), PLAYWRIGHT_BROWSERS_PATH: browsers },

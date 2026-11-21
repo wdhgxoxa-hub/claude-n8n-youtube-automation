@@ -61,4 +61,4 @@ ejecutar(
   },
 );
 comprobarInstalacion();
-console.log("Preparación y lanzamiento de ambos Chromium: PASS.");
+console.log("Preparación y apertura de Chromium, Firefox y WebKit: PASS; Chromium de Sentinel preparado.");
