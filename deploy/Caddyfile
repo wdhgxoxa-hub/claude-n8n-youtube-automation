@@ -53,7 +53,10 @@ http://{$COOPER_DOMAIN}, http://{$N8N_DOMAIN} {
 	}
 	# El puente solo se usa desde backend; no se publica su entrada.
 	@puente path /webhook/cooper/v1 /webhook/cooper/v1/*
-	respond @puente 404
+	# handle se evalúa antes que respond: el bloqueo debe ser un handle hermano.
+	handle @puente {
+		respond 404
+	}
 	@webhooks path /webhook/* /webhook-waiting/* /form/* /form-waiting/*
 	handle @webhooks {
 		reverse_proxy n8n:5678 {
