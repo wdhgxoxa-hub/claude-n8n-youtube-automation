@@ -23,7 +23,7 @@ carpeta.mkdir(parents=True, exist_ok=True)
 objetivo = Objetivo(nombre='cooper-pulido-e2e', url_interfaz=config['url'], url_api_base=config['fixture'],
     ruta_openapi='/no-openapi', destino=ComprobacionDestino('/destino','destino','cooper-e2e-aislado'),
     pantallas=tuple(config['pantallas']), duracion_por_prueba_s=config.get('duracion', 45),
-    exclusiones=Exclusiones(textos=('Cerrar sesión',), selectores=('iframe', 'a[href^="/api/archivos/"]', 'a[href^="/api/revision-archivo/"]', 'button[aria-label^="Modo noticia:"]')))
+    exclusiones=Exclusiones(textos=('Cerrar sesión','Crear avatar','Crear voz','Cargar presentadores del estudio','Confirmar solicitud'), selectores=('iframe', 'a[href^="/api/archivos/"]', 'a[href^="/api/revision-archivo/"]', 'button[aria-label^="Modo noticia:"]', '.team-row button', '.allowed-list button', '.asset-actions button')))
 class GuardianSesion(Guardian):
     def proteger_contexto(self, contexto, registrar):
         super().proteger_contexto(contexto, registrar)
