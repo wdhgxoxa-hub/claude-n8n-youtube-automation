@@ -87,9 +87,12 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
 
 test('competencia: cada idea consulta radar público antes del guion y nunca permite respaldo pago', () => {
   const ra=wf('FabRadar00000001'), texto=wf('FabTextoGPT0001');
-  const destinos=(w,n)=>w.connections[n].main.flat().map(x=>x.node);
-  assert.deepStrictEqual(destinos(ORQ,'Temas recientes del canal'),['Pedido de competencia previa']);
-  assert.deepStrictEqual(destinos(ORQ,'Exigir competencia previa'),['Nuevo video']);
+  const destinos=(w,n)=>(w.connections[n]?.main||[]).flat().map(x=>x.node);
+  const alcanza=(origen,fin,saltar)=>{const pendientes=[origen],vistos=new Set();while(pendientes.length){const n=pendientes.shift();if(n===saltar||vistos.has(n))continue;if(n===fin)return true;vistos.add(n);pendientes.push(...destinos(ORQ,n));}return false;};
+  assert.strictEqual(alcanza('Temas recientes del canal','Nuevo video'),true);
+  // Otras puertas obligatorias (aprendizaje) pueden componerse en la misma ruta.
+  for(const obligatorio of ['Pedido de competencia previa','Radar antes de la idea','Canal con competencia','Exigir competencia previa'])
+    assert.strictEqual(alcanza('Temas recientes del canal','Nuevo video',obligatorio),false,obligatorio);
   assert.deepStrictEqual(destinos(ra,'¿Hay canales?'),['Encargo público de competencia']);
   const condicion=(nombre,nodes)=>run('return '+ra.nodes.find(n=>n.name===nombre).parameters.conditions.conditions[0].leftValue.replace(/^=\{\{\s*|\s*\}\}$/g,''),{nodes})[0];
   for(const accion of ['correr','antes_idea']) assert.strictEqual(condicion('¿Solo ver?',{Inicio:{accion}}),false);
