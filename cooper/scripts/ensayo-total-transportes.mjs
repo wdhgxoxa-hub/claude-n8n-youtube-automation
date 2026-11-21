@@ -6,9 +6,15 @@
  * https://docs.n8n.io/data/data-mapping/data-item-linking/item-linking-code-node/
  *
  * Una respuesta aceptada prueba el cableado, no la calidad ni disponibilidad del
- * proveedor. Los medios son un PNG de muestra y un tono PCM; no voz generada real.
+ * proveedor. Los medios son un PNG, un tono PCM y un MP4 sintético de 8 s;
+ * no son medios generados por proveedores ni comprueban su calidad.
  * El archivo de Pexels contiene únicamente metadatos ficticios: sus URLs .invalid
  * no sirven bytes de video, y el render simulado tampoco los descarga.
+ * Contratos opcionales contrastados el 21-11-2026:
+ * https://aistudio.google.com/docs/omni
+ * https://developers.google.com/youtube/data/guides/using_resumable_upload_protocol
+ * https://developers.heygen.com/reference/create-video
+ * https://developers.epidemicsound.com/docs/mcp/
  */
 
 const HTTP = "n8n-nodes-base.httpRequest";
@@ -62,8 +68,8 @@ function familia(workflow, node) {
 
 /** Se serializa dentro de Code v2. No cerrar sobre variables de este módulo. */
 function responderTransporte(config, entrada, indice, contexto) {
-  const { proveedor, nombre, flujo } = config;
-  const { nodo, ejecucion, pasada } = contexto;
+  const { proveedor, nombre, flujo, clips, noticia } = config;
+  const { nodo, ejecucion, pasada, binario } = contexto;
   const id = (prefijo) =>
     `${prefijo}-${ejecucion}-${nombre
       .normalize("NFD")
@@ -131,6 +137,18 @@ function responderTransporte(config, entrada, indice, contexto) {
       );
     return b.toString("base64");
   };
+  // MP4 H.264 de 16x16, ocho segundos, color liso y sin audio, creado offline:
+  // ffmpeg -f lavfi -i color=c=0x192d40:s=16x16:r=1 -t 8 -an -c:v libx264
+  //   -pix_fmt yuv420p -movflags +faststart -map_metadata -1 sintetico.mp4
+  const mp4 =
+    "AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAOQbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAH0AAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAArt0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAH0AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAABAAAAAQAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAB9AAACAAAABAAAAAAIzbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAACAABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAAB3m1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAZ5zdGJsAAAAvnN0c2QAAAAAAAAAAQAAAK5hdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAABAAEABIAAAASAAAAAAAAAABFExhdmM2My4xLjEwMiBsaWJ4MjY0AAAAAAAAAAAAAAAAGP//AAAANGF2Y0MBZAAK/+EAF2dkAAqs2V7ARAAAAwAEAAADAAg8SJZYAQAGaOvjyyLA/fj4AAAAABBwYXNwAAAAAQAAAAEAAAAUYnRydAAAAAAAAAMlAAAAAAAAABhzdHRzAAAAAAAAAAEAAAAIAABAAAAAABRzdHNzAAAAAAAAAAEAAAABAAAASGN0dHMAAAAAAAAABwAAAAEAAIAAAAAAAQABQAAAAAABAACAAAAAAAEAAAAAAAAAAQAAQAAAAAABAAEAAAAAAAIAAEAAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAAIAAAAAQAAADRzdHN6AAAAAAAAAAAAAAAIAAACyQAAAAwAAAAMAAAADAAAAAwAAAASAAAADgAAAAwAAAAUc3RjbwAAAAAAAAABAAADwAAAAGF1ZHRhAAAAWW1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALGlsc3QAAAAkqXRvbwAAABxkYXRhAAAAAQAAAABMYXZmNjMuMS4xMDIAAAAIZnJlZQAAAy1tZGF0AAACrQYF//+p3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2NSByMzIyMiBiMzU2MDVhIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyNSAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTEgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAAAUZYiEABf//u6CvgU3SlA+7slpoEUAAAAIQZokbEF//vAAAAAIQZ5CeILfjIEAAAAIAZ5hdEFfkoAAAAAIAZ5jakFfkoEAAAAOQZpnSahBaJlMCCv//vEAAAAKQZ6FRREsFf+SgQAAAAgBnqZqQV+SgQ==";
+  const videoBinario = (campo) => ({
+    [campo]: {
+      data: mp4,
+      mimeType: "video/mp4",
+      fileName: "ensayo-sintetico.mp4",
+    },
+  });
   const png =
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGMoX3XmPwAGdgLtG/Qd7AAAAABJRU5ErkJggg==";
   if (proveedor === "telegram")
@@ -187,8 +205,50 @@ function responderTransporte(config, entrada, indice, contexto) {
         ],
         sonidos: [],
       },
-      radar_noticia: { noticia: null },
+      radar_noticia: {
+        noticia: noticia
+          ? {
+              titulo: "Boletín ficticio: medición de 12 unidades",
+              fecha: new Date(Date.now() - 1000).toISOString(),
+              hechos: [
+                {
+                  id: "h1",
+                  dato: "La medición es de 12 unidades.",
+                  fuentes: [
+                    {
+                      url: "https://ensayo.invalid/radar/datos",
+                      titulo: "Boletín primario ficticio",
+                      fecha: new Date(Date.now() - 1000).toISOString(),
+                    },
+                  ],
+                },
+              ],
+            }
+          : null,
+      },
     };
+    if (tarea === "verificador_noticia") {
+      const textos = (pedido.body?.input || [])
+        .flatMap((m) => m.content || [])
+        .filter((c) => c.type === "input_text")
+        .map((c) => c.text);
+      const encargo = JSON.parse(
+        String(textos.at(-1) || pedido.local?.prompt || "")
+          .split("\n")
+          .at(-1),
+      );
+      const fuente = encargo.noticia || encargo;
+      if (!Array.isArray(fuente.hechos) || !fuente.hechos.length)
+        throw new Error(
+          "Ensayo: noticia sin hechos en el pedido de verificación",
+        );
+      respuestas.verificador_noticia = {
+        verificado: true,
+        guion_cubierto: true,
+        hechos: fuente.hechos.map((h) => ({ ...h, estado: "ok" })),
+        resumen: "Verificación ficticia local",
+      };
+    }
     const valor = respuestas[tarea];
     if (!valor) throw new Error(`Ensayo: tarea de texto sin fixture: ${tarea}`);
     const respuesta = respuestaTexto(valor);
@@ -265,10 +325,29 @@ function responderTransporte(config, entrada, indice, contexto) {
     throw new Error(`Ensayo: transporte OpenAI sin fixture: ${nombre}`);
   }
   if (proveedor === "gemini") {
+    if (nombre === "Animar (Gemini Omni)") {
+      // Dos planos en una ejecución cubren los dos formatos oficiales de entrega.
+      const porUri =
+        clips === "uri" || (clips === "alternar" && indice % 2 === 1);
+      return salida({
+        id: id("clip"),
+        status: "completed",
+        steps: [
+          {
+            type: "model_output",
+            content: [
+              {
+                type: "video",
+                mime_type: "video/mp4",
+                ...(porUri ? { uri: url("clip.mp4") } : { data: mp4 }),
+              },
+            ],
+          },
+        ],
+      });
+    }
     if (nombre !== "Voz (Gemini TTS)")
-      throw new Error(
-        `Ensayo: la ruta de clips no tiene medio sintético válido: ${nombre}`,
-      );
+      throw new Error(`Ensayo: transporte Gemini sin fixture: ${nombre}`);
     return salida({
       id: id("voz"),
       steps: [
@@ -466,11 +545,14 @@ function responderTransporte(config, entrada, indice, contexto) {
         headers: { location: "https://ensayo.invalid/subida-youtube" },
         statusCode: 200,
       });
-    if (nombre === "Subir a YouTube")
+    if (nombre === "Subir a YouTube") {
+      if (!binario?.data || binario.data.mimeType !== "video/mp4")
+        throw new Error("Ensayo: YouTube no recibió el binario MP4 en data");
       return salida({
         id: "ENSAYO00001",
-        status: { uploadStatus: "processed" },
+        status: { uploadStatus: "processed", privacyStatus: "private" },
       });
+    }
     return salida({
       items: [
         {
@@ -485,6 +567,14 @@ function responderTransporte(config, entrada, indice, contexto) {
       ],
     });
   }
+  if (
+    proveedor === "descarga" &&
+    ["Descargar clip", "Descargar render"].includes(nombre)
+  )
+    return salida(
+      {},
+      videoBinario(nombre === "Descargar clip" ? "imagen" : "data"),
+    );
   if (proveedor === "descarga" && nombre === "Probar enlace")
     return salida({
       statusCode: 200,
@@ -500,14 +590,23 @@ function responderTransporte(config, entrada, indice, contexto) {
  * nodos Code, esperas, aprobaciones, acceso a Data Tables o lógica de negocio.
  * Los HTTP internos conservados requieren el aislamiento de red del runner.
  */
-export function adaptarTransportes(workflow) {
+export function adaptarTransportes(workflow, opciones = {}) {
+  const clips = opciones.clips || "alternar";
+  if (!["inline", "uri", "alternar"].includes(clips))
+    throw new Error("Ensayo: modo de fixture de clips inválido");
   const copia = structuredClone(workflow);
   const sustituciones = [];
   for (const node of copia.nodes) {
     if (![HTTP, TELEGRAM].includes(node.type)) continue;
     const proveedor = familia(copia, node);
     if (!proveedor) continue;
-    const config = { proveedor, nombre: node.name, flujo: copia.id };
+    const config = {
+      proveedor,
+      nombre: node.name,
+      flujo: copia.id,
+      clips,
+      noticia: opciones.noticia === true,
+    };
     sustituciones.push({
       workflow_id: copia.id,
       nodo_id: node.id,
@@ -516,14 +615,22 @@ export function adaptarTransportes(workflow) {
       proveedor,
       soportado:
         proveedor !== "no-soportado" &&
-        !(proveedor === "descarga" && node.name !== "Probar enlace") &&
-        !(proveedor === "gemini" && node.name !== "Voz (Gemini TTS)"),
+        !(
+          proveedor === "gemini" &&
+          !["Voz (Gemini TTS)", "Animar (Gemini Omni)"].includes(node.name)
+        ),
+      ...(proveedor === "gemini" && node.name === "Animar (Gemini Omni)"
+        ? { fixture: clips }
+        : {}),
+      ...(proveedor === "descarga" && node.name !== "Probar enlace"
+        ? { fixture: "mp4-sintetico-8s" }
+        : {}),
     });
     node.type = "n8n-nodes-base.code";
     node.typeVersion = 2;
     node.parameters = {
       mode: "runOnceForAllItems",
-      jsCode: `// Transporte ficticio: ${proveedor}; nunca sale a la red.\nconst responder = ${responderTransporte.toString()};\nconst config = ${JSON.stringify(config)};\nconst contexto = { ejecucion: String($execution.id), pasada: $runIndex, nodo: (nombre, indice) => { try { const n = $(nombre); if (!n.isExecuted) return null; try { return n.itemMatching(indice).json; } catch { return n.all()[indice]?.json || n.first().json; } } catch { return null; } } };\nreturn $input.all().map((item, indice) => responder(config, item.json, indice, contexto));`,
+      jsCode: `// Transporte ficticio: ${proveedor}; nunca sale a la red.\nconst responder = ${responderTransporte.toString()};\nconst config = ${JSON.stringify(config)};\nconst contexto = { ejecucion: String($execution.id), pasada: $runIndex, nodo: (nombre, indice) => { try { const n = $(nombre); if (!n.isExecuted) return null; try { return n.itemMatching(indice).json; } catch { return n.all()[indice]?.json || n.first().json; } } catch { return null; } } };\nreturn $input.all().map((item, indice) => responder(config, item.json, indice, { ...contexto, binario: item.binary }));`,
     };
     delete node.credentials;
     delete node.webhookId;
