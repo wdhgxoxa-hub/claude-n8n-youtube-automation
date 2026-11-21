@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { AnimationItem } from "lottie-web";
 import { useMovimientoReducido } from "./movimiento";
+import { posterBienvenida } from "@/marca/poster-bienvenida";
 export type Ilustracion =
   "cooper-recibe" | "cooper-reacciona" | "cooper-celebra" | "fabrica";
 
@@ -111,12 +112,17 @@ export function IlustracionViva({
       <Image
         ref={poster}
         className="illustration-poster"
-        src={`/movimiento/${nombre}.svg`}
+        src={
+          prioritaria && nombre === "cooper-recibe"
+            ? posterBienvenida
+            : `/movimiento/${nombre}.svg`
+        }
         alt=""
         width={nombre === "fabrica" ? 600 : 320}
         height={nombre === "fabrica" ? 230 : 280}
         loading={prioritaria ? "eager" : "lazy"}
         fetchPriority={prioritaria ? "high" : undefined}
+        decoding={prioritaria ? "sync" : "async"}
         unoptimized
       />
     </span>

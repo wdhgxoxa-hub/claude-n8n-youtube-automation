@@ -107,10 +107,15 @@ function save(name, w, h, layers) {
     })),
   };
   writeFileSync(`${dir}/${name}.json`, JSON.stringify(data));
-  writeFileSync(
-    `${dir}/${name}.svg`,
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${layers.map((l) => svg(l.items)).join("")}</svg>`,
-  );
+  const poster = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${layers.map((l) => svg(l.items)).join("")}</svg>`;
+  writeFileSync(`${dir}/${name}.svg`, poster);
+  if (name === "cooper-recibe") {
+    writeFileSync(
+      "src/marca/poster-bienvenida.ts",
+      "// Generado por scripts/generar-movimiento.mjs; mismo SVG de public/movimiento.\n" +
+        `export const posterBienvenida = ${JSON.stringify(`data:image/svg+xml,${encodeURIComponent(poster)}`)};\n`,
+    );
+  }
 }
 for (const mood of ["recibe", "reacciona", "celebra"]) {
   const joy = mood === "celebra",
