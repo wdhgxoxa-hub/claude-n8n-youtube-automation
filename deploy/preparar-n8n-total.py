@@ -7,12 +7,45 @@ import json
 from pathlib import Path
 import re
 
+DEPENDENCIAS_SEGURAS = {'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001'}
+
+
+def plan_publicacion(workflows, originales):
+    por_id = {w['id']: w for w in workflows}
+    pendientes = set(originales) | DEPENDENCIAS_SEGURAS
+    if not pendientes <= set(por_id):
+        raise ValueError('Falta una dependencia necesaria en el lote')
+    orden, visitando = [], set()
+
+    def visitar(wid):
+        if wid in orden:
+            return
+        if wid in visitando:
+            raise ValueError('Ciclo de subflujos: requiere revisar el plan')
+        visitando.add(wid)
+        for n in por_id[wid]['nodes']:
+            if n['type'] != 'n8n-nodes-base.executeWorkflow' or n.get('disabled'):
+                continue
+            ref = n['parameters'].get('workflowId', {})
+            value = ref.get('value') if isinstance(ref, dict) else ref
+            if not value or value.startswith('='):
+                continue
+            if value not in pendientes:
+                raise ValueError('Dependencia estática fuera del plan aprobado')
+            visitar(value)
+        visitando.remove(wid)
+        orden.append(wid)
+
+    for wid in sorted(pendientes):
+        visitar(wid)
+    return orden
+
 
 def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
-def preparar(actuales, entradas, origen, metadata=None):
+def preparar(actuales, entradas, origen, metadata=None, publicar_dependencias=False):
     if origen != 'https://flujos.cooperestudio.com':
         raise ValueError('Origen no autorizado')
     by_id = {w['id']: w for w in actuales}
@@ -28,7 +61,7 @@ def preparar(actuales, entradas, origen, metadata=None):
         mapping[nuevo['id']] = actual['id'] if actual else nuevo['id']
         pairs.append((nuevo, actual))
     output, report = [], []
-    faltantes = []
+    faltantes, bloqueos, disparadores = [], [], []
     # Los identificadores no son claves. Sustituye únicamente referencias conocidas.
     pattern = re.compile('|'.join(re.escape(k) for k in sorted(mapping, key=len, reverse=True)))
     for nuevo, actual in pairs:
@@ -80,10 +113,34 @@ def preparar(actuales, entradas, origen, metadata=None):
                         ref['id'] = candidatas[0]['id']
                     else:
                         faltantes.append({'workflow': w['id'], 'nodo': n['name'], 'tipo': tipo, 'nombre': ref.get('name')})
+        if publicar_dependencias:
+            for w in output:
+                for n in w['nodes']:
+                    ausentes = [c for c in faltantes if c['workflow'] == w['id'] and c['nodo'] == n['name']]
+                    if ausentes:
+                        # La fuente canónica conserva la implementación; el destino falla de forma explícita.
+                        nombres = ', '.join(sorted({c['nombre'] or c['tipo'] for c in ausentes}))
+                        mensaje = 'Paso bloqueado: falta configurar ' + nombres + '. No se realizó ninguna llamada externa.'
+                        n['type'] = 'n8n-nodes-base.code'
+                        n['typeVersion'] = 2
+                        n['parameters'] = {'jsCode': 'throw new Error(' + json.dumps(mensaje, ensure_ascii=False) + ');'}
+                        for key in ('credentials', 'onError', 'continueOnFail', 'retryOnFail', 'maxTries', 'waitBetweenTries'):
+                            n.pop(key, None)
+                        bloqueos.append({'workflow': w['id'], 'nodo': n['name'], 'motivo': 'credencial_ausente', 'comportamiento': 'error_explicito'})
+                    if w['id'] in DEPENDENCIAS_SEGURAS and n['type'] in ('n8n-nodes-base.scheduleTrigger', 'n8n-nodes-base.webhook'):
+                        n['disabled'] = True
+                        disparadores.append({'workflow': w['id'], 'nodo': n['name'], 'tipo': n['type']})
         for w, r in zip(output, report):
             r['despues_sha256'] = digest(w)
-    return output, {'mapa_ids': mapping, 'flujos': report, 'credenciales_faltantes': faltantes,
-                    'republicar_originales': [r['id'] for r in report if r['publicado_antes']]}
+    originales = [r['id'] for r in report if r['publicado_antes']]
+    resultado = {'mapa_ids': mapping, 'flujos': report, 'credenciales_faltantes': faltantes,
+                 'republicar_originales': originales, 'bloqueos_explicitos': bloqueos,
+                 'disparadores_dependencias_pausados': disparadores}
+    if publicar_dependencias:
+        if metadata is None:
+            raise ValueError('Publicar dependencias exige inventario de referencias')
+        resultado['plan_publicacion'] = plan_publicacion(output, originales)
+    return output, resultado
 
 
 def main():
@@ -92,12 +149,13 @@ def main():
     parser.add_argument('--entrada', type=Path, required=True)
     parser.add_argument('--salida', type=Path, required=True)
     parser.add_argument('--metadata', type=Path)
+    parser.add_argument('--publicar-dependencias-seguras', action='store_true')
     args = parser.parse_args()
     args.salida.mkdir(mode=0o700, parents=True, exist_ok=False)
     actuales = json.loads(args.export.read_text())
     entradas = [json.loads(p.read_text()) for p in sorted(args.entrada.glob('*.json'))]
     metadata = json.loads(args.metadata.read_text()) if args.metadata else None
-    salida, diff = preparar(actuales, entradas, 'https://flujos.cooperestudio.com', metadata)
+    salida, diff = preparar(actuales, entradas, 'https://flujos.cooperestudio.com', metadata, args.publicar_dependencias_seguras)
     for name, data in [('entrada.json', salida), ('diff.json', diff)]:
         target = args.salida / name
         target.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')

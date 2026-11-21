@@ -19,7 +19,7 @@ def modulo_ensayo():
     return module
 
 
-def validar_entradas(entrada, diff, ensayo, manifiesto):
+def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
     operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS', 'Falta ensayo y reversa satisfactorios')
     operar.require(ensayo.get('entrada_sha256') == operar.digest(entrada), 'El lote difiere del ensayado')
     operar.require(ensayo.get('manifiesto_sha256') == operar.digest(manifiesto), 'El manifiesto difiere del ensayado')
@@ -32,11 +32,23 @@ def validar_entradas(entrada, diff, ensayo, manifiesto):
     # No fabricar ni sustituir credenciales ausentes para conservar un indicador activo.
     bloqueados = {c['workflow'] for c in diff.get('credenciales_faltantes', [])}
     publicar = [wid for wid in originales if wid not in bloqueados]
+    if 'plan_publicacion' in diff:
+        operar.require(plan is not None and plan.is_file(), 'Falta plan de publicación ensayado')
+        publicar = json.loads(plan.read_text())
+        operar.require(ensayo.get('publicacion') == 'PASS' and ensayo.get('publicar_sha256') == operar.digest(plan),
+                        'La publicación difiere del ensayo')
+        operar.require(publicar == diff['plan_publicacion'] == ensayo.get('publicados'), 'Orden de publicación distinto')
+        permitidos = set(originales) | {'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001'}
+        operar.require(len(set(publicar)) == len(publicar) and set(publicar) == permitidos and permitidos <= ids,
+                        'Publicación fuera del plan aprobado')
+        guards = {(x['workflow'], x['nodo']) for x in diff.get('bloqueos_explicitos', [])}
+        operar.require(all((x['workflow'], x['nodo']) in guards for x in diff.get('credenciales_faltantes', [])),
+                        'Falta bloqueo explícito de credencial ausente')
     return ids, publicar
 
 
-def aplicar(op, entrada, diff, ensayo, manifiesto, salida):
-    ids, publicar = validar_entradas(entrada, diff, ensayo, manifiesto)
+def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
+    ids, publicar = validar_entradas(entrada, diff, ensayo, manifiesto, plan)
     operar.require(not salida.exists(), 'El recibo debe ser nuevo')
     validar = modulo_ensayo()
     destino = op.state / ('lote-ejecucion-' + str(time.time_ns()))
@@ -55,7 +67,9 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida):
     resultado = {'entrada_sha256': operar.digest(entrada), 'manifiesto_sha256': operar.digest(manifiesto),
                  'ensayo_y_reversa_previa': 'PASS', 'flujos_importados': len(ids),
                  'republicados_originales': publicar, 'entradas_pausadas_reabiertas': [],
-                 'pausados_por_credencial': sorted(set(diff['republicar_originales']) - set(publicar))}
+                 'pausados_por_credencial': sorted(set(diff['republicar_originales']) - set(publicar)),
+                 'pasos_bloqueados_por_credencial': diff.get('bloqueos_explicitos', []),
+                 'disparadores_dependencias_pausados': diff.get('disparadores_dependencias_pausados', [])}
     try:
         snapshot = op.snapshot(resume=False, tag='reversion')
         resultado['snapshot_previo'] = snapshot
@@ -111,11 +125,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for nombre in ('entrada', 'diff', 'ensayo', 'manifiesto', 'salida'):
         parser.add_argument('--' + nombre, type=Path, required=True)
+    parser.add_argument('--plan', type=Path)
     args = parser.parse_args()
     env, archivo = operar.config('/etc/cooper/.env')
     op = operar.Operator(env, archivo)
     with op.lock():
-        resultado = aplicar(op, args.entrada, json.loads(args.diff.read_text()), json.loads(args.ensayo.read_text()), args.manifiesto, args.salida)
+        resultado = aplicar(op, args.entrada, json.loads(args.diff.read_text()), json.loads(args.ensayo.read_text()), args.manifiesto, args.salida, args.plan)
     print(json.dumps(resultado))
 
 

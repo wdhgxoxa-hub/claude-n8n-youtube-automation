@@ -60,6 +60,21 @@ class AplicarTest(unittest.TestCase):
         self.diff['credenciales_faltantes'] = [{'workflow': 'uno', 'nombre': 'Voz ausente'}]
         self.assertEqual(self.validar(), ({'uno'}, []))
 
+    def test_plan_nuevo_exige_ensayo_de_publicacion_y_orden_exacto(self):
+        ids = ['uno', 'FabYouTube000001', 'FabRadar00000001', 'FabConfirmar0001']
+        self.entrada.write_text(json.dumps([{'id': x, 'active': False} for x in ids]))
+        self.ensayo.update({'entrada_sha256': lote.operar.digest(self.entrada), 'flujos_importados': 4})
+        self.diff['plan_publicacion'] = ids
+        plan = Path(self.tmp.name) / 'publicar.json'
+        plan.write_text(json.dumps(ids))
+        with self.assertRaisesRegex(RuntimeError, 'publicación difiere'):
+            lote.validar_entradas(self.entrada, self.diff, self.ensayo, self.manifiesto, plan)
+        self.ensayo.update({'publicacion': 'PASS', 'publicados': ids, 'publicar_sha256': lote.operar.digest(plan)})
+        self.assertEqual(lote.validar_entradas(self.entrada, self.diff, self.ensayo, self.manifiesto, plan)[1], ids)
+        self.diff['plan_publicacion'] = list(reversed(ids))
+        with self.assertRaisesRegex(RuntimeError, 'Orden'):
+            lote.validar_entradas(self.entrada, self.diff, self.ensayo, self.manifiesto, plan)
+
     def test_fallo_despues_de_importar_restaura_datos_y_reabre_stack(self):
         base = Path(self.tmp.name)
         data, state, restore = (base / n for n in ('datos', 'estado', 'restaurado'))
