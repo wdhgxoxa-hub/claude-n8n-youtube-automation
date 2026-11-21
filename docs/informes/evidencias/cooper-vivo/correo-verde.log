@@ -1,0 +1,16 @@
+✔ la CLI usa el correo exacto de Google al simular sin --admin (88.803076ms)
+✔ planifica sin escribir y conserva costos conciliados y dueños explícitos (1.299594ms)
+✔ huérfanos y contradicciones se rechazan antes de escribir (0.561701ms)
+✔ nombres duplicados y tipos incompatibles no se migran (0.21654ms)
+✔ segunda ejecución vacía y reversa aditiva idempotente (0.673609ms)
+✔ la reversa no pisa cambios posteriores ni otro destino (0.332332ms)
+✔ cambio entre plan y escritura detiene la aplicación (0.190902ms)
+✔ la decisión explícita de asignar todo al administrador conserva reversa e idempotencia (0.377046ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.160067

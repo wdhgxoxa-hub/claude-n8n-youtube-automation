@@ -1,0 +1,90 @@
+{
+  "respaldo": "/home/david/.cache/cooper-vivo/respaldo-20261120-193926-0500",
+  "startedAt": "20261120-193926-0500",
+  "verifiedAt": "2026-11-20T19:39:31.684520-05:00",
+  "sqliteIntegrity": "ok",
+  "foreignKeyErrors": 0,
+  "sqliteTables": 187,
+  "workflows": 27,
+  "activeWorkflows": 25,
+  "workflowVersions": 66,
+  "dataTables": [
+    {
+      "id": "dA6t0L2GGon32eFp",
+      "name": "fab_canales",
+      "rows": 2
+    },
+    {
+      "id": "VIfMDnjzrrw1p2EA",
+      "name": "fab_videos",
+      "rows": 5
+    },
+    {
+      "id": "GdWqVXaxFOEiZKQ9",
+      "name": "fab_planos",
+      "rows": 46
+    },
+    {
+      "id": "FE0Mjte3k2UOEbbE",
+      "name": "fab_eventos",
+      "rows": 0
+    },
+    {
+      "id": "vk7TvbIvNcTbmkVv",
+      "name": "fab_costos",
+      "rows": 25
+    },
+    {
+      "id": "BIHxr4bhuShuU9pS",
+      "name": "fab_trabajos",
+      "rows": 19
+    },
+    {
+      "id": "Uez0VV0bdzTX2FnE",
+      "name": "youtube",
+      "rows": 1
+    },
+    {
+      "id": "OMPWHAVyhbtekML0",
+      "name": "publicaciones",
+      "rows": 4
+    },
+    {
+      "id": "XrPPyzBaFxJwT5O3",
+      "name": "fab_aprobaciones",
+      "rows": 15
+    }
+  ],
+  "pendingExecutions": [
+    {
+      "id": 400,
+      "workflowId": "FabAprobacion001",
+      "workflowVersionId": "81db9e82-dbec-48d1-ae2e-37c13248f9b9",
+      "status": "waiting",
+      "startedAt": "2026-11-20 00:49:11.144",
+      "waitTill": "3000-01-01 00:00:00.000",
+      "finished": 0
+    },
+    {
+      "id": 540,
+      "workflowId": "FabAprobacion001",
+      "workflowVersionId": "e1f6a418-a0b3-4ad9-b153-9e3c74d1d603",
+      "status": "waiting",
+      "startedAt": "2026-11-20 14:27:32.326",
+      "waitTill": "3000-01-01 00:00:00.000",
+      "finished": 0
+    }
+  ],
+  "cooperDatabases": [],
+  "apiKey": "FALTA_API_KEY",
+  "liveStopped": false,
+  "restoredOfflineReadable": true,
+  "n8nCliExportRc": 0,
+  "n8nCliWorkflowIdsAndGraphsMatch": true,
+  "isolation": "podman --network none, CLI sin servidor ni puertos",
+  "allDataTableRows": 117,
+  "backupManifestSha256": "518ae15c0b0265aff69e0ba70b50b92d85112af91bfab0b365f1f51acbd390c5",
+  "backupFilesVerified": 30,
+  "directoryMode": "0700",
+  "fileMode": "0600"
+}

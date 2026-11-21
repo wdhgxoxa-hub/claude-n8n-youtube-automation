@@ -1,0 +1,19 @@
+{
+  "containerRunning": true,
+  "containerStartedAt": "2026-11-19T04:31:30.618874157-05:00",
+  "image": "ghcr.io/n8n-io/n8n:2.47.4",
+  "imageId": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+  "workflowsAndActivationsUnchanged": true,
+  "pendingExecutions": [
+    {
+      "id": 400,
+      "status": "waiting"
+    },
+    {
+      "id": 540,
+      "status": "waiting"
+    }
+  ],
+  "liveMutations": 0,
+  "apiRequestsToLive": 0
+}

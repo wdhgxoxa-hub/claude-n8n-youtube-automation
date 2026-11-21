@@ -1,0 +1,36 @@
+✖ la CLI usa el correo exacto de Google al simular sin --admin (104.723906ms)
+✔ planifica sin escribir y conserva costos conciliados y dueños explícitos (1.178801ms)
+✔ huérfanos y contradicciones se rechazan antes de escribir (0.45148ms)
+✔ nombres duplicados y tipos incompatibles no se migran (0.195965ms)
+✔ segunda ejecución vacía y reversa aditiva idempotente (0.487815ms)
+✔ la reversa no pisa cambios posteriores ni otro destino (0.243458ms)
+✔ cambio entre plan y escritura detiene la aplicación (0.170117ms)
+✔ la decisión explícita de asignar todo al administrador conserva reversa e idempotencia (0.266724ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 170.692832
+
+✖ failing tests:
+
+test at tests/migrar_dueno.test.mjs:46:1
+✖ la CLI usa el correo exacto de Google al simular sin --admin (104.723906ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert(plan.filas.every((row) => row.cambios.dueno_email === "wdhg.xoxa@gmail.com"))
+
+      at TestContext.<anonymous> (file:///home/david/Proyectos/cooper-wt/cooper-ensayo/tests/migrar_dueno.test.mjs:74:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
