@@ -1,0 +1,38 @@
+{
+  "bundle": {
+    "contratos/cooper-tablas-produccion.json": "de59f568dc845eb78b9945738eb6cbb41a54c4db51361f289593b0de137796c3",
+    "deploy/actualizar-solo-cooper.py": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+    "deploy/aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+    "deploy/aplicar-n8n-total.py": "7a49a45203de0b8f1953dffbc0b6e75afa4772bce4ff08fd76887641edae9171",
+    "deploy/configurar-marcas-worker.py": "f7d3922a222771ef67f3ba60572a32f58c24521829881d1a89febc94e3f3e970",
+    "deploy/ensayar-confirmacion.py": "c22a76471595d64f9ba1bf17d72941377d9b77980654cc33d603119fa88314f8",
+    "deploy/ensayar-migracion.py": "f22e612b90ca417335614d520bd3a2fed306d57b61dc3bf72247ac8591046527",
+    "deploy/ensayar-motor-n8n.py": "13949cff3d864ba6b5d0b37a1044ad8bd3183e99b6d0c735d1f9b8d781814bdf",
+    "deploy/ensayar-n8n.py": "f36fb31a97e130476298d4125b782016764f3e8ee2fdc90ffb8e544c6a3354f9",
+    "deploy/esperar-vps.py": "263cf4d06eab5c3ee310741d872b7e556cbea5cb8050bd8d0da390bfd3b6baff",
+    "deploy/esquema-n8n.py": "78e5e6d13b8b619d94d803c63cbff5c89f3a090df7e82874a0823af054426c38",
+    "deploy/generar-monitor.py": "5b901cbb1af6052385d174dfb830fa46711e6e07d1773fb4bd25e15d91fffcb7",
+    "deploy/infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3",
+    "deploy/monitor.py": "83c9a61efb1e4954bfd7413a531cf4778d0697fbdf2e4c3ccd3c5c34895cdc06",
+    "deploy/n8n-columnas.cjs": "7d4b371a85b68f7e954bd3cfe3f1843522a4a328a6abbabca271efc6742816bc",
+    "deploy/operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "deploy/preparar-activaciones-n8n.py": "6266c27906ee5d0ce9db63e4c2fd08372e3f8b1c1d9f08ef85a76337c5424e8d",
+    "deploy/preparar-ajuste-texto.py": "d9af55423d298348b899729fa9a8805c759b913e13af0c47a3a6dd069312afdf",
+    "deploy/preparar-delta-n8n.py": "dbf87567f2675335c2dac45fd07bff1479eb25c0fe08693e1e709de55899820b",
+    "deploy/preparar-n8n-total.py": "ff551961116a62cabf8d60f75440b7f0425e0368cca07f859fd152ade796d6b6",
+    "deploy/preparar-radar-resolver.py": "ef04fb8d22a068500d8973ea91c7f8d1a40bde20258091ca43e5ddef1a3c3d20",
+    "deploy/preparar-resolver-api.py": "5943829426180e2edba661deda15a025bbf7ea979a64873ac3bbca0a8ef69205",
+    "deploy/registrar-replica.py": "e09e38d4a2f268f12be8eb99f12e23e10848554d6f699bb52111001de16f2e03",
+    "deploy/replicar-pc.py": "1637a518790c39dd7af1b6c012a98d914fe53b826451bcf9afc2feb7a9919449",
+    "tools/cooper/comparar_esquema_productivo.py": "b9a93671156741c78f699b4bca7385db9bea1624cafbcd70a44f0110da8a6ce5"
+  },
+  "bundle_sin_modificar": true,
+  "extras": {
+    "recuperar-app.py": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04",
+    "recuperar-infra.py": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba"
+  },
+  "fuente_helper": "a3708ba6c7d0d7cad8383b812c991d13429464ea",
+  "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "integracion_helper": "2e922ca",
+  "version": 1
+}

@@ -1,0 +1,22 @@
+{
+  "fecha_utc": "2026-11-21T22:33:57.291841+00:00",
+  "estado": "PREPARADO_LOCAL",
+  "fuente_cierre": "a3708ba6c7d0d7cad8383b812c991d13429464ea",
+  "integracion": "2e922ca",
+  "tar": {
+    "nombre": "recuperacion-app-b3.tar.gz",
+    "sha256": "4eee6ba392e8f4b6722b031440fe7a170c3c7fb8bbc47cb2cac79cc5efce408e",
+    "bytes": 9081
+  },
+  "archivos": {
+    "COMANDOS.md": "22d8f889dacd4e1011765396a485206f26a66e52bc1142429b3d7cd81d1b7719",
+    "codigo.json": "c2e09b6a3cfed67c3304ad615562ae6abca210902865d01cc2c66daed7d254f5",
+    "preflight.py": "787c89cbd01b08ddd974e612f49016b5169b85b634f90339a41c7a4b26e69c06",
+    "recuperar-app.py": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04"
+  },
+  "destino_publico": "/home/operador/total-integrador-20261121/recuperacion-app-b3",
+  "sin_modificar_bundle25": true,
+  "sin_modificar_app_b3": true,
+  "vps_accedido": false,
+  "bloques_shell_sintaxis_pass": 6
+}

@@ -1,0 +1,48 @@
+{
+  "helper_sha256": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04",
+  "casos": [
+    {
+      "caso": "27 archivos públicos certificados",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "python3 -B importa por PYTHONPATH sin crear bytecode",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Código alterado rechazado",
+      "resultado": "PASS"
+    },
+    {
+      "caso": "Sin -B crea __pycache__ y el inventario lo rechaza",
+      "resultado": "PASS"
+    }
+  ],
+  "estado": "PASS",
+  "entorno_consumido": false,
+  "estado_operativo_creado": false,
+  "bundle_original_modificado": false,
+  "vps_accedido": false,
+  "codigo_sha256": "c2e09b6a3cfed67c3304ad615562ae6abca210902865d01cc2c66daed7d254f5",
+  "preflight_sha256": "787c89cbd01b08ddd974e612f49016b5169b85b634f90339a41c7a4b26e69c06",
+  "regresiones_propias": {
+    "comando": "taskset -c 16-21 python3 -B -W error -m unittest discover -s deploy/tests -p 'test_*.py'",
+    "tests": 241,
+    "segundos": 1.431,
+    "rc": 0,
+    "resultado": "OK",
+    "advertencias": 0,
+    "alcance": "Suite propia posterior a cherry-pick; resumen de salida observada."
+  },
+  "sintaxis_bloques_shell": 6,
+  "cierre_ensayado": {
+    "sha256_recibo_real": "1e5d15bef35efc9e0f910440d28b3d681fb5a76bae542e9b20874948dd6431ee",
+    "imagen_nueva": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+    "imagen_anterior": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+    "servicios": 7,
+    "migraciones": "11→14→11",
+    "cinco_ids_imagenes_startedat_intactos": true,
+    "escrituras_posteriores_archivadas_y_restaurables": true,
+    "tipo_evidencia": "Ensayo público del frente, auditado; no repetido por este revisor."
+  }
+}

@@ -6,6 +6,8 @@ Este extra conserva el actualizador certificado, el bundle, Operator, infraestru
 
 `recuperar-app.py` se entrega fuera del bundle cerrado. `PYTHONPATH` debe seleccionar **el deploy del bundle certificado**, y `--codigo` exige que ese sea el directorio del módulo `operar` realmente importado. Desde allí se carga `actualizar-solo-cooper.py`, sin modificarlo. `--infra-helper` señala el extra canónico `recuperar-infra.py`; este carga `aplicar-infra.py` junto al mismo Operator. `--deploy /opt/cooper/deploy` apunta solo a las configuraciones activas. No copiar el bundle encima del deploy del host ni usar por accidente su Operator antiguo.
 
+Usar `python3 -B` en todas las invocaciones para impedir que las importaciones creen `__pycache__` dentro del bundle. Su verificador exige el inventario exacto de archivos; un directorio de bytecode adicional bloquearía infraestructura. No sustituir `-B` por `-I`, que omite el `PYTHONPATH` explícito requerido.
+
 Verificar las huellas de [entrega](informes/evidencias/total-recuperacion-app/entrega.json), incluido el extra `32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04`, antes de ejecutar. El helper no lee ni imprime el entorno directamente: el adaptador Operator existente lo consume en ejecución. No usar `cat`, `source`, inspecciones completas ni exportaciones de entorno.
 
 Crear un directorio nuevo 0700 bajo `/var/lib/cooper-operacion` para los recibos del extra. Los nombres siguientes son ejemplos y sus SHA se sustituyen por los recibos concretos verificados, sin `latest`.
@@ -15,7 +17,7 @@ Crear un directorio nuevo 0700 bajo `/var/lib/cooper-operacion` para los recibos
 Inmediatamente antes de actualizar Cooper:
 
 ```bash
-PYTHONPATH=/RUTA/BUNDLE/deploy python3 /RUTA/EXTRA/recuperar-app.py \
+PYTHONPATH=/RUTA/BUNDLE/deploy python3 -B /RUTA/EXTRA/recuperar-app.py \
   --codigo /RUTA/BUNDLE/deploy --deploy /opt/cooper/deploy \
   --infra-helper /RUTA/EXTRA/recuperar-infra.py preparar \
   --imagen localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea \
@@ -27,7 +29,7 @@ La preparación exige siete servicios saludables, Cooper y su relé con la misma
 Ejecutar **el mismo actualizador certificado** con el ID anterior comprobado:
 
 ```bash
-python3 /RUTA/BUNDLE/deploy/actualizar-solo-cooper.py \
+python3 -B /RUTA/BUNDLE/deploy/actualizar-solo-cooper.py \
   --imagen localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea \
   --anterior-id sha256:ID_ANTERIOR_VALIDADO
 ```
@@ -35,7 +37,7 @@ python3 /RUTA/BUNDLE/deploy/actualizar-solo-cooper.py \
 Solo si devuelve PASS, antes de infraestructura o cualquier otra fase:
 
 ```bash
-PYTHONPATH=/RUTA/BUNDLE/deploy python3 /RUTA/EXTRA/recuperar-app.py \
+PYTHONPATH=/RUTA/BUNDLE/deploy python3 -B /RUTA/EXTRA/recuperar-app.py \
   --codigo /RUTA/BUNDLE/deploy --deploy /opt/cooper/deploy \
   --infra-helper /RUTA/EXTRA/recuperar-infra.py sellar \
   --preparacion /var/lib/cooper-operacion/CIERRE/app-preparacion.json \
@@ -54,7 +56,7 @@ No se puede atribuir este sello retroactivamente a un despliegue sin preparació
 Orden inverso: **conciliar/revertir lote n8n posterior → recuperar infraestructura → recuperar app**. Cada fase usa su contrato y recibo. El extra rechaza otra configuración, imagen, release o CAS n8n; no fuerza ni omite esos controles. Las imágenes de los otros cinco deben volver al corte app; sus IDs/horas pueden haber cambiado durante la reversa previa de infraestructura, pero deben permanecer idénticos durante esta recuperación limitada.
 
 ```bash
-PYTHONPATH=/RUTA/BUNDLE/deploy python3 /RUTA/EXTRA/recuperar-app.py \
+PYTHONPATH=/RUTA/BUNDLE/deploy python3 -B /RUTA/EXTRA/recuperar-app.py \
   --codigo /RUTA/BUNDLE/deploy --deploy /opt/cooper/deploy \
   --infra-helper /RUTA/EXTRA/recuperar-infra.py recuperar \
   --sello /var/lib/cooper-operacion/CIERRE/app-sello.json \
