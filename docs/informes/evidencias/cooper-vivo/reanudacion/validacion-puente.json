@@ -1,0 +1,36 @@
+[
+  {
+    "check": "estado_dueno",
+    "status": 200,
+    "canales": 2,
+    "videos": 5,
+    "ownerCorrect": true
+  },
+  {
+    "check": "aislamiento",
+    "status": 200,
+    "canales": 0,
+    "videos": 0
+  },
+  {
+    "check": "estado_admin",
+    "status": 200,
+    "canales": 2,
+    "videos": 5
+  },
+  {
+    "check": "datos_panel_admin",
+    "status": 200,
+    "owners": 1,
+    "estimados": true
+  },
+  {
+    "check": "tendencias",
+    "status": 200,
+    "nonEmpty": true
+  },
+  {
+    "check": "rol_admin_falsificado",
+    "status": 403
+  }
+]

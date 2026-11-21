@@ -1,0 +1,131 @@
+{
+  "checkedAt": "2026-11-20T20:09:41.422790-05:00",
+  "result": "PUENTE_ACTIVO_VALIDADO_SIN_PRODUCIR_VIDEOS",
+  "backup": "/home/david/.cache/cooper-vivo/respaldo-20261120-195140-0500",
+  "backupHashesVerified": 26,
+  "originalWorkflowIdsPreserved": 27,
+  "updatedExistingWorkflows": 23,
+  "newWorkflows": [
+    {
+      "source": "FabAvatar0000001",
+      "id": "8nqh0n7jewLQOikC",
+      "name": "FX · Renderizar avatar"
+    },
+    {
+      "source": "FabCooperAPI0001",
+      "id": "xorCR0lfNlil8Ovy",
+      "name": "FX · API de Cooper"
+    },
+    {
+      "source": "FabCooperCosto01",
+      "id": "z74zUkz2BR8k0GLR",
+      "name": "FX · Registrar costo por dueño"
+    },
+    {
+      "source": "FabCooperProgr01",
+      "id": "gNrGzmHBxJ3OIuQM",
+      "name": "FX · Progreso de Cooper"
+    },
+    {
+      "source": "FabPresentacion1",
+      "id": "MkC3QS6ogZZ8n24u",
+      "name": "FX · Validar presentación"
+    }
+  ],
+  "totalWorkflows": 32,
+  "activeWorkflows": 30,
+  "duplicateNames": 0,
+  "cronOriginalNodesRestored": 4,
+  "dataTables": [
+    {
+      "name": "fab_canales",
+      "rows": 2,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "fab_videos",
+      "rows": 5,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "fab_planos",
+      "rows": 46,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "fab_eventos",
+      "rows": 0,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "fab_costos",
+      "rows": 25,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "fab_trabajos",
+      "rows": 19,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "youtube",
+      "rows": 1,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "publicaciones",
+      "rows": 4,
+      "originalFieldsPreserved": true
+    },
+    {
+      "name": "fab_aprobaciones",
+      "rows": 15,
+      "originalFieldsPreserved": true
+    }
+  ],
+  "additiveColumns": 15,
+  "migratedRows": 51,
+  "migrationFinal": {
+    "simular": true,
+    "columnas": [],
+    "filas": []
+  },
+  "pendingExecutions": [
+    {
+      "id": 400,
+      "workflowId": "FabAprobacion001",
+      "status": "waiting",
+      "workflowVersionId": "81db9e82-dbec-48d1-ae2e-37c13248f9b9"
+    },
+    {
+      "id": 540,
+      "workflowId": "FabAprobacion001",
+      "status": "waiting",
+      "workflowVersionId": "e1f6a418-a0b3-4ad9-b153-9e3c74d1d603"
+    }
+  ],
+  "pendingPayloadHashesUnchanged": true,
+  "publicationsRowsUnchanged": true,
+  "newPersistedExecutions": [
+    {
+      "workflowId": "xorCR0lfNlil8Ovy",
+      "status": "success",
+      "count": 6
+    }
+  ],
+  "providerSettingsPreserved": {
+    "allExistingKeysPreserved": true,
+    "newKeys": [
+      "costoAvatarSegUsd",
+      "costoVozHeygenCaracterUsd",
+      "costoVozElevenCaracterUsd"
+    ],
+    "providerFlagsPreserved": true
+  },
+  "noNewVideos": true,
+  "noNewCostRows": true,
+  "noNewJobs": true,
+  "adminUiAuthenticated": "PENDIENTE_PRIMER_LOGIN_GOOGLE",
+  "cronTimezonesPreserved": true,
+  "ajustesDeploymentMatchesPrepared": true
+}

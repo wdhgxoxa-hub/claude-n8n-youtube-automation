@@ -1,0 +1,28 @@
+{
+  "codeCommit": "d8d992f",
+  "branch": "cooper-ensayo",
+  "checks": {
+    "puerta-final.log": {
+      "sha256": "f3d1b94aa79c3631a30489f0ecb9d012eb6469e9678a3f725e52ec905f8ce6a6",
+      "rc": 0
+    },
+    "flujos-final.log": {
+      "sha256": "5c65f796ccefedf65d1e45d985d8ee57e4c2292b4e610d372b10415396ac464b",
+      "rc": 0
+    },
+    "migracion-tests-final.log": {
+      "sha256": "72082bc93e0a45d5c6e717bc62b8f38d3254f0bb60fb16fad32a1aea0a7e2db7",
+      "rc": 0
+    }
+  },
+  "unitTests": 117,
+  "e2eTests": 22,
+  "workflowTests": 119,
+  "migrationTests": 8,
+  "errors": 0,
+  "warnings": 0,
+  "n8nVersion": "2.47.4",
+  "apiSchemaSHA256": "f3d7fe99eef5890d3769e40c57697f2db0da69b134803bd65d2d04604bfc0b97",
+  "secretsIncluded": false,
+  "envExcludedDuringGate": true
+}

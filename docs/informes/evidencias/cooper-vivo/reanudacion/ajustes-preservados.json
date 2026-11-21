@@ -1,0 +1,9 @@
+{
+  "allExistingKeysPreserved": true,
+  "newKeys": [
+    "costoAvatarSegUsd",
+    "costoVozHeygenCaracterUsd",
+    "costoVozElevenCaracterUsd"
+  ],
+  "providerFlagsPreserved": true
+}

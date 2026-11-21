@@ -1,0 +1,302 @@
+{
+  "checkedAt": "2026-11-20T20:03:46.724334-05:00",
+  "result": "REVERTIDO_POR_CREDENCIALES_AUSENTES",
+  "originalContainerRestored": true,
+  "container": "videos-n8n",
+  "originalWorkflows": [
+    {
+      "id": "jylyhP7MsjovYWUC",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "CmfUbbCPbVCfFzY3",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "Fo2be7g3JG6j3SfV",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": false,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "VrlA1ayhq3NxBgI5",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": false,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabAgenteTelegr1",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabAjustes000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabAprendizaje01",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabAprobacion001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabEstado0000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabLlamarClaude1",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabOrquestador01",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabProduccion001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabPublicacion01",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabRetornoClaud1",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabSonido0000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabReferencias01",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabYouTube000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabDerivados0001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabRedes00000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabVidiq00000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabErrores000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": [
+        "Avisar error"
+      ]
+    },
+    {
+      "id": "FabRutina0000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabChatWeb000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabPendientes001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabConfirmar0001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabReenviar00001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    },
+    {
+      "id": "FabRadar00000001",
+      "publishedVersionPreserved": true,
+      "graphPreserved": true,
+      "active": true,
+      "generatedWebhookIdInSender": []
+    }
+  ],
+  "originalActiveCount": 25,
+  "newInactiveDrafts": [
+    {
+      "source": "FabAvatar0000001",
+      "id": "8nqh0n7jewLQOikC",
+      "name": "FX · Renderizar avatar"
+    },
+    {
+      "source": "FabCooperAPI0001",
+      "id": "xorCR0lfNlil8Ovy",
+      "name": "FX · API de Cooper"
+    },
+    {
+      "source": "FabCooperCosto01",
+      "id": "z74zUkz2BR8k0GLR",
+      "name": "FX · Registrar costo por dueño"
+    },
+    {
+      "source": "FabCooperProgr01",
+      "id": "gNrGzmHBxJ3OIuQM",
+      "name": "FX · Progreso de Cooper"
+    },
+    {
+      "source": "FabPresentacion1",
+      "id": "MkC3QS6ogZZ8n24u",
+      "name": "FX · Validar presentación"
+    }
+  ],
+  "dataTables": [
+    {
+      "name": "fab_canales",
+      "rows": 2,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": true
+    },
+    {
+      "name": "fab_videos",
+      "rows": 5,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": true
+    },
+    {
+      "name": "fab_planos",
+      "rows": 46,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": false
+    },
+    {
+      "name": "fab_eventos",
+      "rows": 0,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": false
+    },
+    {
+      "name": "fab_costos",
+      "rows": 25,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": true
+    },
+    {
+      "name": "fab_trabajos",
+      "rows": 19,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": true
+    },
+    {
+      "name": "youtube",
+      "rows": 1,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": false
+    },
+    {
+      "name": "publicaciones",
+      "rows": 4,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": false
+    },
+    {
+      "name": "fab_aprobaciones",
+      "rows": 15,
+      "businessValuesRestored": true,
+      "metadataUpdatedAtMayChange": false
+    }
+  ],
+  "additiveColumnsRetained": 15,
+  "pendingExecutions": [
+    {
+      "id": 400,
+      "workflowId": "FabAprobacion001",
+      "status": "waiting",
+      "workflowVersionId": "81db9e82-dbec-48d1-ae2e-37c13248f9b9"
+    },
+    {
+      "id": 540,
+      "workflowId": "FabAprobacion001",
+      "status": "waiting",
+      "workflowVersionId": "e1f6a418-a0b3-4ad9-b153-9e3c74d1d603"
+    }
+  ],
+  "pendingExecutionPayloadHashesUnchanged": true,
+  "newExecutionsSinceBackup": 0,
+  "publicationsRowsUnchanged": true,
+  "n8nEnvironmentRestored": true
+}

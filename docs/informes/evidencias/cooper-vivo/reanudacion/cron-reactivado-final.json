@@ -1,0 +1,26 @@
+[
+  {
+    "id": "FabAprendizaje01",
+    "active": true,
+    "originalCronNodesRestored": true,
+    "newWorkflowGraphPreserved": true
+  },
+  {
+    "id": "FabConfirmar0001",
+    "active": true,
+    "originalCronNodesRestored": true,
+    "newWorkflowGraphPreserved": true
+  },
+  {
+    "id": "FabRadar00000001",
+    "active": true,
+    "originalCronNodesRestored": true,
+    "newWorkflowGraphPreserved": true
+  },
+  {
+    "id": "FabRutina0000001",
+    "active": true,
+    "originalCronNodesRestored": true,
+    "newWorkflowGraphPreserved": true
+  }
+]

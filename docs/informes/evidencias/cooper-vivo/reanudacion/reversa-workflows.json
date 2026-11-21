@@ -1,0 +1,170 @@
+[
+  {
+    "id": "FabErrores000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true,
+    "normalizations": [
+      {
+        "node": "Avisar error",
+        "field": "webhookId",
+        "meaning": "ID generado por n8n en nodo emisor, sin alterar parámetros ni credenciales"
+      }
+    ]
+  },
+  {
+    "id": "FabAgenteTelegr1",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabAjustes000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabAprendizaje01",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": "DEFERRED"
+  },
+  {
+    "id": "FabAprobacion001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabChatWeb000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabConfirmar0001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": "DEFERRED"
+  },
+  {
+    "id": "FabDerivados0001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabEstado0000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabLlamarClaude1",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabOrquestador01",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabPendientes001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabProduccion001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabPublicacion01",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabRadar00000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": "DEFERRED"
+  },
+  {
+    "id": "FabRedes00000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabReenviar00001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabReferencias01",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabRetornoClaud1",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabRutina0000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": "DEFERRED"
+  },
+  {
+    "id": "FabSonido0000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabVidiq00000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  },
+  {
+    "id": "FabYouTube000001",
+    "nodes": true,
+    "connections": true,
+    "settings": true,
+    "activeVersion": true
+  }
+]
