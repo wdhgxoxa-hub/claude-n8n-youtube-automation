@@ -397,14 +397,7 @@ export function Espacio({
                   </div>
                 </header>
                 <main id="contenido" tabIndex={-1}>
-                  <motion.div
-                    key={path}
-                    initial={reduced || paused ? false : { y: 4 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: reduced || paused ? 0 : 0.2 }}
-                  >
-                    {children}
-                  </motion.div>
+                  <div key={path}>{children}</div>
                 </main>
               </div>
             </div>
