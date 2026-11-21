@@ -3397,7 +3397,7 @@ def recorrer(v):
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
 # Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
-for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'aprendizaje_flujos.py', 'e2e_estados_flujos.py']:
+for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'aprendizaje_flujos.py', 'e2e_estados_flujos.py', 'ramas_flujos.py']:
     exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
 
 # Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.

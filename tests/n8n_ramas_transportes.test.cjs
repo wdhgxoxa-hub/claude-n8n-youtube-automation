@@ -125,9 +125,28 @@ test("ramas: dos clips recorren base64 y URI usando los extractores reales", asy
   comprobarMp4(inline.binary.imagen);
   assert.equal(inline.json.plano.id, "p01");
   const uri = ejecutar(original(prod, "Extraer clip"), salida, nodoImagen, 1);
-  assert.match(uri.json.clip_uri, /^https:\/\/ensayo\.invalid\//);
+  assert.match(
+    uri.json.clip_uri,
+    /^https:\/\/generativelanguage\.googleapis\.com\/v1beta\/files\//,
+  );
   assert.equal(uri.binary, undefined);
-  const descarga = ejecutar(await adaptado(prod, "Descargar clip"), [uri]);
+  let archivo = ejecutar(original(prod, "Clip · preparar archivo"), [uri]);
+  const consultar = await adaptado(prod, "Consultar archivo de clip");
+  const bajar = await adaptado(prod, "Descargar clip");
+  const consulta = () =>
+    ejecutar(
+      original(prod, "Clip · estado archivo"),
+      ejecutar(consultar, [archivo]),
+      { "Clip · consultar entrada": [archivo] },
+    );
+  archivo = consulta();
+  assert.equal(archivo.json.clip_listo, false);
+  assert.equal(archivo.json.clip_consultas, 1);
+  assert.throws(() => ejecutar(bajar, [archivo]), /todavía no está ACTIVE/);
+  archivo = consulta();
+  assert.equal(archivo.json.clip_listo, true);
+  assert.equal(archivo.json.clip_consultas, 2);
+  const descarga = ejecutar(bajar, [archivo]);
   const descargado = ejecutar(original(prod, "Clip descargado"), descarga, {
     "Extraer imagen": [entradas[1]],
   });
@@ -330,4 +349,126 @@ test("ramas: un transporte desconocido falla y nunca produce éxito genérico", 
     () => ejecutar(result.workflow.nodes[0], [{}]),
     /transporte sin fixture válido/,
   );
+});
+
+const destino = (name, output = 0) =>
+  (prod.connections[name]?.main[output] || []).map((e) => e.node);
+const archivoClip = (extra = {}) => ({
+  ...plano("p01"),
+  clip_nombre: "files/clip-local",
+  clip_consultas: 0,
+  clip_uri:
+    "https://generativelanguage.googleapis.com/v1beta/files/clip-local:download?alt=media",
+  ...extra,
+});
+const estadoClip = (respuesta, consultas = 0) =>
+  ejecutar(original(prod, "Clip · estado archivo"), [respuesta], {
+    "Clip · consultar entrada": [archivoClip({ clip_consultas: consultas })],
+  }).json;
+
+test("ramas: Files solo descarga ACTIVE y limita PROCESSING con contador durable por archivo", () => {
+  const pendiente = { name: "files/clip-local", state: "PROCESSING" };
+  assert.equal(estadoClip(pendiente).clip_consultas, 1);
+  assert.equal(estadoClip(pendiente, 38).clip_error, "");
+  const agotado = estadoClip(pendiente, 39);
+  assert.equal(agotado.clip_consultas, 40);
+  assert.equal(agotado.clip_listo, false);
+  assert.match(agotado.clip_error, /40 consultas/);
+  assert.equal(
+    estadoClip({ ...pendiente, state: "ACTIVE" }, 39).clip_listo,
+    true,
+  );
+  assert.deepEqual(destino("¿Clip por URI?"), ["Clip · preparar archivo"]);
+  assert.deepEqual(destino("¿Archivo de clip activo?"), ["Descargar clip"]);
+  assert.deepEqual(destino("¿Archivo de clip activo?", 1), [
+    "Esperar archivo de clip",
+  ]);
+  assert.deepEqual(destino("Esperar archivo de clip"), [
+    "Clip · consultar entrada",
+  ]);
+  assert.equal(original(prod, "Esperar archivo de clip").parameters.amount, 5);
+  assert.equal(
+    original(prod, "Esperar archivo de clip").parameters.unit,
+    "seconds",
+  );
+  assert.ok(destino("Clip · consultar entrada")[0].includes("Presentación"));
+});
+
+test("ramas: Files fallido, desconocido, distinto o con error HTTP guarda un fallo sin mensajes remotos", () => {
+  for (const respuesta of [
+    { name: "files/clip-local", state: "FAILED" },
+    { name: "files/clip-local", state: "STATE_UNSPECIFIED" },
+    { name: "files/otro-clip", state: "ACTIVE" },
+    { error: { message: "CONTENIDO PRIVADO REMOTO" } },
+    {},
+  ]) {
+    const result = estadoClip(respuesta);
+    assert.equal(result.clip_listo, false);
+    assert.ok(result.clip_error);
+    const fallo = ejecutar(original(prod, "Clip · fallo durable"), [result])[0]
+      .json;
+    assert.equal(fallo.estado, "con_fallas");
+    assert.equal(fallo.etapa, "produccion");
+    assert.doesNotMatch(fallo.error, /CONTENIDO PRIVADO/);
+  }
+  assert.equal(
+    original(prod, "Consultar archivo de clip").onError,
+    "continueRegularOutput",
+  );
+  const filtros = original(prod, "Clip · guardar fallo").parameters.filters
+    .conditions;
+  assert.ok(
+    filtros.some(
+      (f) =>
+        f.keyName === "eliminado" &&
+        f.keyValue === true &&
+        f.condition === "neq",
+    ),
+  );
+  assert.ok(
+    filtros.some(
+      (f) =>
+        f.keyName === "estado" &&
+        f.keyValue === "cancelado" &&
+        f.condition === "neq",
+    ),
+  );
+  assert.ok(original(prod, "Cooper · sello Clip · guardar fallo"));
+  assert.ok(original(prod, "Cooper · sello Clip · guardar fallo aviso"));
+  assert.deepEqual(destino("¿Consulta de clip válida?", 1), [
+    "Clip · fallo durable",
+  ]);
+});
+
+test("ramas: la referencia Files limita origen y ruta antes de usar la credencial", () => {
+  const preparar = (uri) =>
+    ejecutar(original(prod, "Clip · preparar archivo"), [
+      { ...plano("p01"), clip_uri: uri },
+    ]).json;
+  for (const uri of [
+    "https://evil.invalid/v1beta/files/clip-local",
+    "https://generativelanguage.googleapis.com.evil.invalid/v1beta/files/clip-local",
+    "https://user:password@generativelanguage.googleapis.com/v1beta/files/clip-local",
+    "http://generativelanguage.googleapis.com/v1beta/files/clip-local",
+    "https://generativelanguage.googleapis.com/v1beta/files/clip-local?key=no-permitida",
+    "https://generativelanguage.googleapis.com/v1beta/files/clip-local#fragmento",
+    "https://generativelanguage.googleapis.com/v1beta/files/../../otro",
+  ]) {
+    const invalid = preparar(uri);
+    assert.ok(invalid.clip_error);
+    assert.equal(invalid.clip_uri, "");
+    assert.equal(invalid.clip_nombre, "");
+  }
+  for (const tail of ["", ":download", ":download?alt=media"]) {
+    const result = preparar(
+      "https://generativelanguage.googleapis.com/v1beta/files/clip-local" +
+        tail,
+    );
+    assert.equal(result.clip_nombre, "files/clip-local");
+    assert.equal(result.clip_uri, archivoClip().clip_uri);
+    assert.equal(result.clip_error, "");
+  }
+  assert.deepEqual(destino("¿Referencia de clip válida?", 1), [
+    "Clip · fallo durable",
+  ]);
 });

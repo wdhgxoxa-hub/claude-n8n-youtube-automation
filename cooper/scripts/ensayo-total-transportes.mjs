@@ -325,6 +325,11 @@ function responderTransporte(config, entrada, indice, contexto) {
     throw new Error(`Ensayo: transporte OpenAI sin fixture: ${nombre}`);
   }
   if (proveedor === "gemini") {
+    if (nombre === "Consultar archivo de clip")
+      return salida({
+        name: entrada.clip_nombre,
+        state: Number(entrada.clip_consultas || 0) ? "ACTIVE" : "PROCESSING",
+      });
     if (nombre === "Animar (Gemini Omni)") {
       // Dos planos en una ejecución cubren los dos formatos oficiales de entrega.
       const porUri =
@@ -339,7 +344,14 @@ function responderTransporte(config, entrada, indice, contexto) {
               {
                 type: "video",
                 mime_type: "video/mp4",
-                ...(porUri ? { uri: url("clip.mp4") } : { data: mp4 }),
+                ...(porUri
+                  ? {
+                      uri:
+                        "https://generativelanguage.googleapis.com/v1beta/files/clip-" +
+                        indice +
+                        ":download?alt=media",
+                    }
+                  : { data: mp4 }),
               },
             ],
           },
@@ -570,11 +582,14 @@ function responderTransporte(config, entrada, indice, contexto) {
   if (
     proveedor === "descarga" &&
     ["Descargar clip", "Descargar render"].includes(nombre)
-  )
+  ) {
+    if (nombre === "Descargar clip" && entrada.clip_listo !== true)
+      throw new Error("Ensayo: el archivo del clip todavía no está ACTIVE");
     return salida(
       {},
       videoBinario(nombre === "Descargar clip" ? "imagen" : "data"),
     );
+  }
   if (proveedor === "descarga" && nombre === "Probar enlace")
     return salida({
       statusCode: 200,
@@ -617,7 +632,11 @@ export function adaptarTransportes(workflow, opciones = {}) {
         proveedor !== "no-soportado" &&
         !(
           proveedor === "gemini" &&
-          !["Voz (Gemini TTS)", "Animar (Gemini Omni)"].includes(node.name)
+          ![
+            "Voz (Gemini TTS)",
+            "Animar (Gemini Omni)",
+            "Consultar archivo de clip",
+          ].includes(node.name)
         ),
       ...(proveedor === "gemini" && node.name === "Animar (Gemini Omni)"
         ? { fixture: clips }

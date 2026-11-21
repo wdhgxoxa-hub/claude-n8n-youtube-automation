@@ -3884,6 +3884,331 @@
     },
     {
       "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\n// Solo se envía la credencial existente al host oficial. Reconstruir la URL\n// evita propagar query strings, usuarios o fragmentos recibidos del proveedor.\nconst uri=String($json.clip_uri || '');\nconst match=uri.match(/^https:\\/\\/generativelanguage\\.googleapis\\.com\\/v1beta\\/files\\/([a-zA-Z0-9_-]{1,160})(?::download)?(?:\\?alt=media)?$/);\nconst clip_nombre=match ? 'files/'+match[1] : '';\nreturn {json:{...$json,clip_nombre,clip_consultas:0,clip_listo:false,\n  clip_uri:match ? 'https://generativelanguage.googleapis.com/v1beta/'+clip_nombre+':download?alt=media' : '',\n  clip_error:match ? '' : 'El clip no entregó una referencia válida de Google Files.'}};\n"
+      },
+      "id": "232cb295-8816-5adb-9976-985af71c0e5f",
+      "name": "Clip · preparar archivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "236afa81-2bab-5b37-9583-e2e42a7d63b8",
+              "leftValue": "={{ !$json.clip_error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1f3351b6-b881-5435-9df5-21d5dc85011f",
+      "name": "¿Referencia de clip válida?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {json:$json};"
+      },
+      "id": "70fd4aa0-a34b-5674-9aa8-cfbfa3b98bcf",
+      "name": "Clip · consultar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/' + $json.clip_nombre }}",
+        "options": {
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1100
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "bf75f842-8593-5955-b2fd-a8bf857dc974",
+      "name": "Consultar archivo de clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredGemini001",
+          "name": "Gemini (Veo)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst p=$('Clip · consultar entrada').item.json, r=$json;\nconst consultas=Number(p.clip_consultas || 0)+1;\nconst coincide=r.name === p.clip_nombre;\nconst activo=coincide && r.state === 'ACTIVE';\nconst pendiente=coincide && r.state === 'PROCESSING';\nconst error=r.error ? 'No se pudo consultar el archivo del clip.' : !coincide ? 'La consulta no corresponde al archivo del clip.' :\n  r.state === 'FAILED' ? 'Google no pudo preparar el archivo del clip.' :\n  !activo && !pendiente ? 'Google devolvió un estado de archivo desconocido.' :\n  pendiente && consultas>=40 ? 'El archivo del clip no estuvo listo después de 40 consultas.' : '';\nreturn {json:{...p,clip_consultas:consultas,clip_listo:activo && !error,clip_error:error}};\n"
+      },
+      "id": "c344f957-dde7-5291-87e3-5de01d2224de",
+      "name": "Clip · estado archivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e870bb98-2274-52a7-b5dd-e1e125029ed3",
+              "leftValue": "={{ !$json.clip_error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bf12d107-0b9f-5439-a9c9-00cde75847f1",
+      "name": "¿Consulta de clip válida?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f368e1bc-f076-5b22-b3da-234179ce70af",
+              "leftValue": "={{ $json.clip_listo === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "36e17b81-fc8f-51a4-be15-50126546d4e0",
+      "name": "¿Archivo de clip activo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "6c9b074c-d657-50da-8beb-4b876e4f8248",
+      "name": "Esperar archivo de clip",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        0
+      ],
+      "webhookId": "7e46412e-a504-57f8-9a77-5531cb96ad5c"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn [{json:{etapa:'produccion',estado:'con_fallas',\n  error:String($json.clip_error || 'No se pudo preparar el archivo del clip.').slice(0,500)}}];\n"
+      },
+      "id": "03ec8383-07ad-58d8-831c-1d2e21cb9de1",
+      "name": "Clip · fallo durable",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "neq",
+              "keyValue": "cancelado"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "156ec0f0-5a9b-5ea9-8937-983e0abc2b29",
+      "name": "Clip · guardar fallo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
+      },
+      "id": "af37f1ba-d8bc-56db-aae4-4be39af6a9cb",
+      "name": "Presentación · Consultar archivo de clip entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k)=>({json:{video_id:$('Inicio').first().json.video_id, control:\"medios\"}, pairedItem:{item:k}}));"
+      },
+      "id": "1b119113-7431-5207-a170-aaae15e07f15",
+      "name": "Presentación · Consultar archivo de clip consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabPresentacion1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "b326c90f-fc17-5231-9366-ad939a5381be",
+      "name": "Presentación · Consultar archivo de clip validar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Consultar archivo de clip entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
+      },
+      "id": "92f76545-9db6-579d-97ba-a4dd231943b9",
+      "name": "Presentación · Consultar archivo de clip seguir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en producción\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "d2173d60-71b0-5248-99cf-b3814d5fab0d",
@@ -4257,6 +4582,48 @@
       "typeVersion": 1.2,
       "position": [
         3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Clip · guardar fallo\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "ffaa9710-f400-5d0d-8877-e71669a865b6",
+      "name": "Cooper · sello Clip · guardar fallo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "922933f7-d6a5-54f4-bcd1-423b89987751",
+      "name": "Cooper · sello Clip · guardar fallo aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4400,
         0
       ]
     }
@@ -4759,7 +5126,7 @@
       "main": [
         [
           {
-            "node": "Descargar clip",
+            "node": "Clip · preparar archivo",
             "type": "main",
             "index": 0
           }
@@ -6138,6 +6505,170 @@
         ]
       ]
     },
+    "¿Archivo de clip activo?": {
+      "main": [
+        [
+          {
+            "node": "Descargar clip",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar archivo de clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip · preparar archivo": {
+      "main": [
+        [
+          {
+            "node": "¿Referencia de clip válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Referencia de clip válida?": {
+      "main": [
+        [
+          {
+            "node": "Clip · consultar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clip · fallo durable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip · consultar entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar archivo de clip entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar archivo de clip": {
+      "main": [
+        [
+          {
+            "node": "Clip · estado archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip · estado archivo": {
+      "main": [
+        [
+          {
+            "node": "¿Consulta de clip válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Consulta de clip válida?": {
+      "main": [
+        [
+          {
+            "node": "¿Archivo de clip activo?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clip · fallo durable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar archivo de clip": {
+      "main": [
+        [
+          {
+            "node": "Clip · consultar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip · fallo durable": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Clip · guardar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar archivo de clip entrada": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar archivo de clip consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar archivo de clip consulta": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar archivo de clip validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar archivo de clip validar": {
+      "main": [
+        [
+          {
+            "node": "Presentación · Consultar archivo de clip seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Presentación · Consultar archivo de clip seguir": {
+      "main": [
+        [
+          {
+            "node": "Consultar archivo de clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Cooper · sello Video en producción": {
       "main": [
         [
@@ -6417,6 +6948,33 @@
         [
           {
             "node": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Clip · guardar fallo": {
+      "main": [
+        [
+          {
+            "node": "Clip · guardar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Clip · guardar fallo aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Clip · guardar fallo": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Clip · guardar fallo aviso",
             "type": "main",
             "index": 0
           }
