@@ -68,11 +68,35 @@ Si el monitor recién instalado falla, reponer únicamente su archivo anterior c
 
 ## Recuperación
 
-1. Poner el destino en mantenimiento y detener el Compose. Preservar cualquier escritura posterior al snapshot; restaurar un disco no revierte publicaciones ni decisiones externas.
-2. Si el VPS se conserva, usar `deploy/revertir.sh` con `anterior.json`; comprueba/restaura primero en un directorio nuevo y archiva los datos desplazados. No iniciar simultáneamente n8n de PC y VPS.
-3. Si se perdió el VPS, preparar Ubuntu y una instalación revisada de `deploy/`. Recuperar el repositorio **cifrado** desde `~/.local/share/cooper-copias-vps/actual` y provisionar la contraseña y configuración privada por el canal ya autorizado. La copia no contiene `/etc/cooper/.env`; no reconstruye OAuth, claves del host ni sesiones CLI.
-4. En el destino nuevo: ejecutar `restic check --read-data`, elegir ID explícito y `operar.py restaurar-prueba ID DESTINO_NUEVO`; después `operar.py importar ID` solo con servicios detenidos y volúmenes vacíos. Conservar los workflows automáticos pausados hasta conciliar esperas/efectos externos y confirmar dos controles humanos de publicación.
-5. Arrancar el Compose, comprobar salud, HTTPS, rechazo anónimo, puente y datos; reinstalar timers. Retirar mantenimiento únicamente tras verificación. Una sesión Google real sigue requiriendo al usuario.
+La receta depende del aplicador que hizo el cambio. Preservar las escrituras posteriores al snapshot: restaurar discos no revierte publicaciones ni decisiones externas. Conciliar las esperas y los efectos externos antes de reabrir la operación; no iniciar simultáneamente n8n de PC y VPS.
+
+**VPS conservado, actualización de Cooper con `operar.py actualizar`:** `deploy/revertir.sh` usa el `STATE_ROOT/anterior.json` que guardó esa actualización. Restaura primero en un directorio nuevo y archiva los datos desplazados. Solo procede directamente si la infraestructura sigue siendo la correspondiente a ese snapshot.
+
+**VPS conservado, secuencia `Operator.actualizar → Marcas opaco → aplicar-infra.py` terminada PASS:** recuperar primero la infraestructura con su recibo exacto. Después, si también se quiere volver a la versión anterior de Cooper, ejecutar `deploy/revertir.sh`. Invertir el orden puede arrancar un motor nuevo con una base del motor anterior. El paso Marcas conserva su configuración opaca; estos helpers no extraen, copian ni revierten su secreto. Consumen la configuración privada únicamente mediante el adaptador operativo existente.
+
+```bash
+# SHA64 es la huella verificada del recibo PASS de ESA aplicación, no «latest».
+python3 /opt/cooper/deploy/recuperar-infra.py \
+  --recibo /var/lib/cooper-operacion/cierre-22ece8e/infra-resultado.json \
+  --recibo-sha256 SHA64 \
+  --salida /var/lib/cooper-operacion/cierre-22ece8e/recuperacion-infra.json
+# Solo después de PASS y de comprobar que anterior.json corresponde al paso Cooper:
+/opt/cooper/deploy/revertir.sh
+```
+
+`recuperar-infra.py` exige un recibo PASS con su SHA explícito, los mismos códigos de Operator/aplicador, archivos públicos actuales idénticos al ensayo, respaldo público íntegro e identidades locales de las imágenes actuales/anteriores. Rechaza ejecuciones `new/running`, otro mantenimiento, un destino de recibo ya existente y rutas con enlaces. Puede comprobar identidades de contenedores detenidos o no saludables; no exige un falso PASS de salud antes de recuperar.
+
+Antes del corte restaura y verifica el snapshot indicado en un directorio nuevo. Bajo `operacion.lock` cierra escritores, obtiene otro snapshot de las escrituras desplazadas y conserva además los datos completos en `recuperacion-infra-*/datos-desplazados`. Recupera configuración y datos juntos, comprueba sus manifiestos y arranca las imágenes anteriores sin descargas/construcciones, con Caddy al final. Exige salud e identidades anteriores y conserva sin cambios `release.json`, `anterior.json` y la imagen nueva de Cooper. Solo entonces retira mantenimiento. Si falla después del corte, detiene el Compose y conserva ambos estados, el recibo `FALLO_MANTENIMIENTO` y el marcador; no reintentar borrando el marcador ni forzar una configuración mezclada. Si hay deriva de configuración, recibos incompletos o corrupción que impide conservar datos, detenerse y preparar una recuperación específica a partir de los estados conservados.
+
+La reversa automática ante un fallo **dentro de** `aplicar-infra.py` sigue siendo una prueba distinta de esta recuperación **después de PASS**. El recibo del nuevo helper debe acompañar al ensayo de esa segunda ruta; no sustituirlo por el recibo automático.
+
+El actualizador histórico `actualizar-solo-cooper.py` guarda `solo-cooper-*/anterior.json` y su respaldo local, **no** el puntero global de `revertir.sh`. Su reversa automática está probada; no usar la receta genérica para una recuperación posterior ni reutilizar un puntero antiguo. La secuencia final de `cooper-total` usa `Operator.actualizar`, y no ese camino histórico.
+
+**VPS perdido:**
+
+1. Preparar Ubuntu y una instalación revisada de `deploy/`; poner el destino en mantenimiento y detener el Compose. Recuperar el repositorio **cifrado** desde `~/.local/share/cooper-copias-vps/actual` y provisionar la contraseña y configuración privada por el canal ya autorizado. La copia no contiene `/etc/cooper/.env`; no reconstruye OAuth, claves del host ni sesiones CLI.
+2. Ejecutar `restic check --read-data`, elegir ID explícito y `operar.py restaurar-prueba ID DESTINO_NUEVO`; después `operar.py importar ID` solo con servicios detenidos y volúmenes vacíos. Conservar los workflows automáticos pausados hasta conciliar esperas/efectos externos y confirmar dos controles humanos de publicación.
+3. Arrancar el Compose, comprobar salud, HTTPS, rechazo anónimo, puente y datos; reinstalar timers. Retirar mantenimiento únicamente tras verificación. Una sesión Google real sigue requiriendo al usuario.
 
 Pruebas locales: `PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s deploy/tests -p 'test_*.py'`. Ejercitan fallos de transporte/restauración, conservación de la copia previa, HMAC real cruzado Python→JavaScript, replay, mensajes inválidos, deduplicación, recuperación, mantenimiento y coordinación de relés. El informe distingue esas pruebas de la copia real y del despliegue remoto.
 
@@ -89,3 +113,5 @@ El helper exige el manifiesto completo antes de crear el destino; usa SQLite bac
 Regresión: con dos transacciones confirmadas y la última en WAL, el clon conserva filas, versión publicada y migraciones incluso al trasladar solo su `.sqlite`. Un WAL omitido del disco o del manifiesto se rechaza antes de crear el destino. Contratos oficiales consultados el 21-11-2026: [SQLite backup API](https://www.sqlite.org/backup.html) y [WAL](https://www.sqlite.org/wal.html).
 
 Fuentes oficiales consultadas el 21-11-2026: [repositorios restic](https://restic.readthedocs.io/en/stable/045_working_with_repos.html), [restauración restic](https://restic.readthedocs.io/en/stable/050_restore.html), [timers systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html), [TLS y certificados en Python](https://docs.python.org/3/library/ssl.html), [webhook n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/), [Code n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/) y [Telegram sendMessage](https://core.telegram.org/bots/api#sendmessage).
+
+Para la recuperación posterior a PASS se contrastaron también los contratos actuales de [Compose ps](https://docs.docker.com/reference/cli/docker/compose/ps/) (`--all` para identidades detenidas) y [Compose up](https://docs.docker.com/reference/cli/docker/compose/up/) (`--pull never`, recreación y espera de salud).
