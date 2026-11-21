@@ -1,0 +1,37 @@
+[
+  {
+    "paso": "ci",
+    "rc": 0,
+    "segundos": 5.41
+  },
+  {
+    "paso": "lint",
+    "rc": 0,
+    "segundos": 3.2
+  },
+  {
+    "paso": "tipos",
+    "rc": 0,
+    "segundos": 4.15
+  },
+  {
+    "paso": "unitarias",
+    "rc": 0,
+    "segundos": 17.3
+  },
+  {
+    "paso": "e2e",
+    "rc": 0,
+    "segundos": 381.23
+  },
+  {
+    "paso": "build",
+    "rc": 0,
+    "segundos": 3.09
+  },
+  {
+    "paso": "flujos",
+    "rc": 0,
+    "segundos": 0.94
+  }
+]

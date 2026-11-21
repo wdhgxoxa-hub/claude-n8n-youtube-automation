@@ -1,0 +1,18 @@
+{
+  "fecha_lima": "2026-11-21 10:04",
+  "docker_enabled": true,
+  "backup_timer_enabled": true,
+  "firewall_enabled": true,
+  "servicios_fallidos": 0,
+  "contenedores_saludables": 4,
+  "imagen_cooper": "localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76",
+  "n8n": "2.47.4",
+  "runner": "2.47.4",
+  "caddy": "2.11.2-alpine",
+  "politica_reinicio": "unless-stopped",
+  "disco_total_gib": 96,
+  "disco_disponible_gib": 88,
+  "repo_restic_local": "/var/backups/cooper-restic",
+  "replica_remota_automatica": false,
+  "monitor_host": false
+}

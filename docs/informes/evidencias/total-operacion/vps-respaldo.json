@@ -1,0 +1,33 @@
+{
+  "fecha_lima": "2026-11-21 10:17:19",
+  "exportacion": {
+    "ruta": "/var/lib/cooper-operacion/total-respaldo-20261121-151617/workflows.json",
+    "sha256": "9cad2297f872b4f0298867586dfdd1a3543e228f6b747f92c1e2ac0ceb64f5d3",
+    "bytes": 901028
+  },
+  "copia": {
+    "snapshot": "04cd7f6f06672e24e34d7c8baa64139a2870e61cf2504d6217f1f533a6d1112c",
+    "restauracion": "PASS",
+    "restic_check_read_data": "PASS",
+    "archivos": 25,
+    "bases": {
+      "cooper": {
+        "tablas": 22,
+        "filas": 21,
+        "migraciones": 8
+      },
+      "n8n": {
+        "tablas": 187,
+        "filas": 7768,
+        "workflows": 34
+      }
+    }
+  },
+  "salud_despues": {
+    "cooper": "healthy",
+    "n8n": "healthy",
+    "runner": "healthy",
+    "caddy": "healthy"
+  },
+  "mutaciones_workflows": false
+}

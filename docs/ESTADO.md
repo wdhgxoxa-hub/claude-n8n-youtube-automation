@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 09:55 (Lima).
+Última actualización: 2026-11-21 10:25 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **cooper-total / Operación:** implementados réplica cifrada en PC, restauración antes de promover copia, monitor firmado para Telegram y arranque protegido por mantenimiento. Copia real VPS y recuperación externa verificadas el 21-11 a las 10:17 Lima: snapshot `04cd7f6f`, 25 archivos y dos bases; los cuatro servicios volvieron saludables. Puerta del frente: 284 unitarias, 43 E2E, 147 flujos y 36 pruebas de operación; cero errores/advertencias. Código entregado al orquestador; timers y monitor aún pendientes de instalación coordinada. [Informe](informes/total-operacion.md).
 
 - Fases 1–6: web, chat por los planes de Claude/Codex, puente firmado con n8n, avatares/voces, WhatsApp, preparación VPS y modo noticia. Proveedores con gasto y modo noticia requieren su activación correspondiente.
 - **Integración 3:** Pulido, Memoria, Cobertura, Marcas y Animación fusionados en orden; `version-chatgpt` y `main` publicados en el remoto propio `mio`, por excepción expresa de Walter. [Informe y evidencia](informes/cooper-integracion3.md).
@@ -23,6 +25,8 @@
 - Regla permanente: actualizar este ESTADO al terminar cada misión, conservando hechos, trabajo en curso, pendientes e ideas.
 
 ## En curso
+
+- Orquestador `cooper-total`: integrar/desplegar los frentes y activar el monitor, receptor de recibos y timers de réplica/arranque; ensayar imagen nueva y reversa con copia del respaldo real. El frente Operación no reabrió workflows ni hizo push.
 
 - Claude: revisar e instalar el lote n8n de integración 3 en el destino elegido, con respaldo real previo, mapa de IDs y reversa. Contiene 32 exportaciones inactivas; **no se aplicó en vivo**. [Procedimiento](cooper-cobertura-despliegue.md).
 - Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas, repositorio de copias fuera del VPS y conexión del chat con los planes de la PC.
