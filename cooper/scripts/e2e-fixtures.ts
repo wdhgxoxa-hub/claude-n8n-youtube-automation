@@ -105,7 +105,8 @@ const server = createServer(async (req, res) => {
       throw new ErrorHttp(403, "Solo cuentas ficticias");
     const user = loginGoogle(input.email, input.email.split("@")[0]);
     await prepararRevisionDemo();
-    const salt = "authjs.session-token";
+    const secure = process.env.AUTH_URL?.startsWith("https://") === true;
+    const salt = `${secure ? "__Secure-" : ""}authjs.session-token`;
     const token = await encode({
       secret: process.env.AUTH_SECRET!,
       salt,
@@ -114,7 +115,7 @@ const server = createServer(async (req, res) => {
     });
     res.setHeader(
       "Set-Cookie",
-      `${salt}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600`,
+      `${salt}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600${secure ? "; Secure" : ""}`,
     );
     res.setHeader("Content-Type", "application/json");
     res.end('{"ok":true}');

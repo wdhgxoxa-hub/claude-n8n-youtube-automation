@@ -1,0 +1,74 @@
+{
+	admin 127.0.0.1:2019
+	grace_period 20s
+	skip_install_trust
+	auto_https disable_redirects
+	# Las consultas y cuerpos no se registran: no habilitar access_log con PII.
+	servers {
+		protocols h1 h2
+		timeouts {
+			read_header 10s
+			idle 2m
+		}
+	}
+	servers :80 {
+		protocols h1
+	}
+}
+
+http://{$COOPER_DOMAIN}, http://{$N8N_DOMAIN} {
+	redir https://{host}{uri} permanent
+}
+
+(seguridad) {
+	tls {$CADDY_TLS}
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		Strict-Transport-Security "max-age=31536000"
+	}
+}
+
+{$COOPER_DOMAIN} {
+	import seguridad
+	request_body {
+		max_size 9MB
+	}
+	reverse_proxy cooper:3000 {
+		flush_interval -1
+		stream_close_delay 5m
+		header_up -X-Forwarded-Port
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 35s
+		}
+	}
+}
+
+{$N8N_DOMAIN} {
+	import seguridad
+	request_body {
+		max_size 16MB
+	}
+	# El puente solo se usa desde backend; no se publica su entrada.
+	@puente path /webhook/cooper/v1 /webhook/cooper/v1/*
+	respond @puente 404
+	@webhooks path /webhook/* /webhook-waiting/* /form/* /form-waiting/*
+	handle @webhooks {
+		reverse_proxy n8n:5678 {
+			flush_interval -1
+		}
+	}
+	handle {
+		respond 404
+	}
+}
+
+# Este listener se publica exclusivamente en loopback del VPS.
+https://{$N8N_DOMAIN}:8443 {
+	import seguridad
+	reverse_proxy n8n:5678 {
+		flush_interval -1
+	}
+}

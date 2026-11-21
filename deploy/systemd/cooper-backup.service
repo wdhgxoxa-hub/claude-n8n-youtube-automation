@@ -1,0 +1,15 @@
+[Unit]
+Description=Copia cifrada y restauración comprobada de Cooper y n8n
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/cooper
+ExecStart=/opt/cooper/deploy/copiar.sh
+UMask=0077
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=2h
+# El bloqueo del script serializa copias, migraciones y actualizaciones.

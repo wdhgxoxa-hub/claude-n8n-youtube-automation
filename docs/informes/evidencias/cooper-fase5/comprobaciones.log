@@ -1,0 +1,14 @@
+Revisión: 88fbf0d8dd7b5c75a2be0ebdb332bdfd8c9c1966
+
+shellcheck deploy/actualizar.sh deploy/copiar.sh deploy/firewall-docker.sh deploy/instalar.sh deploy/migrar-desde-pc.sh deploy/revertir.sh
+rc=0; sin diagnósticos
+
+git diff --check
+rc=0; sin diagnósticos
+
+Puerta completa: rc=0
+Build + Compose: rc=0
+Flujos: rc=0, 119/119
+Copias: rc=0, 14/14
+Artefactos revisados: sin mensajes de advertencia ni asignaciones de secretos
+Contenedores cooper-vps-* restantes: 0
