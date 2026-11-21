@@ -212,3 +212,19 @@ COOPER_PULIDO_RONDA=ronda-1 npm run test:e2e -- --config playwright.pulido.confi
 ```
 
 Requiere Sistema Sentinel instalado en `~/Proyectos/Sistema-Sentinel/codigo` y su entorno Python, o las rutas `SENTINEL_CODIGO` y `SENTINEL_PYTHON`; el ensayo multimedia usa FFmpeg. El adaptador conserva el guardián de Sentinel y añade únicamente una sesión ficticia y viewport al navegador. Las pruebas usan loopback, base efímera y servicios simulados; no requieren Google ni credenciales de producción. Los artefactos quedan en `.cache/capturas-pulido/<ronda>/`, junto con métricas, informe de Sentinel y capturas. Las cookies de ensayo se eliminan al terminar. Playwright complementa los módulos de recorridos, caos y estabilidad con axe, la matriz de pantallas, formularios, micrófono ficticio, fotos, ráfagas, red desconectada y recuperación. La reproducción de video y voz se comprueba con archivos sintéticos servidos localmente.
+
+
+## Operación completa de la fábrica
+
+La navegación Operación reúne Biblia del canal, Radar, Rutina y metas, Especialistas y redes, Referencias, Adoptar cuenta, Programados, Decisiones, Incidencias y Avisos. Administración incluye Ajustes de fábrica: interruptores, presupuestos, modelos y calendario, con revisión del cambio y registro. Cada acción exige confirmación explícita y el servidor comprueba el dueño; los ajustes requieren administrador. El modo simulado conserva sus cambios y se identifica en pantalla.
+
+`GET /api/operacion`, `POST /api/operacion` y `GET /api/admin/fabrica` usan el puente firmado existente. Las consultas `operacion`/`ajustes` y el control estructurado `control_fabrica` están reservados a la web; no amplían las herramientas del chat. La fábrica debe instalar los flujos del [lote revisable con reversa](../docs/cooper-cobertura-despliegue.md) para ofrecer los nuevos datos y controles. No se desplegó esta misión en vivo.
+
+```bash
+# Once pantallas, seis anchuras y dos temas; acciones y Sentinel real aislado.
+COOPER_COBERTURA_RONDA=ronda-1 npm run test:e2e -- --config playwright.cobertura.config.ts
+# Tras compilar, Lighthouse sobre las once pantallas, dos temas y dos tamaños.
+node scripts/auditoria.mjs --cobertura
+```
+
+El adaptador conserva el guardián y los evaluadores de Sentinel. Excluye controles que escriben datos del caos de solo lectura; Playwright verifica las mutaciones de forma dirigida. Para estabilidad espera que la pantalla termine de consultar antes de medir la memoria inicial. Capturas e informes quedan en `.cache/capturas-cobertura/<ronda>/` y `.cache/cobertura/lighthouse/`. El [informe de cobertura](../docs/informes/cooper-cobertura.md) enumera cada flujo, decisión, ajuste y tabla, junto con pruebas y límites reales.

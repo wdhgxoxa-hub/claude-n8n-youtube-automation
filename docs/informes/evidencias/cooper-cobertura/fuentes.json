@@ -1,0 +1,30 @@
+{
+  "revision_actual": "e7c160ea4001a7dde911e9b4824d3d3211ddbc56",
+  "arboles": {
+    "cooper/src": {
+      "5381a01": "08f601bc92cd4bf8c43fa27e64b7ee8c27d09147",
+      "revision_actual": "08f601bc92cd4bf8c43fa27e64b7ee8c27d09147",
+      "identicos": true
+    },
+    "tools": {
+      "5381a01": "df380a3de5beb11ae179d3ac63eaaa978ffa91a6",
+      "revision_actual": "df380a3de5beb11ae179d3ac63eaaa978ffa91a6",
+      "identicos": true
+    },
+    "workflows": {
+      "5381a01": "421948353ecb41e0c3240c0522923724352d7557",
+      "revision_actual": "421948353ecb41e0c3240c0522923724352d7557",
+      "identicos": true
+    },
+    "cooper/drizzle": {
+      "5381a01": "581cf1755d48b16f607997d77198883bb4bf6bfa",
+      "revision_actual": "581cf1755d48b16f607997d77198883bb4bf6bfa",
+      "identicos": true
+    },
+    "contratos": {
+      "5381a01": "1301ce3c64e8b3838915616c67850b1c4b2a3648",
+      "revision_actual": "1301ce3c64e8b3838915616c67850b1c4b2a3648",
+      "identicos": true
+    }
+  }
+}
