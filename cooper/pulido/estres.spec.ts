@@ -134,7 +134,8 @@ test("formularios: doble envío crea un solo canal, cancelación de chat lento y
 
 test("audio ficticio repetido, descarga privada y fábrica temporalmente caída", async ({
   page,
-}) => {
+}, testInfo) => {
+  const nombre = `Recuperación ${testInfo.project.name}`;
   for (let i = 0; i < 3; i++) {
     await page
       .getByRole("button", { name: "Grabar audio", exact: true })
@@ -164,9 +165,7 @@ test("audio ficticio repetido, descarga privada y fábrica temporalmente caída"
     }),
   );
   await page.goto("/canales");
-  await page
-    .getByRole("textbox", { name: "Nombre del canal" })
-    .fill("Recuperación");
+  await page.getByRole("textbox", { name: "Nombre del canal" }).fill(nombre);
   await page
     .getByRole("textbox", { name: "¿De qué trata?" })
     .fill("Ensayo de caída");
@@ -177,7 +176,7 @@ test("audio ficticio repetido, descarga privada y fábrica temporalmente caída"
   await page.unroute("**/api/orden");
   await page.getByRole("button", { name: "Crear canal", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Recuperación", exact: true }),
+    page.getByRole("heading", { name: nombre, exact: true }),
   ).toBeVisible();
 });
 
