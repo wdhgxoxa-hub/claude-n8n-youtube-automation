@@ -1,7 +1,6 @@
 import { z } from "zod";
-export const redes = ["instagram", "facebook", "tiktok", "youtube"] as const;
-export const rubros = ["iglesia-reformada", "moda", "general"] as const;
-export const formatos = ["imagen", "carrusel", "reel", "historia"] as const;
+import { redes, rubros, formatos } from "./opciones";
+export { redes, rubros, formatos } from "./opciones";
 export const guiaSchema = z.object({
   colores: z
     .array(z.string().regex(/^#[a-f\d]{6}$/i))

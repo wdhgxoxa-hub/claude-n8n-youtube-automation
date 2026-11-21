@@ -6,7 +6,7 @@ import { Plus, Palette, CalendarDays, BookOpen, ArrowLeft } from "lucide-react";
 import { api, Heading, Notice, useEspacio } from "./espacio";
 import type { EstadoMarcas } from "@/servicios/marcas/servicio";
 import type { Marca, PiezaMarca } from "@/db/schema";
-import { formatos, redes, rubros } from "@/servicios/marcas/tipos";
+import { formatos, redes, rubros } from "@/servicios/marcas/opciones";
 type MarcaVista = EstadoMarcas["marcas"][number];
 const nombreRubro = {
   "iglesia-reformada": "Iglesia reformada",

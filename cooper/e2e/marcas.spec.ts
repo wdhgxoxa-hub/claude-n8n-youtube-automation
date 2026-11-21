@@ -17,6 +17,10 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
       })
     ).ok(),
   ).toBe(true);
+  const issues: unknown[] = [];
+  const cdp = await page.context().newCDPSession(page);
+  cdp.on("Audits.issueAdded", (issue) => issues.push(issue));
+  await cdp.send("Audits.enable");
   await page.goto("/marcas");
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -136,6 +140,7 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     page.getByRole("heading", { name: "Horario revisado" }),
   ).toBeVisible();
   expect(errors).toEqual([]);
+  expect(issues).toEqual([]);
 });
 test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", async ({
   page,

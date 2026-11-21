@@ -127,7 +127,11 @@ export function Espacio({
       };
       source.addEventListener("estado", (event) => {
         try {
-          setData(JSON.parse(event.data));
+          const next: Estado = JSON.parse(event.data);
+          // Los latidos idénticos no necesitan repintar todos los enlaces y controles.
+          setData((previous) =>
+            JSON.stringify(previous) === event.data ? previous : next,
+          );
           setConnected(true);
           attempts = 0;
         } catch {
