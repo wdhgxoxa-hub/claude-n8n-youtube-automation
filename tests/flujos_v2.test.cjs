@@ -2015,3 +2015,18 @@ test('aprendizaje del plan: PC caída reintenta evidencia sin nueva métrica y e
  assert.equal(pedir([{...base,resultado:JSON.stringify({...JSON.parse(base.resultado),_ensayo:{pendiente:true}})}]).length,0);
  assert.equal(pedir([base,{...base,job_id:'resuelto',estado:'listo'}]).length,0);
 });
+
+test('aceptación del plan: lección real validada y siguiente guion lee IDs sin crear un video',async()=>{
+ const {aceptar,cargarFuentes}=await import('../tools/cooper/aceptar_aprendizaje_plan.mjs');
+ const fuentes=await cargarFuentes(path.join(__dirname,'..'));
+ const evidencia={canal_id:'c',video_id:'v',red:'youtube',ventana:'24h',fecha:'2026-11-02T00:00:00Z',metricas:{vistas:14},creativo:{guion:'Un comercio peruano.'}};
+ const trabajo={job_id:'aprender-ensayo-test',modo:'aprender',canal_id:'c',estado:'bloqueado',resultado:JSON.stringify({_ensayo:{pendiente:true},_aprendizaje:{evidencias:[evidencia]}})};
+ const propuesta={lecciones:[{regla:'Ensayar el dato primero',causa:'Hipótesis',correccion:'Reordenar apertura',origenes:[{video_id:'v',red:'youtube',ventana:'24h',metrica:'vistas'}]}]};
+ const leccion=await aceptar({fase:'leccion',trabajo,fuentes},async prompt=>{assert.ok(prompt.includes('Un comercio peruano.'));return {texto:JSON.stringify(propuesta),llamadas:[]};});
+ assert.equal(leccion.resultado_validado.lecciones[0].origenes[0].valor,14);
+ const listo={...trabajo,estado:'listo',resultado:JSON.stringify({...JSON.parse(trabajo.resultado),resultado:leccion.resultado_validado})};
+ const id=leccion.resultado_validado.lecciones[0].id;
+ const guion=await aceptar({fase:'guion',trabajo:listo,fuentes},async prompt=>{assert.ok(prompt.includes(id));return {texto:JSON.stringify({guion:'Un comercio peruano abre el relato.',aprendizajes_aplicados:[{id,cambio:'El caso local abre el guion'}]}),llamadas:[]};});
+ assert.equal(guion.prueba.omision_rechazada,true);assert.deepEqual(guion.prueba.ids,[id]);assert.equal(guion.crea_video,false);assert.equal(guion.publica,false);
+ await assert.rejects(()=>aceptar({fase:'guion',trabajo,fuentes},async()=>({})),/leccion_persistida/);
+});
