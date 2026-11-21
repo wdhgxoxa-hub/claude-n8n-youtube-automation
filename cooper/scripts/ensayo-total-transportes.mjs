@@ -37,6 +37,7 @@ function familia(workflow, node) {
   if (INTERNOS.has(key)) return null;
   const url = String(node.parameters?.url || "");
   if (node.name === "Despertar routine") return "claude";
+  if (node.name === "Analizar con el plan de la PC") return "aprendizaje-plan";
   if (node.name === "Intentar Codex" || /puente-codex/.test(url))
     return "texto";
   if (/api\.openai\.com/.test(url))
@@ -163,6 +164,36 @@ function responderTransporte(config, entrada, indice, contexto) {
     });
   if (proveedor === "claude")
     return salida({ ok: true, aceptado: true, ensayo: true });
+  if (proveedor === "aprendizaje-plan") {
+    const pedido = nodo("Pedido al plan de aprendizaje", indice) || entrada;
+    const evidencias = JSON.parse(pedido.prompt.split("EVIDENCIA: ").at(-1));
+    const evidencia = evidencias.find((e) => e.metricas.vistas !== null);
+    if (!evidencia)
+      throw new Error("Ensayo: aprendizaje sin evidencia de vistas");
+    return salida({
+      texto: JSON.stringify({
+        resumen: "Ensayo: hipótesis visual basada en datos ficticios.",
+        lecciones: [
+          {
+            regla: "Mostrar el cambio de color desde el primer plano",
+            causa:
+              "Hipótesis de ensayo: el inicio visual puede influir en las vistas, sin demostrar causalidad.",
+            correccion:
+              "Probar una apertura visual y comparar otra publicación.",
+            origenes: [
+              {
+                video_id: evidencia.video_id,
+                red: evidencia.red,
+                ventana: evidencia.ventana,
+                metrica: "vistas",
+              },
+            ],
+          },
+        ],
+      }),
+      llamadas: [],
+    });
+  }
   if (proveedor === "texto") {
     const pedido = nodo("Pedido de texto", 0) || entrada;
     const tarea = pedido.tarea || pedido.local?.tarea;
@@ -182,30 +213,7 @@ function responderTransporte(config, entrada, indice, contexto) {
         problemas: [],
       },
       verificador: { cifras: [], faltantes: [], cuenta: [] },
-      radar: {
-        resumen:
-          "Datos ficticios del ensayo: funcionan las explicaciones de una cifra y un ejemplo.",
-        formatos: [
-          {
-            formato: "explicación visual",
-            por_que: "Muestra sintética con retención estable.",
-            ejemplo: "https://ensayo.invalid/radar/formato",
-          },
-        ],
-        ideas: [
-          {
-            titulo: "3 pasos para explicar un margen",
-            red: "todas",
-            gancho: "Vender más no siempre deja más.",
-            formato: "explicación visual",
-            por_que: "Señal ficticia de retención de la muestra local.",
-            fuente: "Fixture local de vidIQ",
-            fuente_url: "https://ensayo.invalid/radar/datos",
-            caduca_dias: 7,
-          },
-        ],
-        sonidos: [],
-      },
+      radar: null,
       radar_noticia: {
         noticia: noticia
           ? {
@@ -228,6 +236,67 @@ function responderTransporte(config, entrada, indice, contexto) {
           : null,
       },
     };
+    let fuentes = ["https://ensayo.invalid/radar/datos"];
+    if (tarea === "radar") {
+      const prompt =
+        pedido.local?.prompt ||
+        (pedido.body?.input || [])
+          .flatMap((m) => m.content || [])
+          .find((c) => c.type === "input_text")?.text ||
+        "";
+      const canal = JSON.parse(
+        prompt.match(/Canal\/marca: (\{[^\n]*\})\./)?.[1] || "{}",
+      );
+      if (!canal.nombre) throw new Error("Ensayo: Radar sin nombre de canal");
+      const competidores = [1, 2, 3].map((i) => ({
+        nombre: `Cuenta ficticia ${i}`,
+        red: "youtube",
+        url: `https://www.youtube.com/@ensayo${i}`,
+        pais: "Perú",
+        patron: "Hipótesis ficticia de contraste visual",
+        muestras: [100, 120, 80, 600].map((vistas, k) => ({
+          titulo: `Ensayo ${k}`,
+          formato: "short",
+          vistas,
+          fecha: new Date(Date.now() - (10 - k) * 86400000).toISOString(),
+          url: `https://www.youtube.com/shorts/ensayo${i}${k}`,
+        })),
+      }));
+      const comprobaciones = ["youtube", "tiktok"].map((red) => ({
+        red,
+        consulta: `"${canal.nombre}" ${red}`,
+        estado: "consultado",
+        alcance: "Resultados ficticios locales; ninguna consulta a la red.",
+        url:
+          red === "youtube"
+            ? `https://www.youtube.com/results?search_query=${encodeURIComponent(canal.nombre)}`
+            : `https://www.tiktok.com/search?q=${encodeURIComponent(canal.nombre)}`,
+      }));
+      respuestas.radar = {
+        resumen:
+          "Evidencia ficticia local para probar el contrato de competencia",
+        competidores,
+        comprobaciones,
+        homonimos: [],
+        ideas: [
+          {
+            titulo: "3 pasos para explicar un margen",
+            gancho: "Vender más no siempre deja más.",
+            red: "youtube",
+            formato: "short",
+            por_que: "Hipótesis de vistas con datos ficticios",
+            fuente_url: competidores[0].muestras[3].url,
+          },
+        ],
+      };
+      fuentes = [
+        ...competidores.flatMap((c) => [
+          c.url,
+          ...c.muestras.map((m) => m.url),
+        ]),
+        ...comprobaciones.map((c) => c.url),
+      ];
+    }
     if (tarea === "verificador_noticia") {
       const textos = (pedido.body?.input || [])
         .flatMap((m) => m.content || [])
@@ -259,7 +328,7 @@ function responderTransporte(config, entrada, indice, contexto) {
         status: "completed",
         action: {
           type: "search",
-          sources: [{ url: "https://ensayo.invalid/radar/datos" }],
+          sources: fuentes.map((url) => ({ url })),
         },
       });
     }
@@ -267,7 +336,7 @@ function responderTransporte(config, entrada, indice, contexto) {
       ...respuesta,
       ruta: nombre === "Respaldo OpenAI" ? "openai_api" : "codex",
       busqueda_real: true,
-      fuentes_consultadas: ["https://ensayo.invalid/radar/datos"],
+      fuentes_consultadas: fuentes,
       ensayo: true,
     });
   }

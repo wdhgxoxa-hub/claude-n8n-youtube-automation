@@ -7,6 +7,7 @@ import { resolve } from "node:path";
 import { createHash } from "node:crypto";
 import {
   startN8n,
+  N8N_IMAGE,
   podman,
   until,
   stopChild,
@@ -23,12 +24,23 @@ import {
 assertNoEnvFiles();
 const ramas = process.argv.includes("--ramas");
 const renderLocal = process.argv.includes("--render-local");
-assert.ok(!(ramas && renderLocal), "Los modos ramas y render local se ejecutan por separado");
-const CONTAINER = renderLocal ? "cooper-total-render-real" : ramas ? "cooper-total-n8n-ramas" : "cooper-total-n8n-e2e";
+assert.ok(
+  !(ramas && renderLocal),
+  "Los modos ramas y render local se ejecutan por separado",
+);
+const CONTAINER = renderLocal
+  ? "cooper-total-render-real"
+  : ramas
+    ? "cooper-total-n8n-ramas"
+    : "cooper-total-n8n-e2e";
 const rounds = renderLocal ? 1 : Number(process.env.COOPER_TOTAL_RONDAS || 3);
 assert.ok(Number.isInteger(rounds) && rounds >= 1 && rounds <= 10);
 const dir = resolve(
-  renderLocal ? ".cache/total-render-real" : ramas ? ".cache/total-n8n-ramas" : ".cache/total-n8n-e2e",
+  renderLocal
+    ? ".cache/total-render-real"
+    : ramas
+      ? ".cache/total-n8n-ramas"
+      : ".cache/total-n8n-e2e",
   new Date().toISOString().replaceAll(":", "-"),
 );
 mkdirSync(dir, { recursive: true });
@@ -84,7 +96,7 @@ try {
   const { api, url } = instance;
   evidence.instancia = {
     url,
-    imagen: "ghcr.io/n8n-io/n8n:2.47.4",
+    imagen: N8N_IMAGE,
     contenedor: CONTAINER,
     volumen: instance.run + "/n8n",
     redInterna: true,
@@ -206,6 +218,9 @@ try {
     for (const [a, b] of Object.entries(replacements))
       encoded = encoded.replaceAll(a, b);
     const w = JSON.parse(encoded);
+    // Solo esta base ficticia conserva ejecuciones para verificar pedidos y fallos.
+    w.settings.saveDataSuccessExecution = "all";
+    w.settings.saveDataErrorExecution = "all";
     for (const n of w.nodes) {
       delete n.credentials;
       if (
@@ -229,7 +244,12 @@ try {
             /(allow(?:Claude|Imagenes|Archivo|Voz|Drive|Montaje|Redes|Analytics|Radar|Vidiq):\s*)false/g,
             "$1true",
           )
-          .replace(/https:\/\/[^'\s]+/g, "http://127.0.0.1:9/solo-ensayo")
+          .replace(
+            /https:\/\/[^'\s]+/g,
+            (valor) =>
+              "https://ensayo.invalid" +
+              new URL(valor).pathname.replace(/\/$/, ""),
+          )
           .replace(/maxVideosDiaPorCanal:\s*3/, "maxVideosDiaPorCanal: 20");
         if (renderLocal)
           n.parameters.jsCode = n.parameters.jsCode.replace(
@@ -261,8 +281,15 @@ try {
       throw Error(source.name + ": " + error.message + " " + error.detail);
     }
     modified.push(w);
-    if (source.id === "FabErrores000001")
+    if (source.id === "FabErrores000001") {
       await api.request("POST", `/workflows/${ids[source.id]}/publish`, {});
+      await until(
+        async () =>
+          (await api.request("GET", `/workflows/${ids[source.id]}`))
+            .activeVersionId,
+        "Vigilante de ensayo publicado",
+      );
+    }
   }
   const published = new Set(),
     visiting = new Set();
@@ -762,38 +789,31 @@ try {
             ).toISOString(),
           });
         await call("metricas", {});
-        const t = await job("aprender", canal_id);
-        const pedido = await payloadTrabajo(t.job_id);
-        assert.ok(
-          pedido.datos.redes.some(
-            (p) =>
-              p.video_id === video_id &&
-              p.shotlist.length === 3 &&
-              p.guion.texto,
-          ),
-        );
-        const leccion = {
-          lecciones: [
-            {
-              leccion: "Mostrar el cambio de color desde el primer plano",
-              evidencia: "Retención ficticia de ensayo",
-              confianza: "baja",
-            },
-          ],
-          resumen: "Ensayo: adelantar la explicación visual.",
-        };
-        await callback(t, leccion);
-        await wait(
+        const t = await wait(
           async () =>
             (await rows("trabajos")).find(
-              (x) => x.job_id === t.job_id && x.estado === "listo",
+              (t) =>
+                t.modo === "aprender" &&
+                t.canal_id === canal_id &&
+                t.estado === "listo",
             ),
-          "aprendizaje listo",
+          "aprendizaje síncrono listo",
         );
+        const resultado = JSON.parse(t.resultado);
+        assert.ok(
+          resultado._aprendizaje.evidencias.some(
+            (e) =>
+              e.video_id === video_id &&
+              e.creativo.planos.length === 3 &&
+              e.creativo.guion,
+          ),
+        );
+        assert.equal(resultado.resultado.evidencia_version, 1);
+        assert.ok(resultado.resultado.lecciones.length);
+        assert.equal(resultado._plan.api_pagada, false);
         return {
           job_id: t.job_id,
-          pedido,
-          leccion,
+          resultado,
           publicaciones: (await rows("publicaciones")).filter(
             (p) => p.video_id === video_id,
           ),
@@ -814,7 +834,7 @@ try {
         const t = await job("guion", canal_id, `${video_id}-siguiente`);
         const pedido = await payloadTrabajo(t.job_id);
         assert.ok(
-          pedido?.datos.aprendizaje?.length,
+          pedido?.datos.aprendizaje?.lecciones?.length,
           "El aprendizaje debe viajar al siguiente guion",
         );
         assert.ok(
@@ -823,6 +843,12 @@ try {
         );
         await callback(t, {
           ...guion,
+          aprendizajes_aplicados: pedido.datos.aprendizaje.lecciones.map(
+            (l) => ({
+              id: l.id,
+              cambio: "Abrir con el cambio de color como experimento visual.",
+            }),
+          ),
           titulo: "Luz en una nube",
           guion:
             "Mostrar el cambio de color desde el primer plano. " + guion.guion,

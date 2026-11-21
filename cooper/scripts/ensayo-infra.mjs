@@ -68,6 +68,9 @@ export async function startN8n(appPort, options = {}) {
   const { credencialFicticia = false } = options;
   const CONTAINER = options.container || "cooper-ensayo-n8n";
   const networkName = options.network || "cooper-ensayo-red";
+  const cpuSet = process.env.COOPER_ENSAYO_CPUSET || "";
+  if (cpuSet && !/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/.test(cpuSet))
+    throw new Error("Conjunto de CPU de ensayo inválido");
   const root = resolve(homedir(), options.root || ".cache/cooper-ensayo");
   mkdirSync(root, { recursive: true, mode: 0o700 });
   const run = mkdtempSync(`${root}/run-`);
@@ -144,6 +147,7 @@ export async function startN8n(appPort, options = {}) {
     networkName,
     "--cpus",
     "0.5",
+    ...(cpuSet ? ["--cpuset-cpus", cpuSet] : []),
     "--pull",
     "never",
     "-p",
