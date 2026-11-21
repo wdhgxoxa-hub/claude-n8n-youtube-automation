@@ -98,6 +98,7 @@ export type Estudio = {
   historial: Historica[];
 };
 export type Checkpoint = {
+  metricasIntento?: number;
   fase?: string;
   id?: string;
   hijos?: string[];

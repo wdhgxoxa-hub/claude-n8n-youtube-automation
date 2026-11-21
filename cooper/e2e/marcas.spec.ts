@@ -109,6 +109,7 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
       await page.evaluate(() => {
         if (document.activeElement instanceof HTMLElement)
           document.activeElement.blur();
+        window.scrollTo(0, 0);
       });
       await page.screenshot({
         path: `.cache/capturas-marcas/${theme}-${width}.png`,

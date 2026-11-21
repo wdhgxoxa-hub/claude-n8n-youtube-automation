@@ -528,6 +528,7 @@ export async function procesarMarcas(
         lte(piezasMarca.programada, now),
       ),
     )
+    .orderBy(piezasMarca.updatedAt, piezasMarca.programada)
     .limit(4)
     .all();
   let atendidas = 0;
@@ -622,13 +623,21 @@ export async function actualizarMetricas(
   now = Date.now(),
 ) {
   let actualizadas = 0;
+  const ultimoIntento = (p: PiezaMarca) =>
+    p.checkpoint.metricasIntento ?? p.metricas?.capturadas ?? 0;
   for (const p of db()
     .select()
     .from(piezasMarca)
     .where(eq(piezasMarca.estado, "publicada"))
     .all()
-    .filter((p) => !p.metricas || now - p.metricas.capturadas > 3600000)
+    .filter((p) => now - ultimoIntento(p) > 3600000)
+    .sort((a, b) => ultimoIntento(a) - ultimoIntento(b))
     .slice(0, 10)) {
+    db()
+      .update(piezasMarca)
+      .set({ checkpoint: { ...p.checkpoint, metricasIntento: now } })
+      .where(eq(piezasMarca.id, p.id))
+      .run();
     const c = db()
         .select()
         .from(cuentasMarca)

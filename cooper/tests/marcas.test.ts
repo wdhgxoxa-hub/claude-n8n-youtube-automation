@@ -35,7 +35,11 @@ import {
   verificarCitas,
   proponerTexto,
 } from "@/servicios/marcas/especialistas";
-import { RedOficial, RedSimulada } from "@/servicios/marcas/redes";
+import {
+  RedOficial,
+  RedSimulada,
+  type RedSocial,
+} from "@/servicios/marcas/redes";
 import { estudiar, proximoHorario } from "@/servicios/marcas/estudio";
 import { plantillaSvg, renderizar } from "@/servicios/marcas/diseno";
 import { recibirTrabajo } from "@/servicios/marcas/worker";
@@ -691,4 +695,73 @@ it("webhook de WhatsApp aprueba una sola vez la revisión de marca con remitente
   await recibirWhatsApp(req(), now);
   expect(obtenerPieza(ana, p.id).p.estado).toBe("programada");
   vi.unstubAllEnvs();
+});
+
+it("prioriza métricas nunca consultadas frente a diez piezas ya medidas", async () => {
+  const { p } = await escenario();
+  const base = obtenerPieza(ana, p.id).p;
+  const at = Date.now();
+  for (let i = 0; i < 10; i++) {
+    db()
+      .insert(piezasMarca)
+      .values({
+        ...base,
+        id: randomUUID(),
+        estado: "publicada",
+        remoto: `antigua-${i}`,
+        metricas: {
+          vistas: 50,
+          alcance: 40,
+          interacciones: 4,
+          capturadas: at - 7200000,
+        },
+      })
+      .run();
+  }
+  const id = randomUUID();
+  db()
+    .insert(piezasMarca)
+    .values({
+      ...base,
+      id,
+      estado: "publicada",
+      remoto: "sin-medidas",
+      metricas: null,
+    })
+    .run();
+  await actualizarMetricas(new RedSimulada(), at);
+  expect(obtenerPieza(ana, id).p.metricas?.vistas).toBe(240);
+});
+
+it("espacia fallos de métricas y conserva la última medida", async () => {
+  const { p } = await escenario();
+  const at = Date.now() + 14400000;
+  const metricas = {
+    vistas: 120,
+    alcance: 100,
+    interacciones: 8,
+    capturadas: at - 7200000,
+  };
+  db()
+    .update(piezasMarca)
+    .set({
+      estado: "publicada",
+      remoto: "sin-permiso",
+      metricas,
+      checkpoint: { metricasIntento: 1 },
+    })
+    .where(eq(piezasMarca.id, p.id))
+    .run();
+  const red = new RedSimulada();
+  const llamadas = vi
+    .spyOn(red as RedSocial, "metricas")
+    .mockRejectedValue(new Error("sin permiso"));
+  await actualizarMetricas(red, at);
+  const primero = obtenerPieza(ana, p.id).p;
+  expect(primero.metricas).toEqual(metricas);
+  expect(primero.checkpoint.metricasIntento).toBe(at);
+  await actualizarMetricas(red, at + 60000);
+  expect(
+    llamadas.mock.calls.filter(([, remoto]) => remoto === "sin-permiso"),
+  ).toHaveLength(1);
 });
