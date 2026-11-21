@@ -1,0 +1,9 @@
+{
+  "fecha_utc": "2026-11-21T20:33:00Z",
+  "mutaciones": false,
+  "coinciden_con_vps": {
+    "deploy/compose.chat.yaml": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164",
+    "servicios/puente-codex/tunel.mjs": "ee7bbad3234fda85377068963fd847e637a373d0c65973e9cedd3ba06d787fef"
+  },
+  "cas_n8n_previo": "PASS"
+}
