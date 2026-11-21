@@ -15,7 +15,7 @@ import uuid
 
 import operar
 
-IMAGE = 'ghcr.io/n8n-io/n8n:2.47.4'
+IMAGE = json.loads((Path(__file__).resolve().parent / 'infra-imagenes.json').read_text())['servicios']['n8n']['imagen']
 DUMMY_KEY = 'clave-ficticia-ensayo-offline-sin-credenciales-00000000'
 
 

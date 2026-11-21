@@ -128,6 +128,7 @@ await writeFile(
                 },
               }
             : {}),
+          cpus: 0.5,
           // Solo loopback mediante Caddy; no se publican backend ni broker.
         },
       ]),
@@ -360,7 +361,7 @@ try {
   );
   await probarRuntimeMarcas({ compose, request, cookie, env, run, Database, until });
 
-  // Inicialización de n8n nuevo; endpoints cotejados contra código oficial 2.47.4.
+  // Inicialización de n8n nuevo; endpoints cotejados contra código oficial 2.47.6.
   let n8nCookie;
   async function rest(path, body) {
     const res = await request("flujos.test", `/rest${path}`, {
@@ -514,7 +515,7 @@ try {
     401,
   );
   console.log(
-    "PASS runner externo 2.47.4, firma real n8n→Cooper, SSE sin buffering y rechazo de firma inválida",
+    "PASS runner externo 2.47.6, firma real n8n→Cooper, SSE sin buffering y rechazo de firma inválida",
   );
   // Cerrar pestañas debe liberar el límite de cuatro SSE del backend.
   for (let index = 0; index < 5; index++) {

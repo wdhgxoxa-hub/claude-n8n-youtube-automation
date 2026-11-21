@@ -31,6 +31,11 @@ class IntegracionTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, 'Compose debe resolver con valores ficticios')
         self.assertEqual(result.stderr, '', 'Compose no debe emitir advertencias')
         services = json.loads(result.stdout)['services']
+        images = json.loads((ROOT / 'deploy/infra-imagenes.json').read_text())['servicios']
+        self.assertEqual(images['n8n']['version'], images['runner']['version'])
+        for service in ('n8n', 'runner', 'caddy'):
+            self.assertEqual(services[service]['image'], images[service]['imagen'])
+            self.assertRegex(images[service]['imagen'], r'@sha256:[a-f0-9]{64}$')
         for name in names:
             self.assertEqual(services['cooper']['environment'].get(name), env[name], name)
         allowed = json.loads((ROOT / 'deploy/n8n-task-runners.json').read_text())['task-runners'][0]['allowed-env']

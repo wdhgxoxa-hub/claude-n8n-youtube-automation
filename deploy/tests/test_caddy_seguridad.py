@@ -23,7 +23,7 @@ class CaddySeguridadTest(unittest.TestCase):
             'podman', 'run', '--rm', '-i', '--network=none', '--read-only',
             '--cap-drop=all', '--cap-add=NET_BIND_SERVICE', '--security-opt=no-new-privileges',
             '-e', 'COOPER_DOMAIN=cooper.test', '-e', 'N8N_DOMAIN=flujos.test',
-            '-e', 'CADDY_TLS=internal', 'docker.io/library/caddy:2.11.2-alpine',
+            '-e', 'CADDY_TLS=internal', json.loads((ROOT / 'deploy/infra-imagenes.json').read_text())['servicios']['caddy']['imagen'],
             'caddy', 'adapt', '--adapter', 'caddyfile', '--config', '/dev/stdin',
         ], input=(ROOT / 'deploy/Caddyfile').read_text(),
             capture_output=True, text=True, timeout=30)

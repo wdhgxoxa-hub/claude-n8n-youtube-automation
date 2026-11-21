@@ -1,0 +1,21 @@
+{
+  "plataforma": "linux/amd64",
+  "resueltas": "2026-11-21",
+  "servicios": {
+    "n8n": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+    },
+    "runner": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "anterior": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f"
+    },
+    "caddy": {
+      "version": "2.11.8",
+      "imagen": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "anterior": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    }
+  }
+}
