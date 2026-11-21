@@ -72,6 +72,13 @@ export const titulos: Record<NombreHerramienta, string> = {
   tendencias: "Consultar tendencias",
   gastos: "Consultar gasto propio",
 };
+const accionesDeVideo = new Set<NombreHerramienta>([
+  "corregir",
+  "programar",
+  "referencias",
+  "aprobar_guion",
+  "aprobar_final",
+]);
 export function herramientas(user: User): HerramientaChat[] {
   return [...Object.keys(contrato.eventos), ...contrato.consultas]
     .filter((n) => !(contrato.solo_web as string[]).includes(n))
@@ -80,7 +87,7 @@ export function herramientas(user: User): HerramientaChat[] {
       const nombre = n as NombreHerramienta;
       return {
         nombre,
-        descripcion: `${titulos[nombre]}. Solo recursos propios. ${nombre in contrato.eventos ? "Prepara una tarjeta; no ejecuta hasta que el dueño pulse Confirmar. recursoId es el ID local del contexto. Si falta usa el recurso activo; pide aclaración ante ambigüedad. programar requiere texto ISO 8601 con zona horaria. Nunca inventes IDs." : "Consulta datos actuales del dueño."}`,
+        descripcion: `${titulos[nombre]}. Solo recursos propios. ${accionesDeVideo.has(nombre) ? "recursoId corresponde a un video del contexto, no a su canal; si falta se usa activo.videoId." : ""} ${nombre in contrato.eventos ? "Prepara una tarjeta; no ejecuta hasta que el dueño pulse Confirmar. recursoId es el ID local del contexto. Si falta usa el recurso activo; pide aclaración ante ambigüedad. programar requiere texto ISO 8601 con zona horaria. Nunca inventes IDs." : "Consulta datos actuales del dueño."}`,
         parametros: z.toJSONSchema(schemas[nombre]),
       };
     });
@@ -115,13 +122,7 @@ export function prepararLlamada(
   if (esConsulta(nombre))
     return { nombre, argumentos, huella: "", detalle: titulos[nombre] };
   const isVideo =
-    [
-      "corregir",
-      "programar",
-      "referencias",
-      "aprobar_guion",
-      "aprobar_final",
-    ].includes(nombre) ||
+    accionesDeVideo.has(nombre) ||
     (nombre === "eliminar" && argumentos.tipo === "video");
   const recursoId =
     argumentos.recursoId ?? (isVideo ? activo.videoId : activo.canalId);
