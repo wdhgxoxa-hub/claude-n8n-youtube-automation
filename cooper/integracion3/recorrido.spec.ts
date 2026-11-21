@@ -90,7 +90,7 @@ for (const width of [1440, 390]) {
         await current.getByRole("button", { name: "Empezar a crear" }).click();
         if (width === 390) {
           await current
-            .getByRole("button", { name: "Fábrica", exact: true })
+            .getByRole("tab", { name: /^Fábrica/ })
             .click();
           await current.waitForTimeout(1000);
         }
