@@ -92,6 +92,36 @@ it("catálogo coincide exactamente con el puente y restringe gastos por rol", ()
   );
   expect(herramientas(ana).map((h) => h.nombre)).not.toContain("gastos");
 });
+it("referencias describe y valida un video, aunque el canal también sea propio", () => {
+  const catalogo = herramientas(ana);
+  expect(catalogo.find((h) => h.nombre === "referencias")?.descripcion).toContain(
+    "recursoId corresponde a un video del contexto, no a su canal",
+  );
+  expect(catalogo.find((h) => h.nombre === "nuevo_canal")?.descripcion).toContain(
+    "No recibe recursoId",
+  );
+  expect(catalogo.find((h) => h.nombre === "eliminar")?.descripcion).toContain(
+    "recurso indicado por tipo (canal o video)",
+  );
+  expect(catalogo.find((h) => h.nombre === "metas")?.descripcion).toContain(
+    "recursoId es el ID local del canal",
+  );
+  const activo = { canalId: canal, videoId: video };
+  const llamada = {
+    id: "referencia",
+    nombre: "referencias",
+    argumentos: { texto: "Libro de astronomía" },
+  };
+  expect(prepararLlamada(ana, llamada, activo).argumentos.recursoId).toBe(video);
+  expect(() =>
+    prepararLlamada(
+      ana,
+      { ...llamada, argumentos: { ...llamada.argumentos, recursoId: canal } },
+      activo,
+    ),
+  ).toThrow();
+  expect(estadoChat(ana).tarjetas).toEqual([]);
+});
 it("no produce ni registra gasto hasta confirmar y resiste replay/concurrencia", async () => {
   const before = db()
     .select()

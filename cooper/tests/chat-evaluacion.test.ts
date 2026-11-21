@@ -202,6 +202,7 @@ it.each(guiones)("conversación $id: $tipo — $texto", async (g) => {
     ).toBe("pendiente");
   } else if (g.tipo === "memoria") {
     await responderChat(user, input);
+    expect(estadoChat(user).tarjetas).toHaveLength(0);
     let context: EntradaModelo | undefined;
     await responderChat(
       user,
@@ -219,6 +220,11 @@ it.each(guiones)("conversación $id: $tipo — $texto", async (g) => {
     );
     expect(context?.sistema).toContain(
       "solo extiéndete si el usuario pide detalle",
+    );
+    expect(context?.sistema).toContain("sin herramientas ni tarjetas");
+    expect(context?.sistema).toContain("pregunta cuál nombrando las opciones");
+    expect(context?.sistema).toContain(
+      "no lo sustituyas por un video activo ni inventes el dato",
     );
     expect(JSON.stringify(context)).toContain(g.texto);
     expect(JSON.stringify(context)).toContain(canal);

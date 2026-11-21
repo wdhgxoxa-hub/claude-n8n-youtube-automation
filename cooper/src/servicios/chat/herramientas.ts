@@ -85,9 +85,17 @@ export function herramientas(user: User): HerramientaChat[] {
     .filter((n) => n !== "gastos" || user.role === "admin")
     .map((n) => {
       const nombre = n as NombreHerramienta;
+      const destino =
+        nombre === "nuevo_canal"
+          ? "No recibe recursoId."
+          : nombre === "eliminar"
+            ? "recursoId es el ID local del recurso indicado por tipo (canal o video)."
+            : accionesDeVideo.has(nombre)
+              ? "recursoId corresponde a un video del contexto, no a su canal; si falta se usa activo.videoId."
+              : "recursoId es el ID local del canal del contexto.";
       return {
         nombre,
-        descripcion: `${titulos[nombre]}. Solo recursos propios. ${accionesDeVideo.has(nombre) ? "recursoId corresponde a un video del contexto, no a su canal; si falta se usa activo.videoId." : ""} ${nombre in contrato.eventos ? "Prepara una tarjeta; no ejecuta hasta que el dueño pulse Confirmar. recursoId es el ID local del contexto. Si falta usa el recurso activo; pide aclaración ante ambigüedad. programar requiere texto ISO 8601 con zona horaria. Nunca inventes IDs." : "Consulta datos actuales del dueño."}`,
+        descripcion: `${titulos[nombre]}. Solo recursos propios. ${nombre in contrato.eventos ? `Prepara una tarjeta; no ejecuta hasta que el dueño pulse Confirmar. ${destino} Si falta usa el recurso activo; pide aclaración ante ambigüedad. programar requiere texto ISO 8601 con zona horaria. Nunca inventes IDs.` : "Consulta datos actuales del dueño."}`,
         parametros: z.toJSONSchema(schemas[nombre]),
       };
     });
