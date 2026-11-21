@@ -1,0 +1,97 @@
+{
+  "sha": "c6cd1ddb592080dd4d972d64220a7cbdee13899c",
+  "inicio": "2026-11-21T11:52:30.109512-05:00",
+  "pasos": [
+    {
+      "paso": "ci",
+      "comando": "npm ci",
+      "rc": 0,
+      "segundos": 6.75,
+      "sha256": "cab445cb40e9bd91d2d0390446be5861f932624ba73d2c88d5bcdf1b31e805c9",
+      "log": "docs/informes/evidencias/total-m05/ci.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/ci.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "8b2a167cca2f0d7b2e767da73957b5e87b467879f46d8d03d9f88d759fa3e706"
+    },
+    {
+      "paso": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "segundos": 3.7,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007",
+      "log": "docs/informes/evidencias/total-m05/lint.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/lint.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "4f5b78b6a7a005f6d3e97d72954e39088d8bb9935872fe8d48f14ec497372e7d"
+    },
+    {
+      "paso": "tipos",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "segundos": 1.18,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f",
+      "log": "docs/informes/evidencias/total-m05/tipos.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/tipos.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "14cae22bfc4d78a3e69a119f49416ff7fd548228619fdab619135e675289cd21"
+    },
+    {
+      "paso": "unitarias",
+      "comando": "npm test",
+      "rc": 0,
+      "segundos": 18.27,
+      "sha256": "1ba9e4906987386743b51c271a6943d25578662df74fca54488c23e68067b675",
+      "log": "docs/informes/evidencias/total-m05/unitarias.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/unitarias.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "b14c16eaa2041ca80f207774e98044d47db7cfbb8e03145b97f75d4099fc6458"
+    },
+    {
+      "paso": "e2e",
+      "comando": "npm run test:e2e",
+      "rc": 0,
+      "segundos": 418.35,
+      "sha256": "f9538b1789a4a0b45de3d7c0050d2327770a5ccc5c3c6a28f657bb98e61b2368",
+      "log": "docs/informes/evidencias/total-m05/e2e.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/e2e.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "20af8031f97c89e34835f1d8e2b428f4c17cae9d6b7c13c55c194cf2a7206807"
+    },
+    {
+      "paso": "build",
+      "comando": "npm run build",
+      "rc": 0,
+      "segundos": 3.56,
+      "sha256": "d4907ae97355aa7a47d5c0bdcd00916e5de4b3f97100e03e2e5956af905b930c",
+      "log": "docs/informes/evidencias/total-m05/build.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/build.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "3796bee3a95c3fceb0df8f46cf65bdb9628b4cfd44f92b40f4e5f27dff5bb662"
+    },
+    {
+      "paso": "flujos",
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "segundos": 1.07,
+      "sha256": "ebd9ca76c8e01f5425d92b5bc0c65aea5ce78fced5996b917934654f3380e9cb",
+      "log": "docs/informes/evidencias/total-m05/flujos.log.gz",
+      "registro_original": ".cache/total-m05/puerta-final/flujos.log",
+      "compresion": "gzip; sha256 corresponde al contenido original descomprimido",
+      "sha256_archivo": "0d0efb0cb27c363782a89a8cf052d82d6fd3314289e17627db2bf40cda4fc3e9"
+    }
+  ],
+  "fin": "2026-11-21T12:00:02.986423-05:00",
+  "errores": 0,
+  "advertencias": 0,
+  "conteos": {
+    "unitarias": 306,
+    "e2e": 44,
+    "flujos": 147,
+    "omitidas": 0
+  },
+  "entorno": {
+    "node": "24.22.3",
+    "npm": "12.2.2",
+    "navegadores": "Cachés locales de cooper-integracion3, reutilizadas sin modificarlas"
+  }
+}
