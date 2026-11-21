@@ -68,6 +68,109 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e7c3fb8e-9593-58a8-b685-4d2d4afe9c78",
+              "leftValue": "={{ !['estado','reporte','pendientes','tendencias','gastos'].includes($('Autenticar').first().json.solicitud.evento) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0fd1afe5-f68d-5923-9c96-b40eb13476d1",
+      "name": "¿Consultar recibo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst secret = String($env.COOPER_WEBHOOK_SECRET || '');\nif (secret.length < 32) throw new Error('Falta COOPER_WEBHOOK_SECRET');\nconst cuerpo = JSON.stringify(({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'consultar', solicitud:$('Autenticar').first().json.solicitud })), timestamp = String(Date.now());\nconst firma = require('crypto').createHmac('sha256', secret).update(timestamp + '.' + cuerpo).digest('hex');\nreturn [{ json: { cuerpo, timestamp, firma: 'sha256=' + firma } }];\n"
+      },
+      "id": "ff88671f-60c6-5078-8ad4-1b7ff7494ef4",
+      "name": "Firmar consulta de orden",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.COOPER_WEBHOOK_URL }}",
+        "options": {
+          "timeout": 10000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-cooper-timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "x-cooper-signature",
+              "value": "={{ $json.firma }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.cuerpo }}"
+      },
+      "id": "e812f2de-6365-598b-a654-3bf21476097f",
+      "name": "Consultar orden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ ({ nueva:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2 }}"
+      },
+      "id": "26c3a429-d130-5e0e-9432-4a597a7bbb36",
+      "name": "Recibo anterior",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "resource": "row",
         "operation": "get",
         "dataTableId": {
@@ -92,7 +195,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        880,
+        1760,
         0
       ],
       "alwaysOutputData": true,
@@ -124,7 +227,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1100,
+        1980,
         0
       ],
       "alwaysOutputData": true,
@@ -161,7 +264,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1320,
+        2200,
         0
       ],
       "alwaysOutputData": true,
@@ -176,7 +279,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1540,
+        2420,
         0
       ]
     },
@@ -191,7 +294,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        1760,
+        2640,
         0
       ]
     },
@@ -215,7 +318,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1980,
+        2860,
         0
       ],
       "alwaysOutputData": true,
@@ -230,7 +333,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2200,
+        3080,
         0
       ]
     },
@@ -243,7 +346,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2420,
+        3300,
         0
       ]
     },
@@ -281,7 +384,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2640,
+        3520,
         0
       ],
       "retryOnFail": true,
@@ -299,7 +402,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        2860,
+        3740,
         0
       ]
     },
@@ -312,7 +415,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3080,
+        3960,
         0
       ]
     },
@@ -341,7 +444,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3300,
+        4180,
         0
       ]
     },
@@ -354,7 +457,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3520,
+        4400,
         0
       ]
     },
@@ -392,7 +495,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3740,
+        4620,
         0
       ],
       "retryOnFail": true,
@@ -408,7 +511,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3960,
+        4840,
         0
       ]
     },
@@ -421,7 +524,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4180,
+        5060,
         0
       ]
     },
@@ -438,7 +541,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        4400,
+        5280,
         0
       ]
     }
@@ -470,7 +573,7 @@
       "main": [
         [
           {
-            "node": "Canales autorizados",
+            "node": "¿Consultar recibo?",
             "type": "main",
             "index": 0
           }
@@ -478,6 +581,71 @@
         [
           {
             "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Consultar recibo?": {
+      "main": [
+        [
+          {
+            "node": "Firmar consulta de orden",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Canales autorizados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firmar consulta de orden": {
+      "main": [
+        [
+          {
+            "node": "Consultar orden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar orden": {
+      "main": [
+        [
+          {
+            "node": "Recibo anterior",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibo anterior": {
+      "main": [
+        [
+          {
+            "node": "Canales autorizados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aceptado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "En proceso",
             "type": "main",
             "index": 0
           }

@@ -3059,6 +3059,10 @@ f.add('Solicitud de Cooper', 'n8n-nodes-base.webhook', 2,
       {'httpMethod': 'POST', 'path': 'cooper/v1', 'responseMode': 'responseNode', 'options': {}}, webhookId=nid())
 code(f, 'Autenticar', cooper_js('autenticar'))
 iff(f, '¿Autorizado?', '$json.status === 200')
+iff(f, '¿Consultar recibo?', "!['estado','reporte','pendientes','tendencias','gastos'].includes($('Autenticar').first().json.solicitud.evento)")
+firmar_cooper(f, 'Firmar consulta de orden', "({ version:'cooper-v1', tipo:'orden', id_evento:$('Autenticar').first().json.solicitud.id_evento, ejecucion:String($execution.id), fase:'consultar', solicitud:$('Autenticar').first().json.solicitud })")
+enviar_cooper(f, 'Consultar orden')
+switch(f, 'Recibo anterior', 3, "({ nueva:0, confirmada:1, pendiente:2 })[$json.estado] ?? 2")
 for nombre, tabla in [('Canales autorizados','canales'), ('Videos autorizados','videos')]:
     lista_cooper(f, nombre, tabla, [{'keyName': 'dueno_email', 'condition': "={{ $('Autenticar').first().json.admin ? 'isNotEmpty' : 'eq' }}",
                                   'keyValue': "={{ $('Autenticar').first().json.dueno_email }}"}])
@@ -3079,7 +3083,10 @@ code(f, 'Aceptado', "return [{ json: { status:200, respuesta:{ aceptado:true } }
 code(f, 'En proceso', "return [{ json: { status:409, respuesta:{ error:'Orden pendiente de confirmación' } } }];")
 f.add('Responder', 'n8n-nodes-base.respondToWebhook', 1.1, {'respondWith':'json','responseBody':'={{ $json.respuesta }}','options':{'responseCode':'={{ $json.status }}'}})
 f.chain('Solicitud de Cooper','Autenticar','¿Autorizado?')
-f.link('¿Autorizado?','Canales autorizados',0); f.link('¿Autorizado?','Responder',1)
+f.link('¿Autorizado?','¿Consultar recibo?',0); f.link('¿Autorizado?','Responder',1)
+f.link('¿Consultar recibo?','Firmar consulta de orden',0); f.link('¿Consultar recibo?','Canales autorizados',1)
+f.chain('Firmar consulta de orden','Consultar orden','Recibo anterior')
+f.link('Recibo anterior','Canales autorizados',0); f.link('Recibo anterior','Aceptado',1); f.link('Recibo anterior','En proceso',2)
 f.chain('Canales autorizados','Videos autorizados','Aprobaciones','Resolver','Tipo de petición')
 f.link('Tipo de petición','Responder',0); f.link('Tipo de petición','Costos administrativos',1); f.link('Tipo de petición','Firmar reserva',2)
 f.chain('Costos administrativos','Agregar gastos','Responder')
@@ -3175,7 +3182,19 @@ def cambiar(wf,nombre,viejo,nuevo):
     assert viejo in n['parameters']['jsCode'], (nombre,viejo)
     n['parameters']['jsCode'] = n['parameters']['jsCode'].replace(viejo,nuevo)
 cambiar(ORQ,'Pedir nichos',"canal_id:'', video_id:''","canal_id:e.canal_id || '', dueno_email:e.dueno_email || '', video_id:''")
-cambiar(CLAUDE,'Preparar trabajo','fila: { job_id,','fila: { dueno_email: pedido.dueno_email || \'\', job_id,')
+f = reabrir(CLAUDE)
+dt_get(f, 'Video del trabajo', 'videos', 'video_id', "={{ $('Preparar trabajo').first().json.fila.video_id || '' }}")
+dt_get(f, 'Canal del trabajo', 'canales', 'canal_id', "={{ $('Video del trabajo').first().json.canal_id || $('Preparar trabajo').first().json.fila.canal_id || '' }}")
+code(f, 'Atribuir trabajo', r"""
+const fila = $('Preparar trabajo').first().json.fila;
+const video = $('Video del trabajo').first().json, canal = $('Canal del trabajo').first().json;
+const dueno = video.dueno_email || canal.dueno_email || (!fila.video_id && !fila.canal_id ? String($env.COOPER_ADMIN_EMAIL || '') : '');
+if (!dueno || fila.video_id && !video.dueno_email || (fila.canal_id || video.canal_id) && !canal.dueno_email ||
+    video.dueno_email && canal.dueno_email !== video.dueno_email) throw new Error('Trabajo sin dueño válido: completar la migración');
+return [{json:{...fila, canal_id:video.canal_id || fila.canal_id, dueno_email:dueno}}];
+""")
+f.chain('Video del trabajo', 'Canal del trabajo', 'Atribuir trabajo')
+antes(f, 'Registrar trabajo', 'Video del trabajo', 'Atribuir trabajo')
 cambiar(RETORNO,'Evento',"video_id: t.video_id || ''","dueno_email: t.dueno_email || '', video_id: t.video_id || ''")
 cambiar(ORQ,'Mensaje de canal',"etapa: 'canal', mensaje:","dueno_email: $('Inicio').first().json.dueno_email || '', canal_id: $('Inicio').first().json.canal_id || '', etapa: 'canal', mensaje:")
 cambiar(ORQ,'Nuevo canal',"const canal_id = (c.nombre_propuesto", "const canal_id = $json.canal_id || (c.nombre_propuesto")

@@ -1280,6 +1280,10 @@ test('Cooper: todas las escrituras de etapa avisan tras persistir y existen las 
 });
 test('Cooper: reserva antes de despachar y confirmación antes de aceptar; no guarda tokens en ejecuciones', () => {
   const edges=n=>FX.connections[n].main.flat().map(x=>x.node);
+  assert.deepStrictEqual(edges('¿Autorizado?'),['¿Consultar recibo?','Responder']);
+  assert.deepStrictEqual(edges('Consultar orden'),['Recibo anterior']);
+  assert.deepStrictEqual(edges('Recibo anterior'),['Canales autorizados','Aceptado','En proceso']);
+  assert.match(codeOf(FX,'Firmar consulta de orden'),/fase:'consultar'/);
   assert.deepStrictEqual(edges('Reservar orden'),['Estado de reserva']);
   assert.deepStrictEqual(edges('Entregar al Orquestador'),['Firmar confirmación']);
   assert.deepStrictEqual(edges('Confirmar orden'),['Aceptado']);
@@ -1290,6 +1294,15 @@ test('Cooper: reserva antes de despachar y confirmación antes de aceptar; no gu
       assert.ok(names.has(name)); for(const edge of outputs.main.flat()) assert.ok(names.has(edge.node),edge.node);
     }
   }
+});
+test('Cooper: atribuye trabajos desde tablas y rechaza huérfanos sin confiar en el pedido', () => {
+  const fila = { job_id:'j', video_id:'v', canal_id:'c', dueno_email:'falso@example.test' };
+  const ejecutar = (video, canal, datos=fila) => run(codeOf(CL,'Atribuir trabajo'), { nodes: {
+    'Preparar trabajo':{fila:datos}, 'Video del trabajo':video, 'Canal del trabajo':canal }, env:envCooper })[0].json;
+  assert.strictEqual(ejecutar({dueno_email:'ana@example.test',canal_id:'c'}, {dueno_email:'ana@example.test'}).dueno_email,'ana@example.test');
+  assert.throws(() => ejecutar({}, {dueno_email:'ana@example.test'}), /sin dueño/);
+  assert.throws(() => ejecutar({dueno_email:'ana@example.test',canal_id:'c'}, {dueno_email:'otra@example.test'}), /sin dueño/);
+  assert.strictEqual(ejecutar({}, {}, {job_id:'investigacion',video_id:'',canal_id:''}).dueno_email,envCooper.COOPER_ADMIN_EMAIL);
 });
 test('Cooper: todos los nodos Code compilan y todo el grafo apunta a nodos existentes', () => {
   for (const filename of fs.readdirSync(dir).filter(x=>x.endsWith('.json'))) {

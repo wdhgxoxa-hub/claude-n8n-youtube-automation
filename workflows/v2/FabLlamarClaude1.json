@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst pedido = $('Inicio').first().json;\nconst aj = $('Leer ajustes').first().json;\nconst modos = ['investigar_nichos','adoptar_cuenta','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];\nif (!modos.includes(pedido.modo)) throw new Error('Modo desconocido: ' + pedido.modo);\nconst job_id = pedido.modo + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);\nconst payload = { contrato: 'fabrica-v2', modo: pedido.modo, job_id,\n  video_id: pedido.video_id || '', canal_id: pedido.canal_id || '', datos: pedido.datos || {} };\nreturn [{ json: { job_id, payload, permitido: aj.allowClaude === true, routineUrl: aj.routineUrl,\n  fila: { dueno_email: pedido.dueno_email || '', job_id, video_id: payload.video_id, canal_id: payload.canal_id, modo: pedido.modo,\n          estado: aj.allowClaude === true ? 'enviado' : 'bloqueado', resultado: '' } } }];\n"
+        "jsCode": "\nconst pedido = $('Inicio').first().json;\nconst aj = $('Leer ajustes').first().json;\nconst modos = ['investigar_nichos','adoptar_cuenta','crear_biblia','guion','corregir_guion','storyboard','revisar_plano','aprender'];\nif (!modos.includes(pedido.modo)) throw new Error('Modo desconocido: ' + pedido.modo);\nconst job_id = pedido.modo + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);\nconst payload = { contrato: 'fabrica-v2', modo: pedido.modo, job_id,\n  video_id: pedido.video_id || '', canal_id: pedido.canal_id || '', datos: pedido.datos || {} };\nreturn [{ json: { job_id, payload, permitido: aj.allowClaude === true, routineUrl: aj.routineUrl,\n  fila: { job_id, video_id: payload.video_id, canal_id: payload.canal_id, modo: pedido.modo,\n          estado: aj.allowClaude === true ? 'enviado' : 'bloqueado', resultado: '' } } }];\n"
       },
       "id": "c68446a3-503a-4e81-91d0-a2ce7ce6c420",
       "name": "Preparar trabajo",
@@ -282,6 +282,83 @@
     },
     {
       "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Preparar trabajo').first().json.fila.video_id || '' }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "bf80bd97-a083-5e1b-a14b-c59c68b3e618",
+      "name": "Video del trabajo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Video del trabajo').first().json.canal_id || $('Preparar trabajo').first().json.fila.canal_id || '' }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "4fd5890c-c574-58fb-903b-b46b72712de9",
+      "name": "Canal del trabajo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst fila = $('Preparar trabajo').first().json.fila;\nconst video = $('Video del trabajo').first().json, canal = $('Canal del trabajo').first().json;\nconst dueno = video.dueno_email || canal.dueno_email || (!fila.video_id && !fila.canal_id ? String($env.COOPER_ADMIN_EMAIL || '') : '');\nif (!dueno || fila.video_id && !video.dueno_email || (fila.canal_id || video.canal_id) && !canal.dueno_email ||\n    video.dueno_email && canal.dueno_email !== video.dueno_email) throw new Error('Trabajo sin dueño válido: completar la migración');\nreturn [{json:{...fila, canal_id:video.canal_id || fila.canal_id, dueno_email:dueno}}];\n"
+      },
+      "id": "3bef9294-5899-5ca6-b38e-4bd609ea21c9",
+      "name": "Atribuir trabajo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"texto\", servicio:\"Claude (plan)\", usd:0, estimado:true, paso_id:String($execution.id)+':'+\"Respuesta\"+':'+$runIndex+':'+k }}));"
       },
       "id": "d5945bc8-5ac9-531e-a9a5-8e90a1b46d58",
@@ -387,7 +464,7 @@
       "main": [
         [
           {
-            "node": "Registrar trabajo",
+            "node": "Video del trabajo",
             "type": "main",
             "index": 0
           }
@@ -457,6 +534,39 @@
         [
           {
             "node": "Aviso: Claude no respondió",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video del trabajo": {
+      "main": [
+        [
+          {
+            "node": "Canal del trabajo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canal del trabajo": {
+      "main": [
+        [
+          {
+            "node": "Atribuir trabajo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atribuir trabajo": {
+      "main": [
+        [
+          {
+            "node": "Registrar trabajo",
             "type": "main",
             "index": 0
           }

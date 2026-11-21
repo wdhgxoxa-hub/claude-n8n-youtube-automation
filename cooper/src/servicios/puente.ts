@@ -113,6 +113,9 @@ export function recibirWebhook(input: WebhookPuente, raw: string) {
           .from(bridgeCommands)
           .where(eq(bridgeCommands.id, input.id_evento))
           .get();
+        // Lectura previa a resolver recursos: una creación/eliminación confirmada
+        // ya cambió las tablas. Consultar nunca reserva ni habilita un despacho.
+        if (!order && input.fase === "consultar") return { estado: "nueva" };
         // Solo órdenes originadas por el servidor Cooper. No basta conocer el secreto de callbacks.
         if (
           !order ||
@@ -127,6 +130,8 @@ export function recibirWebhook(input: WebhookPuente, raw: string) {
           .get();
         if (!owner?.active) throw new ErrorHttp(403, "Cuenta no disponible.");
         if (order.confirmed) return { estado: "confirmada" };
+        if (input.fase === "consultar")
+          return { estado: order.execution ? "pendiente" : "nueva" };
         if (order.execution && order.execution !== input.ejecucion)
           return { estado: "pendiente" };
         if (input.fase === "confirmar" && !order.execution)

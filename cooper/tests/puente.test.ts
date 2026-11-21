@@ -251,6 +251,37 @@ describe("Contrato y receptor firmado", () => {
 });
 
 describe("Órdenes, transporte y administración", () => {
+  it("consultar una orden desconocida no crea una reserva ni permite confirmarla", async () => {
+    const req = solicitudSchema.parse({
+      version: "cooper-v1",
+      id_evento: randomUUID(),
+      evento: "nuevo_canal",
+      dueno_email: ana.email,
+      admin: false,
+      datos: {},
+    });
+    const input = {
+      version: "cooper-v1",
+      tipo: "orden",
+      id_evento: req.id_evento,
+      ejecucion: "consulta",
+      fase: "consultar",
+      solicitud: req,
+    };
+    expect(await (await POST(signed(input))).json()).toEqual({
+      estado: "nueva",
+    });
+    expect(
+      db()
+        .select()
+        .from(bridgeCommands)
+        .where(eq(bridgeCommands.id, req.id_evento))
+        .get(),
+    ).toBeUndefined();
+    expect((await POST(signed({ ...input, fase: "confirmar" }))).status).toBe(
+      409,
+    );
+  });
   it("reserva atómica por ejecución, confirma y recupera una respuesta perdida", async () => {
     const req = solicitudSchema.parse({
       version: "cooper-v1",
@@ -277,6 +308,16 @@ describe("Órdenes, transporte y administración", () => {
       fase: "reservar",
       solicitud: req,
     };
+    expect(
+      await (await POST(signed({ ...claim, fase: "consultar" }))).json(),
+    ).toEqual({ estado: "nueva" });
+    expect(
+      db()
+        .select()
+        .from(bridgeCommands)
+        .where(eq(bridgeCommands.id, req.id_evento))
+        .get()!.execution,
+    ).toBe("");
     const result = await Promise.all([
       POST(signed(claim)),
       POST(signed({ ...claim, ejecucion: "b" })),
@@ -284,7 +325,13 @@ describe("Órdenes, transporte y administración", () => {
     expect(await result[0].json()).toEqual({ estado: "reservada" });
     expect(await result[1].json()).toEqual({ estado: "pendiente" });
     expect(
+      await (await POST(signed({ ...claim, fase: "consultar" }))).json(),
+    ).toEqual({ estado: "pendiente" });
+    expect(
       await (await POST(signed({ ...claim, fase: "confirmar" }))).json(),
+    ).toEqual({ estado: "confirmada" });
+    expect(
+      await (await POST(signed({ ...claim, fase: "consultar" }))).json(),
     ).toEqual({ estado: "confirmada" });
     expect(
       await (await POST(signed({ ...claim, ejecucion: "c" }))).json(),

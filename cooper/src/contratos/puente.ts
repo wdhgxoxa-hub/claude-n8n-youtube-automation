@@ -100,7 +100,7 @@ export const webhookSchema = z.discriminatedUnion("tipo", [
       tipo: z.literal("orden"),
       id_evento: z.uuid(),
       ejecucion: id,
-      fase: z.enum(["reservar", "confirmar"]),
+      fase: z.enum(["consultar", "reservar", "confirmar"]),
       solicitud: solicitudSchema,
     })
     .strict(),
