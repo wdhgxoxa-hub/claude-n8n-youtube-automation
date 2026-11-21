@@ -1,0 +1,58 @@
+{
+  "fecha_lima": "2026-11-21T11:24:39.316077-05:00",
+  "commit_probado": "30cb276c5a99a63a840a262a2a566761596a44d8",
+  "node": "24.22.3",
+  "npm": "12.2.2",
+  "puerta": {
+    "npm_ci": 0,
+    "lint": 0,
+    "typecheck": 0,
+    "unitarias": {
+      "aprobadas": 292,
+      "fallidas": 0
+    },
+    "e2e": {
+      "aprobadas": 44,
+      "fallidas": 0
+    },
+    "build": 0,
+    "flujos": {
+      "aprobadas": 150,
+      "fallidas": 0
+    }
+  },
+  "auxiliares": {
+    "puente": 13,
+    "sondas": 6,
+    "fallidas": 0
+  },
+  "errores": 0,
+  "advertencias": 0,
+  "datos": "Fixtures explícitos y transportes simulados; no aceptación real de competencia.",
+  "archivos": [
+    {
+      "ruta": "puerta.log",
+      "sha256": "43fea3439438567f9d6908b03f6597ea56c15a4579ac913e969b31f5c6f276b3",
+      "sha256_original": "54735032801c8bf665f4da19dd3bc93a80ff881bf5c55f2aa0c5d18dd70f5a89"
+    },
+    {
+      "ruta": "flujos.log",
+      "sha256": "406a2fb82e40e7d58dfcedde41a24a56822580c5fcb96dc574e7ed8e5a47d9b3",
+      "sha256_original": "406a2fb82e40e7d58dfcedde41a24a56822580c5fcb96dc574e7ed8e5a47d9b3"
+    },
+    {
+      "ruta": "auxiliares.log",
+      "sha256": "35d4675ac5355e7ff6a2de47b14dbb27664534b9da6f3f91de5e737e4eae2f9a",
+      "sha256_original": "35d4675ac5355e7ff6a2de47b14dbb27664534b9da6f3f91de5e737e4eae2f9a"
+    },
+    {
+      "ruta": "radar-selector.log",
+      "sha256": "80b1e86749692ed02af43b9b1447ab0baf84698eb18170ff741bbe51a24ad299",
+      "sha256_original": "ac33c323bd2082fb55de8837f361192e987bb2a28ce9473db4c3f76171dd1021"
+    },
+    {
+      "ruta": "radar-1440.png",
+      "sha256": "02112e88ef010c85ab8f71a0315824ed9e6e5ec03858184e37d4f35df8514e87"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+✔ solo radar con búsqueda amplía el plazo, conservando la cuota única y el aborto (29.855502ms)
+✔ Codex simulado: stdin literal, sandbox, autenticación ChatGPT y entorno sin claves (33.218439ms)
+✔ búsqueda requiere evento real, no basta afirmarlo en el texto (100.177423ms)
+✔ Codex simulado: codex_fallo (29.081478ms)
+✔ Codex simulado: respuesta_invalida (32.526193ms)
+✔ Codex simulado: salida_excesiva (38.700969ms)
+✔ mata una ejecución lenta y devuelve timeout acotado (157.065556ms)
+✔ cancela el proceso cuando se desconecta el cliente (104.721261ms)
+✔ HTTP local: rechaza token, Origin, tareas y argumentos ajenos sin ejecutar (11.664721ms)
+✔ HTTP: respuesta compatible y logs sin prompt, cabeceras ni stderr (73.819629ms)
+✔ HTTP: saturación devuelve 429, y libera la plaza al terminar (7.601325ms)
+✔ chat local: contrato separado, esquema fijo y cero herramientas del CLI (104.518506ms)
+✔ chat y fábrica comparten la única plaza del puente (2.119211ms)
+✔ la sonda solo usa endpoint fijo, referencia de credencial y diagnóstico sin ejecuciones guardadas (1.730959ms)
+✔ descubrir herramientas no autoriza investigaciones, cambios ni argumentos desconocidos (0.612446ms)
+✔ diagnóstico descarta cabeceras, tokens, textos y datos de cuenta sin convertir ausencias en cero (1.328357ms)
+✔ YouTube solo permite lecturas acotadas y el getter aislado existente (1.321702ms)
+✔ los IDs de publicaciones quedan deduplicados y limitados a doce (0.408079ms)
+✔ el diagnóstico rechaza publicaciones ajenas y no expone permisos ni fabrica métricas/formato (2.010584ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 802.172398

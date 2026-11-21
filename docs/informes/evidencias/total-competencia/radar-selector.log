@@ -1,0 +1,64 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --project=demostracion operacion.spec.ts -g radar presenta
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 64ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 678ms
+  Running TypeScript ...
+  Finished TypeScript in 1502ms ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4)
+  Generating static pages using 23 workers (2/4)
+  Generating static pages using 23 workers (3/4)
+✓ Generating static pages using 23 workers (4/4) in 108ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 1 test using 1 worker
+
+  ✓  1 [demostracion] › e2e/operacion.spec.ts:30:1 › radar presenta competencia, diferenciación y límites sin inventar mediciones (2.6s)
+
+  1 passed (5.1s)

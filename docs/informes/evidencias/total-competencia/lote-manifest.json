@@ -1,0 +1,141 @@
+{
+  "origen": "1b29e47f35d1205ec80a1c3f874f88204cd0c328",
+  "base_referencia": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "respaldo_real": false,
+  "desplegado": false,
+  "archivos": [
+    {
+      "ruta": "entrada/workflows/v2/FabAjustes000001.json",
+      "sha256": "c4b30c83c4ae407138c053d44c254dca2bd2e3ceaf35b63651a8c4ade7e9e393"
+    },
+    {
+      "ruta": "referencia-anterior/workflows/v2/FabAjustes000001.json",
+      "sha256": "ed9420226f06584d56d7968c49f2921c5ebd6cad8bfd61cbd3b8987eb9086d6e"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabCooperAPI0001.json",
+      "sha256": "4fb4900133a73199f1b15c13833a05b7d8bd3f31f2f74615d1caa248b578c5d2"
+    },
+    {
+      "ruta": "referencia-anterior/workflows/v2/FabCooperAPI0001.json",
+      "sha256": "71f35e2a1d084e196b01184be8755aff84dc5a5f81f862986ac16396c7961ca4"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabErrores000001.json",
+      "sha256": "9079768547dab788452a9ea6ddc818a2804c5d20d956fda135624194ed96a575"
+    },
+    {
+      "ruta": "referencia-anterior/workflows/v2/FabErrores000001.json",
+      "sha256": "0395a78eb5997d11ba0e93a477791a8823222a36f6dd33d03b891f59af281d38"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabOrquestador01.json",
+      "sha256": "174e3eaa5a28f0090acb9987aa5bc2fc47d9f888a9c7f0f47b750c2bef311605"
+    },
+    {
+      "ruta": "referencia-anterior/workflows/v2/FabOrquestador01.json",
+      "sha256": "74f53fbc2556f985bbcb354a123b9edae3191cffa0b6336366c92837d1a96274"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabRadar00000001.json",
+      "sha256": "32be6c79dff9424f39efff34a0fc304c055d280ca0082070b6e322461491fdda"
+    },
+    {
+      "ruta": "referencia-anterior/workflows/v2/FabRadar00000001.json",
+      "sha256": "7dfcfdb7dd999b1e06b013ccb654e7c49adf0f23296745b107b4987d2a7c2899"
+    },
+    {
+      "ruta": "entrada/workflows/v2/FabTextoGPT0001.json",
+      "sha256": "ba1fc7bd659ad94decd551de902834ef84d270157ae6b125b4257120f8c61fec"
+    },
+    {
+      "ruta": "referencia-anterior/workflows/v2/FabTextoGPT0001.json",
+      "sha256": "812e2d50a3a4fab979f847872b300ca3ba93b821f3564cba7625e7235160155b"
+    },
+    {
+      "ruta": "flujos-y-fuentes.patch",
+      "sha256": "a645dda3f51da01ebe005d438de75b77e8f73352a0dd47cbcdc0ca560b51ede3"
+    },
+    {
+      "ruta": "LEER-ANTES.md",
+      "sha256": "a5b142302273493a39bc00582ced345ace35ca7c12456617c8b7b2e55e7f835f"
+    }
+  ],
+  "flujos": [
+    {
+      "id": "FabAjustes000001",
+      "nombre": "F · Ajustes de la fábrica",
+      "ruta": "workflows/v2/FabAjustes000001.json",
+      "nodos_modificados": [
+        "Ajustes efectivos"
+      ],
+      "nodos_retirados": [],
+      "conexiones_modificadas": false
+    },
+    {
+      "id": "FabCooperAPI0001",
+      "nombre": "FX · API de Cooper",
+      "ruta": "workflows/v2/FabCooperAPI0001.json",
+      "nodos_modificados": [
+        "Resolver"
+      ],
+      "nodos_retirados": [],
+      "conexiones_modificadas": false
+    },
+    {
+      "id": "FabErrores000001",
+      "nombre": "F · Vigilante de errores",
+      "ruta": "workflows/v2/FabErrores000001.json",
+      "nodos_modificados": [
+        "Cooper · fallo público",
+        "Cooper · marcar interrupción"
+      ],
+      "nodos_retirados": [],
+      "conexiones_modificadas": false
+    },
+    {
+      "id": "FabOrquestador01",
+      "nombre": "F · Orquestador",
+      "ruta": "workflows/v2/FabOrquestador01.json",
+      "nodos_modificados": [
+        "Nuevo video",
+        "Pedido de competencia previa",
+        "Radar antes de la idea",
+        "Canal con competencia",
+        "Exigir competencia previa"
+      ],
+      "nodos_retirados": [],
+      "conexiones_modificadas": true
+    },
+    {
+      "id": "FabRadar00000001",
+      "nombre": "F · Radar de tendencias",
+      "ruta": "workflows/v2/FabRadar00000001.json",
+      "nodos_modificados": [
+        "¿Radar encendido?",
+        "Solo tendencias",
+        "Mensaje de radar",
+        "¿Solo ver?",
+        "¿Radar de noticias activo?",
+        "Encargo público de competencia",
+        "Investigar competencia pública",
+        "Competencia comprobada",
+        "Resultado del radar público",
+        "¿Avisar radar público?"
+      ],
+      "nodos_retirados": [],
+      "conexiones_modificadas": true
+    },
+    {
+      "id": "FabTextoGPT0001",
+      "nombre": "FX · Texto GPT con respaldo",
+      "ruta": "workflows/v2/FabTextoGPT0001.json",
+      "nodos_modificados": [
+        "Pedido de texto",
+        "Intentar Codex"
+      ],
+      "nodos_retirados": [],
+      "conexiones_modificadas": false
+    }
+  ]
+}
