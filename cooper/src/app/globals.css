@@ -762,6 +762,8 @@ main:focus {
 .live-pill {
   font-size: 10px;
   display: flex;
+  width: 96px;
+  flex-shrink: 0;
   align-items: center;
   gap: 8px;
   border: 1px solid var(--line);
