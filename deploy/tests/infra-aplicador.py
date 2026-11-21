@@ -21,7 +21,7 @@ infra = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(infra)
 
 
-def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
+def rehearse(fixture, proof, image_archive=None, relay_previous_image=None, recover_after_pass=False):
     operar.require(fixture.name == 'ensayo.env' and fixture.parent.name.startswith('e2e-vps-') and '.cache' in fixture.parts, 'Solo fixture privado de Compose')
     env, filename = operar.config(fixture)
     operar.require(env.get('COOPER_LAB') == '1' and env.get('CONTAINER_ENGINE') == 'podman', 'Solo laboratorio Podman')
@@ -29,6 +29,8 @@ def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
     socket = Path(env['DOCKER_HOST'].removeprefix('unix://'))
     operar.require(socket.parent == fixture.parent, 'Socket fuera del fixture')
     receipt = json.loads(proof.read_text())
+    operar.require(not recover_after_pass or relay_previous_image,
+                   'La recuperación posterior a PASS exige el ensayo de siete servicios con relés mixtos')
     directory = fixture.parent / ('aceptacion-infra-' + str(time.time_ns()))
     candidate = directory / 'candidato'
     candidate.mkdir(parents=True, mode=0o700)
@@ -147,6 +149,30 @@ def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
             if relay_previous_image:
                 for name in relay_services:
                     operar.require(final_services[name]['id'].removeprefix('sha256:') == receipt['cooper_image_id'].removeprefix('sha256:'), 'Un relé no adoptó la imagen nueva tras actualizar')
+            recovered_services = None
+            recovery_output = None
+            if recover_after_pass:
+                recovery_spec = importlib.util.spec_from_file_location('infra_recuperacion_ensayo', DEPLOY / 'recuperar-infra.py')
+                recovery = importlib.util.module_from_spec(recovery_spec)
+                recovery_spec.loader.exec_module(recovery)
+                # El helper exige recibos bajo el estado operativo. Copiar solo
+                # el recibo público exacto, nunca el entorno del laboratorio.
+                applied_receipt = operator.state / ('ensayo-infra-pass-' + str(time.time_ns()) + '.json')
+                shutil.copyfile(successful, applied_receipt)
+                operar.require(operar.digest(applied_receipt) == operar.digest(successful), 'Cambió el recibo público al copiarlo')
+                pointers = {name: operar.digest(operator.state / name) if (operator.state / name).exists() else None
+                            for name in ('release.json', 'anterior.json')}
+                recovery_output = operator.state / ('ensayo-infra-recuperado-' + str(time.time_ns()) + '.json')
+                recovered = recovery.recover(operator, applied_receipt, operar.digest(applied_receipt), recovery_output)
+                operar.require(recovered.get('estado') == 'PASS', 'La recuperación posterior a PASS no terminó')
+                recovered_services = infra.healthy(operator)
+                operar.require({name: item['id'] for name, item in recovered_services.items()} ==
+                               {name: item['id'] for name, item in initial_services.items()},
+                               'La recuperación posterior a PASS no conservó los siete IDs previos mixtos')
+                operar.require(before == {name: operar.digest(DEPLOY / name) for name in infra.FILES}, 'La recuperación no restituyó los archivos originales')
+                operar.require(pointers == {name: operar.digest(operator.state / name) if (operator.state / name).exists() else None
+                                           for name in pointers}, 'La recuperación cambió punteros de Cooper')
+                operar.require(not (operator.state / 'mantenimiento').exists(), 'Quedó mantenimiento tras recuperación')
             output = {'aplicador':'PASS','fallo_inyectado_y_reversa':'PASS','archivos_restaurados':'PASS',
                       'datos_restaurados_con_huellas':'PASS','actualizacion':'PASS','red':'interna y loopback',
                       'recibo_reversa':str(failed),'recibo_actualizacion':str(successful),
@@ -159,6 +185,14 @@ def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
                               servicios_antes=initial_services, servicios_revertidos=reverted_services,
                               servicios_finales=final_services,
                               codigo_arnes_sha256=operar.digest(Path(__file__)))
+            if recovered_services is not None:
+                output.update(recuperacion_posterior_a_pass='PASS',
+                              recuperacion_siete_ids_previos='PASS',
+                              recuperacion_configuracion='PASS',
+                              recuperacion_punteros='PASS',
+                              recibo_recuperacion=str(recovery_output),
+                              servicios_recuperados=recovered_services,
+                              codigo_recuperacion_sha256=operar.digest(DEPLOY / 'recuperar-infra.py'))
             operar.write_json(directory / 'resultado.json', output)
             return output
     finally:
@@ -183,9 +217,10 @@ if __name__ == '__main__':
     parser.add_argument('--ensayo', type=Path, required=True)
     parser.add_argument('--imagen-archivo', type=Path)
     parser.add_argument('--imagen-reles-anterior', help='Ensayar Cooper nuevo con relés n8n/runner aún en la imagen local anterior')
+    parser.add_argument('--recuperar-despues-pass', action='store_true', help='Restituir siete servicios mixtos después de una aplicación PASS')
     args = parser.parse_args()
     try:
-        print(json.dumps(rehearse(args.fixture, args.ensayo, args.imagen_archivo, args.imagen_reles_anterior)))
+        print(json.dumps(rehearse(args.fixture, args.ensayo, args.imagen_archivo, args.imagen_reles_anterior, args.recuperar_despues_pass)))
     except Exception:
         print('Ensayo infra detenido; revisar recibos privados del fixture.', file=sys.stderr)
         sys.exit(1)
