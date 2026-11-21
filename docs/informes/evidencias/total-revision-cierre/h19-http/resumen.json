@@ -1,0 +1,113 @@
+{
+  "alcance": "Dos cgroups separados, aplicaci\u00f3n1GiB CON swap permitido; estos PASS no acreditan el host VPS sin swap",
+  "casos": {
+    "usuario-0": {
+      "videos": 999,
+      "entradaBytes": 5185571,
+      "salidaBytes": 5370176,
+      "primeraMs": 543.828248,
+      "estableMaxMs": 300.6512949999999,
+      "getMaxMs": 97.9460409999997,
+      "lecturaMaxMs": 19.45397899999989,
+      "serializacionMaxMs": 27.596092000000226,
+      "appMaxRSSMiB": 275.578125,
+      "memoriaFinal": {
+        "memory.current": "366518272",
+        "memory.peak": "374419456",
+        "memory.max": "1073741824",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "1073741824",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      },
+      "sha256Respuesta": "44e30d4ed63a1b427f6141cccbaaaacd466c6a5c6ec9126491393ebd1a093f8c",
+      "hashEntrada": "dc367215a649b3ff3241ecf6915408ab37ad2af64ab955efafaead66f788d793",
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "reintentos": 0
+    },
+    "usuario-9": {
+      "videos": 900,
+      "entradaBytes": 4672566,
+      "salidaBytes": 4839001,
+      "primeraMs": 470.36987299999987,
+      "estableMaxMs": 275.53686500000003,
+      "getMaxMs": 81.16405500000019,
+      "lecturaMaxMs": 19.779985000000124,
+      "serializacionMaxMs": 32.05195700000013,
+      "appMaxRSSMiB": 275.98828125,
+      "memoriaFinal": {
+        "memory.current": "232939520",
+        "memory.peak": "257785856",
+        "memory.max": "1073741824",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "1073741824",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      },
+      "sha256Respuesta": "86eef676027057a7d8b230b26d139a7acb120e2acf6cef99e2148d37a97dee64",
+      "hashEntrada": "c1c4942fc236069e444ec82db061ae08b8914ed41cdb17194e5593ca61282633",
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "reintentos": 0
+    },
+    "administrador": {
+      "videos": 9896,
+      "entradaBytes": 51372372,
+      "salidaBytes": 53189871,
+      "primeraMs": 4120.5173700000005,
+      "estableMaxMs": 1943.2187809999996,
+      "getMaxMs": 1040.4016760000013,
+      "lecturaMaxMs": 266.00648399999955,
+      "serializacionMaxMs": 264.0574799999995,
+      "appMaxRSSMiB": 1036.26171875,
+      "memoriaFinal": {
+        "memory.current": "675946496",
+        "memory.peak": "1073741824",
+        "memory.max": "1073741824",
+        "memory.events": "low 0\nhigh 0\nmax 77\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "414928896",
+        "memory.swap.peak": "414932992",
+        "memory.swap.max": "1073741824",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      },
+      "sha256Respuesta": "7da0d1e67d1f59d0a0dd7d9098114c278598da309dc93f60db77c87d9ddc8fce",
+      "hashEntrada": "623be38589a02daa1a0e6923ef06683cc25341ba92edaa16016a3d706fa020e9",
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "reintentos": 0
+    },
+    "sin-recursos": {
+      "videos": 0,
+      "entradaBytes": 26,
+      "salidaBytes": 1282,
+      "primeraMs": 12.637905000000046,
+      "estableMaxMs": 4.374883999999952,
+      "getMaxMs": 44.05357500000002,
+      "lecturaMaxMs": 40.55144400000006,
+      "serializacionMaxMs": 0.48372599999993326,
+      "appMaxRSSMiB": 156.44921875,
+      "memoriaFinal": {
+        "memory.current": "121905152",
+        "memory.peak": "132247552",
+        "memory.max": "1073741824",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "1073741824",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      },
+      "sha256Respuesta": "7ab0bfafd5016e1e11bb99a0196616e2df50a4281ec8a78216a9ef2c53a7d405",
+      "hashEntrada": "003aac3abc3eab017f738fd5db62208ce88823e2f5cf69d3cb58fcc4c3f96142",
+      "sincronizaciones": 5,
+      "lecturas": 3,
+      "reintentos": 0
+    }
+  }
+}

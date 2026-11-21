@@ -43,7 +43,7 @@ async function main() {
     }
     datos = null;
     const resultados = [];
-    async function muestra(auth) {
+    async function muestra(auth, exportar) {
       global.gc();
       const antes = process.memoryUsage();
       const t = performance.now();
@@ -83,12 +83,15 @@ async function main() {
         assert.equal(v.observabilidad.incidencias.length,1);
         assert.equal(v.script.length,4096);
       }
+      const inicioSerializacion = performance.now();
       const serializado = JSON.stringify(result.respuesta);
-      return {ms:fin-t,lecturaMs:inicioProyeccion-t,proyeccionMs:fin-inicioProyeccion,heapDeltaMiB:mib(memoria.heapUsed-antes.heapUsed),heapLecturaMiB:mib(despuesLectura.heapUsed-antes.heapUsed),rssMiB:mib(memoria.rss),proyectadas:videos.length,canales:result.respuesta.canales.length,bytesJSON:Buffer.byteLength(serializado),sha256:hash(serializado),nodos};
+      const serializacionMs = performance.now()-inicioSerializacion;
+      if (exportar) fs.writeFileSync(`/salida/${exportar}.json`,serializado);
+      return {ms:fin-t,lecturaMs:inicioProyeccion-t,proyeccionMs:fin-inicioProyeccion,heapDeltaMiB:mib(memoria.heapUsed-antes.heapUsed),heapLecturaMiB:mib(despuesLectura.heapUsed-antes.heapUsed),rssMiB:mib(memoria.rss),proyectadas:videos.length,canales:result.respuesta.canales.length,bytesJSON:Buffer.byteLength(serializado),sha256:hash(serializado),serializacionMs,nodos};
     }
     for (const [nombre,email,admin] of [['usuario-0',dueno(0),false],['usuario-9',dueno(9),false],['administrador',dueno(0),true],['sin-recursos','nadie@example.test',false]]) {
       const auth={admin,dueno_email:email,solicitud:{evento:'estado',datos:{}}};
-      const caliente=await muestra(auth), muestras=[];
+      const caliente=await muestra(auth,process.argv.includes('--exportar-snapshots') ? nombre : undefined), muestras=[];
       for(let i=0;i<7;i++) {
         const r=await muestra(auth); assert.equal(r.sha256,caliente.sha256); muestras.push(r);
       }

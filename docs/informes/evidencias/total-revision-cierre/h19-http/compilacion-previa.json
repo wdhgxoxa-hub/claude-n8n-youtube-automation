@@ -1,0 +1,9 @@
+{
+  "resultado": "FAIL de preparaci\u00f3n del ensayo",
+  "categoria": "ERR_MODULE_NOT_FOUND",
+  "causa": "esbuild es dependencia anidada de tsx, no paquete ra\u00edz del lockfile",
+  "correccion": "resolver esbuild desde createRequire del package.json de tsx",
+  "origen_sha256": "dab424fed08d5453a2c7e8ee60a430a571377c2715d6010c1a9eb94f4e55e58d",
+  "log_sha256": "c8aa3c568c2cd08c23fe4ac66c8a00768a4b9f84c061d6bdc41a94d3c5e57d3d",
+  "producto": "sin cambios"
+}

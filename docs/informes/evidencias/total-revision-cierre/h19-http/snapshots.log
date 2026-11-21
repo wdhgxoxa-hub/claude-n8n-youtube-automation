@@ -1,0 +1,4 @@
+{"nombre":"usuario-0","medianaMs":373.3704950000001,"maxMs":396.83076500000016,"maxHeapMiB":29.616195678710938,"presupuestoM12":true,"proyectadas":999}
+{"nombre":"usuario-9","medianaMs":352.50523299999986,"maxMs":372.7932299999993,"maxHeapMiB":28.34461212158203,"presupuestoM12":true,"proyectadas":900}
+{"nombre":"administrador","medianaMs":794.2375740000007,"maxMs":841.7727529999993,"maxHeapMiB":103.07786560058594,"presupuestoM12":true,"proyectadas":9896}
+{"nombre":"sin-recursos","medianaMs":330.46379199999865,"maxMs":370.9603820000011,"maxHeapMiB":29.098739624023438,"presupuestoM12":true,"proyectadas":0}

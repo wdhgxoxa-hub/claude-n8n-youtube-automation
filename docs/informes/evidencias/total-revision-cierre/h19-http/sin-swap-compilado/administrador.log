@@ -1,0 +1,13 @@
+node:_http_client:798
+    emitErrorEvent(req, new ConnResetException('socket hang up'));
+                        ^
+
+Error: socket hang up
+    at Socket.socketOnEnd (node:_http_client:798:25)
+    at Socket.emit (node:events:526:24)
+    at endReadableNT (node:internal/streams/readable:1783:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'ECONNRESET'
+}
+
+Node.js v24.22.3

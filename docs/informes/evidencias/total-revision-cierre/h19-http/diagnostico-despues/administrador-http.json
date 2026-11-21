@@ -1,0 +1,1396 @@
+{
+  "version": 2,
+  "fecha": "2026-11-21T20:47:00.079Z",
+  "caso": "administrador",
+  "entrada": {
+    "fixtureHash": "51fca8c9bfcf878c7ec9fe3f6f0a2537a36d86ef5c1ddd95534956a370fc11c3",
+    "sha256": "623be38589a02daa1a0e6923ef06683cc25341ba92edaa16016a3d706fa020e9",
+    "bytes": 51372372,
+    "videos": 9896
+  },
+  "topologia": "Dos cgroups sin red externa y namespace loopback compartido: aplicación 1 GiB sin swap, proveedor/verificador 2 GiB; actor ficticio autenticado",
+  "keepAliveProveedorMs": 5000,
+  "pedidos": 5,
+  "reintentos": 0,
+  "erroresProveedor": 0,
+  "tiemposSync": [
+    1159.284055,
+    518.060309,
+    442.7381070000001,
+    407.283152,
+    409.050033
+  ],
+  "lecturasHttp": [
+    {
+      "httpMs": 427.8127720000002,
+      "parseMs": 148.1011880000001,
+      "totalMs": 575.9139600000003,
+      "bytes": 53189871,
+      "sha256": "3680689b599145a63d7308c5bbbd8f72dd2c7a4d502f6156123d539771fb8fb2",
+      "huellas": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5",
+        "estado": "f205c8a5938d23b30dc7ba1f6b0a2d01aba600d9fa42d0b5e4b56ea6cfbb8f30"
+      },
+      "videos": 9896
+    },
+    {
+      "httpMs": 447.83278399999926,
+      "parseMs": 124.25834500000019,
+      "totalMs": 572.0911289999995,
+      "bytes": 53189871,
+      "sha256": "3680689b599145a63d7308c5bbbd8f72dd2c7a4d502f6156123d539771fb8fb2",
+      "huellas": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5",
+        "estado": "f205c8a5938d23b30dc7ba1f6b0a2d01aba600d9fa42d0b5e4b56ea6cfbb8f30"
+      },
+      "videos": 9896
+    },
+    {
+      "httpMs": 409.54039099999954,
+      "parseMs": 126.96992800000044,
+      "totalMs": 536.510319,
+      "bytes": 53189871,
+      "sha256": "3680689b599145a63d7308c5bbbd8f72dd2c7a4d502f6156123d539771fb8fb2",
+      "huellas": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5",
+        "estado": "f205c8a5938d23b30dc7ba1f6b0a2d01aba600d9fa42d0b5e4b56ea6cfbb8f30"
+      },
+      "videos": 9896
+    }
+  ],
+  "aplicacion": {
+    "node": "v24.22.3",
+    "loader": "compilado_esbuild",
+    "caso": "administrador",
+    "timeoutClienteMs": 10000,
+    "keepAliveMs": 5000,
+    "sincronizaciones": [
+      {
+        "ms": 1144.9864349999998,
+        "antes": {
+          "heapMiB": 17.61743927001953,
+          "heapTotalMiB": 53.43359375,
+          "externalMiB": 4.0506696701049805,
+          "arrayBuffersMiB": 0.20231914520263672,
+          "rssMiB": 157.44921875,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 94803,
+            "cacheBytes": 388029,
+            "esquemaBytes": 42318,
+            "preparadas": 0,
+            "huellasSql": []
+          },
+          "cgroup": {
+            "memory.current": "113795072",
+            "memory.peak": "159723520",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 88.25096130371094,
+          "heapTotalMiB": 117.93359375,
+          "externalMiB": 102.2793025970459,
+          "arrayBuffersMiB": 98.30923271179199,
+          "rssMiB": 402.984375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 71141375,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9903,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 1
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 1
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 1
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 1
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 1
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 1
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 1
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "473735168",
+            "memory.peak": "473735168",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 70.6335220336914
+      },
+      {
+        "ms": 463.33454499999993,
+        "antes": {
+          "heapMiB": 88.41429901123047,
+          "heapTotalMiB": 117.93359375,
+          "externalMiB": 102.2793025970459,
+          "arrayBuffersMiB": 98.30923271179199,
+          "rssMiB": 403.546875,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 633047,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9903,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 1
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 1
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 1
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 1
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 1
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 1
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 1
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "473735168",
+            "memory.peak": "473735168",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 78.4375,
+          "heapTotalMiB": 111.68359375,
+          "externalMiB": 102.33407688140869,
+          "arrayBuffersMiB": 98.30150699615479,
+          "rssMiB": 420.15234375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9910,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 2
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 2
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 2
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 2
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 2
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 2
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 2
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "491147264",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": -9.976799011230469
+      },
+      {
+        "ms": 438.329976,
+        "antes": {
+          "heapMiB": 78.57978820800781,
+          "heapTotalMiB": 111.68359375,
+          "externalMiB": 102.33407688140869,
+          "arrayBuffersMiB": 98.30150699615479,
+          "rssMiB": 420.15234375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9910,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 2
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 2
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 2
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 2
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 2
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 2
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 2
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "491147264",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 78.36471557617188,
+          "heapTotalMiB": 111.43359375,
+          "externalMiB": 102.33407688140869,
+          "arrayBuffersMiB": 98.30150699615479,
+          "rssMiB": 419.93359375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9917,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 3
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 3
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 3
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 3
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 3
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 3
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 3
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "490979328",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": -0.2150726318359375
+      },
+      {
+        "ms": 404.9477099999999,
+        "antes": {
+          "heapMiB": 78.42745971679688,
+          "heapTotalMiB": 111.43359375,
+          "externalMiB": 102.33407688140869,
+          "arrayBuffersMiB": 98.30150699615479,
+          "rssMiB": 419.93359375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9917,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 3
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 3
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 3
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 3
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 3
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 3
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 3
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "490979328",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 88.98251342773438,
+          "heapTotalMiB": 111.93359375,
+          "externalMiB": 4.349053382873535,
+          "arrayBuffersMiB": 0.3164834976196289,
+          "rssMiB": 355.3359375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9924,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 4
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 4
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 4
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 4
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 4
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 4
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 4
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "422899712",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 10.5550537109375
+      },
+      {
+        "ms": 403.5783630000001,
+        "antes": {
+          "heapMiB": 89.05825805664062,
+          "heapTotalMiB": 111.93359375,
+          "externalMiB": 4.349053382873535,
+          "arrayBuffersMiB": 0.3164834976196289,
+          "rssMiB": 355.3359375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9924,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 4
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 4
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 4
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 4
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 4
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 4
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 4
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "422899712",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 86.56391906738281,
+          "heapTotalMiB": 112.43359375,
+          "externalMiB": 4.349053382873535,
+          "arrayBuffersMiB": 0.3164834976196289,
+          "rssMiB": 355.3359375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9931,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "422903808",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": -2.4943389892578125
+      }
+    ],
+    "lecturas": [
+      {
+        "lecturaMs": 217.37733100000014,
+        "serializacionMs": 109.23624999999993,
+        "antes": {
+          "heapMiB": 86.62773132324219,
+          "heapTotalMiB": 112.43359375,
+          "externalMiB": 4.349053382873535,
+          "arrayBuffersMiB": 0.3164834976196289,
+          "rssMiB": 355.3359375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 58407,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42368,
+            "preparadas": 9931,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9896
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "422903808",
+            "memory.peak": "542519296",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 140.4885482788086,
+          "heapTotalMiB": 166.66015625,
+          "externalMiB": 105.80068111419678,
+          "arrayBuffersMiB": 101.76811122894287,
+          "rssMiB": 558.14453125,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 132961,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42397,
+            "preparadas": 9942,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9897
+              },
+              {
+                "sha256": "4809befbc6df13512caa5ff8dbf0ac09cb094e83246fac22ab92b565a1c7d9f9",
+                "cantidad": 1
+              },
+              {
+                "sha256": "8891998b00a0ce4b129d4ef7c5b637e0cc9e5e576aed21329d8436d42eb7ee4e",
+                "cantidad": 1
+              },
+              {
+                "sha256": "349362bb2d25f96524a1ea3f3884929c45040c221145484c543d0c9949e08f54",
+                "cantidad": 1
+              },
+              {
+                "sha256": "167a4e2fea4bc7e9b3a2c5a7750210fb62bf6a85aca47ac409e1eaca87e8f4ee",
+                "cantidad": 1
+              },
+              {
+                "sha256": "e5466f0d6cc4661808b3c174b5aedb2c91b37bfe0b149f6e29ce483bc85e73fe",
+                "cantidad": 1
+              },
+              {
+                "sha256": "a62242555e10d2dfbed69967c0df643f6f745382328b0d1762e5500d5564ea62",
+                "cantidad": 1
+              },
+              {
+                "sha256": "a2afdf417f6c818c9742f27a40a421faf6ea2548eba507a7c161ef7c879018c1",
+                "cantidad": 1
+              },
+              {
+                "sha256": "0f81d231910552906ea4751089544aa011bf3c933867ba532f97a94acad02838",
+                "cantidad": 1
+              },
+              {
+                "sha256": "763c97154cd811d214e5fff8f01e1968b1bb03b1cdd911a303dac5caee40b32f",
+                "cantidad": 1
+              },
+              {
+                "sha256": "796edcbdedfe278c8cc3a2c4dc635c544c401c85a72534c3b504d3918e7e8060",
+                "cantidad": 1
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "637431808",
+            "memory.peak": "637431808",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        }
+      },
+      {
+        "lecturaMs": 215.61251999999968,
+        "serializacionMs": 123.54015499999969,
+        "antes": {
+          "heapMiB": 14.821075439453125,
+          "heapTotalMiB": 49.68359375,
+          "externalMiB": 105.83335971832275,
+          "arrayBuffersMiB": 101.76811122894287,
+          "rssMiB": 507.6328125,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 13759,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42397,
+            "preparadas": 9942,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9897
+              },
+              {
+                "sha256": "4809befbc6df13512caa5ff8dbf0ac09cb094e83246fac22ab92b565a1c7d9f9",
+                "cantidad": 1
+              },
+              {
+                "sha256": "8891998b00a0ce4b129d4ef7c5b637e0cc9e5e576aed21329d8436d42eb7ee4e",
+                "cantidad": 1
+              },
+              {
+                "sha256": "349362bb2d25f96524a1ea3f3884929c45040c221145484c543d0c9949e08f54",
+                "cantidad": 1
+              },
+              {
+                "sha256": "167a4e2fea4bc7e9b3a2c5a7750210fb62bf6a85aca47ac409e1eaca87e8f4ee",
+                "cantidad": 1
+              },
+              {
+                "sha256": "e5466f0d6cc4661808b3c174b5aedb2c91b37bfe0b149f6e29ce483bc85e73fe",
+                "cantidad": 1
+              },
+              {
+                "sha256": "a62242555e10d2dfbed69967c0df643f6f745382328b0d1762e5500d5564ea62",
+                "cantidad": 1
+              },
+              {
+                "sha256": "a2afdf417f6c818c9742f27a40a421faf6ea2548eba507a7c161ef7c879018c1",
+                "cantidad": 1
+              },
+              {
+                "sha256": "0f81d231910552906ea4751089544aa011bf3c933867ba532f97a94acad02838",
+                "cantidad": 1
+              },
+              {
+                "sha256": "763c97154cd811d214e5fff8f01e1968b1bb03b1cdd911a303dac5caee40b32f",
+                "cantidad": 1
+              },
+              {
+                "sha256": "796edcbdedfe278c8cc3a2c4dc635c544c401c85a72534c3b504d3918e7e8060",
+                "cantidad": 1
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "569425920",
+            "memory.peak": "637431808",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 121.23941802978516,
+          "heapTotalMiB": 166.41015625,
+          "externalMiB": 105.83335971832275,
+          "arrayBuffersMiB": 101.76811122894287,
+          "rssMiB": 574.3203125,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 88313,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42397,
+            "preparadas": 9953,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9898
+              },
+              {
+                "sha256": "4809befbc6df13512caa5ff8dbf0ac09cb094e83246fac22ab92b565a1c7d9f9",
+                "cantidad": 2
+              },
+              {
+                "sha256": "8891998b00a0ce4b129d4ef7c5b637e0cc9e5e576aed21329d8436d42eb7ee4e",
+                "cantidad": 2
+              },
+              {
+                "sha256": "349362bb2d25f96524a1ea3f3884929c45040c221145484c543d0c9949e08f54",
+                "cantidad": 2
+              },
+              {
+                "sha256": "167a4e2fea4bc7e9b3a2c5a7750210fb62bf6a85aca47ac409e1eaca87e8f4ee",
+                "cantidad": 2
+              },
+              {
+                "sha256": "e5466f0d6cc4661808b3c174b5aedb2c91b37bfe0b149f6e29ce483bc85e73fe",
+                "cantidad": 2
+              },
+              {
+                "sha256": "a62242555e10d2dfbed69967c0df643f6f745382328b0d1762e5500d5564ea62",
+                "cantidad": 2
+              },
+              {
+                "sha256": "a2afdf417f6c818c9742f27a40a421faf6ea2548eba507a7c161ef7c879018c1",
+                "cantidad": 2
+              },
+              {
+                "sha256": "0f81d231910552906ea4751089544aa011bf3c933867ba532f97a94acad02838",
+                "cantidad": 2
+              },
+              {
+                "sha256": "763c97154cd811d214e5fff8f01e1968b1bb03b1cdd911a303dac5caee40b32f",
+                "cantidad": 2
+              },
+              {
+                "sha256": "796edcbdedfe278c8cc3a2c4dc635c544c401c85a72534c3b504d3918e7e8060",
+                "cantidad": 2
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "638050304",
+            "memory.peak": "639430656",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        }
+      },
+      {
+        "lecturaMs": 210.36012500000015,
+        "serializacionMs": 129.18530399999963,
+        "antes": {
+          "heapMiB": 14.654022216796875,
+          "heapTotalMiB": 53.18359375,
+          "externalMiB": 156.55917358398438,
+          "arrayBuffersMiB": 51.04229736328125,
+          "rssMiB": 473.0859375,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 13759,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42397,
+            "preparadas": 9953,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9898
+              },
+              {
+                "sha256": "4809befbc6df13512caa5ff8dbf0ac09cb094e83246fac22ab92b565a1c7d9f9",
+                "cantidad": 2
+              },
+              {
+                "sha256": "8891998b00a0ce4b129d4ef7c5b637e0cc9e5e576aed21329d8436d42eb7ee4e",
+                "cantidad": 2
+              },
+              {
+                "sha256": "349362bb2d25f96524a1ea3f3884929c45040c221145484c543d0c9949e08f54",
+                "cantidad": 2
+              },
+              {
+                "sha256": "167a4e2fea4bc7e9b3a2c5a7750210fb62bf6a85aca47ac409e1eaca87e8f4ee",
+                "cantidad": 2
+              },
+              {
+                "sha256": "e5466f0d6cc4661808b3c174b5aedb2c91b37bfe0b149f6e29ce483bc85e73fe",
+                "cantidad": 2
+              },
+              {
+                "sha256": "a62242555e10d2dfbed69967c0df643f6f745382328b0d1762e5500d5564ea62",
+                "cantidad": 2
+              },
+              {
+                "sha256": "a2afdf417f6c818c9742f27a40a421faf6ea2548eba507a7c161ef7c879018c1",
+                "cantidad": 2
+              },
+              {
+                "sha256": "0f81d231910552906ea4751089544aa011bf3c933867ba532f97a94acad02838",
+                "cantidad": 2
+              },
+              {
+                "sha256": "763c97154cd811d214e5fff8f01e1968b1bb03b1cdd911a303dac5caee40b32f",
+                "cantidad": 2
+              },
+              {
+                "sha256": "796edcbdedfe278c8cc3a2c4dc635c544c401c85a72534c3b504d3918e7e8060",
+                "cantidad": 2
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "512233472",
+            "memory.peak": "694108160",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 138.9028549194336,
+          "heapTotalMiB": 166.16015625,
+          "externalMiB": 105.83335971832275,
+          "arrayBuffersMiB": 101.76811122894287,
+          "rssMiB": 574.44921875,
+          "sqlite": {
+            "heapSqliteBytes": 0,
+            "sentenciasBytes": 88313,
+            "cacheBytes": 16847293,
+            "esquemaBytes": 42397,
+            "preparadas": 9964,
+            "huellasSql": [
+              {
+                "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+                "cantidad": 5
+              },
+              {
+                "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+                "cantidad": 5
+              },
+              {
+                "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+                "cantidad": 5
+              },
+              {
+                "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+                "cantidad": 5
+              },
+              {
+                "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+                "cantidad": 5
+              },
+              {
+                "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+                "cantidad": 5
+              },
+              {
+                "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+                "cantidad": 5
+              },
+              {
+                "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+                "cantidad": 9899
+              },
+              {
+                "sha256": "4809befbc6df13512caa5ff8dbf0ac09cb094e83246fac22ab92b565a1c7d9f9",
+                "cantidad": 3
+              },
+              {
+                "sha256": "8891998b00a0ce4b129d4ef7c5b637e0cc9e5e576aed21329d8436d42eb7ee4e",
+                "cantidad": 3
+              },
+              {
+                "sha256": "349362bb2d25f96524a1ea3f3884929c45040c221145484c543d0c9949e08f54",
+                "cantidad": 3
+              },
+              {
+                "sha256": "167a4e2fea4bc7e9b3a2c5a7750210fb62bf6a85aca47ac409e1eaca87e8f4ee",
+                "cantidad": 3
+              },
+              {
+                "sha256": "e5466f0d6cc4661808b3c174b5aedb2c91b37bfe0b149f6e29ce483bc85e73fe",
+                "cantidad": 3
+              },
+              {
+                "sha256": "a62242555e10d2dfbed69967c0df643f6f745382328b0d1762e5500d5564ea62",
+                "cantidad": 3
+              },
+              {
+                "sha256": "a2afdf417f6c818c9742f27a40a421faf6ea2548eba507a7c161ef7c879018c1",
+                "cantidad": 3
+              },
+              {
+                "sha256": "0f81d231910552906ea4751089544aa011bf3c933867ba532f97a94acad02838",
+                "cantidad": 3
+              },
+              {
+                "sha256": "763c97154cd811d214e5fff8f01e1968b1bb03b1cdd911a303dac5caee40b32f",
+                "cantidad": 3
+              },
+              {
+                "sha256": "796edcbdedfe278c8cc3a2c4dc635c544c401c85a72534c3b504d3918e7e8060",
+                "cantidad": 3
+              }
+            ]
+          },
+          "cgroup": {
+            "memory.current": "614391808",
+            "memory.peak": "694108160",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "0",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        }
+      }
+    ],
+    "transportes": [
+      {
+        "http": 200,
+        "cabecerasMs": 18.426371000000017,
+        "cuerpoParseMs": 257.574882,
+        "totalMs": 276.04301,
+        "bytesDeclarados": 51372372,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 6.028791999999839,
+        "cuerpoParseMs": 221.7173089999999,
+        "totalMs": 227.75956500000007,
+        "bytesDeclarados": 51372372,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 4.55281100000002,
+        "cuerpoParseMs": 216.1111780000001,
+        "totalMs": 220.6764760000001,
+        "bytesDeclarados": 51372372,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 2.015867999999955,
+        "cuerpoParseMs": 173.11399399999982,
+        "totalMs": 175.1365820000001,
+        "bytesDeclarados": 51372372,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 1.4116539999999986,
+        "cuerpoParseMs": 161.04832799999986,
+        "totalMs": 162.4664170000001,
+        "bytesDeclarados": 51372372,
+        "signalPresente": true
+      }
+    ],
+    "errores": 0,
+    "memoria": {
+      "heapMiB": 14.993850708007812,
+      "heapTotalMiB": 53.57421875,
+      "externalMiB": 156.55917358398438,
+      "arrayBuffersMiB": 101.76811122894287,
+      "rssMiB": 523.80859375,
+      "sqlite": {
+        "heapSqliteBytes": 0,
+        "sentenciasBytes": 26020,
+        "cacheBytes": 16847293,
+        "esquemaBytes": 42397,
+        "preparadas": 9965,
+        "huellasSql": [
+          {
+            "sha256": "43e97d8f77ad9a9f1f384dab7490a5113f9211b762134e86bace4e1135f2d98a",
+            "cantidad": 5
+          },
+          {
+            "sha256": "1030c37e2454adbe1eaf56de1e7af9b211402e395d6ef10595ddbabe2238e591",
+            "cantidad": 5
+          },
+          {
+            "sha256": "e6dce105eef6574ea0e9e05b46ce2e21ca24b4a58b4381ef32e69565c44134b4",
+            "cantidad": 5
+          },
+          {
+            "sha256": "69e494d25a2b8cf640ae4be406b6a5e3833fa1f7d831bf5ea7a010435e62b69e",
+            "cantidad": 5
+          },
+          {
+            "sha256": "31a20f28fee41e66a64f1043034245f62d56d3e23da1845825bd5926e5c7da58",
+            "cantidad": 5
+          },
+          {
+            "sha256": "405fb1f701a6bd4ccd60ad85297eddf636211fff8a97fe38444238079d96c07d",
+            "cantidad": 5
+          },
+          {
+            "sha256": "98b8da4e975a087368a866811b17bdbd6aa30ea67c31e3d5d0ede7d4eb7a88aa",
+            "cantidad": 5
+          },
+          {
+            "sha256": "a4a9a1540cc8bb3d1381f983edbb4115407eb29a4cab44f500c32486e374c216",
+            "cantidad": 9899
+          },
+          {
+            "sha256": "4809befbc6df13512caa5ff8dbf0ac09cb094e83246fac22ab92b565a1c7d9f9",
+            "cantidad": 3
+          },
+          {
+            "sha256": "8891998b00a0ce4b129d4ef7c5b637e0cc9e5e576aed21329d8436d42eb7ee4e",
+            "cantidad": 3
+          },
+          {
+            "sha256": "349362bb2d25f96524a1ea3f3884929c45040c221145484c543d0c9949e08f54",
+            "cantidad": 3
+          },
+          {
+            "sha256": "167a4e2fea4bc7e9b3a2c5a7750210fb62bf6a85aca47ac409e1eaca87e8f4ee",
+            "cantidad": 3
+          },
+          {
+            "sha256": "e5466f0d6cc4661808b3c174b5aedb2c91b37bfe0b149f6e29ce483bc85e73fe",
+            "cantidad": 3
+          },
+          {
+            "sha256": "a62242555e10d2dfbed69967c0df643f6f745382328b0d1762e5500d5564ea62",
+            "cantidad": 3
+          },
+          {
+            "sha256": "a2afdf417f6c818c9742f27a40a421faf6ea2548eba507a7c161ef7c879018c1",
+            "cantidad": 3
+          },
+          {
+            "sha256": "0f81d231910552906ea4751089544aa011bf3c933867ba532f97a94acad02838",
+            "cantidad": 3
+          },
+          {
+            "sha256": "763c97154cd811d214e5fff8f01e1968b1bb03b1cdd911a303dac5caee40b32f",
+            "cantidad": 3
+          },
+          {
+            "sha256": "796edcbdedfe278c8cc3a2c4dc635c544c401c85a72534c3b504d3918e7e8060",
+            "cantidad": 3
+          },
+          {
+            "sha256": "e09c00b4e556f215cfc0b7edfdf0394e724c3ae08b97b941b6ee72e62aebcec3",
+            "cantidad": 1
+          }
+        ]
+      },
+      "cgroup": {
+        "memory.current": "549093376",
+        "memory.peak": "694108160",
+        "memory.max": "1073741824",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "0",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      }
+    },
+    "maxRssProcesoMiB": 625.26171875,
+    "avisos": 0
+  },
+  "verificador": {
+    "memoria": {
+      "heapMiB": 243.71156311035156,
+      "heapTotalMiB": 302.11328125,
+      "externalMiB": 294.51445484161377,
+      "arrayBuffersMiB": 189.03896713256836,
+      "rssMiB": 775.09765625,
+      "cgroup": {
+        "memory.current": "771596288",
+        "memory.peak": "824713216",
+        "memory.max": "2147483648",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "2147483648",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      }
+    },
+    "maxRssProcesoMiB": 825.7734375
+  },
+  "verificaciones": [
+    "IDs y dueños completos",
+    "canales completos",
+    "guiones completos",
+    "observabilidad e historial completos",
+    "bytes HTTP estables",
+    "una petición por sincronización",
+    "sin avisos"
+  ]
+}

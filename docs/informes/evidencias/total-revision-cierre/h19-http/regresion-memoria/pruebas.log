@@ -1,0 +1,13 @@
+
+ RUN  v4.1.12 /ensayo/cooper
+
+ ✓ tests/whatsapp.test.ts (36 tests) 314ms
+ ✓ tests/puente.test.ts (19 tests) 599ms
+     ✓ SSE reemite el evento persistido y omite eventos de otros dueños y costos  507ms
+ ✓ tests/puente-capacidad.test.ts (3 tests) 49ms
+
+ Test Files  3 passed (3)
+      Tests  58 passed (58)
+   Start at  20:46:13
+   Duration  2.55s (transform 412ms, setup 34ms, import 1.32s, tests 962ms, environment 0ms)
+

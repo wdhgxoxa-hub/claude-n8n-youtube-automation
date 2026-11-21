@@ -1,0 +1,433 @@
+{
+  "version": 2,
+  "fecha": "2026-11-21T20:27:47.628Z",
+  "caso": "usuario-0",
+  "entrada": {
+    "fixtureHash": "51fca8c9bfcf878c7ec9fe3f6f0a2537a36d86ef5c1ddd95534956a370fc11c3",
+    "sha256": "dc367215a649b3ff3241ecf6915408ab37ad2af64ab955efafaead66f788d793",
+    "bytes": 5185571,
+    "videos": 999
+  },
+  "topologia": "Dos cgroups sin red externa y namespace loopback compartido: aplicación 1 GiB, proveedor/verificador 2 GiB; actor ficticio autenticado",
+  "keepAliveProveedorMs": 5000,
+  "pedidos": 5,
+  "reintentos": 0,
+  "erroresProveedor": 0,
+  "tiemposSync": [
+    558.0684019999999,
+    352.85984099999996,
+    351.53915200000006,
+    344.5909280000003,
+    342.6937189999999
+  ],
+  "lecturasHttp": [
+    {
+      "httpMs": 77.95036299999992,
+      "parseMs": 19.99567799999977,
+      "totalMs": 97.9460409999997,
+      "bytes": 5370176,
+      "sha256": "44e30d4ed63a1b427f6141cccbaaaacd466c6a5c6ec9126491393ebd1a093f8c",
+      "huellas": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a",
+        "estado": "02a8e0b6fe98653e8a0f1a975aaf475fa38380a90669f1f193b130a7d7064ba5"
+      },
+      "videos": 999
+    },
+    {
+      "httpMs": 33.25534400000015,
+      "parseMs": 12.951976999999715,
+      "totalMs": 46.207320999999865,
+      "bytes": 5370176,
+      "sha256": "44e30d4ed63a1b427f6141cccbaaaacd466c6a5c6ec9126491393ebd1a093f8c",
+      "huellas": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a",
+        "estado": "02a8e0b6fe98653e8a0f1a975aaf475fa38380a90669f1f193b130a7d7064ba5"
+      },
+      "videos": 999
+    },
+    {
+      "httpMs": 34.596312000000125,
+      "parseMs": 9.560312999999951,
+      "totalMs": 44.156625000000076,
+      "bytes": 5370176,
+      "sha256": "44e30d4ed63a1b427f6141cccbaaaacd466c6a5c6ec9126491393ebd1a093f8c",
+      "huellas": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a",
+        "estado": "02a8e0b6fe98653e8a0f1a975aaf475fa38380a90669f1f193b130a7d7064ba5"
+      },
+      "videos": 999
+    }
+  ],
+  "aplicacion": {
+    "node": "v24.22.3",
+    "caso": "usuario-0",
+    "timeoutClienteMs": 10000,
+    "keepAliveMs": 5000,
+    "sincronizaciones": [
+      {
+        "ms": 543.828248,
+        "antes": {
+          "heapMiB": 19.822036743164062,
+          "rssMiB": 137.65625,
+          "cgroup": {
+            "memory.current": "218193920",
+            "memory.peak": "219963392",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 46.91808319091797,
+          "rssMiB": 242.60546875,
+          "cgroup": {
+            "memory.current": "337326080",
+            "memory.peak": "337326080",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 27.096046447753906
+      },
+      {
+        "ms": 282.6273490000001,
+        "antes": {
+          "heapMiB": 21.1630859375,
+          "rssMiB": 238.37890625,
+          "cgroup": {
+            "memory.current": "332922880",
+            "memory.peak": "337588224",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 39.87940216064453,
+          "rssMiB": 247.9296875,
+          "cgroup": {
+            "memory.current": "343109632",
+            "memory.peak": "343109632",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 18.71631622314453
+      },
+      {
+        "ms": 300.6512949999999,
+        "antes": {
+          "heapMiB": 21.15282440185547,
+          "rssMiB": 247.65234375,
+          "cgroup": {
+            "memory.current": "342757376",
+            "memory.peak": "343109632",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 38.6468505859375,
+          "rssMiB": 249.71484375,
+          "cgroup": {
+            "memory.current": "344854528",
+            "memory.peak": "344854528",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 17.49402618408203
+      },
+      {
+        "ms": 276.0700189999998,
+        "antes": {
+          "heapMiB": 21.122718811035156,
+          "rssMiB": 249.71484375,
+          "cgroup": {
+            "memory.current": "344686592",
+            "memory.peak": "344854528",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 42.29320526123047,
+          "rssMiB": 251.02734375,
+          "cgroup": {
+            "memory.current": "346345472",
+            "memory.peak": "346345472",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 21.170486450195312
+      },
+      {
+        "ms": 292.3691010000002,
+        "antes": {
+          "heapMiB": 19.456687927246094,
+          "rssMiB": 251.02734375,
+          "cgroup": {
+            "memory.current": "346136576",
+            "memory.peak": "346345472",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 39.243797302246094,
+          "rssMiB": 253.01171875,
+          "cgroup": {
+            "memory.current": "348102656",
+            "memory.peak": "348102656",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "heapDeltaMiB": 19.787109375
+      }
+    ],
+    "lecturas": [
+      {
+        "lecturaMs": 19.45397899999989,
+        "serializacionMs": 27.596092000000226,
+        "antes": {
+          "heapMiB": 18.935997009277344,
+          "rssMiB": 253.01171875,
+          "cgroup": {
+            "memory.current": "348102656",
+            "memory.peak": "348102656",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 38.781532287597656,
+          "rssMiB": 258.68359375,
+          "cgroup": {
+            "memory.current": "353865728",
+            "memory.peak": "359899136",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        }
+      },
+      {
+        "lecturaMs": 18.20205799999985,
+        "serializacionMs": 9.544217000000117,
+        "antes": {
+          "heapMiB": 19.080482482910156,
+          "rssMiB": 258.5,
+          "cgroup": {
+            "memory.current": "353923072",
+            "memory.peak": "361988096",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 38.52099609375,
+          "rssMiB": 271.44140625,
+          "cgroup": {
+            "memory.current": "367554560",
+            "memory.peak": "367554560",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        }
+      },
+      {
+        "lecturaMs": 18.059194999999818,
+        "serializacionMs": 11.07046500000024,
+        "antes": {
+          "heapMiB": 19.029327392578125,
+          "rssMiB": 266.5,
+          "cgroup": {
+            "memory.current": "362360832",
+            "memory.peak": "370176000",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        },
+        "despues": {
+          "heapMiB": 38.302146911621094,
+          "rssMiB": 275.578125,
+          "cgroup": {
+            "memory.current": "371798016",
+            "memory.peak": "371798016",
+            "memory.max": "1073741824",
+            "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+            "memory.swap.current": "0",
+            "memory.swap.peak": "0",
+            "memory.swap.max": "1073741824",
+            "cpu.max": "100000 100000",
+            "cpuset.cpus.effective": "2-3"
+          }
+        }
+      }
+    ],
+    "transportes": [
+      {
+        "http": 200,
+        "cabecerasMs": 21.853451999999947,
+        "cuerpoParseMs": 20.148864000000003,
+        "totalMs": 42.06227999999999,
+        "bytesDeclarados": 5185571,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 5.732983999999988,
+        "cuerpoParseMs": 16.849805999999944,
+        "totalMs": 22.591147000000092,
+        "bytesDeclarados": 5185571,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 30.607383000000027,
+        "cuerpoParseMs": 33.80663800000002,
+        "totalMs": 64.42246899999986,
+        "bytesDeclarados": 5185571,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 5.404181999999992,
+        "cuerpoParseMs": 9.01775900000007,
+        "totalMs": 14.431241,
+        "bytesDeclarados": 5185571,
+        "signalPresente": true
+      },
+      {
+        "http": 200,
+        "cabecerasMs": 4.2847609999998895,
+        "cuerpoParseMs": 26.448753000000124,
+        "totalMs": 30.739568999999847,
+        "bytesDeclarados": 5185571,
+        "signalPresente": true
+      }
+    ],
+    "errores": 0,
+    "memoria": {
+      "heapMiB": 19.195335388183594,
+      "rssMiB": 270.453125,
+      "cgroup": {
+        "memory.current": "366518272",
+        "memory.peak": "374419456",
+        "memory.max": "1073741824",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "1073741824",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      }
+    },
+    "maxRssProcesoMiB": 275.578125,
+    "avisos": 0
+  },
+  "verificador": {
+    "memoria": {
+      "heapMiB": 31.161781311035156,
+      "rssMiB": 181.5078125,
+      "cgroup": {
+        "memory.current": "152764416",
+        "memory.peak": "157880320",
+        "memory.max": "2147483648",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+        "memory.swap.current": "0",
+        "memory.swap.peak": "0",
+        "memory.swap.max": "2147483648",
+        "cpu.max": "100000 100000",
+        "cpuset.cpus.effective": "2-3"
+      }
+    },
+    "maxRssProcesoMiB": 186.51171875
+  },
+  "verificaciones": [
+    "IDs y dueños completos",
+    "canales completos",
+    "guiones completos",
+    "observabilidad e historial completos",
+    "bytes HTTP estables",
+    "una petición por sincronización",
+    "sin avisos"
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "topologia_final": "Dos cgroups separados; keepalive por defecto; proveedor/verificador fuera del l\u00edmite de la aplicaci\u00f3n.",
+  "pasadas": [
+    {
+      "directorio": "volumen-http-4Kzoys",
+      "alcance": "Primera topolog\u00eda en un proceso, 2 GiB; huellas incluidas en tiempos.",
+      "ejecuciones": [
+        {
+          "nombre": "snapshots",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-0",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-9",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "administrador",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "sin-recursos",
+          "rc": 0,
+          "signal": null
+        }
+      ],
+      "archivos": [
+        {
+          "nombre": "administrador-http.json",
+          "sha256": "7e6e04323ddaecd056673fbc221aec572fbc7681ae3d2cd70c8efd4cc440744b"
+        },
+        {
+          "nombre": "administrador.log",
+          "sha256": "c225b2428faa1f4c1aa611407a6594f4cfc3aabe0f3a651ffbcb1ff8d5b25421"
+        },
+        {
+          "nombre": "medicion.json",
+          "sha256": "d1ddecab06086b857957b86fdd30203f5761cfd09593aa09219d71940436045d"
+        },
+        {
+          "nombre": "origen-http.json",
+          "sha256": "0cefa785b9f45014a8dd96fbc279d6d510867541bb526cc61230d510881f5801"
+        },
+        {
+          "nombre": "sin-recursos-http.json",
+          "sha256": "fa41bd3a856db97b73551e0525980b53d6884716d2f9b570a2d2ce276c45eeb9"
+        },
+        {
+          "nombre": "sin-recursos.log",
+          "sha256": "4eb00351899e327777f123172a530193576b222d26540d87b8a3be8861250e67"
+        },
+        {
+          "nombre": "snapshots.log",
+          "sha256": "b045844af4b02ec715473dba86c104e827718afde52399708eeb3ceaa61d5bbb"
+        },
+        {
+          "nombre": "usuario-0-http.json",
+          "sha256": "22724c6a31611003755af11fbed896fdf2e69136cd840a24b5e12857ccc1ea2d"
+        },
+        {
+          "nombre": "usuario-0.log",
+          "sha256": "a66a5876b4f02ab69ba6b0e878b2acad4599c01a1bc101fce13c27d96ac42101"
+        },
+        {
+          "nombre": "usuario-9-http.json",
+          "sha256": "04bc5a9de3f27fb0c4d9a875eb2d5c5c0dec795d495ca995e675218274612337"
+        },
+        {
+          "nombre": "usuario-9.log",
+          "sha256": "3cef5f1e7a7858d1dd1dda34945e500960311760bf67331b292976b198ec1f73"
+        }
+      ]
+    },
+    {
+      "directorio": "volumen-http-0NdNFl",
+      "alcance": "Un proceso, 2 GiB; huellas fuera de tiempos, keepalive predeterminado; error ECONNRESET al medir administrador, causa exacta no demostrada.",
+      "ejecuciones": [
+        {
+          "nombre": "snapshots",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-0",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-9",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "administrador",
+          "rc": 1,
+          "signal": null
+        }
+      ],
+      "archivos": [
+        {
+          "nombre": "administrador.log",
+          "sha256": "f65d6ea3206fe898b54cf42d8adcd255b9fdc17afb2f374d8f85d2e77fcf6ff9"
+        },
+        {
+          "nombre": "medicion.json",
+          "sha256": "703dd20b88e8fe000dd4ebd29d0f7db2623f37eac8b499172afe0da78173cf5a"
+        },
+        {
+          "nombre": "origen-http.json",
+          "sha256": "9bc9c72f9c8899225864b624933f4f8ad2e70b77d8b69fa17a75f98e89891ad4"
+        },
+        {
+          "nombre": "snapshots.log",
+          "sha256": "5dfbd165d284f9e31edb3789038f8b55b4eee18069da378b10981dc9cc9fc079"
+        },
+        {
+          "nombre": "usuario-0-http.json",
+          "sha256": "90cd90266158a9a8e51e7ab860e0d3910509e2e17124690576f3ee58ad090036"
+        },
+        {
+          "nombre": "usuario-0.log",
+          "sha256": "948e3a70b082c1a4d7ffc0df6efbfa9651ed0babde3d22ca5f2a8ee69c367bf6"
+        },
+        {
+          "nombre": "usuario-9-http.json",
+          "sha256": "7489fe967b75527fb5c02f652301c554410d1c8f2a9257d7174eec74486c6116"
+        },
+        {
+          "nombre": "usuario-9.log",
+          "sha256": "9a95407b2ec5953cf8fb91e1373586400cb19d025bd991ecb4154ca60bd3598b"
+        }
+      ]
+    },
+    {
+      "directorio": "volumen-http-HsCTug",
+      "alcance": "Un proceso, 1 GiB; keepalive 60 s del servidor de ensayo. PASS funcional; pico mezclado no atribuible a Cooper.",
+      "ejecuciones": [
+        {
+          "nombre": "snapshots",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-0",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-9",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "administrador",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "sin-recursos",
+          "rc": 0,
+          "signal": null
+        }
+      ],
+      "archivos": [
+        {
+          "nombre": "administrador-http.json",
+          "sha256": "bf4d0cf4d837a39504beab2b97b3686658acf1e506cc71b2084710cd6e91284d"
+        },
+        {
+          "nombre": "administrador.log",
+          "sha256": "4af14113ade30b77c19150df063630abee36dd22d19507a94d4036fd1859798a"
+        },
+        {
+          "nombre": "medicion.json",
+          "sha256": "faec35d108fafeb2ff3f3c1813f10b87908ff86992468ee1ab52e79a27464fb0"
+        },
+        {
+          "nombre": "origen-http.json",
+          "sha256": "d0e9743c980bcbc3ee9e219a55c8fbc777bb1f7dffbd5ff32d6b19267d9cb158"
+        },
+        {
+          "nombre": "sin-recursos-http.json",
+          "sha256": "6dc4e4644a5de6591ed1f70d8e7562015a01a3183d1a47413fd025badaa62fb1"
+        },
+        {
+          "nombre": "sin-recursos.log",
+          "sha256": "46d306b536ba6719632194daf7ffa61a903bcbfc10775f02c531291e00edf3e7"
+        },
+        {
+          "nombre": "snapshots.log",
+          "sha256": "11e6dad4059a766d6b8e916884ffea9eb34cdeffb6379adfab5d581f48117f31"
+        },
+        {
+          "nombre": "usuario-0-http.json",
+          "sha256": "a0a9905963586ab55a319e1deb9a5f90dd58caa9524e6c210390ac873f02063f"
+        },
+        {
+          "nombre": "usuario-0.log",
+          "sha256": "3a16a261ae325eb39fbbe396fa06d1ead1a892d08bf262a2b184132dcbc1a88d"
+        },
+        {
+          "nombre": "usuario-9-http.json",
+          "sha256": "33c17ebfae5b39e55138b84a3b17e37b5ac85990fc4266c5d2e20898ac510435"
+        },
+        {
+          "nombre": "usuario-9.log",
+          "sha256": "18d2e7f8debbbda8cd635d0eb25daff754cff2505af56a96ed61c63f6c8389e0"
+        }
+      ]
+    },
+    {
+      "directorio": "volumen-http-yI0Xsl",
+      "alcance": "Un proceso, 1 GiB; keepalive 60 s; a\u00f1adi\u00f3 contadores swap/eventos. PASS funcional; pico/swap mezclados no atribuibles a Cooper.",
+      "ejecuciones": [
+        {
+          "nombre": "snapshots",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-0",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "usuario-9",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "administrador",
+          "rc": 0,
+          "signal": null
+        },
+        {
+          "nombre": "sin-recursos",
+          "rc": 0,
+          "signal": null
+        }
+      ],
+      "archivos": [
+        {
+          "nombre": "administrador-http.json",
+          "sha256": "eac4755e36e2f031072562f0e236de669b9aace032d805d5dd06881c371eb4b8"
+        },
+        {
+          "nombre": "administrador.log",
+          "sha256": "b92b68dbd2deb5e377ff0fc175cd2aa46432ef7d71a73e8dd7f6623cc0981e8c"
+        },
+        {
+          "nombre": "medicion.json",
+          "sha256": "0906a3b312712a5461fde06489a419c99b9abdd9c238cb503934c98dacbe8d7c"
+        },
+        {
+          "nombre": "origen-http.json",
+          "sha256": "d944eadb60721d5a17a4b545ba0e397e94be28314e7b9889ef570465ae9d2b4f"
+        },
+        {
+          "nombre": "sin-recursos-http.json",
+          "sha256": "5c2d6117ef8e6ddac0fe53378e34a997cbc41bc3fc159d8458e255bd776ef3ca"
+        },
+        {
+          "nombre": "sin-recursos.log",
+          "sha256": "0293e35aa93557c49e8121cdfca7820f51b0259926321e466340d0d6e5df0cd2"
+        },
+        {
+          "nombre": "snapshots.log",
+          "sha256": "c28d0cc3a03fd3dfad273dda3a5a772b7523007fcd4d0c9827dc950ebabb05e3"
+        },
+        {
+          "nombre": "usuario-0-http.json",
+          "sha256": "7fa67455918a7089c9df4d62bb4ade9562c510038177fdb4c82f23bf3a961703"
+        },
+        {
+          "nombre": "usuario-0.log",
+          "sha256": "c2cf147db8e5aafc0ac17d6660445024ec3531f5d830c305f963f40b9992c14b"
+        },
+        {
+          "nombre": "usuario-9-http.json",
+          "sha256": "cbc5c099f493ce3dc31916b38e89236a69154a4c8c947f60e4d5582128db678a"
+        },
+        {
+          "nombre": "usuario-9.log",
+          "sha256": "2ee09ce43e6d73ac1caa875d507ad83f729e924e90c34416095918e13b7fc903"
+        }
+      ]
+    }
+  ]
+}

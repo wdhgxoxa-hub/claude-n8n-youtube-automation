@@ -1,0 +1,145 @@
+{
+  "estado": "PASS",
+  "revisionProducto": "fd585f0",
+  "archivoProductoSha256": "803317a7851aa4b31a2a6e5baa7588930d4e60d4dc7bd1299f805f5d6328bf1b",
+  "baseArchivo": "762a1d9ebb4c9897b4c6a39d6f41aec7cf61fcd3",
+  "archivoProductoSobrepuesto": true,
+  "condiciones": {
+    "limiteRamBytes": 1073741824,
+    "swapMaxBytes": 0,
+    "cpu": 1,
+    "afinidad": "2-3",
+    "loader": "compilado_esbuild",
+    "extensionDiagnostico": false,
+    "gcExpuestoEnAplicacion": false,
+    "gcInvocadoEnAplicacion": false,
+    "sincronizacionesPorCaso": 5,
+    "getPorCaso": 3,
+    "keepAliveMs": 5000,
+    "timeoutFabricaMs": 10000,
+    "reintentos": 0,
+    "redExterna": false
+  },
+  "casos": [
+    {
+      "caso": "usuario-0",
+      "estado": "PASS",
+      "videos": 999,
+      "snapshotSha256": "dc367215a649b3ff3241ecf6915408ab37ad2af64ab955efafaead66f788d793",
+      "bytesEntrada": 5185571,
+      "bytesSalida": 5370176,
+      "sincronizacionInicialMs": 198.28036399999996,
+      "sincronizacionEstableMaxMs": 61.99039800000003,
+      "getParseMaxMs": 45.03211699999997,
+      "lecturaSQLiteMaxMs": 15.111325999999963,
+      "serializacionMaxMs": 10.02152799999999,
+      "cgroupPicoBytes": 207155200,
+      "rssMaxMiB": 235.5,
+      "heapMuestreadoMaxMiB": 62.41364288330078,
+      "externalMuestreadoMaxMiB": 29.167244911193848,
+      "arrayBuffersMuestreadoMaxMiB": 15.680680274963379,
+      "swapPicoBytes": 0,
+      "estadoContenedor": "exited 0 false",
+      "hashesCompletos": {
+        "videos": "0ae36040702ea2ac2ee23d31c908c7af7e83ed6480c51be380bc0583296f5555",
+        "canales": "d0e8cf1a69f0e6d626c3ab2bea60213f165bec4a97abccc8060ed437142db62a",
+        "estado": "84f36f264e2565d33c979c8b20c708b77ab07df7389e599cc9c003e428cc13be"
+      }
+    },
+    {
+      "caso": "usuario-9",
+      "estado": "PASS",
+      "videos": 900,
+      "snapshotSha256": "c1c4942fc236069e444ec82db061ae08b8914ed41cdb17194e5593ca61282633",
+      "bytesEntrada": 4672566,
+      "bytesSalida": 4839001,
+      "sincronizacionInicialMs": 154.2959770000001,
+      "sincronizacionEstableMaxMs": 69.53689399999996,
+      "getParseMaxMs": 52.85605900000007,
+      "lecturaSQLiteMaxMs": 17.548495999999886,
+      "serializacionMaxMs": 9.416191000000026,
+      "cgroupPicoBytes": 184975360,
+      "rssMaxMiB": 214.8125,
+      "heapMuestreadoMaxMiB": 30.448974609375,
+      "externalMuestreadoMaxMiB": 18.165037155151367,
+      "arrayBuffersMuestreadoMaxMiB": 14.16097640991211,
+      "swapPicoBytes": 0,
+      "estadoContenedor": "exited 0 false",
+      "hashesCompletos": {
+        "videos": "af90f37ed6d9093c97bde11abc43dd43bb123ad59a37591e97a927c3ced9ae65",
+        "canales": "6195f78cd788dea83c49c5f445101c4e1815c7773674c25fe8baa9cfc6340bde",
+        "estado": "2de1fc98e5108a4a8174a2fd123206f033aa1a09768ac0d959316297ef32c5ee"
+      }
+    },
+    {
+      "caso": "administrador",
+      "estado": "PASS",
+      "videos": 9896,
+      "snapshotSha256": "623be38589a02daa1a0e6923ef06683cc25341ba92edaa16016a3d706fa020e9",
+      "bytesEntrada": 51372372,
+      "bytesSalida": 53189871,
+      "sincronizacionInicialMs": 1101.616293,
+      "sincronizacionEstableMaxMs": 428.68185600000015,
+      "getParseMaxMs": 590.2946590000001,
+      "lecturaSQLiteMaxMs": 251.57167299999992,
+      "serializacionMaxMs": 117.17070400000011,
+      "cgroupPicoBytes": 634228736,
+      "rssMaxMiB": 571.26171875,
+      "heapMuestreadoMaxMiB": 138.80558013916016,
+      "externalMuestreadoMaxMiB": 105.83335971832275,
+      "arrayBuffersMuestreadoMaxMiB": 101.76811122894287,
+      "swapPicoBytes": 0,
+      "estadoContenedor": "exited 0 false",
+      "hashesCompletos": {
+        "videos": "6babf852222ad271edc1495cb39481399435dfa1c590bf5af87619aa5c398450",
+        "canales": "84e0f05fdc71426169bd4056ac1695c871962eb032d75f135f8aba9ac21e30b5",
+        "estado": "493b5eabd6fdc1b7808c84d6ca99c0ab0ad6f1ad27f0cf283b1a0b02d6ec5d9a"
+      }
+    },
+    {
+      "caso": "sin-recursos",
+      "estado": "PASS",
+      "videos": 0,
+      "snapshotSha256": "003aac3abc3eab017f738fd5db62208ce88823e2f5cf69d3cb58fcc4c3f96142",
+      "bytesEntrada": 26,
+      "bytesSalida": 1282,
+      "sincronizacionInicialMs": 13.607311999999979,
+      "sincronizacionEstableMaxMs": 4.347260000000006,
+      "getParseMaxMs": 7.016219999999976,
+      "lecturaSQLiteMaxMs": 1.7933849999999438,
+      "serializacionMaxMs": 0.32536000000004606,
+      "cgroupPicoBytes": 161198080,
+      "rssMaxMiB": 193.6015625,
+      "heapMuestreadoMaxMiB": 21.26471710205078,
+      "externalMuestreadoMaxMiB": 4.273496627807617,
+      "arrayBuffersMuestreadoMaxMiB": 0.3279762268066406,
+      "swapPicoBytes": 0,
+      "estadoContenedor": "exited 0 false",
+      "hashesCompletos": {
+        "videos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "canales": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "estado": "2ca59016c87196a39028a4239867e2143f9440d99e002350a5cfe86058018f79"
+      }
+    }
+  ],
+  "regresion": {
+    "unitarias": 58,
+    "fallos": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "advertencias": 0,
+    "controlAnterior": {
+      "falloEsperado": true,
+      "preparacionesPara256": 1283,
+      "limite": 8,
+      "semanticasRestantesPass": 2
+    }
+  },
+  "limites": [
+    "No ejecuta Next ni su sesión real; llama estado→json del GET con actor ficticio previamente autenticado",
+    "No acredita renderizado, navegador, SSE, concurrencia ni volúmenes mayores",
+    "No reduce ni trunca los 49/51MiB del snapshot/estado administrativo",
+    "Presupuesto comparativo original1s conserva incumplimiento y no esSLA",
+    "Pico cgroup incluye pagecache; RSS/heap/external no son medidas sumables ni equivalentes"
+  ]
+}

@@ -1,0 +1,28 @@
+
+ RUN  v4.1.12 /ensayo/cooper
+
+ ❯ tests/puente-capacidad.test.ts (3 tests | 1 failed) 150ms
+   × no prepara una sentencia nativa por fila al sincronizar un lote y repetirlo 134ms
+   ✓ ve cambios anteriores del mismo lote y conserva cancelación, revisión y observabilidad 7ms
+   ✓ mantiene el encolado por revisión, el aislamiento y la reversa completa ante dueño incompatible 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/puente-capacidad.test.ts > no prepara una sentencia nativa por fila al sincronizar un lote y repetirlo
+AssertionError: expected 1283 to be less than or equal to 8
+ ❯ tests/puente-capacidad.test.ts:59:39
+     57|     aplicarEstado(user, snapshot);
+     58|     // El límite incluye la transacción. No depende del tamaño del lot…
+     59|     expect(prepare.mock.calls.length).toBeLessThanOrEqual(8);
+       |                                       ^
+     60|   }
+     61|   prepare.mockRestore();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  20:47:16
+   Duration  637ms (transform 131ms, setup 23ms, import 397ms, tests 150ms, environment 0ms)
+

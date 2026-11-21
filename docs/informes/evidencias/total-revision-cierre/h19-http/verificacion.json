@@ -1,0 +1,23 @@
+{
+  "fuentes_ejecutadas_iguales_a_entrega": {
+    "tools/cooper/medir-volumen-n8n.cjs": true,
+    "tools/cooper/volumen-fixture.cjs": true,
+    "tools/cooper/medir-volumen-http.mjs": true,
+    "tools/cooper/ejecutar-volumen-http.mjs": true
+  },
+  "tsx_sin_swap": "FAIL OOMKilled/137 administrador; dos usuarios PASS; sin-recursos NOT_RUN",
+  "compilado_sin_swap": "FAIL OOMKilled/137 administrador; dos usuarios PASS; sin-recursos NOT_RUN",
+  "con_swap": "4/4 PASS funcional condicionado",
+  "focal": {
+    "tests": 4,
+    "fail": 0
+  },
+  "flujos": {
+    "tests": 173,
+    "fail": 0
+  },
+  "advertencias_comprobaciones": 0,
+  "contenedores_activos": 0,
+  "producto_modificado": false,
+  "VPS_modificado": false
+}

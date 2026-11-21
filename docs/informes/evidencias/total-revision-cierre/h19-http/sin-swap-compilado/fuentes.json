@@ -1,0 +1,5 @@
+{
+  "codigo_harness_sha256": "ef4478593398b4b5a18ce898565d20a5fbdcf7043617de6477a64ac721b22cd4",
+  "resultado_administrador": "OOMKilled=true; exit 137; no aceptado",
+  "resultado_sin_recursos": "NOT_RUN: el lanzador detiene tras el fallo administrativo"
+}
