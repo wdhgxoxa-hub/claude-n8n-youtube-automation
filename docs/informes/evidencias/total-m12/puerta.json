@@ -1,0 +1,43 @@
+{
+  "fechaLima": "2026-11-21T12:31:17.736093-05:00",
+  "revisionCodigo": "49fd2ae",
+  "cpu": 0,
+  "workers": 1,
+  "pasos": [
+    {
+      "comando": "npm ci",
+      "rc": 0,
+      "estado": "PASS",
+      "evidencia": "puerta-ci.log"
+    },
+    {
+      "comando": "npm run lint",
+      "rc": 0,
+      "estado": "PASS",
+      "evidencia": "puerta-lint.log"
+    },
+    {
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "estado": "PASS",
+      "evidencia": "puerta-tipos.log"
+    },
+    {
+      "comando": "npm test",
+      "rc": 0,
+      "estado": "PASS",
+      "evidencia": "puerta-unit.log"
+    },
+    {
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "estado": "PASS",
+      "evidencia": "puerta-flujos.log"
+    }
+  ],
+  "unitarias": 442,
+  "e2e": "NOT_RUN: esperando .cache/TURNO-PUERTA",
+  "build": "NOT_RUN: esperando .cache/TURNO-PUERTA",
+  "flujos": 172,
+  "advertenciasPasosEjecutados": 0
+}
