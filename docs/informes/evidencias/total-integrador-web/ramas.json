@@ -1,6 +1,6 @@
 {
-  "fecha_lima": "2026-11-21T14:39:10.511663-05:00",
-  "commit_objetivo": "6b84bfb52462ce961c9311736b42ee306d53ff57",
+  "fecha_lima": "2026-11-21T15:07:04.882156-05:00",
+  "commit_objetivo": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
   "base_mision": "a69e3746a475b6c20a0ad27e79de259078fd9fc3",
   "ramas": [
     {
@@ -32,6 +32,7 @@
         "docs/informes/total-accesibilidad.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "521e17f32c8d1f69a80ee17a467ca35da05b6a32",
         "80d74642c3fda2646186acfe4976aca6d636a186",
@@ -46,9 +47,8 @@
         "babcf2302930860c0265734ea7543bfe1883aa86",
         "f494d478cf5b4ea3d6f007afca301cf254d525a2"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -84,15 +84,15 @@
         "docs/informes/total-aprendizaje.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "2859862c38c4b259aeeea5cdaa6f4203f1d3f05d",
         "52a1080853da993c9dc383da800948c16318c448",
         "90fd6a2766bb1e5738cd54a26ff6ed5eca9ec330"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -133,14 +133,14 @@
         "docs/informes/total-aprendizaje.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "2859862c38c4b259aeeea5cdaa6f4203f1d3f05d",
         "90fd6a2766bb1e5738cd54a26ff6ed5eca9ec330"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -163,15 +163,15 @@
         "docs/informes/faltantes-total.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "nota": "Informe intencional faltantes-total.md: 31 adiciones y cero eliminaciones respecto al cierre; no falta un informe total-auditoria.md.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "21a74d98adf34cc2ae7c62faa3d24f1a0664edeb"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
-      "actividad_posterior": [],
-      "nota": "Informe intencional faltantes-total.md: 31 adiciones y cero eliminaciones respecto al cierre; no falta un informe total-auditoria.md."
+      "estado": "integrada_por_parche_y_contenido",
+      "actividad_posterior": []
     },
     {
       "rama": "total-chat-vps",
@@ -203,14 +203,14 @@
         "docs/informes/total-chat-vps.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "42a84b3c860633bd921e3cc2c11082653a5cdf51",
         "f269b28dc3e95c0eb525a8d3bada84b844346d9d"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -237,6 +237,7 @@
         "docs/informes/total-chatfix.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "1e2b82d3b7256fa723eaa856d2c4a0f4ab439401",
         "7972734a297757ef545e8eceaef00236c168a1ea",
@@ -247,9 +248,8 @@
         "1e2b82d3b7256fa723eaa856d2c4a0f4ab439401",
         "c87c1d1c9d0a9014227668db891c6f5a65065239"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -319,6 +319,7 @@
         "docs/informes/total-cierre-aceptacion.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "bdf8cd05e818478d90c879955035e38e20e3ae3a",
         "bf11c9177e2e671cf0a1017f2739a1b468b00183",
@@ -326,9 +327,8 @@
         "ed64c42a169f438ff660aa02e067d8cf906f7c73"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -363,6 +363,7 @@
         "docs/informes/total-competencia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "169d0cdf1e3e47bc27c7d8e1790a0764515d2431",
         "1f1ea369ab16f666ceeafe8b2de6ce42f952e154",
@@ -374,9 +375,8 @@
       "commits_identificados_de_esta_mision": [
         "ce2a884174f18024fcfe326c022bed7f52bd6b12"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -398,17 +398,17 @@
         "docs/informes/total-competencia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche",
       "actividad_posterior": []
     },
     {
       "rama": "total-competencia-cierre",
       "sha_inicial": "040ce668fd6e3882492f1ba5079ba0224b341636",
-      "sha_actual": "676ab1f955197a908c75b77d675f286384bd95fc",
+      "sha_actual": "1cdd904efb3a621cff612c11b68d64d1fc797734",
       "cambio_desde_corte": true,
       "en_corte_inicial": true,
       "ancestro": true,
@@ -418,47 +418,54 @@
       "informe_propio_actual": null,
       "pendientes_revision": [],
       "informes_relacionados": [
-        "docs/informes/total-competencia-aceptacion.md"
+        "docs/informes/total-competencia-aceptacion.md",
+        "docs/informes/total-competencia-runtime.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_ascendencia",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_ascendencia",
       "actividad_posterior": [
         {
           "commit": "11327e789b9f79b6f74b837c5bc604d36316b2e4",
           "asunto": "Normaliza la salida del subflujo de competencia antes de guardarla",
-          "estado": "integrada_por_contenido",
+          "estado": "contenido_reconciliado",
           "equivalente": "3a8af0828f251010dd0eba033b59cc9f3e892dff"
         },
         {
           "commit": "62d128b577ba37a3e1ac997273657c43ece76589",
           "asunto": "Consulta vidIQ con cuota renovable comprobada y respaldo gratuito",
-          "estado": "posterior_pendiente_coordinacion",
-          "equivalente": null
+          "estado": "contenido_reconciliado",
+          "equivalente": "528d344a100574182bb6c42f3ddae8d0aec4b425"
         },
         {
           "commit": "ca472c62f858ab9d4ad6dc8dfca4497241023f46",
           "asunto": "Conserva el consumo desconocido y el territorio de cada canal",
-          "estado": "posterior_pendiente_coordinacion",
-          "equivalente": null
+          "estado": "contenido_reconciliado",
+          "equivalente": "528d344a100574182bb6c42f3ddae8d0aec4b425"
         },
         {
           "commit": "3f92d4ca1a1591e85453c777cfa043a4b6e007c2",
           "asunto": "Documenta acceso real, esquema y aceptación parcial de competencia",
-          "estado": "posterior_pendiente_coordinacion",
-          "equivalente": null
+          "estado": "documentacion_consolidada",
+          "equivalente": "d45782d8aee8bd89ec80f913c1e30501dfef553a"
         },
         {
           "commit": "676ab1f955197a908c75b77d675f286384bd95fc",
           "asunto": "Enlaza los cortes históricos con la aceptación vigente",
-          "estado": "posterior_pendiente_coordinacion",
-          "equivalente": null
+          "estado": "documentacion_consolidada",
+          "equivalente": "d45782d8aee8bd89ec80f913c1e30501dfef553a"
+        },
+        {
+          "commit": "1cdd904efb3a621cff612c11b68d64d1fc797734",
+          "asunto": "Acreditar Radar completo y retirar sondas de competencia",
+          "estado": "documentacion_integrada",
+          "equivalente": "d45782d8aee8bd89ec80f913c1e30501dfef553a"
         }
       ],
-      "nota_actividad": "El corte original está integrado; sus adiciones posteriores no se consideran cierre aprobado y se coordinan con el orquestador."
+      "nota_actividad": "Puntas registradas por SHA fijo. Cierres documentales incorporados en la rama delegada; helper operativo separado y asignado a producto. Las evidencias históricas conservan alcance."
     },
     {
       "rama": "total-competencia-navegacion",
@@ -479,11 +486,11 @@
         "docs/informes/total-competencia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche",
       "actividad_posterior": []
     },
     {
@@ -516,6 +523,7 @@
         "docs/informes/total-competencia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "169d0cdf1e3e47bc27c7d8e1790a0764515d2431",
         "3a3b41ce8dce993a5337c8bfdca8a5adae2c9344",
@@ -527,9 +535,8 @@
       "commits_identificados_de_esta_mision": [
         "3a3b41ce8dce993a5337c8bfdca8a5adae2c9344"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -574,6 +581,7 @@
         "docs/informes/total-competencia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "2e6403684ba9874ab5c36153524789c911c27694",
         "9167d91a919b64186c7c090ff29a6fc15c027fc8",
@@ -581,9 +589,8 @@
         "f253267b42f592daf66ae53e7d49fab4f8c0f18b"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -632,6 +639,7 @@
         "docs/informes/total-despliegue.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "4cf7843787a12344a84306e0721d4e62acbb9bee",
         "5b5b138c5a563bd76fe217f32930abc7b0a549dc",
@@ -640,9 +648,8 @@
         "e42f6951af21f2998cb47fb1fa356d5aa82ab7c6"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -678,15 +685,15 @@
         "docs/informes/total-despliegue.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "4cf7843787a12344a84306e0721d4e62acbb9bee",
         "5b5b138c5a563bd76fe217f32930abc7b0a549dc",
         "e38a83b0b6e1cb4b750611e08e05c355432ec017"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -710,11 +717,11 @@
         "docs/informes/total-cierre-aceptacion.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche",
       "actividad_posterior": []
     },
     {
@@ -735,11 +742,11 @@
         "docs/informes/total-cierre-aceptacion.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche",
       "actividad_posterior": []
     },
     {
@@ -758,11 +765,11 @@
         "docs/informes/total-cierre-aceptacion.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_ascendencia",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_ascendencia",
       "actividad_posterior": []
     },
     {
@@ -785,15 +792,15 @@
         "docs/informes/total-guia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "418497b3ad9d9553ae6c4953e0471ea9a3ef611e"
       ],
       "commits_identificados_de_esta_mision": [
         "418497b3ad9d9553ae6c4953e0471ea9a3ef611e"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -815,11 +822,11 @@
         "docs/informes/total-identidad-viva.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche",
       "actividad_posterior": []
     },
     {
@@ -844,13 +851,13 @@
         "docs/informes/total-infra-segura.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "6aee20540550e27d3ab34c65a8452f9aaa78f9af"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -873,15 +880,15 @@
         "docs/informes/total-m01.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "436dd73ea85ddec3440870d6d5e47800b6ad7b13",
         "83e21bb6c3cf705754161e19cf4afc70dc866e04",
         "8a8f8a065105c423e7a083e13ebf4f45b90c662f"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -904,13 +911,13 @@
         "docs/informes/total-m03.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "81ca07caf7b5df4ca4de6b60db171414ae9e9324"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -933,15 +940,15 @@
         "docs/informes/total-m05.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "6ecfa3d19509f5e16a21d3ee73fb395dc05e5efc",
         "7d4523133270eca615251a57ccc7ca184a802cf9",
         "c95cddc6657100e994d563b2151dff29e5108b17"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -964,13 +971,13 @@
         "docs/informes/total-m06.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "c14c20ee3039ad406f5e9ad96eb2420a085570b5"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -994,14 +1001,14 @@
         "docs/informes/total-m07.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "77aeebd8dac9cf65b33e23d3525c3f030c493f9a",
         "ff76ceca3fdccf967ab95e4e252d6a7f168be97b"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1030,14 +1037,14 @@
         "docs/informes/total-m08.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "bdf8cd05e818478d90c879955035e38e20e3ae3a",
         "e05160b5b309c6d65a8405ac2e50f47a52f6cc10"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1061,14 +1068,14 @@
         "docs/informes/total-m09.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "7972734a297757ef545e8eceaef00236c168a1ea",
         "810559045fc62138a7a189ebffe6b05a66c8ac43"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1093,15 +1100,15 @@
         "docs/informes/total-m10.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "1aadd9a89ff1cfb671d4c692945ae554c094f42f",
         "363325fc3114f8f01b57d6e34b5490a815a1aa01",
         "4f96b55a514444ca4599d5784c2e4dc032da6678"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1154,14 +1161,14 @@
         "docs/informes/total-m11.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "449d28bbab2c52e61aedd7d75a1231e5004f6df3",
         "bdf8cd05e818478d90c879955035e38e20e3ae3a"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1216,15 +1223,15 @@
         "docs/informes/total-m12.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "bdf8cd05e818478d90c879955035e38e20e3ae3a",
         "beee4cfe0392997621dde0e31c3a03c16acb40f5",
         "d46bc67d852479da578c5b5bb24ff92e96dc852a"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1249,13 +1256,13 @@
         "docs/informes/total-marcas-runtime.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "9cdcf0da32011dbb92a6c84fbf4ec10ae6d68e25"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1278,15 +1285,15 @@
         "docs/informes/total-margen-estrategia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "9654aa0a7d4ddc7f0457ce7153229fdab83f7b3e"
       ],
       "commits_identificados_de_esta_mision": [
         "9654aa0a7d4ddc7f0457ce7153229fdab83f7b3e"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1311,6 +1318,7 @@
         "docs/informes/total-n8n-auditoria.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "0b299ac69d20cd88ee5892d7106800efbfc00e5e",
         "8348a02833627e4a8fc3498dee726c7e1c32deb3",
@@ -1321,9 +1329,8 @@
         "8348a02833627e4a8fc3498dee726c7e1c32deb3",
         "acb48f2186357759969261c3844703fa35fe3d9c"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1346,6 +1353,7 @@
         "docs/informes/total-n8n-e2e.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "0b299ac69d20cd88ee5892d7106800efbfc00e5e",
         "2ad89bf8e32ec4e6aaa9582dd67e65e03b5db4aa",
@@ -1358,9 +1366,8 @@
         "ed6f2053477357164621481596439cd07c6018f9",
         "f927f73ca912fbce0f5dd7dabc5a81a702958646"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1386,11 +1393,11 @@
         "docs/informes/total-n8n-lote.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche",
       "actividad_posterior": []
     },
     {
@@ -1424,6 +1431,7 @@
         "docs/informes/total-n8n-ramas.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "0b299ac69d20cd88ee5892d7106800efbfc00e5e",
         "2ad89bf8e32ec4e6aaa9582dd67e65e03b5db4aa",
@@ -1442,9 +1450,8 @@
         "f7d07f0cd7b0ff51d254522d7f654e5e8583a025",
         "f927f73ca912fbce0f5dd7dabc5a81a702958646"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1471,19 +1478,38 @@
         "docs/informes/total-operacion.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "43e36cff16b45cda825193fe8209437f0251dd8d"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
+    },
+    {
+      "rama": "total-qa-produccion",
+      "sha_inicial": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "sha_actual": "de397f3195856c10b6a9959171ff42da4328d9ec",
+      "cambio_desde_corte": false,
+      "en_corte_inicial": false,
+      "ancestro": true,
+      "equivalentes_git_cherry": [],
+      "revision": [],
+      "informe_propio_inicial": null,
+      "informe_propio_actual": null,
+      "pendientes_revision": [],
+      "commits_equivalentes_identificados": [],
+      "commits_identificados_de_esta_mision": [],
+      "pendientes_funcionales_cerrados": [],
+      "estado": "sin_cierre_no_seleccionada",
+      "actividad_posterior": [],
+      "nota": "Ref posterior sin cierre propio de misión. Se registra el SHA observado, sin seguir actividad QA/rondas ni modificar su worktree. Historia compartida auditada; no se considera aceptación final. Punta idéntica a base de397f3, sin commits funcionales nuevos."
     },
     {
       "rama": "total-radar-contexto",
       "sha_inicial": "bfd5e79283bdd2c571937a9f30d8ff512015430f",
-      "sha_actual": "64ebdd0f49b9a407469d91f6cbb0b220dfa05021",
+      "sha_actual": "6f6af6465f3240250aad150c3f68b72488ee5595",
       "cambio_desde_corte": true,
       "en_corte_inicial": true,
       "ancestro": true,
@@ -1493,41 +1519,56 @@
       "informe_propio_actual": "docs/informes/total-radar-contexto.md",
       "pendientes_revision": [],
       "informes_relacionados": [
-        "docs/informes/total-radar-contexto.md"
+        "docs/informes/total-radar-contexto.md",
+        "docs/informes/total-aprendizaje-horario.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_ascendencia",
-      "pendientes_funcionales_cerrados": [],
+      "pendientes_funcionales_cerrados": [
+        "c0772dc3dd8027eaf220d0f2e64a40b7ec96e3d7"
+      ],
+      "estado": "integrada_con_helper_operativo_pendiente",
       "actividad_posterior": [
         {
           "commit": "d1c675017687b106467187879ae2754e33a5ebc4",
           "asunto": "Normaliza la salida del subflujo de competencia antes de guardarla",
-          "estado": "integrada_por_contenido",
+          "estado": "contenido_reconciliado",
           "equivalente": "3a8af0828f251010dd0eba033b59cc9f3e892dff"
         },
         {
           "commit": "143bfff1e67a0416503cdf034914b03b9390bdca",
           "asunto": "Documenta la causa del Radar y sus regresiones en ambos motores",
-          "estado": "integrada_por_contenido",
+          "estado": "documentacion_integrada",
           "equivalente": "a794037beaaa886bcf3b8eb69274caf0d3af22c8"
         },
         {
           "commit": "c0772dc3dd8027eaf220d0f2e64a40b7ec96e3d7",
           "asunto": "Restringe el lote conjunto a Radar, su consulta interna y Resolver",
-          "estado": "posterior_pendiente_coordinacion",
+          "estado": "pendiente_helper_operativo",
           "equivalente": null
         },
         {
           "commit": "64ebdd0f49b9a407469d91f6cbb0b220dfa05021",
           "asunto": "Documenta aceptación exacta de imagen bfd5e79 sin activarla",
-          "estado": "posterior_pendiente_coordinacion",
+          "estado": "antecedente_historico_no_reintroducido",
           "equivalente": null
+        },
+        {
+          "commit": "2aa3c98241be77a4c54b7e441bab14dad81163b9",
+          "asunto": "Acredita delta Radar y Resolver aplicado con reversa en ambos motores",
+          "estado": "documentacion_integrada",
+          "equivalente": "097f32ced21b0d8a4471f2b6ba0da3fdc01e8cb5"
+        },
+        {
+          "commit": "6f6af6465f3240250aad150c3f68b72488ee5595",
+          "asunto": "Acredita ejecución automática de aprendizaje con versión e instantes reales",
+          "estado": "documentacion_integrada",
+          "equivalente": "adaf3cad0a9df67e334eb4a7bf383b8eb915ef2f"
         }
       ],
-      "nota_actividad": "El corte original está integrado; sus adiciones posteriores no se consideran cierre aprobado y se coordinan con el orquestador."
+      "nota_actividad": "Puntas registradas por SHA fijo. Cierres documentales incorporados en la rama delegada; helper operativo separado y asignado a producto. Las evidencias históricas conservan alcance."
     },
     {
       "rama": "total-render-real",
@@ -1551,6 +1592,7 @@
         "docs/informes/total-render-real.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "0b299ac69d20cd88ee5892d7106800efbfc00e5e",
         "2ad89bf8e32ec4e6aaa9582dd67e65e03b5db4aa",
@@ -1567,41 +1609,65 @@
         "ed6f2053477357164621481596439cd07c6018f9",
         "f927f73ca912fbce0f5dd7dabc5a81a702958646"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
       "rama": "total-rendimiento",
       "sha_inicial": "7aab905696017609ee38f79e71f6b8e5f476c746",
-      "sha_actual": "7aab905696017609ee38f79e71f6b8e5f476c746",
-      "cambio_desde_corte": false,
+      "sha_actual": "42c58819f6db2e391079f59e073ece5bb470f3b5",
+      "cambio_desde_corte": true,
       "en_corte_inicial": true,
       "ancestro": false,
-      "equivalentes_git_cherry": [],
+      "equivalentes_git_cherry": [
+        "15d7e4faaa71b58282c8c6c1f04ca4bc524fc878",
+        "237633411b754dc2dacd193bd188e2c1cdb48179",
+        "161f4da4a7ea9c898e9dc382b909aa4a5b375c3f",
+        "7aab905696017609ee38f79e71f6b8e5f476c746"
+      ],
       "revision": [
         "f72544bb445f2e960dd18c2bb73a7a35e16e6654",
         "5ca74945d2852c4fac028685f5c5a622081db3a6",
         "16488e924c22dd801cbf7a80dd06c04e654ad93a",
-        "15d7e4faaa71b58282c8c6c1f04ca4bc524fc878",
-        "237633411b754dc2dacd193bd188e2c1cdb48179",
-        "161f4da4a7ea9c898e9dc382b909aa4a5b375c3f",
-        "e8968d737024a49b5a6abb58c0889b26e9ba4366",
-        "7aab905696017609ee38f79e71f6b8e5f476c746"
+        "e8968d737024a49b5a6abb58c0889b26e9ba4366"
       ],
       "informe_propio_inicial": null,
-      "informe_propio_actual": null,
+      "informe_propio_actual": "docs/informes/total-rendimiento.md",
       "pendientes_revision": [],
-      "informes_relacionados": [],
+      "informes_relacionados": [
+        "docs/informes/total-rendimiento.md"
+      ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
-      "commits_equivalentes_identificados": [],
-      "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "activa_pendiente",
+      "nota": "Cerró después del corte inicial en 42c58819. Ocho commits funcionales y cierre ya integrados; conciliación preserva diario y Lima. No queda activa pendiente.",
+      "seleccion_explicita_en_mision": true,
+      "commits_equivalentes_identificados": [
+        "2e00936f0f9ed66f0655b0f5e4017272abb4f161",
+        "5c1b081195508178b3444734ffc42433f791c5be",
+        "6c7a2eba693ae220d3b64926b8fed7f73afb2707",
+        "d4bfb94c62850536d89eeafeff070c76950e686f",
+        "e27a9f1e748c158472cd06a402527992aa230230",
+        "e32665d6001f2afba6507bca884b02685db0b638"
+      ],
+      "commits_identificados_de_esta_mision": [
+        "2e00936f0f9ed66f0655b0f5e4017272abb4f161",
+        "5c1b081195508178b3444734ffc42433f791c5be",
+        "6c7a2eba693ae220d3b64926b8fed7f73afb2707",
+        "d4bfb94c62850536d89eeafeff070c76950e686f",
+        "e27a9f1e748c158472cd06a402527992aa230230",
+        "e32665d6001f2afba6507bca884b02685db0b638"
+      ],
       "pendientes_funcionales_cerrados": [],
-      "actividad_posterior": [],
-      "nota": "Sin informe de cierre en el corte ni en su HEAD; segunda pasada expresa."
+      "estado": "integrada_por_parche_y_contenido",
+      "actividad_posterior": [
+        {
+          "commit": "42c58819f6db2e391079f59e073ece5bb470f3b5",
+          "asunto": "Documentar rendimiento medido, límites y propuesta de Caddy",
+          "estado": "documentacion_integrada",
+          "equivalente": "cd80d29395eb8bedd03acee6d572c6c793692521"
+        }
+      ],
+      "nota_actividad": "Puntas registradas por SHA fijo. Cierres documentales incorporados en la rama delegada; helper operativo separado y asignado a producto. Las evidencias históricas conservan alcance."
     },
     {
       "rama": "total-resultados-e2e",
@@ -1642,14 +1708,14 @@
         "docs/informes/total-resultados-e2e.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "400e52006fd77244ade8a0e896f0ea51e7034dfb",
         "bdf8cd05e818478d90c879955035e38e20e3ae3a"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1672,13 +1738,13 @@
         "docs/informes/total-resultados-movil.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "a69e3746a475b6c20a0ad27e79de259078fd9fc3"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1722,13 +1788,13 @@
         "docs/informes/total-retorno-2476.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "bdf8cd05e818478d90c879955035e38e20e3ae3a"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1747,11 +1813,11 @@
         "docs/informes/total-revision-final.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_ascendencia",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_ascendencia",
       "actividad_posterior": []
     },
     {
@@ -1802,15 +1868,15 @@
         "docs/informes/total-revision-final.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "a9a6c8020ce639352311ece4f211273c9a8a5d96",
         "bdf8cd05e818478d90c879955035e38e20e3ae3a",
         "fcfab3bc2f6f22d03bd5930cbfed002b73adaef8"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -1840,16 +1906,25 @@
         "docs/informes/total-competencia-runtime.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
-        "a794037beaaa886bcf3b8eb69274caf0d3af22c8"
+        "097f32ced21b0d8a4471f2b6ba0da3fdc01e8cb5",
+        "528d344a100574182bb6c42f3ddae8d0aec4b425",
+        "a794037beaaa886bcf3b8eb69274caf0d3af22c8",
+        "adaf3cad0a9df67e334eb4a7bf383b8eb915ef2f",
+        "d45782d8aee8bd89ec80f913c1e30501dfef553a"
       ],
       "commits_identificados_de_esta_mision": [
-        "a794037beaaa886bcf3b8eb69274caf0d3af22c8"
+        "097f32ced21b0d8a4471f2b6ba0da3fdc01e8cb5",
+        "528d344a100574182bb6c42f3ddae8d0aec4b425",
+        "a794037beaaa886bcf3b8eb69274caf0d3af22c8",
+        "adaf3cad0a9df67e334eb4a7bf383b8eb915ef2f",
+        "d45782d8aee8bd89ec80f913c1e30501dfef553a"
       ],
-      "seleccion_explicita_en_mision": false,
-      "estado": "actividad_posterior_pendiente",
       "pendientes_funcionales_cerrados": [],
-      "actividad_posterior": []
+      "estado": "sin_cierre_no_seleccionada",
+      "actividad_posterior": [],
+      "nota": "Ref posterior sin cierre propio de misión. Se registra el SHA observado, sin seguir actividad QA/rondas ni modificar su worktree. Historia compartida auditada; no se considera aceptación final."
     },
     {
       "rama": "total-seguridad",
@@ -1874,13 +1949,13 @@
         "docs/informes/total-seguridad.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "8b9c93e500858ba2b7c04ca4bb7bdd134d6348c6"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -2101,6 +2176,8 @@
         "docs/informes/total-sentinel.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "nota": "No mezclar su historia antigua: 146 commits no equivalentes por git cherry incluyen historia heredada/saneada. Solo se seleccionan commits propios cerrados; parser y chat comprobados por contenido, Radar recuperado en3a3b41c.",
+      "seleccion_explicita_en_mision": true,
       "commits_equivalentes_identificados": [
         "0231337852746daf8baf0af2e489ba4c9d8bc964",
         "0303692d578813bf21d5877a030b82b661ac31c7",
@@ -2242,11 +2319,9 @@
         "ce2a884174f18024fcfe326c022bed7f52bd6b12",
         "f0626e213ad1abded30e1d5c79a76ab2898ec729"
       ],
-      "seleccion_explicita_en_mision": true,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
-      "actividad_posterior": [],
-      "nota": "No mezclar su historia antigua: 146 commits no equivalentes por git cherry incluyen historia heredada/saneada. Solo se seleccionan commits propios cerrados; parser y chat comprobados por contenido, Radar recuperado en3a3b41c."
+      "estado": "integrada_por_parche_y_contenido",
+      "actividad_posterior": []
     },
     {
       "rama": "total-sentinel-guardia",
@@ -2276,14 +2351,14 @@
         "docs/informes/total-sentinel-guardia.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "0303692d578813bf21d5877a030b82b661ac31c7",
         "bdf8cd05e818478d90c879955035e38e20e3ae3a"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -2333,14 +2408,14 @@
         "docs/informes/total-sentinel-privado.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "a9a6c8020ce639352311ece4f211273c9a8a5d96",
         "bdf8cd05e818478d90c879955035e38e20e3ae3a"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -2363,13 +2438,13 @@
         "docs/informes/total-vidiq-parser.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "f8aa9667a8c00fe143d6a9125a57cd991829b09c"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     },
     {
@@ -2392,13 +2467,13 @@
         "docs/informes/total-volumen-n8n.md"
       ],
       "notas_informes": "Rutas relacionadas en origen o destino; ausencia de nombre igual a la rama no prueba falta de integración. Se conserva procedencia histórica.",
+      "seleccion_explicita_en_mision": false,
       "commits_equivalentes_identificados": [
         "1551e9bd44b102ad07be52ab76a369064ce59b62"
       ],
       "commits_identificados_de_esta_mision": [],
-      "seleccion_explicita_en_mision": false,
-      "estado": "integrada_por_parche_y_contenido",
       "pendientes_funcionales_cerrados": [],
+      "estado": "integrada_por_parche_y_contenido",
       "actividad_posterior": []
     }
   ],
@@ -2445,7 +2520,10 @@
         },
         {
           "archivo": "cooper/src/app/(estudio)/admin/fabrica/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/admin/page.tsx",
@@ -2462,11 +2540,17 @@
         },
         {
           "archivo": "cooper/src/app/(estudio)/avisos/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/canales/[id]/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/canales/page.tsx",
@@ -2474,15 +2558,24 @@
         },
         {
           "archivo": "cooper/src/app/(estudio)/cuentas/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/decisiones/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/incidencias/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/marcas/page.tsx",
@@ -2503,7 +2596,10 @@
         },
         {
           "archivo": "cooper/src/app/(estudio)/programados/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/publicados/page.tsx",
@@ -2512,19 +2608,31 @@
         },
         {
           "archivo": "cooper/src/app/(estudio)/radar/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/redes/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/referencias/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/rutina/page.tsx",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "98670f5cd1a81a1f469f9384f76361934a67d93a"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/videos/[id]/page.tsx",
@@ -2781,7 +2889,7 @@
         "equivalentes": [
           "babcf2302930860c0265734ea7543bfe1883aa86"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -2807,7 +2915,7 @@
         "equivalentes": [
           "2859862c38c4b259aeeea5cdaa6f4203f1d3f05d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -2944,7 +3052,7 @@
         "equivalentes": [
           "52a1080853da993c9dc383da800948c16318c448"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3197,7 +3305,7 @@
         "equivalentes": [
           "f269b28dc3e95c0eb525a8d3bada84b844346d9d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3235,7 +3343,7 @@
         "equivalentes": [
           "42a84b3c860633bd921e3cc2c11082653a5cdf51"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3321,7 +3429,7 @@
         "equivalentes": [
           "810559045fc62138a7a189ebffe6b05a66c8ac43"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3519,7 +3627,7 @@
         "equivalentes": [
           "bdf8cd05e818478d90c879955035e38e20e3ae3a"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3554,7 +3662,7 @@
         "equivalentes": [
           "ed64c42a169f438ff660aa02e067d8cf906f7c73"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3584,7 +3692,7 @@
         "equivalentes": [
           "e2160579b563b75290b3b22cd01430bcb17f6c56"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3624,7 +3732,7 @@
         "equivalentes": [
           "bf11c9177e2e671cf0a1017f2739a1b468b00183"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -3718,7 +3826,10 @@
         },
         {
           "archivo": "cooper/src/contratos/operacion.ts",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "6e4ef505644593932306f7b2a69944813fda305b"
+          ]
         },
         {
           "archivo": "cooper/src/servicios/competencia.ts",
@@ -4071,7 +4182,7 @@
         "equivalentes": [
           "b5f20adde781637a817cd824af04930d5a639a34"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4178,7 +4289,7 @@
         "equivalentes": [
           "f253267b42f592daf66ae53e7d49fab4f8c0f18b"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4208,7 +4319,7 @@
         "equivalentes": [
           "2e6403684ba9874ab5c36153524789c911c27694"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4242,7 +4353,7 @@
         "equivalentes": [
           "9167d91a919b64186c7c090ff29a6fc15c027fc8"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4271,7 +4382,7 @@
         "equivalentes": [
           "5b5b138c5a563bd76fe217f32930abc7b0a549dc"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4300,7 +4411,7 @@
         "equivalentes": [
           "4cf7843787a12344a84306e0721d4e62acbb9bee"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4499,7 +4610,7 @@
         "equivalentes": [
           "7fb765ceeac649b2414de5449c604792d5e7d5e1"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4526,7 +4637,7 @@
         "equivalentes": [
           "e38a83b0b6e1cb4b750611e08e05c355432ec017"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4550,7 +4661,7 @@
         "equivalentes": [
           "418497b3ad9d9553ae6c4953e0471ea9a3ef611e"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4580,7 +4691,7 @@
         "equivalentes": [
           "6aee20540550e27d3ab34c65a8452f9aaa78f9af"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4736,7 +4847,7 @@
         "equivalentes": [
           "436dd73ea85ddec3440870d6d5e47800b6ad7b13"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -4918,7 +5029,7 @@
         "equivalentes": [
           "c95cddc6657100e994d563b2151dff29e5108b17"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5083,7 +5194,7 @@
         "equivalentes": [
           "ff76ceca3fdccf967ab95e4e252d6a7f168be97b"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5289,7 +5400,7 @@
         "equivalentes": [
           "e05160b5b309c6d65a8405ac2e50f47a52f6cc10"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5395,7 +5506,8 @@
         },
         {
           "archivo": "cooper/src/contratos/observabilidad.ts",
-          "estado": "blob_identico"
+          "estado": "revisar",
+          "ausente": false
         },
         {
           "archivo": "cooper/src/contratos/resultados.ts",
@@ -5489,7 +5601,7 @@
         "equivalentes": [
           "363325fc3114f8f01b57d6e34b5490a815a1aa01"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5631,7 +5743,7 @@
         "equivalentes": [
           "d46bc67d852479da578c5b5bb24ff92e96dc852a"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5675,7 +5787,7 @@
         "equivalentes": [
           "beee4cfe0392997621dde0e31c3a03c16acb40f5"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5704,7 +5816,7 @@
         "equivalentes": [
           "9cdcf0da32011dbb92a6c84fbf4ec10ae6d68e25"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -5725,7 +5837,7 @@
         "equivalentes": [
           "9654aa0a7d4ddc7f0457ce7153229fdab83f7b3e"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -6007,7 +6119,7 @@
         "equivalentes": [
           "acb48f2186357759969261c3844703fa35fe3d9c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -6376,7 +6488,7 @@
         "equivalentes": [
           "f927f73ca912fbce0f5dd7dabc5a81a702958646"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -6521,7 +6633,7 @@
         "equivalentes": [
           "db9dce74ec0a53a9f76e91e6cccd5fc5987f8774"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -6564,7 +6676,7 @@
         "equivalentes": [
           "43e36cff16b45cda825193fe8209437f0251dd8d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -6600,7 +6712,10 @@
         },
         {
           "archivo": "cooper/scripts/ensayo-render-transportes.mjs",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "a68ac063e6e90d288ec9caecad9792c90c9dd448"
+          ]
         },
         {
           "archivo": "cooper/scripts/ensayo-total.mjs",
@@ -6681,7 +6796,7 @@
         "equivalentes": [
           "7398b6205c8f2ecc6077d84b28ee499732efcab7"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -6712,12 +6827,11 @@
         {
           "archivo": "cooper/scripts/benchmark-sqlite.mjs",
           "estado": "revisar",
-          "ausente": true
+          "ausente": false
         },
         {
           "archivo": "cooper/src/db/index.ts",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "blob_identico"
         },
         {
           "archivo": "cooper/src/servicios/datos.ts",
@@ -6726,19 +6840,25 @@
         },
         {
           "archivo": "cooper/src/servicios/marcas/servicio.ts",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "e27a9f1e748c158472cd06a402527992aa230230"
+          ]
         },
         {
           "archivo": "cooper/tests/rendimiento-sqlite.test.ts",
           "estado": "revisar",
-          "ausente": true
+          "ausente": false
         }
       ],
       "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
+        "estado": "contenido_reconciliado",
+        "equivalentes": [
+          "e27a9f1e748c158472cd06a402527992aa230230",
+          "5c1b081195508178b3444734ffc42433f791c5be",
+          "e32665d6001f2afba6507bca884b02685db0b638"
+        ],
+        "evidencia": "Índices añadidos como 0018, índice 13 del diario, conservando intactas las trece migraciones anteriores. Agregados conservan períodos Lima y excluyen gastos futuros; expectativa de fixture corregida tras comprobar suma JS equivalente."
       }
     },
     {
@@ -6785,8 +6905,10 @@
         },
         {
           "archivo": "cooper/src/app/(estudio)/canales/[id]/page.tsx",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "d4bfb94c62850536d89eeafeff070c76950e686f"
+          ]
         },
         {
           "archivo": "cooper/src/app/(estudio)/cuentas/page.tsx",
@@ -6830,33 +6952,39 @@
         },
         {
           "archivo": "cooper/src/componentes/espacio.tsx",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "d4bfb94c62850536d89eeafeff070c76950e686f"
+          ]
         },
         {
           "archivo": "cooper/src/componentes/ilustracion-viva.tsx",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "d4bfb94c62850536d89eeafeff070c76950e686f"
+          ]
         },
         {
           "archivo": "cooper/src/componentes/inicio.tsx",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "d4bfb94c62850536d89eeafeff070c76950e686f"
+          ]
         },
         {
           "archivo": "cooper/src/componentes/operacion-inicial.tsx",
-          "estado": "revisar",
-          "ausente": true
+          "estado": "blob_identico"
         },
         {
           "archivo": "cooper/src/componentes/operacion.tsx",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "d4bfb94c62850536d89eeafeff070c76950e686f"
+          ]
         },
         {
           "archivo": "cooper/src/contratos/operacion-catalogo.ts",
-          "estado": "revisar",
-          "ausente": true
+          "estado": "blob_identico"
         },
         {
           "archivo": "cooper/src/contratos/operacion.ts",
@@ -6865,9 +6993,12 @@
         }
       ],
       "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
+        "estado": "contenido_reconciliado",
+        "equivalentes": [
+          "d4bfb94c62850536d89eeafeff070c76950e686f",
+          "5c1b081195508178b3444734ffc42433f791c5be"
+        ],
+        "evidencia": "Datos SSR e ilustraciones prioritarias incorporados conservando metadata, foco y Competencia. Fixtures de API usan Actualizar; carga conserva estado accesible y datos previos."
       }
     },
     {
@@ -6886,13 +7017,17 @@
       "detalle_archivos": [
         {
           "archivo": "cooper/e2e/marcas.spec.ts",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "6c7a2eba693ae220d3b64926b8fed7f73afb2707"
+          ]
         },
         {
           "archivo": "cooper/e2e/resultados.spec.ts",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "6c7a2eba693ae220d3b64926b8fed7f73afb2707"
+          ]
         },
         {
           "archivo": "cooper/src/componentes/marcas.tsx",
@@ -6901,111 +7036,26 @@
         },
         {
           "archivo": "cooper/src/componentes/medios-video.tsx",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "blob_identico"
         },
         {
           "archivo": "cooper/src/contratos/observabilidad.ts",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "6c7a2eba693ae220d3b64926b8fed7f73afb2707"
+          ]
         },
         {
           "archivo": "cooper/src/lib/enlaces-medios.ts",
-          "estado": "revisar",
-          "ausente": true
+          "estado": "blob_identico"
         }
       ],
       "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
-      }
-    },
-    {
-      "commit": "15d7e4faaa71b58282c8c6c1f04ca4bc524fc878",
-      "asunto": "Medir rendimiento con caché fría, trazas y recursos reproducibles",
-      "archivos": [
-        "cooper/README.md",
-        "cooper/scripts/auditoria.mjs",
-        "cooper/scripts/rendimiento-bundles.mjs",
-        "cooper/scripts/rendimiento-medios.mjs",
-        "cooper/scripts/rendimiento-trazas.mjs"
-      ],
-      "excluidos": [],
-      "estado": "revisar",
-      "detalle_archivos": [
-        {
-          "archivo": "cooper/README.md",
-          "estado": "revisar",
-          "ausente": false
-        },
-        {
-          "archivo": "cooper/scripts/auditoria.mjs",
-          "estado": "revisar",
-          "ausente": false
-        },
-        {
-          "archivo": "cooper/scripts/rendimiento-bundles.mjs",
-          "estado": "revisar",
-          "ausente": true
-        },
-        {
-          "archivo": "cooper/scripts/rendimiento-medios.mjs",
-          "estado": "revisar",
-          "ausente": true
-        },
-        {
-          "archivo": "cooper/scripts/rendimiento-trazas.mjs",
-          "estado": "revisar",
-          "ausente": true
-        }
-      ],
-      "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
-      }
-    },
-    {
-      "commit": "237633411b754dc2dacd193bd188e2c1cdb48179",
-      "asunto": "Registrar umbrales de trazas y exigir estabilidad visual del diseño",
-      "archivos": [
-        "cooper/scripts/rendimiento-trazas.mjs"
-      ],
-      "excluidos": [],
-      "estado": "revisar",
-      "detalle_archivos": [
-        {
-          "archivo": "cooper/scripts/rendimiento-trazas.mjs",
-          "estado": "revisar",
-          "ausente": true
-        }
-      ],
-      "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
-      }
-    },
-    {
-      "commit": "161f4da4a7ea9c898e9dc382b909aa4a5b375c3f",
-      "asunto": "Contar decisiones visibles durante el renderizado progresivo",
-      "archivos": [
-        "cooper/e2e/operacion.spec.ts"
-      ],
-      "excluidos": [],
-      "estado": "revisar",
-      "detalle_archivos": [
-        {
-          "archivo": "cooper/e2e/operacion.spec.ts",
-          "estado": "revisar",
-          "ausente": false
-        }
-      ],
-      "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
+        "estado": "contenido_reconciliado",
+        "equivalentes": [
+          "6c7a2eba693ae220d3b64926b8fed7f73afb2707"
+        ],
+        "evidencia": "Galerías diferidas hasta abrir, conservando carga inmediata entonces, autenticación privada y ausencia de precarga de video antes de reproducir."
       }
     },
     {
@@ -7022,13 +7072,17 @@
       "detalle_archivos": [
         {
           "archivo": "cooper/e2e/animacion.spec.ts",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "2e00936f0f9ed66f0655b0f5e4017272abb4f161"
+          ]
         },
         {
           "archivo": "cooper/src/app/globals.css",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "2e00936f0f9ed66f0655b0f5e4017272abb4f161"
+          ]
         },
         {
           "archivo": "cooper/src/componentes/espacio.tsx",
@@ -7037,47 +7091,15 @@
         },
         {
           "archivo": "docs/diseno/movimiento-cooper.md",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "blob_identico"
         }
       ],
       "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
-      }
-    },
-    {
-      "commit": "7aab905696017609ee38f79e71f6b8e5f476c746",
-      "asunto": "Incluir el dibujo de bienvenida en el HTML inicial",
-      "archivos": [
-        "cooper/scripts/generar-movimiento.mjs",
-        "cooper/src/componentes/ilustracion-viva.tsx",
-        "cooper/src/marca/poster-bienvenida.ts"
-      ],
-      "excluidos": [],
-      "estado": "revisar",
-      "detalle_archivos": [
-        {
-          "archivo": "cooper/scripts/generar-movimiento.mjs",
-          "estado": "revisar",
-          "ausente": false
-        },
-        {
-          "archivo": "cooper/src/componentes/ilustracion-viva.tsx",
-          "estado": "revisar",
-          "ausente": false
-        },
-        {
-          "archivo": "cooper/src/marca/poster-bienvenida.ts",
-          "estado": "revisar",
-          "ausente": true
-        }
-      ],
-      "resolucion": {
-        "estado": "activa_pendiente",
-        "equivalentes": [],
-        "evidencia": "total-rendimiento no tiene informe de cierre; ocho commits quedan para segunda pasada. Su 0011_rendimiento colisiona con numeración integrada y requiere reconciliación, no cherry-pick ciego."
+        "estado": "contenido_reconciliado",
+        "equivalentes": [
+          "2e00936f0f9ed66f0655b0f5e4017272abb4f161"
+        ],
+        "evidencia": "Primera pintura estable y movimiento al navegar conservan también el ref de foco accesible del contenido."
       }
     },
     {
@@ -7100,7 +7122,7 @@
         "equivalentes": [
           "400e52006fd77244ade8a0e896f0ea51e7034dfb"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7128,7 +7150,7 @@
         "equivalentes": [
           "a69e3746a475b6c20a0ad27e79de259078fd9fc3"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7179,7 +7201,7 @@
         "equivalentes": [
           "a9a6c8020ce639352311ece4f211273c9a8a5d96"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7204,7 +7226,7 @@
         "equivalentes": [
           "fcfab3bc2f6f22d03bd5930cbfed002b73adaef8"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7228,7 +7250,7 @@
         "equivalentes": [
           "a794037beaaa886bcf3b8eb69274caf0d3af22c8"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7255,33 +7277,29 @@
         },
         {
           "archivo": "tests/competencia_youtube.test.mjs",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "blob_identico"
         },
         {
           "archivo": "tests/fixtures/vidiq_competencia_runtime.cjs",
-          "estado": "revisar",
-          "ausente": true
+          "estado": "blob_identico"
         },
         {
           "archivo": "tests/vidiq_competencia.test.cjs",
           "estado": "revisar",
-          "ausente": true
+          "ausente": false
         },
         {
           "archivo": "tools/cooper/auditar_cobertura.py",
-          "estado": "revisar",
-          "ausente": false
+          "estado": "blob_identico"
         },
         {
           "archivo": "tools/cooper/vidiq_competencia.js",
           "estado": "revisar",
-          "ausente": true
+          "ausente": false
         },
         {
           "archivo": "tools/cooper/vidiq_competencia_flujos.py",
-          "estado": "revisar",
-          "ausente": true
+          "estado": "blob_identico"
         },
         {
           "archivo": "tools/generar_flujos_v2.py",
@@ -7295,9 +7313,11 @@
         }
       ],
       "resolucion": {
-        "estado": "actividad_posterior_pendiente",
-        "equivalentes": [],
-        "evidencia": "Actividad posterior al manifiesto inicial; cooper-total declara corte provisional 14:27 Lima y misión en curso. Cuota vidIQ/runtime parcial, helper Radar/Resolver y sus recibos requieren coordinación final sin tocar al orquestador. No atribuir su puerta histórica al objetivo."
+        "estado": "contenido_reconciliado",
+        "equivalentes": [
+          "528d344a100574182bb6c42f3ddae8d0aec4b425"
+        ],
+        "evidencia": "Once nodos vidIQ sincronizados con cuota renovable y consumo desconocido; se conserva fiabilidad integrada y timeout de 330 segundos. Fuente pública y 251 pruebas acreditadas por producto, sin invocar proveedores."
       }
     },
     {
@@ -7320,12 +7340,11 @@
         {
           "archivo": "tests/vidiq_competencia.test.cjs",
           "estado": "revisar",
-          "ausente": true
+          "ausente": false
         },
         {
           "archivo": "tools/cooper/vidiq_competencia.js",
-          "estado": "revisar",
-          "ausente": true
+          "estado": "blob_identico"
         },
         {
           "archivo": "workflows/v2/FabCompYouTube01.json",
@@ -7334,9 +7353,11 @@
         }
       ],
       "resolucion": {
-        "estado": "actividad_posterior_pendiente",
-        "equivalentes": [],
-        "evidencia": "Actividad posterior al manifiesto inicial; cooper-total declara corte provisional 14:27 Lima y misión en curso. Cuota vidIQ/runtime parcial, helper Radar/Resolver y sus recibos requieren coordinación final sin tocar al orquestador. No atribuir su puerta histórica al objetivo."
+        "estado": "contenido_reconciliado",
+        "equivalentes": [
+          "528d344a100574182bb6c42f3ddae8d0aec4b425"
+        ],
+        "evidencia": "Once nodos vidIQ sincronizados con cuota renovable y consumo desconocido; se conserva fiabilidad integrada y timeout de 330 segundos. Fuente pública y 251 pruebas acreditadas por producto, sin invocar proveedores."
       }
     },
     {
@@ -7561,9 +7582,11 @@
         }
       ],
       "resolucion": {
-        "estado": "actividad_posterior_pendiente",
-        "equivalentes": [],
-        "evidencia": "Actividad posterior al manifiesto inicial; cooper-total declara corte provisional 14:27 Lima y misión en curso. Cuota vidIQ/runtime parcial, helper Radar/Resolver y sus recibos requieren coordinación final sin tocar al orquestador. No atribuir su puerta histórica al objetivo."
+        "estado": "documentacion_consolidada",
+        "equivalentes": [
+          "d45782d8aee8bd89ec80f913c1e30501dfef553a"
+        ],
+        "evidencia": "Informe parcial sustituido por cierre completo 1cdd904; se recuperan solo sus recibos públicos referenciados. Evidencia histórica de proveedor no acredita la puerta ni despliegue de e1244bd."
       }
     },
     {
@@ -7662,9 +7685,9 @@
         }
       ],
       "resolucion": {
-        "estado": "actividad_posterior_pendiente",
+        "estado": "antecedente_historico_no_reintroducido",
         "equivalentes": [],
-        "evidencia": "Actividad posterior al manifiesto inicial; cooper-total declara corte provisional 14:27 Lima y misión en curso. Cuota vidIQ/runtime parcial, helper Radar/Resolver y sus recibos requieren coordinación final sin tocar al orquestador. No atribuir su puerta histórica al objetivo."
+        "evidencia": "Puerta anterior del orquestador: no constituye código faltante ni aceptación del corte actual. No se reemplaza su informe vivo con un cierre anterior."
       }
     },
     {
@@ -7695,9 +7718,9 @@
         }
       ],
       "resolucion": {
-        "estado": "actividad_posterior_pendiente",
+        "estado": "pendiente_helper_operativo",
         "equivalentes": [],
-        "evidencia": "Actividad posterior al manifiesto inicial; cooper-total declara corte provisional 14:27 Lima y misión en curso. Cuota vidIQ/runtime parcial, helper Radar/Resolver y sus recibos requieren coordinación final sin tocar al orquestador. No atribuir su puerta histórica al objetivo."
+        "evidencia": "Mismo cambio que c0772dc: helper offline limitado a Radar, consulta interna y Resolver. Faltante real fuera de la aplicación web; producto tiene asignada su integración, preservando CAS y conciliación moderna. No se declara integrado en e1244bd."
       }
     },
     {
@@ -7722,9 +7745,13 @@
         }
       ],
       "resolucion": {
-        "estado": "actividad_posterior_pendiente",
-        "equivalentes": [],
-        "evidencia": "Actividad posterior al manifiesto inicial; cooper-total declara corte provisional 14:27 Lima y misión en curso. Cuota vidIQ/runtime parcial, helper Radar/Resolver y sus recibos requieren coordinación final sin tocar al orquestador. No atribuir su puerta histórica al objetivo."
+        "estado": "documentacion_consolidada",
+        "equivalentes": [
+          "d45782d8aee8bd89ec80f913c1e30501dfef553a",
+          "097f32ced21b0d8a4471f2b6ba0da3fdc01e8cb5",
+          "adaf3cad0a9df67e334eb4a7bf383b8eb915ef2f"
+        ],
+        "evidencia": "Enlaces de aceptación históricos cubiertos por cierres públicos posteriores de Competencia, Radar y M7; no se reintroduce la aceptación provisional como aceptación actual."
       }
     },
     {
@@ -7772,7 +7799,7 @@
         "equivalentes": [
           "8b9c93e500858ba2b7c04ca4bb7bdd134d6348c6"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7793,7 +7820,7 @@
         "equivalentes": [
           "184b2b097f09675bd8d3c22e2f0421355b46552c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7819,7 +7846,7 @@
         "equivalentes": [
           "1fdeaf04d098ba9a9bbd91f45e428dca43f3c495"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7848,7 +7875,7 @@
         "equivalentes": [
           "614688196d525e0255117efe8b41781aea06d1d1"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7867,7 +7894,7 @@
         "equivalentes": [
           "05cbeb47525b7e6a69cf9dc3d71e6bb84941b84d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7887,7 +7914,7 @@
         "equivalentes": [
           "48b54c3cd3d02e8433b9c12d3947ea8226f8f1ea"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7907,7 +7934,7 @@
         "equivalentes": [
           "bc725363cb12e28dbe21e153fca2b545b6bd7c44"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7939,7 +7966,7 @@
         "equivalentes": [
           "0e8a699cd0245783abf58c2868ecf1f6940d0c06"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7961,7 +7988,7 @@
         "equivalentes": [
           "59492dc7b33ca7706eb5087d184116eb628fb6cd"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7980,7 +8007,7 @@
         "equivalentes": [
           "5794dd6029708eb8c0499911883fbe07d6751668"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -7999,7 +8026,7 @@
         "equivalentes": [
           "745d842104d809aba813945318ff87782dd5bba7"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8018,7 +8045,7 @@
         "equivalentes": [
           "5794dd6029708eb8c0499911883fbe07d6751668"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8041,7 +8068,7 @@
         "equivalentes": [
           "9072526a6105213b66248061769e8e36bd2049e7"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8062,7 +8089,7 @@
         "equivalentes": [
           "184b2b097f09675bd8d3c22e2f0421355b46552c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8091,7 +8118,7 @@
         "equivalentes": [
           "614688196d525e0255117efe8b41781aea06d1d1"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8111,7 +8138,7 @@
         "equivalentes": [
           "48b54c3cd3d02e8433b9c12d3947ea8226f8f1ea"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8137,7 +8164,7 @@
         "equivalentes": [
           "1fdeaf04d098ba9a9bbd91f45e428dca43f3c495"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8157,7 +8184,7 @@
         "equivalentes": [
           "27358b733baab2798d9524ce4fab2088e3b14d84"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8176,7 +8203,7 @@
         "equivalentes": [
           "6525bf633d9db1fb8d3b4d095e2a1f73834981b6"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8196,7 +8223,7 @@
         "equivalentes": [
           "e2455713ce3ca9169b6ec139d27133ee99b8b3ac"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8216,7 +8243,7 @@
         "equivalentes": [
           "e2455713ce3ca9169b6ec139d27133ee99b8b3ac"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8235,7 +8262,7 @@
         "equivalentes": [
           "6525bf633d9db1fb8d3b4d095e2a1f73834981b6"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8254,7 +8281,7 @@
         "equivalentes": [
           "5794dd6029708eb8c0499911883fbe07d6751668"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8288,7 +8315,7 @@
         "equivalentes": [
           "153adf6e6c9fa0f862918e93d8b2f09274ea00b5"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8307,7 +8334,7 @@
         "equivalentes": [
           "8423c6e3a5da27177feb1aa190a2bb46d911fc50"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8326,7 +8353,7 @@
         "equivalentes": [
           "97e3932e3b7091b762bab1f5e8822c1aa493dba3"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8345,7 +8372,7 @@
         "equivalentes": [
           "f87e81499f34f3d67e67f6486b27efcbc3a3ff51"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8364,7 +8391,7 @@
         "equivalentes": [
           "ea8d119b2cf63d43534128e03e0644a85a194c57"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8389,7 +8416,7 @@
         "equivalentes": [
           "252ec33119d5a4dcee6098464d24eae4fd4c2122"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8409,7 +8436,7 @@
         "equivalentes": [
           "6fd772ed8a237de1ad9c63314d18b83b3c98601b"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8428,7 +8455,7 @@
         "equivalentes": [
           "ff68e8c044310791cb8253c4178349e9637cc383"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8448,7 +8475,7 @@
         "equivalentes": [
           "718b8d46b65b123d32216e545998ab44f4ff61fb"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8467,7 +8494,7 @@
         "equivalentes": [
           "11ec7ff91c86b6ec7bb71c28de37bfbdc15ef565"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8489,7 +8516,7 @@
         "equivalentes": [
           "d5601d0e37b8d5ece53d358ffe0659db6da3b00d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8509,7 +8536,7 @@
         "equivalentes": [
           "225e33d0e9d282a937ffe20fd730f5df91b28021"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8528,7 +8555,7 @@
         "equivalentes": [
           "fde216269e9aac79cb4de95c2940a80a7e63dde6"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8549,7 +8576,7 @@
         "equivalentes": [
           "d20cf2fa509f34bf41a2bd8ccceeea0dcca7c272"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8569,7 +8596,7 @@
         "equivalentes": [
           "6cc12312087bc360e67c3f407184e0797bf2fbba"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8590,7 +8617,7 @@
         "equivalentes": [
           "4d9b8990793fc927f2763a43c28273c1767e660e"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8610,7 +8637,7 @@
         "equivalentes": [
           "9cd29f10566989cea80711b127195f68ef3fe3c6"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8629,7 +8656,7 @@
         "equivalentes": [
           "6f4544d30c2ea6fd426b27a4bc5538f85f2275b2"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8649,7 +8676,7 @@
         "equivalentes": [
           "07e0a45ee96fd61c9f89ec5e96e649fe6fc65711"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8670,7 +8697,7 @@
         "equivalentes": [
           "6127ea1e0b8bb9d89cee18a2dbf2499a4a6acfd3"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8690,7 +8717,7 @@
         "equivalentes": [
           "a0ced339af56cea90bb8345e154e631397fadc18"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8712,7 +8739,7 @@
         "equivalentes": [
           "74b73dfbcb694699232f27113d430e78b44ee8ea"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8732,7 +8759,7 @@
         "equivalentes": [
           "b889e4fbcd9587a0ca99ee64e1fcf4116e9beb86"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8752,7 +8779,7 @@
         "equivalentes": [
           "84b4f37ce2106177a6c568366fc274e640e721e0"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8772,7 +8799,7 @@
         "equivalentes": [
           "cf0fe8c281ae3f9a00291bc2c38431c4d8210b91"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8791,7 +8818,7 @@
         "equivalentes": [
           "0d3dffd1d77ac6b0d3e6bf161bbcff646259f33a"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8816,7 +8843,7 @@
         "equivalentes": [
           "e10b730777e3dae97089a39f7ec632ee8ed347e1"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8836,7 +8863,7 @@
         "equivalentes": [
           "12aaae6e36b43a8088fdbcb65663bc79e96a73a7"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8855,7 +8882,7 @@
         "equivalentes": [
           "70e0c4bdd5a85c1a895b789205e313a8d941ce32"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8877,7 +8904,7 @@
         "equivalentes": [
           "6059544a4e07f2f9005ae8fe4ae62875c97d02fb"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8897,7 +8924,7 @@
         "equivalentes": [
           "52884dc1a18ecc75e522614a46c1f9ec79e8806c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8918,7 +8945,7 @@
         "equivalentes": [
           "9ce50122827acb95a438857c6411ea432d8766d2"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8937,7 +8964,7 @@
         "equivalentes": [
           "76bc2375842edf58ec9d9a6ba554b338b61b8095"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8957,7 +8984,7 @@
         "equivalentes": [
           "e521916e07a7538e6d0df4b101f730e47f4217dc"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -8987,7 +9014,7 @@
         "equivalentes": [
           "0231337852746daf8baf0af2e489ba4c9d8bc964"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9007,7 +9034,7 @@
         "equivalentes": [
           "d2a24ec1a84067acea2406677ec78c028e8ad2f7"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9026,7 +9053,7 @@
         "equivalentes": [
           "14e16a3b3c3a42cd12f983d85a140f4a3ba2b7a9"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9050,7 +9077,7 @@
         "equivalentes": [
           "fd73395a20a1a7887b07a62484b2e0ac7a3b735f"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9070,7 +9097,7 @@
         "equivalentes": [
           "7c917931a0c9ead713de9aa783679dadfdbdb99f"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9089,7 +9116,7 @@
         "equivalentes": [
           "b03291a0f9a0640c8394fd57f8b4a484cfc81c67"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9108,7 +9135,7 @@
         "equivalentes": [
           "037f2412365c3c22fb1d1ac934d9860c1cf60dbe"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9128,7 +9155,7 @@
         "equivalentes": [
           "d7b3ea74bf5c7b2e026c5d90a53c2c207be059ce"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9151,7 +9178,7 @@
         "equivalentes": [
           "10149b2374bae585654875f4ef3bbea1610df3f4"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9170,7 +9197,7 @@
         "equivalentes": [
           "5ab9f34a61c731f1b93004bad213139972513352"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9189,7 +9216,7 @@
         "equivalentes": [
           "fc2395609f668f6e42f4048d0cd05554884db995"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9211,7 +9238,7 @@
         "equivalentes": [
           "d3f0168117e1c7a1fcb4c0c1091ac2e35f0ad94c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9237,7 +9264,7 @@
         "equivalentes": [
           "85a4f3c6d83acb1e75ce94d7d8fe533102aca5cb"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9256,7 +9283,7 @@
         "equivalentes": [
           "154d1193e2ca5b4709e6d0f104bec8fcc53d8dea"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9275,7 +9302,7 @@
         "equivalentes": [
           "3c3f8efbd7c804fb3669f2e212cf4800f4deb18c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9294,7 +9321,7 @@
         "equivalentes": [
           "8854923d491db06d7f6bc3e262c0c43ba74bd273"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9314,7 +9341,7 @@
         "equivalentes": [
           "970d1025ccdc6ac4b9898a4baa8608ad732dcdf2"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9334,7 +9361,7 @@
         "equivalentes": [
           "2721f7de9f60417fd7853b990f253e8d9dceb00a"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9353,7 +9380,7 @@
         "equivalentes": [
           "6d5f99294771efdfa0c0503efb59a11a053518e8"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9374,7 +9401,7 @@
         "equivalentes": [
           "405378972333ae95dce1a3b0fb59b53a04050335"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9393,7 +9420,7 @@
         "equivalentes": [
           "233aafdacfe9fe44e9334197db9308b8bdb7565d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9412,7 +9439,7 @@
         "equivalentes": [
           "33072ccb68b61ceb910c72f49c5c9d19c834a9db"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9431,7 +9458,7 @@
         "equivalentes": [
           "7711e39180f91ae41bb038a1a13555a1cc2d4d97"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9451,7 +9478,7 @@
         "equivalentes": [
           "ea9289383f293a7d00a1fc37211aa558ff248019"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9475,7 +9502,7 @@
         "equivalentes": [
           "23920c2f5020a07f9b99d99b73f16abbd4241784"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9496,7 +9523,7 @@
         "equivalentes": [
           "1fed6f335df7e2837b40b15440f7a41cdde8234d"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9521,7 +9548,7 @@
         "equivalentes": [
           "45d1bf47b7bba627c7ba15302ff57c9d09e53e07"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9546,7 +9573,7 @@
         "equivalentes": [
           "903ede23a805039849af90d57f90ea9e6feb9988"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9569,7 +9596,7 @@
         "equivalentes": [
           "5f1b25e5d770c2e448a22177ff2289610e8dadf2"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9605,7 +9632,7 @@
         "equivalentes": [
           "46e442e7a230b3935a147ee00bed2843c91997c3"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9626,7 +9653,7 @@
         "equivalentes": [
           "4dbaf4adebb4a4f58915a9eb50f08863401ebaa8"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9650,7 +9677,7 @@
         "equivalentes": [
           "0303692d578813bf21d5877a030b82b661ac31c7"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9756,7 +9783,10 @@
       "detalle_archivos": [
         {
           "archivo": "cooper/e2e/marcas.spec.ts",
-          "estado": "blob_identico"
+          "estado": "parche_archivo",
+          "equivalentes": [
+            "437c7a59f6c0bbbe361e300d00c7ac12ac10c767"
+          ]
         },
         {
           "archivo": "cooper/e2e/navegacion-resultados.spec.ts",
@@ -9834,7 +9864,7 @@
         "equivalentes": [
           "f0626e213ad1abded30e1d5c79a76ab2898ec729"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9859,7 +9889,7 @@
         "equivalentes": [
           "f8aa9667a8c00fe143d6a9125a57cd991829b09c"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     },
     {
@@ -9886,11 +9916,31 @@
         "equivalentes": [
           "1551e9bd44b102ad07be52ab76a369064ce59b62"
         ],
-        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; los descartes de ESTADO/fuentes privadas son intencionales."
+        "evidencia": "Equivalencia calculada por ascendencia del mapa saneado, patch-id estable sin ESTADO o blob/parche por archivo; exclusiones de ESTADO y fuentes privadas intencionales."
       }
     }
   ],
   "exclusiones": "Solo nombres: ESTADO, fuentes Sentinel privadas/cache y rutas credenciales/.env reales; sin leer valores ni contenido privado.",
+  "commit_codigo": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "commit_documental": "adaf3cad0a9df67e334eb4a7bf383b8eb915ef2f",
+  "fecha_actualizacion_lima": "2026-11-21T15:13:25.770156-05:00",
+  "cortes_previos": [
+    {
+      "commit_objetivo": "6b84bfb52462ce961c9311736b42ee306d53ff57",
+      "fecha_lima": "2026-11-21T14:39:10.511663-05:00",
+      "matriz_historica_commit": "cb9b383",
+      "resumen": {
+        "ramas_del_corte": 52,
+        "ramas_posteriores": 1,
+        "commits_revision_individual": 188,
+        "commits_revision_semantica": 43,
+        "commits_activos_pendientes": 8,
+        "commits_posteriores_pendientes_en_rama_nueva": 6,
+        "faltantes_funcionales_en_ramas_cerradas": 0,
+        "resto_detectado_y_corregido": "39537a7/5267610 recuperados en 3a3b41c antes del corte final"
+      }
+    }
+  ],
   "metodo": [
     "git merge-base --is-ancestor sobre cada SHA inicial",
     "git cherry OBJETIVO SHA_INICIAL",
@@ -9911,22 +9961,38 @@
       "blob": "b81951785318f1d5f7049435c5eb431abe4b782d"
     }
   ],
-  "resumen": {
-    "ramas_del_corte": 52,
-    "ramas_posteriores": 1,
-    "commits_revision_individual": 188,
-    "commits_revision_semantica": 43,
-    "commits_activos_pendientes": 8,
-    "commits_posteriores_pendientes_en_rama_nueva": 6,
-    "faltantes_funcionales_en_ramas_cerradas": 0,
-    "resto_detectado_y_corregido": "39537a7/5267610 recuperados en 3a3b41c antes del corte final"
-  },
   "limites": [
     "Es una auditoría de contenido, no una ejecución de la puerta del commit objetivo ni aceptación productiva.",
     "Las ramas activas o cambiantes se registran con SHA; comprobar de nuevo sus puntas antes del push.",
     "No se reintroducen informes/cierres viejos para forzar equivalencia textual ni fuentes privadas Sentinel.",
-    "Los JSON generados se concilian desde módulos fuente; la puerta/generación final corresponde al integrador."
+    "Los JSON generados se concilian desde módulos fuente; la puerta/generación final corresponde al integrador.",
+    "Código de aplicación congelado en e1244bd; los tres cierres documentales se contrastan en adaf3ca, sin atribuir sus despliegues históricos a esta misión.",
+    "Dos refs posteriores QA/rondas sin cierre se registran pero no se incorporan como misiones terminadas."
   ],
+  "resumen": {
+    "ramas_totales": 54,
+    "ramas_del_corte": 52,
+    "ramas_posteriores_sin_cierre": 2,
+    "commits_revision_individual": 184,
+    "commits_revision_semantica": 53,
+    "faltantes_aplicacion_en_ramas_cerradas": 0,
+    "faltantes_helpers_operativos_en_ramas_cerradas": 1,
+    "helper_pendiente": {
+      "origenes": [
+        "3596d5bd",
+        "c0772dc"
+      ],
+      "responsable": "total-integrador-producto",
+      "alcance": "Lote offline Radar/consulta/Resolver; no cambia runtime web"
+    },
+    "rendimiento": "Integrado después del cierre 42c58819, incluidas conciliaciones de migración/períodos/accesibilidad",
+    "cierres_documentales": {
+      "1cdd904": "d45782d",
+      "2aa3c98": "097f32c",
+      "6f6af64": "adaf3ca"
+    },
+    "resto_detectado_y_corregido": "39537a7/5267610 recuperados en 3a3b41c antes del corte final"
+  },
   "seguimientos_posteriores": [
     {
       "fecha_lima": "2026-11-21T15:04:09.572203-05:00",

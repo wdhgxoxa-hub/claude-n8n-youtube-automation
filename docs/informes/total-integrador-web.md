@@ -275,3 +275,78 @@ Sentinel detectó en Publicados a 1440 px `ERR_BLOCKED_BY_CLIENT.Inspector` dura
 caos (semillas 1528974480/1528974481). Causa aún en diagnóstico; se comunicó como
 riesgo compartido sin atribuirla a rendimiento ni filtrar el guardián. Las 24
 capturas que ese frente revisó sin hallazgos no sustituyen una ronda aprobada.
+
+## Cierre documental y matriz actualizada de 54 ramas
+
+21-11-2026, Lima. Código contrastado: `e1244bd3`; documentos contrastados: `adaf3cad`. Esta actualización sustituye las conclusiones de actividad pendiente del corte anterior: rendimiento ya cerró y está integrado. La [matriz completa](evidencias/total-integrador-web/ramas.json) conserva el corte anterior y clasifica 52 refs originales más dos posteriores sin cierre.
+
+**Resultado: ningún cambio de aplicación pendiente de ramas cerradas.** Queda un helper operativo offline (`3596d5bd`/`c0772dc`) asignado a producto; afecta el lote limitado Radar/consulta/Resolver, no la aplicación. Su integración debe acreditarse aparte antes del push. No se incorporan refs de QA/rondas sin cierre ni se siguen sus avances concurrentes.
+
+| Rama | Punta observada | Clasificación |
+| --- | --- | --- |
+| `total-accesibilidad` | `a64bd51f` | Parche/contenido |
+| `total-aprendizaje` | `688a1579` | Parche/contenido |
+| `total-aprendizaje-aceptacion` | `632bd1fe` | Parche/contenido |
+| `total-auditoria` | `ad67618a` | Parche/contenido |
+| `total-chat-vps` | `3ba2508e` | Parche/contenido |
+| `total-chatfix` | `1002cc03` | Parche/contenido |
+| `total-cierre-aceptacion` | `4f13622f` | Parche/contenido |
+| `total-competencia` | `16e70d47` | Parche/contenido |
+| `total-competencia-aceptacion` | `f5d12463` | Parche |
+| `total-competencia-cierre` | `1cdd904e` | Ascendencia |
+| `total-competencia-navegacion` | `ba6769c6` | Parche |
+| `total-competencia-orquestada` | `39537a7f` | Parche/contenido |
+| `total-competencia-youtube` | `bb261a37` | Parche/contenido |
+| `total-despliegue` | `f62e3cd3` | Parche/contenido |
+| `total-despliegue-aceptacion` | `d26b6147` | Parche/contenido |
+| `total-final-aceptacion-fcfab3b` | `5f23df85` | Parche |
+| `total-final2-aceptacion-719409f` | `b5ff17d8` | Parche |
+| `total-final3-aceptacion-bfd5e79` | `bfd5e792` | Ascendencia |
+| `total-guia` | `ff0dd3eb` | Parche/contenido |
+| `total-identidad-viva` | `fed13607` | Parche |
+| `total-infra-segura` | `533703d1` | Parche/contenido |
+| `total-m01` | `1b00e5f9` | Parche/contenido |
+| `total-m03` | `f6fb304c` | Parche/contenido |
+| `total-m05` | `c25546a3` | Parche/contenido |
+| `total-m06` | `fc362c54` | Parche/contenido |
+| `total-m07` | `79911773` | Parche/contenido |
+| `total-m08` | `9a4f0920` | Parche/contenido |
+| `total-m09` | `e5cbc3a3` | Parche/contenido |
+| `total-m10` | `66b36672` | Parche/contenido |
+| `total-m11` | `b96b7eb9` | Parche/contenido |
+| `total-m12` | `ed73dcb4` | Parche/contenido |
+| `total-marcas-runtime` | `2dac9d5d` | Parche/contenido |
+| `total-margen-estrategia` | `390d5518` | Parche/contenido |
+| `total-n8n-auditoria` | `ff3465f6` | Parche/contenido |
+| `total-n8n-e2e` | `2dabc3a6` | Parche/contenido |
+| `total-n8n-lote` | `e3394168` | Parche |
+| `total-n8n-ramas` | `4629bdd7` | Parche/contenido |
+| `total-operacion` | `a4960779` | Parche/contenido |
+| `total-qa-produccion` | `de397f31` | Sin cierre; no seleccionada |
+| `total-radar-contexto` | `6f6af646` | Integrada; helper operativo pendiente |
+| `total-render-real` | `5f612967` | Parche/contenido |
+| `total-rendimiento` | `42c58819` | Parche/contenido |
+| `total-resultados-e2e` | `f0b21a87` | Parche/contenido |
+| `total-resultados-movil` | `b2033945` | Parche/contenido |
+| `total-retorno-2476` | `71be3c70` | Parche/contenido |
+| `total-revision-cierre` | `f8aa9667` | Ascendencia |
+| `total-revision-final` | `00168c10` | Parche/contenido |
+| `total-revision-rondas-cierre` | `65a59968` | Sin cierre; no seleccionada |
+| `total-seguridad` | `cb9c478a` | Parche/contenido |
+| `total-sentinel` | `70f4983f` | Parche/contenido |
+| `total-sentinel-guardia` | `7592d70d` | Parche/contenido |
+| `total-sentinel-privado` | `55bf5e96` | Parche/contenido |
+| `total-vidiq-parser` | `a2ee9f05` | Parche/contenido |
+| `total-volumen-n8n` | `38a1017c` | Parche/contenido |
+
+Cierres documentales recuperados con `docs/ESTADO.md` preservado durante cada cherry-pick:
+
+- `1cdd904 → d45782d`: cierre de Competencia y sus recibos públicos referenciados. El informe parcial queda sustituido por el cierre completo; se mantienen explícitos los límites de vidIQ y de contenido producido.
+- `2aa3c98 → 097f32c`: evidencia histórica de delta Radar/Resolver, ensayo y reversa en ambos motores.
+- `6f6af64 → adaf3ca`: evidencia histórica del disparador M7, versión e instantes reales.
+
+Estos tres commits solo cambian `docs/informes/`; no ejecutan proveedores, n8n ni VPS. La conservación de sus recibos no acredita un despliegue de la integración actual. No se restauraron cierres antiguos de puerta ni fuentes privadas Sentinel. El enlace a la aceptación antigua de imagen `bfd5e79`, ausente en la integración, se conserva como referencia explícita al commit histórico en vez de reintroducir ese cierre. Los vínculos locales, JSON y `git diff --check` se comprobaron; la puerta y dos rondas del código congelado las ejecuta el integrador en su checkout aislado.
+
+Diagnóstico de Sentinel anterior: el recibo público `06705b0` acredita un bloqueo de recurso en caos Publicados 1440 sobre `bfd5e79`, pero no conserva URL, método ni tipo suficientes para atribuir su causa. Publicados ya usaba datos SSR en ese corte; el cambio posterior no demuestra causalidad. Se mantienen guardián y umbrales. Si reaparece, registrar únicamente origen/ruta saneados, método, tipo y localización de consola, sin query, cookies ni cabeceras.
+
+Revisión visual prevista: capturas originales de seis vistas en claro/oscuro y 1440/390, más estados e interacciones y recorrido continuo de cada ronda. La decodificación de videos y los índices técnicos no sustituyen la inspección visual; no se declara aceptada una ronda hasta revisar su salida cerrada. No se añaden decisiones nuevas para Walter.

@@ -38,7 +38,7 @@ Versiones publicadas:
 
 La normalización del Radar tiene SHA `2644d673a8da8792b66932c8d7b146bd1c75edca02c74d7463dda9d8b099ecfe`; Resolver `fbe854c83acc16e0d47dfcc8f6dda12e1e00c7b800a9ee61327b2528c08d72e1`. El primer wrapper temporal rechazó la operación antes de llamar al aplicador porque faltaba el helper público del freno de texto. No existían recibo ni marcador de mantenimiento y no hubo mutación; se completó el paquete y se repitieron las precondiciones. [Procedencia e intento conservado](evidencias/total-radar-contexto/delta3/procedencia.json).
 
-El turno quedó cedido al frente competencia para una sola aceptación íntegra del Radar productivo y retirada de las tres sondas. La publicación técnica no se presenta como aceptación de proveedores. La imagen `bfd5e79` y la actualización de infraestructura continúan sin activar; su [aceptación exacta](total-imagen-bfd5e79.md) es independiente de este lote.
+El turno quedó cedido al frente competencia para una sola aceptación íntegra del Radar productivo y retirada de las tres sondas. La publicación técnica no se presenta como aceptación de proveedores. La imagen `bfd5e79` y la actualización de infraestructura continúan sin activar; su aceptación exacta histórica (`64ebdd0:docs/informes/total-imagen-bfd5e79.md`) es independiente de este lote. La integración conserva esta referencia de procedencia sin incorporar aquella aceptación de imagen como prueba de su nueva versión.
 
 ## Fuentes oficiales
 
