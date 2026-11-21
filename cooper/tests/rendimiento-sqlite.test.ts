@@ -100,9 +100,9 @@ it("Rendimiento agrega gasto sin perder la semana que empieza en el mes anterior
     const result = administracion(admin);
     expect(result.users.find((u) => u.id === ana.id)).toMatchObject({
       day: 25.01,
-      // Conserva el redondeo binario anterior: 30.004999… y 28.004999….
-      week: 30,
-      month: 28,
+      // Mismo redondeo del agregado JS, sin sumar el registro futuro.
+      week: 30.01,
+      month: 28.01,
       alert: true,
     });
     expect(result.users.find((u) => u.id === "sin-gasto")).toMatchObject({
