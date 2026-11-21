@@ -12,7 +12,7 @@ def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
-def preparar(actuales, entradas, origen):
+def preparar(actuales, entradas, origen, metadata=None):
     if origen != 'https://flujos.cooperestudio.com':
         raise ValueError('Origen no autorizado')
     by_id = {w['id']: w for w in actuales}
@@ -28,6 +28,7 @@ def preparar(actuales, entradas, origen):
         mapping[nuevo['id']] = actual['id'] if actual else nuevo['id']
         pairs.append((nuevo, actual))
     output, report = [], []
+    faltantes = []
     # Los identificadores no son claves. Sustituye únicamente referencias conocidas.
     pattern = re.compile('|'.join(re.escape(k) for k in sorted(mapping, key=len, reverse=True)))
     for nuevo, actual in pairs:
@@ -59,7 +60,30 @@ def preparar(actuales, entradas, origen):
                        'antes_sha256': digest(actual) if actual else None, 'despues_sha256': digest(data),
                        'publicado_antes': bool(actual and actual['active']), 'publicado_entrada': False,
                        'nodos_antes': len(actual['nodes']) if actual else 0, 'nodos_despues': len(data['nodes'])})
-    return output, {'mapa_ids': mapping, 'flujos': report, 'republicar_originales': [r['id'] for r in report if r['publicado_antes']]}
+    if metadata is not None:
+        workflows = set(by_id) | {w['id'] for w in output}
+        tablas = set(metadata['tablas'])
+        credenciales = metadata['credenciales']
+        for w in output:
+            for n in w['nodes']:
+                p = n.get('parameters', {})
+                for field, permitidos in [('workflowId', workflows), ('dataTableId', tablas)]:
+                    ref = p.get(field)
+                    value = ref.get('value') if isinstance(ref, dict) else ref
+                    if isinstance(value, str) and not value.startswith('=') and value not in permitidos:
+                        raise ValueError('Referencia inexistente: ' + w['id'] + '/' + n['name'] + '/' + field)
+                for tipo, ref in n.get('credentials', {}).items():
+                    if any(c['id'] == ref.get('id') and c['type'] == tipo for c in credenciales):
+                        continue
+                    candidatas = [c for c in credenciales if c['name'] == ref.get('name') and c['type'] == tipo]
+                    if len(candidatas) == 1:
+                        ref['id'] = candidatas[0]['id']
+                    else:
+                        faltantes.append({'workflow': w['id'], 'nodo': n['name'], 'tipo': tipo, 'nombre': ref.get('name')})
+        for w, r in zip(output, report):
+            r['despues_sha256'] = digest(w)
+    return output, {'mapa_ids': mapping, 'flujos': report, 'credenciales_faltantes': faltantes,
+                    'republicar_originales': [r['id'] for r in report if r['publicado_antes']]}
 
 
 def main():
@@ -67,11 +91,13 @@ def main():
     parser.add_argument('--export', dest='export', type=Path, required=True)
     parser.add_argument('--entrada', type=Path, required=True)
     parser.add_argument('--salida', type=Path, required=True)
+    parser.add_argument('--metadata', type=Path)
     args = parser.parse_args()
     args.salida.mkdir(mode=0o700, parents=True, exist_ok=False)
     actuales = json.loads(args.export.read_text())
     entradas = [json.loads(p.read_text()) for p in sorted(args.entrada.glob('*.json'))]
-    salida, diff = preparar(actuales, entradas, 'https://flujos.cooperestudio.com')
+    metadata = json.loads(args.metadata.read_text()) if args.metadata else None
+    salida, diff = preparar(actuales, entradas, 'https://flujos.cooperestudio.com', metadata)
     for name, data in [('entrada.json', salida), ('diff.json', diff)]:
         target = args.salida / name
         target.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
