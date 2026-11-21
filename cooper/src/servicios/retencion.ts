@@ -341,6 +341,25 @@ function inventariar(
     if (!["aceptado", "cancelado", "fallido"].includes(cadena(row.state)))
       operacion(cadena(row.owner_id), clave);
   }
+  // Compatible con copias anteriores a la recepción durable de conversaciones.
+  if (
+    leer("SELECT name FROM sqlite_master WHERE name = 'whatsapp_chat_jobs'")
+      .length
+  )
+    for (const row of leer(
+      "SELECT id, owner_id, state, created_at FROM whatsapp_chat_jobs ORDER BY id",
+    )) {
+      const clave = agregar(
+        "whatsapp_chat_jobs",
+        row,
+        "mensaje",
+        numero(row.created_at),
+        null,
+        ["trazabilidad_recepcion"],
+      );
+      if (!["completado", "cancelado", "fallido"].includes(cadena(row.state)))
+        operacion(cadena(row.owner_id), clave);
+    }
   for (const row of leer(
     "SELECT owner_id, busy_until FROM chat_sessions ORDER BY owner_id",
   ))

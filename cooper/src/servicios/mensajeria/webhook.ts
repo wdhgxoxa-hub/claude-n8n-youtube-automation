@@ -12,6 +12,7 @@ import {
   whatsappInbox as inbox,
   whatsappDeliveries as deliveries,
   whatsappActions as actions,
+  whatsappChatJobs as chatJobs,
   type User,
 } from "@/db/schema";
 import { ErrorHttp } from "@/lib/permisos";
@@ -22,7 +23,7 @@ import {
   conciliarEntrega,
   encolarVideo,
 } from "./cola";
-import { proveedorMensajeria } from "./proveedor";
+import { mensajeriaPausada, proveedorMensajeria } from "./proveedor";
 const id = z.string().min(1).max(512);
 const timestamp = z.string().regex(/^\d{1,12}$/);
 const webhookSchema = z.object({
@@ -30,11 +31,13 @@ const webhookSchema = z.object({
   entry: z
     .array(
       z.object({
+        id: z.string().optional(),
         changes: z
           .array(
             z.object({
               field: z.string(),
               value: z.object({
+                messaging_product: z.string().optional(),
                 metadata: z.object({ phone_number_id: z.string() }).optional(),
                 messages: z
                   .array(
@@ -43,7 +46,7 @@ const webhookSchema = z.object({
                       from: z.string().optional(),
                       timestamp,
                       type: z.string(),
-                      context: z.object({ id }).optional(),
+                      context: z.object({ id: id.optional() }).optional(),
                       image: z
                         .object({
                           id: z.string().regex(/^\d+$/),
@@ -123,7 +126,7 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.length;
-    if (size > 1024 * 1024) {
+    if (size > 3 * 1024 * 1024) {
       await reader.cancel();
       throw new ErrorHttp(413, "Cuerpo demasiado grande.");
     }
@@ -154,10 +157,17 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
   }[] = [];
   db().transaction(
     (tx) => {
-      for (const entry of payload.entry)
+      for (const entry of payload.entry) {
+        if (
+          process.env.WHATSAPP_WABA_ID &&
+          entry.id !== process.env.WHATSAPP_WABA_ID
+        )
+          continue;
         for (const change of entry.changes) {
           if (
             change.field !== "messages" ||
+            (change.value.messaging_product !== undefined &&
+              change.value.messaging_product !== "whatsapp") ||
             change.value.metadata?.phone_number_id !== phone
           )
             continue;
@@ -254,6 +264,15 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
                   ),
                 )
                 .run();
+              tx.update(chatJobs)
+                .set({ state: "cancelado" })
+                .where(
+                  and(
+                    eq(chatJobs.ownerId, c.ownerId),
+                    eq(chatJobs.state, "pendiente"),
+                  ),
+                )
+                .run();
               continue;
             }
             const media =
@@ -262,7 +281,7 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
                 : message.type === "video"
                   ? message.video
                   : undefined;
-            if (media && c.consentAt)
+            if (media && c.consentAt && !mensajeriaPausada())
               tx.insert(marcaIngestas)
                 .values({
                   id: message.id,
@@ -281,6 +300,7 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
                   )
                 : null;
             if (reply) {
+              if (mensajeriaPausada()) continue;
               const job = tx
                 .select()
                 .from(outbox)
@@ -322,11 +342,25 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
                   revision: job.revision,
                   decision: reply[1],
                 });
-            } else if (
-              message.type === "text" &&
-              c.consentAt &&
-              Object.values(preferencias(c.preferences)).some(Boolean)
-            ) {
+            } else if (message.type === "text" && c.consentAt) {
+              const texto = message.text?.body.trim();
+              if (texto)
+                // Persistir junto al ID entrante: el ACK no espera al modelo ni pierde el turno al reiniciar.
+                tx.insert(chatJobs)
+                  .values({
+                    id: message.id,
+                    ownerId: user.id,
+                    phone: c.phone,
+                    text: texto,
+                    contactVerifiedAt: c.verifiedAt,
+                    simulated: c.simulated,
+                    nextAt: now,
+                    createdAt: now,
+                  })
+                  .onConflictDoNothing()
+                  .run();
+              if (!Object.values(preferencias(c.preferences)).some(Boolean))
+                continue;
               if (user.role === "admin")
                 for (const p of tx
                   .select()
@@ -344,11 +378,14 @@ export async function recibirWhatsApp(request: Request, now = Date.now()) {
             }
           }
         }
+      }
     },
     { behavior: "immediate" },
   );
   for (const action of pending) {
     try {
+      if (mensajeriaPausada())
+        throw new ErrorHttp(503, "La mensajería está pausada.");
       const { fabrica } = await import("@/servicios/fabrica");
       const user = cuentaActiva(action.user.id);
       const job = db()

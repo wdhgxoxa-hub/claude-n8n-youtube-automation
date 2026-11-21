@@ -105,6 +105,25 @@ it("la política predeterminada conserva y nunca habilita borrado", () => {
   expect(r).toEqual(informe(ejemplo));
 });
 
+it("inventaría conversaciones WhatsApp sin cuerpos y protege un turno incierto", () => {
+  sql.exec(`INSERT INTO whatsapp_chat_jobs
+    (id,owner_id,phone,text,response,contact_verified_at,simulated,state,next_at,created_at)
+    VALUES ('conversacion','ana','TELEFONO_PRIVADO','MENSAJE_PRIVADO','RESPUESTA_PRIVADA',1,1,'incierto',1,1);`);
+  const previo = huella(),
+    r = informe();
+  expect(
+    r.items.find((item) => item.clave === "whatsapp_chat_jobs:conversacion"),
+  ).toMatchObject({ categoria: "mensaje", decision: "conservar" });
+  const json = JSON.stringify(r);
+  for (const secreto of [
+    "TELEFONO_PRIVADO",
+    "MENSAJE_PRIVADO",
+    "RESPUESTA_PRIVADA",
+  ])
+    expect(json).not.toContain(secreto);
+  expect(huella()).toBe(previo);
+});
+
 it("separa dueños y cuenta bytes sin exportar cuerpos, evidencias, nombres ni URLs", () => {
   adjunto("foto");
   adjunto("prueba");
