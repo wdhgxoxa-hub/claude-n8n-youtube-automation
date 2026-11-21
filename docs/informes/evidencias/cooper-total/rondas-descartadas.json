@@ -1,0 +1,36 @@
+{
+  "cierre_1": {
+    "fuente": "9dbea5b8177a6d2e66134716f02f3c5e66d857c5",
+    "automaticas": {
+      "startTime": "2026-11-21T18:31:53.234Z",
+      "duration": 2036269.6400000001,
+      "expected": 92,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errores_globales": 0,
+    "playwright_sha256": "f9c6c6e7fbb4305bfa915d9b3db5cd41ca0809167ee7b1fb093d1f4028d01a7d",
+    "log_sha256": "6d13e0ab6383e16b9038764ad2125a49221e4c0b9a2846b3814fec6259d14bcd",
+    "aceptacion_visual": "RECHAZADA",
+    "causa": "En Publicados de 390 px, las cifras y encabezados de la tabla de evolución se parten entre líneas. Confirmado en ambos temas.",
+    "evidencias": [
+      {
+        "archivo": "cooper/.cache/videos-integracion3/cierre-1/390-oscuro-16-publicados.png",
+        "sha256": "b3ef0c5f2097d4de76c3bcc19173e0c0acd398910aa6336c9b6cc099884ade04"
+      },
+      {
+        "archivo": "cooper/.cache/videos-integracion3/cierre-1/390-claro-16-publicados.png",
+        "sha256": "c587f66ed9bf7a522454c9183a146af7902ffb6842ee6ea9cf1f9ef540cc2800"
+      }
+    ],
+    "nota_reporter": "Informa 12 minutos acumulados del archivo Sentinel. Se conserva el mensaje de duración sin filtrar."
+  },
+  "cierre_2": {
+    "estado": "CANCELADA_POR_HALLAZGO_VISUAL_DE_CIERRE_1",
+    "exit_code": 137,
+    "causa_salida": "Parada explícita del contenedor de ensayo; no finalizó con SIGTERM en 15 s y Podman aplicó SIGKILL. No acredita una segunda ronda.",
+    "log_sha256": "c8ee1f1fa9f7cf8c9be0165ec0e2ed6c93aae0dded317a59d22279c34b6cf2db"
+  },
+  "continuacion": "Corregir legibilidad móvil, ejecutar puerta y dos rondas nuevas; no activar la imagen anterior719409f."
+}

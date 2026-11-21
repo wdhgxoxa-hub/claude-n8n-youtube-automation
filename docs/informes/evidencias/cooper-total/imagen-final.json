@@ -21,6 +21,8 @@
   ],
   "producto_objetos_sha256": "a8ea1624e9952ed5507ac60d07ba703904445cafd86db6fbaa296129ea297de7",
   "producto_igual_a_head": true,
-  "estado": "CONSTRUIDA; aceptación de copia fresca y despliegue pendientes",
-  "antecedente": "Sustituye imagen intermedia fcfab3b por corrección del intervalo simulado; no añade migraciones."
+  "estado": "ACEPTADA EN AISLAMIENTO, SUPERADA POR DEFECTO VISUAL MOVIL; NO ACTIVAR",
+  "antecedente": "Sustituye imagen intermedia fcfab3b por corrección del intervalo simulado; no añade migraciones.",
+  "aceptacion_aislada": "../total-cierre-aceptacion/imagen-719409f/",
+  "motivo_sustitucion": "Legibilidad de la tabla de métricas a390px, detectada al revisar capturas de cierre-1"
 }

@@ -1,0 +1,26 @@
+{
+  "fecha_utc": "2026-11-21T18:18:42.488086+00:00",
+  "fuente_commit": "719409f813512e10ecdbd3a0218d529dd9198fd8",
+  "etiqueta": "localhost/cooper:719409f",
+  "imagen_id": "sha256:134f67402247c190c37a32013fc01ecedd483379d3b09be054ea3f3f5d30182d",
+  "formato": "docker",
+  "bytes": 296908810,
+  "archivo_sha256": "135b173772ba14b48aebcd0889b55c4d67bf6d386d0b9d7760827ac6888e249a",
+  "fuentes_archive_sha256": "182072a89785d2e4d63c056284ac51fc3f4ccb4263ee1c6686e0cfaaa3ce3fd2",
+  "log_construccion_sha256": "a5c22e64b75bb0e8cccb0e1e1f9bf141a90faa250cfcf64ca9eabc741c8966b3",
+  "advertencias": 0,
+  "migraciones": 13,
+  "producto_rutas": [
+    "cooper/src",
+    "cooper/drizzle",
+    "cooper/public",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "deploy/Containerfile"
+  ],
+  "producto_objetos_sha256": "a8ea1624e9952ed5507ac60d07ba703904445cafd86db6fbaa296129ea297de7",
+  "producto_igual_a_head": true,
+  "estado": "CONSTRUIDA; aceptación de copia fresca y despliegue pendientes",
+  "antecedente": "Sustituye imagen intermedia fcfab3b por corrección del intervalo simulado; no añade migraciones."
+}
