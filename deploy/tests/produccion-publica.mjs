@@ -9,7 +9,7 @@ const { default: AxeBuilder } = require("@axe-core/playwright");
 const origin = "https://cooper.cooperestudio.com";
 const output = resolve(process.argv[2] ?? "cooper/.cache/total-despliegue-aceptacion/publico");
 await mkdir(output, { recursive: true });
-const routes = ["/", "/canales", "/canales/comprobacion-sin-sesion", "/videos", "/videos/comprobacion-sin-sesion", "/avatares", "/publicados", "/aprendizaje", "/marcas", "/perfil", "/admin", "/admin/fabrica", "/radar", "/rutina", "/redes", "/referencias", "/cuentas", "/programados", "/decisiones", "/incidencias", "/avisos"];
+const routes = ["/", "/canales", "/canales/comprobacion-sin-sesion", "/videos", "/videos/comprobacion-sin-sesion", "/avatares", "/publicados", "/aprendizaje", "/marcas", "/perfil", "/admin", "/admin/fabrica", "/radar", "/rutina", "/redes", "/referencias", "/cuentas", "/programados", "/decisiones", "/incidencias", "/avisos", "/revisar/whatsapp/comprobacion-sin-sesion"];
 const result = { origen: origin, fecha: new Date().toISOString(), alcance: "Entrada y control de acceso anónimo; NO recorrido privado autenticado", pantallas: [], apis: [], formatos: [], oauth_iniciado: false };
 const browser = await chromium.launch({ headless: true });
 try {
@@ -47,6 +47,9 @@ try {
       assert.equal(response.status(), 200);
       if (width === 1440) result.pantallas.push({ ruta: path, destino: "/entrar", acceso_privado: false });
     }
+    await page.goto(origin + "/entrar?error=AccessDenied", { waitUntil: "networkidle" });
+    assert.ok(await page.getByRole("alert").isVisible());
+    assert.equal((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations.length, 0);
     if (width === 1440) {
       for (const path of ["/api/estado", "/api/eventos", "/api/memoria", "/api/marcas", "/api/operacion", "/api/admin/fabrica"]) {
         const r = await context.request.get(origin + path, { maxRedirects: 0 });

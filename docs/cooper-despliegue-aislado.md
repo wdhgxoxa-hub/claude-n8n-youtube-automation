@@ -66,7 +66,7 @@ PLAYWRIGHT_BROWSERS_PATH="$PWD/cooper/.cache/sentinel-browsers" \
   deploy/tests/sentinel-publico.py cooper/.cache/total-despliegue-aceptacion/sentinel
 ```
 
-Playwright graba entrada y redirecciones de 21 rutas privadas a 1440 y 390 px,
+Playwright graba entrada y redirecciones de 22 rutas privadas a 1440 y 390 px,
 verifica seis APIs anónimas, TLS, cabeceras, Google OIDC y accesibilidad.
 Sentinel conserva su guardián y ejecuta recorridos/estabilidad de la entrada
 pública con el host exacto permitido y acciones de autenticación excluidas.
