@@ -13,6 +13,14 @@ spec.loader.exec_module(mod)
 
 
 class CliAislada(unittest.TestCase):
+ def test_radar_solo_recibe_url_publica_adicional(self):
+  base=mod.configuracion('CoopEnsayoApr01')['task-runners'][0]
+  radar=mod.configuracion('CoopRadarReal001')['task-runners'][0]
+  self.assertEqual(set(radar['allowed-env'])-set(base['allowed-env']),{'PUENTE_CODEX_URL'})
+  self.assertFalse(any('TOKEN' in k for k in radar['allowed-env']))
+  self.assertEqual(base['env-overrides']['N8N_BLOCK_ENV_ACCESS_IN_NODE'],'true')
+  self.assertEqual(mod.CONFIG['task-runners'][0],base)
+
  def test_no_permite_workflows_de_produccion(self):
   with patch.object(mod.subprocess,'run') as run:
    with self.assertRaises(ValueError): mod.ejecutar('FabPublicacion01')

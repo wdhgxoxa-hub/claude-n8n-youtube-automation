@@ -4,6 +4,7 @@ import subprocess
 import sys
 import sqlite3
 import fcntl
+import copy
 from pathlib import Path
 
 CONFIG={'task-runners':[{
@@ -14,13 +15,22 @@ CONFIG={'task-runners':[{
  'env-overrides':{'NODE_FUNCTION_ALLOW_BUILTIN':'crypto','NODE_FUNCTION_ALLOW_EXTERNAL':'','N8N_BLOCK_ENV_ACCESS_IN_NODE':'true','N8N_RUNNERS_HEALTH_CHECK_SERVER_HOST':'127.0.0.1'}
 }]}
 
+def configuracion(wid):
+ config=copy.deepcopy(CONFIG)
+ if wid=='CoopRadarReal001':
+  # Texto necesita solo la URL pública; la autenticación HTTP se evalúa en n8n.
+  js=config['task-runners'][0]
+  js['allowed-env'].append('PUENTE_CODEX_URL')
+  js['env-overrides']['N8N_BLOCK_ENV_ACCESS_IN_NODE']='false'
+ return config
+
 def ejecutar(wid, base='file:/var/lib/cooper/n8n/database.sqlite?mode=ro'):
  if wid not in ['CoopEnsayoApr01','CoopEnsayoLec01','CoopSondaVidIQ01','CoopSondaYtComp1','CoopRadarReal001']:
   raise ValueError('ID no autorizado')
  with sqlite3.connect(base,uri=True) as c:
   previo=c.execute('SELECT COALESCE(MAX(id),0) FROM execution_entity').fetchone()[0]
  ruta='/tmp/cooper-ensayo-runner.json'
- subprocess.run(['docker','exec','-i','cooper-runner-1','sh','-c','cat > '+ruta],input=json.dumps(CONFIG).encode(),check=True)
+ subprocess.run(['docker','exec','-i','cooper-runner-1','sh','-c','cat > '+ruta],input=json.dumps(configuracion(wid)).encode(),check=True)
  pid='/tmp/cooper-ensayo-runner.pid'
  runner_cmd=['docker','exec','-e','N8N_RUNNERS_CONFIG_PATH='+ruta,
  '-e','N8N_RUNNERS_TASK_BROKER_URI=http://n8n:5689','-e','N8N_RUNNERS_LAUNCHER_HEALTH_CHECK_PORT=5688',
