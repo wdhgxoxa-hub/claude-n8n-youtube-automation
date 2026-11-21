@@ -37,6 +37,7 @@ export default defineConfig({
       name: "chromium",
       testIgnore: [
         "multiengine.spec.ts",
+        "accesibilidad.spec.ts",
         "diseno.spec.ts",
         "animacion.spec.ts",
         "resultados.spec.ts",
@@ -47,6 +48,7 @@ export default defineConfig({
     {
       name: "demostracion",
       testMatch: [
+        "accesibilidad.spec.ts",
         "diseno.spec.ts",
         "animacion.spec.ts",
         "resultados.spec.ts",
