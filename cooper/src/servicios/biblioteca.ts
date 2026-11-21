@@ -1,5 +1,5 @@
 import { createHash, randomInt, randomUUID } from "node:crypto";
-import { and, eq, lt, or } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import {
@@ -7,7 +7,6 @@ import {
   attachments,
   identityChallenges,
   publicMedia,
-  users,
   type Asset,
   type User,
 } from "@/db/schema";
@@ -174,6 +173,7 @@ function guardarTrabajo(id: string, trabajo: TrabajoMedio) {
         eq(assets.id, id),
         eq(assets.verified, true),
         eq(assets.consentRevokedAt, 0),
+        eq(assets.status, "iniciando"),
       ),
     )
     .run();
@@ -275,66 +275,10 @@ export function archivoRevision(user: User, id: string, fileId: string) {
     .where(and(eq(attachments.id, fileId), eq(attachments.ownerId, a.ownerId)))
     .get()!;
 }
-// La reserva en SQLite evita duplicar el sondeo entre conexiones SSE del mismo dueño.
+// Compatibilidad para consultas internas; comparte la misma reserva durable.
 export async function sincronizarMedios(user: User) {
-  const interval = 10000,
-    now = Date.now();
-  if (
-    !db()
-      .select({ active: users.active })
-      .from(users)
-      .where(eq(users.id, user.id))
-      .get()?.active
-  )
-    return;
-  const rows = db()
-    .select()
-    .from(assets)
-    .where(
-      and(
-        eq(assets.ownerId, user.id),
-        eq(assets.verified, true),
-        eq(assets.consentRevokedAt, 0),
-        or(
-          eq(assets.status, "entrenando"),
-          eq(assets.status, "verificacion_proveedor"),
-        ),
-        lt(assets.polledAt, now - interval),
-        or(eq(assets.syncError, false), lt(assets.polledAt, now - 120000)),
-      ),
-    )
-    .orderBy(assets.polledAt)
-    .limit(20)
-    .all();
-  await Promise.all(
-    rows.map(async (a) => {
-      const claimed = db()
-        .update(assets)
-        .set({ polledAt: now })
-        .where(
-          and(
-            eq(assets.id, a.id),
-            eq(assets.polledAt, a.polledAt),
-            eq(assets.consentRevokedAt, 0),
-          ),
-        )
-        .run();
-      if (!claimed.changes) return;
-      try {
-        const p =
-          a.kind === "avatar"
-            ? proveedorAvatar(a.provider)
-            : proveedorVoz(a.provider);
-        guardarTrabajo(a.id, await p.consultar(a.providerId));
-      } catch {
-        db()
-          .update(assets)
-          .set({ syncError: true })
-          .where(eq(assets.id, a.id))
-          .run();
-      }
-    }),
-  );
+  const { cicloBiblioteca } = await import("./biblioteca-trabajador");
+  await cicloBiblioteca({ ownerId: user.id });
 }
 // Identificadores de interfaz estables; los IDs del proveedor quedan en servidor.
 const idPresentador = (id: string) =>

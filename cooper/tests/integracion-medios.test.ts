@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
 import { db } from "@/db";
-import { users, assets, attachments } from "@/db/schema";
+import { users, assets, attachments, allowedEmails } from "@/db/schema";
 import {
   crearMedio,
   crearReto,
@@ -54,6 +54,10 @@ it("I04 un sondeo tardío no vuelve a habilitar un activo cuyo borrado falló", 
   const user = owner(),
     id = randomUUID();
   db()
+    .insert(allowedEmails)
+    .values({ email: user.email, createdAt: Date.now() })
+    .run();
+  db()
     .insert(assets)
     .values({
       id,
@@ -66,6 +70,9 @@ it("I04 un sondeo tardío no vuelve a habilitar un activo cuyo borrado falló", 
       status: "entrenando",
       simulated: false,
       verified: true,
+      consentAt: Date.now(),
+      reviewedAt: Date.now(),
+      reviewedBy: user.id,
       polledAt: 0,
       createdAt: Date.now(),
     })

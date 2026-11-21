@@ -117,6 +117,10 @@ export const assets = sqliteTable("assets", {
   previewData: text("preview_data").notNull().default(""),
   previewMime: text("preview_mime").notNull().default(""),
   polledAt: integer("polled_at").notNull().default(0),
+  pollLease: text("poll_lease").notNull().default(""),
+  pollLeaseUntil: integer("poll_lease_until").notNull().default(0),
+  pollNextAt: integer("poll_next_at").notNull().default(0),
+  pollFailures: integer("poll_failures").notNull().default(0),
   syncError: integer("sync_error", { mode: "boolean" })
     .notNull()
     .default(false),
