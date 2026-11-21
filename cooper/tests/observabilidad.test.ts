@@ -106,7 +106,7 @@ it("sincroniza medios y métricas aunque la etapa no cambie; aísla dueños y co
   );
 });
 
-it("conserva retención media superior a 100 % y mantiene acotada la curva de audiencia", () => {
+it("conserva repeticiones superiores a 100 % en media y curva de YouTube", () => {
   const punto = {
     fecha: "2026-11-21T00:00:00Z",
     vistas: 12,
@@ -118,9 +118,10 @@ it("conserva retención media superior a 100 % y mantiene acotada la curva de au
   expect(
     medicionSchema.safeParse({
       ...punto,
+      curvaFuente: "youtube_intervalos",
       curvaRetencion: [{ segundo: 1, porcentaje: 1.25 }],
     }).success,
-  ).toBe(false);
+  ).toBe(true);
 });
 
 it("sincroniza evidencia y aplicaciones con métricas opcionales sin convertir ausencias en cero", () => {

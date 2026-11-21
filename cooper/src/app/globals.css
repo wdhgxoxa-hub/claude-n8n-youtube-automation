@@ -3873,10 +3873,14 @@ input:is([type="checkbox"], [type="radio"]):checked {
   }
 }
 
-.operation-page .checkbox {
+.operation-page .checkbox,
+.learning-section .checkbox {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+}
+.learning-section .checkbox {
+  min-height: 44px;
 }
 .operation-page .checkbox input {
   flex: 0 0 auto;

@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import type { Estado } from "../src/servicios/datos";
 import { readFileSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import AxeBuilder from "@axe-core/playwright";
 test.beforeEach(async ({ page }) => {
   expect(
     (
@@ -16,6 +17,128 @@ test.beforeEach(async ({ page }) => {
       )
     ).status(),
   ).toBe(200);
+});
+test("Aprendizaje activa y pausa la medición con persistencia y permiso administrativo", async ({
+  page,
+}) => {
+  const anterior = await (await page.request.get("/api/admin/fabrica")).json();
+  const activo = anterior.valores.allowAnalytics === true;
+  await page.goto("/aprendizaje");
+  const control = page.getByRole("switch", {
+    name: "Medición y aprendizaje automático",
+  });
+  await expect(control).toBeEnabled();
+  await expect(control).toBeChecked({ checked: activo });
+  try {
+    await control.click();
+    await expect(control).toBeEnabled();
+    await expect(control).toBeChecked({ checked: !activo });
+    await page.reload();
+    await expect(control).toBeEnabled();
+    await expect(control).toBeChecked({ checked: !activo });
+    const guardado = await (
+      await page.request.get("/api/admin/fabrica")
+    ).json();
+    expect(guardado.valores.allowAnalytics).toBe(!activo);
+    expect(guardado.historial[0].cambios).toContain("allowAnalytics");
+    await page.route("**/api/operacion", (r) =>
+      r.fulfill({
+        status: 409,
+        json: {
+          error:
+            "Los ajustes cambiaron. Actualiza y revísalos antes de confirmar.",
+        },
+      }),
+    );
+    await control.click();
+    await expect(
+      page
+        .getByRole("region", { name: "Control del aprendizaje" })
+        .getByRole("alert"),
+    ).toContainText("Los ajustes cambiaron");
+    await expect(control).toBeChecked({ checked: !activo });
+    await page.unroute("**/api/operacion");
+  } finally {
+    const actual = await (await page.request.get("/api/admin/fabrica")).json();
+    expect(
+      (
+        await page.request.post("/api/operacion", {
+          data: {
+            accion: "ajustes",
+            revision: actual.revision,
+            valores: { allowAnalytics: activo },
+            confirmado: true,
+          },
+        })
+      ).ok(),
+    ).toBe(true);
+  }
+  const estado: Estado = await (await page.request.get("/api/estado")).json();
+  estado.user.role = "usuario";
+  await page.route("**/api/estado", (r) => r.fulfill({ json: estado }));
+  await page.route("**/api/eventos", (r) =>
+    r.fulfill({
+      contentType: "text/event-stream",
+      body: "event: estado\ndata: " + JSON.stringify(estado) + "\n\n",
+    }),
+  );
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Aprendizaje", exact: true }),
+  ).toBeVisible();
+  await expect(control).toHaveCount(0);
+});
+
+test("Publicados presenta intervalos YouTube en segundos sin recortar repeticiones", async ({
+  page,
+}) => {
+  const estado: Estado = await (await page.request.get("/api/estado")).json();
+  const v = estado.videos[0];
+  v.observabilidad.publicaciones = [
+    {
+      id: "curva-yt",
+      red: "youtube",
+      url: "https://www.youtube.com/watch?v=abcdefghijk",
+      fecha: "2026-11-01T00:00:00Z",
+      miniatura: "",
+      historial: [
+        {
+          fecha: "2026-11-02T00:00:00Z",
+          ventana: "24h",
+          vistas: 100,
+          meGusta: 2,
+          comentarios: 0,
+          seguidoresGanados: 3,
+          retencion: 0.5,
+          curvaFuente: "youtube_intervalos",
+          curvaRetencion: [
+            { segundo: 1.2, porcentaje: 1.25 },
+            { segundo: 60, porcentaje: 0.4 },
+            { segundo: 120, porcentaje: 0 },
+          ],
+        },
+      ],
+    },
+  ];
+  await page.route("**/api/estado", (r) => r.fulfill({ json: estado }));
+  await page.route("**/api/eventos", (r) =>
+    r.fulfill({
+      contentType: "text/event-stream",
+      body: "event: estado\ndata: " + JSON.stringify(estado) + "\n\n",
+    }),
+  );
+  await page.goto("/publicados");
+  await page.getByText("Retención por intervalo", { exact: true }).click();
+  const tabla = page.getByRole("table", { name: "Curva de retención" });
+  await expect(tabla).toContainText("125 %");
+  await expect(tabla.getByRole("row").filter({ hasText: "60" })).toContainText(
+    "40 %",
+  );
+  await expect(
+    page.getByText("Intervalos de YouTube ubicados en segundos", {
+      exact: false,
+    }),
+  ).toBeVisible();
 });
 test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección", async ({
   page,
@@ -253,6 +376,7 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
           fecha: "2026-11-21T00:00:00Z",
           metrica: "retencion",
           valor: 0.4,
+          segundo: 3,
           demoraHoras: 2,
         },
       ],
@@ -281,7 +405,7 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
       lesson.getByText("Cambio propuesto:", { exact: false }),
     ).toBeVisible();
     await expect(lesson.getByLabel("Evidencia de la lección")).toContainText(
-      "Retención: 40 % (captura 2 h después del hito)",
+      "Retención: 40 % en el segundo 3 (captura 2 h después del hito)",
     );
     await expect(
       lesson.getByText(
@@ -296,6 +420,7 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true);
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
     await page.screenshot({
       path: ".cache/capturas-aprendizaje/evidencia-" + width + ".png",
       fullPage: true,

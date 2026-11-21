@@ -15,11 +15,12 @@ export const urlMedio = z
 const fecha = z.iso.datetime({ offset: true });
 const contador = z.number().finite().nonnegative().nullable();
 export const medicionSchema = z.object({
+  curvaFuente: z.enum(["youtube_intervalos", "post_segundos"]).optional(),
   curvaRetencion: z
     .array(
       z.object({
         segundo: z.number().nonnegative(),
-        porcentaje: z.number().min(0).max(1),
+        porcentaje: z.number().finite().nonnegative(),
       }),
     )
     .max(600)
@@ -76,6 +77,7 @@ export const leccionSchema = z.object({
           "seguidoresGanados",
         ]),
         valor: z.number().finite().nonnegative(),
+        segundo: z.number().finite().nonnegative().optional(),
         demoraHoras: z.number().nonnegative(),
       }),
     )

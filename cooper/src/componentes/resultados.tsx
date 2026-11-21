@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { m as motion } from "framer-motion";
-import { Heading, Empty, useEspacio } from "./espacio";
+import { api, Heading, Empty, useEspacio } from "./espacio";
 import { NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import { Portada } from "./portada";
 import type { Medicion } from "@/contratos/observabilidad";
+import type { Ajustes } from "@/contratos/operacion";
 const fecha = (value: string | null) =>
   value
     ? new Intl.DateTimeFormat("es", {
@@ -131,18 +132,31 @@ function Evolucion({ historial }: { historial: Medicion[] }) {
 }
 function CurvaRetencion({
   puntos,
+  fuente,
 }: {
   puntos: NonNullable<Medicion["curvaRetencion"]>;
+  fuente?: Medicion["curvaFuente"];
 }) {
   if (!puntos.length) return null;
   const fin = Math.max(1, ...puntos.map((p) => p.segundo));
+  const maximo = Math.max(1, ...puntos.map((p) => p.porcentaje));
   return (
     <details className="evolution">
-      <summary>Retención por segundo</summary>
+      <summary>
+        {fuente === "youtube_intervalos"
+          ? "Retención por intervalo"
+          : "Retención por segundo"}
+      </summary>
+      {fuente === "youtube_intervalos" && (
+        <p className="muted">
+          Intervalos de YouTube ubicados en segundos según la duración
+          publicada. Las repeticiones pueden superar el 100 %.
+        </p>
+      )}
       <svg
         viewBox="0 0 600 150"
         role="img"
-        aria-label="Porcentaje de audiencia que permanece en cada segundo"
+        aria-label="Retención en los momentos medidos del video"
       >
         <path className="chart-axis" d="M24 24 V120 H576" />
         <polyline
@@ -150,7 +164,7 @@ function CurvaRetencion({
           points={puntos
             .map(
               (p) =>
-                `${24 + (p.segundo / fin) * 552},${120 - p.porcentaje * 96}`,
+                `${24 + (p.segundo / fin) * 552},${120 - (p.porcentaje / maximo) * 96}`,
             )
             .join(" ")}
         />
@@ -166,7 +180,7 @@ function CurvaRetencion({
           <thead>
             <tr>
               <th>Segundo</th>
-              <th>Audiencia que permanece</th>
+              <th>Retención</th>
             </tr>
           </thead>
           <tbody>
@@ -300,7 +314,10 @@ export function Publicados() {
                     : "La fábrica todavía no ha recibido métricas de esta publicación."}
                 </p>
                 <Evolucion historial={p.historial} />
-                <CurvaRetencion puntos={m?.curvaRetencion ?? []} />
+                <CurvaRetencion
+                  puntos={m?.curvaRetencion ?? []}
+                  fuente={m?.curvaFuente}
+                />
               </article>
             );
           })}
@@ -312,6 +329,70 @@ export function Publicados() {
         />
       )}
     </div>
+  );
+}
+function InterruptorAprendizaje() {
+  const [ajustes, setAjustes] = useState<Ajustes | null>(null);
+  const [error, setError] = useState("");
+  const [ocupado, setOcupado] = useState(false);
+  const bloqueo = useRef(false);
+  useEffect(() => {
+    let activo = true;
+    void api<Ajustes>("admin/fabrica", undefined, "GET").then(
+      (r) => {
+        if (activo) setAjustes(r);
+      },
+      (e: Error) => {
+        if (activo) setError(e.message);
+      },
+    );
+    return () => {
+      activo = false;
+    };
+  }, []);
+  async function cambiar() {
+    if (!ajustes || bloqueo.current) return;
+    bloqueo.current = true;
+    setOcupado(true);
+    setError("");
+    try {
+      await api("operacion", {
+        accion: "ajustes",
+        revision: ajustes.revision,
+        valores: { allowAnalytics: ajustes.valores.allowAnalytics !== true },
+        confirmado: true,
+      });
+      setAjustes(await api<Ajustes>("admin/fabrica", undefined, "GET"));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      bloqueo.current = false;
+      setOcupado(false);
+    }
+  }
+  return (
+    <section className="learning-section" aria-label="Control del aprendizaje">
+      <label className="checkbox">
+        <input
+          type="checkbox"
+          role="switch"
+          checked={ajustes?.valores.allowAnalytics === true}
+          disabled={!ajustes || ocupado}
+          onChange={() => void cambiar()}
+        />
+        Medición y aprendizaje automático
+      </label>
+      <p className="muted">
+        Recoge resultados a las 24 h, 72 h y 7 días para preparar las lecciones
+        del siguiente guion. Al pausarlo se conservan las lecciones registradas.
+      </p>
+      {error && (
+        <p role="alert">
+          {error}{" "}
+          <Link href="/admin/fabrica">Revisar ajustes de la fábrica</Link>
+        </p>
+      )}
+    </section>
   );
 }
 export function Aprendizaje() {
@@ -344,6 +425,7 @@ export function Aprendizaje() {
       {data.demo && (
         <p className="notice">Ejemplos de aprendizaje con datos ficticios.</p>
       )}
+      {data.user.role === "admin" && <InterruptorAprendizaje />}
       <dl className="metrics-strip learning-metrics">
         <div>
           <dt>Lecciones registradas</dt>
@@ -442,6 +524,8 @@ export function Aprendizaje() {
                       {o.metrica === "retencion"
                         ? Math.round(o.valor * 100) + " %"
                         : numero(o.valor)}
+                      {o.segundo !== undefined &&
+                        " en el segundo " + numero(o.segundo)}
                       {o.demoraHoras > 0 &&
                         " (captura " + o.demoraHoras + " h después del hito)"}
                     </li>
