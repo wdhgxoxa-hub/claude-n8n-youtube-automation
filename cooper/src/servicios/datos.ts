@@ -1,5 +1,5 @@
 import { leerObservabilidad, leerLecciones } from "@/contratos/observabilidad";
-import { and, desc, eq, or, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lte, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   users,
@@ -100,26 +100,33 @@ export function administracion(user: User) {
   requireAdmin(user);
   const now = Date.now();
   const { day, week, month } = periodosLima(now);
-  const costs = db().select().from(expenses).all();
+  // La semana puede empezar en el mes anterior: conservar ambos periodos.
+  const costs = db()
+    .select({
+      ownerId: expenses.ownerId,
+      day: sql<number>`sum(case when ${expenses.createdAt} >= ${day} then ${expenses.amount} else 0 end)`,
+      week: sql<number>`sum(case when ${expenses.createdAt} >= ${week} then ${expenses.amount} else 0 end)`,
+      month: sql<number>`sum(case when ${expenses.createdAt} >= ${month} then ${expenses.amount} else 0 end)`,
+    })
+    .from(expenses)
+    .where(and(gte(expenses.createdAt, Math.min(week, month)), lte(expenses.createdAt, now)))
+    .groupBy(expenses.ownerId)
+    .all();
   const threshold = Number(process.env.COOPER_GASTO_ALERTA_USD) || 25;
   const team = db()
     .select()
     .from(users)
     .all()
     .map((u) => {
-      const own = costs.filter((c) => c.ownerId === u.id);
-      const sum = (since: number) =>
-        Math.round(
-          own
-            .filter((c) => c.createdAt >= since && c.createdAt <= now)
-            .reduce((a, c) => a + c.amount, 0) * 100,
-        ) / 100;
+      const own = costs.find((c) => c.ownerId === u.id);
+      const round = (amount = 0) => Math.round(amount * 100) / 100;
+      const day = round(own?.day);
       return {
         ...u,
-        day: sum(day),
-        week: sum(week),
-        month: sum(month),
-        alert: sum(day) >= threshold,
+        day,
+        week: round(own?.week),
+        month: round(own?.month),
+        alert: day >= threshold,
       };
     });
   return {

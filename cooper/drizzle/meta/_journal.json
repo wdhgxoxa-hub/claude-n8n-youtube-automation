@@ -92,6 +92,13 @@
       "when": 1795176017000,
       "tag": "0017_biblioteca",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1795176018000,
+      "tag": "0018_rendimiento",
+      "breakpoints": true
     }
   ]
 }

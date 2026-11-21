@@ -21,6 +21,8 @@ function connect() {
   const database = drizzle(sqlite, { schema });
   try {
     aplicarMigraciones(sqlite, resolve("drizzle"));
+    // Conexión larga: estadísticas acotadas al abrir, también tras crear índices.
+    sqlite.pragma("optimize = 0x10002");
   } catch (error) {
     sqlite.close();
     throw error;

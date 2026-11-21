@@ -65,8 +65,8 @@ export function estadoMarcas(user: User) {
         .select()
         .from(piezasMarca)
         .where(eq(piezasMarca.marcaId, m.id))
-        .all()
-        .sort((a, b) => a.programada - b.programada),
+        .orderBy(piezasMarca.programada)
+        .all(),
     })),
     citas: db()
       .select({
