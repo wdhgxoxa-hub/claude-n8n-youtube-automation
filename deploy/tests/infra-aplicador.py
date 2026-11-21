@@ -50,6 +50,15 @@ def rehearse(fixture, proof, image_archive=None):
             time.sleep(0.1)
         operar.require(socket.exists(), 'No arrancó el socket privado')
         with operator.lock():
+            # Compose termina su prueba de reversa con un alias de la MISMA imagen.
+            # Acreditar ambos IDs antes de fijar la etiqueta exacta del artefacto final.
+            artifact = receipt.get('cooper_artefacto')
+            if artifact:
+                current = json.loads(operator.release.read_text())['image'] if operator.release.exists() else env['COOPER_IMAGE']
+                for reference in (current, artifact['etiqueta']):
+                    actual = operar.run(['podman', 'image', 'inspect', reference, '--format', '{{.Id}}'], env=env).strip()
+                    operar.require(actual.removeprefix('sha256:') == receipt['cooper_image_id'].removeprefix('sha256:'), 'El fixture no usa Cooper ensayado')
+                operar.write_json(operator.release, {'image': artifact['etiqueta']})
             (DEPLOY / 'compose.yaml').write_text(old)
             before = {name: operar.digest(DEPLOY / name) for name in infra.FILES}
             operator.compose('up','-d','--no-build','--wait','--wait-timeout','240')
@@ -58,6 +67,8 @@ def rehearse(fixture, proof, image_archive=None):
                 infra.apply(operator, candidate, receipt, failed, simulate_failure=True, image_archive=image_archive)
                 raise AssertionError('La inyección debe terminar en error')
             except RuntimeError:
+                if not failed.exists():
+                    raise
                 result = json.loads(failed.read_text())
                 operar.require(result.get('estado') == 'FALLO_REVERTIDO' and result.get('reversion') == 'PASS', 'No se completó reversa real')
             operar.require(before == {name: operar.digest(DEPLOY / name) for name in infra.FILES}, 'No se recuperaron archivos originales')
