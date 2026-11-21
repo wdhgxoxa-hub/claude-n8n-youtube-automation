@@ -170,7 +170,7 @@ test("capturas finales: todas las pantallas y formularios demo en ambos temas", 
   page,
 }) => {
   test.setTimeout(240000);
-  const dir = ".cache/capturas-final";
+  const dir = ".cache/capturas-final2";
   mkdirSync(dir, { recursive: true });
   const state = await (await page.request.get("/api/estado")).json();
   const manifest: {
@@ -267,6 +267,11 @@ test("capturas finales: todas las pantallas y formularios demo en ambos temas", 
           ).violations,
           `${name} ${theme} ${width}`,
         ).toEqual([]);
+        await page.evaluate(() => {
+          if (document.activeElement instanceof HTMLElement)
+            document.activeElement.blur();
+          window.scrollTo(0, 0);
+        });
         const archivo = `${name}-${theme}-${width}.png`;
         await page.screenshot({ path: `${dir}/${archivo}`, fullPage: true });
         manifest.push({
@@ -322,7 +327,7 @@ test("la barra lateral cubre páginas largas y permite navegar con poca altura",
 }) => {
   test.setTimeout(120000);
   const state = await (await page.request.get("/api/estado")).json();
-  const dir = ".cache/capturas-final";
+  const dir = ".cache/capturas-final2";
   mkdirSync(dir, { recursive: true });
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     for (const [name, path] of [
@@ -390,4 +395,170 @@ test("la barra lateral cubre páginas largas y permite navegar con poca altura",
       if (width < 768) await page.keyboard.press("Escape");
     }
   }
+});
+
+test("integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas", async ({
+  page,
+}) => {
+  test.setTimeout(180000);
+  const output = ".cache/capturas-final2";
+  mkdirSync(output, { recursive: true });
+  const manifest: {
+    archivo: string;
+    tema: string;
+    ancho: number;
+    ruta: string;
+    demo: boolean;
+  }[] = [];
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  // Usuario ficticio separado: la matriz no cambia los ejemplos del administrador.
+  expect(
+    (
+      await page.request.post("/api/admin/permitidos", {
+        data: { email: "final@example.test" },
+      })
+    ).ok(),
+  ).toBe(true);
+  expect(
+    (
+      await page.request.post(
+        `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_FIXTURE_PORT}/sesion`,
+        {
+          data: {
+            email: "final@example.test",
+            secret: process.env.COOPER_E2E_SECRET,
+          },
+        },
+      )
+    ).ok(),
+  ).toBe(true);
+  async function matriz(name: string) {
+    for (const theme of ["oscuro", "claro"]) {
+      // Mantiene estados transitorios (adjunto/OTP) al cambiar los mismos tokens.
+      await page.evaluate((value) => {
+        document.documentElement.dataset.theme = value;
+      }, theme);
+      for (const width of [360, 390, 768, 1440]) {
+        await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
+        await overflow(page);
+        if (name === "chat-foto") {
+          await page.locator(".conversation").focus();
+          await expect(page.locator(".conversation")).toBeFocused();
+          await page.keyboard.press("Home");
+          await expect
+            .poll(() =>
+              page.locator(".conversation").evaluate((el) => el.scrollTop),
+            )
+            .toBe(0);
+        }
+        expect(
+          (
+            await new AxeBuilder({ page })
+              .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+              .analyze()
+          ).violations,
+          `${name} ${theme} ${width}`,
+        ).toEqual([]);
+        if (width === 390 || width === 1440) {
+          await page.evaluate(() => {
+            if (document.activeElement instanceof HTMLElement)
+              document.activeElement.blur();
+            window.scrollTo(0, 0);
+          });
+          const archivo = `${name}-${theme}-${width}.png`;
+          await page.screenshot({
+            path: `${output}/${archivo}`,
+            fullPage: true,
+          });
+          manifest.push({
+            archivo,
+            tema: theme,
+            ancho: width,
+            ruta: new URL(page.url()).pathname,
+            demo: true,
+          });
+        }
+      }
+    }
+  }
+  await ready(page);
+  await page.getByLabel("Mensaje para Cooper").fill("Activa modo noticia");
+  await page.getByRole("button", { name: "Enviar mensaje" }).click();
+  const card = page.getByRole("article", { name: "Ajustar guía del canal" });
+  await expect(
+    card.getByRole("button", { name: "Confirmar", exact: true }),
+  ).toBeEnabled();
+  await expect(card).toContainText("Modo noticia: activado");
+  await matriz("chat-noticia-confirmacion");
+  await card.getByRole("button", { name: "Confirmar", exact: true }).click();
+  await expect(card).toHaveCount(0);
+  const state = await (await page.request.get("/api/estado")).json();
+  const channel = state.channels.find((c: { newsMode: boolean }) => c.newsMode);
+  expect(channel).toBeDefined();
+  const created = await page.request.post("/api/orden", {
+    data: {
+      evento: "nuevo_video",
+      recursoId: channel.id,
+      texto: "Noticia verificada del día",
+    },
+  });
+  expect(created.ok()).toBe(true);
+  const video = await created.json();
+  await ready(page, `/videos/${video.id}`);
+  await expect(
+    page.getByText(/el simulador no verifica noticias reales/),
+  ).toBeVisible();
+  await matriz("noticia-pausada");
+  await ready(page, "/canales");
+  await matriz("canal-noticias");
+  await ready(page);
+  const png = await page.evaluate(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 48;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#a6d7ed";
+    ctx.fillRect(0, 0, 48, 48);
+    return canvas.toDataURL().split(",")[1];
+  });
+  await page.getByLabel("Archivo adjunto", { exact: true }).setInputFiles({
+    name: "referencia.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(png, "base64"),
+  });
+  await expect(
+    page.getByAltText("Vista previa de referencia.png"),
+  ).toBeVisible();
+  await matriz("chat-foto");
+  await page
+    .getByRole("link", { name: "Usar para mi avatar", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Crear avatar", exact: true }).click();
+  await expect(page.locator(".identity-form")).toContainText("Mi frase es:");
+  await matriz("avatar-desde-chat");
+  await ready(page, "/perfil");
+  await page.getByRole("textbox", { name: /^WhatsApp/ }).fill("+51944444444");
+  await page.getByRole("button", { name: "Guardar perfil" }).click();
+  await expect(page.getByText("Tu perfil está actualizado.")).toBeVisible();
+  const wa = page.getByRole("region", { name: "Tus avisos por WhatsApp" });
+  await wa.getByRole("checkbox").check();
+  await wa.getByRole("button", { name: "Enviar código" }).click();
+  const code = await wa.getByTestId("whatsapp-codigo-simulado").innerText();
+  await matriz("whatsapp-codigo");
+  await wa.getByRole("textbox", { name: "Código de verificación" }).fill(code);
+  await wa.getByRole("button", { name: "Verificar número" }).click();
+  await expect(wa.getByText("Número verificado: +51944444444")).toBeVisible();
+  await expect(wa.getByText("Alerta de gasto diario")).toHaveCount(0);
+  await matriz("whatsapp-preferencias");
+  await page.goto("/revisar/whatsapp/invalido");
+  await expect(
+    page.getByRole("heading", { name: "Este enlace ya no está disponible" }),
+  ).toBeVisible();
+  await matriz("whatsapp-enlace-vencido");
+  expect(errors).toEqual([]);
+  writeFileSync(
+    `${output}/manifest-nuevas.json`,
+    JSON.stringify(manifest, null, 2) + "\n",
+  );
 });

@@ -76,6 +76,40 @@ test.describe("evidencia de movimiento", () => {
       .click();
     await page.waitForTimeout(750);
     await captura(page, "fabrica-1440");
+    // El chat ahora termina al acabar el stream. Espaciamos sus frames reales
+    // para observar también respuestas de una sola frase sin carreras con el sondeo.
+    await page.evaluate(() => {
+      const original = window.fetch;
+      window.fetch = async (input, init) => {
+        const response = await original(input, init);
+        if (input !== "/api/chat" || !response.body || !response.ok)
+          return response;
+        const decoder = new TextDecoder(),
+          encoder = new TextEncoder();
+        let pending = "";
+        const stream = response.body.pipeThrough(
+          new TransformStream({
+            async transform(chunk, controller) {
+              pending += decoder.decode(chunk, { stream: true });
+              let split;
+              while ((split = pending.indexOf("\n\n")) >= 0) {
+                controller.enqueue(encoder.encode(pending.slice(0, split + 2)));
+                pending = pending.slice(split + 2);
+                await new Promise((resolve) => setTimeout(resolve, 650));
+              }
+            },
+            flush(controller) {
+              pending += decoder.decode();
+              if (pending) controller.enqueue(encoder.encode(pending));
+            },
+          }),
+        );
+        return new Response(stream, {
+          status: response.status,
+          headers: response.headers,
+        });
+      };
+    });
     // Retardar la respuesta real local permite observar el estado pensando sin alterar su contrato.
     await page.route("**/api/chat", async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 600));

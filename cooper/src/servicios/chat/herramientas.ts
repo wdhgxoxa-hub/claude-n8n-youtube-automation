@@ -33,7 +33,10 @@ const schemas = {
   }),
   corregir: datos,
   ajustar_biblia: datos.extend({
-    parametros: z.object({ campo: z.literal("modo_noticia"), valor: z.boolean() }).strict().optional(),
+    parametros: z
+      .object({ campo: z.literal("modo_noticia"), valor: z.boolean() })
+      .strict()
+      .optional(),
   }),
   programar: datos,
   referencias: datos,
@@ -102,7 +105,11 @@ export function prepararLlamada(
     avatarId?: string;
     voiceId?: string;
     avatarPlacement?: string;
-    parametros?: { modo_noticia?: boolean; campo?: "modo_noticia"; valor?: boolean };
+    parametros?: {
+      modo_noticia?: boolean;
+      campo?: "modo_noticia";
+      valor?: boolean;
+    };
   };
   if (esConsulta(nombre))
     return { nombre, argumentos, huella: "", detalle: titulos[nombre] };
@@ -171,7 +178,8 @@ export function prepararLlamada(
             const item = catalogo().find((m) => m.id === argumentos[campo]);
             return {
               tipo,
-              nombre: item?.name ?? activoVisible(user, argumentos[campo]!).name,
+              nombre:
+                item?.name ?? activoVisible(user, argumentos[campo]!).name,
               ref,
             };
           })

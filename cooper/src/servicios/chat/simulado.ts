@@ -29,9 +29,13 @@ export class ChatSimulado implements ProveedorChat {
       const despues = texto.includes(":")
         ? texto.slice(texto.indexOf(":") + 1).trim()
         : texto;
-      const cambiaNoticias = /\b(?:activa|activar|desactiva|desactivar)\b.*modo noticia/.test(clean);
+      const cambiaNoticias =
+        /\b(?:activa|activar|desactiva|desactivar)\b.*modo noticia/.test(clean);
       const patrones: [RegExp, string][] = [
-        [/\b(?:activa|activar|desactiva|desactivar)\b.*modo noticia/, "ajustar_biblia"],
+        [
+          /\b(?:activa|activar|desactiva|desactivar)\b.*modo noticia/,
+          "ajustar_biblia",
+        ],
         [/(?:crea|crear|abre|nuevo)\s+(?:un\s+)?canal/, "nuevo_canal"],
         [/(crea|nuevo|quiero|haz|pedir|pide).*video/, "nuevo_video"],
         [/corrige|corregir|cambia|pedir cambios/, "corregir"],
@@ -70,10 +74,20 @@ export class ChatSimulado implements ProveedorChat {
                     ? { tipo: /canal/.test(clean) ? "canal" : "video" }
                     : nombre.startsWith("aprobar_")
                       ? {}
-                      : { texto: despues, ...(cambiaNoticias
-                        ? { parametros: { campo: "modo_noticia", valor: !/\bdesactiva(?:r)?\b/.test(clean) } }
-                        : nombre === "nuevo_video" && /\bnoticia\b/.test(clean)
-                          ? { parametros: { modo_noticia: true } } : {}) },
+                      : {
+                          texto: despues,
+                          ...(cambiaNoticias
+                            ? {
+                                parametros: {
+                                  campo: "modo_noticia",
+                                  valor: !/\bdesactiva(?:r)?\b/.test(clean),
+                                },
+                              }
+                            : nombre === "nuevo_video" &&
+                                /\bnoticia\b/.test(clean)
+                              ? { parametros: { modo_noticia: true } }
+                              : {}),
+                        },
               },
             ]
           : /avatar|foto/.test(clean)

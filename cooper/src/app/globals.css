@@ -3241,8 +3241,22 @@ main:focus {
   }
 }
 .file-chips > .attachment-preview {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 24px;
+  width: 100%;
   max-width: 100%;
-  gap: 8px;
+  gap: 4px 8px;
+}
+.attachment-preview > :first-child {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+.attachment-preview > a {
+  grid-column: 2;
+}
+.attachment-preview > button {
+  grid-column: 3;
+  grid-row: 1 / 3;
 }
 .attachment-preview img {
   object-fit: cover;

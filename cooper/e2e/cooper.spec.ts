@@ -760,7 +760,7 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.screenshot({
-      path: `.cache/capturas-final/presentacion-revocada-${width}.png`,
+      path: `.cache/capturas-final2/presentacion-revocada-${width}.png`,
       fullPage: true,
     });
   }

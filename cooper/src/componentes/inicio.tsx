@@ -219,6 +219,7 @@ export function Inicio() {
           <div
             className="conversation"
             role="log"
+            tabIndex={0}
             aria-label="Conversación con Cooper"
             aria-live="polite"
           >
@@ -324,14 +325,19 @@ export function Inicio() {
             {partial && (
               <article className="message assistant" aria-busy={busy}>
                 <span className="message-author">Cooper</span>
-                <p>{partituraTexto(partial).map(({ word }, i) => (
-                  <motion.span className="response-word" key={i}
-                    initial={reduced ? false : { opacity: 0.5 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: reduced ? 0 : 0.16 }}>
-                    {word}
-                  </motion.span>
-                ))}</p>
+                <p>
+                  {partituraTexto(partial).map(({ word }, i) => (
+                    <motion.span
+                      className="response-word"
+                      key={i}
+                      initial={reduced ? false : { opacity: 0.5 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: reduced ? 0 : 0.16 }}
+                    >
+                      {word}
+                    </motion.span>
+                  ))}
+                </p>
               </article>
             )}
             {tarjetas
@@ -455,7 +461,10 @@ export function Inicio() {
                           {f.name}
                         </a>
                         {f.mime.startsWith("image/") && (
-                          <Link className="attachment-link" href={`/avatares?foto=${f.id}`}>
+                          <Link
+                            className="attachment-link"
+                            href={`/avatares?foto=${f.id}`}
+                          >
                             Usar para mi avatar
                           </Link>
                         )}
