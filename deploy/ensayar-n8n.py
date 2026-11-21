@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -92,7 +93,44 @@ def validate_import(before, after, target_ids):
         operar.require(before['conteos'].get(name) == after['conteos'].get(name), 'Cambió conteo ajeno al lote')
 
 
-def rehearse(source, entry, manifest, column_script, destination):
+def validate_publish_order(workflows, order, baseline):
+    ids = {workflow['id'] for workflow in workflows}
+    operar.require(isinstance(order, list) and bool(order), 'Plan de publicación vacío o inválido')
+    operar.require(all(isinstance(wid, str) and re.fullmatch(r'[A-Za-z0-9_-]+', wid) for wid in order), 'ID de publicación inválido')
+    operar.require(len(set(order)) == len(order) and set(order) <= ids, 'Publicación duplicada o fuera del lote')
+    # Los flujos del lote se importan inactivos; solo los ajenos activos pueden ser dependencias previas.
+    ready = {wid for wid, metadata in baseline['flujos'].items() if wid not in ids and metadata[0] and metadata[2]}
+    by_id = {workflow['id']: workflow for workflow in workflows}
+    for wid in order:
+        for node in by_id[wid].get('nodes', []):
+            if node.get('disabled') or node.get('type') != 'n8n-nodes-base.executeWorkflow':
+                continue
+            parameters = node.get('parameters', {})
+            if parameters.get('source', 'database') != 'database':
+                continue
+            target = parameters.get('workflowId')
+            target = target.get('value') if isinstance(target, dict) else target
+            # n8n resuelve las expresiones durante la ejecución; no se evalúan en este ensayo.
+            if isinstance(target, str) and target and not target.startswith('='):
+                operar.require(target in ready, 'Orden de publicación con dependencia pendiente')
+        ready.add(wid)
+
+
+def validate_published(before, after, target_ids, order):
+    operar.require(set(before['flujos']) | target_ids == set(after['flujos']), 'Cambió un ID durante la publicación')
+    for wid in target_ids:
+        active, version, active_version, _ = after['flujos'][wid]
+        operar.require(bool(active) == (wid in order), 'Publicación distinta del plan')
+        operar.require(active_version == version if wid in order else active_version is None, 'Versión publicada distinta del plan')
+    for wid, metadata in before['flujos'].items():
+        if wid not in target_ids:
+            operar.require(after['flujos'][wid] == metadata, 'Publicación modificó un workflow ajeno')
+    operar.require(before['datos'] == after['datos'], 'Publicación modificó tablas de negocio')
+    for name in ('credentials_entity', 'execution_entity', 'execution_data', 'user'):
+        operar.require(before['conteos'].get(name) == after['conteos'].get(name), 'Publicación modificó conteo ajeno')
+
+
+def rehearse(source, entry, manifest, column_script, destination, publish=None):
     operar.require(os.geteuid() != 0, 'Solo Podman rootless')
     source, entry, manifest, column_script, destination = [p.resolve() for p in (source, entry, manifest, column_script, destination)]
     operar.require(all(p.is_file() for p in (source, entry, manifest, column_script)), 'Falta entrada regular')
@@ -111,6 +149,9 @@ def rehearse(source, entry, manifest, column_script, destination):
             read.backup(write)
     baseline = inventory(original / 'database.sqlite')
     original_hash = operar.digest(original / 'database.sqlite')
+    order = json.loads(publish.read_text()) if publish is not None else []
+    if publish is not None:
+        validate_publish_order(workflows, order, baseline)
     work = destination / 'actualizada'
     shutil.copytree(original, work)
     def cli(entrypoint, *args):
@@ -123,6 +164,11 @@ def rehearse(source, entry, manifest, column_script, destination):
     cli('n8n', 'import:workflow', '--input=/entrada/workflows.json')
     upgraded = inventory(work / 'database.sqlite', baseline['columnas'])
     validate_import(baseline, upgraded, ids)
+    if publish is not None:
+        for wid in order:
+            cli('n8n', 'publish:workflow', '--id=' + wid)
+        published = inventory(work / 'database.sqlite', baseline['columnas'])
+        validate_published(baseline, published, ids, order)
     rollback = destination / 'revertida'
     shutil.copytree(original, rollback)
     restored_hash = operar.digest(rollback / 'database.sqlite')
@@ -138,6 +184,9 @@ def rehearse(source, entry, manifest, column_script, destination):
               'respaldo_sha256': original_hash, 'restauracion_sha256': restored_hash,
               'workflow_ids_active_version_sha256': digest(baseline['flujos']),
               'tablas_negocio_sha256': digest(baseline['datos']), 'entrada_sha256': operar.digest(entry), 'manifiesto_sha256': operar.digest(manifest)}
+    if publish is not None:
+        result.update({'publicacion': 'PASS', 'flujos_publicados': len(order), 'publicados': order,
+                       'publicar_sha256': operar.digest(publish), 'versiones_publicadas': 'PASS'})
     operar.write_json(destination / 'resultado.json', result)
     return result
 
@@ -147,9 +196,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for arg in ('base', 'entrada', 'manifiesto', 'columnas', 'salida'):
         parser.add_argument('--' + arg, required=True, type=Path)
+    parser.add_argument('--publicar', type=Path, help='JSON con IDs en orden de dependencias; publicación aislada antes de la reversa')
     args = parser.parse_args()
     try:
-        print(json.dumps(rehearse(args.base, args.entrada, args.manifiesto, args.columnas, args.salida)))
+        print(json.dumps(rehearse(args.base, args.entrada, args.manifiesto, args.columnas, args.salida, args.publicar)))
     except (OSError, ValueError, KeyError, TypeError, RuntimeError, sqlite3.Error, subprocess.SubprocessError):
         print('Ensayo n8n fallido; copias conservadas y producción intacta. No se muestra salida privada.', file=sys.stderr)
         sys.exit(1)

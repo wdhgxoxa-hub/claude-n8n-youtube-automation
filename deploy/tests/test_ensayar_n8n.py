@@ -76,6 +76,69 @@ class EnsayoN8nTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'Destino nuevo'):
                 ensayo.rehearse(source, entry, manifest, script, source.parent)
 
+    def test_publica_dependencias_y_restaura_tras_publicar(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source, entry, manifest, script = self.fixture(root)
+            workflows = json.loads(entry.read_text())
+            workflows[0]['nodes'] = [{'type': 'n8n-nodes-base.executeWorkflow', 'parameters': {'workflowId': {'value': 'nuevo'}}}]
+            entry.write_text(json.dumps(workflows))
+            publish = root / 'publicar.json'
+            publish.write_text('["nuevo", "existente"]')
+            called = []
+            def run(data, _entry, _manifest, _script, command, args):
+                if command != 'n8n':
+                    return '{"columnas":[]}'
+                with closing(sqlite3.connect(data / 'database.sqlite')) as db, db:
+                    if args[0] == 'import:workflow':
+                        db.executescript("UPDATE workflow_entity SET active=0,versionId='version-importada',activeVersionId=NULL WHERE id='existente'; INSERT INTO workflow_entity VALUES('nuevo',0,'version-nueva',NULL,1);")
+                    else:
+                        wid = args[1].removeprefix('--id=')
+                        called.append(wid)
+                        db.execute('UPDATE workflow_entity SET active=1,activeVersionId=versionId WHERE id=?', (wid,))
+                return ''
+            with patch.object(ensayo, 'run_container', side_effect=run):
+                result = ensayo.rehearse(source, entry, manifest, script, root / 'ensayo', publish)
+            self.assertEqual(called, ['nuevo', 'existente'])
+            self.assertEqual(result['publicados'], called)
+            self.assertEqual(result['publicacion'], 'PASS')
+            self.assertEqual(result['publicar_sha256'], ensayo.operar.digest(publish))
+            self.assertEqual(result['reversion'], 'PASS')
+            self.assertEqual(result['respaldo_sha256'], result['restauracion_sha256'])
+            self.assertEqual(ensayo.inventory(source)['flujos']['existente'][1], 'version-original')
+
+    def test_rechaza_orden_invertido_duplicados_y_dependencias_no_publicadas(self):
+        workflows = [{'id': 'a', 'nodes': [{'type': 'n8n-nodes-base.executeWorkflow', 'parameters': {'workflowId': {'value': 'b'}}}]}, {'id': 'b'}]
+        baseline = {'flujos': {'a': [1, 'v', 'v', 1], 'b': [1, 'v', 'v', 1]}}
+        for plan in [[], {}, ['a', 'b'], ['a'], ['b', 'b'], ['ajeno'], ['../b']]:
+            with self.subTest(plan=plan), self.assertRaises(RuntimeError):
+                ensayo.validate_publish_order(workflows, plan, baseline)
+        ensayo.validate_publish_order(workflows, ['b', 'a'], baseline)
+
+    def test_admite_dependencia_ajena_publicada_y_omite_nodo_deshabilitado(self):
+        workflow = {'id': 'a', 'nodes': [{'type': 'n8n-nodes-base.executeWorkflow', 'parameters': {'workflowId': 'b'}}]}
+        baseline = {'flujos': {'b': [1, 'v', 'v', 1]}}
+        ensayo.validate_publish_order([workflow], ['a'], baseline)
+        baseline['flujos']['b'][0] = 0
+        with self.assertRaises(RuntimeError):
+            ensayo.validate_publish_order([workflow], ['a'], baseline)
+        workflow['nodes'][0]['disabled'] = True
+        ensayo.validate_publish_order([workflow], ['a'], baseline)
+
+    def test_detecta_publicacion_omitida_version_erronea_o_modificacion_ajena(self):
+        before = {'flujos': {'a': [1, 'v', 'v', 1], 'ajeno': [1, 'x', 'x', 1]}, 'datos': {'tabla': 'hash'}, 'conteos': {'credentials_entity': 1}}
+        good = {'flujos': {'a': [1, 'n', 'n', 2], 'ajeno': [1, 'x', 'x', 1]}, 'datos': {'tabla': 'hash'}, 'conteos': {'credentials_entity': 1}}
+        ensayo.validate_published(before, good, {'a'}, ['a'])
+        for change in ('inactivo', 'version', 'ajeno', 'datos', 'conteos'):
+            after = json.loads(json.dumps(good))
+            if change == 'inactivo': after['flujos']['a'][0] = 0
+            if change == 'version': after['flujos']['a'][2] = 'v'
+            if change == 'ajeno': after['flujos']['ajeno'][0] = 0
+            if change == 'datos': after['datos']['tabla'] = 'otro'
+            if change == 'conteos': after['conteos']['credentials_entity'] = 2
+            with self.subTest(change=change), self.assertRaises(RuntimeError):
+                ensayo.validate_published(before, after, {'a'}, ['a'])
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
