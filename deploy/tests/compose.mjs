@@ -414,9 +414,9 @@ try {
   const realProgress = JSON.parse(
     await readFile(resolve(root, "workflows/v2/FabCooperProgr01.json"), "utf8"),
   );
-  const signedNodes = realProgress.nodes.filter((n) =>
-    ["Progreso público", "Firmar progreso", "Avisar a Cooper"].includes(n.name),
-  );
+  // Conservar el grafo real, incluidos los intentos y backoff del callback.
+  // Solo el disparador interno se sustituye por el ingreso HTTP sintético.
+  const signedNodes = realProgress.nodes.filter((n) => n.name !== "Inicio");
   const workflow = await api("POST", "/workflows", {
     name: "Ensayo VPS firma real",
     settings: {
@@ -448,14 +448,10 @@ try {
       },
       ...signedNodes,
     ],
-    connections: Object.fromEntries(
-      [
-        ["Entrada", "Inicio"],
-        ["Inicio", "Progreso público"],
-        ["Progreso público", "Firmar progreso"],
-        ["Firmar progreso", "Avisar a Cooper"],
-      ].map(([a, b]) => [a, { main: [[{ node: b, type: "main", index: 0 }]] }]),
-    ),
+    connections: {
+      ...realProgress.connections,
+      Entrada: { main: [[{ node: "Inicio", type: "main", index: 0 }]] },
+    },
   });
   await api("POST", `/workflows/${workflow.id}/activate`, {});
   const stream = await request("cooper.test", "/api/eventos", {
