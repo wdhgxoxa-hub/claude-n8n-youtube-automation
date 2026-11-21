@@ -9,6 +9,9 @@
 
 ## Hecho
 
+- **cooper-total, 21-11 11:30 Lima:** lote FINAL3 aplicado al VPS: 32 flujos, cinco columnas y 25 dependencias publicadas; nueve tablas/118 filas y flujos ajenos preservados, siete servicios saludables. Reversa real del intento previo comprobada. Horarios y callbacks pendientes de aceptación siguen pausados. [Recibos](informes/total-n8n-lote.md).
+- **Puerta integrada de cooper-total:** 322 unitarias, 49 E2E, 167 flujos y 70 pruebas de despliegue; cero errores/advertencias. Runtime Marcas, seguridad, seguimiento durable de biblioteca y navegación de resultados integrados; imagen final y dos rondas aún en curso. [Evidencia](informes/evidencias/cooper-total/puerta/resumen.json).
+
 - **cooper-total / Operación:** réplica restic cifrada y gratuita en PC habilitada; última restauración real `3cb43d07`, 25 archivos y dos bases, 21-11 a las 11:07 Lima. Monitor/Telegram y timers instalados; corrección `c18106f` desplegada con aviso TLS ≤14 días y reintento persistente. Reinicio real probado fuera del lote: siete contenedores saludables, stack y timers automáticos, 36 workflows sin cambios. Puerta repetida: 284 unitarias, 43 E2E, 147 flujos y 39 pruebas operativas, cero errores/advertencias. Código y corrección recogidos por el orquestador en `cooper-total` (`cf0fe8c`); este frente no hizo push/merge. [Informe y evidencia](informes/total-operacion.md).
 
 - **Cooper total, frente aprendizaje:** implementado y probado localmente el ciclo de métricas 24h/72h/7d, evidencia creativa y lecciones por canal con lectura obligatoria del siguiente guion, trazabilidad en Aprendizaje y ensayo seguro sin producción ni llamadas de IA. Puerta completa: 285 unitarias, 44 E2E, 154 regresiones de flujos; cero errores/advertencias. **Pendiente de integración y validación/despliegue remoto por el orquestador.** [Informe](informes/total-aprendizaje.md).
@@ -36,7 +39,7 @@
 - Cooper total: integrar el frente aprendizaje y ejecutar su [ensayo de lectura](cooper-aprendizaje-ensayo.md) sobre publicaciones existentes, con respaldo/reversa, sin reanudar producción. La conexión real y la calidad de las lecciones todavía no se acreditan por las pruebas locales.
 - **Lote cooper-total:** clon aislado publica 25/25 flujos con cuatro pasos sin credencial bloqueados explícitamente y tres entradas externas deshabilitadas; la entrada definitiva FINAL3 ya pasó importación32, publicación25, versiones y reversa exacta187tablas en un único recibo ligado al plan antes de otro intento real. No se ha habilitado producción de medios ni publicado contenido social. [Ensayos](informes/total-despliegue.md).
 
-- Claude: revisar e instalar el lote n8n de integración 3 en el destino elegido, con respaldo real previo, mapa de IDs y reversa. Contiene 32 exportaciones inactivas; **no se aplicó en vivo**. [Procedimiento](cooper-cobertura-despliegue.md).
+- Orquestador: aceptar Aprendizaje/Radar con datos reales, revisar activación segura de las entradas y aplicar delta menor de gastos/retorno. El lote principal ya está aplicado; no queda para Claude.
 - Aceptación del VPS: sesión Google real, datos/SSE/adjuntos, Meta, entradas pausadas y conexión del chat con los planes de la PC. La copia fuera del VPS ya está activa y verificada; queda su custodia offline.
 - La PC conserva la base del corte; no sincroniza escrituras posteriores del VPS. Elegir el destino de producción y conciliar los datos antes de cualquier reversa o actualización del servidor. [Instalación y reversa local](cooper-integracion3-despliegue.md).
 
