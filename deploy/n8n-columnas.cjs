@@ -6,7 +6,8 @@ const path = require('node:path');
 function planColumnas(tablas, manifest) {
   const plan = [];
   for (const [nombre, campos] of Object.entries(manifest.tablas)) {
-    const nombres = nombre === 'fab_publicaciones' ? ['fab_publicaciones', 'publicaciones'] : [nombre];
+    const aliases = { fab_publicaciones: 'publicaciones', fab_youtube: 'youtube' };
+    const nombres = aliases[nombre] ? [nombre, aliases[nombre]] : [nombre];
     const matches = tablas.filter(t => nombres.includes(t.name));
     if (matches.length !== 1) throw new Error(`Tabla ambigua o ausente: ${nombre}`);
     const tabla = matches[0];

@@ -22,9 +22,13 @@ class AplicarTest(unittest.TestCase):
         self.manifiesto = Path(self.tmp.name) / 'columnas.json'
         self.manifiesto.write_text('{}')
         self.diff = {'republicar_originales': ['uno']}
+        self.esquema = lote.modulo_ensayo().esquema
         self.ensayo = {'aplicacion': 'PASS', 'reversion': 'PASS', 'flujos_importados': 1,
                        'entrada_sha256': lote.operar.digest(self.entrada),
-                       'manifiesto_sha256': lote.operar.digest(self.manifiesto)}
+                       'manifiesto_sha256': lote.operar.digest(self.manifiesto),
+                       'contrato_productivo_sha256': lote.operar.digest(self.esquema.CONTRACT),
+                       'comparador_esquema_sha256': lote.operar.digest(self.esquema.CHECKER),
+                       'puerta_esquema_sha256': lote.operar.digest(Path(self.esquema.__file__))}
 
     def validar(self):
         return lote.validar_entradas(self.entrada, self.diff, self.ensayo, self.manifiesto)
@@ -118,7 +122,7 @@ class AplicarTest(unittest.TestCase):
         before = {'flujos': {'ajeno': [True]}, 'columnas': {}}
         op = SimpleNamespace(data=data, state=state, compose=compose, snapshot=lambda **_: 'b' * 64,
                              restore=lambda *_: restore, ownership=lambda: None)
-        validar = SimpleNamespace(inventory=lambda *_: before, column_result=lambda _: {'columnas': []},
+        validar = SimpleNamespace(esquema=SimpleNamespace(CONTRACT=self.esquema.CONTRACT, CHECKER=self.esquema.CHECKER, __file__=self.esquema.__file__, validate=lambda *_: {'ok': True}), inventory=lambda *_: before, column_result=lambda _: {'columnas': []},
                                   validate_import=lambda *_: (_ for _ in ()).throw(RuntimeError('fallo inyectado tras columnas')))
         recibo = state / 'resultado.json'
         with patch.object(lote, 'modulo_ensayo', return_value=validar), patch.object(lote.os, 'chown'):
@@ -156,7 +160,7 @@ class AplicarTest(unittest.TestCase):
         op = SimpleNamespace(data=data, state=state, compose=compose,
                              snapshot=lambda **_: 'a' * 64,
                              restore=lambda *_: restore, ownership=lambda: None)
-        validar = SimpleNamespace(inventory=inventory, column_result=lambda _: {'columnas': []})
+        validar = SimpleNamespace(esquema=SimpleNamespace(CONTRACT=self.esquema.CONTRACT, CHECKER=self.esquema.CHECKER, __file__=self.esquema.__file__, validate=lambda *_: {'ok': True}), inventory=inventory, column_result=lambda _: {'columnas': []})
         recibo = state / 'resultado.json'
         with patch.object(lote, 'modulo_ensayo', return_value=validar), patch.object(lote.os, 'chown'):
             with self.assertRaisesRegex(RuntimeError, 'fallo inyectado'):

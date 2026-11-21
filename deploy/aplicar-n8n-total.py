@@ -72,6 +72,11 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
     solo_columnas = diff.get('modalidad') == 'solo_columnas'
     operar.require(not salida.exists(), 'El recibo debe ser nuevo')
     validar = modulo_ensayo()
+    for key, path in [('contrato_productivo_sha256', validar.esquema.CONTRACT),
+                      ('comparador_esquema_sha256', validar.esquema.CHECKER),
+                      ('puerta_esquema_sha256', Path(validar.esquema.__file__))]:
+        operar.require(ensayo.get(key) == operar.digest(path), 'La puerta de esquema difiere del ensayo')
+    workflows = json.loads(entrada.read_text())
     destino = op.state / ('lote-ejecucion-' + str(time.time_ns()))
     destino.mkdir(mode=0o700)
     for origen, nombre in [(entrada, 'entrada.json'), (manifiesto, 'columnas.json'),
@@ -117,9 +122,11 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         planned = validar.column_result(cli('node', '/lote/columnas.cjs', '/lote/columnas.json'))
         if solo_columnas:
             operar.require(planned['columnas'] == ensayo['plan_columnas'], 'Cambió el plan respecto del ensayo; no se aplicaron columnas')
+        validar.esquema.validate(op.data / 'n8n/database.sqlite', workflows, planned['columnas'])
         applied = validar.column_result(cli('node', '/lote/columnas.cjs', '/lote/columnas.json', '--aplicar', '--diario', '/lote/diario.json'))
         operar.require(planned['columnas'] == applied['columnas'], 'El plan de columnas cambió')
         operar.require(not validar.column_result(cli('node', '/lote/columnas.cjs', '/lote/columnas.json'))['columnas'], 'Columnas no idempotentes')
+        resultado['esquema_productivo'] = validar.esquema.validate(op.data / 'n8n/database.sqlite', workflows)
         if not solo_columnas:
             cli('n8n', 'import:workflow', '--input=/lote/entrada.json')
         after = validar.inventory(op.data / 'n8n/database.sqlite', before['columnas'])

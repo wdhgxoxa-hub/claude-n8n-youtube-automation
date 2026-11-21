@@ -3,6 +3,7 @@
 import argparse
 from contextlib import closing
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -16,6 +17,10 @@ import uuid
 import operar
 
 IMAGE = json.loads((Path(__file__).resolve().parent / 'infra-imagenes.json').read_text())['servicios']['n8n']['imagen']
+SCHEMA_SPEC = importlib.util.spec_from_file_location('esquema_n8n', Path(__file__).with_name('esquema-n8n.py'))
+esquema = importlib.util.module_from_spec(SCHEMA_SPEC)
+SCHEMA_SPEC.loader.exec_module(esquema)
+
 DUMMY_KEY = 'clave-ficticia-ensayo-offline-sin-credenciales-00000000'
 
 
@@ -162,10 +167,12 @@ def rehearse(source, entry, manifest, column_script, destination, publish=None, 
     def cli(entrypoint, *args):
         return run_container(work, entry, manifest, column_script, entrypoint, list(args))
     planned = column_result(cli('node', '/ensayo/n8n-columnas.cjs', '/entrada/columnas.json'))
+    esquema.validate(work / 'database.sqlite', workflows, planned['columnas'])
     applied = column_result(cli('node', '/ensayo/n8n-columnas.cjs', '/entrada/columnas.json', '--aplicar', '--diario', '/home/node/.n8n/columnas-diario.json'))
     operar.require(planned['columnas'] == applied['columnas'], 'Cambió el plan de columnas')
     again = column_result(cli('node', '/ensayo/n8n-columnas.cjs', '/entrada/columnas.json'))
     operar.require(not again['columnas'], 'Columnas no idempotentes')
+    schema_result = esquema.validate(work / 'database.sqlite', workflows)
     if not columns_only:
         cli('n8n', 'import:workflow', '--input=/entrada/workflows.json')
     upgraded = inventory(work / 'database.sqlite', baseline['columnas'])
@@ -191,7 +198,10 @@ def rehearse(source, entry, manifest, column_script, destination, publish=None, 
               'workflow_ids_active_version_sha256': digest(baseline['flujos']),
               'tablas_negocio_sha256': digest(baseline['datos']), 'entrada_sha256': operar.digest(entry), 'manifiesto_sha256': operar.digest(manifest),
               'columnas_script_sha256': operar.digest(column_script), 'plan_columnas': applied['columnas'],
-              'modalidad': 'solo_columnas' if columns_only else 'workflows'}
+              'modalidad': 'solo_columnas' if columns_only else 'workflows',
+              'esquema_productivo': schema_result, 'contrato_productivo_sha256': operar.digest(esquema.CONTRACT),
+              'comparador_esquema_sha256': operar.digest(esquema.CHECKER),
+              'puerta_esquema_sha256': operar.digest(Path(esquema.__file__))}
     if publish is not None:
         result.update({'publicacion': 'PASS', 'flujos_publicados': len(order), 'publicados': order,
                        'publicar_sha256': operar.digest(publish), 'versiones_publicadas': 'PASS'})

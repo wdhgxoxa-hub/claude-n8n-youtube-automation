@@ -16,6 +16,11 @@ spec.loader.exec_module(ensayo)
 
 
 class EnsayoN8nTest(unittest.TestCase):
+    def setUp(self):
+        fake = patch.object(ensayo.esquema, "validate", return_value={"ok": True, "tablas_revisadas": 9})
+        fake.start()
+        self.addCleanup(fake.stop)
+
     def fixture(self, root):
         source = root / 'origen/database.sqlite'
         source.parent.mkdir()

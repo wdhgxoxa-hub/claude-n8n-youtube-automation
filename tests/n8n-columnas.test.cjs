@@ -13,3 +13,16 @@ test('rechaza alias ambiguo y columna incompatible', () => {
   assert.throws(()=>planColumnas([{name:'publicaciones'},{name:'fab_publicaciones'}],schema),/ambigua/);
   assert.throws(()=>planColumnas([{name:'publicaciones',columns:[{name:'metricas_historial',type:'number'}]}],schema),/incompatible/);
 });
+test('contrato productivo reconoce YouTube real sin crear campos de ensayo', () => {
+  const contract = require('../contratos/cooper-tablas-produccion.json');
+  const tables = Object.entries(contract.tablas).map(([name, fields]) => ({
+    id: name, projectId: 'proyecto-ficticio', name: name === 'fab_youtube' ? 'youtube' : name,
+    columns: Object.entries(fields).filter(([field]) => name !== 'fab_eventos' || !['canal_id','evento'].includes(field))
+      .map(([name,type]) => ({name,type})),
+  }));
+  const plan = planColumnas(tables, contract);
+  assert.deepEqual(plan.map(c => [c.table,c.name,c.type]), [
+    ['fab_eventos','canal_id','string'], ['fab_eventos','evento','string'],
+  ]);
+  assert.equal(plan.some(c => c.name === 'access_token'), false);
+});
