@@ -1,0 +1,14 @@
+{
+  "causa": "La espera observaba el hueco entre lotes RSC. El segundo reload empezó a574013.009ms; el siguiente lote arrancó a574013.440ms y WebKit registró11pageerror a574025ms.",
+  "correccion_commit": "233888f",
+  "peticiones": "Seguimiento por objeto Request y500ms continuos sin precargas, SSE excluido.",
+  "errores_filtrados": 0,
+  "timeouts_aumentados": false,
+  "reintentos_suite": 0,
+  "focal": "3 ejecuciones explícitas del caso WebKit claro1440,3PASS",
+  "log_sha256": "6f7e42ba3ade6051c986595af740a3807c8ee26641f551242ff6ce0de5c9e0cc",
+  "fuentes": [
+    "https://nextjs.org/docs/app/guides/prefetching",
+    "https://playwright.dev/docs/network"
+  ]
+}

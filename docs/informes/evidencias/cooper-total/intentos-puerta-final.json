@@ -1,0 +1,229 @@
+{
+  "estado": "INTENTOS_FALLIDOS_CONSERVADOS; no equivalen a puerta aprobada",
+  "intentos": [
+    {
+      "intento": 1,
+      "resultado": "FAIL",
+      "origen": {
+        "commit": "fcfab3bc2f6f22d03bd5930cbfed002b73adaef8",
+        "archivo_sha256": "8b0adcc21c278a9e044380f6214112c68e47c0c666806bb1c2e5532936836357",
+        "limpio": true,
+        "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+        "sentinel_fuentes": "caché privada verificada, fuera del archivo y de la imagen"
+      },
+      "inicio": "2026-11-21T17:46:38.123Z",
+      "fin": "2026-11-21T17:48:51.042Z",
+      "pasos": [
+        {
+          "nombre": "ci",
+          "comando": "npm ci",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 8740,
+          "sha256": "d6e405a5ef20687b5c71d8b262d419d433405c3178e3e89305d3660b445f771f"
+        },
+        {
+          "nombre": "preparacion",
+          "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 81306,
+          "sha256": "189aa56a9d874f933658df7fb1bd2e1bcc7bfc6bdfe27d12b7c1e26c9c057c97"
+        },
+        {
+          "nombre": "lint",
+          "comando": "npm run lint",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 3944,
+          "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+        },
+        {
+          "nombre": "typecheck",
+          "comando": "npm run typecheck",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 4288,
+          "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+        },
+        {
+          "nombre": "unitarias",
+          "comando": "npm test",
+          "rc": 1,
+          "advertencias": 0,
+          "duracion_ms": 34453,
+          "sha256": "02aba875d6bd258b08ee9ad81bc60a053d3caebabded65e7cc473d4a11c47012"
+        }
+      ],
+      "causa": "Git ausente en imagen CI; las pruebas de caché crean repositorios ficticios.",
+      "correccion": "8638035",
+      "unitarias": {
+        "numPassedTests": 447,
+        "numFailedTests": 7,
+        "numPendingTests": 0
+      },
+      "log_local": ".cache/cooper-total/puerta-final-limpia.log",
+      "log_sha256": "a8cfdebdc97a81c31494bf8ac842f3514d60b53d33cc356f4084b1d16a6437f7"
+    },
+    {
+      "intento": 2,
+      "resultado": "FAIL",
+      "origen": {
+        "commit": "863803598c05038558428e8ecc02f1a559228dd1",
+        "archivo_sha256": "ad1dfd620367f2fcf074c2a08826c37648541e83c08d1216b28dd588e2bdb7f7",
+        "limpio": true,
+        "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+        "sentinel_fuentes": "caché privada verificada, fuera del archivo y de la imagen"
+      },
+      "inicio": "2026-11-21T17:49:30.640Z",
+      "fin": "2026-11-21T18:00:07.895Z",
+      "pasos": [
+        {
+          "nombre": "ci",
+          "comando": "npm ci",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 7887,
+          "sha256": "27c8639be0bdc007da313b7ba5adce1a0ba22dba0db9bf997c238a3fa402b73c"
+        },
+        {
+          "nombre": "preparacion",
+          "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 71843,
+          "sha256": "1968e2bb629520863a4cf782aa6f6301ed76a8106b6f46d4e906cf0c835f338a"
+        },
+        {
+          "nombre": "lint",
+          "comando": "npm run lint",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 3189,
+          "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+        },
+        {
+          "nombre": "typecheck",
+          "comando": "npm run typecheck",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 3704,
+          "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+        },
+        {
+          "nombre": "unitarias",
+          "comando": "npm test",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 31596,
+          "sha256": "26ddadf102a4ec4f2144e9a98b5939ae9f44819f894ed3869f8fa52b7674b719"
+        },
+        {
+          "nombre": "e2e",
+          "comando": "npm run test:e2e",
+          "rc": 1,
+          "advertencias": 0,
+          "duracion_ms": 518811,
+          "sha256": "b2acb0b520c46af3566b264062bdea0bd98c334420a86a6d631503730688ddb3"
+        }
+      ],
+      "causa": "Firefox no podía crear su sandbox de usuario con cap-drop=ALL.",
+      "correccion": "5d958c4",
+      "unitarias": {
+        "numPassedTests": 454,
+        "numFailedTests": 0,
+        "numPendingTests": 0
+      },
+      "e2e": {
+        "startTime": "2026-11-21T17:51:39.694Z",
+        "duration": 508040.242,
+        "expected": 63,
+        "skipped": 0,
+        "unexpected": 14,
+        "flaky": 0
+      },
+      "log_local": ".cache/cooper-total/puerta-final-limpia-2.log",
+      "log_sha256": "dd5c48a3115c1154ac94eeed3e82b3b84690d0d1c34fb962445c26651396bd81"
+    },
+    {
+      "intento": 3,
+      "resultado": "FAIL",
+      "origen": {
+        "commit": "5d958c48069c51d63128a21904b53c6c79c43534",
+        "archivo_sha256": "a7cea4c1f1b003654cff56dbedbe15afe9804b3a22783bba5ad338cd4f33b8d4",
+        "limpio": true,
+        "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+        "sentinel_fuentes": "caché privada verificada, fuera del archivo y de la imagen"
+      },
+      "inicio": "2026-11-21T18:02:34.498Z",
+      "fin": "2026-11-21T18:14:22.327Z",
+      "pasos": [
+        {
+          "nombre": "ci",
+          "comando": "npm ci",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 10180,
+          "sha256": "2dc607a77f76b36e621e1b25e49763e61b4cf05d1a70c30a63a0008eada7cedf"
+        },
+        {
+          "nombre": "preparacion",
+          "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 58786,
+          "sha256": "9d827273461610baa70503d567ad1ac7be9c70c55b5886f4f4de7ba3967d4313"
+        },
+        {
+          "nombre": "lint",
+          "comando": "npm run lint",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 3764,
+          "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+        },
+        {
+          "nombre": "typecheck",
+          "comando": "npm run typecheck",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 5337,
+          "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+        },
+        {
+          "nombre": "unitarias",
+          "comando": "npm test",
+          "rc": 0,
+          "advertencias": 0,
+          "duracion_ms": 36210,
+          "sha256": "741dbf1518d2ada1837e1239a924d2309a3fa87d1549ca43cce7217bf5d4c68e"
+        },
+        {
+          "nombre": "e2e",
+          "comando": "npm run test:e2e",
+          "rc": 1,
+          "advertencias": 0,
+          "duracion_ms": 593182,
+          "sha256": "4557396745b9461502bdcfdf995c1a8b5c8abc9d3eb72f74055103b5c9214f8d"
+        }
+      ],
+      "causa": "Sondeo simulado finalizó a14.871s, SSE posterior al timeout15s; recarga WebKit entre lotes de precarga RSC.",
+      "correccion": "719409f (simulación),233888f (precargas)",
+      "unitarias": {
+        "numPassedTests": 454,
+        "numFailedTests": 0,
+        "numPendingTests": 0
+      },
+      "e2e": {
+        "startTime": "2026-11-21T18:04:43.667Z",
+        "duration": 578452.46,
+        "expected": 75,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "log_local": ".cache/cooper-total/puerta-final-limpia-3.log",
+      "log_sha256": "321ec3ee855678885826c76d6f512b3ecc5a781f3c7136ce6d8f886e8546ce6d"
+    }
+  ]
+}

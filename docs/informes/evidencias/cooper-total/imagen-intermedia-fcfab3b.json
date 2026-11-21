@@ -1,0 +1,26 @@
+{
+  "fecha_utc": "2026-11-21T17:52:05.656953+00:00",
+  "fuente_commit": "fcfab3bc2f6f22d03bd5930cbfed002b73adaef8",
+  "etiqueta": "localhost/cooper:fcfab3b",
+  "imagen_id": "sha256:ab0045f978028f1f4cfb31306ae29afdd9607bca4fde95724826585a8f7b8929",
+  "formato": "docker",
+  "bytes": 296908775,
+  "archivo_sha256": "625e2a8d32e504e103f8b3551c809d08c0b9e9a83e62575c4f8c3f0226f29123",
+  "fuentes_archive_sha256": "8b0adcc21c278a9e044380f6214112c68e47c0c666806bb1c2e5532936836357",
+  "log_construccion_sha256": "11e8292be1b8e98e7d213126fa6e485697e3b865bf20db3e4ad917c7fd0ece4f",
+  "advertencias": 0,
+  "migraciones": 13,
+  "producto_rutas": [
+    "cooper/src",
+    "cooper/drizzle",
+    "cooper/public",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "deploy/Containerfile"
+  ],
+  "producto_objetos_sha256": "5150d8620cdbef01362f287f95d336f00362e55690c7a2cb2a178bc991667791",
+  "producto_igual_a_head": true,
+  "estado": "CONSTRUIDA; aceptación de copia fresca y despliegue pendientes",
+  "antecedente": "Primer intento OCI advertía HEALTHCHECK ignorado; conservado y sustituido por formato docker con HEALTHCHECK."
+}
