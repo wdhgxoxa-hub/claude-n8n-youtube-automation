@@ -1,0 +1,68 @@
+{
+  "fecha": "2026-11-21T18:46:34.847Z",
+  "commit_producto": "48d3e19",
+  "fixture_identico": true,
+  "fuentes_n8n_identicas": true,
+  "respuestas_identicas_en_16_muestras_por_caso": true,
+  "casos": [
+    {
+      "caso": "usuario-0",
+      "respuesta_sha256": "dc367215a649b3ff3241ecf6915408ab37ad2af64ab955efafaead66f788d793",
+      "cantidad": 999,
+      "ms_mediana_antes": 1711.4121250000007,
+      "ms_mediana_despues": 470.49569599999995,
+      "ms_max_antes": 3071.121360000001,
+      "ms_max_despues": 491.57532900000024,
+      "proyeccion_mediana_antes_ms": 1131.0086260000007,
+      "proyeccion_mediana_despues_ms": 35.74812699999984,
+      "heap_max_despues_mib": 29.524559020996094,
+      "presupuesto_comparativo_despues": true
+    },
+    {
+      "caso": "usuario-9",
+      "respuesta_sha256": "c1c4942fc236069e444ec82db061ae08b8914ed41cdb17194e5593ca61282633",
+      "cantidad": 900,
+      "ms_mediana_antes": 1677.3976750000002,
+      "ms_mediana_despues": 466.57186,
+      "ms_max_antes": 2001.5618040000008,
+      "ms_max_despues": 498.72821099999965,
+      "proyeccion_mediana_antes_ms": 1139.8079919999982,
+      "proyeccion_mediana_despues_ms": 33.40163600000051,
+      "heap_max_despues_mib": 28.40276336669922,
+      "presupuesto_comparativo_despues": true
+    },
+    {
+      "caso": "administrador",
+      "respuesta_sha256": "623be38589a02daa1a0e6923ef06683cc25341ba92edaa16016a3d706fa020e9",
+      "cantidad": 9896,
+      "ms_mediana_antes": 9977.671346000003,
+      "ms_mediana_despues": 1030.0446840000004,
+      "ms_max_antes": 16064.540710000001,
+      "ms_max_despues": 1069.9090890000007,
+      "proyeccion_mediana_antes_ms": 9135.959797000003,
+      "proyeccion_mediana_despues_ms": 197.23210800000015,
+      "heap_max_despues_mib": 113.48703002929688,
+      "presupuesto_comparativo_despues": false
+    },
+    {
+      "caso": "sin-recursos",
+      "respuesta_sha256": "003aac3abc3eab017f738fd5db62208ce88823e2f5cf69d3cb58fcc4c3f96142",
+      "cantidad": 0,
+      "ms_mediana_antes": 374.1550969999953,
+      "ms_mediana_despues": 418.29882700000235,
+      "ms_max_antes": 404.99560799999745,
+      "ms_max_despues": 442.87314100000003,
+      "proyeccion_mediana_antes_ms": 0.6706770000018878,
+      "proyeccion_mediana_despues_ms": 16.147413999999117,
+      "heap_max_despues_mib": 29.056564331054688,
+      "presupuesto_comparativo_despues": true
+    }
+  ],
+  "limite": "El máximo administrativo sigue 69,91 ms sobre el presupuesto comparativo de 1.000 ms; no se cambia el umbral ni se declara PASS de ese presupuesto. No es un SLA.",
+  "archivos": {
+    "medicion.json": "78d386f5330dad87412e4c6c9cdfcd14056e1b991d5a927256ab647b7c218136",
+    "despues/medicion.json": "171c6b7bc7d54ea373894c42ee9a7fb0059e776db1ced2b2d2b886cfbaa09bd9",
+    "despues/origen.json": "73cf714334076c657196bb6f114642453d121155632dc486cfa8998dff4cd1e2",
+    "despues/ejecucion.log": "65df6369fbf6c79311953dde6683aaad26ab3681c7bf41bf55715556351aaa94"
+  }
+}

@@ -4,6 +4,16 @@
 **Medición implementada y probada; presupuesto temporal FAIL, corrección PASS.**
 No integrado ni desplegado. Sin push, merge, cambios en Cooper, generador, deploy o flujos canónicos.
 
+## Corrección del orquestador, 21-11-2026 Lima
+
+El commit `48d3e19` agrupa planos, publicaciones, eventos y decisiones una vez por video autorizado, y trabajos por canal. Mantiene el orden y las comprobaciones de dueño/canal; usa `Map` para admitir IDs como `__proto__` sin tratarlos como propiedades. No cambia el contrato, la paginación ni los filtros Data Tables. Solo cambia el nodo `Resolver` del puente; no cambia Cooper ni su imagen.
+
+La misma medición, imagen, fixture, CPU y siete muestras contrasta las cuatro respuestas: **sus hashes completos son idénticos antes/después**, incluidos orden, escenas, métricas y aislamiento. La proyección administrativa baja de **9.136 a 197 ms** de mediana; el tiempo total, incluida lectura, baja de **9.978 a 1.030 ms**. Para los dos usuarios, el total queda en **470 y 467 ms**. El máximo administrativo es **1.070 ms** y el incremento de heap, **113,49 MiB**. El presupuesto temporal comparativo de 1.000 ms sigue incumplido por 69,91 ms: se conserva ese resultado y no se presenta como PASS ni como SLA. La serialización HTTP/renderizado y un protocolo de continuación no están medidos por este ensayo.
+
+Se eliminó el recorrido cuadrático detectado; el coste restante incluye leer y proyectar casi 10.000 guiones, unos 49 MiB serializados. No se truncó historia para mejorar el número. Una regresión adicional exige preservar los IDs y el orden de escenas sin volver a recorrer 1.200 planos por cada uno de cien videos. **177 pruebas correctas** (173 flujos y cuatro del harness), sin errores/advertencias. La actualización reversible del nodo real está en preparación con Operación.
+
+[Contraste y huellas](evidencias/total-volumen-n8n/comparacion.json), [medición posterior](evidencias/total-volumen-n8n/despues/medicion.json), [origen posterior](evidencias/total-volumen-n8n/despues/origen.json). El resto del informe conserva la medición inicial del frente.
+
 ## Commits y evidencia
 
 - `1942868c8ca70a7b4ddb031c9f9224f0a0450e65`: harness aislado, fixture y tres pruebas focales.
