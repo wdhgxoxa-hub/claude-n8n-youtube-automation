@@ -295,18 +295,27 @@ test("salud: un usuario normal no puede leer costes, umbrales ni el panel admini
   browser,
 }) => {
   await login(page.request);
-  expect(
-    (
-      await page.request.post("/api/admin/permitidos", {
-        data: { email: "salud@example.test" },
-      })
-    ).status(),
-  ).toBe(200);
+  // Reutiliza la cuenta de la suite: retirar una invitación no borra al usuario
+  // y crear otra cuenta consumiría el décimo cupo antes del ensayo de WhatsApp.
+  const email = "ana@example.test";
+  const equipo = await page.request.get("/api/admin");
+  expect(equipo.status()).toBe(200);
+  const previo = (await equipo.json()) as {
+    allowed: { email: string }[];
+    users: { email: string }[];
+  };
+  const invitadaAqui = !previo.allowed.some((entry) => entry.email === email);
+  if (invitadaAqui)
+    expect(
+      (
+        await page.request.post("/api/admin/permitidos", { data: { email } })
+      ).status(),
+    ).toBe(200);
   const other = await browser.newContext();
   try {
     const origin = new URL((await page.request.get("/api/admin/salud")).url())
       .origin;
-    await login(other.request, "salud@example.test");
+    await login(other.request, email);
     const response = await other.request.get(`${origin}/api/admin/salud`);
     expect(response.status()).toBe(403);
     expect(await response.json()).toEqual({
@@ -337,11 +346,19 @@ test("salud: un usuario normal no puede leer costes, umbrales ni el panel admini
     expect(publicData).not.toContain("telegramActivo");
   } finally {
     await other.close();
-    expect(
-      (
-        await page.request.delete("/api/admin/permitidos/salud%40example.test")
-      ).status(),
-    ).toBe(200);
+    if (invitadaAqui)
+      expect(
+        (
+          await page.request.delete(
+            `/api/admin/permitidos/${encodeURIComponent(email)}`,
+          )
+        ).status(),
+      ).toBe(200);
+  }
+  if (previo.users.some((entry) => entry.email === email)) {
+    const posterior = await (await page.request.get("/api/admin")).json();
+    expect(posterior.users).toHaveLength(previo.users.length);
+    expect(posterior.allowed).toEqual(previo.allowed);
   }
 });
 
