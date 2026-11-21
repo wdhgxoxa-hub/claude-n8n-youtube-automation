@@ -5,10 +5,13 @@ import { resolve } from "node:path";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
+const marcasAudit = process.argv.includes("--marcas");
 const animationAudit = process.argv.includes("--animacion");
-const outputDir = animationAudit
-  ? ".cache/animacion/lighthouse"
-  : ".cache/auditoria";
+const outputDir = marcasAudit
+  ? ".cache/auditoria-marcas"
+  : animationAudit
+    ? ".cache/animacion/lighthouse"
+    : ".cache/auditoria";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -76,6 +79,12 @@ try {
       },
     })
   ).json();
+  if (marcasAudit) {
+    const response = await context.request.post("/api/marcas", {
+      data: { nombre: "Congregación de ensayo", rubro: "iglesia-reformada" },
+    });
+    if (!response.ok()) throw new Error("No se pudo crear la marca ficticia.");
+  }
   const cdp = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   await cdp.contexts()[0].addCookies(await context.cookies());
   const summaries = [];
@@ -93,18 +102,20 @@ try {
     if (!profile.ok())
       throw new Error("No se pudo configurar el tema de ensayo.");
     for (const formFactor of ["mobile", "desktop"]) {
-      const paths = process.argv.includes("--rapida")
-        ? ["/"]
-        : [
-            "/",
-            "/canales",
-            "/videos",
-            `/videos/${video.id}`,
-            "/avatares",
-            "/perfil",
-            "/admin",
-            "/entrar",
-          ];
+      const paths = marcasAudit
+        ? ["/marcas"]
+        : process.argv.includes("--rapida")
+          ? ["/"]
+          : [
+              "/",
+              "/canales",
+              "/videos",
+              `/videos/${video.id}`,
+              "/avatares",
+              "/perfil",
+              "/admin",
+              "/entrar",
+            ];
       for (const path of paths) {
         const mobile = formFactor === "mobile";
         const result = await lighthouse(base + path, {
