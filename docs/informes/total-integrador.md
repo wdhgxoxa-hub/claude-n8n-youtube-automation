@@ -24,7 +24,7 @@ Se compara ascendencia, `git cherry` y contenido. La historia de Sentinel fue sa
 
 ## Verificación y despliegue
 
-En ejecución: puerta completa y dos rondas limpias Sentinel + Playwright con videos sobre el corte `4e029e7` (aplicación e942 idéntica). Pendientes de sus resultados: revisión visual, publicación fast-forward y activación de la imagen, infraestructura y lote. Ninguna evidencia histórica se presenta como prueba nueva de esta combinación.
+La [puerta completa final](evidencias/total-integrador/puerta-final.json) sobre el archivo Git limpio `4e029e7` terminó PASS a las 15:59 Lima: instalación, lint, tipos, 464 unitarias, 103 E2E, build y 235 pruebas de flujos; cero errores, advertencias u omisiones. La aplicación del artefacto e942 es idéntica. En ejecución: dos rondas completas Sentinel + Playwright con videos; pendientes su revisión técnica/visual y la posterior publicación y activación. Ninguna evidencia histórica se presenta como prueba nueva de esta combinación.
 
 Aceptaciones independientes ya terminadas:
 

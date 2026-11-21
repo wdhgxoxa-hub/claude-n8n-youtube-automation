@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 15:46 (Lima).
+Última actualización: 2026-11-21 16:02 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — puerta completa de integración aprobada:** fuente limpia `4e029e7`, 464 unitarias, 103 E2E y 235 pruebas de flujos; instalación, lint, tipos y build también PASS, cero errores/advertencias/omisiones. Aplicación idéntica a la imagen e942 aceptada operativamente. Las dos rondas completas y sus revisiones siguen en curso; aún sin push ni activación de esta misión. [Recibo](informes/evidencias/total-integrador/puerta-final.json).
 
 - **21-11-2026, Lima — adaptador efímero de copia final preparado:** reutiliza el bundle certificado, exige release `e942dc9`, siete servicios saludables y bloqueo compartido; crea snapshot etiquetado sin poda y acredita identidades/configuración/activaciones/versiones antes y después. 14 pruebas sintéticas más las 12 del wrapper aprobadas sin advertencias. Plan de réplica PC exige el mismo ID final antes de registrar el recibo. Implementado y probado localmente, sin ejecutar en VPS; pendiente de la secuencia aceptada app→infra→n8n. [Informe](informes/total-integrador-producto.md#novena-revisión-adaptador-efímero-de-copia-final).
 
