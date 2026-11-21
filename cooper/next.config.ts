@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
+  output: process.env.COOPER_STANDALONE === "1" ? "standalone" : undefined,
   poweredByHeader: false,
   outputFileTracingIncludes: { "/*": ["./drizzle/**/*"] },
   serverExternalPackages: ["better-sqlite3"],
