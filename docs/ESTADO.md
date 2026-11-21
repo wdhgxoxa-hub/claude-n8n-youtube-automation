@@ -99,6 +99,8 @@
 - Contabo Cloud VPS 4, pedido 15717272; dominio cooperestudio.com en Cloudflare. IP/SSH/DNS ya resueltos por la misión VPS, sin revalidación remota en integración 3.
 - Regla permanente: actualizar este ESTADO al terminar cada misión, conservando hechos, trabajo en curso, pendientes e ideas.
 
+- **21-11-2026, 18:19 Lima — activación Marcas simulada probada localmente:** extra separado `42172e5`, 259 pruebas operativas y ciclo real en siete servicios: publicación de dos workers exactos → reloj de cinco minutos → POST HMAC 200 → despublicación, conservación de contenido/versiones y salud. Cero GET externos con cola vacía/red cerrada; Métricas registra su disparador, sin esperar una hora. Implementado y probado, pendiente de integrar/aplicar después de Radar; sin cambios al producto, imagen o bundle. [Informe](informes/total-cierre-marcas.md).
+
 ## En curso
 
 - Integración `total-integrador`: incorpora frentes cerrados desde `a69e374`, preservando los worktrees activos. Verificación y despliegue autorizados en curso; el cierre distinguirá las pruebas nuevas de evidencias históricas.

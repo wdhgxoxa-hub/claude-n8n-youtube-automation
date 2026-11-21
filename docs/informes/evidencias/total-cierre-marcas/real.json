@@ -1,0 +1,138 @@
+{
+  "estado": "PASS",
+  "fixture": "/home/david/.cache/cooper-r7/e2e-vps-recuperacion-r81i04pw",
+  "fuente_extra_sha256": "4bfdb6c789461661ac2246325f1a067ab0a15d38b59093fd1d29c6982f8cfd20",
+  "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "vps_accedido": false,
+  "datos_sinteticos": true,
+  "servicios_antes": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.6",
+        "id": "a1a2ac97196467d6d7fe8cb7936a3feb5da77383157d64c20ab2243535833a11"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.6",
+        "id": "ba9b2a07f5786af771dceba41bc9b892c2a90745af6721f1575168efbede0928"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.8-alpine",
+        "id": "857143cd0ed55376842e88df6b4a68f9b3babd8f56ee9e070bf08b23e91fd6bc"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534068]",
+        "chat-cooper": "net:[4026534068]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534325]",
+        "chat-n8n": "net:[4026534325]"
+      },
+      "runner": {
+        "runner": "net:[4026534905]",
+        "chat-runner": "net:[4026534905]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "redes": {
+    "backend": "true",
+    "salida": "true"
+  },
+  "cron": {
+    "fuente_exacta": true,
+    "disparo_manual": false,
+    "ejecuciones_guardadas": 1
+  },
+  "worker_http": {
+    "posts_firmados_200": 1,
+    "gets": 0
+  },
+  "cola_despues": {
+    "cuentas_marca": 0,
+    "piezas_marca": 0,
+    "marca_ingestas": 0
+  },
+  "servicios_despues": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.6",
+        "id": "a1a2ac97196467d6d7fe8cb7936a3feb5da77383157d64c20ab2243535833a11"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.6",
+        "id": "ba9b2a07f5786af771dceba41bc9b892c2a90745af6721f1575168efbede0928"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.8-alpine",
+        "id": "857143cd0ed55376842e88df6b4a68f9b3babd8f56ee9e070bf08b23e91fd6bc"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534067]",
+        "chat-cooper": "net:[4026534067]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534960]",
+        "chat-n8n": "net:[4026534960]"
+      },
+      "runner": {
+        "runner": "net:[4026535170]",
+        "chat-runner": "net:[4026535170]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "activacion": "PASS",
+  "cron_real": "PASS",
+  "reversa_contenido_version_publicacion": "PASS",
+  "tablas_preservadas": true,
+  "cola_vacia": true,
+  "get_externos": 0,
+  "red_externa": "bloqueada_por_ambas_redes_internas",
+  "conteos_publicacion_n8n": "Contadores de versión avanzan por la CLI oficial; no se atribuye reversa byte a byte de la base.",
+  "alcance": "Siete contenedores Podman reales, fuente exacta de ambos workers, cron de Publicación real y HMAC de producción hacia Cooper b3. Sin seeds, aprobación ni publicación real; Métricas queda publicado/revertido, no se espera su intervalo de una hora.",
+  "limpieza": "PASS"
+}

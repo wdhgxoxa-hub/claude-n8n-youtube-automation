@@ -1,0 +1,5 @@
+Iniciando siete servicios de laboratorio
+Publicando únicamente los dos workers exactos
+Observando cron real y firma HMAC con cola vacía
+Revirtiendo publicación y comprobando contenido, versiones y ajenos
+{"estado": "PASS"}

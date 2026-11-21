@@ -1,0 +1,33 @@
+{
+  "base": "af2774c",
+  "commit_codigo": "42172e5",
+  "resultado": "PASS",
+  "fecha_lima": "2026-11-21T18:19:00-05:00",
+  "sha256": {
+    "deploy/activar-marcas-simuladas.py": "4bfdb6c789461661ac2246325f1a067ab0a15d38b59093fd1d29c6982f8cfd20",
+    "deploy/tests/test_activar_marcas_simuladas.py": "c0607ed19b4123444d38a2a59959a356dfe4541241021f7a219ca7b9ee681126",
+    "deploy/tests/marcas-activacion-real.py": "0adb6024c551289c1f8e6a94f272ff7e2b922e2a1e58f4ecb07736aabbe69ff7",
+    "deploy/operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "deploy/ensayar-n8n.py": "f36fb31a97e130476298d4125b782016764f3e8ee2fdc90ffb8e544c6a3354f9",
+    "workflows/v2/CooperMarcasPub1.json": "39da3eff94aadc1403eee6c14c2f6ef9a8bf64c4e7e4451474e5b740e3b926a5",
+    "workflows/v2/CooperMarcasMet1.json": "62ead72e0e35dc273dd409534375d61d35a29f74146cbab84393ad00aacbbda3"
+  },
+  "origen_wip_ajeno_preservado": {
+    "archivo": "total-marcas-simuladas/deploy/activar-marcas-simuladas.py",
+    "sha256": "e0bb00f9cfbbd68dda5c1566fe41f3931b4c557f2a3959b4b5b0c2dab921b26f",
+    "adaptacion": "Fija operar.DEPLOY al deploy vivo en el CLI; no modifica el WIP original."
+  },
+  "pruebas": {
+    "focales": 15,
+    "regresiones_operativas": 259,
+    "advertencias": 0,
+    "cron_real": "PASS",
+    "post_hmac_200": 1,
+    "get_externos": 0,
+    "reversa": "PASS",
+    "limpieza": "PASS"
+  },
+  "puerta_producto_reutilizada": "docs/informes/evidencias/total-integrador/puerta-final.json",
+  "sin_cambios_producto_imagen_generador_bundle": true,
+  "vps_mutado": false
+}
