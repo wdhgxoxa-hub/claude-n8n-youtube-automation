@@ -166,6 +166,17 @@ test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", a
       sesion: session,
       salida: folder,
       pantallas: ["/marcas"],
+      excluir_selectores: [
+        'a[href^="/"]:not([href^="/marcas"]):not([href^="/api/marcas/medio/"])',
+      ],
+      // Sentinel es de solo lectura; las mutaciones se ejercitan arriba con Playwright.
+      excluir_textos: [
+        "Desconectar",
+        "Verificar conexión",
+        "Estudiar la cuenta",
+        "Proponer texto con el especialista",
+        "Pedir cambios",
+      ],
       duracion: 55,
       ancho: 390,
       modulos: ["recorridos", "caos", "estabilidad"],
