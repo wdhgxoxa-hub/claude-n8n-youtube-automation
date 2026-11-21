@@ -4,6 +4,8 @@ Fecha de auditoría: **21-11-2026, Lima**. Rama y worktree propios: `total-audit
 
 **Resultado:** hay implementación y pruebas locales extensas, pero no una aceptación integral de la versión nueva en producción. En el corte remoto inicial, Cooper conserva ocho migraciones, los dos trabajadores de Marcas no están instalados y varias entradas de la fábrica siguen pausadas. Hay publicaciones históricas: sería incorrecto decir que la fábrica nunca produjo o publicó. Lo que falta demostrar es el recorrido completo de la versión integrada y de sus proveedores autorizados.
 
+Inventario final: **20 hallazgos A** (siete cubiertos por los frentes y trece remanentes con misión propuesta de cinco líneas) y **13 apartados B**, incluidos límites opcionales que requieren decisión y no son defectos. Prioridad de los remanentes: retorno de Claude, runtime de Marcas y conciliación de operaciones inciertas.
+
 La instrucción específica «Solo lectura salvo ese informe» prevalece sobre el cierre documental común: este es el único archivo versionado modificado. Reúne la entrega de `total-auditoria`; no se crea otro informe ni se modifica `docs/ESTADO.md`. Al final se deja el texto de estado para el orquestador. No hubo push, merge, despliegue, reanudación, OAuth, pagos, mensajes ni publicaciones. Los archivos de misión ajenos sin seguimiento se preservan.
 
 ## Criterios y alcance
@@ -64,16 +66,20 @@ Estados `active=0` observados: los cuatro legados; Chat de la fábrica; Confirma
 
 Salud solo comprueba SQLite con `select 1` (`cooper/src/app/api/salud/route.ts:7`): 200 no demuestra chat, generación, mensajería ni publicación.
 
+### VPS-04 — segunda lectura, 11:17:31 Lima
+
+Se repitieron únicamente metadatos Docker y conteos SQLite en transacciones de lectura. Cooper continúa en `05d8337…`, con **8 migraciones / 22 tablas**. Los siete contenedores están saludables. n8n mantiene **36 workflows: 23 con `active=1` y 13 con `active=0`**, exactamente los inactivos enumerados en VPS-02. Ejecuciones: **458 success / 16 error / 2 waiting**. El aumento de éxitos corresponde a actividad concurrente, no a pruebas disparadas por esta auditoría. No acredita instalación del lote nuevo ni aceptación funcional. Esta es la última lectura remota del informe; cualquier corte posterior debe acreditarlo el orquestador.
+
 ## Qué cubren los frentes activos
 
 | Frente | Compromiso comprobado | Estado que se puede afirmar en este corte |
 | --- | --- | --- |
-| **despliegue** | Subir integración, migrar, respaldar/revertir y aceptar web; `../total-despliegue/docs/misiones/total-despliegue.md:7`. | Imagen final `169d0cd` y copia migrada 8→11 ensayadas; todavía sin despliegue final según `../total-despliegue/docs/informes/total-despliegue.md:40`. VPS-01/02 confirman la versión anterior. |
-| **aprendizaje** | 24 h/72 h/7 días, métricas+guion+planos, patrón ≥3 y lección consumida por siguiente guion; `../total-aprendizaje/docs/misiones/total-aprendizaje.md:7`. | Cubre H04. No convertir su implementación concurrente en producción aceptada de esta rama. |
-| **competencia** | 3–5 competidores, outliers, homónimos y diferenciación Perú; `../total-competencia/docs/misiones/total-competencia.md:7`. | Cubre H05, incluido recurso alternativo sin coste si vidIQ no está disponible. No duplicar su radar. |
-| **chat-vps** | Túnel PC→VPS, relés, reconexión, respaldo básico, brevedad; `../total-chat-vps/docs/misiones/total-chat-vps.md:7`. | Transporte real 200/401/503 y recuperación, respuesta Codex en 5,9 s; sesión Google pendiente. `../total-chat-vps/docs/informes/total-chat-vps.md:7`. |
-| **operacion** | Copia fuera del VPS, monitor/Telegram, arranque y recuperación; `../total-operacion/docs/misiones/total-operacion.md:7`. | Réplica restic en PC, restauración, timers y aviso real documentados; reboot físico pendiente. Continuación en `../total-despliegue/docs/informes/total-despliegue.md:16`. |
-| **seguridad** | Auth, aislamiento, SSRF/CSRF, límites, dependencias y propuestas VPS; `../total-seguridad/docs/misiones/total-seguridad.md:7`. | Asignado; no se presume cerrado por estar el host saludable. Cubre revisión de archivos/secretos; no da por aprobada una política de retención. |
+| **despliegue** | Subir integración, migrar, respaldar/revertir y aceptar web; `../total-despliegue/docs/misiones/total-despliegue.md:6`. | Imagen final `169d0cd` y copia migrada 8→11 ensayadas; todavía sin despliegue final según `../total-despliegue/docs/informes/total-despliegue.md:40`. VPS-01/02 confirman la versión anterior. |
+| **aprendizaje** | 24 h/72 h/7 días, métricas+guion+planos, patrón ≥3 y lección consumida por siguiente guion; `../total-aprendizaje/docs/misiones/total-aprendizaje.md:6`. | Cubre H04. No convertir su implementación concurrente en producción aceptada de esta rama. |
+| **competencia** | 3–5 competidores, outliers, homónimos y diferenciación Perú; `../total-competencia/docs/misiones/total-competencia.md:6`. | Cubre H05, incluido recurso alternativo sin coste si vidIQ no está disponible. No duplicar su radar. |
+| **chat-vps** | Túnel PC→VPS, relés, reconexión, respaldo básico, brevedad; `../total-chat-vps/docs/misiones/total-chat-vps.md:6`. | Transporte real 200/401/503 y recuperación, respuesta Codex en 5,9 s; sesión Google pendiente. `../total-chat-vps/docs/informes/total-chat-vps.md:7`. |
+| **operacion** | Copia fuera del VPS, monitor/Telegram, arranque y recuperación; `../total-operacion/docs/misiones/total-operacion.md:6`. | Réplica restic en PC, restauración, timers y aviso real documentados; reboot físico pendiente. Continuación en `../total-despliegue/docs/informes/total-despliegue.md:16`. |
+| **seguridad** | Auth, aislamiento, SSRF/CSRF, límites, dependencias y propuestas VPS; `../total-seguridad/docs/misiones/total-seguridad.md:6`. | Asignado; no se presume cerrado por estar el host saludable. Cubre revisión de archivos/secretos; no da por aprobada una política de retención. |
 | **n8n-lote** | Aplicador, referencias, respaldo, publicación/reversa; commits `3515fc0`, `3a04dca`, `0601218` de la rama homónima. | El ensayo de importación no bastó: publicación secuencial encontró dependencias y credenciales ausentes y hubo reversa. `../total-despliegue/docs/informes/total-despliegue.md:48`. El orquestador conserva aplicación/integración final. |
 
 ## Inventario de faltantes A
@@ -90,7 +96,6 @@ Salud solo comprueba SQLite con `select 1` (`cooper/src/app/api/salud/route.ts:7
 | **H08 · P0** | Contrato de retorno Claude conserva ngrok y el sobre enviado no lleva `retornoUrl`; la fábrica usa routine externa aunque el chat use CLI. El retorno remoto está pausado. | `skill/FABRICA.md:23`, `:30`; `tools/generar_flujos_v2.py:322`, `:402`, `:412`, `:435`; VPS-02. | **Sin cobertura explícita del contrato/routine**. n8n-lote cubre instalación; chat-vps cubre chat/puente, no acredita actualizar la routine. M01; reapertura necesita B02. No se afirma que la variable alternativa esté ausente: no se leyó. |
 | **H09 · P1** | Runtime de Marcas incompleto: FFmpeg/FFprobe ausentes y Compose de esta base no pasa las variables de Marcas ni las del worker. Cambiar solo la imagen no completa el circuito. | `deploy/Containerfile:13`; `deploy/compose.yaml:35`; `cooper/src/servicios/marcas/diseno.ts:115`, `:152`; `cooper/src/servicios/marcas/worker.ts:7`; `docs/cooper-marcas.md:45`, `:52`; VPS-01/02. | **despliegue + n8n-lote parcial**; remanente técnico sin cierre documentado: M02. Probar composición y HMAC con fixtures, manteniendo envíos reales apagados. |
 | **H10 · P1** | Estados inciertos preservan seguridad pero carecen de un procedimiento común completo de conciliación: chat `ejecutando/revisar`, reservas, WhatsApp `incierto`, publicación `revision`, ingesta `descargando`. | `cooper/src/servicios/chat.ts:528`, `:558`; `cooper/src/servicios/mensajeria/cola.ts:290`; `cooper/src/servicios/marcas/servicio.ts:606`; `cooper/src/servicios/marcas/adjuntos-whatsapp.ts:21`; `docs/informes/fase2-puente-n8n.md:59`. | **Sin cobertura explícita**: M03. Hay consultas/reintentos seguros puntuales; falta cierre auditable tras caída, no un botón que reenvíe todo. |
-| **H11 · P1** | Gastos por día/semana/mes y deduplicación de alerta cortan en UTC, sin aclararlo al administrador; difieren del día operativo Lima. Reproducción: a las 21:00 Lima, dos cargos del mismo día por 2 y 3 dan `dia=3`, no 5. | `tools/cooper/gastos.js:3`; `cooper/src/servicios/datos.ts:100`; `cooper/src/servicios/mensajeria/cola.ts:141`. | **Sin cobertura explícita**: M04. Alinear corte y etiqueta, con límites de día/semana/mes y misma regla en demo/n8n/avisos. No es una discrepancia de factura. |
 | **H12 · P1** | Marcas exige adjuntar de nuevo el MP4 de un video propio aunque la integración ya expone montaje; 5 MB por adjunto limita esa vía. URLs caducadas solo muestran error/enlace. | `cooper/src/servicios/marcas/servicio.ts:290`; `docs/cooper-marcas.md:11`; `cooper/src/componentes/medios-video.tsx:18`, `:37`; `docs/informes/cooper-pulido.md:109`. | **Sin cobertura explícita**: M05. Reutilizar medio autorizado por referencia y revisión, sin duplicar producción; política de archivo en B08. |
 | **H13 · P1** | No hay purga de originales/huérfanos ni borrado físico del historial al olvidar memoria; ingestas y medios derivados acumulan datos. | `cooper/MEDIOS.md:29`; `cooper/src/servicios/chat/memoria.ts:324`; `docs/cooper-marcas.md:58`. | **seguridad/operacion parcial**, sin implementación de retención asignada: M06 prepara inventario y simulación; activar borrado requiere B08. |
 | **H14 · P1** | Entrenamientos solo se sondean con usuario conectado; cerrar el estudio detiene la actualización local y no existe trabajador durable para biblioteca. | `cooper/src/app/api/eventos/route.ts:83`; `cooper/src/servicios/biblioteca.ts:271`; `cooper/src/instrumentation.ts:1`; `docs/informes/cooper-fase3.md:63`. | **Sin cobertura explícita**: M07. Probar avance tras cerrar navegador/reiniciar, sin repetir creación o entrenamiento. |
@@ -102,7 +107,7 @@ Salud solo comprueba SQLite con `select 1` (`cooper/src/app/api/salud/route.ts:7
 | **H20 · P2** | Gasto/ahorro son estimaciones: no concilian facturas, cargos fallidos ni coste fijo de planes; el indicador de salud no revela esta diferencia. | `tools/generar_flujos_v2.py:350`; `cooper/src/servicios/datos.ts:147`; `docs/informes/fase2-puente-n8n.md:58`; `docs/informes/cooper-fase6.md:66`. | **Sin cobertura explícita de conciliación**: M13 prepara comparación administrativa con datos ficticios. Tarifas, presupuesto y documentos reales en B05. No prometer ahorro efectivo. |
 | **H21 · P2** | Entrada documental desactualizada: README raíz describe cuatro drafts/Sheets; README Cooper aún dice «no se ha desplegado en vivo», pese al informe VPS. Migraciones experimentales requieren procedimiento propio. | `README.md:3`; `cooper/README.md:39`, `:157`; `docs/ESTADO.md:19`; `docs/informes/cooper-integracion3.md:9`. | **Sin cobertura explícita de saneamiento completo**: M14. Mantener informes históricos, añadir índice vigente y registrar qué base se puede migrar. No alterar diarios aplicados. |
 
-H08–H21 son los remanentes A sin cierre explícito asignado, incluidos los marcados «parcial». La lista siguiente los ordena por impacto; no autoriza implementar estas misiones desde la auditoría.
+H08–H10 y H12–H21 son los **13 remanentes A** sin cierre explícito asignado, incluidos los marcados «parcial». La lista siguiente los ordena por impacto; no autoriza implementar estas misiones desde la auditoría. H11 se retiró del inventario A tras comprobar que la interfaz sí declara UTC: queda como decisión opcional B13, no como fallo. Se conservan los identificadores para hacer trazable esa corrección.
 
 ### Inventario de simulación y activación por subsistema
 
@@ -148,14 +153,6 @@ Los cuatro workflows legados apagados no son cuatro fallos nuevos: v2 aporta sus
 3. Límites: nunca liberar reservas ni reenviar por timeout; acciones de cuenta solo con autorización propia.
 4. Prueba: matar proceso antes/después de aceptación con transportes ficticios; demostrar cero duplicados.
 5. Entrega: flujo de conciliación, guía por subsistema y casos de recuperación reproducibles.
-
-### M04 — periodos de gasto coherentes con Lima (H11)
-
-1. Objetivo: que «hoy», semana, mes y alerta diaria compartan el mismo corte operativo explícito.
-2. Alcance: agregador n8n, simulador, interfaz administrativa y deduplicación de WhatsApp.
-3. Límites: sin alterar importes históricos, tarifas, presupuestos ni enviar avisos reales.
-4. Prueba: 18:59/19:00/23:59/00:00 Lima, lunes y cambio de mes con relojes y cargos ficticios.
-5. Entrega: regla documentada, lote de agregación y regresión que hoy produce 3 en lugar de 5.
 
 ### M05 — reutilización de medios de fábrica en Marcas (H12)
 
@@ -253,6 +250,7 @@ Los cuatro workflows legados apagados no son cuatro fallos nuevos: v2 aporta sus
 | **B10 · P1** | Mantener PC y sesiones de planes disponibles; resolver expiración/cuota mediante el propietario; aceptar precisión/latencia de memoria. Si se exige independencia de PC, decidir alternativa y presupuesto. | `docs/informes/cooper-chat-planes.md:105`, `:109`; `docs/ESTADO.md:36`; informe concurrente chat-vps:25. **chat-vps** conserva fallback; no promete IA completa con PC apagada. Aislamiento de usuario dedicado requiere sesión autorizada. |
 | **B11 · P1** | Custodiar material de recuperación fuera de ambos equipos y decidir aviso independiente si VPS+n8n caen juntos. La réplica cifrada no incluye secretos de host ni sesiones CLI y requiere PC encendida. | Informe concurrente despliegue:60; informe concurrente operación:63. **operacion** ya resolvió réplica/restore; queda esta decisión, no contratar almacenamiento por defecto. |
 | **B12 · P2** | Decidir ampliaciones fuera del compromiso actual: varias réplicas/alta disponibilidad, análisis de PDF/fotos por CLI, historias de video/carruseles mixtos, transferencia de dueño de marcas o cifrado de disco. No son funcionalidades completas hoy. | `cooper/src/servicios/chat/locales.ts:42`; `cooper/README.md:193`; `docs/informes/cooper-marcas.md:69`; `docs/cooper-marcas.md:7`; `docs/informes/cooper-fase5.md:81`. **Sin frente aprobador**; no convertir límites explícitos en trabajo autorizado. |
+| **B13 · P2** | Si Walter desea reportes por día de Lima, decidir el cambio de periodos. Actualmente el corte y los avisos usan UTC y **la interfaz lo declara**; no se encontró incumplimiento de una zona exigida por la especificación. | `cooper/src/componentes/admin.tsx:100`; `tools/cooper/gastos.js:3`; `cooper/src/servicios/datos.ts:100`; `cooper/src/servicios/mensajeria/cola.ts:141`. **Sin frente**; mejora opcional, H11/M04 retirados como fallo/misión A. |
 
 ## Conciliación de los 23 informes históricos
 
@@ -286,16 +284,38 @@ Esta tabla evita reabrir pendientes ya superados. Los documentos antiguos siguen
 
 ## Puerta de esta misión y evidencia local
 
-La puerta de esta auditoría está en ejecución; este apartado se completa con el resultado final antes del commit. No se sustituye por los resultados históricos de integración 3.
+**Puerta final: PASS, siete códigos 0, cero errores y cero advertencias.** Ejecutada secuencialmente el 21-11-2026 de **11:13:24 a 11:20:42 Lima**, sobre el código de `de397f3` conservado por el commit documental `5b8afac`. Ningún archivo de aplicación, pruebas o despliegue cambió. Node **24.22.3**, npm **12.2.2**.
 
-Reproducción del hallazgo H11: se ejecutó **el archivo real** `tools/cooper/gastos.js` en `node:vm`, con reloj fijo `2026-11-21T02:00:00Z` y dos filas ficticias de `23:00Z` y `01:00Z`, importes 2 y 3. Resultado `dia=3`; ambos cargos pertenecen al 20 de noviembre de Lima, suma 5. No se consultaron gastos privados ni se modificó el código.
+```bash
+cd cooper && npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build
+# Desde la raíz:
+node --test tests/flujos_v2.test.cjs
+```
+
+| Paso | Resultado final | Duración | Registro local / SHA-256 |
+| --- | --- | --- | --- |
+| `npm ci` | rc 0; 0 vulnerabilidades; 0 advertencias | 5,85 s | [ci.log](../../.cache/total-auditoria/puerta-final/ci.log) · `d04add36db043c4bed56cf286b0870aa98f0eb3f46e90ae167c9bcbbc3456944` |
+| `npm run lint` | rc 0; 0 errores/advertencias | 3,37 s | [lint.log](../../.cache/total-auditoria/puerta-final/lint.log) · `82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007` |
+| `npm run typecheck` | rc 0; 0 errores/advertencias | 4,69 s | [tipos.log](../../.cache/total-auditoria/puerta-final/tipos.log) · `0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f` |
+| `npm test` | **284/284**, 30 archivos; rc 0 | 19,42 s | [unitarias.log](../../.cache/total-auditoria/puerta-final/unitarias.log) · `36592865f166c23ca34f942d33d01d2607d6b7c466a98e0a1a2f4f7e75728454` |
+| `npm run test:e2e` | **43/43**, incluido Sentinel; rc 0; sin omisiones/reintentos | 399,13 s | [e2e.log](../../.cache/total-auditoria/puerta-final/e2e.log) · `3feb0b77e0fbfbcb1bdb1e7146fc08da2ed276207e83764bb2b2394e2a49ce88` |
+| `npm run build` | rc 0; 0 errores/advertencias | 4,08 s | [build.log](../../.cache/total-auditoria/puerta-final/build.log) · `742297b0eeb23d22d4500c877b72cbec4ef50d216c65256048e743c6968ded2a` |
+| `node --test tests/flujos_v2.test.cjs` | **147/147**, 0 omitidas; rc 0 | 1,04 s | [flujos.log](../../.cache/total-auditoria/puerta-final/flujos.log) · `d3b1a4f1125349645143fe98f95f4e254ea3c5b61e9185c64a8024f58eeba38e` |
+
+[Resumen con códigos, tiempos y huellas](../../.cache/total-auditoria/puerta-final/resultado.json), SHA-256 `ebecbf24388e5c8339674906fc26b077f00ab5d1b49aaf772bbea85ace93d93d`. Las siete huellas se comprobaron contra los registros. Estos artefactos de ejecución permanecen ignorados; solo se versiona este informe, con sus resultados y hashes, conforme al alcance de escritura.
+
+La primera cadena también pasó todas las pruebas, pero la instalación inicial de Chromium emitió **tres avisos** de sistema operativo no soportado y descarga del binario Ubuntu 24.04. Se conserva en [puerta.log](../../.cache/total-auditoria/puerta.log); **no** se presenta como ejecución 0/0. Se preparó la caché Sentinel mediante enlace a la instalación compatible existente de integración 3, sin modificarla. La segunda cadena completa usó los navegadores ya instalados y no emitió esos avisos. No se suprimió salida, no se relajaron umbrales, no se retiraron guardianes ni se omitieron pruebas.
+
+Las pruebas usan cuentas/medios ficticios, puertos loopback y bases aisladas. No demuestran OAuth real, calidad de proveedores ni despliegue. `git diff --check` y comprobación de referencias `archivo:línea`: PASS. Las trece propuestas conservan exactamente cinco líneas numeradas cada una.
+
+Comprobación de B13: se ejecutó **el archivo real** `tools/cooper/gastos.js` en `node:vm`, con reloj fijo `2026-11-21T02:00:00Z` y dos filas ficticias de `23:00Z` y `01:00Z`, importes 2 y 3. Resultado `dia=3`, correcto para el periodo UTC declarado en pantalla; ambos cargos pertenecen al 20 de noviembre de Lima, suma 5 bajo esa otra política. Se descartó como defecto y no se propone una corrección sin decisión. No se consultaron gastos privados ni se modificó el código.
 
 ## Entrega, límites y estado para integración
 
-Único cambio previsto: este informe. Commit documental identificable con `git log -1 -- docs/informes/faltantes-total.md`; no se atribuyen a esta rama commits de otros frentes. Se conservan `docs/misiones/AVISO-cooper-total.md`, `_comun.md` y `total-auditoria.md`, preexistentes sin seguimiento.
+Único archivo cambiado: este informe. Commit inicial **`5b8afac`**, «Documentar auditoría total y misiones pendientes de Cooper». El cierre posterior añade la puerta final, la segunda lectura remota, precisa referencias y retira H11/M04 como falso positivo; se identifica con `git log -1 -- docs/informes/faltantes-total.md`. No se atribuyen a esta rama commits de otros frentes. Se conservan `docs/misiones/AVISO-cooper-total.md`, `_comun.md` y `total-auditoria.md`, preexistentes sin seguimiento.
 
-**Implementado:** el inventario, la clasificación A/B y las propuestas; **probado:** lectura remota y reproducción de H11, más la puerta que se registra arriba; **integrado:** no desde esta misión; **desplegado:** nada desde esta misión. Las propuestas no son trabajo aprobado. No se promete exhaustividad dinámica de cuotas/permisos/proveedores sin usarlos, ni que un estado transitorio del VPS persista después de su hora de corte. La revisión no es un pentest intrusivo ni una evaluación editorial real de modelos.
+**Implementado:** el inventario, la clasificación A/B y las propuestas; **probado:** lectura remota y comprobación de B13, más la puerta que se registra arriba; **integrado:** no desde esta misión; **desplegado:** nada desde esta misión. Las propuestas no son trabajo aprobado. No se promete exhaustividad dinámica de cuotas/permisos/proveedores sin usarlos, ni que un estado transitorio del VPS persista después de su hora de corte. La revisión no es un pentest intrusivo ni una evaluación editorial real de modelos.
 
-Texto propuesto para `docs/ESTADO.md`, que solo el integrador incorporará conservando todas sus secciones: «21-11-2026 Lima: auditoría `total-auditoria` documentada en `faltantes-total.md`; inventario de faltantes A/B, cobertura de siete frentes y misiones adicionales. Evidencia SSH de solo lectura fechada; producción final y decisiones humanas se conservan pendientes. Sin cambios de producto ni despliegue en esta misión». Mantener en **En curso** los cierres de despliegue/lote/chat/operación; en **Pendientes de Walter**, B01–B12; no mover la microserie ni otras **Ideas conversadas** a trabajo aprobado.
+Texto propuesto para `docs/ESTADO.md`, que solo el integrador incorporará conservando todas sus secciones: «21-11-2026 Lima: auditoría `total-auditoria` documentada en `faltantes-total.md`; inventario de faltantes A/B, cobertura de siete frentes y misiones adicionales. Evidencia SSH de solo lectura fechada; producción final y decisiones humanas se conservan pendientes. Sin cambios de producto ni despliegue en esta misión». Mantener en **En curso** los cierres de despliegue/lote/chat/operación; en **Pendientes de Walter**, B01–B13 (B13 opcional); no mover la microserie ni otras **Ideas conversadas** a trabajo aprobado.
 
 Fuentes oficiales consultadas para las operaciones efectivamente utilizadas: [OpenSSH](https://man.openbsd.org/ssh.1), [Docker inspect y formatos](https://docs.docker.com/reference/cli/docker/inspect/), [SQLite mediante Python y apertura URI de solo lectura](https://docs.python.org/3/library/sqlite3.html), [n8n Server CLI y distinción entre importar/publicar](https://docs.n8n.io/deploy/host-n8n/configure-n8n/use-the-command-line.md). No se invocaron APIs de medios, Meta, YouTube, vidIQ o publicación para completar esta auditoría.
