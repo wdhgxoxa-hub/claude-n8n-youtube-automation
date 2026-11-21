@@ -1,0 +1,415 @@
+[
+  {
+    "label": "numeros-inicial",
+    "time": "2026-11-21T06:39:26.168664+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "data": [
+        {
+          "id": "1560268253828249",
+          "display_phone_number": "+51 939 484 675",
+          "verified_name": "Cooper Estudio",
+          "name_status": "AVAILABLE_WITHOUT_REVIEW",
+          "code_verification_status": "VERIFIED",
+          "quality_rating": "UNKNOWN",
+          "status": "CONNECTED",
+          "platform_type": "CLOUD_API"
+        }
+      ]
+    }
+  },
+  {
+    "label": "registro",
+    "time": "2026-11-21T06:39:50.143065+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "success": true
+    }
+  },
+  {
+    "label": "suscripcion",
+    "time": "2026-11-21T06:39:50.653428+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "success": true
+    }
+  },
+  {
+    "label": "suscripcion-verificada",
+    "time": "2026-11-21T06:39:54.447236+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "data": [
+        {
+          "whatsapp_business_api_data": {
+            "link": "https://www.facebook.com/games/?app_id=2333736354090891",
+            "name": "Cooper",
+            "id": "2333736354090891"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "label": "nombre-solicitado",
+    "time": "2026-11-21T06:39:53.352773+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "success": true
+    }
+  },
+  {
+    "label": "nombre-seguimiento",
+    "time": "2026-11-21T06:41:46.404023+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "verified_name": "Cooper Estudio",
+      "name_status": "AVAILABLE_WITHOUT_REVIEW",
+      "new_display_name": "Cooper",
+      "new_name_status": "AVAILABLE_WITHOUT_REVIEW",
+      "id": "1560268253828249"
+    }
+  },
+  {
+    "label": "registro-nombre",
+    "time": "2026-11-21T06:42:06.333567+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "success": true
+    }
+  },
+  {
+    "label": "nombre-aplicado",
+    "time": "2026-11-21T06:42:06.743044+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "verified_name": "Cooper",
+      "name_status": "AVAILABLE_WITHOUT_REVIEW",
+      "new_name_status": "NONE",
+      "status": "CONNECTED",
+      "quality_rating": "UNKNOWN",
+      "whatsapp_business_manager_messaging_limit": "TIER_250",
+      "id": "1560268253828249"
+    }
+  },
+  {
+    "label": "limites",
+    "time": "2026-11-21T06:39:54.113415+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "id": "1538699574836542",
+      "name": "Cooper Estudio",
+      "status": "ACTIVE",
+      "whatsapp_business_manager_messaging_limit": "TIER_250",
+      "health_status": {
+        "can_send_message": "BLOCKED",
+        "entities": [
+          {
+            "entity_type": "WABA",
+            "id": "1538699574836542",
+            "can_send_message": "BLOCKED",
+            "errors": [
+              {
+                "error_code": 141006,
+                "error_description": "There is an error with the payment method. This will block business initiated conversations.",
+                "possible_solution": "There was an error with your payment method. Please add a new payment method to the account."
+              }
+            ]
+          },
+          {
+            "entity_type": "BUSINESS",
+            "id": "1174776201788789",
+            "can_send_message": "LIMITED",
+            "errors": [
+              {
+                "error_code": 141010,
+                "error_description": "The Business has not passed business verification.",
+                "possible_solution": "Visit business settings and start or resolve the business verification request."
+              }
+            ]
+          },
+          {
+            "entity_type": "APP",
+            "id": "2333736354090891",
+            "can_send_message": "AVAILABLE",
+            "additional_info": [
+              "Your app is not subscribed to the message webhook. This means you will not receive any messages sent to your phone number."
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "label": "negocio-verificacion",
+    "time": "2026-11-21T06:41:46.642149+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "id": "1538699574836542",
+      "account_review_status": "APPROVED",
+      "business_verification_status": "not_verified"
+    }
+  },
+  {
+    "label": "alta-cooper_alerta_gasto_admin",
+    "time": "2026-11-21T06:40:17.558187+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "id": "917118451487707",
+      "status": "PENDING",
+      "category": "UTILITY"
+    }
+  },
+  {
+    "label": "alta-cooper_aprobacion_final",
+    "time": "2026-11-21T06:40:21.583745+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "id": "1612777856765377",
+      "status": "PENDING",
+      "category": "UTILITY"
+    }
+  },
+  {
+    "label": "alta-cooper_aprobacion_guion",
+    "time": "2026-11-21T06:40:25.536249+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "id": "992053490151404",
+      "status": "PENDING",
+      "category": "UTILITY"
+    }
+  },
+  {
+    "label": "alta-cooper_verificar_numero",
+    "time": "2026-11-21T06:40:26.504019+00:00",
+    "http": 400,
+    "api_version": "v27.0",
+    "data": {
+      "error": {
+        "message": "Application does not have permission for this action",
+        "type": "OAuthException",
+        "code": 10,
+        "error_subcode": 2388185,
+        "is_transient": false,
+        "error_user_title": "No hemos podido crear la plantilla de mensaje",
+        "error_user_msg": "Esta cuenta de WhatsApp Business no tiene permiso para crear plantillas de mensajes",
+        "fbtrace_id": "AG7brjy52Fl8sdSky3txJZC"
+      }
+    }
+  },
+  {
+    "label": "alta-cooper_video_publicado",
+    "time": "2026-11-21T06:40:30.574899+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "id": "1146417314918775",
+      "status": "PENDING",
+      "category": "UTILITY"
+    }
+  },
+  {
+    "label": "plantillas-seguimiento",
+    "time": "2026-11-21T06:42:52.181627+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "data": [
+        {
+          "id": "1146417314918775",
+          "name": "cooper_video_publicado",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "992053490151404",
+          "name": "cooper_aprobacion_guion",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "1612777856765377",
+          "name": "cooper_aprobacion_final",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "917118451487707",
+          "name": "cooper_alerta_gasto_admin",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "1871215504019639",
+          "name": "hello_world",
+          "language": "en_US",
+          "status": "APPROVED",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        }
+      ]
+    }
+  },
+  {
+    "label": "prueba-unica",
+    "time": "2026-11-21T06:40:31.253770+00:00",
+    "http": 400,
+    "api_version": "v27.0",
+    "data": {
+      "error": {
+        "message": "(#131058) Hello World templates can only be sent from the Public Test Numbers",
+        "code": 131058,
+        "type": "OAuthException",
+        "fbtrace_id": "AwZ5fgPu207ru5d3ncjmFYT"
+      }
+    }
+  },
+  {
+    "label": "meta-cierre",
+    "time": "2026-11-21T06:46:22.748610+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "verified_name": "Cooper",
+      "name_status": "AVAILABLE_WITHOUT_REVIEW",
+      "new_name_status": "NONE",
+      "status": "CONNECTED",
+      "quality_rating": "UNKNOWN",
+      "whatsapp_business_manager_messaging_limit": "TIER_250",
+      "health_status": {
+        "can_send_message": "BLOCKED",
+        "entities": [
+          {
+            "entity_type": "PHONE_NUMBER",
+            "id": "1560268253828249",
+            "can_send_message": "LIMITED",
+            "can_receive_call_sip": "BLOCKED",
+            "errors": [
+              {
+                "error_code": 138024,
+                "error_description": "WhatsApp Business calling cannot use SIP because it is not enabled",
+                "possible_solution": "Configure SIP using {PHONE_NUMBER_ID}/settings API"
+              }
+            ],
+            "additional_info": [
+              "Your display name has not been approved yet. Your message limit will increase after the display name is approved."
+            ]
+          },
+          {
+            "entity_type": "WABA",
+            "id": "1538699574836542",
+            "can_send_message": "BLOCKED",
+            "errors": [
+              {
+                "error_code": 141006,
+                "error_description": "There is an error with the payment method. This will block business initiated conversations.",
+                "possible_solution": "There was an error with your payment method. Please add a new payment method to the account."
+              }
+            ]
+          },
+          {
+            "entity_type": "BUSINESS",
+            "id": "1174776201788789",
+            "can_send_message": "LIMITED",
+            "errors": [
+              {
+                "error_code": 141010,
+                "error_description": "The Business has not passed business verification.",
+                "possible_solution": "Visit business settings and start or resolve the business verification request."
+              }
+            ]
+          },
+          {
+            "entity_type": "APP",
+            "id": "2333736354090891",
+            "can_send_message": "AVAILABLE",
+            "can_receive_call_sip": "BLOCKED",
+            "errors": [
+              {
+                "error_code": 138025,
+                "error_description": "This app cannot use SIP for WhatsApp Business calling because it has not configured a SIP server for this business phone number",
+                "possible_solution": "Configure SIP server using {PHONE_NUMBER_ID}/settings API"
+              }
+            ],
+            "additional_info": [
+              "Your app is not subscribed to the message webhook. This means you will not receive any messages sent to your phone number."
+            ]
+          }
+        ]
+      },
+      "id": "1560268253828249"
+    }
+  },
+  {
+    "label": "plantillas-cierre",
+    "time": "2026-11-21T06:46:23.039276+00:00",
+    "http": 200,
+    "api_version": "v27.0",
+    "data": {
+      "data": [
+        {
+          "id": "1146417314918775",
+          "name": "cooper_video_publicado",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "992053490151404",
+          "name": "cooper_aprobacion_guion",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "1612777856765377",
+          "name": "cooper_aprobacion_final",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "917118451487707",
+          "name": "cooper_alerta_gasto_admin",
+          "language": "es",
+          "status": "PENDING",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        },
+        {
+          "id": "1871215504019639",
+          "name": "hello_world",
+          "language": "en_US",
+          "status": "APPROVED",
+          "category": "UTILITY",
+          "rejected_reason": "NONE"
+        }
+      ]
+    }
+  }
+]

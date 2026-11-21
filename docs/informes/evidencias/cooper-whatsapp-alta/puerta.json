@@ -1,0 +1,56 @@
+{
+  "sha": "938eb30e9a0109a1e0a35f6db8ec0c61a906a8d5",
+  "node": "v24.22.3",
+  "npm": "12.2.2",
+  "results": [
+    {
+      "step": "npm-ci",
+      "command": "npm ci",
+      "rc": 0,
+      "seconds": 4.5,
+      "warning_lines": 0
+    },
+    {
+      "step": "lint",
+      "command": "npm run lint",
+      "rc": 0,
+      "seconds": 2.2,
+      "warning_lines": 0
+    },
+    {
+      "step": "typecheck",
+      "command": "npm run typecheck",
+      "rc": 0,
+      "seconds": 3.0,
+      "warning_lines": 0
+    },
+    {
+      "step": "unitarias",
+      "command": "npm test",
+      "rc": 0,
+      "seconds": 13.2,
+      "warning_lines": 0
+    },
+    {
+      "step": "e2e",
+      "command": "npm run test:e2e",
+      "rc": 0,
+      "seconds": 252.3,
+      "warning_lines": 0
+    },
+    {
+      "step": "build",
+      "command": "npm run build",
+      "rc": 0,
+      "seconds": 3.4,
+      "warning_lines": 0
+    },
+    {
+      "step": "flujos",
+      "command": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "seconds": 0.9,
+      "warning_lines": 0
+    }
+  ]
+}

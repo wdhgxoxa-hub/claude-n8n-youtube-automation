@@ -1,0 +1,10 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-whatsapp-alta/cooper
+
+
+ Test Files  23 passed (23)
+      Tests  227 passed (227)
+   Start at  01:43:00
+   Duration  12.89s (transform 1.53s, setup 205ms, import 6.77s, tests 4.22s, environment 1ms)

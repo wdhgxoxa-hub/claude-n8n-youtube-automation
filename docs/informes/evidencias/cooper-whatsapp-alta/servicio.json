@@ -1,0 +1,27 @@
+{
+  "service": {
+    "ActiveState": "active",
+    "SubState": "running",
+    "MainPID": "1325481",
+    "NRestarts": "0"
+  },
+  "environment_checks": {
+    "WHATSAPP_PHONE_NUMBER_ID": true,
+    "WHATSAPP_WABA_ID": true,
+    "COOPER_MENSAJERIA": true,
+    "COOPER_MENSAJERIA_PAUSA": true,
+    "token_matches_file": true,
+    "verify_token_present": true,
+    "app_secret_present": false
+  },
+  "http": {
+    "salud": 200,
+    "firma_ausente": 503,
+    "webhook_desafio": {
+      "status": 200,
+      "matches": true
+    }
+  },
+  "contacts": 0,
+  "outbox": 0
+}
