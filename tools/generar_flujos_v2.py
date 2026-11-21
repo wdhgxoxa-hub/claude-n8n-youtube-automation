@@ -330,6 +330,7 @@ return [{ json: {
   allowArchivo: true,         // video de archivo de Pexels/Pixabay (gratis)
   allowEfectos: true,         // efectos de sonido de Epidemic Sound (incluidos en tu suscripción)
   allowCritico: false,        // segundo modelo (GPT-6 Astra) que critica investigación y guion (pago por uso, centavos)
+  allowTextoApi: false,       // respaldo automático de texto; activar explícitamente para permitir gasto API
   allowVerificacion: false,   // verificador de cifras con búsqueda web (GPT-6 Astra + web_search) antes del crítico (pago por uso)
   allowReferencias: false,    // imágenes de referencia de personajes y escenarios del canal (pago por uso)
   allowAvatar: false,         // HeyGen
@@ -3130,7 +3131,7 @@ code(f, 'Progreso público', 'const ETAPAS = ' + json.dumps(CONTRATO_COOPER['eta
 const v = $('Inicio').first().json;
 return [{ json: { version:'cooper-v1', tipo:'progreso', id_evento: v.cooper_evento_id || ('video:' + v.video_id + ':' + v.updatedAt),
   video: { id:v.video_id, dueno_email:v.dueno_email, canal_id:v.canal_id, titulo:String(v.tema || ''),
-    stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];
+    modo_noticia:v.modo_noticia === true, stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];
 """)
 firmar_cooper(f,'Firmar progreso',"$('Progreso público').first().json")
 enviar_cooper(f,'Avisar a Cooper')
@@ -3248,24 +3249,6 @@ f.chain('Cooper · eliminar canal','Cooper · marca cascada','Cooper · eliminar
 # Extensión de presentación, antes de los sellos y de la atribución de costos.
 exec(compile(open(os.path.join(RAIZ, 'tools/cooper/presentacion_flujos.py'), encoding='utf-8').read(), 'presentacion_flujos.py', 'exec'))
 
-# Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.
-for wf in [ORQ, PROD, PUB, REDES, CONFIRMAR, VALIDAR_PRESENTACION]:
-    f = reabrir(wf)
-    targets = [n for n in f.nodes if n['type'].endswith('.dataTable') and n['parameters'].get('operation') in ['insert','update'] and n['parameters']['dataTableId']['value'] == T['videos']]
-    for n in targets:
-        p = 'Cooper · sello ' + n['name']
-        code(f,p,"return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k }}));")
-        antes(f,n['name'],p,p)
-        call(f,p+' aviso',W['progreso'],each=True)
-        despues(f,n['name'],p+' aviso',p+' aviso')
-# Fuera del FX, las consultas legadas son del operador. Las filas eliminadas no se reactivan.
-for wf in [ORQ, PROD, PUB, RADAR, RUTINA, REFS, REDES, YT]:
-    for n in wf['nodes']:
-        p=n['parameters']
-        if n['type'].endswith('.dataTable') and p.get('operation') in ['get','update'] and p['dataTableId']['value'] in [T['videos'],T['canales']]:
-            p.setdefault('filters',{}).setdefault('conditions',[]).append({'keyName':'eliminado','condition':'neq','keyValue':True})
-
-
 # Registro al terminar cada llamada, incluso si un paso posterior falla. El total del video
 # sigue siendo una estimación visual; no vuelve a insertarse como un segundo gasto.
 for wf, nombres in [(PROD,['Guardar costos','Guardar costo de derivados']), (REFS,['Guardar costo de referencias'])]:
@@ -3320,7 +3303,7 @@ for wf in [ORQ, PROD, REFS, RADAR, DERIV, SONIDO, CLAUDE, AVATAR]:
 
 # Tiempo máximo por flujo (segundos; tu n8n permite hasta 3600) y vigilante de errores en todos.
 TIEMPO = {'FabAvatar0000001': 1800, 'FabProduccion001': 3600, 'FabDerivados0001': 3600, 'FabSonido0000001': 1800, 'FabReferencias01': 1800,
-          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600}
+          'FabRedes00000001': 1800, 'FabAprendizaje01': 1800, 'FabOrquestador01': 900, 'FabPublicacion01': 600, 'FabNoticia000001': 600, 'FabRadar00000001': 3600}
 # Expresiones de n8n: un salto de línea real dentro de un texto entre comillas no es JavaScript válido
 # (el crítico del guion fallaba en silencio por eso). Se escapan todos los que estén dentro de comillas.
 def escapar_saltos(ex):
@@ -3339,16 +3322,38 @@ def recorrer(v):
     if isinstance(v, list): return [recorrer(x) for x in v]
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR]:
+# Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
+for extension in ['texto_flujos.py', 'noticia_flujos.py']:
+    exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
+
+# Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.
+for wf in [ORQ, PROD, PUB, REDES, CONFIRMAR, VALIDAR_PRESENTACION]:
+    f = reabrir(wf)
+    targets = [n for n in f.nodes if n['type'].endswith('.dataTable') and n['parameters'].get('operation') in ['insert','update'] and n['parameters']['dataTableId']['value'] == T['videos']]
+    for n in targets:
+        p = 'Cooper · sello ' + n['name']
+        code(f,p,"return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + " + JS(n['name']) + " + ':' + $runIndex + ':' + k }}));")
+        antes(f,n['name'],p,p)
+        call(f,p+' aviso',W['progreso'],each=True)
+        despues(f,n['name'],p+' aviso',p+' aviso')
+# Fuera del FX, las consultas legadas son del operador. Las filas eliminadas no se reactivan.
+for wf in [ORQ, PROD, PUB, RADAR, RUTINA, REFS, REDES, YT]:
+    for n in wf['nodes']:
+        p=n['parameters']
+        if n['type'].endswith('.dataTable') and p.get('operation') in ['get','update'] and p['dataTableId']['value'] in [T['videos'],T['canales']]:
+            p.setdefault('filters',{}).setdefault('conditions',[]).append({'keyName':'eliminado','condition':'neq','keyValue':True})
+
+
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]:
     for n in wf['nodes']:
         n['parameters'] = recorrer(n['parameters'])
 
-for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR]:
+for wf in [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]:
     wf['settings'].update({'executionTimeout': TIEMPO.get(wf['id'], 300), 'errorWorkflow': W['errores'],
-                           'saveDataErrorExecution': 'none' if wf['id'] == W['cooper'] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] == W['cooper'] else 'all'})
+                           'saveDataErrorExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all', 'saveDataSuccessExecution': 'none' if wf['id'] in [W['cooper'],W['texto']] else 'all'})
 
 
-ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR]
+ALL = [AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
 
 def conservar_identificadores(wf, anterior):
     prev = {n['name']: n for n in anterior.get('nodes', [])}

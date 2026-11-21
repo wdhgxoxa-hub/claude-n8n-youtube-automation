@@ -81,7 +81,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst c = $('Inicio').first().json, v = $('Video del costo').first().json, canal = $('Canal del costo').first().json;\nconst dueno = v.dueno_email || canal.dueno_email || (c.video_id === 'canal:' ? String($env.COOPER_ADMIN_EMAIL || '') : '');\nif (!dueno || (c.video_id !== 'canal:' && !canal.dueno_email)) throw new Error('Costo sin dueño: completar la migración antes de producir');\nconst usd = Number(c.usd); if (!Number.isFinite(usd) || usd < 0) throw new Error('Costo inválido');\nreturn [{ json: { video_id: c.video_id, concepto: c.concepto, servicio: c.servicio, usd,\n  dueno_email: dueno, estimado: c.estimado !== false,\n  paso_id: c.paso_id || String($execution.id) } }];\n"
+        "jsCode": "\nconst c = $('Inicio').first().json, v = $('Video del costo').first().json, canal = $('Canal del costo').first().json;\nconst dueno = v.dueno_email || canal.dueno_email || (c.video_id === 'canal:' ? String($env.COOPER_ADMIN_EMAIL || '') : '');\nif (!dueno || (c.video_id !== 'canal:' && !canal.dueno_email)) throw new Error('Costo sin dueño: completar la migración antes de producir');\nconst usd = Number(c.usd); if (!Number.isFinite(usd) || usd < 0) throw new Error('Costo inválido');\nreturn [{ json: { video_id: c.video_id, concepto: c.concepto, servicio: c.servicio, usd,\n  ruta: c.ruta || '', ahorro_estimado_usd: Number(c.ahorro_estimado_usd) || 0, motivo_respaldo: c.motivo_respaldo || '', dueno_email: dueno, estimado: c.estimado !== false,\n  paso_id: c.paso_id || String($execution.id) } }];\n"
       },
       "id": "c2701c2d-937e-56da-bd97-d00a335fa175",
       "name": "Costo atribuido",

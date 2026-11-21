@@ -570,7 +570,7 @@ test('escala: topes de 24 h por canal y de toda la fábrica', () => {
 
 test('escala: todo flujo es válido — nodos únicos, conexiones existentes, sin huérfanos, HTTP con tiempo límite', () => {
   for (const id of ['FabAjustes000001', 'FabLlamarClaude1', 'FabRetornoClaud1', 'FabAprobacion001', 'FabOrquestador01', 'FabProduccion001', 'FabSonido0000001',
-    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1']) {
+    'FabPublicacion01', 'FabAprendizaje01', 'FabEstado0000001', 'FabReferencias01', 'FabYouTube000001', 'FabVidiq00000001', 'FabDerivados0001', 'FabRedes00000001', 'FabRutina0000001', 'FabErrores000001', 'FabAgenteTelegr1', 'FabTextoGPT0001', 'FabNoticia000001', 'FabRadar00000001']) {
     const w = wf(id); const nombres = w.nodes.map(n => n.name);
     assert.strictEqual(new Set(nombres).size, nombres.length, id + ': nombres repetidos');
     const destinos = new Set(Object.values(w.connections).flatMap(c => Object.values(c).flat(2)).map(x => x.node));
@@ -579,7 +579,8 @@ test('escala: todo flujo es válido — nodos únicos, conexiones existentes, si
       assert.ok(destinos.has(n.name) || w.connections[n.name], id + ': huérfano ' + n.name);
       if (n.type.endsWith('httpRequest')) assert.ok(n.parameters.options?.timeout, id + ': sin timeout ' + n.name);
       if (n.type.endsWith('.code')) {   // el entorno de Code de n8n no trae estas funciones (verificado en vivo)
-        const sinComentarios = n.parameters.jsCode.split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
+        // crypto está permitido desde el puente Cooper; no habilitar otros módulos.
+        const sinComentarios = n.parameters.jsCode.replace(/require\('crypto'\)/g, 'crypto').split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
         assert.doesNotMatch(sinComentarios, /\bnew URL\(|URLSearchParams|TextEncoder|TextDecoder|structuredClone|\batob\(|\bbtoa\(|\bfetch\(|setTimeout|require\(/, id + ': función no disponible en ' + n.name);
       }
       if (n.type.endsWith('.code')) assert.doesNotThrow(() => new Function('$', '$json', '$input', '$now', '$binary', 'crypto', n.parameters.jsCode), id + ': JS inválido en ' + n.name);
@@ -775,7 +776,7 @@ test('banco de roles: Claude lee su rol y los modelos de GPT llevan el suyo incr
   const fab = fs.readFileSync(path.join(__dirname, '..', 'skill', 'FABRICA.md'), 'utf8');
   for (const r of ['investigador', 'guionista', 'director-visual', 'editor-publicacion', 'analista']) {
     assert.ok(fab.includes(r + '.md'), 'FABRICA no nombra ' + r); assert.ok(fs.existsSync(path.join(__dirname, '..', 'skill', 'roles', r + '.md')), r); }
-  const critico = JSON.stringify(nodo(ORQ, 'Crítico del guion').parameters); assert.match(critico, /LA ARITMÉTICA CUADRA/);
+  const critico = JSON.stringify(nodo(ORQ, 'Texto · Crítico del guion').parameters); assert.match(critico, /LA ARITMÉTICA CUADRA/);
   const PRD = wf('FabProduccion001');
   for (const n of ['Revisar plano', 'Revisar archivo']) assert.match(JSON.stringify(nodo(PRD, n).parameters), /Eres el revisor visual/, n);
   const guionista = fs.readFileSync(path.join(__dirname, '..', 'skill', 'roles', 'guionista.md'), 'utf8');
@@ -885,12 +886,12 @@ test('costo: sin texto en las imágenes, respaldo de escena para el archivo y re
 
 test('cifras verificadas: busca en la web antes del crítico, obliga a reescribir si hay cifras por corregir y pasa los datos a Claude', () => {
   const O = wf('FabOrquestador01'); const nodo = n => O.nodes.find(x => x.name === n);
-  const body = nodo('Verificar cifras').parameters.jsonBody;
+  const body = nodo('Texto · Verificar cifras').parameters.jsCode;
   assert.match(body, /type: 'web_search'/); assert.match(body, /Eres el verificador de datos/); assert.match(body, /notas_del_guionista/);
   assert.strictEqual(O.connections['Temas del canal'].main[0][0].node, 'Puntuar ganchos');
   assert.strictEqual(O.connections['Puntuar ganchos'].main[0][0].node, '¿Verificar cifras?');
-  assert.strictEqual(O.connections['Cifras verificadas'].main[0][0].node, 'Crítico del guion');
-  assert.match(nodo('Crítico del guion').parameters.jsonBody, /verificacion_de_cifras/);
+  assert.strictEqual(O.connections['Cifras verificadas'].main[0][0].node, 'Texto · Crítico del guion');
+  assert.match(nodo('Texto · Crítico del guion').parameters.jsCode, /verificacion_de_cifras/);
   // Respuesta real (forma de la prueba en vivo): búsquedas, razonamiento y un mensaje con el JSON.
   const texto = JSON.stringify({ cifras: [{ dato: 'IGV', valor_guion: '1,53', valor_verificado: '1,53', estado: 'ok' }, { dato: 'margen', valor_guion: '4-5', valor_verificado: '', estado: 'vieja', fecha: '2024-11' }],
     faltantes: [{ dato: 'Precio de lista Petroperú gasohol regular', valor: '15.6293 soles/galón', fecha: '2026-11-18', fuente_url: 'https://www.petroperu.com.pe/x.pdf' }], cuenta: ['S/ 10', 'IGV 1,53'], resumen: 'ok' });
@@ -963,8 +964,8 @@ test('skills de YouTube: el gancho se puntúa y colapsa las filas del canal (el 
   const r = { ganchos: ['Los grifos son interesantes.', 'De tus 10 soles, el grifo se queda con menos de lo que crees.'], gancho_elegido: 1, titulo: 'T', guion: 'g', rubrica: { gancho: 8 } };
   const out = run(codeOf(O, 'Puntuar ganchos'), { all: { $input: [{ tema: 'a' }, { tema: 'b' }, { tema: 'c' }] }, nodes: { Inicio: { resultado: r } } });
   assert.strictEqual(out.length, 1); assert.strictEqual(out[0].json.elegido.formula, 'El dato');
-  assert.match(nodoDe(O, 'Crítico del guion').parameters.jsonBody, /puntaje_ganchos/);
-  assert.match(nodoDe(O, 'Crítico del guion').parameters.jsonBody, /La boleta/);   // el crítico GPT lleva las 21 fórmulas incrustadas
+  assert.match(nodoDe(O, 'Texto · Crítico del guion').parameters.jsCode, /puntaje_ganchos/);
+  assert.match(nodoDe(O, 'Texto · Crítico del guion').parameters.jsCode, /La boleta/);   // el crítico GPT lleva las 21 fórmulas incrustadas
   const msg = run(codeOf(O, 'Mensaje de guion'), { nodes: { Inicio: { video_id: 'v', resultado: r } } })[0].json;
   assert.match(msg.aviso, /🪝 Gancho: \d+\/100 (FUERTE|SIRVE|DÉBIL) · El dato/); assert.match(msg.mensaje, /alerta \d+\/100/);
 });
@@ -1532,5 +1533,111 @@ test('presentación: contrato completo con transportes ficticios de voz, avatar 
     const rendered=await send(PROD,'Renderizar',{json:composed});assert.strictEqual(rendered.status,'planned');
     assert.strictEqual(calls.filter(c=>c.url==='https://api.heygen.com/v3/videos').length,presencia==='completo'?2:1);
     assert.strictEqual(composed.planos,composed.esperados);
+  }
+});
+
+// Fase 6: se ejecuta el código generado que consumirá n8n, con transportes ficticios.
+const TXT = wf('FabTextoGPT0001'), NOT = wf('FabNoticia000001');
+const respuestaTexto = value => ({ status:'completed', output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(value)}]}] });
+const fuenteNoticia = () => ({ url:'https://observatorio.example.test/boletin', titulo:'Boletín primario', fecha:new Date().toISOString() });
+const noticiaFixture = () => ({ titulo:'Nueva medición del observatorio', fecha:new Date().toISOString(), hechos:[{id:'h1',dato:'La medición es de 12 unidades.',estado:'ok',fuentes:[fuenteNoticia()]}], fuentes_consultadas:[fuenteNoticia().url],verificado:true,verificado_en:new Date().toISOString() });
+const noticiasJS = fs.readFileSync(path.join(__dirname,'../tools/cooper/noticia.js'),'utf8');
+const evaluarNoticia = (js,json) => run(noticiasJS + '\n' + js,{json})[0]?.json;
+
+test('texto: todos los roles usan Codex primero y un único respaldo Responses con plazo', () => {
+  for (const [flow,name] of [[ORQ,'Crítico de nichos'],[ORQ,'Crítico del guion'],[ORQ,'Verificar cifras'],[wf('FabRadar00000001'),'Analista de tendencias']]) {
+    const n=flow.nodes.find(n=>n.name===name);
+    assert.equal(n.parameters.workflowId.value,TXT.id);
+    assert.equal(n.parameters.mode,'each');
+  }
+  const edges=name=>TXT.connections[name].main.map(a=>a.map(x=>x.node));
+  assert.deepEqual(edges('Pedido de texto'),[['Intentar Codex']]);
+  assert.deepEqual(edges('¿Codex respondió?'),[['Resultado de texto'],['Permitir respaldo']]);
+  assert.deepEqual(edges('Permitir respaldo'),[['Respaldo OpenAI']]);
+  const http=TXT.nodes.find(n=>n.name==='Respaldo OpenAI');
+  assert.equal(http.parameters.url,'https://api.openai.com/v1/responses');
+  assert.match(http.parameters.jsonBody,/web_search_call.action.sources/);
+  assert.equal(TXT.nodes.find(n=>n.name==='Intentar Codex').parameters.options.timeout,45000);
+  assert.equal(TXT.settings.saveDataErrorExecution,'none');
+  assert.equal(TXT.settings.saveDataSuccessExecution,'none');
+});
+test('texto: éxito local evita API; fallo, 429, timeout o JSON inválido seleccionan respaldo', () => {
+  const pedido={tarea:'radar',local:{buscar_web:false},costo_estimado_usd:0.25};
+  const bueno={...respuestaTexto({ideas:[],resumen:'ensayo'}),ruta:'codex'};
+  const evalua=json=>run(codeOf(TXT,'Evaluar Codex'),{json,nodes:{'Pedido de texto':pedido}})[0].json.ok;
+  assert.equal(evalua(bueno),true);
+  for(const bad of [{error:'timeout'},{error:'ocupado'},{ruta:'codex',output:[]},respuestaTexto({sin:'contrato'})]) assert.equal(evalua(bad),false);
+  const local=run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':pedido,'Evaluar Codex':{ok:true},'Intentar Codex':bueno}})[0].json;
+  assert.deepEqual(local.texto_uso,{ruta:'codex',motivo_respaldo:'',usd:0,ahorro_estimado_usd:0.25,estimado:true});
+  const api=run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':pedido,'Evaluar Codex':{ok:false},'Respaldo OpenAI':respuestaTexto({ideas:[],resumen:'ensayo'})}})[0].json;
+  assert.equal(api.texto_uso.usd,0.25); assert.equal(api.texto_uso.ahorro_estimado_usd,0); assert.equal(api.ruta,'openai_api');
+  assert.throws(()=>run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':pedido,'Evaluar Codex':{ok:false},'Respaldo OpenAI':{error:'sin servicio'}}}),/ambas rutas/);
+  assert.throws(()=>run(codeOf(TXT,'Permitir respaldo'),{nodes:{'Pedido de texto':{api_permitida:false}}}),/apagado/);
+});
+test('texto: una noticia sin evidencia de búsqueda del proveedor vuelve al respaldo', () => {
+  const n=noticiaFixture(), pedido={tarea:'radar_noticia',local:{buscar_web:true}};
+  const r={...respuestaTexto({noticia:n}),ruta:'codex',busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas};
+  const evalua=json=>run(codeOf(TXT,'Evaluar Codex'),{json,nodes:{'Pedido de texto':pedido}})[0].json.ok;
+  assert.equal(evalua(r),true);
+  assert.equal(evalua({...r,busqueda_real:false}),false);
+  assert.equal(evalua({...r,fuentes_consultadas:[]}),false);
+  const p={...pedido,costo_estimado_usd:0.25};
+  assert.throws(()=>run(codeOf(TXT,'Resultado de texto'),{nodes:{'Pedido de texto':p,'Evaluar Codex':{ok:false},'Respaldo OpenAI':respuestaTexto({noticia:n})}}),/búsqueda web/);
+});
+test('noticia: radar acepta solo hechos del día con URLs realmente consultadas', () => {
+  const acepta=n=>run(codeOf(NOT,'Noticia candidata'),{nodes:{'Radar de noticia':{...respuestaTexto({noticia:n}),fuentes_consultadas:[fuenteNoticia().url]}}})[0].json.noticia;
+  assert.equal(acepta(noticiaFixture()).hechos.length,1);
+  for(const n of [null,{...noticiaFixture(),hechos:[]},{...noticiaFixture(),fecha:new Date(Date.now()-48*3600000).toISOString()},{...noticiaFixture(),fecha:new Date(Date.now()+3600000).toISOString()}, {...noticiaFixture(),hechos:[{id:'h1',dato:'rumor',fuentes:[{...fuenteNoticia(),url:'https://inventada.test/x'}]}]}]) assert.throws(()=>acepta(n),/Noticia detenida/);
+});
+test('noticia: verificador bloquea contradicciones, omisiones, fuentes inventadas y salida vacía', () => {
+  const n=noticiaFixture();
+  const valida=(value,r={})=>run(codeOf(NOT,'Noticia verificada'),{nodes:{Inicio:{canal_id:'c'},'Noticia candidata':{noticia:n},'Verificador de noticia':{...respuestaTexto(value),busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas,...r}}})[0].json.noticia;
+  assert.equal(valida({verificado:true,hechos:n.hechos}).verificado,true);
+  for (const value of [{},{verificado:false,hechos:n.hechos},{verificado:true,hechos:[]},{verificado:true,hechos:[{...n.hechos[0],estado:'contradictorio'}]},{verificado:true,hechos:[{...n.hechos[0],dato:'13 unidades'}]}]) assert.throws(()=>valida(value),/Noticia detenida/);
+  assert.throws(()=>valida({verificado:true,hechos:n.hechos},{fuentes_consultadas:[]}),/Noticia detenida/);
+});
+test('noticia: certificación cubre todo el guion y su huella rechaza cambios posteriores', () => {
+  const n=noticiaFixture(), guion={titulo:n.titulo,guion:'La medición es de 12 unidades.'};
+  const cert=covered=>run(codeOf(ORQ,'Certificar guion noticia'),{nodes:{Inicio:{resultado:guion},'Video (crítico)':{noticia:JSON.stringify(n)},'Verificar guion noticia':{...respuestaTexto({verificado:true,guion_cubierto:covered,hechos:n.hechos}),busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas}}})[0].json;
+  assert.throws(()=>cert(false),/afirmaciones sin verificar/);
+  const v={...cert(true),modo_noticia:true};
+  assert.doesNotThrow(()=>evaluarNoticia('exigirGuion($json.v,$json.g); return [{json:{ok:true}}];',{v,g:guion}));
+  assert.throws(()=>evaluarNoticia('exigirGuion($json.v,$json.g);',{v,g:{...guion,guion:'Son 13 unidades.'}}),/versión verificada/);
+  assert.throws(()=>evaluarNoticia('exigirGuion($json.v,null);',{v:{...v,noticia_guion_hash:''}}),/versión verificada/);
+});
+test('noticia: solo recursos didácticos propios; bloquea archivo, avatar y URLs de medios', () => {
+  const plano={id:'p1',tipo:'imagen',origen_visual:'generado',recurso_didactico:'cifra',prompt_imagen:'Diagrama de 12 unidades'};
+  assert.doesNotThrow(()=>evaluarNoticia('exigirVisuales($json);',{planos:[plano]}));
+  for(const bad of [{...plano,tipo:'archivo'},{...plano,tipo:'avatar'},{...plano,origen_visual:'medio'}, {...plano,referencia:'https://medio.test/foto.jpg'}, {...plano,recurso_didactico:'fotografia'}]) assert.throws(()=>evaluarNoticia('exigirVisuales($json);',{planos:[bad]}),/nunca imágenes de medios/);
+});
+test('noticia: las puertas no dependen del crítico y publicación consulta la fila persistida', () => {
+  const edges=(w,n)=>w.connections[n].main.flat().map(x=>x.node);
+  assert(edges(ORQ,'Video (crítico)').includes('¿Verificar guion noticia?'));
+  assert.deepEqual(ORQ.connections['¿Verificar guion noticia?'].main[0].map(x=>x.node),['Invalidar · Encargo de guion noticia entrada']);
+  assert.match(codeOf(ORQ,'Noticia · Canal (publicar) validar'),/exigirGuion\(v,null\)/);
+  assert.match(codeOf(PROD,'Noticia · Plan de producción validar'),/exigirGuion/);
+  assert.match(codeOf(wf('FabRedes00000001'),'Noticia · Subir a redes validar'),/exigirGuion/);
+  assert.match(codeOf(ORQ,'Nuevo video'),/typeof e.modo_noticia === 'boolean'/);
+});
+test('Cooper: modo noticia exige booleano y recurso autorizado', () => {
+  // Reutiliza el mismo contrato/fixture de autorización que el resto del puente.
+  const args={nodes:{Autenticar:{solicitud:{evento:'ajustar_biblia',datos:{id:'orden',recursoId:'c-ana',texto:'Activar',parametros:{campo:'modo_noticia',valor:true}}},dueno_email:'ana@example.test',admin:false},'Canales autorizados':{canal_id:'c-ana',dueno_email:'ana@example.test'},'Videos autorizados':{}}};
+  const result=run(codeOf(FX,'Resolver'),args)[0].json;
+  assert.equal(result.evento.campo,'modo_noticia'); assert.equal(result.evento.valor,'true');
+  args.nodes.Autenticar.solicitud.datos.parametros.valor='false';
+  assert.equal(run(codeOf(FX,'Resolver'),args)[0].json.status,400);
+  args.nodes.Autenticar.solicitud.datos.recursoId='ajeno';
+  assert.equal(run(codeOf(FX,'Resolver'),args)[0].json.status,404);
+});
+test('noticia: verifica storyboard completo e invalida certificados antes de corregir', () => {
+  const n=noticiaFixture(), storyboard={planos:[{id:'p1',tipo:'imagen',origen_visual:'generado',recurso_didactico:'cifra',prompt_imagen:'12 unidades'}]};
+  const cert=covered=>run(codeOf(ORQ,'Certificar storyboard noticia'),{nodes:{Inicio:{resultado:storyboard},'Video de storyboard noticia':{noticia:JSON.stringify(n)},'Verificar storyboard noticia':{...respuestaTexto({verificado:true,guion_cubierto:covered,hechos:n.hechos}),busqueda_real:true,fuentes_consultadas:n.fuentes_consultadas}}})[0].json;
+  assert.throws(()=>cert(false),/storyboard sin respaldo/);
+  const v={...cert(true),modo_noticia:true,noticia_guion_hash:'huella'};
+  assert.doesNotThrow(()=>evaluarNoticia('exigirStoryboard($json.v,$json.s);',{v,s:storyboard}));
+  assert.throws(()=>evaluarNoticia('exigirStoryboard($json.v,$json.s);',{v,s:{planos:[{...storyboard.planos[0],texto_pantalla:'13'}]}}),/storyboard distinto/);
+  for (const step of ['Claude: corregir','Claude: corregir (crítico)','Claude: storyboard corregido']) {
+    const flow=codeOf(ORQ,'Invalidar · '+step+' campos');
+    assert.match(flow,/noticia_storyboard_hash:''/);
   }
 });

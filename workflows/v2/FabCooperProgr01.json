@@ -51,7 +51,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const ETAPAS = {\"radar\": 0, \"guion\": 1, \"verificacion\": 2, \"aprobacion_guion\": 3, \"storyboard\": 4, \"produccion\": 5, \"sonido\": 6, \"montaje\": 7, \"calidad\": 8, \"aprobacion_final\": 9, \"programado\": 10, \"publicado\": 11};\n\nconst v = $('Inicio').first().json;\nreturn [{ json: { version:'cooper-v1', tipo:'progreso', id_evento: v.cooper_evento_id || ('video:' + v.video_id + ':' + v.updatedAt),\n  video: { id:v.video_id, dueno_email:v.dueno_email, canal_id:v.canal_id, titulo:String(v.tema || ''),\n    stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];\n"
+        "jsCode": "const ETAPAS = {\"radar\": 0, \"guion\": 1, \"verificacion\": 2, \"aprobacion_guion\": 3, \"storyboard\": 4, \"produccion\": 5, \"sonido\": 6, \"montaje\": 7, \"calidad\": 8, \"aprobacion_final\": 9, \"programado\": 10, \"publicado\": 11};\n\nconst v = $('Inicio').first().json;\nreturn [{ json: { version:'cooper-v1', tipo:'progreso', id_evento: v.cooper_evento_id || ('video:' + v.video_id + ':' + v.updatedAt),\n  video: { id:v.video_id, dueno_email:v.dueno_email, canal_id:v.canal_id, titulo:String(v.tema || ''),\n    modo_noticia:v.modo_noticia === true, stage:ETAPAS[v.etapa] ?? 0, script:String(v.guion_cooper || '').slice(0,30000), actualizado_en:Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt) } } }];\n"
       },
       "id": "84be3ae1-b084-5c11-88a4-a66af290d0a8",
       "name": "Progreso público",
