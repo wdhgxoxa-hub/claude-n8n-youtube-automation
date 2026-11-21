@@ -84,6 +84,7 @@ class RecoveryTest(unittest.TestCase):
         self.fail_start = False
         self.fail_restore = False
         self.current_override = {}
+        self.reference_override = {}
         case = self
 
         class Operator:
@@ -142,7 +143,7 @@ class RecoveryTest(unittest.TestCase):
         is_new = (self.target / 'compose.yaml').read_text().startswith('PUBLICO NUEVO')
         image = self.new_images[name]['imagen'] if is_new and name in self.new_images else self.services[name]['imagen']
         if fmt == '{{.Config.Image}}':
-            return image
+            return self.reference_override.get(name, image) if is_new else image
         self.assertEqual(fmt, '{{.Image}}')
         return self.current_override.get(name, self.references[image])
 
@@ -223,6 +224,28 @@ class RecoveryTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'servicio actual'):
             self.invoke()
         self.assert_no_cut()
+
+    def test_acepta_nombre_normalizado_por_podman_solo_con_id_del_digest_exacto(self):
+        self.reference_override = {name: value['imagen'].split('@', 1)[0] for name, value in self.new_images.items()}
+        # No existe esa referencia sin digest en el doble del motor: el helper
+        # debe seguir inspeccionando el digest ensayado, no una etiqueta móvil.
+        self.assertTrue(all(value not in self.references for value in self.reference_override.values()))
+        self.assertEqual(self.invoke()['estado'], 'PASS')
+        self.assertEqual(oplib.manifest(self.data), self.original)
+
+    def test_nombre_normalizado_no_acepta_otro_id(self):
+        self.reference_override['n8n'] = self.new_images['n8n']['imagen'].split('@', 1)[0]
+        self.current_override['n8n'] = '0' * 64
+        with self.assertRaisesRegex(RuntimeError, 'servicio actual'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_acepta_otro_alias_solo_si_id_del_digest_coincide_y_conserva_observacion(self):
+        self.reference_override['n8n'] = 'n8n:otra-etiqueta'
+        result = self.invoke()
+        self.assertEqual(result['estado'], 'PASS')
+        self.assertEqual(result['servicios_antes']['n8n']['imagen'], 'n8n:otra-etiqueta')
+        self.assertEqual(result['servicios_antes']['n8n']['id'], self.references[self.new_images['n8n']['imagen']])
 
     def test_rechaza_imagen_anterior_movida_sin_parar(self):
         self.references['n8n:old'] = '0' * 64

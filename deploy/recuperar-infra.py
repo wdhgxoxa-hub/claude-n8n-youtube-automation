@@ -99,7 +99,11 @@ def validate(op, receipt_path, expected, output):
             expected_id = inspect_image(op, reference)
         else:
             reference, expected_id = item['imagen'], old_id
-        operar.require(current[name] == {'imagen': reference, 'id': expected_id}, 'El servicio actual no corresponde al recibo')
+        # Config.Image puede ser una etiqueta/alias normalizada por el motor.
+        # La identidad es el ID del contenedor frente al ID inspeccionado desde
+        # la referencia EXACTA del recibo (con digest para infraestructura).
+        # El texto observado queda en el recibo, sin inferir identidad por él.
+        operar.require(current[name]['id'] == expected_id, 'El servicio actual no corresponde al recibo')
     infra.no_running(op)
     return receipt, backup, current
 
