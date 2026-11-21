@@ -133,7 +133,7 @@ test("Sistema Sentinel: recorridos, caos y estabilidad sobre sesión local", asy
           {
             env: {
               ...process.env,
-              PLAYWRIGHT_BROWSERS_PATH: `${process.env.HOME}/.cache/ms-playwright`,
+              PLAYWRIGHT_BROWSERS_PATH: resolve(".cache/sentinel-browsers"),
             },
             detached: true,
           },

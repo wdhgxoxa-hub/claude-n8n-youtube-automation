@@ -209,7 +209,7 @@ test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", a
         const child = spawn(python, ["scripts/sentinel-cooper.py", config], {
           env: {
             ...process.env,
-            PLAYWRIGHT_BROWSERS_PATH: `${process.env.HOME}/.cache/ms-playwright`,
+            PLAYWRIGHT_BROWSERS_PATH: resolve(".cache/sentinel-browsers"),
           },
           detached: true,
         });
