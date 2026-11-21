@@ -203,3 +203,10 @@ y `git diff --check`: PASS. No se ejecutó Playwright local por faltar la caché
 de navegadores preparada; el integrador solicitó el commit inmediatamente para
 repetir la puerta y las rondas en su imagen CI con bibliotecas completas. Esta
 revisión estática no se presenta como aceptación E2E.
+
+Commit `965682b`: se corrigió del mismo modo la tercera aserción global del
+contador, en `resultados.spec.ts`. El barrido de toda la carpeta E2E confirmó
+que los demás selectores de `status` ya distinguen el mensaje mediante nombre
+accesible o texto, o están acotados a su recurso. Se conservaron sin cambios.
+El error-context de la puerta confirma la misma ambigüedad entre banner y
+contenido; ESLint focal con cero advertencias y `git diff --check`: PASS.
