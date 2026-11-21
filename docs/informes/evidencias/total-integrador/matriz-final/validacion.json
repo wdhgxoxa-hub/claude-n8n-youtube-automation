@@ -1,0 +1,18 @@
+{
+  "estado": "PASS",
+  "objetivo": "012322a690be3cdbcbccc58179d6efa40eb8194b",
+  "refs_csv_json": 76,
+  "refs_unicas": 76,
+  "sha_validos": 76,
+  "evidencias_csv_json_identicas": true,
+  "pendientes_funcionales_de_integracion": 0,
+  "comprobaciones_falsas": 0,
+  "git_diff_check_rc": 0,
+  "archivos": {
+    "ramas.json": "0dc34e19d95e96dd35f72ca7e7fae80e0d8c3516e2e4eadfc0dde9d16370fc18",
+    "ramas.csv": "11342382601af3a91dbcd6615e8716b84b214748cb2b26cd0f557c937ae3eb8a"
+  },
+  "nuevas_pruebas_aplicacion": false,
+  "vps_consultado": false,
+  "formato_csv": "LF; primer control staged detect\u00f3 CRLF y se normaliz\u00f3 antes de cerrar"
+}
