@@ -6,6 +6,18 @@
 credentials/
 *.key
 *.pem
+*.p12
+*.pfx
+credenciales/
+n8n-api-key*
+google-oauth-client*.json
+
+# Datos y artefactos locales, también fuera de cooper/.
+.cache/
+data/
+*.sqlite
+*.sqlite-*
+__pycache__/
 
 # Unsanitized exports. Keep raw n8n exports out of the repo.
 *.local.json

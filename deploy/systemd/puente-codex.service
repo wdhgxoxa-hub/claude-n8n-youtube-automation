@@ -5,10 +5,10 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=%h/.local/lib/cooper/puente-codex
-EnvironmentFile=%h/.config/cooper/codex.env
+WorkingDirectory=%h/.local/share/cooper/app/servicios/puente-codex
+EnvironmentFile=%h/.config/cooper/cooper.env
 Environment=PATH=/usr/bin:/bin:%h/.local/bin
-ExecStart=/usr/bin/node %h/.local/lib/cooper/puente-codex/server.mjs
+ExecStart=/usr/bin/node %h/.local/share/cooper/app/servicios/puente-codex/server.mjs
 Restart=on-failure
 RestartSec=5
 TimeoutStopSec=10
