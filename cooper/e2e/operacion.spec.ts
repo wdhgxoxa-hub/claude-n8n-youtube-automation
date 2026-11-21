@@ -98,7 +98,11 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
   await expect(
     page.getByRole("link", { name: "Competidor ficticio 1", exact: true }),
   ).toBeVisible();
-  await expect(page.getByText("600 vistas", { exact: false })).toBeVisible();
+  const destacado = page
+    .getByRole("link", { name: "Publicación de ensayo" })
+    .locator("..");
+  await expect(destacado).toBeVisible();
+  await expect(destacado).toContainText("600 vistas");
   await expect(
     page.getByRole("link", {
       name: "Fuente de identidad de Competidor ficticio 1",
@@ -113,7 +117,11 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
   await expect(
     page.getByRole("link", { name: "Muestra ficticia 1-1" }),
   ).toHaveAttribute("href", "https://www.youtube.com/shorts/ensayo10");
-  await expect(page.getByText("100 vistas", { exact: false })).toBeVisible();
+  const muestra = page.getByRole("listitem").filter({
+    has: page.getByRole("link", { name: "Muestra ficticia 1-1", exact: true }),
+  });
+  await expect(muestra).toBeVisible();
+  await expect(muestra).toContainText("100 vistas");
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
     expect(
