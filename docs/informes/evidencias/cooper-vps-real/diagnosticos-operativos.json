@@ -1,0 +1,7 @@
+{
+  "runner_aviso": "Broker no disponible durante la copia fria; reconexion y healthcheck posteriores PASS",
+  "cooper_error": "Solicitud Server Action con identificador malformado y; origen no atribuido; salud posterior PASS",
+  "caddy_avisos": "Listener HTTP de redireccion; parada controlada por copia; respuestas canceladas por sondeos externos de rutas inexistentes",
+  "puerta_proyecto": "0 errores y 0 advertencias",
+  "logs_produccion": "Contienen los diagnosticos descritos; no se borraron ni se cuentan como pruebas aprobadas"
+}

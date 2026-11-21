@@ -1,0 +1,10 @@
+{
+  "fecha": 1795271089,
+  "hmac_desde_runner": "PASS",
+  "hmac_invalido": 401,
+  "operacion_hmac": "consulta sin reservar ni despachar",
+  "cooper_a_n8n_estado": "PASS",
+  "canales": 2,
+  "videos": 5,
+  "ejecucion": "consulta via workflow original y runner externo"
+}

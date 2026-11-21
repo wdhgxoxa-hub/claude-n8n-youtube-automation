@@ -1,0 +1,9 @@
+{
+  "fecha": 1795270477.6126382,
+  "pc_detenida": true,
+  "reinicio_n8n": "no",
+  "cooper_habilitado": false,
+  "puente_codex": "sin cambios",
+  "restauracion_politica_n8n": "unless-stopped",
+  "restauracion_cooper": "enable --now"
+}

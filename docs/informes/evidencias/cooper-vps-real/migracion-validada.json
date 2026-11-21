@@ -1,0 +1,12 @@
+{
+  "hashes_importacion": "PASS",
+  "conteos_importacion": "PASS",
+  "archivos": 10,
+  "tablas": 209,
+  "workflows": 34,
+  "data_tables": 9,
+  "entradas_pausadas": 10,
+  "publicados": 22,
+  "filas_data_tables_credenciales_workflows": "PASS",
+  "puente_publicado": "PASS"
+}

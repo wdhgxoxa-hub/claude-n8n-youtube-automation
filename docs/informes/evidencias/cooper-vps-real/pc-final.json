@@ -1,0 +1,16 @@
+{
+  "fecha": 1795271146,
+  "contenedores": {
+    "videos-n8n": {
+      "estado": "exited",
+      "reinicio": "no"
+    },
+    "videos-n8n-runner": {
+      "estado": "exited",
+      "reinicio": "no"
+    }
+  },
+  "cooper_is-active": "inactive",
+  "cooper_is-enabled": "disabled",
+  "puente_codex_pc": "active"
+}

@@ -1,0 +1,17 @@
+{
+  "fecha": 1795271248,
+  "dns": {
+    "cooper.cooperestudio.com": "IPv4 del VPS",
+    "flujos.cooperestudio.com": "IPv4 del VPS"
+  },
+  "puertos": {
+    "22": "accesible",
+    "80": "accesible",
+    "443": "accesible",
+    "8443": "no accesible",
+    "3000": "no accesible",
+    "5678": "no accesible",
+    "5679": "no accesible",
+    "8789": "no accesible"
+  }
+}

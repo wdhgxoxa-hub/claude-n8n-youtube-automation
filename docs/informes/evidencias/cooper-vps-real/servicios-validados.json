@@ -1,0 +1,38 @@
+{
+  "fecha": 1795271089,
+  "servicios": {
+    "cooper-cooper-1": "healthy",
+    "cooper-n8n-1": "healthy",
+    "cooper-runner-1": "healthy",
+    "cooper-caddy-1": "healthy"
+  },
+  "chat": "codex-local; modo basico temporal; respaldo API bloqueado",
+  "whatsapp_pausa": true,
+  "whatsapp_app_secret_presente": false,
+  "google_id_y_secret_presentes": true,
+  "credenciales_suscripcion_copiadas": false,
+  "puertos": {
+    "443/tcp": [
+      {
+        "HostIp": "0.0.0.0",
+        "HostPort": "443"
+      }
+    ],
+    "80/tcp": [
+      {
+        "HostIp": "0.0.0.0",
+        "HostPort": "80"
+      }
+    ],
+    "8443/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "8443"
+      }
+    ]
+  },
+  "editor_privado_https": "PASS",
+  "backup_timer": "enabled/active; 08:00 UTC + demora aleatoria <=15 minutos",
+  "servicios_sistema": "PASS",
+  "ssh": "solo llaves; root y contrasena deshabilitados"
+}

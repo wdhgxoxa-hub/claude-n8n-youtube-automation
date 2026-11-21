@@ -1,0 +1,26 @@
+{
+  "fecha": 1795271159,
+  "snapshot": "a7a1ee642b140b179d182e48dfbc756f2d84c85f6680b3205d37ed6cdec97e43",
+  "segunda_restauracion": "PASS",
+  "restic_check_read_data": "PASS",
+  "destino_aislado": "/var/lib/cooper-operacion/restauracion-final-vps/datos",
+  "servicios_healthy": true,
+  "workflows": 34,
+  "publicados": 22,
+  "data_tables": 9,
+  "ejecuciones_activas": 0,
+  "esperas_historicas": 2,
+  "unidades_systemd_fallidas": false,
+  "cooper-n8n-1_log_diagnosticos": {
+    "error": 0,
+    "warn": 0
+  },
+  "cooper-runner-1_log_diagnosticos": {
+    "error": 0,
+    "warn": 1
+  },
+  "cooper-cooper-1_log_diagnosticos": {
+    "error": 1,
+    "warn": 0
+  }
+}

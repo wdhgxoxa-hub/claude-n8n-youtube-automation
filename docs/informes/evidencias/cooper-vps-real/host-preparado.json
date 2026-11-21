@@ -1,0 +1,26 @@
+{
+  "fecha": 1795269950.323938,
+  "ubuntu": "24.04",
+  "arquitectura": "x86_64",
+  "cpu": 4,
+  "memoria_kib": 8131756,
+  "operador_segunda_sesion": "PASS",
+  "permit_root_login": "no",
+  "password_authentication": "no",
+  "kbd_interactive_authentication": "no",
+  "allow_tcp_forwarding": "local",
+  "puertos_ufw": [
+    22,
+    80,
+    443
+  ],
+  "docker": "29.10.0",
+  "fail2ban": "active",
+  "actualizaciones": "PASS",
+  "reinicio_requerido": false,
+  "imagen_config_sha256": "e8226b1db7f4f6f4a47526bf2fd4fc4597f8414bd37f47f17036f953cfbfe16e",
+  "imagen_manifest_sha256": "4c3c8c1f5560c371bf79ebd52a4cd83942468f4620dfe10eb38460505cc223a4",
+  "imagen_archivo_sha256": "c3de10164018929c3283a140056413a8c832089a032027fcb161bd80578c72d7",
+  "imagen_transferida_verificada": "PASS",
+  "configuracion_compose": "PASS"
+}
