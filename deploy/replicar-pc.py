@@ -46,7 +46,7 @@ def replicate(args):
     operar.require(re.fullmatch(r'[a-z_][a-z0-9_-]*@[a-zA-Z0-9.-]+', args.servidor), 'Servidor SSH inválido')
     key = args.llave.expanduser().resolve()
     operar.private_file(key)
-    ssh = ['ssh', '-i', str(key), '-o', 'BatchMode=yes', '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'ConnectTimeout=15']
+    ssh = ['ssh', '-F', '/dev/null', '-i', str(key), '-o', 'BatchMode=yes', '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'ConnectTimeout=15']
     with (root / 'replica.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         generations = root / 'generaciones'

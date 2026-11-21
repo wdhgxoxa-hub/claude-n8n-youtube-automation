@@ -10,4 +10,5 @@ UMask=0077
 TimeoutStartSec=2h
 Nice=10
 NoNewPrivileges=yes
-PrivateTmp=yes
+# PrivateTmp en servicios de usuario crea un mapa UID limitado: restic no puede
+# restaurar metadatos del UID 1001 del VPS. Los temporales ya son privados 0700.
