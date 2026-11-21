@@ -1,0 +1,42 @@
+[
+  {
+    "archivo": "competencia-vidiq-invocacion2.json",
+    "sha256": "1286a11b1e3b8e444ac71bbf37216bdacb6bd925dbeecbcfa604b38d83878978"
+  },
+  {
+    "archivo": "competencia-vidiq-diagnostico2.json",
+    "sha256": "04be65ba48d9ee7218e00eba0a2b229502ec0d445f8c9f000746b43c7dbf3f89"
+  },
+  {
+    "archivo": "competencia-youtube-invocacion.json",
+    "sha256": "0c44f673696ba9e985524b8683ad0f97bf1b73402a0b713d3b932859ee604116"
+  },
+  {
+    "archivo": "competencia-youtube-diagnostico.json",
+    "sha256": "cd55d13bc7879162bc39196c5625c721d13548535ff4c14d85249e661f6b214b"
+  },
+  {
+    "archivo": "competencia-radar-invocacion.json",
+    "sha256": "14b3127f2ac75bda6b4b164bc10bd98e82022a51888b35c9041c3dfb4a7658bb"
+  },
+  {
+    "archivo": "competencia-radar-diagnostico.json",
+    "sha256": "02e76796f33c0c7c3c19708659f7bf044feef865ac7fba8f06eb59e42ee9e280"
+  },
+  {
+    "archivo": "competencia-radar-proyeccion.json",
+    "sha256": "e964347f3877e934b808b13c71d3ab03fcef9773760efa0dd5337e380707d311"
+  },
+  {
+    "archivo": "competencia-chat-contexto-real.json",
+    "sha256": "dff986500e2be01f448c086ecb65602e934ed33a6d1e97c068deaae725746ad0"
+  },
+  {
+    "archivo": "competencia-limpieza.json",
+    "sha256": "f6dba62db155be4e10db885d5fea8acd01c713be783fea36b00db54e5b3d1eb5"
+  },
+  {
+    "archivo": "flujos-youtube.log",
+    "sha256": "908065b66959841fbf80ca106da4483090054a9836137fff2bad91254f8ce556"
+  }
+]
