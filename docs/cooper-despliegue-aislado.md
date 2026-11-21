@@ -56,6 +56,8 @@ posteriores antes de recuperar `respaldo/` y la imagen de `anterior.json`.
 Conservar el directorio original del intento y no ejecutar la imagen vieja
 contra un diario de migraciones nuevo.
 
+La recuperación ejecutable posterior a PASS usa ahora el [extra preparado y sellado por recibo](cooper-recuperacion-app.md). Su preparación debe preceder al actualizador y su sello preceder a infraestructura/n8n. No usar el puntero global de `revertir.sh`; conservar el bundle certificado intacto.
+
 ## Aceptación pública sin OAuth
 
 ```bash

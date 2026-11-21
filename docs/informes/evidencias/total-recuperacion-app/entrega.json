@@ -1,0 +1,34 @@
+{
+  "estado": "PROBADO_LOCAL",
+  "extra": "recuperar-app.py",
+  "extra_sha256": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04",
+  "dependencias": {
+    "extra": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04",
+    "operar": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "actualizador": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+    "recuperador_infra": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+    "aplicador_infra": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c"
+  },
+  "archivos_certificados_intactos": {
+    "operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "actualizar-solo-cooper.py": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+    "aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+    "recuperar-infra.py": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "compose.chat.yaml": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "regresiones": 241,
+  "focales": 20,
+  "advertencias": 0,
+  "recibos": {
+    "real-7.json": "1e5d15bef35efc9e0f910440d28b3d681fb5a76bae542e9b20874948dd6431ee",
+    "focal.log": "7d9a0b80ae582c747401cce036e105333bfa359fa8ab39f47960939fc76142a3",
+    "regresiones.log": "2c44a3ea760c841d2306b56254379732dbd76d8136465e328cd689646a26ebe6",
+    "intentos.json": "fd52ae79c8e30975ff03a8585cbbaeed081b840a1c02de76f46c7463ad2ba65a"
+  },
+  "no_se_modifica_bundle": true,
+  "no_vps": true
+}

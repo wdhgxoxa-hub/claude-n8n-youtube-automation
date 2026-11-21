@@ -1,0 +1,33 @@
+{
+  "intentos_previos": [
+    {
+      "estado": "FALLO",
+      "limpieza": "PASS",
+      "causa": "Plantilla Podman json .Id no admitida",
+      "antes_de_aplicar": true,
+      "codigo": {
+        "extra": "2495ced7199232372993fd77cd2084d265def801dcfad2dcad302923e8a49ba1",
+        "operar": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+        "actualizador": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+        "recuperador_infra": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+        "aplicador_infra": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c"
+      },
+      "recibo_original_sha256": "fffd9f403d8ebf788595c3d003daa046eb5b245a729dc4204c12777ba711010c"
+    },
+    {
+      "estado": "FALLO",
+      "limpieza": "PASS",
+      "causa": "Prefijo sha256 diferente entre inspect y referencia",
+      "antes_de_aplicar": true,
+      "codigo": {
+        "extra": "b100ad9d9c297168e6fa425f2c1d83fb50965bb0a02eec2ef17b551e9ea40ff4",
+        "operar": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+        "actualizador": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+        "recuperador_infra": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+        "aplicador_infra": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c"
+      },
+      "recibo_original_sha256": "4042892859d975cb72ea7f7a7c1935dc5b8dee3c10d60d8d4677a4c1eee24abf"
+    }
+  ],
+  "tercer_intento": "PASS"
+}

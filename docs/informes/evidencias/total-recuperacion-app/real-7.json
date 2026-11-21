@@ -1,0 +1,258 @@
+{
+  "estado": "PASS",
+  "codigo": {
+    "extra": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04",
+    "operar": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "actualizador": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+    "recuperador_infra": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+    "aplicador_infra": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c"
+  },
+  "codigo_final": {
+    "extra": "32676c66f973f63eb8a6e0c8928847613283313a4a43744d79bf86f4f7c37f04",
+    "operar": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "actualizador": "74726191a82432cc966ad83fe2e867c93f74ae9e2fd3853f9f177fb70cff758a",
+    "recuperador_infra": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+    "aplicador_infra": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c"
+  },
+  "arnes_sha256": "9751f3f8862c6c578a3fd0228f2d38489a301bfbe14b4edd6dd38661bfa2fd95",
+  "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "artefacto_sha256": "9ea269e6746e197c5626ae04fa6835bbcf9eb18274d7d0192225582e8e493d20",
+  "vps_accedido": false,
+  "cinco_identidades_y_arranques_intactos": true,
+  "datos_anteriores_restaurados": true,
+  "datos_posteriores_archivados_y_restaurables": true,
+  "anterior_global_ausente": true,
+  "limpieza": "PASS",
+  "antes": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+        "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+        "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.2-alpine",
+        "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026533912]",
+        "chat-cooper": "net:[4026533912]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534030]",
+        "chat-n8n": "net:[4026534030]"
+      },
+      "runner": {
+        "runner": "net:[4026534103]",
+        "chat-runner": "net:[4026534103]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "aplicada": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+        "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+        "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.2-alpine",
+        "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026533912]",
+        "chat-cooper": "net:[4026533912]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534030]",
+        "chat-n8n": "net:[4026534030]"
+      },
+      "runner": {
+        "runner": "net:[4026534103]",
+        "chat-runner": "net:[4026534103]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "recuperada": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+        "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+        "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.2-alpine",
+        "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534018]",
+        "chat-cooper": "net:[4026534018]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534030]",
+        "chat-n8n": "net:[4026534030]"
+      },
+      "runner": {
+        "runner": "net:[4026534103]",
+        "chat-runner": "net:[4026534103]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "fecha_lima": "2026-11-21T17:21:17.999788-05:00",
+  "fuente": "012322a",
+  "migraciones_antes": 11,
+  "migraciones_despues": 14,
+  "tablas_anteriores_conservadas": 28,
+  "preparacion_sha256": "32d3d7acf279c63794de7a3e0783fe4b241b5cd36a47d4065d111d3aaa77c9af",
+  "sello_sha256": "5bf7402e856c4f264108d4f0c92a25fb8eb88933e44bbe27a2c06cc5b96552d8",
+  "recuperacion_sha256": "c4a51d2a11e169d666e54a430a8eb2fbce795118b77f965bdf51bc9851a8d383",
+  "original_integral_sha256": "4c01fb937537711f89a13152db8f70bb691b215eae776d8e485ff91f0cb7713d",
+  "manifiesto_respaldo_sha256": "b86c7591e58af3a0c2ea9f1fe5b1d73050bd6f8d1c035d5d39b35c5792703a57",
+  "manifiesto_desplazado_sha256": "7645d1e3863ed8f5a754db9b194cde0ba6ce66c59623534e4d70b2c67a87f536",
+  "entradas_manifiesto_respaldo": 4,
+  "entradas_manifiesto_desplazado": 5,
+  "cinco_servicios_antes": {
+    "n8n": {
+      "contenedor": "2a5c56362ae07abbd5971481c34762a42d4ccad4c756dd5c34eb34dcfa1530f6",
+      "imagen_id": "sha256:f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+      "inicio": "2026-11-21T17:18:34.260720879-05:00",
+      "salud": "healthy"
+    },
+    "runner": {
+      "contenedor": "3a45d2b76f2baf1a77cc7f1ce30f27619b4ba267b9d6e79db7efaa42190ff633",
+      "imagen_id": "sha256:fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0",
+      "inicio": "2026-11-21T17:18:50.406636439-05:00",
+      "salud": "healthy"
+    },
+    "caddy": {
+      "contenedor": "47538b44c40862b8418442bafe854f8544e988c225fad2e00da9ab248852505a",
+      "imagen_id": "sha256:2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90",
+      "inicio": "2026-11-21T17:18:50.53531368-05:00",
+      "salud": "healthy"
+    },
+    "chat-n8n": {
+      "contenedor": "44ef94f381431318df70794082347897b9300953f976f47059ae7c58bbae5ad7",
+      "imagen_id": "sha256:f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d",
+      "inicio": "2026-11-21T17:18:50.656533299-05:00",
+      "salud": "healthy"
+    },
+    "chat-runner": {
+      "contenedor": "d148ebf13377ddf8623efa817a74ed5db854645d9edf11ef0dd1653cf2df8056",
+      "imagen_id": "sha256:f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d",
+      "inicio": "2026-11-21T17:18:51.032056194-05:00",
+      "salud": "healthy"
+    }
+  },
+  "cinco_servicios_despues": {
+    "n8n": {
+      "contenedor": "2a5c56362ae07abbd5971481c34762a42d4ccad4c756dd5c34eb34dcfa1530f6",
+      "imagen_id": "sha256:f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+      "inicio": "2026-11-21T17:18:34.260720879-05:00",
+      "salud": "healthy"
+    },
+    "runner": {
+      "contenedor": "3a45d2b76f2baf1a77cc7f1ce30f27619b4ba267b9d6e79db7efaa42190ff633",
+      "imagen_id": "sha256:fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0",
+      "inicio": "2026-11-21T17:18:50.406636439-05:00",
+      "salud": "healthy"
+    },
+    "caddy": {
+      "contenedor": "47538b44c40862b8418442bafe854f8544e988c225fad2e00da9ab248852505a",
+      "imagen_id": "sha256:2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90",
+      "inicio": "2026-11-21T17:18:50.53531368-05:00",
+      "salud": "healthy"
+    },
+    "chat-n8n": {
+      "contenedor": "44ef94f381431318df70794082347897b9300953f976f47059ae7c58bbae5ad7",
+      "imagen_id": "sha256:f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d",
+      "inicio": "2026-11-21T17:18:50.656533299-05:00",
+      "salud": "healthy"
+    },
+    "chat-runner": {
+      "contenedor": "d148ebf13377ddf8623efa817a74ed5db854645d9edf11ef0dd1653cf2df8056",
+      "imagen_id": "sha256:f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d",
+      "inicio": "2026-11-21T17:18:51.032056194-05:00",
+      "salud": "healthy"
+    }
+  },
+  "manifiestos_completos_publicados": false,
+  "limite": "Podman rootless con adaptación de transporte/namespaces, rutas y salud HTTP interna; no Docker VPS ni reboot."
+}
