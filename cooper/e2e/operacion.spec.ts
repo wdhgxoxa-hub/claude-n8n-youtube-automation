@@ -34,10 +34,15 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
   await expect(
     page.getByRole("heading", { name: "Competencia e identidad" }),
   ).toBeVisible();
+  const competencia = page.getByRole("region").filter({
+    has: page.getByRole("heading", {
+      name: "Competencia e identidad",
+      exact: true,
+    }),
+  });
+  await expect(competencia).toHaveCount(1);
   await expect(
-    page
-      .getByRole("region", { name: "Competencia de Ciencia", exact: true })
-      .getByText("Por investigar", { exact: true }),
+    competencia.getByText("Por investigar", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Cuentas con el mismo nombre" }),
