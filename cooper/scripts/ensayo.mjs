@@ -68,7 +68,7 @@ try {
   });
   n8n = await startN8n(appPort);
   console.log(
-    `Ensayo: ${CONTAINER}, n8n 2.47.4, ${n8n.url}; volumen ${n8n.run}/n8n`,
+    `Ensayo: ${CONTAINER}, n8n ${n8n.version}, ${n8n.url}; volumen ${n8n.run}/n8n`,
   );
   const { api } = n8n;
   pass("instancia aislada y propietario ficticio por REST");

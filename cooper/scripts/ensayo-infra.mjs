@@ -1,7 +1,13 @@
 import { spawn, execFileSync } from "node:child_process";
 import { createServer } from "node:net";
 import { createInterface } from "node:readline";
-import { mkdirSync, mkdtempSync, writeFileSync, existsSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  writeFileSync,
+  existsSync,
+  readFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { resolve } from "node:path";
 import { randomBytes } from "node:crypto";
@@ -10,7 +16,29 @@ import { N8nApi } from "../../tools/cooper/n8n-api.mjs";
 export const ADMIN = "wdhg.xoxa@gmail.com";
 export const OTHER = "ana@example.test";
 export const CONTAINER = "cooper-ensayo-n8n";
-const IMAGE = "ghcr.io/n8n-io/n8n:2.47.4";
+const n8n = JSON.parse(
+  readFileSync(
+    new URL("../../deploy/infra-imagenes.json", import.meta.url),
+    "utf8",
+  ),
+).servicios.n8n;
+const imagenes = [n8n.imagen, n8n.anterior];
+const referencia =
+  /^ghcr\.io\/n8n-io\/n8n:(\d+\.\d+\.\d+)@sha256:[a-f0-9]{64}$/;
+if (
+  imagenes.some(
+    (imagen) => typeof imagen !== "string" || !referencia.test(imagen),
+  )
+)
+  throw new Error("El ensayo requiere imágenes oficiales fijadas por digest");
+export const N8N_IMAGE = process.env.COOPER_ENSAYO_N8N_IMAGEN ?? n8n.imagen;
+if (!imagenes.includes(N8N_IMAGE))
+  throw new Error(
+    "La imagen de ensayo debe ser la candidata o la anterior del manifiesto",
+  );
+export const N8N_VERSION = referencia.exec(N8N_IMAGE)[1];
+if (referencia.exec(n8n.imagen)[1] !== n8n.version)
+  throw new Error("La versión candidata no coincide con su referencia");
 export const secret = () => randomBytes(32).toString("hex");
 export const podman = (...args) =>
   execFileSync("podman", args, {
@@ -113,20 +141,24 @@ export async function startN8n(appPort, { credencialFicticia = false } = {}) {
     "cooper.ensayo=true",
     "--network",
     "cooper-ensayo-red",
+    "--cpus",
+    "0.5",
+    "--pull",
+    "never",
     "-p",
     `127.0.0.1:${port}:5678`,
     "-v",
     `${run}/n8n:/home/node/.n8n:U,Z`,
     "--env-file",
     envPath,
-    IMAGE,
+    N8N_IMAGE,
   );
   try {
     const url = `http://127.0.0.1:${port}`;
     writeFileSync(
       `${root}/actual.json`,
       JSON.stringify(
-        { run, port, appPort, container: CONTAINER, image: IMAGE },
+        { run, port, appPort, container: CONTAINER, image: N8N_IMAGE },
         null,
         2,
       ),
@@ -142,7 +174,7 @@ export async function startN8n(appPort, { credencialFicticia = false } = {}) {
       "n8n listo",
       60000,
     );
-    if (podman("exec", CONTAINER, "n8n", "--version") !== "2.47.4")
+    if (podman("exec", CONTAINER, "n8n", "--version") !== N8N_VERSION)
       throw new Error("Versión de n8n inesperada");
     podman(
       "exec",
@@ -183,9 +215,10 @@ export async function startN8n(appPort, { credencialFicticia = false } = {}) {
       lastName: "Local",
       password: `Aa1!${secret().slice(0, 40)}`,
     });
-    const scopes = (await rest("/api-keys/scopes")).filter((s) =>
-      /^(dataTable|workflow|execution)/.test(s) ||
-      (credencialFicticia && s === "credential:create"),
+    const scopes = (await rest("/api-keys/scopes")).filter(
+      (s) =>
+        /^(dataTable|workflow|execution)/.test(s) ||
+        (credencialFicticia && s === "credential:create"),
     );
     const key = (
       await rest("/api-keys", {
@@ -194,7 +227,14 @@ export async function startN8n(appPort, { credencialFicticia = false } = {}) {
         expiresAt: Math.floor(Date.now() / 1000) + 86400,
       })
     ).rawApiKey;
-    return { api: new N8nApi(url, key), url, env, run, key };
+    return {
+      api: new N8nApi(url, key),
+      url,
+      env,
+      run,
+      key,
+      version: N8N_VERSION,
+    };
   } catch (error) {
     podman("stop", CONTAINER);
     throw error;
