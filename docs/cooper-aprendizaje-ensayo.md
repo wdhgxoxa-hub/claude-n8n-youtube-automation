@@ -28,6 +28,10 @@ sh /ruta/ejecutar_ensayo_aprendizaje.sh CoopEnsayoApr01
 
 El wrapper devuelve únicamente el código de salida. Deshabilita conservación de ejecuciones y descarta stdout/stderr, incluidos errores. Ambos workflows también llevan `saveDataSuccessExecution=none`, `saveDataErrorExecution=none`, `saveManualExecutions=false` y `saveExecutionProgress=false`, sin error workflow. No consultar ni volcar `runData` para verificarlo.
 
+Cuando la instancia usa runners externos, la CLI necesita su propio broker. No detener el runner del servicio ni cambiarlo a modo interno. En el host VPS se prepara `tools/cooper/ejecutar_cli_aislada.py` y se ejecuta como operador con `sudo -n python3 /ruta/ejecutar_cli_aislada.py CoopEnsayoApr01`. El helper reserva su ejecución con un lock, usa broker `5689`, launcher `5688` y health JS `5687`, y termina únicamente el launcher temporal. La autenticación del runner se hereda dentro del contenedor; no se extraen variables ni se pasan tokens a la línea de comandos. Los Code nodes temporales no reciben las variables privadas de Cooper. La salida conserva solo código CLI y metadata de ejecución; exige además observar datos nuevos en la tabla. No interpretar un código 0 sin evidencia como un ensayo correcto.
+
+Referencias oficiales: [runners externos](https://docs.n8n.io/deploy/host-n8n/configure-n8n/set-up-task-runners.md), [variables de puertos](https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/task-runners.md) y [configuración del launcher](https://github.com/n8n-io/task-runner-launcher/blob/main/docs/setup.md).
+
 Comprobar mediante proyecciones de las tablas, sin columnas de credenciales:
 
 - Historial y fecha nuevos por video/red. Un contador cero es válido; un dato ausente sigue siendo `null`. YouTube puede tardar en entregar informes.

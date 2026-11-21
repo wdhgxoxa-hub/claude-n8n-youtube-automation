@@ -2040,6 +2040,7 @@ test('aprendizaje del plan: PC caída reintenta evidencia sin nueva métrica y e
 
 test('reconciliación YouTube: identidad confirmada, reversa y ninguna otra columna modificada',()=>{
  execFileSync('python3',[path.join(__dirname,'test_reconciliar_aprendizaje.py')],{stdio:'pipe'});
+ execFileSync('python3',[path.join(__dirname,'test_cli_aprendizaje.py')],{stdio:'pipe'});
 });
 
 test('aceptación del plan: lección real validada y siguiente guion lee IDs sin crear un video',async()=>{
