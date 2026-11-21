@@ -1,4 +1,5 @@
 """CLI n8n + runner externo efímero, sin extraer entorno ni guardar salida cruda."""
+from contextlib import closing
 import json
 import subprocess
 import sys
@@ -27,7 +28,7 @@ def configuracion(wid):
 def ejecutar(wid, base='file:/var/lib/cooper/n8n/database.sqlite?mode=ro'):
  if wid not in ['CoopEnsayoApr01','CoopEnsayoLec01','CoopSondaVidIQ01','CoopSondaYtComp1','CoopRadarReal001']:
   raise ValueError('ID no autorizado')
- with sqlite3.connect(base,uri=True) as c:
+ with closing(sqlite3.connect(base,uri=True)) as c:
   previo=c.execute('SELECT COALESCE(MAX(id),0) FROM execution_entity').fetchone()[0]
  ruta='/tmp/cooper-ensayo-runner.json'
  subprocess.run(['docker','exec','-i','cooper-runner-1','sh','-c','cat > '+ruta],input=json.dumps(configuracion(wid)).encode(),check=True)
@@ -43,7 +44,7 @@ def ejecutar(wid, base='file:/var/lib/cooper/n8n/database.sqlite?mode=ro'):
    '-e','EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=false','-e','EXECUTIONS_DATA_SAVE_ON_PROGRESS=false',
    '-e','N8N_LOG_LEVEL=error','cooper-n8n-1','timeout','260','n8n','execute','--id',wid]
   r=subprocess.run(cli,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=300)
-  with sqlite3.connect(base,uri=True) as c:
+  with closing(sqlite3.connect(base,uri=True)) as c:
    ejecuciones=[{'id':e[0],'estado':e[1]} for e in c.execute('SELECT id,status FROM execution_entity WHERE id>? AND workflowId=? ORDER BY id',(previo,wid))]
   return {'workflow':wid,'codigo_cli':r.returncode,'launcher_codigo_previo':runner.poll(),'ejecuciones':ejecuciones,'runner_externo_aislado':True,'salida_cruda_descartada':True}
  finally:

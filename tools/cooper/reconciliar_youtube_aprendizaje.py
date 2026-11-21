@@ -4,6 +4,7 @@
 Por defecto solo informa. --aplicar prueba escritura/reversa/reaplicación en una
 transacción y guarda el valor previo en un diario nuevo. Requiere exclusiva operativa.
 """
+from contextlib import closing
 import argparse
 import json
 from pathlib import Path
@@ -101,7 +102,7 @@ def main():
     a.add_argument('--diario', type=Path)
     args = a.parse_args()
     modo = 'rw' if args.aplicar else 'ro'
-    with sqlite3.connect(args.base.resolve().as_uri() + '?mode=' + modo, uri=True) as db:
+    with closing(sqlite3.connect(args.base.resolve().as_uri() + '?mode=' + modo, uri=True)) as db:
         print(json.dumps(reconciliar(db, args.video_id, args.request_id, args.aplicar, args.diario), ensure_ascii=False))
 
 

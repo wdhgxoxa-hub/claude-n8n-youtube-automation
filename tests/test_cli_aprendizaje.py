@@ -1,4 +1,5 @@
 """La CLI aislada rechaza producción y limpia su runner aunque falle el ensayo."""
+from contextlib import closing
 import importlib.util
 from pathlib import Path
 import sqlite3
@@ -29,7 +30,7 @@ class CliAislada(unittest.TestCase):
  def test_runner_externo_y_limpieza_despues_de_timeout(self):
   with tempfile.TemporaryDirectory() as tmp:
    db=Path(tmp)/'metadata.sqlite'
-   with sqlite3.connect(db) as c:
+   with closing(sqlite3.connect(db)) as c:
     c.execute('CREATE TABLE execution_entity(id INTEGER,status TEXT,workflowId TEXT)')
    llamados=[]
    def run(cmd,**kw):

@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import uuid
 
-IDS={'CoopEnsayoApr01','CoopEnsayoLec01','CoopSondaVidIQ01','CoopSondaYtComp1','CoopRadarReal001'}
+IDS={'CoopEnsayoIdYt01','CoopEnsayoApr01','CoopEnsayoLec01','CoopSondaVidIQ01','CoopSondaYtComp1','CoopRadarReal001'}
 
 def preparar(workflow):
  if workflow.get('id') not in IDS: raise ValueError('ID fuera de sondas autorizadas')
