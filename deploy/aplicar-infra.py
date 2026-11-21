@@ -109,6 +109,64 @@ def verify_cooper_identity(op, current, receipt, image_archive=None):
     return {**identity, 'artefacto_sha256': artifact['sha256'], 'etiqueta': tag, 'runtime_id': current['id']}
 
 
+def registry_manifest(op, reference):
+    """Lee solo manifiestos públicos, nunca la configuración de una imagen."""
+    digest = reference.rsplit('@', 1)[-1]
+    operar.require(bool(re.fullmatch(r'sha256:[a-f0-9]{64}', digest)), 'Falta digest de manifiesto')
+    process = subprocess.run(['docker', 'buildx', 'imagetools', 'inspect', '--raw', reference],
+                             env=op.env, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                             check=True, timeout=60)
+    raw = process.stdout
+    operar.require(len(raw) <= 1048576 and 'sha256:' + hashlib.sha256(raw).hexdigest() == digest,
+                   'Manifiesto público distinto del digest solicitado')
+    value = json.loads(raw)
+    operar.require(isinstance(value, dict) and value.get('schemaVersion') == 2, 'Manifiesto público inválido')
+    return value
+
+
+def platform_manifest(op, reference, platform):
+    """Resuelve un índice a un solo manifiesto de la plataforma certificada."""
+    value = registry_manifest(op, reference)
+    digest = reference.rsplit('@', 1)[1]
+    indices = {'application/vnd.oci.image.index.v1+json', 'application/vnd.docker.distribution.manifest.list.v2+json'}
+    manifests = {'application/vnd.oci.image.manifest.v1+json', 'application/vnd.docker.distribution.manifest.v2+json'}
+    if value.get('mediaType') in indices:
+        parts = platform.split('/')
+        matches = [row for row in value.get('manifests', []) if
+                   row.get('platform', {}).get('os') == parts[0] and
+                   row.get('platform', {}).get('architecture') == parts[1] and
+                   row.get('platform', {}).get('variant', '') == (parts[2] if len(parts) == 3 else '')]
+        operar.require(len(matches) == 1, 'El índice no identifica una plataforma única')
+        digest = matches[0].get('digest', '')
+        operar.require(matches[0].get('mediaType') in manifests, 'Descriptor de plataforma no es manifiesto')
+        value = registry_manifest(op, reference.rsplit('@', 1)[0] + '@' + digest)
+    operar.require(value.get('mediaType') in manifests, 'Tipo de manifiesto no certificado')
+    config = value.get('config', {}).get('digest', '')
+    operar.require(bool(re.fullmatch(r'sha256:[a-f0-9]{64}', config)), 'Falta identidad de configuración')
+    return {'manifiesto': digest, 'configuracion': config}
+
+
+def verify_service_identity(op, current_id, reference, expected_id, platform='linux/amd64'):
+    """Exige identidad exacta o prueba digest→manifiesto de la misma plataforma."""
+    actual = current_id.removeprefix('sha256:')
+    expected = expected_id.removeprefix('sha256:')
+    result = {'runtime_id': current_id, 'referencia': reference, 'id_local': expected_id}
+    if actual == expected:
+        return {**result, 'identidad_exacta': True}
+    operar.require(all(re.fullmatch(r'[a-f0-9]{64}', value) for value in (actual, expected)), 'Identidad de imagen inválida')
+    operar.require(bool(re.fullmatch(r'linux/[a-z0-9_]+(?:/[a-z0-9]+)?', platform)), 'Plataforma no certificada')
+    for identity in (current_id, reference):
+        architecture = operar.run([op.engine, 'image', 'inspect', identity, '--format', '{{.Architecture}}'], env=op.env).strip()
+        operar.require(architecture == platform.split('/')[1], 'Arquitectura distinta de la ensayada')
+    pinned = platform_manifest(op, reference, platform)
+    # Un motor clásico puede informar el digest de configuración; containerd,
+    # el del índice o del manifiesto. Todos los enlaces se acreditan por SHA-256.
+    if 'sha256:' + actual not in pinned.values():
+        runtime = platform_manifest(op, reference.rsplit('@', 1)[0] + '@sha256:' + actual, platform)
+        operar.require(runtime == pinned, 'La imagen activa no pertenece al manifiesto ensayado')
+    return {**result, **pinned, 'plataforma': platform, 'identidad_exacta': False}
+
+
 def inspect(op, identity, template):
     return operar.run([op.engine, 'inspect', '--format', template, identity], env=op.env).strip()
 
@@ -178,11 +236,13 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
     no_running(op)
     # Las imágenes deben precargarse antes del corte. No se confía en etiquetas mutables.
     image_ids = {}
+    previous_identities = {}
+    platform = json.loads((candidate / 'infra-imagenes.json').read_text())['plataforma']
     for name, value in images.items():
         operar.require('@sha256:' in value['imagen'], 'Referencia sin digest')
         image_ids[name] = operar.run([op.engine, 'image', 'inspect', value['imagen'], '--format', '{{.Id}}'], env=op.env).strip()
         old_id = operar.run([op.engine, 'image', 'inspect', value['anterior'], '--format', '{{.Id}}'], env=op.env).strip()
-        operar.require(previous_services[name]['id'].removeprefix('sha256:') == old_id.removeprefix('sha256:'), 'La versión activa difiere de la reversa ensayada')
+        previous_identities[name] = verify_service_identity(op, previous_services[name]['id'], value['anterior'], old_id, platform)
     # Solo referencias públicas: nunca serializar el entorno efectivo de los servicios.
     resolution_env = {**op.env, 'COOPER_IMAGE': previous_services['cooper']['imagen']}
     resolved_images = set(operar.run(['docker', 'compose', '--env-file', str(op.env_file), '-f', str(candidate / 'compose.yaml'), 'config', '--images'], env=resolution_env).splitlines())
@@ -202,6 +262,7 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
               'configuracion_ensayada': receipt['archivos'], 'servicios_nuevos': images,
               'respaldo_configuracion': str(backup), 'entorno_copiado': False,
               'identidad_cooper': cooper_identity,
+              'identidades_anteriores': previous_identities,
               'codigo_aplicador_sha256': operar.digest(Path(__file__)),
               'codigo_operar_sha256': operar.digest(Path(operar.__file__))}
     operar.write_json(output, result)
@@ -223,7 +284,8 @@ def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=
         start(op)
         current = healthy(op)
         operar.require(current['cooper']['id'] == previous_services['cooper']['id'], 'Cambió la imagen Cooper')
-        operar.require(all(current[name]['id'].removeprefix('sha256:') == image_ids[name].removeprefix('sha256:') for name in images), 'El stack no usa las imágenes verificadas')
+        result['identidades_nuevas'] = {name: verify_service_identity(op, current[name]['id'], value['imagen'], image_ids[name], platform)
+                                       for name, value in images.items()}
         if simulate_failure:
             raise RuntimeError('Fallo deliberado del ensayo después del arranque nuevo')
         result.update(estado='PASS', salud='PASS', datos_preservados='PASS', migraciones_antes=before['conteos'].get('migrations'), migraciones_despues=after['conteos'].get('migrations'))

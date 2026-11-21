@@ -1,5 +1,6 @@
 from contextlib import closing
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -7,6 +8,7 @@ import sqlite3
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 DEPLOY = Path(__file__).resolve().parents[1]
@@ -204,3 +206,82 @@ class ImageIdentityTest(unittest.TestCase):
     def test_recibo_anterior_no_permite_identidad_distinta(self):
         with self.assertRaises(RuntimeError):
             infra.verify_cooper_identity(None,{'id':'otra'}, {'cooper_image_id':'ensayada'})
+
+
+class ServiceIdentityTest(unittest.TestCase):
+    def setUp(self):
+        self.op = SimpleNamespace(engine='docker', env={})
+        self.blobs = {}
+        self.manifest_type = 'application/vnd.oci.image.manifest.v1+json'
+        self.config = 'sha256:' + 'a' * 64
+        self.manifest = self.add({'schemaVersion': 2, 'mediaType': self.manifest_type,
+                                 'config': {'digest': self.config}, 'layers': []})
+        self.index = self.add_index(self.manifest)
+        self.reference = 'registry.example/imagen:ensayada@' + self.manifest
+
+    def add(self, value):
+        raw = json.dumps(value, separators=(',', ':')).encode()
+        digest = 'sha256:' + hashlib.sha256(raw).hexdigest()
+        self.blobs[digest] = raw
+        return digest
+
+    def add_index(self, digest, architecture='amd64', duplicate=False):
+        row = {'digest': digest, 'mediaType': self.manifest_type,
+               'platform': {'os': 'linux', 'architecture': architecture}}
+        return self.add({'schemaVersion': 2, 'mediaType': 'application/vnd.oci.image.index.v1+json',
+                         'manifests': [row, row] if duplicate else [row]})
+
+    def fetch(self, args, **kwargs):
+        self.assertEqual(args[:5], ['docker', 'buildx', 'imagetools', 'inspect', '--raw'])
+        self.assertEqual(kwargs['stderr'], infra.subprocess.DEVNULL)
+        return SimpleNamespace(stdout=self.blobs[args[-1].rsplit('@', 1)[1]])
+
+    def verify(self, actual, reference=None, expected=None, architecture='amd64'):
+        with patch.object(infra.subprocess, 'run', side_effect=self.fetch), \
+             patch.object(infra.operar, 'run', return_value=architecture) as inspect:
+            result = infra.verify_service_identity(self.op, actual, reference or self.reference, expected or self.manifest)
+            self.assertTrue(all(call.args[0][-1] == '{{.Architecture}}' for call in inspect.call_args_list))
+            return result
+
+    def test_indice_runtime_se_enlaza_al_pin_de_plataforma(self):
+        result = self.verify(self.index)
+        self.assertEqual(result['manifiesto'], self.manifest)
+        self.assertEqual(result['configuracion'], self.config)
+        self.assertFalse(result['identidad_exacta'])
+
+    def test_pin_indice_se_enlaza_al_manifiesto_runtime(self):
+        result = self.verify(self.manifest, reference='registry.example/imagen@' + self.index, expected=self.index)
+        self.assertEqual(result['manifiesto'], self.manifest)
+
+    def test_runtime_configuracion_solo_admite_digest_acreditado(self):
+        self.assertEqual(self.verify(self.config)['configuracion'], self.config)
+
+    def test_igualdad_exacta_no_consulta_registro_ni_configuracion(self):
+        with patch.object(infra.subprocess, 'run') as fetch, patch.object(infra.operar, 'run') as inspect:
+            result = infra.verify_service_identity(self.op, self.manifest, self.reference, self.manifest)
+        self.assertTrue(result['identidad_exacta'])
+        fetch.assert_not_called()
+        inspect.assert_not_called()
+
+    def test_rechaza_indice_de_otra_plataforma(self):
+        with self.assertRaisesRegex(RuntimeError, 'plataforma única'):
+            self.verify(self.add_index(self.manifest, architecture='arm64'))
+
+    def test_rechaza_plataforma_ambigua(self):
+        with self.assertRaisesRegex(RuntimeError, 'plataforma única'):
+            self.verify(self.add_index(self.manifest, duplicate=True))
+
+    def test_rechaza_arquitectura_runtime_distinta(self):
+        with self.assertRaisesRegex(RuntimeError, 'Arquitectura'):
+            self.verify(self.index, architecture='arm64')
+
+    def test_rechaza_otro_manifiesto_aunque_reutilice_configuracion(self):
+        other = self.add({'schemaVersion': 2, 'mediaType': self.manifest_type,
+                          'config': {'digest': self.config}, 'layers': [{'digest': 'sha256:' + 'b' * 64}]})
+        with self.assertRaisesRegex(RuntimeError, 'no pertenece'):
+            self.verify(self.add_index(other))
+
+    def test_rechaza_metadatos_cuyo_sha_no_corresponde(self):
+        self.blobs[self.index] += b' '
+        with self.assertRaisesRegex(RuntimeError, 'distinto del digest'):
+            self.verify(self.index)
