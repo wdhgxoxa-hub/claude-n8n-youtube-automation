@@ -1,6 +1,6 @@
 # Ensayo de aprendizaje con publicaciones existentes
 
-Este procedimiento prepara flujos manuales independientes. No cambia interruptores ni publica el M7 original, no crea videos y no ejecuta Telegram, rutinas Claude ni APIs de IA. La renovación usa la conexión Google existente dentro de n8n; no inicia OAuth ni exporta credenciales. Las llamadas permitidas son GET a YouTube Analytics y Upload-Post, y POST de renovación a Google. La consulta puede consumir cuota de lectura ya disponible, pero no contrata ni compra servicios.
+Este procedimiento prepara flujos manuales independientes. No cambia interruptores ni publica el M7 original, no crea videos y no ejecuta Telegram, rutinas Claude ni APIs de IA. La renovación usa la conexión Google existente dentro de n8n; no inicia OAuth ni exporta credenciales. Las llamadas permitidas son GET a YouTube Analytics, Upload-Post y `videos.list` de YouTube Data API (título, miniaturas y duración de IDs ya publicados), y POST de renovación a Google. La consulta puede consumir cuota de lectura ya disponible, pero no contrata ni compra servicios.
 
 La CLI oficial permite ejecutar un workflow guardado por ID: [documentación de n8n](https://docs.n8n.io/deploy/host-n8n/configure-n8n/use-the-command-line.md). No hace falta exponer otro webhook. La salida cruda de la CLI puede contener datos de nodos; debe descartarse íntegra mediante el wrapper incluido.
 
@@ -22,13 +22,13 @@ Usar el respaldo y rollback ya comprobados del despliegue. Además, registrar lo
 
 ## 2. Capturar sin salir del circuito de lectura
 
-Ejecutar dentro del contenedor n8n, con su configuración existente:
+En el VPS con runners externos, ejecutar desde el host con su configuración existente:
 
 ```sh
-sh /ruta/ejecutar_ensayo_aprendizaje.sh CoopEnsayoApr01
+sudo -n python3 /ruta/ejecutar_cli_aislada.py CoopEnsayoApr01
 ```
 
-El wrapper devuelve únicamente el código de salida. Deshabilita conservación de ejecuciones y descarta stdout/stderr, incluidos errores. Ambos workflows también llevan `saveDataSuccessExecution=none`, `saveDataErrorExecution=none`, `saveManualExecutions=false` y `saveExecutionProgress=false`, sin error workflow. No consultar ni volcar `runData` para verificarlo.
+El wrapper devuelve únicamente el código de salida y metadata de ejecución. Deshabilita conservación de ejecuciones y descarta stdout/stderr, incluidos errores. Ambos workflows también llevan `saveDataSuccessExecution=none`, `saveDataErrorExecution=none`, `saveManualExecutions=false` y `saveExecutionProgress=false`, sin error workflow. No consultar ni volcar `runData` para verificarlo.
 
 Cuando la instancia usa runners externos, la CLI necesita su propio broker. No detener el runner del servicio ni cambiarlo a modo interno. En el host VPS se prepara `tools/cooper/ejecutar_cli_aislada.py` y se ejecuta como operador con `sudo -n python3 /ruta/ejecutar_cli_aislada.py CoopEnsayoApr01`. El helper reserva su ejecución con un lock, usa broker `5689`, launcher `5688` y health JS `5687`, y termina únicamente el launcher temporal. La autenticación del runner se hereda dentro del contenedor; no se extraen variables ni se pasan tokens a la línea de comandos. Los Code nodes temporales no reciben las variables privadas de Cooper. La salida conserva solo código CLI y metadata de ejecución; exige además observar datos nuevos en la tabla. No interpretar un código 0 sin evidencia como un ensayo correcto.
 
@@ -56,7 +56,7 @@ python3 tools/cooper/preparar_ensayo_aprendizaje.py \
 Importar el `CoopEnsayoLec01.json` generado y ejecutar:
 
 ```sh
-sh /ruta/ejecutar_ensayo_aprendizaje.sh CoopEnsayoLec01
+sudo -n python3 /ruta/ejecutar_cli_aislada.py CoopEnsayoLec01
 ```
 
 Este flujo no tiene HTTP ni llamadas a otros flujos. Solo lee el trabajo exacto, exige que siga bloqueado y pertenezca al canal de la evidencia, valida cada lección y actualiza ese trabajo a `listo`. Rechaza una repetición ya aplicada. Comprobar en Aprendizaje origen, métrica, causa y corrección; comprobar con un encargo de guion controlado que sus IDs entren a la lectura obligatoria. No es necesario producir ni publicar el video para comprobar la lectura del contrato.
