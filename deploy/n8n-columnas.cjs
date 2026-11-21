@@ -19,6 +19,7 @@ function planColumnas(tablas, manifest) {
   return plan;
 }
 module.exports = { planColumnas };
+let paso = 'inicio';
 
 async function main() {
   const root = '/usr/local/lib/node_modules/n8n';
@@ -30,20 +31,29 @@ async function main() {
   const aplicar = process.argv.includes('--aplicar');
   const journal = process.argv[process.argv.indexOf('--diario') + 1];
   if (aplicar && !process.argv.includes('--diario')) throw new Error('Falta diario previo');
+  paso = 'configuracion';
   r('reflect-metadata');
   r('./dist/config');
   const { Container } = r('@n8n/di');
   const { ModuleRegistry } = r('@n8n/backend-common');
   const { DbConnection } = r('@n8n/db');
-  await Container.get(ModuleRegistry).loadModules();
+  paso = 'modulos';
+  const registry = Container.get(ModuleRegistry);
+  registry.registerPackagedModules(r('./dist/modules/modules.manifest').packagedModules);
+  await registry.loadModules();
   const db = Container.get(DbConnection);
+  paso = 'conexion';
   await db.init();
   try {
+    paso = 'servicios';
     const { DataTableRepository, DataTableService } = r('@n8n/backend-module-data-table');
+    paso = 'inventario';
     const tables = await Container.get(DataTableRepository).find({ relations: ['columns'] });
+    paso = 'plan';
     const plan = planColumnas(tables, manifest);
     if (aplicar) {
       writeFileSync(journal, JSON.stringify({ version: 1, columnas: plan }, null, 2), { flag: 'wx', mode: 0o600 });
+      paso = 'columnas';
       const service = Container.get(DataTableService);
       for (const column of plan) await service.addColumn(column.tableId, column.projectId, { name: column.name, type: column.type });
       const after = await Container.get(DataTableRepository).find({ relations: ['columns'] });
@@ -54,6 +64,6 @@ async function main() {
 }
 if (require.main === module) main().then(() => process.exit(0)).catch(() => {
   // Los mensajes de librerías podrían contener filas/configuración privada.
-  console.error('Falló la migración de columnas; revisar versión, esquema y diario, sin exponer datos.');
+  console.error(`Falló la migración de columnas en ${paso}; revisar versión, esquema y diario, sin exponer datos.`);
   process.exit(1);
 });
