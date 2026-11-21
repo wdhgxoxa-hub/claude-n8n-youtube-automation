@@ -64,8 +64,11 @@ export async function until(check, label, ms = 30000) {
   }
   throw new Error(`Tiempo agotado: ${label}`);
 }
-export async function startN8n(appPort, { credencialFicticia = false } = {}) {
-  const root = resolve(homedir(), ".cache/cooper-ensayo");
+export async function startN8n(appPort, options = {}) {
+  const { credencialFicticia = false } = options;
+  const CONTAINER = options.container || "cooper-ensayo-n8n";
+  const networkName = options.network || "cooper-ensayo-red";
+  const root = resolve(homedir(), options.root || ".cache/cooper-ensayo");
   mkdirSync(root, { recursive: true, mode: 0o700 });
   const run = mkdtempSync(`${root}/run-`);
   mkdirSync(`${run}/n8n`, { mode: 0o700 });
@@ -121,15 +124,13 @@ export async function startN8n(appPort, { credencialFicticia = false } = {}) {
       "network",
       "ls",
       "--filter",
-      "name=^cooper-ensayo-red$",
+      `name=^${networkName}$`,
       "--format",
       "{{.Name}}",
     )
   )
-    podman("network", "create", "--internal", "cooper-ensayo-red");
-  const network = JSON.parse(
-    podman("network", "inspect", "cooper-ensayo-red"),
-  )[0];
+    podman("network", "create", "--internal", networkName);
+  const network = JSON.parse(podman("network", "inspect", networkName))[0];
   if (!network.internal)
     throw new Error("La red de ensayo debe impedir salida externa");
   podman(
@@ -140,7 +141,7 @@ export async function startN8n(appPort, { credencialFicticia = false } = {}) {
     "--label",
     "cooper.ensayo=true",
     "--network",
-    "cooper-ensayo-red",
+    networkName,
     "--cpus",
     "0.5",
     "--pull",

@@ -1,0 +1,532 @@
+/**
+ * Transportes ficticios para la copia aislada de n8n del ensayo total.
+ * No hacen peticiones, no contienen credenciales y no modifican lógica de negocio.
+ * Contratos contrastados con los parsers de workflows/v2 y la documentación de n8n:
+ * https://docs.n8n.io/data/data-structure/
+ * https://docs.n8n.io/data/data-mapping/data-item-linking/item-linking-code-node/
+ *
+ * Una respuesta aceptada prueba el cableado, no la calidad ni disponibilidad del
+ * proveedor. Los medios son un PNG de muestra y un tono PCM; no voz generada real.
+ * El archivo de Pexels contiene únicamente metadatos ficticios: sus URLs .invalid
+ * no sirven bytes de video, y el render simulado tampoco los descarga.
+ */
+
+const HTTP = "n8n-nodes-base.httpRequest";
+const TELEGRAM = "n8n-nodes-base.telegram";
+const INTERNOS = new Set([
+  "FabCooperAPI0001:Consultar orden",
+  "FabCooperAPI0001:Reservar orden",
+  "FabCooperAPI0001:Confirmar orden",
+  "FabCooperAPI0001:Responder decisión de Cooper",
+  "FabCooperProgr01:Avisar a Cooper",
+  "FabPresentacion1:Consultar Cooper",
+  "CooperMarcasPub1:Atender marcas en Cooper",
+  "CooperMarcasMet1:Atender marcas en Cooper",
+]);
+
+function familia(workflow, node) {
+  if (node.type === TELEGRAM) return "telegram";
+  const key = `${workflow.id}:${node.name}`;
+  if (INTERNOS.has(key)) return null;
+  const url = String(node.parameters?.url || "");
+  if (node.name === "Despertar routine") return "claude";
+  if (node.name === "Intentar Codex" || /puente-codex/.test(url))
+    return "texto";
+  if (/api\.openai\.com/.test(url))
+    return /Texto/.test(workflow.id) ? "texto" : "openai";
+  if (/mcp\.vidiq\.com/.test(url)) return "vidiq";
+  if (/www\.googleapis\.com\/(?:upload\/)?drive\/v3/.test(url)) return "drive";
+  if (/generativelanguage\.googleapis\.com/.test(url)) return "gemini";
+  if (/api\.creatomate\.com/.test(url)) return "creatomate";
+  if (/api\.upload-post\.com/.test(url)) return "uploadpost";
+  if (/youtubeanalytics\.googleapis\.com/.test(url)) return "metricas-youtube";
+  if (/api\.heygen\.com/.test(url)) return "heygen";
+  if (/api\.elevenlabs\.io/.test(url)) return "elevenlabs";
+  if (/epidemicsound\.com/.test(url)) return "epidemic";
+  if (/api\.pexels\.com/.test(url)) return "pexels";
+  if (/pixabay\.com/.test(url)) return "pixabay";
+  if (
+    /oauth2\.googleapis\.com|www\.googleapis\.com\/(?:upload\/)?youtube\/v3/.test(
+      url,
+    ) ||
+    node.name === "Subir a YouTube"
+  )
+    return "youtube";
+  if (
+    ["Descargar render", "Descargar clip", "Probar enlace"].includes(node.name)
+  )
+    return "descarga";
+  // Un transporte nuevo no obtiene un éxito genérico que pudiera ocultar un corte.
+  return "no-soportado";
+}
+
+/** Se serializa dentro de Code v2. No cerrar sobre variables de este módulo. */
+function responderTransporte(config, entrada, indice, contexto) {
+  const { proveedor, nombre, flujo } = config;
+  const { nodo, ejecucion, pasada } = contexto;
+  const id = (prefijo) =>
+    `${prefijo}-${ejecucion}-${nombre
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .slice(0, 32)}-${pasada}-${indice}`;
+  const salida = (json, binary) => ({
+    json,
+    ...(binary ? { binary } : {}),
+    pairedItem: { item: indice },
+  });
+  const url = (tipo) =>
+    `https://ensayo.invalid/${tipo}/${encodeURIComponent(id(tipo))}`;
+  const respuestaTexto = (valor) => ({
+    id: id("respuesta"),
+    status: "completed",
+    output: [
+      {
+        type: "message",
+        role: "assistant",
+        content: [
+          { type: "output_text", text: JSON.stringify(valor), annotations: [] },
+        ],
+      },
+    ],
+    usage: { input_tokens: 100, output_tokens: 100, total_tokens: 200 },
+  });
+  const mcp = (valor) => {
+    const mensaje = {
+      jsonrpc: "2.0",
+      id: 1,
+      result: {
+        content: [
+          {
+            type: "text",
+            text: typeof valor === "string" ? valor : JSON.stringify(valor),
+          },
+        ],
+        isError: false,
+      },
+    };
+    return salida({
+      data: JSON.stringify(mensaje),
+      body: JSON.stringify(mensaje),
+      statusCode: 200,
+      headers: { "mcp-session-id": "sesion-ficticia-sin-credenciales" },
+    });
+  };
+  const duracionVoz = () => {
+    const p = nodo("Textos de voz", indice) || entrada;
+    const palabras = String(p.texto || "")
+      .replace(/<[^>]+>/g, "")
+      .split(/\s+/)
+      .filter(Boolean).length;
+    return Math.max(1, palabras / 2.5);
+  };
+  const pcm = () => {
+    const frecuencia = 24000,
+      muestras = Math.round(duracionVoz() * frecuencia);
+    const b = Buffer.alloc(muestras * 2);
+    for (let i = 0; i < muestras; i++)
+      b.writeInt16LE(
+        Math.round(4000 * Math.sin((2 * Math.PI * 440 * i) / frecuencia)),
+        i * 2,
+      );
+    return b.toString("base64");
+  };
+  const png =
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGMoX3XmPwAGdgLtG/Qd7AAAAABJRU5ErkJggg==";
+  if (proveedor === "telegram")
+    return salida({
+      ok: true,
+      result: {
+        message_id: 1000 + indice,
+        chat: { id: 0, type: "private" },
+        text: "Aviso ficticio del ensayo local",
+      },
+    });
+  if (proveedor === "claude")
+    return salida({ ok: true, aceptado: true, ensayo: true });
+  if (proveedor === "texto") {
+    const pedido = nodo("Pedido de texto", 0) || entrada;
+    const tarea = pedido.tarea || pedido.local?.tarea;
+    const respuestas = {
+      critico_nicho: {
+        sin_fuente: [],
+        riesgos: [],
+        veredicto: "Apto para el ensayo ficticio.",
+      },
+      critico: {
+        gancho: 9,
+        promesa: 9,
+        claridad: 9,
+        emocion: 9,
+        exactitud: 9,
+        originalidad: 9,
+        problemas: [],
+      },
+      verificador: { cifras: [], faltantes: [], cuenta: [] },
+      radar: {
+        resumen:
+          "Datos ficticios del ensayo: funcionan las explicaciones de una cifra y un ejemplo.",
+        formatos: [
+          {
+            formato: "explicación visual",
+            por_que: "Muestra sintética con retención estable.",
+            ejemplo: "https://ensayo.invalid/radar/formato",
+          },
+        ],
+        ideas: [
+          {
+            titulo: "3 pasos para explicar un margen",
+            red: "todas",
+            gancho: "Vender más no siempre deja más.",
+            formato: "explicación visual",
+            por_que: "Señal ficticia de retención de la muestra local.",
+            fuente: "Fixture local de vidIQ",
+            fuente_url: "https://ensayo.invalid/radar/datos",
+            caduca_dias: 7,
+          },
+        ],
+        sonidos: [],
+      },
+      radar_noticia: { noticia: null },
+    };
+    const valor = respuestas[tarea];
+    if (!valor) throw new Error(`Ensayo: tarea de texto sin fixture: ${tarea}`);
+    const respuesta = respuestaTexto(valor);
+    if (nombre === "Respaldo OpenAI" && pedido.local?.buscar_web) {
+      respuesta.output.push({
+        type: "web_search_call",
+        status: "completed",
+        action: {
+          type: "search",
+          sources: [{ url: "https://ensayo.invalid/radar/datos" }],
+        },
+      });
+    }
+    return salida({
+      ...respuesta,
+      ruta: nombre === "Respaldo OpenAI" ? "openai_api" : "codex",
+      busqueda_real: true,
+      fuentes_consultadas: ["https://ensayo.invalid/radar/datos"],
+      ensayo: true,
+    });
+  }
+  if (proveedor === "vidiq") {
+    if (/^Iniciar|listo$/.test(nombre))
+      return mcp("Sesión ficticia inicializada");
+    if (nombre === "Puntuar título")
+      return mcp(`score: ${90 - indice} / 100. Resultado ficticio.`);
+    return mcp({
+      origen: "fixture local, sin consultas externas",
+      fuente_url: "https://ensayo.invalid/radar/datos",
+      termino:
+        entrada.args?.query || entrada.args?.keyword || "economía cotidiana",
+      videos: [
+        {
+          titulo: "3 pasos para explicar un margen",
+          url: "https://ensayo.invalid/radar/formato",
+          vistas: 1200,
+          retencion: 0.72,
+        },
+      ],
+      palabras_clave: ["margen", "costos", "ventas"],
+    });
+  }
+  if (proveedor === "drive") {
+    if (nombre === "Carpeta del canal: buscar") return salida({ files: [] });
+    if (/^Compartir/.test(nombre))
+      return salida({ id: id("permiso"), type: "anyone", role: "reader" });
+    if (/^Nombrar|: nombrar$/.test(nombre)) return salida({ id: entrada.id });
+    return salida({
+      id: id("archivo"),
+      name:
+        entrada.nombre ||
+        entrada.plano_id ||
+        entrada.plano?.id ||
+        "medio-ficticio",
+      mimeType: "application/octet-stream",
+    });
+  }
+  if (proveedor === "openai") {
+    if (nombre === "Revisar archivo")
+      return salida(
+        respuestaTexto({ elegido: 1, motivo: "Archivo ficticio compatible." }),
+      );
+    if (nombre === "Revisar plano")
+      return salida(respuestaTexto({ aprobado: true, problemas: [] }));
+    if (/Generar|Imagen de miniatura/.test(nombre))
+      return salida({
+        id: id("imagen"),
+        status: "completed",
+        output: [
+          { type: "image_generation_call", status: "completed", result: png },
+        ],
+        usage: { input_tokens: 100, output_tokens: 100, total_tokens: 200 },
+      });
+    throw new Error(`Ensayo: transporte OpenAI sin fixture: ${nombre}`);
+  }
+  if (proveedor === "gemini") {
+    if (nombre !== "Voz (Gemini TTS)")
+      throw new Error(
+        `Ensayo: la ruta de clips no tiene medio sintético válido: ${nombre}`,
+      );
+    return salida({
+      id: id("voz"),
+      steps: [
+        {
+          type: "model_output",
+          content: [
+            { type: "audio", mime_type: "audio/l16;rate=24000", data: pcm() },
+          ],
+        },
+      ],
+    });
+  }
+  if (proveedor === "elevenlabs")
+    return salida({
+      audio_base64: pcm(),
+      alignment: {
+        characters: [],
+        character_start_times_seconds: [],
+        character_end_times_seconds: [],
+      },
+    });
+  if (proveedor === "heygen") {
+    if (nombre === "Voz (HeyGen)")
+      return salida({
+        data: { audio_url: url("voz"), duration: duracionVoz() },
+      });
+    if (nombre === "Crear avatar")
+      return salida({ data: { video_id: id("avatar") } });
+    const inicio = nodo("Inicio", 0) || {};
+    return salida({
+      data: {
+        id: nodo("Trabajo avatar", 0)?.id || id("avatar"),
+        status: "completed",
+        video_url: url("avatar"),
+        duration: inicio.voz?.duracion_s || 10,
+      },
+    });
+  }
+  if (proveedor === "creatomate") {
+    const esMiniatura = /miniatura/.test(nombre);
+    const creador = esMiniatura
+      ? "Renderizar miniatura"
+      : flujo === "FabDerivados0001"
+        ? "Renderizar corte"
+        : "Renderizar";
+    const creada = nodo(creador, indice);
+    if (/^Consultar/.test(nombre) && creada)
+      return salida({ ...creada, status: "succeeded" });
+    const source = entrada.source || {};
+    const duracion = (source.elements || [])
+      .filter((x) => x.type === "composition")
+      .reduce((suma, x) => suma + Number(x.duration || 0), 0);
+    return salida({
+      id: id("render"),
+      status: "succeeded",
+      url: url(esMiniatura ? "miniatura.png" : "render.mp4"),
+      duration: Number(duracion.toFixed(2)) || source.duration || 1,
+      width: source.width || 1920,
+      height: source.height || 1080,
+    });
+  }
+  if (proveedor === "uploadpost") {
+    if (nombre === "Subir a redes")
+      return salida({
+        request_id: id("publicacion"),
+        job_id: id("publicacion"),
+        status: "scheduled",
+      });
+    const redes = String(entrada.plataformas || "youtube")
+      .split(",")
+      .filter(Boolean);
+    if (nombre === "Métricas en redes")
+      return salida({
+        platforms: Object.fromEntries(
+          redes.map((red) => [
+            red,
+            {
+              success: true,
+              post_metrics: {
+                views: 1200,
+                likes: 84,
+                comments: 12,
+                retention: [
+                  { second: 0, percentage: 1 },
+                  { second: 5, percentage: 0.72 },
+                ],
+              },
+            },
+          ]),
+        ),
+      });
+    return salida({
+      status: "completed",
+      results: redes.map((red) => ({
+        platform: red,
+        success: true,
+        platform_post_id: "ENSAYO00001",
+        post_url: `https://ensayo.invalid/${red}/${encodeURIComponent(entrada.video_id || id("post"))}`,
+        skipped: false,
+        fallback_to_inbox: false,
+      })),
+    });
+  }
+  if (proveedor === "metricas-youtube") {
+    if (nombre === "Retención")
+      return salida({
+        columnHeaders: [
+          { name: "elapsedVideoTimeRatio" },
+          { name: "audienceWatchRatio" },
+        ],
+        rows: [
+          [0, 1],
+          [0.5, 0.75],
+          [1, 0.55],
+        ],
+      });
+    return salida({
+      columnHeaders: [
+        "views",
+        "likes",
+        "comments",
+        "averageViewPercentage",
+      ].map((name) => ({ name })),
+      rows: [[1200, 84, 12, 72]],
+    });
+  }
+  if (proveedor === "epidemic") {
+    if (/^Iniciar|listo$/.test(nombre))
+      return mcp("Sesión ficticia inicializada");
+    if (/^Pedir/.test(nombre))
+      return mcp({ data: { asset: { assetUrl: url("audio.wav") } } });
+    const recording = {
+      id: "pista-ficticia",
+      title: "Tono del ensayo",
+      durationInSeconds: 300,
+      mainArtists: [{ name: "Fixture local" }],
+    };
+    const soundEffect = {
+      id: "efecto-ficticio",
+      title: "Tono del ensayo",
+      audioFile: { durationInMilliseconds: 1000 },
+    };
+    return mcp({ data: { search: { nodes: [{ recording, soundEffect }] } } });
+  }
+  if (proveedor === "pexels") {
+    const consulta = String(
+      entrada.plano?.busqueda_archivo ||
+        entrada.plano?.prompt_imagen ||
+        entrada.query ||
+        "",
+    );
+    if (/sin[\s_-]*resultados/i.test(consulta)) return salida({ videos: [] });
+    const vertical =
+      (nodo("Plan de producción", 0)?.formato || entrada.formato) === "short";
+    const width = vertical ? 1080 : 1920;
+    const height = vertical ? 1920 : 1080;
+    // Solo contrato de búsqueda: no representa un archivo descargado o generado.
+    return salida({
+      page: 1,
+      per_page: 10,
+      total_results: 1,
+      videos: [
+        {
+          id: 1000 + indice,
+          width,
+          height,
+          duration: 12,
+          url: url("archivo-metadatos"),
+          image: url("archivo-miniatura.png"),
+          user: { name: "Fixture local de metadatos" },
+          video_files: [
+            {
+              id: 2000 + indice,
+              file_type: "video/mp4",
+              quality: "hd",
+              width,
+              height,
+              link: url("archivo-ficticio.mp4"),
+            },
+          ],
+        },
+      ],
+    });
+  }
+  if (proveedor === "pixabay") return salida({ hits: [] });
+  if (proveedor === "youtube") {
+    if (/Renovar|Canjear/.test(nombre))
+      return salida({
+        access_token: "TOKEN_FICTICIO_SIN_AUTORIDAD",
+        token_type: "Bearer",
+        expires_in: 3600,
+      });
+    if (/Abrir subida/.test(nombre))
+      return salida({
+        headers: { location: "https://ensayo.invalid/subida-youtube" },
+        statusCode: 200,
+      });
+    if (nombre === "Subir a YouTube")
+      return salida({
+        id: "ENSAYO00001",
+        status: { uploadStatus: "processed" },
+      });
+    return salida({
+      items: [
+        {
+          id: "UC_ENSAYO_LOCAL",
+          snippet: { title: "Canal ficticio local" },
+          statistics: {
+            subscriberCount: "100",
+            videoCount: "3",
+            viewCount: "3600",
+          },
+        },
+      ],
+    });
+  }
+  if (proveedor === "descarga" && nombre === "Probar enlace")
+    return salida({
+      statusCode: 200,
+      headers: { "content-type": "image/png" },
+    });
+  throw new Error(
+    `Ensayo: transporte sin fixture válido: ${flujo}/${nombre} (${proveedor})`,
+  );
+}
+
+/**
+ * Devuelve una copia; jamás altera el workflow original ni reescribe conexiones,
+ * nodos Code, esperas, aprobaciones, acceso a Data Tables o lógica de negocio.
+ * Los HTTP internos conservados requieren el aislamiento de red del runner.
+ */
+export function adaptarTransportes(workflow) {
+  const copia = structuredClone(workflow);
+  const sustituciones = [];
+  for (const node of copia.nodes) {
+    if (![HTTP, TELEGRAM].includes(node.type)) continue;
+    const proveedor = familia(copia, node);
+    if (!proveedor) continue;
+    const config = { proveedor, nombre: node.name, flujo: copia.id };
+    sustituciones.push({
+      workflow_id: copia.id,
+      nodo_id: node.id,
+      nodo: node.name,
+      tipo_original: node.type,
+      proveedor,
+      soportado:
+        proveedor !== "no-soportado" &&
+        !(proveedor === "descarga" && node.name !== "Probar enlace") &&
+        !(proveedor === "gemini" && node.name !== "Voz (Gemini TTS)"),
+    });
+    node.type = "n8n-nodes-base.code";
+    node.typeVersion = 2;
+    node.parameters = {
+      mode: "runOnceForAllItems",
+      jsCode: `// Transporte ficticio: ${proveedor}; nunca sale a la red.\nconst responder = ${responderTransporte.toString()};\nconst config = ${JSON.stringify(config)};\nconst contexto = { ejecucion: String($execution.id), pasada: $runIndex, nodo: (nombre, indice) => { try { const n = $(nombre); if (!n.isExecuted) return null; try { return n.itemMatching(indice).json; } catch { return n.all()[indice]?.json || n.first().json; } } catch { return null; } } };\nreturn $input.all().map((item, indice) => responder(config, item.json, indice, contexto));`,
+    };
+    delete node.credentials;
+    delete node.webhookId;
+  }
+  return { workflow: copia, sustituciones };
+}

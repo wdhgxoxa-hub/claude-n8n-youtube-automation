@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "origen": "Snapshot ficticio copiado para ensayos; no contiene datos de producción ni credenciales",
+  "tablas": {
+    "canales": [{"canal_id":"historico-total","nombre":"Histórico de prueba","nicho":"Historia del color","estado":"pausado","dueno_email":"ajena@example.test","eliminado":false}],
+    "videos": [{"video_id":"historico-total-v1","canal_id":"historico-total","tema":"Historia del azul","formato":"short","etapa":"publicado","estado":"listo","dueno_email":"ajena@example.test","eliminado":false}],
+    "trabajos": [{"job_id":"aprender-historico-total","canal_id":"historico-total","video_id":"historico-total-v1","modo":"aprender","estado":"listo","dueno_email":"ajena@example.test","resultado":"{\"resultado\":{\"lecciones\":[\"NO DEBE VIAJAR A OTRO CANAL\"]}}"}]
+  }
+}
