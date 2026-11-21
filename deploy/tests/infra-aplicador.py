@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import re
+import secrets
 import shutil
 import subprocess
 import sys
@@ -20,7 +21,7 @@ infra = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(infra)
 
 
-def rehearse(fixture, proof, image_archive=None):
+def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
     operar.require(fixture.name == 'ensayo.env' and fixture.parent.name.startswith('e2e-vps-') and '.cache' in fixture.parts, 'Solo fixture privado de Compose')
     env, filename = operar.config(fixture)
     operar.require(env.get('COOPER_LAB') == '1' and env.get('CONTAINER_ENGINE') == 'podman', 'Solo laboratorio Podman')
@@ -42,6 +43,39 @@ def rehearse(fixture, proof, image_archive=None):
         operar.require(old.count(value['imagen']) == 1, 'Referencia candidata no única')
         old = old.replace(value['imagen'], value['anterior'])
     operator = operar.Operator(env, filename)
+    relay_services = ('chat-cooper', 'chat-n8n', 'chat-runner')
+    relay_marker = operator.state / 'chat-tunel.enabled'
+    lab_override = Path(env['COOPER_COMPOSE_OVERRIDE']) if relay_previous_image else None
+    original_override = None
+    if relay_previous_image:
+        operar.require(bool(re.fullmatch(r'localhost/cooper:[a-f0-9]{40}', relay_previous_image)), 'Usar imagen anterior local por commit completo')
+        operar.require(not relay_marker.exists(), 'El fixture de partida no debe tener relés habilitados')
+        operar.require(lab_override.is_file() and not lab_override.is_symlink() and lab_override.parent == fixture.parent, 'Override de laboratorio fuera del fixture')
+        old_relay_id = operar.run(['podman', 'image', 'inspect', relay_previous_image, '--format', '{{.Id}}'], env=env).strip()
+        operar.require(old_relay_id.removeprefix('sha256:') != receipt['cooper_image_id'].removeprefix('sha256:'), 'El ensayo exige imágenes Cooper diferentes')
+        original_override = lab_override.read_bytes()
+        override = json.loads(original_override)
+        socket_directory = directory / 'tunel-ficticio'
+        socket_directory.mkdir(mode=0o700)
+        # Solo el proceso hijo recibe una clave efímera. No se escribe un entorno.
+        env.update(PUENTE_CODEX_TOKEN=secrets.token_hex(32), COOPER_RELE_UID=str(os.getuid()), COOPER_RELE_GID=str(os.getgid()))
+        override['services']['cooper'].setdefault('environment', {})['COOPER_CHAT'] = 'simulada'
+        for name in relay_services:
+            override['services'][name] = {
+                'userns_mode': 'keep-id', 'runtime': 'runc', 'pull_policy': 'never',
+                'stop_grace_period': '15s', 'cpus': 0.5,
+                # runc rootless no puede montar sysfs del namespace de red
+                # ajeno. El relé solo usa Node/loopback y no necesita /sys.
+                'tmpfs': ['/sys:ro,size=1m'],
+                'volumes': [str(socket_directory) + ':/tunel:ro'],
+                'healthcheck': {'start_period': '2s', 'interval': '3s', 'retries': 30},
+            }
+            if os.getenv('COOPER_ENSAYO_CPUSET'):
+                override['services'][name]['cpuset'] = os.environ['COOPER_ENSAYO_CPUSET']
+            if name != 'chat-cooper':
+                override['services'][name]['image'] = relay_previous_image
+        operar.write_json(lab_override, override)
+        relay_marker.touch(mode=0o600)
     socket.unlink(missing_ok=True)
     process = subprocess.Popen(['podman','--runtime','runc','system','service','--time=0', 'unix://' + str(socket)], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
@@ -62,6 +96,18 @@ def rehearse(fixture, proof, image_archive=None):
             (DEPLOY / 'compose.yaml').write_text(old)
             before = {name: operar.digest(DEPLOY / name) for name in infra.FILES}
             operator.compose('up','-d','--no-build','--wait','--wait-timeout','240')
+            initial_services = infra.healthy(operator)
+            if relay_previous_image:
+                for name in ('cooper', 'chat-cooper'):
+                    operar.require(initial_services[name]['id'].removeprefix('sha256:') == receipt['cooper_image_id'].removeprefix('sha256:'), 'Cooper y su relé deben usar imagen nueva')
+                for name in ('chat-n8n', 'chat-runner'):
+                    operar.require(initial_services[name]['id'].removeprefix('sha256:') == old_relay_id.removeprefix('sha256:'), 'Los relés del motor deben usar imagen anterior')
+                # El aplicador debe recrear los relés con la imagen global nueva.
+                # Mantener el pin antiguo ocultaría el fallo que se quiere cubrir.
+                for name in ('chat-n8n', 'chat-runner'):
+                    del override['services'][name]['image']
+                operar.write_json(lab_override, override)
+            effective_override_hash = operar.digest(lab_override) if lab_override else None
             failed = directory / 'fallo-inyectado.json'
             try:
                 infra.apply(operator, candidate, receipt, failed, simulate_failure=True, image_archive=image_archive)
@@ -73,14 +119,29 @@ def rehearse(fixture, proof, image_archive=None):
                 operar.require(result.get('estado') == 'FALLO_REVERTIDO' and result.get('reversion') == 'PASS', 'No se completó reversa real')
             operar.require(before == {name: operar.digest(DEPLOY / name) for name in infra.FILES}, 'No se recuperaron archivos originales')
             operar.require(not (operator.state / 'mantenimiento').exists(), 'Quedó mantenimiento tras reversa')
+            reverted_services = infra.healthy(operator)
+            operar.require({name: value['id'] for name, value in initial_services.items()} ==
+                           {name: value['id'] for name, value in reverted_services.items()}, 'La reversa no conservó las imágenes por servicio')
+            if lab_override:
+                operar.require(operar.digest(lab_override) == effective_override_hash, 'El aplicador modificó el override de laboratorio')
             successful = directory / 'actualizacion.json'
             result = infra.apply(operator, candidate, receipt, successful, image_archive=image_archive)
             operar.require(result['estado'] == 'PASS', 'La actualización real no terminó')
+            final_services = infra.healthy(operator)
+            if relay_previous_image:
+                for name in relay_services:
+                    operar.require(final_services[name]['id'].removeprefix('sha256:') == receipt['cooper_image_id'].removeprefix('sha256:'), 'Un relé no adoptó la imagen nueva tras actualizar')
             output = {'aplicador':'PASS','fallo_inyectado_y_reversa':'PASS','archivos_restaurados':'PASS',
                       'datos_restaurados_con_huellas':'PASS','actualizacion':'PASS','red':'interna y loopback',
                       'recibo_reversa':str(failed),'recibo_actualizacion':str(successful),
                       'codigo_aplicador_sha256':result['codigo_aplicador_sha256'],
                       'codigo_operar_sha256':result['codigo_operar_sha256']}
+            if relay_previous_image:
+                output.update(reles_previos_mezclados='PASS', reversion_imagenes_por_servicio='PASS',
+                              reles_finales_actualizados='PASS',
+                              servicios_antes=initial_services, servicios_revertidos=reverted_services,
+                              servicios_finales=final_services,
+                              codigo_arnes_sha256=operar.digest(Path(__file__)))
             operar.write_json(directory / 'resultado.json', output)
             return output
     finally:
@@ -88,6 +149,9 @@ def rehearse(fixture, proof, image_archive=None):
             operator.compose('down','--timeout','30')
         finally:
             (DEPLOY / 'compose.yaml').write_text(original)
+            if original_override is not None:
+                lab_override.write_bytes(original_override)
+                relay_marker.unlink(missing_ok=True)
             process.terminate()
             try: process.wait(timeout=15)
             except subprocess.TimeoutExpired:
@@ -101,9 +165,10 @@ if __name__ == '__main__':
     parser.add_argument('--fixture', type=Path, required=True)
     parser.add_argument('--ensayo', type=Path, required=True)
     parser.add_argument('--imagen-archivo', type=Path)
+    parser.add_argument('--imagen-reles-anterior', help='Ensayar Cooper nuevo con relés n8n/runner aún en la imagen local anterior')
     args = parser.parse_args()
     try:
-        print(json.dumps(rehearse(args.fixture, args.ensayo, args.imagen_archivo)))
+        print(json.dumps(rehearse(args.fixture, args.ensayo, args.imagen_archivo, args.imagen_reles_anterior)))
     except Exception:
         print('Ensayo infra detenido; revisar recibos privados del fixture.', file=sys.stderr)
         sys.exit(1)
