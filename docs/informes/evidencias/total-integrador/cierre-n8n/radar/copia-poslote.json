@@ -1,0 +1,7 @@
+{
+  "estado": "COPIA_PASS",
+  "lote_recibo_sha256": "65f6a9bda7c3061d2e90017aa945e33cc31c970972b99350f3baeb6e6ffc7c06",
+  "copia_sha256": "b6b0b19e5c8d1d9f9cd8585c4523bc23b3fa31eb714bd40287b573b92bc395c3",
+  "workflows": 45,
+  "ruta": "/home/operador/total-integrador-20261121/radar-horario/20261121T2340Z/database.sqlite"
+}

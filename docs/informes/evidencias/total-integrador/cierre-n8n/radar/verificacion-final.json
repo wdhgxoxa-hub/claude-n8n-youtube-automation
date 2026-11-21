@@ -1,0 +1,22 @@
+{
+  "estado": "PASS",
+  "recibo_ruta": "/var/lib/cooper-operacion/total-cierre-radar-20261121T2340Z-resultado.json",
+  "recibo_sha256": "6e747e3227f4d9a6f864d8516e5172e97ff60794a88025bb587e6e1d33372652",
+  "snapshot_previo": "d302a6cec835e4da1c99ef634e2f3f78e0dc7382241b44f65460157a8fa74bd1",
+  "integridad": true,
+  "claves_foraneas": true,
+  "mantenimiento": false,
+  "servicios": [
+    "cooper-caddy-1|Up 52 seconds (healthy)",
+    "cooper-chat-runner-1|Up 44 seconds (healthy)",
+    "cooper-chat-n8n-1|Up 52 seconds (healthy)",
+    "cooper-runner-1|Up 51 seconds (healthy)",
+    "cooper-chat-cooper-1|Up About a minute (healthy)",
+    "cooper-n8n-1|Up About a minute (healthy)",
+    "cooper-cooper-1|Up About a minute (healthy)"
+  ],
+  "healthy7": true,
+  "workflows": 45,
+  "activos": 29,
+  "credenciales": 15
+}

@@ -1,0 +1,10 @@
+{
+  "fase": "ensayo_local_previo",
+  "estado": "RECHAZADO_ANTES_DE_COPIAR",
+  "causa": "Destino inicialmente dentro del padre de SQLite origen; guardia de ensayo correcta",
+  "correccion": "Solo ruta del runner .cache, usando copia subdirectorio export como origen",
+  "helper_modificado": false,
+  "bundle_modificado": false,
+  "mutacion_vps": false,
+  "repeticion": "PASS"
+}

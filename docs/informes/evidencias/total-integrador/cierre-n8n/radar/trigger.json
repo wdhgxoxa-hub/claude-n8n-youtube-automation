@@ -1,0 +1,15 @@
+{
+  "estado": "PASS",
+  "activo": true,
+  "versionId": "b96dc611-006a-49b1-8f99-3d7ab7d55613",
+  "activeVersionId": "b96dc611-006a-49b1-8f99-3d7ab7d55613",
+  "nodeId": "c3fdac58-f726-4a9c-86f3-8d77854c9337",
+  "disabled": false,
+  "triggers": [
+    {
+      "versionId": "b96dc611-006a-49b1-8f99-3d7ab7d55613",
+      "status": "activated",
+      "error": false
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "fecha_utc": "2026-11-21T23:41:03.721504+00:00",
+  "alcance": "Revision local de guardias, sin acceso VPS ni ejecucion de fases",
+  "resultado": "COMPATIBLE_ESTADO_POST_EXTRAS",
+  "cantidad_workflows_fijada": false,
+  "activos_29_fijados": false,
+  "admite_45_workflows_31_activos": true,
+  "copias": "Hash de id, active, activeVersionId y versionId actuales; comparar antes y despues",
+  "reinicio": "Captura conteo, suma active y hash actuales; compara con recibo antes del reinicio",
+  "replica": "Restaura y verifica manifiesto completo, sin conteos predefinidos",
+  "guardias_reales": [
+    "release exacta b3",
+    "siete servicios saludables",
+    "recibos nuevos",
+    "reinicio exige cero ejecuciones new/running"
+  ],
+  "app_infra_runner": "No se reejecuta; su guardia cbf anterior corresponde a fase ya PASS",
+  "modificaciones_controles_certificados": false,
+  "sha256": {
+    "copia_final": "142a92efc7b07322c9f0f329864a088b487db590f20fb1a8f9db50f7c178b58c",
+    "control_final": "1169ec74653085cab3854bb3538e8eab762ff102386f13dc0d697fc892274669",
+    "replica": "1637a518790c39dd7af1b6c012a98d914fe53b826451bcf9afc2feb7a9919449",
+    "reinicio": "23167131aa07b6ed9bee9436a30ad0a39b40e54aa9fd9070a41bcb93d3ee549c",
+    "qa_publica": "2a68a20b75d6368b851fc0f12dcf9c746a910710b89d1386e489b71f341ae126"
+  }
+}

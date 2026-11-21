@@ -1,0 +1,19 @@
+{
+  "estado": "PREPARADO_ENSAYADO",
+  "run_id": "20261121T2340Z",
+  "lote_recibo_sha256": "65f6a9bda7c3061d2e90017aa945e33cc31c970972b99350f3baeb6e6ffc7c06",
+  "remote": "/home/operador/total-integrador-20261121/radar-horario/20261121T2340Z",
+  "bundle": "/home/operador/total-integrador-20261121/aplicadores-certificados-b3e608e/bundle/deploy",
+  "deploy": "/opt/cooper/deploy",
+  "salida": "/var/lib/cooper-operacion/total-cierre-radar-20261121T2340Z-resultado.json",
+  "fuentes_comparadas": 7,
+  "copia_sha256": "b6b0b19e5c8d1d9f9cd8585c4523bc23b3fa31eb714bd40287b573b92bc395c3",
+  "archivos": {
+    "entrada.json": "68dc821e8c836d1752d1b0fc85319bdf48fa94ebf651f480cf9a82af8fd877d5",
+    "diff.json": "8a4a1e7b3e03defed984b1acce7b15c496c519b848eaf1fbc9c1c40075c4be8e",
+    "publicar.json": "514735c37b869577cd38818a83531b7b1c477bc0c5d275da9da6b4f975bccb12",
+    "columnas.json": "e08918ce3844c5eced08c22c8c75ae4de6a345a79e1e0fd2127cff2543511b53",
+    "ensayo.json": "61b528b4b709ec8c9090cdebb770ffd675623cfb5d5938819b1a8f3cf28131d4",
+    "horario-radar.py": "df5621f98aec16a95622cc9f4b3f21c67ee9de037f418beb9cc5697ee8cbe21a"
+  }
+}
