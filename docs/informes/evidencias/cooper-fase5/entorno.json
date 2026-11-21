@@ -1,0 +1,60 @@
+{
+  "revision": "88fbf0d8dd7b5c75a2be0ebdb332bdfd8c9c1966",
+  "host": "CachyOS Linux, amd64; contenedores rootless",
+  "herramientas": {
+    "podman": "podman version 6.2.0",
+    "docker": "Docker Compose version 5.7.1",
+    "runc": "runc version 1.5.2\ncommit: 1.5.2-1-0-g17cc947-dirty\nspec: 1.3.0\ngo: go1.27.1-X:nodwarf5\nlibseccomp: 2.6.0\nlibpathrs: 0.2.6",
+    "node": "v24.22.3",
+    "npm": "12.2.2"
+  },
+  "imagenes": [
+    {
+      "imagen": "localhost/cooper:fase5",
+      "id": "82477e024a48656a32419a5118d27c544c4df74c6e4f8e636e6f8407a8f3f795",
+      "digests": [
+        "localhost/cooper@sha256:b08a5ab2d0226b06c530c02709ac4184fd1fd47aa8056a970e7a166d6c7de96a"
+      ]
+    },
+    {
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+      "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+      "digests": [
+        "ghcr.io/n8n-io/n8n@sha256:56a3f0d56c2888b53ca7d89de4aa3de702888f33667c96a1f1d7118548f979e9",
+        "ghcr.io/n8n-io/n8n@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+      ]
+    },
+    {
+      "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+      "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0",
+      "digests": [
+        "ghcr.io/n8n-io/runners@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f",
+        "ghcr.io/n8n-io/runners@sha256:e2aed3c5f1e8e93033584aa835094c919bb9b530f007f5de07f4c94ce90e82b1"
+      ]
+    },
+    {
+      "imagen": "docker.io/library/caddy:2.11.2-alpine",
+      "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90",
+      "digests": [
+        "docker.io/library/caddy@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1",
+        "docker.io/library/caddy@sha256:834468128c7696cec0ceea6172f7d692daf645ae51983ca76e39da54a97c570d"
+      ]
+    },
+    {
+      "imagen": "docker.io/restic/restic:0.20.0",
+      "id": "74964ddaa8bd9ccb75e747a981ea24c44585a711828c730b9b1a6b9b9f77f7fb",
+      "digests": [
+        "docker.io/restic/restic@sha256:93999df80d4ac6cb148e82d2ef1fe6a81996f17ff535e772723538211b31555a",
+        "docker.io/restic/restic@sha256:c6d6b4616e3980854c0cbb929c8a063549d5b61ee5ba422c0a4d3c3724b6ca91"
+      ]
+    },
+    {
+      "imagen": "docker.io/library/node:24.22.3-bookworm-slim",
+      "id": "5ba3c1ded6eada2ea16582327a87c672fb3889fca362ee3ac0d78ed742b583c0",
+      "digests": [
+        "docker.io/library/node@sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e",
+        "docker.io/library/node@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54"
+      ]
+    }
+  ]
+}
