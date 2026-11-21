@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 15:30 (Lima).
+Última actualización: 2026-11-21 15:37 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — cierre Radar y clon SQLite con WAL integrados en revisión:** incorporados el helper autónomo de restauración y los recibos históricos de sondas/memoria, preservando el estado de integración actual. 189 pruebas operativas aprobadas sin advertencias. Los 25 archivos del bundle operativo certificado permanecen idénticos; no cambia la app ni invalida el ensayo de infraestructura. Integrado en la rama propia de producto, pendiente de incorporar al corte raíz; sin ejecución ni despliegue remoto. [Alcance](informes/total-integrador-producto.md#octava-revisión-cierre-radar-y-copia-íntegra-de-sqlite-con-wal).
 
 - **21-11-2026, Lima — reversa de infraestructura con relés mixtos corregida:** conserva y acredita la imagen previa de cada servicio mediante override público, sin alterar el orden app→infraestructura→n8n. 185 pruebas operativas y 12 del adaptador aislado aprobadas sin advertencias; el wrapper dirige Compose al deploy vivo manteniendo helpers/contratos certificados fuera de él. No ejecutado en producción. Operación prepara el ensayo real de avería/reversa/actualización con relés antiguos y Cooper nuevo antes de aceptar el corte. [Informe](informes/total-integrador-producto.md#séptima-revisión-reversa-mixta-y-ejecución-desde-bundle-aislado).
 
