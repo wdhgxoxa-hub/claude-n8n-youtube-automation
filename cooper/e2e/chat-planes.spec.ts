@@ -25,10 +25,10 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
   await expect(page.getByLabel("Mensaje para Cooper")).toBeEnabled();
   await expect(
-    page.getByRole("img", { name: "Cooper hablando", exact: true }),
+    page.locator(".chat-heading").getByRole("img", { name: "Cooper hablando", exact: true }),
   ).toHaveAttribute("data-cooper-state", "hablando");
   await expect(
-    page.getByRole("img", { name: "Cooper reposo", exact: true }),
+    page.locator(".chat-heading").getByRole("img", { name: "Cooper reposo", exact: true }),
   ).toHaveAttribute("data-cooper-state", "reposo", { timeout: 8000 });
   await page.unroute("**/api/chat");
   // Fetch que espera a la cancelación, sin enviar una petición al servidor.
