@@ -2022,6 +2022,10 @@ test('aprendizaje del plan: PC caída reintenta evidencia sin nueva métrica y e
  assert.equal(pedir([base,{...base,job_id:'resuelto',estado:'listo'}]).length,0);
 });
 
+test('reconciliación YouTube: identidad confirmada, reversa y ninguna otra columna modificada',()=>{
+ execFileSync('python3',[path.join(__dirname,'test_reconciliar_aprendizaje.py')],{stdio:'pipe'});
+});
+
 test('aceptación del plan: lección real validada y siguiente guion lee IDs sin crear un video',async()=>{
  const {aceptar,cargarFuentes}=await import('../tools/cooper/aceptar_aprendizaje_plan.mjs');
  const fuentes=await cargarFuentes(path.join(__dirname,'..'));
