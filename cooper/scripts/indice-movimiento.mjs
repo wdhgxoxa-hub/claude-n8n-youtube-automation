@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
-const root = ".cache/videos-movimiento";
+const root = process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-movimiento";
 const rounds = readdirSync(root)
   .filter((n) => {
     if (!/^ronda-\d+$/.test(n)) return false;
@@ -10,6 +10,7 @@ const rounds = readdirSync(root)
       );
       return (
         report.stats.unexpected === 0 &&
+        report.stats.flaky === 0 &&
         report.stats.skipped === 0 &&
         report.stats.expected >= 10 &&
         report.errors.length === 0
