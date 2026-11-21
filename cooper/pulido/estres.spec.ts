@@ -205,9 +205,9 @@ test("aprendizaje: red lenta, doble clic, caída y reintento conservan el ajuste
     element.click();
   });
   await expect(control).toBeDisabled();
-  await expect(page.getByRole("alert")).toContainText(
-    "Caída de ensayo Sentinel",
-  );
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Caída de ensayo Sentinel" }),
+  ).toBeVisible();
   await expect(control).toBeEnabled();
   await expect(control).toBeChecked({ checked: activo });
   expect(intentos).toBe(1);
