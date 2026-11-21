@@ -13,6 +13,8 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
     baseURL,
+    // Las llamadas API del ensayo deben cumplir el mismo control CSRF que el navegador.
+    extraHTTPHeaders: { Referer: baseURL },
     launchOptions: {
       args: [
         "--use-fake-device-for-media-stream",
@@ -42,7 +44,11 @@ export default defineConfig({
         "resultados.spec.ts",
         "operacion.spec.ts",
       ],
-      use: { ...devices["Desktop Chrome"], baseURL: demoURL },
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: demoURL,
+        extraHTTPHeaders: { Referer: demoURL },
+      },
     },
   ],
   webServer: [

@@ -107,7 +107,10 @@ it("aísla marcas, archivos, cuentas y mutaciones; Walter ve todo", async () => 
   const response = await POST(
     new Request(`http://localhost/api/marcas/${m.id}/piezas`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        origin: "http://localhost",
+      },
       body: JSON.stringify({}),
     }),
     { params: Promise.resolve({ ruta: ["marcas", m.id, "piezas"] }) },

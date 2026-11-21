@@ -163,6 +163,9 @@ test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajena
   const id = proposed.chat.tarjetas.at(-1).id;
   const other = await browser.newContext({
     baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT}`,
+    extraHTTPHeaders: {
+      Referer: `http://127.0.0.1:${process.env.COOPER_E2E_PORT}`,
+    },
   });
   await login(other.request, "luis@example.test");
   expect(
@@ -385,6 +388,9 @@ test("una foto del chat abre el avatar privado sin omitir verificación", async 
   await expect(page.locator("blockquote")).toBeVisible();
   const other = await browser.newContext({
     baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT}`,
+    extraHTTPHeaders: {
+      Referer: `http://127.0.0.1:${process.env.COOPER_E2E_PORT}`,
+    },
   });
   await login(other.request, "luis@example.test");
   const foreignPage = await other.newPage();
@@ -429,6 +435,9 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
   await expect(page.getByText("Solo tú", { exact: true })).toBeVisible();
   const other = await browser.newContext({
     baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+    extraHTTPHeaders: {
+      Referer: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+    },
   });
   await login(other.request, "luis@example.test");
   expect(
@@ -506,6 +515,9 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   ).toHaveCount(0);
   const other = await browser.newContext({
     baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+    extraHTTPHeaders: {
+      Referer: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`,
+    },
   });
   await login(other.request, "luis@example.test");
   const suspendedPage = await other.newPage();

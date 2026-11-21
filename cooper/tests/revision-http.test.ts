@@ -3,7 +3,7 @@ import { body, sameOrigin, rateLimit, failure } from "@/lib/http";
 it("limita JSON por bytes durante lectura, incluso sin Content-Length", async () => {
   const request = new Request("http://localhost/api/chat", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", origin: "http://localhost" },
     body: JSON.stringify({ texto: "a".repeat(8 * 1024 * 1024) }),
   });
   await expect(body(request)).rejects.toMatchObject({ status: 413 });
@@ -13,7 +13,10 @@ it("rechaza JSON roto, tipos incorrectos y origen cruzado", async () => {
     body(
       new Request("http://localhost/api/chat", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          origin: "http://localhost",
+        },
         body: "{",
       }),
     ),
@@ -22,6 +25,7 @@ it("rechaza JSON roto, tipos incorrectos y origen cruzado", async () => {
     body(
       new Request("http://localhost/api/chat", {
         method: "POST",
+        headers: { origin: "http://localhost" },
         body: "hola",
       }),
     ),

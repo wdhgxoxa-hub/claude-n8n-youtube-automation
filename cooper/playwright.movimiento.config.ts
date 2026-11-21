@@ -14,6 +14,9 @@ export default defineConfig({
       name: "movimiento",
       use: {
         baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
+        extraHTTPHeaders: {
+          Referer: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
+        },
       },
     },
   ],

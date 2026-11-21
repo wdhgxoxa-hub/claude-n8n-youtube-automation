@@ -14,20 +14,28 @@ export default defineConfig({
       name: "movimiento-integrado",
       testDir: "./movimiento",
       timeout: 600000,
-      use: { baseURL: demoURL, trace: "off" },
+      use: {
+        baseURL: demoURL,
+        extraHTTPHeaders: { Referer: demoURL },
+        trace: "off",
+      },
     },
     {
       name: "estres-integrado",
       testDir: "./pulido",
       testMatch: "estres.spec.ts",
       timeout: 120000,
-      use: { baseURL: demoURL },
+      use: { baseURL: demoURL, extraHTTPHeaders: { Referer: demoURL } },
     },
     {
       name: "recorrido-integrado",
       testDir: "./integracion3",
       timeout: 240000,
-      use: { baseURL: demoURL, trace: "off" },
+      use: {
+        baseURL: demoURL,
+        extraHTTPHeaders: { Referer: demoURL },
+        trace: "off",
+      },
     },
   ],
   reporter: [

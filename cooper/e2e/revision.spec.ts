@@ -62,6 +62,9 @@ test("privacidad en HTML, JSON y carga de sesión Auth.js", async ({
   ).toBe(200);
   const context = await browser.newContext({
     baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "33171"}`,
+    extraHTTPHeaders: {
+      Referer: `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "33171"}`,
+    },
   });
   try {
     const session = await context.request.post(

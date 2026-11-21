@@ -30,14 +30,30 @@ export function failure(error: unknown) {
 }
 export function sameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(process.env.AUTH_URL ?? request.url).origin)
-    throw new ErrorHttp(403, "Origen no permitido.");
-  if (request.headers.get("sec-fetch-site") === "cross-site")
+  const expected = new URL(process.env.AUTH_URL ?? request.url).origin;
+  let source = origin;
+  // Origin tiene precedencia: nunca rescatar un Origin inválido con Referer.
+  if (source === null) {
+    try {
+      source = new URL(request.headers.get("referer") ?? "").origin;
+    } catch {
+      source = null;
+    }
+  }
+  if (
+    source !== expected ||
+    request.headers.get("sec-fetch-site") === "cross-site"
+  )
     throw new ErrorHttp(403, "Origen no permitido.");
 }
 export async function body(request: Request) {
   sameOrigin(request);
-  if (!request.headers.get("content-type")?.includes("application/json"))
+  const type = request.headers
+    .get("content-type")
+    ?.split(";", 1)[0]
+    .trim()
+    .toLowerCase();
+  if (type !== "application/json")
     throw new ErrorHttp(415, "Se requiere JSON.");
   const reader = request.body?.getReader();
   if (!reader) throw new ErrorHttp(400, "Falta el contenido.");
