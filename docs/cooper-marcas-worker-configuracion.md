@@ -6,6 +6,8 @@ Antes de generar nada, toma el mismo `operacion.lock` que las copias y el despli
 
 Anexa un secreto nuevo mediante `secrets.token_hex(32)` y fija `COOPER_MARCAS=simulada` y `COOPER_MARCAS_HABILITAR=0`. Deja los dos workflows sin publicar. El despliegue coordinado debe recrear Cooper, n8n y runner para cargar la configuración; este instalador no reinicia servicios.
 
+La opción explícita `--habilitar-simuladas`, incorporada en `e96eacf`, prepara el interruptor en `1` **solo en la primera instalación** y mantiene siempre el proveedor `simulada`. No publica ni activa los workflows. Reejecutar exige la misma opción del recibo original; no sirve para cambiar una instalación previa. El ciclo automático necesita además una activación de workers con su propia prueba y reversa. La publicación real continúa fuera de esta configuración.
+
 El recibo `/var/lib/cooper-operacion/marcas-worker-configurado.json` contiene solo nombres, metadatos del archivo y estado. Una segunda ejecución no genera ni anexa nada. El recibo se escribe primero como `preparado`: si ocurre un corte entre la escritura y su confirmación, el script se detiene sin regenerar. No borrar ese marcador para forzar un reintento. El operador debe resolver la interrupción usando metadatos y una ventana exclusiva; la recuperación automática no puede determinar si la escritura alcanzó el disco sin leer el entorno. Un cambio de inode o truncado también bloquea el reintento.
 
 La configuración técnica no activa publicación real ni resuelve los activos y permisos de los proveedores. La aceptación usa datos ficticios, HMAC y medios sintéticos. Sus pruebas incluyen escritura sin lectura, idempotencia, bloqueo por trabajos, lock ocupado, permisos/enlace y corte después de `fsync`.

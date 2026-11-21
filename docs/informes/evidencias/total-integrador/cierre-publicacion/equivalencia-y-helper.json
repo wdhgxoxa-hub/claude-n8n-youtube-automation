@@ -1,0 +1,26 @@
+{
+  "fecha_lima": "2026-11-21T17:53:47.281810-05:00",
+  "corte": "e96eacf7f5f47d229e80268686f1253f4992ada5",
+  "imagen_fuente": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "runtime_sin_diferencias": [
+    "cooper/src",
+    "cooper/drizzle",
+    "cooper/public",
+    "cooper/package.json",
+    "cooper/package-lock.json",
+    "cooper/next.config.ts",
+    "cooper/tsconfig.json",
+    "deploy/Containerfile",
+    ".dockerignore"
+  ],
+  "puerta_reutilizada": "docs/informes/evidencias/total-integrador/puerta-final.json",
+  "prueba_nueva": {
+    "comando": "python3 -B -W error -m unittest discover -s deploy/tests -p test_configurar_marcas_worker.py",
+    "pruebas": 12,
+    "rc": 0,
+    "advertencias": 0
+  },
+  "helper_marcas_sha256": "e09f236662780c7b9d61951af4699f7ec5bd7dd180f72d5500786d020b2bffb0",
+  "resultado": "PASS",
+  "limite": "Solo opci\u00f3n de instalaci\u00f3n simulada; no activa workers ni valida su automatizaci\u00f3n."
+}
