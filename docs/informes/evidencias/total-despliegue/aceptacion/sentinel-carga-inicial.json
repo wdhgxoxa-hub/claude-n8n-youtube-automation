@@ -1,0 +1,35 @@
+{
+  "herramienta": "Sistema Sentinel",
+  "origen": "https://cooper.cooperestudio.com",
+  "ancho": 1440,
+  "alcance": "Entrada pública sin sesión; pantallas privadas pendientes",
+  "modulos": [
+    {
+      "modulo": "recorridos",
+      "hallazgos": 0
+    },
+    {
+      "modulo": "estabilidad",
+      "hallazgos": 1
+    }
+  ],
+  "hallazgos": [
+    {
+      "tipo": "api_lenta",
+      "gravedad": "media",
+      "titulo": "Las respuestas se vuelven más lentas durante la sesión",
+      "modulo": "estabilidad",
+      "lugar": "https://cooper.cooperestudio.com",
+      "reproducir": [
+        "Abrir en Chromium, una tras otra y en bucle, las pantallas: https://cooper.cooperestudio.com/entrar",
+        "Mantener la sesión 30 s, quedándose unos segundos en cada pantalla y navegando dentro de la app (cambiando el # o pulsando el enlace interno a esa pantalla); si no hay forma, con la barra de direcciones. No pulsar nada más",
+        "Medir memoria JS, nodos y oyentes cada 2 s (DevTools > Performance monitor), recolectando basura al inicio y al final"
+      ],
+      "evidencia": [
+        "evidencias/estabilidad/series.json",
+        "evidencias/estabilidad/series.csv"
+      ],
+      "detalle": "Mediana del primer cuarto: 477 ms; del último cuarto: 1023 ms (14 peticiones del mismo origen)."
+    }
+  ]
+}

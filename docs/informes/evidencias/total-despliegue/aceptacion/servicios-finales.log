@@ -1,0 +1,10 @@
+cooper-chat-cooper-1|localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9|Up 3 minutes (healthy)
+cooper-cooper-1|localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9|Up 3 minutes (healthy)
+cooper-chat-runner-1|localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76|Up 5 minutes (healthy)
+cooper-chat-n8n-1|localhost/cooper:05d833787525fa98b183b3934ef13bd5dff1ca76|Up 5 minutes (healthy)
+cooper-runner-1|ghcr.io/n8n-io/runners:2.47.4|Up 5 minutes (healthy)
+cooper-n8n-1|ghcr.io/n8n-io/n8n:2.47.4|Up 6 minutes (healthy)
+cooper-caddy-1|caddy:2.11.2-alpine|Up 5 minutes (healthy)
+700|root|root|/var/lib/cooper-operacion/solo-cooper-20261121T163031Z
+600|ubuntu|ubuntu|/var/lib/cooper-operacion/solo-cooper-20261121T163031Z/respaldo/cooper.sqlite
+sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e|healthy|2026-11-21T16:30:50.458112836Z

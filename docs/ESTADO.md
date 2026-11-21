@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 11:46 (Lima).
+Última actualización: 2026-11-21 11:51 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **Despliegue parcial real del frente externo, 11:31 Lima:** Cooper pasó de `05d8337` a `cbf2068` (integración 3 y chat), con once migraciones y reversa aislada comprobada. Playwright y Sentinel públicos pasaron; las vistas privadas siguen pendientes de sesión Google. No contiene todavía todas las correcciones de `cooper-total`; la imagen970 y los parches de infraestructura se integran después. [Recibo y videos](informes/total-despliegue.md).
 
 - **cooper-total, corte 11:46 Lima:** imagen `970d102` probada con ocho bloques Compose y migración real 8→11/reversa. Bloqueo público del puente Caddy aplicado con reversa real 401→404→401→404, sin reiniciar n8n. Parches n8n/runner 2.47.6 y Caddy 2.11.8 ensayados, todavía sin desplegar. [Informe provisional y evidencias](informes/cooper-total.md).
 

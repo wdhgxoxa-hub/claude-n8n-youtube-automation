@@ -1,0 +1,8 @@
+{
+  "integridad": true,
+  "fallos_claves_foraneas": 0,
+  "migraciones": 11,
+  "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+  "salud": "healthy",
+  "fecha_utc": "2026-11-21T16:39:55.691039+00:00"
+}

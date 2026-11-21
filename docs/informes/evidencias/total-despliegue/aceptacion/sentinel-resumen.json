@@ -1,0 +1,36 @@
+[
+  {
+    "ancho": 1440,
+    "modulos": [
+      {
+        "modulo": "recorridos",
+        "hallazgos": 0
+      },
+      {
+        "modulo": "estabilidad",
+        "hallazgos": 0
+      }
+    ],
+    "muestras": 15,
+    "respuestas": 56,
+    "caidas": false,
+    "tareas_largas": 0
+  },
+  {
+    "ancho": 390,
+    "modulos": [
+      {
+        "modulo": "recorridos",
+        "hallazgos": 0
+      },
+      {
+        "modulo": "estabilidad",
+        "hallazgos": 0
+      }
+    ],
+    "muestras": 16,
+    "respuestas": 56,
+    "caidas": false,
+    "tareas_largas": 0
+  }
+]

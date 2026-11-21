@@ -1,0 +1,473 @@
+{
+  "pantallas": [
+    "https://cooper.cooperestudio.com/entrar",
+    "https://cooper.cooperestudio.com/entrar?error=AccessDenied"
+  ],
+  "duracion_s": 30,
+  "intervalo_s": 2.0,
+  "muestras": [
+    {
+      "t": 1.663,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": true,
+      "heap": 2429224.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 4.0
+    },
+    {
+      "t": 3.685,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2517760.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 63.0
+    },
+    {
+      "t": 5.699,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2564848.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 63.0
+    },
+    {
+      "t": 7.707,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2570200.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 63.0
+    },
+    {
+      "t": 9.181,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2591888.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 63.0
+    },
+    {
+      "t": 12.305,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 0,
+      "gc": false,
+      "heap": 4826676.0,
+      "nodos": 352.0,
+      "oyentes": 640.0,
+      "documentos": 3.0,
+      "layouts": 60.0
+    },
+    {
+      "t": 14.319,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 0,
+      "gc": false,
+      "heap": 4861100.0,
+      "nodos": 352.0,
+      "oyentes": 640.0,
+      "documentos": 3.0,
+      "layouts": 60.0
+    },
+    {
+      "t": 16.326,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 0,
+      "gc": false,
+      "heap": 4866440.0,
+      "nodos": 352.0,
+      "oyentes": 640.0,
+      "documentos": 3.0,
+      "layouts": 60.0
+    },
+    {
+      "t": 17.803,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 0,
+      "gc": false,
+      "heap": 4870400.0,
+      "nodos": 352.0,
+      "oyentes": 640.0,
+      "documentos": 3.0,
+      "layouts": 60.0
+    },
+    {
+      "t": 20.884,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 1,
+      "gc": false,
+      "heap": 3601972.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 22.897,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 1,
+      "gc": false,
+      "heap": 3627272.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 24.903,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 1,
+      "gc": false,
+      "heap": 3632616.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 26.384,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 1,
+      "gc": false,
+      "heap": 3636576.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 29.519,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 1,
+      "gc": false,
+      "heap": 6378588.0,
+      "nodos": 352.0,
+      "oyentes": 640.0,
+      "documentos": 3.0,
+      "layouts": 60.0
+    },
+    {
+      "t": 30.249,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 1,
+      "gc": false,
+      "heap": 6402116.0,
+      "nodos": 352.0,
+      "oyentes": 640.0,
+      "documentos": 3.0,
+      "layouts": 60.0
+    },
+    {
+      "t": 30.252,
+      "pantalla": "https://cooper.cooperestudio.com/entrar?error=AccessDenied",
+      "visita": 1,
+      "gc": true,
+      "heap": 2506764.0,
+      "nodos": 175.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 60.0
+    }
+  ],
+  "respuestas": [
+    {
+      "t": 0.871,
+      "ms": 620.9,
+      "url": "https://cooper.cooperestudio.com/entrar"
+    },
+    {
+      "t": 1.264,
+      "ms": 395.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/media/manrope_latin_wght_normal-s.p.1p_a2k8qd5zhp.woff2"
+    },
+    {
+      "t": 1.269,
+      "ms": 400.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3be5ypa669k_3.js"
+    },
+    {
+      "t": 1.269,
+      "ms": 400.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/05xbaj-lrloqe.js"
+    },
+    {
+      "t": 1.269,
+      "ms": 400.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0m210n0z2q9an.js"
+    },
+    {
+      "t": 1.27,
+      "ms": 400.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/turbopack-077hmtqrhcoji.js"
+    },
+    {
+      "t": 1.27,
+      "ms": 400.8,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1ua2kfq9s-me6.js"
+    },
+    {
+      "t": 1.271,
+      "ms": 400.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0c1ihz_7b-888.js"
+    },
+    {
+      "t": 1.443,
+      "ms": 574.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2i7e-k36htod_.js"
+    },
+    {
+      "t": 1.443,
+      "ms": 574.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/319i-v035v18f.js"
+    },
+    {
+      "t": 1.622,
+      "ms": 755.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3tfod5vk6sgxv.css"
+    },
+    {
+      "t": 1.63,
+      "ms": 756.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2urz3r1efim9w.js"
+    },
+    {
+      "t": 1.63,
+      "ms": 756.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1r4tpu9kyu516.js"
+    },
+    {
+      "t": 1.631,
+      "ms": 757.1,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1k6vud4yuzdun.js"
+    },
+    {
+      "t": 9.416,
+      "ms": 221.4,
+      "url": "https://cooper.cooperestudio.com/entrar?error=AccessDenied"
+    },
+    {
+      "t": 9.858,
+      "ms": 447.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/media/manrope_latin_wght_normal-s.p.1p_a2k8qd5zhp.woff2"
+    },
+    {
+      "t": 9.858,
+      "ms": 447.1,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3tfod5vk6sgxv.css"
+    },
+    {
+      "t": 9.858,
+      "ms": 446.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0c1ihz_7b-888.js"
+    },
+    {
+      "t": 9.858,
+      "ms": 447.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3be5ypa669k_3.js"
+    },
+    {
+      "t": 10.075,
+      "ms": 663.8,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0m210n0z2q9an.js"
+    },
+    {
+      "t": 10.08,
+      "ms": 669.1,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/turbopack-077hmtqrhcoji.js"
+    },
+    {
+      "t": 10.081,
+      "ms": 669.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1ua2kfq9s-me6.js"
+    },
+    {
+      "t": 10.084,
+      "ms": 673.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/05xbaj-lrloqe.js"
+    },
+    {
+      "t": 10.259,
+      "ms": 848.1,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1r4tpu9kyu516.js"
+    },
+    {
+      "t": 10.259,
+      "ms": 848.8,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/319i-v035v18f.js"
+    },
+    {
+      "t": 10.261,
+      "ms": 850.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2i7e-k36htod_.js"
+    },
+    {
+      "t": 10.262,
+      "ms": 850.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1k6vud4yuzdun.js"
+    },
+    {
+      "t": 10.289,
+      "ms": 855.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2urz3r1efim9w.js"
+    },
+    {
+      "t": 18.04,
+      "ms": 224.2,
+      "url": "https://cooper.cooperestudio.com/entrar"
+    },
+    {
+      "t": 18.248,
+      "ms": 208.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3tfod5vk6sgxv.css"
+    },
+    {
+      "t": 18.481,
+      "ms": 390.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/media/manrope_latin_wght_normal-s.p.1p_a2k8qd5zhp.woff2"
+    },
+    {
+      "t": 18.482,
+      "ms": 391.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/05xbaj-lrloqe.js"
+    },
+    {
+      "t": 18.482,
+      "ms": 391.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1ua2kfq9s-me6.js"
+    },
+    {
+      "t": 18.482,
+      "ms": 391.4,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/turbopack-077hmtqrhcoji.js"
+    },
+    {
+      "t": 18.652,
+      "ms": 613.6,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0c1ihz_7b-888.js"
+    },
+    {
+      "t": 18.652,
+      "ms": 613.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/319i-v035v18f.js"
+    },
+    {
+      "t": 18.653,
+      "ms": 615.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3be5ypa669k_3.js"
+    },
+    {
+      "t": 18.654,
+      "ms": 615.5,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2i7e-k36htod_.js"
+    },
+    {
+      "t": 18.84,
+      "ms": 800.5,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1r4tpu9kyu516.js"
+    },
+    {
+      "t": 18.842,
+      "ms": 803.6,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0m210n0z2q9an.js"
+    },
+    {
+      "t": 18.842,
+      "ms": 802.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1k6vud4yuzdun.js"
+    },
+    {
+      "t": 18.842,
+      "ms": 803.6,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2urz3r1efim9w.js"
+    },
+    {
+      "t": 26.69,
+      "ms": 299.3,
+      "url": "https://cooper.cooperestudio.com/entrar?error=AccessDenied"
+    },
+    {
+      "t": 27.075,
+      "ms": 391.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/media/manrope_latin_wght_normal-s.p.1p_a2k8qd5zhp.woff2"
+    },
+    {
+      "t": 27.077,
+      "ms": 394.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3tfod5vk6sgxv.css"
+    },
+    {
+      "t": 27.083,
+      "ms": 389.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3be5ypa669k_3.js"
+    },
+    {
+      "t": 27.083,
+      "ms": 389.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0c1ihz_7b-888.js"
+    },
+    {
+      "t": 27.29,
+      "ms": 601.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/turbopack-077hmtqrhcoji.js"
+    },
+    {
+      "t": 27.299,
+      "ms": 611.4,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1ua2kfq9s-me6.js"
+    },
+    {
+      "t": 27.301,
+      "ms": 613.8,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0m210n0z2q9an.js"
+    },
+    {
+      "t": 27.467,
+      "ms": 779.6,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/05xbaj-lrloqe.js"
+    },
+    {
+      "t": 27.474,
+      "ms": 784.8,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1r4tpu9kyu516.js"
+    },
+    {
+      "t": 27.474,
+      "ms": 785.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/319i-v035v18f.js"
+    },
+    {
+      "t": 27.474,
+      "ms": 785.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2i7e-k36htod_.js"
+    },
+    {
+      "t": 27.476,
+      "ms": 786.4,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1k6vud4yuzdun.js"
+    },
+    {
+      "t": 27.505,
+      "ms": 796.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2urz3r1efim9w.js"
+    }
+  ],
+  "tareas_largas": {
+    "https://cooper.cooperestudio.com/entrar": [],
+    "https://cooper.cooperestudio.com/entrar?error=AccessDenied": []
+  },
+  "caida": ""
+}

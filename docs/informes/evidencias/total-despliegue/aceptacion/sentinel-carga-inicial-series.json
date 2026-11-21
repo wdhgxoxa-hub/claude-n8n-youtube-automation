@@ -1,0 +1,261 @@
+{
+  "pantallas": [
+    "https://cooper.cooperestudio.com/entrar"
+  ],
+  "duracion_s": 30,
+  "intervalo_s": 2.0,
+  "muestras": [
+    {
+      "t": 2.301,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": true,
+      "heap": 2460568.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 39.0
+    },
+    {
+      "t": 4.32,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2486684.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 6.335,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2533780.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 8.338,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2541532.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 10.352,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2562208.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 12.366,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2565852.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 14.38,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2571460.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 16.384,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2575420.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 18.4,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2579976.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 20.414,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2585236.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 22.431,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2606300.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 24.444,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2610068.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 26.458,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2616212.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 28.472,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2620204.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 30.254,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": false,
+      "heap": 2624196.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    },
+    {
+      "t": 30.257,
+      "pantalla": "https://cooper.cooperestudio.com/entrar",
+      "visita": 0,
+      "gc": true,
+      "heap": 2521808.0,
+      "nodos": 173.0,
+      "oyentes": 318.0,
+      "documentos": 1.0,
+      "layouts": 62.0
+    }
+  ],
+  "respuestas": [
+    {
+      "t": 1.243,
+      "ms": 995.8,
+      "url": "https://cooper.cooperestudio.com/entrar"
+    },
+    {
+      "t": 1.71,
+      "ms": 474.4,
+      "url": "https://cooper.cooperestudio.com/_next/static/media/manrope_latin_wght_normal-s.p.1p_a2k8qd5zhp.woff2"
+    },
+    {
+      "t": 1.714,
+      "ms": 476.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3tfod5vk6sgxv.css"
+    },
+    {
+      "t": 1.715,
+      "ms": 471.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/3be5ypa669k_3.js"
+    },
+    {
+      "t": 1.715,
+      "ms": 471.2,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0c1ihz_7b-888.js"
+    },
+    {
+      "t": 2.049,
+      "ms": 808.7,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/0m210n0z2q9an.js"
+    },
+    {
+      "t": 2.05,
+      "ms": 809.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1ua2kfq9s-me6.js"
+    },
+    {
+      "t": 2.05,
+      "ms": 808.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/turbopack-077hmtqrhcoji.js"
+    },
+    {
+      "t": 2.259,
+      "ms": 1018.3,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/05xbaj-lrloqe.js"
+    },
+    {
+      "t": 2.26,
+      "ms": 1018.4,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2i7e-k36htod_.js"
+    },
+    {
+      "t": 2.263,
+      "ms": 1022.4,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/319i-v035v18f.js"
+    },
+    {
+      "t": 2.264,
+      "ms": 1022.9,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1r4tpu9kyu516.js"
+    },
+    {
+      "t": 2.264,
+      "ms": 1023.0,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/1k6vud4yuzdun.js"
+    },
+    {
+      "t": 2.29,
+      "ms": 1033.8,
+      "url": "https://cooper.cooperestudio.com/_next/static/chunks/2urz3r1efim9w.js"
+    }
+  ],
+  "tareas_largas": {
+    "https://cooper.cooperestudio.com/entrar": []
+  },
+  "caida": ""
+}

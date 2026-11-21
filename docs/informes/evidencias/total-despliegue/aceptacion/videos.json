@@ -1,0 +1,42 @@
+[
+  {
+    "archivo": "entrada-y-acceso-1440.webm",
+    "sha256": "7379a91b9765922db7ee92947cae919b0e34299d6e77225a5aa5b15b622bda50",
+    "bytes": 7084094,
+    "metadatos": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "width": 1440,
+          "height": 900
+        }
+      ],
+      "format": {
+        "duration": "45.200000"
+      }
+    },
+    "decodificacion": "PASS"
+  },
+  {
+    "archivo": "entrada-y-acceso-390.webm",
+    "sha256": "bd804b14967ccb39213705a7ab0ea4ab19529ef1697aa2682a67374c14a3d6f6",
+    "bytes": 3515262,
+    "metadatos": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "width": 390,
+          "height": 900
+        }
+      ],
+      "format": {
+        "duration": "43.960000"
+      }
+    },
+    "decodificacion": "PASS"
+  }
+]

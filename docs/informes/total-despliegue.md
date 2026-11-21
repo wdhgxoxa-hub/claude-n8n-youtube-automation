@@ -1,10 +1,10 @@
 # total-despliegue — aceptación de Cooper integrado
 
-Actualizado: **2026-11-21 11:28 (Lima)**. Rama y worktree `total-despliegue`.
+Actualizado: **2026-11-21 11:41 (Lima)**. Rama y worktree `total-despliegue`.
 
 ## Estado de esta continuación
 
-**Implementado y probado; imagen cargada, todavía no aplicada.** El intento de corte fue rechazado por el bloqueo operativo del orquestador, que mantiene el VPS en mantenimiento. No se detuvo ni modificó ningún servicio desde este frente. No se hizo push ni merge. Las acciones históricas de otros trabajos se conservan al final de este documento.
+**Cooper integrado desplegado a las 11:31 Lima; aceptación privada pendiente de sesión.** El primer intento fue rechazado por el bloqueo del orquestador. Tras su recuperación completa, el corte exclusivo terminó correctamente. Se actualizaron únicamente Cooper y su relé; n8n, runner, Caddy y los relés ajenos conservaron IDs, imágenes y fechas de arranque. No se hizo push ni merge. Las acciones históricas de otros trabajos se conservan al final de este documento.
 
 La imagen procede de `cbf20685e07bf07566573825418d87799bed5ad9`, descendiente de `cooper-integracion3` (`de397f3`). Su árbol `cooper/` es idéntico al de la puerta final. Se construyó desde `git archive`, sin entornos, bases ni sesiones privadas. Podman usa formato Docker para conservar `HEALTHCHECK`; el primer intento OCI emitió un aviso y fue sustituido antes de desplegar. [Fuente, imagen y transporte](evidencias/total-despliegue/aceptacion/fuentes.json).
 
@@ -12,7 +12,9 @@ La imagen procede de `cbf20685e07bf07566573825418d87799bed5ad9`, descendiente de
 
 - `8e20fec`: ajusta la evaluación de memoria/chat al contrato vigente de una frase de hasta 18 palabras y segunda frase solo para decidir; conserva las comprobaciones de aislamiento.
 - `cbf2068`, `53f2839`, `a1232b3`, `03998e7`: corte exclusivo de Cooper y su relé; bloqueo compartido, rechazo de imagen cambiada o stack no saludable, respaldo frío, ensayo real sin red, reversa automática y conservación de datos del intento. Nunca opera n8n/runner/Caddy; verifica sus identidades antes/después.
-- `403a9f0`, `72f0dfd`, `ca873fd`: aceptación pública con Playwright y Sentinel, videos a 1440/390 px, protección de rutas/APIs y Google OIDC; sin OAuth ni cookies fabricadas.
+- `403a9f0`, `72f0dfd`, `ca873fd`, `aa9a116`, `d261bbb`: aceptación pública con Playwright, videos a 1440/390 px, 22 rutas protegidas, revisión WhatsApp, acceso denegado y Google OIDC; sin OAuth ni cookies fabricadas.
+- `948e103`, `25258dc`: Sentinel mide navegación repetida real y conserva resultados de ambos tamaños incluso si encuentra un problema. No se modificaron sus guardianes, evaluadores ni umbrales.
+- `7ead008`: primera evidencia íntegra de puerta y preparación durante el mantenimiento concurrente.
 - `b71bef6`: [procedimiento reproducible y alcance de la reversa](../cooper-despliegue-aislado.md).
 
 ## Puerta final
@@ -32,15 +34,37 @@ Ejecutada completa y secuencialmente: `cd cooper && npm ci && npm run lint && np
 
 Los siete pasos de la puerta terminaron sin errores ni advertencias. [Resultados y tiempos](evidencias/total-despliegue/aceptacion/puerta.json), registros individuales y manifiesto SHA-256 en la misma carpeta. La primera ejecución encontró el texto antiguo del test; la segunda encontró Chromium de Sentinel ausente. Se corrigió el test y se instaló el navegador requerido, luego se repitió toda la puerta. No se desactivaron pruebas ni guardianes.
 
-## Validación pública previa
+## Despliegue y reversa comprobados
+
+Corte **11:30:31–11:31:09 Lima**. Imagen anterior `05d833787525fa98b183b3934ef13bd5dff1ca76` → imagen del commit `cbf20685e07bf07566573825418d87799bed5ad9`. Imagen Docker desplegada: `sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e`.
+
+- Copia fría de Cooper en `/var/lib/cooper-operacion/solo-cooper-20261121T163031Z/respaldo`, bajo directorio 0700; configuración de Caddy conservada. No se copió ningún `.env`, clave del host ni certificado privado.
+- SQLite **8→11 migraciones**, integridad y claves foráneas correctas, conteos de las **21 tablas anteriores** preservados en el ensayo.
+- La copia restaurada coincide byte a byte con el respaldo y arrancó con la imagen anterior, sin red ni puertos. **Reversa aislada real PASS**; no se provocó una reversión de tráfico después de abrir la nueva versión.
+- HTTPS `/api/salud` respondió 200/ok. El diario vivo coincide con el ensayado. Caddy no necesitó recarga; se conservaron su archivo y servicio.
+- El recibo registra las identidades completas antes/después de los cinco servicios ajenos y verifica igualdad exacta. [Recibo del VPS](evidencias/total-despliegue/aceptacion/despliegue.json).
+
+La copia específica de este corte permanece en el VPS. Los respaldos restic y la réplica anteriores no se invocaron desde este frente porque administran el stack completo. Una reversa posterior exige preservar y conciliar actividad nueva antes de restaurar.
+
+## Validación pública
 
 TLS 1.3 con CA/hostname verificados, certificado hasta 19-feb-2027 y HTTP→HTTPS 301: [evidencia](evidencias/total-despliegue/aceptacion/tls.json). Google declara OIDC y el callback exacto `https://cooper.cooperestudio.com/api/auth/callback/google`; no se inició autenticación.
 
-La sonda previa contra la imagen antigua se detuvo al llegar a una ruta nueva todavía inexistente. No se presenta como aceptación de la versión nueva. Los recorridos finales se ejecutarán al terminar el corte. El navegador compartido no está disponible y no se encontró Chromium de usuario accesible por Playwright; no se leyeron cookies, sesiones ni archivos `.env` reales.
+**Playwright final PASS en producción:** 22 rutas privadas redirigen a entrada (incluidos detalle de canal/video y revisión WhatsApp), seis APIs responden 401 sin sesión, Google OIDC/callback correctos. Entrada normal y aviso de acceso denegado a 1440×900 y 390×900: cero errores/advertencias de consola, cero desbordamientos y cero violaciones axe AA. [Resultados](evidencias/total-despliegue/aceptacion/publico.json), [escritorio](evidencias/total-despliegue/aceptacion/entrada-1440.png) y [móvil](evidencias/total-despliegue/aceptacion/entrada-390.png), inspeccionados visualmente.
+
+Dos videos VP9/WebM de **45,20 s y 43,96 s**, decodificados íntegramente con FFmpeg sin errores. [Índice local](../../cooper/.cache/total-despliegue-aceptacion/publico/index.html), [escritorio](../../cooper/.cache/total-despliegue-aceptacion/publico/entrada-y-acceso-1440.webm), [móvil](../../cooper/.cache/total-despliegue-aceptacion/publico/entrada-y-acceso-390.webm) y [metadatos/SHA-256](evidencias/total-despliegue/aceptacion/videos.json). Las grabaciones muestran entrada y protecciones anónimas; **no son recorridos autenticados del interior privado**.
+
+**Sentinel final PASS en producción:** recorridos y estabilidad de la entrada normal/acceso denegado, en ambos tamaños, sin hallazgos. Host exacto autorizado, TLS validado, guardianes activos, autenticación y mutaciones excluidas. [Resumen](evidencias/total-despliegue/aceptacion/sentinel-resumen.json); informes y series por tamaño en la misma carpeta.
+
+Se conservan dos hallazgos previos de latencia, sin ocultarlos: 477→1023 ms en 14 descargas de la única carga inicial, y 890→1937 ms en 56 peticiones durante navegación con la grabación concurrente. El primer conjunto terminó en los primeros 2,3 s; el evaluador compara también archivos estáticos. Al ejecutar navegación repetida **sin la grabación en paralelo**, el hallazgo no se reprodujo en ninguno de los tamaños. Esto no demuestra latencia constante ni sustituye mediciones de campo. [Primera señal](evidencias/total-despliegue/aceptacion/sentinel-carga-inicial.json), [navegación concurrente](evidencias/total-despliegue/aceptacion/sentinel-concurrente.json) y sus series permanecen versionadas. No se cambió el producto ni se debilitaron umbrales para lograr el resultado.
+
+La sonda previa contra la imagen antigua se detuvo en una ruta nueva inexistente; otro intento detectó un selector ambiguo entre el aviso y el anunciador de Next. Se corrigió únicamente el selector del arnés. La ronda final completa pasó. El navegador compartido no está disponible y no se encontró Chromium de usuario accesible por Playwright; no se leyeron cookies, sesiones ni archivos `.env` reales. **El login real y todas las vistas privadas siguen sin acreditar en producción.**
+
+Comprobación final a las **11:39:55 Lima**: imagen exacta esperada, servicio saludable, once migraciones, integridad correcta y cero fallos de claves foráneas. [Evidencia](evidencias/total-despliegue/aceptacion/integridad-final.json). La rama conserva sus commits propios; el orquestador integra. El commit de cierre se identifica con `git log -1 -- docs/informes/total-despliegue.md`.
 
 ## Pendientes de Walter y coordinación
 
-1. **Orquestador:** terminar su mantenimiento y devolver el stack saludable para aplicar el corte exclusivo. No se elude su bloqueo ni se inicia n8n desde este frente.
+1. **Orquestador:** integrar los commits de esta rama y coordinar cualquier actualización posterior de los otros frentes. Este despliegue contiene integración 3 y el chat ya presentes en `total-despliegue`; no declara desplegada la imagen candidata `169d0cd` del registro histórico.
 2. **Walter:** completar el login Google y facilitar una sesión existente autorizada para el recorrido privado de producción. La misión prohíbe iniciar OAuth; la entrada y los rechazos anónimos no acreditan ese login ni las pantallas privadas.
 3. Revisión humana en teléfono/Safari y los pendientes anteriores de Meta, medios/publicación, presupuestos y aceptación de los otros frentes permanecen vigentes.
 
