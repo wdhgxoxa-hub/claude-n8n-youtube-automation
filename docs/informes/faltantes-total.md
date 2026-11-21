@@ -17,6 +17,28 @@ Este inventario conserva el corte original y sus referencias. Los informes de ca
 - **H18:** matriz automatizada Firefox/WebKit implementada, 24/24 recorridos focales correctos; corrige el MIME del audio en Firefox. La puerta integrada y sus rondas finales se registran en el informe de cierre. Teléfono, Safari y tecnologías de asistencia físicos conservan B09.
 - **H19:** prueba con 10.000 videos y 10.000 mensajes implementada; ciclo estable de avisos de 884,67 a 19,56 ms de mediana sin cambiar los resultados consultados. No acredita paginación de Data Tables ni rendimiento de red/renderizado. [Mediciones y alcance](total-m12.md).
 
+## Seguimiento integrado, 21-11-2026 Lima — cierre todavía en curso
+
+Este cuadro actualiza el inventario sin reescribir su corte original. «Probado» identifica el alcance de la evidencia; no equivale a aceptación privada del VPS.
+
+| Hallazgos | Cierre técnico acreditado | Validación o límite que falta |
+| --- | --- | --- |
+| H01/H09 | Imagen final 719409f, 13 migraciones, FFmpeg y workers: migración/reversa, ocho bloques Compose y aplicador exacto con avería/reversa correctos. | Activación final, instalación opaca Marcas y aceptación pública después de dos rondas. Proveedores reales y sesión Google: B. |
+| H02 | Lotes aplicados con reversas y conservación de datos; esquema real corregido con solo dos columnas y puerta obligatoria para futuros lotes. | Delta de Resolver y aceptación final de Radar en curso. |
+| H03/H16 | Puente firmado PC→VPS, caída/reconexión, 37 casos semánticos y tres conversaciones VPS breves. | Sesión web legítima y aceptación cotidiana: B01/B10. |
+| H04 | Ciclo de métricas reales→lección→siguiente borrador probado; M7 horario activo y omisión rechazada. | Ventanas futuras, publicaciones aprobadas y contraste de hipótesis: B05. No se promete mejora causal. |
+| H05 | Fuentes nativas y diferenciación implementadas; getter real y acceso vidIQ acreditados tras corregir esquema/sonda. | Un segundo fallo de Radar y el uso acotado de cuota incluida siguen a cargo de Codex. |
+| H06 | Copia cifrada fuera del VPS, restauración, Telegram y reinicio real probados. | Refrescar copia y aceptación del arranque después de la versión final; custodia/PC disponibles: B11. |
+| H07 | Controles de seguridad y bloqueo de webhooks aplicados/revertidos; fuentes Sentinel retiradas del historial público. | Identificar por ID la clave anterior antes de revocarla: B. |
+| H08 | Contrato de retorno y URL configurables corregidos; retorno externo conservado inactivo. | Asociación de la routine externa: B02. |
+| H10/H12/H13 | Conciliación sin reenvío, montajes por referencia e inventario/retención implementados y probados. | Recibos inciertos y política de purga: B08; no se borraron datos productivos. |
+| H14 | Worker durable de biblioteca, reinicio y navegador cerrado probados; sondeo simulado corregido. | Activar proveedores reales exige sus permisos/consentimientos. |
+| H15/H18 | Puerta limpia: 459 unitarias, 77 E2E, 173 flujos, cero errores/advertencias. Firefox y WebKit incluidos; caché Sentinel privada verificable. | Dos rondas ampliadas con videos en curso. Dispositivos físicos y asistencia: B09. |
+| H17 | Resultados de videos/Marcas agregados, con dueño, filtros, origen y métricas ausentes preservados. | Aceptación privada humana: B01. |
+| H19 | Avisos incrementales y medición real Data Tables con 10.000 videos; proyección de 9.136→197 ms con respuestas idénticas. | Total administrativo máximo 1.070 ms: conserva incumplimiento del presupuesto comparativo de 1.000 ms; no es SLA. HTTP/renderizado e historia paginada no están acreditados. [Contraste](total-volumen-n8n.md). |
+| H20 | Reclasificado como ampliación opcional B, no defecto del contrato de estimaciones. | No se encargó conciliación contable. |
+| H21 | README, procedimientos e informes actualizados; historia anterior preservada y enlazada. | Informe final/ESTADO, publicación de las dos ramas y comprobación de sus SHAs al terminar. |
+
 ## Criterios y alcance
 
 - **A:** Codex puede cerrar el trabajo técnico con código, configuración autorizada o ensayos sin comprar servicios, conceder permisos ni decidir por Walter. Esta auditoría solo lo documenta.
