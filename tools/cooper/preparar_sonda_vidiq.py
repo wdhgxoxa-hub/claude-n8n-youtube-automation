@@ -33,7 +33,7 @@ const leer = (r, esperado) => {
  // Clasificar dentro de n8n; nunca devolver el mensaje (puede contener datos del transporte).
  const nodo=typeof r?.error==='string'?r.error:JSON.stringify(r?.error || {});
  const fallo_nodo=!r?.error?null:/JSON.*(?:valid|v[aá]lid)|valid.*JSON/i.test(nodo)?'json_invalido':
-  /paired.?item|expression|expresi[oó]n|referenced node/i.test(nodo)?'expresion':
+  /paired.?item|expression|expresi[oó]n|referenced node|invalid syntax/i.test(nodo)?'expresion':
   /credential|credencial/i.test(nodo)?'credencial_nodo':/timed?\s*out|timeout|ETIMEDOUT/i.test(nodo)?'timeout':
   /authoriz|unauthoriz|forbidden|401|403/i.test(nodo)?'autorizacion':
   /ENOTFOUND|ECONN|socket|network|certificate/i.test(nodo)?'red':
@@ -109,7 +109,11 @@ if(r.status===200&&!r.error)for(const nombre of permitidas){
  const t=(r.rpc.result?.tools || []).find(t=>t.name===nombre);if(!t)continue;
  const requeridos=t.inputSchema?.required || [];
  if(requeridos.some(k=>k!=='userGoal'))continue;
- pedidos.push({json:{nombre,id:10+pedidos.length,args:requeridos.includes('userGoal')?{userGoal:'Comprobar acceso sin usar créditos ni cambiar la cuenta'}:{}}});
+ const id=10+pedidos.length,args=requeridos.includes('userGoal')?{userGoal:'Comprobar acceso sin usar créditos ni cambiar la cuenta'}:{};
+ // El evaluador de expresiones de n8n reserva `arguments`, incluso como clave.
+ // Serializar en Code evita esa gramática sin cambiar la petición MCP.
+ const cuerpo=JSON.stringify({jsonrpc:'2.0',id,method:'tools/call',params:{name:nombre,arguments:args}});
+ pedidos.push({json:{nombre,id,args,cuerpo}});
 }
 return pedidos.length?pedidos:[{json:{sin_pedidos:true}}];
 """}))
@@ -117,7 +121,7 @@ return pedidos.length?pedidos:[{json:{sin_pedidos:true}}];
         'conditions': [{'leftValue': '={{ $json.sin_pedidos !== true }}', 'rightValue': True,
                         'operator': {'type': 'boolean', 'operation': 'true', 'singleValue': True}}],
         'combinator': 'and'}}, 2.2))
-    http('Leer cuenta sin créditos', "={{ JSON.stringify({jsonrpc:'2.0',id:$json.id,method:'tools/call',params:{name:$json.nombre,arguments:$json.args}}) }}")
+    http('Leer cuenta sin créditos', '={{ $json.cuerpo }}')
     agregar(nodo('Diagnóstico mínimo', 'code', {'jsCode': LECTOR + r"""
 const inicio=leer(salida('Inicializar')[0],1), lista=leer(salida('Listar herramientas')[0],2);
 const nombres=['vidiq_balance','vidiq_user_channels','vidiq_list_competitors'];

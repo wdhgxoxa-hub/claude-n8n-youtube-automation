@@ -51,6 +51,11 @@ test('descubrir herramientas no autoriza investigaciones, cambios ni argumentos 
   ];
   const pedidos = ejecutar('Pedidos gratuitos', rpc({ tools },2));
   assert.deepEqual(pedidos.map(p => p.json.nombre), ['vidiq_balance', 'vidiq_user_channels']);
+  assert.equal(f.nodes.find(n => n.name === 'Leer cuenta sin créditos').parameters.jsonBody, '={{ $json.cuerpo }}');
+  assert.deepEqual(pedidos.map(p => JSON.parse(p.json.cuerpo)), [
+    {jsonrpc:'2.0',id:10,method:'tools/call',params:{name:'vidiq_balance',arguments:{}}},
+    {jsonrpc:'2.0',id:11,method:'tools/call',params:{name:'vidiq_user_channels',arguments:{userGoal:'Comprobar acceso sin usar créditos ni cambiar la cuenta'}}},
+  ]);
   assert.equal(ejecutar('Pedidos gratuitos', { statusCode: 401, body: '{}' })[0].json.sin_pedidos, true);
 });
 
@@ -102,4 +107,23 @@ test('el diagnóstico separa fallos del nodo sin mostrar el mensaje ni atribuirl
   assert.equal(d.consultas[0].http, 0);
   assert.equal(d.consultas[0].fallo_nodo, 'json_invalido');
   assert.equal(d.consultas[0].ok, false);
+});
+
+test('el error de sintaxis del evaluador n8n se clasifica sin atribuirlo a la cuenta', () => {
+  const nodos = {'Pedidos gratuitos': [{nombre:'vidiq_balance',id:10}], 'Leer cuenta sin créditos': [{error:'invalid syntax'}]};
+  const d=JSON.parse(ejecutar('Diagnóstico mínimo',{},nodos)[0].json.resultado);
+  assert.equal(d.consultas[0].http,0);
+  assert.equal(d.consultas[0].fallo_nodo,'expresion');
+  assert.equal(d.consultas[0].ok,false);
+});
+
+test('lee el campo data de text/fullResponse de n8n con JSON y SSE', () => {
+  const datos={credits:{remaining:25},_credits:{used:0}};
+  for(const data of [JSON.stringify({jsonrpc:'2.0',id:10,result:{structuredContent:datos}}),
+    'event: message\ndata: '+JSON.stringify({jsonrpc:'2.0',id:10,result:{structuredContent:datos}})+'\n\n']){
+    const nodos={'Pedidos gratuitos':[{nombre:'vidiq_balance',id:10}], 'Leer cuenta sin créditos':[{statusCode:200,data}]};
+    const d=JSON.parse(ejecutar('Diagnóstico mínimo',{},nodos)[0].json.resultado);
+    assert.equal(d.consultas[0].ok,true);
+    assert.equal(d.consultas[0].saldo['credits.remaining'],25);
+  }
 });
