@@ -213,7 +213,10 @@ it.each(guiones)("conversación $id: $tipo — $texto", async (g) => {
         return "Videos de un minuto.";
       }),
     );
-    expect(context?.sistema).toContain("máximo 2 frases");
+    expect(context?.sistema).toContain("una sola frase de hasta 18 palabras");
+    expect(context?.sistema).toContain(
+      "usa una segunda frase solo si hace falta una decisión",
+    );
     expect(context?.sistema).toContain(
       "solo extiéndete si el usuario pide detalle",
     );
