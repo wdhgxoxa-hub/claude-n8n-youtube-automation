@@ -204,6 +204,13 @@ if __name__ == '__main__':
         with (STATE / 'operacion.lock').open('a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             print(json.dumps(deploy(args.imagen, args.anterior_id)))
-    except (RuntimeError, OSError, ValueError, subprocess.SubprocessError):
+    except BlockingIOError:
+        print('VPS ocupado por otra operación; no se modificó ningún servicio.')
+        raise SystemExit(2) from None
+    except RuntimeError as error:
+        # Estos mensajes se construyen exclusivamente aquí, nunca con stderr privado.
+        print(str(error))
+        raise SystemExit(1) from None
+    except (OSError, ValueError, subprocess.SubprocessError):
         print('No se completó el despliegue. Revisar el recibo seguro; no se muestran datos privados.')
         raise SystemExit(1) from None
