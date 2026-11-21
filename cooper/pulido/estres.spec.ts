@@ -22,18 +22,24 @@ test("chat: ráfaga de envíos, texto de 6000 caracteres, foto, rechazo recupera
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   const counts: number[] = [];
+  const mensaje = page.getByRole("textbox", {
+    name: "Mensaje para Cooper",
+    exact: true,
+  });
   for (let i = 0; i < 12; i++) {
     const before = await (await page.request.get("/api/estado")).json();
     const text =
       i === 0 ? "x".repeat(6000) : `Hola Cooper, ensayo de ráfaga ${i}`;
-    await page.getByLabel("Mensaje para Cooper").fill(text);
-    await page
-      .getByRole("region", { name: "Chat con Cooper" })
-      .locator("form.composer")
-      .evaluate((f) => {
-        for (let j = 0; j < 5; j++) (f as HTMLFormElement).requestSubmit();
-      });
-    await expect(page.getByLabel("Mensaje para Cooper")).toHaveValue("");
+    await expect(mensaje).toHaveCount(1);
+    await expect(mensaje).toBeVisible();
+    await mensaje.fill(text);
+    // El chat móvil es un tabpanel; ambos diseños comparten el campo accesible.
+    await mensaje.evaluate((campo: HTMLTextAreaElement) => {
+      const formulario = campo.form;
+      if (!formulario) throw new Error("El mensaje no tiene formulario asociado");
+      for (let j = 0; j < 5; j++) formulario.requestSubmit();
+    });
+    await expect(mensaje).toHaveValue("");
     await expect(
       page.getByRole("button", { name: "Cancelar espera" }),
     ).toHaveCount(0);
