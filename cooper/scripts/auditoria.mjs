@@ -63,7 +63,10 @@ try {
   browser = await chromium.launch({
     args: [`--remote-debugging-port=${port}`],
   });
-  const context = await browser.newContext({ baseURL: base });
+  const context = await browser.newContext({
+    baseURL: base,
+    extraHTTPHeaders: { Referer: base },
+  });
   const auth = await context.request.post(
     `http://127.0.0.1:${fixturePort}/sesion`,
     {
