@@ -1,0 +1,58 @@
+{
+  "fecha_lima": "2026-11-21 12:30",
+  "base_codigo": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "commit_guia": "0bd15f8c3fd228d8a20d37050bfdd19a7e168e0a",
+  "comandos": {
+    "npm ci": {
+      "rc": 0,
+      "vulnerabilidades": 0
+    },
+    "npm run lint": {
+      "rc": 0,
+      "errores": 0,
+      "advertencias": 0
+    },
+    "npm run typecheck": {
+      "rc": 0
+    },
+    "npm test": {
+      "rc": 0,
+      "archivos": 30,
+      "pruebas": 284
+    },
+    "npm run test:e2e": {
+      "rc": 0,
+      "pruebas": 43,
+      "omitidas": 0,
+      "reintentos": 0
+    },
+    "npm run build": {
+      "rc": 0
+    },
+    "node --test tests/flujos_v2.test.cjs": {
+      "rc": 0,
+      "pruebas": 147,
+      "omitidas": 0
+    }
+  },
+  "registros": [
+    {
+      "archivo": "puerta-cooper.txt",
+      "sha256": "2ccf05965898475547a7c9143d2c120754e030b99f83f5c4082df2eee10b283f"
+    },
+    {
+      "archivo": "puerta-flujos.txt",
+      "sha256": "95525c0162429e76da869352c121769a16a91a3d0937806dff151fd4b287690c"
+    }
+  ],
+  "capturas": {
+    "cantidad": 13,
+    "hashes_correctos": 13,
+    "errores_pagina": [],
+    "revision_visual": "13 imágenes inspeccionadas; tarjeta final con Confirmar habilitado"
+  },
+  "documentacion": {
+    "enlaces_y_anclas_comprobados": 65,
+    "rotos": 0
+  }
+}
