@@ -75,6 +75,7 @@
   --raised: #21262a;
   --hover: #292f33;
   --line: #343b40;
+  --control-line: #78858e;
   --text: #f0eee7;
   --muted: #a5adb3;
   --accent: #a6d7ed;
@@ -93,6 +94,7 @@
   --raised: #e9edee;
   --hover: #dce4e7;
   --line: #c0c9cd;
+  --control-line: #6f7d86;
   --text: #20282c;
   --muted: #56636c;
   --accent: #235f7d;
@@ -150,6 +152,7 @@ summary {
 }
 :focus-visible {
   outline: 2px solid var(--accent);
+  scroll-margin-block: 80px;
 }
 ::selection {
   background: var(--accent);
@@ -190,7 +193,7 @@ select {
   display: block;
   width: 100%;
   background: var(--bg);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: 8px;
   padding: 12px 14px;
   color: var(--text);
@@ -199,7 +202,7 @@ select {
 input::placeholder,
 textarea::placeholder {
   color: var(--muted);
-  opacity: 0.8;
+  opacity: 1;
 }
 textarea {
   resize: vertical;
@@ -299,6 +302,11 @@ details[open] summary {
   background: var(--surface);
   border-color: var(--line);
   color: var(--text);
+}
+.button.danger {
+  background: var(--surface);
+  border-color: var(--danger);
+  color: var(--danger);
 }
 .button.small {
   padding: 8px 12px;
@@ -531,8 +539,8 @@ details[open] summary {
 .menu-button {
   display: none;
 }
-main:focus {
-  outline: none;
+main:focus-visible {
+  outline-offset: -3px;
 }
 .home-title {
   padding: 32px 40px 28px;
@@ -726,7 +734,7 @@ main:focus {
   padding: 16px 20px 12px;
 }
 .composer {
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   background: var(--bg);
   border-radius: 12px;
   padding: 8px;
@@ -744,7 +752,7 @@ main:focus {
   padding: 12px;
 }
 .composer textarea:focus-visible {
-  outline: none;
+  outline-offset: -2px;
 }
 .composer-tools {
   display: flex;

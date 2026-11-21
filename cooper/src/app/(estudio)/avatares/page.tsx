@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { attachments } from "@/db/schema";
 import { currentUser } from "@/lib/sesion";
 import { Avatares } from "@/componentes/avatares";
+export const metadata = { title: "Avatares y voces" };
 export default async function Page({
   searchParams,
 }: {

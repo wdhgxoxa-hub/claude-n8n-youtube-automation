@@ -1,4 +1,5 @@
 import { PantallaOperacion } from "@/componentes/operacion";
+export const metadata = { title: "Adoptar cuenta" };
 export default async function Page({
   searchParams,
 }: {

@@ -3,6 +3,7 @@ import { currentUser } from "@/lib/sesion";
 import { estadoMarcas } from "@/servicios/marcas/servicio";
 import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Marcas" };
 export default async function Page({
   searchParams,
 }: {

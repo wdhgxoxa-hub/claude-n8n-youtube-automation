@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { destinoRevision } from "@/lib/revision-whatsapp";
 import { currentUser } from "@/lib/sesion";
 import { resolverEnlace } from "@/servicios/mensajeria/enlaces";
+export const metadata = { title: "Revisión desde WhatsApp" };
 export default async function RevisionWhatsApp({
   params,
 }: {

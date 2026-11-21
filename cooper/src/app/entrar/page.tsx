@@ -3,6 +3,7 @@ import { destinoRevision } from "@/lib/revision-whatsapp";
 import { signIn } from "@/auth";
 import { Logo } from "@/marca/Logo";
 import { Revelado } from "@/componentes/titular";
+export const metadata = { title: "Entrar al estudio" };
 export default async function Entrar({
   searchParams,
 }: {

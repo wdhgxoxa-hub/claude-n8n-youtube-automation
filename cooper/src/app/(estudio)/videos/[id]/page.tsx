@@ -5,6 +5,7 @@ import { videos } from "@/db/schema";
 import { currentUser } from "@/lib/sesion";
 import { requireOwner } from "@/lib/permisos";
 import { DetalleVideo } from "@/componentes/gestion";
+export const metadata = { title: "Detalle del video" };
 export default async function Page({
   params,
 }: {

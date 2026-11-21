@@ -4,6 +4,7 @@ import { requireOwner } from "@/lib/permisos";
 import { db } from "@/db";
 import { channels } from "@/db/schema";
 import { eq } from "drizzle-orm";
+export const metadata = { title: "Biblia del canal" };
 export default async function Page({
   params,
 }: {

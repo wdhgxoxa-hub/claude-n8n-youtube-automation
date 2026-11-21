@@ -1,4 +1,5 @@
 import { PantallaOperacion } from "@/componentes/operacion";
+export const metadata = { title: "Radar" };
 export default async function Page({
   searchParams,
 }: {
