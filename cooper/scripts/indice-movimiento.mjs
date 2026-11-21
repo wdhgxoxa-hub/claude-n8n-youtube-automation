@@ -34,6 +34,11 @@ for (const round of rounds)
       sha256: createHash("sha256").update(bytes).digest("hex"),
     });
   }
+clips.sort((a, b) =>
+  Number(b.archivo.includes("recorrido-completo")) -
+    Number(a.archivo.includes("recorrido-completo")) ||
+  a.archivo.localeCompare(b.archivo),
+);
 const escape = (s) =>
   s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
 writeFileSync(
