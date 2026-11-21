@@ -1,0 +1,40 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/noticias.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-final/cooper
+
+ ❯ tests/noticias.test.ts (3 tests | 2 failed) 39ms
+   × activa y desactiva noticias desde Cooper sin alterar la biblia ni otros canales 31ms
+   × un pedido de noticia conserva la modalidad y el simulador no inventa verificaciones 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/noticias.test.ts > activa y desactiva noticias desde Cooper sin alterar la biblia ni otros canales
+TypeError: chat.responder is not a function
+ ❯ tests/noticias.test.ts:32:26
+     30|     ["Desactiva modo noticia", false],
+     31|   ] as const) {
+     32|     const r = await chat.responder(user, { texto, canalId, adjuntos: […
+       |                          ^
+     33|     expect(r.orden?.parametros).toEqual({
+     34|       campo: "modo_noticia",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/noticias.test.ts > un pedido de noticia conserva la modalidad y el simulador no inventa verificaciones
+TypeError: (intermediate value).responder is not a function
+ ❯ tests/noticias.test.ts:83:38
+     81|   ).toMatchObject({ newsMode: true, stage: 2, productionState: "pausad…
+     82|   await expect(fabrica.aprobar(user, v.id)).rejects.toThrow();
+     83|   const r = await new ChatSimulado().responder(user, {
+       |                                      ^
+     84|     texto: "Quiero un video de la noticia del día",
+     85|     canalId,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  20:29:30
+   Duration  756ms (transform 363ms, setup 19ms, import 618ms, tests 39ms, environment 0ms)

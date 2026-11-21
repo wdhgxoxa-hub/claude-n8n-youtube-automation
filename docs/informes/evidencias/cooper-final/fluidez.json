@@ -1,0 +1,35 @@
+{
+  "entorno": "Chromium headless local; requestAnimationFrame, no certificación de dispositivos físicos",
+  "muestras": [
+    {
+      "cpu": 1,
+      "properties": [
+        "offset",
+        "easing",
+        "composite",
+        "transform",
+        "computedOffset",
+        "opacity"
+      ],
+      "cls": 0,
+      "frames": 151,
+      "fps": 60.00397377309756,
+      "p95ms": 16.700000000000273
+    },
+    {
+      "cpu": 4,
+      "properties": [
+        "offset",
+        "easing",
+        "composite",
+        "transform",
+        "computedOffset",
+        "opacity"
+      ],
+      "cls": 0,
+      "frames": 151,
+      "fps": 60.00158944607806,
+      "p95ms": 16.800000000000182
+    }
+  ]
+}

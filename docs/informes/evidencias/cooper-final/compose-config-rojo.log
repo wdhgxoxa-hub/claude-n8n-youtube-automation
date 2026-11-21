@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_propaga_configuracion_de_chat_whatsapp_y_texto (test_integracion.IntegracionTest.test_propaga_configuracion_de_chat_whatsapp_y_texto)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/david/Proyectos/cooper-wt/cooper-final/deploy/tests/test_integracion.py", line 33, in test_propaga_configuracion_de_chat_whatsapp_y_texto
+    self.assertEqual(services['cooper']['environment'].get(name), env[name], name)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'ficticio-cooper_chat' : COOPER_CHAT
+
+----------------------------------------------------------------------
+Ran 1 test in 0.059s
+
+FAILED (failures=1)
