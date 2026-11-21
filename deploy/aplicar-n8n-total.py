@@ -36,7 +36,7 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
         operar.require(isinstance(ensayo.get('plan_columnas'), list), 'Falta plan de columnas ensayado')
         return set(), []
     if 'modalidad' in diff:
-        operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total', 'resolver_api') and 'plan_publicacion' in diff,
+        operar.require(diff['modalidad'] in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total', 'resolver_api', 'radar_resolver') and 'plan_publicacion' in diff,
                         'El delta exige modalidad y plan de publicación certificados')
     operar.require(ensayo.get('aplicacion') == ensayo.get('reversion') == 'PASS', 'Falta ensayo y reversa satisfactorios')
     operar.require(ensayo.get('entrada_sha256') == operar.digest(entrada), 'El lote difiere del ensayado')
@@ -61,9 +61,10 @@ def validar_entradas(entrada, diff, ensayo, manifiesto, plan=None):
         operar.require(ensayo.get('publicacion') == 'PASS' and ensayo.get('publicar_sha256') == operar.digest(plan),
                         'La publicación difiere del ensayo')
         operar.require(publicar == diff['plan_publicacion'] == ensayo.get('publicados'), 'Orden de publicación distinto')
-        if diff.get('modalidad') in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total', 'resolver_api'):
+        if diff.get('modalidad') in ('delta_cooper_total', 'ajuste_texto_api', 'activaciones_cooper_total', 'resolver_api', 'radar_resolver'):
             helper = {'ajuste_texto_api': 'preparar-ajuste-texto.py', 'delta_cooper_total': 'preparar-delta-n8n.py',
-                      'activaciones_cooper_total': 'preparar-activaciones-n8n.py', 'resolver_api': 'preparar-resolver-api.py'}[diff['modalidad']]
+                      'activaciones_cooper_total': 'preparar-activaciones-n8n.py', 'resolver_api': 'preparar-resolver-api.py',
+                      'radar_resolver': 'preparar-radar-resolver.py'}[diff['modalidad']]
             spec = importlib.util.spec_from_file_location('delta_n8n', Path(__file__).with_name(helper))
             delta = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(delta)
@@ -92,6 +93,12 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
     conservacion = modulo_conservacion() if 'politica_disparadores' in diff else None
     if conservacion:
         conservacion.validar_actual(op.data / 'n8n/database.sqlite', diff)
+    radar_resolver = None
+    if diff.get('modalidad') == 'radar_resolver':
+        spec = importlib.util.spec_from_file_location('radar_resolver', Path(__file__).with_name('preparar-radar-resolver.py'))
+        radar_resolver = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(radar_resolver)
+        radar_resolver.validar_actual(op.data / 'n8n/database.sqlite', diff)
     destino = op.state / ('lote-ejecucion-' + str(time.time_ns()))
     destino.mkdir(mode=0o700)
     for origen, nombre in [(entrada, 'entrada.json'), (manifiesto, 'columnas.json'),
@@ -123,6 +130,8 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         before = validar.inventory(op.data / 'n8n/database.sqlite')
         if conservacion:
             conservacion.validar_actual(op.data / 'n8n/database.sqlite', diff)
+        if radar_resolver:
+            radar_resolver.validar_actual(op.data / 'n8n/database.sqlite', diff)
         if diff.get('modalidad') == 'activaciones_cooper_total':
             spec = importlib.util.spec_from_file_location('activaciones_n8n', Path(__file__).with_name('preparar-activaciones-n8n.py'))
             activaciones = importlib.util.module_from_spec(spec)
@@ -163,6 +172,9 @@ def aplicar(op, entrada, diff, ensayo, manifiesto, salida, plan=None):
         if conservacion:
             conservacion.validar_actual(op.data / 'n8n/database.sqlite', diff, despues=True)
             resultado['nodos_conservados_y_entrada_exacta'] = 'PASS'
+        if radar_resolver:
+            radar_resolver.validar_actual(op.data / 'n8n/database.sqlite', diff, despues=True)
+            resultado['cambios_minimos_certificados'] = 'PASS'
         if diff.get('modalidad') == 'activaciones_cooper_total':
             activaciones.permiso_cerrado(op.data / 'n8n/database.sqlite')
             resultado['allowTextoApi'] = False
