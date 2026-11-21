@@ -20,7 +20,7 @@ infra = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(infra)
 
 
-def rehearse(fixture, proof):
+def rehearse(fixture, proof, image_archive=None):
     operar.require(fixture.name == 'ensayo.env' and fixture.parent.name.startswith('e2e-vps-') and '.cache' in fixture.parts, 'Solo fixture privado de Compose')
     env, filename = operar.config(fixture)
     operar.require(env.get('COOPER_LAB') == '1' and env.get('CONTAINER_ENGINE') == 'podman', 'Solo laboratorio Podman')
@@ -55,7 +55,7 @@ def rehearse(fixture, proof):
             operator.compose('up','-d','--no-build','--wait','--wait-timeout','240')
             failed = directory / 'fallo-inyectado.json'
             try:
-                infra.apply(operator, candidate, receipt, failed, simulate_failure=True)
+                infra.apply(operator, candidate, receipt, failed, simulate_failure=True, image_archive=image_archive)
                 raise AssertionError('La inyección debe terminar en error')
             except RuntimeError:
                 result = json.loads(failed.read_text())
@@ -63,7 +63,7 @@ def rehearse(fixture, proof):
             operar.require(before == {name: operar.digest(DEPLOY / name) for name in infra.FILES}, 'No se recuperaron archivos originales')
             operar.require(not (operator.state / 'mantenimiento').exists(), 'Quedó mantenimiento tras reversa')
             successful = directory / 'actualizacion.json'
-            result = infra.apply(operator, candidate, receipt, successful)
+            result = infra.apply(operator, candidate, receipt, successful, image_archive=image_archive)
             operar.require(result['estado'] == 'PASS', 'La actualización real no terminó')
             output = {'aplicador':'PASS','fallo_inyectado_y_reversa':'PASS','archivos_restaurados':'PASS',
                       'datos_restaurados_con_huellas':'PASS','actualizacion':'PASS','red':'interna y loopback',
@@ -89,9 +89,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--fixture', type=Path, required=True)
     parser.add_argument('--ensayo', type=Path, required=True)
+    parser.add_argument('--imagen-archivo', type=Path)
     args = parser.parse_args()
     try:
-        print(json.dumps(rehearse(args.fixture, args.ensayo)))
+        print(json.dumps(rehearse(args.fixture, args.ensayo, args.imagen_archivo)))
     except Exception:
         print('Ensayo infra detenido; revisar recibos privados del fixture.', file=sys.stderr)
         sys.exit(1)

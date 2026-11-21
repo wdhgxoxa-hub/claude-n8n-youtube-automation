@@ -2,13 +2,17 @@
 """Actualiza infraestructura ensayada; revierte datos y configuración pública juntos."""
 import argparse
 from contextlib import closing
+import hashlib
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import sqlite3
 import sys
+import subprocess
+import tarfile
 import time
 
 import operar
@@ -39,6 +43,70 @@ def validate_bundle(candidate, receipt):
     operar.require(motor.get('imagen_anterior') == images['n8n']['anterior'], 'Reversa distinta del ensayo')
     operar.require(bool(receipt.get('cooper_image_id')), 'Falta identidad de Cooper ensayado')
     return images
+
+
+def archive_identity(archive, config_id, tag=None, manifest_id=None):
+    """Enlaza metadatos públicos del archivo; nunca interpreta Config.Env."""
+    expected = config_id.removeprefix('sha256:')
+    operar.require(bool(re.fullmatch(r'[a-f0-9]{64}', expected)), 'Identidad de configuración inválida')
+    config_names = {expected + '.json', 'blobs/sha256/' + expected}
+    manifest_name = 'blobs/sha256/' + manifest_id.removeprefix('sha256:') if manifest_id else None
+    selected = config_names | {'manifest.json', 'index.json'} | ({manifest_name} if manifest_name else set())
+    values = {}
+    for member in archive:
+        if member.name not in selected:
+            continue
+        operar.require(member.isfile() and member.size <= 1048576 and member.name not in values, 'Metadatos de imagen ambiguos')
+        with archive.extractfile(member) as content:
+            values[member.name] = content.read()
+    manifests = json.loads(values.get('manifest.json', b'null'))
+    operar.require(isinstance(manifests, list) and len(manifests) == 1, 'El archivo debe contener una imagen')
+    record = manifests[0]
+    config_name = record.get('Config')
+    operar.require(config_name in config_names and config_name in values, 'Configuración diferente de la ensayada')
+    operar.require(hashlib.sha256(values[config_name]).hexdigest() == expected, 'Configuración de imagen corrupta')
+    if tag:
+        operar.require(record.get('RepoTags') == [tag], 'Etiqueta distinta de la ensayada')
+    if manifest_id:
+        blob = values.get(manifest_name, b'')
+        index = json.loads(values.get('index.json', b'{}'))
+        operar.require(hashlib.sha256(blob).hexdigest() == manifest_id.removeprefix('sha256:'), 'Manifiesto distinto del runtime')
+        operar.require(any(x.get('digest') == manifest_id for x in index.get('manifests', [])), 'Índice sin enlace al manifiesto')
+        operar.require(json.loads(blob).get('config', {}).get('digest') == 'sha256:' + expected, 'Manifiesto sin enlace a la configuración')
+    return {'config_sha256': expected, 'manifiesto': manifest_id, 'etiqueta': tag}
+
+
+def verify_cooper_identity(op, current, receipt, image_archive=None):
+    expected = receipt['cooper_image_id'].removeprefix('sha256:')
+    actual = current['id'].removeprefix('sha256:')
+    artifact = receipt.get('cooper_artefacto')
+    if not artifact:
+        # Compatibilidad con recibos previos: únicamente identidad exacta.
+        operar.require(actual == expected, 'Cooper no coincide con la aceptación')
+        return {'config_sha256': expected, 'identidad_exacta': True}
+    operar.require(image_archive is not None and image_archive.is_file() and not image_archive.is_symlink(), 'Falta archivo ensayado de Cooper')
+    operar.require(operar.digest(image_archive) == artifact.get('sha256'), 'Archivo distinto del ensayado')
+    tag = artifact.get('etiqueta', '')
+    operar.require(bool(re.fullmatch(r'localhost/cooper:[a-zA-Z0-9._-]+', tag)) and current['imagen'] == tag, 'Referencia Cooper distinta de la ensayada')
+    with tarfile.open(image_archive, mode='r|*') as archive:
+        identity = archive_identity(archive, expected, tag=tag)
+    tagged_id = operar.run([op.engine, 'image', 'inspect', tag, '--format', '{{.Id}}'], env=op.env).strip().removeprefix('sha256:')
+    operar.require(tagged_id == actual, 'La etiqueta no corresponde al contenedor')
+    if actual != expected:
+        # Docker/containerd puede identificar por manifiesto; Podman identifica por config.
+        # Exportar la IMAGEN pública (no el contenedor ni su entorno) acredita el enlace.
+        process = subprocess.Popen([op.engine, 'image', 'save', current['id']], env=op.env,
+                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        try:
+            with tarfile.open(fileobj=process.stdout, mode='r|*') as archive:
+                identity = archive_identity(archive, expected, manifest_id='sha256:' + actual)
+            operar.require(process.wait(timeout=180) == 0, 'No se acreditó la imagen activa')
+        finally:
+            process.stdout.close()
+            if process.poll() is None:
+                process.kill()
+                process.wait()
+    return {**identity, 'artefacto_sha256': artifact['sha256'], 'etiqueta': tag, 'runtime_id': current['id']}
 
 
 def inspect(op, identity, template):
@@ -97,7 +165,7 @@ def start(op):
     op.compose('up', '-d', '--no-deps', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '180', 'caddy')
 
 
-def apply(op, candidate, receipt, output, simulate_failure=False):
+def apply(op, candidate, receipt, output, simulate_failure=False, image_archive=None):
     images = validate_bundle(candidate, receipt)
     target = operar.DEPLOY
     operar.require(candidate.resolve() != target.resolve(), 'El candidato debe estar separado de la configuración activa')
@@ -106,7 +174,7 @@ def apply(op, candidate, receipt, output, simulate_failure=False):
     marker = op.state / 'mantenimiento'
     operar.require(not marker.exists(), 'Hay mantenimiento o recuperación pendiente')
     previous_services = healthy(op)
-    operar.require(previous_services['cooper']['id'].removeprefix('sha256:') == receipt['cooper_image_id'].removeprefix('sha256:'), 'Cooper no coincide con la aceptación')
+    cooper_identity = verify_cooper_identity(op, previous_services['cooper'], receipt, image_archive)
     no_running(op)
     # Las imágenes deben precargarse antes del corte. No se confía en etiquetas mutables.
     image_ids = {}
@@ -133,6 +201,7 @@ def apply(op, candidate, receipt, output, simulate_failure=False):
     result = {'estado': 'PREPARADO', 'configuracion_anterior': previous, 'servicios_anteriores': previous_services,
               'configuracion_ensayada': receipt['archivos'], 'servicios_nuevos': images,
               'respaldo_configuracion': str(backup), 'entorno_copiado': False,
+              'identidad_cooper': cooper_identity,
               'codigo_aplicador_sha256': operar.digest(Path(__file__)),
               'codigo_operar_sha256': operar.digest(Path(operar.__file__))}
     operar.write_json(output, result)
@@ -187,13 +256,14 @@ if __name__ == '__main__':
     parser.add_argument('--ensayo', type=Path, required=True)
     parser.add_argument('--salida', type=Path, required=True)
     parser.add_argument('--env', default='/etc/cooper/.env')
+    parser.add_argument('--imagen-archivo', type=Path, help='Archivo de imagen pública ligado al recibo')
     parser.add_argument('--ensayar-reversa', action='store_true', help='Inyecta fallo solamente con COOPER_LAB=1 y Podman')
     args = parser.parse_args()
     try:
         env, environment = operar.config(args.env)
         operator = operar.Operator(env, environment)
         with operator.lock():
-            print(json.dumps(apply(operator, args.candidato, json.loads(args.ensayo.read_text()), args.salida, args.ensayar_reversa)))
+            print(json.dumps(apply(operator, args.candidato, json.loads(args.ensayo.read_text()), args.salida, args.ensayar_reversa, args.imagen_archivo)))
     except Exception:
         print('Actualización detenida; consultar recibo y marcador de mantenimiento. No se muestra salida privada.', file=sys.stderr)
         sys.exit(1)

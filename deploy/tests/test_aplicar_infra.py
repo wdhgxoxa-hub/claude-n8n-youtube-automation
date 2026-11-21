@@ -132,3 +132,75 @@ class InfraTest(unittest.TestCase):
             for relay in ('chat-cooper','chat-n8n','chat-runner'):
                 self.assertIn(relay, op.calls[0])
             self.assertTrue(all('--force-recreate' in call for call in op.calls))
+
+class ImageIdentityTest(unittest.TestCase):
+    def image(self, tag='localhost/cooper:ensayo', wrong_link=False):
+        import hashlib
+        import io
+        import tarfile
+        config = b'{"architecture":"amd64","Env":["FICTICIO=valor-no-proyectar"]}'
+        config_id = hashlib.sha256(config).hexdigest()
+        manifest = json.dumps({'schemaVersion':2,'config':{'digest':'sha256:' + ('b'*64 if wrong_link else config_id)},'layers':[]}).encode()
+        manifest_id = hashlib.sha256(manifest).hexdigest()
+        values = {config_id+'.json':config, 'blobs/sha256/'+manifest_id:manifest,
+                  'manifest.json':json.dumps([{'Config':config_id+'.json','RepoTags':[tag],'Layers':[]}]).encode(),
+                  'index.json':json.dumps({'manifests':[{'digest':'sha256:'+manifest_id}]}).encode()}
+        stream=io.BytesIO()
+        with tarfile.open(fileobj=stream,mode='w') as archive:
+            for name,data in values.items():
+                member=tarfile.TarInfo(name); member.size=len(data)
+                archive.addfile(member,io.BytesIO(data))
+        return stream.getvalue(), config_id, manifest_id
+
+    def read(self, data, config, **kwargs):
+        import io
+        import tarfile
+        with tarfile.open(fileobj=io.BytesIO(data),mode='r|*') as archive:
+            return infra.archive_identity(archive,config,**kwargs)
+
+    def test_enlaza_configuracion_y_manifiesto_sin_proyectar_entorno(self):
+        data,config,manifest=self.image()
+        result=self.read(data,config,tag='localhost/cooper:ensayo',manifest_id='sha256:'+manifest)
+        self.assertEqual(result['config_sha256'],config)
+        self.assertNotIn('valor-no-proyectar',json.dumps(result))
+
+    def test_rechaza_etiqueta_ajena(self):
+        data,config,_=self.image()
+        with self.assertRaises(RuntimeError): self.read(data,config,tag='localhost/cooper:otra')
+
+    def test_rechaza_configuracion_distinta_aun_con_etiqueta_correcta(self):
+        data,_,_=self.image()
+        with self.assertRaises(RuntimeError): self.read(data,'a'*64,tag='localhost/cooper:ensayo')
+
+    def test_rechaza_manifiesto_ajeno(self):
+        data,config,_=self.image()
+        with self.assertRaises(RuntimeError): self.read(data,config,manifest_id='sha256:'+'a'*64)
+
+    def test_rechaza_enlace_manifiesto_config_falso(self):
+        data,config,manifest=self.image(wrong_link=True)
+        with self.assertRaises(RuntimeError): self.read(data,config,manifest_id='sha256:'+manifest)
+
+    def test_runtime_distinto_exige_archivo_y_prueba_criptografica(self):
+        import io
+        data,config,manifest=self.image()
+        class Process:
+            stdout=io.BytesIO(data)
+            def wait(self,**_): return 0
+            def poll(self): return 0
+        class Operator:
+            engine='docker';env={}
+        current={'id':'sha256:'+manifest,'imagen':'localhost/cooper:ensayo'}
+        with tempfile.TemporaryDirectory() as temporary:
+            archive=Path(temporary)/'imagen.tar';archive.write_bytes(data)
+            receipt={'cooper_image_id':'sha256:'+config,'cooper_artefacto':{'sha256':infra.operar.digest(archive),'etiqueta':current['imagen']}}
+            with patch.object(infra.operar,'run',return_value=current['id']), patch.object(infra.subprocess,'Popen',return_value=Process()) as launch:
+                result=infra.verify_cooper_identity(Operator(),current,receipt,archive)
+            self.assertEqual(result['manifiesto'],current['id'])
+            self.assertEqual(launch.call_args.args[0],['docker','image','save',current['id']])
+            with self.assertRaises(RuntimeError): infra.verify_cooper_identity(Operator(),current,receipt)
+            archive.write_bytes(b'alterado')
+            with self.assertRaises(RuntimeError): infra.verify_cooper_identity(Operator(),current,receipt,archive)
+
+    def test_recibo_anterior_no_permite_identidad_distinta(self):
+        with self.assertRaises(RuntimeError):
+            infra.verify_cooper_identity(None,{'id':'otra'}, {'cooper_image_id':'ensayada'})
