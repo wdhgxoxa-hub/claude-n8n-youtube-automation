@@ -41,7 +41,8 @@ def boot(image, data, engine):
     # El ensayo nunca publica puertos ni tiene acceso a redes/proveedores externos.
     name = 'cooper-migracion-' + uuid.uuid4().hex[:12]
     command([engine, 'image', 'inspect', image, '--format', '{{.Id}}'])
-    args = [engine, 'run', '-d', '--name', name, '--network', 'none', '--cpus', '0.5', '--read-only',
+    args = [engine, 'run', '-d', '--name', name, '--network', 'none', '--cpus', '0.5',
+            '--memory', '1g', '--memory-swap', '1g', '--read-only',
             '--userns', 'keep-id', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
             '--tmpfs', '/tmp:rw,size=128m,mode=1777', '--tmpfs', '/app/.next/cache:rw,size=64m,mode=1777',
             '-v', str(data) + ':/data:rw', '-e', 'COOPER_DATABASE_PATH=/data/cooper.sqlite',
@@ -55,6 +56,7 @@ def boot(image, data, engine):
         args[-1:-1] = ['--cpuset-cpus', cpu_set]
     try:
         command(args)
+        command([engine, 'exec', name, 'node', '-e', "const fs=require('node:fs');process.exit(fs.readFileSync('/sys/fs/cgroup/memory.max','utf8').trim()==='1073741824'&&fs.readFileSync('/sys/fs/cgroup/memory.swap.max','utf8').trim()==='0'?0:1)"])
         end = time.monotonic() + 90
         healthy = False
         while time.monotonic() < end:
@@ -103,6 +105,7 @@ def rehearse(source, new_image, old_image, destination, engine='podman'):
     reverted = count(rollback / 'cooper.sqlite')
     operar.require(reverted == baseline, 'La reversa cambió los conteos originales')
     result = {'actualizacion': 'PASS', 'reversion': 'PASS', 'red': 'none', 'puertos': [],
+              'memory_max': 1073741824, 'memory_swap_max': 0,
               'imagen_nueva': new_image, 'imagen_anterior': old_image, 'respaldo_sha256': original_hash,
               'migraciones_antes': baseline.get('__drizzle_migrations'), 'migraciones_despues': after.get('__drizzle_migrations'),
               'tablas_anteriores_conservadas': len([x for x in baseline if x != '__drizzle_migrations' and not x.startswith('sqlite_')]),

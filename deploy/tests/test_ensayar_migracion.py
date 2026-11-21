@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from types import SimpleNamespace
 
 DEPLOY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(DEPLOY))
@@ -36,6 +37,16 @@ class MigracionTest(unittest.TestCase):
     def test_no_acepta_perdida_de_filas_como_migracion(self):
         with self.assertRaisesRegex(RuntimeError, 'conteo'):
             ensayo.preserve({'videos': 2, '__drizzle_migrations': 8}, {'videos': 1, '__drizzle_migrations': 11})
+
+    def test_arranque_exige_un_gib_sin_swap_y_contrasta_cgroup_real(self):
+        with patch.object(ensayo, 'command', return_value='') as command, patch.object(ensayo.subprocess, 'run', return_value=SimpleNamespace(returncode=0)):
+            ensayo.boot('localhost/cooper:prueba', Path('/tmp/fixture-ficticio'), 'podman')
+        launch = next(call.args[0] for call in command.call_args_list if call.args[0][1] == 'run')
+        self.assertEqual(launch[launch.index('--memory') + 1], '1g')
+        self.assertEqual(launch[launch.index('--memory-swap') + 1], '1g')
+        checks = [call.args[0][-1] for call in command.call_args_list if call.args[0][1] == 'exec']
+        self.assertTrue(any('memory.swap.max' in code and "==='0'" in code for code in checks))
+        self.assertTrue(any('memory.max' in code and '1073741824' in code for code in checks))
 
 
 if __name__ == '__main__':

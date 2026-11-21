@@ -117,6 +117,8 @@ await writeFile(
           runtime: "runc",
           pull_policy: "never",
           stop_grace_period: "15s",
+          // El VPS no tiene swap. El laboratorio no debe obtener memoria extra de la PC.
+          ...(service === "cooper" ? { memswap_limit: "1g" } : {}),
           ...(service === "caddy"
             ? { volumes: [`${localCaddy}:/etc/caddy/Caddyfile:ro`] }
             : {}),
@@ -241,6 +243,13 @@ try {
   }, "socket privado");
   await compose("config", "--quiet");
   await compose("up", "-d", "--no-build", "--wait", "--wait-timeout", "180");
+  const memory = JSON.parse(
+    await compose(
+      "exec", "-T", "cooper", "node", "-e",
+      "const fs=require('node:fs');console.log(JSON.stringify(Object.fromEntries(['memory.max','memory.swap.max'].map(n=>[n,fs.readFileSync('/sys/fs/cgroup/'+n,'utf8').trim()]))))",
+    ),
+  );
+  assert.deepEqual(memory, { "memory.max": "1073741824", "memory.swap.max": "0" });
   await compose(
     "exec",
     "-T",
@@ -294,7 +303,7 @@ try {
     ).status,
     401,
   );
-  console.log("PASS salud, TLS verificado, cabeceras y editor privado");
+  console.log("PASS salud, TLS verificado, cabeceras, editor privado y Cooper 1 GiB sin swap");
 
   // Reutiliza el emisor E2E existente, nunca empaquetado en la imagen.
   const fixtureSecret = secret();
