@@ -164,7 +164,9 @@ test("recuerdos: retomar desde fábrica y cancelar o borrar conservan el foco", 
   await page.getByRole("tab", { name: /Fábrica/ }).click();
   await page.getByRole("button", { name: "Retomar", exact: true }).focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByLabel("Mensaje para Cooper")).toBeFocused();
+  await expect(
+    page.getByRole("textbox", { name: "Mensaje para Cooper", exact: true }),
+  ).toBeFocused();
   await expect(
     page.getByRole("tab", { name: "Chat", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
@@ -228,7 +230,7 @@ test("chat: salto al contenido, composición, confirmaciones y errores con tecla
       ).status(),
     ).toBe(200);
     await page.goto("/");
-    await expect(page.locator(".studio")).toHaveClass(/tab-fabrica/);
+    await expect(page.locator(".studio:visible")).toHaveClass(/tab-fabrica/);
   } finally {
     // Restaurar la preferencia compartida; Inicio conserva su selección montada.
     expect(
@@ -241,7 +243,10 @@ test("chat: salto al contenido, composición, confirmaciones y errores con tecla
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("main")).toBeFocused();
-  const message = page.getByLabel("Mensaje para Cooper");
+  const message = page.getByRole("textbox", {
+    name: "Mensaje para Cooper",
+    exact: true,
+  });
   await message.fill("Crea un canal: Una idea de teclado");
   await page.keyboard.press("Shift+Enter");
   await expect(message).toHaveValue("Crea un canal: Una idea de teclado\n");

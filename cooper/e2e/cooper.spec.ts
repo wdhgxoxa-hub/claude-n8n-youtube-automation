@@ -150,7 +150,7 @@ test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajena
   await page.goto("/");
   const before = await (await page.request.get("/api/estado")).json();
   await page
-    .getByLabel("Mensaje para Cooper")
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
     .fill("Quiero un video: Un viaje a las estrellas");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
   const card = page.getByRole("article", { name: "Producir video" });
@@ -237,7 +237,9 @@ test("boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream",
     };
   });
   await page.goto("/");
-  await page.getByLabel("Mensaje para Cooper").fill("Revisa mi idea");
+  await page
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+    .fill("Revisa mi idea");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
   await expect(page.locator(".conversation [aria-busy=true]")).toContainText(
     "Estoy revisando",
@@ -338,7 +340,7 @@ test("adjuntos y grabación con transcripción editable", async ({ page }) => {
     page.getByRole("textbox", { name: "Mensaje para Cooper" }),
   ).toHaveValue(/Quiero un nuevo video/);
   await page
-    .getByLabel("Mensaje para Cooper")
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
     .fill("Quiero un video: Idea dictada y revisada");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
   const propuesta = page.getByRole("article", { name: "Producir video" });

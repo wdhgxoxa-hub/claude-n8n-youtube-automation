@@ -65,9 +65,9 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
     page.getByRole("region", { name: "Memoria de Cooper" }),
   ).toContainText("Colección de invierno");
   await page.getByRole("button", { name: "Retomar", exact: true }).click();
-  await expect(page.getByLabel("Mensaje para Cooper")).toHaveValue(
-    "Retomemos esta idea: Colección de invierno",
-  );
+  await expect(
+    page.getByRole("textbox", { name: "Mensaje para Cooper", exact: true }),
+  ).toHaveValue("Retomemos esta idea: Colección de invierno");
   mkdirSync(".cache/capturas-memoria", { recursive: true });
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });

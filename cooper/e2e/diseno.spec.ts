@@ -307,8 +307,12 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
       await page.waitForTimeout(900);
       expect(await page.locator('path[d="undefined"]').count()).toBe(0);
     }
-    await page.getByLabel("Mensaje para Cooper").fill("¿Qué tengo pendiente?");
-    await page.getByLabel("Mensaje para Cooper").press("Enter");
+    await page
+      .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+      .fill("¿Qué tengo pendiente?");
+    await page
+      .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+      .press("Enter");
     await expect(
       page.getByRole("img", { name: "Cooper hablando" }),
     ).toBeVisible();
@@ -484,7 +488,9 @@ test("integración final: chat, noticias y WhatsApp en cuatro anchuras y dos tem
     }
   }
   await ready(page);
-  await page.getByLabel("Mensaje para Cooper").fill("Activa modo noticia");
+  await page
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+    .fill("Activa modo noticia");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
   const card = page.getByRole("article", { name: "Ajustar guía del canal" });
   await expect(

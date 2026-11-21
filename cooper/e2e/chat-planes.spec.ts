@@ -21,9 +21,13 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
       body: 'data: {"tipo":"texto","texto":"Tu estudio está listo. Puedes consultar el avance de tus videos y revisar las aprobaciones pendientes."}\n\ndata: {"tipo":"fin"}\n\n',
     });
   });
-  await page.getByLabel("Mensaje para Cooper").fill("Consulta de estado");
+  await page
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+    .fill("Consulta de estado");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
-  await expect(page.getByLabel("Mensaje para Cooper")).toBeEnabled();
+  await expect(
+    page.getByRole("textbox", { name: "Mensaje para Cooper", exact: true }),
+  ).toBeEnabled();
   await expect(
     page.locator(".chat-heading").getByRole("img", { name: "Cooper hablando", exact: true }),
   ).toHaveAttribute("data-cooper-state", "hablando");
@@ -46,7 +50,9 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
         : original(input, init);
   });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByLabel("Mensaje para Cooper").fill("Otra consulta de estado");
+  await page
+    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+    .fill("Otra consulta de estado");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
   await expect(
     page.getByRole("button", { name: "Cancelar espera" }),

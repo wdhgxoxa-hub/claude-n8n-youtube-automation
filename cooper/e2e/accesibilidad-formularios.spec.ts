@@ -228,7 +228,9 @@ test("Carga interrumpida conserva el control y explica la recuperaciÃ³n en espaÃ
 }) => {
   await page.goto("/perfil");
   await page.route("**/api/archivos", (route) => route.abort("failed"));
-  const foto = page.getByLabel("Cambiar foto", { exact: true });
+  const foto = page
+    .getByLabel("Cambiar foto", { exact: true })
+    .filter({ visible: true });
   await foto.setInputFiles({
     name: "foto-interrumpida.png",
     mimeType: "image/png",

@@ -150,7 +150,9 @@ test.describe("evidencia de movimiento", () => {
       await new Promise((resolve) => setTimeout(resolve, 600));
       await route.continue();
     });
-    await page.getByLabel("Mensaje para Cooper").fill("¿Qué tengo pendiente?");
+    await page
+      .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+      .fill("¿Qué tengo pendiente?");
     await page.getByLabel("Enviar mensaje").click();
     await expect(
       page
