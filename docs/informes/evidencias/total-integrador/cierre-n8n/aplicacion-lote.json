@@ -1,0 +1,88 @@
+{
+  "estado": "VERIFICACION_PASS",
+  "fecha_utc": "2026-11-21T23:39:03Z",
+  "recibo_sha256": "65f6a9bda7c3061d2e90017aa945e33cc31c970972b99350f3baeb6e6ffc7c06",
+  "recibo": {
+    "estado": "PASS",
+    "entrada_sha256": "269d8f7c04981396d34ad266059da27f5e0ee34b8a4d2cf640040d3be7299588",
+    "manifiesto_sha256": "805d80776fb32a9a09ca0cadec6bc2eb865b4ed892da9aee528ad194d3b49134",
+    "ensayo_y_reversa_previa": "PASS",
+    "flujos_importados": 33,
+    "snapshot_previo": "abadc22875b989f1e8e7bcfdd89f54edb612fd1170c212275352c844e0d9257b",
+    "nodos_conservados_y_entrada_exacta": "PASS",
+    "columnas_agregadas": 2,
+    "columnas_idempotentes": "PASS",
+    "flujos_antes": 45,
+    "flujos_despues": 45,
+    "flujos_ajenos_preservados": "PASS",
+    "tablas_negocio_preservadas": 9,
+    "filas_negocio": 151,
+    "tablas_negocio_sha256": "35f5d3d34af19f507678882275d450576d5b219de723cbe3c0a9ec64dd5763b5",
+    "salud_stack": "PASS",
+    "politica_disparadores": "conservar_existentes_bloquear_nuevos"
+  },
+  "cas_contenido_final": "PASS",
+  "integridad": "PASS",
+  "claves_foraneas": "PASS",
+  "conteos": {
+    "workflows": 45,
+    "activos": 29,
+    "credenciales": 15,
+    "ocupadas": 0
+  },
+  "divergencias_nodos_conexiones_borrador_publicado": 0,
+  "flujos_foco": {
+    "CooperMarcasMet1": {
+      "activo": false,
+      "borrador_igual_publicado": false
+    },
+    "CooperMarcasPub1": {
+      "activo": false,
+      "borrador_igual_publicado": false
+    },
+    "FabAprendizaje01": {
+      "activo": true,
+      "borrador_igual_publicado": true
+    },
+    "FabRadar00000001": {
+      "activo": true,
+      "borrador_igual_publicado": true
+    }
+  },
+  "horarios": [
+    {
+      "workflow": "FabAprendizaje01",
+      "nodo": "Cada día",
+      "deshabilitado": false
+    },
+    {
+      "workflow": "FabRadar00000001",
+      "nodo": "Cada mañana (radar)",
+      "deshabilitado": true
+    }
+  ],
+  "columnas": [
+    {
+      "tabla": "fab_videos",
+      "columna": "miniatura_url",
+      "tipo": "string"
+    },
+    {
+      "tabla": "fab_videos",
+      "columna": "render_url",
+      "tipo": "string"
+    }
+  ],
+  "salud": {
+    "cooper": "healthy",
+    "n8n": "healthy",
+    "runner": "healthy",
+    "caddy": "healthy",
+    "chat-cooper": "healthy",
+    "chat-n8n": "healthy",
+    "chat-runner": "healthy"
+  },
+  "entorno_consumido": false,
+  "valores_credenciales_consultados": false,
+  "mutaciones_verificacion": false
+}

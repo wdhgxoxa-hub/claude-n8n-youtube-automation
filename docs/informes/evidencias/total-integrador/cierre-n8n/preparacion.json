@@ -1,0 +1,61 @@
+{
+  "fecha_lima": "2026-11-21T17:53:09.380823-05:00",
+  "estado": "PREPARADO_SIN_MUTACIONES",
+  "cas_y_preflight_remotos": "PASS",
+  "entorno_leido": false,
+  "secretos_leidos": false,
+  "mutaciones_vps": false,
+  "control": "/home/operador/total-integrador-20261121/control-n8n-b3.json",
+  "control_sha256": "dee9193c6ea88bf2229eef7c57867ec83c5cc153a9aa89a3381b6495e99b5089",
+  "workflows_vivos": 45,
+  "activos_vivos": 29,
+  "lote_workflows": 33,
+  "publicaciones_planificadas": 28,
+  "recibo_aplicacion_ausente": true,
+  "recibo_infra_ausente": true,
+  "mantenimiento_ausente": true,
+  "aprendizaje": {
+    "id": "FabAprendizaje01",
+    "activo": true,
+    "version_publicada_igual_borrador": true,
+    "horario_habilitado": true
+  },
+  "radar": {
+    "id": "FabRadar00000001",
+    "activo": true,
+    "version_publicada_igual_borrador": true,
+    "horario_habilitado": false,
+    "motivo_conservacion": "Estado histórico conservado por el lote certificado. El extra posterior habilitará el horario con permiso de texto API cerrado y guardas vidIQ sin compra, recarga ni addOn."
+  },
+  "marcas": {
+    "publicacion_activa": false,
+    "metricas_activas": false,
+    "cron_no_activado_falta_ensayo_reversa_entregado": true
+  },
+  "credenciales_ausentes_bloqueadas": [
+    "Crear avatar",
+    "Consultar avatar",
+    "Voz (HeyGen)",
+    "Voz (ElevenLabs)"
+  ],
+  "export_cli_previo": {
+    "flujos": 45,
+    "publicados": 29,
+    "divergencias_borrador_publicado": [],
+    "archivo_publico": "docs/informes/evidencias/total-integrador/export-cli.json"
+  },
+  "ensayo_previo": {
+    "aplicacion": "PASS",
+    "reversion": "PASS",
+    "red": "none",
+    "columnas_aditivas": 2,
+    "tablas_restauradas": 187,
+    "hash_backup_igual_restauracion": true,
+    "archivo_publico": "docs/informes/evidencias/total-integrador/lote-ensayo.json"
+  },
+  "fuentes_oficiales": [
+    "https://docs.n8n.io/deploy/host-n8n/configure-n8n/use-the-command-line.md",
+    "https://docs.n8n.io/connect/n8n-api.md"
+  ],
+  "alcance": "Corte histórico previo al lote; no incluye los extras posteriores Radar y Marcas."
+}
