@@ -53,7 +53,7 @@ async function main() {
   const env = { ...entornoLimpio(), COOPER_CI_REPORTES: "1" };
   const informe = {
     inicio: new Date().toISOString(),
-    herramientas: comprobarHerramientas(),
+    herramientas: {},
     pasos: [],
     resultado: "FAIL",
   };
@@ -114,6 +114,7 @@ async function main() {
       );
   }
   try {
+    informe.herramientas = comprobarHerramientas();
     await paso("ci", "npm", ["ci"]);
     await paso("preparacion", process.execPath, [
       "scripts/preparar-pruebas.mjs",
@@ -135,6 +136,9 @@ async function main() {
       readFileSync(resolve(salida, "flujos.log"), "utf8"),
     );
     informe.resultado = "PASS";
+  } catch (error) {
+    informe.error = error.message;
+    throw error;
   } finally {
     informe.fin = new Date().toISOString();
     guardar();

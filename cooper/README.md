@@ -140,7 +140,7 @@ No modifica el worktree, no monta HOME, sockets ni archivos privados, no publica
 ni imágenes y no configura un servicio de CI remoto. Conserva el checkout y los artefactos.
 
 La imagen Debian 12 fija Node 24.22.3 y uv 0.12.24 por digest; instala CPython 3.14.7,
-FFmpeg y las bibliotecas oficiales de Chromium. `package-lock.json` fija npm/Playwright JS;
+FFmpeg y las bibliotecas oficiales de Chromium. `ci/versiones.json` fija npm 12.2.2; `package-lock.json` fija las dependencias JavaScript y Playwright;
 `ci/sentinel-requirements.txt` fija las cinco dependencias Python con SHA-256 y solo wheels.
 `vendor/sentinel/origen.json` conserva la revisión y los hashes del guardián y los tres
 módulos originales. Los paquetes del sistema se obtienen del repositorio Debian vigente:
