@@ -1,0 +1,25 @@
+{
+  "fuente_raiz": "758fbd9",
+  "flujo_comparado_con": "ca472c6 + d1c6750",
+  "flujos": [
+    {
+      "id": "FabRadar00000001",
+      "publicada": "a054ba99-0ffc-472e-a4ed-a0758cca37c4",
+      "codigos": 17,
+      "coinciden": true,
+      "horarios": [
+        {
+          "nodo": "Cada mañana (radar)",
+          "deshabilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabCompYouTube01",
+      "publicada": "725330ee-47e3-49e8-83d2-1042262f5b57",
+      "codigos": 7,
+      "coinciden": true,
+      "horarios": []
+    }
+  ]
+}

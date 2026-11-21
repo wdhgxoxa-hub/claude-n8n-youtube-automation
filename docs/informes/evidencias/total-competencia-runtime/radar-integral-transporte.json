@@ -1,0 +1,15 @@
+{
+  "invocaciones": 1,
+  "reintentos": 0,
+  "cliente_ssh_exit_code": 143,
+  "recibo_del_invocador_conservado": false,
+  "causa_senal": "desconocida",
+  "reinicio_o_mutacion_operacion_durante_invocacion": false,
+  "verificacion_posterior": [
+    "metadata 865–873 success",
+    "diagnóstico persistido caller865",
+    "proyección HTTP200",
+    "igualdad SHA256 persistencia/proyección"
+  ],
+  "no_se_reconstruye_un_recibo_http_no_observado": true
+}

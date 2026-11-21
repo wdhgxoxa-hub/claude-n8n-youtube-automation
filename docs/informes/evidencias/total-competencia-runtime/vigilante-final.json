@@ -1,0 +1,1 @@
+{"ok": true, "error_controlado": "835", "estado_esperado": "error", "estado_observado": "error", "vigilante": [{"id": "838", "estado": "success"}], "incidencias_de_ensayo": 1, "telegram": [{"ejecucion": "838", "avisos_enviados": 1}], "cuerpos_privados_leidos": false}

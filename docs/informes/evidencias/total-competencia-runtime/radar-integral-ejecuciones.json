@@ -1,0 +1,68 @@
+{
+  "ejecuciones": [
+    {
+      "ejecucion": 865,
+      "workflow": "CoopRadarReal001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:40:52.817",
+      "fin_utc": "2026-11-21 19:42:18.450"
+    },
+    {
+      "ejecucion": 866,
+      "workflow": "FabRadar00000001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:41:12.650",
+      "fin_utc": "2026-11-21 19:42:18.371"
+    },
+    {
+      "ejecucion": 867,
+      "workflow": "FabAjustes000001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:41:13.426",
+      "fin_utc": "2026-11-21 19:41:14.001"
+    },
+    {
+      "ejecucion": 868,
+      "workflow": "YgWu9aUDsB2VYaz3",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:41:14.635",
+      "fin_utc": "2026-11-21 19:42:09.733"
+    },
+    {
+      "ejecucion": 869,
+      "workflow": "FabAjustes000001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:41:14.940",
+      "fin_utc": "2026-11-21 19:41:15.975"
+    },
+    {
+      "ejecucion": 870,
+      "workflow": "FabCompYouTube01",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:42:09.996",
+      "fin_utc": "2026-11-21 19:42:18.023"
+    },
+    {
+      "ejecucion": 871,
+      "workflow": "FabYouTube000001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:42:10.186",
+      "fin_utc": "2026-11-21 19:42:12.349"
+    },
+    {
+      "ejecucion": 872,
+      "workflow": "FabAjustes000001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:42:10.496",
+      "fin_utc": "2026-11-21 19:42:10.886"
+    },
+    {
+      "ejecucion": 873,
+      "workflow": "FabAjustes000001",
+      "estado": "success",
+      "inicio_utc": "2026-11-21 19:42:15.544",
+      "fin_utc": "2026-11-21 19:42:15.910"
+    }
+  ],
+  "todos_success": true
+}

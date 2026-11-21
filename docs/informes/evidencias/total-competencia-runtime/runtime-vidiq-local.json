@@ -1,0 +1,15 @@
+{
+  "motores": [
+    "2.47.4",
+    "2.47.6"
+  ],
+  "evaluador": "real",
+  "http": "real",
+  "red": false,
+  "credencial": "ficticia",
+  "por_motor": {
+    "solicitudes": 6,
+    "investigacion": 1,
+    "ok": true
+  }
+}

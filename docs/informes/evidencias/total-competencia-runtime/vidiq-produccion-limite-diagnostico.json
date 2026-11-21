@@ -1,0 +1,35 @@
+{
+  "ejecucion_productiva": 870,
+  "ejecucion_sonda_previa": 864,
+  "lectura": "solo metadatos, referencias JSON y rutas permitidas; sin headers, credenciales ni runData completo",
+  "execution_data_presente": true,
+  "runData_tipo": "object",
+  "runData_numero_de_nodos": 0,
+  "respuesta_productiva_conservada": false,
+  "consumo_informado_en_salida": 0,
+  "mensaje_respaldo": "no aportó una respuesta verificable dentro del límite",
+  "sonda_previa": {
+    "http": 200,
+    "answer_tipo": "string",
+    "answer_longitud": 25,
+    "answer_categoria_amplia": "sin_resultados",
+    "texto_conservado": false,
+    "consumo": 0
+  },
+  "causa_especifica": "no_determinable_con_evidencia_conservada",
+  "posibilidades_no_atribuidas": [
+    "cuota posterior no acreditada",
+    "contenido no reconocido por el contrato estricto"
+  ],
+  "defecto_local_reproducido": false,
+  "parser_modificado": false,
+  "llamadas_nuevas": 0,
+  "contenido_vidiq_productivo_aceptado": false,
+  "respaldo_gratuito_aceptado": true,
+  "regresiones_adaptador": {
+    "casos": 9,
+    "pass": 9,
+    "errores": 0,
+    "fecha": "2026-11-21"
+  }
+}
