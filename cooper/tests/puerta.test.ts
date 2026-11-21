@@ -33,6 +33,7 @@ describe("puerta reproducible", () => {
       npm_config_registry: "https://privado.test",
     });
     expect(env.PATH).toBe("/bin");
+    expect(env.TZ).toBe("UTC");
     for (const key of [
       "AUTH_SECRET",
       "NODE_OPTIONS",

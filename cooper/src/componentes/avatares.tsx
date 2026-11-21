@@ -502,8 +502,10 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                   </small>
                   {a.consentAt > 0 && (
                     <small>
-                      Consentimiento:{" "}
-                      {new Date(a.consentAt).toLocaleDateString("es-PE")}
+                      Consentimiento (Lima):{" "}
+                      {new Date(a.consentAt).toLocaleDateString("es-PE", {
+                        timeZone: "America/Lima",
+                      })}
                     </small>
                   )}
                   {a.consentRevokedAt > 0 && (

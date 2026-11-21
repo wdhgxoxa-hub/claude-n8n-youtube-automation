@@ -29,6 +29,7 @@ export function entornoLimpio(origen = process.env) {
         }
       : {}),
     NEXT_TELEMETRY_DISABLED: "1",
+    TZ: "UTC",
     PYTHONDONTWRITEBYTECODE: "1",
     npm_config_update_notifier: "false",
     npm_config_fund: "false",

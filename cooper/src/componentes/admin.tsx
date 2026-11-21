@@ -186,7 +186,11 @@ export function Admin({ initial }: { initial: Administracion }) {
             </h3>
             <blockquote>{a.phrase}</blockquote>
             <p className="helper">
-              {a.consentText} · {new Date(a.consentAt).toLocaleString("es-PE")}
+              {a.consentText} ·{" "}
+              {new Date(a.consentAt).toLocaleString("es-PE", {
+                timeZone: "America/Lima",
+              })}{" "}
+              (Lima)
             </p>
             <div className="button-row">
               {(JSON.parse(a.photoIds) as string[]).map((photo, i) => (

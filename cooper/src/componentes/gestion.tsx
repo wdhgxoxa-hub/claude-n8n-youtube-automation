@@ -381,10 +381,11 @@ export function Videos() {
                   />
                 ))}
               </div>
-              <span className="video-date">
+              <span className="video-date" title="Fecha de creación (Lima)">
                 {new Intl.DateTimeFormat("es", {
                   day: "numeric",
                   month: "short",
+                  timeZone: "America/Lima",
                 }).format(v.createdAt)}
               </span>
             </div>
@@ -555,7 +556,7 @@ export function DetalleVideo({ id }: { id: string }) {
               <summary>Referencias y publicación</summary>
               <p className="muted">
                 {video.scheduledAt
-                  ? `Publicación: ${new Date(video.scheduledAt).toLocaleString("es")}`
+                  ? `Publicación: ${new Date(video.scheduledAt).toLocaleString("es", { timeZone: "America/Lima" })} (Lima)`
                   : "La publicación espera ambas aprobaciones."}
               </p>
               <form

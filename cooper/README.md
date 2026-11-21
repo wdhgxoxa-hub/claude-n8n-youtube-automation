@@ -164,6 +164,8 @@ de las E2E. No usa ni instala nada en `~/Proyectos/Sistema-Sentinel`. Cada lengu
 el navegador que exige su versión de Playwright; no se enlazan cachés ajenas. Las suites usan
 cuentas, sesiones, puertos libres, SQLite y proveedores ficticios. El arnés transmite solo
 variables de herramientas, sin credenciales, configuración de proveedores ni `NODE_OPTIONS`.
+El proceso usa `TZ=UTC`; el recorrido de diseño conserva su navegador en `America/Lima`
+para detectar diferencias entre HTML del servidor y cliente al mostrar fechas.
 
 Evidencia en `<checkout>/cooper/.cache/puerta/`: logs por paso, `vitest.json`,
 `playwright.json` y `resultado.json` con SHA del código, versiones, rc, duración, advertencias,
