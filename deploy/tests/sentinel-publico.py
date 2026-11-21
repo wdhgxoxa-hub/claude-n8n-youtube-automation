@@ -24,7 +24,10 @@ for width in (1440, 390):
         url_api_base=origin, ruta_openapi='/no-openapi',
         # La respuesta real usa un booleano. Guardian compara el valor sin coerción.
         destino=ComprobacionDestino('/api/salud', 'ok', True),
-        hosts_permitidos=('cooper.cooperestudio.com',), pantallas=('/entrar',),
+        # Dos estados reales fuerzan navegación repetida: una sola página inmóvil
+        # solo aportaría las descargas iniciales al comparador de latencia.
+        hosts_permitidos=('cooper.cooperestudio.com',),
+        pantallas=('/entrar', '/entrar?error=AccessDenied'),
         duracion_por_prueba_s=30,
         exclusiones=Exclusiones(textos=('Google', 'Entrar', 'Iniciar sesión'),
             selectores=('button', 'form', 'input', 'a[href*="/api/auth/"]'),
