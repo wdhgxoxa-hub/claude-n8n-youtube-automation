@@ -1,10 +1,16 @@
 "use client";
-import { motion } from "framer-motion";
+import { AnimatePresence, m as motion } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState, useEffect, type FormEvent } from "react";
 import { ArrowUp, Paperclip, X, AudioLines, ArrowUpRight } from "lucide-react";
-import { CooperCara, type EstadoCooper } from "@/marca/CooperCara";
+import {
+  CooperCara,
+  partituraTexto,
+  type EstadoCooper,
+} from "@/marca/CooperCara";
 import { useEspacio, api, Notice } from "./espacio";
-import { useMovimientoReducido } from "./movimiento";
+import { Indicador, resorte, useMovimientoReducido } from "./movimiento";
+import { Revelado } from "./titular";
 import { FabricaVista } from "./fabrica-vista";
 import { Grabador, subir } from "./grabador";
 export function Inicio() {
@@ -16,12 +22,25 @@ export function Inicio() {
     [uploading, setUploading] = useState(false),
     [error, setError] = useState(""),
     [state, setState] = useState<EstadoCooper>("reposo"),
-    [files, setFiles] = useState<{ id: string; name: string }[]>([]),
+    [files, setFiles] = useState<{ id: string; name: string; mime: string }[]>(
+      [],
+    ),
+    [spoken, setSpoken] = useState(""),
     [transcript, setTranscript] = useState<"simulada" | "real" | null>(null),
     [channel, setChannel] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const [historical] = useState(() => new Set(data.messages.map((m) => m.id)));
+  useEffect(() => {
+    if (state !== "hablando") return;
+    const duration = partituraTexto(spoken).reduce(
+      (sum, word) => sum + word.duration,
+      0,
+    );
+    const timer = setTimeout(() => setState("reposo"), duration + 150);
+    return () => clearTimeout(timer);
+  }, [state, spoken]);
   useEffect(() => {
     const list = end.current?.parentElement;
     if (data.messages.length && list) list.scrollTop = list.scrollHeight;
@@ -33,7 +52,7 @@ export function Inicio() {
     setError("");
     setState("pensando");
     try {
-      await api("chat", {
+      const reply = await api<{ texto: string }>("chat", {
         texto: text,
         adjuntos: files.map((f) => f.id),
         canalId: channel || undefined,
@@ -42,8 +61,8 @@ export function Inicio() {
       setFiles([]);
       setTranscript(null);
       await refresh();
+      setSpoken(reply.texto);
       setState("hablando");
-      setTimeout(() => setState("reposo"), 1800);
     } catch (e) {
       setError((e as Error).message);
       setState("reposo");
@@ -59,7 +78,7 @@ export function Inicio() {
       if (files.length >= 5)
         throw new Error("Puedes adjuntar hasta cinco archivos.");
       const uploaded = await subir(file);
-      setFiles((old) => [...old, uploaded]);
+      setFiles((old) => [...old, { ...uploaded, mime: file.type }]);
       if (audio) {
         const result = await api<{ texto: string; simulada: boolean }>(
           "transcribir",
@@ -80,7 +99,12 @@ export function Inicio() {
     <>
       <div className="home-title">
         <div>
-          <h1>Hagamos algo bueno.</h1>
+          <motion.h1
+            layoutId={reduced ? undefined : "titulo-ruta"}
+            transition={{ duration: reduced ? 0 : 0.24 }}
+          >
+            Hagamos algo bueno.
+          </motion.h1>
           <p>Tu próxima idea ya tiene equipo.</p>
         </div>
         <span className="date-note">Tu estudio, en marcha</span>
@@ -91,6 +115,7 @@ export function Inicio() {
           aria-selected={tab === "chat"}
           onClick={() => setTab("chat")}
         >
+          {tab === "chat" && <Indicador id="vista-inicio" />}
           Chat
         </button>
         <button
@@ -98,6 +123,7 @@ export function Inicio() {
           aria-selected={tab === "fabrica"}
           onClick={() => setTab("fabrica")}
         >
+          {tab === "fabrica" && <Indicador id="vista-inicio" />}
           Fábrica {data.videos.length > 0 && `(${data.videos.length})`}
         </button>
       </div>
@@ -105,7 +131,7 @@ export function Inicio() {
         <section className="chat-pane" aria-label="Chat con Cooper">
           <div className="chat-heading">
             <div className="cooper-badge">
-              <CooperCara size={56} estado={state} />
+              <CooperCara size={56} estado={state} texto={spoken} />
             </div>
             <div>
               <h2>Cooper</h2>
@@ -127,11 +153,11 @@ export function Inicio() {
           >
             {data.messages.length === 0 ? (
               <div className="chat-welcome">
-                <CooperCara estado={state} size={112} />
+                <CooperCara estado={state} size={112} texto={spoken} />
                 <h2>
-                  Tú pones la idea.
+                  <Revelado texto="Tú pones la idea." />
                   <br />
-                  Yo pongo todo en marcha.
+                  <Revelado texto="Yo pongo todo en marcha." inicio={4} />
                 </h2>
                 <p>
                   Cuéntame qué quieres crear. Te acompaño desde el primer guion
@@ -176,11 +202,41 @@ export function Inicio() {
               </div>
             ) : (
               data.messages.map((m) => (
-                <article key={m.id} className={`message ${m.role}`}>
+                <motion.article
+                  key={m.id}
+                  className={`message ${m.role}`}
+                  initial={
+                    reduced || historical.has(m.id)
+                      ? false
+                      : { y: 12, scale: 0.985 }
+                  }
+                  animate={{ y: 0, scale: 1 }}
+                  transition={reduced ? { duration: 0 } : resorte}
+                >
                   <span className="message-author">
                     {m.role === "assistant" ? "Cooper" : data.user.name}
                   </span>
-                  <p>{m.content}</p>
+                  <p>
+                    {m.role === "assistant" &&
+                    !historical.has(m.id) &&
+                    m.content === spoken &&
+                    state === "hablando"
+                      ? partituraTexto(m.content).map(({ word, delay }, i) => (
+                          <motion.span
+                            className="response-word"
+                            key={i}
+                            initial={reduced ? false : { opacity: 0.5 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                              delay: reduced ? 0 : delay / 1000,
+                              duration: reduced ? 0 : 0.16,
+                            }}
+                          >
+                            {word}
+                          </motion.span>
+                        ))
+                      : m.content}
+                  </p>
                   {(JSON.parse(m.attachmentIds) as string[]).map((id, i) => (
                     <a
                       className="attachment-link"
@@ -193,7 +249,7 @@ export function Inicio() {
                       Adjunto {i + 1}
                     </a>
                   ))}
-                </article>
+                </motion.article>
               ))
             )}
             {busy && (
@@ -241,20 +297,48 @@ export function Inicio() {
               />
               {files.length > 0 && (
                 <div className="file-chips">
-                  {files.map((f) => (
-                    <span key={f.id}>
-                      {f.name}
-                      <button
-                        type="button"
-                        aria-label={`Quitar ${f.name}`}
-                        onClick={() =>
-                          setFiles(files.filter((x) => x.id !== f.id))
+                  <AnimatePresence initial={false}>
+                    {files.map((f) => (
+                      <motion.span
+                        key={f.id}
+                        className="attachment-preview"
+                        initial={
+                          reduced ? false : { opacity: 0, y: 5, scale: 0.96 }
                         }
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: reduced ? 1 : 0.96 }}
+                        transition={{ duration: reduced ? 0 : 0.18 }}
                       >
-                        <X size={13} />
-                      </button>
-                    </span>
-                  ))}
+                        {f.mime.startsWith("image/") ? (
+                          <Image
+                            unoptimized
+                            src={`/api/archivos/${f.id}`}
+                            width={44}
+                            height={44}
+                            alt={`Vista previa de ${f.name}`}
+                          />
+                        ) : (
+                          <Paperclip size={18} aria-hidden="true" />
+                        )}
+                        <a
+                          href={`/api/archivos/${f.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {f.name}
+                        </a>
+                        <button
+                          type="button"
+                          aria-label={`Quitar ${f.name}`}
+                          onClick={() =>
+                            setFiles(files.filter((x) => x.id !== f.id))
+                          }
+                        >
+                          <X size={13} />
+                        </button>
+                      </motion.span>
+                    ))}
+                  </AnimatePresence>
                 </div>
               )}
               <div className="composer-tools">

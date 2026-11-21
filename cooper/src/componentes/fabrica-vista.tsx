@@ -1,13 +1,46 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { animate, m as motion, useMotionValue } from "framer-motion";
 import { ArrowUpRight, Check, Clock3 } from "lucide-react";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Video } from "@/db/schema";
 import { useEspacio, Empty } from "./espacio";
 import { Portada } from "./portada";
-import { useMovimientoReducido } from "./movimiento";
+import {
+  NumeroAnimado,
+  TarjetaEdicion,
+  useMovimientoReducido,
+} from "./movimiento";
+
+function DestelloEtapa({ completed }: { completed: boolean }) {
+  const reduced = useMovimientoReducido();
+  const previous = useRef(completed);
+  const opacity = useMotionValue(0),
+    scale = useMotionValue(0.7);
+  useEffect(() => {
+    const changed = completed && !previous.current;
+    previous.current = completed;
+    if (!changed || reduced) return;
+    const light = animate(opacity, [0, 0.8, 0], { duration: 0.65 });
+    const ring = animate(scale, [0.7, 1.55], {
+      duration: 0.65,
+      ease: "easeOut",
+    });
+    return () => {
+      light.stop();
+      ring.stop();
+      opacity.set(0);
+    };
+  }, [completed, reduced, opacity, scale]);
+  return (
+    <motion.span
+      className="stage-spark"
+      aria-hidden="true"
+      style={{ opacity, scale }}
+    />
+  );
+}
 
 export function Recorrido({
   stage,
@@ -23,6 +56,7 @@ export function Recorrido({
     <motion.ol
       className={`journey ${compact ? "compact" : ""}`}
       aria-label="Etapas del video"
+      data-production={productionState}
       initial="hidden"
       animate="visible"
       variants={{
@@ -39,12 +73,22 @@ export function Recorrido({
           }
           aria-current={index === stage ? "step" : undefined}
         >
+          {index < 11 && (
+            <span className="stage-connector" aria-hidden="true">
+              <motion.span
+                initial={false}
+                animate={{ scaleY: index < stage || stage === 11 ? 1 : 0 }}
+                transition={{ duration: reduced ? 0 : 0.6 }}
+              />
+            </span>
+          )}
           <span className="stage-node">
-            {index < stage ? (
+            {index < stage || stage === 11 ? (
               <Check size={12} />
             ) : (
               String(index + 1).padStart(2, "0")
             )}
+            <DestelloEtapa completed={index < stage || stage === 11} />
           </span>
           <div>
             <span>{name}</span>
@@ -146,7 +190,9 @@ export function FabricaVista() {
           </div>
           <div className="factory-progress">
             <span>{completed} de 12 etapas completadas</span>
-            <strong>{Math.round((completed / 12) * 100)}%</strong>
+            <strong>
+              <NumeroAnimado value={Math.round((completed / 12) * 100)} />%
+            </strong>
           </div>
           <div
             className="progress-track"
@@ -163,6 +209,7 @@ export function FabricaVista() {
             />
           </div>
           <Recorrido
+            key={active.id}
             stage={active.stage}
             productionState={active.productionState}
             compact
@@ -180,14 +227,12 @@ export function FabricaVista() {
                 <span>{data.videos.length} piezas</span>
               </div>
               <div className="queue-strip">
-                {data.videos.map((v) => (
-                  <motion.button
+                {data.videos.map((v, i) => (
+                  <TarjetaEdicion
                     key={v.id}
-                    className="queue-item"
-                    aria-pressed={active.id === v.id}
+                    index={i}
+                    selected={active.id === v.id}
                     onClick={() => setSelected(v.id)}
-                    whileHover={reduced ? {} : { y: -2 }}
-                    whileTap={reduced ? {} : { scale: 0.97 }}
                   >
                     <span className="queue-cover">
                       <Portada title={v.title} />
@@ -201,7 +246,7 @@ export function FabricaVista() {
                           ? "En pausa"
                           : ETAPAS[v.stage]}
                     </small>
-                  </motion.button>
+                  </TarjetaEdicion>
                 ))}
               </div>
             </div>

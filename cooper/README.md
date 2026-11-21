@@ -139,3 +139,16 @@ La demostración fuerza fábrica, medios, transcripción, consultas de chat y ga
 Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`. Es compatible con bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
 
 `npm run test:e2e` genera 98 PNG finales en `.cache/capturas-final/`: 72 de las 18 pantallas/estados a 1440 y 390 px en dos temas, 24 de la barra en páginas largas/pantallas bajas y 2 de revocación. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
+
+## Movimiento del estudio
+
+La partitura, las fuentes oficiales consultadas y la evidencia de esta misión están en [cooper-animacion](../docs/informes/cooper-animacion.md). Se mantiene Framer Motion, con revelados y bucles sencillos en CSS; no se añaden dependencias. La preferencia de movimiento reducido se escucha también al cambiarla con la página abierta. «Pausar movimiento» conserva su estado durante la navegación y detiene CSS, SVG, seguimiento del cursor y contadores; una pestaña del navegador oculta suspende los efectos del estudio.
+
+```bash
+# Recorrido grabado, capturas, pausa, avance de etapa y muestra local de fluidez
+npm run test:e2e -- --project=demostracion animacion.spec.ts
+# Después de npm run build: auditoría de 32 combinaciones con umbral estricto de 100
+node scripts/auditoria.mjs --animacion
+```
+
+Los artefactos quedan en `.cache/animacion/`, incluidos `recorrido.webm`, capturas de seis anchuras, `fluidez.json` y `lighthouse/resumen.json`. El test usa audio, imágenes, usuarios y producción ficticios. La onda indica grabación activa; no representa el volumen del micrófono. Cooper articula por palabras y pausas del texto, sin generar audio. Los fps son una muestra local, no una garantía sobre equipos físicos.

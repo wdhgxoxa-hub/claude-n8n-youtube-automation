@@ -82,18 +82,33 @@ export function Grabador({
     }
   }
   return (
-    <button
-      type="button"
-      className={`icon-button ${recording ? "recording" : ""}`}
-      disabled={busy}
-      onClick={() => (recording ? recorder.current?.stop() : void start())}
-      aria-label={recording ? "Detener grabación" : "Grabar audio"}
-      title={
-        recording ? "Detener grabación" : "Grabar audio (máximo 60 segundos)"
-      }
-    >
-      {recording ? <Square size={18} /> : <Mic size={19} />}
-    </button>
+    <span className="recorder-control" data-recording={recording}>
+      <button
+        type="button"
+        className={`icon-button ${recording ? "recording" : ""}`}
+        disabled={busy}
+        onClick={() => (recording ? recorder.current?.stop() : void start())}
+        aria-label={recording ? "Detener grabación" : "Grabar audio"}
+        title={
+          recording ? "Detener grabación" : "Grabar audio (máximo 60 segundos)"
+        }
+      >
+        {recording ? <Square size={18} /> : <Mic size={19} />}
+      </button>
+      {recording && (
+        <span
+          className="recording-wave"
+          role="status"
+          aria-label="Grabando audio"
+        >
+          <span aria-hidden="true">
+            {Array.from({ length: 7 }, (_, i) => (
+              <i key={i} />
+            ))}
+          </span>
+        </span>
+      )}
+    </span>
   );
 }
 export async function subir(file: File) {

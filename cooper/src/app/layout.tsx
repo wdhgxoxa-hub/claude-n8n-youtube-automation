@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/manrope";
+import localFont from "next/font/local";
 import "./globals.css";
+const manrope = localFont({
+  src: "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2",
+  variable: "--font-manrope",
+  weight: "200 800",
+  display: "swap",
+  preload: true,
+});
 export const metadata: Metadata = {
   title: {
     default: "Cooper · Tu estudio de creación",
@@ -17,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" data-theme="oscuro">
+    <html lang="es" data-theme="oscuro" className={manrope.variable}>
       <body>{children}</body>
     </html>
   );
