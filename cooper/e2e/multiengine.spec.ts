@@ -168,9 +168,12 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
   const state: Estado = await (await page.request.get("/api/estado")).json();
   const video = state.videos.find((v) => v.title === titulo)!;
   await page.goto(`/videos/${video.id}`);
-  await expect(page.locator(".journey li.current")).toContainText(
-    "Aprobación de guion",
-  );
+  const etapaVisible = page
+    .getByRole("list", { name: "Etapas del video", exact: true })
+    .locator('[aria-current="step"]');
+  await expect(etapaVisible).toHaveCount(1);
+  await expect(etapaVisible).toBeVisible();
+  await expect(etapaVisible).toContainText("Aprobación de guion");
   await context.setOffline(true);
   await expect(page.locator(".connection")).not.toHaveText("En vivo");
   await context.setOffline(false);
@@ -188,7 +191,9 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
     expect(current.videos.find((v) => v.id === video.id)?.stage).toBe(stage);
     await teclado(page, approve);
     await page.keyboard.press("Enter");
-    await expect(page.locator(".journey li.current")).toContainText(next);
+    await expect(etapaVisible).toHaveCount(1);
+    await expect(etapaVisible).toBeVisible();
+    await expect(etapaVisible).toContainText(next);
   }
 });
 
