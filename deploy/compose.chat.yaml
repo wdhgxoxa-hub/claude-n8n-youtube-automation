@@ -11,6 +11,12 @@ x-rele: &rele
   mem_limit: 64m
   cpus: 0.25
   pids_limit: 32
+  healthcheck:
+    test: [CMD, node, -e, "fetch('http://127.0.0.1:8789/salud').then(r=>process.exit(r.status===401?0:1),()=>process.exit(1))"]
+    interval: 15s
+    timeout: 5s
+    retries: 3
+    start_period: 10s
   environment:
     COOPER_RELE_MODO: vps
     COOPER_RELE_SOCKET: /tunel/puente.sock
