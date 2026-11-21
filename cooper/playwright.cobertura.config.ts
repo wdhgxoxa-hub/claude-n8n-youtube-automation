@@ -7,6 +7,7 @@ export default defineConfig({
   // La matriz secuencial y Sentinel requieren unos siete minutos por archivo.
   reportSlowTests: { max: 5, threshold: 600000 },
   timeout: 240000,
+  maxFailures: 1,
   projects: [
     {
       name: "cobertura",

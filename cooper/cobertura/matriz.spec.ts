@@ -62,8 +62,14 @@ for (const theme of ["oscuro", "claro"])
       const paths = await rutas(page);
       for (const [i, path] of paths.entries()) {
         await page.goto(path);
-        await expect(page.locator(".operation-page h1")).toBeVisible();
-        await expect(page.getByText("Consultando la fábrica…")).toHaveCount(0);
+        // Next puede conservar temporalmente un árbol oculto durante la hidratación.
+        // Comprobar la única pantalla visible evita elegir ese árbol de respaldo.
+        const pantalla = page.locator(".operation-page:visible");
+        await expect(pantalla).toHaveCount(1);
+        await expect(pantalla.locator("h1")).toBeVisible();
+        await expect(pantalla.getByText("Consultando la fábrica…")).toHaveCount(
+          0,
+        );
         await expect(
           page.getByRole("button", { name: "Actualizar", exact: true }),
         ).toBeEnabled();
