@@ -1,0 +1,20 @@
+✔ Codex simulado: stdin literal, sandbox, autenticación ChatGPT y entorno sin claves (34.904271ms)
+✔ búsqueda requiere evento real, no basta afirmarlo en el texto (80.100179ms)
+✔ Codex simulado: codex_fallo (24.91198ms)
+✔ Codex simulado: respuesta_invalida (26.709388ms)
+✔ Codex simulado: salida_excesiva (31.707862ms)
+✔ mata una ejecución lenta y devuelve timeout acotado (153.705544ms)
+✔ cancela el proceso cuando se desconecta el cliente (103.64247ms)
+✔ HTTP local: rechaza token, Origin, tareas y argumentos ajenos sin ejecutar (28.025445ms)
+✔ HTTP: respuesta compatible y logs sin prompt, cabeceras ni stderr (57.165412ms)
+✔ HTTP: saturación devuelve 429, y libera la plaza al terminar (5.184653ms)
+✔ chat local: contrato separado, esquema fijo y cero herramientas del CLI (81.735445ms)
+✔ chat y fábrica comparten la única plaza del puente (3.202445ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 708.058291

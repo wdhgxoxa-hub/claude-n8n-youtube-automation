@@ -1,0 +1,12 @@
+{
+  "permisos_0600": "PASS",
+  "dominios_origenes_admin": "PASS",
+  "secretos_aleatorios_distintos": "PASS",
+  "clave_n8n_conservada": "PASS",
+  "google_configurado": true,
+  "whatsapp_app_secret_presente": false,
+  "credenciales_suscripcion_transferidas": false,
+  "chat": "codex-local con respaldo b\u00e1sico",
+  "api_respaldo": false,
+  "mensajeria_pausada": true
+}
