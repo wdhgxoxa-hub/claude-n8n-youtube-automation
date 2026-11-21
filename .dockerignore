@@ -8,6 +8,9 @@ cooper/data
 cooper/test-results
 cooper/playwright-report
 cooper/.env*
+cooper/**/.env*
+cooper/**/*.key
+cooper/**/*.pem
 cooper/*.log
 cooper/**/*.sqlite*
 cooper/**/*.db*

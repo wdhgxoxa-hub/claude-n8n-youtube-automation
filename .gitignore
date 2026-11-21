@@ -2,6 +2,7 @@
 .env
 .env.*
 !templates/env.example
+!deploy/.env.example
 credentials/
 *.key
 *.pem
