@@ -15,6 +15,9 @@ POLITICA_DISPARADORES = 'conservar_existentes_bloquear_nuevos'
 CAMPOS_CAS = ('nodes', 'connections', 'settings', 'versionId', 'activeVersionId', 'active')
 CAMPOS_CONTENIDO = ('nodes', 'connections', 'settings')
 AUSENTE = object()
+CAMPOS_RESOLUCION = {'workflow', 'componente', 'nombre', 'base_sha256', 'integrado_sha256',
+                     'vivo_sha256', 'elegir', 'motivo'}
+CAMPOS_HUELLAS = ('base_sha256', 'integrado_sha256', 'vivo_sha256')
 
 
 def entrada_externa(node):
@@ -82,6 +85,48 @@ def indice_unico(values, key):
     return result
 
 
+def indice_resoluciones(resoluciones):
+    if not isinstance(resoluciones, list):
+        raise ValueError('Las resoluciones deben ser una lista explícita')
+    result = {}
+    for row in resoluciones:
+        if (not isinstance(row, dict) or set(row) != CAMPOS_RESOLUCION
+                or any(not isinstance(row[key], str) or not row[key].strip() for key in CAMPOS_RESOLUCION)
+                or row['componente'] not in ('nodo', 'conexiones', 'ajuste')
+                or row['elegir'] not in ('vivo', 'integrado') or len(row['motivo']) > 1000
+                or any(not re.fullmatch('[a-f0-9]{64}', row[key]) for key in CAMPOS_HUELLAS)):
+            raise ValueError('Resolución desconocida o incompleta; exige identidad, tres hashes, elección y motivo')
+        key = (row['workflow'], row['componente'], row['nombre'])
+        if key in result:
+            raise ValueError('Resolución duplicada para el mismo componente')
+        result[key] = row
+    return result
+
+
+def validar_resoluciones(comparison):
+    resoluciones = comparison.get('resoluciones', [])
+    by_key = indice_resoluciones(resoluciones)
+    if 'resoluciones' in comparison and digest(resoluciones) != comparison.get('resoluciones_sha256'):
+        raise ValueError('La huella de las resoluciones no coincide')
+    used = set()
+    for row in comparison['componentes']:
+        key = (row['workflow'], row['componente'], row['nombre'])
+        resolution = by_key.get(key)
+        if row['decision'] in ('resuelto_vivo', 'resuelto_integrado'):
+            if (resolution is None or key in used or row.get('decision_previa') != 'conflicto'
+                    or len({row.get(field) for field in CAMPOS_HUELLAS}) != 3
+                    or any(row.get(field) != resolution[field] for field in CAMPOS_HUELLAS)
+                    or row['decision'] != 'resuelto_' + resolution['elegir']
+                    or row.get('elegido_sha256') != resolution[resolution['elegir'] + '_sha256']
+                    or row.get('motivo') != resolution['motivo']):
+                raise ValueError('Auditoría de resolución distinta del conflicto y elección aprobados')
+            used.add(key)
+        elif resolution is not None or any(field in row for field in ('decision_previa', 'elegido_sha256', 'motivo')):
+            raise ValueError('Una resolución solo puede decidir un conflicto real')
+    if used != set(by_key):
+        raise ValueError('Resoluciones sobrantes o desconocidas')
+
+
 def normalizar_nodo(node, metadata):
     if node is AUSENTE:
         return AUSENTE
@@ -102,7 +147,8 @@ def normalizar_nodo(node, metadata):
     return result
 
 
-def elegir_componente(base, integrado, vivo, normalizar, rows, wid, clase, nombre, opaco=False):
+def elegir_componente(base, integrado, vivo, normalizar, rows, wid, clase, nombre, opaco=False,
+                      resoluciones=None, usadas=None):
     normalized = [normalizar(value) for value in (base, integrado, vivo)]
     hashes = [hash_componente(value) for value in normalized]
     if opaco and vivo is not AUSENTE:
@@ -115,9 +161,21 @@ def elegir_componente(base, integrado, vivo, normalizar, rows, wid, clase, nombr
         selected, decision = vivo, 'coinciden'
     else:
         selected, decision = AUSENTE, 'conflicto'
-    rows.append({'workflow': wid, 'componente': clase, 'nombre': nombre,
-                 'base_sha256': hashes[0], 'integrado_sha256': hashes[1], 'vivo_sha256': hashes[2],
-                 'decision': decision})
+    row = {'workflow': wid, 'componente': clase, 'nombre': nombre,
+           'base_sha256': hashes[0], 'integrado_sha256': hashes[1], 'vivo_sha256': hashes[2],
+           'decision': decision}
+    key = (wid, clase, nombre)
+    resolution = (resoluciones or {}).get(key)
+    if resolution is not None:
+        if decision != 'conflicto':
+            raise ValueError('Una resolución solo puede decidir un conflicto real')
+        if any(row[field] != resolution[field] for field in CAMPOS_HUELLAS):
+            raise ValueError('Resolución obsoleta: cambiaron las huellas del conflicto')
+        selected = vivo if resolution['elegir'] == 'vivo' else integrado
+        row.update({'decision': 'resuelto_' + resolution['elegir'], 'decision_previa': 'conflicto',
+                    'elegido_sha256': resolution[resolution['elegir'] + '_sha256'], 'motivo': resolution['motivo']})
+        usadas.add(key)
+    rows.append(row)
     return copy.deepcopy(selected) if selected is not AUSENTE else AUSENTE
 
 
@@ -135,7 +193,7 @@ def validar_conexiones(workflow):
     return True
 
 
-def conciliar_workflow(base, integrado, vivo, metadata, rows, ajustes=False):
+def conciliar_workflow(base, integrado, vivo, metadata, rows, ajustes=False, resoluciones=None, usadas=None):
     result = copy.deepcopy(integrado)
     wid = integrado['id']
     if base is not None and vivo is None:
@@ -153,7 +211,8 @@ def conciliar_workflow(base, integrado, vivo, metadata, rows, ajustes=False):
             norm = lambda value: value
         else:
             norm = lambda value: normalizar_nodo(value, metadata)
-        selected = elegir_componente(*values, norm, rows, wid, 'nodo', name, opaco=is_ajustes)
+        selected = elegir_componente(*values, norm, rows, wid, 'nodo', name, opaco=is_ajustes,
+                                     resoluciones=resoluciones, usadas=usadas)
         if selected is not AUSENTE:
             result['nodes'].append(selected)
     for field, clase in [('connections', 'conexiones'), ('settings', 'ajuste')]:
@@ -161,7 +220,8 @@ def conciliar_workflow(base, integrado, vivo, metadata, rows, ajustes=False):
         result[field] = {}
         for name in dict.fromkeys(name for group in groups for name in group):
             selected = elegir_componente(*(group.get(name, AUSENTE) for group in groups),
-                                         lambda value: value, rows, wid, clase, name)
+                                         lambda value: value, rows, wid, clase, name,
+                                         resoluciones=resoluciones, usadas=usadas)
             if selected is not AUSENTE:
                 result[field][name] = selected
     if not validar_conexiones(result):
@@ -188,11 +248,13 @@ def validar_conservacion(workflows, diff):
         raise ValueError('Inventario de conservación incompleto')
     if 'conciliacion_tres_vias' in diff:
         comparison = diff['conciliacion_tres_vias']
-        allowed = {'conservar_vivo', 'incorporar_integrado', 'coinciden', 'conservar_vivo_opaco'}
+        allowed = {'conservar_vivo', 'incorporar_integrado', 'coinciden', 'conservar_vivo_opaco',
+                   'resuelto_vivo', 'resuelto_integrado'}
         if (not re.fullmatch('[a-f0-9]{64}', comparison.get('base_sha256', ''))
                 or not isinstance(comparison.get('componentes'), list)
                 or any(row.get('decision') not in allowed for row in comparison['componentes'])):
             raise ValueError('Conciliación incompleta o con conflictos sin resolver')
+        validar_resoluciones(comparison)
     for row in rows:
         if digest(by_id[row['id']]['nodes']) != row.get('nodos_despues_sha256'):
             raise ValueError('Nodos distintos del contrato conservado')
@@ -267,13 +329,18 @@ def validar_actual(path, diff, despues=False):
                 raise ValueError('El contenido o las versiones cambiaron desde la copia o el lote ensayado')
 
 
-def preparar(actuales, entradas, origen, metadata=None, publicar_dependencias=False, conservar_disparadores=False, bases=None):
+def preparar(actuales, entradas, origen, metadata=None, publicar_dependencias=False, conservar_disparadores=False,
+             bases=None, resoluciones=None):
     if origen != 'https://flujos.cooperestudio.com':
         raise ValueError('Origen no autorizado')
     if conservar_disparadores and (metadata is None or not publicar_dependencias):
         raise ValueError('Conservar disparadores exige inventario y plan de publicación')
     if bases is not None and not conservar_disparadores:
         raise ValueError('La comparación de tres vías exige conservar disparadores y CAS')
+    if resoluciones is not None and bases is None:
+        raise ValueError('Las resoluciones exigen comparación de tres vías con base explícita')
+    decisiones = indice_resoluciones(resoluciones) if resoluciones is not None else {}
+    usadas = set()
     by_id = {w['id']: w for w in actuales}
     by_name = {}
     for w in actuales:
@@ -305,6 +372,8 @@ def preparar(actuales, entradas, origen, metadata=None, publicar_dependencias=Fa
                     raise ValueError('La identidad base contradice el mapping integrado')
                 mapping[base['id']] = matches[0]['id']
         comparacion = {'base_sha256': digest(bases), 'componentes': []}
+        if resoluciones is not None:
+            comparacion.update({'resoluciones': copy.deepcopy(resoluciones), 'resoluciones_sha256': digest(resoluciones)})
     output, report = [], []
     preservados, nuevos_bloqueados, ajustes = [], [], []
     faltantes, bloqueos, disparadores = [], [], []
@@ -317,7 +386,7 @@ def preparar(actuales, entradas, origen, metadata=None, publicar_dependencias=Fa
             if base is not None:
                 base = json.loads(pattern.sub(lambda m: mapping[m[0]], json.dumps(base, ensure_ascii=False)))
             data = conciliar_workflow(base, data, actual, metadata, comparacion['componentes'],
-                                      ajustes=nuevo['id'] == 'FabAjustes000001')
+                                      ajustes=nuevo['id'] == 'FabAjustes000001', resoluciones=decisiones, usadas=usadas)
         data['active'] = False
         data['pinData'] = {}
         if bases is None:
@@ -367,6 +436,8 @@ def preparar(actuales, entradas, origen, metadata=None, publicar_dependencias=Fa
         if conservar_disparadores:
             report[-1]['nodos_antes_sha256'] = digest(actual['nodes']) if actual else None
             report[-1]['estado_antes_sha256'] = digest(estado_cas(actual)) if actual else None
+    if usadas != set(decisiones):
+        raise ValueError('Resoluciones sobrantes o desconocidas')
     if comparacion and any(row['decision'].startswith('conflicto') for row in comparacion['componentes']):
         raise ConflictoConciliacion(comparacion)
     if metadata is not None:
@@ -443,6 +514,8 @@ def main():
     parser.add_argument('--salida', type=Path, required=True)
     parser.add_argument('--metadata', type=Path)
     parser.add_argument('--base', type=Path, help='Directorio JSON de la base Git común; exige modo conservador')
+    parser.add_argument('--resoluciones', type=Path,
+                        help='Lista de conflictos revisados con tres hashes exactos, elección y motivo; exige --base')
     parser.add_argument('--publicar-dependencias-seguras', action='store_true')
     parser.add_argument('--conservar-disparadores', action='store_true',
                         help='Conserva las entradas existentes y bloquea entradas nuevas; no reactiva workflows')
@@ -452,11 +525,12 @@ def main():
     entradas = [json.loads(p.read_text()) for p in sorted(args.entrada.glob('*.json'))]
     metadata = json.loads(args.metadata.read_text()) if args.metadata else None
     bases = [json.loads(p.read_text()) for p in sorted(args.base.glob('*.json'))] if args.base else None
+    resoluciones = json.loads(args.resoluciones.read_text()) if args.resoluciones else None
     if args.base and not bases:
         raise ValueError('La base debe ser un directorio con workflows JSON')
     try:
         salida, diff = preparar(actuales, entradas, 'https://flujos.cooperestudio.com', metadata,
-                               args.publicar_dependencias_seguras, args.conservar_disparadores, bases)
+                               args.publicar_dependencias_seguras, args.conservar_disparadores, bases, resoluciones)
     except ConflictoConciliacion as exc:
         target = args.salida / 'conflictos.json'
         target.write_text(json.dumps(exc.comparacion, ensure_ascii=False, indent=2) + '\n')
