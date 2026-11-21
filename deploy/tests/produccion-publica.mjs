@@ -33,9 +33,8 @@ try {
     assert.ok(await page.getByRole("button", { name: /Google/ }).isVisible());
     const tls = await login.securityDetails();
     assert.ok(tls.protocol.startsWith("TLS"));
-    const headers = await login.allHeaders();
-    assert.ok(headers["strict-transport-security"]?.includes("max-age="));
-    assert.equal(headers["x-content-type-options"], "nosniff");
+    assert.ok((await login.headerValue("strict-transport-security"))?.includes("max-age="));
+    assert.equal(await login.headerValue("x-content-type-options"), "nosniff");
     const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
     assert.equal(axe.violations.length, 0);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
