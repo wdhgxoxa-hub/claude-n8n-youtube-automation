@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "node scripts/e2e.mjs",
+    "test:ensayo": "node --test ../tests/migrar_dueno.test.mjs && node scripts/ensayo.mjs",
     "db:migrate": "tsx src/db/migrar.ts"
   },
   "dependencies": {

@@ -100,6 +100,8 @@ Se usaron filesystem/CLI, navegador Chromium local mediante Playwright y consult
 
 ## Verificación
 
+Para el puente real local: `npm run test:ensayo` (Node 24, Podman y la imagen `ghcr.io/n8n-io/n8n:2.47.4`). Crea Data Tables, migra datos ficticios, importa/publica workflows por REST y prueba Cooper en modo n8n con sesiones locales. Usa red interna sin Internet, puertos loopback libres, secretos nuevos y un volumen exclusivo en `~/.cache/cooper-ensayo/`. Al salir detiene `cooper-ensayo-n8n` y conserva su volumen. Cada repetición archiva el contenedor anterior detenido y crea una instancia nueva; rechaza reutilizar uno en ejecución o sin su etiqueta. No lee `.env` reales. Los resultados y capturas quedan en `.cache/e2e-ensayo-*`; [informe, límites y migración para Claude](../docs/informes/cooper-ensayo.md).
+
 ```bash
 npm ci
 npm run lint
