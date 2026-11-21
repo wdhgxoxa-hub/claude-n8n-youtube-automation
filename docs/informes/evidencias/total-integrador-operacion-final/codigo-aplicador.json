@@ -1,0 +1,16 @@
+{
+  "imagen_fuente": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "aplicador_fuente": "e32747c6c52ee8fe73dfd46e1fba3e465fb6ce9a",
+  "archivos": {
+    "deploy/aplicar-infra.py": "26d5a582b231e439d14eeda4385148ad2e3385d3e8280a4444f80fbd2a1b373e",
+    "deploy/tests/test_aplicar_infra.py": "e637be5817ed380ab3779f261784fac8fe561c65a26c86a5eb3628739d63e735",
+    "deploy/operar.py": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+    "deploy/tests/infra-aplicador.py": "b2b6ae1c8d7fddc6655b274bcd1151b8e7e93f38c89b577ff154632408fe786c"
+  },
+  "pruebas_operativas": {
+    "total": 167,
+    "estado": "PASS",
+    "warnings": "error",
+    "log_sha256": "df8137f11cb9bbaf23f9c8d272c0432ff1bcdeb01d8cc8c9c7314ba30d24abcf"
+  }
+}

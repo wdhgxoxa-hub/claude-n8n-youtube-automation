@@ -1,0 +1,41 @@
+{
+  "fuente": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "etiqueta": "localhost/cooper:e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "image_id": "ae1de678d22f476d56ddbfa50d07afd273edcb2b15a2996724500eee5d3a0d0e",
+  "archivo": "/home/david/.cache/cooper-ti-operacion-final/cooper-e1244bd.tar",
+  "archivo_sha256": "8b52f0c6a9a18181235ce8b78531b85c50096bfc3b9306fafa31c142adc8d641",
+  "compilacion": {
+    "estado": "PASS",
+    "formato": "docker",
+    "cpu_set": "16-23",
+    "errores": 0,
+    "advertencias": 0,
+    "log_sha256": "c2f4fb23a676bec76ee2d6a831ed4366f70239524ec6bc39fa6e7ef298231a34"
+  },
+  "motor_reutilizado": {
+    "fuente_prueba_anterior": "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-integrador/motor.json",
+    "sin_cambios_desde": "a794037beaaa886bcf3b8eb69274caf0d3af22c8",
+    "archivos_sha256": {
+      "deploy/ensayar-motor-n8n.py": "13949cff3d864ba6b5d0b37a1044ad8bd3183e99b6d0c735d1f9b8d781814bdf",
+      "deploy/ensayar-n8n.py": "f36fb31a97e130476298d4125b782016764f3e8ee2fdc90ffb8e544c6a3354f9",
+      "deploy/operar.py": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+      "deploy/infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3",
+      "deploy/compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+      "deploy/Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+      "deploy/n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712"
+    },
+    "recibo_sha256": "0f3b7465f10d6e25c8eefa52d435aad72b5b534cea5a21d637068d350f4a4c78"
+  },
+  "compose": {
+    "estado": "PASS",
+    "bloques": 8,
+    "log_sha256": "e6100300246bae0b891107765e1086cf807d9e54fbe26c51224a56e677109bb4",
+    "fixture": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg",
+    "preparacion_inicial": {
+      "estado": "CORREGIDO",
+      "bloques_aprobados": 7,
+      "causa": "El checkout git archive no conten\u00eda metadatos Git para git rev-parse del bloque 8; repetido en repositorio local con HEAD exacto.",
+      "log_sha256": "46a3943eb3cfdaf6a391061272ea2a9aab78e0f7237ae3acf493bcef279965c9"
+    }
+  }
+}

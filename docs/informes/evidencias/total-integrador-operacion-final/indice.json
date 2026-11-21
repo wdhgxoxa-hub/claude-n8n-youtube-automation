@@ -1,0 +1,43 @@
+{
+  "estado": "PASS",
+  "archivos_sha256": {
+    "imagen.json": "8ec007c8fd03346d2c41260ef4d07a45bbb507a1c10a969514288b168b405f57",
+    "migracion.json": "07d28b7571ba471b1140e81796ee91b97c0b5883cdae1275dbd619673fd5f2ed",
+    "motor.json": "dbf23dbc0bfeb4662e848d74b6f225076ef743f40c4c9797bc860c46266717d7",
+    "infra-aceptacion.json": "30daade23bb319c8edacdc78337f59daf429564d6efe90b2cba53751e8e6f7ed",
+    "infra-aplicador.json": "42e89821c90ee910dbfa8a6ccbbe75876fd0ba625409fb23f912ff753c61e47b",
+    "codigo-aplicador.json": "10f305026ab5be35113908b71fe7f7ac39ebc8caa43a6cc56e8a54d91bfc287c",
+    "compose.log": "e6100300246bae0b891107765e1086cf807d9e54fbe26c51224a56e677109bb4",
+    "operacion-tests.log": "df8137f11cb9bbaf23f9c8d272c0432ff1bcdeb01d8cc8c9c7314ba30d24abcf"
+  },
+  "recibos_privados": {
+    "fallo-inyectado.json": {
+      "ruta": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg/aceptacion-infra-1795292048506421527/fallo-inyectado.json",
+      "sha256": "3336855809055e1bd4127b48858c30b4306a7d7b284a33d92e638a422346e79a",
+      "resultado": {
+        "estado": "FALLO_REVERTIDO",
+        "reversion": "PASS"
+      }
+    },
+    "actualizacion.json": {
+      "ruta": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg/aceptacion-infra-1795292048506421527/actualizacion.json",
+      "sha256": "630fe43bca350ea6322f9ac876c848abd2815deb65b39e179e8ebfdaa195f060",
+      "resultado": {
+        "estado": "PASS",
+        "salud": "PASS",
+        "datos_preservados": "PASS"
+      }
+    },
+    "resultado.json": {
+      "ruta": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg/aceptacion-infra-1795292048506421527/resultado.json",
+      "sha256": "1bccf84fb5496f10117421150a6eaef79bbb8f997a31f15fd8df356270378db8",
+      "resultado": {
+        "aplicador": "PASS",
+        "fallo_inyectado_y_reversa": "PASS",
+        "actualizacion": "PASS"
+      }
+    }
+  },
+  "datos_privados_publicados": false,
+  "remoto_modificado_por_este_frente": false
+}
