@@ -317,10 +317,10 @@ test('producción: el encargo lleva el último guion listo para guardarlo en la 
   assert.strictEqual(out.guion.titulo, 'v2'); assert.strictEqual(out.tema, 'T');
 });
 
-test('aprendizaje: solo mide los videos que cumplen 2 o 7 días', () => {
+test('aprendizaje: captura métricas diariamente sin esperar los días de lecciones', () => {
   const hace = d => new Date(Date.now() - d * 86400000 - 3600000).toISOString();
   const out = run(codeOf(APR, 'Toca medir'), { all: { $input: [{ video_id: 'a', youtube_id: 'y', publicado_en: hace(2) }, { video_id: 'b', youtube_id: 'y', publicado_en: hace(3) }, { video_id: 'c', youtube_id: 'y', publicado_en: hace(7) }] } });
-  assert.deepStrictEqual(out.map(i => i.json.video_id), ['a', 'c']);
+  assert.deepStrictEqual(out.map(i => i.json.video_id), ['a', 'b', 'c']);
   assert.strictEqual(run(codeOf(APR, 'Toca medir'), { all: { $input: [] } })[0].json.nada, true);
 });
 
@@ -555,11 +555,11 @@ test('orquestador: el guion recibe la investigación de vidIQ solo si se usó', 
   assert.strictEqual(sin.datos.investigacion_vidiq, undefined);
 });
 
-test('aprendizaje: también mide los envíos a redes a los 2 y 7 días', () => {
+test('aprendizaje: mide redes confirmadas y conserva lecciones a los días 2 y 7', () => {
   const hace = d => new Date(Date.now() - d * 86400000 - 3600000).toISOString();
-  const pubs = [{ request_id: 'a', publicado_en: hace(2), canal_id: 'c', video_id: 'v' }, { request_id: 'b', publicado_en: hace(4) }, { request_id: '', publicado_en: hace(2) }, { request_id: 'e', estado: 'error', publicado_en: hace(7) }];
+  const pubs = [{ request_id: 'a', estado: 'publicado', publicado_en: hace(2), canal_id: 'c', video_id: 'v' }, { request_id: 'b', estado: 'publicado', publicado_en: hace(4) }, { request_id: '', publicado_en: hace(2) }, { request_id: 'e', estado: 'error', publicado_en: hace(7) }];
   const t = run(codeOf(APR, 'Toca medir en redes'), { all: { $input: pubs } });
-  assert.deepStrictEqual(t.map(i => i.json.request_id), ['a']);
+  assert.deepStrictEqual(t.map(i => i.json.request_id), ['a', 'b', 'e']);
   const lec = run(codeOf(APR, 'Pedir lecciones'), { all: { 'Toca medir en redes': [{ request_id: 'a', canal_id: 'c', video_id: 'v', tipo: 'principal', dias: 2 }], 'Métricas en redes': [{ tiktok: { views: 900 } }] } }).map(i => i.json);
   assert.strictEqual(lec.length, 1); assert.deepStrictEqual(lec[0].datos.redes[0].metricas, { tiktok: { views: 900 } }); assert.deepStrictEqual(lec[0].datos.videos, []);
 });
@@ -1655,4 +1655,38 @@ test('noticia: verifica storyboard completo e invalida certificados antes de cor
     const flow=codeOf(ORQ,'Invalidar · '+step+' campos');
     assert.match(flow,/noticia_storyboard_hash:''/);
   }
+});
+
+const OBS=fs.readFileSync(path.join(__dirname,'../tools/cooper/observabilidad.js'),'utf8');
+test('pulido: métricas por publicación, nulos distintos de cero y un punto por día',()=>{
+ const respuesta={platforms:{youtube:{success:true,post_metrics:{views:0,likes:0}},tiktok:{success:true,post_metrics_error:'sin permiso',profile_snapshot_latest:{impressions:999}}}};
+ const js=OBS+'return [{json:JSON.parse(historialRedesCooper($json.p,$json.respuesta,Date.now()))}];';
+ const a=run(js,{json:{p:{},respuesta}})[0].json;
+ assert.equal(a.youtube[0].vistas,0);assert.equal(a.youtube[0].comentarios,null);assert.equal(a.tiktok,undefined);
+ const b=run(js,{json:{p:{metricas_historial:JSON.stringify(a)},respuesta}})[0].json;
+ assert.equal(b.youtube.length,1);
+});
+test('pulido: la proyección aísla medios, lecciones, rechazos y resoluciones',()=>{
+ const date='2026-11-21T00:00:00Z';
+ const out=run(codeOf(FX,'Resolver'),{nodes:{Autenticar:{solicitud:solicitudCooper('estado'),dueno_email:'ana@example.test',admin:false}},all:{
+  'Canales autorizados':[canalCooper], 'Videos autorizados':[{...videoCooper,render_url:'https://cdn.test/video.mp4'}],
+  'Piezas de Cooper':[{video_id:'v-ana',plano_id:'p1',tipo:'imagen',archivo_url:'https://cdn.test/p1.png'},{video_id:'otro',plano_id:'privado',url:'https://privado.test/a.png'}],
+  'Lecciones de Cooper':[{canal_id:'c-ana',job_id:'l',modo:'aprender',estado:'ok',createdAt:date,resultado:JSON.stringify({resultado:{resumen:'Mejoró el gancho.',lecciones:[{regla:'Preguntar al inicio ayuda al gancho.'}]},costo_usd:999})}],
+  'Historial de Cooper':[{video_id:'v-ana',id:'e1',tipo:'incidencia_cooper',createdAt:date,detalle:JSON.stringify({tipo:'critico',resumen:'El gancho era largo.'})},{video_id:'v-ana',id:'e2',tipo:'correccion_cooper',createdAt:'2026-11-21T01:00:00Z',detalle:JSON.stringify({tipos:['critico'],cambio:'Se acortó la apertura y superó la revisión.'})}]
+ }} )[0].json.respuesta;
+ assert.equal(out.videos[0].observabilidad.montaje,'https://cdn.test/video.mp4');assert.equal(out.videos[0].observabilidad.escenas.length,1);
+ assert.equal(out.videos[0].observabilidad.incidencias[0].estado,'corregido');assert.equal(out.canales[0].lecciones[0].ganchos.length,1);
+ assert.doesNotMatch(JSON.stringify(out),/privado|999|costo_usd/);
+});
+test('pulido: red publicada se conserva ante fallo parcial y no se confunde enviado con publicado',()=>{
+ const js=OBS+'return [{json:observabilidadCooper($json.v,[],$json.p,[],[])}];';
+ const p=[{video_id:'v',request_id:'r',estado:'error',resultado:JSON.stringify({publicaciones:[{red:'youtube',url:'https://youtube.com/watch?v=abcdefghijk',publicado:true},{red:'tiktok',url:'',publicado:false}]})},{video_id:'v',request_id:'r2',estado:'enviado',url:'https://instagram.com/test'}];
+ const out=run(js,{json:{v:{video_id:'v'},p}})[0].json;
+ assert.equal(out.publicaciones.length,1);assert.equal(out.publicaciones[0].red,'youtube');
+});
+test('pulido: periodicidad diaria acotada y análisis de IA solo a los días 2 y 7',()=>{
+ const videos=Array.from({length:110},(_,i)=>({video_id:String(i),youtube_id:'y',publicado_en:'2026-01-01T00:00:00Z'}));
+ assert.equal(run(codeOf(APR,'Toca medir'),{all:{$input:videos}}).length,100);
+ const fuera=run(codeOf(APR,'Pedir lecciones'),{all:{'Toca medir en redes':[{video_id:'v',canal_id:'c',dias:4}],'Métricas en redes':[{platforms:{}}]}});
+ assert.equal(fuera.length,0);
 });

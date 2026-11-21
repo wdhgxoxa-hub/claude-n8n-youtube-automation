@@ -3308,6 +3308,150 @@
     },
     {
       "parameters": {
+        "jsCode": "\nconst planos=$('Composición Creatomate').first().json.planos || [];\nconst voces=$('Sonido y emoción').first().json.voces || [];\nreturn [{json:{cooper_escenas:JSON.stringify(planos.map((p,i)=>({id:String(p.plano_id || p.plano?.id || i),orden:i,\n imagen:!['clip','archivo','avatar'].includes(p.plano?.tipo || p.tipo)?p.url || '':'',\n clip:['clip','archivo','avatar'].includes(p.plano?.tipo || p.tipo)?p.url || '':'',\n voz:voces.find(v=>v.plano_id===(p.plano_id || p.plano?.id))?.url || ''})))}}];\n"
+      },
+      "id": "30ac441d-f02a-53de-bc41-0130678c63ee",
+      "name": "Cooper · piezas terminadas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7cdad666-e3dc-5f7a-9898-0d2069d5f391",
+      "name": "Cooper · guardar piezas",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
+      },
+      "id": "104f57e6-35b6-5ec9-8a5f-54fc507d446d",
+      "name": "Cooper · atribuir ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "0a11f1ed-034d-581a-8aad-e73e28d59325",
+      "name": "Cooper · guardar atribución",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "17e8f9fb-2881-5464-9ba9-2fdfd7c9b92f",
+              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a6bec37b-3315-5ee9-b8d2-147b17b752f1",
+      "name": "¿Atribuir ejecución a video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "0febf7ae-5186-53f9-a501-af03be9fb105",
+      "name": "Cooper · continuar ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en producción\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "d2173d60-71b0-5248-99cf-b3814d5fab0d",
@@ -3515,6 +3659,48 @@
         2200,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · guardar piezas\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "59097a75-7359-5f0c-9177-19ef231a89de",
+      "name": "Cooper · sello Cooper · guardar piezas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "60a7922d-a695-5bd4-a19e-1a3dab040b12",
+      "name": "Cooper · sello Cooper · guardar piezas aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2640,
+        0
+      ]
     }
   ],
   "connections": {
@@ -3567,17 +3753,6 @@
         [
           {
             "node": "Permiso de gasto · cerrar",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Leer ajustes",
             "type": "main",
             "index": 0
           }
@@ -4304,6 +4479,11 @@
         [
           {
             "node": "Presentación · Renderizar entrada",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · piezas terminadas",
             "type": "main",
             "index": 0
           }
@@ -5168,6 +5348,79 @@
         ]
       ]
     },
+    "Cooper · piezas terminadas": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · guardar piezas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · continuar ejecución": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "¿Atribuir ejecución a video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Atribuir ejecución a video?": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir ejecución": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar atribución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar atribución": {
+      "main": [
+        [
+          {
+            "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Cooper · sello Video en producción": {
       "main": [
         [
@@ -5321,6 +5574,33 @@
         [
           {
             "node": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · guardar piezas": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar piezas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · guardar piezas aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Cooper · guardar piezas": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · guardar piezas aviso",
             "type": "main",
             "index": 0
           }

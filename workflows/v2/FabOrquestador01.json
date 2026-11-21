@@ -6701,6 +6701,258 @@
     },
     {
       "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json,v=$('Veredicto del crítico').first().json;\nif (!e.video_id || v.por_cifras) return [];\nreturn [{json:{video_id:e.video_id,canal_id:e.canal_id || '',evento:String($execution.id)+':revision',\n tipo:v.pasa && v.leido?'correccion_cooper':'incidencia_cooper',detalle:JSON.stringify(v.pasa && v.leido?{tipos:['critico'],cambio:'El guion revisado superó la revisión de gancho, claridad y exactitud.'}:{tipo:'critico',resumen:v.leido?'La revisión del guion pidió reforzar el gancho, la claridad o la exactitud.':'No se pudo completar la revisión automática del guion.'})}}];\n"
+      },
+      "id": "02477bdf-7bbe-5273-9a8d-6351f1ffbd62",
+      "name": "Cooper · resultado de revisión",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "37e7e475-6dbc-5294-bf94-a7fc8ab2b9ca",
+      "name": "Cooper · guardar revisión",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
+      },
+      "id": "1b05b517-97e0-57ef-9c2d-65e6bc971a8a",
+      "name": "Cooper · atribuir ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "715bffd5-a40b-5a1c-bd68-ca3e0fdc1201",
+      "name": "Cooper · guardar atribución",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d6c4340b-8df4-53aa-ac5b-bbe985cc0b04",
+              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c2b66c25-d535-5bbe-8228-1df1fa37b3b4",
+      "name": "¿Atribuir ejecución a video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "283633ae-6e4f-57ce-b414-03e89ab99fed",
+      "name": "Cooper · continuar ejecución",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Proyección cerrada de datos públicos: jamás se serializan filas de proveedor/costos.\nfunction jsonCooper(value, fallback) { try { return JSON.parse(value || 'null') ?? fallback; } catch { return fallback; } }\nfunction urlCooper(value) { const s=String(value || ''); return /^https:\\/\\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::443)?(?:[/?#][^\\s\\\\<>]*)?$/i.test(s) ? s : ''; }\nfunction fechaCooper(value) { const n = typeof value === 'number' ? value : Date.parse(value); return Number.isFinite(n) && n > 0 ? new Date(n).toISOString() : null; }\nfunction numeroCooper(value) { return value !== null && value !== '' && value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null; }\nfunction textoCooper(value, max = 2000) {\n  // Los textos libres de especialistas pueden mencionar datos administrativos.\n  return String(value || '').replace(/https?:\\/\\/\\S+/gi, '[enlace]').replace(/(?:Bearer|Apikey)\\s+\\S+/gi, '[privado]')\n    .split(/\\n|(?<=[.!?])\\s/).filter(s => !/\\b(?:USD|US\\$|costos?|presupuesto|tokens?|api.?key|secret|proveedor|credencial|OpenAI|Claude|Creatomate|HeyGen|ElevenLabs|Gemini)\\b|\\$\\s*\\d/i.test(s)).join(' ').slice(0,max);\n}\nfunction curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({segundo:numeroCooper(p.second ?? p.segundo),porcentaje:numeroCooper(p.percentage ?? p.porcentaje)})).filter(p=>p.segundo!==null && p.porcentaje!==null && p.porcentaje<=1).slice(0,600); }\nfunction medicionCooper(value) {\n  const fecha = fechaCooper(value.fecha); if (!fecha) return null;\n  const r = numeroCooper(value.retencion);\n  return { fecha, curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r !== null && r <= 1 ? r : null };\n}\nfunction leccionesCooper(canal, trabajos) {\n  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && t.estado === 'ok').slice(-100).flatMap(t => {\n    const raw = jsonCooper(t.resultado, {}), r = raw.resultado || raw;\n    const fecha = fechaCooper(t.updatedAt || t.createdAt); if (!fecha) return [];\n    const lista = x => (Array.isArray(x) ? x : []).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);\n    const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);\n    return resumen ? [{id:String(t.job_id),fecha,resumen,ganchos:lista(r.ganchos_que_funcionan || r.ganchos).concat(lista(r.lecciones).filter(x=>/gancho|apertura/i.test(x))).slice(0,20),temas:lista(r.temas_que_funcionan || r.temas).concat(lista(r.lecciones).filter(x=>/tema/i.test(x))).slice(0,20)}] : [];\n  });\n}\nfunction observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {\n  const publicadas = publicaciones.filter(p => p.video_id === v.video_id).flatMap(p => {\n    const r = jsonCooper(p.resultado, {});\n    // Cada red confirmada se conserva aunque otra red del envío falle.\n    const resultados = Array.isArray(r.publicaciones) ? r.publicaciones.filter(x => x.publicado === true) : p.estado === 'publicado' ? (r.urls || [p.url]).filter(Boolean).map(url => ({url,red: inferirRedCooper(url)})) : [];\n    const historiales = jsonCooper(p.metricas_historial, {});\n    return resultados.map(x => ({ id:String(p.request_id)+':'+x.red, red:String(x.red || p.plataforma || 'Otra red'),url:urlCooper(x.url),fecha:fechaCooper(p.publicado_en),miniatura:urlCooper(v.miniatura_url),\n      historial:(Array.isArray(historiales[x.red]) ? historiales[x.red] : []).map(medicionCooper).filter(Boolean).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90) }));\n  });\n  if (v.youtube_id && v.estado === 'publicado' && !publicadas.some(p => p.red === 'youtube' && p.url.includes(v.youtube_id))) {\n    publicadas.push({id:'youtube:'+v.youtube_id,red:'youtube',url:'https://www.youtube.com/watch?v='+encodeURIComponent(v.youtube_id),fecha:fechaCooper(v.publicado_en),miniatura:urlCooper(v.miniatura_url),historial:jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean).slice(-90)});\n  }\n  const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);\n  for (const p of publicadas) if (p.red==='youtube') {\n    const porDia=new Map(ytHist.map(m=>[m.fecha.slice(0,10),m]));\n    for (const m of p.historial) { const otro=porDia.get(m.fecha.slice(0,10)); porDia.set(m.fecha.slice(0,10),{...m,retencion:m.retencion ?? otro?.retencion ?? null}); }\n    p.historial=[...porDia.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90);\n  }\n  // Los eventos de resolución explicitan qué revisión fue superada. Avanzar de etapa no basta.\n  const propios = eventos.filter(e => e.video_id === v.video_id && ['incidencia_cooper','correccion_cooper'].includes(e.tipo)).sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));\n  const incidencias=[];\n  for (const e of propios) {\n    const d=jsonCooper(e.detalle,{}), fecha=fechaCooper(e.createdAt); if (!fecha) continue;\n    if (e.tipo === 'correccion_cooper') {\n      for (const i of incidencias) if (i.estado === 'pendiente' && (d.tipos || []).includes(i.tipo)) { i.estado='corregido'; i.corregidoEn=fecha; i.cambio=textoCooper(d.cambio); }\n    } else if (['ejecucion','critico','verificador','correccion','calidad'].includes(d.tipo)) incidencias.push({id:String(e.id || e.evento),tipo:d.tipo,resumen:textoCooper(d.resumen),fecha,estado:'pendiente',corregidoEn:null,cambio:''});\n  }\n  for (const a of aprobaciones.filter(a=>a.video_id===v.video_id && a.cambios)) {\n    const fecha=fechaCooper(a.decidido_en || a.createdAt); if (!fecha) continue;\n    const siguiente=aprobaciones.filter(b=>b.video_id===v.video_id && b.etapa===a.etapa && ['aprobado','decidida'].includes(b.estado) && fechaCooper(b.decidido_en)>fecha).sort((a,b)=>String(a.decidido_en).localeCompare(String(b.decidido_en)))[0];\n    incidencias.push({id:'aprobacion:'+a.aprobacion_id,tipo:'correccion',resumen:textoCooper(a.cambios),fecha,estado:siguiente?'corregido':'pendiente',corregidoEn:siguiente?fechaCooper(siguiente.decidido_en):null,cambio:siguiente?'La nueva versión recibió aprobación después de los cambios solicitados.':''});\n  }\n  if (v.error && !incidencias.some(i=>i.estado==='pendiente')) incidencias.push({id:'estado:'+v.video_id,tipo:'ejecucion',resumen:'La producción registró un fallo; está pendiente de revisión.',fecha:fechaCooper(v.updatedAt || v.createdAt) || new Date(0).toISOString(),estado:'pendiente',corregidoEn:null,cambio:''});\n  const guardadas = jsonCooper(v.cooper_escenas,[]);\n  const escenas = guardadas.length ? guardadas : planos.filter(p=>p.video_id===v.video_id).map((p,i)=>({id:p.plano_id,orden:Math.max(0,Number(p.orden) || i),imagen:['imagen','ilustracion'].includes(p.tipo)?p.archivo_url || p.url:'',clip:['clip','archivo','avatar'].includes(p.tipo)?p.archivo_url || p.url:'',voz:p.voz_url || ''}));\n  return {montaje:urlCooper(v.render_url),miniatura:urlCooper(v.miniatura_url),escenas:escenas.slice(0,200).map((e,i)=>({id:String(e.id || i),orden:Math.max(0,Math.floor(Number(e.orden)||0)),imagen:urlCooper(e.imagen),clip:urlCooper(e.clip),voz:urlCooper(e.voz)})),publicaciones:publicadas.slice(0,100),incidencias:incidencias.slice(-200)};\n}\nfunction inferirRedCooper(url) { const host = String(url).match(/^https:\\/\\/(?:www\\.)?([^/:?#]+)/i)?.[1]?.toLowerCase(); return ({'youtube.com':'youtube','youtu.be':'youtube','tiktok.com':'tiktok','instagram.com':'instagram','facebook.com':'facebook'})[host] || 'Otra red'; }\nfunction historialRedesCooper(p, respuesta, ahora) {\n  const historial=jsonCooper(p.metricas_historial,{}), fecha=new Date(ahora).toISOString();\n  for (const [red,r] of Object.entries(respuesta.platforms || {})) {\n    if (r.success !== true || r.post_metrics_error || !r.post_metrics) continue;\n    const m=r.post_metrics;\n    // No usar snapshots del perfil como si fueran métricas de un video.\n    const curva=curvaCooper(m.retention);\n    const dato={fecha,vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};\n    const prev=Array.isArray(historial[red])?historial[red]:[];\n    historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10)),dato].slice(-90);\n  }\n  return JSON.stringify(historial);\n}\n\nconst e=$('Inicio').first().json;\nreturn e.evento==='corregir' && e.video_id?[{json:{video_id:e.video_id,canal_id:e.canal_id || '',tipo:'incidencia_cooper',evento:String($execution.id)+':cambio',detalle:JSON.stringify({tipo:'correccion',resumen:textoCooper(e.instruccion || 'Se solicitaron cambios en este video.')})}}]:[];\n"
+      },
+      "id": "1b5fe151-3e8a-5c90-9939-cb33519f5a86",
+      "name": "Cooper · cambio solicitado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "dc5709a0-d701-51e2-b34a-4c00648087b7",
+      "name": "Cooper · guardar cambio solicitado",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json;\nreturn e.evento==='aprobado' && e.video_id?[{json:{video_id:e.video_id,canal_id:e.canal_id || '',tipo:'correccion_cooper',evento:String($execution.id)+':aprobacion',detalle:JSON.stringify({tipos:['correccion'],cambio:'La nueva versión recibió aprobación humana después de revisar los cambios.'})}}]:[];\n"
+      },
+      "id": "795c8f30-2198-53f4-8817-4709ec935f5c",
+      "name": "Cooper · revisión aprobada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1d2e17b7-099f-5df7-8190-712b0b419afd",
+      "name": "Cooper · guardar revisión aprobada",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json,v=$('Cifras verificadas').first().json;\nif (!e.video_id || !$('Verificar cifras').isExecuted) return [];\nconst ok=v.leido && !v.corregir;\nreturn [{json:{video_id:e.video_id,canal_id:e.canal_id || '',evento:String($execution.id)+':verificacion',tipo:ok?'correccion_cooper':'incidencia_cooper',detalle:JSON.stringify(ok?{tipos:['verificador'],cambio:'Se contrastaron las cifras del guion revisado y no se pidieron más cambios.'}:{tipo:'verificador',resumen:v.leido?'Se pidieron cambios en cifras o fuentes del guion.':'No se pudo completar la verificación de cifras.'})}}];\n"
+      },
+      "id": "daa6b09b-de66-5834-ae4d-b24386cc7604",
+      "name": "Cooper · resultado de verificación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "181cb70a-d9a8-5dba-9805-bf181b0e557c",
+      "name": "Cooper · guardar verificación",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Guardar video\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "726de92a-e960-571f-8aff-5071349c3428",
@@ -7625,17 +7877,6 @@
     }
   ],
   "connections": {
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Leer ajustes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Leer ajustes": {
       "main": [
         [
@@ -8263,6 +8504,11 @@
             "node": "Texto · Crítico del guion",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Cooper · resultado de verificación",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -8299,6 +8545,11 @@
           },
           {
             "node": "Fila de costo (crítico)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · resultado de revisión",
             "type": "main",
             "index": 0
           }
@@ -10364,6 +10615,122 @@
         [
           {
             "node": "Canal (publicar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · resultado de revisión": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar revisión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · continuar ejecución": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · cambio solicitado",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · revisión aprobada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "¿Atribuir ejecución a video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Atribuir ejecución a video?": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir ejecución": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar atribución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar atribución": {
+      "main": [
+        [
+          {
+            "node": "Cooper · continuar ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · cambio solicitado": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar cambio solicitado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · revisión aprobada": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar revisión aprobada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · resultado de verificación": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar verificación",
             "type": "main",
             "index": 0
           }

@@ -52,6 +52,84 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tipo",
+              "condition": "eq",
+              "keyValue": "ejecucion_cooper"
+            },
+            {
+              "keyName": "evento",
+              "condition": "eq",
+              "keyValue": "={{ String($('Error en un flujo').first().json.execution?.id || '__sin_id__') }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "b3d3d275-5463-55ec-9eb6-4046b37b2f77",
+      "name": "Cooper · ejecución fallida",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Error en un flujo').first().json;\nreturn $input.all().map(i=>i.json).filter(v=>v.video_id).map(v=>({json:{video_id:v.video_id,canal_id:v.canal_id || '',tipo:'incidencia_cooper',evento:String(e.execution?.id)+':error',detalle:JSON.stringify({tipo:'ejecucion',resumen:'La ejecución se interrumpió y necesita revisión antes de continuar.'})}}));\n"
+      },
+      "id": "77854078-d180-5463-8b88-1c03938b32f2",
+      "name": "Cooper · fallo público",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1550e421-dabd-5171-90af-6d164340eb52",
+      "name": "Cooper · guardar fallo público",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
@@ -60,6 +138,11 @@
         [
           {
             "node": "Mensaje de error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · ejecución fallida",
             "type": "main",
             "index": 0
           }
@@ -71,6 +154,28 @@
         [
           {
             "node": "Avisar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · ejecución fallida": {
+      "main": [
+        [
+          {
+            "node": "Cooper · fallo público",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · fallo público": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar fallo público",
             "type": "main",
             "index": 0
           }
