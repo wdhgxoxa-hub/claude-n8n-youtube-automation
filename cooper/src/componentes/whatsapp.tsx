@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { api, useEspacio, Notice } from "./espacio";
 export function PreferenciasWhatsApp() {
+  const id = useId();
   const { data, refresh } = useEspacio();
   const [error, setError] = useState(""),
     [message, setMessage] = useState(""),
@@ -70,16 +71,16 @@ export function PreferenciasWhatsApp() {
   return (
     <section
       className="stack whatsapp-preferences"
-      aria-labelledby="whatsapp-title"
+      aria-labelledby={`${id}-titulo`}
     >
       <div>
-        <h2 id="whatsapp-title">Tus avisos por WhatsApp</h2>
+        <h2 id={`${id}-titulo`}>Tus avisos por WhatsApp</h2>
         <p className="helper">
           Recibe las revisiones de tus videos y abre Cooper para verlas. Puedes
           desactivar cada aviso aquí o escribir «baja» en WhatsApp.
         </p>
       </div>
-      <Notice id="whatsapp-resultado" error={error} message={message} />
+      <Notice id={`${id}-resultado`} error={error} message={message} />
       {wa.simulada && (
         <p className="helper">
           Modo simulado: no se envían mensajes a WhatsApp. La verificación sirve
@@ -145,8 +146,8 @@ export function PreferenciasWhatsApp() {
               aria-invalid={codeError || undefined}
               aria-describedby={
                 codeError
-                  ? "whatsapp-codigo-ayuda whatsapp-resultado"
-                  : "whatsapp-codigo-ayuda"
+                  ? `${id}-codigo-ayuda ${id}-resultado`
+                  : `${id}-codigo-ayuda`
               }
               onChange={() => setCodeError(false)}
               inputMode="numeric"
@@ -157,7 +158,7 @@ export function PreferenciasWhatsApp() {
               required
             />
           </label>
-          <p className="helper" id="whatsapp-codigo-ayuda">
+          <p className="helper" id={`${id}-codigo-ayuda`}>
             Escribe los seis números del código. Si caducó, pide uno nuevo.
           </p>
           <button className="button" disabled={busy}>

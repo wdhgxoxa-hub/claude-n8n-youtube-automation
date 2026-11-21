@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { m as motion } from "framer-motion";
 import {
@@ -70,6 +70,7 @@ function Retrato({ variant, moving }: { variant: string; moving: boolean }) {
   );
 }
 export function Avatares({ fotoId = "" }: { fotoId?: string }) {
+  const formId = useId();
   const reduced = useMovimientoReducido();
   const { data, refresh } = useEspacio();
   const [tab, setTab] = useState<"avatar" | "voz">("avatar"),
@@ -164,7 +165,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
             className="button"
             disabled={busy}
             aria-expanded={creating}
-            aria-controls={creating ? "crear-identidad" : undefined}
+            aria-controls={creating ? formId : undefined}
             onClick={async () => {
               setError("");
               setPhotos(tab === "avatar" && fotoId ? [fotoId] : []);
@@ -257,11 +258,11 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
       {creating && (
         <section
           className="identity-form"
-          id="crear-identidad"
-          aria-labelledby="crear-identidad-titulo"
+          id={formId}
+          aria-labelledby={`${formId}-titulo`}
         >
           <div>
-            <h2 id="crear-identidad-titulo">Tu identidad, bajo tu control.</h2>
+            <h2 id={`${formId}-titulo`}>Tu identidad, bajo tu control.</h2>
             <p>
               Solo puedes crear una versión de ti. Queda privada hasta que
               decidas compartirla.

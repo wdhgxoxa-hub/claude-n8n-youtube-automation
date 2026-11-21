@@ -82,7 +82,7 @@ test("Pedir video conserva el foco al cancelar y respeta el control elegido mien
   await filtro.focus();
   await page.keyboard.press("Enter");
   solicitud.responder!();
-  await expect(page.locator("#pedir-video")).toHaveCount(0);
+  await expect(enviar).toHaveCount(0);
   await expect(filtro).toBeFocused();
 });
 

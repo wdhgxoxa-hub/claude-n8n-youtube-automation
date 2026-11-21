@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef, type FormEvent } from "react";
+import { useEffect, useId, useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import {
   Plus,
@@ -206,6 +206,7 @@ export function Canales() {
   );
 }
 export function Videos() {
+  const formId = useId();
   const pending = useRef(false);
   const createButton = useRef<HTMLButtonElement>(null);
   const restoreFocus = useRef(false);
@@ -269,7 +270,7 @@ export function Videos() {
             ref={createButton}
             className="button"
             aria-expanded={creating}
-            aria-controls={creating ? "pedir-video" : undefined}
+            aria-controls={creating ? formId : undefined}
             disabled={busy}
             onClick={() => (creating ? closeCreate() : setCreating(true))}
           >
@@ -281,7 +282,7 @@ export function Videos() {
       <Notice error={error} />
       {creating && (
         <form
-          id="pedir-video"
+          id={formId}
           className="inline-form"
           onSubmit={create}
           aria-busy={busy}

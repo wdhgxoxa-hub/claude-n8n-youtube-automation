@@ -1,6 +1,6 @@
 "use client";
 import { PanelCompetencia } from "./competencia";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus, Palette, CalendarDays, BookOpen, ArrowLeft } from "lucide-react";
@@ -32,6 +32,7 @@ export function Marcas({
   marcaId?: string;
   seccionInicial?: "calendario" | "publicados" | "aprendizaje";
 }) {
+  const editorId = useId();
   const { data: espacio } = useEspacio(),
     admin = espacio.user.role === "admin";
   const [data, setData] = useState(initial),
@@ -104,7 +105,7 @@ export function Marcas({
             className="button primary"
             disabled={busy}
             aria-expanded={editor}
-            aria-controls={editor ? "editor-marca" : undefined}
+            aria-controls={editor ? editorId : undefined}
             onClick={() => abrirEditor()}
           >
             <Plus size={18} />
@@ -121,6 +122,7 @@ export function Marcas({
       )}
       {editor ? (
         <EditorMarca
+          id={editorId}
           marca={editarGuia ? marca : undefined}
           data={data}
           busy={busy}
@@ -688,12 +690,14 @@ export function Marcas({
   );
 }
 function EditorMarca({
+  id,
   marca,
   data,
   busy,
   cancelar,
   guardar,
 }: {
+  id: string;
   marca?: Marca;
   data: EstadoMarcas;
   busy: boolean;
@@ -729,16 +733,12 @@ function EditorMarca({
     });
   }
   return (
-    <section
-      className="marca-editor"
-      id="editor-marca"
-      aria-labelledby="editor-marca-titulo"
-    >
+    <section className="marca-editor" id={id} aria-labelledby={`${id}-titulo`}>
       <button className="button" onClick={cancelar} disabled={busy}>
         <ArrowLeft size={16} />
         Volver a marcas
       </button>
-      <h2 id="editor-marca-titulo">{marca ? "Editar guía" : "Añadir marca"}</h2>
+      <h2 id={`${id}-titulo`}>{marca ? "Editar guía" : "Añadir marca"}</h2>
       <ol className="marca-pasos">
         {["Identidad y dueño", "Guía visual", "Especialista y revisión"].map(
           (v, i) => (
