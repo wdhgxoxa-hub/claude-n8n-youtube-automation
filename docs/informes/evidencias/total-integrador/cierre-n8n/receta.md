@@ -6,7 +6,7 @@
 
 El preflight y el CAS remoto del lote exacto pasan. Los 33 workflows y 28 publicaciones conservan los disparadores existentes. El export previo sigue vigente para contenido y versiones porque el CAS recién repetido coincide; las filas de negocio pueden crecer con la operación normal y se respaldan de nuevo bajo corte por el aplicador.
 
-La secuencia final es **lote certificado → extra de horario Radar → extra de trabajadores Marcas simulados → copia final**. Cada extra conserva su ensayo y recibo separados; se prepara su CAS después de que la fase anterior termine. El estado histórico del lote —Radar con horario deshabilitado y Marcas inactivos— no describe el resultado esperado tras los extras. Esta receta no acredita todavía su ejecución remota.
+La secuencia final es **lote certificado → extra de horario Radar → extra de trabajadores Marcas simulados → copia final**. Cada extra conserva su ensayo y recibo separados; se prepara su CAS después de que la fase anterior termine. El estado histórico del lote —Radar con horario deshabilitado y Marcas inactivos— no describe el resultado tras los extras: Radar obtuvo PASS a las 18:45 y [Marcas a las 18:54](marcas/ejecucion.md). La copia final queda a cargo de la fase posterior.
 
 ```bash
 ssh -i ~/.ssh/cooper_vps -o BatchMode=yes operador@144.91.88.253 \

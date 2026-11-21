@@ -1,6 +1,6 @@
 # Cierre técnico de los trabajadores Marcas simulados
 
-21-11-2026, 18:19 Lima. Rama/worktree propios `total-cierre-marcas`, base `af2774c`. **Implementado y probado localmente; todavía no integrado ni aplicado al VPS por este frente.**
+21-11-2026, 18:19 Lima. Rama/worktree propios `total-cierre-marcas`, base `af2774c`. **Implementado, probado, integrado y desplegado.** El integrador incorporó `42172e5` como `1c3e051` y `b5e0460` como `96ea620`; 269 regresiones combinadas PASS. La activación del VPS terminó PASS el 21-11-2026 a las 18:54 Lima: dos workers, cuatro disparadores registrados, 45 workflows/31 activos, colas vacías y siete servicios saludables. [Ejecución y diagnóstico acotado de referencias](evidencias/total-integrador/cierre-n8n/marcas/ejecucion.md).
 
 ## Cambios y procedencia
 
@@ -43,6 +43,6 @@ Preparar únicamente después del PASS de Radar; no reutilizar un recibo prepara
 1. La reversa oficial conserva definición, versión y estado publicado anterior; `versionCounter` avanza. No es una reversa byte a byte de SQLite. El snapshot adicional preserva el estado desplazado.
 2. Se observó el intervalo real de Publicación (cinco minutos), no el de Métricas (una hora). Métricas quedó publicado, con sus disparadores registrados y después despublicado; la próxima ventana productiva requiere observación posterior.
 3. Cero GET externos corresponde al ensayo de cola vacía con red cerrada. No promete ausencia permanente de consultas externas si se incorporan futuras ingestas. El modo simulado evita publicación real; activos, contenidos, permisos y primer ensayo real siguen en los pendientes ya existentes de Walter.
-4. Ninguna decisión nueva de Walter bloquea este extra técnico. No se atribuye aún despliegue, automatización productiva ni observación de un reloj del VPS.
+4. Ninguna decisión nueva de Walter bloquea este extra técnico. El despliegue y el registro de disparadores del VPS están acreditados; no se atribuye todavía observación del siguiente reloj productivo.
 
 Documentación oficial consultada: [CLI n8n](https://docs.n8n.io/deploy/host-n8n/configure-n8n/use-the-command-line.md), [publish:workflow 2.47.6](https://github.com/n8n-io/n8n/blob/n8n%402.47.6/packages/cli/src/commands/publish/workflow.ts), [OwnerController 2.47.6](https://github.com/n8n-io/n8n/blob/n8n%402.47.6/packages/cli/src/controllers/owner.controller.ts). El owner se crea solo en laboratorio sintético.

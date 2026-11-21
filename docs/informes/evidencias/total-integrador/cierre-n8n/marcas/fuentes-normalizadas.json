@@ -1,0 +1,27 @@
+{
+  "estado": "PASS",
+  "normalizacion": "Solo Reloj.disabled ausente a false explícito; helper y live intactos",
+  "fuentes": {
+    "CooperMarcasPub1": {
+      "original_sha256": "39da3eff94aadc1403eee6c14c2f6ef9a8bf64c4e7e4451474e5b740e3b926a5",
+      "integrada_sha256": "c4b63c009b5c7fb39f237f931f5924795b4a7de8c40347d691bf2184f7f3d17c",
+      "contenido_integrado_sha256": "d2470630d78c5535335faeac37f4e99ed5c953862d83128feb8f26f62c18de9b",
+      "unico_delta": "/nodes/0/disabled: ausente → false"
+    },
+    "CooperMarcasMet1": {
+      "original_sha256": "62ead72e0e35dc273dd409534375d61d35a29f74146cbab84393ad00aacbbda3",
+      "integrada_sha256": "c94a5e4f9a761f1e746a269164c7a0d3381ea22032af45aab0b531e7ba025910",
+      "contenido_integrado_sha256": "17fa3ec093651a56a93452b9d3cf7b8bfd31366169b85672ca024ee7c35a0c38",
+      "unico_delta": "/nodes/0/disabled: ausente → false"
+    }
+  },
+  "focales": [
+    "Contrato exacto integrado aceptado",
+    "Fuente canónica no normalizada rechazada sin relajar CAS",
+    "Rechaza disabled de tipo/valor True",
+    "Rechaza disabled de tipo/valor 'false'",
+    "Rechaza disabled de tipo/valor None"
+  ],
+  "entrada_lote_sha256": "269d8f7c04981396d34ad266059da27f5e0ee34b8a4d2cf640040d3be7299588",
+  "helper_sha256": "4bfdb6c789461661ac2246325f1a067ab0a15d38b59093fd1d29c6982f8cfd20"
+}
