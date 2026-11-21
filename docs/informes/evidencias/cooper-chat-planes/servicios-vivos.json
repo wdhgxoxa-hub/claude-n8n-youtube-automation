@@ -1,0 +1,16 @@
+{
+  "origen": "proceso efímero de systemd, misma cuenta y EnvironmentFile del puente, sin leer archivos privados",
+  "claude_sesion_valida": true,
+  "puente_salud": 200,
+  "puente_sin_token": 401,
+  "codex_http": {
+    "duracion_ms": 4989,
+    "datos": "ficticios",
+    "resultado": {
+      "role": "assistant",
+      "texto": "El estudio está vacío: no tiene canales ni videos.",
+      "llamadas": []
+    }
+  },
+  "api_pago": false
+}

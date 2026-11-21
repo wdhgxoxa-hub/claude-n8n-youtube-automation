@@ -1,0 +1,15 @@
+{
+  "codigo": "70d70e2f6a0beedd7b7190eebc2317c2cc2390b7",
+  "node": "v24.22.3",
+  "comando": "cd cooper && npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
+  "rc": 0,
+  "errores": 0,
+  "advertencias": 0,
+  "vulnerabilidades": 0,
+  "unitarias": 227,
+  "archivos_unitarios": 23,
+  "e2e": 33,
+  "evaluacion_simulada": 30,
+  "flujos_v2": 129,
+  "puente_codex": 12
+}

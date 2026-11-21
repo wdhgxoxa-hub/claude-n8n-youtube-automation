@@ -1,0 +1,14 @@
+{
+  "proveedor": "claude-cli",
+  "duracion_ms": 2247,
+  "datos": "ficticios",
+  "acciones": 0,
+  "resultado": {
+    "tipo": "fin",
+    "mensaje": {
+      "role": "assistant",
+      "texto": "El estudio está vacío en este estado ficticio: tiene cero canales y cero videos.",
+      "llamadas": []
+    }
+  }
+}

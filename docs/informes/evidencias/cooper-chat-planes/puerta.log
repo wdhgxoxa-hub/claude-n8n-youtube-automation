@@ -1,0 +1,141 @@
+
+added 357 packages, and audited 364 packages in 5s
+
+found 0 vulnerabilities
+npm notice run cooper@0.1.0 lint
+npm notice run eslint . --max-warnings 0
+npm notice run cooper@0.1.0 typecheck
+npm notice run tsc --noEmit
+npm notice run cooper@0.1.0 test
+npm notice run vitest run
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/cooper-chat-planes/cooper
+
+
+ Test Files  23 passed (23)
+      Tests  227 passed (227)
+   Start at  22:28:52
+   Duration  12.09s (transform 922ms, setup 195ms, import 6.10s, tests 4.09s, environment 1ms)
+
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 53ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 295ms
+  Running TypeScript ...
+  Finished TypeScript in 1089ms ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/4) ...
+  Generating static pages using 19 workers (1/4)
+  Generating static pages using 19 workers (2/4)
+  Generating static pages using 19 workers (3/4)
+✓ Generating static pages using 19 workers (4/4) in 224ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 33 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/chat-planes.spec.ts:3:1 › respuesta completa mantiene la boca y la espera se puede cancelar (16.8s)
+  ✓   2 [chromium] › e2e/cooper.spec.ts:37:1 › entrada pública, cabeceras y protección de rutas (592ms)
+  ✓   3 [chromium] › e2e/cooper.spec.ts:91:1 › conversa, pide un video, observa SSE y aprueba las dos puertas (7.3s)
+  ✓   4 [chromium] › e2e/cooper.spec.ts:145:1 › chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajenas (1.9s)
+  ✓   5 [chromium] › e2e/cooper.spec.ts:197:1 › boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream (5.5s)
+  ✓   6 [chromium] › e2e/cooper.spec.ts:258:1 › aísla usuarios, gasto, chat, SSE y acciones de video (478ms)
+  ✓   7 [chromium] › e2e/cooper.spec.ts:304:1 › adjuntos y grabación con transcripción editable (1.7s)
+  ✓   8 [chromium] › e2e/cooper.spec.ts:347:1 › una foto del chat abre el avatar privado sin omitir verificación (760ms)
+  ✓   9 [chromium] › e2e/cooper.spec.ts:399:1 › biblioteca propia, verificación simulada, privacidad y compartir (12.3s)
+  ✓  10 [chromium] › e2e/cooper.spec.ts:448:1 › perfil guarda tema, inicio y WhatsApp; móvil y teclado (938ms)
+  ✓  11 [chromium] › e2e/cooper.spec.ts:478:1 › administración, gastos por periodo, alerta y revocación inmediata (1.7s)
+  ✓  12 [chromium] › e2e/cooper.spec.ts:526:1 › auditoría AA de todas las pantallas, anchuras y ambos temas (27.4s)
+  ✓  13 [chromium] › e2e/cooper.spec.ts:608:1 › elige avatar, voz y presencia al pedir un video desde la biblioteca (476ms)
+  ✓  14 [chromium] › e2e/cooper.spec.ts:643:1 › bienvenida vacía: las tres acciones quedan antes del compositor (606ms)
+  ✓  15 [chromium] › e2e/cooper.spec.ts:664:1 › identidad con frase renovable, formulario accesible y entrenamiento en vivo (13.0s)
+  ✓  16 [chromium] › e2e/cooper.spec.ts:769:1 › modo noticia por canal se detiene sin verificación real (1.4s)
+  ✓  17 [chromium] › e2e/revision.spec.ts:15:1 › R08 recupera SSE después de una respuesta HTTP temporal (1.5s)
+  ✓  18 [chromium] › e2e/revision.spec.ts:35:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar (367ms)
+  ✓  19 [chromium] › e2e/revision.spec.ts:53:1 › privacidad en HTML, JSON y carga de sesión Auth.js (478ms)
+  ✓  20 [chromium] › e2e/revision.spec.ts:125:1 › R12 conserva el correo de invitación cuando falla la red (267ms)
+  ✓  21 [chromium] › e2e/revision.spec.ts:145:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar (302ms)
+  ✓  22 [chromium] › e2e/revision.spec.ts:178:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras (18.7s)
+  ✓  23 [chromium] › e2e/whatsapp.spec.ts:5:1 › WhatsApp: verificar número, elegir avisos, revocar al cambiar y revisar accesibilidad (2.0s)
+  ✓  24 [demostracion] › e2e/animacion.spec.ts:37:3 › evidencia de movimiento › entrada, fábrica, mirada, chat, audio y adjunto en movimiento (8.7s)
+  ✓  25 [demostracion] › e2e/animacion.spec.ts:186:1 › pausa y movimiento reducido detienen efectos activos, incluso al navegar (2.6s)
+  ✓  26 [demostracion] › e2e/animacion.spec.ts:251:1 › fluidez local y propiedades de animación sin cambios de geometría (6.6s)
+  ✓  27 [demostracion] › e2e/animacion.spec.ts:340:1 › avance por evento: relleno, destello único y porcentaje final (1.6s)
+  ✓  28 [demostracion] › e2e/diseno.spec.ts:33:1 › demostración: siete pantallas, dos tamaños y fábrica seleccionable (7.7s)
+  ✓  29 [demostracion] › e2e/diseno.spec.ts:110:1 › movimiento opcional, teclado y retícula en seis anchuras (1.0s)
+  ✓  30 [demostracion] › e2e/diseno.spec.ts:169:1 › capturas finales: todas las pantallas y formularios demo en ambos temas (31.6s)
+  ✓  31 [demostracion] › e2e/diseno.spec.ts:293:1 › I08 identidad se hidrata en Lima y Cooper no emite errores SVG (12.8s)
+  ✓  32 [demostracion] › e2e/diseno.spec.ts:325:1 › la barra lateral cubre páginas largas y permite navegar con poca altura (4.4s)
+  ✓  33 [demostracion] › e2e/diseno.spec.ts:400:1 › integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas (22.7s)
+
+  33 passed (3.7m)
+npm notice run cooper@0.1.0 build
+npm notice run next build
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 59ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 441ms
+  Running TypeScript ...
+  Finished TypeScript in 1108ms ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/4) ...
+  Generating static pages using 19 workers (1/4)
+  Generating static pages using 19 workers (2/4)
+  Generating static pages using 19 workers (3/4)
+✓ Generating static pages using 19 workers (4/4) in 206ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

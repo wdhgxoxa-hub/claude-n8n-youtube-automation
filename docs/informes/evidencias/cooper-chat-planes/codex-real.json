@@ -1,0 +1,10 @@
+{
+  "proveedor": "codex-local",
+  "duracion_ms": 4100,
+  "datos": "ficticios",
+  "acciones": 0,
+  "resultado": {
+    "texto": "El estudio está vacío: no hay canales ni videos.",
+    "llamadas": []
+  }
+}

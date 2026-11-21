@@ -1,0 +1,19 @@
+{
+  "pantallas": [
+    {
+      "ancho": 390,
+      "status": 200,
+      "desbordamiento": false
+    },
+    {
+      "ancho": 1440,
+      "status": 200,
+      "desbordamiento": false
+    }
+  ],
+  "errores": [],
+  "advertencias": [],
+  "salud": 200,
+  "chat_sin_sesion": 401,
+  "admin_sin_sesion": 307
+}
