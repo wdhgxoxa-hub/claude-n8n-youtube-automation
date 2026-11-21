@@ -1,0 +1,108 @@
+{
+  "fecha": "2026-11-21T19:14:44.703733+00:00",
+  "commit_producto": "75ccb4c",
+  "integrado_por_orquestador": "bfd5e79",
+  "base": "86a5727c71435139f830b15779f4bc28db9d2ccf",
+  "imagen_herramientas": "localhost/cooper-ci:9dbea5b8177a",
+  "cpu": "0,1; límite 2",
+  "cambio": "Tres reglas CSS; aserción de geometría y desplazamiento en test existente. No se alteran datos, permisos, umbrales ni timeout.",
+  "antes": {
+    "archivo": ".cache/resultados-focal/checkout/cooper/.cache/rojo/playwright.json",
+    "sha256": "bd05744fbb45d81c167e2ba4022636fee51c1fd7a2a24d716793f058f29f4ee5",
+    "estadisticas": {
+      "startTime": "2026-11-21T19:11:02.401Z",
+      "duration": 4406.731000000001,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "errores_globales": 0
+  },
+  "despues": {
+    "archivo": ".cache/resultados-focal/checkout/cooper/.cache/verde/playwright.json",
+    "sha256": "85d7e9ef973c3570af42bb5dbe52b3272e6f17e09485bf90b9ce8c149740ce7c",
+    "estadisticas": {
+      "startTime": "2026-11-21T19:11:57.563Z",
+      "duration": 6066.192,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errores_globales": 0
+  },
+  "tres_motores": {
+    "archivo": ".cache/resultados-focal/checkout/cooper/.cache/motores/playwright.json",
+    "sha256": "4184a203d0358f03f4ddc3286d1e4ea2ed7c66a214b793330d22c63a3401ae26",
+    "estadisticas": {
+      "startTime": "2026-11-21T19:13:20.571Z",
+      "duration": 15252.455,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errores_globales": 0
+  },
+  "comprobaciones": [
+    "lint --max-warnings 0",
+    "typecheck",
+    "next build",
+    "E2E Chromium a 390/1440",
+    "E2E Firefox a 390/1440",
+    "E2E WebKit a 390/1440"
+  ],
+  "capturas_inspeccionadas": [
+    {
+      "archivo": "tabla-evolucion-390.png",
+      "sha256": "84ff2894d2840d4c0d598919749952d49eb7267b2613d08a1d049b28ba600087",
+      "inspeccion": "PNG original visualizado: 1630, 2860, 4090 y 5320 en una línea; sin solapamientos; en móvil Retención queda accesible al desplazar el contenedor, con geometría y teclado comprobados por E2E."
+    },
+    {
+      "archivo": "tabla-evolucion-1440.png",
+      "sha256": "fb88a44882c74706393549784ff1b2866610ee2468e48dfe3a6c09b8a71efd2c",
+      "inspeccion": "PNG original visualizado: 1630, 2860, 4090 y 5320 en una línea; sin solapamientos; en móvil Retención queda accesible al desplazar el contenedor, con geometría y teclado comprobados por E2E."
+    },
+    {
+      "archivo": "demostracion-390.png",
+      "sha256": "84ff2894d2840d4c0d598919749952d49eb7267b2613d08a1d049b28ba600087",
+      "inspeccion": "PNG original visualizado: 1630, 2860, 4090 y 5320 en una línea; sin solapamientos; en móvil Retención queda accesible al desplazar el contenedor, con geometría y teclado comprobados por E2E."
+    },
+    {
+      "archivo": "firefox-390.png",
+      "sha256": "d31a5df65882fd0002cb79a7745af735537732e8bc612eed507b4103b305db0b",
+      "inspeccion": "PNG original visualizado: 1630, 2860, 4090 y 5320 en una línea; sin solapamientos; en móvil Retención queda accesible al desplazar el contenedor, con geometría y teclado comprobados por E2E."
+    },
+    {
+      "archivo": "webkit-390.png",
+      "sha256": "f8387f19405c5ee7ecd7af5deedb2ccf622a4e2edb33aebd1e639114f6463c65",
+      "inspeccion": "PNG original visualizado: 1630, 2860, 4090 y 5320 en una línea; sin solapamientos; en móvil Retención queda accesible al desplazar el contenedor, con geometría y teclado comprobados por E2E."
+    }
+  ],
+  "revision_anterior": {
+    "archivo": "revision-cierre-1-con-hallazgo.json",
+    "sha256": "6493bfd834bf76b2e66e79a3b4e38ea3dd33fd48817ddefe4de900366623b666",
+    "muestras": 24,
+    "sin_hallazgos_en_muestra": 22,
+    "con_hallazgo": 2,
+    "hallazgo": "V01",
+    "recorridos": "no revisados; corrección de V01 priorizada",
+    "decodificacion_completa": "no ejecutada todavía; no se declara PASS técnico del verificador"
+  },
+  "logs": [
+    {
+      "archivo": ".cache/resultados-focal/rojo.log",
+      "sha256": "4de19a894292b3730e1eada36d022a4c315d4fc08ccd989c69149bc41bc3e9f6"
+    },
+    {
+      "archivo": ".cache/resultados-focal/verde.log",
+      "sha256": "8047b51d0d95f51ff545f742f4e2013430d3682f177c75c77b0ee336b7fd8850"
+    },
+    {
+      "archivo": ".cache/resultados-focal/motores.log",
+      "sha256": "71b2209c19f2e6a23baafe32fec318e754e879ed122f64b8e04017ffeaf9d42e"
+    }
+  ],
+  "puerta_completa": "La ejecuta de nuevo el orquestador sobre la integración; este recibo solo acredita validación focal."
+}

@@ -1,0 +1,451 @@
+{
+  "estado": "HALLAZGO_VISUAL",
+  "muestras": [
+    {
+      "archivo": "cierre-1/1440-oscuro-01-inicio.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/",
+      "sha256": "6781fda3cd6ff414995c046d96cac461cab90e536d4c769966683ec1127efd48",
+      "dimensiones": [
+        1440,
+        1923
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388566+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Chat, fábrica, progreso del 25 % y galería de 18 piezas visibles en columnas; compositor y controles separados.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-02-marcas.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/marcas",
+      "sha256": "00b042e654e0b054f7bdadb08c6179a1748dee05ea59f6ec40f992cc874892c2",
+      "dimensiones": [
+        1440,
+        2744
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388581+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Identidad, aviso de simulación, conexión y calendario separados; formulario de dos columnas legible hasta Guardar borrador.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-09-cuentas.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/cuentas",
+      "sha256": "d6077e2a60a580ab6ec16bcd4e268bab2095e9f5c776aecf167a349d92683614",
+      "dimensiones": [
+        1440,
+        1023
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388585+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Identidad simulada y formulario de adopción legibles en dos áreas; red y usuario visibles.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-16-publicados.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/publicados",
+      "sha256": "f1c3dd1112d2d9c38aaf000ba53a8184ecf37ccb7d63043255c1697246bb34b0",
+      "dimensiones": [
+        1440,
+        3234
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388588+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Seis registros simulados, métricas y gráficos visibles; tabla expandida de cinco columnas mantiene fechas y valores íntegros.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-17-aprendizaje.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/aprendizaje",
+      "sha256": "f9fca4dafde659172adf2d2f9e2769b1fd8067dc816355590eea28044cf023fd",
+      "dimensiones": [
+        1440,
+        1905
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388590+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Aviso de ejemplos ficticios, interruptor, filtros, dos lecciones históricas y dos correcciones visibles; los registros sin evidencia se identifican.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-oscuro-21-admin.png",
+      "ancho": 1440,
+      "tema": "oscuro",
+      "ruta": "/admin/fabrica",
+      "sha256": "156ba41bcc400b3d5d0351cbcd9a4209a491ac35eee94886772561ea55bc6313",
+      "dimensiones": [
+        1440,
+        3291
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388591+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Controles de producción en dos columnas; casillas, modelos, importes de ejemplo y registro de cambios legibles.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-claro-01-inicio.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/",
+      "sha256": "0b7ec86fdf454f2737392db729711f29e462cc055e9e01c4787dfcc0537b2eb8",
+      "dimensiones": [
+        1440,
+        1923
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388593+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Chat, fábrica, progreso del 25 % y galería de 18 piezas visibles en columnas; compositor y controles separados.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-claro-02-marcas.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/marcas",
+      "sha256": "b70377e093f470431cd529ff8d08cb54f4563ce20ec5b28c45fe4e0d6bd7158f",
+      "dimensiones": [
+        1440,
+        2744
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388594+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Identidad, aviso de simulación, conexión y calendario separados; formulario de dos columnas legible hasta Guardar borrador.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-claro-09-cuentas.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/cuentas",
+      "sha256": "b61742690e969b1a0af179fc0b6cba76b2244da33e6bd4dd5fbc03d332804c72",
+      "dimensiones": [
+        1440,
+        1023
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388595+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Identidad simulada y formulario de adopción legibles en dos áreas; red y usuario visibles.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-claro-16-publicados.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/publicados",
+      "sha256": "dc0624f14fb9e28f954d2341ddfc47461b73d8cf5b33252acd47fc37faeefe70",
+      "dimensiones": [
+        1440,
+        3234
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388596+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Seis registros simulados, métricas y gráficos visibles; tabla expandida de cinco columnas mantiene fechas y valores íntegros.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-claro-17-aprendizaje.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/aprendizaje",
+      "sha256": "68dd1645d4441bcebbf838dbacce125bbd8fe8349a0abbb17f5e9e4ff467a270",
+      "dimensiones": [
+        1440,
+        1905
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388597+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Aviso de ejemplos ficticios, interruptor, filtros, dos lecciones históricas y dos correcciones visibles; los registros sin evidencia se identifican.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/1440-claro-21-admin.png",
+      "ancho": 1440,
+      "tema": "claro",
+      "ruta": "/admin/fabrica",
+      "sha256": "76df0cb2f8f563ed54120c8c6cbff71eadd47f83d2bbf2ae109a2661de3bb292",
+      "dimensiones": [
+        1440,
+        3291
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388598+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Controles de producción en dos columnas; casillas, modelos, importes de ejemplo y registro de cambios legibles.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-01-inicio.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/",
+      "sha256": "46acb1075c66b05b7fa901fbb516e5703b8ce4992ce3d98218876b8395619ff6",
+      "dimensiones": [
+        390,
+        1263
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388599+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Chat visible con pestaña Fábrica (18); burbujas y compositor se ajustan al ancho sin solaparse.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-02-marcas.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/marcas",
+      "sha256": "1653c9529621777df27be620d01422c33c474d15aa177888af04c7a94de184b7",
+      "dimensiones": [
+        390,
+        3580
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388600+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Formulario pasa a una columna. La navegación de pestañas se extiende horizontalmente; el fragmento de Publicados al borde no invade el formulario. Campos y botones íntegros.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-09-cuentas.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/cuentas",
+      "sha256": "f4eec070fe551f5f9a573069a14f7816cc1b79cf74a532d667f57c8231b03b3e",
+      "dimensiones": [
+        390,
+        1264
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388602+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Navegación envuelta en varias líneas; identidad y adopción apiladas, botones y campos completos.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-16-publicados.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/publicados",
+      "sha256": "b3ef0c5f2097d4de76c3bcc19173e0c0acd398910aa6336c9b6cc099884ade04",
+      "dimensiones": [
+        390,
+        5954
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388603+00:00",
+      "estado": "HALLAZGO",
+      "observaciones": [
+        "Hallazgo V01: tabla expandida parte Vistas/Comentarios/Retención y los valores 2860, 4090 y 5320 entre dos líneas. Tarjetas, curvas, filtros y enlaces de origen sí están presentes.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ],
+      "hallazgos": [
+        "V01"
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-17-aprendizaje.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/aprendizaje",
+      "sha256": "1cae77896bc6c634265c15274e5ce38d36bdf3cf24c473ec39cffef3bc5c61da",
+      "dimensiones": [
+        390,
+        2830
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388605+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Lecciones y correcciones se apilan; origen, límite de evidencia histórica, posible cambio registrado y estado Corregido legibles sin solapamiento.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-oscuro-21-admin.png",
+      "ancho": 390,
+      "tema": "oscuro",
+      "ruta": "/admin/fabrica",
+      "sha256": "5602355d556ae4b967c3d8335385d60f404afb7867ed723dd3a2144232711ce5",
+      "dimensiones": [
+        390,
+        5652
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388606+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Controles y campos en una columna; títulos envueltos naturalmente, valores numéricos íntegros y registro de cambios visible al final.",
+        "Tema oscuro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-claro-01-inicio.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/",
+      "sha256": "8436277af3d05d4378f12d01481b6d2971aaa1f461c495aafb22dba75de1da76",
+      "dimensiones": [
+        390,
+        1263
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388607+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Chat visible con pestaña Fábrica (18); burbujas y compositor se ajustan al ancho sin solaparse.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-claro-02-marcas.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/marcas",
+      "sha256": "c6be44e283eda0f8f080466c485de13ca4bd8d893b8c257db5d1128a49a51238",
+      "dimensiones": [
+        390,
+        3580
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388608+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Formulario pasa a una columna. La navegación de pestañas se extiende horizontalmente; el fragmento de Publicados al borde no invade el formulario. Campos y botones íntegros.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-claro-09-cuentas.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/cuentas",
+      "sha256": "49772b958d40bbd634f90439011872068ca3c0361fabe68bae2aa0793a359145",
+      "dimensiones": [
+        390,
+        1264
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388609+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Navegación envuelta en varias líneas; identidad y adopción apiladas, botones y campos completos.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-claro-16-publicados.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/publicados",
+      "sha256": "c587f66ed9bf7a522454c9183a146af7902ffb6842ee6ea9cf1f9ef540cc2800",
+      "dimensiones": [
+        390,
+        5954
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388610+00:00",
+      "estado": "HALLAZGO",
+      "observaciones": [
+        "Hallazgo V01: tabla expandida parte Vistas/Comentarios/Retención y los valores 2860, 4090 y 5320 entre dos líneas. Tarjetas, curvas, filtros y enlaces de origen sí están presentes.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ],
+      "hallazgos": [
+        "V01"
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-claro-17-aprendizaje.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/aprendizaje",
+      "sha256": "c3306f0fe1032fbd2286d14a10497125a7d6aad41dcdca9244b5d44f7d312a09",
+      "dimensiones": [
+        390,
+        2830
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388611+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Lecciones y correcciones se apilan; origen, límite de evidencia histórica, posible cambio registrado y estado Corregido legibles sin solapamiento.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    },
+    {
+      "archivo": "cierre-1/390-claro-21-admin.png",
+      "ancho": 390,
+      "tema": "claro",
+      "ruta": "/admin/fabrica",
+      "sha256": "3b8e73ece6c81ea1d615767c84654f9205d138cadb372777e163b75f6824a074",
+      "dimensiones": [
+        390,
+        5652
+      ],
+      "inspeccion": "view_image del PNG original, detalle original",
+      "observado_en": "2026-11-21T19:10:04.388612+00:00",
+      "estado": "SIN_HALLAZGOS_EN_LA_MUESTRA",
+      "observaciones": [
+        "Controles y campos en una columna; títulos envueltos naturalmente, valores numéricos íntegros y registro de cambios visible al final.",
+        "Tema claro: texto principal, bordes y controles distinguibles visualmente; no sustituye medición WCAG."
+      ]
+    }
+  ],
+  "hallazgos": [
+    {
+      "id": "V01",
+      "descripcion": "Cifras de la tabla de evolución partidas a 390 px en ambos temas.",
+      "estado": "comunicado al orquestador; corrección autorizada; estas muestras no se declaran limpias"
+    }
+  ],
+  "recorridos": "pendientes; revisión detenida para corregir V01"
+}
