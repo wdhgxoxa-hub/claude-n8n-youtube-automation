@@ -1,0 +1,47 @@
+Instancia aislada lista: http://127.0.0.1:44455
+Rama avatar-completo R1: PASS (15062ms)
+Rama avatar-completo R2: PASS (14955ms)
+Rama avatar-completo R3: PASS (14816ms)
+Rama avatar-partes-heygen R1: PASS (12601ms)
+Rama avatar-partes-heygen R2: PASS (12499ms)
+Rama avatar-partes-heygen R3: PASS (12361ms)
+Rama avatar-partes-elevenlabs R1: PASS (12961ms)
+Rama avatar-partes-elevenlabs R2: PASS (12522ms)
+Rama avatar-partes-elevenlabs R3: PASS (13426ms)
+Rama clips R1: PASS (12818ms)
+Rama clips R2: PASS (13575ms)
+Rama clips R3: PASS (14268ms)
+Rama youtube-directo R1: PASS (12443ms)
+Rama youtube-directo R2: PASS (14682ms)
+Rama youtube-directo R3: PASS (11816ms)
+Rama musica R1: PASS (13351ms)
+Rama musica R2: PASS (13069ms)
+Rama musica R3: PASS (12715ms)
+Rama noticia R1: PASS (12696ms)
+Rama noticia R2: PASS (12927ms)
+Rama noticia R3: PASS (12342ms)
+Resiliencia R1 contrato de voz inválido y Vigilante: PASS
+Resiliencia R1 callback inválido y desconocido rechazados: PASS
+Resiliencia R2 contrato de voz inválido y Vigilante: PASS
+Resiliencia R2 callback inválido y desconocido rechazados: PASS
+Resiliencia R3 contrato de voz inválido y Vigilante: PASS
+Resiliencia R3 callback inválido y desconocido rechazados: PASS
+Resiliencia R1 render fallido conserva fallo durable: PASS
+Resiliencia R2 render fallido conserva fallo durable: PASS
+Resiliencia R3 render fallido conserva fallo durable: PASS
+Resiliencia R1 clip processing_agotado detiene conjunto incompleto: PASS
+Resiliencia R2 clip processing_agotado detiene conjunto incompleto: PASS
+Resiliencia R3 clip processing_agotado detiene conjunto incompleto: PASS
+Resiliencia R1 clip failed detiene conjunto incompleto: PASS
+Resiliencia R2 clip failed detiene conjunto incompleto: PASS
+Resiliencia R3 clip failed detiene conjunto incompleto: PASS
+Resiliencia R1 clip uri_ajeno detiene conjunto incompleto: PASS
+Resiliencia R2 clip uri_ajeno detiene conjunto incompleto: PASS
+Resiliencia R3 clip uri_ajeno detiene conjunto incompleto: PASS
+Resiliencia R1 Wait reanuda misma ejecución tras SIGKILL: PASS
+Resiliencia R1 callback pendiente sobrevive SIGKILL sin duplicar: PASS
+Resiliencia R2 Wait reanuda misma ejecución tras SIGKILL: PASS
+Resiliencia R2 callback pendiente sobrevive SIGKILL sin duplicar: PASS
+Resiliencia R3 Wait reanuda misma ejecución tras SIGKILL: PASS
+Resiliencia R3 callback pendiente sobrevive SIGKILL sin duplicar: PASS
+Evidencia: /home/david/Proyectos/cooper-wt/total-integrador-n8n/cooper/.cache/total-n8n-ramas/2026-11-21T19-54-07.510Z

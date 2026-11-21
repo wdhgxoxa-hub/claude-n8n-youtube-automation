@@ -1,0 +1,30 @@
+{
+  "fuente": "04d746b",
+  "resultado": "PASS",
+  "inicio": "2026-11-21T19:54:07.511Z",
+  "fin": "2026-11-21T20:02:44.365Z",
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "audiovisuales": 21,
+  "marcas": 3,
+  "resiliencia": 24,
+  "ejecuciones": 2991,
+  "estados": {
+    "success": 2988,
+    "error": 3
+  },
+  "errores_esperados": 3,
+  "traza": {
+    "archivo": "pasos-motor.json",
+    "pasos": 552
+  },
+  "contenedor_final": "exited",
+  "pruebas": [
+    "Copia histórica intacta después de todas las corridas"
+  ],
+  "cuota_cpu": 2,
+  "cpuset": "16-23",
+  "artefactos": {
+    "ramas-resultado.json.gz": "ccd05f0bcc7b255965395976e583d44bfc2ad418173d514c49c83b7e21b6f3e8",
+    "ramas-pasos-motor.json.gz": "cf3acbee91abde1e5d22ab73c51fe94d7995d6b98c60dff6b83df3f78f0ef2c9"
+  }
+}

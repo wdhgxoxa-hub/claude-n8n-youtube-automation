@@ -1,0 +1,26 @@
+{
+  "modo": "total",
+  "fuente": "91c2afd",
+  "inicio": "2026-11-21T19:39:22.594Z",
+  "fin": "2026-11-21T19:42:27.306Z",
+  "resultado": "PASS",
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "rondas": 3,
+  "pasos_funcionales": 27,
+  "ejecuciones": 447,
+  "estados": {
+    "success": 447
+  },
+  "traza": {
+    "archivo": "pasos-motor.json",
+    "pasos": 111
+  },
+  "pruebas": [
+    "Copia histórica intacta después de todas las corridas"
+  ],
+  "contenedor_final": "exited",
+  "artefactos": {
+    "total-resultado.json.gz": "b097969a6ba60ca070fcb601522946f4db619a382dba2c2af6d66b844b77050b",
+    "total-pasos-motor.json.gz": "65635bfe7b08eec2ce7623d77e9693189fbd16c7697f97cfcc136c65b8319806"
+  }
+}

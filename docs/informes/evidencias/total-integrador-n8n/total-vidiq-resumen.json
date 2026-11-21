@@ -1,0 +1,16 @@
+{
+  "fuente": "04d746b",
+  "resultado": "PASS",
+  "inicio": "2026-11-21T19:54:25.468Z",
+  "fin": "2026-11-21T19:55:45.937Z",
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "rondas": 1,
+  "ejecuciones": 152,
+  "estados": {
+    "success": 152
+  },
+  "contenedor_final": "exited",
+  "pruebas": [
+    "Copia histórica intacta después de todas las corridas"
+  ]
+}

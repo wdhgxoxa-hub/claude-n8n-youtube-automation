@@ -1,0 +1,129 @@
+{
+  "modo": "render-local",
+  "fuente": "fcfd787",
+  "inicio": "2026-11-21T19:43:36.375Z",
+  "fin": "2026-11-21T19:45:47.570Z",
+  "resultado": "PASS",
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "ejecuciones": 104,
+  "estados": {
+    "success": 104
+  },
+  "traza": {
+    "archivo": "pasos-motor.json",
+    "pasos": 27
+  },
+  "pruebas": [
+    "Copia histórica intacta después de todas las corridas",
+    "MP4 generado antes de calidad; aprobación final pendiente; ninguna publicación propia",
+    "Chequeos objetivos reales: cero fallas y cero avisos"
+  ],
+  "relay": {
+    "solicitudes": 12,
+    "errores": 0
+  },
+  "contenedor_final": "exited",
+  "archivos": [
+    {
+      "formato": "vertical",
+      "archivo": "/home/david/Proyectos/cooper-wt/total-integrador-n8n/cooper/.cache/total-render-real/2026-11-21T19-43-36.373Z/medios/vertical/cooper-cielo.mp4",
+      "sha256": "c01b6e4197a51d14c5781214edbc6f5044321250bf8bff1eec77b2d94261a3c2",
+      "bytes": 2097639,
+      "ancho": 1080,
+      "alto": 1920,
+      "duracion_s": 22.2005,
+      "duracion_composicion_s": 22.15,
+      "fps": 30,
+      "sonoridad_lufs": -16.85,
+      "pico_dbtp": -4.43,
+      "subtitulos": 18,
+      "capturas": [
+        {
+          "archivo": "fotograma-1-a.png",
+          "segundo": 2.015
+        },
+        {
+          "archivo": "fotograma-1-b.png",
+          "segundo": 5.642
+        },
+        {
+          "archivo": "fotograma-2-a.png",
+          "segundo": 9.773
+        },
+        {
+          "archivo": "fotograma-2-b.png",
+          "segundo": 12.855
+        },
+        {
+          "archivo": "fotograma-3-a.png",
+          "segundo": 16.72
+        },
+        {
+          "archivo": "fotograma-3-b.png",
+          "segundo": 19.978
+        }
+      ],
+      "comprobaciones": [
+        "H264 yuv420p",
+        "AAC estéreo 48 kHz",
+        "30 fps",
+        "duración y sincronía <150ms",
+        "subtítulos visibles y pista mov_text cotejada",
+        "decodificación completa"
+      ]
+    },
+    {
+      "formato": "horizontal",
+      "archivo": "/home/david/Proyectos/cooper-wt/total-integrador-n8n/cooper/.cache/total-render-real/2026-11-21T19-43-36.373Z/medios/horizontal/cooper-cielo.mp4",
+      "sha256": "2a4bdf85fcf9ea97e1f24f11ced7bbd6c359193726c7fe1851903476a9aca9dd",
+      "bytes": 3465032,
+      "ancho": 1920,
+      "alto": 1080,
+      "duracion_s": 22.2005,
+      "duracion_composicion_s": 22.15,
+      "fps": 30,
+      "sonoridad_lufs": -16.85,
+      "pico_dbtp": -4.43,
+      "subtitulos": 18,
+      "capturas": [
+        {
+          "archivo": "fotograma-1-a.png",
+          "segundo": 2.015
+        },
+        {
+          "archivo": "fotograma-1-b.png",
+          "segundo": 5.642
+        },
+        {
+          "archivo": "fotograma-2-a.png",
+          "segundo": 9.773
+        },
+        {
+          "archivo": "fotograma-2-b.png",
+          "segundo": 12.855
+        },
+        {
+          "archivo": "fotograma-3-a.png",
+          "segundo": 16.72
+        },
+        {
+          "archivo": "fotograma-3-b.png",
+          "segundo": 19.978
+        }
+      ],
+      "comprobaciones": [
+        "H264 yuv420p",
+        "AAC estéreo 48 kHz",
+        "30 fps",
+        "duración y sincronía <150ms",
+        "subtítulos visibles y pista mov_text cotejada",
+        "decodificación completa"
+      ]
+    }
+  ],
+  "coste_api_usd": 0,
+  "artefactos": {
+    "render-resultado.json.gz": "3eb7cd294a281462f2ce0d4579330929e5406f3559b709efa451f0f96505eb8e",
+    "render-pasos-motor.json.gz": "c5052dca154366148f9ca5d6d5da1cb1dee81e6abb5b7abbf7e6c7574821e3f3"
+  }
+}

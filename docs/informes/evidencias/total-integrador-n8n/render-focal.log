@@ -1,0 +1,14 @@
+✔ render local conserva tiempos acumulados y texto del montaje real (14.151582ms)
+✔ render local rechaza subtítulos fuera de escena y superposiciones (1.185461ms)
+✔ render local nunca obtiene archivos de una URL externa ni permite IDs inventados (7.962834ms)
+✔ render local: el registro del webhook reintenta solo 404 inequívoco y se limita a 30 segundos (7.671819ms)
+✔ render local: conserva lógica, aprobación, originales y binarios emparejados (15.921829ms)
+✔ render local: voz, archivo, imagen y render solo apuntan al relay loopback cerrado (7.864531ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.010802
