@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "estado": "COMPATIBILIDAD_DURABLE_ACREDITADA_POR_CODIGO_Y_HASHES",
+  "fecha_lima": "2026-11-21T16:39:12-05:00",
+  "fuente_git": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "fuente_metadatos": "Consulta remota de solo hashes ejecutada por el integrador; este agente no accedió al VPS",
+  "fuente_metadatos_sha256": "885994e39968807b94f9e1786739a11cc51535bde929c0c4dcc4fcfc09a068bf",
+  "archivos": [
+    {
+      "ruta_remota_publica": "/opt/cooper/deploy/operar.py",
+      "ruta_git": "deploy/operar.py",
+      "sha256_observado": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+      "sha256_b3": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+      "coincide_b3": false,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/opt/cooper/deploy/monitor.py",
+      "ruta_git": "deploy/monitor.py",
+      "sha256_observado": "83c9a61efb1e4954bfd7413a531cf4778d0697fbdf2e4c3ccd3c5c34895cdc06",
+      "sha256_b3": "83c9a61efb1e4954bfd7413a531cf4778d0697fbdf2e4c3ccd3c5c34895cdc06",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/opt/cooper/deploy/actualizar.sh",
+      "ruta_git": "deploy/actualizar.sh",
+      "sha256_observado": "d39058786829c18764ca05794f7087a29b3d5fa18eb7908a66b21cd0f21f1820",
+      "sha256_b3": "d39058786829c18764ca05794f7087a29b3d5fa18eb7908a66b21cd0f21f1820",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/opt/cooper/deploy/copiar.sh",
+      "ruta_git": "deploy/copiar.sh",
+      "sha256_observado": "cf2269d643446af7b2310b2648660cde54507cf85be15ad3a0a9ce389385f9ea",
+      "sha256_b3": "cf2269d643446af7b2310b2648660cde54507cf85be15ad3a0a9ce389385f9ea",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/opt/cooper/deploy/revertir.sh",
+      "ruta_git": "deploy/revertir.sh",
+      "sha256_observado": "0cc6dd5945b9466b16931765eba3e8a333ac650bff245e126b87c4defe4dff70",
+      "sha256_b3": "0cc6dd5945b9466b16931765eba3e8a333ac650bff245e126b87c4defe4dff70",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/etc/systemd/system/cooper-stack.service",
+      "ruta_git": "deploy/systemd/cooper-stack.service",
+      "sha256_observado": "809e075c4c55c0c511a74d3ad697d3f898a046217ac5b63164d51941b3583498",
+      "sha256_b3": "809e075c4c55c0c511a74d3ad697d3f898a046217ac5b63164d51941b3583498",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/etc/systemd/system/cooper-backup.service",
+      "ruta_git": "deploy/systemd/cooper-backup.service",
+      "sha256_observado": "87462c8fbb33633145dd59baecabf6c180845c80f2c62242fd876f79520cc303",
+      "sha256_b3": "87462c8fbb33633145dd59baecabf6c180845c80f2c62242fd876f79520cc303",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/etc/systemd/system/cooper-backup.timer",
+      "ruta_git": "deploy/systemd/cooper-backup.timer",
+      "sha256_observado": "7271e3b327f30813b298432b303e143210e798b6098eb355260185f80368aec4",
+      "sha256_b3": "7271e3b327f30813b298432b303e143210e798b6098eb355260185f80368aec4",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/etc/systemd/system/cooper-monitor.service",
+      "ruta_git": "deploy/systemd/cooper-monitor.service",
+      "sha256_observado": "4d48ba30e08347577e43acf48e558e6c43ce509536f6c3103f701efac114b6ef",
+      "sha256_b3": "4d48ba30e08347577e43acf48e558e6c43ce509536f6c3103f701efac114b6ef",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/etc/systemd/system/cooper-monitor.timer",
+      "ruta_git": "deploy/systemd/cooper-monitor.timer",
+      "sha256_observado": "3b745da3da5149e0605da8e07a9d87c57f9a64e674b5ea8b56b8a4e349391d6b",
+      "sha256_b3": "3b745da3da5149e0605da8e07a9d87c57f9a64e674b5ea8b56b8a4e349391d6b",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/opt/cooper/deploy/compose.chat.yaml",
+      "ruta_git": "deploy/compose.chat.yaml",
+      "sha256_observado": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164",
+      "sha256_b3": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164",
+      "coincide_b3": true,
+      "compatible": true
+    },
+    {
+      "ruta_remota_publica": "/opt/cooper/servicios/puente-codex/tunel.mjs",
+      "ruta_git": "servicios/puente-codex/tunel.mjs",
+      "sha256_observado": "ee7bbad3234fda85377068963fd847e637a373d0c65973e9cedd3ba06d787fef",
+      "sha256_b3": "ee7bbad3234fda85377068963fd847e637a373d0c65973e9cedd3ba06d787fef",
+      "coincide_b3": true,
+      "compatible": true
+    }
+  ],
+  "operar_instalado": {
+    "fuente_exacta": "cbf20685e07bf07566573825418d87799bed5ad9",
+    "sha256": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+    "unico_delta_b3": "Argumento opcional image_overrides=None y -f cuando no es None. No cambia el camino sin override ni las demás funciones.",
+    "release_snapshot_backup_CLI_iguales": true,
+    "timer_requiere_override_nuevo": false,
+    "reversa_infra_usa_operador_del_bundle": true
+  },
+  "rutas_durables": {
+    "arranque": "cooper-stack.service → /opt/cooper/deploy/operar.py compose up → release.json.image",
+    "respaldo": "cooper-backup.service → copiar.sh → operar.py copia → snapshot → compose start de contenedores existentes",
+    "monitor": "cooper-monitor.service → monitor.py → consultas de salud; no arranca ni elige imagen",
+    "reles": "compose.chat.yaml → montaje /opt/cooper/servicios/puente-codex/tunel.mjs; ambos hashes coinciden b3"
+  },
+  "pruebas_locales": {
+    "cantidad": 5,
+    "rc": 0,
+    "advertencias": 0,
+    "script": "/home/david/.cache/total-integrador-producto-durabilidad-b3/test_durabilidad.py",
+    "script_sha256": "99a9c1ce1b820deccab8ba879b13f75a6a25d6dd0180287cdeef46f5d3cdf171",
+    "log_sha256": "c4b1fc5b17ccc12075c5cfe1cc38df743d7f72b116ba6ff9fafc161c1a40de72",
+    "cubre": [
+      "Precedencia de release b3 sobre imagen antigua del entorno sintético",
+      "Comandos up/ps/start equivalentes con/sin overlay chat",
+      "Override explícito de imagen conserva contrato",
+      "AST completo equivalente tras retirar únicamente image_overrides opcional"
+    ]
+  },
+  "decision": "No hace falta instalar ni reemplazar helpers, unidades, overlay o túnel para que esta release b3 sea durable. Mantener bundle aislado para los aplicadores.",
+  "comprobacion_operativa_si_no_esta_acreditada": {
+    "comando_publico": "systemctl show --all --property=FragmentPath,DropInPaths,NeedDaemonReload,UnitFileState,ActiveState,SubState,Result,ExecMainStatus cooper-stack.service cooper-backup.service cooper-backup.timer cooper-monitor.service cooper-monitor.timer",
+    "criterio": "FragmentPath del archivo acreditado, sin drop-ins no revisados, NeedDaemonReload=no; stack y timers habilitados según instalación."
+  },
+  "limites": [
+    "Los hashes acreditan archivos; la habilitación efectiva de unidades se comprueba por metadatos systemd, no por inferencia.",
+    "No se ensayó un reboot ni se ejecutaron copias/monitor durante esta revisión.",
+    "No se leyó ni imprimió entorno real, logs privados o contenidos remotos.",
+    "No sustituye la aceptación de imagen, puerta/rondas ni la secuencia de despliegue pendiente."
+  ],
+  "pendientes_de_Walter": []
+}

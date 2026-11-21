@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:21 (Lima).
+Última actualización: 2026-11-21 16:40 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — durabilidad de la release b3 acreditada por código y hashes:** los doce archivos públicos del host consultados por raíz corresponden a las fuentes revisadas. `operar.py` instalado conserva exactamente release/bloqueo/copia de `cbf20685`; su única diferencia con b3 es el override opcional que utiliza la reversa del bundle. Monitor, unidades, wrappers, overlay y túnel coinciden con b3. Cinco pruebas locales de equivalencia PASS, sin avisos. No hace falta reemplazar helpers para mantener la release tras arranque o copias; no se realizó reinicio ni escritura remota. [Recibo y límites](informes/evidencias/total-integrador/durabilidad-host-b3.json).
 
 - **21-11-2026, Lima — puerta y operación finales b3 aprobadas:** 467 unitarias, 103 E2E, 235 flujos, instalación/lint/tipos/build sin errores ni advertencias. Imagen concreta: migración 11→14/reversa, Compose 8/8, infraestructura con reversa exacta de siete IDs y H19 de cuatro perfiles aprobados bajo 1 GiB/swap0. Precarga de imagen y preflights VPS correctos, sin activar. Dos rondas completas y revisión visual/técnica pendientes; aún no publicado ni desplegado desde esta misión. [Informe](informes/total-integrador.md), [puerta](informes/evidencias/total-integrador/puerta-final.json).
 
