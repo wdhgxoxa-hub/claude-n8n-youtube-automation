@@ -199,7 +199,7 @@ function operacionCooper(
     }
     const biblePaths = Object.keys(CAMPOS_BIBLIA);
     const propios = videos.filter((v) => v.canal_id === c.canal_id);
-    const especialistas = trabajos
+    const versiones = trabajos
       .filter(
         (t) =>
           t.canal_id === c.canal_id &&
@@ -207,6 +207,14 @@ function operacionCooper(
           ["listo", "ok"].includes(t.estado) &&
           vs.has(t.video_id),
       )
+      .sort((a, b) =>
+        String(a.updatedAt || a.createdAt || "").localeCompare(
+          String(b.updatedAt || b.createdAt || ""),
+        ),
+      );
+    const ultimas = new Map();
+    for (const t of versiones) ultimas.set(t.video_id, t);
+    const especialistas = [...ultimas.values()]
       .flatMap((t) => {
         const r = jsonCooper(t.resultado, {}).resultado || {},
           p = r.publicacion || {};
@@ -237,13 +245,15 @@ function operacionCooper(
       biblia: Object.fromEntries(
         biblePaths.map((k) => [
           k,
-          textoOperacion(
-            k.startsWith("publicacion.")
-              ? ajusteValor(bib, k)?.indicaciones || ""
-              : Array.isArray(ajusteValor(bib, k))
-                ? ajusteValor(bib, k).join("\n")
-                : ajusteValor(bib, k),
-          ),
+          Array.isArray(ajusteValor(bib, k))
+            ? ajusteValor(bib, k)
+                .map((x) => textoOperacion(x))
+                .join("\n")
+            : textoOperacion(
+                k.startsWith("publicacion.")
+                  ? ajusteValor(bib, k)?.indicaciones || ""
+                  : ajusteValor(bib, k),
+              ),
         ]),
       ),
       perfil: String(c.uploadpost_perfil || ""),
@@ -281,13 +291,11 @@ function operacionCooper(
             url: urlCooper(i.url || i.fuente_url),
             formato: /largo/.test(i.formato) ? "largo" : "short",
           })),
-        sonidos: (rad.sonidos || [])
-          .slice(0, 10)
-          .map((s) => ({
-            nombre: textoOperacion(s.nombre),
-            uso: textoOperacion(s.uso),
-            url: urlCooper(s.url),
-          })),
+        sonidos: (rad.sonidos || []).slice(0, 10).map((s) => ({
+          nombre: textoOperacion(s.nombre),
+          uso: textoOperacion(s.uso),
+          url: urlCooper(s.url),
+        })),
       },
       rutina: eventos
         .filter((e) => e.canal_id === c.canal_id && e.tipo === "rutina_cooper")

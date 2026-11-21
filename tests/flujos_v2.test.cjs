@@ -1796,3 +1796,9 @@ test('cobertura: los cierres web compiten por la decisión pendiente antes de av
  const cierres=ORQ.nodes.filter(n=>n.name.startsWith('Cooper · cerrar ')&&n.name.endsWith(' guardar'));assert.strictEqual(cierres.length,4);
  for(const n of cierres){assert.ok(n.parameters.filters.conditions.some(c=>c.keyName==='estado'&&c.keyValue==='pendiente'));assert.ok(!n.alwaysOutputData);}
 });
+
+test('cobertura: conservar listas editables y mostrar solo la recomendación más reciente',()=>{
+ const trabajos=[{job_id:'j',resultado:JSON.stringify({resultado:{voz:{palabras_prohibidas:['primera','segunda']}}})},...['2026-11-20','2026-11-21'].map((createdAt,k)=>({job_id:'story-'+k,createdAt,canal_id:'c-ana',video_id:'v-ana',modo:'storyboard',estado:'listo',resultado:JSON.stringify({resultado:{publicacion:{youtube:{recomendacion:'Versión '+k}}}})}))];
+ const c=resolverCooper(solicitudCooper('operacion'),{trabajos}).respuesta.canales[0];assert.strictEqual(c.biblia['voz.palabras_prohibidas'],'primera\nsegunda');assert.strictEqual(c.especialistas.length,1);assert.strictEqual(c.especialistas[0].recomendacion,'Versión 1');
+ const canales=[{...canalCooper,tendencias:JSON.stringify({ideas:[{titulo:'Sin fecha'}]})}];assert.strictEqual(controlCooper('idea',{ideaId:'0:'},{canales}).status,409);
+});

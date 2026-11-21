@@ -320,7 +320,11 @@ if (["operacion", "ajustes", "control_fabrica"].includes(b.evento)) {
     case "idea": {
       const ch = op.canales.find((x) => x.id === c.canal_id),
         idea = ch.radar.ideas.find((x) => x.id === d.ideaId);
-      if (!idea || Date.now() - Date.parse(ch.radar.fecha) > 3 * 86400000)
+      if (
+        !idea ||
+        !Number.isFinite(Date.parse(ch.radar.fecha)) ||
+        Date.now() - Date.parse(ch.radar.fecha) > 3 * 86400000
+      )
         return fail(409, "Actualiza las ideas del radar");
       if (
         c.estado !== "activo" ||

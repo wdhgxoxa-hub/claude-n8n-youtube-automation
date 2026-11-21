@@ -1386,7 +1386,7 @@
     {
       "id": "FabAjustes000001",
       "nombre": "F · Ajustes de la fábrica",
-      "sha256": "af57967495b44b3b059b13d3cb7d3b988c4afe9101deb40a28e1c6e18ec02206",
+      "sha256": "ed9420226f06584d56d7968c49f2921c5ebd6cad8bfd61cbd3b8987eb9086d6e",
       "pantalla": "/admin/fabrica",
       "accion": "Editar ajustes con revisión, confirmación y registro",
       "estado": "completo",
@@ -3245,7 +3245,7 @@
     {
       "id": "FabCooperAPI0001",
       "nombre": "FX · API de Cooper",
-      "sha256": "246a32596eace6bd1f24527d9f257f58b86943c274c2649b3e8ccea7293c6914",
+      "sha256": "71f35e2a1d084e196b01184be8755aff84dc5a5f81f862986ac16396c7961ca4",
       "pantalla": "/radar",
       "accion": "Puente firmado de todas las pantallas; autorización y recibos idempotentes",
       "estado": "completo",
@@ -5268,7 +5268,7 @@
     {
       "id": "FabErrores000001",
       "nombre": "F · Vigilante de errores",
-      "sha256": "502c5d8c297dd830bb31dcd8ce35d1e38787b4b78c69ce450fe212ec10de58bf",
+      "sha256": "0395a78eb5997d11ba0e93a477791a8823222a36f6dd33d03b891f59af281d38",
       "pantalla": "/incidencias",
       "accion": "Causa sencilla, siguiente acción y reintento seguro; fallos globales solo admin",
       "estado": "completo",
