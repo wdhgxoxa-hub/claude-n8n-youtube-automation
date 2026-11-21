@@ -33,6 +33,8 @@ services:
       start_period: 60s
       retries: 5
     environment:
+      # Fontconfig necesita cache escribible aun con la raíz en solo lectura.
+      XDG_CACHE_HOME: /tmp/.cache
       AUTH_URL: ${COOPER_ORIGIN:?Definir COOPER_ORIGIN}
       AUTH_TRUST_HOST: "true"
       AUTH_SECRET: ${AUTH_SECRET:?Definir AUTH_SECRET}

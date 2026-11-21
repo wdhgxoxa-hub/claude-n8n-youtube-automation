@@ -10,6 +10,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { probarRuntimeMarcas } from "./marcas-runtime.mjs";
+import { invocarWebhookRegistrado } from "./esperar-webhook.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const app = resolve(root, "cooper");
@@ -363,6 +364,7 @@ try {
     "PASS login ficticio con cookie Auth.js Secure y datos de ensayo",
   );
   await probarRuntimeMarcas({ compose, request, cookie, env, run, Database, until });
+  assert.doesNotMatch(await compose("logs", "--no-color", "cooper"), /Fontconfig (?:error|warning):/i);
 
   // Inicialización de n8n nuevo; endpoints cotejados contra código oficial 2.47.6.
   let n8nCookie;
@@ -478,10 +480,15 @@ try {
     cooper_actualizado_en: Date.now(),
     updatedAt: new Date().toISOString(),
   };
-  const trigger = await request("flujos.test", "/webhook/ensayo-vps", {
-    method: "POST",
-    body: event,
-  });
+  const { response: trigger, intentos } = await invocarWebhookRegistrado(
+    () => request("flujos.test", "/webhook/ensayo-vps", { method: "POST", body: event }),
+    () => {
+      const journal = new Database(resolve(env.DATA_ROOT, "n8n/database.sqlite"), { readonly: true });
+      try { return journal.prepare("SELECT count(*) AS total FROM execution_entity WHERE workflowId=?").get(workflow.id).total; }
+      finally { journal.close(); }
+    },
+  );
+  await writeFile(resolve(run, "registro-webhook.json"), JSON.stringify({ intentos, estado: trigger.status }), { mode: 0o600 });
   assert.equal(trigger.status, 200);
   await until(
     () => events.includes("event: progreso") && events.includes("video-vps"),
