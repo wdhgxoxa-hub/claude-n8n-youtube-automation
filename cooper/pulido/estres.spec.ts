@@ -18,7 +18,7 @@ test.beforeEach(async ({ page }) => {
 test("chat: ráfaga de envíos, texto de 6000 caracteres, foto, rechazo recuperable y red", async ({
   page,
   context,
-}) => {
+}, testInfo) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   const counts: number[] = [];
@@ -78,7 +78,7 @@ test("chat: ráfaga de envíos, texto de 6000 caracteres, foto, rechazo recupera
   const dir = `.cache/capturas-pulido/${process.env.COOPER_PULIDO_RONDA || "diagnostico"}`;
   mkdirSync(dir, { recursive: true });
   writeFileSync(
-    `${dir}/rafagas.json`,
+    `${dir}/rafagas-${testInfo.project.name}.json`,
     JSON.stringify(
       {
         intentos: 60,
