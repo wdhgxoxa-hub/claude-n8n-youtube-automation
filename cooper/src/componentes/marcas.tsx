@@ -24,10 +24,12 @@ const etiquetas = {
 export function Marcas({
   initial,
   piezaId,
+  marcaId,
   seccionInicial = "calendario",
 }: {
   initial: EstadoMarcas;
   piezaId?: string;
+  marcaId?: string;
   seccionInicial?: "calendario" | "publicados" | "aprendizaje";
 }) {
   const { data: espacio } = useEspacio(),
@@ -35,6 +37,7 @@ export function Marcas({
   const [data, setData] = useState(initial),
     [seleccion, setSeleccion] = useState(
       initial.marcas.find((m) => m.piezas.some((p) => p.id === piezaId))?.id ??
+        initial.marcas.find((m) => m.id === marcaId)?.id ??
         initial.marcas[0]?.id ??
         "",
     ),
@@ -570,7 +573,11 @@ export function Marcas({
                       {marca.piezas
                         .filter((p) => p.aviso || p.metricas)
                         .map((p) => (
-                          <article className="marca-aprendizaje" key={p.id}>
+                          <article
+                            className="marca-aprendizaje"
+                            key={p.id}
+                            id={`aprendizaje-${p.id}`}
+                          >
                             <h4>{p.datos.titulo}</h4>
                             <p>
                               {p.aviso ||

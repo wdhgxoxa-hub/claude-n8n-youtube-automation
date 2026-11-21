@@ -1,336 +1,329 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import type { Ajustes } from "@/contratos/operacion";
 import Link from "next/link";
 import Image from "next/image";
-import { m as motion } from "framer-motion";
 import { api, Heading, Empty, useEspacio } from "./espacio";
-import { NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import { Portada } from "./portada";
-import type { Medicion } from "@/contratos/observabilidad";
-import type { Ajustes } from "@/contratos/operacion";
-const fecha = (value: string | null) =>
-  value
-    ? new Intl.DateTimeFormat("es", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        timeZone: "America/Lima",
-      }).format(new Date(value))
-    : "Fecha sin registrar";
-const numero = (value: number | null | undefined) =>
-  value == null ? "Sin dato" : new Intl.NumberFormat("es").format(value);
-function Evolucion({ historial }: { historial: Medicion[] }) {
-  const [metrica, setMetrica] = useState<
-    "vistas" | "meGusta" | "comentarios" | "retencion"
-  >("vistas");
-  const reduced = useMovimientoReducido();
-  const datos = [...historial].sort(
-    (a, b) => Date.parse(a.fecha) - Date.parse(b.fecha),
-  );
-  const valores = datos.filter((d) => d[metrica] !== null);
-  const max = Math.max(1, ...valores.map((d) => d[metrica]!));
-  const inicio = Date.parse(datos[0]?.fecha ?? "") || 0;
-  const intervalo = Math.max(
-    1,
-    (Date.parse(datos.at(-1)?.fecha ?? "") || 0) - inicio,
-  );
-  const xy = (d: Medicion) =>
-    `${24 + ((Date.parse(d.fecha) - inicio) / intervalo) * 552},${120 - (d[metrica]! / max) * 96}`;
+import {
+  fecha,
+  numero,
+  MetricasVideo,
+  EvidenciaLeccion,
+} from "./metricas-resultados";
+import {
+  filtrarResultados,
+  agruparPublicaciones,
+  sinFiltros,
+  type Resultados,
+  type FiltroResultados,
+  type AmbitoResultado,
+} from "@/contratos/resultados";
+import type { Metricas } from "@/servicios/marcas/tipos";
+
+function MetricasMarca({ metricas: m }: { metricas: Metricas | null }) {
   return (
-    <div className="evolution">
-      <label>
-        Métrica del gráfico
-        <select
-          value={metrica}
-          onChange={(e) => setMetrica(e.target.value as typeof metrica)}
-        >
-          <option value="vistas">Vistas</option>
-          <option value="meGusta">Me gusta</option>
-          <option value="comentarios">Comentarios</option>
-          <option value="retencion">Retención</option>
-        </select>
-      </label>
-      {valores.length > 0 ? (
-        <>
-          <svg
-            viewBox="0 0 600 150"
-            role="img"
-            aria-label={`Evolución de ${metrica === "meGusta" ? "me gusta" : metrica}: ${valores.length} mediciones; datos en la tabla`}
-          >
-            <path d="M24 24 V120 H576" className="chart-axis" />
-            <motion.polyline
-              className="chart-line"
-              points={valores.map(xy).join(" ")}
-              key={metrica}
-              style={{ transformOrigin: "24px 120px" }}
-              initial={{ scaleX: reduced ? 1 : 0, opacity: reduced ? 1 : 0 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: reduced ? 0 : 0.6 }}
-            />
-            {valores.map((d) => {
-              const [cx, cy] = xy(d).split(",");
-              return (
-                <circle
-                  key={d.fecha}
-                  cx={cx}
-                  cy={cy}
-                  r="4"
-                  className="chart-point"
-                >
-                  <title>{`${fecha(d.fecha)}: ${metrica === "retencion" ? `${Math.round(d.retencion! * 100)} %` : numero(d[metrica])}`}</title>
-                </circle>
-              );
-            })}
-          </svg>
-          <div className="chart-range">
-            <span>{fecha(valores[0].fecha)}</span>
-            <span>{fecha(valores.at(-1)!.fecha)}</span>
+    <>
+      <dl className="metrics-strip">
+        {[
+          ["Vistas", m?.vistas],
+          ["Alcance", m?.alcance],
+          ["Interacciones", m?.interacciones],
+        ].map(([label, value]) => (
+          <div key={String(label)}>
+            <dt>{label}</dt>
+            <dd>{numero(typeof value === "number" ? value : null)}</dd>
           </div>
-        </>
-      ) : (
-        <p className="muted">Todavía no hay mediciones de esta métrica.</p>
-      )}
-      <details>
-        <summary>Ver datos de evolución</summary>
-        <div
-          className="table-scroll"
-          tabIndex={0}
-          role="region"
-          aria-label="Mediciones de la publicación"
-        >
-          <table>
-            <caption>Mediciones de la publicación</caption>
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Vistas</th>
-                <th>Me gusta</th>
-                <th>Comentarios</th>
-                <th>Retención</th>
-              </tr>
-            </thead>
-            <tbody>
-              {datos.map((d) => (
-                <tr key={d.fecha}>
-                  <td>{fecha(d.fecha)}</td>
-                  <td>{numero(d.vistas)}</td>
-                  <td>{numero(d.meGusta)}</td>
-                  <td>{numero(d.comentarios)}</td>
-                  <td>
-                    {d.retencion === null
-                      ? "Sin dato"
-                      : `${Math.round(d.retencion * 100)} %`}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </details>
-    </div>
+        ))}
+      </dl>
+      <p className="muted">
+        {m
+          ? `Última medición: ${fecha(new Date(m.capturadas).toISOString())}.`
+          : "Todavía no hay métricas de esta publicación."}{" "}
+        Las interacciones y el alcance conservan la definición de esta red.
+      </p>
+    </>
   );
 }
-function CurvaRetencion({
-  puntos,
-  fuente,
+function Origen({
+  ambito,
+  simulada,
 }: {
-  puntos: NonNullable<Medicion["curvaRetencion"]>;
-  fuente?: Medicion["curvaFuente"];
+  ambito: AmbitoResultado;
+  simulada: boolean;
 }) {
-  if (!puntos.length) return null;
-  const fin = Math.max(1, ...puntos.map((p) => p.segundo));
-  const maximo = Math.max(1, ...puntos.map((p) => p.porcentaje));
   return (
-    <details className="evolution">
-      <summary>
-        {fuente === "youtube_intervalos"
-          ? "Retención por intervalo"
-          : "Retención por segundo"}
-      </summary>
-      {fuente === "youtube_intervalos" && (
-        <p className="muted">
-          Intervalos de YouTube ubicados en segundos según la duración
-          publicada. Las repeticiones pueden superar el 100 %.
+    <p className="muted">
+      {ambito.tipo === "video" ? "Video" : "Marca"} · {ambito.nombre} ·{" "}
+      {ambito.propietario} · {ambito.id.split(":").at(-1)?.slice(0, 8)}
+      {simulada ? " · Datos simulados" : ""}
+    </p>
+  );
+}
+function Filtros({
+  resultado,
+  filtro,
+  cambiar,
+  actualizar,
+  ocupado,
+}: {
+  resultado: Resultados;
+  filtro: FiltroResultados;
+  cambiar: (v: FiltroResultados) => void;
+  actualizar: () => void;
+  ocupado: boolean;
+}) {
+  const { data } = useEspacio();
+  const ambitos = resultado.ambitos.filter(
+    (a) =>
+      (!filtro.tipo || a.tipo === filtro.tipo) &&
+      (!filtro.ownerId || a.ownerId === filtro.ownerId),
+  );
+  const propietarios = [
+    ...new Map(
+      resultado.ambitos.map((a) => [a.ownerId, a.propietario]),
+    ).entries(),
+  ];
+  const redes = [
+    ...new Set(
+      [...resultado.publicaciones, ...resultado.aprendizajes].flatMap(
+        (r) => r.redes,
+      ),
+    ),
+  ].sort();
+  return (
+    <section aria-label="Filtros de resultados" className="resultados-filtros">
+      <div className="resultados-campos">
+        <label>
+          Tipo
+          <select
+            value={filtro.tipo}
+            onChange={(e) =>
+              cambiar({ ...filtro, tipo: e.target.value, ambitoId: "" })
+            }
+          >
+            <option value="">Videos y Marcas</option>
+            <option value="video">Videos</option>
+            <option value="marca">Marcas</option>
+          </select>
+        </label>
+        {data.user.role === "admin" && (
+          <label>
+            Dueño
+            <select
+              value={filtro.ownerId}
+              onChange={(e) =>
+                cambiar({ ...filtro, ownerId: e.target.value, ambitoId: "" })
+              }
+            >
+              <option value="">Todo el equipo</option>
+              {propietarios.map(([id, nombre]) => (
+                <option key={id} value={id}>
+                  {nombre} · {id.slice(0, 8)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        <label>
+          Canal o marca
+          <select
+            value={filtro.ambitoId}
+            onChange={(e) => cambiar({ ...filtro, ambitoId: e.target.value })}
+          >
+            <option value="">Todos los ámbitos</option>
+            {ambitos.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.tipo === "video" ? "Canal" : "Marca"}: {a.nombre} ·{" "}
+                {a.propietario} · {a.id.split(":").at(-1)?.slice(0, 8)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Desde (Lima)
+          <input
+            type="date"
+            value={filtro.desde}
+            max={filtro.hasta || undefined}
+            onChange={(e) => cambiar({ ...filtro, desde: e.target.value })}
+          />
+        </label>
+        <label>
+          Hasta (Lima)
+          <input
+            type="date"
+            value={filtro.hasta}
+            min={filtro.desde || undefined}
+            onChange={(e) => cambiar({ ...filtro, hasta: e.target.value })}
+          />
+        </label>
+      </div>
+      <div className="filters" aria-label="Filtrar por red">
+        {["", ...redes].map((red) => (
+          <button
+            key={red}
+            aria-pressed={filtro.red === red}
+            onClick={() => cambiar({ ...filtro, red })}
+          >
+            {red || "Todas las redes"}
+          </button>
+        ))}
+      </div>
+      <div className="filters">
+        <button onClick={() => cambiar({ ...sinFiltros })}>
+          Limpiar filtros
+        </button>
+        <button disabled={ocupado} onClick={actualizar}>
+          {ocupado ? "Actualizando…" : "Actualizar resultados"}
+        </button>
+      </div>
+      <p className="muted">
+        Fechas de publicación o aprendizaje en Lima. Sin fecha registrada, el
+        resultado aparece al quitar el intervalo. Las lecciones sin red
+        identificada aparecen en «Todas las redes».
+      </p>
+      {!!filtro.desde && !!filtro.hasta && filtro.desde > filtro.hasta && (
+        <p role="alert">
+          La fecha de inicio debe ser anterior a la fecha final.
         </p>
       )}
-      <svg
-        viewBox="0 0 600 150"
-        role="img"
-        aria-label="Retención en los momentos medidos del video"
-      >
-        <path className="chart-axis" d="M24 24 V120 H576" />
-        <polyline
-          className="chart-line"
-          points={puntos
-            .map(
-              (p) =>
-                `${24 + (p.segundo / fin) * 552},${120 - (p.porcentaje / maximo) * 96}`,
-            )
-            .join(" ")}
-        />
-      </svg>
-      <div
-        className="table-scroll"
-        tabIndex={0}
-        role="region"
-        aria-label="Curva de retención"
-      >
-        <table>
-          <caption>Curva de retención</caption>
-          <thead>
-            <tr>
-              <th>Segundo</th>
-              <th>Retención</th>
-            </tr>
-          </thead>
-          <tbody>
-            {puntos.map((p, i) => (
-              <tr key={i}>
-                <td>{p.segundo}</td>
-                <td>{Math.round(p.porcentaje * 100)} %</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </details>
+    </section>
   );
 }
-export function Publicados() {
-  const { data } = useEspacio();
-  const [red, setRed] = useState("todas");
-  const publicaciones = data.videos
-    .flatMap((v) =>
-      v.observabilidad.publicaciones.map((p) => ({ ...p, video: v })),
-    )
-    .sort(
-      (a, b) =>
-        (Date.parse(b.fecha ?? "") || 0) - (Date.parse(a.fecha ?? "") || 0),
-    );
-  const redes = [...new Set(publicaciones.map((p) => p.red))].sort();
-  const visibles = publicaciones.filter(
-    (p) => red === "todas" || p.red === red,
+function useResultados(initial: Resultados) {
+  const [resultado, setResultado] = useState(initial);
+  const [filtro, cambiar] = useState({ ...sinFiltros });
+  const [ocupado, setOcupado] = useState(false);
+  const [error, setError] = useState("");
+  async function actualizar() {
+    if (ocupado) return;
+    setOcupado(true);
+    try {
+      setResultado(await api<Resultados>("resultados", undefined, "GET"));
+      setError("");
+    } catch {
+      setError(
+        "No pudimos actualizar. Se conservan los últimos resultados cargados.",
+      );
+    } finally {
+      setOcupado(false);
+    }
+  }
+  return { resultado, filtro, cambiar, actualizar, ocupado, error };
+}
+export function Publicados({ initial }: { initial: Resultados }) {
+  const consulta = useResultados(initial);
+  const { resultado, filtro, error } = consulta;
+  const visibles = filtrarResultados(
+    resultado.publicaciones,
+    resultado.ambitos,
+    filtro,
   );
+  const publicaciones = agruparPublicaciones(visibles, resultado.ambitos);
   return (
     <div className="page">
       <Heading
         title="Publicados"
-        description="Los videos de tus canales, su audiencia y lo que cambia con el tiempo."
+        description="Videos y piezas de tus marcas, con sus resultados y origen."
         action={
           <Link className="button secondary" href="/marcas?seccion=publicados">
             Publicados de marcas
           </Link>
         }
       />
-      {data.demo && (
-        <p className="notice">
-          Datos de demostración. Las cifras son ficticias.
-        </p>
-      )}
-      <div className="filters" aria-label="Filtrar por red">
-        {["todas", ...redes].map((r) => (
-          <button key={r} aria-pressed={r === red} onClick={() => setRed(r)}>
-            {r === "todas" ? "Todas las redes" : r}
-          </button>
-        ))}
-      </div>
-      {visibles.length ? (
+      <Filtros {...consulta} />
+      {error && <p role="alert">{error}</p>}
+      <p role="status">
+        {publicaciones.length} publicaciones · {visibles.length} registros de
+        origen
+      </p>
+      <p className="muted">
+        Cada fuente conserva sus métricas. Solo agrupamos registros con una
+        misma identidad de publicación comprobable; no sumamos sus cifras.
+      </p>
+      {publicaciones.length ? (
         <div className="publications">
-          {visibles.map((p) => {
-            const m = p.historial.at(-1);
+          {publicaciones.map((grupo) => {
+            const primero = grupo.registros[0];
             return (
-              <article key={`${p.video.id}:${p.id}`} className="publication">
+              <article key={grupo.id} className="publication">
                 <div className="publication-heading">
                   <Link
-                    href={`/videos/${p.video.id}`}
+                    href={primero.href}
                     className="publication-thumb"
-                    aria-label={`Ver detalle de ${p.video.title}`}
+                    aria-label={`Ver detalle de ${primero.titulo}`}
                   >
-                    {p.miniatura ? (
+                    {primero.tipo === "video" &&
+                    primero.publicacion.miniatura ? (
                       <Image
                         unoptimized
-                        src={p.miniatura}
+                        src={primero.publicacion.miniatura}
                         alt=""
                         width={240}
                         height={160}
                       />
                     ) : (
-                      <Portada title={p.video.title} />
+                      <Portada title={primero.titulo} />
                     )}
                   </Link>
                   <div>
-                    <p className="muted">
-                      {p.red} · {fecha(p.fecha)}
-                    </p>
+                    <p className="muted">{primero.redes.join(" · ")}</p>
                     <h2>
-                      <Link href={`/videos/${p.video.id}`}>
-                        {p.video.title}
-                      </Link>
+                      <Link href={primero.href}>{primero.titulo}</Link>
                     </h2>
-                    {p.url && (
-                      <a
-                        href={p.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-link"
-                      >
-                        Abrir publicación
-                      </a>
-                    )}
                   </div>
                 </div>
-                <dl className="metrics-strip">
-                  {[
-                    ["Vistas", m?.vistas],
-                    ["Me gusta", m?.meGusta],
-                    ["Comentarios", m?.comentarios],
-                    ["Seguidores ganados", m?.seguidoresGanados],
-                  ].map(([label, value]) => (
-                    <div key={String(label)}>
-                      <dt>{label}</dt>
-                      <dd>
-                        {typeof value === "number" ? (
-                          <NumeroAnimado value={value} />
-                        ) : (
-                          "Sin dato"
+                {grupo.registros.length > 1 && (
+                  <p>
+                    Una publicación, {grupo.registros.length} registros.
+                    Conservamos las mediciones de cada origen.
+                  </p>
+                )}
+                {grupo.registros.map((p) => (
+                  <div className="resultado-origen" key={p.id}>
+                    <Origen
+                      ambito={resultado.ambitos.find(
+                        (a) => a.id === p.ambitoId,
+                      )!}
+                      simulada={p.simulada}
+                    />
+                    <Link className="text-link" href={p.href}>
+                      Ver origen: {p.titulo}
+                    </Link>
+                    <p className="muted">
+                      {fecha(p.fecha)}
+                      {p.tipo === "marca"
+                        ? ` · ${p.formato} · ${p.cuenta}`
+                        : ""}
+                    </p>
+                    {p.tipo === "video" ? (
+                      <>
+                        {p.publicacion.url && (
+                          <a
+                            className="text-link"
+                            href={p.publicacion.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Abrir publicación
+                          </a>
                         )}
-                      </dd>
-                    </div>
-                  ))}
-                  <div>
-                    <dt>Retención media</dt>
-                    <dd>
-                      {m?.retencion == null ? (
-                        "Sin dato"
-                      ) : (
-                        <>
-                          <NumeroAnimado
-                            value={Math.round(m.retencion * 100)}
-                          />{" "}
-                          %
-                        </>
-                      )}
-                    </dd>
+                        <MetricasVideo publicacion={p.publicacion} />
+                      </>
+                    ) : (
+                      <MetricasMarca metricas={p.metricas} />
+                    )}
                   </div>
-                </dl>
-                <p className="muted">
-                  {m
-                    ? `Última medición: ${fecha(m.fecha)}`
-                    : "La fábrica todavía no ha recibido métricas de esta publicación."}
-                </p>
-                <Evolucion historial={p.historial} />
-                <CurvaRetencion
-                  puntos={m?.curvaRetencion ?? []}
-                  fuente={m?.curvaFuente}
-                />
+                ))}
               </article>
             );
           })}
         </div>
       ) : (
         <Empty
-          title="Las historias publicadas aparecerán aquí"
-          description="Cuando una red confirme la publicación, podrás seguir sus resultados."
+          title="No hay publicaciones para estos filtros"
+          description="Las publicaciones confirmadas aparecerán aquí. Puedes limpiar los filtros para ver todos los resultados disponibles."
         />
       )}
     </div>
@@ -400,195 +393,92 @@ function InterruptorAprendizaje() {
     </section>
   );
 }
-export function Aprendizaje() {
+export function Aprendizaje({ initial }: { initial: Resultados }) {
   const { data } = useEspacio();
-  const [filtro, setFiltro] = useState("todos");
-  const lecciones = data.channels
-    .flatMap((c) => c.lecciones.map((l) => ({ ...l, canal: c.name })))
-    .sort((a, b) => Date.parse(b.fecha) - Date.parse(a.fecha));
-  const fallos = data.videos
-    .flatMap((v) =>
-      v.observabilidad.incidencias.map((i) => ({ ...i, video: v })),
-    )
-    .sort((a, b) => Date.parse(b.fecha) - Date.parse(a.fecha));
-  const retenciones = data.videos
-    .flatMap((v) =>
-      v.observabilidad.publicaciones.map((p) => p.historial.at(-1)?.retencion),
-    )
-    .filter((r): r is number => r != null);
-  const media = retenciones.length
-    ? Math.round(
-        (retenciones.reduce((a, b) => a + b, 0) / retenciones.length) * 100,
-      )
-    : null;
+  const consulta = useResultados(initial);
+  const { resultado, filtro, error } = consulta;
+  const [estado, setEstado] = useState("todos");
+  const lecciones = filtrarResultados(
+    resultado.aprendizajes,
+    resultado.ambitos,
+    filtro,
+  );
+  const fallos = filtrarResultados(
+    resultado.incidencias,
+    resultado.ambitos,
+    filtro,
+  );
+  const visibles = fallos.filter(
+    (f) => estado === "todos" || f.incidencia.estado === estado,
+  );
   return (
     <div className="page">
       <Heading
         title="Aprendizaje"
-        description="Lo que funciona, lo que falló y las lecciones de los videos de tus canales."
+        description="Lecciones de videos, resultados de Marcas y cambios registrados, en una consulta."
         action={
           <Link className="button secondary" href="/marcas?seccion=aprendizaje">
             Aprendizaje de marcas
           </Link>
         }
       />
-      {data.demo && (
-        <p className="notice">Ejemplos de aprendizaje con datos ficticios.</p>
-      )}
+      {data.demo && <p className="notice">Ejemplos de aprendizaje con datos ficticios.</p>}
       {data.user.role === "admin" && <InterruptorAprendizaje />}
-      <dl className="metrics-strip learning-metrics">
-        <div>
-          <dt>Lecciones registradas</dt>
-          <dd>
-            <NumeroAnimado value={lecciones.length} />
-          </dd>
-        </div>
-        <div>
-          <dt>Retención media</dt>
-          <dd>
-            {media === null ? (
-              "Sin dato"
-            ) : (
-              <>
-                <NumeroAnimado value={media} /> %
-              </>
-            )}
-          </dd>
-        </div>
-        <div>
-          <dt>Fallos corregidos</dt>
-          <dd>
-            <NumeroAnimado
-              value={fallos.filter((i) => i.estado === "corregido").length}
-            />
-          </dd>
-        </div>
-        <div>
-          <dt>Pendientes</dt>
-          <dd>
-            <NumeroAnimado
-              value={fallos.filter((i) => i.estado === "pendiente").length}
-            />
-          </dd>
-        </div>
-      </dl>
+      <Filtros {...consulta} />
+      {error && <p role="alert">{error}</p>}
+      <p role="status">
+        {lecciones.filter((l) => l.tipo === "video").length} lecciones de videos
+        · {lecciones.filter((l) => l.tipo === "marca").length} registros de
+        Marcas
+      </p>
       <p className="muted">
-        Retención: media de la última medición disponible de{" "}
-        {retenciones.length} publicaciones; sin estimar los datos ausentes.
+        Las observaciones de Marcas y las lecciones de videos conservan su
+        alcance. Consulta la retención, las vistas y las interacciones en cada
+        publicación.
       </p>
       <section className="learning-section">
         <h2>Lo que estamos aprendiendo</h2>
-        {lecciones.length ? (
-          lecciones.map((l) => (
-            <article className="lesson" key={l.id}>
-              <p className="muted">
-                {l.canal} · {fecha(l.fecha)}
-              </p>
-              <h3>{l.resumen}</h3>
-              {!l.origenes?.length && (
-                <p className="muted">
-                  Registro histórico sin evidencia enlazada; no se aplica
-                  automáticamente al guion.
-                </p>
-              )}
-              {l.nivel && (
-                <p className="muted">
-                  {l.nivel === "patron"
-                    ? "Patrón en tres o más videos; causa por contrastar."
-                    : "Hipótesis: necesita más videos para confirmar el patrón."}
-                </p>
-              )}
-              {l.causa && (
+        {lecciones.map((l) => (
+          <article className="lesson" key={l.id}>
+            <Origen
+              ambito={resultado.ambitos.find((a) => a.id === l.ambitoId)!}
+              simulada={l.simulada}
+            />
+            <p className="muted">
+              {fecha(l.fecha)} · {l.redes.join(" · ") || "Red sin identificar"}
+            </p>
+            <h3>{l.titulo}</h3>
+            <Link className="text-link" href={l.href}>
+              Ver origen
+            </Link>
+            {l.tipo === "video" ? (
+              <EvidenciaLeccion leccion={l.leccion} />
+            ) : (
+              <>
                 <p>
-                  <strong>Posible causa:</strong> {l.causa}
+                  {l.clase === "estudio"
+                    ? "Estudio descriptivo; no es una lección validada."
+                    : "Observación de la pieza; no es una lección validada."}
                 </p>
-              )}
-              {l.correccion && (
-                <p>
-                  <strong>Cambio propuesto:</strong> {l.correccion}
-                </p>
-              )}
-              {!!l.origenes?.length && (
-                <ul aria-label="Evidencia de la lección">
-                  {l.origenes.map((o, i) => (
-                    <li key={o.videoId + o.red + i}>
-                      <Link href={"/videos/" + encodeURIComponent(o.videoId)}>
-                        {data.videos.find((v) => v.id === o.videoId)?.title ||
-                          "Video de origen"}
-                      </Link>
-                      {" · "}
-                      {o.red}
-                      {" · "}
-                      {o.ventana}
-                      {" · "}
-                      {
-                        {
-                          vistas: "Vistas",
-                          meGusta: "Me gusta",
-                          comentarios: "Comentarios",
-                          retencion: "Retención",
-                          seguidoresGanados: "Seguidores ganados",
-                        }[o.metrica]
-                      }
-                      :{" "}
-                      {o.metrica === "retencion"
-                        ? Math.round(o.valor * 100) + " %"
-                        : numero(o.valor)}
-                      {o.segundo !== undefined &&
-                        " en el segundo " + numero(o.segundo)}
-                      {o.demoraHoras > 0 &&
-                        " (captura " + o.demoraHoras + " h después del hito)"}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {l.correccion && (
-                <p className="muted">
-                  {l.aplicaciones?.length
-                    ? "Aplicada en guiones; el efecto aún necesita nuevas métricas."
-                    : "Pendiente de aplicar en el siguiente guion."}
-                </p>
-              )}
-              {!!l.aplicaciones?.length && (
-                <ul aria-label="Aplicaciones de la lección">
-                  {l.aplicaciones.map((a, i) => (
-                    <li key={a.videoId + i}>
-                      <Link href={"/videos/" + encodeURIComponent(a.videoId)}>
-                        Ver guion
-                      </Link>
-                      : {a.cambio}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {l.ganchos.length > 0 && (
-                <p>
-                  <strong>Ganchos que funcionan:</strong>{" "}
-                  {l.ganchos.join(" · ")}
-                </p>
-              )}
-              {l.temas.length > 0 && (
-                <p>
-                  <strong>Temas que funcionan:</strong> {l.temas.join(" · ")}
-                </p>
-              )}
-            </article>
-          ))
-        ) : (
-          <p>
-            Las lecciones aparecerán cuando la fábrica analice resultados
-            suficientes.
-          </p>
-        )}
+                <p>{l.resumen}</p>
+                {l.aviso && <p>{l.aviso}</p>}
+                {l.clase === "resultado" && (
+                  <MetricasMarca metricas={l.metricas} />
+                )}
+              </>
+            )}
+          </article>
+        ))}
+        {!lecciones.length && <p>No hay aprendizajes para estos filtros.</p>}
       </section>
       <section className="learning-section">
-        <h2>Fallos y correcciones</h2>
+        <h2>Fallos y correcciones de videos</h2>
         <div className="filters" aria-label="Filtrar fallos">
           {["todos", "pendiente", "corregido"].map((f) => (
             <button
               key={f}
-              aria-pressed={filtro === f}
-              onClick={() => setFiltro(f)}
+              aria-pressed={estado === f}
+              onClick={() => setEstado(f)}
             >
               {f === "todos"
                 ? "Todos"
@@ -598,37 +488,45 @@ export function Aprendizaje() {
             </button>
           ))}
         </div>
-        {fallos
-          .filter((f) => filtro === "todos" || f.estado === filtro)
-          .map((f) => (
-            <article className="lesson" key={`${f.video.id}:${f.id}`}>
-              <div className="incident-heading">
-                <Link href={`/videos/${f.video.id}`}>{f.video.title}</Link>
-                <span className={`incident-state ${f.estado}`}>
-                  {f.estado === "corregido" ? "Corregido" : "Pendiente"}
-                </span>
-              </div>
-              <p className="muted">
+        {visibles.map((r) => (
+          <article className="lesson" key={r.id}>
+            <div className="incident-heading">
+              <Link href={r.href}>{r.titulo}</Link>
+              <span className={`incident-state ${r.incidencia.estado}`}>
+                {r.incidencia.estado === "corregido"
+                  ? "Corregido"
+                  : "Pendiente"}
+              </span>
+            </div>
+            <Origen
+              ambito={resultado.ambitos.find((a) => a.id === r.ambitoId)!}
+              simulada={r.simulada}
+            />
+            <p className="muted">
+              {
                 {
-                  {
-                    ejecucion: "Ejecución",
-                    critico: "Revisión del guion",
-                    verificador: "Verificación",
-                    correccion: "Cambios solicitados",
-                    calidad: "Control de calidad",
-                  }[f.tipo]
-                }{" "}
-                · {fecha(f.fecha)}
+                  ejecucion: "Ejecución",
+                  critico: "Revisión del guion",
+                  verificador: "Verificación",
+                  correccion: "Cambios solicitados",
+                  calidad: "Control de calidad",
+                }[r.incidencia.tipo]
+              }{" "}
+              · {fecha(r.fecha)}
+            </p>
+            <h3>{r.incidencia.resumen}</h3>
+            <p>
+              {r.incidencia.cambio ||
+                "Todavía no hay una corrección registrada."}
+            </p>
+            {r.incidencia.corregidoEn && (
+              <p className="muted">
+                Corregido el {fecha(r.incidencia.corregidoEn)}
               </p>
-              <h3>{f.resumen}</h3>
-              <p>{f.cambio || "Todavía no hay una corrección registrada."}</p>
-              {f.corregidoEn && (
-                <p className="muted">Corregido el {fecha(f.corregidoEn)}</p>
-              )}
-            </article>
-          ))}
-        {!fallos.filter((f) => filtro === "todos" || f.estado === filtro)
-          .length && <p>No hay fallos registrados en este estado.</p>}
+            )}
+          </article>
+        ))}
+        {!visibles.length && <p>No hay fallos registrados en este estado.</p>}
       </section>
     </div>
   );

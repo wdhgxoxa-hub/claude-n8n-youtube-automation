@@ -116,6 +116,7 @@ export type Observabilidad = z.infer<typeof observabilidadSchema>;
 export type Publicacion = z.infer<typeof publicacionSchema>;
 export type Medicion = z.infer<typeof medicionSchema>;
 export type Leccion = z.infer<typeof leccionSchema>;
+export type Incidencia = z.infer<typeof incidenciaSchema>;
 export const sinObservabilidad: Observabilidad = {
   montaje: "",
   miniatura: "",

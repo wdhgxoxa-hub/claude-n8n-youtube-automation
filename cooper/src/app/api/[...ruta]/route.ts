@@ -1,4 +1,5 @@
 import { rutaMarcas } from "@/servicios/marcas/servicio";
+import { leerResultados } from "@/servicios/resultados";
 import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -97,6 +98,8 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "GET") {
       rateLimit(`read:${user.id}`, 300);
+      if (section === "resultados" && ruta.length === 1)
+        return json(leerResultados(user));
       if (section === "operacion" && ruta.length === 1)
         return json(await leerOperacion(user));
       if (section === "admin" && id === "fabrica" && ruta.length === 2)

@@ -1,4 +1,6 @@
 import { Publicados } from "@/componentes/resultados";
-export default function Page() {
-  return <Publicados />;
+import { currentUser } from "@/lib/sesion";
+import { leerResultados } from "@/servicios/resultados";
+export default async function Page() {
+  return <Publicados initial={leerResultados(await currentUser())} />;
 }

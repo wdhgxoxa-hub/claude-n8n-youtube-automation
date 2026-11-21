@@ -4288,3 +4288,10 @@ input:is([type="checkbox"], [type="radio"]):checked {
 .standalone .login-cinema, .page.stack > .login-cinema { justify-content: center; }
 
 .login-cinema[data-motion="paused"] *, .login-cinema[data-motion="paused"] *::before, .login-cinema[data-motion="paused"] *::after { animation: none !important; transition: none !important; }
+
+.resultados-filtros { margin-block: 20px; }
+.resultados-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 12px; margin-bottom: 16px; }
+.resultados-campos label { display: grid; gap: 6px; min-width: 0; }
+.resultados-campos select, .resultados-campos input { width: 100%; min-width: 0; }
+.resultado-origen { overflow-wrap: anywhere; }
+.resultado-origen + .resultado-origen { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 20px; }
