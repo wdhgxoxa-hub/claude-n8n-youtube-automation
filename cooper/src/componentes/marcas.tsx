@@ -8,7 +8,17 @@ import { api, Heading, Notice, useEspacio } from "./espacio";
 import type { EstadoMarcas } from "@/servicios/marcas/servicio";
 import type { Marca, PiezaMarca } from "@/db/schema";
 import { formatos, redes, rubros } from "@/servicios/marcas/opciones";
+import {
+  plantillasIglesia,
+  proximaFechaIglesia,
+  revisionDoctrinalIglesia,
+} from "@/servicios/marcas/iglesia";
+import { IglesiaEditorial } from "./marcas-iglesia";
 type MarcaVista = EstadoMarcas["marcas"][number];
+const fechaDispositivo = (fecha: number) =>
+  new Date(fecha - new Date(fecha).getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
 const nombreRubro = {
   "iglesia-reformada": "Iglesia reformada",
   moda: "Moda y tienda",
@@ -123,6 +133,33 @@ export function Marcas({
         }
       />
       <Notice error={error} message={message} />
+      {admin && !editor && (
+        <div className="actions">
+          <button
+            className="button"
+            disabled={busy}
+            onClick={() =>
+              void ejecutar(async () => {
+                const m = await api<Marca>("marcas/iglesia", {});
+                setSeleccion(m.id);
+                setEditar(undefined);
+                setSeccion("calendario");
+                const url = new URL(window.location.href);
+                url.searchParams.set("marca", m.id);
+                url.searchParams.set("seccion", "calendario");
+                url.searchParams.delete("pieza");
+                window.history.replaceState(
+                  null,
+                  "",
+                  url.pathname + url.search,
+                );
+              }, "Iglesia preparada. Revisa la identidad provisional y los pendientes pastorales.")
+            }
+          >
+            Preparar Iglesia (por confirmar)
+          </button>
+        </div>
+      )}
       {data.simulada && (
         <p className="marcas-demo">
           Modo simulado · Las cuentas, publicaciones y métricas de ensayo no
@@ -475,6 +512,9 @@ export function Marcas({
                   )}
                   {seccion === "calendario" && (
                     <>
+                      {marca.rubro === "iglesia-reformada" && (
+                        <IglesiaEditorial />
+                      )}
                       <div className="marca-calendario-titulo">
                         <CalendarDays size={24} />
                         <h3>Próximas publicaciones</h3>
@@ -550,12 +590,13 @@ export function Marcas({
                             admin={admin}
                             busy={busy}
                             editar={() => setEditar(p)}
-                            accion={(accion) =>
+                            accion={(accion, doctrina) =>
                               ejecutar(
                                 () =>
                                   api(`marcas/pieza/${p.id}`, {
                                     accion,
                                     revision: p.revision,
+                                    doctrina,
                                   }),
                                 accion === "enviar"
                                   ? "Pieza lista para la revisión de Walter."
@@ -922,6 +963,22 @@ function EditorPieza({
 }) {
   const [texto, setTexto] = useState(pieza?.datos.texto ?? ""),
     [titulo, setTitulo] = useState(pieza?.datos.titulo ?? ""),
+    [formato, setFormato] = useState(pieza?.datos.formato ?? "imagen"),
+    [plantilla, setPlantilla] = useState(pieza?.datos.plantilla ?? "domingo"),
+    [detalle, setDetalle] = useState(pieza?.datos.detalle ?? ""),
+    [diapositivas, setDiapositivas] = useState(
+      pieza?.datos.diapositivas.join("\n") ?? "",
+    ),
+    [ejemplo, setEjemplo] = useState(pieza?.datos.ejemplo ?? false),
+    [datosConfirmados, setDatosConfirmados] = useState(false),
+    [fecha, setFecha] = useState(
+      pieza ? fechaDispositivo(pieza.programada) : "",
+    ),
+    [citaElegida, setCitaElegida] = useState(
+      pieza?.datos.citas[0]
+        ? `${pieza.datos.citas[0].referencia}|${pieza.datos.citas[0].version}`
+        : "",
+    ),
     [error, setError] = useState(""),
     [working, setWorking] = useState(false),
     [videoId, setVideoId] = useState(pieza?.datos.videoId ?? ""),
@@ -986,9 +1043,48 @@ function EditorPieza({
             origen: videoId ? "fabrica" : "web",
             videoId,
             montaje: videoId ? { revision: revisionMontaje } : undefined,
+            ejemplo: ejemplo && !datosConfirmados,
           });
         }}
       >
+        {marca.rubro === "iglesia-reformada" && (
+          <fieldset>
+            <legend>Plantillas de la iglesia</legend>
+            <p>
+              Son ejemplos editables. Elegir una plantilla reemplaza el
+              contenido de este formulario.
+            </p>
+            <div className="actions">
+              {plantillasIglesia.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  className="button"
+                  disabled={busy || working}
+                  onClick={() => {
+                    setTitulo(p.datos.titulo);
+                    setTexto(p.datos.texto);
+                    setDetalle(p.datos.detalle);
+                    setDiapositivas(p.datos.diapositivas.join("\n"));
+                    setFormato(p.datos.formato);
+                    setPlantilla(p.datos.plantilla);
+                    setEjemplo(true);
+                    setDatosConfirmados(false);
+                    setCitaElegida("");
+                    setVideoId("");
+                    setRevisionMontaje("");
+                    setIds([]);
+                    setFecha(
+                      fechaDispositivo(Date.parse(proximaFechaIglesia(p.id))),
+                    );
+                  }}
+                >
+                  Usar plantilla de {p.nombre.toLocaleLowerCase("es")}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )}
         <div className="marca-form-grid">
           <label>
             Cuenta
@@ -1004,7 +1100,8 @@ function EditorPieza({
             Formato
             <select
               name="formato"
-              defaultValue={pieza?.datos.formato}
+              value={formato}
+              onChange={(e) => setFormato(e.target.value as typeof formato)}
               disabled={!!videoId}
             >
               {formatos.map((f) => (
@@ -1016,10 +1113,11 @@ function EditorPieza({
             Plantilla
             <select
               name="plantilla"
-              defaultValue={pieza?.datos.plantilla ?? "domingo"}
-              onChange={(e) =>
-                setTitulo(etiquetas[e.target.value as keyof typeof etiquetas])
-              }
+              value={plantilla}
+              onChange={(e) => {
+                setPlantilla(e.target.value as typeof plantilla);
+                setTitulo(etiquetas[e.target.value as keyof typeof etiquetas]);
+              }}
             >
               {Object.entries(etiquetas).map(([v, label]) => (
                 <option value={v} key={v}>
@@ -1033,16 +1131,8 @@ function EditorPieza({
             <input
               name="fecha"
               type="datetime-local"
-              defaultValue={
-                pieza
-                  ? new Date(
-                      pieza.programada -
-                        new Date(pieza.programada).getTimezoneOffset() * 60000,
-                    )
-                      .toISOString()
-                      .slice(0, 16)
-                  : ""
-              }
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
             />
             <small>Vacío: sugerencia en {marca.zona}.</small>
           </label>
@@ -1061,7 +1151,8 @@ function EditorPieza({
           Horario, lugar u otro detalle de la pieza
           <input
             name="detalle"
-            defaultValue={pieza?.datos.detalle}
+            value={detalle}
+            onChange={(e) => setDetalle(e.target.value)}
             maxLength={180}
           />
         </label>
@@ -1069,7 +1160,8 @@ function EditorPieza({
           Diapositivas (una por línea, para carrusel)
           <textarea
             name="diapositivas"
-            defaultValue={pieza?.datos.diapositivas.join("\n")}
+            value={diapositivas}
+            onChange={(e) => setDiapositivas(e.target.value)}
           />
         </label>
         <button
@@ -1094,12 +1186,9 @@ function EditorPieza({
             Cita bíblica cotejada
             <select
               name="cita"
-              defaultValue={
-                pieza?.datos.citas[0]
-                  ? `${pieza.datos.citas[0].referencia}|${pieza.datos.citas[0].version}`
-                  : ""
-              }
+              value={citaElegida}
               onChange={(e) => {
+                setCitaElegida(e.target.value);
                 const c = citas.find(
                   (c) => `${c.referencia}|${c.version}` === e.target.value,
                 );
@@ -1122,6 +1211,23 @@ function EditorPieza({
                 ))}
             </select>
           </label>
+        )}
+        {ejemplo && (
+          <div>
+            <p role="status">
+              Datos de ejemplo · No se puede aprobar hasta sustituirlos y
+              revisarlos.
+            </p>
+            <label className="choice">
+              <input
+                type="checkbox"
+                checked={datosConfirmados}
+                onChange={(e) => setDatosConfirmados(e.target.checked)}
+              />
+              Confirmo que sustituí los datos de ejemplo por información
+              verificada
+            </label>
+          </div>
         )}
         <label>
           Montaje aprobado de fábrica
@@ -1252,10 +1358,20 @@ function Pieza({
   admin: boolean;
   busy: boolean;
   editar: () => void;
-  accion: (v: string) => Promise<void>;
+  accion: (
+    v: string,
+    doctrina?: {
+      revisorPastoral: string;
+      observaciones: string;
+      comprobaciones: string[];
+    },
+  ) => Promise<void>;
 }) {
   const [revisionAbierta, setRevisionAbierta] = useState<number | null>(null);
   const previaAbierta = revisionAbierta === p.revision;
+  const requiereDoctrina =
+    marca.rubro === "iglesia-reformada" || p.datos.requiereRevisionDoctrinal;
+  const doctrina = p.revisionDoctrinal;
   return (
     <article className="marca-pieza" id={`pieza-${p.id}`}>
       <div>
@@ -1280,6 +1396,94 @@ function Pieza({
           </p>
         )}
         <p className="marca-caption">{p.datos.texto}</p>
+        {p.datos.ejemplo && (
+          <p className="marcas-demo">
+            Datos de ejemplo · Pendiente de sustituir. No aprobable.
+          </p>
+        )}
+        {requiereDoctrina && (
+          <p>
+            {doctrina?.revision === p.revision
+              ? `Revisión doctrinal registrada · ${doctrina.revisorPastoral} · Revisión ${doctrina.revision}`
+              : "Revisión doctrinal pendiente. Debe completarse antes de aprobar."}
+          </p>
+        )}
+        {doctrina && (
+          <details className="marca-previa">
+            <summary>Ver revisión doctrinal registrada</summary>
+            <p className="marca-caption">{doctrina.observaciones}</p>
+            <p>
+              Registrada el{" "}
+              {new Intl.DateTimeFormat("es-PE", {
+                timeZone: marca.zona,
+                dateStyle: "medium",
+                timeStyle: "short",
+              }).format(doctrina.fecha)}
+              . Una edición exige otra revisión doctrinal.
+            </p>
+          </details>
+        )}
+        {requiereDoctrina && p.estado === "pendiente" && admin && (
+          <form
+            className="stack marca-revision-doctrinal"
+            key={p.revision}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const f = new FormData(e.currentTarget);
+              void accion("revisar-doctrina", {
+                revisorPastoral: String(f.get("revisorPastoral")),
+                observaciones: String(f.get("observaciones")),
+                comprobaciones: f.getAll("comprobaciones").map(String),
+              });
+            }}
+          >
+            <fieldset>
+              <legend>Revisión doctrinal</legend>
+              <p>
+                Walter registra la revisión acordada con el responsable
+                pastoral. Comprueba la vista previa completa de esta revisión
+                antes de marcar los controles.
+              </p>
+              <label>
+                Responsable pastoral
+                <input
+                  name="revisorPastoral"
+                  required
+                  minLength={3}
+                  maxLength={120}
+                  defaultValue={doctrina?.revisorPastoral ?? ""}
+                />
+              </label>
+              <label>
+                Observaciones y fuentes de la revisión
+                <textarea
+                  name="observaciones"
+                  required
+                  minLength={20}
+                  maxLength={2000}
+                  defaultValue={doctrina?.observaciones ?? ""}
+                />
+              </label>
+              {revisionDoctrinalIglesia.map((c) => (
+                <label key={c.id} className="choice">
+                  <input
+                    type="checkbox"
+                    name="comprobaciones"
+                    value={c.id}
+                    required
+                  />
+                  <span>
+                    <strong>{c.etiqueta}</strong>
+                    <small>{c.detalle}</small>
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+            <button className="button" disabled={busy || p.datos.ejemplo}>
+              Registrar revisión doctrinal
+            </button>
+          </form>
+        )}
         {p.aviso && <p role="status">{p.aviso}</p>}
         {p.metricas && (
           <p>
@@ -1307,7 +1511,11 @@ function Pieza({
             <>
               <button
                 className="button primary"
-                disabled={busy}
+                disabled={
+                  busy ||
+                  p.datos.ejemplo ||
+                  (requiereDoctrina && doctrina?.revision !== p.revision)
+                }
                 onClick={() => void accion("aprobar")}
               >
                 Aprobar y programar
