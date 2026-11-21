@@ -12,6 +12,7 @@ sys.dont_write_bytecode = True
 from urllib.parse import urlsplit
 from sentinel_exclusiones import TEXTOS, SELECTORES
 from sentinel_cache import comprobar_sentinel
+from sentinel_observacion import observar
 
 config = json.loads(Path(sys.argv[1]).read_text())
 cooper = Path(__file__).resolve().parents[1]
@@ -34,9 +35,13 @@ objetivo = Objetivo(nombre='cooper-pulido-e2e', url_interfaz=config['url'], url_
     ruta_openapi='/no-openapi', destino=ComprobacionDestino('/destino','destino','cooper-e2e-aislado'),
     pantallas=tuple(config['pantallas']), duracion_por_prueba_s=config.get('duracion', 45),
     exclusiones=Exclusiones(textos=(*TEXTOS, *config.get('excluir_textos', [])), selectores=(*SELECTORES, *config.get('excluir_selectores', []))))
+eventos_red = []
+modulo_actual = 'preparacion'
+
 class GuardianSesion(Guardian):
     def proteger_contexto(self, contexto, registrar):
         super().proteger_contexto(contexto, registrar)
+        observar(contexto, eventos_red, lambda: modulo_actual)
         contexto.add_cookies(cookies)
         contexto.add_init_script("localStorage.setItem('cooper-motion-paused', 'false');")
         def preparar(pagina):
@@ -57,6 +62,7 @@ ctx = Contexto(objetivo=objetivo, carpeta=carpeta, guardian=guardian, registrar=
 modulos=[]
 medidas_caos=[]
 for nombre in config.get('modulos',['recorridos','caos','estabilidad']):
+    modulo_actual = nombre
     guardian.verificar_destino()
     paquete=importlib.import_module('sentinel.pruebas.'+nombre)
     modulo=paquete.MODULO
@@ -86,6 +92,7 @@ for nombre in config.get('modulos',['recorridos','caos','estabilidad']):
 unicos={h.huella():h.a_dict() for h in hallazgos}
 informe={'herramienta':'Sistema Sentinel API local','modulos':modulos,'medidas_caos':medidas_caos,'pantallas':ctx.pantallas,'hallazgos':list(unicos.values())}
 (carpeta/'informe.json').write_text(guardian.redactar(json.dumps(informe,ensure_ascii=False,indent=2)))
+(carpeta/'red-observada.json').write_text(guardian.redactar(json.dumps(eventos_red,ensure_ascii=False,indent=2)))
 fallos=[h for h in unicos.values() if h['gravedad'] != 'info']
 print(json.dumps({'fallos':len(fallos),'informe':str(carpeta/'informe.json')}))
 sys.exit(1 if fallos else 0)

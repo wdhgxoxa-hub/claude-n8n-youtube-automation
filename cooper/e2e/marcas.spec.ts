@@ -236,15 +236,8 @@ for (const width of [1440, 390])
         excluir_selectores: [
           'a[href^="/"]:not([href^="/marcas"]):not([href^="/api/marcas/medio/"])',
         ],
-        // Sentinel es de solo lectura; las mutaciones se ejercitan arriba con Playwright.
-        excluir_textos: [
-          "Desconectar",
-          "Verificar conexión",
-          "Estudiar la cuenta",
-          "Investigar competencia",
-          "Proponer texto con el especialista",
-          "Pedir cambios",
-        ],
+        // El contrato común excluye las escrituras también en la ronda general;
+        // Marcas y Montajes las ejercitan con acciones dirigidas autorizadas.
         duracion: 55,
         ancho: width,
         modulos: ["recorridos", "caos", "estabilidad"],

@@ -19,6 +19,7 @@ sys.path.insert(0, str(COOPER / 'scripts'))
 from sentinel_cache import comprobar_sentinel
 sys.path.insert(0, str(comprobar_sentinel()))
 from sentinel_exclusiones import TEXTOS, SELECTORES
+from sentinel_observacion import observar
 from sentinel.contrato import Objetivo, ComprobacionDestino, Exclusiones
 from sentinel.guardian.guardian import Guardian
 from sentinel.pruebas.caos import _SCRIPT_HORDA, _Pantalla, Caos
@@ -30,6 +31,14 @@ HTML = '''<!doctype html><html lang="es"><meta charset="utf-8"><title>Contrato d
 <a id="ajustes" href="/admin/fabrica">Revisar ajustes de la fábrica</a>
 </section>
 <button id="investigar">Investigar competencia</button>
+<button id="montajes">Actualizar montajes desde fábrica</button>
+<button class="mutante">Añadir cuenta</button>
+<button class="mutante">Verificar conexión</button>
+<button class="mutante">Desconectar</button>
+<button class="mutante">Estudiar la cuenta</button>
+<button class="mutante">Proponer texto con el especialista</button>
+<button class="mutante">Pedir cambios</button>
+<a id="externo" href="https://www.youtube.com/watch?v=solo-ejemplo" target="_blank" rel="noreferrer">Abrir publicación</a>
 <label><input id="filtro" type="checkbox" role="switch">Mostrar hipótesis</label>
 <select id="red"><option>todas</option><option>youtube</option></select>
 <button id="actualizar">Actualizar</button>
@@ -39,6 +48,8 @@ window.mutaciones=0; window.filtros=0; window.lecturas=0;
 const escribir=()=>{window.mutaciones++;fetch('/api/operacion',{method:'POST',body:'{}'}).catch(()=>{});};
 document.querySelector('#medir').addEventListener('change',escribir);
 document.querySelector('#investigar').addEventListener('click',escribir);
+document.querySelector('#montajes').addEventListener('click',()=>{window.mutaciones++;fetch('/api/marcas/montajes',{method:'POST',body:'{}'}).catch(()=>{});});
+document.querySelectorAll('.mutante').forEach(el=>el.addEventListener('click',escribir));
 document.querySelector('#filtro').addEventListener('change',()=>window.filtros++);
 document.querySelector('#actualizar').addEventListener('click',()=>fetch('/api/operacion').then(()=>window.lecturas++));
 // Cooper navega sus enlaces internos con Next. La fixture conserva también el
@@ -105,9 +116,15 @@ class ExclusionesCooper(unittest.TestCase):
         _, page, findings = self.contexto()
         console = []
         page.on('console', lambda msg: console.append(msg.text) if msg.type == 'error' else None)
-        for selector in ['#medir', 'label.checkbox', '#investigar']:
+        for selector in ['#medir', 'label.checkbox', '#investigar', '#montajes']:
             self.assertTrue(page.locator(selector).evaluate('(el)=>window.__sentinelExcluido(el)'))
             page.locator(selector).click()
+        for control in page.locator('.mutante').all():
+            self.assertTrue(control.evaluate('(el)=>window.__sentinelExcluido(el)'))
+            control.click()
+        # El guardián original ya excluye enlaces externos; no se amplía el
+        # bloqueo para esconder el antiguo fallo de Publicados sin trazabilidad.
+        self.assertTrue(page.locator('#externo').evaluate('(el)=>window.__sentinelExcluido(el)'))
         page.locator('#medir').focus()
         page.keyboard.press('Space')
         for selector in ['#filtro', '#red', '#actualizar', 'summary', '#ajustes']:
@@ -131,12 +148,20 @@ class ExclusionesCooper(unittest.TestCase):
 
     def test_escritura_que_eluda_interfaz_sigue_bloqueada_y_es_error_visible(self):
         guardian, page, findings = self.contexto()
+        eventos = []
+        observar(page.context, eventos, lambda: 'reproduccion')
         console = []
         page.on('console', lambda msg: console.append(msg.text) if msg.type == 'error' else None)
-        page.evaluate("fetch('/api/operacion',{method:'POST',body:'{}'}).catch(()=>{})")
+        page.evaluate("fetch('/api/marcas/montajes',{method:'POST',body:'{}'}).catch(()=>{})")
         self.assertEqual(HTTP.escrituras, 0)
-        self.assertTrue(any('escritura bloqueada: POST /api/operacion' == f.titulo for f in findings))
+        self.assertTrue(any('escritura bloqueada: POST /api/marcas/montajes' == f.titulo for f in findings))
         self.assertTrue(any('ERR_BLOCKED_BY_CLIENT' in error for error in console))
+        fallida = next(e for e in eventos if e['tipo'] == 'peticion_fallida')
+        mensaje = next(e for e in eventos if e['tipo'] == 'consola_error')
+        self.assertEqual(fallida['ruta'], '/api/marcas/montajes')
+        self.assertEqual(fallida['metodo'], 'POST')
+        self.assertEqual(fallida['codigo'], mensaje['codigo'])
+        self.assertEqual(fallida['ruta'], mensaje['ruta'])
         with tempfile.TemporaryDirectory() as tmp:
             observed = _Pantalla(self.url, errores_consola=console)
             evaluated = Caos()._hallazgos(guardian, observed, page, Path(tmp), 0)
