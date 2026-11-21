@@ -102,6 +102,7 @@ export async function runResiliencia(ctx) {
         nombre: "Canal ficticio de resiliencia",
         nicho: "Prueba local",
         estado: "activo",
+        eliminado: false,
         formato_defecto: "short",
         dueno_email: "resiliencia@example.test",
       },
