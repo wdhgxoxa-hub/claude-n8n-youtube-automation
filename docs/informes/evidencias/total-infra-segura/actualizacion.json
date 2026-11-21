@@ -1,0 +1,59 @@
+{
+  "estado": "PASS",
+  "configuracion_anterior": {
+    "compose.yaml": "32ecc11f1f6d558363862ef41ee5d54fe3ceb7b7b047f79d52318c1802f509c8",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "servicios_anteriores": {
+    "cooper": {
+      "imagen": "localhost/cooper:reversion-1795279433580791367",
+      "id": "e4ee909a0458156bc1c421482fb0c9f898ebeb1a8d72f0eff94263a5ddd01379"
+    },
+    "n8n": {
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+      "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+    },
+    "runner": {
+      "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+      "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+    },
+    "caddy": {
+      "imagen": "docker.io/library/caddy:2.11.2-alpine",
+      "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+    }
+  },
+  "configuracion_ensayada": {
+    "compose.yaml": "f20edc18d20f2320db76ee4a612aee05d655b7654c1fe6a881529d27569bae50",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "servicios_nuevos": {
+    "n8n": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+    },
+    "runner": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "anterior": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f"
+    },
+    "caddy": {
+      "version": "2.11.8",
+      "imagen": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "anterior": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    }
+  },
+  "respaldo_configuracion": "/home/david/.cache/cooper-infra/cooper/.cache/e2e-vps-DvS8yQ/operacion/infra-1795280283443792629/configuracion-anterior",
+  "entorno_copiado": false,
+  "codigo_aplicador_sha256": "3dead5c4c526a4c814a7f4d4c09c85d153c10ee43b79db5995f6c51242e46cd0",
+  "codigo_operar_sha256": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+  "snapshot_previo": "059934e41982205c0de021a62f956d29212ae36605c3f881be3f10ccef94a1bb",
+  "salud": "PASS",
+  "datos_preservados": "PASS",
+  "migraciones_antes": 342,
+  "migraciones_despues": 342
+}
