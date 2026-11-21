@@ -1,5 +1,11 @@
 import type { EstadoMedio } from "@/servicios/medios";
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  text,
+  integer,
+  real,
+  primaryKey,
+} from "drizzle-orm/sqlite-core";
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
@@ -71,6 +77,7 @@ export const messages = sqliteTable("messages", {
   role: text("role", { enum: ["user", "assistant"] }).notNull(),
   content: text("content").notNull(),
   attachmentIds: text("attachment_ids").notNull().default("[]"),
+  channelId: text("channel_id").notNull().default(""),
   createdAt: integer("created_at").notNull(),
 });
 export const attachments = sqliteTable("attachments", {
@@ -181,7 +188,26 @@ export const chatSessions = sqliteTable("chat_sessions", {
   channelId: text("channel_id").notNull().default(""),
   lease: text("lease").notNull().default(""),
   busyUntil: integer("busy_until").notNull().default(0),
+  memoryAfter: integer("memory_after").notNull().default(0),
 });
+export const chatMemories = sqliteTable(
+  "chat_memories",
+  {
+    ownerId: text("owner_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scope: text("scope").notNull(),
+    channelId: text("channel_id").references(() => channels.id, {
+      onDelete: "cascade",
+    }),
+    summary: text("summary").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+    method: text("method", { enum: ["apuntes", "resumen"] })
+      .notNull()
+      .default("apuntes"),
+  },
+  (t) => [primaryKey({ columns: [t.ownerId, t.scope] })],
+);
 export const chatActions = sqliteTable("chat_actions", {
   id: text("id").primaryKey(),
   ownerId: text("owner_id")

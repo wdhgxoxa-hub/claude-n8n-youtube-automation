@@ -5,6 +5,7 @@ import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice } from "./espacio";
 import { m as motion } from "framer-motion";
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
+import { MemoriaAdmin } from "./memoria";
 export function Admin({ initial }: { initial: Administracion }) {
   const reduced = useMovimientoReducido();
   const [data, setData] = useState(initial),
@@ -154,6 +155,7 @@ export function Admin({ initial }: { initial: Administracion }) {
           ))}
         </div>
       </section>
+      <MemoriaAdmin personas={data.users} />
       <section className="stack identity-reviews">
         <h2>Revisión de identidad</h2>
         <p>

@@ -1,0 +1,5 @@
+# Misión: memoria de largo plazo y ESTADO vivo (rama cooper-pulido, después de la misión cooper-pulido)
+1. ESTADO del proyecto: mantén docs/ESTADO.md como fuente viva (ya existe; respeta su formato). Añade al flujo de trabajo una regla: cada misión de Codex actualiza ESTADO.md al terminar (hecho, en curso, pendientes de Walter, ideas).
+2. Memoria del chat Cooper por usuario: además de los últimos 30 mensajes, guarda un resumen de largo plazo por usuario y por marca/canal (temas pendientes, videos que se estaban pensando con su título provisional, decisiones, preferencias), actualizado al cerrar cada conversación o cada N mensajes. Cooper lo lee al empezar para entender referencias como «el video que estábamos pensando». Privado por usuario; el admin puede verlo. Botón para ver y borrar lo recordado.
+3. En el inicio de Cooper, una tarjeta discreta «Donde lo dejamos» con lo último pendiente de ese usuario.
+4. Pruebas (evaluación con conversaciones de varios días simulados) y puerta completa. Commits; fusiona a version-chatgpt bajo las mismas condiciones que cooper-pulido. Informe docs/informes/cooper-memoria.md.

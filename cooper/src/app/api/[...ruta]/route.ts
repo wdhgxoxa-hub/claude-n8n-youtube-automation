@@ -46,6 +46,7 @@ import {
   reiniciarNumero,
 } from "@/servicios/mensajeria/cuentas";
 import { historial, resumenCola } from "@/servicios/mensajeria/cola";
+import { leerRecuerdos, borrarRecuerdos } from "@/servicios/chat/memoria";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ ruta: string[] }> };
@@ -83,6 +84,17 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "GET") {
       rateLimit(`read:${user.id}`, 300);
+      if (section === "memoria" && ruta.length === 1)
+        return json(leerRecuerdos(user));
+      if (
+        section === "admin" &&
+        id === "memoria" &&
+        action &&
+        ruta.length === 3
+      ) {
+        requireAdmin(user);
+        return json(leerRecuerdos(user, action));
+      }
       if (section === "whatsapp" && id === "resumen") {
         requireAdmin(user);
         return json(resumenCola());
@@ -411,6 +423,10 @@ async function handle(request: Request, context: Context) {
       }
     }
     if (method === "DELETE") {
+      if (section === "memoria" && ruta.length === 1) {
+        borrarRecuerdos(user);
+        return json({ ok: true });
+      }
       if (section === "videos" && id) {
         requireOwner(
           user,

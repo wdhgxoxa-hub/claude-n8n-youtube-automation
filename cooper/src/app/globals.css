@@ -1,4 +1,72 @@
 @import "tailwindcss";
+.memory-card {
+  margin: 0 40px 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.memory-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.memory-last {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.memory-last h2 {
+  font-size: 14px;
+  font-weight: 700;
+}
+.memory-last p {
+  margin-top: 4px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.memory-details {
+  margin-top: 16px;
+}
+.memory-scope {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.memory-scope h3 {
+  font-size: 16px;
+}
+.memory-scope h4 {
+  font-size: 13px;
+  margin-top: 12px;
+  color: var(--muted);
+}
+.memory-scope ul {
+  padding-left: 20px;
+  margin: 4px 0 8px;
+}
+.memory-admin {
+  margin: 24px 0;
+}
+.memory-admin select {
+  max-width: 100%;
+}
+@media (max-width: 1200px) {
+  .memory-card {
+    margin-inline: 28px;
+  }
+}
+@media (max-width: 1000px) {
+  .memory-card {
+    margin-inline: 20px;
+  }
+}
+@media (max-width: 767px) {
+  .memory-card {
+    margin-inline: 16px;
+  }
+}
 :root {
   color-scheme: dark;
   --bg: #101214;

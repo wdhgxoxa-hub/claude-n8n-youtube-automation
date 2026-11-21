@@ -16,6 +16,7 @@ import { FabricaVista } from "./fabrica-vista";
 import { Grabador, subir } from "./grabador";
 import { leerSSE } from "@/lib/stream";
 import type { EventoChat, TarjetaChat } from "@/servicios/chat/tipos";
+import { MemoriaChat } from "./memoria";
 export function Inicio() {
   const { data, refresh } = useEspacio();
   const reduced = useMovimientoReducido();
@@ -216,6 +217,18 @@ export function Inicio() {
         </div>
         <span className="date-note">Tu estudio, en marcha</span>
       </div>
+      <MemoriaChat
+        recuerdos={data.chat.recuerdos}
+        busy={busy}
+        refresh={refresh}
+        retomar={(canalId, texto) => {
+          setChannel(canalId);
+          setVideo("");
+          setTab("chat");
+          setText(texto);
+          textarea.current?.focus();
+        }}
+      />
       <div className="mobile-tabs" role="tablist" aria-label="Vista de inicio">
         <button
           role="tab"
