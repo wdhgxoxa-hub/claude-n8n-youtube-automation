@@ -15,6 +15,9 @@ TEXTOS = (
     # datos ficticios y comprueban el resultado autorizado.
     'Añadir cuenta', 'Verificar conexión', 'Desconectar', 'Estudiar la cuenta',
     'Proponer texto con el especialista', 'Pedir cambios',
+    # Altas y atestaciones de iglesia son escrituras; iglesia.spec.ts ejerce
+    # ambas con sesión autorizada y comprueba permisos, datos y revisión.
+    'Preparar Iglesia (por confirmar)', 'Registrar revisión doctrinal',
 )
 SELECTORES = (
     'iframe', 'a[href^="/api/archivos/"]', 'a[href^="/api/revision-archivo/"]',
