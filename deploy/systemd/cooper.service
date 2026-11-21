@@ -8,7 +8,8 @@ Type=simple
 WorkingDirectory=%h/.local/share/cooper/app/cooper
 EnvironmentFile=%h/.config/cooper/cooper.env
 Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=/usr/bin/env NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 COOPER_TEST_MODE=0 COOPER_DEMO=0 COOPER_CHAT=auto COOPER_CHAT_API_RESPALDO=0 COOPER_DATABASE_PATH=%h/.local/share/cooper/cooper.sqlite COOPER_CLAUDE_BIN=%h/.local/bin/claude PUENTE_CODEX_URL=http://127.0.0.1:8789 /usr/bin/node %h/.local/share/cooper/app/cooper/node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000
+ExecStartPre=/usr/bin/env NODE_ENV=production COOPER_DEMO=0 COOPER_DATABASE_PATH=%h/.local/share/cooper/cooper.sqlite /usr/bin/node --import tsx src/db/migrar.ts
+ExecStart=/usr/bin/env NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 COOPER_TEST_MODE=0 COOPER_DEMO=0 COOPER_MARCAS=simulada COOPER_CHAT=auto COOPER_CHAT_API_RESPALDO=0 COOPER_DATABASE_PATH=%h/.local/share/cooper/cooper.sqlite COOPER_CLAUDE_BIN=%h/.local/bin/claude PUENTE_CODEX_URL=http://127.0.0.1:8789 /usr/bin/node %h/.local/share/cooper/app/cooper/node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000
 Restart=on-failure
 RestartSec=5
 TimeoutStopSec=30

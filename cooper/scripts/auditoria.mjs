@@ -12,12 +12,12 @@ const coverageAudit = process.argv.includes("--cobertura");
 const outputDir = marcasAudit
   ? ".cache/auditoria-marcas"
   : motionAudit
-  ? ".cache/videos-movimiento/lighthouse"
-  : coverageAudit
-    ? ".cache/cobertura/lighthouse"
-    : animationAudit
-      ? ".cache/animacion/lighthouse"
-      : ".cache/auditoria";
+    ? ".cache/videos-movimiento/lighthouse"
+    : coverageAudit
+      ? ".cache/cobertura/lighthouse"
+      : animationAudit
+        ? ".cache/animacion/lighthouse"
+        : ".cache/auditoria";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -111,32 +111,17 @@ try {
       const paths = marcasAudit
         ? ["/marcas"]
         : motionAudit
-        ? [
-            "/",
-            "/canales",
-            `/canales/${channel.id}`,
-            "/videos",
-            `/videos/${video.id}`,
-            "/publicados",
-            "/aprendizaje",
-            "/avatares",
-            "/perfil",
-            "/admin",
-            "/radar",
-            "/rutina",
-            "/redes",
-            "/referencias",
-            "/cuentas",
-            "/programados",
-            "/decisiones",
-            "/incidencias",
-            "/avisos",
-            "/admin/fabrica",
-            "/entrar",
-          ]
-        : coverageAudit
           ? [
+              "/",
+              "/canales",
               `/canales/${channel.id}`,
+              "/videos",
+              `/videos/${video.id}`,
+              "/publicados",
+              "/aprendizaje",
+              "/avatares",
+              "/perfil",
+              "/admin",
               "/radar",
               "/rutina",
               "/redes",
@@ -147,19 +132,34 @@ try {
               "/incidencias",
               "/avisos",
               "/admin/fabrica",
+              "/entrar",
             ]
-          : process.argv.includes("--rapida")
-            ? ["/"]
-            : [
-                "/",
-                "/canales",
-                "/videos",
-                `/videos/${video.id}`,
-                "/avatares",
-                "/perfil",
-                "/admin",
-                "/entrar",
-              ];
+          : coverageAudit
+            ? [
+                `/canales/${channel.id}`,
+                "/radar",
+                "/rutina",
+                "/redes",
+                "/referencias",
+                "/cuentas",
+                "/programados",
+                "/decisiones",
+                "/incidencias",
+                "/avisos",
+                "/admin/fabrica",
+              ]
+            : process.argv.includes("--rapida")
+              ? ["/"]
+              : [
+                  "/",
+                  "/canales",
+                  "/videos",
+                  `/videos/${video.id}`,
+                  "/avatares",
+                  "/perfil",
+                  "/admin",
+                  "/entrar",
+                ];
       for (const path of paths) {
         const mobile = formFactor === "mobile";
         const result = await lighthouse(base + path, {

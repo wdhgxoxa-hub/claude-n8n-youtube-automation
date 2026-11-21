@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { mkdirSync, writeFileSync, readFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawn } from "node:child_process";
-const dir = `.cache/videos-movimiento/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
+const dir = `${process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-movimiento"}/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
 for (const width of [1440, 390])
   test(`Sistema Sentinel ${width}: recorrido, caos y estabilidad`, async ({
     page,
@@ -24,6 +24,7 @@ for (const width of [1440, 390])
     const state = await (await page.request.get("/api/estado")).json();
     const paths = [
       "/",
+      "/marcas",
       "/canales",
       `/canales/${state.channels[0].id}`,
       "/videos",
@@ -58,6 +59,13 @@ for (const width of [1440, 390])
         pantallas: paths,
         duracion: 160,
         esperar_operacion: true,
+        excluir_textos: [
+          "Desconectar",
+          "Verificar conexión",
+          "Estudiar la cuenta",
+          "Proponer texto con el especialista",
+          "Pedir cambios",
+        ],
         ancho: width,
       }),
       { mode: 0o600 },

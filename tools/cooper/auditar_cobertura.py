@@ -7,6 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MAPA = {
+    'CooperMarcasPub1': ('/marcas', 'Despertar el trabajador firmado para publicaciones aprobadas e ingesta; bloqueado por configuración'),
+    'CooperMarcasMet1': ('/marcas', 'Consultar métricas de publicaciones de marcas con reservas y reintentos acotados'),
     'FabAgenteTelegr1': ('/', 'Chat breve con herramientas; avisos en /avisos'),
     'FabAjustes000001': ('/admin/fabrica', 'Editar ajustes con revisión, confirmación y registro'),
     'FabAprendizaje01': ('/aprendizaje', 'Retención, lecciones e incidencias; /publicados para métricas'),

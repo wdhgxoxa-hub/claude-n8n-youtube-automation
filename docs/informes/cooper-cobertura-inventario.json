@@ -1021,6 +1021,156 @@
   "alcance": "Cobertura funcional del código. No certifica despliegue ni proveedores externos. Nodos automáticos se controlan mediante la acción de producto e interruptores, no ejecución arbitraria.",
   "flujos": [
     {
+      "id": "CooperMarcasMet1",
+      "nombre": "FX · Marcas · Métricas",
+      "sha256": "df228227057b36bd2e69120e6a7d1f90d2b46dbdc1a67c96eaf06e3b9fc0fd4e",
+      "pantalla": "/marcas",
+      "accion": "Consultar métricas de publicaciones de marcas con reservas y reintentos acotados",
+      "estado": "completo",
+      "nodos": [
+        {
+          "nombre": "Reloj",
+          "tipo": "n8n-nodes-base.scheduleTrigger",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Firmar trabajo de marcas"
+              ]
+            }
+          ],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Inicio",
+          "tipo": "n8n-nodes-base.executeWorkflowTrigger",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Firmar trabajo de marcas"
+              ]
+            }
+          ],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Firmar trabajo de marcas",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Atender marcas en Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Atender marcas en Cooper",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        }
+      ],
+      "tipos_registrados": []
+    },
+    {
+      "id": "CooperMarcasPub1",
+      "nombre": "FX · Marcas · Publicación y adjuntos",
+      "sha256": "e2a1ec5ab52e0245188d0752372971d344896b1bb8640979abe505e68d9902df",
+      "pantalla": "/marcas",
+      "accion": "Despertar el trabajador firmado para publicaciones aprobadas e ingesta; bloqueado por configuración",
+      "estado": "completo",
+      "nodos": [
+        {
+          "nombre": "Reloj",
+          "tipo": "n8n-nodes-base.scheduleTrigger",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Firmar trabajo de marcas"
+              ]
+            }
+          ],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Inicio",
+          "tipo": "n8n-nodes-base.executeWorkflowTrigger",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Firmar trabajo de marcas"
+              ]
+            }
+          ],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Firmar trabajo de marcas",
+          "tipo": "n8n-nodes-base.code",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [
+            {
+              "tipo": "main",
+              "salida": 0,
+              "destinos": [
+                "Atender marcas en Cooper"
+              ]
+            }
+          ],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        },
+        {
+          "nombre": "Atender marcas en Cooper",
+          "tipo": "n8n-nodes-base.httpRequest",
+          "decision": false,
+          "tabla": null,
+          "operacion_tabla": null,
+          "salidas": [],
+          "pantalla": "/marcas",
+          "estado": "completo"
+        }
+      ],
+      "tipos_registrados": []
+    },
+    {
       "id": "FabAgenteTelegr1",
       "nombre": "F · Agente de Telegram",
       "sha256": "0450a30362705242cfc4a2da2ca6d699270ff3e09f5d60daeec991d77667a56c",

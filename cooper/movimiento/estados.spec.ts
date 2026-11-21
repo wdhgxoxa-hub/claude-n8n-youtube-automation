@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { mkdirSync, copyFileSync, writeFileSync } from "node:fs";
-const dir = `.cache/videos-movimiento/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
+const dir = `${process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-movimiento"}/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
 for (const width of [1440, 390])
   test(`${width}: vacío, ilustración sin motor, enlace vencido y página ausente`, async ({
     browser,

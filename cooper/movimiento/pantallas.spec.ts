@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync, copyFileSync } from "node:fs";
 import type { Estado } from "../src/servicios/datos";
 const ronda = process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico";
-const dir = `.cache/videos-movimiento/${ronda}`;
+const dir = `${process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-movimiento"}/${ronda}`;
 const fixture = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_FIXTURE_PORT}`;
 async function login(page: Page) {
   expect(
@@ -80,12 +80,23 @@ for (const width of [1440, 390])
           })
         ).ok(),
       ).toBe(true);
+      const brands = await (await page.request.get("/api/marcas")).json();
+      if (!brands.marcas.length) {
+        expect(
+          (
+            await page.request.post("/api/marcas", {
+              data: { nombre: "Marca de integración", rubro: "general" },
+            })
+          ).ok(),
+        ).toBe(true);
+      }
       const storageState = await page.context().storageState();
       const channel = state.channels[0].id,
         video = state.videos[0].id;
       const paths = [
         "/entrar",
         "/",
+        "/marcas",
         "/canales",
         `/canales/${channel}`,
         "/radar",
@@ -232,6 +243,22 @@ for (const width of [1440, 390])
             current.getByRole("region", { name: "Confirmar cambios" }),
           ).toHaveCount(0);
           interactions.push("preparar cambios", "cancelar sin enviar");
+        }
+        if (path === "/marcas") {
+          for (const tab of [
+            "Estudio",
+            "Publicados",
+            "Aprendizaje",
+            "Calendario",
+          ]) {
+            await current
+              .getByRole("button", { name: tab, exact: true })
+              .click();
+            expect(
+              (await new AxeBuilder({ page: current }).analyze()).violations,
+            ).toEqual([]);
+            interactions.push(`marcas: ${tab}`);
+          }
         }
         if (path === "/publicados") {
           await current
