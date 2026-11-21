@@ -1,5 +1,31 @@
 import { expect, it, vi } from "vitest";
 import { body, sameOrigin, rateLimit, failure } from "@/lib/http";
+import { marcaSchema } from "@/servicios/marcas/tipos";
+
+it.each([
+  [123, "nombre: Entrada inválida: se esperaba texto, recibido número"],
+  [
+    "A",
+    "nombre: Demasiado pequeño: se esperaba que texto tuviera >=2 caracteres",
+  ],
+])(
+  "devuelve validación en español y conserva mensajes propios (%s)",
+  async (nombre, mensaje) => {
+    const result = marcaSchema.safeParse({
+      nombre,
+      rubro: "general",
+      zona: "Zona/inexistente",
+    });
+    expect(result.success).toBe(false);
+    if (result.success)
+      throw new Error("El ensayo debe producir un error de validación");
+    const response = failure(result.error);
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: `Revisa los campos. ${mensaje}; zona: Zona horaria inválida`,
+    });
+  },
+);
 it("limita JSON por bytes durante lectura, incluso sin Content-Length", async () => {
   const request = new Request("http://localhost/api/chat", {
     method: "POST",

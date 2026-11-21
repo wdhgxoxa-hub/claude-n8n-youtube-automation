@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import { z } from "@/contratos/validacion";
 import { ErrorHttp } from "./permisos";
 export function json(data: unknown, status = 200) {
   return Response.json(data, {
@@ -12,7 +12,7 @@ export function failure(error: unknown) {
     if (error.status === 429) response.headers.set("Retry-After", "60");
     return response;
   }
-  if (error instanceof ZodError)
+  if (error instanceof z.ZodError)
     return json(
       {
         error:
