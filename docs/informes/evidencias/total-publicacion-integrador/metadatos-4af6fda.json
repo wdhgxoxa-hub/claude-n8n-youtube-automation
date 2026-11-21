@@ -1,0 +1,82 @@
+{
+  "tipo": "revision_independiente_publicacion_solo_metadatos",
+  "fecha_lima_inicio": "2026-11-21T16:42:56.380575-05:00",
+  "fecha_lima_fin": "2026-11-21T16:43:46.695470-05:00",
+  "worktree_revisado": "/home/david/Proyectos/cooper-wt/total-integrador",
+  "commit_revisado": "4af6fdacbb526802bc2df675a92fa74321247818",
+  "commit_al_terminar": "4af6fdacbb526802bc2df675a92fa74321247818",
+  "head_estable": true,
+  "base": "de397f3195856c10b6a9959171ff42da4328d9ec",
+  "base_es_ancestro": true,
+  "commits_salientes_desde_base": 341,
+  "objetos_salientes_desde_base": 3905,
+  "sentinel": {
+    "pin": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+    "blobs_no_vacios_unicos": 67,
+    "coincidencias_objetos_salientes": [],
+    "metodo": "git ls-tree -r -l; solo tipo, tamaño y object ID; no contenido",
+    "rutas_vendor_en_head": [],
+    "rutas_vendor_en_historia_saliente": [
+      "cooper/vendor/sentinel/README.md",
+      "cooper/vendor/sentinel/origen.json"
+    ]
+  },
+  "rutas": {
+    "rutas_head": 1857,
+    "rutas_anadidas_o_modificadas_historia_saliente": 1308,
+    "sospechosas": [],
+    "alcance": "Nombres y tipos de rutas en los 341 árboles de commits salientes, incluidos renombrados y borrados posteriormente; no inspección de contenido ni garantía de ausencia de secretos incrustados",
+    "arboles_commit_revisados": 341,
+    "rutas_unicas_en_todos_los_arboles_salientes": 1859,
+    "sospechosas_en_todos_los_arboles": [],
+    "enlaces_simbolicos_o_submodulos": []
+  },
+  "refs_locales_mio_y_destinos": [
+    "refs/heads/main de397f3195856c10b6a9959171ff42da4328d9ec",
+    "refs/heads/version-chatgpt de397f3195856c10b6a9959171ff42da4328d9ec",
+    "refs/remotes/mio/HEAD de397f3195856c10b6a9959171ff42da4328d9ec",
+    "refs/remotes/mio/main de397f3195856c10b6a9959171ff42da4328d9ec",
+    "refs/remotes/mio/version-chatgpt de397f3195856c10b6a9959171ff42da4328d9ec"
+  ],
+  "consulta_remota": {
+    "estado": "PASS",
+    "metodo": "git ls-remote --heads mio main version-chatgpt; sin fetch ni push",
+    "referencias": [
+      {
+        "ref": "refs/heads/main",
+        "sha": "de397f3195856c10b6a9959171ff42da4328d9ec",
+        "objeto_local_disponible": true,
+        "ancestro_del_candidato": true,
+        "coincide_base": true
+      },
+      {
+        "ref": "refs/heads/version-chatgpt",
+        "sha": "de397f3195856c10b6a9959171ff42da4328d9ec",
+        "objeto_local_disponible": true,
+        "ancestro_del_candidato": true,
+        "coincide_base": true
+      }
+    ]
+  },
+  "principal": {
+    "head": "de397f3195856c10b6a9959171ff42da4328d9ec",
+    "seguidos_modificados": [],
+    "sin_seguimiento_total": 58,
+    "colisiones_con_candidato": [],
+    "colisiones_archivo_directorio": []
+  },
+  "integrador_estado": {
+    "seguidos_modificados": [],
+    "sin_seguimiento": [
+      "docs/misiones/_comun.md",
+      "docs/misiones/total-integrador.md"
+    ]
+  },
+  "limites": [
+    "Corresponde únicamente al SHA indicado; repetir si cambia HEAD o las referencias remotas.",
+    "No valida imagen, puerta, despliegue, contenido de blobs ni secretos incrustados.",
+    "No ejecuta la parte del preflight anterior que presupone imagen 22.",
+    "No modifica otros árboles, referencias Git, servicios ni datos; sin push."
+  ],
+  "resultado": "PASS_METADATOS"
+}
