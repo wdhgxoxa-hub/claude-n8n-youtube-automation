@@ -1,6 +1,6 @@
 # cooper-total — cierre operativo y aceptación final
 
-Corte: **21-11-2026, 13:03 Lima**. Rama propia `total-cierre-aceptacion`; el orquestador integra los commits. Este frente no hizo push ni merge. La aceptación de imagen e infraestructura continúa; los cambios n8n descritos a continuación sí están desplegados.
+Corte: **21-11-2026, 13:17 Lima**. Rama propia `total-cierre-aceptacion`; el orquestador integra los commits. Este frente no hizo push ni merge. La aceptación de imagen e infraestructura continúa; los cambios n8n descritos a continuación sí están desplegados.
 
 ## Resultado real en el VPS
 
@@ -57,7 +57,20 @@ Copia fría fresca `6ae420fdc5c7e3845d10bc6c516e15ae2d5e0546b8790b4bb5c79047ed1a
 
 Los recibos de publicación verifican restauración exacta de bytes, inventario y versiones; no se provocó una caída real del VPS en los tres lotes exitosos. La reversa automática real del aplicador se ensayó previamente mediante fallo inyectado y se conserva en los informes anteriores.
 
-El ensayo de imagen final `fcfab3b` y del aplicador conjunto de infraestructura está **en curso**, aislado en CPUs 0–7 y con cuota de 0,5 CPU por contenedor. La imagen no está desplegada por este frente. El Caddy real conserva el hash `17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c`.
+La imagen `fcfab3b` y el aplicador conjunto de infraestructura pasaron su aceptación aislada en CPUs 0–7 y con cuota de 0,5 CPU por contenedor. **Esta imagen queda intermedia:** una corrección posterior necesaria del simulador de voz exige otra imagen y su aceptación. No está desplegada por este frente. El Caddy real conserva el hash `17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c`.
+
+## Aceptación intermedia `fcfab3b` — 13:17 Lima
+
+- Migración real **11→13**, integridad/claves foráneas y conservación de las 27 tablas anteriores; restauración exacta y arranque con la imagen anterior descargada directamente del VPS. [Recibo](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/migracion.json).
+- **Ocho bloques Compose PASS**, incluyendo medios sintéticos Marcas, HTTPS, sesión ficticia, runner 2.47.6, firma/SSE, reconexiones, restic, importación y reversa conjunta. [Registro](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/compose.log).
+- Aplicador exacto SHA-256 `9273e7d6e60114948ec7413dfbe92bbf2311cbbe1ff0879fb5d4706e8c5738cd`: fallo deliberado después del arranque nuevo → **FALLO_REVERTIDO/PASS**, archivos públicos y datos restaurados, imágenes anteriores saludables y marcador retirado; segunda actualización → **PASS**. [Reversa](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/infra-reversa.json), [actualización](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/infra-actualizacion.json), [resumen](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/infra-aplicador.json).
+- Artefacto subido al área operativa del VPS, SHA-256 remoto igual al local. **No cargado ni activado**; se conserva como intermedio. [Transporte](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/transporte.json).
+
+Se corrigió una hipótesis inicial: los IDs distintos de la imagen anterior no correspondían a reconstrucciones diferentes. El archivo `docker save` verificado enlaza índice → manifiesto `84b577…` → configuración `f43ff6…`; Docker/containerd y Podman muestran identidades diferentes del mismo contenido. [Prueba del enlace](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/identidad-retroceso.json).
+
+El aplicador ahora verifica SHA del archivo, etiqueta exacta, configuración ensayada y correspondencia con el contenedor. Si el runtime identifica por manifiesto, verifica además el hash de ese manifiesto y su enlace a la configuración. Nunca acepta únicamente una etiqueta ni interpreta el entorno de la imagen. El primer intento rechazó correctamente un alias temporal del fixture antes del corte; se corrigió el arnés comprobando ambos IDs antes de fijar su etiqueta de ensayo. **111 pruebas Python PASS**, sin advertencias. [Registro](evidencias/total-cierre-aceptacion/imagen-intermedia-fcfab3b/python111.log).
+
+Contrato contrastado con documentación oficial de [Docker/containerd](https://docs.docker.com/engine/storage/containerd/), [Docker inspect](https://docs.docker.com/reference/cli/docker/image/inspect/), [Podman inspect](https://docs.podman.io/en/latest/markdown/podman-image-inspect.1.html) y [manifiesto OCI](https://specs.opencontainers.org/image-spec/manifest/). La aceptación intermedia no acredita la futura imagen ni sustituye las rondas de interfaz del orquestador.
 
 ## Commits de esta continuación
 
@@ -68,7 +81,9 @@ El ensayo de imagen final `fcfab3b` y del aplicador conjunto de infraestructura 
 - `6290697`: cierre explícito de conexiones SQLite en pruebas.
 - `127bd0f`: confirmación sintética ejecutada en n8n real sin red.
 - `f3e6375`: trabajadores pausados durante el ensayo de migración.
-- `d2d966a`: afinidad CPU separada de las rondas de interfaz.
+- `d2d966a`, `5b8549f`: afinidad CPU separada de las rondas de interfaz, también en el ensayo de motor.
+- `6e13ecd`: identidad criptográfica de imagen entre Docker y Podman.
+- `466992d`: precondición de identidad del alias de laboratorio.
 
 Son IDs de la rama propia. El orquestador recoge los cambios por cherry-pick; sus IDs integrados pueden diferir. No se copiaron entornos reales ni valores de credenciales.
 

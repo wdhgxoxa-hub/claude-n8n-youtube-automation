@@ -1,0 +1,8 @@
+{
+  "config_sha256": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d",
+  "manifiesto": "sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e",
+  "etiqueta": null,
+  "estado": "PASS",
+  "origen": "docker save por digest de la imagen vigente del VPS",
+  "tar_sha256": "aafa59078cd1f8bc8b4790280c34d4999fda19d512d913e5979ab5d7b5d6d42c"
+}

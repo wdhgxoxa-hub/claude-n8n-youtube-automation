@@ -1,0 +1,10 @@
+{
+  "estado": "SUBIDO_NO_CARGADO",
+  "fuente": "fcfab3b",
+  "config_sha256": "ab0045f978028f1f4cfb31306ae29afdd9607bca4fde95724826585a8f7b8929",
+  "etiqueta": "localhost/cooper:fcfab3b",
+  "artefacto_sha256": "625e2a8d32e504e103f8b3551c809d08c0b9e9a83e62575c4f8c3f0226f29123",
+  "bytes": 296908775,
+  "destino": "/var/lib/cooper-operacion/imagen-fcfab3b.tar.gz",
+  "vigencia": "Intermedia; sustituir por imagen posterior a la corrección del simulador de voz"
+}
