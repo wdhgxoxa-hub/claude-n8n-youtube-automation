@@ -3662,6 +3662,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
 }
 .table-scroll table {
   width: 100%;
+  min-width: max-content;
   font-size: 13px;
   border-collapse: collapse;
 }
@@ -3669,6 +3670,8 @@ input:is([type="checkbox"], [type="radio"]):checked {
 .table-scroll th {
   padding: 8px;
   text-align: left;
+  white-space: nowrap;
+  overflow-wrap: normal;
   border-bottom: 1px solid var(--line);
 }
 .table-scroll caption {

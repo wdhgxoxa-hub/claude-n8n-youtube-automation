@@ -170,7 +170,7 @@ test("Publicados presenta intervalos YouTube en segundos sin recortar repeticion
 });
 test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección", async ({
   page,
-}) => {
+}, info) => {
   // El administrador ve también los ejemplos de cuentas creadas por otras E2E.
   // Contrastar contra la API comprueba la lista completa sin depender del orden de las suites.
   const resultados: Resultados = await (
@@ -217,7 +217,64 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
     publicacion.getByText("Todavía no hay mediciones de esta métrica."),
   ).toBeVisible();
   await publicacion.getByText("Ver datos de evolución").click();
-  await expect(publicacion.getByRole("table")).toBeVisible();
+  const tabla = publicacion.getByRole("table", {
+    name: "Mediciones de la publicación",
+  });
+  await expect(tabla).toBeVisible();
+  expect(
+    sinRetencion.publicacion.historial.some((m) => (m.vistas ?? 0) >= 1000),
+  ).toBe(true);
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    const region = publicacion.getByRole("region", {
+      name: "Mediciones de la publicación",
+    });
+    await region.scrollIntoViewIfNeeded();
+    // El DOM conserva los dígitos aunque CSS los parta: medir los fragmentos
+    // de texto detecta el fallo visual que no descubre toContainText("2860").
+    const partidas = await tabla.locator("th, td").evaluateAll((celdas) =>
+      celdas.flatMap((celda) => {
+        const rango = document.createRange();
+        rango.selectNodeContents(celda);
+        const lineas = rango.getClientRects().length;
+        return lineas > 1 ? [{ texto: celda.textContent, lineas }] : [];
+      }),
+    );
+    expect(partidas).toEqual([]);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(width);
+    if (width === 390) {
+      expect(
+        await region.evaluate((el) => el.scrollWidth > el.clientWidth),
+      ).toBe(true);
+      await region.focus();
+      await region.press("ArrowRight");
+      await expect
+        .poll(() => region.evaluate((el) => el.scrollLeft))
+        .toBeGreaterThan(0);
+      await region.evaluate((el) => {
+        el.scrollLeft = el.scrollWidth;
+      });
+      const borde = await region.boundingBox();
+      const ultima = await tabla
+        .getByRole("columnheader", { name: "Retención" })
+        .boundingBox();
+      expect(borde).not.toBeNull();
+      expect(ultima).not.toBeNull();
+      expect(ultima!.x).toBeGreaterThanOrEqual(borde!.x);
+      expect(ultima!.x + ultima!.width).toBeLessThanOrEqual(
+        borde!.x + borde!.width + 1,
+      );
+      await region.evaluate((el) => {
+        el.scrollLeft = 0;
+      });
+    }
+    await info.attach(`tabla-evolucion-${width}`, {
+      body: await region.screenshot(),
+      contentType: "image/png",
+    });
+  }
   await page.goto("/aprendizaje");
   await page
     .getByRole("combobox", { name: "Tipo", exact: true })
