@@ -18,7 +18,7 @@ npm run dev
 
 Abre `http://localhost:3000`. Configura en Google OAuth el callback `http://localhost:3000/api/auth/callback/google`; el origen debe coincidir con `AUTH_URL`. Google debe devolver un correo verificado. El primer administrador entra con `COOPER_ADMIN_EMAIL`; invita los demás correos desde Administración. Hasta diez cuentas. No hay credenciales ni sesiones de demostración públicas.
 
-Para producción local: `npm run build && npm start`. Mantén el proceso en un servidor Node, con SQLite en un volumen persistente. No es una exportación estática ni una aplicación para edge. HTTPS, proxy y respaldos pertenecen a la fase 5.
+Para producción local: `npm run build && npm start`. Mantén el proceso en un servidor Node, con SQLite en un volumen persistente. No es una exportación estática ni una aplicación para edge. La [guía VPS](../docs/cooper-vps.md) prepara la imagen Node 24, n8n/runner 2.47.4, Caddy HTTPS/SSE, copias cifradas y migración offline; no se ha desplegado en vivo.
 
 Las migraciones SQL versionadas de `drizzle/` se leen con Drizzle y se aplican bajo una transacción `IMMEDIATE`, con diario compatible y comprobación de hashes, tanto con `db:migrate` como al abrir la conexión. WAL, claves foráneas e índices por dueño están activados. La base de ejecución se excluye deliberadamente del trazado de Turbopack; las migraciones sí se incluyen. Nunca empaquetes datos privados en la imagen de despliegue.
 
@@ -122,7 +122,7 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 2. Puente implementado y probado localmente; falta aplicar la migración y verificar en una instancia de ensayo antes del despliegue.
 3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales, incluidos los flujos de presentación implementados.
 4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
-5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.
+5. VPS preparado en `deploy/`: TLS, proxy SSE, copias/restauración, retención y endurecimiento operativo. Requiere revisión y aplicación en Ubuntu por el operador; [guía](../docs/cooper-vps.md) e [informe](../docs/informes/cooper-fase5.md).
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.
 
 OAuth real requiere las credenciales del equipo; las pruebas automatizadas usan sesiones locales firmadas y no automatizan una cuenta Google. No se ha desplegado, conectado a proveedores de producción ni publicado videos reales.
