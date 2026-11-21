@@ -64,8 +64,20 @@ export const piezaSchema = z
     programada: z.string().datetime({ offset: true }).optional(),
     origen: z.enum(["web", "chat", "whatsapp", "fabrica"]).default("web"),
     videoId: z.string().max(100).default(""),
+    montaje: z
+      .object({ revision: z.string().regex(/^[a-f0-9]{64}$/) })
+      .strict()
+      .optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (v) =>
+      (!v.videoId && !v.montaje) ||
+      Boolean(
+        v.videoId && v.montaje && v.formato === "reel" && !v.adjuntos.length,
+      ),
+    "Selecciona un montaje aprobado para reel, sin combinarlo con adjuntos.",
+  );
 export type Guia = z.infer<typeof guiaSchema>;
 export type PiezaDatos = z.infer<typeof piezaSchema>;
 export type Red = (typeof redes)[number];

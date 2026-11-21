@@ -15,7 +15,7 @@ import {
   citasMarca,
   attachments,
   users,
-  videos,
+  montajesFabrica,
   type User,
   type Marca,
   type PiezaMarca,
@@ -27,6 +27,13 @@ import { estudiar, proximoHorario } from "./estudio";
 import { verificarCitas, registrarCita, proponerTexto } from "./especialistas";
 import { proveedorRed, type RedSocial } from "./redes";
 import { lineas, renderizar } from "./diseno";
+import {
+  listarMontajes,
+  comprobarMontaje,
+  prepararMontaje,
+  buscarCopia,
+} from "./montajes";
+import { fabrica } from "@/servicios/fabrica";
 export function obtenerMarca(user: User, id: string): Marca {
   const m = db().select().from(marcas).where(eq(marcas.id, id)).get();
   requireOwner(user, m);
@@ -45,6 +52,7 @@ export function estadoMarcas(user: User) {
     .all();
   return {
     simulada: proveedorRed().simulada,
+    montajes: listarMontajes(user),
     marcas: visibles.map((m) => ({
       ...m,
       competencia: leerCompetenciaMarca(m),
@@ -293,24 +301,7 @@ function comprobarPieza(
     )
       throw new ErrorHttp(404, "Adjunto incompatible o ajeno a la marca.");
   }
-  if (v.videoId) {
-    const video = db()
-      .select()
-      .from(videos)
-      .where(eq(videos.id, v.videoId))
-      .get();
-    if (
-      !video ||
-      video.ownerId !== m.ownerId ||
-      video.stage < 9 ||
-      video.productionState !== "activa" ||
-      !v.adjuntos.length
-    )
-      throw new ErrorHttp(
-        409,
-        "Adjunta el archivo final de un video propio listo para revisar.",
-      );
-  }
+  if (v.videoId) comprobarMontaje(m.ownerId, v);
   verificarCitas({ ...m, guia: p.guia }, v);
   return c;
 }
@@ -324,6 +315,10 @@ export function guardarPieza(
 ) {
   const m = obtenerMarca(user, marcaId),
     datos = piezaSchema.parse(raw);
+  if (datos.videoId) {
+    comprobarMontaje(m.ownerId, datos);
+    datos.origen = "fabrica";
+  }
   const cuenta = db()
     .select()
     .from(cuentasMarca)
@@ -392,20 +387,37 @@ export async function enviarRevision(user: User, id: string, revision: number) {
   if (p.revision !== revision || p.estado !== "borrador")
     throw new ErrorHttp(409, "Revisión desactualizada.");
   comprobarPieza(m, p, proveedorRed());
-  const mediosIds = await renderizar(p, m);
-  const changed = db()
-    .update(piezasMarca)
-    .set({ estado: "pendiente", mediosIds, updatedAt: Date.now() })
-    .where(
-      and(
-        eq(piezasMarca.id, id),
-        eq(piezasMarca.revision, revision),
-        eq(piezasMarca.estado, "borrador"),
-      ),
-    )
-    .run().changes;
-  if (!changed)
-    throw new ErrorHttp(409, "La pieza cambió durante la composición.");
+  const copia = p.datos.videoId
+    ? await prepararMontaje(m.ownerId, p.datos)
+    : undefined;
+  const compuestos = copia ? [] : await renderizar(p, m);
+  db().transaction(
+    () => {
+      // La descarga no mantiene un bloqueo SQLite; revalidar tras cada espera y
+      // guardar copia + transición juntas evita huérfanos por edición concurrente.
+      cuentaActiva(user.id);
+      comprobarPieza(m, p, proveedorRed());
+      let mediosIds: string[] = compuestos;
+      if (copia) {
+        db().insert(montajesFabrica).values(copia).onConflictDoNothing().run();
+        mediosIds = [buscarCopia(m.ownerId, p.datos)!.id];
+      }
+      const changed = db()
+        .update(piezasMarca)
+        .set({ estado: "pendiente", mediosIds, updatedAt: Date.now() })
+        .where(
+          and(
+            eq(piezasMarca.id, id),
+            eq(piezasMarca.revision, revision),
+            eq(piezasMarca.estado, "borrador"),
+          ),
+        )
+        .run().changes;
+      if (!changed)
+        throw new ErrorHttp(409, "La pieza cambió durante la composición.");
+    },
+    { behavior: "immediate" },
+  );
   const { encolarMarca } = await import("./whatsapp");
   encolarMarca(id);
 }
@@ -500,6 +512,12 @@ export function leerMedio(id: string, url: URL, user?: User, now = Date.now()) {
       .get();
     if (c?.estado !== "conectada" || c.marcaId !== m.id)
       throw new ErrorHttp(404, "Medio no disponible.");
+  }
+  if (p.datos.videoId) {
+    const copia = buscarCopia(m.ownerId, p.datos);
+    if (!copia || copia.id !== p.mediosIds[index])
+      throw new ErrorHttp(404, "Medio no disponible.");
+    return { ...copia, mime: "video/mp4", name: p.datos.titulo };
   }
   const a = db()
     .select()
@@ -716,6 +734,12 @@ export async function rutaMarcas(
   if (method === "GET" && !id) return estadoMarcas(user);
   if (method !== "POST") throw new ErrorHttp(405, "Método no permitido.");
   if (!id) return guardarMarca(user, raw);
+  if (id === "montajes") {
+    z.object({}).strict().parse(raw);
+    // Lectura del puente existente, con permisos del usuario autenticado.
+    await fabrica().sincronizar(user);
+    return { ok: true };
+  }
   if (id === "citas") {
     registrarCita(user, raw);
     return { ok: true };

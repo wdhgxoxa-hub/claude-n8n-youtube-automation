@@ -408,6 +408,20 @@ export const citasMarca = sqliteTable("citas_marca", {
 export type Marca = typeof marcas.$inferSelect;
 export type CuentaMarca = typeof cuentasMarca.$inferSelect;
 export type PiezaMarca = typeof piezasMarca.$inferSelect;
+// Copias exactas de fábrica, separadas de los adjuntos que pueden reutilizarse
+// libremente. El acceso siempre pasa por la pieza y revalida la referencia.
+export const montajesFabrica = sqliteTable("montajes_fabrica", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  videoId: text("video_id").notNull(),
+  revision: text("revision").notNull(),
+  sha256: text("sha256").notNull(),
+  size: integer("size").notNull(),
+  data: text("data").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
 export const marcaIngestas = sqliteTable("marca_ingestas", {
   id: text("id").primaryKey(),
   ownerId: text("owner_id")
