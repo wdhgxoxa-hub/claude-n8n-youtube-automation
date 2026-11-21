@@ -29,6 +29,7 @@ export const channels = sqliteTable("channels", {
   name: text("name").notNull(),
   niche: text("niche").notNull(),
   bible: text("bible").notNull().default(""),
+  newsMode: integer("news_mode", { mode: "boolean" }).notNull().default(false),
   networks: text("networks").notNull().default(""),
   goals: text("goals").notNull().default(""),
   account: text("account").notNull().default(""),
@@ -43,6 +44,7 @@ export const videos = sqliteTable("videos", {
     .notNull()
     .references(() => channels.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
+  newsMode: integer("news_mode", { mode: "boolean" }).notNull().default(false),
   avatarId: text("avatar_id").notNull().default(""),
   voiceId: text("voice_id").notNull().default(""),
   avatarPlacement: text("avatar_placement", { enum: ["completo", "partes"] })

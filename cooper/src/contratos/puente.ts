@@ -30,10 +30,17 @@ export const videoRemotoSchema = z.object({
   stage: z.number().int().min(0).max(11),
   script: z.string().max(30000),
   actualizado_en: z.number().int().nonnegative(),
+  modo_noticia: z.boolean().optional(),
 });
 export const estadoRemotoSchema = z.object({
   canales: z.array(
-    z.object({ id, dueno_email: email, nombre: z.string(), nicho: z.string() }),
+    z.object({
+      id,
+      dueno_email: email,
+      nombre: z.string(),
+      nicho: z.string(),
+      modo_noticia: z.boolean().optional(),
+    }),
   ),
   videos: z.array(videoRemotoSchema),
 });

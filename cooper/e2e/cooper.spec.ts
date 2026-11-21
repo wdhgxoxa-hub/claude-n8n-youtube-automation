@@ -765,3 +765,64 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
     });
   }
 });
+
+test("modo noticia por canal se detiene sin verificación real", async ({
+  page,
+}) => {
+  const request = page.request;
+  await login(request);
+  const created = await request.post("/api/orden", {
+    data: {
+      evento: "nuevo_canal",
+      texto: "Observatorio del día",
+      nombre: "Observatorio del día",
+    },
+  });
+  expect(created.status()).toBe(200);
+  const { id } = await created.json();
+  await page.goto("/canales");
+  const toggle = page.getByRole("button", {
+    name: /Modo noticia: .* de Observatorio del día/,
+  });
+  await expect(toggle).toHaveAttribute("aria-pressed", "false");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await noOverflow(page);
+    const audit = await new AxeBuilder({ page }).analyze();
+    expect(audit.violations).toEqual([]);
+    await page.screenshot({
+      path: `test-results/visual/noticias-${width}.png`,
+      fullPage: true,
+    });
+  }
+  const made = await request.post("/api/orden", {
+    data: {
+      evento: "nuevo_video",
+      recursoId: id,
+      texto: "Noticia del observatorio",
+    },
+  });
+  expect(made.status()).toBe(200);
+  const video = await made.json();
+  await page.goto(`/videos/${video.id}`);
+  await expect(
+    page.getByText(
+      "Modo noticia: el simulador no verifica noticias reales. Se necesitan datos con fuentes antes de avanzar.",
+    ),
+  ).toBeVisible();
+  const state = await (await request.get("/api/estado")).json();
+  expect(
+    state.videos.find((v: { id: string }) => v.id === video.id),
+  ).toMatchObject({ newsMode: true, stage: 2, productionState: "pausada" });
+  await page.goto("/canales");
+  await page
+    .getByRole("button", { name: /Modo noticia: .* de Observatorio del día/ })
+    .click();
+  await expect(
+    page.getByRole("button", {
+      name: /Modo noticia: .* de Observatorio del día/,
+    }),
+  ).toHaveAttribute("aria-pressed", "false");
+});

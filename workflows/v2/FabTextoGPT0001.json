@@ -1,0 +1,305 @@
+{
+  "id": "FabTextoGPT0001",
+  "name": "FX · Texto GPT con respaldo",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "3c59a49d-6854-5a01-b087-02f60619026a",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabAjustes000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "ae9a8df7-021d-53a4-8b03-c385c12a6338",
+      "name": "Leer ajustes",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e = $('Inicio').first().json, aj = $('Leer ajustes').first().json;\nif (!['critico','critico_nicho','verificador','radar','radar_noticia','verificador_noticia'].includes(e.tarea) || !e.body?.input) throw new Error('Pedido de texto inválido');\nif (!Number.isFinite(Number(e.costo_estimado_usd)) || Number(e.costo_estimado_usd) < 0) throw new Error('Tarifa estimada inválida');\nconst prompt = e.body.input.flatMap(m => m.content || []).filter(c => c.type === 'input_text').map(c => c.text).join('\\n');\nif (!prompt || prompt.length > 60000) throw new Error('Texto fuera de límites');\nconst buscar_web = !!e.body.tools?.some(t => t.type === 'web_search');\nconst url = String($env.PUENTE_CODEX_URL || 'http://127.0.0.1:8789');\nif (!/^http:\\/\\/(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::\\d+)?$/.test(url)) throw new Error('El puente debe usar loopback');\nreturn [{json:{...e, local:{tarea:e.tarea,prompt,buscar_web}, url, api_permitida:aj.allowTextoApi === true}}];\n"
+      },
+      "id": "3315f954-4915-5fe8-9c1e-4df81f9b724a",
+      "name": "Pedido de texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Pedido de texto').first().json.url + '/v1/texto' }}",
+        "options": {
+          "timeout": 45000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.PUENTE_CODEX_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Pedido de texto').first().json.local }}"
+      },
+      "id": "c32eecdc-193a-54fb-926e-952f8fa09b2b",
+      "name": "Intentar Codex",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compartido con los nodos de n8n; no depende del sistema de archivos ni de red.\nfunction leerTexto(respuesta) {\n  const texto = (respuesta?.output || []).filter(x => x.type === 'message')\n    .flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\\n');\n  try { return JSON.parse(texto); } catch { return null; }\n}\nfunction textoValido(tarea, respuesta) {\n  if (respuesta?.error || respuesta?.status === 'incomplete') return false;\n  const v = leerTexto(respuesta);\n  if (!v || typeof v !== 'object' || Array.isArray(v)) return false;\n  switch (tarea) {\n    case 'critico_nicho': return Array.isArray(v.sin_fuente) && Array.isArray(v.riesgos) && typeof v.veredicto === 'string';\n    case 'critico': return ['gancho','promesa','claridad','emocion','exactitud','originalidad'].every(k => Number.isFinite(v[k]) && v[k] >= 0 && v[k] <= 10) && Array.isArray(v.problemas);\n    case 'verificador': return Array.isArray(v.cifras) && Array.isArray(v.faltantes) && Array.isArray(v.cuenta);\n    case 'radar': return Array.isArray(v.ideas) && typeof v.resumen === 'string';\n    case 'radar_noticia': return v.noticia === null || typeof v.noticia?.titulo === 'string' && Array.isArray(v.noticia.hechos);\n    case 'verificador_noticia': return typeof v.verificado === 'boolean' && Array.isArray(v.hechos);\n    default: return false;\n  }\n}\nfunction fuentesRespuesta(respuesta) {\n  return [...new Set((respuesta?.output || []).flatMap(x => x.type === 'web_search_call'\n    ? (x.action?.sources || []).map(s => s.url).concat(x.action?.url || [])\n    : (x.content || []).flatMap(c => (c.annotations || []).filter(a => a.type === 'url_citation').map(a => a.url)))\n    .filter(u => typeof u === 'string' && /^https:\\/\\//.test(u)))];\n}\n\nconst p = $('Pedido de texto').first().json, r = $json;\nconst investigacion = !p.local.buscar_web || r.busqueda_real === true;\nconst noticias = !p.tarea.includes('noticia') || Array.isArray(r.fuentes_consultadas) && r.fuentes_consultadas.length > 0;\nreturn [{json:{ok:r.ruta === 'codex' && textoValido(p.tarea,r) && investigacion && noticias}}];\n"
+      },
+      "id": "80ef0bd0-2e58-5d02-8905-def5be4ae911",
+      "name": "Evaluar Codex",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "64d3245d-5a11-5474-8f76-a62bdfa80720",
+              "leftValue": "={{ $json.ok === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6877cf67-5f95-55de-a7ef-98b482b97b5e",
+      "name": "¿Codex respondió?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if (!$('Pedido de texto').first().json.api_permitida) throw new Error('Texto detenido: Codex falló y el respaldo API está apagado'); return $input.all();"
+      },
+      "id": "60aec52f-ff89-5062-93a2-a206b56a7e31",
+      "name": "Permitir respaldo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "options": {
+          "timeout": 180000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { ...$('Pedido de texto').first().json.body, store:false, ...($('Pedido de texto').first().json.local.buscar_web ? {include:['web_search_call.action.sources']} : {}) } }}"
+      },
+      "id": "10b7676a-78fd-5a41-bb03-8a06b98c4a63",
+      "name": "Respaldo OpenAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FabCredOpenAI001",
+          "name": "OpenAI"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compartido con los nodos de n8n; no depende del sistema de archivos ni de red.\nfunction leerTexto(respuesta) {\n  const texto = (respuesta?.output || []).filter(x => x.type === 'message')\n    .flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\\n');\n  try { return JSON.parse(texto); } catch { return null; }\n}\nfunction textoValido(tarea, respuesta) {\n  if (respuesta?.error || respuesta?.status === 'incomplete') return false;\n  const v = leerTexto(respuesta);\n  if (!v || typeof v !== 'object' || Array.isArray(v)) return false;\n  switch (tarea) {\n    case 'critico_nicho': return Array.isArray(v.sin_fuente) && Array.isArray(v.riesgos) && typeof v.veredicto === 'string';\n    case 'critico': return ['gancho','promesa','claridad','emocion','exactitud','originalidad'].every(k => Number.isFinite(v[k]) && v[k] >= 0 && v[k] <= 10) && Array.isArray(v.problemas);\n    case 'verificador': return Array.isArray(v.cifras) && Array.isArray(v.faltantes) && Array.isArray(v.cuenta);\n    case 'radar': return Array.isArray(v.ideas) && typeof v.resumen === 'string';\n    case 'radar_noticia': return v.noticia === null || typeof v.noticia?.titulo === 'string' && Array.isArray(v.noticia.hechos);\n    case 'verificador_noticia': return typeof v.verificado === 'boolean' && Array.isArray(v.hechos);\n    default: return false;\n  }\n}\nfunction fuentesRespuesta(respuesta) {\n  return [...new Set((respuesta?.output || []).flatMap(x => x.type === 'web_search_call'\n    ? (x.action?.sources || []).map(s => s.url).concat(x.action?.url || [])\n    : (x.content || []).flatMap(c => (c.annotations || []).filter(a => a.type === 'url_citation').map(a => a.url)))\n    .filter(u => typeof u === 'string' && /^https:\\/\\//.test(u)))];\n}\n\nconst p = $('Pedido de texto').first().json;\nconst local = $('Evaluar Codex').first().json.ok;\nconst r = local ? $('Intentar Codex').first().json : $('Respaldo OpenAI').first().json;\nif (!textoValido(p.tarea,r)) throw new Error('Texto detenido: ambas rutas fallaron');\nconst busqueda_real = local ? r.busqueda_real === true : (r.output || []).some(x => x.type === 'web_search_call' && x.status === 'completed');\nif (p.local.buscar_web && !busqueda_real) throw new Error('Texto detenido: no hubo búsqueda web');\nconst tarifa = Number(p.costo_estimado_usd);\nif (!Number.isFinite(tarifa) || tarifa < 0) throw new Error('Tarifa estimada inválida');\nreturn [{json:{...r, ruta:local ? 'codex' : 'openai_api', busqueda_real,\n  fuentes_consultadas:local ? r.fuentes_consultadas : fuentesRespuesta(r),\n  texto_uso:{ruta:local ? 'codex' : 'openai_api', motivo_respaldo:local ? '' : 'fallo_timeout_o_respuesta_invalida',\n    usd:local ? 0 : tarifa, ahorro_estimado_usd:local ? tarifa : 0, estimado:true}}}];\n"
+      },
+      "id": "321b88c3-fce0-5b2b-bb40-1ce3f20b61b8",
+      "name": "Resultado de texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ajustes": {
+      "main": [
+        [
+          {
+            "node": "Pedido de texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido de texto": {
+      "main": [
+        [
+          {
+            "node": "Intentar Codex",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intentar Codex": {
+      "main": [
+        [
+          {
+            "node": "Evaluar Codex",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar Codex": {
+      "main": [
+        [
+          {
+            "node": "¿Codex respondió?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Codex respondió?": {
+      "main": [
+        [
+          {
+            "node": "Resultado de texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Permitir respaldo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Permitir respaldo": {
+      "main": [
+        [
+          {
+            "node": "Respaldo OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respaldo OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Resultado de texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300,
+    "errorWorkflow": "FabErrores000001",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

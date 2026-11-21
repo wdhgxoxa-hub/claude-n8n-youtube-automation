@@ -4,7 +4,9 @@
   "tablas": {
     "fab_canales": {
       "dueno_email": "string",
-      "eliminado": "boolean"
+      "eliminado": "boolean",
+      "modo_noticia": "boolean",
+      "noticia_hoy": "string"
     },
     "fab_videos": {
       "dueno_email": "string",
@@ -13,7 +15,11 @@
       "cooper_actualizado_en": "number",
       "cooper_evento_id": "string",
       "presentacion": "string",
-      "cooper_orden_id": "string"
+      "cooper_orden_id": "string",
+      "modo_noticia": "boolean",
+      "noticia": "string",
+      "noticia_guion_hash": "string",
+      "noticia_storyboard_hash": "string"
     },
     "fab_trabajos": {
       "dueno_email": "string"
@@ -21,7 +27,10 @@
     "fab_costos": {
       "dueno_email": "string",
       "paso_id": "string",
-      "estimado": "boolean"
+      "estimado": "boolean",
+      "ruta": "string",
+      "ahorro_estimado_usd": "number",
+      "motivo_respaldo": "string"
     },
     "fab_planos": {
       "presentacion": "string",

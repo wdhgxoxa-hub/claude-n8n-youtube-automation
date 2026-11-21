@@ -62,6 +62,28 @@ export function Canales() {
       setError((e as Error).message);
     }
   }
+  async function cambiarNoticia(id: string, activar: boolean) {
+    setError("");
+    setBusy(true);
+    try {
+      await api("orden", {
+        evento: "ajustar_biblia",
+        recursoId: id,
+        texto: activar ? "Activar modo noticia" : "Desactivar modo noticia",
+        parametros: { campo: "modo_noticia", valor: activar },
+      });
+      await refresh();
+      setMessage(
+        activar
+          ? "Modo noticia activado para los próximos videos."
+          : "Modo noticia desactivado para los próximos videos.",
+      );
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <div className="page">
       <Heading
@@ -91,6 +113,19 @@ export function Canales() {
                   </button>
                 </div>
                 <p>{c.niche}</p>
+                <button
+                  className="button secondary"
+                  aria-pressed={c.newsMode}
+                  aria-label={`Modo noticia: ${c.newsMode ? "activado" : "desactivado"} de ${c.name}`}
+                  disabled={busy}
+                  onClick={() => void cambiarNoticia(c.id, !c.newsMode)}
+                >
+                  Modo noticia: {c.newsMode ? "activado" : "desactivado"}
+                </button>
+                <p className="muted">
+                  Noticias del día con fuentes verificadas e imágenes didácticas
+                  propias.
+                </p>
                 <div className="channel-meta">
                   <span>
                     {data.videos.filter((v) => v.channelId === c.id).length}{" "}

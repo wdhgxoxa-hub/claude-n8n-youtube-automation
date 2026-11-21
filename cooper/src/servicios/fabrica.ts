@@ -74,6 +74,18 @@ export function videosPropios(user: User) {
     .all();
 }
 export function validarOrden(user: User, orden: Orden) {
+  if (
+    (orden.evento === "ajustar_biblia" &&
+      orden.parametros?.campo === "modo_noticia" &&
+      typeof orden.parametros.valor !== "boolean") ||
+    (orden.evento === "nuevo_video" &&
+      orden.parametros?.modo_noticia !== undefined &&
+      typeof orden.parametros.modo_noticia !== "boolean")
+  )
+    throw new ErrorHttp(
+      400,
+      "El modo noticia debe estar activado o desactivado.",
+    );
   if (orden.evento === "nuevo_canal") return;
   const isVideo = ["corregir", "programar", "referencias"].includes(
     orden.evento,
@@ -158,13 +170,31 @@ export class FabricaSimulada implements Fabrica {
               .run();
             resourceId = id;
             break;
-          case "nuevo_video":
+          case "nuevo_video": {
+            const channel = tx
+              .select()
+              .from(channels)
+              .where(eq(channels.id, orden.recursoId!))
+              .get()!;
+            const newsMode =
+              typeof orden.parametros?.modo_noticia === "boolean"
+                ? orden.parametros.modo_noticia
+                : channel.newsMode;
             tx.insert(videos)
               .values({
                 id,
                 ownerId: user.id,
                 channelId: orden.recursoId!,
                 title: orden.texto.slice(0, 160),
+                newsMode,
+                ...(newsMode && this.registrarGasto
+                  ? {
+                      stage: 2,
+                      productionState: "pausada",
+                      productionNotice:
+                        "Modo noticia: el simulador no verifica noticias reales. Se necesitan datos con fuentes antes de avanzar.",
+                    }
+                  : {}),
                 avatarId: orden.avatarId ?? "",
                 voiceId: orden.voiceId ?? "",
                 avatarPlacement: orden.avatarPlacement ?? "partes",
@@ -185,6 +215,7 @@ export class FabricaSimulada implements Fabrica {
                 .run();
             resourceId = id;
             break;
+          }
           case "corregir": {
             if (!this.registrarGasto) {
               tx.update(videos)
@@ -232,6 +263,16 @@ export class FabricaSimulada implements Fabrica {
               .run();
             break;
           default: {
+            if (
+              orden.evento === "ajustar_biblia" &&
+              orden.parametros?.campo === "modo_noticia"
+            ) {
+              tx.update(channels)
+                .set({ newsMode: orden.parametros.valor === true })
+                .where(eq(channels.id, orden.recursoId!))
+                .run();
+              break;
+            }
             const field = {
               ajustar_biblia: "bible",
               configurar_redes: "networks",
@@ -318,7 +359,7 @@ export class FabricaSimulada implements Fabrica {
           throw new ErrorHttp(409, "La revisión cambió.");
         if (
           !video ||
-          video.productionState === "cancelada" ||
+          video.productionState !== "activa" ||
           !esperaAprobacion(video.stage)
         )
           throw new ErrorHttp(

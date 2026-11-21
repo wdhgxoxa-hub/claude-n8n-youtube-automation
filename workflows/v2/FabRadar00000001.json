@@ -214,35 +214,32 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.openai.com/v1/responses",
-        "options": {
-          "timeout": 180000
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabTextoGPT0001"
         },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ { model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }] }] } }}"
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
       },
       "id": "fa9e9c50-369a-4770-9adf-23194883a05e",
       "name": "Analista de tendencias",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
       "position": [
         1980,
         0
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "FabCredOpenAI001",
-          "name": "OpenAI"
-        }
-      },
-      "onError": "continueRegularOutput",
-      "retryOnFail": true,
-      "maxTries": 2,
-      "waitBetweenTries": 5000
+      ]
     },
     {
       "parameters": {
@@ -452,7 +449,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:('canal:' + $('Encargo del analista').all()[k].json.canal_id), concepto:\"radar\", servicio:\"OpenAI\", usd:aj.costoRadarUsd, estimado:true, paso_id:String($execution.id)+':'+\"Analista de tendencias\"+':'+$runIndex+':'+k }}));"
+        "jsCode": "const originales = (() => { const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:('canal:' + $('Encargo del analista').all()[k].json.canal_id), concepto:\"radar\", servicio:\"OpenAI\", usd:aj.costoRadarUsd, estimado:true, paso_id:String($execution.id)+':'+\"Analista de tendencias\"+':'+$runIndex+':'+k }})); })();\nreturn originales.map((i,k) => { const u=$('Analista de tendencias').all()[k].json.texto_uso; return {json:{...i.json,...u,servicio:u.ruta === 'codex' ? 'Codex (plan ChatGPT)' : 'OpenAI API'}}; });"
       },
       "id": "f4160ff7-05ef-54cc-a1f4-8509cbd9faea",
       "name": "Cooper · costo Analista de tendencias",
@@ -517,6 +514,189 @@
         220,
         0
       ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {json:{tarea:\"radar\", body:{ model: $('Leer ajustes').first().json.modeloCritico, text: { format: { type: 'json_object' } }, input: [{ role: 'user', content: [{ type: 'input_text', text: $json.prompt }] }] }, costo_estimado_usd:$('Leer ajustes').first().json.costoRadarUsd}};"
+      },
+      "id": "64be95e3-aabc-517f-8565-88be4fcedd71",
+      "name": "Texto · Analista de tendencias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4ab1c5a6-e127-50b2-a4cb-d439275427ff",
+              "leftValue": "={{ $('Leer ajustes').first().json.allowRadar === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4ce23eb8-057d-53e8-b7ec-a0d460fd45fc",
+      "name": "¿Radar de noticias activo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "modo_noticia",
+              "condition": "eq",
+              "keyValue": true
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "3ac69fce-5d31-5e00-baac-7c22b3c20a99",
+      "name": "Canales de noticias",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; return $input.all().filter(i=>i.json.canal_id && i.json.estado === 'activo' && !i.json.eliminado && (!e.canal_id || e.canal_id === i.json.canal_id));"
+      },
+      "id": "122dd589-fcaa-5f9b-9a07-786f16a60604",
+      "name": "Pedidos de noticias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabNoticia000001"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f8510957-52b5-5730-9226-20e0d04a03cf",
+      "name": "Noticias del día",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(i=>({json:{canal_id:i.json.canal_id,noticia_hoy:JSON.stringify(i.json.noticia)}}));"
+      },
+      "id": "54ac78ab-b5ed-5e0b-9ed4-c005f00d0ad0",
+      "name": "Noticias para guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dA6t0L2GGon32eFp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "canal_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.canal_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c7c69e1d-d232-5e97-b95c-f24b2ea76bc8",
+      "name": "Guardar noticias del día",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        0
+      ]
     }
   ],
   "connections": {
@@ -576,6 +756,11 @@
         [
           {
             "node": "¿Radar encendido?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "¿Radar de noticias activo?",
             "type": "main",
             "index": 0
           }
@@ -641,7 +826,7 @@
       "main": [
         [
           {
-            "node": "Analista de tendencias",
+            "node": "Texto · Analista de tendencias",
             "type": "main",
             "index": 0
           }
@@ -740,6 +925,72 @@
           }
         ]
       ]
+    },
+    "Texto · Analista de tendencias": {
+      "main": [
+        [
+          {
+            "node": "Analista de tendencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Radar de noticias activo?": {
+      "main": [
+        [
+          {
+            "node": "Canales de noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canales de noticias": {
+      "main": [
+        [
+          {
+            "node": "Pedidos de noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos de noticias": {
+      "main": [
+        [
+          {
+            "node": "Noticias del día",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticias del día": {
+      "main": [
+        [
+          {
+            "node": "Noticias para guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticias para guardar": {
+      "main": [
+        [
+          {
+            "node": "Guardar noticias del día",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -747,7 +998,7 @@
     "executionOrder": "v1",
     "timezone": "America/Lima",
     "callerPolicy": "workflowsFromSameOwner",
-    "executionTimeout": 300,
+    "executionTimeout": 3600,
     "errorWorkflow": "FabErrores000001",
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"

@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nconst presentacion = validarPresentacion(e.presentacion);\nconst planos = planosPresentacion((e.storyboard?.planos || []).filter(p => p && p.id), presentacion);\nif (new Set(planos.map(p => p.id)).size !== planos.length) throw new Error('IDs de plano duplicados');\n// Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se\n// mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el\n// storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.\nconst seg = p => Math.max(4, Math.min(8, Math.round(String(p.texto_narrado || '').replace(/\\[[^\\]]*\\]/g, '').split(/\\s+/).filter(Boolean).length / 2.5)));\nconst movimiento = { animados: [] };\nif (e.formato === 'short' && aj.allowClips) {\n  const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;\n  const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);\n  const mueve = p => ['clip', 'archivo', 'avatar'].includes(p.tipo);\n  const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)\n    + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;\n  const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))\n    .filter(x => x.p.tipo === 'imagen').sort((a, b) => b.peso - a.peso);\n  for (const x of orden) {\n    const clips = planos.filter(p => p.tipo === 'clip').length; const cuota = planos.filter(mueve).length / planos.length;\n    if (clips >= topeClips || (cuota >= aj.movimientoMinShort && mueve(planos[0]))) break;\n    const extra = seg(x.p) * aj.costoClipSegUsd;\n    if (costoActual() + extra > presupuesto0 * (aj.avisoGastoPct || 1)) continue;\n    x.p.tipo = 'clip'; x.p.duracion_clip_s = seg(x.p); movimiento.animados.push(x.p.id);\n  }\n  planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = seg(p); });\n  movimiento.cuota = Math.round(planos.filter(mueve).length / Math.max(1, planos.length) * 100) / 100;\n}\nplanos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = 8; });\nconst n = t => planos.filter(p => p.tipo === t).length;\nconst segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.duracion_clip_s, 0);\n// Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.\n// Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.\nconst revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;\nconst costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa\n  + segClips * aj.costoClipSegUsd + planos.filter(p => p.tipo === 'avatar').reduce((a,p) => a + Math.max(1, String(p.texto_narrado).split(/\\s+/).length / 2.5) * aj.costoAvatarSegUsd, 0)\n  + planos.reduce((a,p) => a + costoVozPresentacion(p.texto_narrado, presentacion, aj), 0);\nif (!Number.isFinite(costo)) throw new Error('Configura las tarifas de presentación');\nconst faltan = [];\nif (planos.some(p => p.tipo !== 'avatar') && !aj.allowImagenes) faltan.push('imágenes (OpenAI)');\nif (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');\nif ((n('avatar') || presentacion?.avatar) && !aj.allowAvatar) faltan.push('avatar (HeyGen)');\nif (!aj.allowVoz) faltan.push('voz (Gemini TTS)');\nif (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');\nif (!aj.allowMontaje) faltan.push('montaje (Creatomate)');\nconst presupuesto = Number(e.presupuesto_usd ?? (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd));\nif (!Number.isFinite(presupuesto) || presupuesto < 0) throw new Error('Presupuesto inválido');\nif (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);\nreturn [{ json: { ...e, presentacion, planos, movimiento, bloqueo: presentacion?.avatar && !aj.allowAvatar ? 'avatar_apagado' : !aj.allowVoz ? 'voz_apagada' : costo > presupuesto ? 'presupuesto' : faltan.length ? 'produccion_pausada' : '', costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,\n  dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];\n"
+        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\n// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n\nconst e = $('Inicio').first().json; const aj = $('Leer ajustes').first().json;\nif (e.modo_noticia) { exigirNoticia(e.noticia); exigirVisuales(e.storyboard); if (e.noticia_guion_hash !== huellaGuion(e.guion) || e.presentacion?.avatar) throw new Error('Noticia sin guion verificado o con avatar incompatible'); }\nconst presentacion = validarPresentacion(e.presentacion);\nconst planos = planosPresentacion((e.storyboard?.planos || []).filter(p => p && p.id), presentacion);\nif (new Set(planos.map(p => p.id)).size !== planos.length) throw new Error('IDs de plano duplicados');\n// Regla del operador: un Short nunca es una sucesión de imágenes fijas. El primer plano (el gancho) siempre se\n// mueve, y al menos `movimientoMinShort` de los planos tienen movimiento real (archivo o clip animado). Si el\n// storyboard se queda corto, se animan las imágenes de más emoción, sin pasar el tope de clips ni el presupuesto.\nconst seg = p => Math.max(4, Math.min(8, Math.round(String(p.texto_narrado || '').replace(/\\[[^\\]]*\\]/g, '').split(/\\s+/).filter(Boolean).length / 2.5)));\nconst movimiento = { animados: [] };\nif (e.formato === 'short' && aj.allowClips) {\n  const presupuesto0 = Number(e.presupuesto_usd) || aj.presupuestoShortUsd;\n  const topeClips = Math.min(aj.clipsMaxShort ?? 4, e.biblia?.presupuesto?.clips_max ?? 99);\n  const mueve = p => ['clip', 'archivo', 'avatar'].includes(p.tipo);\n  const costoActual = () => planos.reduce((a, p) => a + (['imagen', 'clip'].includes(p.tipo) ? aj.costoImagenUsd + aj.costoRevisionUsd : p.tipo === 'archivo' ? 0.5 * aj.costoImagenUsd + aj.costoRevisionUsd : 0)\n    + (p.tipo === 'clip' ? seg(p) * aj.costoClipSegUsd : 0), 0) + planos.length * aj.costoVozUsdPorPlano;\n  const orden = planos.map((p, i) => ({ p, i, peso: (i === 0 ? 100 : 0) + (/tension|tensión|sorpresa|asombro|revel|miedo|emoci/i.test(p.emocion || '') ? 10 : 0) + (p.texto_pantalla ? -5 : 0) }))\n    .filter(x => x.p.tipo === 'imagen').sort((a, b) => b.peso - a.peso);\n  for (const x of orden) {\n    const clips = planos.filter(p => p.tipo === 'clip').length; const cuota = planos.filter(mueve).length / planos.length;\n    if (clips >= topeClips || (cuota >= aj.movimientoMinShort && mueve(planos[0]))) break;\n    const extra = seg(x.p) * aj.costoClipSegUsd;\n    if (costoActual() + extra > presupuesto0 * (aj.avisoGastoPct || 1)) continue;\n    x.p.tipo = 'clip'; x.p.duracion_clip_s = seg(x.p); movimiento.animados.push(x.p.id);\n  }\n  planos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = seg(p); });\n  movimiento.cuota = Math.round(planos.filter(mueve).length / Math.max(1, planos.length) * 100) / 100;\n}\nplanos.forEach(p => { if (p.tipo === 'clip' && !p.duracion_clip_s) p.duracion_clip_s = 8; });\nconst n = t => planos.filter(p => p.tipo === t).length;\nconst segClips = planos.filter(p => p.tipo === 'clip').reduce((a, p) => a + p.duracion_clip_s, 0);\n// Un clip parte de una imagen generada; el archivo (Pexels/Pixabay) no cuesta.\n// Incluye la revisión visual de cada plano y, por prudencia, que la mitad del archivo termine generándose.\nconst revisa = aj.allowRevisionVisual ? aj.costoRevisionUsd : 0;\nconst costo = (n('imagen') + n('clip') + n('archivo') * 0.5) * (aj.costoImagenUsd + revisa) + n('archivo') * revisa\n  + segClips * aj.costoClipSegUsd + planos.filter(p => p.tipo === 'avatar').reduce((a,p) => a + Math.max(1, String(p.texto_narrado).split(/\\s+/).length / 2.5) * aj.costoAvatarSegUsd, 0)\n  + planos.reduce((a,p) => a + costoVozPresentacion(p.texto_narrado, presentacion, aj), 0);\nif (!Number.isFinite(costo)) throw new Error('Configura las tarifas de presentación');\nconst faltan = [];\nif (planos.some(p => p.tipo !== 'avatar') && !aj.allowImagenes) faltan.push('imágenes (OpenAI)');\nif (n('clip') && !aj.allowClips) faltan.push('clips (Gemini Omni)');\nif ((n('avatar') || presentacion?.avatar) && !aj.allowAvatar) faltan.push('avatar (HeyGen)');\nif (!aj.allowVoz) faltan.push('voz (Gemini TTS)');\nif (!aj.allowDrive) faltan.push('alojamiento (Google Drive)');\nif (!aj.allowMontaje) faltan.push('montaje (Creatomate)');\nconst presupuesto = Number(e.presupuesto_usd ?? (e.formato === 'short' ? aj.presupuestoShortUsd : aj.presupuestoLargoUsd));\nif (!Number.isFinite(presupuesto) || presupuesto < 0) throw new Error('Presupuesto inválido');\nif (costo > presupuesto) faltan.push(`ajustar el storyboard al tope (cuesta ~US$${(Math.round(costo * 100) / 100)}, tope US$${presupuesto})`);\nreturn [{ json: { ...e, presentacion, planos, movimiento, bloqueo: presentacion?.avatar && !aj.allowAvatar ? 'avatar_apagado' : !aj.allowVoz ? 'voz_apagada' : costo > presupuesto ? 'presupuesto' : faltan.length ? 'produccion_pausada' : '', costo_estimado_usd: Math.round(costo * 100) / 100, presupuesto,\n  dentro: costo <= presupuesto, faltan, chatId: aj.chatId } }];\n"
       },
       "id": "54ae661f-22a0-4937-b004-1da6292d115d",
       "name": "Plan de producción",
@@ -2905,216 +2905,6 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en producción\" + ':' + $runIndex + ':' + k }}));"
-      },
-      "id": "d2173d60-71b0-5248-99cf-b3814d5fab0d",
-      "name": "Cooper · sello Video en producción",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        220,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "FabCooperProgr01"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "mode": "each",
-        "options": {
-          "waitForSubWorkflow": true
-        }
-      },
-      "id": "c220bc60-1065-573d-b79d-2cd31926e7ee",
-      "name": "Cooper · sello Video en producción aviso",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        440,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video detenido\" + ':' + $runIndex + ':' + k }}));"
-      },
-      "id": "effbcc57-c894-5d0c-b664-03a674bb2f2c",
-      "name": "Cooper · sello Video detenido",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        660,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "FabCooperProgr01"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "mode": "each",
-        "options": {
-          "waitForSubWorkflow": true
-        }
-      },
-      "id": "4eda689b-53e0-5142-8b86-6eb7c29d8b5a",
-      "name": "Cooper · sello Video detenido aviso",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        880,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Costo en la tabla\" + ':' + $runIndex + ':' + k }}));"
-      },
-      "id": "b98870ec-bc2b-54ea-8acb-030d673151a1",
-      "name": "Cooper · sello Costo en la tabla",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1100,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "FabCooperProgr01"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "mode": "each",
-        "options": {
-          "waitForSubWorkflow": true
-        }
-      },
-      "id": "73aeca28-d21b-5287-9233-0fb0ffa56136",
-      "name": "Cooper · sello Costo en la tabla aviso",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        1320,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Sonido y emoción guardar\" + ':' + $runIndex + ':' + k }}));"
-      },
-      "id": "9ee0b027-766b-5bda-95a1-cac87f21584a",
-      "name": "Cooper · sello Cooper · Sonido y emoción guardar",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1540,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "FabCooperProgr01"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "mode": "each",
-        "options": {
-          "waitForSubWorkflow": true
-        }
-      },
-      "id": "c8046bf7-827a-5a08-beac-3089c3879af7",
-      "name": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        1760,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Composición Creatomate guardar\" + ':' + $runIndex + ':' + k }}));"
-      },
-      "id": "58c7a859-8e9b-542f-9f6b-be4f5b4cc16e",
-      "name": "Cooper · sello Cooper · Composición Creatomate guardar",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1980,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "FabCooperProgr01"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "mode": "each",
-        "options": {
-          "waitForSubWorkflow": true
-        }
-      },
-      "id": "91e65c95-d4e1-5217-995c-2cf81e6a8f32",
-      "name": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        2200,
-        0
-      ]
-    },
-    {
-      "parameters": {
         "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:(e.video_id || ('canal:' + e.canal_id)), concepto:\"imágenes\", servicio:\"OpenAI\", usd:aj.costoImagenUsd, estimado:true, paso_id:String($execution.id)+':'+\"Generar imagen\"+':'+$runIndex+':'+k }}));"
       },
       "id": "6ea33e89-e9c5-599c-8676-9e4175867386",
@@ -3452,6 +3242,279 @@
         1100,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "id": "60ca50ba-d403-59b6-8ac2-e6d39c620609",
+      "name": "Noticia · Plan de producción entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "db20f0fe-a955-5fa1-befc-426f05039afa",
+      "name": "Noticia · Plan de producción video",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst v=$('Noticia · Plan de producción video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,$('Inicio').first().json.guion); if (v.modo_noticia) { exigirStoryboard(v,$('Inicio').first().json.storyboard); if ($('Inicio').first().json.modo_noticia !== true) throw new Error('Modalidad de noticia incompatible'); } return $('Noticia · Plan de producción entrada').all();"
+      },
+      "id": "55c3e3e4-2d65-5310-a040-70763c3ff7d7",
+      "name": "Noticia · Plan de producción validar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video en producción\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "d2173d60-71b0-5248-99cf-b3814d5fab0d",
+      "name": "Cooper · sello Video en producción",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c220bc60-1065-573d-b79d-2cd31926e7ee",
+      "name": "Cooper · sello Video en producción aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Video detenido\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "effbcc57-c894-5d0c-b664-03a674bb2f2c",
+      "name": "Cooper · sello Video detenido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "4eda689b-53e0-5142-8b86-6eb7c29d8b5a",
+      "name": "Cooper · sello Video detenido aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Costo en la tabla\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "b98870ec-bc2b-54ea-8acb-030d673151a1",
+      "name": "Cooper · sello Costo en la tabla",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "73aeca28-d21b-5287-9233-0fb0ffa56136",
+      "name": "Cooper · sello Costo en la tabla aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Sonido y emoción guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "9ee0b027-766b-5bda-95a1-cac87f21584a",
+      "name": "Cooper · sello Cooper · Sonido y emoción guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c8046bf7-827a-5a08-beac-3089c3879af7",
+      "name": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Cooper · Composición Creatomate guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "58c7a859-8e9b-542f-9f6b-be4f5b4cc16e",
+      "name": "Cooper · sello Cooper · Composición Creatomate guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "91e65c95-d4e1-5217-995c-2cf81e6a8f32",
+      "name": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        0
+      ]
     }
   ],
   "connections": {
@@ -3525,7 +3588,7 @@
       "main": [
         [
           {
-            "node": "Plan de producción",
+            "node": "Noticia · Plan de producción entrada",
             "type": "main",
             "index": 0
           }
@@ -4852,165 +4915,6 @@
         ]
       ]
     },
-    "Cooper · sello Video en producción": {
-      "main": [
-        [
-          {
-            "node": "Video en producción",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Video en producción aviso": {
-      "main": [
-        [
-          {
-            "node": "Un ítem por plano",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Video en producción": {
-      "main": [
-        [
-          {
-            "node": "Cooper · sello Video en producción aviso",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Video detenido": {
-      "main": [
-        [
-          {
-            "node": "Video detenido",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Video detenido aviso": {
-      "main": [
-        []
-      ]
-    },
-    "Video detenido": {
-      "main": [
-        [
-          {
-            "node": "Cooper · sello Video detenido aviso",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Costo en la tabla": {
-      "main": [
-        [
-          {
-            "node": "Costo en la tabla",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Costo en la tabla aviso": {
-      "main": [
-        [
-          {
-            "node": "Encargo de derivados",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Costo en la tabla": {
-      "main": [
-        [
-          {
-            "node": "Cooper · sello Costo en la tabla aviso",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Cooper · Sonido y emoción guardar": {
-      "main": [
-        [
-          {
-            "node": "Cooper · Sonido y emoción guardar",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Cooper · Sonido y emoción guardar aviso": {
-      "main": [
-        [
-          {
-            "node": "Cooper · Sonido y emoción seguir",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · Sonido y emoción guardar": {
-      "main": [
-        [
-          {
-            "node": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Cooper · Composición Creatomate guardar": {
-      "main": [
-        [
-          {
-            "node": "Cooper · Composición Creatomate guardar",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · sello Cooper · Composición Creatomate guardar aviso": {
-      "main": [
-        [
-          {
-            "node": "Cooper · Composición Creatomate seguir",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cooper · Composición Creatomate guardar": {
-      "main": [
-        [
-          {
-            "node": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Cooper · costo Generar imagen": {
       "main": [
         [
@@ -5225,6 +5129,198 @@
         [
           {
             "node": "Cooper · costo Renderizar registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia · Plan de producción entrada": {
+      "main": [
+        [
+          {
+            "node": "Noticia · Plan de producción video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia · Plan de producción video": {
+      "main": [
+        [
+          {
+            "node": "Noticia · Plan de producción validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Noticia · Plan de producción validar": {
+      "main": [
+        [
+          {
+            "node": "Plan de producción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en producción": {
+      "main": [
+        [
+          {
+            "node": "Video en producción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video en producción aviso": {
+      "main": [
+        [
+          {
+            "node": "Un ítem por plano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video en producción": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video en producción aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video detenido": {
+      "main": [
+        [
+          {
+            "node": "Video detenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Video detenido aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Video detenido": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Video detenido aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Costo en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Costo en la tabla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Costo en la tabla aviso": {
+      "main": [
+        [
+          {
+            "node": "Encargo de derivados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Costo en la tabla": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Costo en la tabla aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Sonido y emoción guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Sonido y emoción guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Sonido y emoción seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Sonido y emoción guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Sonido y emoción guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Composición Creatomate guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Cooper · Composición Creatomate guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Cooper · Composición Creatomate seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · Composición Creatomate guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Cooper · Composición Creatomate guardar aviso",
             "type": "main",
             "index": 0
           }

@@ -26,12 +26,15 @@ const schemas = {
     .object({ texto: datos.shape.texto, nombre: datos.shape.nombre })
     .strict(),
   nuevo_video: datos.extend({
+    parametros: z.object({ modo_noticia: z.boolean() }).strict().optional(),
     avatarId: id.optional(),
     voiceId: id.optional(),
     avatarPlacement: z.enum(["completo", "partes"]).optional(),
   }),
   corregir: datos,
-  ajustar_biblia: datos,
+  ajustar_biblia: datos.extend({
+    parametros: z.object({ campo: z.literal("modo_noticia"), valor: z.boolean() }).strict().optional(),
+  }),
   programar: datos,
   referencias: datos,
   configurar_redes: datos,
@@ -91,10 +94,16 @@ export function prepararLlamada(
     throw new ErrorHttp(400, "Esa acción está fuera de mi alcance.");
   const nombre = llamada.nombre as NombreHerramienta;
   if (nombre === "gastos") requireAdmin(user);
-  const argumentos = schemas[nombre].parse(llamada.argumentos) as Record<
-    string,
-    string
-  >;
+  const argumentos = schemas[nombre].parse(llamada.argumentos) as {
+    recursoId: string;
+    texto?: string;
+    nombre?: string;
+    tipo?: string;
+    avatarId?: string;
+    voiceId?: string;
+    avatarPlacement?: string;
+    parametros?: { modo_noticia?: boolean; campo?: "modo_noticia"; valor?: boolean };
+  };
   if (esConsulta(nombre))
     return { nombre, argumentos, huella: "", detalle: titulos[nombre] };
   const isVideo =
@@ -158,11 +167,11 @@ export function prepararLlamada(
         )
           .filter(([campo]) => argumentos[campo])
           .map(([campo, tipo]) => {
-            const ref = medioDisponible(user, argumentos[campo], tipo);
+            const ref = medioDisponible(user, argumentos[campo]!, tipo);
             const item = catalogo().find((m) => m.id === argumentos[campo]);
             return {
               tipo,
-              nombre: item?.name ?? activoVisible(user, argumentos[campo]).name,
+              nombre: item?.name ?? activoVisible(user, argumentos[campo]!).name,
               ref,
             };
           })
@@ -183,7 +192,7 @@ export function prepararLlamada(
     nombre,
     argumentos,
     huella,
-    detalle: `${etiqueta}${nombre === "eliminar" && argumentos.tipo === "canal" ? `\nTambién se eliminarán ${dependientes.length} videos de este canal.` : ""}${argumentos.texto && recurso ? `\n${argumentos.texto}` : ""}${medios.length ? `\n${medios.map((m) => `${m.tipo === "avatar" ? "Presentador" : "Voz"}: ${m.nombre}`).join("\n")}\nPresencia: ${argumentos.avatarPlacement === "completo" ? "todo el video" : "solo en partes"}` : ""}`,
+    detalle: `${etiqueta}${argumentos.parametros ? `\nModo noticia: ${(argumentos.parametros.valor ?? argumentos.parametros.modo_noticia) ? "activado" : "desactivado"}. Requiere fuentes verificadas antes de producir.` : ""}${nombre === "eliminar" && argumentos.tipo === "canal" ? `\nTambién se eliminarán ${dependientes.length} videos de este canal.` : ""}${argumentos.texto && recurso ? `\n${argumentos.texto}` : ""}${medios.length ? `\n${medios.map((m) => `${m.tipo === "avatar" ? "Presentador" : "Voz"}: ${m.nombre}`).join("\n")}\nPresencia: ${argumentos.avatarPlacement === "completo" ? "todo el video" : "solo en partes"}` : ""}`,
   };
 }
 export async function consultar(

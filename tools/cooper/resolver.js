@@ -4,12 +4,14 @@ const own = x => !!x.dueno_email && (auth.admin || x.dueno_email === auth.dueno_
 const canales = $('Canales autorizados').all().map(i => i.json).filter(c => c.canal_id && own(c) && !c.eliminado);
 const videos = $('Videos autorizados').all().map(i => i.json).filter(v => v.video_id && own(v) && !v.eliminado && canales.some(c => c.canal_id === v.canal_id));
 const safeVideo = v => ({ id: v.video_id, dueno_email: v.dueno_email, canal_id: v.canal_id, titulo: String(v.tema || ''),
-  stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });
+  modo_noticia:v.modo_noticia === true, stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });
 if (b.evento === 'estado') return [{ json: { accion: 'responder', status: 200, respuesta: {
-  canales: canales.map(c => ({ id: c.canal_id, dueno_email: c.dueno_email, nombre: String(c.nombre || ''), nicho: String(c.nicho || '') })), videos: videos.map(safeVideo) } } }];
+  canales: canales.map(c => ({ id: c.canal_id, dueno_email: c.dueno_email, nombre: String(c.nombre || ''), nicho: String(c.nicho || ''), modo_noticia:c.modo_noticia === true })), videos: videos.map(safeVideo) } } }];
 if (['reporte', 'pendientes', 'tendencias'].includes(b.evento)) {
   const summary = b.evento === 'tendencias' ? canales.map(c => {
     let t = {}; try { t = JSON.parse(c.tendencias || '{}'); } catch { /* no radar */ }
+    let n=null; try {n=JSON.parse(c.noticia_hoy || 'null');} catch {}
+    if (c.modo_noticia) return `${c.nombre}: ${n ? n.titulo + ' (' + n.fecha + ')' : 'Sin noticia verificada hoy.'}`;
     return `${c.nombre}: ${String(t.resumen || 'Sin tendencias registradas.').slice(0, 1000)}`;
   }).join('\n') : videos.filter(v => b.evento !== 'pendientes' || ['aprobacion_guion', 'aprobacion_final'].includes(v.etapa))
     .map(v => `${v.tema}: ${v.etapa}`).join('\n');
@@ -42,7 +44,7 @@ const p = d.parametros && typeof d.parametros === 'object' && !Array.isArray(d.p
 if (!['aprobar_guion', 'aprobar_final', 'eliminar'].includes(b.evento) && (!text || text.length > 6000)) return fail(400, 'Texto inválido');
 switch (b.evento) {
   case 'nuevo_canal': e.criterios = text; e.nombre = String(d.nombre || text).slice(0,120); break;
-  case 'nuevo_video': e.presentacion = presentacion; e.cooper_orden_id = b.id_evento; e.tema = text; e.formato = ['short','largo'].includes(p.formato) ? p.formato : resource.formato_defecto; break;
+  case 'nuevo_video': if (p.modo_noticia !== undefined && typeof p.modo_noticia !== 'boolean') return fail(400, 'Modo noticia inválido'); e.modo_noticia = p.modo_noticia ?? resource.modo_noticia === true; e.presentacion = presentacion; e.cooper_orden_id = b.id_evento; e.tema = text; e.formato = ['short','largo'].includes(p.formato) ? p.formato : resource.formato_defecto; break;
   case 'corregir': e.instruccion = text; e.etapa = (CONTRATO.etapas[resource.etapa] ?? 0) >= 4 ? 'storyboard' : 'guion'; break;
   case 'programar': {
     const time = Date.parse(text);
@@ -51,6 +53,7 @@ switch (b.evento) {
   }
   case 'ajustar_biblia': {
     if (p.campo && (!/^[a-z_]+(\.[a-z_0-9]+){0,3}$/.test(p.campo) || p.campo.split('.').some(x => ['__proto__','prototype','constructor','canal_id','nombre'].includes(x)))) return fail(400, 'Campo inválido');
+    if (p.campo === 'modo_noticia' && typeof p.valor !== 'boolean') return fail(400, 'Modo noticia inválido');
     e.campo = p.campo || 'notas'; e.valor = p.valor === undefined ? text : JSON.stringify(p.valor); break;
   }
   case 'configurar_redes': {
