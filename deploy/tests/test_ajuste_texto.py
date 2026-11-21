@@ -1,4 +1,5 @@
 import copy
+from contextlib import closing
 import importlib.util
 import json
 from pathlib import Path
@@ -79,7 +80,7 @@ class AjusteTest(unittest.TestCase):
         _, diff = ajuste.preparar([self.actual])
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'db.sqlite'
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute('CREATE TABLE data_table(id TEXT,name TEXT)')
                 db.execute("INSERT INTO data_table VALUES('eventos','fab_eventos')")
                 db.execute('CREATE TABLE data_table_user_eventos(id INTEGER,tipo TEXT,detalle TEXT)')
@@ -87,11 +88,11 @@ class AjusteTest(unittest.TestCase):
                 values = [self.actual['id'], self.actual['name']] + [json.dumps(self.actual[k]) if self.actual[k] is not None else None for k in ajuste.FIELDS[1:]]
                 db.execute('INSERT INTO workflow_entity VALUES(?,?,?,?,?,?,?)', values)
             ajuste.validar_actual(path, diff)
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute("INSERT INTO data_table_user_eventos VALUES(1,'ajustes_cooper',?)", ('{"valores":{"allowTextoApi":true}}',))
             with self.assertRaisesRegex(RuntimeError, 'administrativo'):
                 ajuste.validar_actual(path, diff)
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute('DELETE FROM data_table_user_eventos')
                 db.execute('UPDATE workflow_entity SET settings=?', ('{"cambio":true}',))
             with self.assertRaisesRegex(RuntimeError, 'cambió'):

@@ -1,4 +1,5 @@
 import copy
+from contextlib import closing
 import importlib.util
 import json
 from pathlib import Path
@@ -82,18 +83,18 @@ class ActivacionesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'db.sqlite'
             nodes = [{'name': 'Ajustes', 'type': 'n8n-nodes-base.code', 'parameters': {'jsCode': 'return [{json:{allowTextoApi:false}}];'}}]
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute('CREATE TABLE workflow_entity(id TEXT,nodes TEXT)')
                 db.execute('INSERT INTO workflow_entity VALUES(?,?)', ('FabAjustes000001', json.dumps(nodes)))
                 db.execute('CREATE TABLE data_table(id TEXT,name TEXT)')
                 db.execute("INSERT INTO data_table VALUES('eventos','fab_eventos')")
                 db.execute('CREATE TABLE data_table_user_eventos(tipo TEXT,detalle TEXT)')
             act.permiso_cerrado(path)
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute("INSERT INTO data_table_user_eventos VALUES('ajustes_cooper',?)", ('{"valores":{"allowTextoApi":true}}',))
             with self.assertRaisesRegex(RuntimeError, 'override'):
                 act.permiso_cerrado(path)
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute('DELETE FROM data_table_user_eventos')
                 db.execute('UPDATE workflow_entity SET nodes=?', (json.dumps(nodes).replace('false', 'true'),))
             with self.assertRaisesRegex(RuntimeError, 'allowTextoApi'):
