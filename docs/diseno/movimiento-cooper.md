@@ -31,7 +31,7 @@ Diferencia frente a Linear, Stripe y Predis: anfitrión de ojos distintos, mater
 
 | Momento | Gesto / ritmo | Coste y variante quieta |
 | --- | --- | --- |
-| Ruta | Contenedor 10px/560ms; título 12px/680ms. Contenido disponible desde el primer render. | Transform, sin cortina ni espera de salida. Pausa: posición final. |
+| Ruta | Al navegar dentro del estudio: contenedor 10px/560ms; título 12px/680ms. La primera carga presenta contenido estable desde SSR; las escenas conservan su movimiento. | Transform, sin cortina ni espera de salida. No se vuelve a desplazar el contenido inicial al hidratar. Pausa: posición final. |
 | Cabeceras | Tres planos; luz 8s; respiración 4px/6s; barrido 5,8s. Radar 8s, órbita de redes 24s. | Transform/opacity, sombra y gradiente estáticos. Fuera del viewport se detienen. |
 | Scroll | Desfase 0–20px en 700px de scroll. | CSS scroll timeline, sin listeners por fotograma. Fallback estático. |
 | Cooper recibe/reacciona | Gesto, parpadeo y ojos de dos colores en 4s; inclinación al escuchar. La cara del chat conserva boca por palabras. | Lottie SVG ligero; formas estáticas y matrices transform. Poster equivalente si falla el motor. |

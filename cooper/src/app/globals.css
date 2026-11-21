@@ -4161,9 +4161,9 @@ input:is([type="checkbox"], [type="radio"]):checked {
 }
 
 /* Cooper · partitura de la sala de montaje. Solo transform y opacity animados. */
-.route-choreography > :first-child { animation: route-arrive 560ms var(--motion-ease); }
-.route-choreography .page-heading > :first-child,
-.route-choreography .home-title > :first-child { animation: title-arrive 680ms var(--motion-ease); }
+.route-choreography[data-navigation] > :first-child { animation: route-arrive 560ms var(--motion-ease); }
+.route-choreography[data-navigation] .page-heading > :first-child,
+.route-choreography[data-navigation] .home-title > :first-child { animation: title-arrive 680ms var(--motion-ease); }
 @keyframes route-arrive { from { transform: translate3d(0, 10px, 0); } to { transform: none; } }
 @keyframes title-arrive { from { transform: translate3d(-12px, 0, 0); } to { transform: none; } }
 .page-heading { position: relative; min-height: 174px; gap: 24px; isolation: isolate; }

@@ -224,7 +224,17 @@ test("pausa y movimiento reducido detienen efectos activos, incluso al navegar",
   page,
 }) => {
   await login(page);
+  const contenido = page.locator(".route-choreography > :first-child");
+  await expect(contenido).toHaveCSS("animation-name", "none");
+  await page
+    .getByRole("navigation", { name: "Principal" })
+    .getByRole("link", { name: /^Videos/ })
+    .click();
+  await expect(contenido).toHaveCSS("animation-name", "route-arrive");
+  await page.getByRole("link", { name: "Inicio", exact: true }).click();
+  await expect(contenido).toHaveCSS("animation-name", "route-arrive");
   await page.getByRole("button", { name: "Pausar movimiento" }).click();
+  await expect(contenido).toHaveCSS("animation-name", "none");
   await page.waitForTimeout(350);
   const before = await settledFace(page);
   await page.mouse.move(20, 30);

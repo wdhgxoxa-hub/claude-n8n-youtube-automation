@@ -122,6 +122,16 @@ export function Espacio({
     [connected, setConnected] = useState(false),
     [menu, setMenu] = useState(false);
   const path = usePathname();
+  const ruta = useRef<HTMLDivElement>(null);
+  const ultimaRuta = useRef(path);
+  useEffect(() => {
+    // La primera carga ya tiene contenido legible en SSR. La coreografía se
+    // reserva para cambios de ruta, sin mover de nuevo el LCP al hidratar.
+    if (ultimaRuta.current !== path) {
+      ultimaRuta.current = path;
+      ruta.current?.setAttribute("data-navigation", "true");
+    }
+  }, [path]);
   const reduced = useMovimientoReducido();
   const [isPaused, setPaused] = usePausaMovimiento();
   const [celebration, setCelebration] = useState<string | null>(null);
@@ -484,7 +494,7 @@ export function Espacio({
                   </div>
                 </header>
                 <main ref={content} id="contenido" tabIndex={-1}>
-                  <div key={path} className="route-choreography">
+                  <div key={path} ref={ruta} className="route-choreography">
                     {children}
                   </div>
                   {celebration && (
