@@ -47,6 +47,7 @@ class ScopedDeployment(unittest.TestCase):
             new = 'localhost/cooper:' + 'a' * 40; expected = 'sha256:' + 'b' * 64
 
             def inspect(name, fmt):
+                if fmt == '{{.State.Health.Status}}': return 'healthy'
                 if name != 'cooper-cooper-1': return 'unchanged'
                 return {'{{.Config.Image}}': 'old', '{{.Image}}': expected, '{{.State.Health.Status}}': 'healthy'}[fmt]
 
@@ -93,6 +94,14 @@ class ScopedDeployment(unittest.TestCase):
     def test_rejects_other_image_before_stopping(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(solo, 'STATE', Path(tmp)), patch.object(solo.os, 'geteuid', return_value=0), patch.object(solo, 'inspect', return_value='different'), patch.object(solo, 'stop') as stop:
             with self.assertRaises(RuntimeError):
+                solo.deploy('localhost/cooper:' + 'a' * 40, 'sha256:' + 'b' * 64)
+            stop.assert_not_called()
+
+    def test_rejects_incomplete_maintenance_recovery(self):
+        def inspect(name, fmt):
+            return 'sha256:' + 'b' * 64 if fmt == '{{.Image}}' else 'unhealthy'
+        with tempfile.TemporaryDirectory() as tmp, patch.object(solo, 'STATE', Path(tmp)), patch.object(solo.os, 'geteuid', return_value=0), patch.object(solo, 'inspect', side_effect=inspect), patch.object(solo, 'run'), patch.object(solo, 'stop') as stop:
+            with self.assertRaisesRegex(RuntimeError, 'todavía no está saludable'):
                 solo.deploy('localhost/cooper:' + 'a' * 40, 'sha256:' + 'b' * 64)
             stop.assert_not_called()
 

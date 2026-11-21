@@ -125,6 +125,9 @@ def deploy(image, expected):
     previous = inspect('cooper-cooper-1', '{{.Config.Image}}')
     require(inspect('cooper-cooper-1', '{{.Image}}') == expected, 'Cooper cambió desde la revisión')
     run(['docker', 'image', 'inspect', image, '--format', '{{.Id}}'])
+    for name in ('cooper-cooper-1', *UNCHANGED):
+        require(inspect(name, '{{.State.Health.Status}}') == 'healthy',
+                'El stack todavía no está saludable; no se inicia el corte')
     identity = '{{.Id}}|{{.Image}}|{{.State.StartedAt}}'
     before = {name: inspect(name, identity) for name in UNCHANGED}
     output = STATE / ('solo-cooper-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()))
