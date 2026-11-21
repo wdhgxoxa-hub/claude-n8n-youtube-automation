@@ -78,7 +78,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst vid = String($('Inicio').first().json.video_id || '').trim();\nconst l = $input.all().map(i => i.json).filter(r => r.url && r.estado === 'pendiente' && (!vid || r.video_id === vid));\nreturn l.length ? l.map(r => ({ json: { ...r, prueba: r.url.replace(/^https?:\\/\\/[^/]+/, 'http://127.0.0.1:5678') } })) : [{ json: { nada: true } }];\n"
+        "jsCode": "\nconst vid = String($('Inicio').first().json.video_id || '').trim();\nconst l = $input.all().map(i => i.json).filter(r => (!$('Inicio').first().json.aprobacion_id||r.aprobacion_id===$('Inicio').first().json.aprobacion_id) && r.url && r.estado === 'pendiente' && (!vid || r.video_id === vid));\nreturn l.length ? l.map(r => ({ json: { ...r, prueba: r.url.replace(/^https?:\\/\\/[^/]+/, 'http://127.0.0.1:5678') } })) : [{ json: { nada: true } }];\n"
       },
       "id": "9fb8ac99-d7a6-421e-88e3-a522e4586479",
       "name": "Elegir",
@@ -327,6 +327,47 @@
         3080,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Reenviar tarjeta\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Reenviar tarjeta\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Reenviar tarjeta\"})}};});\n"
+      },
+      "id": "3816061d-b115-5d20-ba2e-49520f7415a1",
+      "name": "Cooper · aviso Reenviar tarjeta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ebc3fa4e-0e16-53a2-9e40-4438679250e0",
+      "name": "Cooper · aviso Reenviar tarjeta guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -473,6 +514,11 @@
             "node": "Resultado",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Cooper · aviso Reenviar tarjeta",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -482,6 +528,17 @@
         [
           {
             "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Reenviar tarjeta": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Reenviar tarjeta guardar",
             "type": "main",
             "index": 0
           }

@@ -410,7 +410,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
+        "jsCode": "const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id||e.canal_id?[{json:{video_id:video_id||'',canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];"
       },
       "id": "0f2d599a-7298-50e2-b537-8ac22437b344",
       "name": "Cooper · atribuir ejecución",
@@ -461,7 +461,7 @@
           "conditions": [
             {
               "id": "59fbdcc2-70de-5a86-a4b5-c4edae7c2135",
-              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id) }}",
+              "leftValue": "={{ !!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id || $('Inicio').first().json.canal_id) }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -530,6 +530,47 @@
       },
       "id": "401a0dc1-7f32-523a-805c-8078770e0895",
       "name": "Cooper · guardar calidad superada",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: no pasó calidad\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: no pasó calidad\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: no pasó calidad\"})}};});\n"
+      },
+      "id": "f10a2e9d-24df-5c1a-85c5-477cccd0d01b",
+      "name": "Cooper · aviso Aviso: no pasó calidad",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a0dee919-c052-519d-9066-5d36b1ff1ff1",
+      "name": "Cooper · aviso Aviso: no pasó calidad guardar",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
@@ -850,6 +891,28 @@
         [
           {
             "node": "Cooper · guardar calidad superada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso: no pasó calidad": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: no pasó calidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: no pasó calidad": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: no pasó calidad guardar",
             "type": "main",
             "index": 0
           }

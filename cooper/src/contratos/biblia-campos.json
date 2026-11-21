@@ -1,0 +1,126 @@
+{
+  "nicho": {
+    "etiqueta": "Tema del canal",
+    "tipo": "texto"
+  },
+  "publico": {
+    "etiqueta": "Público",
+    "tipo": "texto"
+  },
+  "promesa": {
+    "etiqueta": "Promesa editorial",
+    "tipo": "texto"
+  },
+  "idioma": {
+    "etiqueta": "Idioma",
+    "tipo": "texto"
+  },
+  "estilo_visual.descripcion": {
+    "etiqueta": "Estilo visual",
+    "tipo": "texto"
+  },
+  "estilo_visual.paleta_hex": {
+    "etiqueta": "Colores — uno por línea",
+    "tipo": "lista"
+  },
+  "estilo_visual.luz": {
+    "etiqueta": "Iluminación",
+    "tipo": "texto"
+  },
+  "estilo_visual.lente": {
+    "etiqueta": "Encuadre y lente",
+    "tipo": "texto"
+  },
+  "estilo_visual.textura": {
+    "etiqueta": "Textura",
+    "tipo": "texto"
+  },
+  "estilo_visual.prohibido": {
+    "etiqueta": "Elementos visuales prohibidos — uno por línea",
+    "tipo": "lista"
+  },
+  "voz.tono": {
+    "etiqueta": "Tono",
+    "tipo": "texto"
+  },
+  "voz.descripcion": {
+    "etiqueta": "Descripción de la voz",
+    "tipo": "texto"
+  },
+  "voz.ritmo": {
+    "etiqueta": "Ritmo de narración",
+    "tipo": "texto"
+  },
+  "voz.persona": {
+    "etiqueta": "Personalidad de la voz",
+    "tipo": "texto"
+  },
+  "voz.palabras_prohibidas": {
+    "etiqueta": "Palabras prohibidas — una por línea",
+    "tipo": "lista"
+  },
+  "voz.gemini_voice": {
+    "etiqueta": "Voz de catálogo",
+    "tipo": "texto"
+  },
+  "voz.eleven_voice_id": {
+    "etiqueta": "Identificador de voz personalizada",
+    "tipo": "texto"
+  },
+  "montaje.plantilla_creatomate_id": {
+    "etiqueta": "Plantilla de montaje",
+    "tipo": "texto"
+  },
+  "montaje.duracion_plano_s.largo": {
+    "etiqueta": "Segundos por plano largo",
+    "tipo": "numero"
+  },
+  "montaje.duracion_plano_s.short": {
+    "etiqueta": "Segundos por plano corto",
+    "tipo": "numero"
+  },
+  "montaje.fuente": {
+    "etiqueta": "Tipografía",
+    "tipo": "texto"
+  },
+  "montaje.color_texto": {
+    "etiqueta": "Color de los subtítulos",
+    "tipo": "texto"
+  },
+  "montaje.musica_volumen": {
+    "etiqueta": "Volumen de la música",
+    "tipo": "texto"
+  },
+  "montaje.efectos_volumen": {
+    "etiqueta": "Volumen de los efectos",
+    "tipo": "texto"
+  },
+  "montaje.transicion": {
+    "etiqueta": "Transición",
+    "tipo": "texto"
+  },
+  "musica.estilo": {
+    "etiqueta": "Estilo musical",
+    "tipo": "texto"
+  },
+  "notas": {
+    "etiqueta": "Reglas editoriales",
+    "tipo": "texto"
+  },
+  "publicacion.youtube": {
+    "etiqueta": "Publicación en YouTube",
+    "tipo": "texto"
+  },
+  "publicacion.tiktok": {
+    "etiqueta": "Publicación en TikTok",
+    "tipo": "texto"
+  },
+  "publicacion.instagram": {
+    "etiqueta": "Publicación en Instagram",
+    "tipo": "texto"
+  },
+  "publicacion.facebook": {
+    "etiqueta": "Publicación en Facebook",
+    "tipo": "texto"
+  }
+}

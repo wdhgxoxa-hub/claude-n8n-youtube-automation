@@ -47,6 +47,7 @@ import {
 } from "@/servicios/mensajeria/cuentas";
 import { historial, resumenCola } from "@/servicios/mensajeria/cola";
 import { leerRecuerdos, borrarRecuerdos } from "@/servicios/chat/memoria";
+import { leerOperacion, leerAjustes, controlar } from "@/servicios/operacion";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ ruta: string[] }> };
@@ -84,6 +85,10 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "GET") {
       rateLimit(`read:${user.id}`, 300);
+      if (section === "operacion" && ruta.length === 1)
+        return json(await leerOperacion(user));
+      if (section === "admin" && id === "fabrica" && ruta.length === 2)
+        return json(await leerAjustes(user));
       if (section === "memoria" && ruta.length === 1)
         return json(leerRecuerdos(user));
       if (
@@ -162,6 +167,8 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "POST") {
       const input = await body(request);
+      if (section === "operacion" && ruta.length === 1)
+        return json(await controlar(user, input));
       if (section === "whatsapp" && id === "codigo")
         return json(solicitarCodigo(user, input));
       if (section === "whatsapp" && id === "verificar")

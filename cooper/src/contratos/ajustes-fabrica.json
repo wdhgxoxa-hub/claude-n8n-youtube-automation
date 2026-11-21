@@ -1,0 +1,355 @@
+{
+  "allowClaude": {
+    "etiqueta": "Investigación y guiones",
+    "tipo": "boolean",
+    "valor": true
+  },
+  "allowImagenes": {
+    "etiqueta": "Imágenes",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowRevisionVisual": {
+    "etiqueta": "Revisión visual",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowClips": {
+    "etiqueta": "Clips animados",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowVoz": {
+    "etiqueta": "Voz",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowMusica": {
+    "etiqueta": "Música",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowArchivo": {
+    "etiqueta": "Video de archivo",
+    "tipo": "boolean",
+    "valor": true
+  },
+  "allowEfectos": {
+    "etiqueta": "Efectos de sonido",
+    "tipo": "boolean",
+    "valor": true
+  },
+  "allowCritico": {
+    "etiqueta": "Crítico de guion",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowTextoApi": {
+    "etiqueta": "Respaldo de texto por API",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowVerificacion": {
+    "etiqueta": "Verificación de cifras",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowReferencias": {
+    "etiqueta": "Referencias visuales",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowAvatar": {
+    "etiqueta": "Presentadores",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowMontaje": {
+    "etiqueta": "Montaje",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowDrive": {
+    "etiqueta": "Archivo en Drive",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowYoutube": {
+    "etiqueta": "Publicación directa en YouTube",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowAnalytics": {
+    "etiqueta": "Medición y aprendizaje",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowVidiq": {
+    "etiqueta": "Investigación de audiencias",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowRadar": {
+    "etiqueta": "Radar diario",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowMiniaturas": {
+    "etiqueta": "Miniaturas",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowCortes": {
+    "etiqueta": "Cortes verticales",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "allowRedes": {
+    "etiqueta": "Publicación en redes",
+    "tipo": "boolean",
+    "valor": false
+  },
+  "privacidadYoutube": {
+    "etiqueta": "Privacidad de YouTube",
+    "tipo": "string",
+    "valor": "public"
+  },
+  "modeloTexto": {
+    "etiqueta": "Modelo de texto",
+    "tipo": "string",
+    "valor": "gpt-6-astra"
+  },
+  "modeloImagen": {
+    "etiqueta": "Modelo de imágenes",
+    "tipo": "string",
+    "valor": "gpt-image-2.6-sunburst"
+  },
+  "modeloClip": {
+    "etiqueta": "Modelo de clips",
+    "tipo": "string",
+    "valor": "gemini-omni-1.2-flash"
+  },
+  "costoAvatarSegUsd": {
+    "etiqueta": "Avatar: USD por segundo",
+    "tipo": "number",
+    "valor": 0.1,
+    "min": 0,
+    "max": 10000
+  },
+  "costoVozHeygenCaracterUsd": {
+    "etiqueta": "Voz HeyGen: USD por carácter",
+    "tipo": "number",
+    "valor": 0.0001,
+    "min": 0,
+    "max": 10000
+  },
+  "costoVozElevenCaracterUsd": {
+    "etiqueta": "Voz ElevenLabs: USD por carácter",
+    "tipo": "number",
+    "valor": 0.0003,
+    "min": 0,
+    "max": 10000
+  },
+  "modeloVoz": {
+    "etiqueta": "Modelo de voz",
+    "tipo": "string",
+    "valor": "gemini-3.8-flash-tts"
+  },
+  "modeloCritico": {
+    "etiqueta": "Modelo del crítico",
+    "tipo": "string",
+    "valor": "gpt-6-astra"
+  },
+  "vozGemini": {
+    "etiqueta": "Voz predeterminada",
+    "tipo": "string",
+    "valor": "Charon"
+  },
+  "costoImagenUsd": {
+    "etiqueta": "Imagen: USD por unidad",
+    "tipo": "number",
+    "valor": 0.06,
+    "min": 0,
+    "max": 10000
+  },
+  "costoClipSegUsd": {
+    "etiqueta": "Clip: USD por segundo",
+    "tipo": "number",
+    "valor": 0.07,
+    "min": 0,
+    "max": 10000
+  },
+  "costoRevisionUsd": {
+    "etiqueta": "Revisión visual: USD por revisión",
+    "tipo": "number",
+    "valor": 0.01,
+    "min": 0,
+    "max": 10000
+  },
+  "costoCriticoUsd": {
+    "etiqueta": "Crítico: USD por revisión",
+    "tipo": "number",
+    "valor": 0.02,
+    "min": 0,
+    "max": 10000
+  },
+  "costoRadarUsd": {
+    "etiqueta": "Radar: USD por análisis",
+    "tipo": "number",
+    "valor": 0.05,
+    "min": 0,
+    "max": 10000
+  },
+  "costoVerificacionUsd": {
+    "etiqueta": "Verificación: USD por revisión",
+    "tipo": "number",
+    "valor": 0.25,
+    "min": 0,
+    "max": 10000
+  },
+  "costoVozUsdPorPlano": {
+    "etiqueta": "Voz: USD por plano",
+    "tipo": "number",
+    "valor": 0.002,
+    "min": 0,
+    "max": 10000
+  },
+  "avisoGastoPct": {
+    "etiqueta": "Umbral para pedir permiso de gasto (0 a 1)",
+    "tipo": "number",
+    "valor": 0.8,
+    "min": 0,
+    "max": 1
+  },
+  "presupuestoLargoUsd": {
+    "etiqueta": "Presupuesto por video largo (USD)",
+    "tipo": "number",
+    "valor": 5,
+    "min": 0,
+    "max": 10000
+  },
+  "maxVideosDiaPorCanal": {
+    "etiqueta": "Máximo de videos diarios por canal",
+    "tipo": "number",
+    "valor": 3,
+    "min": 0,
+    "max": 100,
+    "entero": true
+  },
+  "maxVideosDiaTotal": {
+    "etiqueta": "Máximo de videos diarios de la fábrica",
+    "tipo": "number",
+    "valor": 40,
+    "min": 0,
+    "max": 100,
+    "entero": true
+  },
+  "presupuestoShortUsd": {
+    "etiqueta": "Presupuesto por video corto (USD)",
+    "tipo": "number",
+    "valor": 2.5,
+    "min": 0,
+    "max": 10000
+  },
+  "movimientoMinShort": {
+    "etiqueta": "Proporción mínima con movimiento (0 a 1)",
+    "tipo": "number",
+    "valor": 0.6,
+    "min": 0,
+    "max": 1
+  },
+  "clipsMaxShort": {
+    "etiqueta": "Máximo de clips por corto",
+    "tipo": "number",
+    "valor": 4,
+    "min": 0,
+    "max": 100,
+    "entero": true
+  },
+  "maxIntentosPlano": {
+    "etiqueta": "Máximo de intentos por plano",
+    "tipo": "number",
+    "valor": 2,
+    "min": 0,
+    "max": 100,
+    "entero": true
+  },
+  "costoMiniaturaUsd": {
+    "etiqueta": "Miniatura: USD por unidad",
+    "tipo": "number",
+    "valor": 0.06,
+    "min": 0,
+    "max": 10000
+  },
+  "idioma": {
+    "etiqueta": "Idioma",
+    "tipo": "string",
+    "valor": "es"
+  },
+  "calendario.zona": {
+    "etiqueta": "Zona horaria de publicación",
+    "tipo": "string",
+    "valor": "America/Lima"
+  },
+  "calendario.horas.youtube": {
+    "etiqueta": "Hora de publicación: youtube",
+    "tipo": "number",
+    "valor": 11,
+    "min": 0,
+    "max": 23,
+    "entero": true
+  },
+  "calendario.horas.youtube_shorts": {
+    "etiqueta": "Hora de publicación: youtube shorts",
+    "tipo": "number",
+    "valor": 16,
+    "min": 0,
+    "max": 23,
+    "entero": true
+  },
+  "calendario.horas.tiktok": {
+    "etiqueta": "Hora de publicación: tiktok",
+    "tipo": "number",
+    "valor": 19,
+    "min": 0,
+    "max": 23,
+    "entero": true
+  },
+  "calendario.horas.instagram": {
+    "etiqueta": "Hora de publicación: instagram",
+    "tipo": "number",
+    "valor": 20,
+    "min": 0,
+    "max": 23,
+    "entero": true
+  },
+  "calendario.horas.facebook": {
+    "etiqueta": "Hora de publicación: facebook",
+    "tipo": "number",
+    "valor": 21,
+    "min": 0,
+    "max": 23,
+    "entero": true
+  },
+  "calendario.diasEntreLargos": {
+    "etiqueta": "Días mínimos entre videos largos",
+    "tipo": "number",
+    "valor": 2,
+    "min": 0,
+    "max": 100,
+    "entero": true
+  },
+  "calendario.maxPorRedDia": {
+    "etiqueta": "Máximo de publicaciones por red y día",
+    "tipo": "number",
+    "valor": 2,
+    "min": 0,
+    "max": 100,
+    "entero": true
+  },
+  "calendario.cortesDias": {
+    "etiqueta": "Días de salida de cortes (separados por comas)",
+    "tipo": "string",
+    "valor": "1,3,5"
+  }
+}

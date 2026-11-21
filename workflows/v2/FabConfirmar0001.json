@@ -65,9 +65,9 @@
         "filters": {
           "conditions": [
             {
-              "keyName": "createdAt",
-              "condition": "gte",
-              "keyValue": "={{ new Date(Date.now() - 14 * 86400000).toISOString() }}"
+              "keyName": "={{ $('Consulta de Cooper').isExecuted ? 'video_id' : 'createdAt' }}",
+              "condition": "={{ $('Consulta de Cooper').isExecuted ? 'eq' : 'gte' }}",
+              "keyValue": "={{ $('Consulta de Cooper').isExecuted ? $('Consulta de Cooper').first().json.video_id : new Date(Date.now()-14*86400000).toISOString() }}"
             }
           ]
         },
@@ -86,7 +86,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Solo lo que ya debió salir (10 min de margen) y aún no está confirmado.\nconst corte = Date.now() - 10 * 60000;\nconst l = $input.all().map(i => i.json).filter(p => p.request_id && ['programado', 'enviado'].includes(p.estado) && Date.parse(p.publicado_en || 0) <= corte);\nreturn l.length ? l.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
+        "jsCode": "\n// Solo lo que ya debió salir (10 min de margen) y aún no está confirmado.\nconst corte = Date.now() - 10 * 60000;\nconst filtroCooper=$('Consulta de Cooper').isExecuted ? $('Consulta de Cooper').first().json.video_id : '';\nconst l = $input.all().map(i => i.json).filter(p => p.request_id && (filtroCooper ? p.video_id===filtroCooper : ['programado', 'enviado'].includes(p.estado) && Date.parse(p.publicado_en || 0) <= corte));\nconst elegidas=filtroCooper?l.filter(p=>p.video_id===filtroCooper):l;\nreturn elegidas.length ? elegidas.map(p => ({ json: p })) : [{ json: { nada: true } }];\n"
       },
       "id": "e0f8f0d2-c770-4f3a-b8c5-5ef82cdeb9e4",
       "name": "Por confirmar",
@@ -159,7 +159,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Traduce la respuesta de Upload-Post: completo y sin fallos → publicado; fallido → error; lo demás sigue esperando.\nconst pedidos = $('Por confirmar').all().map(i => i.json);\nconst todas = $('Publicaciones recientes').all().map(i => i.json);\nconst cambios = [];\n$input.all().forEach((it, k) => {\n  const p = pedidos[k]; const r = it.json || {}; if (!p) return;\n  const res = Array.isArray(r.results) ? r.results : [];\n  const st = String(r.status || '').toLowerCase();\n  // Solo se juzga lo terminado: mientras está «queued» Upload-Post ya trae success:false (aún no hay intento).\n  if (!['completed', 'failed'].includes(st) || !res.length) return;   // pendiente o en proceso: se mira en una hora\n  const fallo = st === 'failed' || res.some(x => x.success !== true);\n  const listo = !fallo;\n  const urls = res.map(x => x.post_url || x.url || '').filter(Boolean);\n  const errores = res.filter(x => x.success !== true).map(x => `${x.platform}: ${String(x.error_message || x.error || x.message || 'error').slice(0, 120)}`);\n  cambios.push({ request_id: p.request_id, video_id: p.video_id, plataformas: p.plataformas, tipo: p.tipo,\n    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: (res.find(x => x.platform === 'youtube' && x.success === true) || {}).platform_post_id || '',\n    resultado: JSON.stringify({ status: st, urls, errores, publicaciones: res.map(x=>({red:String(x.platform || ''),url:x.post_url || x.url || '',publicado:x.success === true})) }) });\n});\nif (!cambios.length) return [{ json: { nada: true } }];\n// Estado del video: publicado cuando todas sus publicaciones salieron; error si alguna falló.\nconst porVideo = {};\nfor (const v of new Set(cambios.map(c => c.video_id))) {\n  const filas = todas.filter(t => t.video_id === v).map(t => cambios.find(c => c.request_id === t.request_id) || t);\n  const yt = cambios.filter(c => c.video_id === v && /youtube/.test(c.plataformas)).map(c => c.youtube_id || (c.url.match(/(?:v=|shorts\\/|youtu\\.be\\/)([\\w-]{11})/) || [])[1]).find(Boolean) || '';\n  porVideo[v] = { video_id: v, youtube_id: yt,\n    estado: filas.some(f => f.estado === 'error') ? 'error_publicacion' : filas.every(f => f.estado === 'publicado') ? 'publicado' : '' };\n}\nreturn cambios.map(c => ({ json: { ...c, video: porVideo[c.video_id] } }));\n"
+        "jsCode": "\n// Traduce la respuesta de Upload-Post: completo y sin fallos → publicado; fallido → error; lo demás sigue esperando.\nconst pedidos = $('Por confirmar').all().map(i => i.json);\nconst todas = $('Publicaciones recientes').all().map(i => i.json);\nconst cambios = [];\n$input.all().forEach((it, k) => {\n  const p = pedidos[k]; const r = it.json || {}; if (!p) return;\n  const res = Array.isArray(r.results) ? r.results : [];\n  const st = String(r.status || '').toLowerCase();\n  // Solo se juzga lo terminado: mientras está «queued» Upload-Post ya trae success:false (aún no hay intento).\n  if (!['completed', 'failed'].includes(st) || !res.length) return;   // pendiente o en proceso: se mira en una hora\n  const fallo = st === 'failed' || res.some(x => x.success !== true || x.skipped === true || x.fallback_to_inbox === true);\n  const listo = !fallo;\n  const urls = res.map(x => x.post_url || x.url || '').filter(Boolean);\n  const errores = res.filter(x => x.success !== true).map(x => `${x.platform}: ${String(x.error_message || x.error || x.message || 'error').slice(0, 120)}`);\n  cambios.push({ request_id: p.request_id, video_id: p.video_id, plataformas: p.plataformas, tipo: p.tipo,\n    estado: listo ? 'publicado' : 'error', url: urls[0] || '', youtube_id: (res.find(x => x.platform === 'youtube' && x.success === true) || {}).platform_post_id || '',\n    resultado: JSON.stringify({ status: st, urls, errores, publicaciones: res.map(x=>({red:String(x.platform || ''),url:x.post_url || x.url || '',publicado:x.success === true && !x.skipped && !x.fallback_to_inbox,estado:x.fallback_to_inbox?'borrador':x.skipped?'omitido':x.success===true?'publicado':'error',borrador:x.fallback_to_inbox===true,omitido:x.skipped===true})) }) });\n});\nif (!cambios.length) return [{ json: { nada: true } }];\n// Estado del video: publicado cuando todas sus publicaciones salieron; error si alguna falló.\nconst porVideo = {};\nfor (const v of new Set(cambios.map(c => c.video_id))) {\n  const filas = todas.filter(t => t.video_id === v).map(t => cambios.find(c => c.request_id === t.request_id) || t);\n  const yt = cambios.filter(c => c.video_id === v && /youtube/.test(c.plataformas)).map(c => c.youtube_id || (c.url.match(/(?:v=|shorts\\/|youtu\\.be\\/)([\\w-]{11})/) || [])[1]).find(Boolean) || '';\n  porVideo[v] = { video_id: v, youtube_id: yt,\n    estado: filas.some(f => f.estado === 'error') ? 'error_publicacion' : filas.every(f => f.estado === 'publicado') ? 'publicado' : '' };\n}\nreturn cambios.map(c => ({ json: { ...c, video: porVideo[c.video_id] } }));\n"
       },
       "id": "f9f5297c-8531-496b-ab24-0290ccd4a6a7",
       "name": "Leer resultados",
@@ -382,6 +382,60 @@
     },
     {
       "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "37ea9037-4fb0-5fdb-a368-52f1b8ff912f",
+      "name": "Consulta de Cooper",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Avisar\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Avisar\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Avisar\"})}};});\n"
+      },
+      "id": "3aebae01-436e-5fd7-a03b-84983bb186d5",
+      "name": "Cooper · aviso Avisar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "0e0ff854-a815-5f9e-b77d-7a862d404d79",
+      "name": "Cooper · aviso Avisar guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Actualizar video\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "7b7bb4f8-35db-57a0-9633-5b5dca9e13f4",
@@ -560,6 +614,39 @@
         [
           {
             "node": "Avisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta de Cooper": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Avisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Avisar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Avisar guardar",
             "type": "main",
             "index": 0
           }

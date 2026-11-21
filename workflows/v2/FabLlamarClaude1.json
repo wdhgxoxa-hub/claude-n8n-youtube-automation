@@ -424,20 +424,104 @@
         220,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: Claude no respondió\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: Claude no respondió\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: Claude no respondió\"})}};});\n"
+      },
+      "id": "da97b02a-1c91-56df-9a4c-6e572ed1e143",
+      "name": "Cooper · aviso Aviso: Claude no respondió",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "17b810c8-109b-557b-abdd-bb25a5ed8ceb",
+      "name": "Cooper · aviso Aviso: Claude no respondió guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json;return [{json:{tipo:'ejecucion_cooper',evento:String($execution.id),canal_id:e.canal_id||'',video_id:e.video_id||e.plan?.video_id||'',detalle:'{}'}}];"
+      },
+      "id": "90d013c3-cb08-507c-b733-5659bb5d1983",
+      "name": "Cooper · atribuir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "6d5c4875-46b1-57b2-85fe-88a88e45bed1",
+      "name": "Cooper · guardar auxiliar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "7fa5b72a-6172-5982-958d-80c309e0593f",
+      "name": "Cooper · seguir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Leer ajustes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Leer ajustes": {
       "main": [
         [
@@ -616,6 +700,72 @@
         [
           {
             "node": "Cooper · costo Respuesta registrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso: Claude no respondió": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: Claude no respondió",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: Claude no respondió": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: Claude no respondió guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · seguir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · seguir auxiliar",
             "type": "main",
             "index": 0
           }

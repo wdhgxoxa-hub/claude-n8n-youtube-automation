@@ -915,20 +915,145 @@
         8580,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: conectado\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: conectado\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: conectado\"})}};});\n"
+      },
+      "id": "1c592c1e-7764-5dc0-aa44-561cfb49177b",
+      "name": "Cooper · aviso Aviso: conectado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cf66d18a-75f1-5791-b726-15c3f666199b",
+      "name": "Cooper · aviso Aviso: conectado guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: no conectado\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: no conectado\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: no conectado\"})}};});\n"
+      },
+      "id": "c2075277-1444-5f13-bbc0-5738a04888d0",
+      "name": "Cooper · aviso Aviso: no conectado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "21e79dd6-e04c-5520-8dec-6a3182b0fbc1",
+      "name": "Cooper · aviso Aviso: no conectado guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Inicio').first().json;return [{json:{tipo:'ejecucion_cooper',evento:String($execution.id),canal_id:e.canal_id||'',video_id:e.video_id||e.plan?.video_id||'',detalle:'{}'}}];"
+      },
+      "id": "a2ac34a0-7179-5613-916f-6f482e26ea12",
+      "name": "Cooper · atribuir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "9a82952e-cf99-55b4-b546-5b5101370c50",
+      "name": "Cooper · guardar auxiliar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Inicio').all();"
+      },
+      "id": "1880de14-0f56-5710-88b1-8f5578137ed6",
+      "name": "Cooper · seguir auxiliar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
-    "Inicio": {
-      "main": [
-        [
-          {
-            "node": "Leer ajustes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Leer ajustes": {
       "main": [
         [
@@ -1293,6 +1418,11 @@
             "node": "Página: listo",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Cooper · aviso Aviso: conectado",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1313,6 +1443,77 @@
         [
           {
             "node": "Página: error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cooper · aviso Aviso: no conectado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: conectado": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: conectado guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: no conectado": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: no conectado guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · seguir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Leer ajustes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Cooper · atribuir auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · atribuir auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · guardar auxiliar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · guardar auxiliar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · seguir auxiliar",
             "type": "main",
             "index": 0
           }

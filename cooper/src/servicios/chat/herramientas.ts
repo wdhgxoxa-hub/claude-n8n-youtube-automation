@@ -74,6 +74,7 @@ export const titulos: Record<NombreHerramienta, string> = {
 };
 export function herramientas(user: User): HerramientaChat[] {
   return [...Object.keys(contrato.eventos), ...contrato.consultas]
+    .filter((n) => !(contrato.solo_web as string[]).includes(n))
     .filter((n) => n !== "gastos" || user.role === "admin")
     .map((n) => {
       const nombre = n as NombreHerramienta;

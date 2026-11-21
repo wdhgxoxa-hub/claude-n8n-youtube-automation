@@ -85,7 +85,11 @@ it("catálogo coincide exactamente con el puente y restringe gastos por rol", ()
     herramientas(admin)
       .map((h) => h.nombre)
       .sort(),
-  ).toEqual([...Object.keys(contrato.eventos), ...contrato.consultas].sort());
+  ).toEqual(
+    [...Object.keys(contrato.eventos), ...contrato.consultas]
+      .filter((n) => !(contrato.solo_web as string[]).includes(n))
+      .sort(),
+  );
   expect(herramientas(ana).map((h) => h.nombre)).not.toContain("gastos");
 });
 it("no produce ni registra gasto hasta confirmar y resiste replay/concurrencia", async () => {

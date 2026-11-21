@@ -125,7 +125,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst c = $input.all().map(i => i.json).filter(x => x.canal_id && x.nicho);\nreturn c.length ? c.map(x => ({ json: { accion: 'radar', canal_id: x.canal_id, nombre: x.nombre || x.canal_id, nicho: String(x.nicho).slice(0, 450),\n  redes: x.redes || 'youtube,tiktok' } })) : [{ json: { nada: true } }];\n"
+        "jsCode": "\nconst pedidoCooper=$('Inicio').isExecuted?$('Inicio').first().json:{};\nconst c = $input.all().map(i => i.json).filter(x => x.canal_id && x.nicho && (!pedidoCooper.canal_id||x.canal_id===pedidoCooper.canal_id));\nreturn c.length ? c.map(x => ({ json: { accion: 'radar', canal_id: x.canal_id, nombre: x.nombre || x.canal_id, nicho: String(x.nicho).slice(0, 450),\n  redes: x.redes || 'youtube,tiktok' } })) : [{ json: { nada: true } }];\n"
       },
       "id": "526c3f29-24da-4c5e-9e9d-4670bddbbd5c",
       "name": "Pedidos de radar",
@@ -201,7 +201,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n// Une cada canal con lo que trajo vidIQ (mismo orden) y arma el encargo del analista de tendencias.\nconst ped = $('Pedidos de radar').all().map(i => i.json); const vq = $input.all().map(i => i.json);\nreturn ped.map((p, i) => { const v = vq[i] || {}; const t = v.ok ? (v.textos || []) : [];\n  return { json: { ...p, ok: !!v.ok, creditos: v.creditos || 0, prompt:\n`Eres el analista de tendencias de una fábrica de videos con IA (imágenes y clips generados, voz en off, montaje automático; sin rostros reales, sin grabar personas, sin plantillas de CapCut).\nCanal: ${p.nombre}. Nicho: ${p.nicho}. Publica en: ${p.redes}.\nCon estos datos de esta semana, di qué está funcionando y propón ideas que ESTA fábrica pueda producir ya, distintas por red:\n- TikTok: ritmo, ganchos en pantalla, sonidos en alza (el sonido solo se puede sugerir: se pone a mano al publicar).\n- Instagram Reels: estética, bucle, texto de portada, guardados y compartidos.\n- YouTube Shorts: retención, búsqueda, nada de contenido repetido ni plantillas (política de contenido inauténtico).\nDescarta lo que dependa de música con derechos en YouTube, de caras de personas reales o de grabar en persona.\nResponde JSON {\"resumen\": \"2 frases\", \"formatos\": [{\"formato\": \"\", \"por_que\": \"\", \"ejemplo\": \"url\"}], \"ideas\": [{\"titulo\": \"\", \"red\": \"tiktok|instagram|youtube|todas\", \"gancho\": \"primera frase y texto en pantalla\", \"formato\": \"\", \"por_que\": \"dato concreto del radar\", \"caduca_dias\": 7}], \"sonidos\": [{\"nombre\": \"\", \"url\": \"\", \"uso\": \"\"}]}\nMáximo 5 ideas, 3 formatos y 3 sonidos. Usa solo datos de abajo; si no alcanzan, dilo en el resumen.\n\n== Reels y TikTok que superan a su creador ==\n${(t[0] || 'sin datos').slice(0, 9000)}\n\n== Shorts en español que despegan ==\n${(t[1] || 'sin datos').slice(0, 6000)}\n\n== Sonidos de TikTok en alza ==\n${(t[2] || 'sin datos').slice(0, 4000)}` } }; });\n"
+        "jsCode": "\n// Une cada canal con lo que trajo vidIQ (mismo orden) y arma el encargo del analista de tendencias.\nconst ped = $('Pedidos de radar').all().map(i => i.json); const vq = $input.all().map(i => i.json);\nreturn ped.map((p, i) => { const v = vq[i] || {}; const t = v.ok ? (v.textos || []) : [];\n  return { json: { ...p, ok: !!v.ok, creditos: v.creditos || 0, prompt:\n`Eres el analista de tendencias de una fábrica de videos con IA (imágenes y clips generados, voz en off, montaje automático; sin rostros reales, sin grabar personas, sin plantillas de CapCut).\nCanal: ${p.nombre}. Nicho: ${p.nicho}. Publica en: ${p.redes}.\nCon estos datos de esta semana, di qué está funcionando y propón ideas que ESTA fábrica pueda producir ya, distintas por red:\n- TikTok: ritmo, ganchos en pantalla, sonidos en alza (el sonido solo se puede sugerir: se pone a mano al publicar).\n- Instagram Reels: estética, bucle, texto de portada, guardados y compartidos.\n- YouTube Shorts: retención, búsqueda, nada de contenido repetido ni plantillas (política de contenido inauténtico).\nDescarta lo que dependa de música con derechos en YouTube, de caras de personas reales o de grabar en persona.\nResponde JSON {\"resumen\": \"2 frases\", \"formatos\": [{\"formato\": \"\", \"por_que\": \"\", \"ejemplo\": \"url\"}], \"ideas\": [{\"titulo\": \"\", \"red\": \"tiktok|instagram|youtube|todas\", \"gancho\": \"primera frase y texto en pantalla\", \"formato\": \"\", \"por_que\": \"dato concreto del radar\", \"fuente\": \"nombre de la fuente consultada\", \"fuente_url\": \"URL exacta de los datos suministrados, o vacío si falta\", \"caduca_dias\": 7}], \"sonidos\": [{\"nombre\": \"\", \"url\": \"\", \"uso\": \"\"}]}\nMáximo 5 ideas, 3 formatos y 3 sonidos. Usa solo datos de abajo; si no alcanzan, dilo en el resumen.\n\n== Reels y TikTok que superan a su creador ==\n${(t[0] || 'sin datos').slice(0, 9000)}\n\n== Shorts en español que despegan ==\n${(t[1] || 'sin datos').slice(0, 6000)}\n\n== Sonidos de TikTok en alza ==\n${(t[2] || 'sin datos').slice(0, 4000)}` } }; });\n"
       },
       "id": "a3354983-2a8b-47b2-9929-58f06c7b533f",
       "name": "Encargo del analista",
@@ -697,6 +697,47 @@
         1320,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet inicio={};try{if($('Inicio').isExecuted)inicio=$('Inicio').first().json;}catch{}\nreturn $input.all().map((i,k)=>{const r=i.json.result||i.json;return {json:{tipo:'aviso_cooper',evento:String($execution.id)+':'+\"Aviso: radar\"+':'+$runIndex+':'+k,canal_id:inicio.canal_id||inicio.plan?.canal_id||'',video_id:inicio.video_id||inicio.plan?.video_id||'',detalle:JSON.stringify({tipo:\"Aviso: radar\",estado:r.message_id?'enviado':r.error?'fallido':'incierto',resumen:'Aviso: '+\"Aviso: radar\"})}};});\n"
+      },
+      "id": "83717c87-4710-5763-8f8a-3d675a925586",
+      "name": "Cooper · aviso Aviso: radar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "729d1d29-fa75-5a4e-9bea-fca414225f4d",
+      "name": "Cooper · aviso Aviso: radar guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ]
     }
   ],
   "connections": {
@@ -986,6 +1027,28 @@
         [
           {
             "node": "Guardar noticias del día",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aviso: radar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · aviso Aviso: radar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · aviso Aviso: radar guardar",
             "type": "main",
             "index": 0
           }
