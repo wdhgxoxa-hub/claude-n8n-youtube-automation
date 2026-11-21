@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 12:14 (Lima).
+Última actualización: 2026-11-21 12:30 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **Sentinel privado separado, probado focalmente:** retiradas nueve fuentes del árbol público; caché ignorada preparada desde objetos Git fijados y verificada antes de importar. Pasan 13 unitarias, 8 Python con guardián/caos real y 172 flujos; archivo público sin fuentes privadas. Pendiente integración, saneamiento de commits salientes y puerta completa del orquestador. [Informe](informes/total-sentinel-privado.md).
 
 - **Retorno y aprendizaje compatibles, probado localmente:** corregida la lectura prematura de «Fila actualizada» y la pérdida del recibo M01. La validación editorial ahora precede a reserva/despacho; contexto y deduplicación se conservan. Pasan 15 casos reales en n8n 2.47.6 y 15 en 2.47.4, 172 de flujos y tres del selector estricto de imágenes. Pendiente integración y aplicación coordinada; VPS sin cambios por este frente. [Evidencia](informes/total-retorno-2476.md).
 

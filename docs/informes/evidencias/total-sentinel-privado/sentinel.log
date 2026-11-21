@@ -1,0 +1,13 @@
+test_archivos_y_directorios_extra (test_sentinel_cache.CacheSentinel.test_archivos_y_directorios_extra) ... ok
+test_enlaces_a_fuentes_y_cache (test_sentinel_cache.CacheSentinel.test_enlaces_a_fuentes_y_cache) ... ok
+test_hash_publico_y_no_bytecode (test_sentinel_cache.CacheSentinel.test_hash_publico_y_no_bytecode) ... ok
+test_modificado_y_faltante (test_sentinel_cache.CacheSentinel.test_modificado_y_faltante) ... ok
+test_no_acepta_ruta_fuera_del_modulo (test_sentinel_cache.CacheSentinel.test_no_acepta_ruta_fuera_del_modulo) ... ok
+test_cache_conserva_hashes_del_manifiesto_publico (test_sentinel_exclusiones.ExclusionesCooper.test_cache_conserva_hashes_del_manifiesto_publico) ... ok
+test_controles_mutantes_excluidos_sin_bloquear_filtros_ni_caos (test_sentinel_exclusiones.ExclusionesCooper.test_controles_mutantes_excluidos_sin_bloquear_filtros_ni_caos) ... ok
+test_escritura_que_eluda_interfaz_sigue_bloqueada_y_es_error_visible (test_sentinel_exclusiones.ExclusionesCooper.test_escritura_que_eluda_interfaz_sigue_bloqueada_y_es_error_visible) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.692s
+
+OK

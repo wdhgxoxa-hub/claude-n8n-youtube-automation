@@ -1,0 +1,12 @@
+{
+  "commit": "892d665f4c2f10d30c74603351a8c766afc59e6b",
+  "archivo_sha256": "76577aa873d1f7410ebe11175b32b08c14e9c5354e594255bd9e99a29af6cf98",
+  "entradas_privadas_en_tar": 0,
+  "revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+  "archivos_cache": 9,
+  "runtime_node": "PASS",
+  "runtime_python": "PASS",
+  "cache_fuera_contexto_imagen": true,
+  "checkout_local": "/home/david/Proyectos/cooper-wt/total-sentinel-privado/cooper/.cache/archivo-publico-hamMhH/checkout",
+  "alcance": "Archivo público y caché verificada; no se ejecutó ci:limpia ni puerta completa en este ensayo"
+}

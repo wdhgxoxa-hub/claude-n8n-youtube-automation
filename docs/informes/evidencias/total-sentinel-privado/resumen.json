@@ -1,0 +1,46 @@
+{
+  "fecha": "2026-11-21T17:29:11.409Z",
+  "alcance": "Verificación focal; puerta integrada completa a cargo del orquestador",
+  "pasos": [
+    {
+      "nombre": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "duracion_ms": 3654,
+      "advertencias": 0,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "tipos",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "duracion_ms": 1367,
+      "advertencias": 0,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "unitarias",
+      "comando": "npm test -- tests/sentinel-cache.test.ts tests/puerta.test.ts",
+      "rc": 0,
+      "duracion_ms": 884,
+      "advertencias": 0,
+      "sha256": "a3cd57807e50d6daefa9da8317dab7c7225f4c8988d1da466b8b1483d2aa4f01"
+    },
+    {
+      "nombre": "sentinel",
+      "comando": "/home/david/Proyectos/cooper-wt/total-sentinel-privado/cooper/.cache/sentinel-venv/bin/python -B -m unittest discover -s tests -p test_sentinel_*.py -v",
+      "rc": 0,
+      "duracion_ms": 7035,
+      "advertencias": 0,
+      "sha256": "6a53e05f134afd61b9e79ffe69fcf83c4546c154207c0e9e1ea51fc462d06682"
+    },
+    {
+      "nombre": "flujos",
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "rc": 0,
+      "duracion_ms": 1259,
+      "advertencias": 0,
+      "sha256": "63d1b8f8dcb1f999df916dcc0903c9b67f28ee1287d4d3b1679f54113e24da96"
+    }
+  ]
+}
