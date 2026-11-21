@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:53 (Lima).
+Última actualización: 2026-11-21 17:03 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **Recuperación canónica complementaria acreditada localmente:** helper `beaa5cab…` del integrador, imagen b3 y siete servicios mixtos: aplicación → recuperación post-PASS → reinicio explícito con override PASS. CAS intacto, escritura posterior archivada y snapshot restaurado, anterior global ausente, 1 GiB/swap0 y limpieza propia. 221 regresiones sin advertencias. No hubo VPS ni cambios productivos; no acredita recreación genérica sin override. [Recibos y orden de recuperación](informes/total-recuperacion-cas.md).
 
 - **21-11-2026, Lima — estrés móvil y escritorio verificados:** selector del ensayo corregido para el tabpanel móvil mediante el cuadro de mensaje accesible y su formulario asociado; aplicación sin cambios. Focal completo 8/8 PASS, 16 videos, 60 intentos→12 mensajes por tamaño, cero advertencias/reintentos/omisiones. Integrado como `5e8e260`; dos rondas conjuntas nuevas pendientes. La ronda H19 fallida y sus 34 originales/62 fotogramas quedan como diagnóstico no aceptado. [Evidencia](informes/total-integrador-web.md#estrés-completo-después-de-corregir-el-selector-móvil).
 

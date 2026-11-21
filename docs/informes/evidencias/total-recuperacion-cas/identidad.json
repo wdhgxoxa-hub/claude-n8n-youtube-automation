@@ -1,0 +1,32 @@
+{
+  "estado": "PASS",
+  "fecha_lima": "2026-11-21T17:01:50.087868-05:00",
+  "base": "23478e4",
+  "identidad_antes_despues": {
+    "operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+    "recuperar-infra.py": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "compose.chat.yaml": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "integrador_f2537b3_helper_identico": true,
+  "arnes_sha256": "42e75a441c24f277f041ea5d57bd5b3824605c0534e0320f46f6660cd2629cb9",
+  "recibos": {
+    "real-7.json": "7c5dbbc5ffdd35604cec39ecb3a8d2e69ee97074cdc6f4f1f69258957583a721",
+    "aplicacion.json": "65b2b39f94727661768bb5f365e6158b8e21e288e50c25f357eca56e17dd3bdf",
+    "recuperacion.json": "f39ff5e7abb991335034de3a99bd0f100364998a09d2adee3e6483edff724dca"
+  },
+  "vps_accedido": false,
+  "archivos_productivos_modificados": false,
+  "motor": "Podman rootless con adaptación de namespaces declarada",
+  "alcance": "Aplicación, recuperación posterior, snapshot desplazado restaurado, reinicio explícito con override, anterior global ausente y limpieza",
+  "regresiones": {
+    "total": 221,
+    "resultado": "PASS",
+    "advertencias": 0,
+    "sha256": "58a1e664ae20ab1b011ecd7e800b8c9c1fb9487e651d8b2c7582253e402f5799"
+  }
+}

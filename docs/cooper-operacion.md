@@ -96,6 +96,8 @@ La reversa automática ante un fallo **dentro de** `aplicar-infra.py` sigue sien
 
 `actualizar-solo-cooper.py` guarda `solo-cooper-*/anterior.json` y su respaldo local, **no** el puntero global de `revertir.sh`. Su reversa automática está probada; no usar la receta genérica para una recuperación posterior ni reutilizar un puntero antiguo. Ese es el actualizador de la secuencia del integrador b3. La secuencia histórica de `cooper-total` usaba `Operator.actualizar`; no transferir su receta sin comprobar el recibo real de la fase de aplicación.
 
+La aceptación complementaria del helper canónico acredita siete servicios y un reinicio explícito con `imagenes-reversa.json` como último override: `start_restored(op, archivo_certificado)` delega en `infra.start(..., image_overrides=...)`. Ese archivo no queda instalado como política persistente; una recreación posterior sin él podría adoptar la imagen Cooper global en los relés. No se ensayó reboot ni se cambiaron timers. La secuencia actual limitada requiere conciliar/revertir primero cualquier lote n8n posterior, después infraestructura y finalmente Cooper con su recibo específico. [Ensayo y límites](informes/total-recuperacion-cas.md).
+
 **VPS perdido:**
 
 1. Preparar Ubuntu y una instalación revisada de `deploy/`; poner el destino en mantenimiento y detener el Compose. Recuperar el repositorio **cifrado** desde `~/.local/share/cooper-copias-vps/actual` y provisionar la contraseña y configuración privada por el canal ya autorizado. La copia no contiene `/etc/cooper/.env`; no reconstruye OAuth, claves del host ni sesiones CLI.

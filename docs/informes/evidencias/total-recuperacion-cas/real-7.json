@@ -1,0 +1,228 @@
+{
+  "estado": "PASS",
+  "fuente_imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "imagen_archivo_sha256": "9ea269e6746e197c5626ae04fa6835bbcf9eb18274d7d0192225582e8e493d20",
+  "codigo": {
+    "operar.py": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+    "aplicar-infra.py": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+    "recuperar-infra.py": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba"
+  },
+  "codigo_arnes_sha256": "42e75a441c24f277f041ea5d57bd5b3824605c0534e0320f46f6660cd2629cb9",
+  "vps_accedido": false,
+  "datos_sinteticos": true,
+  "mixto_previo": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+        "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+        "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.2-alpine",
+        "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534077]",
+        "chat-cooper": "net:[4026534077]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534146]",
+        "chat-n8n": "net:[4026534146]"
+      },
+      "runner": {
+        "runner": "net:[4026534482]",
+        "chat-runner": "net:[4026534482]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "infra_aplicada": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.6",
+        "id": "a1a2ac97196467d6d7fe8cb7936a3feb5da77383157d64c20ab2243535833a11"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.6",
+        "id": "ba9b2a07f5786af771dceba41bc9b892c2a90745af6721f1575168efbede0928"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.8-alpine",
+        "id": "857143cd0ed55376842e88df6b4a68f9b3babd8f56ee9e070bf08b23e91fd6bc"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534077]",
+        "chat-cooper": "net:[4026534077]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534146]",
+        "chat-n8n": "net:[4026534146]"
+      },
+      "runner": {
+        "runner": "net:[4026534343]",
+        "chat-runner": "net:[4026534343]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "infra_recuperada": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+        "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+        "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.2-alpine",
+        "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534146]",
+        "chat-cooper": "net:[4026534146]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534077]",
+        "chat-n8n": "net:[4026534077]"
+      },
+      "runner": {
+        "runner": "net:[4026534349]",
+        "chat-runner": "net:[4026534349]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "arranque_explicito_infra_only": {
+    "servicios": {
+      "cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "n8n": {
+        "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+        "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+      },
+      "runner": {
+        "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+        "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+      },
+      "caddy": {
+        "imagen": "docker.io/library/caddy:2.11.2-alpine",
+        "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+      },
+      "chat-cooper": {
+        "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+        "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+      },
+      "chat-n8n": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      },
+      "chat-runner": {
+        "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+        "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+      }
+    },
+    "namespaces": {
+      "cooper": {
+        "cooper": "net:[4026534146]",
+        "chat-cooper": "net:[4026534146]"
+      },
+      "n8n": {
+        "n8n": "net:[4026534077]",
+        "chat-n8n": "net:[4026534077]"
+      },
+      "runner": {
+        "runner": "net:[4026534349]",
+        "chat-runner": "net:[4026534349]"
+      }
+    },
+    "reles_401_200": "PASS",
+    "limites": [
+      "1073741824",
+      "0"
+    ]
+  },
+  "escritura_posterior_preservada": "PASS",
+  "snapshot_desplazado_restaurable": "PASS",
+  "punteros_cooper_conservados": "PASS",
+  "recuperacion_infra_only": "PASS",
+  "arranque_explicito_infra_only_pass": "PASS",
+  "anterior_global_ausente": true,
+  "override_transitorio_requerido": true,
+  "recibo_aplicacion": "/home/david/.cache/cooper-r7/e2e-vps-recuperacion-pwduvgnf/operacion/infra-pass.json",
+  "recibo_recuperacion": "/home/david/.cache/cooper-r7/e2e-vps-recuperacion-pwduvgnf/operacion/recuperacion-pass.json",
+  "alcance": "Podman real con adaptación de retirada de relés detenidos y /sys vacío solo lectura; no prueba Docker productivo ni SSH.",
+  "limpieza": "PASS"
+}
