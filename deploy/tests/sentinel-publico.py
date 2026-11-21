@@ -5,12 +5,16 @@ sus evaluadores. No se etiqueta producción como copia ni se fabrican cookies.
 """
 import importlib
 import json
-import os
 from pathlib import Path
 import sys
 
-source = Path(os.environ.get('SENTINEL_CODIGO', str(Path.home() / 'Proyectos/Sistema-Sentinel/codigo')))
-sys.path.insert(0, str(source / 'src'))
+sys.dont_write_bytecode = True
+cooper = Path(__file__).resolve().parents[2] / 'cooper'
+sys.path.insert(0, str(cooper / 'scripts'))
+from sentinel_cache import comprobar_sentinel
+
+# La aceptación remota usa la misma revisión privada verificada que la puerta.
+sys.path.insert(0, str(comprobar_sentinel()))
 from sentinel.contrato import Objetivo, ComprobacionDestino, Contexto, Exclusiones
 from sentinel.guardian.guardian import Guardian
 
