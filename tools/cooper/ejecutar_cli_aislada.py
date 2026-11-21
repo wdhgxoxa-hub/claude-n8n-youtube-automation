@@ -45,7 +45,7 @@ def ejecutar(wid, base='file:/var/lib/cooper/n8n/database.sqlite?mode=ro'):
   r=subprocess.run(cli,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=300)
   with sqlite3.connect(base,uri=True) as c:
    ejecuciones=[{'id':e[0],'estado':e[1]} for e in c.execute('SELECT id,status FROM execution_entity WHERE id>? AND workflowId=? ORDER BY id',(previo,wid))]
-  return {'workflow':wid,'codigo_cli':r.returncode,'ejecuciones':ejecuciones,'runner_externo_aislado':True,'salida_cruda_descartada':True}
+  return {'workflow':wid,'codigo_cli':r.returncode,'launcher_codigo_previo':runner.poll(),'ejecuciones':ejecuciones,'runner_externo_aislado':True,'salida_cruda_descartada':True}
  finally:
   subprocess.run(['docker','exec','cooper-runner-1','sh','-c','if test -f '+pid+'; then kill -TERM "$(cat '+pid+')"; fi'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
   try: runner.wait(timeout=50)
