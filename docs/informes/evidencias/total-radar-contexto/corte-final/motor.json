@@ -1,0 +1,21 @@
+{
+  "migracion": "PASS",
+  "reversion": "PASS",
+  "idempotencia": "PASS",
+  "imagen_nueva": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "imagen_anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6",
+  "red": "none",
+  "puertos": [],
+  "cpus": 0.5,
+  "triggers_arrancados": false,
+  "integridad_y_claves_foraneas": "PASS",
+  "flujos_preservados": 45,
+  "tablas_negocio_preservadas": 9,
+  "filas_negocio_preservadas": 146,
+  "migraciones_antes": 342,
+  "migraciones_despues": 342,
+  "respaldo_sha256": "44dd221a64c46ad741f37747427c7803f489d84d2c351bf880d53beb60028146",
+  "restauracion_sha256": "44dd221a64c46ad741f37747427c7803f489d84d2c351bf880d53beb60028146",
+  "workflow_ids_active_version_sha256": "d14e7acefee211b645eba3938bff70f3c219444e1401704aa49adfd20bcbaae5",
+  "tablas_negocio_sha256": "dcf5e2174450101441e0627f9ae69a4526c66387489aef92db7e57af571fef18"
+}

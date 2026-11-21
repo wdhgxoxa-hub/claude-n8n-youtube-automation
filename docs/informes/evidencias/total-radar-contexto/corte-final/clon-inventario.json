@@ -1,0 +1,8 @@
+{
+  "flujos": 45,
+  "filas_negocio": 146,
+  "migraciones_n8n": 342,
+  "tablas_negocio_sha256": "dcf5e2174450101441e0627f9ae69a4526c66387489aef92db7e57af571fef18",
+  "workflow_ids_active_version_sha256": "d14e7acefee211b645eba3938bff70f3c219444e1401704aa49adfd20bcbaae5",
+  "comparacion_restauracion": "PASS"
+}

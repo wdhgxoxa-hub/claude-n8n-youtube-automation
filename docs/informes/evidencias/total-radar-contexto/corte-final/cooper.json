@@ -1,0 +1,14 @@
+{
+  "actualizacion": "PASS",
+  "reversion": "PASS",
+  "red": "none",
+  "puertos": [],
+  "imagen_nueva": "localhost/cooper:bfd5e79",
+  "imagen_anterior": "localhost/cooper:retroceso-vps-cbf2068",
+  "respaldo_sha256": "e855ef149d3a67f492a2b1a2a1863b0d780a3b3a054d4b76e5edfb7c424b7066",
+  "migraciones_antes": 11,
+  "migraciones_despues": 13,
+  "tablas_anteriores_conservadas": 27,
+  "integridad": "PASS",
+  "claves_foraneas": "PASS"
+}

@@ -1,0 +1,17 @@
+{
+  "aceptacion_del_corte": "RECHAZADA",
+  "produccion_mutada": false,
+  "motivo": "Traslado manual solo de .sqlite omitió WAL; no representa el snapshot completo.",
+  "observado": {
+    "filas_negocio": 145,
+    "migraciones_cooper": 8
+  },
+  "esperado": {
+    "filas_negocio": 146,
+    "migraciones_cooper": 11
+  },
+  "ensayo_motor_sobre_copia_incompleta": "PASS técnico no válido para aceptar este corte",
+  "ensayo_cooper_sobre_copia_incompleta": "FAIL",
+  "correccion": "Restaurar snapshot íntegro, verificar manifiesto y clonar con backup API incorporando WAL.",
+  "guardia_commit": "e29bba5"
+}

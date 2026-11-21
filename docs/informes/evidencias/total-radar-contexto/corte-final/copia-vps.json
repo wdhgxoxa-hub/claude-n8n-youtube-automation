@@ -1,0 +1,114 @@
+{
+  "snapshot": "38b362f015b86e819cdd6669681f5980f5c1f4ae74aa448805afa09da596aef1",
+  "restauracion": "PASS",
+  "corte": "/var/lib/cooper-operacion/corte-final-sondas-1795291419006699775",
+  "estado": {
+    "ocupadas": 0,
+    "waiting": [
+      400,
+      540
+    ],
+    "sondas": [
+      {
+        "id": "CoopRadarReal001",
+        "active": false,
+        "version": null
+      },
+      {
+        "id": "CoopSondaVidIQ01",
+        "active": false,
+        "version": null
+      },
+      {
+        "id": "CoopSondaYtComp1",
+        "active": false,
+        "version": null
+      }
+    ]
+  },
+  "conteos": {
+    "workflows": 45,
+    "migraciones_n8n": 342,
+    "migraciones_cooper": 11,
+    "tablas_negocio": 9,
+    "filas_negocio": 146
+  },
+  "tablas_negocio_sha256": "dcf5e2174450101441e0627f9ae69a4526c66387489aef92db7e57af571fef18",
+  "workflow_ids_active_version_sha256": "d14e7acefee211b645eba3938bff70f3c219444e1401704aa49adfd20bcbaae5",
+  "n8n_sqlite_sha256": "9d80a6b09d6978feedf8ff71ab0713a32a7569378bbe0f7aa1bbfe5b928a3b76",
+  "servicios_antes": [
+    {
+      "servicio": "caddy",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-cooper",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-n8n",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-runner",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "cooper",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "n8n",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "runner",
+      "salud": "healthy",
+      "estado": "running"
+    }
+  ],
+  "servicios": [
+    {
+      "servicio": "caddy",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-cooper",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-n8n",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-runner",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "cooper",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "n8n",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "runner",
+      "salud": "healthy",
+      "estado": "running"
+    }
+  ],
+  "recarga_y_copia_unico_corte": true
+}

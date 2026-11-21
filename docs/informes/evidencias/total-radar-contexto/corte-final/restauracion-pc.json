@@ -1,0 +1,16 @@
+{
+  "restauracion": "PASS",
+  "snapshot": "38b362f015b86e819cdd6669681f5980f5c1f4ae74aa448805afa09da596aef1",
+  "archivos": 25,
+  "bases": 2,
+  "flujos": 45,
+  "filas_negocio": 146,
+  "tablas_negocio_sha256": "dcf5e2174450101441e0627f9ae69a4526c66387489aef92db7e57af571fef18",
+  "workflow_ids_active_version_sha256": "d14e7acefee211b645eba3938bff70f3c219444e1401704aa49adfd20bcbaae5",
+  "wal_preservados": [
+    "cooper/cooper.sqlite-wal",
+    "n8n/database.sqlite-wal"
+  ],
+  "cooper_migraciones_completa": 11,
+  "cooper_migraciones_solo_sqlite": 8
+}
