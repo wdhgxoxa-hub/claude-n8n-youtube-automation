@@ -1,0 +1,25 @@
+PASS salud, TLS verificado, cabeceras y editor privado
+PASS login ficticio con cookie Auth.js Secure y datos de ensayo
+PASS Marcas: JPEG y reel sintéticos con audio, HMAC válido/inválido y reinicio sin publicación
+PASS runner externo 2.47.4, firma real n8n→Cooper, SSE sin buffering y rechazo de firma inválida
+PASS desconexión y cinco reconexiones SSE sin agotar cupos
+Diagnóstico privado: /home/david/.cache/cooper-970d102/cooper/.cache/e2e-vps-U2hNYN
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+4 !== 1
+
+    at file:///home/david/.cache/cooper-970d102/deploy/tests/compose.mjs:582:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 4,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.3

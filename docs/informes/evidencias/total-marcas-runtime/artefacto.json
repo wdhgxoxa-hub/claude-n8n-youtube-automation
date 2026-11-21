@@ -1,0 +1,10 @@
+{
+  "fuente": "970d1025ccdc6ac4b9898a4baa8608ad732dcdf2",
+  "imagen": "localhost/cooper:970d1025ccdc6ac4b9898a4baa8608ad732dcdf2",
+  "imagen_id": "e4ee909a0458156bc1c421482fb0c9f898ebeb1a8d72f0eff94263a5ddd01379",
+  "archivo": "/home/david/Proyectos/cooper-wt/total-marcas-runtime/cooper/.cache/aceptacion-final/cooper-970d1025ccdc6ac4b9898a4baa8608ad732dcdf2.tar.gz",
+  "archivo_sha256": "25b6ec2a4f06b91eb7b12bb1439aa8775019041eb4390394d5b6ddd79bf25752",
+  "bytes": 296860164,
+  "arnes_correccion": "25be660",
+  "producto_modificado_despues_build": false
+}
