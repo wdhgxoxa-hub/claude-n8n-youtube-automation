@@ -1,0 +1,188 @@
+{
+  "version": "cooper-produccion-2026-11-21",
+  "descripcion": "Contrato de nombres y tipos, sin filas. Las columnas opcionales solo respaldan lecturas de compatibilidad; no se crean para satisfacer fixtures. Se preservan columnas históricas adicionales.",
+  "aliases": {
+    "youtube": "fab_youtube",
+    "publicaciones": "fab_publicaciones"
+  },
+  "tablas": {
+    "fab_aprobaciones": {
+      "aprobacion_id": "string",
+      "aviso": "string",
+      "cambios": "string",
+      "canal_id": "string",
+      "decidido_en": "string",
+      "estado": "string",
+      "etapa": "string",
+      "job_id": "string",
+      "pedido": "string",
+      "resumen": "string",
+      "url": "string",
+      "video_id": "string"
+    },
+    "fab_canales": {
+      "biblia_ruta": "string",
+      "canal_id": "string",
+      "cuenta": "string",
+      "dueno_email": "string",
+      "eliminado": "boolean",
+      "estado": "string",
+      "formato_defecto": "string",
+      "metas": "string",
+      "modo_noticia": "boolean",
+      "nicho": "string",
+      "nombre": "string",
+      "noticia_hoy": "string",
+      "plataformas": "string",
+      "presupuesto_largo_usd": "number",
+      "presupuesto_short_usd": "number",
+      "redes": "string",
+      "tendencias": "string",
+      "uploadpost_perfil": "string",
+      "zona": "string"
+    },
+    "fab_costos": {
+      "ahorro_estimado_usd": "number",
+      "concepto": "string",
+      "dueno_email": "string",
+      "estimado": "boolean",
+      "motivo_respaldo": "string",
+      "paso_id": "string",
+      "ruta": "string",
+      "servicio": "string",
+      "usd": "number",
+      "video_id": "string"
+    },
+    "fab_eventos": {
+      "detalle": "string",
+      "etapa": "string",
+      "tipo": "string",
+      "video_id": "string",
+      "canal_id": "string",
+      "evento": "string"
+    },
+    "fab_planos": {
+      "archivo_url": "string",
+      "costo_usd": "number",
+      "estado": "string",
+      "intentos": "number",
+      "nota_revision": "string",
+      "plano_id": "string",
+      "presentacion": "string",
+      "tipo": "string",
+      "usa_avatar": "boolean",
+      "video_id": "string"
+    },
+    "fab_publicaciones": {
+      "canal_id": "string",
+      "estado": "string",
+      "job_id": "string",
+      "metricas_consultadas_en": "string",
+      "metricas_historial": "string",
+      "plataformas": "string",
+      "publicado_en": "string",
+      "request_id": "string",
+      "resultado": "string",
+      "tipo": "string",
+      "titulo": "string",
+      "url_video": "string",
+      "video_id": "string"
+    },
+    "fab_trabajos": {
+      "canal_id": "string",
+      "dueno_email": "string",
+      "estado": "string",
+      "job_id": "string",
+      "modo": "string",
+      "resultado": "string",
+      "video_id": "string"
+    },
+    "fab_videos": {
+      "canal_id": "string",
+      "cooper_actualizado_en": "number",
+      "cooper_escenas": "string",
+      "cooper_evento_id": "string",
+      "cooper_orden_id": "string",
+      "costo_usd": "number",
+      "drive_carpeta": "string",
+      "dueno_email": "string",
+      "eliminado": "boolean",
+      "error": "string",
+      "estado": "string",
+      "etapa": "string",
+      "formato": "string",
+      "guion_cooper": "string",
+      "intentos": "number",
+      "metricas_consultadas_en": "string",
+      "metricas_youtube": "string",
+      "modo_noticia": "boolean",
+      "noticia": "string",
+      "noticia_guion_hash": "string",
+      "noticia_storyboard_hash": "string",
+      "presentacion": "string",
+      "presupuesto_usd": "number",
+      "publicado_en": "string",
+      "publicar_en": "string",
+      "retencion_media": "number",
+      "tema": "string",
+      "version": "number",
+      "video_id": "string",
+      "youtube_id": "string"
+    },
+    "fab_youtube": {
+      "canal_id": "string",
+      "canal_youtube": "string",
+      "canal_youtube_id": "string",
+      "conectado_en": "string",
+      "estado": "string",
+      "nonce": "string",
+      "refresh_token": "string"
+    }
+  },
+  "lecturas_compatibilidad_opcionales": {
+    "fab_canales": {
+      "zona_horaria": "string"
+    },
+    "fab_videos": {
+      "render_url": "string",
+      "miniatura_url": "string"
+    },
+    "fab_planos": {
+      "url": "string",
+      "orden": "number",
+      "duracion_s": "number"
+    },
+    "fab_publicaciones": {
+      "plataforma": "string",
+      "url": "string"
+    }
+  },
+  "solo_ensayo_sin_escritura_productiva": {
+    "fab_videos": [
+      "storyboard",
+      "drive_url",
+      "publicacion_id",
+      "retencion"
+    ],
+    "fab_planos": [
+      "prompt",
+      "archivo_id",
+      "error",
+      "version"
+    ],
+    "fab_youtube": [
+      "state",
+      "redirect_uri",
+      "access_token",
+      "token_type",
+      "scope",
+      "youtube_id",
+      "youtube_titulo",
+      "expires_at"
+    ],
+    "fab_publicaciones": [
+      "error",
+      "publicar_en"
+    ]
+  }
+}
