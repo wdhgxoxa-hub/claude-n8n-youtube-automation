@@ -31,6 +31,7 @@ export default defineConfig({
     permissions: ["microphone"],
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
+    video: process.env.COOPER_E2E_VIDEO === "1" ? "on" : "off",
   },
   projects: [
     {
