@@ -167,8 +167,15 @@ Para la ejecución manual: `npm ci`, `npm run preparar:pruebas`, `npm run prefli
 los seis comandos restantes. Los `.env` reales en la raíz o `cooper/` se rechazan por nombre
 sin abrirlos; utilice el ensayo limpio para conservar su configuración de desarrollo.
 
-El preflight valida sistema, herramientas, hashes y el lanzamiento de ambos Chromium antes
-de las E2E. El preparador puede leer los objetos Git fijados del checkout privado
+El preflight valida sistema, herramientas, hashes, el Chromium de Sentinel y una página
+sintética en Chromium, Firefox y WebKit antes de las E2E. La imagen de ensayo incluye Git
+para las regresiones de la caché. El contenedor conserva `no-new-privileges` y, después de
+retirar capacidades, permite únicamente `SETUID`, `SETGID`, `SETFCAP` y `SYS_CHROOT`
+para el sandbox de Firefox. No se monta el HOME del anfitrión, sockets ni configuración
+real. Alcance: pruebas propias en entorno efímero; consulte las guías de
+[Playwright en Docker](https://playwright.dev/docs/docker) y
+[namespaces de usuario de Linux](https://man7.org/linux/man-pages/man7/user_namespaces.7.html).
+El preparador puede leer los objetos Git fijados del checkout privado
 `~/Proyectos/Sistema-Sentinel/codigo`; nunca lee sus fuentes de trabajo ni instala allí.
 La ejecución solo consume `.cache/sentinel`, verificada contra el manifiesto público. Cada lenguaje conserva
 el navegador que exige su versión de Playwright; no se enlazan cachés ajenas. Las suites usan
