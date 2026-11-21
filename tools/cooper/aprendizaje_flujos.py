@@ -151,7 +151,8 @@ if(['guion','corregir_guion'].includes(pedido.modo)) {
 # Guardar evidencia antes de despachar; se conserva durante el retorno para auditar y deduplicar.
 cambiar(CLAUDE,'Preparar trabajo', "resultado: ''", "resultado: JSON.stringify({ ...(pedido.modo==='aprender'?{_aprendizaje:{evidencias:pedido.datos?.evidencias || []}}:{}), ...(['guion','corregir_guion'].includes(pedido.modo)?{_lecciones_requeridas:pedido.datos?.aprendizaje?.lecciones?.map(l=>l.id) || []}:{}) })")
 f=reabrir(RETORNO)
-n=next(n for n in f.nodes if n['name']=='Fila actualizada')
+# Validar antes de reservar o despachar; la confirmación posterior conserva el recibo M01.
+n=next(n for n in f.nodes if n['name']=='Reserva del retorno')
 n['parameters']['jsCode']=APRENDIZAJE_JS+r"""
 const v=$('Validar').first().json, t=$('Buscar trabajo').first().json, anterior=parseAprendizaje(t.resultado);
 if(v.modo && v.modo!==t.modo) throw new Error('El resultado no corresponde al modo del trabajo');
@@ -161,9 +162,10 @@ if(v.estado==='ok' && ['guion','corregir_guion'].includes(t.modo)) {
  const requeridas=anterior._lecciones_requeridas || [], aplicadas=Array.isArray(resultado?.aprendizajes_aplicados)?resultado.aprendizajes_aplicados:[];
  if(requeridas.some(id=>!aplicadas.some(a=>a.id===id && (String(a.cambio || '').trim() || String(a.motivo_no_aplica || '').trim())))) throw new Error('El guion debe explicar cada aprendizaje requerido antes de pasar a revisión');
 }
-return [{json:{estado:v.estado==='ok'?'listo':'error',resultado:JSON.stringify({...anterior,resultado,avisos:v.avisos})}}];
+return [{json:{estado:'retorno_en_curso',resultado:JSON.stringify({...anterior,resultado,avisos:v.avisos,
+ retorno:{version:1,huella:v.huella,ejecucion:String($execution.id),entregado:false}})}}];
 """
-cambiar(RETORNO,'Evento', 'resultado: v.resultado', "resultado: JSON.parse($('Fila actualizada').first().json.resultado).resultado")
+cambiar(RETORNO,'Evento', 'resultado: v.resultado', "resultado: JSON.parse($('Reserva del retorno').first().json.resultado).resultado")
 # Tabla de lecciones por canal: lectura obligatoria en cada encargo y biblia enriquecida sin sobrescribir ajustes humanos.
 f=reabrir(ORQ)
 lista_cooper(f,'Lecciones antes del guion','trabajos',[{'keyName':'canal_id','condition':'eq','keyValue':"={{ $('Buscar canal').first().json.canal_id }}"},{'keyName':'modo','condition':'eq','keyValue':'aprender'}])

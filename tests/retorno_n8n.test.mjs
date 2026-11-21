@@ -27,7 +27,7 @@ test('M01: routine ficticia, retorno autenticado y ruta real del Orquestador en 
       name, columns:columns.map(name => ({name, type:'string'})),
     })).id;
     const trabajos = await tabla('fab_trabajos', ['job_id','modo','estado','resultado','video_id','canal_id','dueno_email']);
-    const eventos = await tabla('ensayo_eventos', ['job_id','evento','modo','video_id','canal_id','dueno_email','ruta']);
+    const eventos = await tabla('ensayo_eventos', ['job_id','evento','modo','video_id','canal_id','dueno_email','ruta','resultado']);
     const insertar = data => api.request('POST', `/data-tables/${trabajos}/rows`, {data:[data], returnType:'all'});
     const filas = () => api.rows(trabajos);
     const eventosDe = async job => (await api.rows(eventos)).filter(e => e.job_id === job);
@@ -61,7 +61,7 @@ test('M01: routine ficticia, retorno autenticado y ruta real del Orquestador en 
     const sonda = await guardar({
       name:'M01 · Orquestador sin efectos', settings:{executionOrder:'v1'},
       nodes:[...orq.nodes.filter(n => ['Inicio','Ruta'].includes(n.name)),
-        nodo('Evento observado','code',{jsCode:`const e=$('Inicio').first().json; return [{json:{job_id:e.job_id,evento:e.evento,modo:e.modo,video_id:e.video_id,canal_id:e.canal_id,dueno_email:e.dueno_email,ruta:$json.clave}}];`}),
+        nodo('Evento observado','code',{jsCode:`const e=$('Inicio').first().json; return [{json:{job_id:e.job_id,evento:e.evento,modo:e.modo,video_id:e.video_id,canal_id:e.canal_id,dueno_email:e.dueno_email,ruta:$json.clave,resultado:JSON.stringify(e.resultado)}}];`}),
         nodo('Guardar evento','dataTable',{resource:'row',operation:'insert',dataTableId:{__rl:true,mode:'id',value:eventos},columns:{mappingMode:'autoMapInputData',value:{},schema:[],matchingColumns:[]},options:{}},1.1)],
       connections:{Inicio:{main:[[link('Ruta')]]},Ruta:{main:[[link('Evento observado')]]},'Evento observado':{main:[[link('Guardar evento')]]}},
     });
@@ -138,11 +138,49 @@ test('M01: routine ficticia, retorno autenticado y ruta real del Orquestador en 
     });
     await t.test('error de la routine se guarda y enruta como claude_error una sola vez', async () => {
       const b = {...await preparar(),estado:'error',resultado:null,avisos:['Fallo ficticio']};
+      await api.update(trabajos,await actualizado(b.job_id),{resultado:JSON.stringify({_lecciones_requeridas:['leccion-ficticia']})});
       assert.equal((await llamar(b)).codigo,200);
       await recibido(b.job_id);
       assert.equal((await actualizado(b.job_id)).estado,'error');
+      assert.deepEqual(JSON.parse((await actualizado(b.job_id)).resultado)._lecciones_requeridas,['leccion-ficticia']);
       assert.equal((await eventosDe(b.job_id))[0].evento,'claude_error');
       assert.equal((await llamar(b)).codigo,200);
+    });
+    await t.test('aprendizaje conserva contexto y recibo; el evento usa métricas verificadas antes del despacho', async () => {
+      const evidencia={video_id:'video-ficticio',red:'youtube',ventana:'24h',fecha:'2026-11-21T00:00:00Z',metricas:{vistas:10}};
+      const b={job_id:'aprender-ensayo-a1',modo:'aprender',estado:'ok',avisos:[],resultado:{lecciones:[{
+        regla:'Probar una apertura breve',causa:'Hipótesis editorial',correccion:'Acortar el inicio',
+        origenes:[{video_id:evidencia.video_id,red:evidencia.red,ventana:evidencia.ventana,metrica:'vistas',valor:999}],
+      }]}};
+      await insertar({job_id:b.job_id,modo:b.modo,estado:'enviado',video_id:'video-ficticio',canal_id:'canal-ficticio',dueno_email:'dueno@example.test',resultado:JSON.stringify({_aprendizaje:{evidencias:[evidencia]}})});
+      assert.equal((await llamar(b)).codigo,200);
+      await recibido(b.job_id);
+      const guardado=JSON.parse((await actualizado(b.job_id)).resultado);
+      assert.deepEqual(guardado._aprendizaje.evidencias,[evidencia]);
+      assert.equal(guardado.retorno.entregado,true);
+      assert.match(guardado.retorno.huella,/^[a-f0-9]{64}$/);
+      const observado=JSON.parse((await eventosDe(b.job_id))[0].resultado);
+      assert.equal(observado.lecciones[0].origenes[0].valor,10);
+      assert.equal(observado.lecciones[0].id,b.job_id+':0');
+      assert.deepEqual(observado,guardado.resultado);
+      assert.equal((await llamar(b)).codigo,200);
+      assert.equal((await eventosDe(b.job_id)).length,1);
+    });
+    await t.test('el guion omiso o con ID ajeno no reserva ni despacha; la corrección válida sí', async () => {
+      const b=await preparar(), id='aprender-ensayo-a1:0';
+      await api.update(trabajos,await actualizado(b.job_id),{resultado:JSON.stringify({_lecciones_requeridas:[id]})});
+      for(const resultado of [b.resultado,{...b.resultado,aprendizajes_aplicados:[{id:'ajeno',cambio:'No corresponde'}]}]) {
+        assert.equal((await llamar({...b,resultado})).codigo,500);
+        assert.equal((await actualizado(b.job_id)).estado,'enviado');
+        assert.equal((await eventosDe(b.job_id)).length,0);
+      }
+      const resultado={...b.resultado,aprendizajes_aplicados:[{id,cambio:'Inicio con el caso concreto'}]};
+      assert.equal((await llamar({...b,resultado})).codigo,200);
+      await recibido(b.job_id);
+      const guardado=JSON.parse((await actualizado(b.job_id)).resultado);
+      assert.deepEqual(guardado._lecciones_requeridas,[id]);
+      assert.equal(guardado.retorno.entregado,true);
+      assert.deepEqual(JSON.parse((await eventosDe(b.job_id))[0].resultado),resultado);
     });
     await t.test('callback tardío después de timeout de envío conserva el trabajo original', async () => {
       const b = await preparar('envio_incierto');

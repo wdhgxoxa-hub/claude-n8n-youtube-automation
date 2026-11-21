@@ -26,6 +26,13 @@ const ORQ = wf('FabOrquestador01'), CL = wf('FabLlamarClaude1'), RET = wf('FabRe
 const PROD = wf('FabProduccion001'), PUB = wf('FabPublicacion01'), AJ = wf('FabAjustes000001');
 const aj = run(codeOf(AJ, 'Ajustes'))[0].json;
 
+// La validación editorial precede al despacho; solo después se confirma la entrega.
+function retornoCompleto(validado, trabajo) {
+  const reserva = run(codeOf(RET,'Reserva del retorno'),{nodes:{Validar:validado,'Buscar trabajo':trabajo}})[0].json;
+  assert.strictEqual(JSON.parse(reserva.resultado).retorno.entregado,false);
+  return run(codeOf(RET,'Fila actualizada'),{nodes:{Validar:validado,'Reserva del retorno':reserva}})[0].json;
+}
+
 test('analytics y renovación no conservan tokens en ejecuciones automáticas ni manuales', () => {
   for (const id of ['FabAprendizaje01', 'FabYouTube000001']) {
     const s = wf(id).settings;
@@ -1985,15 +1992,15 @@ test('aprendizaje total: medición → explicación verificada → siguiente gui
  const e=pedido.datos.evidencias[0]; assert.equal(e.metricas.seguidoresGanados,3);assert.equal(e.metricas.comentarios,0);assert.equal(e.creativo.guion,'Una frase comprobable.');assert.equal(e.creativo.planos[0].id,'p1');assert.equal(e.creativo.miniatura.texto,'Caso peruano');
  const trabajo=run(codeOf(CL,'Preparar trabajo'),{nodes:{Inicio:pedido,'Leer ajustes':{...aj,allowClaude:true}}})[0].json.fila;
  const propuesta={resumen:'Revisar la apertura',lecciones:[{regla:'Abrir con el dato local',causa:'Posible demora en explicar la cifra',correccion:'Mover la cifra al primer plano',origenes:[{video_id:'v1',red:'youtube',ventana:'24h',metrica:'retencion',valor:999}]}]};
- const salida=run(codeOf(RET,'Fila actualizada'),{nodes:{Validar:{estado:'ok',resultado:propuesta,avisos:[]},'Buscar trabajo':trabajo}})[0].json;
+ const salida=retornoCompleto({estado:'ok',resultado:propuesta,avisos:[],huella:'prueba'},trabajo);
  const listo={...trabajo,...salida,createdAt:fecha}; const leccion=JSON.parse(listo.resultado).resultado.lecciones[0];
  assert.equal(leccion.origenes[0].valor,.4);assert.equal(leccion.nivel,'hipotesis');assert.equal(leccion.estado,'propuesta');
  assert.equal(run(codeOf(APR,'Pedir lecciones'),{all:{...all,'Trabajos para aprender':[...creativos,listo]},clock}).length,0);
  const nuevo=run(codeOf(ORQ,'Nuevo video'),{nodes:{Inicio:{tema:'Otro caso peruano'},'Buscar canal':{canal_id:'c'},'Buscar biblia':{resultado:JSON.stringify({resultado:{lecciones:['Regla humana']}})}},all:{'Lecciones antes del guion':[listo]}})[0].json;
  assert.equal(nuevo.pedido.datos.aprendizaje.lecciones[0].id,leccion.id);assert.deepEqual(nuevo.pedido.datos.biblia.lecciones,['Regla humana']);
  const guion=run(codeOf(CL,'Preparar trabajo'),{nodes:{Inicio:nuevo.pedido,'Leer ajustes':{...aj,allowClaude:true}}})[0].json.fila;
- assert.throws(()=>run(codeOf(RET,'Fila actualizada'),{nodes:{Validar:{estado:'ok',resultado:{guion:'Sin aplicar'},avisos:[]},'Buscar trabajo':guion}}),/cada aprendizaje requerido/);
- const aplicado=run(codeOf(RET,'Fila actualizada'),{nodes:{Validar:{estado:'ok',resultado:{guion:'Cifra primero.',aprendizajes_aplicados:[{id:leccion.id,cambio:'La cifra abre el primer plano'}]},avisos:[]},'Buscar trabajo':guion}})[0].json;
+ assert.throws(()=>retornoCompleto({estado:'ok',resultado:{guion:'Sin aplicar'},avisos:[]},guion),/cada aprendizaje requerido/);
+ const aplicado=retornoCompleto({estado:'ok',resultado:{guion:'Cifra primero.',aprendizajes_aplicados:[{id:leccion.id,cambio:'La cifra abre el primer plano'}]},avisos:[],huella:'prueba'},guion);
  const vista=run(OBS+'return [{json:leccionesCooper($json.c,$json.t)}];',{json:{c:{canal_id:'c'},t:[listo,{...guion,...aplicado,createdAt:fecha}]}})[0].json;
  assert.equal(vista[0].origenes[0].videoId,'v1');assert.equal(vista[0].origenes[0].valor,.4);assert.equal(vista[0].aplicaciones[0].videoId,nuevo.fila.video_id);assert.equal(vista[0].causa,propuesta.lecciones[0].causa);
 });
@@ -2020,7 +2027,7 @@ test('aprendizaje total: reescritura obligatoria y segunda consulta conserva el 
  const r=run(codeOf(CL,'Preparar trabajo'),{nodes:{Inicio:{modo:'corregir_guion',canal_id:'c',datos:{guion:'Anterior'}},'Leer ajustes':aj},all:{'Aprendizajes al escribir':[trabajo,{...trabajo,canal_id:'ajeno'}]}})[0].json;
  assert.deepEqual(r.payload.datos.aprendizaje.lecciones.map(l=>l.id),['l']);
  assert.deepEqual(JSON.parse(r.fila.resultado)._lecciones_requeridas,['l']);
- assert.throws(()=>run(codeOf(RET,'Fila actualizada'),{nodes:{Validar:{estado:'ok',resultado:{guion:'Corrección sin justificar'}},'Buscar trabajo':r.fila}}),/cada aprendizaje requerido/);
+ assert.throws(()=>retornoCompleto({estado:'ok',resultado:{guion:'Corrección sin justificar'}},r.fila),/cada aprendizaje requerido/);
  const pedidos=[{video_id:'v',canal_id:'c',token:'ficticio',youtube_id:'abcdefghijk'}];
  assert.deepEqual(run(codeOf(APR,'Reponer pedidos de métricas'),{json:{rows:[]},all:{'Pedidos de retención':pedidos}}).map(x=>x.json),pedidos);
 });

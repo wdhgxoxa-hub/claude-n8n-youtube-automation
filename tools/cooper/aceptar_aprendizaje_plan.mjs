@@ -62,7 +62,7 @@ export async function aceptar({ fase, trabajo, fuentes }, llamarPlan) {
   if (typeof propuesta.guion !== 'string' || !propuesta.guion.trim()) throw new Error('guion_vacio');
   const validar = resultado => {
     const validado = { modo: 'guion', estado: 'ok', resultado, avisos: [], huella: sha(JSON.stringify(resultado)) };
-    const reserva = ejecutar(fuentes.reserva, { nodes: { Validar: validado } })[0].json;
+    const reserva = ejecutar(fuentes.reserva, { nodes: { Validar: validado, 'Buscar trabajo': pedido.fila } })[0].json;
     return ejecutar(fuentes.retorno, { nodes: {
       Validar: validado, 'Buscar trabajo': pedido.fila, 'Reserva del retorno': reserva,
     } })[0].json;
