@@ -1,0 +1,29 @@
+Instancia aislada lista: http://127.0.0.1:34325
+R1 nicho e idea: 932ms
+R1 aprobar canal y crear biblia: 1743ms
+R1 radar: 678ms
+R1 guion: 1106ms
+R1 aprobar guion y storyboard: 1673ms
+R1 imágenes voz render y calidad: 5579ms
+R1 aprobación final y publicación simulada: 1431ms
+R1 métricas y aprendizaje: 830ms
+R1 siguiente guion recibe aprendizaje: 1856ms
+R2 nicho e idea: 466ms
+R2 aprobar canal y crear biblia: 1703ms
+R2 radar: 691ms
+R2 guion: 1257ms
+R2 aprobar guion y storyboard: 1808ms
+R2 imágenes voz render y calidad: 5922ms
+R2 aprobación final y publicación simulada: 1481ms
+R2 métricas y aprendizaje: 950ms
+R2 siguiente guion recibe aprendizaje: 1636ms
+R3 nicho e idea: 520ms
+R3 aprobar canal y crear biblia: 1874ms
+R3 radar: 741ms
+R3 guion: 909ms
+R3 aprobar guion y storyboard: 1601ms
+R3 imágenes voz render y calidad: 5799ms
+R3 aprobación final y publicación simulada: 1587ms
+R3 métricas y aprendizaje: 1336ms
+R3 siguiente guion recibe aprendizaje: 2581ms
+Evidencia: /home/david/Proyectos/cooper-wt/total-n8n-e2e/cooper/.cache/total-n8n-e2e/2026-11-21T18-37-25.645Z

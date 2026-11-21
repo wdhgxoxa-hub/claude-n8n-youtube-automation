@@ -1,0 +1,14 @@
+{
+  "fecha": "2026-11-21",
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+  "imagen_id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+  "contenedor_ensayo": "exited",
+  "contenedor_fuente": "exited",
+  "regeneracion_flujos": "idéntica antes/después",
+  "exportaciones": 32,
+  "inactivas": 32,
+  "push": false,
+  "merge": false,
+  "vps_contactado": false,
+  "desplegado": false
+}

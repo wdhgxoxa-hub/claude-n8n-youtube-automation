@@ -1,0 +1,124 @@
+{
+  "conteos": {
+    "canales": 2,
+    "videos": 5,
+    "planos": 46,
+    "costos": 26,
+    "trabajos": 19,
+    "aprobaciones": 15
+  },
+  "total_filas": 113,
+  "allowlist": {
+    "fab_canales": [
+      "canal_id",
+      "estado",
+      "formato_defecto",
+      "presupuesto_largo_usd",
+      "presupuesto_short_usd"
+    ],
+    "fab_videos": [
+      "video_id",
+      "canal_id",
+      "estado",
+      "etapa",
+      "formato",
+      "version",
+      "costo_usd",
+      "presupuesto_usd",
+      "intentos",
+      "retencion",
+      "retencion_media"
+    ],
+    "fab_planos": [
+      "video_id",
+      "plano_id",
+      "tipo",
+      "estado",
+      "version",
+      "orden",
+      "costo_usd",
+      "duracion_s",
+      "intentos"
+    ],
+    "fab_costos": [
+      "video_id",
+      "paso_id",
+      "usd",
+      "ahorro_estimado_usd"
+    ],
+    "fab_trabajos": [
+      "job_id",
+      "video_id",
+      "canal_id",
+      "modo",
+      "estado"
+    ],
+    "fab_aprobaciones": [
+      "aprobacion_id",
+      "video_id",
+      "canal_id",
+      "job_id",
+      "etapa",
+      "estado"
+    ]
+  },
+  "columnas_leidas": {
+    "fab_canales": [
+      "canal_id",
+      "estado",
+      "formato_defecto",
+      "presupuesto_largo_usd",
+      "presupuesto_short_usd"
+    ],
+    "fab_videos": [
+      "video_id",
+      "canal_id",
+      "estado",
+      "etapa",
+      "formato",
+      "version",
+      "costo_usd",
+      "presupuesto_usd",
+      "intentos",
+      "retencion_media"
+    ],
+    "fab_planos": [
+      "video_id",
+      "plano_id",
+      "tipo",
+      "estado",
+      "costo_usd",
+      "intentos"
+    ],
+    "fab_costos": [
+      "video_id",
+      "paso_id",
+      "usd",
+      "ahorro_estimado_usd"
+    ],
+    "fab_trabajos": [
+      "job_id",
+      "video_id",
+      "canal_id",
+      "modo",
+      "estado"
+    ],
+    "fab_aprobaciones": [
+      "aprobacion_id",
+      "video_id",
+      "canal_id",
+      "job_id",
+      "etapa",
+      "estado"
+    ]
+  },
+  "metadatos_leidos": {
+    "data_table": [
+      "id",
+      "name"
+    ]
+  },
+  "valores_fuera_de_catalogo": 6,
+  "canales_y_videos_eliminados": true,
+  "credenciales_copiadas": 0
+}

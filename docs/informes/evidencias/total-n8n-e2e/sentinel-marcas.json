@@ -1,0 +1,95 @@
+{
+  "herramienta": "Sistema Sentinel API local",
+  "modulos": [
+    {
+      "nombre": "recorridos",
+      "hallazgos": 3
+    },
+    {
+      "nombre": "caos",
+      "hallazgos": 0
+    },
+    {
+      "nombre": "estabilidad",
+      "hallazgos": 0
+    }
+  ],
+  "medidas_caos": [
+    {
+      "url": "http://127.0.0.1:43741/marcas",
+      "acciones": 1000,
+      "fps": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "congelada": false,
+      "estrellada": false
+    }
+  ],
+  "pantallas": [
+    "/marcas"
+  ],
+  "hallazgos": [
+    {
+      "tipo": "cobertura",
+      "gravedad": "info",
+      "titulo": "Vista sin URL propia: solo la revisa recorridos",
+      "modulo": "recorridos",
+      "lugar": "http://127.0.0.1:43741/marcas",
+      "reproducir": [
+        "Abrir http://127.0.0.1:43741/marcas",
+        "Pulsar «Aprendizaje»"
+      ],
+      "evidencia": [
+        "evidencias/recorridos/04-marcas-Aprendizaje.png"
+      ],
+      "detalle": "Al pulsar «Aprendizaje» cambia el contenido pero no la URL: los demás módulos no pueden abrir esta vista por ruta."
+    }
+  ]
+}

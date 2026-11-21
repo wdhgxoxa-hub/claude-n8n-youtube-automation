@@ -1,0 +1,35 @@
+[
+  {
+    "corrida": "2026-11-21T18-20-46.471Z",
+    "corte": "metadata interna en salida Code",
+    "inicio": "2026-11-21T18:20:46.472Z",
+    "fin": "2026-11-21T18:21:08.521Z",
+    "error": "radar guardado: [{\"id\":\"23\",\"workflowId\":\"9Iqdxe1CFXfRx15q\",\"lastNode\":\"Cooper · costo Analista de tendencias seguir\",\"error\":\"Invalid output format [item 0]\"}]"
+  },
+  {
+    "corrida": "2026-11-21T18-25-08.632Z",
+    "corte": "render_url ausente en video",
+    "inicio": "2026-11-21T18:25:08.632Z",
+    "fin": "2026-11-21T18:25:37.935Z",
+    "error": "The expression evaluated to a falsy value:\n\n  assert.ok(video.render_url)\n"
+  },
+  {
+    "corrida": "2026-11-21T18-33-17.899Z",
+    "corte": "timeout formulario del ejecutor",
+    "inicio": "2026-11-21T18:33:17.899Z",
+    "fin": "2026-11-21T18:34:05.635Z",
+    "error": "The operation was aborted due to timeout",
+    "diagnostico": {
+      "ejecuciones": 11,
+      "success": 10,
+      "waiting": 1,
+      "ejecucionPendiente": "10",
+      "ultimoNodo": "Aprobación · esperar",
+      "errorMotor": null,
+      "filaAprobacion": "2026-11-21T18:33:34.630Z",
+      "inicioWait": "2026-11-21T18:33:34.665Z",
+      "persistenciaWaiting": "2026-11-21T18:33:34.668Z",
+      "causalidad": "No demostrada: el POST original no tiene timestamp; se corrigió la precondición esperando waiting."
+    }
+  }
+]

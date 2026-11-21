@@ -1,0 +1,13 @@
+{
+  "unitarias": 284,
+  "e2e": 43,
+  "flujos": 170,
+  "exportador_python_interno": 6,
+  "errores": 0,
+  "advertencias": 0,
+  "pasos_puerta": 7,
+  "corridas_n8n": 3,
+  "ejecuciones_n8n_success": 447,
+  "encargos_listos": 18,
+  "filas_copiadas_intactas": 113
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "paso": "npm-ci",
+    "comando": "npm ci",
+    "codigo": 0,
+    "duracionSegundos": 5.97
+  },
+  {
+    "paso": "lint",
+    "comando": "npm run lint",
+    "codigo": 0,
+    "duracionSegundos": 3.88
+  },
+  {
+    "paso": "typecheck",
+    "comando": "npm run typecheck",
+    "codigo": 0,
+    "duracionSegundos": 4.89
+  },
+  {
+    "paso": "unitarias",
+    "comando": "npm test",
+    "codigo": 0,
+    "duracionSegundos": 19.07
+  },
+  {
+    "paso": "e2e",
+    "comando": "npm run test:e2e",
+    "codigo": 0,
+    "duracionSegundos": 397.33
+  },
+  {
+    "paso": "build",
+    "comando": "npm run build",
+    "codigo": 0,
+    "duracionSegundos": 3.38
+  },
+  {
+    "paso": "flujos",
+    "comando": "node --test tests/flujos_v2.test.cjs",
+    "codigo": 0,
+    "duracionSegundos": 1.22
+  }
+]

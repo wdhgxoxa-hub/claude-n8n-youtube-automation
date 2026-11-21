@@ -1,0 +1,42 @@
+{
+  "primera_puerta": [
+    {
+      "paso": "npm-ci",
+      "comando": "npm ci",
+      "codigo": 0,
+      "duracionSegundos": 5.31
+    },
+    {
+      "paso": "lint",
+      "comando": "npm run lint",
+      "codigo": 0,
+      "duracionSegundos": 3.38
+    },
+    {
+      "paso": "typecheck",
+      "comando": "npm run typecheck",
+      "codigo": 0,
+      "duracionSegundos": 4.2
+    },
+    {
+      "paso": "unitarias",
+      "comando": "npm test",
+      "codigo": 0,
+      "duracionSegundos": 18.38
+    },
+    {
+      "paso": "e2e",
+      "comando": "npm run test:e2e",
+      "codigo": 1,
+      "duracionSegundos": 367.07
+    }
+  ],
+  "e2e": {
+    "pasaron": 42,
+    "fallaron": 1,
+    "causa": "Faltaba Chromium headless shell 1243 en la caché propia de Sentinel",
+    "correccion": "Instalar con el Python de Sentinel y PLAYWRIGHT_BROWSERS_PATH del worktree, según README",
+    "tests_modificados": false
+  },
+  "aviso_instalacion": "Playwright descargó el binario alternativo Ubuntu 24.04 para el sistema anfitrión; el aviso solo correspondió a la preparación inicial."
+}
