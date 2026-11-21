@@ -54,6 +54,14 @@ def preparar_captura(ids):
     origen = leer('FabAprendizaje01')
     f = base(CAPTURA, 'Ensayo Cooper · solo métricas de publicaciones existentes', origen['nodes'])
     f['connections'] = origen['connections']
+    # El ensayo de captura termina antes del plan: la aceptación del modelo se hace aparte.
+    retirar = {'Guardar trabajo de aprendizaje','Pedido al plan de aprendizaje',
+               'Analizar con el plan de la PC','Validar aprendizaje del plan','Guardar lecciones del plan'}
+    f['nodes'] = [n for n in f['nodes'] if n['name'] not in retirar]
+    f['connections'] = {n: r for n, r in f['connections'].items() if n not in retirar}
+    for rutas in f['connections'].values():
+        for salida in rutas.get('main', []):
+            salida[:] = [e for e in salida if e['node'] not in retirar]
     reloj = nodo(f, 'Cada día')
     reloj.update({'type': 'n8n-nodes-base.manualTrigger', 'typeVersion': 1, 'parameters': {}})
     ajustes = nodo(f, 'Leer ajustes')
@@ -67,7 +75,7 @@ def preparar_captura(ids):
             original, original + '.filter(p=>' + json.dumps(ids) + '.includes(p.video_id))')
     nodo(f, 'Tokens de los canales')['parameters']['workflowId']['value'] = TOKEN
     # Conserva evidencia en un trabajo bloqueado: nadie lo envía a un proveedor automáticamente.
-    pedido = nodo(f, 'Claude: aprender')
+    pedido = nodo(f, 'Preparar trabajo de aprendizaje')
     pedido.update({'type': 'n8n-nodes-base.code', 'typeVersion': 2, 'parameters': {'jsCode': """
 return $input.all().map((i,k)=>({json:{job_id:'aprender-ensayo-'+String($execution.id)+'-'+k,
  canal_id:i.json.canal_id,video_id:'',modo:'aprender',estado:'bloqueado',
@@ -77,7 +85,7 @@ return $input.all().map((i,k)=>({json:{job_id:'aprender-ensayo-'+String($executi
     registrar = copy.deepcopy(nodo(leer('FabLlamarClaude1'), 'Registrar trabajo'))
     registrar['name'] = 'Guardar evidencia del ensayo'
     f['nodes'].append(registrar)
-    enlace(f, 'Claude: aprender', registrar['name'])
+    enlace(f, pedido['name'], registrar['name'])
     # Rama de renovación solamente: no existe callback OAuth, enlace, subida ni Telegram.
     yt = leer('FabYouTube000001')
     nombres = ['Inicio', 'Conexión', '¿Conectado?', 'Renovar token', 'Token', 'Sin conexión']

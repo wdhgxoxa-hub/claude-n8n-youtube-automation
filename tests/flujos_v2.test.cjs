@@ -64,7 +64,7 @@ test('ensayo de aprendizaje solo captura IDs explícitos y registra lecciones co
     assert.deepStrictEqual(run(codeOf(captura, 'Toca medir'), { all: { $input: candidatos } }).map(x => x.json.video_id), ['video-permitido']);
     assert.deepStrictEqual(token.nodes.filter(n => n.type.endsWith('.dataTable')).map(n => n.parameters.operation), ['get']);
     const observada = { video_id: 'video-permitido', canal_id: 'canal-a', red: 'youtube', ventana: '72h', fecha, metricas: { vistas: 123 }, creativo: {} };
-    const tarea = run(codeOf(captura, 'Claude: aprender'), { json: { canal_id: 'canal-a', datos: { evidencias: [observada] } } })[0].json;
+    const tarea = run(codeOf(captura, 'Preparar trabajo de aprendizaje'), { json: { canal_id: 'canal-a', datos: { evidencias: [observada] } } })[0].json;
     assert.strictEqual(tarea.estado, 'bloqueado');
     assert.strictEqual(JSON.parse(tarea.resultado)._aprendizaje.evidencias[0].metricas.vistas, 123);
     const propuesta = { lecciones: [{ regla: 'Probar un gancho concreto', causa: 'Hipótesis pendiente de contraste', correccion: 'Acortar la introducción', origenes: [{ video_id: observada.video_id, red: 'youtube', ventana: '72h', metrica: 'vistas', valor: 99999 }] }] };
@@ -1980,4 +1980,38 @@ test('aprendizaje total: reescritura obligatoria y segunda consulta conserva el 
  assert.throws(()=>run(codeOf(RET,'Fila actualizada'),{nodes:{Validar:{estado:'ok',resultado:{guion:'Corrección sin justificar'}},'Buscar trabajo':r.fila}}),/cada aprendizaje requerido/);
  const pedidos=[{video_id:'v',canal_id:'c',token:'ficticio',youtube_id:'abcdefghijk'}];
  assert.deepEqual(run(codeOf(APR,'Reponer pedidos de métricas'),{json:{rows:[]},all:{'Pedidos de retención':pedidos}}).map(x=>x.json),pedidos);
+});
+
+test('aprendizaje del plan: persiste evidencia, limita salida y no tiene ruta de IA pagada ni callback',()=>{
+ const e={video_id:'v',canal_id:'c',red:'youtube',ventana:'24h',fecha:'2026-11-02T00:00:00Z',metricas:{vistas:12},creativo:{guion:'x'.repeat(10000),planos:[]}};
+ const tarea=run(codeOf(APR,'Preparar trabajo de aprendizaje'),{json:{canal_id:'c',datos:{evidencias:[e]}}})[0].json;
+ assert.equal(tarea.estado,'enviado');assert.equal(JSON.parse(tarea.resultado)._aprendizaje.evidencias[0].metricas.vistas,12);
+ const prompt=run(codeOf(APR,'Pedido al plan de aprendizaje'),{json:tarea})[0].json;
+ assert.ok(prompt.prompt.length<60000);assert.equal(prompt.url,'http://127.0.0.1:8789');
+ assert.throws(()=>run(codeOf(APR,'Pedido al plan de aprendizaje'),{json:tarea,env:{PUENTE_CODEX_URL:'https://proveedor-pagado.example'}}),/loopback/);
+ const propuesta={lecciones:[{regla:'Dato antes',causa:'Hipótesis de apertura lenta',correccion:'Acortar apertura',origenes:[{video_id:'v',red:'youtube',ventana:'24h',metrica:'vistas',valor:999}]}]};
+ const evaluar=json=>run(codeOf(APR,'Validar aprendizaje del plan'),{json,all:{'Preparar trabajo de aprendizaje':[tarea]}})[0].json;
+ const listo=evaluar({texto:JSON.stringify(propuesta),llamadas:[]});
+ assert.equal(listo.estado,'listo');assert.equal(JSON.parse(listo.resultado).resultado.lecciones[0].origenes[0].valor,12);
+ for(const mal of [{error:'sin PC'},{texto:'no JSON',llamadas:[]},{texto:JSON.stringify(propuesta),llamadas:[{nombre:'publicar'}]}]) {
+  const r=evaluar(mal);assert.equal(r.estado,'error');assert.equal(JSON.parse(r.resultado)._aprendizaje.evidencias[0].metricas.vistas,12);
+ }
+ const calls=APR.nodes.filter(n=>n.type.endsWith('.executeWorkflow')).map(n=>n.parameters.workflowId.value);
+ assert.deepEqual(calls.sort(),['FabAjustes000001','FabYouTube000001'].sort());
+ const posts=APR.nodes.filter(n=>n.type.endsWith('.httpRequest') && n.parameters.method==='POST');
+ assert.equal(posts.length,1);assert.equal(posts[0].name,'Analizar con el plan de la PC');
+ assert.match(posts[0].parameters.url,/\/v1\/chat/);
+});
+
+test('aprendizaje del plan: PC caída reintenta evidencia sin nueva métrica y excluye ensayos manuales',()=>{
+ const clock=relojAprendizaje('2026-11-02T03:00:00Z');
+ const e={video_id:'v',canal_id:'c',red:'youtube',ventana:'24h',fecha:'2026-11-02T00:00:00Z',metricas:{vistas:12},creativo:{}};
+ const base={job_id:'aprender-plan-1',canal_id:'c',modo:'aprender',estado:'error',updatedAt:'2026-11-02T01:00:00Z',resultado:JSON.stringify({_aprendizaje:{evidencias:[e]},_plan:{estado:'error'}})};
+ const pedir=trabajos=>run(codeOf(APR,'Pedir lecciones'),{clock,all:{'Trabajos para aprender':trabajos}});
+ assert.equal(pedir([base])[0].json.datos.evidencias[0].fecha,e.fecha);
+ assert.equal(pedir([{...base,updatedAt:'2026-11-02T02:45:00Z'}]).length,0);
+ assert.equal(pedir([{...base,estado:'enviado'}]).length,1);
+ assert.equal(pedir([{...base,estado:'listo'}]).length,0);
+ assert.equal(pedir([{...base,resultado:JSON.stringify({...JSON.parse(base.resultado),_ensayo:{pendiente:true}})}]).length,0);
+ assert.equal(pedir([base,{...base,job_id:'resuelto',estado:'listo'}]).length,0);
 });
