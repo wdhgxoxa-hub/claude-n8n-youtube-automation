@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   useRef,
+  useId,
   useState,
   useEffect,
   useSyncExternalStore,
@@ -32,6 +33,13 @@ function observarVistaMovil(notify: () => void) {
   return () => media.removeEventListener("change", notify);
 }
 export function Inicio() {
+  const instanceId = useId();
+  const chatTabId = `${instanceId}-pestana-chat`;
+  const factoryTabId = `${instanceId}-pestana-fabrica`;
+  const chatPanelId = `${instanceId}-panel-chat`;
+  const factoryPanelId = `${instanceId}-panel-fabrica`;
+  const messageId = `${instanceId}-mensaje`;
+  const messageHelpId = `${instanceId}-ayuda-mensaje`;
   const { data, refresh } = useEspacio();
   const reduced = useMovimientoReducido();
   const mobile = useSyncExternalStore(
@@ -300,39 +308,39 @@ export function Inicio() {
       />
       <div className="mobile-tabs" role="tablist" aria-label="Vista de inicio">
         <button
-          id="pestana-chat"
+          id={chatTabId}
           ref={chatTab}
           role="tab"
-          aria-controls="panel-chat"
+          aria-controls={chatPanelId}
           aria-selected={tab === "chat"}
           tabIndex={tab === "chat" ? 0 : -1}
           onKeyDown={cambiarPestana}
           onClick={() => setTab("chat")}
         >
-          {tab === "chat" && <Indicador id="vista-inicio" />}
+          {tab === "chat" && <Indicador id={`${instanceId}-vista-inicio`} />}
           Chat
         </button>
         <button
-          id="pestana-fabrica"
+          id={factoryTabId}
           ref={factoryTab}
           role="tab"
-          aria-controls="panel-fabrica"
+          aria-controls={factoryPanelId}
           aria-selected={tab === "fabrica"}
           tabIndex={tab === "fabrica" ? 0 : -1}
           onKeyDown={cambiarPestana}
           onClick={() => setTab("fabrica")}
         >
-          {tab === "fabrica" && <Indicador id="vista-inicio" />}
+          {tab === "fabrica" && <Indicador id={`${instanceId}-vista-inicio`} />}
           Fábrica {data.videos.length > 0 && `(${data.videos.length})`}
         </button>
       </div>
       <div className={`studio tab-${tab}`}>
         <section
-          id="panel-chat"
+          id={chatPanelId}
           className="chat-pane"
           role={mobile ? "tabpanel" : undefined}
           aria-label={mobile ? undefined : "Chat con Cooper"}
-          aria-labelledby={mobile ? "pestana-chat" : undefined}
+          aria-labelledby={mobile ? chatTabId : undefined}
           tabIndex={mobile ? 0 : undefined}
         >
           <div className="chat-heading">
@@ -549,18 +557,18 @@ export function Inicio() {
               </p>
             )}
             <form onSubmit={send} className="composer">
-              <label className="sr-only" htmlFor="mensaje">
+              <label className="sr-only" htmlFor={messageId}>
                 Mensaje para Cooper
               </label>
               <textarea
-                id="mensaje"
+                id={messageId}
                 ref={textarea}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Cuéntame tu idea…"
                 maxLength={6000}
                 rows={2}
-                aria-describedby="ayuda-mensaje"
+                aria-describedby={messageHelpId}
                 onKeyDown={(e) => {
                   if (
                     e.key === "Enter" &&
@@ -730,13 +738,17 @@ export function Inicio() {
                 ? "Guardando archivo…"
                 : "Cooper propone. Tú tienes la última palabra."}
             </p>
-            <p className="sr-only" id="ayuda-mensaje">
+            <p className="sr-only" id={messageHelpId}>
               Pulsa Entrar para enviar o Mayús y Entrar para escribir otra
               línea.
             </p>
           </div>
         </section>
-        <FabricaVista tabPanel={mobile} />
+        <FabricaVista
+          tabPanel={mobile}
+          panelId={factoryPanelId}
+          tabId={factoryTabId}
+        />
       </div>
     </>
   );

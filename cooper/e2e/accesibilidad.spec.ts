@@ -89,6 +89,31 @@ function auditor(
   const muestras: Muestra[] = [];
   return async (nombre: string) => {
     const resultado = await new AxeBuilder({ page }).analyze();
+    const idsAriaIncompletos = resultado.incomplete.filter(
+      ({ id }) => id === "duplicate-id-aria",
+    );
+    const diagnosticoIdsDuplicados = idsAriaIncompletos.length
+      ? await page.evaluate(() => {
+          const grupos = new Map<string, Element[]>();
+          for (const nodo of document.querySelectorAll("[id]")) {
+            const grupo = grupos.get(nodo.id) ?? [];
+            grupo.push(nodo);
+            grupos.set(nodo.id, grupo);
+          }
+          // Solo estructura: no incluye texto, valores de campos ni HTML.
+          return [...grupos]
+            .filter(([, nodos]) => nodos.length > 1)
+            .map(([id, nodos]) => ({
+              id,
+              cantidad: nodos.length,
+              elementos: nodos.map((nodo) => ({
+                etiqueta: nodo.tagName.toLowerCase(),
+                rol: nodo.getAttribute("role"),
+                visible: nodo.getClientRects().length > 0,
+              })),
+            }));
+        })
+      : [];
     const desbordamiento = await page.evaluate(() =>
       Math.max(0, document.documentElement.scrollWidth - innerWidth),
     );
@@ -110,7 +135,11 @@ function auditor(
     };
     writeFileSync(
       informe,
-      JSON.stringify({ ...muestra, axe: resultado }, null, 2) + "\n",
+      JSON.stringify(
+        { ...muestra, diagnosticoIdsDuplicados, axe: resultado },
+        null,
+        2,
+      ) + "\n",
     );
     await page.screenshot({ path: captura, fullPage: true });
     muestras.push(muestra);
@@ -143,6 +172,18 @@ function auditor(
           elementos: nodes.map((node) => node.target),
         })),
         `${nombre}: ${tema}, ${ancho}px; detalle en ${informe}`,
+      )
+      .toEqual([]);
+    // Axe clasifica IDs ambiguos como incomplete: también bloquean la puerta.
+    // El contraste indeterminado se conserva íntegro para revisión manual.
+    expect
+      .soft(
+        idsAriaIncompletos.map(({ id, impact, nodes }) => ({
+          id,
+          impact,
+          elementos: nodes.map((node) => node.target),
+        })),
+        `${nombre}: referencias ARIA ambiguas; diagnóstico en ${informe}`,
       )
       .toEqual([]);
   };

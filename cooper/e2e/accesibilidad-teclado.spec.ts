@@ -1,5 +1,39 @@
-import { test, expect, type APIRequestContext } from "@playwright/test";
+import {
+  test,
+  expect,
+  type APIRequestContext,
+  type Page,
+} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+
+async function comprobarReferenciasAccesibles(page: Page) {
+  const referenciasInvalidas = await page.evaluate(() => {
+    // Incluye las rutas ocultas conservadas por Next: sus IDs también comparten DOM.
+    const ids = new Map<string, number>();
+    document.querySelectorAll("[id]").forEach((element) => {
+      ids.set(element.id, (ids.get(element.id) ?? 0) + 1);
+    });
+    const referencias: { atributo: string; id: string; destinos: number }[] =
+      [];
+    for (const atributo of [
+      "aria-controls",
+      "aria-labelledby",
+      "aria-describedby",
+      "for",
+    ]) {
+      document.querySelectorAll(`[${atributo}]`).forEach((element) => {
+        const valor = element.getAttribute(atributo) ?? "";
+        const destinos = atributo === "for" ? [valor] : valor.split(/\s+/);
+        for (const id of destinos.filter(Boolean)) {
+          if (ids.get(id) !== 1)
+            referencias.push({ atributo, id, destinos: ids.get(id) ?? 0 });
+        }
+      });
+    }
+    return referencias;
+  });
+  expect(referenciasInvalidas).toEqual([]);
+}
 
 async function entrar(request: APIRequestContext) {
   const response = await request.post(
@@ -21,6 +55,7 @@ test("inicio a 360 px: pestañas, navegación modal y ruta completa por teclado"
   await page.setViewportSize({ width: 360, height: 800 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await comprobarReferenciasAccesibles(page);
   const chat = page.getByRole("tab", { name: "Chat", exact: true });
   const fabrica = page.getByRole("tab", { name: /Fábrica/ });
   await chat.focus();
@@ -85,6 +120,28 @@ test("inicio a 360 px: pestañas, navegación modal y ruta completa por teclado"
   await expect(page.getByRole("main")).toBeFocused();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.locator(".main-column")).not.toHaveAttribute("inert", "");
+
+  await opener.press("Enter");
+  await menu
+    .getByRole("navigation", { name: "Principal", exact: true })
+    .getByRole("link", { name: "Inicio", exact: true })
+    .press("Enter");
+  await expect(page).toHaveTitle("Inicio · Cooper");
+  await expect(
+    page.getByRole("tab", { name: "Chat", exact: true }),
+  ).toBeVisible();
+  await comprobarReferenciasAccesibles(page);
+  await expect(
+    page.getByRole("textbox", { name: "Mensaje para Cooper" }),
+  ).toHaveAccessibleDescription(/Pulsa Entrar para enviar/);
+  const bienvenida = page.getByRole("button", { name: "Conocer el estudio" });
+  await bienvenida.press("Enter");
+  await expect(
+    page.getByRole("dialog", { name: "Una idea, un equipo." }),
+  ).toBeVisible();
+  await comprobarReferenciasAccesibles(page);
+  await page.keyboard.press("Escape");
+  await expect(bienvenida).toBeFocused();
 });
 
 test("recuerdos: retomar desde fábrica y cancelar o borrar conservan el foco", async ({

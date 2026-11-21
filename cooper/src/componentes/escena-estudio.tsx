@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import { usePathname } from "next/navigation";
 import { IlustracionViva } from "./ilustracion-viva";
 
@@ -93,6 +93,7 @@ const pasos = [
   },
 ] as const;
 export function BienvenidaAnimada() {
+  const titleId = useId();
   const dialog = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState(0);
   const [open, setOpen] = useState(false);
@@ -112,7 +113,7 @@ export function BienvenidaAnimada() {
         ref={dialog}
         onClose={() => setOpen(false)}
         className="welcome-tour"
-        aria-labelledby="tour-title"
+        aria-labelledby={titleId}
       >
         <button
           className="tour-close button secondary"
@@ -129,7 +130,7 @@ export function BienvenidaAnimada() {
           <p className="muted">
             {step + 1} de {pasos.length}
           </p>
-          <h2 id="tour-title">{pasos[step].titulo}</h2>
+          <h2 id={titleId}>{pasos[step].titulo}</h2>
           <p>{pasos[step].texto}</p>
         </div>
         <div className="tour-progress" aria-hidden="true">
