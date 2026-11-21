@@ -1,5 +1,6 @@
 import { test, expect, type APIRequestContext } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { mkdirSync } from "node:fs";
 import { revisionDoctrinalIglesia } from "../src/servicios/marcas/iglesia";
 
 async function entrar(request: APIRequestContext, email: string) {
@@ -85,7 +86,10 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
       page.getByLabel("Título de la pieza", { exact: true }),
     ).toHaveValue(/EJEMPLO/);
     await expect(
-      page.getByLabel("Texto de la publicación", { exact: true }),
+      page.getByRole("textbox", {
+        name: "Texto de la publicación",
+        exact: true,
+      }),
     ).toHaveValue(/EJEMPLO/);
   }
   expect((await marcaIglesia(page.request)).piezas).toEqual([]);
@@ -163,7 +167,7 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
     .getByLabel("Título de la pieza", { exact: true })
     .fill("Encuentro pastoral de ensayo");
   await page
-    .getByLabel("Texto de la publicación", { exact: true })
+    .getByRole("textbox", { name: "Texto de la publicación", exact: true })
     .fill(
       "Material ficticio del ensayo automatizado: encuentro pastoral revisado por el equipo.",
     );
@@ -193,7 +197,10 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
     .getByLabel("Responsable pastoral", { exact: true })
     .fill("Responsable ficticio del ensayo");
   await pieza
-    .getByLabel("Observaciones y fuentes de la revisión", { exact: true })
+    .getByRole("textbox", {
+      name: "Observaciones y fuentes de la revisión",
+      exact: true,
+    })
     .fill(
       "Revisión ficticia de texto, contexto, tono y permisos para este ensayo local.",
     );
@@ -206,6 +213,7 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   await expect(
     pieza.getByRole("button", { name: "Aprobar y programar", exact: true }),
   ).toBeEnabled();
+  mkdirSync(".cache/capturas-iglesia", { recursive: true });
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     expect(
@@ -214,6 +222,15 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
       ),
     ).toBe(true);
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    await page.evaluate(() => {
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      window.scrollTo(0, 0);
+    });
+    await page.screenshot({
+      path: `.cache/capturas-iglesia/revision-doctrinal-${width}.png`,
+      fullPage: true,
+    });
   }
   await pieza
     .getByRole("button", { name: "Aprobar y programar", exact: true })
