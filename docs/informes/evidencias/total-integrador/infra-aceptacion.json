@@ -1,0 +1,54 @@
+{
+  "estado": "PASS",
+  "compose_bloques": 8,
+  "compose_log_sha256": "e4ab0808c3f8fd93096d8e93c157c7765e3c48d199be9625ba9e257037a53d56",
+  "archivos": {
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "servicios": {
+    "n8n": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+    },
+    "runner": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "anterior": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f"
+    },
+    "caddy": {
+      "version": "2.11.8",
+      "imagen": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "anterior": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    }
+  },
+  "motor": {
+    "migracion": "PASS",
+    "reversion": "PASS",
+    "idempotencia": "PASS",
+    "imagen_nueva": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+    "imagen_anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6",
+    "red": "none",
+    "puertos": [],
+    "cpus": 0.5,
+    "triggers_arrancados": false,
+    "integridad_y_claves_foraneas": "PASS",
+    "flujos_preservados": 45,
+    "tablas_negocio_preservadas": 9,
+    "filas_negocio_preservadas": 130,
+    "migraciones_antes": 342,
+    "migraciones_despues": 342,
+    "respaldo_sha256": "ec74044c5950506d826e57f9a45ba7e4f18e06b5d53cecab148f738bba9e6255",
+    "restauracion_sha256": "ec74044c5950506d826e57f9a45ba7e4f18e06b5d53cecab148f738bba9e6255",
+    "workflow_ids_active_version_sha256": "81da5a874a0492965aae3169ec984500cab8546a88eb8ef858c2e0803152d68b",
+    "tablas_negocio_sha256": "759842c8c3a2b3645bb57b022315c735cb9789277e43582d218daedf333d3200"
+  },
+  "cooper_image_id": "49becc8812acd202f37d6a2c5a2ebca5b0ad8a4932490f40b6bb016b0fce4e41",
+  "cooper_artefacto": {
+    "etiqueta": "localhost/cooper:a794037beaaa886bcf3b8eb69274caf0d3af22c8",
+    "sha256": "2e746cec08491675f853ebfc64d5069e55d07b38266155790300f4fe427617a7"
+  }
+}

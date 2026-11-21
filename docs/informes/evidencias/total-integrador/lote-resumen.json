@@ -1,0 +1,16 @@
+{
+  "workflows": 33,
+  "publicar": 28,
+  "decisiones": {
+    "conservar_vivo": 2346,
+    "incorporar_integrado": 581,
+    "coinciden": 66,
+    "conservar_vivo_opaco": 1,
+    "resuelto_vivo": 4,
+    "resuelto_integrado": 6
+  },
+  "bloqueos_credencial": 0,
+  "disparadores_preservados": 11,
+  "disparadores_nuevos_bloqueados": 0,
+  "conservar_vivo_distinto_de_base": 0
+}

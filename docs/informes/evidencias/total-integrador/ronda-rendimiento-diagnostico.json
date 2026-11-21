@@ -1,0 +1,22 @@
+{
+  "inicio": "2026-11-21T20:05:59.826Z",
+  "pasos": [
+    {
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0
+    },
+    {
+      "comando": "node scripts/preparar-pruebas.mjs",
+      "rc": 0,
+      "advertencias": 0
+    },
+    {
+      "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts",
+      "rc": 1,
+      "advertencias": 0
+    }
+  ],
+  "resultado": "FAIL",
+  "fin": "2026-11-21T20:11:14.178Z"
+}

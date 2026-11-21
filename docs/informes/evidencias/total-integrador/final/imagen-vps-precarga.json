@@ -1,0 +1,6 @@
+{
+  "imagen": "localhost/cooper:e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "artefacto_sha256": "8b52f0c6a9a18181235ce8b78531b85c50096bfc3b9306fafa31c142adc8d641",
+  "docker_id": "sha256:3604e1d396046e475dda53e0cb26d833259d3ccd4593f969980f7216be32c0cc",
+  "estado": "PRECARGADA_SIN_ACTIVAR"
+}

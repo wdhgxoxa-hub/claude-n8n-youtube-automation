@@ -1,0 +1,85 @@
+{
+  "estado": "PASS",
+  "fuente": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "compose_bloques": 8,
+  "compose_log_sha256": "e6100300246bae0b891107765e1086cf807d9e54fbe26c51224a56e677109bb4",
+  "archivos": {
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "servicios": {
+    "n8n": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+    },
+    "runner": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "anterior": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f"
+    },
+    "caddy": {
+      "version": "2.11.8",
+      "imagen": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "anterior": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    }
+  },
+  "motor": {
+    "migracion": "PASS",
+    "reversion": "PASS",
+    "idempotencia": "PASS",
+    "imagen_nueva": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+    "imagen_anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6",
+    "red": "none",
+    "puertos": [],
+    "cpus": 0.5,
+    "triggers_arrancados": false,
+    "integridad_y_claves_foraneas": "PASS",
+    "flujos_preservados": 45,
+    "tablas_negocio_preservadas": 9,
+    "filas_negocio_preservadas": 130,
+    "migraciones_antes": 342,
+    "migraciones_despues": 342,
+    "respaldo_sha256": "ec74044c5950506d826e57f9a45ba7e4f18e06b5d53cecab148f738bba9e6255",
+    "restauracion_sha256": "ec74044c5950506d826e57f9a45ba7e4f18e06b5d53cecab148f738bba9e6255",
+    "workflow_ids_active_version_sha256": "81da5a874a0492965aae3169ec984500cab8546a88eb8ef858c2e0803152d68b",
+    "tablas_negocio_sha256": "759842c8c3a2b3645bb57b022315c735cb9789277e43582d218daedf333d3200"
+  },
+  "cooper_image_id": "ae1de678d22f476d56ddbfa50d07afd273edcb2b15a2996724500eee5d3a0d0e",
+  "cooper_artefacto": {
+    "etiqueta": "localhost/cooper:e1244bd376f8546d3b439e32b77e8a187a062d3e",
+    "sha256": "8b52f0c6a9a18181235ce8b78531b85c50096bfc3b9306fafa31c142adc8d641"
+  },
+  "migracion_cooper": {
+    "actualizacion": "PASS",
+    "reversion": "PASS",
+    "red": "none",
+    "puertos": [],
+    "imagen_nueva": "localhost/cooper:e1244bd376f8546d3b439e32b77e8a187a062d3e",
+    "imagen_anterior": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+    "respaldo_sha256": "e855ef149d3a67f492a2b1a2a1863b0d780a3b3a054d4b76e5edfb7c424b7066",
+    "migraciones_antes": 11,
+    "migraciones_despues": 14,
+    "tablas_anteriores_conservadas": 27,
+    "integridad": "PASS",
+    "claves_foraneas": "PASS"
+  },
+  "codigo_aplicador": {
+    "imagen_fuente": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+    "aplicador_fuente": "e32747c6c52ee8fe73dfd46e1fba3e465fb6ce9a",
+    "archivos": {
+      "deploy/aplicar-infra.py": "26d5a582b231e439d14eeda4385148ad2e3385d3e8280a4444f80fbd2a1b373e",
+      "deploy/tests/test_aplicar_infra.py": "e637be5817ed380ab3779f261784fac8fe561c65a26c86a5eb3628739d63e735",
+      "deploy/operar.py": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+      "deploy/tests/infra-aplicador.py": "b2b6ae1c8d7fddc6655b274bcd1151b8e7e93f38c89b577ff154632408fe786c"
+    },
+    "pruebas_operativas": {
+      "total": 167,
+      "estado": "PASS",
+      "warnings": "error",
+      "log_sha256": "df8137f11cb9bbaf23f9c8d272c0432ff1bcdeb01d8cc8c9c7314ba30d24abcf"
+    }
+  }
+}

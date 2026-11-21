@@ -1,0 +1,102 @@
+[
+  {
+    "workflow": "8nqh0n7jewLQOikC",
+    "componente": "nodo",
+    "nombre": "Crear avatar",
+    "base_sha256": "d1df998bd8b89c2d01cdcf15894d9bb8ddb18e6153aa81309cae143dc47f6775",
+    "integrado_sha256": "a71287465b2db91d58fcc97f2d1776a8d9ee2c1b84c26e94e6655ddd81a263d7",
+    "vivo_sha256": "d7d9e0a7f6dd8419abd41bb46841bcc4263d94c45756a7027e1143e4a5024de4",
+    "elegir": "vivo",
+    "motivo": "Conservar bloqueo operativo explícito por credencial ausente: nodo Code que lanza error sin llamada externa ni credencial. No habilitar proveedor."
+  },
+  {
+    "workflow": "8nqh0n7jewLQOikC",
+    "componente": "nodo",
+    "nombre": "Consultar avatar",
+    "base_sha256": "a412ffc694aadc1746d3469693e92522e4c460be0ee74890a8fc1aef20660844",
+    "integrado_sha256": "4476cd9381aa9fd83b93dcde4094c22b9f6d69fb9b3c1ecaa77a091a4a47c6c1",
+    "vivo_sha256": "eded1d7563b0e348fea3ae9e093a97c7a69e2b715f0d7105d4fdf08d7aac24d1",
+    "elegir": "vivo",
+    "motivo": "Conservar bloqueo operativo explícito por credencial ausente: nodo Code que lanza error sin llamada externa ni credencial. No habilitar proveedor."
+  },
+  {
+    "workflow": "FabCompYouTube01",
+    "componente": "nodo",
+    "nombre": "Iniciar vidIQ de competencia",
+    "base_sha256": "05f08d00bdc462053f0be93db08fdcc6e527159318f2d67bd057314b21920863",
+    "integrado_sha256": "bf401cb5cb92b8611909a5742cf9c910a139e2e56c40a93b12623aa2913a9b7f",
+    "vivo_sha256": "1c80a4dcd660512602f601070ec74de8f1d444d45c89bbe408db366226c5d276",
+    "elegir": "integrado",
+    "motivo": "Protocolo vidIQ ya publicado en758fbd9; única diferencia semántica revisada: batching seguro integrado. retryOnFail false y omitido mantienen reintentos apagados."
+  },
+  {
+    "workflow": "FabCompYouTube01",
+    "componente": "nodo",
+    "nombre": "Notificar vidIQ de competencia",
+    "base_sha256": "05f08d00bdc462053f0be93db08fdcc6e527159318f2d67bd057314b21920863",
+    "integrado_sha256": "7b1cee7dc2786979a7a8342bc09ce232285a9cfcbe75d883c5315de817820652",
+    "vivo_sha256": "6836d6ffbf3b1d49b2e226e9be2053fdbd26e724d0913eb061de072538f8b0dc",
+    "elegir": "integrado",
+    "motivo": "Protocolo vidIQ ya publicado en758fbd9; única diferencia semántica revisada: batching seguro integrado. retryOnFail false y omitido mantienen reintentos apagados."
+  },
+  {
+    "workflow": "FabCompYouTube01",
+    "componente": "nodo",
+    "nombre": "Catálogo vidIQ de competencia",
+    "base_sha256": "05f08d00bdc462053f0be93db08fdcc6e527159318f2d67bd057314b21920863",
+    "integrado_sha256": "e013d216c2ee16f2df5b1123313be2e887f4bea2fc1fe81cd229c2b57b43996b",
+    "vivo_sha256": "320e83fcd7312aaf1bcb21e5b1fc99f769dacb746b887c3dec4f97ead09747eb",
+    "elegir": "integrado",
+    "motivo": "Protocolo vidIQ ya publicado en758fbd9; única diferencia semántica revisada: batching seguro integrado. retryOnFail false y omitido mantienen reintentos apagados."
+  },
+  {
+    "workflow": "FabCompYouTube01",
+    "componente": "nodo",
+    "nombre": "Cuota renovable antes",
+    "base_sha256": "05f08d00bdc462053f0be93db08fdcc6e527159318f2d67bd057314b21920863",
+    "integrado_sha256": "3c008cf4fcc727e6fd83a581853303f4614262af3829d9ba7f3873dee3c2639e",
+    "vivo_sha256": "a3eb0b3c74728dd445c4cd8ee1a74279fbc0680b424b2a5c8f3a2a4dddbca14d",
+    "elegir": "integrado",
+    "motivo": "Protocolo vidIQ ya publicado en758fbd9; única diferencia semántica revisada: batching seguro integrado. retryOnFail false y omitido mantienen reintentos apagados."
+  },
+  {
+    "workflow": "FabCompYouTube01",
+    "componente": "nodo",
+    "nombre": "Un pedido de destacados incluido",
+    "base_sha256": "05f08d00bdc462053f0be93db08fdcc6e527159318f2d67bd057314b21920863",
+    "integrado_sha256": "7142e49fc172d3d14607e00d7162b9d0f7ae84cdb7019fac44ce100dc18b9e89",
+    "vivo_sha256": "98e9b4bbd02fbcfd9e3ac29c9ce246e78e75a613be1b0d217f939577d9186315",
+    "elegir": "integrado",
+    "motivo": "Protocolo vidIQ ya publicado en758fbd9; única diferencia semántica revisada: batching seguro integrado. retryOnFail false y omitido mantienen reintentos apagados."
+  },
+  {
+    "workflow": "FabCompYouTube01",
+    "componente": "nodo",
+    "nombre": "Cuota renovable después",
+    "base_sha256": "05f08d00bdc462053f0be93db08fdcc6e527159318f2d67bd057314b21920863",
+    "integrado_sha256": "44e601acf16dd723c7f2cdca6083089e6ef5ea246de674ab3e767ac8cf57692f",
+    "vivo_sha256": "7cf67627354afd2d8f06e5d4bafa84d1a48d40f63488ac2921b98c0aae80d390",
+    "elegir": "integrado",
+    "motivo": "Protocolo vidIQ ya publicado en758fbd9; única diferencia semántica revisada: batching seguro integrado. retryOnFail false y omitido mantienen reintentos apagados."
+  },
+  {
+    "workflow": "FabSonido0000001",
+    "componente": "nodo",
+    "nombre": "Voz (HeyGen)",
+    "base_sha256": "9725b6352d3ec2584923d0d76b1136cf95b92443f2a1f71d6da3568ad90a4947",
+    "integrado_sha256": "ee744769d65808197a2c782d19f95e4347f9c469578668f33cf3ba565b495857",
+    "vivo_sha256": "b6ce31a8400ca26ca26165a5120fdb28514713d7f1abc85e566fff7a20b761f9",
+    "elegir": "vivo",
+    "motivo": "Conservar bloqueo operativo explícito por credencial ausente: nodo Code que lanza error sin llamada externa ni credencial. No habilitar proveedor."
+  },
+  {
+    "workflow": "FabSonido0000001",
+    "componente": "nodo",
+    "nombre": "Voz (ElevenLabs)",
+    "base_sha256": "80b16d9799af47cae9354c4e346de017794653fe84c0afa5c6bc35a6570dde28",
+    "integrado_sha256": "31ac0a998b1ede5da1c4830da51269ca7ee0c29890d48bf0ff74fef583b4eea1",
+    "vivo_sha256": "305027aa341ea6a7e5bb3429bf5e527a4e923fe84e9c2c32ae29e07819f2ce6d",
+    "elegir": "vivo",
+    "motivo": "Conservar bloqueo operativo explícito por credencial ausente: nodo Code que lanza error sin llamada externa ni credencial. No habilitar proveedor."
+  }
+]

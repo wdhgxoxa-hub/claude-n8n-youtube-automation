@@ -1,0 +1,106 @@
+{
+  "estado": "FALLO_REVERTIDO",
+  "configuracion_anterior": {
+    "compose.yaml": "c330124eb9a09369c8775f2047994dc39046872262ab5a53da3325b2b549c131",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "servicios_anteriores": {
+    "cooper": {
+      "imagen": "localhost/cooper:e1244bd376f8546d3b439e32b77e8a187a062d3e",
+      "id": "ae1de678d22f476d56ddbfa50d07afd273edcb2b15a2996724500eee5d3a0d0e"
+    },
+    "n8n": {
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+      "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+    },
+    "runner": {
+      "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+      "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+    },
+    "caddy": {
+      "imagen": "docker.io/library/caddy:2.11.2-alpine",
+      "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+    }
+  },
+  "configuracion_ensayada": {
+    "compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "n8n-task-runners.json": "1ab00c49cfb886044c0a860bf47e96e133daf0417db74bc19a6e29ecfafa6712",
+    "infra-imagenes.json": "51ad012e6dde415e6cd0b49c5cdded484e7dd53e975ebf1bee4123fe0529c5a3"
+  },
+  "servicios_nuevos": {
+    "n8n": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "anterior": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6"
+    },
+    "runner": {
+      "version": "2.47.6",
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "anterior": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f"
+    },
+    "caddy": {
+      "version": "2.11.8",
+      "imagen": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "anterior": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    }
+  },
+  "respaldo_configuracion": "/home/david/.cache/tiop-final/cooper/.cache/e2e-vps-gUXkUg/operacion/infra-1795292064022209954/configuracion-anterior",
+  "entorno_copiado": false,
+  "identidad_cooper": {
+    "config_sha256": "ae1de678d22f476d56ddbfa50d07afd273edcb2b15a2996724500eee5d3a0d0e",
+    "manifiesto": null,
+    "etiqueta": "localhost/cooper:e1244bd376f8546d3b439e32b77e8a187a062d3e",
+    "artefacto_sha256": "8b52f0c6a9a18181235ce8b78531b85c50096bfc3b9306fafa31c142adc8d641",
+    "runtime_id": "ae1de678d22f476d56ddbfa50d07afd273edcb2b15a2996724500eee5d3a0d0e"
+  },
+  "identidades_anteriores": {
+    "n8n": {
+      "runtime_id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+      "referencia": "ghcr.io/n8n-io/n8n:2.47.4@sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6",
+      "id_local": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c",
+      "identidad_exacta": true
+    },
+    "runner": {
+      "runtime_id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0",
+      "referencia": "ghcr.io/n8n-io/runners:2.47.4@sha256:886feee7690c425f5c16918899c4e91010148c86149cad4b3006be0d4272db2f",
+      "id_local": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0",
+      "identidad_exacta": true
+    },
+    "caddy": {
+      "runtime_id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90",
+      "referencia": "docker.io/library/caddy:2.11.2-alpine@sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1",
+      "id_local": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90",
+      "identidad_exacta": true
+    }
+  },
+  "codigo_aplicador_sha256": "26d5a582b231e439d14eeda4385148ad2e3385d3e8280a4444f80fbd2a1b373e",
+  "codigo_operar_sha256": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+  "snapshot_previo": "b9e1e21f42a0fcdfcd1c2cfc82bc4b2f5a412eba0870190075d62f1d9128e736",
+  "identidades_nuevas": {
+    "n8n": {
+      "runtime_id": "a1a2ac97196467d6d7fe8cb7936a3feb5da77383157d64c20ab2243535833a11",
+      "referencia": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "id_local": "a1a2ac97196467d6d7fe8cb7936a3feb5da77383157d64c20ab2243535833a11",
+      "identidad_exacta": true
+    },
+    "runner": {
+      "runtime_id": "ba9b2a07f5786af771dceba41bc9b892c2a90745af6721f1575168efbede0928",
+      "referencia": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "id_local": "ba9b2a07f5786af771dceba41bc9b892c2a90745af6721f1575168efbede0928",
+      "identidad_exacta": true
+    },
+    "caddy": {
+      "runtime_id": "857143cd0ed55376842e88df6b4a68f9b3babd8f56ee9e070bf08b23e91fd6bc",
+      "referencia": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "id_local": "857143cd0ed55376842e88df6b4a68f9b3babd8f56ee9e070bf08b23e91fd6bc",
+      "identidad_exacta": true
+    }
+  },
+  "manifiesto_restaurado_sha256": "589ee0df0b714d22b00dbf942e9c67b4cfb5d158a160329e622d6767aacb5dd5",
+  "reversion": "PASS",
+  "configuracion_restaurada": "PASS",
+  "datos_restaurados": true
+}
