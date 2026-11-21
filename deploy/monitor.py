@@ -8,6 +8,8 @@ import json
 import os
 from pathlib import Path
 import shutil
+import socket
+import ssl
 import subprocess
 import sys
 import time
@@ -31,6 +33,24 @@ def age(path, now):
         return None
 
 
+def certificates_ok(env, now):
+    """Verifica ambos dominios públicos con CA/SNI y margen de renovación de 14 días."""
+    try:
+        context = ssl.create_default_context()
+        for key in ('COOPER_DOMAIN', 'N8N_DOMAIN'):
+            host = env[key]
+            if not host:
+                return False
+            with socket.create_connection((host, 443), timeout=10) as connection:
+                with context.wrap_socket(connection, server_hostname=host) as secure:
+                    expires = ssl.cert_time_to_seconds(secure.getpeercert()['notAfter'])
+                    if expires - now <= 14 * 86400:
+                        return False
+        return True
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
 def issues(env, now):
     problems = []
     project = env.get('COMPOSE_PROJECT_NAME', 'cooper')
@@ -42,6 +62,9 @@ def issues(env, now):
             healthy = False
         if not healthy:
             problems.append('servicio_' + service)
+    # Código ya admitido por el workflow vivo: evita modificar flujos n8n.
+    if not certificates_ok(env, now):
+        problems.append('servicio_caddy')
     data = Path(env['DATA_ROOT'])
     disk = shutil.disk_usage(data)
     if disk.free < max(2 * 1024**3, disk.total * .1):
@@ -97,7 +120,7 @@ def monitor(env, now=None, force=False, probe=False):
         previous = json.loads(path.read_text()) if path.exists() else {}
         changed = previous.get('notificados') != found
         due = now - previous.get('aviso_en', 0) >= 6 * 3600
-        send = force or probe or (found and (changed or due)) or (not found and (bool(previous.get('notificados')) or (bool(previous.get('problemas')) and previous.get('entrega') is False)))
+        send = force or probe or previous.get('entrega') is False or (found and (changed or due)) or (not found and bool(previous.get('notificados')))
         delivered = notify(env, found, now, probe) if send else None
         result = {'fecha': now, 'problemas': found, 'notificados': previous.get('notificados'), 'aviso_en': previous.get('aviso_en', 0), 'entrega': delivered, 'salud': 'FAIL' if found else 'PASS'}
         # Un fallo de transporte conserva lo pendiente: se reintenta al próximo tick.

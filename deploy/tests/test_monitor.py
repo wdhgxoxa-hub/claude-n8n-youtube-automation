@@ -6,6 +6,8 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from unittest.mock import MagicMock
+import ssl
 
 DEPLOY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(DEPLOY))
@@ -57,6 +59,35 @@ class MonitorTest(unittest.TestCase):
             monitor.monitor(self.env, 100001)
             self.assertEqual(send.call_count, 1)
 
+    def test_reintenta_recuperacion_hasta_entregar(self):
+        with patch.object(monitor, 'issues', return_value=['servicio_n8n']), patch.object(monitor, 'notify', return_value=False):
+            monitor.monitor(self.env, 100000)
+        with patch.object(monitor, 'issues', return_value=[]), patch.object(monitor, 'notify', side_effect=[False, False, True]) as send:
+            for now in range(100001, 100004):
+                monitor.monitor(self.env, now)
+            self.assertEqual(send.call_count, 3)
+            self.assertEqual(json.loads((self.root / 'monitor.json').read_text())['notificados'], [])
+
+    def test_certificados_validan_host_y_anticipan_catorce_dias(self):
+        context = MagicMock()
+        context.wrap_socket.return_value.__enter__.return_value.getpeercert.return_value = {'notAfter': 'Jan 20 00:00:00 2030 GMT'}
+        expires = ssl.cert_time_to_seconds('Jan 20 00:00:00 2030 GMT')
+        env = {'COOPER_DOMAIN': 'cooper.example.com', 'N8N_DOMAIN': 'flujos.example.com'}
+        with patch.object(monitor.ssl, 'create_default_context', return_value=context), patch.object(monitor.socket, 'create_connection') as connect:
+            self.assertTrue(monitor.certificates_ok(env, expires - 15 * 86400))
+            self.assertEqual([call.args[0] for call in connect.call_args_list], [('cooper.example.com', 443), ('flujos.example.com', 443)])
+            self.assertEqual(context.wrap_socket.call_args.kwargs['server_hostname'], 'flujos.example.com')
+            self.assertFalse(monitor.certificates_ok(env, expires - 14 * 86400))
+            context.wrap_socket.side_effect = ssl.SSLCertVerificationError('certificado ficticio')
+            self.assertFalse(monitor.certificates_ok(env, expires - 15 * 86400))
+
+    def test_certificados_ausentes_o_sin_fecha_no_son_saludables(self):
+        self.assertFalse(monitor.certificates_ok({}, 1000))
+        context = MagicMock()
+        context.wrap_socket.return_value.__enter__.return_value.getpeercert.return_value = {}
+        with patch.object(monitor.ssl, 'create_default_context', return_value=context), patch.object(monitor.socket, 'create_connection'):
+            self.assertFalse(monitor.certificates_ok({'COOPER_DOMAIN': 'cooper.example.com', 'N8N_DOMAIN': 'flujos.example.com'}, 1000))
+
     def test_no_alerta_durante_mantenimiento(self):
         (self.root / 'mantenimiento').touch()
         with patch.object(monitor, 'issues') as check, patch.object(monitor, 'notify') as send:
@@ -81,10 +112,12 @@ class MonitorTest(unittest.TestCase):
     def test_salud_detecta_disco_copias_y_contenedor(self):
         self.env.update(DATA_ROOT=str(self.root), COOPER_ORIGIN='https://ficticio.invalid')
         response = subprocess.CompletedProcess([], 0, 'running healthy unless-stopped', '')
-        with patch.object(monitor.subprocess, 'run', return_value=response), patch.object(monitor.shutil, 'disk_usage', return_value=type('Disk', (), {'free': 1, 'total': 100})()), patch.object(monitor.urllib.request, 'urlopen', side_effect=OSError()):
+        with patch.object(monitor.subprocess, 'run', return_value=response), patch.object(monitor.shutil, 'disk_usage', return_value=type('Disk', (), {'free': 1, 'total': 100})()), patch.object(monitor.urllib.request, 'urlopen', side_effect=OSError()), patch.object(monitor, 'certificates_ok', return_value=True) as certs:
             self.assertEqual(monitor.issues(self.env, 1000), ['copia_local', 'copia_remota', 'disco_bajo', 'https_cooper'])
             response.stdout = 'exited unhealthy no'
             self.assertIn('servicio_n8n', monitor.issues(self.env, 1000))
+            certs.return_value = False
+            self.assertIn('servicio_caddy', monitor.issues(self.env, 1000))
 
     def execute_node(self, packet, state=None):
         script = "const fs=require('fs');const input=JSON.parse(fs.readFileSync(0,'utf8'));const crypto=require('crypto');const f=new Function('$json','$env','$getWorkflowStaticData','require',input.code);console.log(JSON.stringify(f({body:input.packet},{COOPER_WEBHOOK_SECRET:input.secret},()=>input.state,require)));"
