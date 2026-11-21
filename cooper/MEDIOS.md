@@ -26,7 +26,7 @@ Privada incluso frente al administrador en la biblioteca ordinaria; compartida s
 
 Las URLs remotas no llegan al cliente. Proxy de medios con HTTPS, hosts CDN exactos, sin redirecciones ni cookies de proveedor, límite 20 MB y MIME de audio/video. Lista inicial: `files.heygen.ai`, `files2.heygen.ai`, `resource.heygen.ai`, `cdn.heygen.ai`. Un CDN diferente devuelve error hasta que sea validado; nunca aceptar hosts enviados por el navegador. Fotos/grabaciones se envían inline base64; no se crea un enlace público de los originales en Cooper.
 
-Los originales y el consentimiento permanecen en SQLite después de borrar el activo, por el sistema existente de adjuntos. No hay purga de huérfanos, cifrado de base ni política de retención automática; Walter debe fijar retención, copias y eliminación en proveedor antes de operación con personas reales. Privado en Cooper no garantiza que un administrador de la cuenta del proveedor no pueda ver sus recursos.
+Los originales permanecen en SQLite después de borrar el activo, por el sistema existente de adjuntos. El consentimiento está en la fila del activo: al eliminar esa fila no queda un archivo histórico independiente del consentimiento. No hay purga de huérfanos, cifrado de base ni política de retención automática; Walter debe fijar retención de originales/evidencias/consentimientos, copias y eliminación en proveedor antes de operación con personas reales. El [inventario y simulador M06](../docs/cooper-retencion.md) identifica referencias conservadas y bloqueos sin borrar datos; no reconstruye registros históricos eliminados. Privado en Cooper no garantiza que un administrador de la cuenta del proveedor no pueda ver sus recursos.
 
 ## Seguimiento sin navegador
 

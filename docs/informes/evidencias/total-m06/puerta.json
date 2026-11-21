@@ -1,0 +1,40 @@
+{
+  "mision": "M06",
+  "fechaLima": "2026-11-21T11:55:53-05:00",
+  "rama": "total-m06",
+  "codigoProbado": "93d7c44b150a9eeac05768c8af806c64e693b241",
+  "comandos": [
+    {
+      "directorio": "cooper",
+      "comando": "npm ci && npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
+      "salida": 0
+    },
+    {
+      "directorio": "raiz",
+      "comando": "node --test tests/flujos_v2.test.cjs",
+      "salida": 0
+    }
+  ],
+  "pruebas": {
+    "unitarias": 307,
+    "unitariasM06": 23,
+    "e2e": 43,
+    "flujos": 147,
+    "omitidas": 0
+  },
+  "errores": 0,
+  "advertencias": 0,
+  "vulnerabilidadesNpmCi": 0,
+  "logs": [
+    {
+      "archivo": "puerta.log",
+      "sha256": "8f8b638b61e36cc57a3fa769053dd18a1a4f7fe4f568c527c96034aa96faee10"
+    },
+    {
+      "archivo": "flujos.log",
+      "sha256": "0b448a5856505f40f1b359d9b63e6fbebfde34a75f2a912fa2664b1dcafa2a97"
+    }
+  ],
+  "alcance": "Fixtures locales. Sin purga real, integración ni despliegue.",
+  "formatoLogs": "Salida completa con retornos de carro, espacios finales y líneas finales vacías normalizados para Git."
+}
