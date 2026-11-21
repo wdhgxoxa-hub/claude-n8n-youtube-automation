@@ -2841,7 +2841,7 @@ RADAR = f.dump()
 f = Flow(W['errores'], 'F · Vigilante de errores')
 f.add('Error en un flujo', 'n8n-nodes-base.errorTrigger', 1, {})
 code(f, 'Mensaje de error', r"""
-// Aviso claro en español: qué se detuvo, en qué paso, por qué (traducido) y un enlace corto al detalle.
+// El error crudo sirve solo para clasificar: nunca se envía a Telegram, pues puede contener credenciales.
 const e = $json; const ex = e.execution || {}; const wf = e.workflow || {};
 const original = String(ex.error?.message || e.trigger?.error?.message || 'error sin mensaje').replace(/\s+/g, ' ').trim();
 const nodo = ex.lastNodeExecuted || ex.error?.node?.name || e.trigger?.error?.node?.name || '¿?';
@@ -2854,12 +2854,15 @@ const motivos = [
   [/\b5\d\d\b|internal server error|bad gateway|service unavailable/i, 'el servicio externo tuvo una falla de su lado.'],
   [/not supported|bad request|\b400\b/i, 'el servicio rechazó el pedido (formato o parámetros).'],
 ];
-const motivo = (motivos.find(([r]) => r.test(original)) || [null, null])[1];
+const motivo = motivos.find(([r]) => r.test(original))?.[1] || 'ocurrió un fallo; revisa la ejecución en n8n.';
 const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const nombre = String(wf.name || wf.id || 'un flujo').replace(/^(F|FX|M\d+(–M\d+)?) · /, '');
-const texto = `⚠️ <b>Se detuvo: ${esc(nombre)}</b>\nPaso: ${esc(nodo)}\nMotivo: ${esc(motivo || original.slice(0, 300))}`
-  + (motivo ? `\n<i>${esc(original.slice(0, 160))}</i>` : '') + (ex.retryOf ? '\n(era un reintento)' : '')
-  + (ex.url ? `\n<a href="${esc(ex.url)}">Ver el detalle</a>` : '');
+// n8n documenta execution.id; los fallos del disparador pueden no tenerlo. Ignorar siempre execution.url.
+const executionId = typeof ex.id === 'string' ? ex.id : (Number.isSafeInteger(ex.id) ? String(ex.id) : '');
+const detalle = /^[0-9]{1,20}$/.test(executionId) ? `https://flujos.cooperestudio.com/execution/${executionId}` : '';
+const texto = `⚠️ <b>Se detuvo: ${esc(nombre)}</b>\nPaso: ${esc(nodo)}\nMotivo: ${esc(motivo)}`
+  + (ex.retryOf ? '\n(era un reintento)' : '')
+  + (detalle ? `\n<a href="${detalle}">Ver el detalle</a>` : '');
 return [{ json: { texto } }];
 """)
 f.add('Avisar error', 'n8n-nodes-base.telegram', 1.2,

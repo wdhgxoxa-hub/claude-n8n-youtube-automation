@@ -699,19 +699,35 @@ test('escala: todo flujo es válido — nodos únicos, conexiones existentes, si
   }
 });
 
-test('vigilante: el aviso de error dice flujo, nodo, mensaje y enlace', () => {
+test('vigilante: avisa flujo, nodo y categoría sin divulgar el error original', () => {
   const ERR = wf('FabErrores000001');
-  const m = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'M8 · Publicación en redes' }, execution: { lastNodeExecuted: 'Subir a redes', url: 'https://n8n/x/1', error: { message: '429  demasiadas\n peticiones' } } } })[0].json.texto;
+  const secretoFicticio = 'credencial-ficticia-no-publicar-123';
+  const m = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'M8 · Publicación en redes' }, execution: { id: '231', lastNodeExecuted: 'Subir a redes', url: `https://proveedor.invalid/error?token=${secretoFicticio}`, error: { message: `429  demasiadas\n peticiones ${secretoFicticio}`, stack: secretoFicticio } } } })[0].json.texto;
   assert.match(m, /Se detuvo: Publicación en redes/); assert.match(m, /Paso: Subir a redes/);
-  assert.match(m, /Motivo: el servicio pidió ir más despacio/); assert.match(m, /429 demasiadas peticiones/);   // motivo en español + original
-  assert.match(m, /<a href="https:\/\/n8n\/x\/1">Ver el detalle<\/a>/);
-  const raro = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'F · X' }, execution: { error: { message: 'algo <raro> & nuevo' } } } })[0].json.texto;
-  assert.match(raro, /Motivo: algo &lt;raro&gt; &amp; nuevo/);   // sin traducción: el original, escapado para HTML de Telegram
+  assert.match(m, /Motivo: el servicio pidió ir más despacio/);
+  assert.doesNotMatch(m, /429|proveedor\.invalid|token=|credencial-ficticia-no-publicar-123/);
+  assert.match(m, /<a href="https:\/\/flujos\.cooperestudio\.com\/execution\/231">Ver el detalle<\/a>/);
+  const raro = run(codeOf(ERR, 'Mensaje de error'), { json: { workflow: { name: 'F · X' }, execution: { error: { message: `algo <raro> & nuevo ${secretoFicticio}` } } } })[0].json.texto;
+  assert.match(raro, /Motivo: ocurrió un fallo; revisa la ejecución en n8n\./);
+  assert.doesNotMatch(raro, /raro|nuevo|credencial-ficticia-no-publicar-123|href=/);
   const vacio = run(codeOf(ERR, 'Mensaje de error'), { json: {} })[0].json.texto;
-  assert.match(vacio, /error sin mensaje/);
+  assert.match(vacio, /Motivo: ocurrió un fallo/);
   assert.strictEqual(nodo(ERR, 'Avisar error').parameters.additionalFields.parse_mode, 'HTML');
   for (const id of ['FabProduccion001', 'FabRedes00000001', 'FabOrquestador01']) { const s = wf(id).settings;
     assert.strictEqual(s.errorWorkflow, 'FabErrores000001'); assert.ok(s.executionTimeout > 0 && s.executionTimeout <= 3600); }
+});
+
+test('vigilante: solo enlaza identificadores de ejecución válidos y nunca la URL recibida', () => {
+  const js = codeOf(wf('FabErrores000001'), 'Mensaje de error');
+  for (const id of [undefined, null, {}, -1, 1.5, Number.MAX_SAFE_INTEGER + 1, '../123', '123?token=ficticio', '123\" onclick=\"x', '1'.repeat(21)]) {
+    const salida = run(js, { json: { execution: { id, url: 'https://proveedor.invalid/?token=ficticio' }, trigger: { error: { message: 'invalid api key credencial-ficticia-no-publicar-123' } } } })[0].json;
+    assert.match(salida.texto, /una clave fue rechazada/);
+    assert.doesNotMatch(JSON.stringify(salida), /href=|proveedor\.invalid|token=|credencial-ficticia-no-publicar-123/);
+  }
+  const salida = run(js, { json: { execution: { id: 231, retryOf: '230', error: { message: 'timeout credencial-ficticia-no-publicar-123' } } } })[0].json;
+  assert.match(salida.texto, /execution\/231/);
+  assert.match(salida.texto, /era un reintento/);
+  assert.doesNotMatch(JSON.stringify(salida), /credencial-ficticia-no-publicar-123/);
 });
 
 test('rutina: avisa los videos que llevan más de 24 h sin avanzar, y solo esos', () => {
