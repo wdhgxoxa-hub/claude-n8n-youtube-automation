@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 12:30 (Lima).
+Última actualización: 2026-11-21 12:36 (Lima).
 
 ## Qué es
 
@@ -9,9 +9,13 @@
 
 ## Hecho
 
+- **Integración cooper-total en curso:** chat real 37/37 tras corregir memoria, identificadores de video y orientación de identidad; tres contextos reales del puente VPS también correctos. Retención incluye montajes por revisión y conciliación cancelada; benchmark de 10.000 videos reduce el ciclo de avisos de 885 a 20 ms sin alterar las lecturas. Sentinel usa caché privada verificada y sus fuentes se retiraron del historial saliente. Estos cambios están integrados localmente, todavía no acreditan el despliegue final. [Chat](informes/total-chat-aceptacion.md), [retención](informes/total-retencion-integrada.md), [volumen](informes/total-m12.md), [Sentinel](informes/total-sentinel-privado.md).
+
+- **Copia fresca y reversa de motor, 21-11:** snapshot `6ae420fd`, réplica cifrada en PC y restauración de 25 archivos/dos bases correctas. Clon n8n de 44 flujos/nueve tablas/126 filas actualizado a 2.47.6 y revertido íntegramente. Servicios VPS saludables; estas pruebas no equivalen a la actualización real de infraestructura.
+
 - **Sentinel privado separado, probado focalmente:** retiradas nueve fuentes del árbol público; caché ignorada preparada desde objetos Git fijados y verificada antes de importar. Pasan 13 unitarias, 8 Python con guardián/caos real y 172 flujos; archivo público sin fuentes privadas. Pendiente integración, saneamiento de commits salientes y puerta completa del orquestador. [Informe](informes/total-sentinel-privado.md).
 
-- **Retorno y aprendizaje compatibles, probado localmente:** corregida la lectura prematura de «Fila actualizada» y la pérdida del recibo M01. La validación editorial ahora precede a reserva/despacho; contexto y deduplicación se conservan. Pasan 15 casos reales en n8n 2.47.6 y 15 en 2.47.4, 172 de flujos y tres del selector estricto de imágenes. Pendiente integración y aplicación coordinada; VPS sin cambios por este frente. [Evidencia](informes/total-retorno-2476.md).
+- **Retorno y aprendizaje compatibles, probado localmente:** corregida la lectura prematura de «Fila actualizada» y la pérdida del recibo M01. La validación editorial ahora precede a reserva/despacho; contexto y deduplicación se conservan. Pasan 15 casos reales en n8n 2.47.6 y 15 en 2.47.4, 172 de flujos y tres del selector estricto de imágenes. Integrado localmente; aplicación coordinada pendiente. VPS sin cambios por este frente. [Evidencia](informes/total-retorno-2476.md).
 
 - **Aprendizaje aceptado con datos reales:** TikTok/YouTube de una publicación existente, hipótesis generada por el plan PC, lección persistida y siguiente guion que declara su ID; omisión rechazada. Reversa y reaplicación comprobadas sin nuevos videos ni costos. Google existente y Data API funcionan; Analytics devolvió cero filas. M7 pendiente de activación coordinada. [Evidencia](informes/total-aprendizaje-aceptacion.md).
 
@@ -46,7 +50,7 @@
 
 - Orquestador `cooper-total`: integrar/desplegar los frentes y ensayar imagen nueva/reversa; la corrección del monitor `c18106f` ya está recogida en su rama. Monitor, receptor y timers ya están instalados; reinicio automático comprobado. Operación no reabrió workflows ni hizo push.
 
-- Cooper total: integrar el frente aprendizaje y ejecutar su [ensayo de lectura](cooper-aprendizaje-ensayo.md) sobre publicaciones existentes, con respaldo/reversa, sin reanudar producción. La conexión real y la calidad de las lecciones todavía no se acreditan por las pruebas locales.
+- Cooper total: activar de forma controlada el ciclo de aprendizaje ya aceptado con lecturas reales y lección persistida. El guion posterior fue un borrador de ensayo; no se atribuye una aplicación editorial ni mejora a un video nuevo. Ventanas futuras y contraste causal requieren publicaciones aprobadas.
 - **Lote cooper-total:** clon aislado publica 25/25 flujos con cuatro pasos sin credencial bloqueados explícitamente y tres entradas externas deshabilitadas; la entrada definitiva FINAL3 ya pasó importación32, publicación25, versiones y reversa exacta187tablas en un único recibo ligado al plan antes de otro intento real. No se ha habilitado producción de medios ni publicado contenido social. [Ensayos](informes/total-despliegue.md).
 
 - Orquestador: aceptar Aprendizaje/Radar con datos reales, revisar activación segura de las entradas y aplicar delta menor de gastos/retorno. El lote principal ya está aplicado; no queda para Claude.
@@ -58,7 +62,7 @@
 1. Resolver pago de Meta, configurar firma y plantillas WhatsApp con Claude; mantener mensajería pausada hasta aceptar la configuración.
 2. Probar Google, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya no son un pendiente de alta; no repetir el acceso root antiguo.
 3. Revisar con Claude las dos esperas históricas y las diez entradas pausadas del VPS; elegir cuáles reabrir. El guion del Short `v-mwp2bjgj-7fvq` sigue como pendiente histórico, sin reanudación ni aprobación en esta misión.
-4. Validar memoria con conversaciones ficticias usando el proveedor del plan: las pruebas locales no miden calidad semántica real. La síntesis añade una llamada por turno y hasta 12 segundos.
+4. Aceptar el comportamiento cotidiano de memoria y chat desde su sesión: la evaluación real del plan con conversaciones ficticias pasó 37/37, pero una muestra no garantiza todas las respuestas futuras. La síntesis conserva su límite de doce segundos.
 5. Fijar presupuestos, modelos, interruptores, perfiles de publicación y permisos OAuth; autorizar por separado un ensayo real de producción, medios y celebración. Operación puede mostrar indisponibilidad hasta instalar el nuevo puente.
 6. Revisar los videos y probar un teléfono físico de gama media y Safari si se utiliza. La emulación local no sustituye esa aceptación.
 7. Marcas: definir identidad/dueños, asignar activos y permisos, cotejar corpus bíblico y guía pastoral, aprobar plantilla WhatsApp y decidir retención/conciliación de medios y primer ensayo real.
