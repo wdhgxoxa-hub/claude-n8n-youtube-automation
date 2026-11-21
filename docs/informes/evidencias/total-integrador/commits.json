@@ -1,354 +1,507 @@
 {
   "base": "a69e3746a475b6c20a0ad27e79de259078fd9fc3",
-  "corte": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+  "corte": "096efd4f10d60d6d20db6147035e117874dbf68f",
+  "total": 125,
   "commits": [
     {
-      "sha": "6e1277c3b8f46312f6fd7a61db9a6f08bf6e1ce4",
+      "commit": "6e1277c3b8f46312f6fd7a61db9a6f08bf6e1ce4",
       "titulo": "Investigar estrategia de Margen Real con muestras y fuentes públicas"
     },
     {
-      "sha": "9654aa0a7d4ddc7f0457ce7153229fdab83f7b3e",
+      "commit": "9654aa0a7d4ddc7f0457ce7153229fdab83f7b3e",
       "titulo": "Documentar estrategia de Margen Real y puerta completa verificada"
     },
     {
-      "sha": "5dde5722a2e89bf250846bfae0f4dd678c364bf0",
+      "commit": "5dde5722a2e89bf250846bfae0f4dd678c364bf0",
       "titulo": "Adapta el ensayo editorial al contexto de aprendizaje integrado"
     },
     {
-      "sha": "98670f5cd1a81a1f469f9384f76361934a67d93a",
+      "commit": "98670f5cd1a81a1f469f9384f76361934a67d93a",
       "titulo": "Mejorar contraste, foco visible y títulos de las pantallas"
     },
     {
-      "sha": "cd3357eaa699184059cd2b2c9de8639cbfe32da6",
+      "commit": "cd3357eaa699184059cd2b2c9de8639cbfe32da6",
       "titulo": "Mostrar la validación de campos en español"
     },
     {
-      "sha": "64bd594c8379a2708719727038c4d699fb4701e1",
+      "commit": "64bd594c8379a2708719727038c4d699fb4701e1",
       "titulo": "Completar navegación por teclado y anuncios del chat"
     },
     {
-      "sha": "f494d478cf5b4ea3d6f007afca301cf254d525a2",
+      "commit": "f494d478cf5b4ea3d6f007afca301cf254d525a2",
       "titulo": "Conservar el foco y facilitar la recuperación en formularios"
     },
     {
-      "sha": "521e17f32c8d1f69a80ee17a467ca35da05b6a32",
+      "commit": "521e17f32c8d1f69a80ee17a467ca35da05b6a32",
       "titulo": "Auditar accesibilidad de pantallas y estados en ambos temas"
     },
     {
-      "sha": "ae233468a8ebf75129c141f9dfff50bb84c38eb9",
+      "commit": "ae233468a8ebf75129c141f9dfff50bb84c38eb9",
       "titulo": "Seleccionar la pieza propia en la prueba de animación"
     },
     {
-      "sha": "60779b4f6ac3e8ed6c61a90b74627d731bfe0ed2",
+      "commit": "60779b4f6ac3e8ed6c61a90b74627d731bfe0ed2",
       "titulo": "Respetar el foco elegido durante los guardados"
     },
     {
-      "sha": "7accd4dd429dec8122e3bf2a1054755d63f61251",
+      "commit": "7accd4dd429dec8122e3bf2a1054755d63f61251",
       "titulo": "Evitar referencias ARIA ambiguas entre vistas retenidas"
     },
     {
-      "sha": "80d74642c3fda2646186acfe4976aca6d636a186",
+      "commit": "80d74642c3fda2646186acfe4976aca6d636a186",
       "titulo": "Asignar identidades únicas a los formularios accesibles"
     },
     {
-      "sha": "51a5785bbbdaba20e8d8d36a0b7910f80c6a3811",
+      "commit": "51a5785bbbdaba20e8d8d36a0b7910f80c6a3811",
       "titulo": "Seleccionar controles visibles al probar HTML transmitido"
     },
     {
-      "sha": "babcf2302930860c0265734ea7543bfe1883aa86",
+      "commit": "babcf2302930860c0265734ea7543bfe1883aa86",
       "titulo": "Documentar la accesibilidad y la puerta completa de Cooper"
     },
     {
-      "sha": "a91cfff4f5fc56bb189f765042965fffe7ea46e6",
+      "commit": "a91cfff4f5fc56bb189f765042965fffe7ea46e6",
       "titulo": "Ampliar Sentinel con caos móvil, controles inventariados y videos por prueba"
     },
     {
-      "sha": "23de51431831c2d1c93033a176482d130011ac18",
+      "commit": "23de51431831c2d1c93033a176482d130011ac18",
       "titulo": "Conservar el contador de caos al navegar la fixture del guardián"
     },
     {
-      "sha": "b2357765f4d5effa7e3a332753f2e3afc6737fa2",
+      "commit": "b2357765f4d5effa7e3a332753f2e3afc6737fa2",
       "titulo": "Separar los datos de caída entre los ensayos móvil y escritorio"
     },
     {
-      "sha": "583fbf7417b4ddb7e97ef650c241df8b4ea8d38f",
+      "commit": "583fbf7417b4ddb7e97ef650c241df8b4ea8d38f",
       "titulo": "Permitir grabar todos los flujos de la puerta final de Sentinel"
     },
     {
-      "sha": "af7b5928222a8654899c6d176348cc4e596c3ec6",
+      "commit": "af7b5928222a8654899c6d176348cc4e596c3ec6",
       "titulo": "Incluir videos de una puerta aprobada en el índice de movimiento"
     },
     {
-      "sha": "37cb41564d256905257ef184a03b36884f99f818",
+      "commit": "37cb41564d256905257ef184a03b36884f99f818",
       "titulo": "Prueba: distinguir el aviso de caída del anunciador de rutas"
     },
     {
-      "sha": "a4d4e0509394c85fb8ec04a6f34f9da3a0555314",
+      "commit": "a4d4e0509394c85fb8ec04a6f34f9da3a0555314",
       "titulo": "Corregir el singular de los contadores de resultados"
     },
     {
-      "sha": "437c7a59f6c0bbbe361e300d00c7ac12ac10c767",
+      "commit": "437c7a59f6c0bbbe361e300d00c7ac12ac10c767",
       "titulo": "Conservar las secciones de Marcas al recargar y cubrirlas con caos"
     },
     {
-      "sha": "e070f3ae7588268c5baf11988cd36dc8e0e5aab3",
+      "commit": "e070f3ae7588268c5baf11988cd36dc8e0e5aab3",
       "titulo": "Separar la evidencia de ráfagas móvil y escritorio"
     },
     {
-      "sha": "f0626e213ad1abded30e1d5c79a76ab2898ec729",
+      "commit": "f0626e213ad1abded30e1d5c79a76ab2898ec729",
       "titulo": "Documentar la integración total, las correcciones y la evidencia Sentinel"
     },
     {
-      "sha": "aec5baef545808bf14ea0273371946134f8115f8",
+      "commit": "aec5baef545808bf14ea0273371946134f8115f8",
       "titulo": "Adaptar la auditoría accesible a Resultados y Competencia integrados"
     },
     {
-      "sha": "7879189d90cb9710bc73bd0086d3c79e2c59bd3b",
+      "commit": "7879189d90cb9710bc73bd0086d3c79e2c59bd3b",
       "titulo": "Documentar la integración web y Sentinel con sus verificaciones focales"
     },
     {
-      "sha": "ce2a884174f18024fcfe326c022bed7f52bd6b12",
+      "commit": "ce2a884174f18024fcfe326c022bed7f52bd6b12",
       "titulo": "Recupera el lote de competencia y distingue altas y bajas"
     },
     {
-      "sha": "c87c1d1c9d0a9014227668db891c6f5a65065239",
+      "commit": "c87c1d1c9d0a9014227668db891c6f5a65065239",
       "titulo": "Completa memoria y destinos del chat conservando su brevedad"
     },
     {
-      "sha": "1e2b82d3b7256fa723eaa856d2c4a0f4ab439401",
+      "commit": "1e2b82d3b7256fa723eaa856d2c4a0f4ab439401",
       "titulo": "Documenta los faltantes integrados y conserva la evidencia histórica del chat"
     },
     {
-      "sha": "c5354866e997dd7d3eed24acce29b0ce5cee3379",
+      "commit": "c5354866e997dd7d3eed24acce29b0ce5cee3379",
       "titulo": "Auditar n8n del VPS con exportación estructural de solo lectura"
     },
     {
-      "sha": "8348a02833627e4a8fc3498dee726c7e1c32deb3",
+      "commit": "8348a02833627e4a8fc3498dee726c7e1c32deb3",
       "titulo": "Evitar reenvíos inciertos y reforzar la fiabilidad de los flujos n8n"
     },
     {
-      "sha": "a9c7c50d89bfe9042f25bd3da0b3f3cdb3d6a1f3",
+      "commit": "a9c7c50d89bfe9042f25bd3da0b3f3cdb3d6a1f3",
       "titulo": "Preparar lote n8n inactivo con diff y reversa versionada"
     },
     {
-      "sha": "acb48f2186357759969261c3844703fa35fe3d9c",
+      "commit": "acb48f2186357759969261c3844703fa35fe3d9c",
       "titulo": "Documentar auditoría n8n, lote reversible y puerta completa"
     },
     {
-      "sha": "2ad89bf8e32ec4e6aaa9582dd67e65e03b5db4aa",
+      "commit": "2ad89bf8e32ec4e6aaa9582dd67e65e03b5db4aa",
       "titulo": "Corrige continuidad, medios y estados terminales de la fábrica n8n"
     },
     {
-      "sha": "ed6f2053477357164621481596439cd07c6018f9",
+      "commit": "ed6f2053477357164621481596439cd07c6018f9",
       "titulo": "Añade ensayo integral local con copia saneada y trazas de tres corridas"
     },
     {
-      "sha": "f927f73ca912fbce0f5dd7dabc5a81a702958646",
+      "commit": "f927f73ca912fbce0f5dd7dabc5a81a702958646",
       "titulo": "Documenta ensayo total, evidencia de puerta y pendientes de Walter"
     },
     {
-      "sha": "a1070796d222621b889d953d8d755c0a92befab5",
+      "commit": "a1070796d222621b889d953d8d755c0a92befab5",
       "titulo": "Ensayar fallos y recuperación durable de n8n local"
     },
     {
-      "sha": "354081b4513de4594700be1efb8f6ada1780e471",
+      "commit": "354081b4513de4594700be1efb8f6ada1780e471",
       "titulo": "Extender transportes ficticios de ramas audiovisuales"
     },
     {
-      "sha": "cd4d421247c7d23b964695b3c4c8ea5789936fd5",
+      "commit": "cd4d421247c7d23b964695b3c4c8ea5789936fd5",
       "titulo": "Informar de inmediato fallos inesperados del ensayo de resiliencia"
     },
     {
-      "sha": "14c0f02932ec96b2ead8add368215b1ba244d77a",
+      "commit": "14c0f02932ec96b2ead8add368215b1ba244d77a",
       "titulo": "Conservar canales de resiliencia visibles en la copia local"
     },
     {
-      "sha": "f7d07f0cd7b0ff51d254522d7f654e5e8583a025",
+      "commit": "f7d07f0cd7b0ff51d254522d7f654e5e8583a025",
       "titulo": "Esperar archivos de clips activos antes de descargarlos"
     },
     {
-      "sha": "1f4668cfcad72222f65864d4f882b617860d3d43",
+      "commit": "1f4668cfcad72222f65864d4f882b617860d3d43",
       "titulo": "Conservar los avatares terminados en las escenas de Cooper"
     },
     {
-      "sha": "e3176e610a79ffbac15f9fda00863aa0579cf14c",
+      "commit": "e3176e610a79ffbac15f9fda00863aa0579cf14c",
       "titulo": "Recorrer ramas opcionales y reels de Marcas en n8n aislado"
     },
     {
-      "sha": "564f1be1b0c53080aacdfd46b76344533f1786cf",
+      "commit": "564f1be1b0c53080aacdfd46b76344533f1786cf",
       "titulo": "Incluir diff aplicable y reversa verificable en el lote n8n"
     },
     {
-      "sha": "c2f323abfe2d367871a893190c711e3f9fc3f58f",
+      "commit": "c2f323abfe2d367871a893190c711e3f9fc3f58f",
       "titulo": "Cubrir fallos de archivos de clips y documentar el ensayo de ramas"
     },
     {
-      "sha": "db9dce74ec0a53a9f76e91e6cccd5fc5987f8774",
+      "commit": "db9dce74ec0a53a9f76e91e6cccd5fc5987f8774",
       "titulo": "Documentar ramas verificadas, lote reversible y pendientes de Walter"
     },
     {
-      "sha": "a68ac063e6e90d288ec9caecad9792c90c9dd448",
+      "commit": "a68ac063e6e90d288ec9caecad9792c90c9dd448",
       "titulo": "Genera MP4 locales con voz Piper y montaje FFmpeg desde n8n"
     },
     {
-      "sha": "7398b6205c8f2ecc6077d84b28ee499732efcab7",
+      "commit": "7398b6205c8f2ecc6077d84b28ee499732efcab7",
       "titulo": "Documenta render real, evidencias y estado de la misión"
     },
     {
-      "sha": "461ad6867cbca8aa912c976ba74d94fd233817e7",
+      "commit": "461ad6867cbca8aa912c976ba74d94fd233817e7",
       "titulo": "total-guia: documentar el uso de Cooper con capturas locales"
     },
     {
-      "sha": "418497b3ad9d9553ae6c4953e0471ea9a3ef611e",
+      "commit": "418497b3ad9d9553ae6c4953e0471ea9a3ef611e",
       "titulo": "total-guia: registrar la puerta completa y el cierre documental"
     },
     {
-      "sha": "0b299ac69d20cd88ee5892d7106800efbfc00e5e",
+      "commit": "0b299ac69d20cd88ee5892d7106800efbfc00e5e",
       "titulo": "Conservar contratos durables y seguridad al integrar los frentes n8n"
     },
     {
-      "sha": "3a8af0828f251010dd0eba033b59cc9f3e892dff",
+      "commit": "3a8af0828f251010dd0eba033b59cc9f3e892dff",
       "titulo": "Normaliza la salida del subflujo de competencia antes de guardarla"
     },
     {
-      "sha": "a794037beaaa886bcf3b8eb69274caf0d3af22c8",
+      "commit": "a794037beaaa886bcf3b8eb69274caf0d3af22c8",
       "titulo": "Documenta la causa del Radar y sus regresiones en ambos motores"
     },
     {
-      "sha": "63463bd08b387754518cdebbe24921e8c773a376",
+      "commit": "63463bd08b387754518cdebbe24921e8c773a376",
       "titulo": "Adaptar el lote de auditoría a los treinta y tres flujos integrados"
     },
     {
-      "sha": "cf21ae1cbf407606d2bb3cdfbf62a68d603d537c",
+      "commit": "cf21ae1cbf407606d2bb3cdfbf62a68d603d537c",
       "titulo": "Conservar callbacks firmados y esperar el registro del Radar en los ensayos"
     },
     {
-      "sha": "908b40f0ac83e524af68195f6fa8dd59f84a236f",
+      "commit": "908b40f0ac83e524af68195f6fa8dd59f84a236f",
       "titulo": "Ensaya el grafo completo del progreso firmado con sus reintentos"
     },
     {
-      "sha": "3a3b41ce8dce993a5337c8bfdca8a5adae2c9344",
+      "commit": "3a3b41ce8dce993a5337c8bfdca8a5adae2c9344",
       "titulo": "Conservar el rechazo de respuestas duplicadas del radar al integrar competencia"
     },
     {
-      "sha": "5cd2e881bbf8a936d9733fb30072578f9259c084",
+      "commit": "5cd2e881bbf8a936d9733fb30072578f9259c084",
       "titulo": "Conserva activaciones n8n y verifica contenido concurrente antes de aplicar"
     },
     {
-      "sha": "6b84bfb52462ce961c9311736b42ee306d53ff57",
+      "commit": "6b84bfb52462ce961c9311736b42ee306d53ff57",
       "titulo": "Documenta la conservación n8n y sus límites frente a cambios vivos"
     },
     {
-      "sha": "903be4dd9b27d64c5d16535a20bc9145bce3fb27",
+      "commit": "903be4dd9b27d64c5d16535a20bc9145bce3fb27",
       "titulo": "Actualizar los ensayos aislados a competencia y aprendizaje con evidencia"
     },
     {
-      "sha": "ef09cb83e7aa34dde5547871ff69a4ec362e8893",
+      "commit": "ef09cb83e7aa34dde5547871ff69a4ec362e8893",
       "titulo": "Acotar los estados de Resultados al contenido principal"
     },
     {
-      "sha": "cb9b383c631791b3bcd3749d0fb86cd59ad7a02e",
+      "commit": "cb9b383c631791b3bcd3749d0fb86cd59ad7a02e",
       "titulo": "Documentar equivalencias y pendientes de las ramas originales"
     },
     {
-      "sha": "1a3682b792f28ed2fa9118972c9051b9f4bb09b4",
+      "commit": "1a3682b792f28ed2fa9118972c9051b9f4bb09b4",
       "titulo": "Distinguir el contador de Publicados del estado de conexión"
     },
     {
-      "sha": "378b5c3bc8d2113c9b9c9ec89673ba8df3824ff0",
+      "commit": "378b5c3bc8d2113c9b9c9ec89673ba8df3824ff0",
       "titulo": "Registrar la revisión completa de selectores de estado"
     },
     {
-      "sha": "59a6223269da7f3e2bf14b362a4ad04715c1465d",
+      "commit": "59a6223269da7f3e2bf14b362a4ad04715c1465d",
       "titulo": "Concilia n8n en tres vías sin sobrescribir cambios vivos"
     },
     {
-      "sha": "f18e0e69f667ae32e5ad211532126a7a5c300321",
+      "commit": "f18e0e69f667ae32e5ad211532126a7a5c300321",
       "titulo": "Cerrar el relay de render sin perder la evidencia ante un pipe terminado"
     },
     {
-      "sha": "1557882866bab6fbcd2577ac90d0c81dbd243589",
+      "commit": "1557882866bab6fbcd2577ac90d0c81dbd243589",
       "titulo": "Seleccionar el compositor accesible en los ensayos multinavegador"
     },
     {
-      "sha": "9d0c279964a8f7797febbce0c6e6dd6bccba8e0a",
+      "commit": "9d0c279964a8f7797febbce0c6e6dd6bccba8e0a",
       "titulo": "Acreditar la revisión del compositor duplicado en WebKit"
     },
     {
-      "sha": "528d344a100574182bb6c42f3ddae8d0aec4b425",
+      "commit": "528d344a100574182bb6c42f3ddae8d0aec4b425",
       "titulo": "Sincroniza la cuota vidIQ ya publicada conservando fiabilidad integrada"
     },
     {
-      "sha": "6a591ae08de667eb960afce42699731ad6bfc5ee",
+      "commit": "6a591ae08de667eb960afce42699731ad6bfc5ee",
       "titulo": "Verificar el retorno idempotente M01 después de una caída"
     },
     {
-      "sha": "721e6e619ea6ae815c29fa0b32487cafaf554dab",
+      "commit": "721e6e619ea6ae815c29fa0b32487cafaf554dab",
       "titulo": "Documenta la conciliación n8n y sus pruebas sin datos privados"
     },
     {
-      "sha": "846402b2ff6f02f5d7003069a073569e71357bca",
+      "commit": "846402b2ff6f02f5d7003069a073569e71357bca",
       "titulo": "Acredita la sincronización vidIQ y limita la base n8n a evidencia comprobada"
     },
     {
-      "sha": "8bd07cae31222bb6879d34e129fd138b1fd16bb0",
+      "commit": "8bd07cae31222bb6879d34e129fd138b1fd16bb0",
       "titulo": "Resuelve conflictos n8n revisados con tres huellas y auditoría estricta"
     },
     {
-      "sha": "da8e662238267187b9cf2ddf5dcc6f2267e18c09",
+      "commit": "da8e662238267187b9cf2ddf5dcc6f2267e18c09",
       "titulo": "Documenta las resoluciones n8n ligadas a conflictos exactos"
     },
     {
-      "sha": "e27a9f1e748c158472cd06a402527992aa230230",
+      "commit": "e27a9f1e748c158472cd06a402527992aa230230",
       "titulo": "Optimizar consultas de Cooper con índices y agregados acotados"
     },
     {
-      "sha": "d4bfb94c62850536d89eeafeff070c76950e686f",
+      "commit": "d4bfb94c62850536d89eeafeff070c76950e686f",
       "titulo": "Adelantar datos de operación y priorizar las ilustraciones visibles"
     },
     {
-      "sha": "6c7a2eba693ae220d3b64926b8fed7f73afb2707",
+      "commit": "6c7a2eba693ae220d3b64926b8fed7f73afb2707",
       "titulo": "Diferir videos y galerías hasta su revisión o reproducción"
     },
     {
-      "sha": "81a1e01db20ef80992480e10ba6367afd7064895",
+      "commit": "81a1e01db20ef80992480e10ba6367afd7064895",
       "titulo": "Medir rendimiento con caché fría, trazas y recursos reproducibles"
     },
     {
-      "sha": "768813b0fd733906e0f99b22147183766e8be851",
+      "commit": "768813b0fd733906e0f99b22147183766e8be851",
       "titulo": "Registrar umbrales de trazas y exigir estabilidad visual del diseño"
     },
     {
-      "sha": "275b34b053cc9393cfb2cac68abb524e8832aff3",
+      "commit": "275b34b053cc9393cfb2cac68abb524e8832aff3",
       "titulo": "Contar decisiones visibles durante el renderizado progresivo"
     },
     {
-      "sha": "2e00936f0f9ed66f0655b0f5e4017272abb4f161",
+      "commit": "2e00936f0f9ed66f0655b0f5e4017272abb4f161",
       "titulo": "Conservar la coreografía al navegar y estabilizar la primera carga"
     },
     {
-      "sha": "39ec869456104ce0447ac59323a0a526bdcea2a9",
+      "commit": "39ec869456104ce0447ac59323a0a526bdcea2a9",
       "titulo": "Incluir el dibujo de bienvenida en el HTML inicial"
     },
     {
-      "sha": "5c1b081195508178b3444734ffc42433f791c5be",
+      "commit": "5c1b081195508178b3444734ffc42433f791c5be",
       "titulo": "Conservar Lima y estados accesibles al integrar rendimiento"
     },
     {
-      "sha": "e32665d6001f2afba6507bca884b02685db0b638",
+      "commit": "e32665d6001f2afba6507bca884b02685db0b638",
       "titulo": "Ajustar la regresión de gastos al período de Lima integrado"
     },
     {
-      "sha": "cd80d29395eb8bedd03acee6d572c6c793692521",
+      "commit": "cd80d29395eb8bedd03acee6d572c6c793692521",
       "titulo": "Documentar rendimiento medido, límites y propuesta de Caddy"
     },
     {
-      "sha": "bddb1b308cccbacef42f4e8c1e04562adf44d1de",
+      "commit": "bddb1b308cccbacef42f4e8c1e04562adf44d1de",
       "titulo": "Documentar la integración tardía de rendimiento y sus límites"
     },
     {
-      "sha": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
+      "commit": "e1244bd376f8546d3b439e32b77e8a187a062d3e",
       "titulo": "Documentar integración n8n y cuarenta y ocho recorridos finales verificados"
+    },
+    {
+      "commit": "7eb85651b16de94a1cebad96580a29a9b3bd2492",
+      "titulo": "Acreditar identidad de índices y manifiestos de infraestructura"
+    },
+    {
+      "commit": "0f9f61ff7b40e9ce829ac20d69e7bd317a570e42",
+      "titulo": "Acreditar Radar completo y retirar sondas de competencia"
+    },
+    {
+      "commit": "e824299ea55e77fc8ccd561c9aebbf2862b5641e",
+      "titulo": "Acredita delta Radar y Resolver aplicado con reversa en ambos motores"
+    },
+    {
+      "commit": "8828dc11f9fef7db9b72c9771115d1a8f8329c5c",
+      "titulo": "Acredita ejecución automática de aprendizaje con versión e instantes reales"
+    },
+    {
+      "commit": "3efd7eb4091b4a57706c57cc7d6c394175ac7931",
+      "titulo": "Actualizar matriz de 54 ramas y cierres públicos integrados"
+    },
+    {
+      "commit": "af3a5ed9a8c4616ec52645d4b7c0cdef565e3560",
+      "titulo": "Integrar el delta cerrado de Radar con CAS de contenido y versiones"
+    },
+    {
+      "commit": "191c301178fd875218bba9e2307cc85eb2d90a64",
+      "titulo": "Documentar identidad OCI y capacidad Radar certificadas"
+    },
+    {
+      "commit": "503fb804c9ed2af0d7d146d1060a0488227262f0",
+      "titulo": "Documentar aceptación operativa de la imagen final con catorce migraciones"
+    },
+    {
+      "commit": "bb74925e77b215e89dfc583d0d40922135bd7293",
+      "titulo": "Comprobar la etapa accesible durante las aprobaciones en Firefox"
+    },
+    {
+      "commit": "f5d5dbef016a8d2891dd3a422405f1f0b6cd7af7",
+      "titulo": "Registrar conciliación total, ensayos y diagnósticos antes del despliegue"
+    },
+    {
+      "commit": "533d98f0cf48b92935da9d3d47e8de901c06a465",
+      "titulo": "Restaurar imágenes por servicio al revertir infraestructura mixta"
+    },
+    {
+      "commit": "f1df4f7f1598da383d77bdc68acbbc5b945033a4",
+      "titulo": "Aislar identificadores accesibles entre instancias de Biblia"
+    },
+    {
+      "commit": "a987b2feb7b61985dc5e4f39e5a2580fe88b21c3",
+      "titulo": "Probar Radar visible y reproducción diferida con teclado"
+    },
+    {
+      "commit": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+      "titulo": "Preservar el contrato de lectura de Sentinel y registrar fallos de red saneados"
+    },
+    {
+      "commit": "34d6c7a2fab3180ad54df31a6789cac4041d244e",
+      "titulo": "Registrar revisión de reversa mixta y ejecución aislada"
+    },
+    {
+      "commit": "111a83759fbc77b9b34b0c3055db72d7befef35b",
+      "titulo": "Registrar correcciones de aceptación y controles previos al despliegue"
+    },
+    {
+      "commit": "612e0afcda16b95e635e5ae7ad31224b1471b04f",
+      "titulo": "Acreditar contrato Sentinel, dieciséis recorridos y barrido final de ramas"
+    },
+    {
+      "commit": "54b9ac720d1070f549119113cc2d3b1cce68803e",
+      "titulo": "Valida restauración completa y preserva WAL al preparar clones SQLite"
+    },
+    {
+      "commit": "d33b60c46c87b7c9cf51a4f76d07d7bf8a551564",
+      "titulo": "Acredita copia final de sondas y ensayos íntegros de 146 filas"
+    },
+    {
+      "commit": "2be2dc5144df4b870249b9d0acad641e6c594830",
+      "titulo": "Documenta memoria real de Cooper y ausencia de swap en el VPS"
+    },
+    {
+      "commit": "abb94c119ef1e08b8da29c0558b67a95806c9392",
+      "titulo": "Registrar cierre Radar y validación del clon SQLite íntegro"
+    },
+    {
+      "commit": "c99b30ee30577312b52759a2e724b88257230c33",
+      "titulo": "Ensayar reversa de infraestructura con relés de imágenes distintas"
+    },
+    {
+      "commit": "0670486cb008a1fe30ef399fadb4d7f42a3ca2c3",
+      "titulo": "Adaptar dependencias de namespace en el ensayo mixto Podman"
+    },
+    {
+      "commit": "801e46eafed7a59b2ae230c47c5103a835eda752",
+      "titulo": "Acreditar imagen e942 y reversa real con relés de imágenes distintas"
+    },
+    {
+      "commit": "e92d8e9b0f79629a4f8f03ad34a7a6974fa01acf",
+      "titulo": "Acreditar imagen precargada y reversa exacta de infraestructura"
+    },
+    {
+      "commit": "4e029e73f680435cd0814301457a03c6574b1cce",
+      "titulo": "Identificar la región accesible de competencia por su encabezado"
+    },
+    {
+      "commit": "bb3268d4cfdf6448e98b9b93c1d86631f30c7a80",
+      "titulo": "Conservar diagnóstico de Radar y reiniciar aceptación conjunta"
+    },
+    {
+      "commit": "53a5fd89dbfabc4331cbb401695d5036f8d4b9d8",
+      "titulo": "Acreditar operación completa y cierre del helper WAL sin restos"
+    },
+    {
+      "commit": "4deecdea176b1ebe03bb7298e36fbad430a7a9ee",
+      "titulo": "Registrar adaptador certificado de copia final y réplica"
+    },
+    {
+      "commit": "7837b8461e6e2e4a7da2167f258f9b312838892b",
+      "titulo": "Acreditar puerta completa limpia de la integración total"
+    },
+    {
+      "commit": "dce1b03d6db1597332e71eb79d719b2f5bda197c",
+      "titulo": "Reutilizar sentencias del puente para evitar agotamiento de memoria"
+    },
+    {
+      "commit": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "titulo": "Exige un GiB sin swap en ensayos de la imagen Cooper"
+    },
+    {
+      "commit": "48f1c814c4801c199cef3456dfe06c70df851874",
+      "titulo": "Registrar cierre tardío de capacidad y renovar la aceptación total"
+    },
+    {
+      "commit": "bd2edf81b17f0dd29e436ec340a697f8bb7f6d73",
+      "titulo": "Incorporar reproducción H19 y evidencia íntegra de memoria sin swap"
+    },
+    {
+      "commit": "90f474a997723b32437f116c99c9c9e3aeebcde4",
+      "titulo": "Conservar cierres tardíos y distinguir aceptación nueva tras H19"
+    },
+    {
+      "commit": "b6d73147370cca022ebea848af423d1447d4853d",
+      "titulo": "Ensayar H19 por HTTP sobre la imagen standalone sin swap"
+    },
+    {
+      "commit": "c53dbbd1d18a7dda88ad61577898e170378818b6",
+      "titulo": "Acreditar imagen b3 con reversa mixta y carga H19 completa"
+    },
+    {
+      "commit": "096efd4f10d60d6d20db6147035e117874dbf68f",
+      "titulo": "Documentar revisión final de la secuencia de despliegue b3"
     }
   ]
 }

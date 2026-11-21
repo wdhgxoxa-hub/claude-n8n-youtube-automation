@@ -1,0 +1,9 @@
+{
+  "resultado": "PASS",
+  "fecha_utc": "2026-11-21T21:19:26.147119+00:00",
+  "archivo_sha256": "9ea269e6746e197c5626ae04fa6835bbcf9eb18274d7d0192225582e8e493d20",
+  "bytes": 269559055,
+  "etiqueta": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "id_docker": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+  "activada": false
+}
