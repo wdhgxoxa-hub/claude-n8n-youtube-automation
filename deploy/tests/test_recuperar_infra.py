@@ -46,6 +46,9 @@ class RecoveryTest(unittest.TestCase):
             db.executescript('CREATE TABLE videos(id INTEGER); INSERT INTO videos VALUES(1);')
         with closing(sqlite3.connect(self.data / 'n8n/database.sqlite')) as db, db:
             db.executescript("CREATE TABLE execution_entity(status TEXT); INSERT INTO execution_entity VALUES('waiting'); CREATE TABLE migrations(id INTEGER); INSERT INTO migrations VALUES(1);")
+            db.execute('CREATE TABLE workflow_entity(id TEXT,name TEXT,nodes TEXT,connections TEXT,settings TEXT,versionId TEXT,activeVersionId TEXT,active INTEGER,versionCounter INTEGER)')
+            db.execute('INSERT INTO workflow_entity VALUES(?,?,?,?,?,?,?,?,?)',
+                       ('ficticio', 'Sintético', '[]', '{}', '{}', 'v1', 'v1', 1, 1))
         self.snapshot = self.root / 'snapshot'
         oplib.copy_data(self.data, self.snapshot)
         self.original = oplib.manifest(self.snapshot)
@@ -72,7 +75,14 @@ class RecoveryTest(unittest.TestCase):
             'servicios_nuevos': self.new_images, 'respaldo_configuracion': str(self.backup),
             'snapshot_previo': 'a' * 64, 'codigo_operar_sha256': oplib.digest(Path(oplib.__file__)),
             'codigo_aplicador_sha256': oplib.digest(Path(recovery.infra.__file__)),
+            'identidad_cooper': {'runtime_id': self.references[self.cooper], 'config_sha256': sha('config-cooper')},
+            'identidades_nuevas': {name: {'runtime_id': self.references[value['imagen']],
+                                         'id_local': self.references[value['imagen']],
+                                         'referencia': value['imagen'], 'identidad_exacta': True}
+                                  for name, value in self.new_images.items()},
         }
+        self.rollback_images = self.backup.parent / 'imagenes-reversa.json'
+        self.write_overrides()
         self.receipt_path = self.state / 'aplicacion.json'
         self.output = self.state / 'recuperacion.json'
         self.write_receipt()
@@ -80,19 +90,23 @@ class RecoveryTest(unittest.TestCase):
         oplib.write_json(self.state / 'anterior.json', {'image': 'localhost/cooper:reversion-1', 'snapshot': 'c' * 64})
         self.pointers = {name: oplib.digest(self.state / name) for name in ('release.json', 'anterior.json')}
         self.events = []
+        self.override_calls = []
         self.running = True
         self.fail_start = False
         self.fail_restore = False
         self.current_override = {}
         self.reference_override = {}
+        self.snapshot_hook = None
         case = self
 
         class Operator:
             state, data, engine = case.state, case.data, 'docker'
             env, env_file = {}, case.root / 'NO-LEER.env'
 
-            def compose(self, *args):
+            def compose(self, *args, **kwargs):
                 case.events.append(args)
+                if kwargs:
+                    case.override_calls.append((args, kwargs))
                 if args[:2] == ('ps', '--all'):
                     return args[-1]
                 if args[:2] == ('ps', '-q'):
@@ -118,6 +132,8 @@ class RecoveryTest(unittest.TestCase):
                 case.events.append(('snapshot', kwargs))
                 case.assertEqual(kwargs, {'resume': False, 'tag': 'reversion'})
                 case.running = False
+                if case.snapshot_hook:
+                    case.snapshot_hook()
                 oplib.copy_data(case.data, case.root / 'snapshot-desplazado')
                 return 'b' * 64
 
@@ -133,8 +149,14 @@ class RecoveryTest(unittest.TestCase):
         oplib.write_json(self.receipt_path, self.receipt)
         self.receipt_hash = oplib.digest(self.receipt_path)
 
+    def write_overrides(self):
+        oplib.write_json(self.rollback_images, {'services': {name: {'image': value['imagen']} for name, value in self.services.items()}})
+        self.receipt['imagenes_reversa_sha256'] = oplib.digest(self.rollback_images)
+
     def command(self, args, **kwargs):
         if args[1:3] == ['image', 'inspect']:
+            if args[-1] == '{{.Architecture}}':
+                return 'amd64'
             return self.references[args[3]]
         self.assertEqual(args[1:3], ['inspect', '--format'])
         fmt, name = args[-2:]
@@ -142,10 +164,12 @@ class RecoveryTest(unittest.TestCase):
             return 'running healthy' if self.running else 'exited'
         is_new = (self.target / 'compose.yaml').read_text().startswith('PUBLICO NUEVO')
         image = self.new_images[name]['imagen'] if is_new and name in self.new_images else self.services[name]['imagen']
+        if is_new and name.startswith('chat-'):
+            image = self.cooper
         if fmt == '{{.Config.Image}}':
             return self.reference_override.get(name, image) if is_new else image
         self.assertEqual(fmt, '{{.Image}}')
-        return self.current_override.get(name, self.references[image])
+        return self.current_override.get(name, self.references[image]) if is_new else self.references[image]
 
     def invoke(self):
         return recovery.recover(self.operator, self.receipt_path, self.receipt_hash, self.output)
@@ -249,7 +273,7 @@ class RecoveryTest(unittest.TestCase):
 
     def test_rechaza_imagen_anterior_movida_sin_parar(self):
         self.references['n8n:old'] = '0' * 64
-        with self.assertRaisesRegex(RuntimeError, 'imagen anterior'):
+        with self.assertRaisesRegex(RuntimeError, 'referencia anterior'):
             self.invoke()
         self.assert_no_cut()
 
@@ -287,6 +311,134 @@ class RecoveryTest(unittest.TestCase):
             operator.rollback()
         compose.assert_not_called()
         self.assert_no_cut()
+
+    def test_pass_recupera_reles_mixtos_con_override_certificado(self):
+        old = 'localhost/cooper:' + 'b' * 40
+        self.references[old] = sha('relay-anterior')
+        for name in ('chat-n8n', 'chat-runner'):
+            self.services[name] = {'imagen': old, 'id': self.references[old]}
+        self.write_overrides(); self.write_receipt()
+        result = self.invoke()
+        self.assertEqual(result['servicios_despues'], self.services)
+        self.assertTrue(result['workflows_ajenos_preservados'])
+        self.assertEqual(result['servicios_antes']['chat-n8n']['id'], self.references[self.cooper])
+        self.assertEqual(len(self.override_calls), 3)
+        self.assertTrue(all(kwargs == {'image_overrides': self.rollback_images} for _, kwargs in self.override_calls))
+
+    def test_identidad_oci_no_confunde_indice_config_y_manifiesto(self):
+        reference = self.new_images['n8n']['imagen']
+        runtime = sha('manifiesto-plataforma')
+        self.current_override['n8n'] = runtime
+        self.receipt['identidades_nuevas']['n8n']['runtime_id'] = runtime
+        self.write_receipt()
+        with patch.object(recovery.infra, 'platform_manifest', return_value={
+                'manifiesto': 'sha256:' + runtime, 'configuracion': 'sha256:' + sha('config-distinta')}) as manifest:
+            self.assertEqual(self.invoke()['estado'], 'PASS')
+        self.assertEqual(manifest.call_args.args[1], reference)
+        self.assertGreaterEqual(manifest.call_count, 2)
+
+    def test_rechaza_id_actual_distinto_del_pass_aunque_referencia_exista(self):
+        self.receipt['identidades_nuevas']['n8n']['runtime_id'] = sha('otro-runtime')
+        self.write_receipt()
+        with patch.object(recovery.infra, 'verify_service_identity'):
+            with self.assertRaisesRegex(RuntimeError, 'servicio actual'):
+                self.invoke()
+        self.assert_no_cut()
+
+    def test_rechaza_override_ausente_antes_de_parar(self):
+        self.rollback_images.unlink()
+        with self.assertRaisesRegex(RuntimeError, 'Falta archivo'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_rechaza_override_alterado_antes_de_parar(self):
+        self.rollback_images.write_text('{}')
+        with self.assertRaisesRegex(RuntimeError, 'Override'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_rechaza_override_contenido_ajeno_aun_con_huella_actualizada(self):
+        self.rollback_images.write_text('{}')
+        self.receipt['imagenes_reversa_sha256'] = oplib.digest(self.rollback_images)
+        self.write_receipt()
+        with self.assertRaisesRegex(RuntimeError, 'Override'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_rechaza_override_enlace_fuera_de_estado(self):
+        outside = self.root / 'externo.json'
+        self.rollback_images.rename(outside)
+        self.rollback_images.symlink_to(outside)
+        with self.assertRaisesRegex(RuntimeError, 'enlaces operativos'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def mutate_workflow(self):
+        with closing(sqlite3.connect(self.data / 'n8n/database.sqlite')) as db, db:
+            db.execute('UPDATE workflow_entity SET nodes=?', ('[{"name":"Cambio posterior"}]',))
+
+    def test_rechaza_lote_posterior_con_misma_version_y_activacion(self):
+        self.mutate_workflow()
+        self.displaced = oplib.manifest(self.data)
+        with self.assertRaisesRegex(RuntimeError, 'lote o edición'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_cas_repetido_detecta_edicion_durante_snapshot_sin_sustituir_datos(self):
+        self.snapshot_hook = self.mutate_workflow
+        with self.assertRaisesRegex(RuntimeError, 'Cambió un workflow'):
+            self.invoke()
+        self.assertTrue((self.state / 'mantenimiento').exists())
+        self.assertFalse(self.running)
+        self.assertTrue((self.data / 'cooper/posterior.txt').exists())
+        self.assertFalse(any(p.name == 'datos-desplazados' for p in self.state.rglob('*')))
+        self.assertEqual(oplib.manifest(self.data), oplib.verify(self.root / 'snapshot-desplazado'))
+
+    def test_cas_override_repetido_detecta_cambio_durante_snapshot(self):
+        self.snapshot_hook = lambda: self.rollback_images.write_text('{}')
+        with self.assertRaisesRegex(RuntimeError, 'Override'):
+            self.invoke()
+        self.assertTrue((self.state / 'mantenimiento').exists())
+        self.assertEqual(oplib.manifest(self.data), self.displaced)
+
+    def test_rechaza_puntero_cooper_modificado_durante_corte(self):
+        self.snapshot_hook = lambda: oplib.write_json(self.state / 'release.json', {'image': 'OTRA'})
+        with self.assertRaisesRegex(RuntimeError, 'puntero de Cooper'):
+            self.invoke()
+        self.assertTrue((self.state / 'mantenimiento').exists())
+        self.assertEqual(oplib.manifest(self.data), self.displaced)
+
+    def test_cas_json_equivalente_no_inventa_lote_posterior(self):
+        with closing(sqlite3.connect(self.data / 'n8n/database.sqlite')) as db, db:
+            db.execute('UPDATE workflow_entity SET nodes=?,settings=?', ('[ ]', '{ }'))
+        self.assertEqual(self.invoke()['estado'], 'PASS')
+
+    def test_rechaza_lote_solo_columnas_sin_cambiar_version_workflow(self):
+        with closing(sqlite3.connect(self.data / 'n8n/database.sqlite')) as db, db:
+            db.execute('CREATE TABLE data_table_user_ficticia(id INTEGER, nueva TEXT)')
+        self.displaced = oplib.manifest(self.data)
+        with self.assertRaisesRegex(RuntimeError, 'lote o edición'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_rechaza_base_sin_columnas_cas_obligatorias(self):
+        with closing(sqlite3.connect(self.data / 'n8n/database.sqlite')) as db, db:
+            db.execute('ALTER TABLE workflow_entity DROP COLUMN versionCounter')
+        self.displaced = oplib.manifest(self.data)
+        with self.assertRaisesRegex(RuntimeError, 'contrato CAS'):
+            self.invoke()
+        self.assert_no_cut()
+
+    def test_helper_independiente_carga_aplicador_junto_al_operador_certificado(self):
+        extra = self.root / 'artefacto-separado'
+        extra.mkdir()
+        helper = extra / 'recuperar-infra.py'
+        shutil.copyfile(Path(recovery.__file__), helper)
+        spec = importlib.util.spec_from_file_location('helper_independiente', helper)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertEqual(Path(module.infra.__file__), Path(oplib.__file__).with_name('aplicar-infra.py'))
+        self.assertEqual(module.operar, oplib)
 
 
 if __name__ == '__main__':

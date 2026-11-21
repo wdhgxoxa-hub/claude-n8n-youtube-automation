@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 """Revierte una aplicación de infraestructura PASS usando su recibo exacto.
 
-Conserva la imagen de Cooper. Su reversa de aplicación, si procede, se ejecuta
-después con el anterior.json de Operator. No lee ni copia el entorno por fuera
+Conserva la imagen de Cooper. Su reversa de aplicación, si procede, requiere
+el recibo del aplicador que hizo esa fase. No lee ni copia el entorno por fuera
 del adaptador operativo existente, ni muestra salida de proveedores.
 """
 import argparse
+from contextlib import closing
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
 import re
+import sqlite3
 import sys
 import time
 import os
 
 import operar
 
-SPEC = importlib.util.spec_from_file_location('infra_recuperacion', Path(__file__).with_name('aplicar-infra.py'))
+# Permite cargar este helper separado sin añadir archivos al bundle cerrado.
+# El llamador fija/importa operar desde ese bundle antes de importar el helper.
+SPEC = importlib.util.spec_from_file_location('infra_recuperacion', Path(operar.__file__).with_name('aplicar-infra.py'))
 infra = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(infra)
 SHA = re.compile(r'[0-9a-f]{64}')
@@ -58,13 +63,51 @@ def current_services(op, names):
     return result
 
 
-def validate(op, receipt_path, expected, output):
+def rollback_images(op, receipt, backup):
+    path = checked_path(backup.parent / 'imagenes-reversa.json', op.state)
+    expected = receipt.get('imagenes_reversa_sha256')
+    operar.require(isinstance(expected, str) and SHA.fullmatch(expected), 'Falta huella de imágenes de reversa')
+    operar.require(path.is_file() and operar.digest(path) == expected, 'Override de reversa alterado o ausente')
+    value = json.loads(path.read_text())
+    operar.require(value == infra.previous_image_overrides(op, receipt['servicios_anteriores']),
+                   'Override de reversa distinto del recibo')
+    return path
+
+
+def workflow_guard(path):
+    """CAS de todos los workflows, sin serializar parámetros ni credenciales."""
+    fields = ('id', 'name', 'nodes', 'connections', 'settings', 'versionId',
+              'activeVersionId', 'active', 'versionCounter')
+    with closing(sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)) as db:
+        db.execute('BEGIN')
+        columns = {row[1] for row in db.execute('PRAGMA table_info(workflow_entity)')}
+        operar.require(set(fields) <= columns, 'Falta contrato CAS de workflows')
+        rows = db.execute('SELECT ' + ','.join('"' + key + '"' for key in fields) +
+                          ' FROM workflow_entity ORDER BY id').fetchall()
+        # Un lote de solo columnas también debe bloquear una recuperación que
+        # lo borraría, aunque no haya publicado otra versión de un workflow.
+        tables = [row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+                  if row[0].startswith('data_table_user_')]
+        business_schema = {name: db.execute('PRAGMA table_info("' + name.replace('"', '""') + '")').fetchall()
+                           for name in tables}
+    normalized = []
+    for row in rows:
+        value = dict(zip(fields, row))
+        for key in ('nodes', 'connections', 'settings'):
+            value[key] = json.loads(value[key]) if value[key] is not None else None
+        normalized.append(value)
+    return hashlib.sha256(json.dumps({'workflows': normalized, 'columnas_negocio': business_schema}, sort_keys=True, separators=(',', ':'),
+                                     ensure_ascii=False).encode()).hexdigest()
+
+
+def validate(op, receipt_path, expected, output, *, prepared=False):
     operar.require(isinstance(expected, str) and SHA.fullmatch(expected), 'Exigir SHA-256 del recibo explícito')
     receipt_path = checked_path(receipt_path, op.state)
     operar.require(receipt_path.is_file() and receipt_path.stat().st_size <= 1048576, 'Recibo no regular o demasiado grande')
     operar.require(operar.digest(receipt_path) == expected, 'El recibo no coincide con su huella')
     output = checked_path(output, op.state, exists=False)
-    operar.require(not output.exists() and output.parent.is_dir(), 'La salida exige nombre nuevo y directorio existente')
+    operar.require(output.parent.is_dir() and (output.is_file() if prepared else not output.exists()),
+                   'La salida exige nombre nuevo y directorio existente')
     receipt = json.loads(receipt_path.read_text())
     operar.require(receipt.get('estado') == 'PASS', 'Solo recuperar una aplicación terminada PASS')
     operar.require(receipt.get('codigo_operar_sha256') == operar.digest(Path(operar.__file__)), 'Operator difiere del aplicado')
@@ -88,6 +131,16 @@ def validate(op, receipt_path, expected, output):
         names |= {'chat-cooper', 'chat-n8n', 'chat-runner'}
     previous, newer = receipt.get('servicios_anteriores', {}), receipt.get('servicios_nuevos', {})
     operar.require(set(previous) == names and set(newer) == {'n8n', 'runner', 'caddy'}, 'Servicios distintos del recibo')
+    rollback_images(op, receipt, backup)
+    applied = receipt.get('identidades_nuevas', {})
+    operar.require(set(applied) == set(newer), 'Faltan identidades del PASS')
+    cooper = receipt.get('identidad_cooper', {})
+    cooper_id = image_id(previous['cooper']['id'])
+    if 'runtime_id' in cooper:
+        operar.require(image_id(cooper['runtime_id']) == cooper_id, 'Identidad Cooper distinta del PASS')
+    else:
+        operar.require(cooper.get('identidad_exacta') is True and
+                       image_id(cooper.get('config_sha256')) == cooper_id, 'Falta identidad Cooper acreditada')
     current = current_services(op, sorted(names))
     for name in sorted(names):
         item = previous[name]
@@ -96,12 +149,20 @@ def validate(op, receipt_path, expected, output):
         if name in newer:
             reference = newer[name].get('imagen', '')
             operar.require(re.fullmatch(r'[a-zA-Z0-9./:_-]+@sha256:[0-9a-f]{64}', reference), 'La imagen aplicada no tiene digest')
-            expected_id = inspect_image(op, reference)
+            identity = applied[name]
+            operar.require(identity.get('referencia') == reference, 'Referencia distinta del PASS')
+            expected_id = image_id(identity.get('runtime_id'))
+            local_id = inspect_image(op, reference)
+            operar.require(local_id == image_id(identity.get('id_local')), 'La referencia aplicada cambió')
+            infra.verify_service_identity(op, 'sha256:' + expected_id, reference, 'sha256:' + local_id,
+                                          identity.get('plataforma', 'linux/amd64'))
         else:
-            reference, expected_id = item['imagen'], old_id
+            # Después de PASS, todos los relés adoptaron Cooper, aunque el
+            # recibo conserve imágenes distintas para restaurarlos después.
+            expected_id = cooper_id
         # Config.Image puede ser una etiqueta/alias normalizada por el motor.
-        # La identidad es el ID del contenedor frente al ID inspeccionado desde
-        # la referencia EXACTA del recibo (con digest para infraestructura).
+        # La identidad es el runtime del PASS, con su referencia y cadena OCI
+        # acreditadas; no confundirlo con el ID de configuración de otra engine.
         # El texto observado queda en el recibo, sin inferir identidad por él.
         operar.require(current[name]['id'] == expected_id, 'El servicio actual no corresponde al recibo')
     infra.no_running(op)
@@ -113,14 +174,9 @@ def pointer_hash(path):
     return operar.digest(path) if path.exists() else None
 
 
-def start_restored(op):
-    names = ['cooper', 'n8n', 'runner']
-    if (op.state / 'chat-tunel.enabled').exists():
-        names += ['chat-cooper', 'chat-n8n', 'chat-runner']
-    # Nunca descargar/construir durante una recuperación ni abrir Caddy primero.
-    options = ('up', '-d', '--no-build', '--pull', 'never', '--force-recreate', '--wait', '--wait-timeout')
-    op.compose(*options, '240', *names)
-    op.compose(*options, '180', '--no-deps', 'caddy')
+def start_restored(op, images):
+    # Reutiliza exactamente la reversa mixta certificada: pull never y Caddy al final.
+    infra.start(op, image_overrides=images)
 
 
 def recover(op, receipt_path, expected_sha256, output):
@@ -135,6 +191,9 @@ def recover(op, receipt_path, expected_sha256, output):
     restored = op.restore(receipt['snapshot_previo'], directory / 'restauracion')
     operar.verify(restored)
     restored_manifest = operar.digest(restored / 'manifiesto.json')
+    baseline_workflows = workflow_guard(restored / 'n8n/database.sqlite')
+    operar.require(workflow_guard(op.data / 'n8n/database.sqlite') == baseline_workflows,
+                   'Hay un lote o edición de workflows posterior; no recuperar infraestructura sobre cambios ajenos')
     result = {
         'estado': 'PREPARADO', 'recibo_aplicacion_sha256': expected_sha256,
         'codigo_recuperacion_sha256': operar.digest(Path(__file__)),
@@ -143,6 +202,7 @@ def recover(op, receipt_path, expected_sha256, output):
         'snapshot_restaurado': receipt['snapshot_previo'],
         'servicios_antes': current, 'directorio': str(directory),
         'entorno_copiado': False,
+        'workflow_cas_sha256': baseline_workflows,
     }
     operar.write_json(output, result)
     marker.touch(mode=0o600)
@@ -151,6 +211,15 @@ def recover(op, receipt_path, expected_sha256, output):
         result['snapshot_desplazado'] = op.snapshot(resume=False, tag='reversion')
         operar.require(not op.compose('ps', '--status', 'running', '--services').strip(), 'Quedan escritores durante la recuperación')
         infra.no_running(op)
+        # Repetir identidades, código, respaldo, override y CAS ya con escritores
+        # detenidos. Ningún lote posterior se revierte por interpretar el PASS.
+        checked, checked_backup, _ = validate(op, receipt_path, expected_sha256, output, prepared=True)
+        operar.require(checked == receipt and checked_backup == backup, 'Cambió el recibo durante la recuperación')
+        operar.require(workflow_guard(op.data / 'n8n/database.sqlite') == baseline_workflows,
+                       'Cambió un workflow durante el corte; no recuperar cambios ajenos')
+        operar.require(pointers == {name: pointer_hash(op.state / name) for name in pointers},
+                       'Cambió el puntero de Cooper durante el corte')
+        operar.verify(restored)
         # Repetir huellas bajo el corte; el candado ya excluye otros aplicadores.
         for name in infra.FILES:
             operar.require(operar.digest(operar.DEPLOY / name) == receipt['configuracion_ensayada'][name], 'Configuración cambió durante el respaldo')
@@ -163,16 +232,20 @@ def recover(op, receipt_path, expected_sha256, output):
         operar.verify(op.data)
         operar.require(operar.digest(op.data / 'manifiesto.json') == restored_manifest, 'El manifiesto recuperado difiere del snapshot')
         infra.restore_files(backup, operar.DEPLOY, receipt['configuracion_anterior'])
-        op.compose('config', '--quiet')
-        start_restored(op)
+        images = rollback_images(op, receipt, backup)
+        op.compose('config', '--quiet', image_overrides=images)
+        start_restored(op, images)
         services = infra.healthy(op)
         operar.require(set(services) == set(receipt['servicios_anteriores']), 'El stack recuperado está incompleto')
         for name, item in receipt['servicios_anteriores'].items():
             operar.require(image_id(services[name]['id']) == image_id(item['id']), 'La recuperación no restituyó una imagen anterior')
         operar.require(pointers == {name: pointer_hash(op.state / name) for name in pointers}, 'Cambió el puntero de la recuperación de Cooper')
+        operar.require(workflow_guard(op.data / 'n8n/database.sqlite') == baseline_workflows,
+                       'La recuperación cambió el contrato de workflows')
         result.update(estado='PASS', salud='PASS', configuracion_restaurada='PASS', datos_restaurados='PASS',
                       manifiesto_restaurado_sha256=restored_manifest, servicios_despues=services,
-                      imagen_cooper_conservada=True, punteros_cooper_conservados=True)
+                      imagen_cooper_conservada=True, punteros_cooper_conservados=True,
+                      workflows_ajenos_preservados=True, imagenes_reversa_sha256=receipt['imagenes_reversa_sha256'])
         operar.write_json(output, result)
         marker.unlink()
         return result
