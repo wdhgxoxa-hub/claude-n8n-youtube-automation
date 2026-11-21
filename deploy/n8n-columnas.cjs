@@ -1,4 +1,4 @@
-// Administración local, fijada a n8n 2.47.4. Usa su servicio de tablas, nunca SQL DDL propio.
+// Administración local, ensayada en n8n 2.47.4 y 2.47.6. Usa su servicio de tablas, nunca SQL DDL propio.
 const { createRequire } = require('node:module');
 const { readFileSync, writeFileSync } = require('node:fs');
 const path = require('node:path');
@@ -24,7 +24,7 @@ let paso = 'inicio';
 async function main() {
   const root = '/usr/local/lib/node_modules/n8n';
   const r = createRequire(path.join(root, 'package.json'));
-  if (r('./package.json').version !== '2.47.4') throw new Error('Versión de n8n no ensayada');
+  if (!['2.47.4', '2.47.6'].includes(r('./package.json').version)) throw new Error('Versión de n8n no ensayada');
   const manifestPath = process.argv[2];
   if (!manifestPath) throw new Error('Falta manifiesto de columnas');
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
