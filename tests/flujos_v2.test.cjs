@@ -156,6 +156,9 @@ test('competencia: un resultado anterior no sustituye la investigación del pedi
   for(const resultado of [[],[{error:'sin respuesta'}],[{canal_id:'otro',ok:true,tendencias}],[{canal_id:'mr',ok:true,tendencias:'{}'}]])
     assert.throws(()=>ejecutar(resultado),/Radar pendiente/);
   assert.deepStrictEqual(ejecutar([{canal_id:'mr',ok:true,tendencias}]),[{json:{tema:'Tema anterior'}}]);
+  const valido={canal_id:'mr',ok:true,tendencias};
+  for(const resultados of [[valido,valido],[valido,{canal_id:'mr',ok:false,tendencias}]])
+    assert.throws(()=>ejecutar(resultados),/Radar pendiente/);
   comprobaciones[1].estado='inaccesible';
   canal.tendencias=JSON.stringify({competencia:{version:1,estado:'listo',fecha:new Date().toISOString(),comprobaciones}});
   assert.throws(()=>ejecutar([{canal_id:'mr',ok:true,tendencias:canal.tendencias}]),/Radar pendiente/);
