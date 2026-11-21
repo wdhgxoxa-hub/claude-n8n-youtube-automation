@@ -146,7 +146,9 @@ propietarios de archivos bajo el contenedor sin capacidades. `ci/versiones.json`
 `ci/sentinel-requirements.txt` fija las cinco dependencias Python con SHA-256 y solo wheels.
 `vendor/sentinel/origen.json` conserva la revisión y los hashes del guardián y los tres
 módulos originales. El caos usa `gremlins.js` 2.2.0 desde el lockfile npm de Cooper;
-su bundle se comprueba por SHA-256 antes de ejecutar Sentinel. Los paquetes del sistema se obtienen del repositorio Debian vigente:
+su bundle se comprueba por SHA-256 antes de ejecutar Sentinel. El `postinstall` de
+`core-js` solo presenta un aviso de financiación y queda denegado explícitamente en
+`allowScripts`; se mantienen las autorizaciones de compilación de SQLite y esbuild. Los paquetes del sistema se obtienen del repositorio Debian vigente:
 la imagen base y las dependencias de aplicación están fijadas, no se promete una imagen
 binariamente idéntica ante futuras actualizaciones de seguridad del sistema.
 
