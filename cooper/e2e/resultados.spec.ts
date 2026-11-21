@@ -196,7 +196,7 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
   await expect(page.locator(".resultado-origen:visible")).toHaveCount(
     publicaciones.length,
   );
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.getByRole("main").getByRole("status")).toContainText(
     `${publicaciones.length} registros de origen`,
   );
   await page.getByRole("button", { name: "instagram", exact: true }).click();
