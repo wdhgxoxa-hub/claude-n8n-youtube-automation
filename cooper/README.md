@@ -23,6 +23,7 @@ Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md)
 Marcas y redes: [guía de uso, fuentes oficiales y lote n8n](../docs/cooper-marcas.md). Marcas privadas, estudio de cuentas, plantillas propias, especialistas, calendario, aprobación de Walter y métricas; modo simulado por defecto. [Informe de la misión](../docs/informes/cooper-marcas.md).
 
 M05 añade reutilización de montajes propios aprobados en Marcas: referencia por video/revisión, copia privada exacta de MP4 hasta 50 MiB, consentimiento revalidado y recuperación de enlace desde la fábrica. Migración aditiva `0011_montajes_fabrica`; no vuelve a generar medios ni amplía el límite de adjuntos manuales. [Uso, recuperación y retención pendiente](../docs/cooper-marcas.md#recuperar-un-enlace-de-montaje).
+Operaciones interrumpidas: Administración incluye [conciliación por recibo/ID](../docs/cooper-conciliacion.md), consultas sin reenvío y decisiones con evidencia. Conserva reservas y registra cierres; no publica, libera reservas ni reactiva cuentas. Código local M03 pendiente de integración y despliegue.
 
 ## Arranque
 
