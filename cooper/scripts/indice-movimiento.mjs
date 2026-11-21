@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 const root = process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-movimiento";
 const rounds = readdirSync(root)
   .filter((n) => {
-    if (!/^ronda-\d+$/.test(n)) return false;
+    if (!/^ronda-\d+$/.test(n) && n !== "puerta") return false;
     try {
       const report = JSON.parse(
         readFileSync(`${root}/${n}/playwright.json`, "utf8"),
