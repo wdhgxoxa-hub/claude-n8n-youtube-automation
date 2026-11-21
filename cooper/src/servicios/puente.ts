@@ -1,5 +1,5 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
-import { and, eq, desc } from "drizzle-orm";
+import { and, eq, desc, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   bridgeCommands,
@@ -26,65 +26,109 @@ export function aplicarEstado(
 ) {
   db().transaction(
     (tx) => {
+      // Preparar una vez por transacción evita miles de sentencias nativas
+      // pendientes de liberación. Las lecturas siguen viendo cada cambio del lote.
+      const ownerByEmail = tx
+        .select()
+        .from(users)
+        .where(eq(users.email, sql.placeholder("email")))
+        .prepare();
+      const channelById = tx
+        .select()
+        .from(channels)
+        .where(eq(channels.id, sql.placeholder("id")))
+        .prepare();
+      const videoById = tx
+        .select()
+        .from(videos)
+        .where(eq(videos.id, sql.placeholder("id")))
+        .prepare();
+      const channelFields = {
+        learning: sql.placeholder("learning"),
+        name: sql.placeholder("name"),
+        niche: sql.placeholder("niche"),
+        newsMode: sql.placeholder("newsMode"),
+      };
+      const saveChannel = tx
+        .insert(channels)
+        .values({
+          id: sql.placeholder("id"),
+          ownerId: sql.placeholder("ownerId"),
+          createdAt: sql.placeholder("createdAt"),
+          ...channelFields,
+        })
+        .onConflictDoUpdate({
+          target: channels.id,
+          set: {
+            learning: sql`excluded.learning`,
+            name: sql`excluded.name`,
+            niche: sql`excluded.niche`,
+            newsMode: sql`excluded.news_mode`,
+          },
+        })
+        .prepare();
+      const saveObservability = tx
+        .update(videos)
+        .set({ observability: sql`${sql.placeholder("observability")}` })
+        .where(eq(videos.id, sql.placeholder("id")))
+        .prepare();
+      const videoFields = {
+        observability: sql.placeholder("observability"),
+        newsMode: sql.placeholder("newsMode"),
+        stage: sql.placeholder("stage"),
+        script: sql.placeholder("script"),
+        title: sql.placeholder("title"),
+        remoteUpdatedAt: sql.placeholder("remoteUpdatedAt"),
+        updatedAt: sql.placeholder("updatedAt"),
+      };
+      const saveVideo = tx
+        .insert(videos)
+        .values({
+          id: sql.placeholder("id"),
+          ownerId: sql.placeholder("ownerId"),
+          channelId: sql.placeholder("channelId"),
+          createdAt: sql.placeholder("createdAt"),
+          ...videoFields,
+        })
+        .onConflictDoUpdate({
+          target: videos.id,
+          set: {
+            observability: sql`excluded.observability`,
+            newsMode: sql`excluded.news_mode`,
+            stage: sql`excluded.stage`,
+            script: sql`excluded.script`,
+            title: sql`excluded.title`,
+            remoteUpdatedAt: sql`excluded.remote_updated_at`,
+            updatedAt: sql`excluded.updated_at`,
+          },
+        })
+        .prepare();
       for (const channel of snapshot.canales) {
         if (user.role !== "admin" && channel.dueno_email !== user.email)
           continue;
-        const owner = tx
-          .select()
-          .from(users)
-          .where(eq(users.email, channel.dueno_email))
-          .get();
+        const owner = ownerByEmail.get({ email: channel.dueno_email });
         if (!owner) continue;
-        const existing = tx
-          .select()
-          .from(channels)
-          .where(eq(channels.id, channel.id))
-          .get();
+        const existing = channelById.get({ id: channel.id });
         if (existing && existing.ownerId !== owner.id)
           throw new ErrorHttp(409, "Propietario incompatible.");
-        tx.insert(channels)
-          .values({
-            id: channel.id,
-            ownerId: owner.id,
-            learning: JSON.stringify(
-              channel.lecciones ?? JSON.parse(existing?.learning ?? "[]"),
-            ),
-            name: channel.nombre,
-            niche: channel.nicho,
-            newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
-            createdAt: Date.now(),
-          })
-          .onConflictDoUpdate({
-            target: channels.id,
-            set: {
-              learning: JSON.stringify(
-                channel.lecciones ?? JSON.parse(existing?.learning ?? "[]"),
-              ),
-              name: channel.nombre,
-              niche: channel.nicho,
-              newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
-            },
-          })
-          .run();
+        saveChannel.run({
+          id: channel.id,
+          ownerId: owner.id,
+          learning: JSON.stringify(
+            channel.lecciones ?? JSON.parse(existing?.learning ?? "[]"),
+          ),
+          name: channel.nombre,
+          niche: channel.nicho,
+          newsMode: channel.modo_noticia ?? existing?.newsMode ?? false,
+          createdAt: Date.now(),
+        });
       }
       for (const video of snapshot.videos) {
         if (user.role !== "admin" && video.dueno_email !== user.email) continue;
-        const owner = tx
-          .select()
-          .from(users)
-          .where(eq(users.email, video.dueno_email))
-          .get();
-        const channel = tx
-          .select()
-          .from(channels)
-          .where(eq(channels.id, video.canal_id))
-          .get();
+        const owner = ownerByEmail.get({ email: video.dueno_email });
+        const channel = channelById.get({ id: video.canal_id });
         if (!owner || channel?.ownerId !== owner.id) continue;
-        const existing = tx
-          .select()
-          .from(videos)
-          .where(eq(videos.id, video.id))
-          .get();
+        const existing = videoById.get({ id: video.id });
         if (existing && existing.ownerId !== owner.id)
           throw new ErrorHttp(409, "Propietario incompatible.");
         // Los datos de publicación pueden cambiar sin un nuevo paso de producción.
@@ -93,10 +137,10 @@ export function aplicarEstado(
           video.observabilidad &&
           video.actualizado_en >= existing.remoteUpdatedAt
         )
-          tx.update(videos)
-            .set({ observability: JSON.stringify(video.observabilidad) })
-            .where(eq(videos.id, video.id))
-            .run();
+          saveObservability.run({
+            id: video.id,
+            observability: JSON.stringify(video.observabilidad),
+          });
         if (existing && existing.remoteUpdatedAt >= video.actualizado_en)
           continue;
         const fields = {
@@ -113,19 +157,14 @@ export function aplicarEstado(
           remoteUpdatedAt: video.actualizado_en,
           updatedAt: Date.now(),
         };
-        tx.insert(videos)
-          .values({
-            id: video.id,
-            ownerId: owner.id,
-            channelId: video.canal_id,
-            createdAt: Date.now(),
-            ...fields,
-          })
-          .onConflictDoUpdate({ target: videos.id, set: fields })
-          .run();
-        encolarVideo(
-          tx.select().from(videos).where(eq(videos.id, video.id)).get()!,
-        );
+        saveVideo.run({
+          id: video.id,
+          ownerId: owner.id,
+          channelId: video.canal_id,
+          createdAt: Date.now(),
+          ...fields,
+        });
+        encolarVideo(videoById.get({ id: video.id })!);
       }
     },
     { behavior: "immediate" },
