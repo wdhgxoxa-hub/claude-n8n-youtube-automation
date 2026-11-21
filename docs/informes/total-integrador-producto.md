@@ -44,3 +44,23 @@ Se consultó la guía instalada `next/dist/docs/01-app/02-guides/testing/vitest.
 
 1. La aceptación humana del chat y sus respuestas sigue pendiente en el informe histórico; este trabajo no invoca nuevamente el plan ni promete el comportamiento de todas las respuestas futuras.
 2. No hay nuevas decisiones de Walter para integrar estos parches. La puerta completa y el control adicional de Radar son trabajo técnico del integrador; el lote offline no sustituye export previo, revisión, reversa y aceptación del VPS.
+
+## Segunda revisión: conservación operativa de n8n
+
+21-11-2026, Lima. Encargo adicional del integrador para preparar un lote sobre una instalación que ya tiene Radar, Confirmar y Aprendizaje activados, sin retroceder a las pausas del primer despliegue. No se accedió por SSH ni a exports, bases, credenciales o entornos reales. `revision_operacion` revisó el contrato; el integrador confirmó únicamente los IDs/estados de las tres dependencias seguras.
+
+Commit de implementación: `da10629`, «Conserva activaciones n8n y verifica contenido concurrente antes de aplicar».
+
+`deploy/preparar-n8n-total.py` incorpora **`--conservar-disparadores`**, que exige también inventario de metadata y `--publicar-dependencias-seguras`. Sin esta opción permanecen los defaults y formatos certificados anteriores. El modo nuevo:
+
+- Conserva `disabled` de entradas externas por nombre y tipo; un cambio de tipo o una entrada nueva queda bloqueada. Las entradas internas de subflujo y manuales mantienen la fuente.
+- Mantiene IDs, referencias de credenciales y webhook IDs de los nodos coincidentes. Credenciales ausentes siguen convertidas en bloqueo explícito; no se inventan referencias. Ajustes se copia opacamente, incluso sus URLs, sin sustituir parámetros por defaults.
+- Las tres dependencias seguras deben estar activas previamente y se resuelven con sus IDs reales. Solo se republican workflows antes activos; no reabre históricos ni publica nuevos subflujos por inferencia. Una dependencia estática nueva o inactiva exige revisión explícita. Se conserva el orden topológico, con detección de ciclos.
+- El export debe contener `versionId` y `activeVersionId`. Se añade una huella CAS canónica de `nodes`, `connections`, `settings`, ambas versiones y `active` por workflow. El diff guarda únicamente hashes; el contenido privado se procesa en memoria sin imprimirlo. Las IDs nuevas deben seguir ausentes.
+- `deploy/aplicar-n8n-total.py` valida el contrato y el plan exactamente ensayado, comprueba CAS antes de crear mantenimiento o respaldar, y repite la comprobación después de detener escritores. Si aparece un cambio en esa ventana, restaura el snapshot más reciente sin importar ni publicar. Al terminar compara los nodos almacenados con los del lote exacto.
+
+**Límite material:** CAS detecta cambios posteriores al export; no combina código vivo anterior al export con una fuente Git antigua. Operación avisó de posibles cambios vidIQ ya vivos ausentes de la fuente. Antes de aplicar el lote completo, el integrador debe contrastar base, fuente integrada y destino, conservar cambios exclusivos del destino y resolver los conflictos explícitamente. Esta opción no acredita esa conciliación ni constituye permiso técnico para sobrescribir código vivo sin comparar. No se declara un lote VPS preparado, ensayado o aplicado por esta subtarea.
+
+Verificación: `PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s deploy/tests -p 'test_*.py'`: **134/134 PASS**, RC 0, cero advertencias. Nueve casos nuevos cubren conservación con IDs remapeados, Ajustes opaco, credenciales, triggers nuevos, cambios de tipo, duplicados, históricos inactivos, export sin versiones, contratos alterados, CAS de los cinco campos sin cambiar `active`, colisión de una ID nueva, nodos finales exactos y carrera durante el snapshot con reversa sin import. Los tests anteriores de defaults, deltas, activación, esquema, ensayo y reversa permanecen aprobados.
+
+La primera pasada detectó ResourceWarnings por conexiones SQLite no cerradas en las fixtures nuevas; se cerraron explícitamente y se repitió la suite. No se silenciaron advertencias. `git diff --check`: PASS. La puerta de aplicación completa y el ensayo del lote VPS concreto siguen separados de esta verificación operativa local. Sin decisiones nuevas de Walter: conciliación de cambios vivos, export consistente, ensayo y despliegue son trabajo técnico autorizado del integrador.

@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **21-11-2026, Lima — conservación operativa de n8n preparada:** opción explícita para conservar disparadores externos existentes por nombre/tipo, bloquear nuevos y mantener Ajustes opaco, credenciales y plan topológico. CAS de contenido/versiones antes del respaldo y antes del import; 134 pruebas operativas aprobadas sin advertencias. Defaults certificados sin cambios. Implementado y probado solo localmente; la comparación con cambios vivos anteriores al export y el ensayo/aplicación del lote concreto siguen a cargo del integrador. [Alcance](informes/total-integrador-producto.md#segunda-revisión-conservación-operativa-de-n8n).
+
 - **Radar, causa reproducida y corregida:** n8n añadía `metadata` a la respuesta del subflujo y el nodo Code rechazaba devolver el ítem entero. Salida normalizada y cuatro comprobaciones por motor (2.47.4/2.47.6), incluido fallo previo, varios canales y persistencia exacta. Integrado localmente; delta remoto con vidIQ y Resolver pendiente. [Informe](informes/total-radar-contexto.md).
 
 - **21-11-2026, Lima — revisión de integración de producto:** recuperado el empaquetador offline de competencia con altas/bajas explícitas y los complementos faltantes de `total-chatfix`, conservando la política vigente de 18 palabras. Pruebas focales: 76 de chat, 173 de flujos y dos del empaquetador; lint y tipos aprobados. Informe/ensayos históricos de chatfix recuperados con alcance separado. Implementado y probado en `total-integrador-producto`; pendiente de integrar y de la puerta completa conjunta, sin despliegue propio. [Informe](informes/total-integrador-producto.md).
