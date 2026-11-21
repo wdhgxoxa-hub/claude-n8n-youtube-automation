@@ -1,0 +1,11 @@
+{
+  "run": "/home/david/.cache/cooper-ensayo/run-ieqFKO",
+  "port": 36111,
+  "appPort": 40627,
+  "container": "cooper-ensayo-n8n",
+  "image": "ghcr.io/n8n-io/n8n:2.47.4",
+  "estado": "exited",
+  "imagen_digest": "sha256:f49b85f2bb0a492feeae78bedb406317c0b14a268076df11aee91878cac2faa6",
+  "openapi_sha256": "f3d7fe99eef5890d3769e40c57697f2db0da69b134803bd65d2d04604bfc0b97",
+  "codigo": "a0dd73d79c67e38bd38278741ab217d454a9425d"
+}

@@ -1,0 +1,24 @@
+{
+  "codigo": "a0dd73d79c67e38bd38278741ab217d454a9425d",
+  "puerta_cooper": {
+    "rc": 0,
+    "vitest": 117,
+    "e2e": 22,
+    "advertencias": 0,
+    "vulnerabilidades": 0
+  },
+  "flujos": {
+    "rc": 0,
+    "pruebas": 119
+  },
+  "ensayo": {
+    "rc": 0,
+    "migracion": 7,
+    "verificaciones": 17
+  },
+  "regeneracion": {
+    "rc": 0,
+    "workflows": 28
+  },
+  "git_diff_check": 0
+}

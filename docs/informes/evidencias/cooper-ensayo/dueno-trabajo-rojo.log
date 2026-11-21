@@ -1,0 +1,63 @@
+npm notice run cooper@0.1.0 test:ensayo
+npm notice run node --test ../tests/migrar_dueno.test.mjs && node scripts/ensayo.mjs
+✔ planifica sin escribir y conserva costos conciliados y dueños explícitos (1.581308ms)
+✔ huérfanos y contradicciones se rechazan antes de escribir (0.624586ms)
+✔ nombres duplicados y tipos incompatibles no se migran (0.201806ms)
+✔ segunda ejecución vacía y reversa aditiva idempotente (0.61444ms)
+✔ la reversa no pisa cambios posteriores ni otro destino (0.772305ms)
+✔ cambio entre plan y escritura detiene la aplicación (0.198318ms)
+✔ la decisión explícita de asignar todo al administrador conserva reversa e idempotencia (0.445546ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.233524
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 47ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 381ms
+  Running TypeScript ...
+  Finished TypeScript in 1028ms ...
+  Collecting page data using 16 workers ...
+  Generating static pages using 16 workers (0/3) ...
+✓ Generating static pages using 16 workers (3/3) in 206ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/[...ruta]
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/n8n/webhook
+├ ƒ /avatares
+├ ƒ /canales
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /perfil
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Ensayo: cooper-ensayo-n8n, n8n 2.47.4, http://127.0.0.1:44457; volumen /home/david/.cache/cooper-ensayo/run-I4s4CJ/n8n
+PASS instancia aislada y propietario ficticio por REST
+PASS migración: simulación sin escritura, 111 filas, paginación, idempotencia y reversa
+PASS dos canales del administrador, uno de Ana y videos en varias etapas
+PASS 28 workflows importados por REST; FX y subflujos publicados, proveedores apagados
+PASS sesiones Auth.js de dos cuentas y consulta aislada desde Cooper hacia n8n
+PASS token inválido, rol falsificado, recursos ajenos y gasto exclusivo del administrador
+FAIL AssertionError [ERR_ASSERTION]: El trabajo debe conservar el dueño del video
+    at scenarios (file:///home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/scripts/ensayo-escenarios.mjs:40:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/scripts/ensayo.mjs:153:3
+Evidencia: /home/david/Proyectos/cooper-wt/cooper-ensayo/cooper/.cache/e2e-ensayo-9X9xyD; resultado 1. Instancia conservada y detenida.

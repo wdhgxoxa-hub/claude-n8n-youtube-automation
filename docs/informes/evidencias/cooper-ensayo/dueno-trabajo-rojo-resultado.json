@@ -1,0 +1,12 @@
+{
+  "exitCode": 1,
+  "results": [
+    "instancia aislada y propietario ficticio por REST",
+    "migración: simulación sin escritura, 111 filas, paginación, idempotencia y reversa",
+    "dos canales del administrador, uno de Ana y videos en varias etapas",
+    "28 workflows importados por REST; FX y subflujos publicados, proveedores apagados",
+    "sesiones Auth.js de dos cuentas y consulta aislada desde Cooper hacia n8n",
+    "token inválido, rol falsificado, recursos ajenos y gasto exclusivo del administrador"
+  ],
+  "stopped": "exited"
+}
