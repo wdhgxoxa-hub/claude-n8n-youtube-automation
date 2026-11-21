@@ -24,9 +24,11 @@ const etiquetas = {
 export function Marcas({
   initial,
   piezaId,
+  seccionInicial = "calendario",
 }: {
   initial: EstadoMarcas;
   piezaId?: string;
+  seccionInicial?: "calendario" | "publicados" | "aprendizaje";
 }) {
   const { data: espacio } = useEspacio(),
     admin = espacio.user.role === "admin";
@@ -38,7 +40,7 @@ export function Marcas({
     ),
     [editor, setEditor] = useState(false),
     [editarGuia, setEditarGuia] = useState(false),
-    [seccion, setSeccion] = useState("calendario"),
+    [seccion, setSeccion] = useState<string>(seccionInicial),
     [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
@@ -523,6 +525,7 @@ export function Marcas({
                   {seccion === "publicados" && (
                     <section>
                       <h3>Publicados</h3>
+                      <Link href="/publicados">Ver videos publicados</Link>
                       <p>
                         Las métricas ausentes se muestran como «Sin datos».{" "}
                         {data.simulada
@@ -552,6 +555,7 @@ export function Marcas({
                   {seccion === "aprendizaje" && (
                     <section>
                       <h3>Aprendizaje de la marca</h3>
+                      <Link href="/aprendizaje">Ver aprendizaje de videos</Link>
                       <p>
                         Conserva los resultados y las interrupciones para
                         ajustar el próximo calendario.

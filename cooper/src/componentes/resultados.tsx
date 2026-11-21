@@ -215,7 +215,12 @@ export function Publicados() {
     <div className="page">
       <Heading
         title="Publicados"
-        description="Cada historia, su audiencia y lo que cambia con el tiempo."
+        description="Los videos de tus canales, su audiencia y lo que cambia con el tiempo."
+        action={
+          <Link className="button secondary" href="/marcas?seccion=publicados">
+            Publicados de marcas
+          </Link>
+        }
       />
       {data.demo && (
         <p className="notice">
@@ -420,7 +425,12 @@ export function Aprendizaje() {
     <div className="page">
       <Heading
         title="Aprendizaje"
-        description="Lo que funciona, lo que falló y los cambios que deja cada intento."
+        description="Lo que funciona, lo que falló y las lecciones de los videos de tus canales."
+        action={
+          <Link className="button secondary" href="/marcas?seccion=aprendizaje">
+            Aprendizaje de marcas
+          </Link>
+        }
       />
       {data.demo && (
         <p className="notice">Ejemplos de aprendizaje con datos ficticios.</p>

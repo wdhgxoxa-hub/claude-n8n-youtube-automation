@@ -5,8 +5,19 @@ export const dynamic = "force-dynamic";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ pieza?: string }>;
+  searchParams: Promise<{ pieza?: string; seccion?: string }>;
 }) {
-  const { pieza } = await searchParams;
-  return <Marcas initial={estadoMarcas(await currentUser())} piezaId={pieza} />;
+  const { pieza, seccion } = await searchParams;
+  const seccionInicial =
+    seccion === "publicados" || seccion === "aprendizaje"
+      ? seccion
+      : "calendario";
+  return (
+    <Marcas
+      key={`${pieza ?? ""}:${seccionInicial}`}
+      initial={estadoMarcas(await currentUser())}
+      piezaId={pieza}
+      seccionInicial={seccionInicial}
+    />
+  );
 }
