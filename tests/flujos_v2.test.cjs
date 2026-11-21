@@ -6,7 +6,7 @@ const dir = path.join(__dirname, '..', 'workflows', 'v2');
 const wf = id => JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8'));
 const codeOf = (w, name) => w.nodes.find(n => n.name === name).parameters.jsCode;
 
-function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {}, runIndex = 0 } = {}) {
+function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, env = {}, runIndex = 0, clock = Date } = {}) {
   // Simula el entorno de un nodo Code de n8n: $('Nodo') con first/last/item/all/isExecuted, $json, $input.
   const $ = name => ({
     first: () => ({ json: nodes[name] }), last: () => ({ json: nodes[name] }), item: { json: nodes[name] },
@@ -17,8 +17,8 @@ function run(js, { nodes = {}, json = {}, all = {}, binary = {}, pasadas = {}, e
     isExecuted: nodes[name] !== undefined || all[name] !== undefined || pasadas[name] !== undefined,
   });
   const $input = { all: () => (all.$input || [json]).map(j => ({ json: j })), item: { json, binary } };
-  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', '$env', 'require', '$runIndex', js);
-  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { id:'ejecucion-prueba', resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' }, env, require, runIndex);
+  const fn = new Function('$', '$json', '$input', '$now', '$binary', '$execution', '$env', 'require', '$runIndex', 'Date', js);
+  const r = fn($, json, $input, { toFormat: () => '2026-11-19' }, binary, { id:'ejecucion-prueba', resumeFormUrl: 'https://n8n/form-waiting/1?signature=x' }, env, require, runIndex, clock);
   return Array.isArray(r) ? r : [r];
 }
 
@@ -492,6 +492,21 @@ test('redes: respeta la fecha que programaste y la separación entre largos; no 
   const corto = run(codeOf(RED, 'Plan de publicación'), { nodes: { Inicio: { ...base, formato: 'short', redes: 'tiktok' }, 'Leer ajustes': aj }, all: { 'Agenda del canal': lleno } })[0].json;
   const ocupados = new Set(lleno.map(r => hl(r.publicado_en).slice(0, 10)));
   assert.ok(!ocupados.has(hl(corto.programado).slice(0, 10)));
+});
+
+test('redes: la separación mínima entre largos conserva las horas al cruzar medianoche', () => {
+  for (const instant of ['2026-11-21T05:20:00Z', '2026-11-21T17:20:00Z']) {
+    const now = Date.parse(instant), previous = now - 3600000;
+    class Reloj extends Date {
+      constructor(...args) { super(...(args.length ? args : [now])); }
+      static now() { return now; }
+    }
+    const inicio = { video_id: 'v', canal_id: 'c', tema: 'T', perfil: 'p', redes: 'youtube', formato: 'largo', contexto: { render_url: 'r', cortes: [] } };
+    const agenda = [{ request_id: 'anterior', tipo: 'principal', plataformas: 'youtube', publicado_en: new Date(previous).toISOString(), estado: 'enviado' }];
+    const next = run(codeOf(RED, 'Plan de publicación'), { clock: Reloj, nodes: { Inicio: inicio, 'Leer ajustes': aj }, all: { 'Agenda del canal': agenda } })[0].json;
+    assert.ok(Date.parse(next.programado) - previous >= aj.calendario.diasEntreLargos * 86400000, instant);
+    assert.ok(hl(next.programado).endsWith(', 11:00'));
+  }
 });
 
 test('redes: escala — 60 canales con 3 largos cada uno se agendan sin pasar topes ni chocar', () => {

@@ -2440,14 +2440,15 @@ const ahora = new Date(Date.now() + 15 * 60000);   // 15 min de margen para que 
 const agenda = $('Agenda del canal').all().map(i => i.json).filter(r => r.request_id && r.estado !== 'error' && r.publicado_en);
 const ocupado = {}; for (const r of agenda) for (const red of String(r.plataformas || '').split(',')) { const k = red + '|' + diaLocal(new Date(r.publicado_en)); ocupado[k] = (ocupado[k] || 0) + 1; }
 const largos = agenda.filter(r => r.tipo === 'principal').map(r => Date.parse(r.publicado_en));
+const minimoLargo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000;
 const maxDia = cal.maxPorRedDia || 2;
-const hueco = (red, dia, hora) => { let d = dia;            // primer día ≥ dia con cupo para esa red y hora todavía futura
-  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }
+const hueco = (red, dia, hora, minimo = 0) => { let d = dia; // conservar también las horas de separación, no solo la fecha local
+  for (let i = 0; i < 30; i++, d = sumarDias(d, 1)) { const t = aUTC(d, hora); if (t > ahora && t >= minimo && (ocupado[red + '|' + d] || 0) < maxDia) { ocupado[red + '|' + d] = (ocupado[red + '|' + d] || 0) + 1; return t; } }
   return null; };
 // --- día del video principal: el que tú programaste, o el primero con 2 días de distancia del último largo ---
 let diaBase = diaLocal(ahora);
 if (Date.parse(e.publicar_en || '') > Date.now()) diaBase = diaLocal(new Date(e.publicar_en));
-else if (e.formato !== 'short') { const minimo = Math.max(0, ...largos) + (cal.diasEntreLargos || 2) * 86400000; if (minimo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimo)); }
+else if (e.formato !== 'short') { if (minimoLargo > Date.parse(diaBase + 'T12:00:00Z')) diaBase = diaLocal(new Date(minimoLargo)); }
 const horaFija = Date.parse(e.publicar_en || '') > Date.now() ? (pp => Number(pp.hour) + Number(pp.minute) / 60)(partes(new Date(e.publicar_en))) : null;
 // --- textos ---
 const vq = $('vidIQ: títulos').isExecuted ? $('vidIQ: títulos').first().json : null; const yt = pub.youtube || {};
@@ -2468,7 +2469,7 @@ const campos = (red, t, vertical, extra = {}) => ({ ...comun, title: t, ...({
 }[red]), ...extra });
 const envios = []; const sinCupo = [];
 const agendar = (tipo, video, red, dia, hora, t, vertical, extra) => {
-  const cuando = hueco(red, dia, hora); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }
+  const cuando = hueco(red, dia, hora, !vertical && horaFija === null ? minimoLargo : 0); if (!cuando) { sinCupo.push(`${tipo} ${red}`); return; }
   envios.push({ tipo, red, video, cuando, campos: campos(red, t, vertical, extra) }); };
 if (e.formato === 'short') {
   // Hora del especialista de cada red (6–23 h, hora del público) si la propuso; si no, la de Ajustes.
