@@ -24,7 +24,7 @@ Se compara ascendencia, `git cherry` y contenido. La historia de Sentinel fue sa
 
 ## Verificación y despliegue
 
-En ejecución: puerta completa y dos rondas limpias Sentinel + Playwright con videos sobre el corte `e942dc9`. Pendientes de sus resultados: revisión visual, publicación fast-forward y activación de la imagen, infraestructura y lote. Ninguna evidencia histórica se presenta como prueba nueva de esta combinación.
+En ejecución: puerta completa y dos rondas limpias Sentinel + Playwright con videos sobre el corte `4e029e7` (aplicación e942 idéntica). Pendientes de sus resultados: revisión visual, publicación fast-forward y activación de la imagen, infraestructura y lote. Ninguna evidencia histórica se presenta como prueba nueva de esta combinación.
 
 Aceptaciones independientes ya terminadas:
 
@@ -43,6 +43,8 @@ Validación focal nueva: 16/16 casos aprobados, incluidos Marcas/Sentinel en 144
 Aceptación operativa final sobre la imagen `e942dc9`: migración 11→14, ocho bloques Compose, avería inyectada con relés mixtos, reversa exacta de siete IDs/datos/configuración y segunda actualización saludable. [Recibos](total-integrador-operacion-final.md). El arnés local adapta únicamente las dependencias de namespace de Podman; los helpers certificados de producción no cambian. La imagen precargada en Docker corresponde al mismo archivo gzip por SHA-256; aún no activada.
 
 Últimos cierres integrados: helper WAL de Radar (`54b9ac7`) y cierres/documentación `d33b60c`, `2be2dc5`, `abb94c1`; las 189 pruebas operativas pasan. Los recibos históricos de esos cierres no sustituyen las aceptaciones nuevas de esta misión.
+
+La puerta sobre e942 terminó con 102/103 E2E: el selector Radar de la corrección anterior abreviaba «Ciencia cotidiana» como «Ciencia». `4e029e7` identifica la única región accesible que contiene el encabezado exacto, conservando la comprobación de estado visible. Se interrumpió la ronda paralela diagnóstica y se reiniciaron puerta y dos rondas desde un archivo Git limpio de ese commit. La aplicación y el artefacto e942 son idénticos; se conservan [fallo](evidencias/total-integrador/puerta-cierre-diagnostico.json) e [interrupción](evidencias/total-integrador/rondas-cierre-interrumpidas.json).
 
 ## Limitaciones reales
 

@@ -1,0 +1,9 @@
+{
+  "estado": "INTERRUMPIDA_POR_CORRECCION_DE_PRUEBA",
+  "commit": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+  "motivo": "La puerta paralela detect\u00f3 el nombre abreviado incorrecto del canal en el selector Radar. Se conserva diagn\u00f3stico y se repiten ambas rondas desde 4e029e7.",
+  "contenedor_propio": "cooper-integrador-rondas-cierre",
+  "otras_misiones_modificadas": false,
+  "cuenta_como_ronda_limpia": false,
+  "detencion": "SIGTERM sin salida en 20 s; Podman cerr\u00f3 \u00fanicamente ese contenedor con SIGKILL."
+}

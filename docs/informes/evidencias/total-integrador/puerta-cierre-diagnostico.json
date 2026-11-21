@@ -1,0 +1,71 @@
+{
+  "inicio": "2026-11-21T20:26:03.033Z",
+  "herramientas": {
+    "node": "24.22.3",
+    "npm": "12.2.2",
+    "python": "3.14.7",
+    "uv": "0.12.24",
+    "sistema": "debian 12",
+    "sentinel": "6764bbdcab91719947e93ba1cc476cbefafb58e8"
+  },
+  "pasos": [
+    {
+      "nombre": "ci",
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 5341,
+      "sha256": "41713bee207894d4bd258e05c4eace8746c26e7fa50ec57e5c7a23eafb510efe"
+    },
+    {
+      "nombre": "preparacion",
+      "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 4297,
+      "sha256": "5446b24fb4c55caad883a2c8cc3aa4dc013f4a425fbd5679d7758e4b59b51d30"
+    },
+    {
+      "nombre": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 3742,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "typecheck",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 4234,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "unitarias",
+      "comando": "npm test",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 33219,
+      "sha256": "a3270dce033c1072162e0d5f1707afdf4d23172a1297c1f7e4721766512ec905"
+    },
+    {
+      "nombre": "e2e",
+      "comando": "npm run test:e2e",
+      "rc": 1,
+      "advertencias": 0,
+      "duracion_ms": 908066,
+      "sha256": "acba6ef9fa3122750d27c39b209bcc4cc3a21a0674cc144d9d7295725c96152d"
+    }
+  ],
+  "resultado": "FAIL",
+  "origen": {
+    "commit": "e942dc9eab05242f7967d1c7c8631a3e3171d6da",
+    "archivo_sha256": "a4e3ab7484ec3acfcea9c77c39681dfa65a972532f3760e0b4d0ed0eac452432",
+    "limpio": true,
+    "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+    "sentinel_fuentes": "caché privada verificada"
+  },
+  "error": "e2e: rc 1, 0 advertencias. Consulte .cache/puerta/e2e.log.",
+  "fin": "2026-11-21T20:42:02.067Z"
+}
