@@ -1,0 +1,18 @@
+{
+  "fuente": "758fbd9",
+  "modalidad": "radar_resolver",
+  "objetivos": [
+    "FabCompYouTube01",
+    "FabRadar00000001",
+    "xorCR0lfNlil8Ovy"
+  ],
+  "entrada_sha256": "036631ccf577443d5592af9b7b97c6a165e288d240b053f8048f6129c3f8af80",
+  "plan_sha256": "9ef411a60c4254b0a0324fa57bdfc8cef1f59f985df002d0775c073d04a19be3",
+  "primer_intento": {
+    "estado": "FALLO",
+    "categoria": "FileNotFoundError",
+    "mutacion": false,
+    "causa": "Helper auxiliar preparar-ajuste-texto.py omitido del paquete temporal; precondición opaca no alcanzó el aplicador",
+    "correccion": "Añadido helper público y repetida precondición antes de aplicar"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "aplicacion": {
+    "entrada_sha256": "036631ccf577443d5592af9b7b97c6a165e288d240b053f8048f6129c3f8af80",
+    "manifiesto_sha256": "de59f568dc845eb78b9945738eb6cbb41a54c4db51361f289593b0de137796c3",
+    "ensayo_y_reversa_previa": "PASS",
+    "flujos_importados": 3,
+    "republicados_originales": [
+      "FabCompYouTube01",
+      "FabRadar00000001",
+      "xorCR0lfNlil8Ovy"
+    ],
+    "entradas_pausadas_reabiertas": [],
+    "disparadores_habilitados": [],
+    "pausados_por_credencial": [],
+    "pasos_bloqueados_por_credencial": [],
+    "disparadores_dependencias_pausados": [],
+    "snapshot_previo": "963cd2fbf81b571d7648eb422f59541c0a58386ee36b732f772b2496331ca96e",
+    "esquema_productivo": {
+      "ok": true,
+      "tablas_revisadas": 9,
+      "columnas_faltantes": [],
+      "tipos_incompatibles": [],
+      "referencias_incompatibles": [],
+      "referencias_dinamicas_sin_resolver": []
+    },
+    "cambios_minimos_certificados": "PASS",
+    "estado": "PASS",
+    "columnas_agregadas": 0,
+    "columnas_idempotentes": "PASS",
+    "plan_columnas": [],
+    "columnas_script_sha256": "7d4b371a85b68f7e954bd3cfe3f1843522a4a328a6abbabca271efc6742816bc",
+    "modalidad": "radar_resolver",
+    "flujos_antes": 45,
+    "flujos_despues": 45,
+    "flujos_ajenos_preservados": "PASS",
+    "tablas_negocio_preservadas": 9,
+    "filas_negocio": 144,
+    "tablas_negocio_sha256": "b7034c2581cfbad07cfd454b209fd2bdf4657df1ae5e0adbae04143c0ab16610",
+    "salud_stack": "PASS"
+  },
+  "fuente": "758fbd9",
+  "ejecuciones": {
+    "ocupadas": 0,
+    "waiting": [
+      400,
+      540
+    ]
+  },
+  "allowTextoApi": false,
+  "flujos": [
+    {
+      "id": "FabCompYouTube01",
+      "activo": true,
+      "version": "725330ee-47e3-49e8-83d2-1042262f5b57",
+      "codigos_sha256": {
+        "Candidatos del canal": "78bc72cebd383b203765f144e7f41e30228a666a924020b99f16bd9a12806450",
+        "Tres cuentas públicas": "aa22d19f627f6f84215af30a70c6e55fdaa2bf07014581253b64313587cc4d61",
+        "Listas de competidores": "0eeac2841e86a0f2f1cd11614c8132b19aa56ddd357f2b1ff3487d73b36e7967",
+        "IDs públicos observados": "072b65a0e278cf5d482ee83d3a7a52f8d037ddc4f588bc27f922b28bd826d508",
+        "Competencia nativa comprobada": "721bb66a02ab2f4fad2b2ef7fd8629c5949c8b97039abeca51db35e6abcfc1ea",
+        "Guardia vidIQ de competencia": "6369699ae0124432b5a986a8a6f07d31a2f1606734e95ffe6e194d8dd7cbefe4",
+        "Competencia con cuota comprobada": "24cdffb262ffe31e9532268017f39758c3fe79dd4b193ddb727fe5b571f1506c"
+      },
+      "horarios": []
+    },
+    {
+      "id": "FabRadar00000001",
+      "activo": true,
+      "version": "a054ba99-0ffc-472e-a4ed-a0758cca37c4",
+      "codigos_sha256": {
+        "Pedidos de radar": "b6fc2247f25044a0f4036e0ec88dd4dbfa929adc1eeae5774994b7e2d0c57944",
+        "Encargo del analista": "b70d9124a1f2746818ac6a3fe52b6ece343c3edbf219af8dd3a716b3b6281632",
+        "Radar del canal": "84e524bfd30f905a76c1e3f1eae62f7d6afad1291a0678dbc0356e712893884c",
+        "Solo tendencias": "0bf2d3fc301dc657c33207ddb3fe5cf76dbfebcac1ba23c20f541059b06e88e4",
+        "Mensaje de radar": "0a5826b7a0dfd882b7290c70712903ca2564ca983d0406c97b2de53aa7a8b696",
+        "Radar guardado": "ec074d85e395490eb02f30fc600aca9fdae17f4869e40920f992c97a58adb03f",
+        "Cooper · costo Analista de tendencias": "b8127cb2f0880313fff752f2b1d78b50c932474cb056515394c49580af57093a",
+        "Cooper · costo Analista de tendencias seguir": "84410cd82cda1f3eae0cdbbfe36c85f9d8e7576ee5ee76fbb4dc7e7ead338a18",
+        "Cooper · identificar Cooper · costo Analista de tendencias registrar": "53328ccfe81a7b0147a67f7dc8c494ba2ce8661f15fff36c356862bc5925776b",
+        "Texto · Analista de tendencias": "d5fb7a0386727530a1d800a4aeaf74d7bca7939cf08a2d86613634789a8f6685",
+        "Pedidos de noticias": "ccfbcad4c28392c06085cd4139ba829de6a445dcb415cc6f594ce728e1c0feb4",
+        "Noticias para guardar": "625121518b36156b624040126845cfd610f4703a5c0084e78594506f9037481e",
+        "Cooper · aviso Aviso: radar": "8b90f415a734997a06195519e275f0470413e9abdbbb05ced8fff24deff31d56",
+        "Encargo público de competencia": "d2a11bb0a1467e6076eb4dd82905b18b0ac5d291aabc448327b855874a5f14e4",
+        "Competencia comprobada": "07b5abd0e17f5c38088a33f38621e00a09499d8569b9a727a1f261bddbdd9bea",
+        "Resultado del radar público": "6aaa6e61068664d74e8e037a2447820956fb400dad694b1cfe0e594a37c4925d",
+        "Competencia con YouTube": "2644d673a8da8792b66932c8d7b146bd1c75edca02c74d7463dda9d8b099ecfe"
+      },
+      "horarios": [
+        {
+          "nodo": "Cada mañana (radar)",
+          "habilitado": false
+        }
+      ]
+    },
+    {
+      "id": "xorCR0lfNlil8Ovy",
+      "activo": true,
+      "version": "372aadf1-b595-4c16-9438-e0e98be2f76b",
+      "codigos_sha256": {
+        "Autenticar": "517d452c55c69ea911de65d6104701bc557652b26a770bb35c2ae035b5ba90a1",
+        "Firmar consulta de orden": "d1a8a626703fb4cd346cba34cc0598f761f7a9b9ca3f66acb9ad3df9c932cf8f",
+        "Resolver": "fbe854c83acc16e0d47dfcc8f6dda12e1e00c7b800a9ee61327b2528c08d72e1",
+        "Agregar gastos": "a19272966c00475641461b8e784afc412be67c5c6346f2b4ae7531cacfa6229f",
+        "Firmar reserva": "20dd10eee131069a56060eff654c2ecadd16ad00a55c45bfc280073289318770",
+        "Evento del Orquestador": "fd1aced68b8695a87c08a523a6e92491a45608499a07c103d3f0c6610b5392f5",
+        "Firmar confirmación": "d2249a10bc064f00004492f6e26d17b44e3449585456841edbaec7bc1937e7eb",
+        "Aceptado": "7b27a085143451e2be6fd60e357577e62d07ab82ad2f8faa737328a99a5a2191",
+        "En proceso": "ab683c0d832dbe231b033031003b9ea3ffdc43975e2ad7cc674798f16318f928",
+        "Fila de ajustes administrativos": "b37103552b7052481cd253c0ed36f811e4cf78523a7d16729060fa6bd06def2b",
+        "Pedido de radar de Cooper": "54f82cb3f5843c95b890088ecfb2196cf1d17ce5b78a952d6d9714e63f7c2297",
+        "Preparar conexión de Cooper": "fbfe87c66e379bae15708c6fa919f2054874c5a060fbb9e8c40b8f2c9656f124"
+      },
+      "horarios": []
+    }
+  ],
+  "servicios": [
+    {
+      "servicio": "caddy",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-cooper",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-n8n",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "chat-runner",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "cooper",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "n8n",
+      "salud": "healthy",
+      "estado": "running"
+    },
+    {
+      "servicio": "runner",
+      "salud": "healthy",
+      "estado": "running"
+    }
+  ]
+}
