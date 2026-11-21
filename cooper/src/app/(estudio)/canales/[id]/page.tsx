@@ -1,4 +1,4 @@
-import { PantallaOperacion } from "@/componentes/operacion";
+import { OperacionInicial } from "@/componentes/operacion-inicial";
 import { currentUser } from "@/lib/sesion";
 import { requireOwner } from "@/lib/permisos";
 import { db } from "@/db";
@@ -15,5 +15,5 @@ export default async function Page({
     await currentUser(),
     db().select().from(channels).where(eq(channels.id, id)).get(),
   );
-  return <PantallaOperacion vista="biblia" canalId={id} />;
+  return <OperacionInicial vista="biblia" canalId={id} />;
 }

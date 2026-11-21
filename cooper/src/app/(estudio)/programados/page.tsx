@@ -1,5 +1,5 @@
-import { PantallaOperacion } from "@/componentes/operacion";
+import { OperacionInicial } from "@/componentes/operacion-inicial";
 export const metadata = { title: "Programados" };
 export default function Page() {
-  return <PantallaOperacion vista="programados" />;
+  return <OperacionInicial vista="programados" />;
 }

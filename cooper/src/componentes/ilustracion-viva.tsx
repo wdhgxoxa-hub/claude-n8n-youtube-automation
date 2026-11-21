@@ -12,13 +12,16 @@ export function IlustracionViva({
   className = "",
   repetir = true,
   activo = true,
+  prioritaria = false,
 }: {
   nombre?: Ilustracion;
   className?: string;
   repetir?: boolean;
   activo?: boolean;
+  prioritaria?: boolean;
 }) {
   const container = useRef<HTMLSpanElement>(null);
+  const poster = useRef<HTMLImageElement>(null);
   const player = useRef<AnimationItem | null>(null);
   const preference = useMovimientoReducido();
   const reduced = preference || !activo;
@@ -48,6 +51,10 @@ export function IlustracionViva({
       if (loading) return;
       loading = true;
       try {
+        // Presentar el dibujo primero; el motor decorativo no compite con su
+        // descarga y decodificación. Si el poster falla, Lottie aún puede cargar.
+        await poster.current?.decode().catch(() => {});
+        if (cancelled) return;
         const [module, response] = await Promise.all([
           import("lottie-web/build/player/lottie_light"),
           fetch(`/movimiento/${nombre}.json`, { signal: controller.signal }),
@@ -102,11 +109,14 @@ export function IlustracionViva({
     >
       <span ref={container} className="lottie-layer" />
       <Image
+        ref={poster}
         className="illustration-poster"
         src={`/movimiento/${nombre}.svg`}
         alt=""
         width={nombre === "fabrica" ? 600 : 320}
         height={nombre === "fabrica" ? 230 : 280}
+        loading={prioritaria ? "eager" : "lazy"}
+        fetchPriority={prioritaria ? "high" : undefined}
         unoptimized
       />
     </span>

@@ -94,7 +94,7 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
     objetivos: ["vistas", "retención", "seguidores"],
   };
   await page.route("**/api/operacion", (route) => route.fulfill({ json: op }));
-  await page.reload();
+  await page.getByRole("button", { name: "Actualizar", exact: true }).click();
   await expect(
     page.getByRole("link", { name: "Competidor ficticio 1", exact: true }),
   ).toBeVisible();
@@ -136,6 +136,33 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
     path: ".cache/competencia-radar-1440.png",
     fullPage: true,
   });
+});
+test("operación: el HTML inicial contiene los datos y actualizar mantiene la consulta explícita", async ({
+  page,
+}) => {
+  const html = await (await page.request.get("/radar")).text();
+  expect(html).toContain(
+    ">Fábrica simulada. Los ejemplos no consultan cuentas externas.<",
+  );
+  expect(html).toContain("Por qué reconocemos el olor de la lluvia");
+  let consultas = 0;
+  await page.route("**/api/operacion", (route) => {
+    consultas++;
+    return route.continue();
+  });
+  await page.goto("/radar");
+  await expect(
+    page.getByRole("button", { name: "Solicitar nuevo radar" }),
+  ).toBeVisible();
+  expect(consultas).toBe(0);
+  const respuesta = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/operacion") &&
+      response.request().method() === "GET",
+  );
+  await page.getByRole("button", { name: "Actualizar", exact: true }).click();
+  expect((await respuesta).status()).toBe(200);
+  expect(consultas).toBe(1);
 });
 test("canales con nombres repetidos conservan menús accesibles distintos", async ({
   page,
@@ -255,6 +282,7 @@ test("operación: una idea produce un video, los ajustes registran cambios y el 
     }),
   );
   await page.goto("/avisos");
+  await page.getByRole("button", { name: "Actualizar", exact: true }).click();
   await expect(
     page.getByText("La fábrica no respondió. Vuelve a consultar."),
   ).toBeVisible();

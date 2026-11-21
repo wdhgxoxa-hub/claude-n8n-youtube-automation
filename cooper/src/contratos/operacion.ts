@@ -1,16 +1,11 @@
 import { z } from "./validacion";
 import { competenciaSchema } from "./competencia-schema";
-import catalogo from "./ajustes-fabrica.json";
-import campos from "./biblia-campos.json";
-export { campos };
-export { catalogo };
+import { catalogo, campos, camposBiblia } from "./operacion-catalogo";
+export { catalogo, campos, camposBiblia } from "./operacion-catalogo";
 const texto = z.string().max(6000);
 const id = z.string().min(1).max(160);
 const fecha = z.string().max(40);
 const red = z.enum(["youtube", "tiktok", "instagram", "facebook"]);
-export const camposBiblia = Object.fromEntries(
-  Object.entries(campos).map(([k, v]) => [k, v.etiqueta]),
-) as Record<keyof typeof campos, string>;
 export function validarBiblia(campo: keyof typeof campos, valor: string) {
   const tipo = campos[campo].tipo;
   return tipo === "numero"

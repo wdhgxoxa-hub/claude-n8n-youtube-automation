@@ -329,6 +329,7 @@ export function Espacio({
                         onClick={() => setMenu(false)}
                         key={href}
                         href={href}
+                        prefetch={href === "/radar" ? false : undefined}
                         aria-current={
                           (href === "/" ? path === "/" : path.startsWith(href))
                             ? "page"
@@ -538,7 +539,11 @@ export function Empty({
 }) {
   return (
     <div className="empty">
-      <IlustracionViva nombre="cooper-recibe" className="empty-companion" />
+      <IlustracionViva
+        nombre="cooper-recibe"
+        className="empty-companion"
+        prioritaria
+      />
       <div className="empty-story" aria-hidden="true">
         <span>
           <i className="story-idea" />

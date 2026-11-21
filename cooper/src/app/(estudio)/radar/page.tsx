@@ -1,4 +1,4 @@
-import { PantallaOperacion } from "@/componentes/operacion";
+import { OperacionInicial } from "@/componentes/operacion-inicial";
 export const metadata = { title: "Radar" };
 export default async function Page({
   searchParams,
@@ -6,5 +6,5 @@ export default async function Page({
   searchParams: Promise<{ canal?: string }>;
 }) {
   const { canal } = await searchParams;
-  return <PantallaOperacion vista="radar" canalId={canal} />;
+  return <OperacionInicial vista="radar" canalId={canal} />;
 }

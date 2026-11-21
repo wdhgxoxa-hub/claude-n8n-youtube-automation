@@ -9,14 +9,8 @@ import {
 } from "react";
 import Link from "next/link";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
-import {
-  camposBiblia,
-  campos,
-  catalogo,
-  type Operacion,
-  type Ajustes,
-  type Control,
-} from "@/contratos/operacion";
+import { camposBiblia, campos, catalogo } from "@/contratos/operacion-catalogo";
+import type { Operacion, Ajustes, Control } from "@/contratos/operacion";
 const pantallas = [
   ["biblia", "Biblia", "/canales"],
   ["radar", "Radar", "/radar"],
@@ -30,6 +24,11 @@ const pantallas = [
   ["avisos", "Avisos", "/avisos"],
 ] as const;
 export type VistaOperacion = (typeof pantallas)[number][0] | "ajustes";
+export type DatosInicialesOperacion = {
+  op: Operacion | null;
+  ajustes: Ajustes | null;
+  error: string;
+};
 function fecha(value: string) {
   return value
     ? new Date(value).toLocaleString("es-PE", {
@@ -54,16 +53,18 @@ function enlace(value: string) {
 export function PantallaOperacion({
   vista,
   canalId,
+  initial,
 }: {
   vista: VistaOperacion;
   canalId?: string;
+  initial?: DatosInicialesOperacion;
 }) {
   const { data, refresh } = useEspacio();
-  const [op, setOp] = useState<Operacion | null>(null),
-    [ajustes, setAjustes] = useState<Ajustes | null>(null),
-    [error, setError] = useState(""),
+  const [op, setOp] = useState<Operacion | null>(initial?.op ?? null),
+    [ajustes, setAjustes] = useState<Ajustes | null>(initial?.ajustes ?? null),
+    [error, setError] = useState(initial?.error ?? ""),
     [mensaje, setMensaje] = useState(""),
-    [cargando, setCargando] = useState(true),
+    [cargando, setCargando] = useState(!initial),
     [ocupado, setOcupado] = useState(false),
     [seleccion, setSeleccion] = useState(canalId || ""),
     [pendiente, setPendiente] = useState<Control | null>(null);
@@ -89,6 +90,7 @@ export function PantallaOperacion({
     }
   }, [vista]);
   useEffect(() => {
+    if (initial) return;
     let activo = true;
     const consulta =
       vista === "ajustes"
@@ -108,7 +110,7 @@ export function PantallaOperacion({
     return () => {
       activo = false;
     };
-  }, [vista]);
+  }, [vista, initial]);
   useEffect(() => {
     if (pendiente) confirmacion.current?.focus();
   }, [pendiente]);
@@ -198,6 +200,7 @@ export function PantallaOperacion({
           <Link
             key={v}
             href={v === "biblia" && canal ? `/canales/${canal.id}` : url}
+            prefetch={false}
             aria-current={vista === v ? "page" : undefined}
           >
             {n}
@@ -206,6 +209,7 @@ export function PantallaOperacion({
         {data.user.role === "admin" && (
           <Link
             href="/admin/fabrica"
+            prefetch={false}
             aria-current={vista === "ajustes" ? "page" : undefined}
           >
             Ajustes

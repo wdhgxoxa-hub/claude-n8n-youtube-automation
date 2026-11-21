@@ -372,6 +372,7 @@ export function Inicio() {
             {data.messages.length === 0 && !submitted && !partial ? (
               <div className="chat-welcome">
                 <IlustracionViva
+                  prioritaria
                   nombre={
                     state === "reposo" ? "cooper-recibe" : "cooper-reacciona"
                   }
