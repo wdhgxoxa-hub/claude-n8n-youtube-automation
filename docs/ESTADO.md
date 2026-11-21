@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **Margen Real — estrategia investigada e integrada localmente:** ocho referentes hispanos, tres peruanos, y 60 videos de muestra con fuentes y duraciones. Biblia editorial parcial y cinco hipótesis en `canales/margen-real/`; no son lecciones propias confirmadas. Integrada en `total-integrador`, pendiente de puerta conjunta; no aplicada a la biblia activa ni publicada. [Informe histórico](informes/total-margen-estrategia.md).
+
 - **Publicados móvil, defecto visual corregido:** cifras y encabezados completos, tabla desplazable con teclado y última columna accesible. Rojo/verde reproducido y tres motores aprobados a 390/1440 px. La primera ronda anterior sigue rechazada visualmente; nueva imagen `bfd5e79` construida y puerta/rondas en curso. [Informe y capturas](informes/total-resultados-movil.md).
 
 - **Esquema n8n corregido y ensayado:** agregadas solo `canal_id` y `evento` a eventos; nueve tablas/130 filas y 45 workflows conservados. Reversa exacta y ambos motores comprobados; futuros lotes exigen contrato y referencias compatibles. La imagen final `719409f` pasó migración 11→13, ocho bloques Compose y avería/reversa/actualización del aplicador exacto; sigue pendiente activarla. [Recibos](informes/total-cierre-aceptacion.md).
@@ -39,6 +41,8 @@
 
 ## En curso
 
+- Integración `total-integrador`: incorpora frentes cerrados desde `a69e374`, preservando los worktrees activos. Verificación y despliegue autorizados en curso; el cierre distinguirá las pruebas nuevas de evidencias históricas.
+
 - H19 ampliado: Data Tables real con 10.000 videos detectó unos nueve segundos de proyección administrativa por filtros repetidos. Agrupación por ID implementada y contrastada: proyección administrativa 9.136→197 ms, respuestas idénticas en cuatro casos. El total máximo sigue en 1.070 ms frente al presupuesto comparativo de 1.000 ms; límite explícito. Delta único de Resolver y reversa ensayados en ambos motores; aplicación remota pendiente. No cambia Cooper ni su imagen. [Medición inicial](informes/total-volumen-n8n.md).
 
 - Orquestador `cooper-total`: corregir la legibilidad de la tabla de Publicados móvil detectada en revisión visual; cerrar Radar/vidIQ tras aislar dos columnas de eventos ausentes y corregir la sonda, completar dos rondas Sentinel+Playwright con videos; aceptar y desplegar exactamente la imagen nueva, comprobar acceso público, refrescar réplica y publicar las dos ramas autorizadas del remoto propio. Los fallos técnicos siguen a cargo de Codex.
@@ -59,6 +63,8 @@
 8. Mantener disponible la PC para el plan y la réplica gratuita; custodiar recuperación offline. Elegir aviso independiente si cae todo el VPS/n8n. Túnel, réplica y restauración están probados; no se crearon cuentas ni pagos externos.
 9. Revisar hipótesis de aprendizaje y aprobar futuros videos para contrastarlas. Reautorizar únicamente permisos que fallen de forma demostrada; la prueba actual de Google renovó su permiso existente. No inventar métricas pasadas ni mejora causal.
 10. Definir retención y excepciones antes de purgar originales, consentimientos, mensajes, derivados/copias. Cotejar operaciones inciertas sin recibo. Identificar la clave administrativa anterior mediante su ID en la instalación correcta antes de revocarla; no se afirma que siga activa.
+
+11. Margen Real: confirmar URL/ID del TikTok propio y el homónimo mexicano; revisar descriptor Perú, capacidad del piloto y aplicación editorial. [Detalle](informes/total-margen-estrategia.md#pendientes-de-walter).
 
 ## Ideas conversadas
 
