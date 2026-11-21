@@ -2,6 +2,7 @@
 """Replica el repositorio cifrado del VPS a la PC y prueba recuperación antes de promoverlo."""
 import argparse
 import contextlib
+from datetime import datetime
 import fcntl
 import json
 import os
@@ -30,7 +31,7 @@ def validate_repo(repo, password, restic, destination):
     execute(command + ['check', '--read-data'], env=env)
     snapshots = json.loads(execute(command + ['snapshots', '--host', 'cooper-vps', '--tag', 'cooper-vps', '--json'], env=env))
     operar.require(bool(snapshots), 'No hay snapshots de Cooper')
-    latest = max(snapshots, key=lambda row: row['time'])
+    latest = max(snapshots, key=lambda row: datetime.fromisoformat(row['time'].replace('Z', '+00:00')))
     snapshot = latest['id']
     operar.require(re.fullmatch('[0-9a-f]{64}', snapshot), 'ID snapshot inválido')
     execute(command + ['restore', snapshot, '--target', str(destination)], env=env)

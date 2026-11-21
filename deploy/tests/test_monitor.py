@@ -126,6 +126,18 @@ class MonitorTest(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 recibo.receipt({**row, **change}, 1000)
 
+    def test_snapshot_mas_reciente_se_compara_por_instante_no_zona(self):
+        password = self.root / 'clave'
+        password.write_text('ficticio')
+        password.chmod(0o600)
+        snapshots = [
+            {'id': 'a' * 64, 'time': '2026-11-21T12:00:00+01:00'},
+            {'id': 'b' * 64, 'time': '2026-11-21T08:00:00-05:00'},
+        ]
+        with patch.object(replica, 'execute', side_effect=['', json.dumps(snapshots), '']), patch.object(operar, 'verify', return_value={'archivos': {}, 'tablas': {}}):
+            result = replica.validate_repo(self.root, password, Path('/ficticio'), self.root / 'restore')
+        self.assertEqual(result['snapshot'], 'b' * 64)
+
     def test_rsync_fallido_conserva_copia_vigente(self):
         root = self.root / 'copias'
         root.mkdir()
