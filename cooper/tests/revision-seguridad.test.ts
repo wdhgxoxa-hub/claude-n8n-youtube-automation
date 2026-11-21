@@ -183,7 +183,10 @@ it("R04 limita conexiones SSE simultáneas y libera cupos al cancelar", async ()
   await next.body?.cancel();
 });
 it("R11 limita lecturas repetidas y permite recuperarse tras la ventana", async () => {
-  active = { ...ana, id: randomUUID() };
+  // La sesión de ensayo debe corresponder a una cuenta persistida, como en producción.
+  const email = `${randomUUID()}@example.test`;
+  db().insert(allowedEmails).values({ email, createdAt: Date.now() }).run();
+  active = loginGoogle(email, "Lecturas repetidas");
   for (let i = 0; i < 300; i++)
     expect((await route("GET", "estado")).status).toBe(200);
   const limited = await route("GET", "estado");
