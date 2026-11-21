@@ -1,0 +1,36 @@
+{
+  "nombres_campos_payload": {
+    "scheduled_job": [
+      "workflowId",
+      "nodeId"
+    ],
+    "scheduled_task": [
+      "workflowId",
+      "nodeId"
+    ]
+  },
+  "historia_publicada": [
+    {
+      "workflowId": "FabAprendizaje01",
+      "versionId": "f9e60b1a-c702-4569-aa2f-96a872cac035",
+      "createdAt": "2026-11-21 17:56:01.495",
+      "updatedAt": "2026-11-21 17:56:01.495"
+    }
+  ],
+  "version_publicada_en_tarea": [
+    {
+      "id": 1,
+      "workflowId": "FabAprendizaje01",
+      "versionId": null,
+      "workflowVersionId": null,
+      "nodeId": "6db48189-d01e-44f3-ad5a-bb5b99448091"
+    },
+    {
+      "id": 3,
+      "workflowId": "FabAprendizaje01",
+      "versionId": null,
+      "workflowVersionId": null,
+      "nodeId": "6db48189-d01e-44f3-ad5a-bb5b99448091"
+    }
+  ]
+}

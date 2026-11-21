@@ -1,0 +1,161 @@
+{
+  "solo_lectura": true,
+  "workflow": "FabAprendizaje01",
+  "inicio_previsto_utc": "2026-11-21T20:00:05+00:00",
+  "fin_observado_utc": "2026-11-21T20:01:45.034087+00:00",
+  "antes": {
+    "publicada": [
+      {
+        "id": "FabAprendizaje01",
+        "active": 1,
+        "activeVersionId": "f9e60b1a-c702-4569-aa2f-96a872cac035"
+      }
+    ],
+    "trabajos": [
+      {
+        "id": 2,
+        "ownerId": "FabAprendizaje01",
+        "ownerMemberId": "6db48189-d01e-44f3-ad5a-bb5b99448091",
+        "nextRunAt": "2026-11-21 20:00:21.000",
+        "lastFiredAt": "2026-11-21 19:00:21.000",
+        "lastDispatchedAt": "2026-11-21 19:00:22.166",
+        "enabled": 1
+      }
+    ],
+    "tareas": [
+      {
+        "id": 3,
+        "jobId": 2,
+        "scheduledFor": "2026-11-21 19:00:21.000",
+        "status": "succeeded",
+        "startedAt": "2026-11-21 19:00:21.030",
+        "finishedAt": "2026-11-21 19:00:22.392",
+        "dispatchedAt": "2026-11-21 19:00:22.156"
+      },
+      {
+        "id": 1,
+        "jobId": 2,
+        "scheduledFor": "2026-11-21 18:00:21.000",
+        "status": "succeeded",
+        "startedAt": "2026-11-21 18:00:21.012",
+        "finishedAt": "2026-11-21 18:00:22.756",
+        "dispatchedAt": "2026-11-21 18:00:22.216"
+      }
+    ],
+    "estadisticas": [
+      {
+        "name": "data_loaded",
+        "count": 1,
+        "latestEvent": "2026-11-21 19:00:31.538",
+        "rootCount": 1
+      },
+      {
+        "name": "production_error",
+        "count": 1,
+        "latestEvent": "2026-11-21 18:00:44",
+        "rootCount": 1
+      },
+      {
+        "name": "production_success",
+        "count": 3,
+        "latestEvent": "2026-11-21 19:00:33",
+        "rootCount": 3
+      }
+    ]
+  },
+  "observadas": [
+    {
+      "observado_utc": "2026-11-21T20:00:21.289675+00:00",
+      "id": 878,
+      "workflowId": "FabAprendizaje01",
+      "workflowVersionId": "f9e60b1a-c702-4569-aa2f-96a872cac035",
+      "mode": "trigger",
+      "status": "running",
+      "startedAt": "2026-11-21 20:00:21.187",
+      "stoppedAt": null,
+      "finished": 0
+    },
+    {
+      "observado_utc": "2026-11-21T20:00:22.537938+00:00",
+      "id": 878,
+      "workflowId": "FabAprendizaje01",
+      "workflowVersionId": "f9e60b1a-c702-4569-aa2f-96a872cac035",
+      "mode": "trigger",
+      "status": "success",
+      "startedAt": "2026-11-21 20:00:21.187",
+      "stoppedAt": "2026-11-21 20:00:22.314",
+      "finished": 1
+    }
+  ],
+  "filas_retiradas_durante_observacion": [],
+  "errores_lectura_categorias": {},
+  "despues": {
+    "publicada": [
+      {
+        "id": "FabAprendizaje01",
+        "active": 1,
+        "activeVersionId": "f9e60b1a-c702-4569-aa2f-96a872cac035"
+      }
+    ],
+    "trabajos": [
+      {
+        "id": 2,
+        "ownerId": "FabAprendizaje01",
+        "ownerMemberId": "6db48189-d01e-44f3-ad5a-bb5b99448091",
+        "nextRunAt": "2026-11-21 21:00:21.000",
+        "lastFiredAt": "2026-11-21 20:00:21.000",
+        "lastDispatchedAt": "2026-11-21 20:00:21.271",
+        "enabled": 1
+      }
+    ],
+    "tareas": [
+      {
+        "id": 5,
+        "jobId": 2,
+        "scheduledFor": "2026-11-21 20:00:21.000",
+        "status": "succeeded",
+        "startedAt": "2026-11-21 20:00:21.053",
+        "finishedAt": "2026-11-21 20:00:21.326",
+        "dispatchedAt": "2026-11-21 20:00:21.268"
+      },
+      {
+        "id": 3,
+        "jobId": 2,
+        "scheduledFor": "2026-11-21 19:00:21.000",
+        "status": "succeeded",
+        "startedAt": "2026-11-21 19:00:21.030",
+        "finishedAt": "2026-11-21 19:00:22.392",
+        "dispatchedAt": "2026-11-21 19:00:22.156"
+      },
+      {
+        "id": 1,
+        "jobId": 2,
+        "scheduledFor": "2026-11-21 18:00:21.000",
+        "status": "succeeded",
+        "startedAt": "2026-11-21 18:00:21.012",
+        "finishedAt": "2026-11-21 18:00:22.756",
+        "dispatchedAt": "2026-11-21 18:00:22.216"
+      }
+    ],
+    "estadisticas": [
+      {
+        "name": "data_loaded",
+        "count": 1,
+        "latestEvent": "2026-11-21 19:00:31.538",
+        "rootCount": 1
+      },
+      {
+        "name": "production_error",
+        "count": 1,
+        "latestEvent": "2026-11-21 18:00:44",
+        "rootCount": 1
+      },
+      {
+        "name": "production_success",
+        "count": 4,
+        "latestEvent": "2026-11-21 20:00:22",
+        "rootCount": 4
+      }
+    ]
+  }
+}

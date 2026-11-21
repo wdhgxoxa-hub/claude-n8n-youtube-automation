@@ -1,0 +1,95 @@
+{
+  "observado_utc": "2026-11-21T19:41:27.381009+00:00",
+  "workflow": "FabAprendizaje01",
+  "jobs": [
+    {
+      "id": 2,
+      "name": "FabAprendizaje01:6db48189-d01e-44f3-ad5a-bb5b99448091:cc892ac30ed4d309:0",
+      "taskType": "workflow:schedule-trigger",
+      "kind": "cron",
+      "cronExpression": "21 0 */1 * * *",
+      "timezone": "America/Lima",
+      "intervalSeconds": null,
+      "enabled": 1,
+      "nextRunAt": "2026-11-21 20:00:21.000",
+      "lastFiredAt": "2026-11-21 19:00:21.000",
+      "lastDispatchedAt": "2026-11-21 19:00:22.166",
+      "ownerType": "workflow",
+      "ownerId": "FabAprendizaje01",
+      "ownerMemberId": "6db48189-d01e-44f3-ad5a-bb5b99448091",
+      "misfirePolicy": "skip"
+    }
+  ],
+  "tareas": [
+    {
+      "id": 3,
+      "jobId": 2,
+      "scheduledFor": "2026-11-21 19:00:21.000",
+      "runAt": "2026-11-21 19:00:21.000",
+      "status": "succeeded",
+      "attempts": 0,
+      "startedAt": "2026-11-21 19:00:21.030",
+      "finishedAt": "2026-11-21 19:00:22.392",
+      "dispatchedAt": "2026-11-21 19:00:22.156"
+    },
+    {
+      "id": 1,
+      "jobId": 2,
+      "scheduledFor": "2026-11-21 18:00:21.000",
+      "runAt": "2026-11-21 18:00:21.000",
+      "status": "succeeded",
+      "attempts": 0,
+      "startedAt": "2026-11-21 18:00:21.012",
+      "finishedAt": "2026-11-21 18:00:22.756",
+      "dispatchedAt": "2026-11-21 18:00:22.216"
+    }
+  ],
+  "publicacion": [
+    {
+      "workflowId": "FabAprendizaje01",
+      "nodeId": "6db48189-d01e-44f3-ad5a-bb5b99448091",
+      "versionId": "f9e60b1a-c702-4569-aa2f-96a872cac035",
+      "status": "activated",
+      "triggerKind": "in-memory",
+      "createdAt": "2026-11-21 19:39:40.200",
+      "updatedAt": "2026-11-21 19:39:40.200"
+    }
+  ],
+  "estadisticas": [
+    {
+      "name": "data_loaded",
+      "count": 1,
+      "latestEvent": "2026-11-21 19:00:31.538",
+      "rootCount": 1
+    },
+    {
+      "name": "production_error",
+      "count": 1,
+      "latestEvent": "2026-11-21 18:00:44",
+      "rootCount": 1
+    },
+    {
+      "name": "production_success",
+      "count": 3,
+      "latestEvent": "2026-11-21 19:00:33",
+      "rootCount": 3
+    }
+  ],
+  "ledger": [],
+  "ejecuciones": [
+    {
+      "id": 768,
+      "mode": "trigger",
+      "status": "success",
+      "startedAt": "2026-11-21 13:00:21.028",
+      "stoppedAt": "2026-11-21 13:00:21.832"
+    },
+    {
+      "id": 510,
+      "mode": "trigger",
+      "status": "success",
+      "startedAt": "2026-11-20 13:00:21.049",
+      "stoppedAt": "2026-11-20 13:00:21.214"
+    }
+  ]
+}
