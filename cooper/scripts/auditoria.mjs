@@ -5,6 +5,10 @@ import { resolve } from "node:path";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
+const animationAudit = process.argv.includes("--animacion");
+const outputDir = animationAudit
+  ? ".cache/animacion/lighthouse"
+  : ".cache/auditoria";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -75,7 +79,7 @@ try {
   const cdp = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   await cdp.contexts()[0].addCookies(await context.cookies());
   const summaries = [];
-  mkdirSync(".cache/auditoria", { recursive: true });
+  mkdirSync(outputDir, { recursive: true });
   for (const theme of ["oscuro", "claro"]) {
     const profile = await context.request.patch("/api/perfil", {
       data: {
@@ -133,7 +137,7 @@ try {
         if (!result?.lhr || result.lhr.runtimeError)
           throw new Error("Lighthouse no completó la medición.");
         const name = `${path.replaceAll("/", "_") || "inicio"}-${theme}-${formFactor}`;
-        writeFileSync(`.cache/auditoria/${name}.html`, result.report);
+        writeFileSync(`${outputDir}/${name}.html`, result.report);
         const summary = {
           path,
           theme: path === "/entrar" ? "oscuro (entrada pública)" : theme,
@@ -164,7 +168,7 @@ try {
         };
         summaries.push(summary);
         writeFileSync(
-          ".cache/auditoria/resumen.json",
+          `${outputDir}/resumen.json`,
           JSON.stringify(
             {
               entorno: "Chromium local; laboratorio, sin métricas de campo",
@@ -186,13 +190,13 @@ try {
       (result) =>
         result.warnings.length ||
         result.failedAudits.length ||
-        result.scores.performance < 0.9 ||
+        result.scores.performance < (animationAudit ? 1 : 0.9) ||
         result.scores.accessibility < 1 ||
         result.scores["best-practices"] < 1,
     )
   )
     throw new Error(
-      "La auditoría requiere rendimiento >=90, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.",
+      `La auditoría requiere rendimiento >=${animationAudit ? 100 : 90}, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.`,
     );
 } finally {
   await browser?.close();
