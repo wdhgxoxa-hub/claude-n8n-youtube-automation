@@ -91,7 +91,12 @@ function Evolucion({ historial }: { historial: Medicion[] }) {
       )}
       <details>
         <summary>Ver datos de evolución</summary>
-        <div className="table-scroll">
+        <div
+          className="table-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="Mediciones de la publicación"
+        >
           <table>
             <caption>Mediciones de la publicación</caption>
             <thead>
@@ -150,7 +155,12 @@ function CurvaRetencion({
             .join(" ")}
         />
       </svg>
-      <div className="table-scroll">
+      <div
+        className="table-scroll"
+        tabIndex={0}
+        role="region"
+        aria-label="Curva de retención"
+      >
         <table>
           <caption>Curva de retención</caption>
           <thead>
