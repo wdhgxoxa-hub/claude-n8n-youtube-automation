@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m as motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState, useEffect, type FormEvent } from "react";
 import { ArrowUp, Paperclip, X, AudioLines, ArrowUpRight } from "lucide-react";

@@ -3122,11 +3122,8 @@ main:focus {
   overflow: hidden;
 }
 .number-reel {
-  display: flex;
-  flex-direction: column;
-}
-.number-reel > span {
-  height: 1.3em;
+  display: block;
+  white-space: pre;
   line-height: 1.3;
   text-align: center;
 }

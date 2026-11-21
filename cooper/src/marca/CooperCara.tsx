@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { animate, motion, useInView, useMotionValue } from "framer-motion";
+import { animate, m as motion, useInView, useMotionValue } from "framer-motion";
 import { useMovimientoReducido } from "@/componentes/movimiento";
 export type EstadoCooper = "reposo" | "escuchando" | "pensando" | "hablando";
 export function CooperCara({

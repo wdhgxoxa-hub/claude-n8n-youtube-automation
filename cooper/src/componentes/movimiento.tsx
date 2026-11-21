@@ -5,7 +5,11 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { MotionConfigContext, motion, useMotionValue } from "framer-motion";
+import {
+  MotionConfigContext,
+  m as motion,
+  useMotionValue,
+} from "framer-motion";
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function observarPreferencia(notify: () => void) {
   const media = window.matchMedia(motionQuery);
@@ -55,9 +59,7 @@ export function NumeroAnimado({
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                {Array.from({ length: 10 }, (_, n) => (
-                  <span key={n}>{n}</span>
-                ))}
+                {"0\n1\n2\n3\n4\n5\n6\n7\n8\n9"}
               </motion.span>
             </span>
           ) : (

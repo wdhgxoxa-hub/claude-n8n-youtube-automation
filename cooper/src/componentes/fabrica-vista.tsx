@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { animate, motion, useMotionValue } from "framer-motion";
+import { animate, m as motion, useMotionValue } from "framer-motion";
 import { ArrowUpRight, Check, Clock3 } from "lucide-react";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Video } from "@/db/schema";

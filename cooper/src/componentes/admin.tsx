@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
 import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice } from "./espacio";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 export function Admin({ initial }: { initial: Administracion }) {
   const reduced = useMovimientoReducido();

@@ -12,7 +12,12 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutGroup, MotionConfig, motion } from "framer-motion";
+import {
+  LayoutGroup,
+  LazyMotion,
+  MotionConfig,
+  m as motion,
+} from "framer-motion";
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import {
   House,
@@ -54,6 +59,8 @@ export function useEspacio() {
   if (!value) throw new Error("Espacio no disponible");
   return value;
 }
+const cargarMovimiento = () =>
+  import("./movimiento-funciones").then((module) => module.default);
 const nav = [
   { path: "/", label: "Inicio", icon: House },
   { path: "/canales", label: "Canales", icon: Radio },
@@ -202,199 +209,207 @@ export function Espacio({
       <MotionConfig
         reducedMotion={paused || hidden || reduced ? "always" : "user"}
       >
-        <LayoutGroup id="estudio">
-          <div
-            className="workspace"
-            data-motion={paused || hidden ? "paused" : "playing"}
-          >
-            <a className="skip" href="#contenido">
-              Saltar al contenido
-            </a>
-            <aside
-              ref={sidebar}
-              role={menu ? "dialog" : undefined}
-              aria-modal={menu || undefined}
-              aria-label="Navegación del estudio"
-              id="navegacion"
-              className={`sidebar ${menu ? "is-open" : ""}`}
+        <LazyMotion features={cargarMovimiento} strict>
+          <LayoutGroup id="estudio">
+            <div
+              className="workspace"
+              data-motion={paused || hidden ? "paused" : "playing"}
             >
-              <div className="sidebar-content">
-                <Link href="/" className="brand" aria-label="Cooper, inicio">
-                  <Logo />
-                  <span>
-                    cooper<span className="brand-dot">.</span>
-                  </span>
-                </Link>
-                <button
-                  className="icon-button drawer-close"
-                  aria-label="Cerrar navegación"
-                  onClick={() => setMenu(false)}
-                >
-                  <X size={20} />
-                </button>
-                <div className="workspace-label">Tu espacio de creación</div>
-                <nav aria-label="Principal">
-                  {nav.map(({ path: href, label, icon: Icon }) => (
-                    <Link
-                      onClick={() => setMenu(false)}
-                      key={href}
-                      href={href}
-                      aria-current={
-                        (href === "/" ? path === "/" : path.startsWith(href))
-                          ? "page"
-                          : undefined
-                      }
-                    >
-                      {(href === "/"
-                        ? path === "/"
-                        : path.startsWith(href)) && (
-                        <Indicador id="navegacion" className="nav-indicator" />
-                      )}
-                      <Icon size={19} />
-                      <span>{label}</span>
-                      {href === "/videos" && pending > 0 && (
-                        <span className="nav-count">{pending}</span>
-                      )}
-                    </Link>
-                  ))}
-                </nav>
-                <div className="sidebar-note">
-                  <p>En tu estudio</p>
-                  <Link href="/videos">
-                    <strong>
-                      <NumeroAnimado
-                        value={data.videos.filter((v) => v.stage < 11).length}
-                      />
-                    </strong>{" "}
-                    videos en producción
-                  </Link>
-                  <Link href="/videos">
-                    <strong>
-                      <NumeroAnimado value={pending} />
-                    </strong>{" "}
-                    por aprobar
-                  </Link>
-                  <div className="sidebar-summary-track" aria-hidden="true">
-                    {Array.from({ length: 12 }, (_, i) => (
-                      <i
-                        key={i}
-                        className={
-                          data.videos.some((v) => v.stage === i)
-                            ? "occupied"
-                            : ""
-                        }
-                      />
-                    ))}
-                  </div>
-                </div>
-                <nav className="bottom-nav" aria-label="Cuenta">
-                  {data.user.role === "admin" && (
-                    <Link
-                      onClick={() => setMenu(false)}
-                      href="/admin"
-                      aria-current={path === "/admin" ? "page" : undefined}
-                    >
-                      {path === "/admin" && (
-                        <Indicador id="navegacion" className="nav-indicator" />
-                      )}
-                      <ShieldCheck size={18} />
-                      Administración
-                    </Link>
-                  )}
-                  <Link
-                    onClick={() => setMenu(false)}
-                    href="/perfil"
-                    aria-current={path === "/perfil" ? "page" : undefined}
-                  >
-                    {path === "/perfil" && (
-                      <Indicador id="navegacion" className="nav-indicator" />
-                    )}
-                    <Settings2 size={18} />
-                    Mi perfil
-                  </Link>
-                  <form action={logout}>
-                    <button className="nav-button">
-                      <LogOut size={18} />
-                      Cerrar sesión
-                    </button>
-                  </form>
-                </nav>
-                <div className="identity">
-                  {data.user.image ? (
-                    <Image
-                      unoptimized
-                      src={data.user.image}
-                      width={36}
-                      height={36}
-                      alt=""
-                    />
-                  ) : (
-                    <span className="initial">
-                      {data.user.name.slice(0, 1).toUpperCase()}
+              <a className="skip" href="#contenido">
+                Saltar al contenido
+              </a>
+              <aside
+                ref={sidebar}
+                role={menu ? "dialog" : undefined}
+                aria-modal={menu || undefined}
+                aria-label="Navegación del estudio"
+                id="navegacion"
+                className={`sidebar ${menu ? "is-open" : ""}`}
+              >
+                <div className="sidebar-content">
+                  <Link href="/" className="brand" aria-label="Cooper, inicio">
+                    <Logo />
+                    <span>
+                      cooper<span className="brand-dot">.</span>
                     </span>
-                  )}
-                  <div>
-                    <strong>{data.user.name}</strong>
-                    <small>
-                      {data.user.role === "admin"
-                        ? "Administrador"
-                        : "Equipo Cooper"}
-                    </small>
+                  </Link>
+                  <button
+                    className="icon-button drawer-close"
+                    aria-label="Cerrar navegación"
+                    onClick={() => setMenu(false)}
+                  >
+                    <X size={20} />
+                  </button>
+                  <div className="workspace-label">Tu espacio de creación</div>
+                  <nav aria-label="Principal">
+                    {nav.map(({ path: href, label, icon: Icon }) => (
+                      <Link
+                        onClick={() => setMenu(false)}
+                        key={href}
+                        href={href}
+                        aria-current={
+                          (href === "/" ? path === "/" : path.startsWith(href))
+                            ? "page"
+                            : undefined
+                        }
+                      >
+                        {(href === "/"
+                          ? path === "/"
+                          : path.startsWith(href)) && (
+                          <Indicador
+                            id="navegacion"
+                            className="nav-indicator"
+                          />
+                        )}
+                        <Icon size={19} />
+                        <span>{label}</span>
+                        {href === "/videos" && pending > 0 && (
+                          <span className="nav-count">{pending}</span>
+                        )}
+                      </Link>
+                    ))}
+                  </nav>
+                  <div className="sidebar-note">
+                    <p>En tu estudio</p>
+                    <Link href="/videos">
+                      <strong>
+                        <NumeroAnimado
+                          value={data.videos.filter((v) => v.stage < 11).length}
+                        />
+                      </strong>{" "}
+                      videos en producción
+                    </Link>
+                    <Link href="/videos">
+                      <strong>
+                        <NumeroAnimado value={pending} />
+                      </strong>{" "}
+                      por aprobar
+                    </Link>
+                    <div className="sidebar-summary-track" aria-hidden="true">
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <i
+                          key={i}
+                          className={
+                            data.videos.some((v) => v.stage === i)
+                              ? "occupied"
+                              : ""
+                          }
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <nav className="bottom-nav" aria-label="Cuenta">
+                    {data.user.role === "admin" && (
+                      <Link
+                        onClick={() => setMenu(false)}
+                        href="/admin"
+                        aria-current={path === "/admin" ? "page" : undefined}
+                      >
+                        {path === "/admin" && (
+                          <Indicador
+                            id="navegacion"
+                            className="nav-indicator"
+                          />
+                        )}
+                        <ShieldCheck size={18} />
+                        Administración
+                      </Link>
+                    )}
+                    <Link
+                      onClick={() => setMenu(false)}
+                      href="/perfil"
+                      aria-current={path === "/perfil" ? "page" : undefined}
+                    >
+                      {path === "/perfil" && (
+                        <Indicador id="navegacion" className="nav-indicator" />
+                      )}
+                      <Settings2 size={18} />
+                      Mi perfil
+                    </Link>
+                    <form action={logout}>
+                      <button className="nav-button">
+                        <LogOut size={18} />
+                        Cerrar sesión
+                      </button>
+                    </form>
+                  </nav>
+                  <div className="identity">
+                    {data.user.image ? (
+                      <Image
+                        unoptimized
+                        src={data.user.image}
+                        width={36}
+                        height={36}
+                        alt=""
+                      />
+                    ) : (
+                      <span className="initial">
+                        {data.user.name.slice(0, 1).toUpperCase()}
+                      </span>
+                    )}
+                    <div>
+                      <strong>{data.user.name}</strong>
+                      <small>
+                        {data.user.role === "admin"
+                          ? "Administrador"
+                          : "Equipo Cooper"}
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </aside>
-            {menu && (
-              <button
-                className="drawer-backdrop"
-                aria-label="Cerrar menú"
-                tabIndex={-1}
-                onClick={() => setMenu(false)}
-              />
-            )}
-            <div className="main-column" inert={menu}>
-              <header className="topbar">
+              </aside>
+              {menu && (
                 <button
-                  ref={menuButton}
-                  className="icon-button menu-button"
-                  aria-label="Abrir navegación"
-                  aria-controls="navegacion"
-                  aria-expanded={menu}
-                  onClick={() => setMenu(!menu)}
-                >
-                  <PanelLeftClose size={20} />
-                </button>
-                <span>Estudio Cooper</span>
-                <div className="topbar-right">
-                  <span className={`connection ${connected ? "online" : ""}`}>
-                    <i />
-                    {connected ? "En vivo" : "Reconectando"}
-                  </span>
+                  className="drawer-backdrop"
+                  aria-label="Cerrar menú"
+                  tabIndex={-1}
+                  onClick={() => setMenu(false)}
+                />
+              )}
+              <div className="main-column" inert={menu}>
+                <header className="topbar">
                   <button
-                    className="motion-toggle"
-                    aria-pressed={paused}
-                    onClick={() => setPaused(!paused)}
+                    ref={menuButton}
+                    className="icon-button menu-button"
+                    aria-label="Abrir navegación"
+                    aria-controls="navegacion"
+                    aria-expanded={menu}
+                    onClick={() => setMenu(!menu)}
                   >
-                    {paused ? "Activar movimiento" : "Pausar movimiento"}
+                    <PanelLeftClose size={20} />
                   </button>
-                  <span className="demo-label">
-                    {data.demo ? "Demostración" : "Modo de prueba"}
-                  </span>
-                </div>
-              </header>
-              <main id="contenido" tabIndex={-1}>
-                <motion.div
-                  key={path}
-                  initial={reduced || paused ? false : { y: 4 }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: reduced || paused ? 0 : 0.2 }}
-                >
-                  {children}
-                </motion.div>
-              </main>
+                  <span>Estudio Cooper</span>
+                  <div className="topbar-right">
+                    <span className={`connection ${connected ? "online" : ""}`}>
+                      <i />
+                      {connected ? "En vivo" : "Reconectando"}
+                    </span>
+                    <button
+                      className="motion-toggle"
+                      aria-pressed={paused}
+                      onClick={() => setPaused(!paused)}
+                    >
+                      {paused ? "Activar movimiento" : "Pausar movimiento"}
+                    </button>
+                    <span className="demo-label">
+                      {data.demo ? "Demostración" : "Modo de prueba"}
+                    </span>
+                  </div>
+                </header>
+                <main id="contenido" tabIndex={-1}>
+                  <motion.div
+                    key={path}
+                    initial={reduced || paused ? false : { y: 4 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: reduced || paused ? 0 : 0.2 }}
+                  >
+                    {children}
+                  </motion.div>
+                </main>
+              </div>
             </div>
-          </div>
-        </LayoutGroup>
+          </LayoutGroup>
+        </LazyMotion>
       </MotionConfig>
     </Context.Provider>
   );
