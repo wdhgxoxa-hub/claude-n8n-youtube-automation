@@ -3244,11 +3244,9 @@ main:focus {
 @keyframes editing-arrival {
   from {
     transform: translateY(6px) rotateX(6deg);
-    opacity: 0.55;
   }
   to {
     transform: none;
-    opacity: 1;
   }
 }
 .cooper-gaze {
