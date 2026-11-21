@@ -3369,7 +3369,7 @@ def recorrer(v):
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
 # Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
-for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'aprendizaje_flujos.py']:
+for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'aprendizaje_flujos.py']:
     exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
 
 # Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.
@@ -3431,7 +3431,7 @@ return [{json:{url:origin + '/api/marcas/operar', cuerpo, tiempo, firma}}];
 MARCA_PUBLICAR = flujo_marcas('CooperMarcasPub1', 'FX · Marcas · Publicación y adjuntos', 'publicar', 1)
 MARCA_METRICAS = flujo_marcas('CooperMarcasMet1', 'FX · Marcas · Métricas', 'metricas', 60)
 
-ALL = [MARCA_PUBLICAR, MARCA_METRICAS, AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
+ALL = [MARCA_PUBLICAR, MARCA_METRICAS, COMPETENCIA_YOUTUBE, AJUSTES, CLAUDE, RETORNO, APROB, ORQ, PROD, SONIDO, PUB, APRENDE, ESTADO, REFS, YT, VIDIQ, DERIV, REDES, CONFIRMAR, RUTINA, RADAR, ERRORES, AGENTE, PEND, REENVIAR, CHAT, COOPER, COSTO_COOPER, PROGRESO_COOPER, VALIDAR_PRESENTACION, AVATAR, TEXTO, NOTICIA]
 
 def conservar_identificadores(wf, anterior):
     prev = {n['name']: n for n in anterior.get('nodes', [])}

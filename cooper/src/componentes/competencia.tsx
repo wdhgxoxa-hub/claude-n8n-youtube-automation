@@ -52,6 +52,15 @@ export function PanelCompetencia({
           ` · ${new Date(c.fecha).toLocaleDateString("es-PE", { timeZone: "America/Lima" })}`}
       </p>
       <p>{c.resumen}</p>
+      {c.fuente !== "web_publica" && (
+        <p className="muted">
+          Fuente: YouTube Data API
+          {c.fuente === "youtube_data_api_y_web"
+            ? " y páginas públicas consultadas"
+            : ""}
+          .
+        </p>
+      )}
       <p>{c.diferenciacion}</p>
       <p className="muted">
         Buscamos crecer en vistas, retención y seguidores. La investigación se
@@ -115,13 +124,19 @@ export function PanelCompetencia({
                           {v.titulo || "Ver publicación"}
                         </Fuente>
                         {" · "}
-                        {v.formato}
+                        {v.formato === "sin_clasificar"
+                          ? "Formato sin comprobar"
+                          : v.formato}
                         {" · "}
                         {new Date(v.fecha).toLocaleDateString("es-PE", {
                           timeZone: "America/Lima",
                         })}
                         {" · "}
                         {v.vistas.toLocaleString("es-PE")} vistas
+                        {v.likes != null &&
+                          ` · ${v.likes.toLocaleString("es-PE")} me gusta`}
+                        {v.comentarios != null &&
+                          ` · ${v.comentarios.toLocaleString("es-PE")} comentarios`}
                       </li>
                     ))}
                   </ul>

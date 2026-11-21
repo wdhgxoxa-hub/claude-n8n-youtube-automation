@@ -6,12 +6,15 @@ const publicacion = {
   fecha: texto,
   vistas: z.number().nonnegative(),
   formato: texto,
+  likes: z.number().nonnegative().nullable().optional(),
+  comentarios: z.number().nonnegative().nullable().optional(),
+  duracion: texto.optional(),
 };
 export const competenciaSchema = z.object({
   version: z.literal(1),
   estado: z.enum(["pendiente", "sin_datos", "parcial", "listo"]),
   fecha: texto,
-  fuente: z.literal("web_publica"),
+  fuente: z.enum(["web_publica", "youtube_data_api", "youtube_data_api_y_web"]),
   resumen: texto,
   diferenciacion: texto,
   competidores: z

@@ -4,6 +4,7 @@ import {
   normalizarCompetencia,
   competenciaVigente,
   proyectarCompetencia,
+  normalizarCompetenciaYouTube,
 } from "@/contratos/competencia.mjs";
 import { competenciaSchema } from "@/contratos/competencia-schema";
 import { proponerTexto } from "@/servicios/marcas/especialistas";
@@ -20,6 +21,31 @@ import {
 import { db } from "@/db";
 import { users, allowedEmails } from "@/db/schema";
 const now = Date.parse("2026-11-21T17:00:00Z");
+it("acepta la proyección nativa con país comprobado y métricas todavía ausentes", () => {
+  const id = "UC" + "a".repeat(22);
+  const c = normalizarCompetenciaYouTube(
+    {
+      propia: "UC" + "p".repeat(22),
+      candidatos: [id],
+      identidades: [
+        {
+          statusCode: 200,
+          body: {
+            items: [
+              { id, snippet: { title: "Cuenta de prueba", country: "PE" } },
+            ],
+          },
+        },
+      ],
+    },
+    "Margen Real",
+    now,
+  );
+  expect(competenciaSchema.parse(c)).toEqual(c);
+  expect(c.fuente).toBe("youtube_data_api");
+  expect(c.estado).toBe("parcial");
+  expect(c.competidores[0].muestras).toEqual([]);
+});
 function fixture() {
   const competidores = [1, 2, 3].map((i) => ({
     nombre: `Cuenta ficticia ${i}`,

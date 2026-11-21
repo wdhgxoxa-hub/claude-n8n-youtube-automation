@@ -75,7 +75,27 @@ export function normalizarCompetencia(
         "La respuesta no acredita fuentes públicas abiertas; una búsqueda sin URLs consultadas no basta.",
       ],
     };
-  const consultadas = new Set(lista(respuesta.fuentes_consultadas));
+  return normalizarEvidenciaCompetencia(
+    raw,
+    new Set(lista(respuesta.fuentes_consultadas)),
+    nombre,
+    ahora,
+    "web_publica",
+  );
+}
+// Solo los adaptadores verificados construyen la lista de evidencia; nunca el JSON del modelo.
+function normalizarEvidenciaCompetencia(
+  raw,
+  consultadas,
+  nombre,
+  ahora,
+  origen,
+) {
+  const base = {
+    ...competenciaVacia(nombre),
+    fecha: new Date(ahora).toISOString(),
+    fuente: origen,
+  };
   const fuente = (v) =>
     urlPublicaCompetencia(v) && consultadas.has(v) ? v : "";
   const reciente = (v, dias) =>
@@ -112,7 +132,13 @@ export function normalizarCompetencia(
             vistas.has(u) ||
             !reciente(v.fecha, 90) ||
             numero(v.vistas) === null ||
-            !["short", "largo", "reel", "imagen"].includes(v.formato)
+            ![
+              "short",
+              "largo",
+              "reel",
+              "imagen",
+              ...(origen !== "web_publica" ? ["sin_clasificar"] : []),
+            ].includes(v.formato)
           )
             return [];
           vistas.add(u);
@@ -123,11 +149,18 @@ export function normalizarCompetencia(
               fecha: v.fecha,
               vistas: v.vistas,
               formato: v.formato,
+              ...(origen !== "web_publica"
+                ? {
+                    likes: numero(v.likes),
+                    comentarios: numero(v.comentarios),
+                    duracion: texto(v.duracion, 40),
+                  }
+                : {}),
             },
           ];
         });
       const outliers = muestras
-        .filter((v) => reciente(v.fecha, 30))
+        .filter((v) => reciente(v.fecha, 30) && v.formato !== "sin_clasificar")
         .flatMap((v) => {
           // Solo comparar publicaciones anteriores del mismo formato/cuenta: sin seguidores ni medianas inventadas.
           const anteriores = muestras
@@ -207,6 +240,7 @@ export function normalizarCompetencia(
         !c.muestras.some(
           (v) =>
             reciente(v.fecha, 30) &&
+            v.formato !== "sin_clasificar" &&
             c.muestras.filter(
               (anterior) =>
                 anterior.formato === v.formato &&
@@ -240,6 +274,232 @@ export function normalizarCompetencia(
     limitaciones,
   };
 }
+export function candidatosYouTubeCompetencia(pedido) {
+  // Selección editorial inicial comprobada en la sonda real 802 (21/11/2026).
+  // Cada ejecución vuelve a consultar identidad y métricas; no reutiliza cifras de la sonda.
+  if (/margen\s*real/i.test(pedido?.nombre || ""))
+    return [
+      "UCfLvLO4R9kKExnksWkZnfgw",
+      "UCDFQF7lV8CQBQbBaZfTt17w",
+      "UCuInF2D7Z4rbZqMzkhSjXZQ",
+    ];
+  return [
+    ...new Set(
+      lista(pedido?.competencia?.competidores).flatMap((c) => {
+        const id = /^https:\/\/www\.youtube\.com\/channel\/(UC[\w-]{22})$/.exec(
+          c?.url || "",
+        )?.[1];
+        return id ? [id] : [];
+      }),
+    ),
+  ].slice(0, 3);
+}
+export function normalizarCompetenciaYouTube(
+  datos,
+  nombre,
+  ahora = Date.now(),
+) {
+  const idCanal = (v) => typeof v === "string" && /^UC[\w-]{22}$/.test(v);
+  const idVideo = (v) => typeof v === "string" && /^[\w-]{11}$/.test(v);
+  const items = (r) =>
+    r?.statusCode === 200 && !r.body?.error ? lista(r.body?.items) : [];
+  const entero = (v) =>
+    typeof v === "string" && /^\d+$/.test(v) && Number.isSafeInteger(Number(v))
+      ? Number(v)
+      : null;
+  const perfil = (id) => "https://www.youtube.com/channel/" + id;
+  const candidatos = new Set(
+    lista(datos?.candidatos).filter(idCanal).slice(0, 3),
+  );
+  const cuentas = lista(datos?.identidades)
+    .flatMap(items)
+    .filter(
+      (c) =>
+        idCanal(datos?.propia) &&
+        candidatos.has(c?.id) &&
+        c.id !== datos.propia,
+    );
+  const ids = new Map(
+    lista(datos?.listas).flatMap((l) => {
+      const cuenta = cuentas.find((c) => c.id === l.cuenta);
+      if (
+        !cuenta ||
+        l.playlist !== cuenta.contentDetails?.relatedPlaylists?.uploads
+      )
+        return [];
+      return items(l.respuesta)
+        .slice(0, 4)
+        .map((v) => v?.contentDetails?.videoId)
+        .filter(idVideo)
+        .map((id) => [id, cuenta.id]);
+    }),
+  );
+  const videos = items(datos?.videos).filter(
+    (v) => ids.has(v?.id) && ids.get(v.id) === v.snippet?.channelId,
+  );
+  const raw = {
+    resumen:
+      "Identidades y métricas públicas consultadas directamente en YouTube; cifras observadas, no causas demostradas.",
+    competidores: cuentas.map((c) => ({
+      nombre: c.snippet?.title,
+      red: "youtube",
+      url: perfil(c.id),
+      fuente_identidad: perfil(c.id),
+      pais: /^[A-Z]{2}$/.test(c.snippet?.country || "")
+        ? c.snippet.country
+        : "",
+      patron:
+        "Muestra reciente de la cuenta. La duración no acredita el formato ni demuestra por qué obtuvo esas vistas.",
+      muestras: videos
+        .filter((v) => v.snippet?.channelId === c.id)
+        .slice(0, 4)
+        .map((v) => ({
+          titulo: v.snippet.title,
+          url: "https://www.youtube.com/watch?v=" + v.id,
+          fecha: v.snippet.publishedAt,
+          vistas: entero(v.statistics?.viewCount),
+          likes: entero(v.statistics?.likeCount),
+          comentarios: entero(v.statistics?.commentCount),
+          duracion: v.contentDetails?.duration,
+          formato: "sin_clasificar",
+        })),
+    })),
+    homonimos: [],
+    comprobaciones: [],
+  };
+  const exacto = (v) =>
+    texto(v, 160)
+      .normalize("NFKC")
+      .toLocaleLowerCase("es")
+      .replace(/\s+/g, " ");
+  if (
+    idCanal(datos?.propia) &&
+    datos?.busqueda?.statusCode === 200 &&
+    !datos.busqueda.body?.error
+  ) {
+    raw.homonimos = items(datos.busqueda)
+      .filter(
+        (c) =>
+          idCanal(c?.id?.channelId) &&
+          c.id.channelId !== datos.propia &&
+          exacto(c.snippet?.channelTitle || c.snippet?.title) ===
+            exacto(nombre),
+      )
+      .map((c) => ({
+        nombre: c.snippet.channelTitle || c.snippet.title,
+        red: "youtube",
+        url: perfil(c.id.channelId),
+        pais: "",
+        diferencia:
+          "Cuenta distinta del canal conectado. El país no se ha comprobado; no atribuirle cifras ni publicaciones propias.",
+      }));
+    raw.comprobaciones = [
+      {
+        red: "youtube",
+        consulta: nombre + " en YouTube (API oficial)",
+        url:
+          "https://www.youtube.com/results?search_query=" +
+          encodeURIComponent('"' + nombre + '"'),
+      },
+    ];
+  }
+  const fuentes = new Set([
+    ...raw.competidores.flatMap((c) => [
+      c.url,
+      ...c.muestras.map((v) => v.url),
+    ]),
+    ...raw.homonimos.map((h) => h.url),
+    ...raw.comprobaciones.map((c) => c.url),
+  ]);
+  const c = normalizarEvidenciaCompetencia(
+    raw,
+    fuentes,
+    nombre,
+    ahora,
+    "youtube_data_api",
+  );
+  c.limitaciones.push(
+    "YouTube no informa el formato Short mediante estos recursos: las muestras sin clasificar no acreditan outliers. Retención y seguidores ganados de competidores no son públicos.",
+  );
+  if (!cuentas.length)
+    c.limitaciones.push(
+      "No se obtuvo identidad pública mediante el permiso existente. Revisa conexión, cuota y candidatos del canal.",
+    );
+  return c;
+}
+export function combinarCompetenciaYouTube(
+  web,
+  nativa,
+  nombre,
+  ahora = Date.now(),
+) {
+  if (!nativa?.competidores?.length)
+    return web || nativa || competenciaVacia(nombre);
+  // La evidencia web ya pasó el guardián de aperturas; la nativa pasó HTTP, IDs y pertenencia.
+  const competidores = [
+    ...nativa.competidores,
+    ...lista(web?.competidores).filter(
+      (c) => !nativa.competidores.some((n) => n.url === c.url),
+    ),
+  ]
+    .slice(0, 5)
+    .map((c) => ({ ...c, muestras: c.muestras.map((v) => ({ ...v })) }));
+  const homonimos = [
+    ...nativa.homonimos,
+    ...lista(web?.homonimos).filter(
+      (h) => !nativa.homonimos.some((n) => n.url === h.url),
+    ),
+  ];
+  const comprobaciones = [
+    ...nativa.comprobaciones,
+    ...lista(web?.comprobaciones).filter((c) => c.red !== "youtube"),
+  ];
+  // Una muestra web verificada del mismo video puede acreditar el formato; la duración sola nunca.
+  for (const c of competidores)
+    for (const v of c.muestras) {
+      const conocida = lista(web?.competidores)
+        .flatMap((p) => (p.url === c.url ? p.muestras : []))
+        .find((x) => x.url === v.url);
+      if (
+        conocida &&
+        ["short", "largo", "reel", "imagen"].includes(conocida.formato)
+      )
+        v.formato = conocida.formato;
+    }
+  const raw = {
+    resumen: nativa.resumen,
+    competidores,
+    homonimos,
+    comprobaciones,
+  };
+  const fuentes = new Set([
+    ...competidores.flatMap((c) => [
+      c.url,
+      c.fuente_identidad,
+      ...c.muestras.map((v) => v.url),
+    ]),
+    ...homonimos.map((h) => h.url),
+    ...comprobaciones.map((c) => c.url),
+  ]);
+  const resultado = normalizarEvidenciaCompetencia(
+    raw,
+    fuentes,
+    nombre,
+    ahora,
+    web?.competidores?.length || web?.comprobaciones?.length
+      ? "youtube_data_api_y_web"
+      : "youtube_data_api",
+  );
+  if (
+    resultado.competidores.some((c) =>
+      c.muestras.some((v) => v.formato === "sin_clasificar"),
+    )
+  )
+    resultado.limitaciones.push(
+      "Las muestras sin formato comprobado se muestran, pero no se usan para calcular destacados.",
+    );
+  return resultado;
+}
 export function competenciaVigente(c, ahora = Date.now()) {
   const edad = ahora - Date.parse(c?.fecha || "");
   return (
@@ -259,9 +519,23 @@ export function proyectarCompetencia(c, nombre) {
     fecha: texto(v.fecha, 40),
     vistas: numero(v.vistas),
     formato: texto(v.formato, 30),
+    ...(c.fuente !== "web_publica"
+      ? {
+          likes: numero(v.likes),
+          comentarios: numero(v.comentarios),
+          duracion: texto(v.duracion, 40),
+        }
+      : {}),
   });
   return {
     ...base,
+    fuente: [
+      "web_publica",
+      "youtube_data_api",
+      "youtube_data_api_y_web",
+    ].includes(c.fuente)
+      ? c.fuente
+      : "web_publica",
     estado: ["pendiente", "sin_datos", "parcial", "listo"].includes(c.estado)
       ? c.estado
       : "sin_datos",

@@ -18,3 +18,15 @@ export function promptCompetencia(c: {
   redes?: string;
 }): string;
 export function proyectarCompetencia(c: unknown, nombre: string): Competencia;
+export function candidatosYouTubeCompetencia(pedido: unknown): string[];
+export function normalizarCompetenciaYouTube(
+  datos: unknown,
+  nombre: string,
+  ahora?: number,
+): Competencia;
+export function combinarCompetenciaYouTube(
+  web: Competencia,
+  nativa: Competencia,
+  nombre: string,
+  ahora?: number,
+): Competencia;
