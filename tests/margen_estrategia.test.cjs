@@ -132,7 +132,14 @@ test('fábrica existente: aplicar el parche conserva configuración y entrega la
     'Buscar canal': { canal_id: anterior.canal_id, presupuesto_short_usd: 1 },
     'Buscar biblia': fila,
   };
-  const $ = nombre => ({ first: () => ({ json: nodos[nombre] }) });
+  const $ = nombre => {
+    if (nombre === 'Canal con competencia') return { isExecuted: false };
+    if (['Lecciones antes del guion', 'Temas recientes del canal'].includes(nombre)) {
+      return { all: () => [] };
+    }
+    assert.ok(Object.hasOwn(nodos, nombre), `Nodo esperado: ${nombre}`);
+    return { first: () => ({ json: nodos[nombre] }) };
+  };
   const salida = new Function('$', '$input', codigo('Nuevo video'))($, { all: () => [] })[0].json;
   assert.equal(salida.pedido.datos.biblia.notas, biblia.notas);
   assert.equal(salida.pedido.datos.biblia.publicacion.tiktok, biblia.publicacion.tiktok);
