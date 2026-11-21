@@ -11,7 +11,10 @@ export async function GET(
     const { id } = await context.params,
       url = new URL(request.url);
     const user = url.searchParams.has("s") ? undefined : await currentUser();
-    rateLimit(`medio:${user?.id ?? id}`, 120);
+    // Las peticiones sin sesión comparten una clave fija: rotar IDs no debe
+    // saltarse el límite ni hacer crecer el mapa con claves elegidas por terceros.
+    if (user) rateLimit(`medio:${user.id}`, 120);
+    else rateLimit("medio:publico", 300);
     const a = leerMedio(id, url, user);
     return new Response(Buffer.from(a.data, "base64"), {
       headers: {

@@ -1,0 +1,25 @@
+import { afterEach, expect, it, vi } from "vitest";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { allowedEmails, users } from "@/db/schema";
+import { loginGoogle } from "@/lib/identidad";
+const claims = vi.hoisted(() => ({ email: "", role: "admin" }));
+vi.mock("@/auth", () => ({ auth: async () => ({ user: claims }) }));
+import { currentUser } from "@/lib/sesion";
+afterEach(() => vi.unstubAllEnvs());
+it("usa el rol persistido y revoca cada petición al suspender o retirar el correo", async () => {
+  const email = "seguridad-sesion@example.test";
+  db().insert(allowedEmails).values({ email, createdAt: Date.now() }).run();
+  const user = loginGoogle(email, "Ensayo de sesión");
+  claims.email = email;
+  expect((await currentUser()).role).toBe("usuario");
+  db().update(users).set({ active: false }).where(eq(users.id, user.id)).run();
+  await expect(currentUser()).rejects.toMatchObject({ status: 401 });
+  db().update(users).set({ active: true }).where(eq(users.id, user.id)).run();
+  db().delete(allowedEmails).where(eq(allowedEmails.email, email)).run();
+  await expect(currentUser()).rejects.toMatchObject({ status: 403 });
+  claims.email = "inexistente@example.test";
+  await expect(currentUser()).rejects.toMatchObject({ status: 401 });
+  claims.email = "";
+  await expect(currentUser()).rejects.toMatchObject({ status: 401 });
+});

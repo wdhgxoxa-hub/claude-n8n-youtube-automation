@@ -468,6 +468,8 @@ export function urlsMedios(p: PiezaMarca, now = Date.now()) {
 export function leerMedio(id: string, url: URL, user?: User, now = Date.now()) {
   const p = db().select().from(piezasMarca).where(eq(piezasMarca.id, id)).get();
   if (!p) throw new ErrorHttp(404, "Medio no disponible.");
+  const m = db().select().from(marcas).where(eq(marcas.id, p.marcaId)).get();
+  if (!m) throw new ErrorHttp(404, "Medio no disponible.");
   const index = Number(url.searchParams.get("i") ?? "0");
   if (!Number.isInteger(index) || index < 0 || index >= p.mediosIds.length)
     throw new ErrorHttp(404, "Medio no disponible.");
@@ -478,6 +480,7 @@ export function leerMedio(id: string, url: URL, user?: User, now = Date.now()) {
       signature = url.searchParams.get("s") ?? "";
     if (
       r !== String(p.revision) ||
+      !Number.isSafeInteger(expires) ||
       expires <= now ||
       expires > now + 86400000 ||
       !/^[a-f0-9]{64}$/.test(signature) ||
@@ -489,15 +492,13 @@ export function leerMedio(id: string, url: URL, user?: User, now = Date.now()) {
       !["enviando", "procesando", "publicada"].includes(p.estado)
     )
       throw new ErrorHttp(404, "Medio no disponible.");
-    const m = db().select().from(marcas).where(eq(marcas.id, p.marcaId)).get();
-    if (!m) throw new ErrorHttp(404, "Medio no disponible.");
     cuentaActiva(m.ownerId);
     const c = db()
       .select()
       .from(cuentasMarca)
       .where(eq(cuentasMarca.id, p.cuentaId))
       .get();
-    if (c?.estado !== "conectada")
+    if (c?.estado !== "conectada" || c.marcaId !== m.id)
       throw new ErrorHttp(404, "Medio no disponible.");
   }
   const a = db()
@@ -505,7 +506,8 @@ export function leerMedio(id: string, url: URL, user?: User, now = Date.now()) {
     .from(attachments)
     .where(eq(attachments.id, p.mediosIds[index]))
     .get();
-  if (!a) throw new ErrorHttp(404, "Medio no disponible.");
+  if (!a || a.ownerId !== m.ownerId)
+    throw new ErrorHttp(404, "Medio no disponible.");
   return a;
 }
 export async function procesarMarcas(
