@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 10:48 (Lima).
+Última actualización: 2026-11-21 11:02 (Lima).
 
 ## Qué es
 
@@ -12,6 +12,7 @@
 - **cooper-total / Operación:** implementados réplica cifrada en PC, restauración antes de promover copia, monitor firmado para Telegram y arranque protegido por mantenimiento. Copia real VPS y recuperación externa verificadas el 21-11 a las 10:17 Lima: snapshot `04cd7f6f`, 25 archivos y dos bases; los cuatro servicios volvieron saludables. Puerta del frente: 284 unitarias, 43 E2E, 147 flujos y 36 pruebas de operación; cero errores/advertencias. Código entregado al orquestador; timers y monitor aún pendientes de instalación coordinada. [Informe](informes/total-operacion.md).
 - **Cooper total, frente aprendizaje:** implementado y probado localmente el ciclo de métricas 24h/72h/7d, evidencia creativa y lecciones por canal con lectura obligatoria del siguiente guion, trazabilidad en Aprendizaje y ensayo seguro sin producción ni llamadas de IA. Puerta completa: 285 unitarias, 44 E2E, 154 regresiones de flujos; cero errores/advertencias. **Pendiente de integración y validación/despliegue remoto por el orquestador.** [Informe](informes/total-aprendizaje.md).
 - **Cooper total / Chat VPS:** túnel privado instalado y probado con el plan real de la PC, caída y recuperación; puerta 284 unitarias/43 E2E/147 flujos sin errores ni advertencias. Overlay del destino privado pendiente del despliegue integrado; sesión Google real pendiente, sin iniciar OAuth. [Informe](informes/total-chat-vps.md).
+- **Imagen final de cooper-total probada (21-11, 11:02 Lima):** fuente exacta `169d0cd`, migración real 8→11/reversa a imagen previa y siete bloques Compose pasan; TLS, login ficticio, runner/firma/SSE, restic y recuperación comprobados. Vigilante seguro: 148 pruebas de flujos pasan. No equivale a despliegue ni OAuth real. [Evidencia](informes/total-despliegue.md).
 
 - **Operación real de cooper-total (21-11, 10:48 Lima):** réplica restic cifrada a PC habilitada, servicio con restauración real y recibo VPS en éxito; monitor activo con aviso Telegram aceptado y reversa de publicación probada 404→401→sonda firmada. Se conservaron los 34 workflows anteriores. Stack habilitado, pendiente prueba coordinada de arranque; aplicación final todavía no desplegada por este frente. [Informe y evidencia](informes/total-despliegue.md).
 - Fases 1–6: web, chat por los planes de Claude/Codex, puente firmado con n8n, avatares/voces, WhatsApp, preparación VPS y modo noticia. Proveedores con gasto y modo noticia requieren su activación correspondiente.
