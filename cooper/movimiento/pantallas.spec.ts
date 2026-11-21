@@ -283,6 +283,27 @@ for (const width of [1440, 390])
         await current.evaluate(() => window.scrollTo(0, 0));
         const axe = await new AxeBuilder({ page: current }).analyze();
         expect(axe.violations).toEqual([]);
+        const controles = await current
+          .locator("button, a[href], input, select, textarea, summary")
+          .evaluateAll((elements) =>
+            elements
+              .filter((element) => element.getClientRects().length)
+              .map((element) => ({
+                tipo: element.tagName.toLowerCase(),
+                nombre:
+                  element.getAttribute("aria-label") ||
+                  (element instanceof HTMLInputElement ||
+                  element instanceof HTMLSelectElement ||
+                  element instanceof HTMLTextAreaElement
+                    ? [...(element.labels || [])]
+                        .map((l) => l.textContent)
+                        .join(" ")
+                    : element.textContent
+                  )?.trim(),
+                destino: element.getAttribute("href"),
+                deshabilitado: element.matches(":disabled"),
+              })),
+          );
         await current.screenshot({
           path: `${dir}/${name}.png`,
           fullPage: true,
@@ -300,6 +321,7 @@ for (const width of [1440, 390])
           ...measure,
           video: `${name}.webm`,
           interacciones: interactions,
+          controles,
         });
         writeFileSync(
           `${dir}/pantallas-${width}-${theme}.json`,

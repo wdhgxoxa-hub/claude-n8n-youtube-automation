@@ -180,3 +180,63 @@ test("audio ficticio repetido, descarga privada y fábrica temporalmente caída"
     page.getByRole("heading", { name: "Recuperación", exact: true }),
   ).toBeVisible();
 });
+
+test("aprendizaje: red lenta, doble clic, caída y reintento conservan el ajuste", async ({
+  page,
+}) => {
+  const inicial = await (await page.request.get("/api/admin/fabrica")).json();
+  const activo = inicial.valores.allowAnalytics === true;
+  let intentos = 0;
+  await page.route("**/api/operacion", async (route) => {
+    intentos++;
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    await route.fulfill({
+      status: 503,
+      json: { error: "Caída de ensayo Sentinel" },
+    });
+  });
+  await page.goto("/aprendizaje");
+  const control = page.getByRole("switch", {
+    name: "Medición y aprendizaje automático",
+  });
+  await expect(control).toBeEnabled();
+  await expect(control).toBeChecked({ checked: activo });
+  await control.evaluate((element: HTMLInputElement) => {
+    element.click();
+    element.click();
+  });
+  await expect(control).toBeDisabled();
+  await expect(page.getByRole("alert")).toContainText(
+    "Caída de ensayo Sentinel",
+  );
+  await expect(control).toBeEnabled();
+  await expect(control).toBeChecked({ checked: activo });
+  expect(intentos).toBe(1);
+  expect(
+    (await (await page.request.get("/api/admin/fabrica")).json()).valores
+      .allowAnalytics,
+  ).toBe(activo);
+  await page.unroute("**/api/operacion");
+  try {
+    await control.click();
+    await expect(control).toBeEnabled();
+    await expect(control).toBeChecked({ checked: !activo });
+    await page.reload();
+    await expect(control).toBeEnabled();
+    await expect(control).toBeChecked({ checked: !activo });
+  } finally {
+    const actual = await (await page.request.get("/api/admin/fabrica")).json();
+    expect(
+      (
+        await page.request.post("/api/operacion", {
+          data: {
+            accion: "ajustes",
+            revision: actual.revision,
+            valores: { allowAnalytics: activo },
+            confirmado: true,
+          },
+        })
+      ).ok(),
+    ).toBe(true);
+  }
+});

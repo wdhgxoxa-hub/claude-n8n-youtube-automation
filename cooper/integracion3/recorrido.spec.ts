@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const dir = `.cache/videos-integracion3/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
+const dir = `${process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-integracion3"}/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
 for (const width of [1440, 390]) {
   test(`recorrido completo continuo de ${width} px`, async ({
     browser,
@@ -89,9 +89,7 @@ for (const width of [1440, 390]) {
         }
         await current.getByRole("button", { name: "Empezar a crear" }).click();
         if (width === 390) {
-          await current
-            .getByRole("tab", { name: /^Fábrica/ })
-            .click();
+          await current.getByRole("tab", { name: /^Fábrica/ }).click();
           await current.waitForTimeout(1000);
         }
       }
