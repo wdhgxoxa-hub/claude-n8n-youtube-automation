@@ -1,0 +1,12 @@
+{
+  "fecha_utc": "2026-11-21T22:53:35.982971+00:00",
+  "resultado": "STAGING_PASS",
+  "commit_fuente": "e96eacf7f5f47d229e80268686f1253f4992ada5",
+  "ruta": "/home/operador/total-integrador-20261121/marcas-config-e96eacf/configurar-marcas-worker.py",
+  "sha256": "e09f236662780c7b9d61951af4699f7ec5bd7dd180f72d5500786d020b2bffb0",
+  "sintaxis": "PASS",
+  "helper_bundle_intacto": true,
+  "configuracion_ejecutada": false,
+  "servicios_modificados": false,
+  "entorno_leido": false
+}

@@ -1,0 +1,29 @@
+{
+  "fecha_utc": "2026-11-21T23:27:59.734827+00:00",
+  "origen": "https://cooper.cooperestudio.com",
+  "rutas": [
+    {
+      "ruta": "/api/salud",
+      "status": 200
+    },
+    {
+      "ruta": "/entrar",
+      "status": 200
+    },
+    {
+      "ruta": "/api/estado",
+      "status": 401
+    },
+    {
+      "ruta": "/api/operacion",
+      "status": 401
+    },
+    {
+      "ruta": "/api/auth/providers",
+      "status": 200,
+      "google_configurado": true
+    }
+  ],
+  "oauth_iniciado": false,
+  "resultado": "PASS"
+}

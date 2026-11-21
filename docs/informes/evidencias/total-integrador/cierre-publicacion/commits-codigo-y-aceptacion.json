@@ -1,0 +1,35 @@
+{
+  "base": "deb1f2a566d06d7f36fd540e6756863dd136cb89",
+  "corte": "bd9ac879b7c7067698be55fbae46cb441853fb80",
+  "commits": [
+    {
+      "commit": "e96eacf7f5f47d229e80268686f1253f4992ada5",
+      "asunto": "Preparar la activación simulada de Marcas al instalar"
+    },
+    {
+      "commit": "af2774cdf2bfe7072142d7a2e1ba9ebd512948ff",
+      "asunto": "Documentar preparación simulada y equivalencia del artefacto publicado"
+    },
+    {
+      "commit": "6f8825c9672121d596fb7ad4505c87e6fd5b44c6",
+      "asunto": "Preparar horario Radar con cambio mínimo y reversa certificada"
+    },
+    {
+      "commit": "fc0e98a3bdc00b4b8665a7252556ec58ed54ada8",
+      "asunto": "Acreditar dos rondas completas y revisión visual de Cooper"
+    },
+    {
+      "commit": "1c3e051e3a5a14df992db43497eaff64f098111c",
+      "asunto": "Prueba y acota activación reversible de Marcas simuladas"
+    },
+    {
+      "commit": "96ea62020dbaea3e974a1de47735a16264f2e57f",
+      "asunto": "Documenta reloj real y reversa de Marcas simuladas"
+    },
+    {
+      "commit": "bd9ac879b7c7067698be55fbae46cb441853fb80",
+      "asunto": "Registrar publicación y pruebas combinadas del cierre"
+    }
+  ],
+  "limite": "Índice hasta publicación de código; los recibos del despliegue y cierre documental se incorporan después."
+}

@@ -1,0 +1,105 @@
+{
+  "fecha_utc": "2026-11-21T22:51:31.053192+00:00",
+  "solo_lectura": true,
+  "servicios": [
+    {
+      "id": "deb5170847db9aea74754b3aaf9e47e8a02d5084c9651e6b5d917b4e3207a1b2",
+      "image_id": "sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e",
+      "image": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T21:26:11.483092268Z",
+      "memory": "1073741824",
+      "memory_swap": "2147483648",
+      "project": "cooper",
+      "service": "cooper"
+    },
+    {
+      "id": "15c9914903da6a4f2eb6f45245a834b945c55b0ee0b4740b12ef146ead2f68cb",
+      "image_id": "sha256:56a3f0d56c2888b53ca7d89de4aa3de702888f33667c96a1f1d7118548f979e9",
+      "image": "ghcr.io/n8n-io/n8n:2.47.4",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T20:02:38.988786954Z",
+      "memory": "2147483648",
+      "memory_swap": "4294967296",
+      "project": "cooper",
+      "service": "n8n"
+    },
+    {
+      "id": "faba024a6efab0c800ed1adce976bde46ae605a524e8589b465a5cb892116dfb",
+      "image_id": "sha256:e2aed3c5f1e8e93033584aa835094c919bb9b530f007f5de07f4c94ce90e82b1",
+      "image": "ghcr.io/n8n-io/runners:2.47.4",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T20:03:16.142905245Z",
+      "memory": "1073741824",
+      "memory_swap": "2147483648",
+      "project": "cooper",
+      "service": "runner"
+    },
+    {
+      "id": "87ed47b861024c1f386b441464a6ee2b82d15b08eb844ffb7c9eeb834c63c92d",
+      "image_id": "sha256:834468128c7696cec0ceea6172f7d692daf645ae51983ca76e39da54a97c570d",
+      "image": "docker.io/library/caddy:2.11.2-alpine",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T20:03:16.774483527Z",
+      "memory": "268435456",
+      "memory_swap": "536870912",
+      "project": "cooper",
+      "service": "caddy"
+    },
+    {
+      "id": "d75bffb419277e87f5afbbd90f0cc5f56f9f2353f79a83d37697285de4a74de8",
+      "image_id": "sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e",
+      "image": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T20:02:46.176778763Z",
+      "memory": "67108864",
+      "memory_swap": "134217728",
+      "project": "cooper",
+      "service": "chat-cooper"
+    },
+    {
+      "id": "6209002e4f5ea4d895e7e7e8aefe2a1486e1232388d0e751dbce95dfdbf8ee0e",
+      "image_id": "sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e",
+      "image": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T20:03:15.550217273Z",
+      "memory": "67108864",
+      "memory_swap": "134217728",
+      "project": "cooper",
+      "service": "chat-n8n"
+    },
+    {
+      "id": "f50d0151fb0797f9f304c0d3bee6033efc3a5b49478ea7ce68abf5a5c6a09b8e",
+      "image_id": "sha256:84b577955f6ba209e406916a5db61dbc7ea0088b88171380f401f094de59ff6e",
+      "image": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "state": "running",
+      "health": "healthy",
+      "started_at": "2026-11-21T20:03:22.745968301Z",
+      "memory": "67108864",
+      "memory_swap": "134217728",
+      "project": "cooper",
+      "service": "chat-runner"
+    }
+  ],
+  "imagen_precargada": {
+    "ref": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+    "id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508"
+  },
+  "release_imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+  "mantenimiento": false,
+  "marcas_configurado": false,
+  "env_solo_metadata": {
+    "regular": true,
+    "modo": "0o600",
+    "uid": 0,
+    "inode": 262178,
+    "mtime_ns": 1795296370375130820
+  },
+  "secretos_leidos": false
+}

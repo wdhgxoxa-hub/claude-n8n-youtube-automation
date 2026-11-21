@@ -1,0 +1,40 @@
+{
+  "fecha_utc": "2026-11-21T22:52:37.299612+00:00",
+  "boot_id": "09888ee0-8210-490d-9df5-c3895ef2f2ef",
+  "unidades": {
+    "docker.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "cooper-stack.service": {
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "exited",
+      "UnitFileState": "enabled"
+    },
+    "cooper-monitor.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "cooper-backup.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  },
+  "archivos_publicos_sha256": {
+    "operar.py": "5331274f0b37214e9c486d2d68b291c20580ad41e02523b99967798bdc59d56b",
+    "monitor.py": "83c9a61efb1e4954bfd7413a531cf4778d0697fbdf2e4c3ccd3c5c34895cdc06",
+    "registrar-replica.py": "e09e38d4a2f268f12be8eb99f12e23e10848554d6f699bb52111001de16f2e03",
+    "compose.chat.yaml": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164"
+  },
+  "solo_lectura": true,
+  "secretos_leidos": false
+}

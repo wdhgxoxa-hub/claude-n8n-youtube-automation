@@ -1,0 +1,96 @@
+{
+  "estado": "PASS",
+  "salud": "PASS",
+  "datos_preservados": "PASS",
+  "snapshot_previo": "3eb172db32c477bdbed7d0ca1de004037c6daabb7911370fcec93ff9d4514210",
+  "migraciones_antes": 342,
+  "migraciones_despues": 342,
+  "identidad_cooper": {
+    "config_sha256": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129",
+    "manifiesto": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+    "etiqueta": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+    "artefacto_sha256": "9ea269e6746e197c5626ae04fa6835bbcf9eb18274d7d0192225582e8e493d20",
+    "runtime_id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508"
+  },
+  "identidades_nuevas": {
+    "n8n": {
+      "runtime_id": "sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "referencia": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "id_local": "sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "identidad_exacta": true
+    },
+    "runner": {
+      "runtime_id": "sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "referencia": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "id_local": "sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "identidad_exacta": true
+    },
+    "caddy": {
+      "runtime_id": "sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "referencia": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "id_local": "sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "identidad_exacta": true
+    }
+  },
+  "entorno_copiado": false,
+  "fecha_utc": "2026-11-21T23:28:10.187093+00:00",
+  "mantenimiento": false,
+  "servicios": {
+    "cooper": {
+      "id": "119c2ee394a37452b19afb731263165f194b9f0db1de3ff17d156d509a97aa89",
+      "image_id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+      "image": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "health": "healthy",
+      "memory": "1073741824",
+      "memory_swap": "2147483648"
+    },
+    "n8n": {
+      "id": "9809f9f484c21de3de1bc85e5aba622e44529edca869f3666e790f1b8383da78",
+      "image_id": "sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "image": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+      "health": "healthy",
+      "memory": "2147483648",
+      "memory_swap": "4294967296"
+    },
+    "runner": {
+      "id": "68a2af0e685d9b500d80e26b6920ba14ac53df038a04111996c8b3f7fafd9b16",
+      "image_id": "sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "image": "ghcr.io/n8n-io/runners:2.47.6@sha256:2369901c767fc53631b0b440c453b983feb9a10152372ab41a564977b7780c94",
+      "health": "healthy",
+      "memory": "1073741824",
+      "memory_swap": "2147483648"
+    },
+    "caddy": {
+      "id": "e1ae3d239af1227c6b698378c6b00886978bccf4f2325cbe66431edb60a4786f",
+      "image_id": "sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "image": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+      "health": "healthy",
+      "memory": "268435456",
+      "memory_swap": "536870912"
+    },
+    "chat-cooper": {
+      "id": "f9b833270c92a7d1673379cd9425414c4cd31af05ab7835224cbcfb1922c0885",
+      "image_id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+      "image": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "health": "healthy",
+      "memory": "67108864",
+      "memory_swap": "134217728"
+    },
+    "chat-n8n": {
+      "id": "15abe6825966a1d2c53aecf3a2ccf18db465f1a8617e904c8bd5a85886491c11",
+      "image_id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+      "image": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "health": "healthy",
+      "memory": "67108864",
+      "memory_swap": "134217728"
+    },
+    "chat-runner": {
+      "id": "f20400e70b3e9cca3c9b1a0e7faed30219f7fade96b53c5ed537bab6f400ee8f",
+      "image_id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+      "image": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "health": "healthy",
+      "memory": "67108864",
+      "memory_swap": "134217728"
+    }
+  }
+}
