@@ -557,7 +557,6 @@ async function leerFabrica(
       stage: videos.stage,
       updatedAt: videos.updatedAt,
       productionState: videos.productionState,
-      scheduledAt: videos.scheduledAt,
     })
     .from(videos)
     .all();
@@ -597,11 +596,6 @@ async function leerFabrica(
   );
   const pausados = new Set(op.fallos.map((v) => v.videoId));
   const aprobaciones = new Set(op.decisiones.map((v) => v.videoId));
-  const programados = new Set(
-    op.publicaciones
-      .filter((p) => p.estado === "programado")
-      .map((p) => p.videoId),
-  );
   const filas =
     esRemoto && datos.value
       ? datos.value.videos.map((v) => ({
@@ -610,7 +604,6 @@ async function leerFabrica(
           stage: v.stage,
           updatedAt: v.actualizado_en,
           productionState: cancelados.has(v.id) ? "cancelada" : "activa",
-          scheduledAt: "",
         }))
       : local;
   base.videos = filas.map((v): VideoSalud => {
@@ -630,9 +623,7 @@ async function leerFabrica(
             ? "publicado"
             : [3, 9].includes(v.stage) || aprobaciones.has(v.id)
               ? "aprobacion"
-              : v.stage === 10 ||
-                  Boolean(v.scheduledAt) ||
-                  programados.has(v.id)
+              : v.stage === 10
                 ? "programado"
                 : edad === null
                   ? "desconocido"

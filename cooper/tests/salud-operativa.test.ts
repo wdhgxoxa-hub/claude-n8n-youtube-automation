@@ -494,6 +494,8 @@ describe("actividad y costes de fábrica", () => {
           script: "",
           stage,
           productionState,
+          // Fijar una fecha antes de terminar la producción no justifica la falta de avance.
+          scheduledAt: fecha(86400000),
           createdAt: ahora - 7200000,
           updatedAt: ahora - 7200000,
         })
