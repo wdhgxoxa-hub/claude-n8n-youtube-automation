@@ -592,8 +592,8 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
 
 test("modo noticia por canal se detiene sin verificación real", async ({
   page,
-  request,
 }) => {
+  const request = page.request;
   await login(request);
   const created = await request.post("/api/orden", {
     data: {
@@ -606,7 +606,7 @@ test("modo noticia por canal se detiene sin verificación real", async ({
   const { id } = await created.json();
   await page.goto("/canales");
   const toggle = page.getByRole("button", {
-    name: "Modo noticia de Observatorio del día",
+    name: /Modo noticia: .* de Observatorio del día/,
   });
   await expect(toggle).toHaveAttribute("aria-pressed", "false");
   await toggle.click();
@@ -642,9 +642,11 @@ test("modo noticia por canal se detiene sin verificación real", async ({
   ).toMatchObject({ newsMode: true, stage: 2, productionState: "pausada" });
   await page.goto("/canales");
   await page
-    .getByRole("button", { name: "Modo noticia de Observatorio del día" })
+    .getByRole("button", { name: /Modo noticia: .* de Observatorio del día/ })
     .click();
   await expect(
-    page.getByRole("button", { name: "Modo noticia de Observatorio del día" }),
+    page.getByRole("button", {
+      name: /Modo noticia: .* de Observatorio del día/,
+    }),
   ).toHaveAttribute("aria-pressed", "false");
 });

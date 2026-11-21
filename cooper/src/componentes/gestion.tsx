@@ -116,7 +116,7 @@ export function Canales() {
                 <button
                   className="button secondary"
                   aria-pressed={c.newsMode}
-                  aria-label={`Modo noticia de ${c.name}`}
+                  aria-label={`Modo noticia: ${c.newsMode ? "activado" : "desactivado"} de ${c.name}`}
                   disabled={busy}
                   onClick={() => void cambiarNoticia(c.id, !c.newsMode)}
                 >
