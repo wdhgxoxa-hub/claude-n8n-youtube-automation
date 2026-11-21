@@ -1019,6 +1019,8 @@ try {
 } catch (error) {
   evidence.resultado = "FAIL";
   evidence.error = error.message;
+  evidence.causa = error.cause?.code || null;
+  evidence.pila = error.stack;
   console.error(error.message);
   process.exitCode = 1;
 } finally {

@@ -113,6 +113,15 @@ export function relayMediosLocales(container, atender) {
     stdio: ["pipe", "pipe", "pipe"],
   });
   const state = { child, solicitudes: 0, errores: 0 };
+  // Una respuesta puede terminar después de cerrar el ensayo; no escribir
+  // sobre el pipe cerrado ni dejar EPIPE sin manejador durante cleanup.
+  let cerrado = false;
+  child.once("exit", () => {
+    cerrado = true;
+  });
+  child.stdin.on("error", () => {
+    cerrado = true;
+  });
   let listo = false;
   state.ready = new Promise((resolveReady, reject) => {
     const timer = setTimeout(
@@ -143,10 +152,11 @@ export function relayMediosLocales(container, atender) {
         const response = JSON.stringify({ id: request.id, status: 200, body });
         if (Buffer.byteLength(response) > LIMITE)
           throw Error("Respuesta excedida");
-        if (!child.stdin.destroyed) child.stdin.write(response + "\n");
+        if (!cerrado && !child.stdin.destroyed)
+          child.stdin.write(response + "\n");
       } catch {
         state.errores++;
-        if (request?.id && !child.stdin.destroyed)
+        if (request?.id && !cerrado && !child.stdin.destroyed)
           child.stdin.write(
             JSON.stringify({
               id: request.id,
