@@ -49,7 +49,9 @@ def preflight(cooper, n8n):
     return counts
 
 
-def configure(environment, state, cooper, n8n):
+def configure(environment, state, cooper, n8n, habilitar_simuladas=False):
+    require(type(habilitar_simuladas) is bool, 'La habilitación simulada debe ser explícita')
+    interruptor = '1' if habilitar_simuladas else '0'
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
     marker = state / 'marcas-worker-configurado.json'
     lock = os.open(state / 'operacion.lock', os.O_WRONLY | os.O_APPEND | os.O_CREAT | os.O_NOFOLLOW, 0o600)
@@ -62,16 +64,17 @@ def configure(environment, state, cooper, n8n):
             previous = json.loads(marker.read_text())
             require(previous.get('estado') == 'configurado', 'Configuración interrumpida: revisar marcador, sin regenerar')
             require(previous.get('archivo') == str(environment) and previous.get('identidad') == identity and metadata.st_size >= previous.get('bytes_despues', 0), 'El entorno cambió de archivo o fue truncado: revisar sin regenerar')
-            return {'estado': 'YA_CONFIGURADO', 'variables': VARIABLES, 'entorno_leido': False}
+            require(previous.get('interruptor', '0') == interruptor, 'La opción difiere de la primera instalación; no modificar ni regenerar')
+            return {'estado': 'YA_CONFIGURADO', 'variables': VARIABLES, 'entorno_leido': False, 'proveedor': 'simulada', 'interruptor': interruptor}
         counts = preflight(cooper, n8n)
-        receipt = {'version': 1, 'estado': 'preparado', 'archivo': str(environment), 'identidad': identity, 'bytes_antes': metadata.st_size, 'variables': VARIABLES}
+        receipt = {'version': 2, 'estado': 'preparado', 'archivo': str(environment), 'identidad': identity, 'bytes_antes': metadata.st_size, 'variables': VARIABLES, 'proveedor': 'simulada', 'interruptor': interruptor}
         # Un corte entre anexo y recibo deja "preparado": la siguiente ejecución no regenera.
         write_marker(marker, receipt)
         fd = os.open(environment, os.O_WRONLY | os.O_APPEND | os.O_NOFOLLOW)
         try:
             current = os.fstat(fd)
             require([current.st_dev, current.st_ino] == identity and current.st_size == metadata.st_size, 'El entorno cambió durante la preparación')
-            payload = ('\nCOOPER_MARCAS_WORKER_SECRET=' + secrets.token_hex(32) + '\nCOOPER_MARCAS=simulada\nCOOPER_MARCAS_HABILITAR=0\n').encode()
+            payload = ('\nCOOPER_MARCAS_WORKER_SECRET=' + secrets.token_hex(32) + '\nCOOPER_MARCAS=simulada\nCOOPER_MARCAS_HABILITAR=' + interruptor + '\n').encode()
             with os.fdopen(fd, 'ab', closefd=False) as output:
                 output.write(payload)
                 output.flush()
@@ -80,7 +83,7 @@ def configure(environment, state, cooper, n8n):
         finally:
             os.close(fd)
         write_marker(marker, receipt)
-        return {'estado': 'CONFIGURADO', 'variables': VARIABLES, 'workers_publicados': 0, 'conteos_previos': counts, 'entorno_leido': False, 'proveedor': 'simulada', 'interruptor': '0'}
+        return {'estado': 'CONFIGURADO', 'variables': VARIABLES, 'workers_publicados': 0, 'conteos_previos': counts, 'entorno_leido': False, 'proveedor': 'simulada', 'interruptor': interruptor}
     finally:
         os.close(lock)
 
@@ -92,9 +95,10 @@ if __name__ == '__main__':
     parser.add_argument('--estado', type=Path, default=Path('/var/lib/cooper-operacion'))
     parser.add_argument('--cooper-db', type=Path, default=Path('/var/lib/cooper/cooper/cooper.sqlite'))
     parser.add_argument('--n8n-db', type=Path, default=Path('/var/lib/cooper/n8n/database.sqlite'))
+    parser.add_argument('--habilitar-simuladas', action='store_true', help='Solo primera instalación: preparar interruptor 1 con proveedor siempre simulado; no publica workflows')
     args = parser.parse_args()
     try:
-        print(json.dumps(configure(args.entorno, args.estado, args.cooper_db, args.n8n_db)))
+        print(json.dumps(configure(args.entorno, args.estado, args.cooper_db, args.n8n_db, args.habilitar_simuladas)))
     except (OSError, ValueError, RuntimeError, sqlite3.Error):
         print('Configuración detenida: comprobar condiciones y marcador. No se leyó ni mostró el entorno.', file=sys.stderr)
         sys.exit(1)

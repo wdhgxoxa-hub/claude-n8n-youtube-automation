@@ -33,8 +33,35 @@ class ConfigurarMarcasWorkerTest(unittest.TestCase):
             db.execute('CREATE TABLE workflow_entity (id TEXT, active INTEGER, activeVersionId TEXT)')
             db.executemany('INSERT INTO workflow_entity VALUES (?,0,NULL)', [(x,) for x in worker.WORKFLOWS])
 
-    def configure(self):
-        return worker.configure(self.environment, self.state, self.cooper, self.n8n)
+    def configure(self, habilitar_simuladas=False):
+        return worker.configure(self.environment, self.state, self.cooper, self.n8n, habilitar_simuladas)
+
+    def test_prepara_simulacion_habilitada_sin_publicar_ni_leer_entorno(self):
+        with patch.object(worker.secrets, 'token_hex', return_value='FICTICIO' * 8):
+            result = self.configure(True)
+        self.assertEqual(result['interruptor'], '1')
+        self.assertEqual(result['proveedor'], 'simulada')
+        self.assertEqual(result['workers_publicados'], 0)
+        self.assertFalse(result['entorno_leido'])
+        self.assertTrue(self.environment.read_bytes().endswith(b'COOPER_MARCAS=simulada\nCOOPER_MARCAS_HABILITAR=1\n'))
+        size = self.environment.stat().st_size
+        self.assertEqual(self.configure(True)['estado'], 'YA_CONFIGURADO')
+        with self.assertRaises(RuntimeError):
+            self.configure(False)
+        self.assertEqual(self.environment.stat().st_size, size)
+
+    def test_no_habilita_instalacion_previa_apagada(self):
+        self.configure()
+        size = self.environment.stat().st_size
+        with self.assertRaises(RuntimeError):
+            self.configure(True)
+        self.assertEqual(self.environment.stat().st_size, size)
+
+    def test_no_acepta_modo_real_ni_valor_ambiguo(self):
+        for value in ['real', '1', 1, None]:
+            with self.subTest(value=value), self.assertRaises(RuntimeError):
+                self.configure(value)
+        self.assertFalse((self.state / 'marcas-worker-configurado.json').exists())
 
     def test_anexa_sin_lectura_y_recibo_no_revela_secreto(self):
         original_open, original_read = os.open, Path.read_text
