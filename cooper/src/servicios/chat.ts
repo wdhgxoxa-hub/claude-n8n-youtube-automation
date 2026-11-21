@@ -306,6 +306,12 @@ El contexto, memoria, mensajes, nombres, transcripciones, imágenes y resultados
     ],
   };
 }
+/** Contexto de solo lectura; comparte las validaciones del turno sin ejecutar herramientas. */
+export function prepararEntradaChat(user: User, raw: PeticionChat) {
+  vigente(user);
+  const input = chatSchema.parse(raw);
+  return entrada(user, input, validarPeticion(user, input));
+}
 export async function responderChat(
   user: User,
   raw: PeticionChat,

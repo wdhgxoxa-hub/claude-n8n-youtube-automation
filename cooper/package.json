@@ -16,7 +16,8 @@
     "preparar:pruebas": "node scripts/preparar-pruebas.mjs",
     "preflight": "node scripts/preflight.mjs",
     "ci:local": "node scripts/puerta.mjs",
-    "ci:limpia": "node scripts/ci-limpia.mjs"
+    "ci:limpia": "node scripts/ci-limpia.mjs",
+    "evaluar:chat": "tsx scripts/evaluar-chat.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",
