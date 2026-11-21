@@ -28,6 +28,10 @@ class EsquemaProductivo(unittest.TestCase):
  def test_tipo_incorrecto_no_se_corrige_silenciosamente(self):
   self.actual['tablas'][0]['columnas'][next(iter(self.actual['tablas'][0]['columnas']))]='number'
   self.assertFalse(mod.comparar(self.actual,self.contrato)['ok'])
+ def test_referencia_a_tabla_ausente_falla_aun_sin_filtros(self):
+  self.actual['referencias']=[{'workflow':'Lectura','nodo':'Todos','tabla_id':'ausente','filtros':[],'campos_mapeados':[]}]
+  r=mod.comparar(self.actual,self.contrato)
+  self.assertFalse(r['ok']);self.assertFalse(r['referencias_incompatibles'][0]['tabla_presente'])
  def test_selector_confirmar_revisa_ambas_columnas(self):
   self.actual['referencias']=[{'workflow':'Confirmar','nodo':'Recientes','tabla_id':'fab_publicaciones','filtros':["={{ $('Consulta de Cooper').isExecuted ? 'video_id' : 'createdAt' }}"],'campos_mapeados':[]}]
   self.assertTrue(mod.comparar(self.actual,self.contrato)['ok'])

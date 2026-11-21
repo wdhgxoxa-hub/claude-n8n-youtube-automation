@@ -28,6 +28,10 @@ def comparar(actual, contrato):
                               'actual': real[campo] if real[campo] in TIPOS else 'no_reconocido'})
     for ref in actual.get('referencias', []):
         tabla = por_id.get(ref.get('tabla_id'))
+        if tabla is None:
+            referencias.append({'workflow': ref['workflow'], 'nodo': ref['nodo'],
+                                'columna': None, 'tabla_presente': False})
+            continue
         for campo in ref.get('filtros', []) + ref.get('campos_mapeados', []):
             campos = [campo]
             if isinstance(campo, str) and campo.startswith('={{'):
