@@ -22,13 +22,13 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
     });
   });
   await page.getByLabel("Mensaje para Cooper").fill("Consulta de estado");
-  await page.getByLabel("Enviar mensaje").click();
+  await page.getByRole("button", { name: "Enviar mensaje" }).click();
   await expect(page.getByLabel("Mensaje para Cooper")).toBeEnabled();
   await expect(
-    page.locator(".chat-heading svg[data-cooper-state]"),
+    page.getByRole("img", { name: "Cooper hablando", exact: true }),
   ).toHaveAttribute("data-cooper-state", "hablando");
   await expect(
-    page.locator(".chat-heading svg[data-cooper-state]"),
+    page.getByRole("img", { name: "Cooper reposo", exact: true }),
   ).toHaveAttribute("data-cooper-state", "reposo", { timeout: 8000 });
   await page.unroute("**/api/chat");
   // Fetch que espera a la cancelación, sin enviar una petición al servidor.
@@ -47,7 +47,7 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByLabel("Mensaje para Cooper").fill("Otra consulta de estado");
-  await page.getByLabel("Enviar mensaje").click();
+  await page.getByRole("button", { name: "Enviar mensaje" }).click();
   await expect(
     page.getByRole("button", { name: "Cancelar espera" }),
   ).toBeVisible();
@@ -60,7 +60,7 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
       "Cancelaste la espera. Revisa las tarjetas pendientes antes de repetir el pedido.",
     ),
   ).toBeVisible();
-  await expect(page.getByLabel("Enviar mensaje")).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Enviar mensaje" })).toBeEnabled();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
