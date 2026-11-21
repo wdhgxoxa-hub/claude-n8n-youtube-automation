@@ -89,6 +89,9 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   ).toBeVisible();
   await page.goto("/aprendizaje");
   await expect(
+    page.getByRole("switch", { name: "Medición y aprendizaje automático" }),
+  ).toHaveCount(0);
+  await expect(
     page.getByRole("heading", { name: "Abrir con una pregunta verificable" }),
   ).toHaveCount(1);
   await expect(page.getByLabel("Evidencia de la lección")).toContainText("24h");
@@ -146,5 +149,9 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
     .getByRole("combobox", { name: "Dueño", exact: true })
     .selectOption(ajeno.ambitos[0].ownerId);
   await expect(page.locator(".publication:visible")).toHaveCount(4);
+  await page.goto("/aprendizaje");
+  await expect(
+    page.getByRole("switch", { name: "Medición y aprendizaje automático" }),
+  ).toBeEnabled();
   expect(errores).toEqual([]);
 });
