@@ -1920,6 +1920,7 @@ test('marcas: lote inactivo, firma exacta y sin salida cuando está apagado', ()
 const APRENDIZAJE = fs.readFileSync(path.join(__dirname,'../tools/cooper/aprendizaje.js'),'utf8');
 const relojAprendizaje = fecha => class extends Date { constructor(...args) { super(...(args.length?args:[fecha])); } static now() { return Date.parse(fecha); } };
 test('aprendizaje total: hitos reales, reintento de datos tardíos y ningún punto antes de 24 h',()=>{
+ assert.equal(APR.name,'M7 · Aprendizaje (24 h, 72 h y 7 días)');
  const inicio='2026-11-01T00:00:00.000Z';
  for(const [horas,ventana] of [[23,null],[24,'24h'],[72,'72h'],[168,'7d'],[192,'7d']]) {
   const clock=relojAprendizaje(new Date(Date.parse(inicio)+horas*3600000).toISOString());
