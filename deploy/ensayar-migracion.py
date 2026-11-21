@@ -41,12 +41,13 @@ def boot(image, data, engine):
     # El ensayo nunca publica puertos ni tiene acceso a redes/proveedores externos.
     name = 'cooper-migracion-' + uuid.uuid4().hex[:12]
     command([engine, 'image', 'inspect', image, '--format', '{{.Id}}'])
-    args = [engine, 'run', '-d', '--name', name, '--network', 'none', '--read-only',
+    args = [engine, 'run', '-d', '--name', name, '--network', 'none', '--cpus', '0.5', '--read-only',
             '--userns', 'keep-id', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
             '--tmpfs', '/tmp:rw,size=128m,mode=1777', '--tmpfs', '/app/.next/cache:rw,size=64m,mode=1777',
             '-v', str(data) + ':/data:rw', '-e', 'COOPER_DATABASE_PATH=/data/cooper.sqlite',
             '-e', 'COOPER_FABRICA=simulada', '-e', 'COOPER_CHAT=simulada',
-            '-e', 'COOPER_MENSAJERIA_PAUSA=1', '-e', 'COOPER_CHAT_API_RESPALDO=0',
+            '-e', 'COOPER_MENSAJERIA_PAUSA=1', '-e', 'COOPER_BIBLIOTECA_PAUSA=1',
+            '-e', 'COOPER_MARCAS_HABILITAR=0', '-e', 'COOPER_CHAT_API_RESPALDO=0',
             '-e', 'AUTH_SECRET=' + secrets.token_hex(32), '-e', 'AUTH_TRUST_HOST=true', image]
     try:
         command(args)
