@@ -1,6 +1,6 @@
 # Cooper ↔ n8n · contrato y puesta en servicio de fase 2
 
-Implementación integrada en `cooper-integracion`; **no desplegada ni probada contra n8n vivo**. Los JSON se generan exclusivamente con `python3 tools/generar_flujos_v2.py`. Los identificadores de nodos existentes se conservan; dos ejecuciones consecutivas no cambian los archivos.
+Implementación integrada en `cooper-integracion`; **puente activo contra n8n vivo desde `cooper-ensayo`**, con validación de lecturas y del receptor firmado, sin producir videos. [Informe operativo, IDs vivos, límites y reversa](informes/cooper-vivo.md). Los JSON se generan exclusivamente con `python3 tools/generar_flujos_v2.py`. Los identificadores de nodos existentes se conservan; dos ejecuciones consecutivas no cambian los archivos. Para actualizar el vivo se debe reutilizar el mapa de IDs del informe: los cinco subflujos añadidos recibieron IDs de REST distintos de los identificadores declarativos del generador.
 
 El puente se ensaya ahora con n8n **2.47.4 aislado**, Data Tables y workflows publicados por REST: `cd cooper && npm run test:ensayo`. Preparación, alcance, evidencias y paso a vivo para Claude: [cooper-ensayo.md](informes/cooper-ensayo.md). No intervienen credenciales reales ni proveedores externos.
 

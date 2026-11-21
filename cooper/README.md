@@ -1,6 +1,6 @@
 # Cooper — fases 1, 2 y 3
 
-Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md); no se ha desplegado.
+Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en español de `../docs/cooper-especificacion.md`. La integración de `cooper-revision`, `cooper-fase2` y `cooper-fase3` está en `cooper-integracion`. El puente está documentado en [cooper-puente-n8n.md](../docs/cooper-puente-n8n.md). Desde `cooper-ensayo` se activó contra n8n vivo el 20 de noviembre de 2026: [informe, validaciones y reversa](../docs/informes/cooper-vivo.md).
 
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado integrado, puerta completa, capturas y pasos manuales de Walter: [informe final de integración](../docs/informes/cooper-integracion.md).
 
@@ -74,7 +74,7 @@ Consultas: estado, reporte, pendientes y tendencias. El simulador reconoce expre
 
 El receptor `/api/n8n/webhook` valida firma sobre bytes, tiempo, dueño, ID y digest persistidos. SSE reemite progreso del dueño y concilia el estado cada minuto. `COOPER_WEBHOOK_SECRET` debe coincidir con n8n y tener al menos 32 caracteres. En modo n8n, el panel administrativo usa los gastos registrados en `fab_costos`, indicando las estimaciones de las tarifas configuradas. No se mezcla el gasto simulado. El contrato completo, variables de n8n, migración de dueños y pasos para Claude/Walter están en [la guía del puente](../docs/cooper-puente-n8n.md).
 
-El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md). La fábrica persiste esa selección y la usa en storyboard, voz, avatar y montaje. FX mantiene 422 para recursos de demostración. Un video sin selección conserva la voz según guion. Revocar consentimiento cancela la cola antes del siguiente paso y avisa; los interruptores y el presupuesto pausan conservando la elección. Detalles y límites en la guía del puente; sin ensayo pago ni despliegue.
+El sobre añade `datos.presentacion` con avatar/voz autorizados en servidor; consulta el [contrato de presentación](../docs/cooper-especificacion.md). La fábrica persiste esa selección y la usa en storyboard, voz, avatar y montaje. FX mantiene 422 para recursos de demostración. Un video sin selección conserva la voz según guion. Revocar consentimiento cancela la cola antes del siguiente paso y avisa; los interruptores y el presupuesto pausan conservando la elección. El puente está publicado; la presentación continúa sin ensayo pago. Las ramas nuevas de HeyGen y ElevenLabs requieren asociar credenciales existentes cuando se autorice su uso; no se configuraron durante el paso a vivo.
 
 `ProveedorAvatar`, `ProveedorVoz` y `ProveedorTranscripcion` tienen implementaciones reales y simuladas seleccionables por entorno. La identidad real pasa por revisión humana de Walter; no hay verificación biométrica automática. Las creaciones y simuladores heredados permanecen etiquetados como tales. Detalles de las APIs actuales, estados, consentimiento fechado, privacidad y límites en [MEDIOS.md](MEDIOS.md).
 
@@ -119,13 +119,13 @@ Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y
 
 ## Fases siguientes
 
-2. Puente implementado y probado localmente; falta aplicar la migración y verificar en una instancia de ensayo antes del despliegue.
+2. Puente activo en n8n vivo; migración sin pendientes, lecturas por dueño, tendencias, gastos administrativos y firma del receptor comprobadas. Falta la revisión visual del panel tras el primer ingreso Google de Walter; ver el informe de paso a vivo.
 3. Adaptadores reales implementados en esta rama; pendientes de ensayo manual con credenciales, incluidos los flujos de presentación implementados.
 4. Avisos por WhatsApp Business oficial. Hoy solo se guarda el número del usuario y se avisa dentro del estudio.
 5. VPS, dominio, TLS, proxy SSE sin buffering, copias/restauración, política de retención y endurecimiento operativo.
 6. Radar de noticias verificadas y rutas de modelos del ecosistema.
 
-OAuth real requiere las credenciales del equipo; las pruebas automatizadas usan sesiones locales firmadas y no automatizan una cuenta Google. No se ha desplegado, conectado a proveedores de producción ni publicado videos reales.
+OAuth real requiere las credenciales del equipo; las pruebas automatizadas usan sesiones locales firmadas y no automatizan una cuenta Google. El paso a vivo conservó Ajustes y no creó videos ni invocó proveedores de pago. Las sesiones y el emisor E2E permanecen fuera de producción.
 
 ## Demostración de diseño
 
