@@ -42,8 +42,24 @@ def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
     for value in images.values():
         operar.require(old.count(value['imagen']) == 1, 'Referencia candidata no única')
         old = old.replace(value['imagen'], value['anterior'])
-    operator = operar.Operator(env, filename)
     relay_services = ('chat-cooper', 'chat-n8n', 'chat-runner')
+
+    class RelayLabOperator(operar.Operator):
+        def compose(self, *args, **kwargs):
+            # Docker Compose no retira primero los dependientes de namespace
+            # que exige Podman. Adaptar solo ese orden del laboratorio conserva
+            # el namespace real y los mismos argumentos/overrides del aplicador.
+            if relay_previous_image and args and (args[0] == 'down' or (
+                    args[0] == 'up' and '--force-recreate' in args and
+                    any(name in args for name in ('cooper', 'n8n', 'runner')))):
+                if args[0] == 'down':
+                    super().compose('stop', *relay_services, **kwargs)
+                running = super().compose('ps', '--status', 'running', '--services', **kwargs).split()
+                operar.require(not set(relay_services).intersection(running), 'Retirar solo relés detenidos en el laboratorio')
+                super().compose('rm', '--force', *relay_services, **kwargs)
+            return super().compose(*args, **kwargs)
+
+    operator = RelayLabOperator(env, filename)
     relay_marker = operator.state / 'chat-tunel.enabled'
     lab_override = Path(env['COOPER_COMPOSE_OVERRIDE']) if relay_previous_image else None
     original_override = None
@@ -139,6 +155,7 @@ def rehearse(fixture, proof, image_archive=None, relay_previous_image=None):
             if relay_previous_image:
                 output.update(reles_previos_mezclados='PASS', reversion_imagenes_por_servicio='PASS',
                               reles_finales_actualizados='PASS',
+                              adaptacion_podman='Relés con /sys vacío de solo lectura; comprobar que los dependientes de namespace están detenidos y retirarlos antes de recrear padres.',
                               servicios_antes=initial_services, servicios_revertidos=reverted_services,
                               servicios_finales=final_services,
                               codigo_arnes_sha256=operar.digest(Path(__file__)))
