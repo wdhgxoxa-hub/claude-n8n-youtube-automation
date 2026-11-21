@@ -142,7 +142,7 @@
     },
     {
       "parameters": {
-        "jsCode": "if (!$('Pedido de texto').first().json.api_permitida) throw new Error('Texto detenido: Codex falló y el respaldo API está apagado'); return $input.all();"
+        "jsCode": "if (!$('Pedido de texto').first().json.api_permitida) throw new Error('Texto detenido: Codex falló y el respaldo API está apagado'); /* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "60aec52f-ff89-5062-93a2-a206b56a7e31",
       "name": "Permitir respaldo",

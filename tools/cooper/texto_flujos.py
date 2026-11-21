@@ -26,7 +26,7 @@ const noticias = !p.tarea.includes('noticia') || Array.isArray(r.fuentes_consult
 return [{json:{ok:r.ruta === 'codex' && textoValido(p.tarea,r) && investigacion && noticias}}];
 """)
 iff(f, '¿Codex respondió?', '$json.ok === true')
-code(f, 'Permitir respaldo', "if (!$('Pedido de texto').first().json.api_permitida) throw new Error('Texto detenido: Codex falló y el respaldo API está apagado'); return $input.all();")
+code(f, 'Permitir respaldo', "if (!$('Pedido de texto').first().json.api_permitida) throw new Error('Texto detenido: Codex falló y el respaldo API está apagado'); " + devolver_items())
 http(f, 'Respaldo OpenAI', 'POST', 'https://api.openai.com/v1/responses',
      body="={{ { ...$('Pedido de texto').first().json.body, store:false, ...($('Pedido de texto').first().json.local.buscar_web ? {include:['web_search_call.action.sources']} : {}) } }}", cred=CRED_OPENAI, timeout=180000)
 f.nodes[-1]['onError'] = 'continueRegularOutput'

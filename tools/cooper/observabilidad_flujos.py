@@ -102,7 +102,7 @@ for wf in [ORQ,PROD,SONIDO,PUB,REDES,NOTICIA]:
     code(f,'Cooper · atribuir ejecución',"const e=$('Inicio').first().json; const video_id=e.video_id || e.plan?.video_id; return video_id?[{json:{video_id,canal_id:e.canal_id || e.plan?.canal_id || '',tipo:'ejecucion_cooper',evento:String($execution.id),detalle:'{}'}}]:[];")
     dt_insert(f,'Cooper · guardar atribución','eventos')
     iff(f,'¿Atribuir ejecución a video?',"!!($('Inicio').first().json.video_id || $('Inicio').first().json.plan?.video_id)")
-    code(f,'Cooper · continuar ejecución',"return $('Inicio').all();")
+    code(f,'Cooper · continuar ejecución',devolver_items("$('Inicio').all()"))
     despues(f,'Inicio','¿Atribuir ejecución a video?','Cooper · continuar ejecución')
     f.link('¿Atribuir ejecución a video?','Cooper · atribuir ejecución',0)
     f.link('¿Atribuir ejecución a video?','Cooper · continuar ejecución',1)

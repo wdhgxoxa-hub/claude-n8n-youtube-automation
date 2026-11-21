@@ -1062,7 +1062,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "1880de14-0f56-5710-88b1-8f5578137ed6",
       "name": "Cooper · seguir auxiliar",

@@ -675,7 +675,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "51de983a-56c3-4926-b979-9c74a8b019f4",
       "name": "Guardar costo de referencias",
@@ -784,7 +784,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Generar principal').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Generar principal').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "4ee30289-64f7-5175-8e03-aaa6656a1452",
       "name": "Cooper · costo Generar principal seguir",
@@ -839,7 +839,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Generar vista').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Generar vista').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "4cc3a176-20f7-53ba-806d-c357e443de96",
       "name": "Cooper · costo Generar vista seguir",
@@ -1001,7 +1001,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "aca899ff-4882-5f56-aaf6-4b1148f6ebd7",
       "name": "Cooper · seguir auxiliar",

@@ -167,6 +167,13 @@ def code1(f, name, js, **kw):
     return f.add(name, 'n8n-nodes-base.code', 2, {'mode': 'runOnceForEachItem', 'jsCode': js}, **kw)
 
 
+def devolver_items(origen='$input.all()', emparejar=False):
+    """Proyecta el contrato de Code; Execute Workflow añade metadata interna."""
+    pares = 'pairedItem:{item:k}' if emparejar else '...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})'
+    return ("/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn " + origen +
+            ".map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary})," + pares + "}));")
+
+
 def call(f, name, wid, wait=True, each=False):
     # Las llamadas de vuelta al orquestador van por expresión: así el ciclo
     # orquestador → producción → publicación → aprobación → orquestador no bloquea la publicación en n8n.
@@ -3210,13 +3217,13 @@ PROGRESO_COOPER = f.dump()
 # Registrar una etapa antes de un paso, conservando su entrada para no cambiar el contrato interno.
 def etapa_cooper(wf, destino, etapa, video_expr="$('Inicio').first().json.video_id", guion=None):
     f = reabrir(wf); p = 'Cooper · ' + destino
-    code(f,p+' entrada','return $input.all();')
+    code(f,p+' entrada',devolver_items())
     fields = "{ etapa:'" + etapa + "'" + (", guion_cooper: String(" + guion + ").slice(0,30000)" if guion else '') + " }"
     code(f,p+' etapa', 'return [{ json: ' + fields + ' }];')
     dt_update(f,p+' guardar','videos','video_id','={{ ' + video_expr + ' }}')
     # Si la tabla no encuentra fila, conservar el flujo legado. La etapa sigue sin inventarse.
     f.nodes[-1]['alwaysOutputData'] = True
-    code(f,p+' seguir',"return $('" + p + " entrada').all();")
+    code(f,p+' seguir',devolver_items("$('" + p + " entrada').all()"))
     f.chain(p+' entrada',p+' etapa',p+' guardar',p+' seguir')
     antes(f,destino,p+' entrada',p+' seguir')
 
@@ -3321,7 +3328,7 @@ exec(compile(open(os.path.join(RAIZ, 'tools/cooper/presentacion_flujos.py'), enc
 for wf, nombres in [(PROD,['Guardar costos','Guardar costo de derivados']), (REFS,['Guardar costo de referencias'])]:
     for n in wf['nodes']:
         if n['name'] in nombres:
-            n.update({'type':'n8n-nodes-base.code','typeVersion':2,'parameters':{'jsCode':'return $input.all();'}})
+            n.update({'type':'n8n-nodes-base.code','typeVersion':2,'parameters':{'jsCode':devolver_items()}})
 
 PASOS_COSTO = [
     (AVATAR,'Crear avatar','avatar','HeyGen',"$('Inicio').first().json.voz.duracion_s * aj.costoAvatarSegUsd"),
@@ -3350,7 +3357,7 @@ for wf, origen, concepto, servicio, usd in PASOS_COSTO:
     vid = "('canal:' + $('Encargo del analista').all()[k].json.canal_id)" if wf['id']==W['radar'] else "(e.video_id || ('canal:' + e.canal_id))"
     code(f,p,"const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; const aj=$('Leer ajustes').first().json; return $input.all().map((i,k)=>({json:{ video_id:" + vid + ", concepto:" + JS(concepto) + ", servicio:" + JS(servicio) + ", usd:" + usd + ", estimado:true, paso_id:String($execution.id)+':'+" + JS(origen) + "+':'+$runIndex+':'+k }}));")
     call(f,p+' registrar',W['costo'],each=True)
-    code(f,p+' seguir',"return $('" + origen + "').all().map((i,k) => ({...i, pairedItem:{item:k}}));")
+    code(f,p+' seguir',devolver_items("$('" + origen + "').all()", emparejar=True))
     f.chain(p,p+' registrar',p+' seguir')
     # Solo salida de éxito; las salidas de error del HTTP mantienen su destino original.
     outs=f.conn.setdefault(origen,{'main':[[]]})['main']
@@ -3390,7 +3397,7 @@ def recorrer(v):
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
 # Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
-for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'aprendizaje_flujos.py']:
+for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py', 'cobertura_flujos.py', 'competencia_flujos.py', 'youtube_competencia_flujos.py', 'aprendizaje_flujos.py', 'e2e_estados_flujos.py']:
     exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
 
 # Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.

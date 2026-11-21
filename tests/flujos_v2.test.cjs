@@ -1,4 +1,6 @@
+require('./n8n_e2e_estados.test.cjs');
 // Pruebas de la lógica de los nodos Code de los flujos v2 con datos ficticios.
+require('./n8n_e2e_regresiones.test.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs'); const path = require('path');

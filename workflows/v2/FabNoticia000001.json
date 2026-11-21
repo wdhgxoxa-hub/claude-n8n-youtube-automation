@@ -198,7 +198,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Radar de noticia').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Radar de noticia').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "9fa8d5b3-fee2-5ea2-955d-82e263c59c8c",
       "name": "Costo · Radar de noticia seguir",
@@ -253,7 +253,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Verificador de noticia').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Verificador de noticia').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "86db6142-2f06-5dd2-ac90-4e6883217beb",
       "name": "Costo · Verificador de noticia seguir",
@@ -341,7 +341,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "f7535db7-ef99-5526-8115-46a9d7618388",
       "name": "Cooper · continuar ejecución",

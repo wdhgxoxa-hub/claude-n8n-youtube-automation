@@ -492,7 +492,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Analista de tendencias').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Analista de tendencias').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "6175b8da-9c0f-56d8-b825-a47c3748147d",
       "name": "Cooper · costo Analista de tendencias seguir",
@@ -603,7 +603,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; return $input.all().filter(i=>i.json.canal_id && i.json.estado === 'activo' && !i.json.eliminado && (!e.canal_id || e.canal_id === i.json.canal_id));"
+        "jsCode": "const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; /* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().filter(i=>i.json.canal_id && i.json.estado === 'activo' && !i.json.eliminado && (!e.canal_id || e.canal_id === i.json.canal_id)).map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "122dd589-fcaa-5f9b-9a07-786f16a60604",
       "name": "Pedidos de noticias",

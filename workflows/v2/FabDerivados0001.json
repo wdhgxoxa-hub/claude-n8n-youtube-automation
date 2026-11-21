@@ -699,7 +699,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "66a364d9-c398-5a07-891b-6c4c72167144",
       "name": "Presentación · Renderizar miniatura entrada",
@@ -754,7 +754,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Renderizar miniatura entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Renderizar miniatura entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "8a22a947-c439-55ae-9b10-42b28a7c0391",
       "name": "Presentación · Renderizar miniatura seguir",
@@ -767,7 +767,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "fbb182fe-6594-504f-8c64-68a4c3b01911",
       "name": "Presentación · Renderizar corte entrada",
@@ -822,7 +822,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Renderizar corte entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Renderizar corte entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "12d7d863-cf04-5e28-838e-f689914249aa",
       "name": "Presentación · Renderizar corte seguir",
@@ -877,7 +877,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Imagen de miniatura').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Imagen de miniatura').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "d1c0217d-515e-5f47-9ed7-8a45aef5736c",
       "name": "Cooper · costo Imagen de miniatura seguir",
@@ -932,7 +932,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Renderizar miniatura').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Renderizar miniatura').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "5cac41d0-5a02-5cd8-9528-9a722a71589f",
       "name": "Cooper · costo Renderizar miniatura seguir",
@@ -987,7 +987,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Renderizar corte').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Renderizar corte').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "a94d7985-f932-5e80-8272-fc778239b3f5",
       "name": "Cooper · costo Renderizar corte seguir",
@@ -1080,7 +1080,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b81cb984-81ae-5ef2-b748-5fa99b27f59b",
       "name": "Cooper · seguir auxiliar",

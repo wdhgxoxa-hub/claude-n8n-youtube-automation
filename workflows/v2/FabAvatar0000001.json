@@ -290,7 +290,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "de75a64a-d538-5848-8d62-9eff828652e0",
       "name": "Presentación · Pedido de avatar entrada",
@@ -345,7 +345,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Pedido de avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Pedido de avatar entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "5d68db4d-9cf5-5bbd-85a8-582b3a2aaad9",
       "name": "Presentación · Pedido de avatar seguir",
@@ -358,7 +358,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "a585eea8-5770-5949-85d6-bd75609f4289",
       "name": "Presentación · Crear avatar entrada",
@@ -413,7 +413,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Crear avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Crear avatar entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "33e6e675-7a02-5964-920b-dc124ae7782c",
       "name": "Presentación · Crear avatar seguir",
@@ -426,7 +426,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "03d775cc-c7b5-52b2-9ef7-3118b56f0fe7",
       "name": "Presentación · Consultar avatar entrada",
@@ -481,7 +481,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Consultar avatar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Consultar avatar entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "cd9a084f-dc18-530a-b61b-ec4f54376816",
       "name": "Presentación · Consultar avatar seguir",
@@ -494,7 +494,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "a1103a00-a447-5556-846b-c462d6f80e2c",
       "name": "Presentación · Avatar listo entrada",
@@ -549,7 +549,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Avatar listo entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Avatar listo entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "61e59603-0361-5e20-ba17-588ee1069725",
       "name": "Presentación · Avatar listo seguir",
@@ -604,7 +604,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Crear avatar').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Crear avatar').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "d50c5dba-8975-5462-b151-12ec171093b9",
       "name": "Cooper · costo Crear avatar seguir",

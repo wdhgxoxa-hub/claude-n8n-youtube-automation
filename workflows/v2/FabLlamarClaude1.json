@@ -409,7 +409,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Respuesta').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Respuesta').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "ba797d5a-eb77-5a72-a708-6b341fd5b934",
       "name": "Cooper · costo Respuesta seguir",
@@ -517,7 +517,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "7fa5b72a-6172-5982-958d-80c309e0593f",
       "name": "Cooper · seguir auxiliar",

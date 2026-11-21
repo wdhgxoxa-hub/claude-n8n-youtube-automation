@@ -86,19 +86,8 @@ f.chain('Fiabilidad · diagnóstico mínimo', 'Fiabilidad · guardar diagnóstic
 nodo_fiable(CLAUDE, 'Fallo al despertar')['parameters']['jsCode'] = "return [{json:{estado:'enviado',resultado:JSON.stringify({estado:'incierto',error:'No se confirmó la recepción; conciliar el trabajo antes de repetir.'})}}];"
 nodo_fiable(CLAUDE, 'Aviso: Claude no respondió')['parameters']['text'] = tg_texto("No se confirmó la recepción del encargo de Claude. Puede seguir ejecutándose; consulta el trabajo antes de volver a enviarlo.")
 
-# Compare-and-set sobre la fila existente: solo el retorno que cambia ENVIADO
-# puede avanzar. Un segundo webhook simultáneo obtiene cero filas y responde
-# sin despachar nuevamente al Orquestador.
-f = reabrir(RETORNO)
-n = nodo_fiable(RETORNO, 'Guardar resultado')
-n['parameters']['filters']['conditions'].append({'keyName':'estado','condition':'eq','keyValue':'enviado'})
-n['alwaysOutputData'] = True
-iff(f, 'Fiabilidad · ganó el retorno', "!!$json.job_id && ['listo','error'].includes($json.estado)")
-f.add('Fiabilidad · responder duplicado', 'n8n-nodes-base.respondToWebhook', 1.1,
-    {'respondWith':'json','responseBody':'={{ { status: "duplicado" } }}','options':{'responseCode':200}})
-f.conn['Guardar resultado'] = {'main':[[{'node':'Fiabilidad · ganó el retorno','type':'main','index':0}]]}
-f.link('Fiabilidad · ganó el retorno', 'Responder recibido', 0)
-f.link('Fiabilidad · ganó el retorno', 'Fiabilidad · responder duplicado', 1)
+# M01 ya reserva por estado y huella, despacha una vez y confirma la entrega.
+# Conservar ese CAS: Guardar resultado exige retorno_en_curso, nunca enviado.
 
 # Retirar reintentos ciegos de TODO efecto externo, incluidos POST de IA, Drive,
 # OAuth y RPC. Solo los callbacks con ID durable se reintentan explícitamente.

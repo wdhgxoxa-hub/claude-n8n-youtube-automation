@@ -893,7 +893,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "e2a9d201-eb72-5a14-80dc-83fb83e17470",
       "name": "Presentación · Textos de voz entrada",
@@ -948,7 +948,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Textos de voz entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Textos de voz entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "616c4fbd-56fc-5696-9dd3-080aee1aa642",
       "name": "Presentación · Textos de voz seguir",
@@ -961,7 +961,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "73abca15-bec0-5143-8552-88b29760b846",
       "name": "Presentación · Voz (Gemini TTS) entrada",
@@ -1016,7 +1016,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Voz (Gemini TTS) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Voz (Gemini TTS) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "5ff18f18-0217-5a73-a794-9a7c7d0a9d80",
       "name": "Presentación · Voz (Gemini TTS) seguir",
@@ -1029,7 +1029,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b07dde12-7934-5768-a4a1-3293a4d5aecc",
       "name": "Presentación · Voz (HeyGen) entrada",
@@ -1084,7 +1084,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Voz (HeyGen) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Voz (HeyGen) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "9f64197e-e8e0-5565-9540-78083c5bd195",
       "name": "Presentación · Voz (HeyGen) seguir",
@@ -1097,7 +1097,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "77939ced-cfc0-5f06-8433-9b8280c9a9a6",
       "name": "Presentación · Voz (ElevenLabs) entrada",
@@ -1152,7 +1152,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Voz (ElevenLabs) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Voz (ElevenLabs) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "0ee97cea-e3e7-5179-af12-38effdba5f10",
       "name": "Presentación · Voz (ElevenLabs) seguir",
@@ -1207,7 +1207,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Voz (HeyGen)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Voz (HeyGen)').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "96537bbe-1bb8-5a74-9652-863bd6acca18",
       "name": "Cooper · costo Voz (HeyGen) seguir",
@@ -1262,7 +1262,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Voz (ElevenLabs)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Voz (ElevenLabs)').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "7e614c18-61f6-5668-8084-a0072370f624",
       "name": "Cooper · costo Voz (ElevenLabs) seguir",
@@ -1317,7 +1317,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Voz (Gemini TTS)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Voz (Gemini TTS)').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "e4679735-5b05-5420-97f6-55803d2f50dc",
       "name": "Cooper · costo Voz (Gemini TTS) seguir",
@@ -1372,7 +1372,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Pedir descarga').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Pedir descarga').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "99752d5a-2871-5b63-b89b-d0227872419b",
       "name": "Cooper · costo Pedir descarga seguir",
@@ -1427,7 +1427,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Pedir efecto').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Pedir efecto').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "cb41f528-02ab-5c00-affe-cb0f209c23fc",
       "name": "Cooper · costo Pedir efecto seguir",
@@ -1580,7 +1580,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "6946b880-adba-5c31-b40c-84ebf4702d1e",
       "name": "Cooper · continuar ejecución",

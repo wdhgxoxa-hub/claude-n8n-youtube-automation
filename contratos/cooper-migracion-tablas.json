@@ -21,6 +21,8 @@
       "noticia_guion_hash": "string",
       "noticia_storyboard_hash": "string",
       "cooper_escenas": "string",
+      "render_url": "string",
+      "miniatura_url": "string",
       "metricas_youtube": "string",
       "metricas_consultadas_en": "string"
     },

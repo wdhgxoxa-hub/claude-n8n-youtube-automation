@@ -138,7 +138,7 @@ for wf in [REFS,DERIV,CLAUDE,YT,VIDIQ,RETORNO]:
  if not any(n['name']=='Inicio' for n in f.nodes):continue
  code(f,'Cooper · atribuir auxiliar',"const e=$('Inicio').first().json;return [{json:{tipo:'ejecucion_cooper',evento:String($execution.id),canal_id:e.canal_id||'',video_id:e.video_id||e.plan?.video_id||'',detalle:'{}'}}];")
  dt_insert(f,'Cooper · guardar auxiliar','eventos')
- code(f,'Cooper · seguir auxiliar',"return $('Inicio').all();")
+ code(f,'Cooper · seguir auxiliar',devolver_items("$('Inicio').all()"))
  despues(f, 'Inicio','Cooper · atribuir auxiliar','Cooper · seguir auxiliar')
  f.chain('Cooper · atribuir auxiliar','Cooper · guardar auxiliar','Cooper · seguir auxiliar')
 f=reabrir(ERRORES)

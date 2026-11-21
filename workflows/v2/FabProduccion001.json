@@ -1965,7 +1965,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "6050dc28-4004-478f-97b0-ec9f1d800c14",
       "name": "Guardar costos",
@@ -2123,7 +2123,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "1b4b3fc9-7c81-42cf-be7f-d39f7f0589c6",
       "name": "Guardar costo de derivados",
@@ -2179,7 +2179,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "3af2471a-af7f-5901-acc7-872f5190b96e",
       "name": "Cooper · Sonido y emoción entrada",
@@ -2249,7 +2249,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Sonido y emoción entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Sonido y emoción entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "de3ab38a-c5d2-5160-9d1d-93206c2fa4b2",
       "name": "Cooper · Sonido y emoción seguir",
@@ -2262,7 +2262,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "7fed09cd-770e-5c8f-97af-ba81aebbaeeb",
       "name": "Cooper · Composición Creatomate entrada",
@@ -2332,7 +2332,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Composición Creatomate entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Composición Creatomate entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b63740b4-1728-5a06-8386-96051a95b44e",
       "name": "Cooper · Composición Creatomate seguir",
@@ -2447,7 +2447,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "daded510-2559-5617-bf92-c65386db8468",
       "name": "Presentación · ¿Todo encendido? entrada",
@@ -2502,7 +2502,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · ¿Todo encendido? entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · ¿Todo encendido? entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "c98fdfe9-38aa-54ef-bf44-71926282936f",
       "name": "Presentación · ¿Todo encendido? seguir",
@@ -2515,7 +2515,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "936bf801-96f2-5922-a3f7-22d09d3c3e7e",
       "name": "Presentación · ¿Hay avatares? entrada",
@@ -2570,7 +2570,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · ¿Hay avatares? entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · ¿Hay avatares? entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "942b12b0-a2a0-52aa-b654-fedabe33c253",
       "name": "Presentación · ¿Hay avatares? seguir",
@@ -2583,7 +2583,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "e814dc43-d53d-5469-a36b-95e21f468a21",
       "name": "Presentación · Generar imagen entrada",
@@ -2638,7 +2638,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Generar imagen entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Generar imagen entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "93c4db88-7993-595c-af81-486931e72f39",
       "name": "Presentación · Generar imagen seguir",
@@ -2651,7 +2651,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "7f5687ae-99da-5a82-a7b3-9da09fd54be8",
       "name": "Presentación · Animar (Gemini Omni) entrada",
@@ -2706,7 +2706,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Animar (Gemini Omni) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Animar (Gemini Omni) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "fc29c363-c129-5199-9701-d6f5e8659554",
       "name": "Presentación · Animar (Gemini Omni) seguir",
@@ -2719,7 +2719,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "583fc34a-7c63-576e-90e7-95c20bd214c8",
       "name": "Presentación · Renderizar entrada",
@@ -2774,7 +2774,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Renderizar entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Renderizar entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "48bfd043-e36e-54a8-b1b2-c2964d238742",
       "name": "Presentación · Renderizar seguir",
@@ -2787,7 +2787,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b0a8d5f4-e275-5c6e-bd14-a04a7173fd1a",
       "name": "Presentación · Encargo de calidad entrada",
@@ -2842,7 +2842,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Encargo de calidad entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Encargo de calidad entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "d184ad64-9f06-58ce-88f8-a3dbcb1bb6b2",
       "name": "Presentación · Encargo de calidad seguir",
@@ -2855,7 +2855,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "c625fa43-e18f-5196-8b79-2d09df58b670",
       "name": "Presentación · Derivados entrada",
@@ -2910,7 +2910,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Derivados entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Derivados entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "f033b6c8-4f64-5760-b745-19a0628c73cf",
       "name": "Presentación · Derivados seguir",
@@ -2965,7 +2965,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Generar imagen').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Generar imagen').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "94b21fbb-98d9-521c-a021-753ced613995",
       "name": "Cooper · costo Generar imagen seguir",
@@ -3020,7 +3020,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Revisar plano').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Revisar plano').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "803fd451-c171-5892-a80c-254346012015",
       "name": "Cooper · costo Revisar plano seguir",
@@ -3075,7 +3075,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Revisar archivo').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Revisar archivo').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "8493f845-39f6-529a-81cb-7e28d5200409",
       "name": "Cooper · costo Revisar archivo seguir",
@@ -3130,7 +3130,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Animar (Gemini Omni)').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Animar (Gemini Omni)').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "c4e2680b-68bb-5d8b-bc8e-a20928d1d47b",
       "name": "Cooper · costo Animar (Gemini Omni) seguir",
@@ -3185,7 +3185,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Renderizar').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Renderizar').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "9ac9e4ef-f50a-53b1-b68b-238253b25d12",
       "name": "Cooper · costo Renderizar seguir",
@@ -3263,7 +3263,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "60ca50ba-d403-59b6-8ac2-e6d39c620609",
       "name": "Noticia · Plan de producción entrada",
@@ -3313,7 +3313,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst v=$('Noticia · Plan de producción video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,$('Inicio').first().json.guion); if (v.modo_noticia) { exigirStoryboard(v,$('Inicio').first().json.storyboard); if ($('Inicio').first().json.modo_noticia !== true) throw new Error('Modalidad de noticia incompatible'); } return $('Noticia · Plan de producción entrada').all();"
+        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst v=$('Noticia · Plan de producción video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,$('Inicio').first().json.guion); if (v.modo_noticia) { exigirStoryboard(v,$('Inicio').first().json.storyboard); if ($('Inicio').first().json.modo_noticia !== true) throw new Error('Modalidad de noticia incompatible'); } /* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Noticia · Plan de producción entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "55c3e3e4-2d65-5310-a040-70763c3ff7d7",
       "name": "Noticia · Plan de producción validar",
@@ -3457,7 +3457,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "0febf7ae-5186-53f9-a501-af03be9fb105",
       "name": "Cooper · continuar ejecución",
@@ -3629,6 +3629,256 @@
       "typeVersion": 1.1,
       "position": [
         1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst r=$json, intento=$runIndex+1;\nconst pendientes=['planned','waiting','transcribing','rendering'];\nconst terminal=r.status==='failed' || ['canceled','cancelled'].includes(r.status);\nconst invalido=r.status!=='succeeded' && !terminal && !pendientes.includes(r.status);\nconst agotado=pendientes.includes(r.status) && intento>=40;\nconst incompleto=r.status==='succeeded' && !r.url;\nif (terminal || invalido || agotado || incompleto) {\n  const motivo=agotado?'El montaje no terminó después de 40 consultas.':\n    incompleto?'El montaje terminó sin entregar un archivo.':\n    invalido?'No se pudo interpretar el estado del montaje.':'El montaje informó un fallo.';\n  return [{json:{...r,status:'failed',error_message:motivo,consultas_render:intento}}];\n}\nreturn [{json:{...r,consultas_render:intento}}];\n"
+      },
+      "id": "a19e3dea-d31f-5d04-84dd-c88f52f80c80",
+      "name": "Render · limitar espera",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn [{json:{etapa:'montaje',estado:'con_fallas',error:String($json.error_message || 'El montaje informó un fallo.').slice(0,500)}}];\n"
+      },
+      "id": "44788e40-201a-5b57-8ed3-877325f2efb9",
+      "name": "Render · fallo durable",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "neq",
+              "keyValue": "cancelado"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "615e3284-b1dc-54bd-9556-9964b4d6ea40",
+      "name": "Render · guardar fallo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Render · limitar espera').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
+      },
+      "id": "cd00fbcb-6a11-58e3-979c-45323a13722f",
+      "name": "Render · conservar fallo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst p=$('Plan de producción').first().json;\nreturn [{json:{etapa:'produccion',estado:'detenido',error:p.bloqueo==='presupuesto'?\n  'Producción pausada: el storyboard supera el presupuesto permitido.':\n  'Producción pausada: faltan habilitaciones para continuar.'}}];\n"
+      },
+      "id": "65cf3971-bf78-57d6-b192-647d1a73b84f",
+      "name": "Pausa · Aviso: falta encender",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "neq",
+              "keyValue": "cancelado"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "3d675b79-8fd6-5c35-b5d0-f88c4e892797",
+      "name": "Pausa · Aviso: falta encender guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Plan de producción').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
+      },
+      "id": "0e503206-1277-56d5-bb78-efff7c8ee963",
+      "name": "Pausa · Aviso: falta encender continuar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst p=$('Plan de producción').first().json;\nreturn [{json:{etapa:'produccion',estado:'detenido',error:p.bloqueo==='presupuesto'?\n  'Producción pausada: el storyboard supera el presupuesto permitido.':\n  'Producción pausada: faltan habilitaciones para continuar.'}}];\n"
+      },
+      "id": "02923417-504e-5280-984e-933c5e2f08ae",
+      "name": "Pausa · Aviso: sobre presupuesto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Plan de producción').first().json.video_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "neq",
+              "keyValue": "cancelado"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "3077e477-a224-51d3-9950-90f945bbbbf4",
+      "name": "Pausa · Aviso: sobre presupuesto guardar",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Plan de producción').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
+      },
+      "id": "de25a989-267f-5ac5-b48b-f107b60a044c",
+      "name": "Pausa · Aviso: sobre presupuesto continuar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
         0
       ]
     },
@@ -3883,6 +4133,132 @@
         2640,
         0
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Render · guardar fallo\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "dabb72df-45d4-5d5c-a7ab-d8df64eb2f95",
+      "name": "Cooper · sello Render · guardar fallo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "979f32b0-4a5c-5557-8fc2-bf03a6788d9e",
+      "name": "Cooper · sello Render · guardar fallo aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Pausa · Aviso: falta encender guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "481652f5-6f56-5491-a049-79f30b7f7a0e",
+      "name": "Cooper · sello Pausa · Aviso: falta encender guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "828c8e5e-0755-592c-b2e7-2221246a2b8b",
+      "name": "Cooper · sello Pausa · Aviso: falta encender guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Pausa · Aviso: sobre presupuesto guardar\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "f2cbfbd4-1fa5-516a-95cd-050984f24422",
+      "name": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3740,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "9af5c542-73f9-5628-8b7b-9651c29af6c7",
+      "name": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3960,
+        0
+      ]
     }
   ],
   "connections": {
@@ -3979,7 +4355,7 @@
         ],
         [
           {
-            "node": "Aviso: falta encender",
+            "node": "Pausa · Aviso: falta encender",
             "type": "main",
             "index": 0
           }
@@ -3997,7 +4373,7 @@
         ],
         [
           {
-            "node": "Aviso: sobre presupuesto",
+            "node": "Pausa · Aviso: sobre presupuesto",
             "type": "main",
             "index": 0
           }
@@ -4703,7 +5079,7 @@
       "main": [
         [
           {
-            "node": "¿Render listo?",
+            "node": "Render · limitar espera",
             "type": "main",
             "index": 0
           }
@@ -4732,7 +5108,7 @@
       "main": [
         [
           {
-            "node": "Aviso: render fallido",
+            "node": "Render · fallo durable",
             "type": "main",
             "index": 0
           }
@@ -5685,6 +6061,83 @@
         ]
       ]
     },
+    "Render · limitar espera": {
+      "main": [
+        [
+          {
+            "node": "¿Render listo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render · conservar fallo": {
+      "main": [
+        [
+          {
+            "node": "Aviso: render fallido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render · fallo durable": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Render · guardar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa · Aviso: falta encender continuar": {
+      "main": [
+        [
+          {
+            "node": "Aviso: falta encender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa · Aviso: falta encender": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Pausa · Aviso: falta encender guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa · Aviso: sobre presupuesto continuar": {
+      "main": [
+        [
+          {
+            "node": "Aviso: sobre presupuesto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa · Aviso: sobre presupuesto": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Cooper · sello Video en producción": {
       "main": [
         [
@@ -5865,6 +6318,105 @@
         [
           {
             "node": "Cooper · sello Cooper · guardar piezas aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Render · guardar fallo": {
+      "main": [
+        [
+          {
+            "node": "Render · guardar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Render · guardar fallo aviso": {
+      "main": [
+        [
+          {
+            "node": "Render · conservar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render · guardar fallo": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Render · guardar fallo aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Pausa · Aviso: falta encender guardar": {
+      "main": [
+        [
+          {
+            "node": "Pausa · Aviso: falta encender guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Pausa · Aviso: falta encender guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Pausa · Aviso: falta encender continuar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa · Aviso: falta encender guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Pausa · Aviso: falta encender guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Pausa · Aviso: sobre presupuesto guardar": {
+      "main": [
+        [
+          {
+            "node": "Pausa · Aviso: sobre presupuesto guardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Pausa · Aviso: sobre presupuesto guardar aviso": {
+      "main": [
+        [
+          {
+            "node": "Pausa · Aviso: sobre presupuesto continuar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa · Aviso: sobre presupuesto guardar": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Pausa · Aviso: sobre presupuesto guardar aviso",
             "type": "main",
             "index": 0
           }

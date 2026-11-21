@@ -34,10 +34,10 @@ VALIDAR_PRESENTACION = f.dump()
 
 def guardia_presentacion(wf, destino, control='medios', extra='', video="$('Inicio').first().json.video_id"):
     f = reabrir(wf); p = 'Presentación · ' + destino
-    code(f,p+' entrada','return $input.all();')
+    code(f,p+' entrada',devolver_items())
     code(f,p+' consulta',"return $input.all().map((i,k)=>({json:{video_id:" + video + ", control:" + JS(control) + extra + "}, pairedItem:{item:k}}));")
     call(f,p+' validar',W['presentacion'],each=True)
-    code(f,p+' seguir',"return $('"+p+" entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));")
+    code(f,p+' seguir',devolver_items("$('"+p+" entrada').all()", emparejar=True))
     f.chain(p+' entrada',p+' consulta',p+' validar',p+' seguir')
     antes(f,destino,p+' entrada',p+' seguir')
 

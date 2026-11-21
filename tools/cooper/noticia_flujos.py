@@ -38,7 +38,7 @@ def costo_noticia(wf, origen, concepto, video):
     f=reabrir(wf); p='Costo · ' + origen
     code(f,p,"const r=$('"+origen+"').first().json; const u=r.texto_uso; return [{json:{...u,video_id:"+video+",concepto:"+JS(concepto)+",servicio:u.ruta === 'codex' ? 'Codex (plan ChatGPT)' : 'OpenAI API',paso_id:String($execution.id)+':"+origen+"'}}];")
     call(f,p+' registrar',W['costo'])
-    code(f,p+' seguir',"return $('"+origen+"').all();")
+    code(f,p+' seguir',devolver_items("$('"+origen+"').all()"))
     f.chain(p,p+' registrar',p+' seguir'); despues(f,origen,p,p+' seguir')
 
 for origen in ['Radar de noticia','Verificador de noticia']:
@@ -130,10 +130,10 @@ for destino, campos in [('Claude: corregir',"noticia_guion_hash:'',noticia_story
     if not any(n['name']==destino for n in ORQ['nodes']):
         raise ValueError('Destino de invalidación desconocido: '+destino)
     f=reabrir(ORQ); p='Invalidar · '+destino
-    code(f,p+' entrada','return $input.all();')
+    code(f,p+' entrada',devolver_items())
     code(f,p+' campos','return [{json:{'+campos+'}}];')
     dt_update(f,p+' guardar','videos','video_id',"={{ $('Inicio').first().json.video_id }}")
-    code(f,p+' seguir',"return $('"+p+" entrada').all();")
+    code(f,p+' seguir',devolver_items("$('"+p+" entrada').all()"))
     f.chain(p+' entrada',p+' campos',p+' guardar',p+' seguir'); antes(f,destino,p+' entrada',p+' seguir')
 
 # La aprobación de guion comprueba la huella persistida; no confía en flags del evento.
@@ -151,10 +151,10 @@ cambiar(PROD,'Plan de producción',"const presentacion =", "if (e.modo_noticia) 
 # Defensa en la entrada real de producción y en ambas salidas de publicación.
 def guardia_noticia(wf,destino,guion=None):
     f=reabrir(wf); p='Noticia · '+destino
-    code(f,p+' entrada','return $input.all();')
+    code(f,p+' entrada',devolver_items())
     dt_get(f,p+' video','videos','video_id',"={{ $('Inicio').first().json.video_id }}")
     extra="if (v.modo_noticia) { exigirStoryboard(v,$('Inicio').first().json.storyboard); if ($('Inicio').first().json.modo_noticia !== true) throw new Error('Modalidad de noticia incompatible'); }" if guion else "if (v.modo_noticia && !v.noticia_storyboard_hash) throw new Error('Noticia sin storyboard verificado');"
-    code(f,p+' validar',NOTICIA_JS + "\nconst v=$('"+p+" video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,"+(guion or 'null')+"); "+extra+" return $('"+p+" entrada').all();")
+    code(f,p+' validar',NOTICIA_JS + "\nconst v=$('"+p+" video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,"+(guion or 'null')+"); "+extra+" " + devolver_items("$('"+p+" entrada').all()"))
     f.chain(p+' entrada',p+' video',p+' validar'); antes(f,destino,p+' entrada',p+' validar')
 guardia_noticia(PROD,'Plan de producción',"$('Inicio').first().json.guion")
 guardia_noticia(ORQ,'Canal (publicar)')
@@ -164,7 +164,7 @@ guardia_noticia(REDES,'Subir a redes')
 f=reabrir(RADAR)
 iff(f,'¿Radar de noticias activo?',"$('Leer ajustes').first().json.allowRadar === true")
 lista_cooper(f,'Canales de noticias','canales',[{'keyName':'modo_noticia','condition':'eq','keyValue':True}])
-code(f,'Pedidos de noticias',"const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; return $input.all().filter(i=>i.json.canal_id && i.json.estado === 'activo' && !i.json.eliminado && (!e.canal_id || e.canal_id === i.json.canal_id));")
+code(f,'Pedidos de noticias',"const e=$('Inicio').isExecuted ? $('Inicio').first().json : {}; " + devolver_items("$input.all().filter(i=>i.json.canal_id && i.json.estado === 'activo' && !i.json.eliminado && (!e.canal_id || e.canal_id === i.json.canal_id))"))
 call(f,'Noticias del día',W['noticia'],each=True)
 code(f,'Noticias para guardar',"return $input.all().map(i=>({json:{canal_id:i.json.canal_id,noticia_hoy:JSON.stringify(i.json.noticia)}}));")
 dt_update(f,'Guardar noticias del día','canales','canal_id','={{ $json.canal_id }}')

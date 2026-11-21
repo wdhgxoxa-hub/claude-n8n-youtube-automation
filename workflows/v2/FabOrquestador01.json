@@ -4153,7 +4153,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "88e0ae30-2958-5122-b602-4fe9852c12b6",
       "name": "Cooper · Verificar cifras entrada",
@@ -4223,7 +4223,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Verificar cifras entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Verificar cifras entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "08ea52f9-9435-5232-af9b-447c47393220",
       "name": "Cooper · Verificar cifras seguir",
@@ -4236,7 +4236,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "56c5c81f-eb2a-5bbf-9b41-11516f2f692e",
       "name": "Cooper · Aprobar guion entrada",
@@ -4306,7 +4306,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Aprobar guion entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Aprobar guion entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "4e8f1872-0bb8-5699-90a6-8ea19a6ec76f",
       "name": "Cooper · Aprobar guion seguir",
@@ -4319,7 +4319,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "3cd8909a-9ca0-5ad0-83f9-cc84439cda37",
       "name": "Cooper · Claude: corregir entrada",
@@ -4389,7 +4389,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Claude: corregir entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Claude: corregir entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "5513bd4f-a04f-5d58-912c-3db7fd50d3a6",
       "name": "Cooper · Claude: corregir seguir",
@@ -4402,7 +4402,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "405b7da8-26d0-540b-8bcf-e26cd3d49536",
       "name": "Cooper · Claude: corregir (crítico) entrada",
@@ -4472,7 +4472,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Claude: corregir (crítico) entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Claude: corregir (crítico) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "9b15d94a-6840-5695-9d64-d48fb404cee0",
       "name": "Cooper · Claude: corregir (crítico) seguir",
@@ -4573,7 +4573,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "24f11051-3a46-56e6-81dc-0937171f985e",
       "name": "Cooper · Canal del video entrada",
@@ -4643,7 +4643,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Canal del video entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Canal del video entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b8973f7b-9b4d-5814-8761-b408accf400c",
       "name": "Cooper · Canal del video seguir",
@@ -4656,7 +4656,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "a6a2e707-e33a-5449-9f9b-49dba821d523",
       "name": "Cooper · Video (publicar) entrada",
@@ -4726,7 +4726,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Cooper · Video (publicar) entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Cooper · Video (publicar) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "ea1aa3f9-8ea7-5f4b-b5b4-fd4b8f58ced8",
       "name": "Cooper · Video (publicar) seguir",
@@ -5134,7 +5134,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "dea8647e-f30e-52fe-82f7-3f917078763e",
       "name": "Presentación · Pedir storyboard entrada",
@@ -5189,7 +5189,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Pedir storyboard entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Pedir storyboard entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "ea78dfe1-578e-539b-9aca-54efcfb2b695",
       "name": "Presentación · Pedir storyboard seguir",
@@ -5202,7 +5202,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "f55ec760-1b74-5026-9299-ee1cd63e3730",
       "name": "Presentación · Pedir storyboard corregido entrada",
@@ -5257,7 +5257,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Pedir storyboard corregido entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Pedir storyboard corregido entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "6804d33a-daee-5d27-a41e-2ca789ebb040",
       "name": "Presentación · Pedir storyboard corregido seguir",
@@ -5270,7 +5270,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "78d6d063-92f1-52af-93aa-816db6d211e9",
       "name": "Presentación · Encargo de producción entrada",
@@ -5325,7 +5325,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Encargo de producción entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Encargo de producción entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "6b08dbe8-9b55-5034-b0e9-fece01002d55",
       "name": "Presentación · Encargo de producción seguir",
@@ -5338,7 +5338,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b6455ea6-6a71-5bf4-808c-f2061547a4d8",
       "name": "Presentación · Video (publicar) entrada",
@@ -5393,7 +5393,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Video (publicar) entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Video (publicar) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "4d6e82da-6c73-5978-af3e-09a2a6fe9842",
       "name": "Presentación · Video (publicar) seguir",
@@ -5406,7 +5406,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "fcc02aae-6be9-5648-a3e9-70d92d35e1cd",
       "name": "Presentación · Subir a YouTube entrada",
@@ -5461,7 +5461,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Presentación · Subir a YouTube entrada').all().map((i,k)=>({...i,pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Presentación · Subir a YouTube entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "f5e871b5-d1fb-5a87-952d-adf77b62fe2f",
       "name": "Presentación · Subir a YouTube seguir",
@@ -5516,7 +5516,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Crítico de nichos').all().map((i,k) => ({...i, pairedItem:{item:k}}));"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Crítico de nichos').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),pairedItem:{item:k}}));"
       },
       "id": "099c4cde-e1fd-57fb-bb52-c9d43523ed93",
       "name": "Cooper · costo Crítico de nichos seguir",
@@ -6006,7 +6006,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Verificar guion noticia').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Verificar guion noticia').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "23502012-8731-5db3-a500-86acadbef9dd",
       "name": "Costo · Verificar guion noticia seguir",
@@ -6243,7 +6243,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Verificar storyboard noticia').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Verificar storyboard noticia').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "c003e997-28bb-5aae-afd8-43e9630dee86",
       "name": "Costo · Verificar storyboard noticia seguir",
@@ -6256,7 +6256,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "d38c018d-78e5-57b5-8c0d-8ae5ea7d86b5",
       "name": "Invalidar · Claude: corregir entrada",
@@ -6325,7 +6325,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Invalidar · Claude: corregir entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Invalidar · Claude: corregir entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "b131294a-5c76-55a4-952b-f17653e48d1a",
       "name": "Invalidar · Claude: corregir seguir",
@@ -6338,7 +6338,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "57b3c963-0260-5cd7-be32-5706c633387f",
       "name": "Invalidar · Claude: corregir (crítico) entrada",
@@ -6407,7 +6407,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Invalidar · Claude: corregir (crítico) entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Invalidar · Claude: corregir (crítico) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "5802a299-026f-51ba-9975-7c1a09630221",
       "name": "Invalidar · Claude: corregir (crítico) seguir",
@@ -6420,7 +6420,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "9e7f380c-de1d-5a9c-9de4-df730d487218",
       "name": "Invalidar · Claude: storyboard corregido entrada",
@@ -6489,7 +6489,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Invalidar · Claude: storyboard corregido entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Invalidar · Claude: storyboard corregido entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "3306d798-f3be-559a-a4e2-65164d5669ca",
       "name": "Invalidar · Claude: storyboard corregido seguir",
@@ -6502,7 +6502,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "61d4cb80-4c51-590e-aebd-9b759dac6076",
       "name": "Invalidar · Encargo de guion noticia entrada",
@@ -6571,7 +6571,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Invalidar · Encargo de guion noticia entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Invalidar · Encargo de guion noticia entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "7d986a1a-83ef-55b6-b1c4-0e8acaefcbb2",
       "name": "Invalidar · Encargo de guion noticia seguir",
@@ -6584,7 +6584,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "9ca479bd-da64-5ab0-b69c-4bad412aa270",
       "name": "Invalidar · Encargo de storyboard noticia entrada",
@@ -6653,7 +6653,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Invalidar · Encargo de storyboard noticia entrada').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Invalidar · Encargo de storyboard noticia entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "82e60a98-1875-532f-b86a-7f8ff2f599ad",
       "name": "Invalidar · Encargo de storyboard noticia seguir",
@@ -6666,7 +6666,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $input.all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "8ef2eeb7-f701-5b86-8b68-3dafa4949e9f",
       "name": "Noticia · Canal (publicar) entrada",
@@ -6716,7 +6716,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst v=$('Noticia · Canal (publicar) video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,null); if (v.modo_noticia && !v.noticia_storyboard_hash) throw new Error('Noticia sin storyboard verificado'); return $('Noticia · Canal (publicar) entrada').all();"
+        "jsCode": "// Política de noticias, compartida por radar, guion, producción y publicación.\nfunction fechaNoticia(fecha) {\n  const ms = Date.parse(fecha);\n  const dia = x => new Intl.DateTimeFormat('en-CA', { timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit' }).format(x);\n  return Number.isFinite(ms) && ms <= Date.now() && dia(ms) === dia(Date.now());\n}\nfunction validarHechos(hechos, consultadas) {\n  const urls = new Set(consultadas || []);\n  return Array.isArray(hechos) && hechos.length > 0 && hechos.length <= 30 &&\n    new Set(hechos.map(h => h.id)).size === hechos.length && hechos.every(h =>\n      typeof h.id === 'string' && /^[a-z0-9_-]{1,40}$/.test(h.id) && typeof h.dato === 'string' && h.dato.trim() &&\n      Array.isArray(h.fuentes) && h.fuentes.length > 0 && h.fuentes.every(f =>\n        typeof f.url === 'string' && /^https:\\/\\/[a-z0-9.-]+(?::443)?(?:[/?#][^\\s]*)?$/i.test(f.url) &&\n        urls.has(f.url) && typeof f.titulo === 'string' && f.titulo.trim() && Number.isFinite(Date.parse(f.fecha)) && Date.parse(f.fecha) <= Date.now()));\n}\nfunction validarNoticia(n) {\n  if (!n || !fechaNoticia(n.fecha) || !n.titulo?.trim() || !validarHechos(n.hechos, n.fuentes_consultadas))\n    throw new Error('Noticia detenida: faltan hechos, fuentes consultadas o noticia del día');\n  return n;\n}\nfunction validarVerificacion(n, r, respuesta) {\n  validarNoticia(n);\n  if (!respuesta?.busqueda_real || r?.verificado !== true || !validarHechos(r.hechos, respuesta.fuentes_consultadas) ||\n      r.hechos.length !== n.hechos.length || n.hechos.some(h => !r.hechos.some(v => v.id === h.id && v.dato === h.dato && v.estado === 'ok')))\n    throw new Error('Noticia detenida: datos sin verificar o contradictorios');\n  return { ...n, hechos:r.hechos, fuentes_consultadas:respuesta.fuentes_consultadas, verificado:true, verificado_en:new Date().toISOString() };\n}\nfunction exigirNoticia(n) {\n  validarNoticia(n);\n  const age = Date.now() - Date.parse(n.verificado_en);\n  if (n.verificado !== true || !Number.isFinite(age) || age < 0 || age > 24 * 3600000 || n.hechos.some(h => h.estado !== 'ok'))\n    throw new Error('Noticia detenida: verificación ausente o vencida');\n}\nfunction huellaGuion(g) {\n  return require('crypto').createHash('sha256').update(JSON.stringify(g)).digest('hex');\n}\nfunction exigirGuion(v, g) {\n  if (!v.modo_noticia) return;\n  const n = JSON.parse(v.noticia || 'null'); exigirNoticia(n);\n  if (!v.noticia_guion_hash || (g && v.noticia_guion_hash !== huellaGuion(g)))\n    throw new Error('Noticia detenida: el guion no coincide con la versión verificada');\n}\nfunction exigirVisuales(storyboard) {\n  const planos = storyboard?.planos;\n  if (!Array.isArray(planos) || !planos.length || planos.some(p =>\n    !['imagen','clip'].includes(p.tipo) || p.origen_visual !== 'generado' ||\n    !['mapa','cifra','esquema'].includes(p.recurso_didactico) ||\n    typeof p.prompt_imagen !== 'string' || !p.prompt_imagen.trim() ||\n    /https?:\\/\\//i.test(JSON.stringify(p))))\n    throw new Error('Noticia detenida: solo mapas, cifras y esquemas generados; nunca imágenes de medios');\n}\nfunction exigirStoryboard(v, storyboard) {\n  if (!v.modo_noticia) return;\n  exigirGuion(v, null);\n  exigirVisuales(storyboard);\n  if (!v.noticia_storyboard_hash || v.noticia_storyboard_hash !== huellaGuion(storyboard))\n    throw new Error('Noticia detenida: storyboard distinto de la versión verificada');\n}\n\nconst v=$('Noticia · Canal (publicar) video').first().json; if (!v.video_id) throw new Error('Video no encontrado'); exigirGuion(v,null); if (v.modo_noticia && !v.noticia_storyboard_hash) throw new Error('Noticia sin storyboard verificado'); /* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Noticia · Canal (publicar) entrada').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "99408eca-043a-5b28-b443-96d727bd6c28",
       "name": "Noticia · Canal (publicar) validar",
@@ -6845,7 +6845,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $('Inicio').all();"
+        "jsCode": "/* Ítems públicos de n8n: sin metadata interna del subflujo. */\nreturn $('Inicio').all().map((i,k)=>({json:i.json,...(i.binary === undefined ? {} : {binary:i.binary}),...(i.pairedItem === undefined ? {} : {pairedItem:i.pairedItem})}));"
       },
       "id": "283633ae-6e4f-57ce-b414-03e89ab99fed",
       "name": "Cooper · continuar ejecución",
@@ -6858,7 +6858,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Proyección cerrada de datos públicos: jamás se serializan filas de proveedor/costos.\nfunction jsonCooper(value, fallback) { try { return JSON.parse(value || 'null') ?? fallback; } catch { return fallback; } }\nfunction urlCooper(value) { const s=String(value || ''); return /^https:\\/\\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::443)?(?:[/?#][^\\s\\\\<>]*)?$/i.test(s) ? s : ''; }\nfunction fechaCooper(value) { const n = typeof value === 'number' ? value : Date.parse(value); return Number.isFinite(n) && n > 0 ? new Date(n).toISOString() : null; }\nfunction numeroCooper(value) { return value !== null && value !== '' && value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null; }\nfunction textoCooper(value, max = 2000) {\n  // Los textos libres de especialistas pueden mencionar datos administrativos.\n  return String(value || '').replace(/https?:\\/\\/\\S+/gi, '[enlace]').replace(/(?:Bearer|Apikey)\\s+\\S+/gi, '[privado]')\n    .split(/\\n|(?<=[.!?])\\s/).filter(s => !/\\b(?:USD|US\\$|costos?|presupuesto|tokens?|api.?key|secret|proveedor|credencial|OpenAI|Claude|Creatomate|HeyGen|ElevenLabs|Gemini)\\b|\\$\\s*\\d/i.test(s)).join(' ').slice(0,max);\n}\nfunction curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({segundo:numeroCooper(p.second ?? p.segundo),porcentaje:numeroCooper(p.percentage ?? p.porcentaje)})).filter(p=>p.segundo!==null && p.porcentaje!==null).sort((a,b)=>a.segundo-b.segundo).slice(0,600); }\nfunction medicionCooper(value) {\n  const fecha = fechaCooper(value.fecha); if (!fecha) return null;\n  const r = numeroCooper(value.retencion);\n  return { fecha, curvaFuente:value.curvaFuente==='youtube_intervalos'?'youtube_intervalos':'post_segundos', seguidoresGanados:numeroCooper(value.seguidoresGanados), ventana:['24h','72h','7d'].includes(value.ventana)?value.ventana:null, demoraHoras:numeroCooper(value.demora_horas), curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };\n}\nfunction leccionesCooper(canal, trabajos) {\n  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).slice(-100).flatMap(t => {\n    const raw = jsonCooper(t.resultado, {}), r = raw.resultado || raw;\n    const fecha = fechaCooper(t.updatedAt || t.createdAt); if (!fecha) return [];\n    if (r.evidencia_version === 1) return (r.lecciones || []).slice(0,30).map(l => {\n      const aplicaciones = trabajos.filter(g=>g.canal_id===canal.canal_id && ['guion','corregir_guion'].includes(g.modo) && ['ok','listo'].includes(g.estado)).flatMap(g=>{\n        const raw=jsonCooper(g.resultado,{}), a=(raw.resultado?.aprendizajes_aplicados || []).find(a=>a.id===l.id && a.cambio);\n        return a?[{videoId:String(g.video_id),cambio:textoCooper(a.cambio,1500)}]:[];\n      }).slice(-20);\n      return { id:String(l.id),fecha,resumen:textoCooper(l.regla,3000),ganchos:[],temas:[],causa:textoCooper(l.causa),correccion:textoCooper(l.correccion),nivel:l.nivel==='patron'?'patron':'hipotesis',aplicaciones,\n        origenes:(l.origenes || []).slice(0,20).map(o=>({videoId:String(o.video_id),red:String(o.red).slice(0,40),ventana:o.ventana,fecha:fechaCooper(o.fecha),metrica:o.metrica,valor:numeroCooper(o.valor),...(numeroCooper(o.segundo)!==null?{segundo:numeroCooper(o.segundo)}:{}),demoraHoras:numeroCooper(o.demora_horas) || 0})).filter(o=>o.fecha && o.valor!==null) };\n    });\n    const lista = x => (Array.isArray(x) ? x : []).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);\n    const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);\n    return resumen ? [{id:String(t.job_id),fecha,resumen,ganchos:lista(r.ganchos_que_funcionan || r.ganchos).concat(lista(r.lecciones).filter(x=>/gancho|apertura/i.test(x))).slice(0,20),temas:lista(r.temas_que_funcionan || r.temas).concat(lista(r.lecciones).filter(x=>/tema/i.test(x))).slice(0,20)}] : [];\n  }).slice(-100);\n}\nfunction observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {\n  const publicadas = publicaciones.filter(p => p.video_id === v.video_id).flatMap(p => {\n    const r = jsonCooper(p.resultado, {});\n    // Cada red confirmada se conserva aunque otra red del envío falle.\n    const resultados = Array.isArray(r.publicaciones) ? r.publicaciones.filter(x => x.publicado === true) : p.estado === 'publicado' ? (r.urls || [p.url]).filter(Boolean).map(url => ({url,red: inferirRedCooper(url)})) : [];\n    const historiales = jsonCooper(p.metricas_historial, {});\n    return resultados.map(x => ({ id:String(p.request_id)+':'+x.red, red:String(x.red || p.plataforma || 'Otra red'),url:urlCooper(x.url),fecha:fechaCooper(p.publicado_en),miniatura:urlCooper(v.miniatura_url),\n      historial:(Array.isArray(historiales[x.red]) ? historiales[x.red] : []).map(medicionCooper).filter(Boolean).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90) }));\n  });\n  if (v.youtube_id && v.estado === 'publicado' && !publicadas.some(p => p.red === 'youtube' && p.url.includes(v.youtube_id))) {\n    publicadas.push({id:'youtube:'+v.youtube_id,red:'youtube',url:'https://www.youtube.com/watch?v='+encodeURIComponent(v.youtube_id),fecha:fechaCooper(v.publicado_en),miniatura:urlCooper(v.miniatura_url),historial:jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean).slice(-90)});\n  }\n  const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);\n  for (const p of publicadas) if (p.red==='youtube') {\n    const clave=m=>m.fecha.slice(0,10)+':'+(m.ventana || 'diaria');\n    const porDia=new Map(ytHist.map(m=>[clave(m),m]));\n    for (const m of p.historial) { const otro=porDia.get(clave(m)), curva=m.curvaRetencion.length?m:otro; porDia.set(clave(m),{...m,curvaRetencion:curva?.curvaRetencion || [],curvaFuente:curva?.curvaFuente || m.curvaFuente,retencion:m.retencion ?? otro?.retencion ?? null,seguidoresGanados:m.seguidoresGanados ?? otro?.seguidoresGanados ?? null}); }\n    p.historial=[...porDia.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90);\n  }\n  // Los eventos de resolución explicitan qué revisión fue superada. Avanzar de etapa no basta.\n  const propios = eventos.filter(e => e.video_id === v.video_id && ['incidencia_cooper','correccion_cooper'].includes(e.tipo)).sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));\n  const incidencias=[];\n  for (const e of propios) {\n    const d=jsonCooper(e.detalle,{}), fecha=fechaCooper(e.createdAt); if (!fecha) continue;\n    if (e.tipo === 'correccion_cooper') {\n      for (const i of incidencias) if (i.estado === 'pendiente' && (d.tipos || []).includes(i.tipo)) { i.estado='corregido'; i.corregidoEn=fecha; i.cambio=textoCooper(d.cambio); }\n    } else if (['ejecucion','critico','verificador','correccion','calidad'].includes(d.tipo)) incidencias.push({id:String(e.id || e.evento),tipo:d.tipo,resumen:textoCooper(d.resumen),fecha,estado:'pendiente',corregidoEn:null,cambio:''});\n  }\n  for (const a of aprobaciones.filter(a=>a.video_id===v.video_id && a.cambios)) {\n    const fecha=fechaCooper(a.decidido_en || a.createdAt); if (!fecha) continue;\n    const siguiente=aprobaciones.filter(b=>b.video_id===v.video_id && b.etapa===a.etapa && ['aprobado','decidida'].includes(b.estado) && fechaCooper(b.decidido_en)>fecha).sort((a,b)=>String(a.decidido_en).localeCompare(String(b.decidido_en)))[0];\n    incidencias.push({id:'aprobacion:'+a.aprobacion_id,tipo:'correccion',resumen:textoCooper(a.cambios),fecha,estado:siguiente?'corregido':'pendiente',corregidoEn:siguiente?fechaCooper(siguiente.decidido_en):null,cambio:siguiente?'La nueva versión recibió aprobación después de los cambios solicitados.':''});\n  }\n  if (v.error && !incidencias.some(i=>i.estado==='pendiente')) incidencias.push({id:'estado:'+v.video_id,tipo:'ejecucion',resumen:'La producción registró un fallo; está pendiente de revisión.',fecha:fechaCooper(v.updatedAt || v.createdAt) || new Date(0).toISOString(),estado:'pendiente',corregidoEn:null,cambio:''});\n  const guardadas = jsonCooper(v.cooper_escenas,[]);\n  const escenas = guardadas.length ? guardadas : planos.filter(p=>p.video_id===v.video_id).map((p,i)=>({id:p.plano_id,orden:Math.max(0,Number(p.orden) || i),imagen:['imagen','ilustracion'].includes(p.tipo)?p.archivo_url || p.url:'',clip:['clip','archivo','avatar'].includes(p.tipo)?p.archivo_url || p.url:'',voz:p.voz_url || ''}));\n  return {montaje:urlCooper(v.render_url),miniatura:urlCooper(v.miniatura_url),escenas:escenas.slice(0,200).map((e,i)=>({id:String(e.id || i),orden:Math.max(0,Math.floor(Number(e.orden)||0)),imagen:urlCooper(e.imagen),clip:urlCooper(e.clip),voz:urlCooper(e.voz)})),publicaciones:publicadas.slice(0,100),incidencias:incidencias.slice(-200)};\n}\nfunction inferirRedCooper(url) { const host = String(url).match(/^https:\\/\\/(?:www\\.)?([^/:?#]+)/i)?.[1]?.toLowerCase(); return ({'youtube.com':'youtube','youtu.be':'youtube','tiktok.com':'tiktok','instagram.com':'instagram','facebook.com':'facebook'})[host] || 'Otra red'; }\nfunction historialRedesCooper(p, respuesta, ahora) {\n  const historial=jsonCooper(p.metricas_historial,{}), fecha=new Date(ahora).toISOString();\n  for (const [red,r] of Object.entries(respuesta.platforms || {})) {\n    if (r.success !== true || r.post_metrics_error || !r.post_metrics) continue;\n    const m=r.post_metrics;\n    // No usar snapshots del perfil como si fueran métricas de un video.\n    const curva=curvaCooper(m.retention);\n    const horas=(ahora-Date.parse(p.publicado_en || ''))/3600000,ventana=horas>=168?'7d':horas>=72?'72h':horas>=24?'24h':null;\n    const dato={fecha,ventana,demora_horas:ventana?Math.max(0,Math.round(horas-(ventana==='7d'?168:ventana==='72h'?72:24))):null,seguidoresGanados:numeroCooper(m.new_followers),vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};\n    const prev=Array.isArray(historial[red])?historial[red]:[];\n    historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10) || x.ventana!==ventana),dato].slice(-90);\n  }\n  return JSON.stringify(historial);\n}\n\nconst e=$('Inicio').first().json;\nreturn e.evento==='corregir' && e.video_id?[{json:{video_id:e.video_id,canal_id:e.canal_id || '',tipo:'incidencia_cooper',evento:String($execution.id)+':cambio',detalle:JSON.stringify({tipo:'correccion',resumen:textoCooper(e.instruccion || 'Se solicitaron cambios en este video.')})}}]:[];\n"
+        "jsCode": "// Proyección cerrada de datos públicos: jamás se serializan filas de proveedor/costos.\nfunction jsonCooper(value, fallback) { try { return JSON.parse(value || 'null') ?? fallback; } catch { return fallback; } }\nfunction urlCooper(value) { const s=String(value || ''); return /^https:\\/\\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::443)?(?:[/?#][^\\s\\\\<>]*)?$/i.test(s) ? s : ''; }\nfunction fechaCooper(value) { const n = typeof value === 'number' ? value : Date.parse(value); return Number.isFinite(n) && n > 0 ? new Date(n).toISOString() : null; }\nfunction numeroCooper(value) { return value !== null && value !== '' && value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null; }\nfunction textoCooper(value, max = 2000) {\n  // Los textos libres de especialistas pueden mencionar datos administrativos.\n  return String(value || '').replace(/https?:\\/\\/\\S+/gi, '[enlace]').replace(/(?:Bearer|Apikey)\\s+\\S+/gi, '[privado]')\n    .split(/\\n|(?<=[.!?])\\s/).filter(s => !/\\b(?:USD|US\\$|costos?|presupuesto|tokens?|api.?key|secret|proveedor|credencial|OpenAI|Claude|Creatomate|HeyGen|ElevenLabs|Gemini)\\b|\\$\\s*\\d/i.test(s)).join(' ').slice(0,max);\n}\nfunction curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({segundo:numeroCooper(p.second ?? p.segundo),porcentaje:numeroCooper(p.percentage ?? p.porcentaje)})).filter(p=>p.segundo!==null && p.porcentaje!==null).sort((a,b)=>a.segundo-b.segundo).slice(0,600); }\nfunction medicionCooper(value) {\n  const fecha = fechaCooper(value.fecha); if (!fecha) return null;\n  const r = numeroCooper(value.retencion);\n  return { fecha, curvaFuente:value.curvaFuente==='youtube_intervalos'?'youtube_intervalos':'post_segundos', seguidoresGanados:numeroCooper(value.seguidoresGanados), ventana:['24h','72h','7d'].includes(value.ventana)?value.ventana:null, demoraHoras:numeroCooper(value.demora_horas), curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };\n}\nfunction leccionesCooper(canal, trabajos) {\n  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).sort((a,b)=>String(a.updatedAt || a.createdAt || '').localeCompare(String(b.updatedAt || b.createdAt || ''))).slice(-100).flatMap(t => {\n    const raw = jsonCooper(t.resultado, {}), r = raw.resultado || raw;\n    const fecha = fechaCooper(t.updatedAt || t.createdAt); if (!fecha) return [];\n    if (r.evidencia_version === 1) return (r.lecciones || []).slice(0,30).map(l => {\n      const aplicaciones = trabajos.filter(g=>g.canal_id===canal.canal_id && ['guion','corregir_guion'].includes(g.modo) && ['ok','listo'].includes(g.estado)).flatMap(g=>{\n        const raw=jsonCooper(g.resultado,{}), a=(raw.resultado?.aprendizajes_aplicados || []).find(a=>a.id===l.id && a.cambio);\n        return a?[{videoId:String(g.video_id),cambio:textoCooper(a.cambio,1500)}]:[];\n      }).slice(-20);\n      return { id:String(l.id),fecha,resumen:textoCooper(l.regla,3000),ganchos:[],temas:[],causa:textoCooper(l.causa),correccion:textoCooper(l.correccion),nivel:l.nivel==='patron'?'patron':'hipotesis',aplicaciones,\n        origenes:(l.origenes || []).slice(0,20).map(o=>({videoId:String(o.video_id),red:String(o.red).slice(0,40),ventana:o.ventana,fecha:fechaCooper(o.fecha),metrica:o.metrica,valor:numeroCooper(o.valor),...(numeroCooper(o.segundo)!==null?{segundo:numeroCooper(o.segundo)}:{}),demoraHoras:numeroCooper(o.demora_horas) || 0})).filter(o=>o.fecha && o.valor!==null) };\n    });\n    const lista = x => (Array.isArray(x) ? x : []).filter(v => typeof v === 'string' || v && typeof v === 'object' && !Array.isArray(v)).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);\n    const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);\n    return resumen ? [{id:String(t.job_id),fecha,resumen,ganchos:lista(r.ganchos_que_funcionan || r.ganchos).concat(lista(r.lecciones).filter(x=>/gancho|apertura/i.test(x))).slice(0,20),temas:lista(r.temas_que_funcionan || r.temas).concat(lista(r.lecciones).filter(x=>/tema/i.test(x))).slice(0,20)}] : [];\n  }).slice(-100);\n}\nfunction observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {\n  const publicadas = publicaciones.filter(p => p.video_id === v.video_id).flatMap(p => {\n    const r = jsonCooper(p.resultado, {});\n    // Cada red confirmada se conserva aunque otra red del envío falle.\n    const resultados = Array.isArray(r.publicaciones) ? r.publicaciones.filter(x => x.publicado === true) : p.estado === 'publicado' ? (r.urls || [p.url]).filter(Boolean).map(url => ({url,red: inferirRedCooper(url)})) : [];\n    const historiales = jsonCooper(p.metricas_historial, {});\n    return resultados.map(x => ({ id:String(p.request_id)+':'+x.red, red:String(x.red || p.plataforma || 'Otra red'),url:urlCooper(x.url),fecha:fechaCooper(p.publicado_en),miniatura:urlCooper(v.miniatura_url),\n      historial:(Array.isArray(historiales[x.red]) ? historiales[x.red] : []).map(medicionCooper).filter(Boolean).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90) }));\n  });\n  if (v.youtube_id && v.estado === 'publicado' && !publicadas.some(p => p.red === 'youtube' && p.url.includes(v.youtube_id))) {\n    publicadas.push({id:'youtube:'+v.youtube_id,red:'youtube',url:'https://www.youtube.com/watch?v='+encodeURIComponent(v.youtube_id),fecha:fechaCooper(v.publicado_en),miniatura:urlCooper(v.miniatura_url),historial:jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean).slice(-90)});\n  }\n  const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);\n  for (const p of publicadas) if (p.red==='youtube') {\n    const clave=m=>m.fecha.slice(0,10)+':'+(m.ventana || 'diaria');\n    const porDia=new Map(ytHist.map(m=>[clave(m),m]));\n    for (const m of p.historial) { const otro=porDia.get(clave(m)), curva=m.curvaRetencion.length?m:otro; porDia.set(clave(m),{...m,curvaRetencion:curva?.curvaRetencion || [],curvaFuente:curva?.curvaFuente || m.curvaFuente,retencion:m.retencion ?? otro?.retencion ?? null,seguidoresGanados:m.seguidoresGanados ?? otro?.seguidoresGanados ?? null}); }\n    p.historial=[...porDia.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90);\n  }\n  // Los eventos de resolución explicitan qué revisión fue superada. Avanzar de etapa no basta.\n  const propios = eventos.filter(e => e.video_id === v.video_id && ['incidencia_cooper','correccion_cooper'].includes(e.tipo)).sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));\n  const incidencias=[];\n  for (const e of propios) {\n    const d=jsonCooper(e.detalle,{}), fecha=fechaCooper(e.createdAt); if (!fecha) continue;\n    if (e.tipo === 'correccion_cooper') {\n      for (const i of incidencias) if (i.estado === 'pendiente' && (d.tipos || []).includes(i.tipo)) { i.estado='corregido'; i.corregidoEn=fecha; i.cambio=textoCooper(d.cambio); }\n    } else if (['ejecucion','critico','verificador','correccion','calidad'].includes(d.tipo)) incidencias.push({id:String(e.id || e.evento),tipo:d.tipo,resumen:textoCooper(d.resumen),fecha,estado:'pendiente',corregidoEn:null,cambio:''});\n  }\n  for (const a of aprobaciones.filter(a=>a.video_id===v.video_id && a.cambios)) {\n    const fecha=fechaCooper(a.decidido_en || a.createdAt); if (!fecha) continue;\n    const siguiente=aprobaciones.filter(b=>b.video_id===v.video_id && b.etapa===a.etapa && ['aprobado','decidida'].includes(b.estado) && fechaCooper(b.decidido_en)>fecha).sort((a,b)=>String(a.decidido_en).localeCompare(String(b.decidido_en)))[0];\n    incidencias.push({id:'aprobacion:'+a.aprobacion_id,tipo:'correccion',resumen:textoCooper(a.cambios),fecha,estado:siguiente?'corregido':'pendiente',corregidoEn:siguiente?fechaCooper(siguiente.decidido_en):null,cambio:siguiente?'La nueva versión recibió aprobación después de los cambios solicitados.':''});\n  }\n  if (v.error && !incidencias.some(i=>i.estado==='pendiente')) incidencias.push({id:'estado:'+v.video_id,tipo:'ejecucion',resumen:'La producción registró un fallo; está pendiente de revisión.',fecha:fechaCooper(v.updatedAt || v.createdAt) || new Date(0).toISOString(),estado:'pendiente',corregidoEn:null,cambio:''});\n  const guardadas = jsonCooper(v.cooper_escenas,[]);\n  const escenas = guardadas.length ? guardadas : planos.filter(p=>p.video_id===v.video_id).map((p,i)=>({id:p.plano_id,orden:Math.max(0,Number(p.orden) || i),imagen:['imagen','ilustracion'].includes(p.tipo)?p.archivo_url || p.url:'',clip:['clip','archivo','avatar'].includes(p.tipo)?p.archivo_url || p.url:'',voz:p.voz_url || ''}));\n  return {montaje:urlCooper(v.render_url),miniatura:urlCooper(v.miniatura_url),escenas:escenas.slice(0,200).map((e,i)=>({id:String(e.id || i),orden:Math.max(0,Math.floor(Number(e.orden)||0)),imagen:urlCooper(e.imagen),clip:urlCooper(e.clip),voz:urlCooper(e.voz)})),publicaciones:publicadas.slice(0,100),incidencias:incidencias.slice(-200)};\n}\nfunction inferirRedCooper(url) { const host = String(url).match(/^https:\\/\\/(?:www\\.)?([^/:?#]+)/i)?.[1]?.toLowerCase(); return ({'youtube.com':'youtube','youtu.be':'youtube','tiktok.com':'tiktok','instagram.com':'instagram','facebook.com':'facebook'})[host] || 'Otra red'; }\nfunction historialRedesCooper(p, respuesta, ahora) {\n  const historial=jsonCooper(p.metricas_historial,{}), fecha=new Date(ahora).toISOString();\n  for (const [red,r] of Object.entries(respuesta.platforms || {})) {\n    if (r.success !== true || r.post_metrics_error || !r.post_metrics) continue;\n    const m=r.post_metrics;\n    // No usar snapshots del perfil como si fueran métricas de un video.\n    const curva=curvaCooper(m.retention);\n    const horas=(ahora-Date.parse(p.publicado_en || ''))/3600000,ventana=horas>=168?'7d':horas>=72?'72h':horas>=24?'24h':null;\n    const dato={fecha,ventana,demora_horas:ventana?Math.max(0,Math.round(horas-(ventana==='7d'?168:ventana==='72h'?72:24))):null,seguidoresGanados:numeroCooper(m.new_followers),vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};\n    const prev=Array.isArray(historial[red])?historial[red]:[];\n    historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10) || x.ventana!==ventana),dato].slice(-90);\n  }\n  return JSON.stringify(historial);\n}\n\nconst e=$('Inicio').first().json;\nreturn e.evento==='corregir' && e.video_id?[{json:{video_id:e.video_id,canal_id:e.canal_id || '',tipo:'incidencia_cooper',evento:String($execution.id)+':cambio',detalle:JSON.stringify({tipo:'correccion',resumen:textoCooper(e.instruccion || 'Se solicitaron cambios en este video.')})}}]:[];\n"
       },
       "id": "1b5fe151-3e8a-5c90-9939-cb33519f5a86",
       "name": "Cooper · cambio solicitado",
@@ -8259,6 +8259,106 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8055771a-8860-54fd-9285-90b6b0a05134",
+              "leftValue": "={{ $('Inicio').first().json.evento === 'claude_error' && !!$('Inicio').first().json.video_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a416e1f0-b3f2-5aec-b516-3c3a68991b19",
+      "name": "¿Falló el especialista?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst e=$('Inicio').first().json;\nreturn [{json:{etapa:e.modo==='storyboard'?'storyboard':'guion',estado:'con_fallas',\n  error:'El especialista no completó el encargo; requiere revisión antes de continuar.'}}];\n"
+      },
+      "id": "5f2c2c34-c5b2-5358-ab3e-d1da434b756d",
+      "name": "Especialista · fallo durable",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "VIfMDnjzrrw1p2EA"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "video_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Inicio').first().json.video_id }}"
+            },
+            {
+              "keyName": "estado",
+              "condition": "neq",
+              "keyValue": "cancelado"
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            },
+            {
+              "keyName": "eliminado",
+              "condition": "neq",
+              "keyValue": true
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "2500b900-22a6-5ee7-b6a6-a4550f60819c",
+      "name": "Especialista · guardar fallo",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Guardar video\" + ':' + $runIndex + ':' + k }}));"
       },
       "id": "726de92a-e960-571f-8aff-5071349c3428",
@@ -9183,6 +9283,48 @@
     },
     {
       "parameters": {
+        "jsCode": "return $input.all().map((i,k) => ({json:{...i.json, cooper_actualizado_en:Date.now(), cooper_evento_id:String($execution.id)+':' + \"Especialista · guardar fallo\" + ':' + $runIndex + ':' + k }}));"
+      },
+      "id": "95c1d19e-2952-51cc-befa-4ef377c4e4f0",
+      "name": "Cooper · sello Especialista · guardar fallo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        9900,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FabCooperProgr01"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "fb7616b2-43ec-5367-9c50-8801635fa17b",
+      "name": "Cooper · sello Especialista · guardar fallo aviso",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        10120,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "resource": "row",
         "operation": "get",
         "dataTableId": {
@@ -9347,7 +9489,7 @@
       "main": [
         [
           {
-            "node": "Ruta",
+            "node": "¿Falló el especialista?",
             "type": "main",
             "index": 0
           }
@@ -12860,6 +13002,35 @@
         ]
       ]
     },
+    "¿Falló el especialista?": {
+      "main": [
+        [
+          {
+            "node": "Especialista · fallo durable",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ruta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Especialista · fallo durable": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Especialista · guardar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Cooper · sello Guardar video": {
       "main": [
         [
@@ -13556,6 +13727,33 @@
         [
           {
             "node": "Cooper · sello Invalidar · Encargo de storyboard noticia guardar aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Especialista · guardar fallo": {
+      "main": [
+        [
+          {
+            "node": "Especialista · guardar fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cooper · sello Especialista · guardar fallo aviso": {
+      "main": [
+        []
+      ]
+    },
+    "Especialista · guardar fallo": {
+      "main": [
+        [
+          {
+            "node": "Cooper · sello Especialista · guardar fallo aviso",
             "type": "main",
             "index": 0
           }

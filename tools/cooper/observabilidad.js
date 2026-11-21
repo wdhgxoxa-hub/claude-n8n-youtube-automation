@@ -15,7 +15,7 @@ function medicionCooper(value) {
   return { fecha, curvaFuente:value.curvaFuente==='youtube_intervalos'?'youtube_intervalos':'post_segundos', seguidoresGanados:numeroCooper(value.seguidoresGanados), ventana:['24h','72h','7d'].includes(value.ventana)?value.ventana:null, demoraHoras:numeroCooper(value.demora_horas), curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };
 }
 function leccionesCooper(canal, trabajos) {
-  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).slice(-100).flatMap(t => {
+  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && ['ok','listo'].includes(t.estado)).sort((a,b)=>String(a.updatedAt || a.createdAt || '').localeCompare(String(b.updatedAt || b.createdAt || ''))).slice(-100).flatMap(t => {
     const raw = jsonCooper(t.resultado, {}), r = raw.resultado || raw;
     const fecha = fechaCooper(t.updatedAt || t.createdAt); if (!fecha) return [];
     if (r.evidencia_version === 1) return (r.lecciones || []).slice(0,30).map(l => {
@@ -26,7 +26,7 @@ function leccionesCooper(canal, trabajos) {
       return { id:String(l.id),fecha,resumen:textoCooper(l.regla,3000),ganchos:[],temas:[],causa:textoCooper(l.causa),correccion:textoCooper(l.correccion),nivel:l.nivel==='patron'?'patron':'hipotesis',aplicaciones,
         origenes:(l.origenes || []).slice(0,20).map(o=>({videoId:String(o.video_id),red:String(o.red).slice(0,40),ventana:o.ventana,fecha:fechaCooper(o.fecha),metrica:o.metrica,valor:numeroCooper(o.valor),...(numeroCooper(o.segundo)!==null?{segundo:numeroCooper(o.segundo)}:{}),demoraHoras:numeroCooper(o.demora_horas) || 0})).filter(o=>o.fecha && o.valor!==null) };
     });
-    const lista = x => (Array.isArray(x) ? x : []).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);
+    const lista = x => (Array.isArray(x) ? x : []).filter(v => typeof v === 'string' || v && typeof v === 'object' && !Array.isArray(v)).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);
     const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);
     return resumen ? [{id:String(t.job_id),fecha,resumen,ganchos:lista(r.ganchos_que_funcionan || r.ganchos).concat(lista(r.lecciones).filter(x=>/gancho|apertura/i.test(x))).slice(0,20),temas:lista(r.temas_que_funcionan || r.temas).concat(lista(r.lecciones).filter(x=>/tema/i.test(x))).slice(0,20)}] : [];
   }).slice(-100);
