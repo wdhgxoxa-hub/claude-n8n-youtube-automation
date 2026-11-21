@@ -1,7 +1,9 @@
 const auth = $('Autenticar').first().json;
 if (!auth.admin) return [{ json: { status: 403, respuesta: { error: 'No autorizado' } } }];
-const now = new Date(), day = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-const week = day - ((now.getUTCDay() + 6) % 7) * 86400000, month = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1);
+// El mismo día operativo America/Lima que la web y sus avisos (UTC−05).
+const offset = 5 * 3600000, now = new Date(Date.now() - offset);
+const day = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) + offset;
+const week = day - ((now.getUTCDay() + 6) % 7) * 86400000, month = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1) + offset;
 const result = new Map(); let estimados = false;
 for (const item of $input.all()) {
   const c = item.json, time = Date.parse(c.createdAt), usd = Number(c.usd);

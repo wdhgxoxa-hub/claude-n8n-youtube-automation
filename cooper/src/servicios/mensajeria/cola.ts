@@ -13,6 +13,7 @@ import {
   type AvisoWhatsApp,
 } from "@/db/schema";
 import { ErrorHttp } from "@/lib/permisos";
+import { periodosLima } from "@/lib/periodos";
 import {
   contacto,
   cuentaActiva,
@@ -138,7 +139,7 @@ export function encolarGasto(admin: User, detail: string, now = Date.now()) {
   if (admin.role !== "admin") throw new ErrorHttp(403, "Aviso no disponible.");
   const c = contacto(admin.id);
   if (!c?.verifiedAt || !preferencias(c.preferences).gasto) return;
-  const day = new Date(now).toISOString().slice(0, 10);
+  const { date: day, day: start } = periodosLima(now);
   db()
     .insert(outbox)
     .values({
@@ -152,7 +153,7 @@ export function encolarGasto(admin: User, detail: string, now = Date.now()) {
       simulated: c.simulated,
       nextAt: now,
       createdAt: now,
-      expiresAt: Date.parse(`${day}T00:00:00Z`) + DIA,
+      expiresAt: start + DIA,
     })
     .onConflictDoNothing()
     .run();

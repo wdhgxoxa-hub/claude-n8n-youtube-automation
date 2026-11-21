@@ -97,7 +97,7 @@ export function Admin({ initial }: { initial: Administracion }) {
           </div>
         </div>
         <p className="helper">
-          Periodos de calendario en UTC.{" "}
+          Periodos de calendario en Lima (UTC−05).{" "}
           {data.fuente === "simulada"
             ? "Importes de ejemplo."
             : data.fuente === "n8n_estimado"

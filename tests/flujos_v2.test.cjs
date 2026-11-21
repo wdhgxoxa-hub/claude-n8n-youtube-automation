@@ -2122,3 +2122,17 @@ test('aprendizaje: no inventa segundos, patrón solo con tres videos y conserva 
  const red=run(OBS+'return [{json:JSON.parse(historialRedesCooper($json.p,$json.r,Date.now()))}];',{clock,json:{p:{...v,metricas_historial:JSON.stringify({tiktok:[viejo]})},r:{platforms:{tiktok:{success:true,post_metrics:{views:20}}}}}})[0].json;
  assert.deepEqual(red.tiktok.map(m=>m.ventana),['24h','72h']);
 });
+
+
+test('Cooper: el gasto cruza las 19 UTC sin cambiar el día de Lima', () => {
+  const instant=Date.parse('2026-11-21T21:00:00-05:00');
+  class Reloj extends Date { constructor(value) { super(value===undefined?instant:value); } static now(){return instant;} }
+  const out=run(codeOf(FX,'Agregar gastos'),{clock:Reloj,nodes:{Autenticar:{admin:true}},all:{$input:[
+    {dueno_email:'ana@example.test',usd:2,createdAt:'2026-11-21T18:59:00-05:00'},
+    {dueno_email:'ana@example.test',usd:3,createdAt:'2026-11-21T19:00:00-05:00'},
+    {dueno_email:'ana@example.test',usd:100,createdAt:'2026-11-20T23:59:59-05:00'},
+    {dueno_email:'ana@example.test',usd:1000,createdAt:'2026-11-22T00:00:00-05:00'},
+  ]}})[0].json.respuesta;
+  assert.strictEqual(out.gastos[0].dia,5);
+  assert.strictEqual(out.gastos[0].semana,105);
+});

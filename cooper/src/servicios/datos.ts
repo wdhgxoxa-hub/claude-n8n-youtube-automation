@@ -12,6 +12,7 @@ import {
   type User,
 } from "@/db/schema";
 import { requireAdmin } from "@/lib/permisos";
+import { periodosLima } from "@/lib/periodos";
 import { catalogo, revisiones } from "./biblioteca";
 import { proveedorAvatar, proveedorVoz } from "./proveedores";
 import { estadoChat } from "./chat";
@@ -97,14 +98,8 @@ export function estado(user: User) {
 export type Estado = ReturnType<typeof estado>;
 export function administracion(user: User) {
   requireAdmin(user);
-  const now = new Date();
-  const day = Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate(),
-  );
-  const week = day - ((now.getUTCDay() + 6) % 7) * 86400000;
-  const month = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1);
+  const now = Date.now();
+  const { day, week, month } = periodosLima(now);
   const costs = db().select().from(expenses).all();
   const threshold = Number(process.env.COOPER_GASTO_ALERTA_USD) || 25;
   const team = db()
@@ -116,7 +111,7 @@ export function administracion(user: User) {
       const sum = (since: number) =>
         Math.round(
           own
-            .filter((c) => c.createdAt >= since)
+            .filter((c) => c.createdAt >= since && c.createdAt <= now)
             .reduce((a, c) => a + c.amount, 0) * 100,
         ) / 100;
       return {
