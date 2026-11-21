@@ -78,7 +78,7 @@ export function Admin({ initial }: { initial: Administracion }) {
               <NumeroAnimado value={total} money />
             </p>
           </div>
-          <div className="filters">
+          <div className="filters" role="group" aria-label="Periodo del gasto">
             {(
               [
                 ["day", "Hoy"],
@@ -140,6 +140,7 @@ export function Admin({ initial }: { initial: Administracion }) {
                   <button
                     className="button secondary small"
                     disabled={busy}
+                    aria-label={`${u.active ? "Desactivar" : "Reactivar"} acceso de ${u.name}`}
                     onClick={() =>
                       void mutate(
                         `admin/usuarios/${u.id}`,
@@ -172,6 +173,7 @@ export function Admin({ initial }: { initial: Administracion }) {
           <form
             key={a.id}
             className="identity-review stack"
+            aria-busy={busy}
             onSubmit={async (event) => {
               event.preventDefault();
               const f = new FormData(event.currentTarget);
@@ -246,6 +248,7 @@ export function Admin({ initial }: { initial: Administracion }) {
             </label>
             <input
               id="email"
+              autoComplete="email"
               name="email"
               type="email"
               placeholder="persona@equipo.com"

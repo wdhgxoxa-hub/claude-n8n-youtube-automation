@@ -1,5 +1,5 @@
 "use client";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api, useEspacio, Notice } from "./espacio";
 export function PreferenciasWhatsApp() {
   const { data, refresh } = useEspacio();
@@ -7,17 +7,35 @@ export function PreferenciasWhatsApp() {
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [requested, setRequested] = useState(false),
+    [codeError, setCodeError] = useState(false),
     [simulatedCode, setSimulatedCode] = useState("");
+  const codeInput = useRef<HTMLInputElement>(null);
+  const preferenceTitle = useRef<HTMLLegendElement>(null);
+  const focusPreferences = useRef(false);
   const wa = data.whatsapp;
-  async function run(task: () => Promise<void>) {
+  useEffect(() => {
+    if (wa.verificado && !busy && focusPreferences.current) {
+      focusPreferences.current = false;
+      preferenceTitle.current?.focus();
+    }
+  }, [wa.verificado, busy]);
+  async function run(task: () => Promise<void>, verification = false) {
     setBusy(true);
     setError("");
     setMessage("");
+    setCodeError(false);
     try {
       await task();
       await refresh();
     } catch (e) {
       setError((e as Error).message);
+      if (
+        verification &&
+        (e as Error).message.startsWith("El código no es válido")
+      ) {
+        setCodeError(true);
+        codeInput.current?.focus();
+      }
     } finally {
       setBusy(false);
     }
@@ -27,10 +45,11 @@ export function PreferenciasWhatsApp() {
     const codigo = new FormData(e.currentTarget).get("codigo");
     void run(async () => {
       await api("whatsapp/verificar", { codigo });
+      focusPreferences.current = true;
       setRequested(false);
       setSimulatedCode("");
       setMessage("Número verificado. Elige los avisos que quieres recibir.");
-    });
+    }, true);
   }
   function save(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -59,7 +78,7 @@ export function PreferenciasWhatsApp() {
           desactivar cada aviso aquí o escribir «baja» en WhatsApp.
         </p>
       </div>
-      <Notice error={error} message={message} />
+      <Notice id="whatsapp-resultado" error={error} message={message} />
       {wa.simulada && (
         <p className="helper">
           Modo simulado: no se envían mensajes a WhatsApp. La verificación sirve
@@ -76,6 +95,7 @@ export function PreferenciasWhatsApp() {
       {!wa.verificado && (
         <form
           className="stack"
+          aria-busy={busy}
           onSubmit={(e) => {
             e.preventDefault();
             void run(async () => {
@@ -106,7 +126,7 @@ export function PreferenciasWhatsApp() {
         </form>
       )}
       {requested && !wa.verificado && (
-        <form className="stack" onSubmit={verify}>
+        <form className="stack" onSubmit={verify} aria-busy={busy}>
           {simulatedCode && (
             <p role="status">
               Código de demostración:{" "}
@@ -119,6 +139,15 @@ export function PreferenciasWhatsApp() {
             Código de verificación
             <input
               name="codigo"
+              ref={codeInput}
+              autoFocus
+              aria-invalid={codeError || undefined}
+              aria-describedby={
+                codeError
+                  ? "whatsapp-codigo-ayuda whatsapp-resultado"
+                  : "whatsapp-codigo-ayuda"
+              }
+              onChange={() => setCodeError(false)}
               inputMode="numeric"
               autoComplete="one-time-code"
               pattern="[0-9]{6}"
@@ -127,6 +156,9 @@ export function PreferenciasWhatsApp() {
               required
             />
           </label>
+          <p className="helper" id="whatsapp-codigo-ayuda">
+            Escribe los seis números del código. Si caducó, pide uno nuevo.
+          </p>
           <button className="button" disabled={busy}>
             Verificar número
           </button>
@@ -136,10 +168,13 @@ export function PreferenciasWhatsApp() {
         <form
           className="stack"
           onSubmit={save}
+          aria-busy={busy}
           key={JSON.stringify(wa.preferencias)}
         >
           <fieldset className="stack">
-            <legend>Quiero recibir</legend>
+            <legend ref={preferenceTitle} tabIndex={-1}>
+              Quiero recibir
+            </legend>
             {(
               [
                 ["guion", "Guion listo para aprobar"],

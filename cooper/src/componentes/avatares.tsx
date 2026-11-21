@@ -1,5 +1,5 @@
 "use client";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { m as motion } from "framer-motion";
 import {
@@ -83,7 +83,31 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
       null,
     ),
     [evidence, setEvidence] = useState("");
-  async function upload(file: File, kind: "photo" | "evidence") {
+  const createButton = useRef<HTMLButtonElement>(null);
+  const restoreFocus = useRef(false);
+  const uploadOrigin = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!busy && uploadOrigin.current) {
+      const origin = uploadOrigin.current;
+      uploadOrigin.current = null;
+      if (document.activeElement === document.body && origin.isConnected)
+        origin.focus();
+    }
+    if (!creating && !busy && restoreFocus.current) {
+      restoreFocus.current = false;
+      createButton.current?.focus();
+    }
+  }, [creating, busy]);
+  async function upload(
+    file: File,
+    kind: "photo" | "evidence",
+    origin?: HTMLElement,
+  ) {
+    uploadOrigin.current =
+      origin ??
+      (document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null);
     setBusy(true);
     setError("");
     try {
@@ -113,6 +137,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
         consentimiento: f.get("consentimiento") === "on",
       });
       await refresh();
+      restoreFocus.current = true;
       setCreating(false);
       setPhotos([]);
       setEvidence("");
@@ -134,8 +159,11 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
         description="Personajes que cuentan tus historias contigo."
         action={
           <button
+            ref={createButton}
             className="button"
             disabled={busy}
+            aria-expanded={creating}
+            aria-controls={creating ? "crear-identidad" : undefined}
             onClick={async () => {
               setError("");
               setPhotos(tab === "avatar" && fotoId ? [fotoId] : []);
@@ -161,7 +189,11 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
           </button>
         }
       />
-      <div className="filters library-tabs">
+      <div
+        className="filters library-tabs"
+        role="group"
+        aria-label="Tipo de biblioteca"
+      >
         <button
           aria-pressed={tab === "avatar"}
           onClick={() => {
@@ -222,9 +254,13 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
         </button>
       )}
       {creating && (
-        <section className="identity-form">
+        <section
+          className="identity-form"
+          id="crear-identidad"
+          aria-labelledby="crear-identidad-titulo"
+        >
           <div>
-            <h2>Tu identidad, bajo tu control.</h2>
+            <h2 id="crear-identidad-titulo">Tu identidad, bajo tu control.</h2>
             <p>
               Solo puedes crear una versión de ti. Queda privada hasta que
               decidas compartirla.
@@ -236,11 +272,12 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
               reconocerte, te pedirá repetirla en persona.
             </p>
           </div>
-          <form className="stack" onSubmit={create}>
+          <form className="stack" onSubmit={create} aria-busy={busy}>
             <label>
               Nombre
               <input
                 name="name"
+                autoFocus
                 required
                 maxLength={120}
                 placeholder={tab === "avatar" ? "Mi presentador" : "Mi voz"}
@@ -255,6 +292,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                   accept="image/png,image/jpeg,image/webp"
                   required={photos.length === 0}
                   multiple
+                  disabled={busy}
                   onChange={async (e) => {
                     const files = Array.from(e.target.files ?? []);
                     setPhotos(tab === "avatar" && fotoId ? [fotoId] : []);
@@ -262,6 +300,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                       setError("Selecciona hasta tres fotos.");
                       return;
                     }
+                    uploadOrigin.current = e.currentTarget;
                     setBusy(true);
                     try {
                       const ids = [];
@@ -294,6 +333,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
               <input
                 className="sr-only"
                 type="file"
+                disabled={busy}
                 accept={
                   tab === "voz"
                     ? "audio/webm,audio/mp4,audio/ogg,audio/wav"
@@ -301,7 +341,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                 }
                 onChange={(e) => {
                   if (e.target.files?.[0])
-                    void upload(e.target.files[0], "evidence");
+                    void upload(e.target.files[0], "evidence", e.currentTarget);
                 }}
               />
               <span
@@ -313,10 +353,11 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
             </label>
             <div className="record-identity">
               <Grabador
+                disabled={busy}
                 onAudio={(file) => upload(file, "evidence")}
                 onError={setError}
               />
-              <span>
+              <span role="status">
                 {evidence ? "Grabación recibida" : "O graba la frase ahora"}
               </span>
             </div>
@@ -373,8 +414,8 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
               className="asset-card"
               key={a.id}
               variants={{
-                inicio: { y: 8 },
-                visible: { y: 0, transition: { duration: 0.25 } },
+                inicio: { y: reduced ? 0 : 8 },
+                visible: { y: 0, transition: { duration: reduced ? 0 : 0.25 } },
               }}
             >
               <div className={`asset-portrait ${a.style}`}>
@@ -386,6 +427,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                       muted
                       playsInline
                       src={`/api/muestra/${encodeURIComponent(a.id)}`}
+                      aria-label={`Vista previa de ${a.name}`}
                       onError={() =>
                         setError(
                           "No se pudo cargar la vista previa. Inténtalo de nuevo.",
@@ -433,6 +475,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                     controls
                     autoPlay
                     src={`/api/muestra/${encodeURIComponent(a.id)}`}
+                    aria-label={`Muestra de voz de ${a.name}`}
                     onError={() =>
                       setError(
                         "No se pudo reproducir la muestra. Inténtalo de nuevo.",
@@ -526,6 +569,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                         controls
                         preload="none"
                         src={`/api/muestra/${a.id}`}
+                        aria-label={`Muestra de voz de ${a.name}`}
                         onError={() =>
                           setError("No se pudo reproducir la voz.")
                         }
@@ -540,6 +584,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                         preload="none"
                         playsInline
                         src={`/api/muestra/${a.id}`}
+                        aria-label={`Vista previa de ${a.name}`}
                         onError={() =>
                           setError("No se pudo reproducir el avatar.")
                         }

@@ -32,10 +32,12 @@ export function Grabador({
   }, []);
   async function start() {
     try {
-      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder)
-        throw new Error(
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        onError(
           "Tu navegador no permite grabar audio. Puedes adjuntar una grabación.",
         );
+        return;
+      }
       setBusy(true);
       const captured = await navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -84,8 +86,15 @@ export function Grabador({
     } catch (e) {
       stream.current?.getTracks().forEach((track) => track.stop());
       if (!mounted.current) return;
+      const reason = e instanceof Error ? e.name : "";
       onError(
-        e instanceof Error ? e.message : "Permite el micrófono para grabar.",
+        reason === "NotAllowedError" || reason === "SecurityError"
+          ? "Permite el micrófono en tu navegador o adjunta una grabación."
+          : reason === "NotFoundError"
+            ? "No encontramos un micrófono. Conecta uno o adjunta una grabación."
+            : reason === "NotReadableError" || reason === "AbortError"
+              ? "No pudimos abrir el micrófono. Cierra otras aplicaciones que lo usen y vuelve a intentar."
+              : "No pudimos iniciar la grabación. Inténtalo de nuevo o adjunta un audio.",
       );
     } finally {
       if (mounted.current) setBusy(false);
@@ -97,6 +106,7 @@ export function Grabador({
         type="button"
         className={`icon-button ${recording ? "recording" : ""}`}
         disabled={busy || (disabled && !recording)}
+        aria-busy={busy}
         onClick={() => (recording ? recorder.current?.stop() : void start())}
         aria-label={recording ? "Detener grabación" : "Grabar audio"}
         title={
@@ -105,6 +115,11 @@ export function Grabador({
       >
         {recording ? <Square size={18} /> : <Mic size={19} />}
       </button>
+      {busy && (
+        <span className="sr-only" role="status">
+          Esperando permiso para usar el micrófono.
+        </span>
+      )}
       {recording && (
         <span
           className="recording-wave"
@@ -130,17 +145,49 @@ export async function subir(file: File) {
     reader.onerror = () => reject(new Error("No pudimos leer el archivo."));
     reader.readAsDataURL(file);
   });
-  const response = await fetch("/api/archivos", {
-    method: "POST",
-    signal: AbortSignal.timeout(15000),
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: file.name,
-      mime: file.type.split(";")[0] || "text/plain",
-      data,
-    }),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error);
+  let response: Response;
+  try {
+    response = await fetch("/api/archivos", {
+      method: "POST",
+      signal: AbortSignal.timeout(15000),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: file.name,
+        mime: file.type.split(";")[0] || "text/plain",
+        data,
+      }),
+    });
+  } catch (error) {
+    const timeout =
+      error instanceof Error &&
+      ["TimeoutError", "AbortError"].includes(error.name);
+    throw new Error(
+      timeout
+        ? "La carga tardó demasiado. Comprueba tu conexión antes de volver a seleccionar el archivo."
+        : "No pudimos confirmar la carga. Comprueba tu conexión antes de volver a seleccionar el archivo.",
+    );
+  }
+  let result;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error(
+      "No pudimos confirmar la carga. Revisa si el archivo llegó antes de volver a intentarlo.",
+    );
+  }
+  if (!response.ok)
+    throw new Error(
+      typeof result?.error === "string"
+        ? result.error
+        : "No pudimos subir el archivo. Revisa el formato y el tamaño e inténtalo de nuevo.",
+    );
+  if (
+    !result ||
+    typeof result.id !== "string" ||
+    typeof result.name !== "string"
+  )
+    throw new Error(
+      "No pudimos confirmar la carga. Revisa si el archivo llegó antes de volver a intentarlo.",
+    );
   return result as { id: string; name: string };
 }

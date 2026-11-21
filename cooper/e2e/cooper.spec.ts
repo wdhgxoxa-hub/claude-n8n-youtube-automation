@@ -460,10 +460,14 @@ test("perfil guarda tema, inicio y WhatsApp; móvil y teclado", async ({
   await login(page.request);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/perfil");
-  await page.getByLabel("Tu nombre").fill("Ana del equipo");
+  await page
+    .getByRole("textbox", { name: "Tu nombre", exact: true })
+    .fill("Ana del equipo");
   await page.getByRole("textbox", { name: /^WhatsApp/ }).fill("+51987654321");
-  await page.getByLabel("Día", { exact: true }).check();
-  await page.getByLabel("Al abrir Cooper").selectOption("fabrica");
+  await page.getByRole("radio", { name: "Día", exact: true }).check();
+  await page
+    .getByRole("combobox", { name: "Al abrir Cooper", exact: true })
+    .selectOption("fabrica");
   await page.getByRole("button", { name: "Guardar perfil" }).click();
   await expect(page.getByText("Tu perfil está actualizado.")).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "claro");
@@ -479,8 +483,10 @@ test("perfil guarda tema, inicio y WhatsApp; móvil y teclado", async ({
   await noOverflow(page);
   await page.getByRole("button", { name: "Abrir navegación" }).click();
   await page.getByRole("link", { name: "Mi perfil" }).click();
-  await page.getByLabel("Noche", { exact: true }).check();
-  await page.getByLabel("Al abrir Cooper").selectOption("chat");
+  await page.getByRole("radio", { name: "Noche", exact: true }).check();
+  await page
+    .getByRole("combobox", { name: "Al abrir Cooper", exact: true })
+    .selectOption("chat");
   await page.getByRole("button", { name: "Guardar perfil" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "oscuro");
 });

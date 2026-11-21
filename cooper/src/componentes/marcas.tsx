@@ -1,6 +1,6 @@
 "use client";
 import { PanelCompetencia } from "./competencia";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus, Palette, CalendarDays, BookOpen, ArrowLeft } from "lucide-react";
@@ -50,6 +50,30 @@ export function Marcas({
     [editar, setEditar] = useState<PiezaMarca>();
   const [conexionAbierta, setConexionAbierta] = useState(true);
   const [business, setBusiness] = useState<Record<string, boolean>>({});
+  const editorOrigin = useRef<HTMLElement | null>(null);
+  const newBrandButton = useRef<HTMLButtonElement>(null);
+  const restoreEditorFocus = useRef(false);
+  useEffect(() => {
+    if (!editor && !busy && restoreEditorFocus.current) {
+      restoreEditorFocus.current = false;
+      (editorOrigin.current?.isConnected
+        ? editorOrigin.current
+        : newBrandButton.current
+      )?.focus();
+    }
+  }, [editor, busy]);
+  function abrirEditor(editar = false) {
+    editorOrigin.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    setEditarGuia(editar);
+    setEditor(true);
+  }
+  function cerrarEditor() {
+    restoreEditorFocus.current = true;
+    setEditor(false);
+  }
   const marca = data.marcas.find((m) => m.id === seleccion);
   async function refresh() {
     setData(await api<EstadoMarcas>("marcas", undefined, "GET"));
@@ -75,11 +99,12 @@ export function Marcas({
         description="Una identidad para cada voz. Un lugar para cuidar lo que compartes."
         action={
           <button
+            ref={newBrandButton}
             className="button primary"
-            onClick={() => {
-              setEditarGuia(false);
-              setEditor(true);
-            }}
+            disabled={busy}
+            aria-expanded={editor}
+            aria-controls={editor ? "editor-marca" : undefined}
+            onClick={() => abrirEditor()}
           >
             <Plus size={18} />
             Añadir marca o cuenta
@@ -98,7 +123,7 @@ export function Marcas({
           marca={editarGuia ? marca : undefined}
           data={data}
           busy={busy}
-          cancelar={() => setEditor(false)}
+          cancelar={cerrarEditor}
           guardar={(v) =>
             ejecutar(async () => {
               const m = await api<Marca>(
@@ -106,7 +131,7 @@ export function Marcas({
                 v,
               );
               setSeleccion(m.id);
-              setEditor(false);
+              cerrarEditor();
             }, "Guía de marca guardada.")
           }
         />
@@ -120,7 +145,7 @@ export function Marcas({
                 Tu iglesia, una tienda, Margen Real o una cuenta del equipo.
                 Cada marca conserva su guía y sus publicaciones.
               </p>
-              <button className="button" onClick={() => setEditor(true)}>
+              <button className="button" onClick={() => abrirEditor()}>
                 Crear mi primera marca
               </button>
             </section>
@@ -179,10 +204,7 @@ export function Marcas({
                     </div>
                     <button
                       className="button"
-                      onClick={() => {
-                        setEditarGuia(true);
-                        setEditor(true);
-                      }}
+                      onClick={() => abrirEditor(true)}
                     >
                       Editar guía
                     </button>
@@ -678,6 +700,12 @@ function EditorMarca({
   guardar: (v: unknown) => Promise<void>;
 }) {
   const [paso, setPaso] = useState(0);
+  const formulario = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    formulario.current
+      ?.querySelector<HTMLElement>("fieldset:not([hidden]) legend")
+      ?.focus();
+  }, [paso]);
   function next(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
@@ -700,12 +728,16 @@ function EditorMarca({
     });
   }
   return (
-    <section className="marca-editor">
-      <button className="button" onClick={cancelar}>
+    <section
+      className="marca-editor"
+      id="editor-marca"
+      aria-labelledby="editor-marca-titulo"
+    >
+      <button className="button" onClick={cancelar} disabled={busy}>
         <ArrowLeft size={16} />
         Volver a marcas
       </button>
-      <h2>{marca ? "Editar guía" : "Añadir marca"}</h2>
+      <h2 id="editor-marca-titulo">{marca ? "Editar guía" : "Añadir marca"}</h2>
       <ol className="marca-pasos">
         {["Identidad y dueño", "Guía visual", "Especialista y revisión"].map(
           (v, i) => (
@@ -715,9 +747,9 @@ function EditorMarca({
           ),
         )}
       </ol>
-      <form className="stack" onSubmit={next}>
+      <form className="stack" onSubmit={next} ref={formulario} aria-busy={busy}>
         <fieldset hidden={paso !== 0}>
-          <legend>Identidad y dueño</legend>
+          <legend tabIndex={-1}>Identidad y dueño</legend>
           <label>
             Nombre de la marca
             <input
@@ -754,7 +786,7 @@ function EditorMarca({
           </p>
         </fieldset>
         <fieldset hidden={paso !== 1}>
-          <legend>Guía visual</legend>
+          <legend tabIndex={-1}>Guía visual</legend>
           <div className="marca-form-grid">
             <label>
               Color de fondo
@@ -808,7 +840,7 @@ function EditorMarca({
           </label>
         </fieldset>
         <fieldset hidden={paso !== 2}>
-          <legend>Especialista y revisión</legend>
+          <legend tabIndex={-1}>Especialista y revisión</legend>
           <p>
             El especialista sigue el rubro y la guía. Los avisos usan plantillas
             propias; las ilustraciones pueden servir como fondo. Texto, horarios
@@ -841,6 +873,7 @@ function EditorMarca({
             <button
               type="button"
               className="button"
+              disabled={busy}
               onClick={() => setPaso(paso - 1)}
             >
               Anterior

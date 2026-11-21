@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, type FormEvent } from "react";
+import { useEffect, useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import {
   Plus,
@@ -207,11 +207,23 @@ export function Canales() {
 }
 export function Videos() {
   const pending = useRef(false);
+  const createButton = useRef<HTMLButtonElement>(null);
+  const restoreFocus = useRef(false);
   const { data, refresh } = useEspacio();
   const [filter, setFilter] = useState("todos"),
     [creating, setCreating] = useState(false),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!creating && !busy && restoreFocus.current) {
+      restoreFocus.current = false;
+      createButton.current?.focus();
+    }
+  }, [creating, busy]);
+  function closeCreate() {
+    restoreFocus.current = true;
+    setCreating(false);
+  }
   const visible = data.videos.filter(
     (v) =>
       filter === "todos" ||
@@ -225,6 +237,7 @@ export function Videos() {
     e.preventDefault();
     if (pending.current) return;
     pending.current = true;
+    setError("");
     setBusy(true);
     const f = new FormData(e.currentTarget);
     try {
@@ -237,7 +250,7 @@ export function Videos() {
         avatarPlacement: f.get("avatarPlacement"),
       });
       await refresh();
-      setCreating(false);
+      closeCreate();
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -251,7 +264,14 @@ export function Videos() {
         title="Tus videos"
         description="Ideas en movimiento. Historias listas para salir."
         action={
-          <button className="button" onClick={() => setCreating(!creating)}>
+          <button
+            ref={createButton}
+            className="button"
+            aria-expanded={creating}
+            aria-controls={creating ? "pedir-video" : undefined}
+            disabled={busy}
+            onClick={() => (creating ? closeCreate() : setCreating(true))}
+          >
             <Plus size={17} />
             Pedir video
           </button>
@@ -259,11 +279,16 @@ export function Videos() {
       />
       <Notice error={error} />
       {creating && (
-        <form className="inline-form" onSubmit={create}>
+        <form
+          id="pedir-video"
+          className="inline-form"
+          onSubmit={create}
+          aria-busy={busy}
+        >
           <h2>¿Qué vamos a contar?</h2>
           <label>
             Canal
-            <select name="canal" required>
+            <select name="canal" required autoFocus>
               <option value="">Selecciona un canal</option>
               {data.channels
                 .filter((c) => c.ownerId === data.user.id)
@@ -277,7 +302,6 @@ export function Videos() {
           <label>
             Idea del video
             <input
-              autoFocus
               name="titulo"
               required
               maxLength={160}
@@ -334,7 +358,8 @@ export function Videos() {
             <button
               type="button"
               className="button secondary"
-              onClick={() => setCreating(false)}
+              disabled={busy}
+              onClick={closeCreate}
             >
               Cancelar
             </button>
@@ -344,7 +369,7 @@ export function Videos() {
           )}
         </form>
       )}
-      <div className="filters" aria-label="Filtrar videos">
+      <div className="filters" role="group" aria-label="Filtrar videos">
         {[
           ["todos", "Todos"],
           ["proceso", "En producción"],

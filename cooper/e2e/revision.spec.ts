@@ -168,8 +168,12 @@ test("R13 libera el micrófono cuando MediaRecorder no puede iniciar", async ({
   await page.goto("/");
   await page.getByRole("button", { name: "Grabar audio", exact: true }).click();
   await expect(
-    page.getByRole("alert").filter({ hasText: "Grabador no disponible" }),
-  ).toHaveText("Grabador no disponible");
+    page
+      .getByRole("alert")
+      .filter({ hasText: "No pudimos iniciar la grabación" }),
+  ).toHaveText(
+    "No pudimos iniciar la grabación. Inténtalo de nuevo o adjunta un audio.",
+  );
   expect(
     await page.evaluate(() =>
       (window as unknown as { grabacionEnsayo: MediaStream }).grabacionEnsayo

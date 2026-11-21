@@ -159,7 +159,7 @@ function Filtros({
           />
         </label>
       </div>
-      <div className="filters" aria-label="Filtrar por red">
+      <div className="filters" role="group" aria-label="Filtrar por red">
         {["", ...redes].map((red) => (
           <button
             key={red}
@@ -409,7 +409,7 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
       </section>
       <section className="learning-section">
         <h2>Fallos y correcciones de videos</h2>
-        <div className="filters" aria-label="Filtrar fallos">
+        <div className="filters" role="group" aria-label="Filtrar fallos">
           {["todos", "pendiente", "corregido"].map((f) => (
             <button
               key={f}

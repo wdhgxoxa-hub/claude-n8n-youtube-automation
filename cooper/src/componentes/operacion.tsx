@@ -68,7 +68,10 @@ export function PantallaOperacion({
     [seleccion, setSeleccion] = useState(canalId || ""),
     [pendiente, setPendiente] = useState<Control | null>(null);
   const bloqueo = useRef(false),
-    confirmacion = useRef<HTMLDivElement>(null);
+    confirmacion = useRef<HTMLDivElement>(null),
+    origen = useRef<HTMLElement | null>(null),
+    restaurarFoco = useRef(false),
+    actualizar = useRef<HTMLButtonElement>(null);
   const cargar = useCallback(async () => {
     try {
       if (vista === "ajustes") {
@@ -108,14 +111,29 @@ export function PantallaOperacion({
   }, [vista]);
   useEffect(() => {
     if (pendiente) confirmacion.current?.focus();
-  }, [pendiente]);
+    else if (!ocupado && restaurarFoco.current) {
+      restaurarFoco.current = false;
+      (origen.current?.isConnected
+        ? origen.current
+        : actualizar.current
+      )?.focus();
+    }
+  }, [pendiente, ocupado]);
   const canal =
     op?.canales.find((c) => c.id === (seleccion || canalId)) || op?.canales[0];
   function preparar(control: Control) {
     if (!ocupado) {
+      origen.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
       setPendiente(control);
       setMensaje("");
     }
+  }
+  function cancelar() {
+    restaurarFoco.current = true;
+    setPendiente(null);
   }
   async function confirmar() {
     if (!pendiente || bloqueo.current) return;
@@ -124,7 +142,7 @@ export function PantallaOperacion({
     setError("");
     try {
       const r = await api<{ mensaje: string }>("operacion", pendiente);
-      setPendiente(null);
+      cancelar();
       setMensaje(r.mensaje);
       await cargar();
       await refresh();
@@ -200,6 +218,7 @@ export function PantallaOperacion({
               : ""}
         </p>
         <button
+          ref={actualizar}
           className="button secondary"
           disabled={cargando || ocupado}
           onClick={() => void cargar()}
@@ -213,8 +232,15 @@ export function PantallaOperacion({
           className="operation-confirm"
           role="region"
           aria-label="Confirmar cambios"
+          aria-busy={ocupado}
           tabIndex={-1}
           ref={confirmacion}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && !ocupado) {
+              event.preventDefault();
+              cancelar();
+            }
+          }}
         >
           <h2>Revisa antes de confirmar</h2>
           <p>
@@ -324,7 +350,7 @@ export function PantallaOperacion({
             <button
               className="button secondary"
               disabled={ocupado}
-              onClick={() => setPendiente(null)}
+              onClick={cancelar}
             >
               Cancelar
             </button>

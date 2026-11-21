@@ -14,6 +14,7 @@ export function Perfil() {
   async function save(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+    setMessage("");
     setBusy(true);
     const values = Object.fromEntries(new FormData(e.currentTarget));
     try {
@@ -53,10 +54,13 @@ export function Perfil() {
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp"
+              aria-describedby="perfil-foto-ayuda"
               disabled={busy}
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
+                setError("");
+                setMessage("");
                 setBusy(true);
                 try {
                   setImage("/api/archivos/" + (await subir(file)).id);
@@ -68,31 +72,35 @@ export function Perfil() {
               }}
             />
           </label>
-          <small>PNG, JPG o WebP. Hasta 5 MB.</small>
+          <small id="perfil-foto-ayuda">PNG, JPG o WebP. Hasta 5 MB.</small>
         </aside>
         <div className="profile-settings">
-          <form className="profile-form stack" onSubmit={save}>
+          <form className="profile-form stack" onSubmit={save} aria-busy={busy}>
             <Notice error={error} message={message} />
             <h2>Lo esencial</h2>
             <label>
               Tu nombre
               <input
                 name="name"
+                autoComplete="name"
                 defaultValue={data.user.name}
                 required
                 maxLength={120}
               />
             </label>
             <label>
-              WhatsApp
+              <span id="perfil-whatsapp-etiqueta">WhatsApp</span>
               <input
                 type="tel"
                 name="whatsapp"
+                autoComplete="tel"
+                aria-labelledby="perfil-whatsapp-etiqueta"
+                aria-describedby="perfil-whatsapp-ayuda"
                 defaultValue={data.user.whatsapp}
                 placeholder="+51987654321"
                 pattern="\+[1-9][0-9]{7,14}"
               />
-              <span className="helper">
+              <span className="helper" id="perfil-whatsapp-ayuda">
                 Incluye el código del país. Guarda el perfil y verifica tu
                 número abajo.
               </span>
@@ -124,12 +132,17 @@ export function Perfil() {
               </div>
             </fieldset>
             <label>
-              Al abrir Cooper
-              <select name="home" defaultValue={data.user.home}>
+              <span id="perfil-inicio-etiqueta">Al abrir Cooper</span>
+              <select
+                name="home"
+                defaultValue={data.user.home}
+                aria-labelledby="perfil-inicio-etiqueta"
+                aria-describedby="perfil-inicio-ayuda"
+              >
                 <option value="chat">Conversar con Cooper</option>
                 <option value="fabrica">Ver la fábrica</option>
               </select>
-              <span className="helper">
+              <span className="helper" id="perfil-inicio-ayuda">
                 En celular, esta será tu primera pestaña.
               </span>
             </label>
