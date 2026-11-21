@@ -2,7 +2,7 @@
 
 Esta integración añade aprendizaje con métricas reales, competencia pública por canal, chat por el plan de la PC, conciliación, seguimiento durable de biblioteca, reutilización de montajes y resultados unificados. El [informe vigente](../docs/informes/cooper-total.md) y [ESTADO](../docs/ESTADO.md) distinguen lo implementado, probado y desplegado de la aceptación humana pendiente. El lote n8n lo aplica el orquestador con respaldo y reversa comprobados.
 
-La secuencia actual contiene trece migraciones. Conserva las ocho originales y `0008_observabilidad`, `0009_memoria`, `0010_marcas`, `0011_montajes_fabrica` y `0017_biblioteca`; no se renumeran diarios aplicados. Las bases experimentales con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas. El procedimiento de la [integración 3](../docs/cooper-integracion3-despliegue.md) se conserva como antecedente de las once migraciones de la PC.
+La secuencia actual contiene catorce migraciones. Conserva las ocho originales y `0008_observabilidad`, `0009_memoria`, `0010_marcas`, `0011_montajes_fabrica`, `0017_biblioteca` y `0018_rendimiento`; no se renumeran diarios aplicados. Las bases experimentales con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas. El procedimiento de la [integración 3](../docs/cooper-integracion3-despliegue.md) se conserva como antecedente de las once migraciones de la PC.
 
 Recorrido conjunto reproducible, con todas las E2E anteriores, memoria, Marcas, movimiento, estrés y videos continuos a 1440/390 px:
 
