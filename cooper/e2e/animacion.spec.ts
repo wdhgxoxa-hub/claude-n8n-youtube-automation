@@ -46,6 +46,8 @@ test.describe("evidencia de movimiento", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "Las ideas buenas",
     );
+    await page.screenshot({ path: `${dir}/entrada-revelado-1440.png` });
+    await page.waitForTimeout(950);
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
     await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
@@ -200,6 +202,9 @@ test("pausa y movimiento reducido detienen efectos activos, incluso al navegar",
     });
   }
   await page.goto("/entrar");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator(".login-track")).toBeVisible();
+  await captura(page, "entrada-390");
   expect(
     await page.evaluate(
       () =>

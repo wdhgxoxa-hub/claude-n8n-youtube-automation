@@ -157,7 +157,7 @@ export function Inicio() {
                 <h2>
                   <Revelado texto="Tú pones la idea." />
                   <br />
-                  <Revelado texto="Yo pongo todo en marcha." />
+                  <Revelado texto="Yo pongo todo en marcha." inicio={4} />
                 </h2>
                 <p>
                   Cuéntame qué quieres crear. Te acompaño desde el primer guion

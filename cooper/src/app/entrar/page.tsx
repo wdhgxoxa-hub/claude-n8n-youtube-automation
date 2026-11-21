@@ -18,9 +18,9 @@ export default async function Entrar({
           <h1>
             <Revelado texto="Las ideas buenas" />
             <br />
-            <Revelado texto="no se quedan" />
+            <Revelado texto="no se quedan" inicio={3} />
             <br />
-            <Revelado texto="en el chat." />
+            <Revelado texto="en el chat." inicio={6} />
           </h1>
           <p>
             Un estudio de creación.
