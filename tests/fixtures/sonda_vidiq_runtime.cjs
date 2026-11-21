@@ -12,6 +12,9 @@ const code = name => f.nodes.find(n => n.name === name).parameters.jsCode;
 const expression = new Expression({});
 const anterior = "={{ JSON.stringify({jsonrpc:'2.0',id:$json.id,method:'tools/call',params:{name:$json.nombre,arguments:$json.args}}) }}";
 assert.equal(expression.resolveSimpleParameterValue('={{ JSON.stringify({a:1}) }}', {}), '{"a":1}');
+assert.throws(() => expression.resolveSimpleParameterValue('={{ JSON.stringify({outer:{inner:1}}) }}', {}), /invalid syntax/);
+assert.deepEqual(JSON.parse(expression.resolveSimpleParameterValue('={{ JSON.stringify({ outer: { inner:1 } }) }}', {})), { outer: { inner: 1 } });
+assert.deepEqual(JSON.parse(expression.resolveSimpleParameterValue('={{ JSON.stringify({ arguments: {} }) }}', {})), { arguments: {} });
 assert.throws(() => expression.resolveSimpleParameterValue(anterior, { $json: { id: 10, nombre: 'vidiq_balance', args: {} } }), /invalid syntax/);
 const herramientas = [
   { name: 'vidiq_balance', inputSchema: {} },
@@ -54,5 +57,6 @@ const context = {
   const d = JSON.parse(result[0].json.resultado);
   assert.deepEqual(d.consultas.map(c => [c.herramienta, c.http, c.ok]), [['vidiq_balance', 200, true], ['vidiq_user_channels', 200, true]]);
   console.log(JSON.stringify({ n8n: require(path.join(raiz, 'package.json')).version, expresion_anterior: 'invalid syntax',
+    control_anidado_compacto: 'invalid syntax', control_anidado_espaciado: 'PASS', clave_arguments_valida: true,
     expresion_corregida: 'PASS', nodo_http_real: 'PASS', transporte: 'ficticio', red: false, credencial: 'ficticia', consultas: 2 }));
 })().catch(() => { console.error('Falló la regresión aislada de la sonda.'); process.exit(1); });

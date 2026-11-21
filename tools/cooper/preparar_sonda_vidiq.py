@@ -110,8 +110,8 @@ if(r.status===200&&!r.error)for(const nombre of permitidas){
  const requeridos=t.inputSchema?.required || [];
  if(requeridos.some(k=>k!=='userGoal'))continue;
  const id=10+pedidos.length,args=requeridos.includes('userGoal')?{userGoal:'Comprobar acceso sin usar créditos ni cambiar la cuenta'}:{};
- // El evaluador de expresiones de n8n reserva `arguments`, incluso como clave.
- // Serializar en Code evita esa gramática sin cambiar la petición MCP.
+ // Los cierres `}}` del objeto compacto chocan con el delimitador de expresión.
+ // Serializar en Code evita esa ambigüedad sin cambiar la petición MCP.
  const cuerpo=JSON.stringify({jsonrpc:'2.0',id,method:'tools/call',params:{name:nombre,arguments:args}});
  pedidos.push({json:{nombre,id,args,cuerpo}});
 }

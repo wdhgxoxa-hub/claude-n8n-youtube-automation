@@ -1,0 +1,67 @@
+{
+  "fecha_lima": "2026-11-21T13:37:00-05:00",
+  "commit_funcional": "2ec8f9e",
+  "pruebas": [
+    {
+      "n8n": "2.47.4",
+      "expresion_anterior": "invalid syntax",
+      "control_anidado_compacto": "invalid syntax",
+      "control_anidado_espaciado": "PASS",
+      "clave_arguments_valida": true,
+      "expresion_corregida": "PASS",
+      "nodo_http_real": "PASS",
+      "transporte": "ficticio",
+      "red": false,
+      "credencial": "ficticia",
+      "consultas": 2
+    },
+    {
+      "n8n": "2.47.6",
+      "expresion_anterior": "invalid syntax",
+      "control_anidado_compacto": "invalid syntax",
+      "control_anidado_espaciado": "PASS",
+      "clave_arguments_valida": true,
+      "expresion_corregida": "PASS",
+      "nodo_http_real": "PASS",
+      "transporte": "ficticio",
+      "red": false,
+      "credencial": "ficticia",
+      "consultas": 2
+    },
+    {
+      "n8n": "2.47.4",
+      "expresiones_canonicas_originales_correctas": 8,
+      "peticiones_ficticias": 8,
+      "nodo_http_real": "PASS",
+      "transporte": "ficticio",
+      "red": false,
+      "credencial": "ficticia"
+    },
+    {
+      "n8n": "2.47.6",
+      "expresiones_canonicas_originales_correctas": 8,
+      "peticiones_ficticias": 8,
+      "nodo_http_real": "PASS",
+      "transporte": "ficticio",
+      "red": false,
+      "credencial": "ficticia"
+    }
+  ],
+  "suite": {
+    "pasadas": 181,
+    "flujos": 173,
+    "sonda": 8,
+    "fallidas": 0,
+    "omitidas": 0
+  },
+  "canonicos_modificados": false,
+  "vps": false,
+  "proveedores_reales": false,
+  "huellas": {
+    "sonda-2.47.4.json": "4cd297c5913953b187468cd733fbe929e398ff15fcab3575db7d8504c50911f3",
+    "sonda-2.47.6.json": "0d4b578419e18faad899248eb7a0e631f66e239e321f9853a28e0225d1fcd3b9",
+    "mcp-original-2.47.4.json": "95416be51a1b8180df47bf9f5926cf375ffc82d56b0b71bae283ee137460320c",
+    "mcp-original-2.47.6.json": "5a1de7c584b901862bb0433ecbff47b51803fd4d62ece5a259b206784e4e702b",
+    "flujos-sonda-cierre.log": "16250d6c81f9a4204913dcb7e5558c8072c8ec6e4b7cca97dc4d26579745259b"
+  }
+}
