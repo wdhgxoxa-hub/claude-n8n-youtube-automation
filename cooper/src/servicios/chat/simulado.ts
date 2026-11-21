@@ -91,8 +91,8 @@ export class ChatSimulado implements ProveedorChat {
               },
             ]
           : /avatar|foto/.test(clean)
-            ? "Puedo usar tus fotos como referencia. Para crear tu avatar, abre Avatares y voces y completa la verificación de identidad y el consentimiento."
-            : "Puedo ayudarte con tus canales y videos: crearlos, revisarlos y consultar su avance. Ese pedido está fuera de mi alcance o requiere la sección Administración.";
+            ? "Para crear tu avatar, abre Avatares y voces y completa la verificación de identidad y el consentimiento."
+            : "Ese pedido está fuera de mi alcance; puedo ayudarte con tus canales y videos.";
     }
     if (typeof salida === "string") {
       for (const texto of (salida + "\n").match(/.{1,60}(?:\s|$)|.{1,60}/gs) ??
