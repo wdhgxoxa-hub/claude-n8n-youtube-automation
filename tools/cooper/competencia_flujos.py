@@ -55,7 +55,9 @@ call(f, 'Radar antes de la idea', W['radar'])
 dt_get(f, 'Canal con competencia', 'canales', 'canal_id', "={{ $('Buscar canal').first().json.canal_id }}")
 code(f, 'Exigir competencia previa', COMPETENCIA_JS + r"""
 const c=$('Canal con competencia').first().json; let t;try{t=JSON.parse(c.tendencias||'{}');}catch{t={};}
-if(!competenciaVigente(t.competencia)) throw new Error('Radar pendiente: faltan competidores, homónimos o muestra comparable. Revisa Radar antes de pedir una idea.');
+const investigado=$('Radar antes de la idea').all().map(i=>i.json).find(r=>r.canal_id===c.canal_id && r.ok===true);
+// La vigencia de una fila anterior no acredita la investigación de este pedido.
+if(!investigado || investigado.tendencias!==c.tendencias || !competenciaVigente(t.competencia)) throw new Error('Radar pendiente: faltan competidores, homónimos o muestra comparable. Revisa Radar antes de pedir una idea.');
 return $('Temas recientes del canal').all();
 """)
 antes(f, 'Nuevo video', 'Pedido de competencia previa', 'Exigir competencia previa')

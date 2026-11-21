@@ -57,7 +57,16 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
       pais: "Perú",
       fuente_identidad: `https://editorial-ficticia${i}.example.org/canal`,
       patron: "Hipótesis de gancho visual, pendiente de probar.",
-      muestras: [],
+      muestras:
+        i === 1
+          ? [100, 120, 80, 600].map((vistas, k) => ({
+              titulo: `Muestra ficticia ${k + 1}`,
+              formato: "short",
+              vistas,
+              fecha: new Date(Date.now() - (10 - k) * 86400000).toISOString(),
+              url: `https://www.youtube.com/shorts/ensayo1${k}`,
+            }))
+          : [],
       outliers:
         i === 1
           ? [
@@ -101,6 +110,13 @@ test("radar presenta competencia, diferenciación y límites sin inventar medici
   await expect(
     page.getByRole("link", { name: "Homónimo ficticio" }),
   ).toBeVisible();
+  await page
+    .getByText("Ver muestra de 4 publicaciones de Competidor ficticio 1")
+    .click();
+  await expect(
+    page.getByRole("link", { name: "Muestra ficticia 1" }),
+  ).toHaveAttribute("href", "https://www.youtube.com/shorts/ensayo10");
+  await expect(page.getByText("100 vistas", { exact: false })).toBeVisible();
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
     expect(

@@ -102,6 +102,31 @@ export function PanelCompetencia({
                   comparable.
                 </p>
               )}
+              {p.muestras.length > 0 && (
+                <details>
+                  <summary>
+                    Ver muestra de {p.muestras.length} publicaciones de{" "}
+                    {p.nombre}
+                  </summary>
+                  <ul>
+                    {p.muestras.map((v) => (
+                      <li key={v.url}>
+                        <Fuente url={v.url}>
+                          {v.titulo || "Ver publicación"}
+                        </Fuente>
+                        {" · "}
+                        {v.formato}
+                        {" · "}
+                        {new Date(v.fecha).toLocaleDateString("es-PE", {
+                          timeZone: "America/Lima",
+                        })}
+                        {" · "}
+                        {v.vistas.toLocaleString("es-PE")} vistas
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
             </div>
           </article>
         ))}

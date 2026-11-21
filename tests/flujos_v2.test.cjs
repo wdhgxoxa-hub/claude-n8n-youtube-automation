@@ -130,6 +130,14 @@ test('competencia: fallo público se persiste sin ideas ni métricas ficticias y
   const guion=run(codeOf(ORQ,'Pedir guion'),{nodes:{'Nuevo video':v}})[0].json;
   assert.deepStrictEqual(guion.datos.competencia,c);
 });
+test('competencia: un resultado anterior no sustituye la investigación del pedido actual', () => {
+  const tendencias=JSON.stringify({competencia:{version:1,estado:'listo',fecha:new Date().toISOString()}});
+  const canal={canal_id:'mr',tendencias};
+  const ejecutar=resultado=>run(codeOf(ORQ,'Exigir competencia previa'),{nodes:{'Canal con competencia':canal},all:{'Radar antes de la idea':resultado,'Temas recientes del canal':[{tema:'Tema anterior'}]}});
+  for(const resultado of [[],[{error:'sin respuesta'}],[{canal_id:'otro',ok:true,tendencias}],[{canal_id:'mr',ok:true,tendencias:'{}'}]])
+    assert.throws(()=>ejecutar(resultado),/Radar pendiente/);
+  assert.deepStrictEqual(ejecutar([{canal_id:'mr',ok:true,tendencias}]),[{json:{tema:'Tema anterior'}}]);
+});
 
 // Formulario tal como lo arma n8n en «Subir a redes» (mismo texto que un multipart, para comprobar campos).
 const cuerpoDe = o => o.pares.map(([k, x]) => `name="${k}"\r\n\r\n${x}\r\n`).join('');

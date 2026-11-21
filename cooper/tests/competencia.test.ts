@@ -6,6 +6,8 @@ import {
   proyectarCompetencia,
 } from "@/contratos/competencia.mjs";
 import { competenciaSchema } from "@/contratos/competencia-schema";
+import { proponerTexto } from "@/servicios/marcas/especialistas";
+import type { EntradaModelo, ProveedorChat } from "@/servicios/chat/tipos";
 import {
   investigarCompetencia,
   leerCompetenciaMarca,
@@ -255,6 +257,29 @@ it("cada marca conserva investigación por dueño y un usuario ajeno no puede in
     "Modo simulado",
   );
   expect(estadoMarcas(luis).marcas).toHaveLength(0);
+  const { raw, respuesta } = fixture();
+  const competencia = normalizarCompetencia(raw, respuesta, m.nombre, now);
+  let entrada: EntradaModelo | undefined;
+  const proveedor: ProveedorChat = {
+    async *generar(pedido) {
+      entrada = pedido;
+      yield {
+        tipo: "texto",
+        texto: "Caso peruano de ensayo, sujeto a revisión.",
+      };
+    },
+  };
+  await proponerTexto(
+    { ...m, estudio: null },
+    "Una idea local",
+    proveedor,
+    competencia,
+  );
+  expect(entrada?.sistema).toContain("Margen Real es Perú");
+  expect(entrada?.sistema).toContain("no copies sus títulos ni guiones");
+  expect(JSON.parse(entrada!.mensajes[0].texto).competencia).toEqual(
+    competencia,
+  );
   await expect(
     rutaMarcas(luis, "POST", [m.id, "competencia"], {}),
   ).rejects.toMatchObject({ status: 404 });
