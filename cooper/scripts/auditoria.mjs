@@ -6,12 +6,15 @@ import { createServer } from "node:net";
 import lighthouse from "lighthouse";
 const secret = randomBytes(32).toString("hex");
 const animationAudit = process.argv.includes("--animacion");
+const motionAudit = process.argv.includes("--movimiento");
 const coverageAudit = process.argv.includes("--cobertura");
-const outputDir = coverageAudit
-  ? ".cache/cobertura/lighthouse"
-  : animationAudit
-    ? ".cache/animacion/lighthouse"
-    : ".cache/auditoria";
+const outputDir = motionAudit
+  ? ".cache/videos-movimiento/lighthouse"
+  : coverageAudit
+    ? ".cache/cobertura/lighthouse"
+    : animationAudit
+      ? ".cache/animacion/lighthouse"
+      : ".cache/auditoria";
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -96,9 +99,18 @@ try {
     if (!profile.ok())
       throw new Error("No se pudo configurar el tema de ensayo.");
     for (const formFactor of ["mobile", "desktop"]) {
-      const paths = coverageAudit
+      const paths = motionAudit
         ? [
+            "/",
+            "/canales",
             `/canales/${channel.id}`,
+            "/videos",
+            `/videos/${video.id}`,
+            "/publicados",
+            "/aprendizaje",
+            "/avatares",
+            "/perfil",
+            "/admin",
             "/radar",
             "/rutina",
             "/redes",
@@ -109,19 +121,34 @@ try {
             "/incidencias",
             "/avisos",
             "/admin/fabrica",
+            "/entrar",
           ]
-        : process.argv.includes("--rapida")
-          ? ["/"]
-          : [
-              "/",
-              "/canales",
-              "/videos",
-              `/videos/${video.id}`,
-              "/avatares",
-              "/perfil",
-              "/admin",
-              "/entrar",
-            ];
+        : coverageAudit
+          ? [
+              `/canales/${channel.id}`,
+              "/radar",
+              "/rutina",
+              "/redes",
+              "/referencias",
+              "/cuentas",
+              "/programados",
+              "/decisiones",
+              "/incidencias",
+              "/avisos",
+              "/admin/fabrica",
+            ]
+          : process.argv.includes("--rapida")
+            ? ["/"]
+            : [
+                "/",
+                "/canales",
+                "/videos",
+                `/videos/${video.id}`,
+                "/avatares",
+                "/perfil",
+                "/admin",
+                "/entrar",
+              ];
       for (const path of paths) {
         const mobile = formFactor === "mobile";
         const result = await lighthouse(base + path, {
@@ -207,13 +234,14 @@ try {
       (result) =>
         result.warnings.length ||
         result.failedAudits.length ||
-        result.scores.performance < (animationAudit ? 1 : 0.9) ||
+        result.scores.performance <
+          (motionAudit ? 0.95 : animationAudit ? 1 : 0.9) ||
         result.scores.accessibility < 1 ||
         result.scores["best-practices"] < 1,
     )
   )
     throw new Error(
-      `La auditoría requiere rendimiento >=${animationAudit ? 100 : 90}, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.`,
+      `La auditoría requiere rendimiento >=${motionAudit ? 95 : animationAudit ? 100 : 90}, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.`,
     );
 } finally {
   await browser?.close();
