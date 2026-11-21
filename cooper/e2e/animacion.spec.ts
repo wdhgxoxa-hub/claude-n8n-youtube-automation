@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
+import type { Estado } from "../src/servicios/datos";
 const dir = ".cache/animacion";
 async function captura(page: Page, name: string) {
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -60,20 +61,54 @@ test.describe("evidencia de movimiento", () => {
     await expect
       .poll(() => gaze.getAttribute("style"))
       .toContain("translateX(-3px)");
-    const card = page.getByRole("button", {
-      name: /12 Por qué el cielo cambia de color/,
-    });
+    const state: Estado = await (await page.request.get("/api/estado")).json();
+    const ownPublished = state.videos.find(
+      (video) =>
+        video.ownerId === state.user.id &&
+        video.title === "Por qué el cielo cambia de color" &&
+        video.stage === 11,
+    );
+    const ownEditing = state.videos.find(
+      (video) =>
+        video.ownerId === state.user.id &&
+        video.title === "El mar también respira" &&
+        video.stage === 7,
+    );
+    expect(ownPublished).toBeDefined();
+    expect(ownEditing).toBeDefined();
+    // El administrador ve demos de varios dueños con el mismo título. La cola
+    // conserva el orden del estado; el enlace de detalle comprueba el ID elegido.
+    const queue = page.locator(".queue-item");
+    await expect(queue).toHaveCount(state.videos.length);
+    const card = queue.nth(
+      state.videos.findIndex((video) => video.id === ownPublished!.id),
+    );
+    await expect(card).toHaveAccessibleName(
+      "12 Por qué el cielo cambia de color Publicado",
+    );
     await card.hover({ position: { x: 8, y: 8 } });
     await expect.poll(() => card.getAttribute("style")).toContain("rotateY");
     await card.click();
+    await expect(page.locator(".factory-link")).toHaveAttribute(
+      "href",
+      `/videos/${ownPublished!.id}`,
+    );
     await expect(page.getByRole("progressbar")).toHaveAttribute(
       "aria-valuenow",
       "12",
     );
     await expect(page.locator(".factory-progress .sr-only")).toHaveText("100");
-    await page
-      .getByRole("button", { name: /08 El mar también respira/ })
-      .click();
+    const editing = queue.nth(
+      state.videos.findIndex((video) => video.id === ownEditing!.id),
+    );
+    await expect(editing).toHaveAccessibleName(
+      "08 El mar también respira Montaje",
+    );
+    await editing.click();
+    await expect(page.locator(".factory-link")).toHaveAttribute(
+      "href",
+      `/videos/${ownEditing!.id}`,
+    );
     await page.waitForTimeout(750);
     await captura(page, "fabrica-1440");
     // El chat ahora termina al acabar el stream. Espaciamos sus frames reales
