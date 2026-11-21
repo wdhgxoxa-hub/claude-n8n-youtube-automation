@@ -12,5 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends build-essential
 RUN npm install --global npm@12.2.2 --no-fund --update-notifier=false
 # Playwright JS coincide con package-lock.json; bibliotecas solo en la imagen local.
 RUN npx --yes --package=playwright@1.65.1 playwright install-deps firefox webkit
+# Las regresiones de la caché crean repositorios Git ficticios dentro del ensayo.
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -r /var/lib/apt/lists/*
 WORKDIR /ensayo/cooper
 CMD ["node", "scripts/puerta.mjs"]
