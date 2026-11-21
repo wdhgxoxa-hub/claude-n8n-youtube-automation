@@ -629,7 +629,24 @@ return respuestas.map((item,i)=>{const plano=$('Extraer imagen').itemMatching(i)
         signal: AbortSignal.timeout(30000),
       },
     );
-    assert.equal(repetirCallback.status, 409);
+    // M01 confirma la repetición idéntica sin reenviar; un cuerpo distinto se rechaza.
+    assert.equal(repetirCallback.status, 200);
+    assert.deepEqual(await repetirCallback.json(), { status: "recibido" });
+    const callbackAlterado = await fetch(
+      `${url}/webhook/video-factory/resultado`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          job_id: trabajo.job_id,
+          modo: trabajo.modo,
+          estado: "ok",
+          resultado: { ...biblia, ensayo_diferente: true },
+        }),
+        signal: AbortSignal.timeout(30000),
+      },
+    );
+    assert.equal(callbackAlterado.status, 409);
     await reposo();
     assert.deepEqual(
       (await rows("trabajos")).filter(
@@ -644,7 +661,8 @@ return respuestas.map((item,i)=>{const plano=$('Extraer imagen').itemMatching(i)
       job_id: trabajo.job_id,
       caida: caidaTrabajo,
       estado: "listo",
-      callbackRepetidoHTTP: 409,
+      callbackRepetidoHTTP: repetirCallback.status,
+      callbackAlteradoHTTP: callbackAlterado.status,
     });
   }
   await reposo();
