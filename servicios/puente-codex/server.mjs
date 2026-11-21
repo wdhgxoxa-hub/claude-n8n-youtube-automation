@@ -19,7 +19,8 @@ export function validarPedido(p) {
   return p && Object.keys(p).every(k => ['tarea','prompt','buscar_web'].includes(k)) && tareas.has(p.tarea)
     && typeof p.prompt === 'string' && p.prompt.trim().length > 0 && p.prompt.length <= 60000 && typeof p.buscar_web === 'boolean';
 }
-export function ejecutarCodex(p, { bin = 'codex', timeoutMs = 40000, signal, env = process.env } = {}) {
+export function tiempoTarea(p) { return p.tarea === 'radar' && p.buscar_web === true ? 180000 : 40000; }
+export function ejecutarCodex(p, { bin = 'codex', timeoutMs = tiempoTarea(p), signal, env = process.env } = {}) {
   return (async () => {
     const cwd = await mkdtemp(join(tmpdir(), 'puente-codex-'));
     // Lista cerrada: ni claves de API, ni token HTTP, ni configuración del proyecto.
@@ -119,7 +120,7 @@ export function crearServidor({ token, runner = ejecutarCodex, log = x => proces
         if (!p || Object.keys(p).length !== 1 || typeof p.prompt !== 'string' || !p.prompt.trim() || p.prompt.length > 60000) return reply(400, { error:'pedido_invalido' });
         p = { tarea:'chat', prompt:p.prompt, buscar_web:false };
       } else if (!validarPedido(p)) return reply(400, { error:'pedido_invalido' });
-      const result = await runner(p, { signal:controller.signal });
+      const result = await runner(p, { signal:controller.signal, timeoutMs:tiempoTarea(p) });
       reply(200, result);
       log({ id, tarea:p.tarea, ruta:'codex', resultado:'ok', duracion_ms:Date.now() - started });
     } catch (err) {

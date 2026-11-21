@@ -5,7 +5,7 @@ import { mkdtemp, writeFile, chmod, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
-import { crearServidor, ejecutarCodex } from '../servicios/puente-codex/server.mjs';
+import { crearServidor, ejecutarCodex, tiempoTarea } from '../servicios/puente-codex/server.mjs';
 
 const fixture = await mkdtemp(join(tmpdir(), 'codex-ficticio-'));
 const bin = join(fixture, 'codex');
@@ -35,6 +35,14 @@ let input=''; process.stdin.on('data',c=>input+=c); process.stdin.on('end',()=>{
 await chmod(bin, 0o700);
 test.after(() => rm(fixture, { recursive:true, force:true }));
 const pedido = prompt => ({ tarea:'radar', prompt, buscar_web:false });
+test('solo radar con búsqueda amplía el plazo, conservando la cuota única y el aborto', async t => {
+  assert.equal(tiempoTarea({tarea:'radar',buscar_web:true}),180000);
+  for(const tarea of ['chat','critico','verificador','radar_noticia','verificador_noticia']) assert.equal(tiempoTarea({tarea,buscar_web:true}),40000);
+  assert.equal(tiempoTarea({tarea:'radar',buscar_web:false}),40000);
+  const s=await servidor(t,async(p,opts)=>({timeout:opts.timeoutMs,signal:opts.signal instanceof AbortSignal}));
+  assert.deepEqual(await (await s.send({...pedido('BUSCAR'),buscar_web:true})).json(),{timeout:180000,signal:true});
+  assert.deepEqual(await (await s.send({prompt:'hola'},{},'/v1/chat')).json(),{timeout:40000,signal:true});
+});
 const runner = (p, opts = {}) => ejecutarCodex(p, { ...opts, bin, timeoutMs:1500,
   env:{ PATH:process.env.PATH, OPENAI_API_KEY:'ficticia', CODEX_API_KEY:'ficticia', PUENTE_CODEX_TOKEN:'ficticio' } });
 
