@@ -4,6 +4,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import type { Estado } from "../src/servicios/datos";
 import type { Operacion } from "../src/contratos/operacion";
 import type { EstadoMarcas } from "../src/servicios/marcas/servicio";
+import type { Resultados } from "../src/contratos/resultados";
+import { competenciaVacia } from "../src/contratos/competencia.mjs";
 
 // API oficial: https://playwright.dev/docs/accessibility-testing
 // Axe comprueba solo contenido visible: cada menú, formulario y estado se abre
@@ -215,6 +217,7 @@ function marcaDeEnsayo(ownerId: string): EstadoMarcas["marcas"][number] {
     rubro: "general",
     zona: "America/Lima",
     guia,
+    competencia: competenciaVacia("Marca accesible de ensayo"),
     createdAt: fecha,
     cuentas: [
       {
@@ -613,6 +616,15 @@ for (const tema of temas) {
       await page.route("**/api/operacion", (route) =>
         route.fulfill({ json: operacionVacia }),
       );
+      const resultadosVacios: Resultados = {
+        ambitos: [],
+        publicaciones: [],
+        aprendizajes: [],
+        incidencias: [],
+      };
+      await page.route("**/api/resultados", (route) =>
+        route.fulfill({ json: resultadosVacios }),
+      );
       for (const [nombre, ruta] of [
         ["inicio-vacio", "/"],
         ["canales-vacios", "/canales"],
@@ -632,6 +644,20 @@ for (const tema of temas) {
         ].map((ruta) => [`${ruta}-vacio`, `/${ruta}`]),
       ]) {
         await abrir(page, ruta, tema);
+        if (ruta === "/publicados" || ruta === "/aprendizaje") {
+          // Resultados conserva su proyección SSR; el control público vuelve
+          // a leer el contrato conjunto interceptado sin alterar la base.
+          const [respuesta] = await Promise.all([
+            page.waitForResponse(
+              (r) => new URL(r.url()).pathname === "/api/resultados",
+            ),
+            page.getByRole("button", { name: "Actualizar resultados" }).click(),
+          ]);
+          expect(respuesta.ok()).toBe(true);
+          await expect(
+            page.getByRole("button", { name: "Actualizar resultados" }),
+          ).toBeEnabled();
+        }
         // Esperar al estado vacío recibido, en lugar del HTML SSR poblado.
         if (ruta === "/")
           await expect(page.locator(".factory-pane .empty")).toHaveCount(1);
@@ -640,7 +666,7 @@ for (const tema of temas) {
         else if (ruta === "/aprendizaje")
           await expect(
             page.getByText(
-              "Las lecciones aparecerán cuando la fábrica analice resultados suficientes.",
+              "No hay aprendizajes para estos filtros.",
             ),
           ).toBeVisible();
         await revisar(nombre);
