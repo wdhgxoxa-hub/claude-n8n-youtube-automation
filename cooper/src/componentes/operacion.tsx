@@ -3,6 +3,7 @@ import { PanelCompetencia } from "./competencia";
 import {
   useCallback,
   useEffect,
+  useId,
   useRef,
   useState,
   type FormEvent,
@@ -59,6 +60,7 @@ export function PantallaOperacion({
   canalId?: string;
   initial?: DatosInicialesOperacion;
 }) {
+  const formularioId = useId();
   const { data, refresh } = useEspacio();
   const [op, setOp] = useState<Operacion | null>(initial?.op ?? null),
     [ajustes, setAjustes] = useState<Ajustes | null>(initial?.ajustes ?? null),
@@ -417,10 +419,10 @@ export function PantallaOperacion({
                   });
                 }}
               >
-                <label htmlFor={campo}>
+                <label htmlFor={`${formularioId}-${campo}`}>
                   {label}
                   <textarea
-                    id={campo}
+                    id={`${formularioId}-${campo}`}
                     aria-label={label}
                     name="valor"
                     defaultValue={canal.biblia[campo] || ""}
