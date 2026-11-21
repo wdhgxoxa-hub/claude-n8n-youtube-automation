@@ -18,7 +18,10 @@ export default async function Page({
     notFound();
   if (marca && !initial.marcas.some((m) => m.id === marca)) notFound();
   const seccionInicial =
-    seccion === "publicados" || seccion === "aprendizaje"
+    seccion === "publicados" ||
+    seccion === "aprendizaje" ||
+    seccion === "estudio" ||
+    seccion === "competencia"
       ? seccion
       : "calendario";
   return (

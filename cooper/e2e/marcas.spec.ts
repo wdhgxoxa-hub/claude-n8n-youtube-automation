@@ -166,111 +166,133 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   expect(errors).toEqual([]);
   expect(issues).toEqual([]);
 });
-test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", async ({
-  page,
-  baseURL,
-}) => {
-  test.setTimeout(240000);
-  expect(
-    (
-      await page.request.post(`${fixture()}/sesion`, {
-        data: {
-          email: "admin@example.test",
-          secret: process.env.COOPER_E2E_SECRET,
-        },
-      })
-    ).ok(),
-  ).toBe(true);
-  // El contexto con videos activos reproduce los pulsos SSE de la suite completa.
-  const canal = await page.request.post("/api/orden", {
-    data: { evento: "nuevo_canal", texto: "Ensayo de estabilidad Marcas" },
-  });
-  expect(canal.ok()).toBe(true);
-  const { id: canalId } = await canal.json();
-  for (let i = 0; i < 3; i++) {
-    const video = await page.request.post("/api/orden", {
-      data: { evento: "nuevo_video", recursoId: canalId, texto: `Ensayo ${i}` },
-    });
-    expect(video.ok()).toBe(true);
-  }
-  await page.goto("/marcas");
-  const folder = resolve(".cache/sentinel-marcas");
-  mkdirSync(folder, { recursive: true });
-  const session = resolve(folder, "sesion-efimera.json"),
-    config = resolve(folder, "config.json");
-  await page.context().storageState({ path: session });
-  writeFileSync(
-    config,
-    JSON.stringify({
-      url: baseURL,
-      fixture: fixture(),
-      sesion: session,
-      salida: folder,
-      pantallas: ["/marcas"],
-      excluir_selectores: [
-        'a[href^="/"]:not([href^="/marcas"]):not([href^="/api/marcas/medio/"])',
-      ],
-      // Sentinel es de solo lectura; las mutaciones se ejercitan arriba con Playwright.
-      excluir_textos: [
-        "Desconectar",
-        "Verificar conexión",
-        "Estudiar la cuenta",
-        "Investigar competencia",
-        "Proponer texto con el especialista",
-        "Pedir cambios",
-      ],
-      duracion: 55,
-      ancho: 390,
-      modulos: ["recorridos", "caos", "estabilidad"],
-    }),
-    { mode: 0o600 },
-  );
-  try {
-    const python = resolve(".cache/sentinel-venv/bin/python");
-    const result = await new Promise<{ code: number | null; log: string }>(
-      (done, reject) => {
-        const child = spawn(python, ["scripts/sentinel-cooper.py", config], {
-          env: {
-            ...process.env,
-            PLAYWRIGHT_BROWSERS_PATH: resolve(".cache/sentinel-browsers"),
-          },
-          detached: true,
-        });
-        let log = "";
-        const timer = setTimeout(() => {
-          process.kill(-child.pid!, "SIGTERM");
-          reject(new Error("Sentinel excedió 210 s"));
-        }, 210000);
-        child.stdout.on("data", (d) => {
-          log += String(d);
-        });
-        child.stderr.on("data", (d) => {
-          log += String(d);
-        });
-        child.on("error", (error) => {
-          clearTimeout(timer);
-          reject(error);
-        });
-        child.on("exit", (code) => {
-          clearTimeout(timer);
-          done({ code, log });
-        });
-      },
-    );
-    writeFileSync(resolve(folder, "ejecucion.log"), result.log);
-    expect(result.code, result.log).toBe(0);
-    const report = JSON.parse(
-      readFileSync(resolve(folder, "informe.json"), "utf8"),
-    );
-    expect(report.modulos.map((m: { nombre: string }) => m.nombre)).toEqual([
-      "recorridos",
-      "caos",
-      "estabilidad",
-    ]);
+for (const width of [1440, 390])
+  test(`Marcas: Sentinel ${width} recorre sus cinco secciones con el guardián activo`, async ({
+    page,
+    baseURL,
+  }) => {
+    test.setTimeout(240000);
     expect(
-      report.medidas_caos.some((m: { acciones: number }) => m.acciones > 0),
+      (
+        await page.request.post(`${fixture()}/sesion`, {
+          data: {
+            email: "admin@example.test",
+            secret: process.env.COOPER_E2E_SECRET,
+          },
+        })
+      ).ok(),
     ).toBe(true);
-  } finally {
-    unlinkSync(session);
-  }
-});
+    // El contexto con videos activos reproduce los pulsos SSE de la suite completa.
+    const canal = await page.request.post("/api/orden", {
+      data: { evento: "nuevo_canal", texto: "Ensayo de estabilidad Marcas" },
+    });
+    expect(canal.ok()).toBe(true);
+    const { id: canalId } = await canal.json();
+    for (let i = 0; i < 3; i++) {
+      const video = await page.request.post("/api/orden", {
+        data: {
+          evento: "nuevo_video",
+          recursoId: canalId,
+          texto: `Ensayo ${i}`,
+        },
+      });
+      expect(video.ok()).toBe(true);
+    }
+    await page.goto("/marcas");
+    const folder = resolve(`.cache/sentinel-marcas/${width}`);
+    const pantallas = [
+      "calendario",
+      "estudio",
+      "competencia",
+      "publicados",
+      "aprendizaje",
+    ].map((seccion) => `/marcas?seccion=${seccion}`);
+    mkdirSync(folder, { recursive: true });
+    const session = resolve(folder, "sesion-efimera.json"),
+      config = resolve(folder, "config.json");
+    await page.context().storageState({ path: session });
+    writeFileSync(
+      config,
+      JSON.stringify({
+        url: baseURL,
+        fixture: fixture(),
+        sesion: session,
+        salida: folder,
+        pantallas,
+        excluir_selectores: [
+          'a[href^="/"]:not([href^="/marcas"]):not([href^="/api/marcas/medio/"])',
+        ],
+        // Sentinel es de solo lectura; las mutaciones se ejercitan arriba con Playwright.
+        excluir_textos: [
+          "Desconectar",
+          "Verificar conexión",
+          "Estudiar la cuenta",
+          "Investigar competencia",
+          "Proponer texto con el especialista",
+          "Pedir cambios",
+        ],
+        duracion: 55,
+        ancho: width,
+        modulos: ["recorridos", "caos", "estabilidad"],
+      }),
+      { mode: 0o600 },
+    );
+    try {
+      const python = resolve(".cache/sentinel-venv/bin/python");
+      const result = await new Promise<{ code: number | null; log: string }>(
+        (done, reject) => {
+          const child = spawn(python, ["scripts/sentinel-cooper.py", config], {
+            env: {
+              ...process.env,
+              PLAYWRIGHT_BROWSERS_PATH: resolve(".cache/sentinel-browsers"),
+            },
+            detached: true,
+          });
+          let log = "";
+          const timer = setTimeout(() => {
+            process.kill(-child.pid!, "SIGTERM");
+            reject(new Error("Sentinel excedió 210 s"));
+          }, 210000);
+          child.stdout.on("data", (d) => {
+            log += String(d);
+          });
+          child.stderr.on("data", (d) => {
+            log += String(d);
+          });
+          child.on("error", (error) => {
+            clearTimeout(timer);
+            reject(error);
+          });
+          child.on("exit", (code) => {
+            clearTimeout(timer);
+            done({ code, log });
+          });
+        },
+      );
+      writeFileSync(resolve(folder, "ejecucion.log"), result.log);
+      expect(result.code, result.log).toBe(0);
+      const report = JSON.parse(
+        readFileSync(resolve(folder, "informe.json"), "utf8"),
+      );
+      expect(report.modulos.map((m: { nombre: string }) => m.nombre)).toEqual([
+        "recorridos",
+        "caos",
+        "estabilidad",
+      ]);
+      expect(
+        report.medidas_caos.some((m: { acciones: number }) => m.acciones > 0),
+      ).toBe(true);
+      for (const path of pantallas) {
+        expect(report.pantallas).toContain(path);
+        expect(
+          report.medidas_caos.some(
+            (m: { url: string; acciones: number }) =>
+              m.url === new URL(path, baseURL).href && m.acciones > 0,
+          ),
+          `Caos efectivo en ${path}`,
+        ).toBe(true);
+      }
+    } finally {
+      unlinkSync(session);
+    }
+  });

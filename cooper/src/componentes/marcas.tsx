@@ -30,7 +30,8 @@ export function Marcas({
   initial: EstadoMarcas;
   piezaId?: string;
   marcaId?: string;
-  seccionInicial?: "calendario" | "publicados" | "aprendizaje";
+  seccionInicial?:
+    "calendario" | "estudio" | "competencia" | "publicados" | "aprendizaje";
 }) {
   const editorId = useId();
   const { data: espacio } = useEspacio(),
@@ -77,6 +78,14 @@ export function Marcas({
     setEditor(false);
   }
   const marca = data.marcas.find((m) => m.id === seleccion);
+  function cambiarSeccion(valor: string) {
+    setSeccion(valor);
+    const url = new URL(window.location.href);
+    url.searchParams.set("seccion", valor);
+    if (marca) url.searchParams.set("marca", marca.id);
+    url.searchParams.delete("pieza");
+    window.history.replaceState(null, "", url.pathname + url.search);
+  }
   async function refresh() {
     setData(await api<EstadoMarcas>("marcas", undefined, "GET"));
   }
@@ -365,7 +374,7 @@ export function Marcas({
                         className={seccion === v ? "active" : ""}
                         aria-current={seccion === v ? "page" : undefined}
                         key={v}
-                        onClick={() => setSeccion(v)}
+                        onClick={() => cambiarSeccion(v)}
                       >
                         {label}
                       </button>

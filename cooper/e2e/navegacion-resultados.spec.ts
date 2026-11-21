@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import { mkdirSync } from "node:fs";
 
 test("Resultados enlaza las secciones de Marcas y conserva el destino al recargar", async ({
   page,
 }) => {
+  test.setTimeout(120000);
   const fixture = `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT}`;
   expect(
     (
@@ -61,6 +64,43 @@ test("Resultados enlaza las secciones de Marcas y conserva el destino al recarga
     await expect(
       page.getByRole("heading", { name: etiqueta, exact: true }),
     ).toBeVisible();
+  }
+  mkdirSync(".cache/total-sentinel/marcas", { recursive: true });
+  const marcas = await (await page.request.get("/api/marcas")).json();
+  const marca = marcas.marcas.find(
+    (m: { nombre: string }) => m.nombre === "Marca para navegación",
+  );
+  await page.goto(`/marcas?marca=${marca.id}`);
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const [seccion, etiqueta] of [
+      ["estudio", "Estudio"],
+      ["competencia", "Competencia"],
+      ["publicados", "Publicados"],
+      ["aprendizaje", "Aprendizaje"],
+      ["calendario", "Calendario"],
+    ]) {
+      const pestana = page
+        .getByRole("navigation", { name: "Secciones de la marca" })
+        .getByRole("button", { name: etiqueta, exact: true });
+      await pestana.click();
+      await expect
+        .poll(() => new URL(page.url()).searchParams.get("seccion"))
+        .toBe(seccion);
+      await page.reload();
+      await expect(pestana).toHaveAttribute("aria-current", "page");
+      await expect(
+        page.getByRole("heading", {
+          name: "Marca para navegación",
+          exact: true,
+        }),
+      ).toBeVisible();
+      expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+      await page.screenshot({
+        path: `.cache/total-sentinel/marcas/${width}-${seccion}.png`,
+        fullPage: true,
+      });
+    }
   }
   await page.goto("/marcas?seccion=no-admitida");
   await expect(
