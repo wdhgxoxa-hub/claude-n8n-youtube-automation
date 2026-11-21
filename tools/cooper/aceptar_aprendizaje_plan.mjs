@@ -8,9 +8,10 @@ const sha = text => createHash('sha256').update(text).digest('hex');
 export async function cargarFuentes(raiz) {
   const wf = async id => JSON.parse(await readFile(resolve(raiz, `workflows/v2/${id}.json`), 'utf8'));
   const codigo = (f, nombre) => f.nodes.find(n => n.name === nombre).parameters.jsCode;
-  const [apr, cl, ret] = await Promise.all(['FabAprendizaje01', 'FabLlamarClaude1', 'FabRetornoClaud1'].map(wf));
+  const [apr, cl, ret, ajustes] = await Promise.all(['FabAprendizaje01', 'FabLlamarClaude1', 'FabRetornoClaud1', 'FabAjustes000001'].map(wf));
   return { pedido: codigo(apr, 'Pedido al plan de aprendizaje'), validar: codigo(apr, 'Validar aprendizaje del plan'),
-    guion: codigo(cl, 'Preparar trabajo'), retorno: codigo(ret, 'Fila actualizada') };
+    guion: codigo(cl, 'Preparar trabajo'), retorno: codigo(ret, 'Fila actualizada'),
+    reserva: codigo(ret, 'Reserva del retorno'), ajustes: codigo(ajustes, 'Ajustes') };
 }
 
 function ejecutar(js, { json = {}, nodes = {}, all = {} } = {}) {
@@ -51,7 +52,7 @@ export async function aceptar({ fase, trabajo, fuentes }, llamarPlan) {
     Inicio: { modo: 'guion', canal_id: trabajo.canal_id, video_id: 'ensayo-lectura-sin-video',
       datos: { tema: 'Reescritura controlada del mismo video para probar las lecciones',
         contexto_original: contexto._aprendizaje.evidencias[0].creativo } },
-    'Leer ajustes': { allowClaude: false },
+    'Leer ajustes': { ...ejecutar(fuentes.ajustes)[0].json, allowClaude: false },
   }, all: { 'Aprendizajes al escribir': [trabajo] } })[0].json;
   const ids = JSON.parse(pedido.fila.resultado)._lecciones_requeridas;
   if (!ids?.length) throw new Error('el_siguiente_guion_no_recibio_lecciones');
@@ -59,9 +60,13 @@ export async function aceptar({ fase, trabajo, fuentes }, llamarPlan) {
   if (prompt.length > 60000) throw new Error('contexto_de_guion_excesivo');
   const propuesta = desempaquetar(await llamarPlan(prompt));
   if (typeof propuesta.guion !== 'string' || !propuesta.guion.trim()) throw new Error('guion_vacio');
-  const validar = resultado => ejecutar(fuentes.retorno, { nodes: {
-    Validar: { modo: 'guion', estado: 'ok', resultado, avisos: [] }, 'Buscar trabajo': pedido.fila,
-  } })[0].json;
+  const validar = resultado => {
+    const validado = { modo: 'guion', estado: 'ok', resultado, avisos: [], huella: sha(JSON.stringify(resultado)) };
+    const reserva = ejecutar(fuentes.reserva, { nodes: { Validar: validado } })[0].json;
+    return ejecutar(fuentes.retorno, { nodes: {
+      Validar: validado, 'Buscar trabajo': pedido.fila, 'Reserva del retorno': reserva,
+    } })[0].json;
+  };
   const correcto = validar(propuesta);
   let omisionRechazada = false;
   try { validar({ guion: propuesta.guion }); } catch { omisionRechazada = true; }
