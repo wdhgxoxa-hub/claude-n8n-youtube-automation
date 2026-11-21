@@ -35,6 +35,13 @@ import {
 } from "@/servicios/biblioteca";
 import { revocarConsentimiento } from "@/servicios/presentacion";
 import { validarArchivo } from "@/lib/archivos";
+import {
+  solicitarCodigo,
+  verificarCodigo,
+  guardarPreferencias,
+  reiniciarNumero,
+} from "@/servicios/mensajeria/cuentas";
+import { historial, resumenCola } from "@/servicios/mensajeria/cola";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ ruta: string[] }> };
@@ -72,6 +79,11 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "GET") {
       rateLimit(`read:${user.id}`, 300);
+      if (section === "whatsapp" && id === "resumen") {
+        requireAdmin(user);
+        return json(resumenCola());
+      }
+      if (section === "whatsapp") return json(historial(user));
       if (section === "estado") return json(estado(user));
       if (section === "admin") return json(await administracionActual(user));
       if (section === "revision-archivo" && id && action) {
@@ -134,6 +146,12 @@ async function handle(request: Request, context: Context) {
     }
     if (method === "POST") {
       const input = await body(request);
+      if (section === "whatsapp" && id === "codigo")
+        return json(solicitarCodigo(user, input));
+      if (section === "whatsapp" && id === "verificar")
+        return json(verificarCodigo(user, input));
+      if (section === "whatsapp" && id === "preferencias")
+        return json(guardarPreferencias(user, input));
       if (section === "orden") {
         const orden = ordenSchema.parse(input);
         let actor = user;
@@ -329,7 +347,13 @@ async function handle(request: Request, context: Context) {
           if (!file?.mime.startsWith("image/"))
             throw new ErrorHttp(400, "La foto debe ser una imagen.");
         }
-        db().update(users).set(parsed).where(eq(users.id, user.id)).run();
+        db().transaction(
+          () => {
+            if (parsed.whatsapp !== user.whatsapp) reiniciarNumero(user.id);
+            db().update(users).set(parsed).where(eq(users.id, user.id)).run();
+          },
+          { behavior: "immediate" },
+        );
         return json({ ok: true });
       }
       if (section === "activos" && id) {

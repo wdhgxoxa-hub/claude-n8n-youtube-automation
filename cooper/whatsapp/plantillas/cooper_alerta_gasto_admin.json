@@ -1,0 +1,35 @@
+{
+  "name": "cooper_alerta_gasto_admin",
+  "language": "es",
+  "category": "UTILITY",
+  "components": [
+    {
+      "type": "BODY",
+      "text": "Alerta solicitada para la administración de Cooper: el gasto diario acumulado llegó a {{1}} y superó el umbral configurado. Revisa el detalle del equipo.",
+      "example": {
+        "body_text": [
+          [
+            "26.40 USD"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "FOOTER",
+      "text": "Puedes desactivar estos avisos en tu perfil de Cooper."
+    },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        {
+          "type": "URL",
+          "text": "Revisar gasto",
+          "url": "https://cooper.example.org/revisar/whatsapp/{{1}}",
+          "example": [
+            "https://cooper.example.org/revisar/whatsapp/00000000-0000-4000-8000-000000000000.1795176000000.ejemplo_para_revision_de_meta"
+          ]
+        }
+      ]
+    }
+  ]
+}

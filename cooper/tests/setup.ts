@@ -1,5 +1,6 @@
 import { beforeEach, vi } from "vitest";
 import { mkdirSync, mkdtempSync } from "node:fs";
+import { randomBytes } from "node:crypto";
 import { resolve } from "node:path";
 mkdirSync(".cache", { recursive: true });
 process.env.COOPER_DATABASE_PATH = resolve(
@@ -8,6 +9,8 @@ process.env.COOPER_DATABASE_PATH = resolve(
 );
 process.env.COOPER_ADMIN_EMAIL = "admin@example.test";
 process.env.COOPER_FABRICA = "simulada";
+process.env.COOPER_MENSAJERIA = "simulada";
+process.env.AUTH_SECRET = randomBytes(32).toString("hex");
 process.env.COOPER_SIMULACION_MS = "200";
 
 for (const name of [

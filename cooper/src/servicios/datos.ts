@@ -13,10 +13,12 @@ import {
 import { requireAdmin } from "@/lib/permisos";
 import { catalogo, revisiones } from "./biblioteca";
 import { proveedorAvatar, proveedorVoz } from "./proveedores";
+import { estadoWhatsApp } from "./mensajeria/cuentas";
 export function estado(user: User) {
   return {
     demo: process.env.COOPER_DEMO === "1",
     user,
+    whatsapp: estadoWhatsApp(user),
     catalogo: catalogo(),
     medios: {
       avatarSimulado: proveedorAvatar().simulada,
