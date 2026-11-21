@@ -28,6 +28,10 @@ Las URLs remotas no llegan al cliente. Proxy de medios con HTTPS, hosts CDN exac
 
 Los originales y el consentimiento permanecen en SQLite después de borrar el activo, por el sistema existente de adjuntos. No hay purga de huérfanos, cifrado de base ni política de retención automática; Walter debe fijar retención, copias y eliminación en proveedor antes de operación con personas reales. Privado en Cooper no garantiza que un administrador de la cuenta del proveedor no pueda ver sus recursos.
 
+## Seguimiento sin navegador
+
+El proceso web consulta cada 15 segundos trabajos ya creados y verificados, incluso sin SSE abierto. La reserva SQLite compartida evita consultas duplicadas; cada lote limita a 10 dueños y 20 activos por dueño. Tras un fallo espera dos minutos. La revocación y la suspensión de cuenta bloquean el sondeo; una respuesta tardía no restaura un activo revocado. Reiniciar Cooper conserva los IDs y reanuda consultas, sin repetir creación ni síntesis. `COOPER_BIBLIOTECA_PAUSA=1` pausa el trabajador. Pruebas con proveedores ficticios en `tests/biblioteca-trabajador.test.ts`; no acredita entrenamiento real ni calidad facial/vocal.
+
 ## Documentación oficial consultada el 20-11-2026
 
 - [HeyGen: avatar de foto](https://developers.heygen.com/docs/avatar-from-photo): `POST /v3/avatars`, `type: photo`, `file` base64; respuesta `data.avatar_item.id`.

@@ -7,6 +7,7 @@ import {
   attachments,
   identityChallenges,
   publicMedia,
+  users,
   type Asset,
   type User,
 } from "@/db/schema";
@@ -168,7 +169,13 @@ function guardarTrabajo(id: string, trabajo: TrabajoMedio) {
       polledAt: Date.now(),
       syncError: false,
     })
-    .where(and(eq(assets.id, id), eq(assets.verified, true)))
+    .where(
+      and(
+        eq(assets.id, id),
+        eq(assets.verified, true),
+        eq(assets.consentRevokedAt, 0),
+      ),
+    )
     .run();
 }
 async function iniciarMedio(id: string) {
@@ -272,26 +279,45 @@ export function archivoRevision(user: User, id: string, fileId: string) {
 export async function sincronizarMedios(user: User) {
   const interval = 10000,
     now = Date.now();
+  if (
+    !db()
+      .select({ active: users.active })
+      .from(users)
+      .where(eq(users.id, user.id))
+      .get()?.active
+  )
+    return;
   const rows = db()
     .select()
     .from(assets)
     .where(
       and(
         eq(assets.ownerId, user.id),
+        eq(assets.verified, true),
+        eq(assets.consentRevokedAt, 0),
         or(
           eq(assets.status, "entrenando"),
           eq(assets.status, "verificacion_proveedor"),
         ),
         lt(assets.polledAt, now - interval),
+        or(eq(assets.syncError, false), lt(assets.polledAt, now - 120000)),
       ),
     )
+    .orderBy(assets.polledAt)
+    .limit(20)
     .all();
   await Promise.all(
     rows.map(async (a) => {
       const claimed = db()
         .update(assets)
         .set({ polledAt: now })
-        .where(and(eq(assets.id, a.id), eq(assets.polledAt, a.polledAt)))
+        .where(
+          and(
+            eq(assets.id, a.id),
+            eq(assets.polledAt, a.polledAt),
+            eq(assets.consentRevokedAt, 0),
+          ),
+        )
         .run();
       if (!claimed.changes) return;
       try {
