@@ -1,4 +1,5 @@
 "use client";
+import { IlustracionViva } from "./ilustracion-viva";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { animate, m as motion, useMotionValue } from "framer-motion";
@@ -186,6 +187,30 @@ export function FabricaVista() {
       )}
       {active ? (
         <>
+          <div
+            className="factory-cinema"
+            data-working={
+              active.productionState === "activa" &&
+              !esperaAprobacion(active.stage) &&
+              active.stage < 11
+            }
+          >
+            <IlustracionViva
+              nombre="fabrica"
+              activo={
+                active.productionState === "activa" &&
+                !esperaAprobacion(active.stage) &&
+                active.stage < 11
+              }
+            />
+            <span>
+              {active.stage === 11
+                ? "Historia publicada"
+                : esperaAprobacion(active.stage)
+                  ? "La siguiente escena la decides tú"
+                  : "Cada pieza encuentra su lugar"}
+            </span>
+          </div>
           <div className="factory-feature">
             <VideoMini video={active} />
           </div>

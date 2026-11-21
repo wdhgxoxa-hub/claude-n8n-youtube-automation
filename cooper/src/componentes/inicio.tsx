@@ -1,4 +1,6 @@
 "use client";
+import { BienvenidaAnimada } from "./escena-estudio";
+import { IlustracionViva } from "./ilustracion-viva";
 import { AnimatePresence, m as motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -215,7 +217,7 @@ export function Inicio() {
           </motion.h1>
           <p>Tu próxima idea ya tiene equipo.</p>
         </div>
-        <span className="date-note">Tu estudio, en marcha</span>
+        <BienvenidaAnimada />
       </div>
       <MemoriaChat
         recuerdos={data.chat.recuerdos}
@@ -276,7 +278,12 @@ export function Inicio() {
           >
             {data.messages.length === 0 && !submitted && !partial ? (
               <div className="chat-welcome">
-                <CooperCara estado={state} size={112} texto={spoken} />
+                <IlustracionViva
+                  nombre={
+                    state === "reposo" ? "cooper-recibe" : "cooper-reacciona"
+                  }
+                  className="welcome-companion"
+                />
                 <h2>
                   <Revelado texto="Tú pones la idea." />
                   <br />

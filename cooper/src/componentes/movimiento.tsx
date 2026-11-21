@@ -1,6 +1,7 @@
 "use client";
 import {
   useContext,
+  useState,
   useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
@@ -137,4 +138,40 @@ export function TarjetaEdicion({
       {children}
     </motion.button>
   );
+}
+
+function observarPausa(notify: () => void) {
+  window.addEventListener("storage", notify);
+  window.addEventListener("cooper-motion", notify);
+  return () => {
+    window.removeEventListener("storage", notify);
+    window.removeEventListener("cooper-motion", notify);
+  };
+}
+function pausaGuardada() {
+  try {
+    return localStorage.getItem("cooper-motion-paused") === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function usePausaMovimiento() {
+  const paused = useSyncExternalStore(
+    observarPausa,
+    pausaGuardada,
+    () => false,
+  );
+  const [volatilePause, setVolatilePause] = useState(false);
+  const isPaused = paused || volatilePause;
+  const setPaused = (value: boolean) => {
+    try {
+      localStorage.setItem("cooper-motion-paused", String(value));
+      window.dispatchEvent(new Event("cooper-motion"));
+      setVolatilePause(false);
+    } catch {
+      setVolatilePause(value);
+    }
+  };
+  return [isPaused, setPaused] as const;
 }

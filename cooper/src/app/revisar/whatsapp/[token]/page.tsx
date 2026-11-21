@@ -1,3 +1,4 @@
+import { EntradaMovimiento } from "@/componentes/entrada-movimiento";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { destinoRevision } from "@/lib/revision-whatsapp";
@@ -22,6 +23,7 @@ export default async function RevisionWhatsApp({
   } catch {
     return (
       <main className="page stack">
+        <EntradaMovimiento motivo="revision" />
         <h1>Este enlace ya no está disponible</h1>
         <p>
           Puede haber caducado o la revisión cambió. Entra con la cuenta que

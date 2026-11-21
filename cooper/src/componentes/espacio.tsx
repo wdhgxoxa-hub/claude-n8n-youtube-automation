@@ -18,7 +18,14 @@ import {
   MotionConfig,
   m as motion,
 } from "framer-motion";
-import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
+import { EscenaEstudio, CelebracionPublicacion } from "./escena-estudio";
+import { IlustracionViva } from "./ilustracion-viva";
+import {
+  Indicador,
+  NumeroAnimado,
+  useMovimientoReducido,
+  usePausaMovimiento,
+} from "./movimiento";
 import {
   House,
   ChartNoAxesCombined,
@@ -91,7 +98,30 @@ export function Espacio({
     [menu, setMenu] = useState(false);
   const path = usePathname();
   const reduced = useMovimientoReducido();
-  const [paused, setPaused] = useState(false);
+  const [isPaused, setPaused] = usePausaMovimiento();
+  const [celebration, setCelebration] = useState<string | null>(null);
+  const previousVideos = useRef(initial.videos);
+  const celebrationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const receive = useCallback((next: Estado) => {
+    const published = next.videos.find(
+      (v) =>
+        v.stage === 11 &&
+        previousVideos.current.some((p) => p.id === v.id && p.stage < 11),
+    );
+    previousVideos.current = next.videos;
+    setData(next);
+    if (published) {
+      setCelebration(published.title);
+      if (celebrationTimer.current) clearTimeout(celebrationTimer.current);
+      celebrationTimer.current = setTimeout(() => setCelebration(null), 9000);
+    }
+  }, []);
+  useEffect(
+    () => () => {
+      if (celebrationTimer.current) clearTimeout(celebrationTimer.current);
+    },
+    [],
+  );
   const hidden = useSyncExternalStore(
     observarVisibilidad,
     () => document.hidden,
@@ -100,8 +130,8 @@ export function Espacio({
   const menuButton = useRef<HTMLButtonElement>(null);
   const sidebar = useRef<HTMLElement>(null);
   const refresh = useCallback(async () => {
-    setData(await api<Estado>("estado", undefined, "GET"));
-  }, []);
+    receive(await api<Estado>("estado", undefined, "GET"));
+  }, [receive]);
   useEffect(() => {
     let source: EventSource | undefined;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -131,7 +161,7 @@ export function Espacio({
       };
       source.addEventListener("estado", (event) => {
         try {
-          setData(JSON.parse(event.data));
+          receive(JSON.parse(event.data));
           setConnected(true);
           attempts = 0;
         } catch {
@@ -157,7 +187,7 @@ export function Espacio({
       window.removeEventListener("online", connect);
       window.removeEventListener("offline", offline);
     };
-  }, []);
+  }, [receive]);
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: light)");
     const apply = () =>
@@ -220,13 +250,13 @@ export function Espacio({
   return (
     <Context.Provider value={{ data, refresh, connected }}>
       <MotionConfig
-        reducedMotion={paused || hidden || reduced ? "always" : "user"}
+        reducedMotion={isPaused || hidden || reduced ? "always" : "user"}
       >
         <LazyMotion features={cargarMovimiento} strict>
           <LayoutGroup id="estudio">
             <div
               className="workspace"
-              data-motion={paused || hidden ? "paused" : "playing"}
+              data-motion={isPaused || hidden || reduced ? "paused" : "playing"}
             >
               <a className="skip" href="#contenido">
                 Saltar al contenido
@@ -399,10 +429,10 @@ export function Espacio({
                     </span>
                     <button
                       className="motion-toggle"
-                      aria-pressed={paused}
-                      onClick={() => setPaused(!paused)}
+                      aria-pressed={isPaused}
+                      onClick={() => setPaused(!isPaused)}
                     >
-                      {paused ? "Activar movimiento" : "Pausar movimiento"}
+                      {isPaused ? "Activar movimiento" : "Pausar movimiento"}
                     </button>
                     <span className="demo-label">
                       {data.demo ? "Demostración" : "Modo de prueba"}
@@ -410,7 +440,15 @@ export function Espacio({
                   </div>
                 </header>
                 <main id="contenido" tabIndex={-1}>
-                  <div key={path}>{children}</div>
+                  <div key={path} className="route-choreography">
+                    {children}
+                  </div>
+                  {celebration && (
+                    <CelebracionPublicacion
+                      title={celebration}
+                      cerrar={() => setCelebration(null)}
+                    />
+                  )}
                 </main>
               </div>
             </div>
@@ -441,6 +479,7 @@ export function Heading({
         </motion.h1>
         <p>{description}</p>
       </div>
+      <EscenaEstudio />
       {action}
     </div>
   );
@@ -456,6 +495,7 @@ export function Empty({
 }) {
   return (
     <div className="empty">
+      <IlustracionViva nombre="cooper-recibe" className="empty-companion" />
       <div className="empty-story" aria-hidden="true">
         <span>
           <i className="story-idea" />
@@ -500,6 +540,11 @@ export function Skeleton() {
       role="status"
       aria-label="Cargando contenido"
     >
+      <span className="loading-reel" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
       <div className="skeleton wide" />
       <div className="skeleton" />
       <div className="skeleton tall" />

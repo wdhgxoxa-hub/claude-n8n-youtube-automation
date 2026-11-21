@@ -60,8 +60,10 @@ function Evolucion({ historial }: { historial: Medicion[] }) {
             <motion.polyline
               className="chart-line"
               points={valores.map(xy).join(" ")}
-              initial={{ pathLength: reduced ? 1 : 0 }}
-              animate={{ pathLength: 1 }}
+              key={metrica}
+              style={{ transformOrigin: "24px 120px" }}
+              initial={{ scaleX: reduced ? 1 : 0, opacity: reduced ? 1 : 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
               transition={{ duration: reduced ? 0 : 0.6 }}
             />
             {valores.map((d) => {
