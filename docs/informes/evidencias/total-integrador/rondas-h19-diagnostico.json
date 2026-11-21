@@ -1,0 +1,60 @@
+{
+  "resultado": "FAIL_NO_ACEPTACION",
+  "fecha_utc": "2026-11-21T21:47:41.104262+00:00",
+  "commit_fuente": "b3e608eec138a03fce419a66954497b8fc2c50ea",
+  "ronda": "cierre-1",
+  "estadisticas": {
+    "startTime": "2026-11-21T21:03:57.025Z",
+    "duration": 2480561.591,
+    "expected": 119,
+    "skipped": 3,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "casos": 123,
+  "proyectos": 14,
+  "fallo": {
+    "proyecto": "estres-movil",
+    "archivo": "cooper/pulido/estres.spec.ts",
+    "linea": 33,
+    "causa_en_revision": "Selector region Chat con Cooper no existe en móvil: vista accesible tabpanel. No se ha modificado app."
+  },
+  "ronda2": "NO_INICIADA",
+  "hashes": {
+    ".cache/total-integrador/rondas-h19/checkout/cooper/.cache/videos-integracion6/cierre-1/playwright.json": "528b03e078378377f15eae4e76bac0aaddebe59b178c3b63947066ad9e2ff5af",
+    ".cache/total-integrador/rondas-h19/checkout/rondas-resultado.json": "f202c94b7470e419c9c6301c446e891a1f5a31d0a91711daa907d4fa3d6706ae",
+    ".cache/total-integrador/rondas-h19.log": "9ab6d41ba366c6497c0cee8ed33d37628d51a57eea217e0a57076696ca8ac156"
+  },
+  "harness": {
+    "inicio": "2026-11-21T21:03:29.309Z",
+    "pasos": [
+      {
+        "comando": "npm ci",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 7968,
+        "sha256": "27c8639be0bdc007da313b7ba5adce1a0ba22dba0db9bf997c238a3fa402b73c"
+      },
+      {
+        "comando": "node scripts/preparar-pruebas.mjs",
+        "rc": 0,
+        "advertencias": 0,
+        "duracion_ms": 4552,
+        "sha256": "823cd680ea3ddcac84231eb6fdde18ee84575a11c441c9d45a298c7291c9d487"
+      },
+      {
+        "comando": "npm run test:e2e -- --config=playwright.total-sentinel.config.ts",
+        "rc": 1,
+        "advertencias": 0,
+        "duracion_ms": 2496126,
+        "sha256": "41590afeaf4321be26ec9940e328fbedbfa4d1557486f4449951375af7bbfbee"
+      }
+    ],
+    "resultado": "FAIL",
+    "fin": "2026-11-21T21:45:17.957Z"
+  },
+  "notas": [
+    "No cuenta como ronda limpia; conservar videos originales.",
+    "No se relaja el contrato secuencial del verificador."
+  ]
+}

@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 16:40 (Lima).
+Última actualización: 2026-11-21 16:49 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — diagnóstico de estrés móvil preservado:** puerta b3 aprobada; ronda de 123 casos termina con 119 PASS, un fallo de selector región/panel móvil y tres omitidos. No cuenta como aceptación. La captura acredita textbox/formulario presentes; se corrige solo el arnés y se repetirán puerta y dos rondas secuenciales completas, sin relajar el verificador. Aún sin push ni activación de esta misión. [Recibo](informes/evidencias/total-integrador/rondas-h19-diagnostico.json).
 
 - **21-11-2026, Lima — durabilidad de la release b3 acreditada por código y hashes:** los doce archivos públicos del host consultados por raíz corresponden a las fuentes revisadas. `operar.py` instalado conserva exactamente release/bloqueo/copia de `cbf20685`; su única diferencia con b3 es el override opcional que utiliza la reversa del bundle. Monitor, unidades, wrappers, overlay y túnel coinciden con b3. Cinco pruebas locales de equivalencia PASS, sin avisos. No hace falta reemplazar helpers para mantener la release tras arranque o copias; no se realizó reinicio ni escritura remota. [Recibo y límites](informes/evidencias/total-integrador/durabilidad-host-b3.json).
 

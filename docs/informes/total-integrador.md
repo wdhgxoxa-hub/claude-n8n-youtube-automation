@@ -24,7 +24,7 @@ Se compara ascendencia, `git cherry` y contenido. La historia de Sentinel fue sa
 
 ## Verificación y despliegue
 
-La [puerta completa final](evidencias/total-integrador/puerta-final.json) sobre archivo Git limpio `b3e608e` terminó PASS el 21-11-2026 a las 16:19 Lima: instalación, lint, tipos, **467 unitarias, 103 E2E**, build y **235 pruebas de flujos**; cero errores, advertencias u omisiones. La aplicación coincide exactamente con la nueva imagen. Dos rondas completas de 123 casos/14 proyectos siguen en curso; la primera llegó al bloque de movimiento sin fallos. Publicación y activación aún pendientes de sus revisiones técnica y visual.
+La [puerta completa final](evidencias/total-integrador/puerta-final.json) sobre archivo Git limpio `b3e608e` terminó PASS el 21-11-2026 a las 16:19 Lima: instalación, lint, tipos, **467 unitarias, 103 E2E**, build y **235 pruebas de flujos**; cero errores, advertencias u omisiones. La aplicación coincide exactamente con la nueva imagen. La primera ronda completa sobre b3 terminó con 119 casos aprobados, uno fallido y tres omitidos por maxFailures: el estrés móvil buscó la región de escritorio aunque el chat móvil expone un tabpanel. Se conserva como diagnóstico, no aceptación. La corrección afecta solo el selector de prueba; se repetirán puerta y dos rondas completas secuenciales. Publicación y activación siguen pendientes. [Diagnóstico](evidencias/total-integrador/rondas-h19-diagnostico.json).
 
 Aceptaciones independientes ya terminadas:
 
