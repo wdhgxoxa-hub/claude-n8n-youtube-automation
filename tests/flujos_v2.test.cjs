@@ -1690,3 +1690,10 @@ test('pulido: periodicidad diaria acotada y análisis de IA solo a los días 2 y
  const fuera=run(codeOf(APR,'Pedir lecciones'),{all:{'Toca medir en redes':[{video_id:'v',canal_id:'c',dias:4}],'Métricas en redes':[{platforms:{}}]}});
  assert.equal(fuera.length,0);
 });
+test('pulido: piezas usa los archivos finales de sonido/avatar y el orden del montaje',()=>{
+ const p1={plano_id:'p1',url:'https://cdn.test/imagen.png',plano:{id:'p1',tipo:'imagen'}};
+ const p2={plano_id:'p2',url:'https://cdn.test/avatar.mp4',plano:{id:'p2',tipo:'avatar'}};
+ const nodes={'Composición Creatomate':{planos:2},'Plan de producción':{planos:[{id:'p1'},{id:'p2'}]},'Juntar planos':{planos:[p1,{...p2,url:''}]},'Sonido y emoción':{planos:[p2,p1],voces:[{plano_id:'p2',url:'https://cdn.test/voz.wav'}]}};
+ const datos=JSON.parse(run(codeOf(PROD,'Cooper · piezas terminadas'),{nodes})[0].json.cooper_escenas);
+ assert.deepEqual(datos,[{id:'p1',orden:0,imagen:p1.url,clip:'',voz:''},{id:'p2',orden:1,imagen:'',clip:p2.url,voz:'https://cdn.test/voz.wav'}]);
+});

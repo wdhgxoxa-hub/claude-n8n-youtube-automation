@@ -3308,7 +3308,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst planos=$('Composición Creatomate').first().json.planos || [];\nconst voces=$('Sonido y emoción').first().json.voces || [];\nreturn [{json:{cooper_escenas:JSON.stringify(planos.map((p,i)=>({id:String(p.plano_id || p.plano?.id || i),orden:i,\n imagen:!['clip','archivo','avatar'].includes(p.plano?.tipo || p.tipo)?p.url || '':'',\n clip:['clip','archivo','avatar'].includes(p.plano?.tipo || p.tipo)?p.url || '':'',\n voz:voces.find(v=>v.plano_id===(p.plano_id || p.plano?.id))?.url || ''})))}}];\n"
+        "jsCode": "\nconst son=$('Sonido y emoción').first().json;\nconst orden=$('Plan de producción').first().json.planos.map(p=>p.id);\n// La composición devuelve un conteo; los archivos definitivos (incluido avatar) vienen de sonido.\nconst planos=(son.planos || $('Juntar planos').first().json.planos || [])\n .filter(p=>orden.includes(p.plano_id)).sort((a,b)=>orden.indexOf(a.plano_id)-orden.indexOf(b.plano_id));\nconst voces=son.voces || [];\nreturn [{json:{cooper_escenas:JSON.stringify(planos.map((p,i)=>({id:String(p.plano_id || p.plano?.id || i),orden:i,\n imagen:!['clip','archivo','avatar'].includes(p.plano?.tipo || p.tipo)?p.url || '':'',\n clip:['clip','archivo','avatar'].includes(p.plano?.tipo || p.tipo)?p.url || '':'',\n voz:voces.find(v=>v.plano_id===(p.plano_id || p.plano?.id))?.url || ''})))}}];\n"
       },
       "id": "30ac441d-f02a-53de-bc41-0130678c63ee",
       "name": "Cooper · piezas terminadas",
