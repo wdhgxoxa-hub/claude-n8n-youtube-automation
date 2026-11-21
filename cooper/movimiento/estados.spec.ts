@@ -14,7 +14,7 @@ for (const width of [1440, 390])
           `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_FIXTURE_PORT}/sesion`,
           {
             data: {
-              email: "luis@example.test",
+              email: "admin@example.test",
               secret: process.env.COOPER_E2E_SECRET,
             },
           },
