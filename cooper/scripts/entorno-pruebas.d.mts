@@ -3,3 +3,4 @@ export function entornoLimpio(
 ): Record<string, string>;
 export function comprobarArchivosEntorno(directorio?: string): void;
 export function comprobarSentinel(directorio?: string): string;
+export function comprobarGremlins(directorio?: string): void;

@@ -70,6 +70,19 @@ export function comprobarSentinel(
   return origen.revision;
 }
 
+export function comprobarGremlins(
+  directorio = resolve(raiz, "node_modules/gremlins.js"),
+) {
+  const bundle = resolve(directorio, "dist/gremlins.min.js");
+  if (!existsSync(bundle))
+    throw new Error(
+      "Falta gremlins.js para el caos de Sentinel. Ejecute npm ci.",
+    );
+  const hash = createHash("sha256").update(readFileSync(bundle)).digest("hex");
+  if (hash !== versiones.gremlinsSha256)
+    throw new Error("gremlins.js no coincide con la distribución fijada.");
+}
+
 export function ejecutar(cmd, args, opciones = {}) {
   const result = spawnSync(cmd, args, {
     cwd: raiz,
@@ -117,6 +130,7 @@ export function comprobarHerramientas() {
 export function comprobarInstalacion() {
   comprobarArchivosEntorno();
   comprobarSentinel();
+  comprobarGremlins();
   if (!existsSync(python))
     throw new Error(
       "Falta Python de ensayo. Ejecute npm run preparar:pruebas o npm run ci:limpia.",

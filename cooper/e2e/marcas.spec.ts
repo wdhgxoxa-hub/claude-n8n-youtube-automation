@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { mkdirSync, writeFileSync, unlinkSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawn } from "node:child_process";
 const fixture = () => `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT}`;
@@ -259,6 +259,17 @@ test("Marcas: Sentinel recorre la instancia efímera con su guardián activo", a
     );
     writeFileSync(resolve(folder, "ejecucion.log"), result.log);
     expect(result.code, result.log).toBe(0);
+    const report = JSON.parse(
+      readFileSync(resolve(folder, "informe.json"), "utf8"),
+    );
+    expect(report.modulos.map((m: { nombre: string }) => m.nombre)).toEqual([
+      "recorridos",
+      "caos",
+      "estabilidad",
+    ]);
+    expect(
+      report.medidas_caos.some((m: { acciones: number }) => m.acciones > 0),
+    ).toBe(true);
   } finally {
     unlinkSync(session);
   }

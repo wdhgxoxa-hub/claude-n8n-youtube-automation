@@ -4,5 +4,10 @@
   "python": "3.14.7",
   "uv": "0.12.24",
   "playwrightPython": "1.63.0",
-  "plataformas": { "debian": ["12", "13"], "ubuntu": ["22.04", "24.04"] }
+  "plataformas": {
+    "debian": ["12", "13"],
+    "ubuntu": ["22.04", "24.04"]
+  },
+  "gremlins": "2.2.0",
+  "gremlinsSha256": "ac289545818d0f3543e09f66b4ab5fe328995e9f0b2af09069a1314c5c862c63"
 }

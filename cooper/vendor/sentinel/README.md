@@ -9,7 +9,9 @@ credenciales, informes ni otros módulos que Cooper no invoca.
 
 Las cinco dependencias transitivas de esos módulos se fijan con los hashes del `uv.lock`
 de la misma revisión en `../../ci/sentinel-requirements.txt`. El preflight verifica
-estas fuentes antes de importar Sentinel. Actualizar exige revisar diferencias, renovar
+estas fuentes antes de importar Sentinel. El módulo de caos necesita además el bundle
+`gremlins.js` 2.2.0, fijado en el lockfile npm de Cooper (misma versión del lockfile
+Node de origen); `ci/versiones.json` registra su SHA-256. Actualizar exige revisar diferencias, renovar
 huellas y volver a ejecutar la puerta; nunca editar esta copia para hacer pasar un ensayo.
 
 El proyecto de origen no contiene un archivo de licencia. Esta copia sirve al ensayo

@@ -145,7 +145,8 @@ del propio Node mediante `npm_package_config_node_gyp_nodedir`, sin descargar ni
 propietarios de archivos bajo el contenedor sin capacidades. `ci/versiones.json` fija npm 12.2.2; `package-lock.json` fija las dependencias JavaScript y Playwright;
 `ci/sentinel-requirements.txt` fija las cinco dependencias Python con SHA-256 y solo wheels.
 `vendor/sentinel/origen.json` conserva la revisión y los hashes del guardián y los tres
-módulos originales. Los paquetes del sistema se obtienen del repositorio Debian vigente:
+módulos originales. El caos usa `gremlins.js` 2.2.0 desde el lockfile npm de Cooper;
+su bundle se comprueba por SHA-256 antes de ejecutar Sentinel. Los paquetes del sistema se obtienen del repositorio Debian vigente:
 la imagen base y las dependencias de aplicación están fijadas, no se promete una imagen
 binariamente idéntica ante futuras actualizaciones de seguridad del sistema.
 
@@ -176,7 +177,8 @@ Documentación oficial consultada: [Playwright CI](https://playwright.dev/docs/c
 [uv en contenedores](https://docs.astral.sh/uv/guides/integration/docker/),
 [instalación con hashes](https://pip.pypa.io/en/stable/topics/secure-installs/),
 [Podman run](https://docs.podman.io/en/latest/markdown/podman-run.1.html),
-[configuración actual de node-gyp](https://github.com/nodejs/node-gyp#environment-variables).
+[configuración actual de node-gyp](https://github.com/nodejs/node-gyp#environment-variables),
+[gremlins.js](https://github.com/marmelab/gremlins.js).
 Publicar CI o redistribuir la copia interna de Sentinel exige decisión de Walter;
 esta misión deja únicamente el arnés local.
 

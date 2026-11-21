@@ -5,11 +5,24 @@ import { resolve } from "node:path";
 import {
   comprobarArchivosEntorno,
   comprobarSentinel,
+  comprobarGremlins,
   entornoLimpio,
 } from "../scripts/entorno-pruebas.mjs";
 import { avisos, comprobarResultados } from "../scripts/puerta.mjs";
 
 describe("puerta reproducible", () => {
+  it("exige el bundle íntegro de gremlins antes de poder ejecutar caos", () => {
+    expect(() => comprobarGremlins()).not.toThrow();
+    const root = mkdtempSync(resolve(tmpdir(), "cooper-gremlins-"));
+    try {
+      expect(() => comprobarGremlins(root)).toThrow("Falta gremlins.js");
+      mkdirSync(resolve(root, "dist"));
+      writeFileSync(resolve(root, "dist/gremlins.min.js"), "// alterado");
+      expect(() => comprobarGremlins(root)).toThrow("no coincide");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
   it("solo transmite variables de herramientas, sin credenciales ni opciones inyectadas", () => {
     const env = entornoLimpio({
       PATH: "/bin",
