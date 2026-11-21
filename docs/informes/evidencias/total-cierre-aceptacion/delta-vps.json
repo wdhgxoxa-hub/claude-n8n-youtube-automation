@@ -1,0 +1,29 @@
+{
+  "entrada_sha256": "ca98d37aff4964d0cb6b8a5fbf53dfd50cb217ea795618fab58e65742431f849",
+  "manifiesto_sha256": "7314477317b5fe4da786af16985a49e2eb83eb49163f4796aa5dc8079a411f31",
+  "ensayo_y_reversa_previa": "PASS",
+  "flujos_importados": 6,
+  "republicados_originales": [
+    "FabCompYouTube01",
+    "FabLlamarClaude1",
+    "FabRadar00000001",
+    "FabOrquestador01",
+    "xorCR0lfNlil8Ovy"
+  ],
+  "entradas_pausadas_reabiertas": [],
+  "disparadores_habilitados": [],
+  "pausados_por_credencial": [],
+  "pasos_bloqueados_por_credencial": [],
+  "disparadores_dependencias_pausados": [],
+  "snapshot_previo": "153ee6a0d35a8e542615c25e2f0e69f3aed3abbf3de06bf70198aaa391cabe80",
+  "estado": "PASS",
+  "columnas_agregadas": 0,
+  "columnas_idempotentes": "PASS",
+  "flujos_antes": 44,
+  "flujos_despues": 45,
+  "flujos_ajenos_preservados": "PASS",
+  "tablas_negocio_preservadas": 9,
+  "filas_negocio": 126,
+  "tablas_negocio_sha256": "712cd03ff0910c13b8c390d558df70f91a32b12d6b1378f600d4b402eeaee7b0",
+  "salud_stack": "PASS"
+}

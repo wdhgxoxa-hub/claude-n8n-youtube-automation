@@ -1,0 +1,19 @@
+{
+  "fecha": 1795282036,
+  "copia": {
+    "snapshot": "6ae420fdc5c7e3845d10bc6c516e15ae2d5e0546b8790b4bb5c79047ed1a50df",
+    "fecha": 1795281658,
+    "restauracion": "PASS"
+  },
+  "servicios": {
+    "cooper-cooper-1": "running healthy",
+    "cooper-n8n-1": "running healthy",
+    "cooper-runner-1": "running healthy",
+    "cooper-caddy-1": "running healthy",
+    "cooper-chat-cooper-1": "running healthy",
+    "cooper-chat-n8n-1": "running healthy",
+    "cooper-chat-runner-1": "running healthy"
+  },
+  "caddy_sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+  "imagen_cooper": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9"
+}

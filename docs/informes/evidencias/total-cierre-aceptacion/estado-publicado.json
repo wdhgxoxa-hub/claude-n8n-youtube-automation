@@ -1,0 +1,241 @@
+{
+  "workflows": [
+    {
+      "id": "jylyhP7MsjovYWUC",
+      "nombre": "01 · Fábrica de videos · Telegram",
+      "activo": false,
+      "version": "78a8a32a-adf4-41b3-b4fb-e4c711b0c2db",
+      "version_publicada": null,
+      "version_vigente_publicada": false,
+      "entradas": [
+        {
+          "nombre": "Telegram Trigger",
+          "tipo": "telegramTrigger",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "CmfUbbCPbVCfFzY3",
+      "nombre": "02 · Fábrica de videos · Revisión de guion",
+      "activo": false,
+      "version": "401a168c-1c3e-4b54-9c54-12217b9e051c",
+      "version_publicada": null,
+      "version_vigente_publicada": false,
+      "entradas": [
+        {
+          "nombre": "Script Webhook",
+          "tipo": "webhook",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabAprendizaje01",
+      "nombre": "M7 · Aprendizaje (24 h, 72 h y 7 días)",
+      "activo": true,
+      "version": "f9e60b1a-c702-4569-aa2f-96a872cac035",
+      "version_publicada": "f9e60b1a-c702-4569-aa2f-96a872cac035",
+      "version_vigente_publicada": true,
+      "entradas": [
+        {
+          "nombre": "Cada día",
+          "tipo": "scheduleTrigger",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabRetornoClaud1",
+      "nombre": "F · Retorno de Claude",
+      "activo": false,
+      "version": "1cc5f5a8-9032-4e5f-96ff-6af0f52be67c",
+      "version_publicada": null,
+      "version_vigente_publicada": false,
+      "entradas": [
+        {
+          "nombre": "Resultado de Claude",
+          "tipo": "webhook",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabYouTube000001",
+      "nombre": "FX · YouTube por canal",
+      "activo": true,
+      "version": "a2bbe08f-713d-4772-bb36-0923977d0b31",
+      "version_publicada": "a2bbe08f-713d-4772-bb36-0923977d0b31",
+      "version_vigente_publicada": true,
+      "entradas": [
+        {
+          "nombre": "Inicio",
+          "tipo": "executeWorkflowTrigger",
+          "habilitado": true
+        },
+        {
+          "nombre": "Vuelta de Google",
+          "tipo": "webhook",
+          "habilitado": false
+        }
+      ]
+    },
+    {
+      "id": "FabErrores000001",
+      "nombre": "F · Vigilante de errores",
+      "activo": true,
+      "version": "da1b0783-ec1b-4928-b3cb-9ebe67177405",
+      "version_publicada": "da1b0783-ec1b-4928-b3cb-9ebe67177405",
+      "version_vigente_publicada": true,
+      "entradas": [
+        {
+          "nombre": "Error en un flujo",
+          "tipo": "errorTrigger",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabRutina0000001",
+      "nombre": "F · Rutina diaria y reporte semanal",
+      "activo": false,
+      "version": "f461e24d-0ca6-4b3b-bf1f-88b5496b2f96",
+      "version_publicada": null,
+      "version_vigente_publicada": false,
+      "entradas": [
+        {
+          "nombre": "Cada mañana",
+          "tipo": "scheduleTrigger",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabChatWeb000001",
+      "nombre": "F · Chat de la fábrica (computadora)",
+      "activo": false,
+      "version": "4782f8dc-6dbc-43c5-8505-f13ba46a6cb7",
+      "version_publicada": null,
+      "version_vigente_publicada": false,
+      "entradas": [
+        {
+          "nombre": "Chat",
+          "tipo": "chatTrigger",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabConfirmar0001",
+      "nombre": "F · Confirmar publicaciones",
+      "activo": true,
+      "version": "9583d5be-49a3-4320-b701-621eab1bf188",
+      "version_publicada": "9583d5be-49a3-4320-b701-621eab1bf188",
+      "version_vigente_publicada": true,
+      "entradas": [
+        {
+          "nombre": "Cada hora",
+          "tipo": "scheduleTrigger",
+          "habilitado": true
+        },
+        {
+          "nombre": "Consulta de Cooper",
+          "tipo": "executeWorkflowTrigger",
+          "habilitado": true
+        }
+      ]
+    },
+    {
+      "id": "FabRadar00000001",
+      "nombre": "F · Radar de tendencias",
+      "activo": true,
+      "version": "c5eecaef-97f4-44db-9b41-c82d3eeb8a13",
+      "version_publicada": "c5eecaef-97f4-44db-9b41-c82d3eeb8a13",
+      "version_vigente_publicada": true,
+      "entradas": [
+        {
+          "nombre": "Cada mañana (radar)",
+          "tipo": "scheduleTrigger",
+          "habilitado": false
+        },
+        {
+          "nombre": "Inicio",
+          "tipo": "executeWorkflowTrigger",
+          "habilitado": true
+        }
+      ],
+      "codigo_publico_sha256": {
+        "Pedidos de radar": "b6fc2247f25044a0f4036e0ec88dd4dbfa929adc1eeae5774994b7e2d0c57944",
+        "Encargo del analista": "b70d9124a1f2746818ac6a3fe52b6ece343c3edbf219af8dd3a716b3b6281632",
+        "Radar del canal": "84e524bfd30f905a76c1e3f1eae62f7d6afad1291a0678dbc0356e712893884c",
+        "Solo tendencias": "0bf2d3fc301dc657c33207ddb3fe5cf76dbfebcac1ba23c20f541059b06e88e4",
+        "Mensaje de radar": "0a5826b7a0dfd882b7290c70712903ca2564ca983d0406c97b2de53aa7a8b696",
+        "Radar guardado": "ec074d85e395490eb02f30fc600aca9fdae17f4869e40920f992c97a58adb03f",
+        "Cooper · costo Analista de tendencias": "b8127cb2f0880313fff752f2b1d78b50c932474cb056515394c49580af57093a",
+        "Cooper · costo Analista de tendencias seguir": "84410cd82cda1f3eae0cdbbfe36c85f9d8e7576ee5ee76fbb4dc7e7ead338a18",
+        "Cooper · identificar Cooper · costo Analista de tendencias registrar": "53328ccfe81a7b0147a67f7dc8c494ba2ce8661f15fff36c356862bc5925776b",
+        "Texto · Analista de tendencias": "d5fb7a0386727530a1d800a4aeaf74d7bca7939cf08a2d86613634789a8f6685",
+        "Pedidos de noticias": "ccfbcad4c28392c06085cd4139ba829de6a445dcb415cc6f594ce728e1c0feb4",
+        "Noticias para guardar": "625121518b36156b624040126845cfd610f4703a5c0084e78594506f9037481e",
+        "Cooper · aviso Aviso: radar": "8b90f415a734997a06195519e275f0470413e9abdbbb05ced8fff24deff31d56",
+        "Encargo público de competencia": "d2a11bb0a1467e6076eb4dd82905b18b0ac5d291aabc448327b855874a5f14e4",
+        "Competencia comprobada": "07b5abd0e17f5c38088a33f38621e00a09499d8569b9a727a1f261bddbdd9bea",
+        "Resultado del radar público": "6aaa6e61068664d74e8e037a2447820956fb400dad694b1cfe0e594a37c4925d",
+        "Competencia con YouTube": "5cc74f9b9349b9c0dccd87a9bffd41cb902821716c0d75236d8c40279fec3db0"
+      }
+    },
+    {
+      "id": "FabCompYouTube01",
+      "nombre": "FX · Competencia pública de YouTube",
+      "activo": true,
+      "version": "cfdd769f-4069-4e63-8cbb-8c4bef4190af",
+      "version_publicada": "cfdd769f-4069-4e63-8cbb-8c4bef4190af",
+      "version_vigente_publicada": true,
+      "entradas": [
+        {
+          "nombre": "Inicio",
+          "tipo": "executeWorkflowTrigger",
+          "habilitado": true
+        }
+      ],
+      "codigo_publico_sha256": {
+        "Candidatos del canal": "78bc72cebd383b203765f144e7f41e30228a666a924020b99f16bd9a12806450",
+        "Tres cuentas públicas": "aa22d19f627f6f84215af30a70c6e55fdaa2bf07014581253b64313587cc4d61",
+        "Listas de competidores": "0eeac2841e86a0f2f1cd11614c8132b19aa56ddd357f2b1ff3487d73b36e7967",
+        "IDs públicos observados": "072b65a0e278cf5d482ee83d3a7a52f8d037ddc4f588bc27f922b28bd826d508",
+        "Competencia nativa comprobada": "721bb66a02ab2f4fad2b2ef7fd8629c5949c8b97039abeca51db35e6abcfc1ea"
+      }
+    }
+  ],
+  "servicios": [
+    {
+      "nombre": "cooper-chat-cooper-1",
+      "estado": "Up 3 minutes (healthy)"
+    },
+    {
+      "nombre": "cooper-chat-n8n-1",
+      "estado": "Up 2 minutes (healthy)"
+    },
+    {
+      "nombre": "cooper-chat-runner-1",
+      "estado": "Up 2 minutes (healthy)"
+    },
+    {
+      "nombre": "cooper-cooper-1",
+      "estado": "Up 3 minutes (healthy)"
+    },
+    {
+      "nombre": "cooper-runner-1",
+      "estado": "Up 2 minutes (healthy)"
+    },
+    {
+      "nombre": "cooper-n8n-1",
+      "estado": "Up 3 minutes (healthy)"
+    },
+    {
+      "nombre": "cooper-caddy-1",
+      "estado": "Up 2 minutes (healthy)"
+    }
+  ],
+  "caddy_sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c"
+}

@@ -1,0 +1,31 @@
+{
+  "aplicacion": "PASS",
+  "reversion": "PASS",
+  "red": "none",
+  "puertos": [],
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "columnas_agregadas": 0,
+  "idempotencia_columnas": "PASS",
+  "flujos_importados": 1,
+  "flujos_antes": 44,
+  "flujos_despues": 44,
+  "flujos_importados_inactivos": true,
+  "flujos_ajenos_preservados": "PASS",
+  "tablas_negocio_preservadas": 9,
+  "filas_tablas_negocio": 126,
+  "tablas_restauradas": 187,
+  "integridad_y_claves_foraneas": "PASS",
+  "respaldo_sha256": "0309be7713647eb501fc81a4f9fffaeae36dc5cfe7484f915e93c5b2900cfed3",
+  "restauracion_sha256": "0309be7713647eb501fc81a4f9fffaeae36dc5cfe7484f915e93c5b2900cfed3",
+  "workflow_ids_active_version_sha256": "2c0dd4949f309ca329c45106b999987838ebac1555057cd97763564e7c8d55ed",
+  "tablas_negocio_sha256": "712cd03ff0910c13b8c390d558df70f91a32b12d6b1378f600d4b402eeaee7b0",
+  "entrada_sha256": "a9d048d80885f9c19979d85e909ed1276db0777a3c6b50f561614336157f3032",
+  "manifiesto_sha256": "7314477317b5fe4da786af16985a49e2eb83eb49163f4796aa5dc8079a411f31",
+  "publicacion": "PASS",
+  "flujos_publicados": 1,
+  "publicados": [
+    "FabAjustes000001"
+  ],
+  "publicar_sha256": "80d27c0b7773c642e8e442d38c62e694d5df1b945bf060baaeb52fb2aaa68827",
+  "versiones_publicadas": "PASS"
+}

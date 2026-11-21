@@ -1,0 +1,14 @@
+{
+  "estado": "PASS",
+  "imagen": "ghcr.io/n8n-io/n8n:2.47.6@sha256:d26c451fcb258abfe3a3561b13c5421cbc9bc8e7a738afb06c7a464fa31f821b",
+  "red": "none",
+  "puertos": [],
+  "credenciales": "ficticias",
+  "publicaciones_reales": 0,
+  "confirmacion_sintetica": "PASS",
+  "mensaje_privado_descartado": "PASS",
+  "query_sensible_eliminada": "PASS",
+  "tablas_negocio_preservadas": 9,
+  "flujos_originales_preservados": 44,
+  "workflow_fuente_sha256": "62d49a2d90b0d0030aa5f6c331fc6da4071264966077927678fee72e7f3c6d50"
+}

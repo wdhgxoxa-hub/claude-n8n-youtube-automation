@@ -1,0 +1,26 @@
+{
+  "entrada_sha256": "a9d048d80885f9c19979d85e909ed1276db0777a3c6b50f561614336157f3032",
+  "manifiesto_sha256": "7314477317b5fe4da786af16985a49e2eb83eb49163f4796aa5dc8079a411f31",
+  "ensayo_y_reversa_previa": "PASS",
+  "flujos_importados": 1,
+  "republicados_originales": [
+    "FabAjustes000001"
+  ],
+  "entradas_pausadas_reabiertas": [],
+  "pausados_por_credencial": [],
+  "pasos_bloqueados_por_credencial": [],
+  "disparadores_dependencias_pausados": [],
+  "snapshot_previo": "5103c42809ae241278ffaa5b4c80027337635037aef185a4712772b152cf3b55",
+  "allowTextoApi": false,
+  "unico_cambio_de_contenido": "PASS",
+  "estado": "PASS",
+  "columnas_agregadas": 0,
+  "columnas_idempotentes": "PASS",
+  "flujos_antes": 44,
+  "flujos_despues": 44,
+  "flujos_ajenos_preservados": "PASS",
+  "tablas_negocio_preservadas": 9,
+  "filas_negocio": 126,
+  "tablas_negocio_sha256": "712cd03ff0910c13b8c390d558df70f91a32b12d6b1378f600d4b402eeaee7b0",
+  "salud_stack": "PASS"
+}
