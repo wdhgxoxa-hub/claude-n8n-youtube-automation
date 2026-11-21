@@ -186,3 +186,43 @@ COOPER_VPS_TEST_IMAGE=localhost/cooper:COMMIT_REVISADO node deploy/tests/compose
 ```
 
 El contrato del entorno efectivo se comprueba con `python3 -W error -m unittest discover -s deploy/tests -p 'test_integracion.py'`: Docker Compose resuelve solo el `.env.example` con valores ficticios y no arranca servicios. [Documentación oficial de variables en Compose](https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/).
+
+## Preparación de cooperestudio.com (VPS real)
+
+La misión real se registra en [cooper-vps-real](informes/cooper-vps-real.md). Los
+secretos y respaldos permanecen fuera del checkout. La llave dedicada es
+`~/.ssh/cooper_vps`; Walter instala su parte pública con el comando guardado en
+`~/.config/cooper/ssh-copy-id.txt`, después de escribir la IPv4 pública en
+`~/.config/cooper/vps-ip`. Verificar la huella del servidor al primer acceso.
+
+```bash
+python3 deploy/esperar-vps.py
+```
+
+Sondea cada 120 segundos durante un máximo de ocho horas. Exige IPv4 pública,
+SSH sin contraseña con la llave dedicada y host conocido, y que todos los A de
+`cooper.cooperestudio.com` coincidan con esa IP. Rechaza direcciones locales,
+texto de shell, DNS mezclado y cambios de clave del host. Solo comprueba acceso:
+**no ejecuta el corte ni el instalador**. Estado mínimo en
+`~/.cache/cooper-vps/espera.json`; salida 0 al estar listo, 2 al agotar la espera.
+Antes de instalar, comprobar también el A de `flujos.cooperestudio.com`, ausencia
+de AAAA sin configurar, Ubuntu 24.04 y acceso de `operador` en una segunda sesión.
+Usar DNS directo de Cloudflare mientras se valida el HTTPS del origen.
+
+El entorno preparado apunta a `/var/backups/cooper-restic`, repositorio local
+cifrado **fuera de `/var/lib/cooper`**, con contraseña en
+`/etc/cooper/restic-password`. Transferir el repositorio cifrado y la contraseña
+por SSH como archivos separados; no incluirlos en la imagen ni en Git. La copia
+local no cubre pérdida del VPS: el destino remoto y su ensayo siguen pendientes.
+
+El contenedor no lleva sesiones Claude/ChatGPT. `COOPER_CHAT=codex-local` y
+`COOPER_CHAT_API_RESPALDO=0` permiten el modo básico temporal con aviso visible
+cuando el puente no está disponible. Compose transmite ambas variables y la
+URL/token del puente a Cooper. No habilitar respaldo API por tener claves
+presentes. La conexión futura exige un túnel dentro del espacio de red del
+contenedor: `127.0.0.1` del VPS no es `127.0.0.1` de Cooper, n8n ni su runner.
+El servidor actual de Claude CLI no es un puente HTTP independiente. El de Codex
+sí escucha en la PC. Un túnel reverso necesitaría una excepción SSH limitada:
+`instalar.sh` solo permite reenvío local. No cambiarlo a reenvío global ni abrir
+8789 para resolverlo. Hasta desplegar y ensayar una topología privada completa,
+se conserva el respaldo básico y no se trasladan credenciales de suscripción.
