@@ -1,0 +1,30 @@
+{
+  "aplicacion-pass.json": {
+    "bytes": 6182,
+    "sha256": "82bff2db5a135a2ecc2f26188907a8cae937e5299cd82d301cbaeb24fc1a9d6a"
+  },
+  "aplicador.json": {
+    "bytes": 5627,
+    "sha256": "7061420596d3fc01b5961725e046fb57bdcd5558921d2ba62155b0dae3cba868"
+  },
+  "cierre.json": {
+    "bytes": 958,
+    "sha256": "33a6391e45e19705128a3d08fd9a8f7a83972e2da764e486629aab581f417346"
+  },
+  "compose.log": {
+    "bytes": 730,
+    "sha256": "2588e1182c27710ab7e38a05f6af56f2f60434823c988412405930fceb5622e9"
+  },
+  "fallo-inyectado-revertido.json": {
+    "bytes": 6277,
+    "sha256": "13e321916b514eb3d0a05df939fab13d3b2c885a7e6288eb08baa0254d8ea073"
+  },
+  "invocacion-inicial.json": {
+    "bytes": 350,
+    "sha256": "66ad27390cc7cdecfe558b1b40d6ae68bf61f10dd209cea2d591112d2233b45b"
+  },
+  "recuperacion.json": {
+    "bytes": 3812,
+    "sha256": "a666d42e98cbd2ec719c9d45b86f4b0b62c59c198d7903af6de3b8aaf61e1794"
+  }
+}

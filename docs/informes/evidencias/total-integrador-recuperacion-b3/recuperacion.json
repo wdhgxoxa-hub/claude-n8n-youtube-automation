@@ -1,0 +1,81 @@
+{
+  "estado": "PASS",
+  "recibo_aplicacion_sha256": "82bff2db5a135a2ecc2f26188907a8cae937e5299cd82d301cbaeb24fc1a9d6a",
+  "codigo_recuperacion_sha256": "beaa5cabeb4f94fb99940922751818a8e771e54dd591e975795397308ca0a3ba",
+  "codigo_operar_sha256": "0a42c6f610ebca5afd2eaa93e5c695a0f9d5fbdaa55482a889543177ed447a56",
+  "codigo_aplicador_sha256": "d9b8a8faec7ff1b4658dc25f941595778951338698e7d035d26dae96e85dab2c",
+  "snapshot_restaurado": "cd415f92c5e59b7f341feccb2861331230a8417915e9374ac8475db1476da549",
+  "servicios_antes": {
+    "caddy": {
+      "imagen": "docker.io/library/caddy:2.11.8-alpine",
+      "id": "857143cd0ed55376842e88df6b4a68f9b3babd8f56ee9e070bf08b23e91fd6bc"
+    },
+    "chat-cooper": {
+      "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+    },
+    "chat-n8n": {
+      "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+    },
+    "chat-runner": {
+      "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+    },
+    "cooper": {
+      "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+    },
+    "n8n": {
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.6",
+      "id": "a1a2ac97196467d6d7fe8cb7936a3feb5da77383157d64c20ab2243535833a11"
+    },
+    "runner": {
+      "imagen": "ghcr.io/n8n-io/runners:2.47.6",
+      "id": "ba9b2a07f5786af771dceba41bc9b892c2a90745af6721f1575168efbede0928"
+    }
+  },
+  "directorio": "/home/david/.cache/tiop-b3/cooper/.cache/e2e-vps-e2Lk2r/operacion/recuperacion-infra-1795298037689235682",
+  "entorno_copiado": false,
+  "workflow_cas_sha256": "fd1bb792c3ff3ae97d099ab04bc98ebe46877cddbe4442197f8caa37a4d8a51f",
+  "snapshot_desplazado": "f80925e6d3cdd3d91fb96770bc9aa781279cff2ca0d35e7bcfd7fa9e727c7211",
+  "datos_desplazados": "/home/david/.cache/tiop-b3/cooper/.cache/e2e-vps-e2Lk2r/operacion/recuperacion-infra-1795298037689235682/datos-desplazados",
+  "salud": "PASS",
+  "configuracion_restaurada": "PASS",
+  "datos_restaurados": "PASS",
+  "manifiesto_restaurado_sha256": "7df3de2262115e6c2d64e11515640b69148d42ae931751ad1c4bb560ceaba5fa",
+  "servicios_despues": {
+    "cooper": {
+      "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+    },
+    "n8n": {
+      "imagen": "ghcr.io/n8n-io/n8n:2.47.4",
+      "id": "f57fc062750b990970708fc7bdd6826892bf1d07a664ec4b62dd825ebc199f7c"
+    },
+    "runner": {
+      "imagen": "ghcr.io/n8n-io/runners:2.47.4",
+      "id": "fa28d26eeb50f921aca577f101f2aa7cb57203e091694c1403384db66fce6ac0"
+    },
+    "caddy": {
+      "imagen": "docker.io/library/caddy:2.11.2-alpine",
+      "id": "2ad4f81b9a44d531eff80b8d8c65c495c8a867648dc9a3e3720224d7418b3f90"
+    },
+    "chat-cooper": {
+      "imagen": "localhost/cooper:b3e608eec138a03fce419a66954497b8fc2c50ea",
+      "id": "c5f653a5c70e15fcbe02fa1123fefaf1fed52590a9f455f2e311e50d60923129"
+    },
+    "chat-n8n": {
+      "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+    },
+    "chat-runner": {
+      "imagen": "localhost/cooper:cbf20685e07bf07566573825418d87799bed5ad9",
+      "id": "f43ff6fa376091f82fcbcc817d11430070fb6e9928714a6e61a52513ef803d0d"
+    }
+  },
+  "imagen_cooper_conservada": true,
+  "punteros_cooper_conservados": true,
+  "workflows_ajenos_preservados": true,
+  "imagenes_reversa_sha256": "2cd6cc4b07a3ee6956c2f4f4c840139d845f462ed49c2d6d20a021d055622744"
+}

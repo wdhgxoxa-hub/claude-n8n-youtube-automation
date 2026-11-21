@@ -1,0 +1,6 @@
+{
+  "resultado": "BLOQUEADO_ANTES_DE_MUTAR",
+  "motivo": "Faltó COOPER_LAB=1 en el entorno externo de la primera invocación; operar.config rechazó leer el fixture bajo checkout antes de crear candidato.",
+  "correccion": "Invocación repetida con COOPER_LAB=1 y fixture sintético; helpers y guardas sin modificar.",
+  "candidato_creado": false
+}
