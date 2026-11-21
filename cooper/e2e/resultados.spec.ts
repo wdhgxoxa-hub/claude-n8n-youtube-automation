@@ -1,8 +1,28 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import type { Estado } from "../src/servicios/datos";
+import type { Resultados } from "../src/contratos/resultados";
+import type { Leccion } from "../src/contratos/observabilidad";
 import { readFileSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import AxeBuilder from "@axe-core/playwright";
+
+async function actualizarResultados(page: Page) {
+  // El HTML inicial viene del servidor; la proyección interceptada solo entra
+  // mediante la misma actualización GET que ofrece la pantalla al usuario.
+  const [respuesta] = await Promise.all([
+    page.waitForResponse(
+      (r) =>
+        new URL(r.url()).pathname === "/api/resultados" &&
+        r.request().method() === "GET",
+    ),
+    page.getByRole("button", { name: "Actualizar resultados" }).click(),
+  ]);
+  expect(respuesta.ok()).toBe(true);
+  await expect(
+    page.getByRole("button", { name: "Actualizar resultados" }),
+  ).toBeEnabled();
+}
+
 test.beforeEach(async ({ page }) => {
   expect(
     (
@@ -92,42 +112,47 @@ test("Aprendizaje activa y pausa la medición con persistencia y permiso adminis
 test("Publicados presenta intervalos YouTube en segundos sin recortar repeticiones", async ({
   page,
 }) => {
-  const estado: Estado = await (await page.request.get("/api/estado")).json();
-  const v = estado.videos[0];
-  v.observabilidad.publicaciones = [
+  const resultados: Resultados = await (
+    await page.request.get("/api/resultados")
+  ).json();
+  const publicada = resultados.publicaciones.find((p) => p.tipo === "video")!;
+  expect(publicada).toBeDefined();
+  resultados.publicaciones = [
     {
-      id: "curva-yt",
-      red: "youtube",
-      url: "https://www.youtube.com/watch?v=abcdefghijk",
+      ...publicada,
+      tipo: "video",
+      redes: ["youtube"],
       fecha: "2026-11-01T00:00:00Z",
-      miniatura: "",
-      historial: [
-        {
-          fecha: "2026-11-02T00:00:00Z",
-          ventana: "24h",
-          vistas: 100,
-          meGusta: 2,
-          comentarios: 0,
-          seguidoresGanados: 3,
-          retencion: 0.5,
-          curvaFuente: "youtube_intervalos",
-          curvaRetencion: [
-            { segundo: 1.2, porcentaje: 1.25 },
-            { segundo: 60, porcentaje: 0.4 },
-            { segundo: 120, porcentaje: 0 },
-          ],
-        },
-      ],
+      publicacion: {
+        id: "curva-yt",
+        red: "youtube",
+        url: "https://www.youtube.com/watch?v=abcdefghijk",
+        fecha: "2026-11-01T00:00:00Z",
+        miniatura: "",
+        historial: [
+          {
+            fecha: "2026-11-02T00:00:00Z",
+            ventana: "24h",
+            vistas: 100,
+            meGusta: 2,
+            comentarios: 0,
+            seguidoresGanados: 3,
+            retencion: 0.5,
+            curvaFuente: "youtube_intervalos",
+            curvaRetencion: [
+              { segundo: 1.2, porcentaje: 1.25 },
+              { segundo: 60, porcentaje: 0.4 },
+              { segundo: 120, porcentaje: 0 },
+            ],
+          },
+        ],
+      },
     },
   ];
-  await page.route("**/api/estado", (r) => r.fulfill({ json: estado }));
-  await page.route("**/api/eventos", (r) =>
-    r.fulfill({
-      contentType: "text/event-stream",
-      body: "event: estado\ndata: " + JSON.stringify(estado) + "\n\n",
-    }),
-  );
+  await page.route("**/api/resultados", (r) => r.fulfill({ json: resultados }));
   await page.goto("/publicados");
+  await actualizarResultados(page);
+  await expect(page.locator(".resultado-origen:visible")).toHaveCount(1);
   await page.getByText("Retención por intervalo", { exact: true }).click();
   const tabla = page.getByRole("table", { name: "Curva de retención" });
   await expect(tabla).toContainText("125 %");
@@ -139,19 +164,22 @@ test("Publicados presenta intervalos YouTube en segundos sin recortar repeticion
       exact: false,
     }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: `Ver origen: ${publicada.titulo}` }),
+  ).toHaveAttribute("href", publicada.href);
 });
 test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección", async ({
   page,
 }) => {
   // El administrador ve también los ejemplos de cuentas creadas por otras E2E.
   // Contrastar contra la API comprueba la lista completa sin depender del orden de las suites.
-  const estado: Estado = await (await page.request.get("/api/estado")).json();
-  const publicaciones = estado.videos.flatMap(
-    (v) => v.observabilidad.publicaciones,
+  const resultados: Resultados = await (
+    await page.request.get("/api/resultados")
+  ).json();
+  const publicaciones = resultados.publicaciones.filter(
+    (p) => p.tipo === "video",
   );
-  const incidencias = estado.videos.flatMap(
-    (v) => v.observabilidad.incidencias,
-  );
+  const incidencias = resultados.incidencias.map((r) => r.incidencia);
   const pendientes = incidencias.filter((i) => i.estado === "pendiente");
   const corregidos = incidencias.filter((i) => i.estado === "corregido");
   expect(pendientes.length).toBeGreaterThan(0);
@@ -160,14 +188,30 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
   await expect(
     page.getByRole("heading", { name: "Publicados", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".publication:visible")).toHaveCount(
+  await page
+    .getByRole("combobox", { name: "Tipo", exact: true })
+    .selectOption("video");
+  // Una tarjeta puede agrupar varias fuentes; comprobar cada registro evita
+  // perder métricas al agrupar y no incluye publicaciones de Marcas ajenas.
+  await expect(page.locator(".resultado-origen:visible")).toHaveCount(
     publicaciones.length,
   );
-  await page.getByRole("button", { name: "instagram", exact: true }).click();
-  await expect(page.locator(".publication:visible")).toHaveCount(
-    publicaciones.filter((p) => p.red === "instagram").length,
+  await expect(page.getByRole("status")).toContainText(
+    `${publicaciones.length} registros de origen`,
   );
-  const publicacion = page.locator(".publication:visible").first();
+  await page.getByRole("button", { name: "instagram", exact: true }).click();
+  const instagram = publicaciones.filter((p) => p.redes.includes("instagram"));
+  await expect(page.locator(".resultado-origen:visible")).toHaveCount(
+    instagram.length,
+  );
+  const sinRetencion = instagram.find((p) =>
+    p.publicacion.historial.every((m) => m.retencion === null),
+  )!;
+  expect(sinRetencion).toBeDefined();
+  const publicacion = page
+    .locator(".resultado-origen:visible")
+    .filter({ has: page.locator(`a[href="${sinRetencion.href}"]`) })
+    .first();
   await publicacion.getByLabel("Métrica del gráfico").selectOption("retencion");
   await expect(
     publicacion.getByText("Todavía no hay mediciones de esta métrica."),
@@ -175,6 +219,9 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
   await publicacion.getByText("Ver datos de evolución").click();
   await expect(publicacion.getByRole("table")).toBeVisible();
   await page.goto("/aprendizaje");
+  await page
+    .getByRole("combobox", { name: "Tipo", exact: true })
+    .selectOption("video");
   await page.getByRole("button", { name: "Pendientes", exact: true }).click();
   await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
     pendientes.length,
@@ -358,43 +405,57 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
   const state: Estado = await (await page.request.get("/api/estado")).json();
   const video = state.videos[0];
   const channel = state.channels.find((c) => c.id === video.channelId)!;
-  channel.lecciones = [
+  const leccion: Leccion = {
+    id: "leccion-evidencia",
+    fecha: "2026-11-21T00:00:00Z",
+    resumen: "Abrir con la cifra peruana",
+    ganchos: [],
+    temas: [],
+    nivel: "hipotesis",
+    causa: "La explicación aparece después del primer plano.",
+    correccion: "Mover la cifra a la apertura.",
+    origenes: [
+      {
+        videoId: video.id,
+        red: "youtube",
+        ventana: "72h",
+        fecha: "2026-11-21T00:00:00Z",
+        metrica: "retencion",
+        valor: 0.4,
+        segundo: 3,
+        demoraHoras: 2,
+      },
+    ],
+    aplicaciones: [
+      { videoId: video.id, cambio: "La cifra abre el primer plano." },
+    ],
+  };
+  const resultados: Resultados = await (
+    await page.request.get("/api/resultados")
+  ).json();
+  const ambito = resultados.ambitos.find(
+    (a) => a.id === `video:${channel.id}`,
+  )!;
+  expect(ambito).toBeDefined();
+  resultados.aprendizajes = [
     {
-      id: "leccion-evidencia",
-      fecha: "2026-11-21T00:00:00Z",
-      resumen: "Abrir con la cifra peruana",
-      ganchos: [],
-      temas: [],
-      nivel: "hipotesis",
-      causa: "La explicación aparece después del primer plano.",
-      correccion: "Mover la cifra a la apertura.",
-      origenes: [
-        {
-          videoId: video.id,
-          red: "youtube",
-          ventana: "72h",
-          fecha: "2026-11-21T00:00:00Z",
-          metrica: "retencion",
-          valor: 0.4,
-          segundo: 3,
-          demoraHoras: 2,
-        },
-      ],
-      aplicaciones: [
-        { videoId: video.id, cambio: "La cifra abre el primer plano." },
-      ],
+      id: `${ambito.id}:id:${leccion.id}`,
+      tipo: "video",
+      ambitoId: ambito.id,
+      titulo: leccion.resumen,
+      href: `/canales/${channel.id}`,
+      fecha: leccion.fecha,
+      redes: ["youtube"],
+      simulada: true,
+      leccion,
     },
   ];
-  await page.route("**/api/estado", (r) => r.fulfill({ json: state }));
-  await page.route("**/api/eventos", (r) =>
-    r.fulfill({
-      contentType: "text/event-stream",
-      body: "event: estado\ndata: " + JSON.stringify(state) + "\n\n",
-    }),
-  );
+  resultados.incidencias = [];
+  await page.route("**/api/resultados", (r) => r.fulfill({ json: resultados }));
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/aprendizaje");
+    await actualizarResultados(page);
     const lesson = page
       .locator(".lesson:visible")
       .filter({ hasText: "Abrir con la cifra peruana" });

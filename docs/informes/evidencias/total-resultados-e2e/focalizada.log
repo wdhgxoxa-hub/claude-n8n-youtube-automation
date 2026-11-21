@@ -1,0 +1,71 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs e2e/resultados.spec.ts e2e/resultados-unificados.spec.ts e2e/navegacion-resultados.spec.ts
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 65ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.9s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4) 
+  Generating static pages using 23 workers (2/4) 
+  Generating static pages using 23 workers (3/4) 
+✓ Generating static pages using 23 workers (4/4) in 59ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/admin/conciliacion
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 7 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/navegacion-resultados.spec.ts:3:1 › Resultados enlaza las secciones de Marcas y conserva el destino al recargar (6.6s)
+  ✓  2 [chromium] › e2e/resultados-unificados.spec.ts:15:1 › consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados y origen (8.8s)
+  ✓  3 [demostracion] › e2e/resultados.spec.ts:41:1 › Aprendizaje activa y pausa la medición con persistencia y permiso administrativo (2.8s)
+  ✓  4 [demostracion] › e2e/resultados.spec.ts:112:1 › Publicados presenta intervalos YouTube en segundos sin recortar repeticiones (1.3s)
+  ✓  5 [demostracion] › e2e/resultados.spec.ts:171:1 › Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección (2.5s)
+  ✓  6 [demostracion] › e2e/resultados.spec.ts:247:1 › el montaje real se reproduce y sustituye la maqueta; galería y embeds usan URLs exactas (1.5s)
+  ✓  7 [demostracion] › e2e/resultados.spec.ts:402:1 › Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejora (3.6s)
+
+  7 passed (30.2s)
