@@ -37,3 +37,22 @@ test('la proyección canónica descarta filas ajenas y conserva escenas e histor
   assert.deepEqual(v.observabilidad.publicaciones[0].historial.map(m=>m.vistas),[1,3]);
  }
 });
+
+test('la proyección no vuelve a recorrer todos los planos por cada video autorizado',()=>{
+ const ids=Array.from({length:100},(_,i)=>i===0?'__proto__':i===1?'constructor':`v-${i}`);
+ const auth={admin:false,dueno_email:dueno(0),solicitud:{evento:'estado',datos:{}}};
+ const filas={
+  'Canales autorizados':[{json:{canal_id:'c',dueno_email:dueno(0)}}],
+  'Videos autorizados':ids.map(video_id=>({json:{video_id,canal_id:'c',dueno_email:dueno(0)}})),
+ };
+ let lecturas=0;
+ filas['Piezas de Cooper']=Array.from({length:1200},(_,i)=>({json:{
+  get video_id(){lecturas++;return i<200?ids[i%100]:'ajeno';},
+  plano_id:`p-${i}`,tipo:'imagen',archivo_url:`https://media.example.test/${i}.png`,
+ }}));
+ const respuesta=new Function('$',w.nodes.find(n=>n.name==='Resolver').parameters.jsCode)(contexto(filas,auth))[0].json.respuesta;
+ assert.deepEqual(respuesta.videos.map(v=>v.id),ids);
+ respuesta.videos.forEach((v,i)=>assert.deepEqual(v.observabilidad.escenas.map(p=>p.id),[`p-${i}`,`p-${i+100}`]));
+ assert.ok(lecturas<=2400,`Se recorrieron ${lecturas} claves para 1200 planos`);
+ assert.doesNotMatch(JSON.stringify(respuesta),/ajeno/);
+});
