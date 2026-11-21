@@ -1,0 +1,86 @@
+{
+  "fecha": "2026-11-21T16:04:13.244399+00:00",
+  "tipo": "preflight_solo_lectura",
+  "sin_runData": true,
+  "sin_valores_credenciales": true,
+  "conteos": {
+    "videos": 5,
+    "publicaciones": 4,
+    "costos": 26
+  },
+  "publicados": [
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "tema": "Cuánto gana de verdad una pollería en Lima",
+      "estado": "publicado",
+      "publicado_en": "2026-11-20T01:17:34.000Z",
+      "youtube_id": ""
+    },
+    {
+      "video_id": "v-mwocg00m-bo9w",
+      "canal_id": "margen-real-mcce",
+      "tema": "Cuánto se queda de verdad un grifo de tus 10 soles de gasolina",
+      "estado": "publicado",
+      "publicado_en": "2026-11-20T21:00:00.000Z",
+      "youtube_id": ""
+    }
+  ],
+  "publicaciones": [
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "request_id": "e6da95a2b1874002a7bc9cabf5f51752",
+      "plataformas": "youtube",
+      "estado": "publicado",
+      "publicado_en": "2026-11-20T01:17:34.000Z"
+    },
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "request_id": "d70523f2dd5945c1a9e42dc34553bd95",
+      "plataformas": "tiktok",
+      "estado": "publicado",
+      "publicado_en": "2026-11-20T01:17:34.000Z"
+    },
+    {
+      "video_id": "v-mwocg00m-bo9w",
+      "canal_id": "margen-real-mcce",
+      "request_id": "a840210f856945df8ea0bf8301525d69",
+      "plataformas": "youtube",
+      "estado": "publicado",
+      "publicado_en": "2026-11-20T21:00:00.000Z"
+    },
+    {
+      "video_id": "v-mwocg00m-bo9w",
+      "canal_id": "margen-real-mcce",
+      "request_id": "2c185bba3ce845629dde13f7ca086d66",
+      "plataformas": "tiktok",
+      "estado": "publicado",
+      "publicado_en": "2026-11-21T00:00:00.000Z"
+    }
+  ],
+  "credenciales_referenciadas": [
+    {
+      "id": "FabCredGoogleCli",
+      "name": "Google cliente (OAuth)",
+      "type": "httpCustomAuth"
+    },
+    {
+      "id": "PpoAcczNUlZgLCwe",
+      "name": "Upload-Post",
+      "type": "httpHeaderAuth"
+    }
+  ],
+  "aprendizaje_previo": 0,
+  "miniatura_contexto": {
+    "storyboard-mwo9dmge-q2q56": {
+      "disponible": false,
+      "cantidad_planos": 12
+    },
+    "storyboard-mwod0k67-av2tn": {
+      "disponible": false,
+      "cantidad_planos": 12
+    }
+  }
+}

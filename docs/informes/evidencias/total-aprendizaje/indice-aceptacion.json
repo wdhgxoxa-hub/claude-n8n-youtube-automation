@@ -1,0 +1,15 @@
+{
+  "sha256": {
+    "aceptacion-real.json": "190137d334b69843bf76ecf19cb465eb2ba681009f6ee5eddeb68207cabe6f18",
+    "diagnostico-cli.json": "13ebde958ff190e907af59ef84f2d88912dbbe55a09694dbd6df7c01d92d615c",
+    "leccion-plan-796.json": "cf41d60865ac9bac10afa365d9b006702e62869fbe27d67584e8617fc460859f",
+    "guion-plan-796.json": "b353f4997199f43dcc96b7e654da41fb610442e90da75992fae659565c8f22e3",
+    "reconciliacion-grifo-resumen.json": "13ffcc8f0ee5fc9f723979f3c652ee6fc4e81a08eed35cddb2e5d4e24b75a77e",
+    "reconciliacion-polleria-resumen.json": "b2ec9fe61f732247cfb0099ace631300562d35a45d53dfef35d48597f78f06d6",
+    "reversa-observaciones.json": "14cf14c146751c59b2063040497bc80fa21abaa40b92fd3ee3d68bec1ca2822a",
+    "limpieza-diagnostico.json": "357896e92f7d74616ce9eb2b420298a43de88f774a003342b4f46251a422eac0",
+    "cierre.json": "836bb108f942b9175d22a8491fd2c11e848a87bc6fd35ca9b3450943ae87ef4d",
+    "helpers-aceptacion.log": "1079f71b69206f460f4d10cc1757cb7922e1e884fb6b5b9ddd7c73fd9818a04d",
+    "flujos-aceptacion.log": "1e8f9ec7d52e919564baea2ce72dc49682dad86400bbbcf6dc5f3e92b13de690"
+  }
+}

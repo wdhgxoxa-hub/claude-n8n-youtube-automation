@@ -1,0 +1,23 @@
+test_no_permite_workflows_de_produccion (test_cli_aprendizaje.CliAislada.test_no_permite_workflows_de_produccion) ... ok
+test_radar_solo_recibe_url_publica_adicional (test_cli_aprendizaje.CliAislada.test_radar_solo_recibe_url_publica_adicional) ... ok
+test_runner_externo_y_limpieza_despues_de_timeout (test_cli_aprendizaje.CliAislada.test_runner_externo_y_limpieza_despues_de_timeout) ... ok
+test_diagnostico_solo_acepta_confirmacion_de_la_misma_publicacion (test_reconciliar_aprendizaje.Conciliacion.test_diagnostico_solo_acepta_confirmacion_de_la_misma_publicacion) ... ok
+test_diario_existente_o_error_de_reversa_revierte_todo (test_reconciliar_aprendizaje.Conciliacion.test_diario_existente_o_error_de_reversa_revierte_todo) ... ok
+test_lectura_y_reversa_real_solo_youtube_id (test_reconciliar_aprendizaje.Conciliacion.test_lectura_y_reversa_real_solo_youtube_id) ... ok
+test_rechaza_canal_ajeno_id_distinto_ambiguedad_y_estado (test_reconciliar_aprendizaje.Conciliacion.test_rechaza_canal_ajeno_id_distinto_ambiguedad_y_estado) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.013s
+
+OK
+test_bloqueo_antes_de_cualquier_llamada_interna (test_invocar_webhook_ensayo.Invocacion.test_bloqueo_antes_de_cualquier_llamada_interna) ... ok
+test_no_confunde_http200_con_ejecucion_correcta (test_invocar_webhook_ensayo.Invocacion.test_no_confunde_http200_con_ejecucion_correcta) ... ok
+test_rechaza_ids_y_rutas_ajenos (test_invocar_webhook_ensayo.Invocacion.test_rechaza_ids_y_rutas_ajenos) ... ok
+test_timeout_no_acredita_exito (test_invocar_webhook_ensayo.Invocacion.test_timeout_no_acredita_exito) ... ok
+test_rechaza_produccion_y_entradas_adicionales (test_webhook_ensayo.Ensayo.test_rechaza_produccion_y_entradas_adicionales) ... ok
+test_solo_prefijo_interno_y_entrada_fija (test_webhook_ensayo.Ensayo.test_solo_prefijo_interno_y_entrada_fija) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK

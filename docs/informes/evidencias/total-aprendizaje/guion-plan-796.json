@@ -1,0 +1,44 @@
+{
+  "tipo": "aceptacion_aprendizaje_plan",
+  "fecha": "2026-11-21T16:52:24.246Z",
+  "fase": "guion",
+  "job_id": "aprender-ensayo-796-0",
+  "canal_id": "margen-real-mcce",
+  "red": "plan_pc_loopback",
+  "fuentes_sha256": {
+    "pedido": "07a43a9ce2cbcadc44340ff48a45339e7e1edad821c9886118f931a53ba8ce83",
+    "validar": "de8885ea347052bde69ff5415e11b0a2c06e2355b83575806892c5b62315463b",
+    "guion": "971a4eeea04e5695d78c8a24f466249b615553a5845fa3fbf3ebc58eccfa1a5d",
+    "retorno": "c7f6540fadcfa6201a7744fade18b5516176b23f05fcae4c0086106c77500613"
+  },
+  "crea_video": false,
+  "publica": false,
+  "api_pagada": false,
+  "prueba": {
+    "lectura_obligatoria": true,
+    "ids": [
+      "aprender-ensayo-796-0:0"
+    ],
+    "omision_rechazada": true,
+    "guion_sha256": "b2d327420a7c63b1398df461c18de75508130d870b401e059afdd55f98a58335",
+    "aprendizajes_aplicados": [
+      {
+        "id": "aprender-ensayo-796-0:0",
+        "cambio": "La apertura plantea directamente la pregunta sobre cada 10 soles y después presenta el resultado como una estimación.",
+        "motivo_no_aplica": null
+      }
+    ]
+  },
+  "borrador": {
+    "titulo": "Pollería de barrio: ¿cuánto le queda al dueño de cada 10 soles?",
+    "guion": "¿Cuánto le queda al dueño de una pollería de barrio por cada 10 soles? Según nuestra cuenta, cerca de 1 sol. Casi 1 sol es IGV, unos 4 corresponden a pollo, papa y ensalada, y otros 4 a personal, alquiler, leña, gas y delivery, según nuestra estimación. Cuando sube el pollo, ese sol se encoge.",
+    "aprendizajes_aplicados": [
+      {
+        "id": "aprender-ensayo-796-0:0",
+        "cambio": "La apertura plantea directamente la pregunta sobre cada 10 soles y después presenta el resultado como una estimación.",
+        "motivo_no_aplica": null
+      }
+    ]
+  },
+  "persistido_como_video": false
+}

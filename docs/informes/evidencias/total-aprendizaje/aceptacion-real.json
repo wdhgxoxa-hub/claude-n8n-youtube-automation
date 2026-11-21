@@ -1,0 +1,449 @@
+{
+  "fecha_utc": "2026-11-21T16:54:28.482Z",
+  "canal_id": "margen-real-mcce",
+  "ejecuciones": [
+    {
+      "id": 795,
+      "tipo": "sonda_runner_sin_http",
+      "estado": "success",
+      "diagnostico_sintetico_retirado": true
+    },
+    {
+      "id": 796,
+      "tipo": "captura_metricas_existentes",
+      "estado": "success"
+    },
+    {
+      "id": 797,
+      "tipo": "persistencia_leccion_revisada",
+      "estado": "success"
+    },
+    {
+      "id": 798,
+      "tipo": "status_publicacion_lectura",
+      "estado": "success"
+    },
+    {
+      "id": 799,
+      "tipo": "youtube_directo_lectura",
+      "estado": "success"
+    }
+  ],
+  "google_existente": [
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "permiso_renovado": true,
+      "respuesta_recibida": true,
+      "filas": 0,
+      "error": false,
+      "datos_publicados": {
+        "respuesta_recibida": true,
+        "error": false,
+        "id_coincide": true
+      }
+    }
+  ],
+  "videos": [
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "youtube_id": "3sY1JsbPxMY",
+      "retencion_media": null,
+      "metricas_youtube": "[]",
+      "metricas_consultadas_en": "2026-11-21T16:54:28.177Z"
+    },
+    {
+      "video_id": "v-mwocg00m-bo9w",
+      "canal_id": "margen-real-mcce",
+      "youtube_id": "XaNPu8nxWqM",
+      "retencion_media": null,
+      "metricas_youtube": null,
+      "metricas_consultadas_en": null
+    }
+  ],
+  "publicaciones": [
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "request_id": "e6da95a2b1874002a7bc9cabf5f51752",
+      "plataformas": "youtube",
+      "metricas_historial": {
+        "youtube": [
+          {
+            "fecha": "2026-11-21T16:48:12.536Z",
+            "ventana": "24h",
+            "demora_horas": 16,
+            "seguidoresGanados": null,
+            "vistas": 301,
+            "meGusta": 4,
+            "comentarios": 0,
+            "retencion": null,
+            "curvaRetencion": []
+          }
+        ]
+      },
+      "metricas_consultadas_en": "2026-11-21T16:48:12.536Z"
+    },
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "request_id": "d70523f2dd5945c1a9e42dc34553bd95",
+      "plataformas": "tiktok",
+      "metricas_historial": {
+        "tiktok": [
+          {
+            "fecha": "2026-11-21T16:48:12.536Z",
+            "ventana": "24h",
+            "demora_horas": 16,
+            "seguidoresGanados": 10,
+            "vistas": 4317,
+            "meGusta": 13,
+            "comentarios": 0,
+            "retencion": null,
+            "curvaRetencion": [
+              {
+                "segundo": 0,
+                "porcentaje": 1
+              },
+              {
+                "segundo": 1,
+                "porcentaje": 0.78
+              },
+              {
+                "segundo": 2,
+                "porcentaje": 0.45
+              },
+              {
+                "segundo": 3,
+                "porcentaje": 0.33
+              },
+              {
+                "segundo": 4,
+                "porcentaje": 0.26
+              },
+              {
+                "segundo": 5,
+                "porcentaje": 0.21
+              },
+              {
+                "segundo": 6,
+                "porcentaje": 0.17
+              },
+              {
+                "segundo": 7,
+                "porcentaje": 0.13
+              },
+              {
+                "segundo": 8,
+                "porcentaje": 0.12
+              },
+              {
+                "segundo": 9,
+                "porcentaje": 0.1
+              },
+              {
+                "segundo": 10,
+                "porcentaje": 0.1
+              },
+              {
+                "segundo": 11,
+                "porcentaje": 0.09
+              },
+              {
+                "segundo": 12,
+                "porcentaje": 0.08
+              },
+              {
+                "segundo": 13,
+                "porcentaje": 0.08
+              },
+              {
+                "segundo": 14,
+                "porcentaje": 0.07
+              },
+              {
+                "segundo": 15,
+                "porcentaje": 0.07
+              },
+              {
+                "segundo": 16,
+                "porcentaje": 0.06
+              },
+              {
+                "segundo": 17,
+                "porcentaje": 0.06
+              },
+              {
+                "segundo": 18,
+                "porcentaje": 0.05
+              },
+              {
+                "segundo": 19,
+                "porcentaje": 0.05
+              },
+              {
+                "segundo": 20,
+                "porcentaje": 0.05
+              },
+              {
+                "segundo": 21,
+                "porcentaje": 0.05
+              },
+              {
+                "segundo": 22,
+                "porcentaje": 0.05
+              },
+              {
+                "segundo": 23,
+                "porcentaje": 0.05
+              },
+              {
+                "segundo": 24,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 25,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 26,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 27,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 28,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 29,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 30,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 31,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 32,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 33,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 34,
+                "porcentaje": 0.04
+              },
+              {
+                "segundo": 35,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 36,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 37,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 38,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 39,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 40,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 41,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 42,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 43,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 44,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 45,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 46,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 47,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 48,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 49,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 50,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 51,
+                "porcentaje": 0.03
+              },
+              {
+                "segundo": 52,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 53,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 54,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 55,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 56,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 57,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 58,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 59,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 60,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 61,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 62,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 63,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 64,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 65,
+                "porcentaje": 0.02
+              },
+              {
+                "segundo": 66,
+                "porcentaje": 0.02
+              }
+            ]
+          }
+        ]
+      },
+      "metricas_consultadas_en": "2026-11-21T16:48:12.536Z"
+    },
+    {
+      "video_id": "v-mwocg00m-bo9w",
+      "canal_id": "margen-real-mcce",
+      "request_id": "a840210f856945df8ea0bf8301525d69",
+      "plataformas": "youtube",
+      "metricas_historial": {},
+      "metricas_consultadas_en": null
+    },
+    {
+      "video_id": "v-mwocg00m-bo9w",
+      "canal_id": "margen-real-mcce",
+      "request_id": "2c185bba3ce845629dde13f7ca086d66",
+      "plataformas": "tiktok",
+      "metricas_historial": {},
+      "metricas_consultadas_en": null
+    }
+  ],
+  "leccion": {
+    "job_id": "aprender-ensayo-796-0",
+    "canal_id": "margen-real-mcce",
+    "modo": "aprender",
+    "estado": "listo",
+    "createdAt": "2026-11-21 16:48:14.651",
+    "updatedAt": "2026-11-21 16:52:13.637"
+  },
+  "reconciliacion_polleria_confirmada": [
+    {
+      "video_id": "v-mwo7a9rm-31e2",
+      "canal_id": "margen-real-mcce",
+      "request_id": "e6da95a2b1874002a7bc9cabf5f51752",
+      "request_id_coincide": true,
+      "publicacion_confirmada": true,
+      "youtube_id_confirmado": "3sY1JsbPxMY"
+    }
+  ],
+  "siguiente_guion": {
+    "lee_fila_persistida": true,
+    "lee_id": "aprender-ensayo-796-0:0",
+    "omision_rechazada": true,
+    "persistido_como_video": false
+  },
+  "conteos_antes_y_despues": {
+    "videos": 5,
+    "publicaciones": 4,
+    "costos": 26
+  },
+  "caddy": {
+    "recibo": "/var/lib/cooper-operacion/caddy-total-1795279523578829450/resultado.json",
+    "sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "prueba_reversa_publico_http": [
+      401,
+      404,
+      401,
+      404
+    ]
+  },
+  "limites": [
+    "La ventana24h se capturó con16h de demora.",
+    "YouTube Analytics respondió0filas sinerror; retención directa aún ausente.",
+    "72h y7d requieren tiempo real.",
+    "Una sola pieza permite hipótesis, no patrón ni mejora demostrada.",
+    "Miniatura sin descripción y planos sin duración: no atribuir una caída a un plano ni a píxeles no inspeccionados.",
+    "M7 siguió inactivo durante la aceptación.",
+    "Las lecciones son visibles por contrato/proyección; la aceptación visual final del VPS corresponde al orquestador."
+  ],
+  "secretos_leidos": false,
+  "runData_leido": false,
+  "nuevos_videos": 0,
+  "nuevas_publicaciones": 0,
+  "nuevas_filas_costos": 0
+}

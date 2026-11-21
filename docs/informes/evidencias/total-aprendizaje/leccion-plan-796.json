@@ -1,0 +1,63 @@
+{
+  "tipo": "aceptacion_aprendizaje_plan",
+  "fecha": "2026-11-21T16:49:41.624Z",
+  "fase": "leccion",
+  "job_id": "aprender-ensayo-796-0",
+  "canal_id": "margen-real-mcce",
+  "red": "plan_pc_loopback",
+  "fuentes_sha256": {
+    "pedido": "07a43a9ce2cbcadc44340ff48a45339e7e1edad821c9886118f931a53ba8ce83",
+    "validar": "de8885ea347052bde69ff5415e11b0a2c06e2355b83575806892c5b62315463b",
+    "guion": "971a4eeea04e5695d78c8a24f466249b615553a5845fa3fbf3ebc58eccfa1a5d",
+    "retorno": "c7f6540fadcfa6201a7744fade18b5516176b23f05fcae4c0086106c77500613"
+  },
+  "crea_video": false,
+  "publica": false,
+  "api_pagada": false,
+  "propuesta": {
+    "resumen": "En la ventana rotulada 24h, con 16 horas de demora, el mismo video registra 4.317 vistas y 10 seguidores ganados en TikTok, frente a 301 vistas en YouTube. En TikTok, la retención baja del 78 % en el segundo 1 al 45 % en el segundo 2. Falta contexto sobre distribución, duración de los planos y miniatura; una sola pieza no demuestra causalidad.",
+    "lecciones": [
+      {
+        "regla": "Probar una apertura más directa sobre la cuenta de cada 10 soles.",
+        "causa": "Hipótesis: el título plantea esa pregunta, pero el guion abre con la venta mensual en un primer plano; esa secuencia podría contribuir a la caída inicial. Sin duraciones no se puede atribuir la caída a un plano concreto, y no hay descripción de miniatura.",
+        "correccion": "Probar una versión que abra con la pregunta o el sol restante y después explique la estimación.",
+        "origenes": [
+          {
+            "video_id": "v-mwo7a9rm-31e2",
+            "red": "tiktok",
+            "ventana": "24h",
+            "metrica": "retencion",
+            "segundo": 2
+          }
+        ]
+      }
+    ]
+  },
+  "resultado_validado": {
+    "resumen": "En la ventana rotulada 24h, con 16 horas de demora, el mismo video registra 4.317 vistas y 10 seguidores ganados en TikTok, frente a 301 vistas en YouTube. En TikTok, la retención baja del 78 % en el segundo 1 al 45 % en el segundo 2. Falta contexto sobre distribución, duración de los planos y miniatura; una sola pieza no demuestra causalidad.",
+    "lecciones": [
+      {
+        "id": "aprender-ensayo-796-0:0",
+        "regla": "Probar una apertura más directa sobre la cuenta de cada 10 soles.",
+        "causa": "Hipótesis: el título plantea esa pregunta, pero el guion abre con la venta mensual en un primer plano; esa secuencia podría contribuir a la caída inicial. Sin duraciones no se puede atribuir la caída a un plano concreto, y no hay descripción de miniatura.",
+        "correccion": "Probar una versión que abra con la pregunta o el sol restante y después explique la estimación.",
+        "origenes": [
+          {
+            "video_id": "v-mwo7a9rm-31e2",
+            "red": "tiktok",
+            "ventana": "24h",
+            "fecha": "2026-11-21T16:48:12.536Z",
+            "metrica": "retencion",
+            "valor": 0.45,
+            "segundo": 2,
+            "demora_horas": 16
+          }
+        ],
+        "nivel": "hipotesis",
+        "estado": "propuesta",
+        "aplicada_en": []
+      }
+    ],
+    "evidencia_version": 1
+  }
+}

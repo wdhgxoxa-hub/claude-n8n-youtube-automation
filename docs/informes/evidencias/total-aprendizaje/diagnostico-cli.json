@@ -1,0 +1,33 @@
+{
+  "recopilado_en": "2026-11-21T16:46:28.122439+00:00",
+  "ejecuciones": [
+    {
+      "id": 790,
+      "workflow": "CoopEnsayoApr01",
+      "codigo_cli": 1,
+      "estado": "error",
+      "metricas_nuevas": false
+    },
+    {
+      "id": 791,
+      "workflow": "CoopEnsayoLec01",
+      "codigo_cli": 1,
+      "estado": "error",
+      "launcher_vivo_al_final": true
+    },
+    {
+      "id": 792,
+      "workflow": "CoopEnsayoLec01",
+      "codigo_cli": 1,
+      "estado": "error",
+      "launcher_vivo_al_final": true,
+      "ultimo_nodo": "Guardar diagnóstico",
+      "tipo_error": "NodeOperationError",
+      "modulo_data_table_deshabilitado": true
+    }
+  ],
+  "runner_code_comprobado": true,
+  "sin_lectura_runData": true,
+  "sin_valores_credenciales": true,
+  "sin_prueba_permisos_api_aun": true
+}

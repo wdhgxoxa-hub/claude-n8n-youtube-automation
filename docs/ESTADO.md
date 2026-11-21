@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 11:51 (Lima).
+Última actualización: 2026-11-21 12:10 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **Aprendizaje aceptado con datos reales:** TikTok/YouTube de una publicación existente, hipótesis generada por el plan PC, lección persistida y siguiente guion que declara su ID; omisión rechazada. Reversa y reaplicación comprobadas sin nuevos videos ni costos. Google existente y Data API funcionan; Analytics devolvió cero filas. M7 pendiente de activación coordinada. [Evidencia](informes/total-aprendizaje-aceptacion.md).
 
 - **Despliegue parcial real del frente externo, 11:31 Lima:** Cooper pasó de `05d8337` a `cbf2068` (integración 3 y chat), con once migraciones y reversa aislada comprobada. Playwright y Sentinel públicos pasaron; las vistas privadas siguen pendientes de sesión Google. No contiene todavía todas las correcciones de `cooper-total`; la imagen970 y los parches de infraestructura se integran después. [Recibo y videos](informes/total-despliegue.md).
 

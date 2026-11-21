@@ -134,3 +134,7 @@ Evidencia de este cierre: [puerta completa](evidencias/total-aprendizaje/puerta-
 **Pendientes de Walter:** se mantienen los tres pendientes editoriales y de permisos ya documentados arriba. Este cierre no añade una solicitud de OAuth ni un permiso de publicación. Activación del lote, respaldo y reversa quedan al orquestador, con aceptación de una publicación existente.
 
 Fuentes oficiales consultadas en este cierre: [dimensión de retención de YouTube](https://developers.google.com/youtube/analytics/dimensions#elapsedVideoTimeRatio), [videos.list](https://developers.google.com/youtube/data/reference/rest/v3/videos/list), [duración publicada](https://developers.google.com/youtube/data/reference/rest/v3/videos#contentDetails.duration) y [analytics de Upload-Post](https://docs.upload-post.com/api/get-analytics/). Para la web se leyó la guía de componentes cliente/servidor de la versión de Next instalada. Herramientas utilizadas: Git/archivos, documentación web oficial y Playwright/axe locales; no se invocaron conectores de diseño ni cuentas reales.
+
+## Aceptación real posterior
+
+El ciclo fue aceptado con métricas y lección persistida del VPS, reversa y siguiente guion contractual. Google existente funciona; M7 queda pendiente de activación coordinada. Véase [informe completo de aceptación](total-aprendizaje-aceptacion.md).
