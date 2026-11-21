@@ -233,6 +233,18 @@ Vitest cubre identidad, permisos/rutas, aislamiento de chat, gasto, etapas, HTTP
 
 Tras construir, `node scripts/auditoria.mjs` mide las siete pantallas privadas y la entrada en móvil y escritorio, repitiendo ambos temas privados (la entrada tiene tema oscuro fijo). `--rapida` limita las mediciones al inicio. Informes HTML por ruta en `.cache/auditoria/`; métricas resumidas en `.cache/auditoria/resumen.json`. El ejecutor falla si hay advertencias, rendimiento inferior a 90 o accesibilidad/buenas prácticas inferiores a 100. Son mediciones de laboratorio, no datos de usuarios reales.
 
+La auditoría vacía ahora la caché HTTP **antes de cada ruta**, conservando únicamente la sesión ficticia. Para rendimiento de todas las pantallas, `--rendimiento` recorre 23 rutas × móvil/escritorio en tema oscuro, exige >=95 y guarda LCP, CLS, TBT y bytes por tipo de recurso. `--movimiento` conserva además la matriz de ambos temas. No ejecutar mediciones simultáneamente con builds, otras auditorías o benchmarks:
+
+```bash
+node scripts/rendimiento-bundles.mjs .cache/rendimiento/despues/bundles.json
+COOPER_AUDITORIA_SALIDA=.cache/rendimiento/despues/lighthouse node scripts/auditoria.mjs --rendimiento
+node scripts/rendimiento-trazas.mjs --fase=despues
+node scripts/rendimiento-medios.mjs despues
+node scripts/benchmark-sqlite.mjs
+```
+
+Para diagnosticar una ruta: `node scripts/auditoria.mjs --rendimiento --rutas=/,/radar --dispositivo=mobile`. Las trazas CDP sanitizadas se abren en DevTools/Perfetto y separan carga, animación estable e interacciones. Event Timing mide una muestra de INP de laboratorio con clics/teclado reales; no sustituye el percentil 75 de usuarios de producción. El benchmark SQLite crea exclusivamente una base sintética y contrasta tiempos, planes y resultados antes/después. [Resultados y límites](../docs/informes/total-rendimiento.md); [medios y propuesta de Caddy sin aplicar](../docs/cooper-rendimiento-vps.md).
+
 ## Fases siguientes
 
 2. Puente activo en n8n vivo; migración sin pendientes, lecturas por dueño, tendencias, gastos administrativos y firma del receptor comprobadas. Falta la revisión visual del panel tras el primer ingreso Google de Walter; ver el informe de paso a vivo.

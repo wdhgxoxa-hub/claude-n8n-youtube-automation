@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
@@ -8,16 +8,28 @@ const secret = randomBytes(32).toString("hex");
 const marcasAudit = process.argv.includes("--marcas");
 const animationAudit = process.argv.includes("--animacion");
 const motionAudit = process.argv.includes("--movimiento");
+const performanceAudit = process.argv.includes("--rendimiento");
 const coverageAudit = process.argv.includes("--cobertura");
-const outputDir = marcasAudit
-  ? ".cache/auditoria-marcas"
-  : motionAudit
-    ? ".cache/videos-movimiento/lighthouse"
-    : coverageAudit
-      ? ".cache/cobertura/lighthouse"
-      : animationAudit
-        ? ".cache/animacion/lighthouse"
-        : ".cache/auditoria";
+const selectedPaths = process.argv
+  .find((arg) => arg.startsWith("--rutas="))
+  ?.slice(8)
+  .split(",");
+const selectedDevice = process.argv
+  .find((arg) => arg.startsWith("--dispositivo="))
+  ?.slice(14);
+if (selectedDevice && !["mobile", "desktop"].includes(selectedDevice))
+  throw new Error("Dispositivo no válido.");
+const outputDir =
+  process.env.COOPER_AUDITORIA_SALIDA ??
+  (marcasAudit
+    ? ".cache/auditoria-marcas"
+    : motionAudit
+      ? ".cache/videos-movimiento/lighthouse"
+      : coverageAudit
+        ? ".cache/cobertura/lighthouse"
+        : animationAudit
+          ? ".cache/animacion/lighthouse"
+          : ".cache/auditoria");
 delete process.env.NO_COLOR;
 process.env.PLAYWRIGHT_BROWSERS_PATH = resolve(".cache/browsers");
 const { chromium } = await import("@playwright/test");
@@ -88,7 +100,7 @@ try {
       },
     })
   ).json();
-  if (marcasAudit || motionAudit) {
+  if (marcasAudit || motionAudit || performanceAudit) {
     const response = await context.request.post("/api/marcas", {
       data: { nombre: "Congregación de ensayo", rubro: "iglesia-reformada" },
     });
@@ -96,9 +108,13 @@ try {
   }
   const cdp = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   await cdp.contexts()[0].addCookies(await context.cookies());
+  const cachePage = await cdp.contexts()[0].newPage();
+  const cacheSession = await cdp.contexts()[0].newCDPSession(cachePage);
   const summaries = [];
   mkdirSync(outputDir, { recursive: true });
-  for (const theme of ["oscuro", "claro"]) {
+  // La matriz de rendimiento compara las mismas 23 rutas y ambos dispositivos.
+  // --movimiento conserva además la matriz de dos temas de la auditoría visual.
+  for (const theme of performanceAudit ? ["oscuro"] : ["oscuro", "claro"]) {
     const profile = await context.request.patch("/api/perfil", {
       data: {
         name: "Ensayo Lighthouse",
@@ -110,10 +126,12 @@ try {
     });
     if (!profile.ok())
       throw new Error("No se pudo configurar el tema de ensayo.");
-    for (const formFactor of ["mobile", "desktop"]) {
+    for (const formFactor of selectedDevice
+      ? [selectedDevice]
+      : ["mobile", "desktop"]) {
       const paths = marcasAudit
         ? ["/marcas"]
-        : motionAudit
+        : motionAudit || performanceAudit
           ? [
               "/",
               "/marcas",
@@ -137,6 +155,9 @@ try {
               "/avisos",
               "/admin/fabrica",
               "/entrar",
+              ...(performanceAudit
+                ? ["/revisar/whatsapp/enlace-invalido"]
+                : []),
             ]
           : coverageAudit
             ? [
@@ -165,7 +186,11 @@ try {
                   "/entrar",
                 ];
       for (const path of paths) {
+        if (selectedPaths && !selectedPaths.includes(path)) continue;
         const mobile = formFactor === "mobile";
+        // Mantener cookies de ensayo no debe convertir las rutas posteriores en
+        // visitas con caché caliente. Vaciar solo HTTP, sin borrar la sesión.
+        await cacheSession.send("Network.clearBrowserCache");
         const result = await lighthouse(base + path, {
           port,
           logLevel: "error",
@@ -215,6 +240,22 @@ try {
               "cumulative-layout-shift",
             ].map((key) => [key, result.lhr.audits[key].numericValue]),
           ),
+          resources: result.lhr.audits["resource-summary"]?.details?.items,
+          diagnostics: Object.fromEntries(
+            [
+              "unused-javascript",
+              "unused-css-rules",
+              "mainthread-work-breakdown",
+              "bootup-time",
+            ].map((key) => [
+              key,
+              {
+                value: result.lhr.audits[key]?.numericValue,
+                savingsBytes:
+                  result.lhr.audits[key]?.details?.overallSavingsBytes,
+              },
+            ]),
+          ),
           warnings: result.lhr.runWarnings,
           failedAudits: Object.values(result.lhr.audits)
             .filter(
@@ -231,6 +272,11 @@ try {
           JSON.stringify(
             {
               entorno: "Chromium local; laboratorio, sin métricas de campo",
+              cache:
+                "HTTP vacía antes de cada navegación; sesión ficticia conservada",
+              buildId: readFileSync(".next/BUILD_ID", "utf8").trim(),
+              lighthouse: result.lhr.lighthouseVersion,
+              navegador: result.lhr.environment.hostUserAgent,
               mediciones: summaries,
             },
             null,
@@ -244,19 +290,21 @@ try {
     }
   }
   await cdp.close();
+  if (!summaries.length)
+    throw new Error("Ninguna ruta seleccionada existe en la matriz.");
   if (
     summaries.some(
       (result) =>
         result.warnings.length ||
         result.failedAudits.length ||
         result.scores.performance <
-          (motionAudit ? 0.95 : animationAudit ? 1 : 0.9) ||
+          (motionAudit || performanceAudit ? 0.95 : animationAudit ? 1 : 0.9) ||
         result.scores.accessibility < 1 ||
         result.scores["best-practices"] < 1,
     )
   )
     throw new Error(
-      `La auditoría requiere rendimiento >=${motionAudit ? 95 : animationAudit ? 100 : 90}, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.`,
+      `La auditoría requiere rendimiento >=${motionAudit || performanceAudit ? 95 : animationAudit ? 100 : 90}, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.`,
     );
 } finally {
   await browser?.close();
