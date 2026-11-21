@@ -49,7 +49,7 @@ for (const width of [1440, 390])
       }),
     );
     await p.goto("/");
-    await expect(p.locator(".connection")).toHaveText("En vivo");
+    // El SSE de esta fixture es finito: comprobar el estado recibido, no una conexión abierta.
     if (width === 390) await p.getByRole("tab", { name: /Fábrica/ }).click();
     await expect(
       p.getByRole("heading", { name: "Tu primera historia empieza aquí" }),

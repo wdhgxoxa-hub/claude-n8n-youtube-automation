@@ -2,7 +2,22 @@ import { readdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 const root = ".cache/videos-movimiento";
 const rounds = readdirSync(root)
-  .filter((n) => /^ronda-\d+$/.test(n))
+  .filter((n) => {
+    if (!/^ronda-\d+$/.test(n)) return false;
+    try {
+      const report = JSON.parse(
+        readFileSync(`${root}/${n}/playwright.json`, "utf8"),
+      );
+      return (
+        report.stats.unexpected === 0 &&
+        report.stats.skipped === 0 &&
+        report.stats.expected >= 10 &&
+        report.errors.length === 0
+      );
+    } catch {
+      return false;
+    }
+  })
   .sort();
 const clips = [];
 for (const round of rounds)
