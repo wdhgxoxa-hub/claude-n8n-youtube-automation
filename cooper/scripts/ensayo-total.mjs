@@ -16,11 +16,12 @@ import { adaptarTransportes } from "./ensayo-total-transportes.mjs";
 import { trazarPasos } from "./ensayo-total-traza.mjs";
 
 assertNoEnvFiles();
-const CONTAINER = "cooper-total-n8n-e2e";
+const ramas = process.argv.includes("--ramas");
+const CONTAINER = ramas ? "cooper-total-n8n-ramas" : "cooper-total-n8n-e2e";
 const rounds = Number(process.env.COOPER_TOTAL_RONDAS || 3);
 assert.ok(Number.isInteger(rounds) && rounds >= 1 && rounds <= 10);
 const dir = resolve(
-  ".cache/total-n8n-e2e",
+  ramas ? ".cache/total-n8n-ramas" : ".cache/total-n8n-e2e",
   new Date().toISOString().replaceAll(":", "-"),
 );
 mkdirSync(dir, { recursive: true });
@@ -60,8 +61,8 @@ for (const sig of ["SIGINT", "SIGTERM"])
 try {
   instance = await startN8n(0, {
     container: CONTAINER,
-    network: "cooper-total-n8n-e2e-red",
-    root: ".cache/cooper-total-n8n-e2e",
+    network: CONTAINER + "-red",
+    root: ".cache/" + CONTAINER,
   });
   const { api, url } = instance;
   evidence.instancia = {
@@ -73,18 +74,21 @@ try {
   };
   console.log("Instancia aislada lista: " + url);
   // Receptor ficticio que comprueba la firma real del subflujo de progreso. Nunca imprime el secreto.
-  const receiverCode = `const http=require('node:http'),crypto=require('node:crypto');http.createServer(async(req,res)=>{let b='';for await(const c of req)b+=c;const t=req.headers['x-cooper-timestamp'];const sig=crypto.createHmac('sha256',process.env.COOPER_WEBHOOK_SECRET).update(t+'.'+b).digest('hex');const ok='sha256='+sig===req.headers['x-cooper-signature'] && Math.abs(Date.now()-Number(t))<300000;res.writeHead(ok?200:401,{'content-type':'application/json'});res.end(JSON.stringify({ok}));}).listen(8889,'127.0.0.1',()=>console.log('ready'));`;
-  receiver = spawn(
-    "podman",
-    ["exec", "-i", CONTAINER, "node", "-e", receiverCode],
-    { stdio: ["pipe", "pipe", "pipe"] },
-  );
-  await new Promise((yes, no) => {
-    createInterface({ input: receiver.stdout }).on("line", (l) => {
-      if (l === "ready") yes();
+  const receiverCode = `const http=require('node:http'),crypto=require('node:crypto');http.createServer(async(req,res)=>{let b='';for await(const c of req)b+=c;const t=req.headers['x-cooper-timestamp'];const sig=crypto.createHmac('sha256',process.env.COOPER_WEBHOOK_SECRET).update(t+'.'+b).digest('hex');const ok='sha256='+sig===req.headers['x-cooper-signature'] && Math.abs(Date.now()-Number(t))<300000;res.writeHead(ok?200:401,{'content-type':'application/json'});res.end(JSON.stringify({ok,permitido:ok}));}).listen(8889,'127.0.0.1',()=>console.log('ready'));`;
+  async function restartReceiver() {
+    receiver = spawn(
+      "podman",
+      ["exec", "-i", CONTAINER, "node", "-e", receiverCode],
+      { stdio: ["pipe", "pipe", "pipe"] },
+    );
+    await new Promise((yes, no) => {
+      createInterface({ input: receiver.stdout }).on("line", (l) => {
+        if (l === "ready") yes();
+      });
+      receiver.once("exit", () => no(Error("Receptor terminado")));
     });
-    receiver.once("exit", () => no(Error("Receptor terminado")));
-  });
+  }
+  await restartReceiver();
   const base = JSON.parse(
     readFileSync("../contratos/cooper-tablas-ensayo.json", "utf8"),
   );
@@ -172,7 +176,7 @@ try {
     (a, b) =>
       Number(b.id === "FabErrores000001") - Number(a.id === "FabErrores000001"),
   )) {
-    const adapted = adaptarTransportes(source);
+    const adapted = adaptarTransportes(source, { noticia: ramas });
     evidence.sustituciones.push(...adapted.sustituciones);
     let encoded = JSON.stringify(adapted.workflow);
     for (const [a, b] of Object.entries(replacements))
@@ -316,10 +320,13 @@ try {
     });
     assert.equal(response.status, 200, await response.text());
   };
+  const expectedErrors = new Set();
   const errors = async () => {
     const es = await api.all("/executions");
     const failures = [];
-    for (const e of es.filter((e) => e.status === "error")) {
+    for (const e of es.filter(
+      (e) => e.status === "error" && !expectedErrors.has(e.id),
+    )) {
       const d = await api.request(
         "GET",
         `/executions/${e.id}?includeData=true`,
@@ -467,7 +474,45 @@ try {
     escenarios: [],
     montaje: { subtitulos: true },
   };
-  for (let round = 1; round <= rounds; round++) {
+  if (ramas) {
+    const ctx = {
+      api,
+      url,
+      ids,
+      tables,
+      rows,
+      insert,
+      call,
+      wrapper,
+      publish,
+      wait,
+      rounds,
+      evidence,
+      save,
+      dir,
+      instance,
+      container: CONTAINER,
+      job,
+      callback,
+      approval,
+      payloadTrabajo,
+      restartReceiver,
+      errors,
+      expectedErrors,
+      modified,
+      body,
+      biblia,
+    };
+    const { ejecutarRamas } = await import("./ensayo-ramas-produccion.mjs");
+    await ejecutarRamas(ctx);
+    if (!process.env.COOPER_RAMAS_CASOS) {
+      const { ejecutarMarcas } = await import("./ensayo-ramas-marcas.mjs");
+      await ejecutarMarcas(ctx);
+      const { runResiliencia } = await import("./ensayo-ramas-resiliencia.mjs");
+      await runResiliencia(ctx);
+    } else evidence.parcial = true;
+  }
+  for (let round = 1; !ramas && round <= rounds; round++) {
     const canal_id = `total-r${round}`,
       video_id = `total-v${round}`;
     const roundEvidence = { ronda: round, canal_id, video_id, pasos: [] };
@@ -747,6 +792,22 @@ try {
     roundEvidence.resultado = "PASS";
     save();
   }
+  evidence.erroresEsperados = [...expectedErrors];
+  if (ramas && !evidence.parcial) {
+    assert.equal(evidence.ramas.length, 7 * rounds);
+    assert.equal(evidence.marcas.rondas.length, rounds);
+    const conteo = {};
+    for (const r of [...evidence.ramas, ...evidence.resiliencia]) {
+      assert.equal(r.resultado, "PASS");
+      const nombre = r.rama || r.caso;
+      conteo[nombre] = (conteo[nombre] || 0) + 1;
+    }
+    for (const total of Object.values(conteo)) assert.equal(total, rounds);
+    evidence.cobertura = {
+      ...conteo,
+      "Marcas reels": evidence.marcas.rondas.length,
+    };
+  }
   evidence.errores = await errors();
   assert.deepEqual(evidence.errores, []);
   for (const [name, anteriores] of Object.entries(copiaAntes)) {
@@ -812,7 +873,7 @@ try {
   );
   assert.equal(
     pendientes.length,
-    rounds,
+    ramas ? 0 : rounds,
     "Solo debe quedar la aprobación humana del siguiente guion por corrida",
   );
   assert.ok(
@@ -846,7 +907,8 @@ try {
     0,
     "No deben quedar ejecuciones colgadas",
   );
-  evidence.resultado = "PASS";
+  evidence.resultado =
+    evidence.parcial || (ramas && rounds < 3) ? "PARCIAL" : "PASS";
 } catch (error) {
   evidence.resultado = "FAIL";
   evidence.error = error.message;

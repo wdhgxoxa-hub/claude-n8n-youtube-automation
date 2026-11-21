@@ -1,3 +1,4 @@
+require('./n8n_ramas_transportes.test.cjs');
 require('./n8n_e2e_estados.test.cjs');
 // Pruebas de la lógica de los nodos Code de los flujos v2 con datos ficticios.
 require('./n8n_e2e_regresiones.test.cjs');
@@ -1193,7 +1194,8 @@ test('movimiento real: un Short no queda en diapositivas (gancho animado, cuota 
   assert.strictEqual(run(codeOf(P, 'Plan de producción'), { nodes: { Inicio: { formato: 'short', storyboard: { planos } }, 'Leer ajustes': { ...ajc, allowClips: false } } })[0].json.planos.filter(p => p.tipo === 'clip').length, 0);
   // el clip se pide con su duración y, si llega por URI, se descarga
   assert.match(nodoDe(P, 'Animar (Gemini Omni)').parameters.jsonBody, /\[0-' \+ \(\$json\.plano\.duracion_clip_s \|\| 8\) \+ 's\]/);
-  assert.strictEqual(P.connections['¿Clip por URI?'].main[0][0].node, 'Descargar clip');
+  assert.strictEqual(P.connections['¿Clip por URI?'].main[0][0].node, 'Clip · preparar archivo');
+  assert.strictEqual(P.connections['¿Archivo de clip activo?'].main[0][0].node, 'Descargar clip');
   const uri = run(codeOf(P, 'Extraer clip'), { json: { steps: [{ type: 'model_output', content: [{ type: 'video', uri: 'https://g/files/x:download' }] }] }, nodes: { 'Extraer imagen': { plano: { id: 'p1' } } } })[0].json;
   assert.strictEqual(uri.clip_uri, 'https://g/files/x:download');
   // calidad avisa si el Short quedó en diapositivas
@@ -1846,7 +1848,7 @@ test('pulido: periodicidad diaria acotada y ningún análisis sin evidencia pers
 test('pulido: piezas usa los archivos finales de sonido/avatar y el orden del montaje',()=>{
  const p1={plano_id:'p1',url:'https://cdn.test/imagen.png',plano:{id:'p1',tipo:'imagen'}};
  const p2={plano_id:'p2',url:'https://cdn.test/avatar.mp4',plano:{id:'p2',tipo:'avatar'}};
- const nodes={'Composición Creatomate':{planos:2},'Plan de producción':{planos:[{id:'p1'},{id:'p2'}]},'Juntar planos':{planos:[p1,{...p2,url:''}]},'Sonido y emoción':{planos:[p2,p1],voces:[{plano_id:'p2',url:'https://cdn.test/voz.wav'}]}};
+ const nodes={'Composición Creatomate':{planos:2},'Plan de producción':{planos:[{id:'p1'},{id:'p2'}]},'Juntar planos':{planos:[p1,{...p2,url:''}]},'Sonido y emoción':{voces:[{plano_id:'p2',url:'https://cdn.test/voz.wav'}]},'Presentación lista':{planos:[p2,p1],voces:[{plano_id:'p2',url:'https://cdn.test/voz.wav'}]}};
  const datos=JSON.parse(run(codeOf(PROD,'Cooper · piezas terminadas'),{nodes})[0].json.cooper_escenas);
  assert.deepEqual(datos,[{id:'p1',orden:0,imagen:p1.url,clip:'',voz:''},{id:'p2',orden:1,imagen:'',clip:p2.url,voz:'https://cdn.test/voz.wav'}]);
 });
