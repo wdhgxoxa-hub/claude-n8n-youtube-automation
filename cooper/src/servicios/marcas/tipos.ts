@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { redes, rubros, formatos } from "./opciones";
+import { tiendaSchema } from "./tienda";
 export { redes, rubros, formatos } from "./opciones";
 export const guiaSchema = z.object({
   colores: z
@@ -11,6 +12,7 @@ export const guiaSchema = z.object({
   logoId: z.string().max(100).default(""),
   tono: z.string().trim().min(3).max(500).default("Cercano, cuidadoso y claro"),
   versionBiblia: z.string().trim().min(2).max(30).default("RVR1960"),
+  tienda: tiendaSchema.optional(),
 });
 export const marcaSchema = z
   .object({
@@ -30,7 +32,11 @@ export const marcaSchema = z
       }, "Zona horaria inválida"),
     guia: guiaSchema.default(() => guiaSchema.parse({})),
   })
-  .strict();
+  .strict()
+  .refine((v) => !v.guia.tienda || v.rubro === "moda", {
+    path: ["guia", "tienda"],
+    message: "La plantilla de tienda de ropa corresponde al rubro moda.",
+  });
 export const cuentaSchema = z
   .object({
     red: z.enum(redes),

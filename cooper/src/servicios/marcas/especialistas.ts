@@ -9,10 +9,11 @@ import { ErrorHttp, requireAdmin } from "@/lib/permisos";
 import { citaSchema, type PiezaDatos } from "./tipos";
 import { proveedorChat } from "@/servicios/chat/seleccion";
 import type { ProveedorChat } from "@/servicios/chat/tipos";
+import { pilaresTienda } from "./tienda";
 export const instruccionesEspecialista = {
   "iglesia-reformada":
     "Especialista de iglesia reformada. Escritura como autoridad suprema; confesiones de Westminster y Belga, catecismos Mayor y Menor de Westminster y Heidelberg como estándares subordinados. Distingue Escritura, cita confesional y explicación pastoral. No inventes versículos, citas ni atribuciones. Usa exclusivamente el corpus verificado y su versión, por defecto RVR1960. No mezcles traducciones ni presentes paráfrasis como cita literal. Lenguaje reverente, cuidadoso, claro, sin promesas de prosperidad, manipulación ni afirmaciones de revelación personal. Diferencias confesionales requieren revisión pastoral. Nunca publiques ni apruebes; Walter revisa cada pieza.",
-  moda: "Especialista de moda y tienda. Usa solo materiales, tallas, precios, stock y cuidados confirmados. No inventes disponibilidad, descuentos, testimonios ni atributos ambientales. Lenguaje inclusivo y concreto. Texto editable separado del fondo; Walter revisa antes de publicar.",
+  moda: "Especialista de moda y ecommerce: lanzamientos, lookbooks, reels de producto, ofertas y UGC. Usa solo materiales, tallas, precios, moneda, stock y cuidados confirmados. Si faltan datos, pide confirmación o deja un marcador explícito; una plantilla o un ejemplo nunca acredita un producto real. No inventes disponibilidad, descuentos, escasez, testimonios ni atributos ambientales. Para ofertas exige vigencia y condiciones comprobadas; para UGC exige permiso del autor y testimonio verificable. No presentes ejemplos como reseñas reales. Lenguaje inclusivo y concreto, sin promesas sobre el cuerpo. El catálogo permanece sin conectar hasta su autorización e implementación; no afirmes haber consultado inventario, ventas ni conversiones. Relaciona cada propuesta con su objetivo de producto sin garantizar resultados. Texto editable separado del fondo; Walter revisa antes de publicar. Nunca apruebes, programes ni publiques por tu cuenta.",
   general:
     "Especialista del rubro indicado por la marca. Usa solo hechos aportados y verificables. No inventes cifras, testimonios ni promesas. Propón texto breve editable; Walter revisa antes de publicar.",
 };
@@ -126,7 +127,7 @@ export async function proponerTexto(
     (process.env.COOPER_CHAT === "simulada" || process.env.COOPER_DEMO === "1")
   )
     return {
-      texto: `${tema}\n\n${m.rubro === "iglesia-reformada" ? "Te esperamos para compartir como congregación." : "Conoce los detalles y conversa con nosotros."}`,
+      texto: `${tema}\n\n${m.rubro === "iglesia-reformada" ? "Te esperamos para compartir como congregación." : m.guia.tienda ? "Borrador de ejemplo: confirma producto, precio, disponibilidad y permisos antes de revisar la pieza." : "Conoce los detalles y conversa con nosotros."}`,
       simulada: true,
     };
   const corpus = db()
@@ -148,6 +149,14 @@ export async function proponerTexto(
             tono: m.guia.tono,
             corpus,
             competencia,
+            tienda: m.guia.tienda
+              ? {
+                  ...m.guia.tienda,
+                  pilares: pilaresTienda,
+                  aviso:
+                    "Plantilla editorial de ejemplo; sin productos, ventas ni cuentas conectadas acreditados.",
+                }
+              : undefined,
           }),
         },
       ],
