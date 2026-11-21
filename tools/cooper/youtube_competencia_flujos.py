@@ -72,8 +72,11 @@ call(f,'Consultar YouTube por canal',W['competencia_yt'],each=True)
 f.nodes[-1]['onError']='continueRegularOutput'
 code(f,'Competencia con YouTube',r"""
 const respuestas=$input.all();
-return $('Competencia comprobada').all().map((p,k)=>respuestas[k]?.json?.canal_id===p.json.canal_id && respuestas[k].json.ok===true
- ? respuestas[k] : p);
+// Execute Workflow añade metadata al ítem; Code no admite esa clave superior.
+return $('Competencia comprobada').all().map((p,k)=>{
+ const elegido=respuestas[k]?.json?.canal_id===p.json.canal_id && respuestas[k].json.ok===true ? respuestas[k] : p;
+ return {json:{...elegido.json},pairedItem:{item:k}};
+});
 """)
 f.conn['Competencia comprobada']={'main':[[{'node':'Consultar YouTube por canal','type':'main','index':0}]]}
 f.chain('Consultar YouTube por canal','Competencia con YouTube','Solo tendencias')

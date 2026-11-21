@@ -884,7 +884,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst respuestas=$input.all();\nreturn $('Competencia comprobada').all().map((p,k)=>respuestas[k]?.json?.canal_id===p.json.canal_id && respuestas[k].json.ok===true\n ? respuestas[k] : p);\n"
+        "jsCode": "\nconst respuestas=$input.all();\n// Execute Workflow añade metadata al ítem; Code no admite esa clave superior.\nreturn $('Competencia comprobada').all().map((p,k)=>{\n const elegido=respuestas[k]?.json?.canal_id===p.json.canal_id && respuestas[k].json.ok===true ? respuestas[k] : p;\n return {json:{...elegido.json},pairedItem:{item:k}};\n});\n"
       },
       "id": "f43ca6e8-e1f5-544e-abf4-17c3248d107e",
       "name": "Competencia con YouTube",
