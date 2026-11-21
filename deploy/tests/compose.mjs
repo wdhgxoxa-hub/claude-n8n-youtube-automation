@@ -552,6 +552,9 @@ try {
   fixture.kill("SIGTERM");
   await new Promise((yes) => fixture.once("exit", yes));
   fixture = undefined;
+  const beforeBackup = new Database(resolve(env.DATA_ROOT, "cooper/cooper.sqlite"), { readonly: true });
+  const attachmentsBeforeBackup = beforeBackup.prepare("SELECT count(*) n FROM attachments").get().n;
+  beforeBackup.close();
   await operate("iniciar-repositorio");
   await operate("copia");
   const backup = JSON.parse(
@@ -581,7 +584,8 @@ try {
   );
   assert.equal(
     restored.prepare("SELECT count(*) n FROM attachments").get().n,
-    1,
+    attachmentsBeforeBackup,
+    "La restauración conserva todos los adjuntos, incluidos los medios sintéticos de Marcas",
   );
   restored.close();
   await until(
