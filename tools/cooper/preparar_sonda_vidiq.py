@@ -28,11 +28,18 @@ const leer = r => {
  let datos=rpc.result?.structuredContent;
  if(!datos)for(const c of rpc.result?.content || [])if(c.type==='text'){try{datos=JSON.parse(c.text);break;}catch{}}
  const status=Number(r?.statusCode || 0), error=!!(r?.error || rpc.error || rpc.result?.isError);
+ // Clasificar dentro de n8n; nunca devolver el mensaje (puede contener datos del transporte).
+ const nodo=typeof r?.error==='string'?r.error:JSON.stringify(r?.error || {});
+ const fallo_nodo=!r?.error?null:/JSON.*(?:valid|v[aá]lid)|valid.*JSON/i.test(nodo)?'json_invalido':
+  /paired.?item|expression|expresi[oó]n|referenced node/i.test(nodo)?'expresion':
+  /credential|credencial/i.test(nodo)?'credencial_nodo':/timed?\s*out|timeout|ETIMEDOUT/i.test(nodo)?'timeout':
+  /authoriz|unauthoriz|forbidden|401|403/i.test(nodo)?'autorizacion':
+  /ENOTFOUND|ECONN|socket|network|certificate/i.test(nodo)?'red':'otro';
  const texto=JSON.stringify(rpc.error || rpc.result?.content || []);
  const categoria=status===401?'no_autorizado':status===403?'sin_permiso':status===429?'limite_temporal':
   /expired|expiration|caduc/i.test(texto)?'acceso_caducado':/verif|authorize|connect.*channel/i.test(texto)?'requiere_conexion':
   /credit|balance|quota/i.test(texto)&&error?'limite_cuenta':error?'error_proveedor':status===200?'respuesta':'sin_respuesta';
- return {rpc,datos,status,error,categoria};
+ return {rpc,datos,status,error,categoria,fallo_nodo};
 };
 const salida=n=>$(n).isExecuted?$(n).all().map(i=>i.json):[];
 """
@@ -118,7 +125,7 @@ const balance=v=>{const datos={};const visitar=(x,ruta='',n=0)=>{if(!x||typeof x
   else if(/credit|balance|remaining|renew|addon|reset|unlimited/i.test(p)&&
    (y===null||typeof y==='number'||typeof y==='boolean'||y==='unlimited'||/^\d{4}-\d\d-\d\d(?:T[\d:.+-]+Z?)?$/.test(String(y))))datos[p]=y;}};visitar(v);return datos;};
 const consultas=pedidos.map((p,k)=>{const r=leer(respuestas[k]);return {herramienta:p.nombre,http:r.status,
- ok:r.status===200&&!r.error&&!!r.rpc.result,categoria:r.categoria,
+ ok:r.status===200&&!r.error&&!!r.rpc.result,categoria:r.categoria,fallo_nodo:r.fallo_nodo,
  creditos_usados:typeof r.datos?._credits?.used==='number'?r.datos._credits.used:null,
  ...(p.nombre==='vidiq_balance'?{saldo:balance(r.datos)}:{canales:ids(r.datos)})};});
 const diagnostico={fecha:new Date().toISOString(),inicio:{http:inicio.status,categoria:inicio.categoria},

@@ -71,3 +71,17 @@ test('diagnóstico descarta cabeceras, tokens, textos y datos de cuenta sin conv
   assert.deepEqual(d.consultas[1].canales, ['UC1234567890123456789012']);
   assert.equal(d.investigacion_invocada, false);
 });
+
+test('el diagnóstico separa fallos del nodo sin mostrar el mensaje ni atribuirlos al proveedor', () => {
+  const secreto = 'valor-ficticio-privado';
+  const nodos = {
+    'Pedidos gratuitos': [{ nombre: 'vidiq_balance' }],
+    'Leer cuenta sin créditos': [{ error: 'JSON parameter needs to be valid JSON: ' + secreto }],
+  };
+  const resultado = ejecutar('Diagnóstico mínimo', {}, nodos)[0].json;
+  assert.equal(JSON.stringify(resultado).includes(secreto), false);
+  const d = JSON.parse(resultado.resultado);
+  assert.equal(d.consultas[0].http, 0);
+  assert.equal(d.consultas[0].fallo_nodo, 'json_invalido');
+  assert.equal(d.consultas[0].ok, false);
+});
