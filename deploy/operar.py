@@ -152,6 +152,8 @@ class Operator:
         if image:
             env["COOPER_IMAGE"] = image
         cmd = ["docker", "compose", "--env-file", str(self.env_file), "-f", str(DEPLOY / "compose.yaml")]
+        if (self.state / "chat-tunel.enabled").exists():
+            cmd += ["-f", str(DEPLOY / "compose.chat.yaml")]
         if env.get("COOPER_LAB") == "1" and env.get("COOPER_COMPOSE_OVERRIDE"):
             cmd += ["-f", env["COOPER_COMPOSE_OVERRIDE"]]
         return run(cmd + list(args), env=env)
@@ -178,6 +180,9 @@ class Operator:
             try:
                 if managed:
                     # n8n drena con runner y callback Cooper aún disponibles.
+                    for service in ("chat-cooper", "chat-n8n", "chat-runner"):
+                        if service in running:
+                            self.compose("stop", service)
                     for service in ("caddy", "n8n", "runner", "cooper"):
                         self.compose("stop", service)
                     require(not self.compose("ps", "--status", "running", "--services").strip(),
@@ -241,11 +246,13 @@ class Operator:
         if "@sha256:" in image:
             run([self.engine, "pull", image], env=self.env)
         run([self.engine, "image", "inspect", image, "--format", "{{.Id}}"], env=self.env)
+        (self.state / "mantenimiento").touch(mode=0o600)
         snapshot = self.snapshot(resume=False, tag="reversion")
         write_json(self.state / "anterior.json", {"image": rollback_tag, "snapshot": snapshot})
         write_json(self.release, {"image": image})
         try:
             self.compose("up", "-d", "--no-build", "--wait", "--wait-timeout", "180")
+            (self.state / "mantenimiento").unlink()
         except RuntimeError:
             self.compose("stop")
             raise RuntimeError("Actualización fallida; servicios detenidos. Ejecutar revertir.sh antes de reabrir tráfico") from None
@@ -255,6 +262,7 @@ class Operator:
         # Validar y restaurar primero a otro directorio; no sobrescribir datos actuales.
         restore_dir = self.state / f"reversion-{time.time_ns()}"
         restored = self.restore(previous["snapshot"], restore_dir)
+        (self.state / "mantenimiento").touch(mode=0o600)
         self.snapshot(resume=False)
         archived = self.data.with_name(self.data.name + f".antes-reversion-{time.time_ns()}")
         self.data.rename(archived)
@@ -262,6 +270,7 @@ class Operator:
         self.ownership()
         write_json(self.release, {"image": previous["image"]})
         self.compose("up", "-d", "--no-build", "--force-recreate", "--wait", "--wait-timeout", "180")
+        (self.state / "mantenimiento").unlink()
 
 
 def main():

@@ -149,7 +149,30 @@ class CopiasTest(unittest.TestCase):
                 operator.update('localhost/cooper:' + 'a' * 40)
         self.assertEqual(calls[-1], ('stop',))
         self.assertTrue((state / 'anterior.json').exists())
+        self.assertTrue((state / 'mantenimiento').exists())
         self.assertEqual(op.manifest(self.source), before)
+
+    def test_compose_incorpora_tunel_solo_si_esta_habilitado(self):
+        state = self.root / 'state'
+        operator = op.Operator({'DATA_ROOT': str(self.source), 'STATE_ROOT': str(state)}, self.root / 'env')
+        with patch.object(op, 'run', return_value='') as run:
+            operator.compose('ps')
+            self.assertNotIn(str(op.DEPLOY / 'compose.chat.yaml'), run.call_args.args[0])
+            (state / 'chat-tunel.enabled').touch()
+            operator.compose('ps')
+            self.assertIn(str(op.DEPLOY / 'compose.chat.yaml'), run.call_args.args[0])
+
+    def test_copia_detiene_relays_antes_de_los_contenedores(self):
+        operator = op.Operator({'DATA_ROOT': str(self.source), 'STATE_ROOT': str(self.root / 'state')}, self.root / 'env')
+        calls = []
+        def compose(*args):
+            calls.append(args)
+            return 'chat-cooper chat-n8n chat-runner cooper n8n' if len(calls) == 1 else ''
+        with patch.object(operator, 'compose', side_effect=compose), patch.object(op, 'copy_data', side_effect=RuntimeError('prueba')):
+            with self.assertRaises(RuntimeError):
+                operator.snapshot()
+        self.assertEqual(calls[1:4], [('stop', 'chat-cooper'), ('stop', 'chat-n8n'), ('stop', 'chat-runner')])
+        self.assertEqual(calls[-1], ('start', 'chat-cooper', 'chat-n8n', 'chat-runner', 'cooper', 'n8n'))
 
 
 if __name__ == '__main__':

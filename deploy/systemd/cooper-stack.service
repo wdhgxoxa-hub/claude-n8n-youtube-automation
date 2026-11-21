@@ -1,0 +1,19 @@
+[Unit]
+Description=Arranque de Cooper y n8n tras reinicio del VPS
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+ConditionPathExists=/etc/cooper/.env
+# Crear este archivo antes de una recuperación o mantenimiento que deba quedar cerrado.
+ConditionPathExists=!/var/lib/cooper-operacion/mantenimiento
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/cooper
+ExecStart=/usr/bin/python3 /opt/cooper/deploy/operar.py compose up -d --no-build --wait --wait-timeout 180
+TimeoutStartSec=4min
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
