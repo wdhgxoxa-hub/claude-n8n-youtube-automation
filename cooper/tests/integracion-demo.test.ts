@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, allowedEmails } from "@/db/schema";
 import {
   proveedorAvatar,
   proveedorVoz,
@@ -10,13 +10,17 @@ import {
 } from "@/servicios/proveedores";
 import { administracionActual } from "@/servicios/datos";
 import { FabricaN8n } from "@/servicios/fabrica";
-import { proveedorChat } from "@/servicios/chat";
+import { responderChat } from "@/servicios/chat";
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
 function owner() {
   const id = randomUUID();
+  db()
+    .insert(allowedEmails)
+    .values({ email: `${id}@example.test`, createdAt: Date.now() })
+    .run();
   return db()
     .insert(users)
     .values({ id, email: `${id}@example.test`, name: "Ensayo", role: "admin" })
@@ -27,6 +31,7 @@ it("I01 demo mantiene medios, chat y gastos simulados aunque el entorno seleccio
   const user = owner();
   vi.stubEnv("COOPER_DEMO", "1");
   vi.stubEnv("COOPER_FABRICA", "n8n");
+  vi.stubEnv("COOPER_CHAT", "claude");
   vi.stubEnv("COOPER_AVATAR", "heygen");
   vi.stubEnv("COOPER_VOZ_CLONADA", "elevenlabs");
   vi.stubEnv("COOPER_VOZ_CATALOGO", "gemini");
@@ -46,7 +51,7 @@ it("I01 demo mantiene medios, chat y gastos simulados aunque el entorno seleccio
     ].every((p) => p.simulada),
   ).toBe(true);
   expect((await administracionActual(user)).fuente).toBe("simulada");
-  await proveedorChat.responder(user, { texto: "reporte", adjuntos: [] });
+  await responderChat(user, { texto: "reporte", adjuntos: [] });
   expect(costs).not.toHaveBeenCalled();
   expect(chat).not.toHaveBeenCalled();
   expect(fetch).not.toHaveBeenCalled();

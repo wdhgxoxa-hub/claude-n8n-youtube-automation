@@ -8,6 +8,7 @@ process.env.COOPER_DATABASE_PATH = resolve(
 );
 process.env.COOPER_ADMIN_EMAIL = "admin@example.test";
 process.env.COOPER_FABRICA = "simulada";
+process.env.COOPER_CHAT = "simulada";
 process.env.COOPER_SIMULACION_MS = "200";
 
 for (const name of [

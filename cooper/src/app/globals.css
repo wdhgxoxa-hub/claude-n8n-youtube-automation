@@ -2980,3 +2980,31 @@ main:focus {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
+
+.chat-confirmation {
+  margin: 16px 0;
+  padding: 16px;
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+}
+.chat-confirmation h3 {
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+.chat-confirmation p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+}
+.chat-confirmation .button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.composer-tools .tool-group {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.composer-tools select {
+  max-width: 160px;
+}

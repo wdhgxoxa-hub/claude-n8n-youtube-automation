@@ -21,7 +21,9 @@ import {
   EVENTOS,
   videosPropios,
 } from "@/servicios/fabrica";
-import { ChatSimulado } from "@/servicios/chat";
+import { ChatSimulado, responderChat } from "@/servicios/chat";
+import { herramientas } from "@/servicios/chat/herramientas";
+import type { MensajeModelo } from "@/servicios/chat/tipos";
 import { estado, administracion } from "@/servicios/datos";
 import { sincronizarMedios } from "@/servicios/biblioteca";
 import { AvatarSimulado } from "@/servicios/proveedores/simulados";
@@ -237,15 +239,25 @@ describe("Etapas y fábrica", () => {
     vi.unstubAllGlobals();
   });
 });
-describe("Chat determinista", () => {
+describe("Proveedor simulado y aislamiento del chat", () => {
+  async function seleccionar(texto: string) {
+    let reply: MensajeModelo | undefined;
+    for await (const e of new ChatSimulado().generar(
+      {
+        sistema: "",
+        mensajes: [{ role: "user", texto }],
+        herramientas: herramientas(ana),
+      },
+      AbortSignal.timeout(1000),
+    )) {
+      if (e.tipo === "fin") reply = e.mensaje;
+    }
+    return reply!;
+  }
   it("crear un video en un canal no crea otro canal", async () => {
-    const reply = await new ChatSimulado().responder(ana, {
-      texto: "Crea un video en mi canal: El cielo",
-      adjuntos: [],
-    });
-    expect(reply.orden?.evento).toBe("nuevo_video");
+    const reply = await seleccionar("Crea un video en mi canal: El cielo");
+    expect(reply.llamadas?.[0].nombre).toBe("nuevo_video");
   });
-  const chat = new ChatSimulado();
   const phrases = [
     "Crea un canal: Ciencia",
     "Quiero un video: El cielo",
@@ -258,28 +270,20 @@ describe("Chat determinista", () => {
     "Adopta cuenta: @ciencia",
   ];
   it.each(EVENTOS)("mapea %s uno a uno", async (evento) => {
-    const reply = await chat.responder(ana, {
-      texto: phrases[EVENTOS.indexOf(evento)],
-      adjuntos: [],
-      canalId: channel,
-      videoId: video,
-    });
-    expect(reply.orden?.evento).toBe(evento);
+    const reply = await seleccionar(phrases[EVENTOS.indexOf(evento)]);
+    expect(reply.llamadas?.[0].nombre).toBe(evento);
   });
   it.each(["estado", "reporte", "pendientes", "tendencias"])(
     "responde %s sin acceder a otro espacio",
     async (texto) => {
-      const reply = await chat.responder(luis, { texto, adjuntos: [] });
+      const reply = await responderChat(luis, { texto, adjuntos: [] });
       expect(reply.texto).not.toContain("Por qué el cielo");
-      expect(reply.orden).toBeUndefined();
     },
   );
   it("es determinista y no revela costos", async () => {
-    const input = { texto: "Hola, ¿cuánto gasto?", adjuntos: [] };
-    expect(await chat.responder(ana, input)).toEqual(
-      await chat.responder(ana, input),
-    );
-    expect((await chat.responder(ana, input)).texto).not.toContain("0.84");
+    const texto = "Hola, ¿cuánto gasto?";
+    expect(await seleccionar(texto)).toEqual(await seleccionar(texto));
+    expect((await seleccionar(texto)).texto).not.toContain("0.84");
   });
   it("rechaza una selección de canal ajeno aunque se fuerce desde el chat", async () => {
     active = luis;

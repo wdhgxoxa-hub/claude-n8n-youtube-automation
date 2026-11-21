@@ -2,10 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Mic, Square } from "lucide-react";
 export function Grabador({
+  disabled = false,
   onAudio,
   onError,
   onRecording,
 }: {
+  disabled?: boolean;
   onAudio: (file: File) => Promise<void>;
   onError: (error: string) => void;
   onRecording?: (value: boolean) => void;
@@ -85,7 +87,7 @@ export function Grabador({
     <button
       type="button"
       className={`icon-button ${recording ? "recording" : ""}`}
-      disabled={busy}
+      disabled={busy || disabled}
       onClick={() => (recording ? recorder.current?.stop() : void start())}
       aria-label={recording ? "Detener grabación" : "Grabar audio"}
       title={

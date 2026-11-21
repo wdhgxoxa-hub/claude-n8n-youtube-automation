@@ -66,7 +66,7 @@ function Retrato({ variant, moving }: { variant: string; moving: boolean }) {
     </motion.svg>
   );
 }
-export function Avatares() {
+export function Avatares({ fotoId = "" }: { fotoId?: string }) {
   const { data, refresh } = useEspacio();
   const [tab, setTab] = useState<"avatar" | "voz">("avatar"),
     [preview, setPreview] = useState(""),
@@ -74,7 +74,7 @@ export function Avatares() {
     [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [photos, setPhotos] = useState<string[]>([]),
+    [photos, setPhotos] = useState<string[]>(fotoId ? [fotoId] : []),
     [challenge, setChallenge] = useState<{ id: string; phrase: string } | null>(
       null,
     ),
@@ -134,7 +134,7 @@ export function Avatares() {
             disabled={busy}
             onClick={async () => {
               setError("");
-              setPhotos([]);
+              setPhotos(tab === "avatar" && fotoId ? [fotoId] : []);
               setEvidence("");
               setChallenge(null);
               if (creating) {
@@ -180,6 +180,12 @@ export function Avatares() {
         </button>
       </div>
       <Notice error={error} message={message} />
+      {fotoId && (
+        <p className="helper">
+          Tu foto del chat está preparada. Pulsa Crear avatar y completa la
+          verificación y el consentimiento.
+        </p>
+      )}
       <p className="simulation-note">
         {(
           tab === "avatar"
@@ -241,11 +247,11 @@ export function Avatares() {
                   className="sr-only"
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
-                  required
+                  required={photos.length === 0}
                   multiple
                   onChange={async (e) => {
                     const files = Array.from(e.target.files ?? []);
-                    setPhotos([]);
+                    setPhotos(tab === "avatar" && fotoId ? [fotoId] : []);
                     if (files.length > 3) {
                       setError("Selecciona hasta tres fotos.");
                       return;

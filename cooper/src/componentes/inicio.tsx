@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRef, useState, useEffect, type FormEvent } from "react";
 import { ArrowUp, Paperclip, X, AudioLines, ArrowUpRight } from "lucide-react";
@@ -7,6 +8,8 @@ import { useEspacio, api, Notice } from "./espacio";
 import { useMovimientoReducido } from "./movimiento";
 import { FabricaVista } from "./fabrica-vista";
 import { Grabador, subir } from "./grabador";
+import { leerSSE } from "@/lib/stream";
+import type { EventoChat, TarjetaChat } from "@/servicios/chat/tipos";
 export function Inicio() {
   const { data, refresh } = useEspacio();
   const reduced = useMovimientoReducido();
@@ -16,16 +19,31 @@ export function Inicio() {
     [uploading, setUploading] = useState(false),
     [error, setError] = useState(""),
     [state, setState] = useState<EstadoCooper>("reposo"),
-    [files, setFiles] = useState<{ id: string; name: string }[]>([]),
+    [files, setFiles] = useState<
+      { id: string; name: string; image?: boolean }[]
+    >([]),
     [transcript, setTranscript] = useState<"simulada" | "real" | null>(null),
-    [channel, setChannel] = useState("");
+    [channel, setChannel] = useState(data.chat.canalId),
+    [video, setVideo] = useState(""),
+    [partial, setPartial] = useState(""),
+    [submitted, setSubmitted] = useState(""),
+    [cards, setCards] = useState<TarjetaChat[]>([]);
+  const controller = useRef<AbortController | null>(null);
+  const mouthTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      controller.current?.abort();
+      if (mouthTimer.current) clearTimeout(mouthTimer.current);
+    },
+    [],
+  );
   const fileInput = useRef<HTMLInputElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const list = end.current?.parentElement;
     if (data.messages.length && list) list.scrollTop = list.scrollHeight;
-  }, [data.messages.length]);
+  }, [data.messages.length, partial, cards.length]);
   async function send(e: FormEvent) {
     e.preventDefault();
     if (!text.trim() || busy) return;
@@ -33,25 +51,88 @@ export function Inicio() {
     setError("");
     setState("pensando");
     try {
-      await api("chat", {
-        texto: text,
-        adjuntos: files.map((f) => f.id),
-        canalId: channel || undefined,
+      controller.current = new AbortController();
+      setSubmitted(text);
+      setPartial("");
+      setCards([]);
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "text/event-stream",
+        },
+        body: JSON.stringify({
+          texto: text,
+          adjuntos: files.map((f) => f.id),
+          canalId: channel || undefined,
+          videoId: video || undefined,
+        }),
+        signal: controller.current.signal,
       });
+      if (!response.ok) throw new Error((await response.json()).error);
+      let complete = false;
+      for await (const raw of leerSSE(response)) {
+        const event = raw as EventoChat;
+        if (event.tipo === "error") throw new Error(event.texto);
+        if (event.tipo === "tarjeta")
+          setCards((old) => [...old, event.tarjeta]);
+        if (event.tipo === "texto") {
+          setPartial((old) => old + event.texto);
+          setState("hablando");
+          if (mouthTimer.current) clearTimeout(mouthTimer.current);
+          mouthTimer.current = setTimeout(() => setState("pensando"), 450);
+        }
+        if (event.tipo === "fin") complete = true;
+      }
+      if (!complete)
+        throw new Error(
+          "La respuesta se interrumpió. Puedes volver a intentarlo.",
+        );
       setText("");
       setFiles([]);
       setTranscript(null);
-      await refresh();
-      setState("hablando");
-      setTimeout(() => setState("reposo"), 1800);
     } catch (e) {
       setError((e as Error).message);
       setState("reposo");
     } finally {
+      if (mouthTimer.current) clearTimeout(mouthTimer.current);
+      setState("reposo");
+      try {
+        await refresh();
+      } catch {
+        setError("No pudimos actualizar la conversación. Recarga la página.");
+      }
+      setSubmitted("");
+      setPartial("");
+      setCards([]);
       setBusy(false);
       textarea.current?.focus();
     }
   }
+  async function confirmar(id: string, aceptar: boolean) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await api("chat/confirmar", { id, aceptar });
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      await refresh().catch(() =>
+        setError("Recarga para ver el resultado de la acción."),
+      );
+      setBusy(false);
+    }
+  }
+  const canalEfectivo =
+    channel ||
+    data.chat.canalId ||
+    data.channels.find((c) => c.ownerId === data.user.id)?.id ||
+    "";
+  const tarjetas = [
+    ...data.chat.tarjetas,
+    ...cards.filter((c) => !data.chat.tarjetas.some((a) => a.id === c.id)),
+  ];
   async function attach(file: File, audio = false) {
     setError("");
     setUploading(true);
@@ -59,7 +140,10 @@ export function Inicio() {
       if (files.length >= 5)
         throw new Error("Puedes adjuntar hasta cinco archivos.");
       const uploaded = await subir(file);
-      setFiles((old) => [...old, uploaded]);
+      setFiles((old) => [
+        ...old,
+        { ...uploaded, image: file.type.startsWith("image/") },
+      ]);
       if (audio) {
         const result = await api<{ texto: string; simulada: boolean }>(
           "transcribir",
@@ -125,7 +209,7 @@ export function Inicio() {
             aria-label="Conversación con Cooper"
             aria-live="polite"
           >
-            {data.messages.length === 0 ? (
+            {data.messages.length === 0 && !submitted && !partial ? (
               <div className="chat-welcome">
                 <CooperCara estado={state} size={112} />
                 <h2>
@@ -182,21 +266,90 @@ export function Inicio() {
                   </span>
                   <p>{m.content}</p>
                   {(JSON.parse(m.attachmentIds) as string[]).map((id, i) => (
-                    <a
-                      className="attachment-link"
-                      key={id}
-                      href={`/api/archivos/${id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Paperclip size={14} />
-                      Adjunto {i + 1}
-                    </a>
+                    <span key={id}>
+                      <a
+                        className="attachment-link"
+                        href={`/api/archivos/${id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <Paperclip size={14} />
+                        Adjunto {i + 1}
+                      </a>
+                      {data.chat.fotos.some((f) => f.id === id) && (
+                        <Link
+                          className="attachment-link"
+                          href={`/avatares?foto=${id}`}
+                        >
+                          Usar foto para mi avatar
+                        </Link>
+                      )}
+                    </span>
                   ))}
                 </article>
               ))
             )}
-            {busy && (
+            {submitted &&
+              !data.messages.some(
+                (m) => m.role === "user" && m.content === submitted,
+              ) && (
+                <article className="message user">
+                  <span className="message-author">{data.user.name}</span>
+                  <p>{submitted}</p>
+                </article>
+              )}
+            {partial && (
+              <article className="message assistant" aria-busy={busy}>
+                <span className="message-author">Cooper</span>
+                <p>{partial}</p>
+              </article>
+            )}
+            {tarjetas
+              .filter(
+                (c) =>
+                  c.estado === "pendiente" ||
+                  c.estado === "revisar" ||
+                  c.estado === "ejecutando",
+              )
+              .map((c) => (
+                <article
+                  className="chat-confirmation"
+                  key={c.id}
+                  aria-label={c.titulo}
+                >
+                  <h3>{c.titulo}</h3>
+                  <p>{c.detalle}</p>
+                  {c.estado === "pendiente" ? (
+                    <>
+                      <p className="helper">
+                        Revisa el pedido. Solo se realizará cuando lo confirmes.
+                      </p>
+                      <div className="button-row">
+                        <button
+                          className="button"
+                          disabled={busy}
+                          onClick={() => void confirmar(c.id, true)}
+                        >
+                          Confirmar
+                        </button>
+                        <button
+                          className="button secondary"
+                          disabled={busy}
+                          onClick={() => void confirmar(c.id, false)}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p role="status">
+                      Revisa el estado de la fábrica antes de repetir esta
+                      acción.
+                    </p>
+                  )}
+                </article>
+              ))}
+            {busy && !partial && (
               <div className="thinking" role="status">
                 <span />
                 <span />
@@ -244,6 +397,14 @@ export function Inicio() {
                   {files.map((f) => (
                     <span key={f.id}>
                       {f.name}
+                      {f.image && (
+                        <Link
+                          className="attachment-link"
+                          href={`/avatares?foto=${f.id}`}
+                        >
+                          Usar para mi avatar
+                        </Link>
+                      )}
                       <button
                         type="button"
                         aria-label={`Quitar ${f.name}`}
@@ -263,7 +424,7 @@ export function Inicio() {
                     type="button"
                     className="icon-button"
                     aria-label="Adjuntar archivo"
-                    disabled={uploading}
+                    disabled={uploading || busy}
                     onClick={() => fileInput.current?.click()}
                   >
                     <Paperclip size={19} />
@@ -281,6 +442,7 @@ export function Inicio() {
                     }}
                   />
                   <Grabador
+                    disabled={busy || uploading}
                     onAudio={(f) => attach(f, true)}
                     onError={setError}
                     onRecording={(v) => setState(v ? "escuchando" : "reposo")}
@@ -290,9 +452,13 @@ export function Inicio() {
                     <select
                       aria-label="Canal del chat"
                       value={channel}
-                      onChange={(e) => setChannel(e.target.value)}
+                      disabled={busy}
+                      onChange={(e) => {
+                        setChannel(e.target.value);
+                        setVideo("");
+                      }}
                     >
-                      <option value="">Último canal</option>
+                      <option value="">Último canal propio</option>
                       {data.channels
                         .filter((c) => c.ownerId === data.user.id)
                         .map((c) => (
@@ -302,6 +468,32 @@ export function Inicio() {
                         ))}
                     </select>
                   )}
+                  {canalEfectivo &&
+                    data.videos.filter(
+                      (v) =>
+                        v.ownerId === data.user.id &&
+                        v.channelId === canalEfectivo,
+                    ).length > 0 && (
+                      <select
+                        aria-label="Video del chat"
+                        value={video}
+                        disabled={busy}
+                        onChange={(e) => setVideo(e.target.value)}
+                      >
+                        <option value="">Elegir video</option>
+                        {data.videos
+                          .filter(
+                            (v) =>
+                              v.ownerId === data.user.id &&
+                              v.channelId === canalEfectivo,
+                          )
+                          .map((v) => (
+                            <option key={v.id} value={v.id}>
+                              {v.title}
+                            </option>
+                          ))}
+                      </select>
+                    )}
                 </div>
                 <button
                   className="send"
@@ -313,6 +505,7 @@ export function Inicio() {
               </div>
             </form>
             <p className="composer-caption">
+              {data.chat.simulado ? "Chat de demostración. " : ""}
               {uploading
                 ? "Guardando archivo…"
                 : "Cooper propone. Tú tienes la última palabra."}
