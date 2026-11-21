@@ -6,7 +6,7 @@ Corte **2026-11-21 22:11:13 UTC / 17:11:13 Lima**, objetivo **`012322a690be3cdbc
 
 - [Matriz JSON](evidencias/total-integrador/matriz-final/ramas.json).
 - [Matriz CSV, una fila por ref](evidencias/total-integrador/matriz-final/ramas.csv).
-- [Validación de integridad](evidencias/total-integrador/matriz-final/validacion.json): 76 SHAs únicos, correspondencia CSV/JSON y evidencia coincidente, cero comprobaciones falsas y `git diff --check` limpio. No es otra ejecución de la puerta.
+- [Validación de integridad](evidencias/total-integrador/matriz-final/validacion.json): 76 referencias únicas con SHA válido, correspondencia CSV/JSON y evidencia coincidente, cero comprobaciones falsas y `git diff --check` limpio. No es otra ejecución de la puerta.
 
 ## Método y decisiones
 
