@@ -1,5 +1,6 @@
 "use client";
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
 import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice } from "./espacio";
@@ -53,6 +54,19 @@ export function Admin({ initial }: { initial: Administracion }) {
           </span>
         }
       />
+      <section
+        className="stack spend-section"
+        aria-labelledby="salud-operativa-enlace"
+      >
+        <h2 id="salud-operativa-enlace">Salud de la operación</h2>
+        <p className="helper">
+          Ejecuciones y fallos de n8n, estado del servidor, producción y alertas
+          por Telegram.
+        </p>
+        <Link href="/admin/salud" className="button secondary" prefetch={false}>
+          Abrir salud de la operación
+        </Link>
+      </section>
       <Notice error={error} />
       {data.users.some((u) => u.alert) && (
         <div role="alert" className="spend-alert">
