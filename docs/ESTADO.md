@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 14:17 (Lima).
+Última actualización: 2026-11-21 15:28 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — reversa de infraestructura con relés mixtos corregida:** conserva y acredita la imagen previa de cada servicio mediante override público, sin alterar el orden app→infraestructura→n8n. 185 pruebas operativas y 12 del adaptador aislado aprobadas sin advertencias; el wrapper dirige Compose al deploy vivo manteniendo helpers/contratos certificados fuera de él. No ejecutado en producción. Operación prepara el ensayo real de avería/reversa/actualización con relés antiguos y Cooper nuevo antes de aceptar el corte. [Informe](informes/total-integrador-producto.md#séptima-revisión-reversa-mixta-y-ejecución-desde-bundle-aislado).
 
 - **21-11-2026, Lima — identidad de infraestructura y delta Radar certificados localmente:** el aplicador acredita por hashes la relación índice OCI/manifiesto de plataforma; las tres imágenes anteriores del VPS corresponden exactamente a los pins ensayados, verificado con metadatos públicos y SSH de solo lectura. Incorporado el helper cerrado Radar/consulta interna/Resolver con CAS de contenido y versiones antes del respaldo y antes del import. 180 pruebas operativas aprobadas sin advertencias, incluidas carreras y reversa sin import; aplicación Cooper, Compose y lote total moderno permanecen sin cambios. Helpers entregados al integrador y operación; esta revisión no desplegó. [Informe](informes/total-integrador-producto.md#sexta-revisión-identidad-de-infraestructura-y-delta-cerrado-de-radar).
 
