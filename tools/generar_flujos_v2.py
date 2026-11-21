@@ -3070,7 +3070,7 @@ for nombre, tabla in [('Canales autorizados','canales'), ('Videos autorizados','
                                   'keyValue': "={{ $('Autenticar').first().json.dueno_email }}"}])
 # Las decisiones se proyectan después de comprobar el video; jamás se devuelven enlaces/formularios internos.
 lista_cooper(f, 'Aprobaciones', 'aprobaciones', [{'keyName':'estado','condition':'eq','keyValue':'pendiente'}, {'keyName':'video_id','condition':'eq','keyValue':"={{ $('Autenticar').first().json.solicitud.datos.id || '__ninguno__' }}"}])
-code(f, 'Resolver', PRESENTACION_JS + cooper_js('resolver'))
+code(f, 'Resolver', PRESENTACION_JS + open(os.path.join(RAIZ,'tools/cooper/observabilidad.js'), encoding='utf-8').read() + cooper_js('resolver'))
 switch(f, 'Tipo de petición', 3, "({ responder:0, gastos:1, orden:2 })[$json.accion]")
 lista_cooper(f, 'Costos administrativos', 'costos')
 code(f, 'Agregar gastos', cooper_js('gastos'))
@@ -3324,7 +3324,7 @@ def recorrer(v):
     if isinstance(v, str) and v.startswith('={{'): return escapar_saltos(v)
     return v
 # Fase 6: texto por Codex y modo noticia (extensiones locales, sin despliegue).
-for extension in ['texto_flujos.py', 'noticia_flujos.py']:
+for extension in ['texto_flujos.py', 'noticia_flujos.py', 'observabilidad_flujos.py']:
     exec(compile(open(os.path.join(RAIZ, 'tools/cooper', extension), encoding='utf-8').read(), extension, 'exec'))
 
 # Todas las escrituras de videos llevan sello durable y un callback con el mismo ID al reintentar.

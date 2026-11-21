@@ -4,7 +4,8 @@ import Link from "next/link";
 import { animate, m as motion, useMotionValue } from "framer-motion";
 import { ArrowUpRight, Check, Clock3 } from "lucide-react";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
-import type { Video } from "@/db/schema";
+import type { Estado } from "@/servicios/datos";
+type Video = Estado["videos"][number];
 import { useEspacio, Empty } from "./espacio";
 import { Portada } from "./portada";
 import {

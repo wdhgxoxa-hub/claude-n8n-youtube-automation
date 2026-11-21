@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { observabilidadSchema, leccionSchema } from "./observabilidad";
 import contrato from "./cooper-v1.json";
 export { contrato };
 export type EventoPuente = keyof typeof contrato.eventos;
@@ -27,6 +28,7 @@ export const videoRemotoSchema = z.object({
   dueno_email: email,
   canal_id: id,
   titulo: z.string().max(500),
+  observabilidad: observabilidadSchema.optional(),
   stage: z.number().int().min(0).max(11),
   script: z.string().max(30000),
   actualizado_en: z.number().int().nonnegative(),
@@ -38,6 +40,7 @@ export const estadoRemotoSchema = z.object({
       id,
       dueno_email: email,
       nombre: z.string(),
+      lecciones: z.array(leccionSchema).max(100).optional(),
       nicho: z.string(),
       modo_noticia: z.boolean().optional(),
     }),

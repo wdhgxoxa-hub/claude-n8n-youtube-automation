@@ -3,10 +3,12 @@ const fail = (status, error) => [{ json: { status, respuesta: { error }, accion:
 const own = x => !!x.dueno_email && (auth.admin || x.dueno_email === auth.dueno_email);
 const canales = $('Canales autorizados').all().map(i => i.json).filter(c => c.canal_id && own(c) && !c.eliminado);
 const videos = $('Videos autorizados').all().map(i => i.json).filter(v => v.video_id && own(v) && !v.eliminado && canales.some(c => c.canal_id === v.canal_id));
+const filasCooper = nombre => $(nombre).isExecuted ? $(nombre).all().map(i=>i.json) : [];
+const planosCooper=filasCooper('Piezas de Cooper'), pubsCooper=filasCooper('Publicaciones de Cooper'), eventosCooper=filasCooper('Historial de Cooper'), decisionesCooper=filasCooper('Decisiones de Cooper'), trabajosCooper=filasCooper('Lecciones de Cooper');
 const safeVideo = v => ({ id: v.video_id, dueno_email: v.dueno_email, canal_id: v.canal_id, titulo: String(v.tema || ''),
-  modo_noticia:v.modo_noticia === true, stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });
+  observabilidad:observabilidadCooper(v,planosCooper,pubsCooper,eventosCooper,decisionesCooper), modo_noticia:v.modo_noticia === true, stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });
 if (b.evento === 'estado') return [{ json: { accion: 'responder', status: 200, respuesta: {
-  canales: canales.map(c => ({ id: c.canal_id, dueno_email: c.dueno_email, nombre: String(c.nombre || ''), nicho: String(c.nicho || ''), modo_noticia:c.modo_noticia === true })), videos: videos.map(safeVideo) } } }];
+  canales: canales.map(c => ({ id: c.canal_id, dueno_email: c.dueno_email, lecciones:leccionesCooper(c,trabajosCooper), nombre: String(c.nombre || ''), nicho: String(c.nicho || ''), modo_noticia:c.modo_noticia === true })), videos: videos.map(safeVideo) } } }];
 if (['reporte', 'pendientes', 'tendencias'].includes(b.evento)) {
   const summary = b.evento === 'tendencias' ? canales.map(c => {
     let t = {}; try { t = JSON.parse(c.tendencias || '{}'); } catch { /* no radar */ }

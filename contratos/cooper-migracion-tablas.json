@@ -19,7 +19,10 @@
       "modo_noticia": "boolean",
       "noticia": "string",
       "noticia_guion_hash": "string",
-      "noticia_storyboard_hash": "string"
+      "noticia_storyboard_hash": "string",
+      "cooper_escenas": "string",
+      "metricas_youtube": "string",
+      "metricas_consultadas_en": "string"
     },
     "fab_trabajos": {
       "dueno_email": "string"
@@ -35,6 +38,10 @@
     "fab_planos": {
       "presentacion": "string",
       "usa_avatar": "boolean"
+    },
+    "fab_publicaciones": {
+      "metricas_historial": "string",
+      "metricas_consultadas_en": "string"
     }
   }
 }

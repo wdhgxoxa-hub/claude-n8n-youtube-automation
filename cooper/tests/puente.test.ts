@@ -531,3 +531,42 @@ describe("Órdenes, transporte y administración", () => {
     expect(text).not.toContain('"usd"');
   });
 });
+
+it("pulido: n8n cae, conserva el estado y vuelve a sincronizar al recuperarse", async () => {
+  const before = estado(ana).videos.find((v) => v.id === videoId)!;
+  const mock = vi.fn(
+    async () => new Response("no disponible", { status: 503 }),
+  );
+  vi.stubGlobal("fetch", mock);
+  const bridge = factory();
+  await expect(bridge.sincronizar(ana)).rejects.toThrow();
+  expect(mock).toHaveBeenCalledTimes(3);
+  expect(estado(ana).videos.find((v) => v.id === videoId)?.title).toBe(
+    before.title,
+  );
+  mock.mockImplementation(
+    async () =>
+      new Response(
+        JSON.stringify({
+          canales: [
+            {
+              id: channelId,
+              dueno_email: ana.email,
+              nombre: "Ciencia",
+              nicho: "Ciencia",
+            },
+          ],
+          videos: [
+            remote({
+              titulo: "Recuperado",
+              actualizado_en: Date.now() + 10000,
+            }),
+          ],
+        }),
+      ),
+  );
+  await bridge.sincronizar(ana);
+  expect(estado(ana).videos.find((v) => v.id === videoId)?.title).toBe(
+    "Recuperado",
+  );
+});

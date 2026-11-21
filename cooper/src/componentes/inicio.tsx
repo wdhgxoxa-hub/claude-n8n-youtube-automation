@@ -36,6 +36,7 @@ export function Inicio() {
     [partial, setPartial] = useState(""),
     [submitted, setSubmitted] = useState(""),
     [cards, setCards] = useState<TarjetaChat[]>([]);
+  const sending = useRef(false);
   const controller = useRef<AbortController | null>(null);
   const mouthTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const waitingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -58,7 +59,8 @@ export function Inicio() {
   }, [data.messages.length, partial, cards.length]);
   async function send(e: FormEvent) {
     e.preventDefault();
-    if (!text.trim() || busy) return;
+    if (!text.trim() || sending.current) return;
+    sending.current = true;
     setBusy(true);
     setError("");
     setState("pensando");
@@ -83,7 +85,10 @@ export function Inicio() {
           canalId: channel || undefined,
           videoId: video || undefined,
         }),
-        signal: controller.current.signal,
+        signal: AbortSignal.any([
+          controller.current.signal,
+          AbortSignal.timeout(90000),
+        ]),
       });
       if (!response.ok) throw new Error((await response.json()).error);
       let complete = false;
@@ -145,6 +150,7 @@ export function Inicio() {
       setSubmitted("");
       setPartial("");
       setCards([]);
+      sending.current = false;
       setBusy(false);
       textarea.current?.focus();
     }

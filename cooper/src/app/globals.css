@@ -3508,3 +3508,207 @@ input:is([type="checkbox"], [type="radio"]):checked {
   height: 16px;
   flex-shrink: 0;
 }
+
+/* Resultados de producción: medios, mediciones y aprendizaje. */
+.real-player,
+.publication,
+.lesson {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.real-player video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  background: #080909;
+  aspect-ratio: 16/9;
+}
+.player-caption,
+.incident-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.player-caption,
+.real-player > p {
+  padding: 16px;
+}
+.scene-gallery,
+.published-players {
+  margin: 28px 0;
+}
+.scene-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 20px;
+}
+.scene-grid article {
+  min-width: 0;
+}
+.scene-grid img,
+.scene-grid video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.scene-grid audio {
+  width: 100%;
+  margin-top: 8px;
+}
+.published-players iframe {
+  display: block;
+  width: 100%;
+  min-height: 240px;
+  aspect-ratio: 16/9;
+  border: 0;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.published-players article {
+  margin-top: 20px;
+}
+.publications {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  gap: 28px;
+}
+.publication {
+  padding: clamp(16px, 2vw, 28px);
+  min-width: 0;
+}
+.publication-heading {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.publication-heading > div {
+  min-width: 0;
+}
+.publication-heading h2 {
+  font-size: 21px;
+  overflow-wrap: anywhere;
+}
+.publication-thumb {
+  width: 112px;
+  height: 100px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.publication-thumb img,
+.publication-thumb svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 28px 0 16px;
+}
+.metrics-strip dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+.metrics-strip dd {
+  font-size: clamp(18px, 2vw, 28px);
+  margin: 8px 0 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.evolution label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.evolution select {
+  width: auto;
+  max-width: 100%;
+}
+.evolution svg {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+}
+.chart-axis {
+  fill: none;
+  stroke: var(--line);
+}
+.chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+.chart-point {
+  fill: var(--accent);
+}
+.chart-range {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+.table-scroll {
+  overflow-x: auto;
+}
+.table-scroll table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+.table-scroll td,
+.table-scroll th {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.table-scroll caption {
+  padding: 12px 0;
+  text-align: left;
+}
+.learning-section {
+  margin-top: 36px;
+}
+.lesson {
+  padding: 24px;
+  margin: 16px 0;
+}
+.lesson h3 {
+  font-size: 18px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+.lesson p {
+  overflow-wrap: anywhere;
+}
+.incident-state {
+  font-size: 13px;
+  color: var(--accent);
+}
+.incident-state.corregido {
+  color: var(--text);
+}
+@media (max-width: 600px) {
+  .metrics-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .publication-heading {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .publication-thumb {
+    width: 80px;
+    height: 90px;
+  }
+}

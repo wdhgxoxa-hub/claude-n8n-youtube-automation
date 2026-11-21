@@ -272,7 +272,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\nconst CONTRATO = {\"version\": \"cooper-v1\", \"eventos\": {\"nuevo_canal\": \"nuevo_canal\", \"nuevo_video\": \"nuevo_video\", \"corregir\": \"corregir\", \"aprobar_guion\": \"aprobado:guion\", \"aprobar_final\": \"aprobado:final\", \"ajustar_biblia\": \"ajustar_biblia\", \"programar\": \"programar\", \"referencias\": \"referencias\", \"configurar_redes\": \"configurar_redes\", \"metas\": \"metas\", \"adoptar_cuenta\": \"adoptar_cuenta\", \"eliminar\": \"eliminar\"}, \"consultas\": [\"estado\", \"reporte\", \"pendientes\", \"tendencias\", \"gastos\"], \"etapas\": {\"radar\": 0, \"guion\": 1, \"verificacion\": 2, \"aprobacion_guion\": 3, \"storyboard\": 4, \"produccion\": 5, \"sonido\": 6, \"montaje\": 7, \"calidad\": 8, \"aprobacion_final\": 9, \"programado\": 10, \"publicado\": 11}};\nconst auth = $('Autenticar').first().json, b = auth.solicitud, d = b.datos;\nconst fail = (status, error) => [{ json: { status, respuesta: { error }, accion: 'responder' } }];\nconst own = x => !!x.dueno_email && (auth.admin || x.dueno_email === auth.dueno_email);\nconst canales = $('Canales autorizados').all().map(i => i.json).filter(c => c.canal_id && own(c) && !c.eliminado);\nconst videos = $('Videos autorizados').all().map(i => i.json).filter(v => v.video_id && own(v) && !v.eliminado && canales.some(c => c.canal_id === v.canal_id));\nconst safeVideo = v => ({ id: v.video_id, dueno_email: v.dueno_email, canal_id: v.canal_id, titulo: String(v.tema || ''),\n  modo_noticia:v.modo_noticia === true, stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });\nif (b.evento === 'estado') return [{ json: { accion: 'responder', status: 200, respuesta: {\n  canales: canales.map(c => ({ id: c.canal_id, dueno_email: c.dueno_email, nombre: String(c.nombre || ''), nicho: String(c.nicho || ''), modo_noticia:c.modo_noticia === true })), videos: videos.map(safeVideo) } } }];\nif (['reporte', 'pendientes', 'tendencias'].includes(b.evento)) {\n  const summary = b.evento === 'tendencias' ? canales.map(c => {\n    let t = {}; try { t = JSON.parse(c.tendencias || '{}'); } catch { /* no radar */ }\n    let n=null; try {n=JSON.parse(c.noticia_hoy || 'null');} catch {}\n    if (c.modo_noticia) return `${c.nombre}: ${n ? n.titulo + ' (' + n.fecha + ')' : 'Sin noticia verificada hoy.'}`;\n    return `${c.nombre}: ${String(t.resumen || 'Sin tendencias registradas.').slice(0, 1000)}`;\n  }).join('\\n') : videos.filter(v => b.evento !== 'pendientes' || ['aprobacion_guion', 'aprobacion_final'].includes(v.etapa))\n    .map(v => `${v.tema}: ${v.etapa}`).join('\\n');\n  return [{ json: { accion: 'responder', status: 200, respuesta: { resumen: summary || 'Sin resultados en tu espacio.' } } }];\n}\nif (b.evento === 'gastos') return [{ json: { accion: 'gastos' } }];\nconst validId = x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x);\nif (!validId(d.id)) return fail(400, 'Falta el identificador');\nconst videoEvent = ['corregir', 'aprobar_guion', 'aprobar_final', 'programar', 'referencias'].includes(b.evento);\nconst resource = b.evento === 'eliminar' ? (d.tipo === 'canal' ? canales : d.tipo === 'video' ? videos : []).find(r => (r.video_id || r.canal_id) === d.id)\n  : b.evento.startsWith('aprobar_') ? videos.find(v => v.video_id === d.id)\n  : videoEvent ? videos.find(v => v.video_id === d.recursoId) : canales.find(c => c.canal_id === d.recursoId);\nif (b.evento !== 'nuevo_canal' && !resource) return fail(404, 'Recurso no disponible');\nif (b.evento === 'nuevo_canal' && canales.some(c => c.canal_id === d.id) || b.evento === 'nuevo_video' && videos.some(v => v.video_id === d.id)) return fail(409, 'Identificador existente');\nif (b.evento === 'nuevo_video' && (resource.estado !== 'activo' || !String(resource.biblia_ruta).startsWith('trabajo:'))) return fail(409, 'El canal todavía se está preparando');\nlet presentacion = null;\nif (b.evento === 'nuevo_video') {\n  try { presentacion = validarPresentacion(d.presentacion); }\n  catch (error) { return fail(error.message === 'Recurso de demostración' ? 422 : 400, error.message); }\n  if ((d.avatarId || d.voiceId) && !presentacion) return fail(422, 'Falta resolver la presentación elegida');\n  if ((d.avatarId || '') !== (presentacion?.avatar?.recurso_id || '') && d.avatarId !== undefined ||\n      (d.voiceId || '') !== (presentacion?.voz?.recurso_id || '') && d.voiceId !== undefined) return fail(400, 'Selección incompatible');\n}\nif (videoEvent && resource.estado === 'cancelado') return fail(409, 'Video cancelado por revocación');\nconst e = { evento: b.evento, dueno_email: resource?.dueno_email || auth.dueno_email,\n  canal_id: b.evento === 'nuevo_canal' ? d.id : resource?.canal_id,\n  video_id: b.evento === 'nuevo_video' ? d.id : resource?.video_id || '', cooper: true };\nconst text = typeof d.texto === 'string' ? d.texto.trim() : '';\nconst p = d.parametros && typeof d.parametros === 'object' && !Array.isArray(d.parametros) ? d.parametros : {};\nif (!['aprobar_guion', 'aprobar_final', 'eliminar'].includes(b.evento) && (!text || text.length > 6000)) return fail(400, 'Texto inválido');\nswitch (b.evento) {\n  case 'nuevo_canal': e.criterios = text; e.nombre = String(d.nombre || text).slice(0,120); break;\n  case 'nuevo_video': if (p.modo_noticia !== undefined && typeof p.modo_noticia !== 'boolean') return fail(400, 'Modo noticia inválido'); e.modo_noticia = p.modo_noticia ?? resource.modo_noticia === true; e.presentacion = presentacion; e.cooper_orden_id = b.id_evento; e.tema = text; e.formato = ['short','largo'].includes(p.formato) ? p.formato : resource.formato_defecto; break;\n  case 'corregir': e.instruccion = text; e.etapa = (CONTRATO.etapas[resource.etapa] ?? 0) >= 4 ? 'storyboard' : 'guion'; break;\n  case 'programar': {\n    const time = Date.parse(text);\n    if (!Number.isFinite(time) || time <= Date.now() + 3600000 || time >= Date.now() + 180 * 86400000) return fail(400, 'Fecha fuera del intervalo de una hora a seis meses');\n    e.fecha = text; break;\n  }\n  case 'ajustar_biblia': {\n    if (p.campo && (!/^[a-z_]+(\\.[a-z_0-9]+){0,3}$/.test(p.campo) || p.campo.split('.').some(x => ['__proto__','prototype','constructor','canal_id','nombre'].includes(x)))) return fail(400, 'Campo inválido');\n    if (p.campo === 'modo_noticia' && typeof p.valor !== 'boolean') return fail(400, 'Modo noticia inválido');\n    e.campo = p.campo || 'notas'; e.valor = p.valor === undefined ? text : JSON.stringify(p.valor); break;\n  }\n  case 'configurar_redes': {\n    // Los campos con significado operativo se envían estructurados; no se inventa un perfil.\n    if (typeof p.perfil !== 'string' || !/^[A-Za-z0-9_.-]{2,60}$/.test(p.perfil) || !Array.isArray(p.redes) || !p.redes.length || p.redes.some(r => !['youtube','tiktok','instagram','facebook'].includes(r))) return fail(400, 'Indica perfil y redes en parametros');\n    e.perfil = p.perfil; e.redes = p.redes.join(',');\n    if (p.zona) { try { new Intl.DateTimeFormat('es', { timeZone: p.zona }); } catch { return fail(400, 'Zona inválida'); } e.zona = p.zona; } break;\n  }\n  case 'metas': {\n    const n = p.videos_semana ?? Number((text.match(/\\d+/) || [])[0]);\n    if (!Number.isInteger(n) || n < 0 || n > 21) return fail(400, 'Indica de cero a veintiún videos por semana');\n    e.videos_semana = n;\n    if (p.auto !== undefined) { if (typeof p.auto !== 'boolean') return fail(400, 'Auto inválido'); e.auto = p.auto; }\n    if (p.formato !== undefined) { if (!['short','largo'].includes(p.formato)) return fail(400, 'Formato inválido'); e.formato = p.formato; }\n    // Los usuarios no leen ni cambian presupuestos internos.\n    break;\n  }\n  case 'adoptar_cuenta': e.url = text; e.red = p.red || ''; break;\n  case 'aprobar_guion': case 'aprobar_final': {\n    const stage = b.evento === 'aprobar_guion' ? 'guion' : 'final';\n    if (resource.etapa !== 'aprobacion_' + stage) return fail(409, 'Sin aprobación pendiente');\n    const ap = $('Aprobaciones').all().map(i => i.json).filter(a => a.video_id === resource.video_id && a.etapa === stage && a.estado === 'pendiente')\n      .sort((a,b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0];\n    if (!ap) return fail(409, 'Sin decisión pendiente');\n    let original; try { original = JSON.parse(ap.pedido); } catch { return fail(409, 'Decisión incompleta'); }\n    e.evento = 'aprobado'; e.etapa = stage; e.contexto = original.contexto; e.aprobacion_id = ap.aprobacion_id; break;\n  }\n  case 'eliminar':\n    // No prometer cancelar un proveedor ya en vuelo. La eliminación exige recursos en reposo.\n    if (videos.some(v => (d.tipo === 'canal' ? v.canal_id === d.id : v.video_id === d.id) && !['aprobacion_guion','aprobacion_final','publicado'].includes(v.etapa))) return fail(409, 'Hay producción en curso');\n    e.tipo = d.tipo; e.id = d.id; break;\n}\nreturn [{ json: { accion: 'orden', status: 200, evento: e } }];\n"
+        "jsCode": "// Compartido por entrada, storyboard, planos y sonido. Sin evidencia ni URLs privadas.\nfunction validarPresentacion(value) {\n  if (value === undefined || value === null) return null;\n  const obj = x => x && typeof x === 'object' && !Array.isArray(x);\n  if (!obj(value) || value.version !== 1 || !['completo', 'partes'].includes(value.presencia) ||\n      !Object.hasOwn(value, 'avatar') || !Object.hasOwn(value, 'voz') ||\n      Object.keys(value).some(k => !['version', 'presencia', 'avatar', 'voz'].includes(k))) throw new Error('Presentación inválida');\n  for (const kind of ['avatar', 'voz']) {\n    const m = value[kind];\n    if (m === null) continue;\n    if (!obj(m) || !['propio', 'catalogo'].includes(m.tipo) ||\n        ![m.id, m.recurso_id].every(x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x)) ||\n        Object.keys(m).some(k => !['recurso_id', 'proveedor', 'id', 'tipo'].includes(k))) throw new Error('Recurso inválido');\n    if (m.proveedor === 'simulada') throw new Error('Recurso de demostración');\n    if (kind === 'avatar' ? m.proveedor !== 'heygen' :\n      !(m.proveedor === 'gemini' && m.tipo === 'catalogo' || ['heygen', 'elevenlabs'].includes(m.proveedor) && m.tipo === 'propio')) throw new Error('Proveedor incompatible');\n  }\n  return value;\n}\nfunction planosPresentacion(planos, value) {\n  const p = validarPresentacion(value);\n  const narrados = planos.filter(x => String(x.texto_narrado || '').trim());\n  if (!narrados.length && (p?.avatar || p?.voz)) throw new Error('La presentación requiere narración');\n  const result = planos.map(x => {\n    const habla = !!String(x.texto_narrado || '').trim();\n    const avatar = !!p?.avatar && habla && (p.presencia === 'completo' || x.usa_avatar === true || x.tipo === 'avatar');\n    if (x.tipo === 'avatar' && !avatar) throw new Error('Plano avatar sin presentación autorizada');\n    return { ...x, ...(p ? { usa_avatar: avatar, presentacion: p } : {}), ...(avatar ? { tipo: 'avatar' } : {}) };\n  });\n  if (p?.avatar && p.presencia === 'partes') {\n    const n = result.filter(x => x.usa_avatar).length;\n    if (!n || narrados.length > 1 && n === narrados.length) throw new Error('Storyboard: elige solo algunas escenas con usa_avatar');\n  }\n  return result;\n}\nfunction costoVozPresentacion(texto, value, aj) {\n  const voz = value?.voz;\n  const tarifa = voz?.proveedor === 'heygen' ? aj.costoVozHeygenCaracterUsd : voz?.proveedor === 'elevenlabs' ? aj.costoVozElevenCaracterUsd : null;\n  const costo = tarifa === null ? Number(aj.costoVozUsdPorPlano) : String(texto || '').replace(/\\[[^\\]]*\\]|<[^>]*>/g, '').length * Number(tarifa);\n  if (!Number.isFinite(costo) || costo < 0) throw new Error('Configura la tarifa de voz');\n  return costo;\n}\n// Proyección cerrada de datos públicos: jamás se serializan filas de proveedor/costos.\nfunction jsonCooper(value, fallback) { try { return JSON.parse(value || 'null') ?? fallback; } catch { return fallback; } }\nfunction urlCooper(value) { const s=String(value || ''); return /^https:\\/\\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::443)?(?:[/?#][^\\s\\\\<>]*)?$/i.test(s) ? s : ''; }\nfunction fechaCooper(value) { const n = typeof value === 'number' ? value : Date.parse(value); return Number.isFinite(n) && n > 0 ? new Date(n).toISOString() : null; }\nfunction numeroCooper(value) { return value !== null && value !== '' && value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null; }\nfunction textoCooper(value, max = 2000) {\n  // Los textos libres de especialistas pueden mencionar datos administrativos.\n  return String(value || '').replace(/https?:\\/\\/\\S+/gi, '[enlace]').replace(/(?:Bearer|Apikey)\\s+\\S+/gi, '[privado]')\n    .split(/\\n|(?<=[.!?])\\s/).filter(s => !/\\b(?:USD|US\\$|costos?|presupuesto|tokens?|api.?key|secret|proveedor|credencial|OpenAI|Claude|Creatomate|HeyGen|ElevenLabs|Gemini)\\b|\\$\\s*\\d/i.test(s)).join(' ').slice(0,max);\n}\nfunction curvaCooper(value) { return (Array.isArray(value)?value:[]).map(p=>({segundo:numeroCooper(p.second ?? p.segundo),porcentaje:numeroCooper(p.percentage ?? p.porcentaje)})).filter(p=>p.segundo!==null && p.porcentaje!==null && p.porcentaje<=1).slice(0,600); }\nfunction medicionCooper(value) {\n  const fecha = fechaCooper(value.fecha); if (!fecha) return null;\n  const r = numeroCooper(value.retencion);\n  return { fecha, curvaRetencion:curvaCooper(value.curvaRetencion), vistas:numeroCooper(value.vistas), meGusta:numeroCooper(value.meGusta), comentarios:numeroCooper(value.comentarios), retencion:r };\n}\nfunction leccionesCooper(canal, trabajos) {\n  return trabajos.filter(t => t.canal_id === canal.canal_id && t.modo === 'aprender' && t.estado === 'ok').slice(-100).flatMap(t => {\n    const raw = jsonCooper(t.resultado, {}), r = raw.resultado || raw;\n    const fecha = fechaCooper(t.updatedAt || t.createdAt); if (!fecha) return [];\n    const lista = x => (Array.isArray(x) ? x : []).map(v => textoCooper(typeof v === 'string' ? v : v.regla || v.leccion || v.descripcion || v.gancho || v.tema, 500)).filter(Boolean).slice(0,20);\n    const resumen = textoCooper([r.resumen, ...lista(r.lecciones)].filter(Boolean).join(' '),3000);\n    return resumen ? [{id:String(t.job_id),fecha,resumen,ganchos:lista(r.ganchos_que_funcionan || r.ganchos).concat(lista(r.lecciones).filter(x=>/gancho|apertura/i.test(x))).slice(0,20),temas:lista(r.temas_que_funcionan || r.temas).concat(lista(r.lecciones).filter(x=>/tema/i.test(x))).slice(0,20)}] : [];\n  });\n}\nfunction observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {\n  const publicadas = publicaciones.filter(p => p.video_id === v.video_id).flatMap(p => {\n    const r = jsonCooper(p.resultado, {});\n    // Cada red confirmada se conserva aunque otra red del envío falle.\n    const resultados = Array.isArray(r.publicaciones) ? r.publicaciones.filter(x => x.publicado === true) : p.estado === 'publicado' ? (r.urls || [p.url]).filter(Boolean).map(url => ({url,red: inferirRedCooper(url)})) : [];\n    const historiales = jsonCooper(p.metricas_historial, {});\n    return resultados.map(x => ({ id:String(p.request_id)+':'+x.red, red:String(x.red || p.plataforma || 'Otra red'),url:urlCooper(x.url),fecha:fechaCooper(p.publicado_en),miniatura:urlCooper(v.miniatura_url),\n      historial:(Array.isArray(historiales[x.red]) ? historiales[x.red] : []).map(medicionCooper).filter(Boolean).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90) }));\n  });\n  if (v.youtube_id && v.estado === 'publicado' && !publicadas.some(p => p.red === 'youtube' && p.url.includes(v.youtube_id))) {\n    publicadas.push({id:'youtube:'+v.youtube_id,red:'youtube',url:'https://www.youtube.com/watch?v='+encodeURIComponent(v.youtube_id),fecha:fechaCooper(v.publicado_en),miniatura:urlCooper(v.miniatura_url),historial:jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean).slice(-90)});\n  }\n  const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);\n  for (const p of publicadas) if (p.red==='youtube') {\n    const porDia=new Map(ytHist.map(m=>[m.fecha.slice(0,10),m]));\n    for (const m of p.historial) { const otro=porDia.get(m.fecha.slice(0,10)); porDia.set(m.fecha.slice(0,10),{...m,retencion:m.retencion ?? otro?.retencion ?? null}); }\n    p.historial=[...porDia.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90);\n  }\n  // Los eventos de resolución explicitan qué revisión fue superada. Avanzar de etapa no basta.\n  const propios = eventos.filter(e => e.video_id === v.video_id && ['incidencia_cooper','correccion_cooper'].includes(e.tipo)).sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));\n  const incidencias=[];\n  for (const e of propios) {\n    const d=jsonCooper(e.detalle,{}), fecha=fechaCooper(e.createdAt); if (!fecha) continue;\n    if (e.tipo === 'correccion_cooper') {\n      for (const i of incidencias) if (i.estado === 'pendiente' && (d.tipos || []).includes(i.tipo)) { i.estado='corregido'; i.corregidoEn=fecha; i.cambio=textoCooper(d.cambio); }\n    } else if (['ejecucion','critico','verificador','correccion','calidad'].includes(d.tipo)) incidencias.push({id:String(e.id || e.evento),tipo:d.tipo,resumen:textoCooper(d.resumen),fecha,estado:'pendiente',corregidoEn:null,cambio:''});\n  }\n  for (const a of aprobaciones.filter(a=>a.video_id===v.video_id && a.cambios)) {\n    const fecha=fechaCooper(a.decidido_en || a.createdAt); if (!fecha) continue;\n    const siguiente=aprobaciones.filter(b=>b.video_id===v.video_id && b.etapa===a.etapa && ['aprobado','decidida'].includes(b.estado) && fechaCooper(b.decidido_en)>fecha).sort((a,b)=>String(a.decidido_en).localeCompare(String(b.decidido_en)))[0];\n    incidencias.push({id:'aprobacion:'+a.aprobacion_id,tipo:'correccion',resumen:textoCooper(a.cambios),fecha,estado:siguiente?'corregido':'pendiente',corregidoEn:siguiente?fechaCooper(siguiente.decidido_en):null,cambio:siguiente?'La nueva versión recibió aprobación después de los cambios solicitados.':''});\n  }\n  if (v.error && !incidencias.some(i=>i.estado==='pendiente')) incidencias.push({id:'estado:'+v.video_id,tipo:'ejecucion',resumen:'La producción registró un fallo; está pendiente de revisión.',fecha:fechaCooper(v.updatedAt || v.createdAt) || new Date(0).toISOString(),estado:'pendiente',corregidoEn:null,cambio:''});\n  const guardadas = jsonCooper(v.cooper_escenas,[]);\n  const escenas = guardadas.length ? guardadas : planos.filter(p=>p.video_id===v.video_id).map((p,i)=>({id:p.plano_id,orden:Math.max(0,Number(p.orden) || i),imagen:['imagen','ilustracion'].includes(p.tipo)?p.archivo_url || p.url:'',clip:['clip','archivo','avatar'].includes(p.tipo)?p.archivo_url || p.url:'',voz:p.voz_url || ''}));\n  return {montaje:urlCooper(v.render_url),miniatura:urlCooper(v.miniatura_url),escenas:escenas.slice(0,200).map((e,i)=>({id:String(e.id || i),orden:Math.max(0,Math.floor(Number(e.orden)||0)),imagen:urlCooper(e.imagen),clip:urlCooper(e.clip),voz:urlCooper(e.voz)})),publicaciones:publicadas.slice(0,100),incidencias:incidencias.slice(-200)};\n}\nfunction inferirRedCooper(url) { const host = String(url).match(/^https:\\/\\/(?:www\\.)?([^/:?#]+)/i)?.[1]?.toLowerCase(); return ({'youtube.com':'youtube','youtu.be':'youtube','tiktok.com':'tiktok','instagram.com':'instagram','facebook.com':'facebook'})[host] || 'Otra red'; }\nfunction historialRedesCooper(p, respuesta, ahora) {\n  const historial=jsonCooper(p.metricas_historial,{}), fecha=new Date(ahora).toISOString();\n  for (const [red,r] of Object.entries(respuesta.platforms || {})) {\n    if (r.success !== true || r.post_metrics_error || !r.post_metrics) continue;\n    const m=r.post_metrics;\n    // No usar snapshots del perfil como si fueran métricas de un video.\n    const curva=curvaCooper(m.retention);\n    const dato={fecha,vistas:numeroCooper(m.views),meGusta:numeroCooper(m.likes),comentarios:numeroCooper(m.comments),retencion:null,curvaRetencion:curva};\n    const prev=Array.isArray(historial[red])?historial[red]:[];\n    historial[red]=[...prev.filter(x=>x.fecha?.slice(0,10)!==fecha.slice(0,10)),dato].slice(-90);\n  }\n  return JSON.stringify(historial);\n}\nconst CONTRATO = {\"version\": \"cooper-v1\", \"eventos\": {\"nuevo_canal\": \"nuevo_canal\", \"nuevo_video\": \"nuevo_video\", \"corregir\": \"corregir\", \"aprobar_guion\": \"aprobado:guion\", \"aprobar_final\": \"aprobado:final\", \"ajustar_biblia\": \"ajustar_biblia\", \"programar\": \"programar\", \"referencias\": \"referencias\", \"configurar_redes\": \"configurar_redes\", \"metas\": \"metas\", \"adoptar_cuenta\": \"adoptar_cuenta\", \"eliminar\": \"eliminar\"}, \"consultas\": [\"estado\", \"reporte\", \"pendientes\", \"tendencias\", \"gastos\"], \"etapas\": {\"radar\": 0, \"guion\": 1, \"verificacion\": 2, \"aprobacion_guion\": 3, \"storyboard\": 4, \"produccion\": 5, \"sonido\": 6, \"montaje\": 7, \"calidad\": 8, \"aprobacion_final\": 9, \"programado\": 10, \"publicado\": 11}};\nconst auth = $('Autenticar').first().json, b = auth.solicitud, d = b.datos;\nconst fail = (status, error) => [{ json: { status, respuesta: { error }, accion: 'responder' } }];\nconst own = x => !!x.dueno_email && (auth.admin || x.dueno_email === auth.dueno_email);\nconst canales = $('Canales autorizados').all().map(i => i.json).filter(c => c.canal_id && own(c) && !c.eliminado);\nconst videos = $('Videos autorizados').all().map(i => i.json).filter(v => v.video_id && own(v) && !v.eliminado && canales.some(c => c.canal_id === v.canal_id));\nconst filasCooper = nombre => $(nombre).isExecuted ? $(nombre).all().map(i=>i.json) : [];\nconst planosCooper=filasCooper('Piezas de Cooper'), pubsCooper=filasCooper('Publicaciones de Cooper'), eventosCooper=filasCooper('Historial de Cooper'), decisionesCooper=filasCooper('Decisiones de Cooper'), trabajosCooper=filasCooper('Lecciones de Cooper');\nconst safeVideo = v => ({ id: v.video_id, dueno_email: v.dueno_email, canal_id: v.canal_id, titulo: String(v.tema || ''),\n  observabilidad:observabilidadCooper(v,planosCooper,pubsCooper,eventosCooper,decisionesCooper), modo_noticia:v.modo_noticia === true, stage: CONTRATO.etapas[v.etapa] ?? 0, script: String(v.guion_cooper || '').slice(0, 30000), actualizado_en: Number(v.cooper_actualizado_en) || Date.parse(v.updatedAt || v.createdAt) || 0 });\nif (b.evento === 'estado') return [{ json: { accion: 'responder', status: 200, respuesta: {\n  canales: canales.map(c => ({ id: c.canal_id, dueno_email: c.dueno_email, lecciones:leccionesCooper(c,trabajosCooper), nombre: String(c.nombre || ''), nicho: String(c.nicho || ''), modo_noticia:c.modo_noticia === true })), videos: videos.map(safeVideo) } } }];\nif (['reporte', 'pendientes', 'tendencias'].includes(b.evento)) {\n  const summary = b.evento === 'tendencias' ? canales.map(c => {\n    let t = {}; try { t = JSON.parse(c.tendencias || '{}'); } catch { /* no radar */ }\n    let n=null; try {n=JSON.parse(c.noticia_hoy || 'null');} catch {}\n    if (c.modo_noticia) return `${c.nombre}: ${n ? n.titulo + ' (' + n.fecha + ')' : 'Sin noticia verificada hoy.'}`;\n    return `${c.nombre}: ${String(t.resumen || 'Sin tendencias registradas.').slice(0, 1000)}`;\n  }).join('\\n') : videos.filter(v => b.evento !== 'pendientes' || ['aprobacion_guion', 'aprobacion_final'].includes(v.etapa))\n    .map(v => `${v.tema}: ${v.etapa}`).join('\\n');\n  return [{ json: { accion: 'responder', status: 200, respuesta: { resumen: summary || 'Sin resultados en tu espacio.' } } }];\n}\nif (b.evento === 'gastos') return [{ json: { accion: 'gastos' } }];\nconst validId = x => typeof x === 'string' && /^[\\w-]{1,160}$/.test(x);\nif (!validId(d.id)) return fail(400, 'Falta el identificador');\nconst videoEvent = ['corregir', 'aprobar_guion', 'aprobar_final', 'programar', 'referencias'].includes(b.evento);\nconst resource = b.evento === 'eliminar' ? (d.tipo === 'canal' ? canales : d.tipo === 'video' ? videos : []).find(r => (r.video_id || r.canal_id) === d.id)\n  : b.evento.startsWith('aprobar_') ? videos.find(v => v.video_id === d.id)\n  : videoEvent ? videos.find(v => v.video_id === d.recursoId) : canales.find(c => c.canal_id === d.recursoId);\nif (b.evento !== 'nuevo_canal' && !resource) return fail(404, 'Recurso no disponible');\nif (b.evento === 'nuevo_canal' && canales.some(c => c.canal_id === d.id) || b.evento === 'nuevo_video' && videos.some(v => v.video_id === d.id)) return fail(409, 'Identificador existente');\nif (b.evento === 'nuevo_video' && (resource.estado !== 'activo' || !String(resource.biblia_ruta).startsWith('trabajo:'))) return fail(409, 'El canal todavía se está preparando');\nlet presentacion = null;\nif (b.evento === 'nuevo_video') {\n  try { presentacion = validarPresentacion(d.presentacion); }\n  catch (error) { return fail(error.message === 'Recurso de demostración' ? 422 : 400, error.message); }\n  if ((d.avatarId || d.voiceId) && !presentacion) return fail(422, 'Falta resolver la presentación elegida');\n  if ((d.avatarId || '') !== (presentacion?.avatar?.recurso_id || '') && d.avatarId !== undefined ||\n      (d.voiceId || '') !== (presentacion?.voz?.recurso_id || '') && d.voiceId !== undefined) return fail(400, 'Selección incompatible');\n}\nif (videoEvent && resource.estado === 'cancelado') return fail(409, 'Video cancelado por revocación');\nconst e = { evento: b.evento, dueno_email: resource?.dueno_email || auth.dueno_email,\n  canal_id: b.evento === 'nuevo_canal' ? d.id : resource?.canal_id,\n  video_id: b.evento === 'nuevo_video' ? d.id : resource?.video_id || '', cooper: true };\nconst text = typeof d.texto === 'string' ? d.texto.trim() : '';\nconst p = d.parametros && typeof d.parametros === 'object' && !Array.isArray(d.parametros) ? d.parametros : {};\nif (!['aprobar_guion', 'aprobar_final', 'eliminar'].includes(b.evento) && (!text || text.length > 6000)) return fail(400, 'Texto inválido');\nswitch (b.evento) {\n  case 'nuevo_canal': e.criterios = text; e.nombre = String(d.nombre || text).slice(0,120); break;\n  case 'nuevo_video': if (p.modo_noticia !== undefined && typeof p.modo_noticia !== 'boolean') return fail(400, 'Modo noticia inválido'); e.modo_noticia = p.modo_noticia ?? resource.modo_noticia === true; e.presentacion = presentacion; e.cooper_orden_id = b.id_evento; e.tema = text; e.formato = ['short','largo'].includes(p.formato) ? p.formato : resource.formato_defecto; break;\n  case 'corregir': e.instruccion = text; e.etapa = (CONTRATO.etapas[resource.etapa] ?? 0) >= 4 ? 'storyboard' : 'guion'; break;\n  case 'programar': {\n    const time = Date.parse(text);\n    if (!Number.isFinite(time) || time <= Date.now() + 3600000 || time >= Date.now() + 180 * 86400000) return fail(400, 'Fecha fuera del intervalo de una hora a seis meses');\n    e.fecha = text; break;\n  }\n  case 'ajustar_biblia': {\n    if (p.campo && (!/^[a-z_]+(\\.[a-z_0-9]+){0,3}$/.test(p.campo) || p.campo.split('.').some(x => ['__proto__','prototype','constructor','canal_id','nombre'].includes(x)))) return fail(400, 'Campo inválido');\n    if (p.campo === 'modo_noticia' && typeof p.valor !== 'boolean') return fail(400, 'Modo noticia inválido');\n    e.campo = p.campo || 'notas'; e.valor = p.valor === undefined ? text : JSON.stringify(p.valor); break;\n  }\n  case 'configurar_redes': {\n    // Los campos con significado operativo se envían estructurados; no se inventa un perfil.\n    if (typeof p.perfil !== 'string' || !/^[A-Za-z0-9_.-]{2,60}$/.test(p.perfil) || !Array.isArray(p.redes) || !p.redes.length || p.redes.some(r => !['youtube','tiktok','instagram','facebook'].includes(r))) return fail(400, 'Indica perfil y redes en parametros');\n    e.perfil = p.perfil; e.redes = p.redes.join(',');\n    if (p.zona) { try { new Intl.DateTimeFormat('es', { timeZone: p.zona }); } catch { return fail(400, 'Zona inválida'); } e.zona = p.zona; } break;\n  }\n  case 'metas': {\n    const n = p.videos_semana ?? Number((text.match(/\\d+/) || [])[0]);\n    if (!Number.isInteger(n) || n < 0 || n > 21) return fail(400, 'Indica de cero a veintiún videos por semana');\n    e.videos_semana = n;\n    if (p.auto !== undefined) { if (typeof p.auto !== 'boolean') return fail(400, 'Auto inválido'); e.auto = p.auto; }\n    if (p.formato !== undefined) { if (!['short','largo'].includes(p.formato)) return fail(400, 'Formato inválido'); e.formato = p.formato; }\n    // Los usuarios no leen ni cambian presupuestos internos.\n    break;\n  }\n  case 'adoptar_cuenta': e.url = text; e.red = p.red || ''; break;\n  case 'aprobar_guion': case 'aprobar_final': {\n    const stage = b.evento === 'aprobar_guion' ? 'guion' : 'final';\n    if (resource.etapa !== 'aprobacion_' + stage) return fail(409, 'Sin aprobación pendiente');\n    const ap = $('Aprobaciones').all().map(i => i.json).filter(a => a.video_id === resource.video_id && a.etapa === stage && a.estado === 'pendiente')\n      .sort((a,b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0];\n    if (!ap) return fail(409, 'Sin decisión pendiente');\n    let original; try { original = JSON.parse(ap.pedido); } catch { return fail(409, 'Decisión incompleta'); }\n    e.evento = 'aprobado'; e.etapa = stage; e.contexto = original.contexto; e.aprobacion_id = ap.aprobacion_id; break;\n  }\n  case 'eliminar':\n    // No prometer cancelar un proveedor ya en vuelo. La eliminación exige recursos en reposo.\n    if (videos.some(v => (d.tipo === 'canal' ? v.canal_id === d.id : v.video_id === d.id) && !['aprobacion_guion','aprobacion_final','publicado'].includes(v.etapa))) return fail(409, 'Hay producción en curso');\n    e.tipo = d.tipo; e.id = d.id; break;\n}\nreturn [{ json: { accion: 'orden', status: 200, evento: e } }];\n"
       },
       "id": "00648b87-2e5a-50b6-b9f9-15d722fc311b",
       "name": "Resolver",
@@ -544,6 +544,176 @@
         5280,
         0
       ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "GdWqVXaxFOEiZKQ9"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true
+      },
+      "id": "737dccf9-609b-52c2-aaa3-3da002cfa0fc",
+      "name": "Piezas de Cooper",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "OMPWHAVyhbtekML0"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true
+      },
+      "id": "c66c3105-51ce-596e-925b-fc2d890a06a3",
+      "name": "Publicaciones de Cooper",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FE0Mjte3k2UOEbbE"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true
+      },
+      "id": "32eccdf6-210b-56e5-8f7d-beb24c9a4ffc",
+      "name": "Historial de Cooper",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "XrPPyzBaFxJwT5O3"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true
+      },
+      "id": "18fe5322-a228-5a29-a40f-11fd46bd3514",
+      "name": "Decisiones de Cooper",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "BIHxr4bhuShuU9pS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "modo",
+              "condition": "eq",
+              "keyValue": "aprender"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "47e28ffb-67cc-5d00-961b-72841405d849",
+      "name": "Lecciones de Cooper",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ee16cc95-7625-5cce-bab7-989456bdff12",
+              "leftValue": "={{ $('Autenticar').first().json.solicitud.evento === 'estado' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2aadcbcd-fbac-521f-8760-0a1bc68f2540",
+      "name": "¿Consultar resultados de Cooper?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
     }
   ],
   "connections": {
@@ -678,7 +848,7 @@
       "main": [
         [
           {
-            "node": "Resolver",
+            "node": "¿Consultar resultados de Cooper?",
             "type": "main",
             "index": 0
           }
@@ -850,6 +1020,79 @@
         [
           {
             "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lecciones de Cooper": {
+      "main": [
+        [
+          {
+            "node": "Resolver",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Consultar resultados de Cooper?": {
+      "main": [
+        [
+          {
+            "node": "Piezas de Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resolver",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Piezas de Cooper": {
+      "main": [
+        [
+          {
+            "node": "Publicaciones de Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publicaciones de Cooper": {
+      "main": [
+        [
+          {
+            "node": "Historial de Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Historial de Cooper": {
+      "main": [
+        [
+          {
+            "node": "Decisiones de Cooper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decisiones de Cooper": {
+      "main": [
+        [
+          {
+            "node": "Lecciones de Cooper",
             "type": "main",
             "index": 0
           }

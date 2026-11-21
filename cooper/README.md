@@ -72,7 +72,7 @@ El ejecutor E2E genera sus propios secretos aleatorios y una base aislada en `.c
 
 Consultas: estado, reporte, pendientes y tendencias. Solo el proveedor simulado reconoce expresiones fijas; los proveedores reales usan tool use. En modo n8n consulta el radar guardado; en modo simulado ofrece ejemplos. Incluso el chat del administrador opera solo sobre sus recursos. En las pantallas de gestión, el administrador sí puede ver y actuar sobre los recursos del equipo.
 
-`Fabrica` separa producción e interfaz. `FabricaSimulada` persiste operaciones y avanza con los pulsos SSE mientras hay un estudio abierto; no produce archivos audiovisuales reales. El detalle muestra una maqueta animada, no un video renderizado. Las fechas programadas se respetan después de las dos aprobaciones.
+`Fabrica` separa producción e interfaz. `FabricaSimulada` persiste operaciones y avanza con los pulsos SSE mientras hay un estudio abierto; no produce archivos audiovisuales reales. Cuando la fábrica entrega `render_url`, el detalle reproduce ese montaje y muestra las imágenes, clips y voces por escena. La maqueta animada queda reservada para la demostración sin archivo real; el modo n8n muestra la espera del montaje. Las publicaciones confirmadas de YouTube/TikTok tienen un reproductor incrustado oficial. Las fechas programadas se respetan después de las dos aprobaciones.
 
 `FabricaN8n` usa el contrato `cooper-v1`: token de cabecera, tipos y Zod, timeout de 10 s y tres intentos con backoff. Las órdenes se registran en SQLite; n8n reserva y confirma el despacho mediante callback HMAC. La eliminación se propaga como marca lógica en n8n y exige recursos en reposo. Las aprobaciones llevan el contexto guardado de n8n y la etapa se confirma remotamente.
 
@@ -140,7 +140,7 @@ La demostración fuerza fábrica, medios, transcripción, consultas de chat y ga
 
 ## Integración verificada
 
-Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`, `0005_chat_ia`, `0006_whatsapp`, `0007_noticias`. Es compatible con bases del ensayo/vivo hasta `0004_presentacion` y con `0005_chat_ia`. Las bases experimentales de ramas independientes con `0005_whatsapp` o `0005_noticias` se rechazan por diario incompatible: respaldar y preparar una migración de datos específica; nunca renombrar el diario para forzarlas. También admite bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
+Informe y pasos manuales: [cooper-integracion.md](../docs/informes/cooper-integracion.md). La secuencia SQLite integrada es `0000_inicio`, `0001_presentadores`, `0002_puente`, `0003_medios_reales`, `0004_presentacion`, `0005_chat_ia`, `0006_whatsapp`, `0007_noticias`, `0008_observabilidad`. Es compatible con bases del ensayo/vivo hasta `0004_presentacion` y con `0005_chat_ia`. Las bases experimentales de ramas independientes con `0005_whatsapp` o `0005_noticias` se rechazan por diario incompatible: respaldar y preparar una migración de datos específica; nunca renombrar el diario para forzarlas. También admite bases de fase 1 y fase 2; una base experimental de fase 3 con el antiguo `0002_medios_reales` no comparte el diario. No renombres ni borres filas del diario: respáldala y prepara una migración de datos específica, o usa una base nueva si solo contiene ensayos descartables.
 
 `npm run test:e2e` genera 130 PNG en `.cache/capturas-final2/`: 72 de las 18 pantallas/estados anteriores, 32 de los ocho estados nuevos de chat, fotos, noticias y WhatsApp a 1440 y 390 px en dos temas, 24 de la barra en páginas largas/pantallas bajas y 2 de revocación. Los estados nuevos también pasan axe a 360 y 768 px. `manifest.json` y `manifest-nuevas.json` describen las dos matrices. La entrada pública clara aplica tokens para inspección, sin selector público. El emisor de pruebas añade una revisión de voz ficticia para inspeccionar Administración; nunca se inicia desde la aplicación. Lighthouse usa demo, puertos libres y 32 mediciones con `node scripts/auditoria.mjs`.
 
@@ -197,3 +197,18 @@ Migración aditiva `0009_memoria`: añade ámbito a los mensajes y corte de olvi
 Evaluación: `tests/chat-memoria*.test.ts` simula días 1, 2 y 5, más de 30 mensajes, reapertura SQLite, dos marcas, usuarios diferentes, ambigüedad, correcciones, borrado y fallos del sintetizador. Produce `.cache/evaluacion-memoria.json`. Playwright añade el recorrido de recuerdos y Administración, capturas y axe en seis anchuras y ambos temas (`.cache/capturas-memoria/`). Los proveedores de evaluación son ficticios: no miden la precisión de Claude/Codex/OpenAI reales.
 
 Cada misión actualiza [ESTADO](../docs/ESTADO.md) al cerrar y registra su evidencia en `docs/informes/`; regla permanente en [AGENTS.md](../AGENTS.md).
+
+## Publicados, aprendizaje y ensayo masivo
+
+Publicados reúne las publicaciones confirmadas por red, con miniatura, fecha, enlace y evolución diaria de vistas, me gusta, comentarios y retención disponible. Los valores ausentes se muestran como «Sin dato», sin convertirlos en cero. La tabla accesible acompaña al gráfico y TikTok puede aportar una curva de permanencia por segundo. Aprendizaje muestra las lecciones del canal y las incidencias con fecha, estado y cambio que permitió resolverlas. Los costos siguen en Administración.
+
+El puente añade `lecciones` y `observabilidad` al estado `cooper-v1`; los productores anteriores siguen siendo compatibles. La novena migración SQLite guarda las dos proyecciones. El generador offline prepara las nuevas columnas y nodos de n8n para conservar piezas, registrar revisiones y medir diariamente las publicaciones. No se ha desplegado esta ampliación. El [informe de pulido](../docs/informes/cooper-pulido.md) contiene el procedimiento de migración, límites, fuentes y evidencia.
+
+El chat pide una frase breve y cálida, como máximo dos salvo solicitud de detalle. La evaluación de 30 conversaciones comprueba la mediana de palabras y las mismas decisiones de herramientas, con proveedor simulado.
+
+```bash
+# Matriz de seis anchos × dos temas, estrés y API local de Sistema Sentinel
+COOPER_PULIDO_RONDA=ronda-1 npm run test:e2e -- --config playwright.pulido.config.ts
+```
+
+Requiere Sistema Sentinel instalado en `~/Proyectos/Sistema-Sentinel/codigo` y su entorno Python, o las rutas `SENTINEL_CODIGO` y `SENTINEL_PYTHON`; el ensayo multimedia usa FFmpeg. El adaptador conserva el guardián de Sentinel y añade únicamente una sesión ficticia y viewport al navegador. Las pruebas usan loopback, base efímera y servicios simulados; no requieren Google ni credenciales de producción. Los artefactos quedan en `.cache/capturas-pulido/<ronda>/`, junto con métricas, informe de Sentinel y capturas. Las cookies de ensayo se eliminan al terminar. Playwright complementa los módulos de recorridos, caos y estabilidad con axe, la matriz de pantallas, formularios, micrófono ficticio, fotos, ráfagas, red desconectada y recuperación. La reproducción de video y voz se comprueba con archivos sintéticos servidos localmente.
