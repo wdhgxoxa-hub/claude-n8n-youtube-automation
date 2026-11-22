@@ -476,7 +476,11 @@ for (const mode of ["medicion", "grabacion"] as const) {
         const hardwareAccelerated =
           systemInfo.gpu.featureStatus?.gpu_compositing === "enabled" &&
           systemInfo.gpu.devices.some(
-            (device) => device.vendorId > 0 && device.vendorId !== 65535,
+            (device) =>
+              (device.vendorId > 0 && device.vendorId !== 65535) ||
+              /Intel|NVIDIA|AMD|Radeon/i.test(
+                `${device.vendorString} ${device.deviceString}`,
+              ),
           ) &&
           !/SwiftShader|llvmpipe|lavapipe|software/i.test(
             String(systemInfo.gpu.auxAttributes?.glRenderer ?? ""),
