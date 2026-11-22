@@ -62,10 +62,34 @@ type TransitionObservation = {
   names: string[];
   startedAt: number;
   updateDoneAt: number | null;
+  loadingAtSnapshot: boolean | null;
   readyAt: number | null;
   finishedAt: number | null;
   error: string | null;
 };
+
+async function finishViewTransition(page: Page) {
+  await page.evaluate(async () => {
+    const finished = (
+      window as Window & { cooperDesignTransitionFinished?: Promise<void> }
+    ).cooperDesignTransitionFinished;
+    if (!finished) throw new Error("La navegación no inició View Transition.");
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        finished,
+        new Promise<never>((_, reject) => {
+          timeout = setTimeout(
+            () => reject(new Error("View Transition no terminó en 5 segundos.")),
+            5000,
+          );
+        }),
+      ]);
+    } finally {
+      clearTimeout(timeout);
+    }
+  });
+}
 
 async function startMotionSample(page: Page, phase: string) {
   await page.evaluate((name) => {
@@ -468,23 +492,32 @@ for (const mode of ["medicion", "grabacion"] as const) {
         page,
         context,
         browser,
-      }) => {
+      }, testInfo) => {
         await page.setViewportSize({ width, height: 900 });
         await page.emulateMedia({ reducedMotion: "no-preference" });
         const browserClient = await browser.newBrowserCDPSession();
         const systemInfo = await browserClient.send("SystemInfo.getInfo");
+        const hardwareAccelerated =
+          systemInfo.gpu.featureStatus?.gpu_compositing === "enabled" &&
+          systemInfo.gpu.devices.some(
+            (device) =>
+              (device.vendorId > 0 && device.vendorId !== 65535) ||
+              /Intel|NVIDIA|AMD|Radeon/i.test(
+                `${device.vendorString} ${device.deviceString}`,
+              ),
+          ) &&
+          !/SwiftShader|llvmpipe|lavapipe|software/i.test(
+            String(systemInfo.gpu.auxAttributes?.glRenderer ?? ""),
+          );
         const renderer = {
           devices: systemInfo.gpu.devices,
           features: systemInfo.gpu.featureStatus,
           renderer: systemInfo.gpu.auxAttributes?.glRenderer,
           vendor: systemInfo.gpu.auxAttributes?.glVendor,
           driver: systemInfo.gpu.auxAttributes?.displayType,
+          hardwareAccelerated,
           browserVersion: browser.version(),
-          launchOptions: [
-            "--enable-gpu",
-            "--use-gl=angle",
-            "--use-angle=swiftshader",
-          ],
+          launchOptions: testInfo.project.use.launchOptions?.args,
         };
         await browserClient.detach();
         const client = await context.newCDPSession(page);
@@ -532,6 +565,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
                 .filter(Boolean),
               startedAt: performance.now(),
               updateDoneAt: null,
+              loadingAtSnapshot: null,
               readyAt: null,
               finishedAt: null,
               error: null,
@@ -539,10 +573,18 @@ for (const mode of ["medicion", "grabacion"] as const) {
             observations.push(observation);
             const id = observations.length;
             const transition = original(...args);
+            (
+              window as Window & {
+                cooperDesignTransitionFinished?: Promise<void>;
+              }
+            ).cooperDesignTransitionFinished = transition.finished;
             performance.mark(`diseno:view-transition:${id}:inicio`);
             void transition.updateCallbackDone.then(
               () => {
                 observation.updateDoneAt = performance.now();
+                observation.loadingAtSnapshot = Boolean(
+                  document.querySelector("[data-ruta-cargando]"),
+                );
                 performance.mark(`diseno:view-transition:${id}:dom-listo`);
               },
               (error: Error) => {
@@ -651,7 +693,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
           await expect(page).toHaveURL(
             new RegExp(`${path === "/" ? "/$" : path + "$"}`),
           );
-          await page.waitForTimeout(700);
+          await finishViewTransition(page);
           await finishPhase();
         }
         const target = page.locator(".video-mini").first();
@@ -659,7 +701,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
         await beginPhase("video-elemento-compartido");
         await target.click();
         await expect(page).toHaveURL(new RegExp(`${href}$`));
-        await page.waitForTimeout(800);
+        await finishViewTransition(page);
         await finishPhase();
         const transitions = await page.evaluate(
           () =>
@@ -679,6 +721,14 @@ for (const mode of ["medicion", "grabacion"] as const) {
           `${directory}/transiciones-${mode === "grabacion" ? "grabacion-" : ""}${width}.json`,
           JSON.stringify(transitions, null, 2) + "\n",
         );
+        for (const [index, transition] of transitions.entries()) {
+          expect
+            .soft(
+              transition.loadingAtSnapshot,
+              `Transición ${index + 1}: la captura contiene la página definitiva`,
+            )
+            .toBe(false);
+        }
         if (mode === "grabacion") {
           await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
           expect(errors).toEqual([]);
@@ -798,8 +848,9 @@ for (const mode of ["medicion", "grabacion"] as const) {
               interactions,
               trace: `traza-movimiento-${width}.json`,
               errors,
-              limitation:
-                "Laboratorio Chromium local con composición habilitada y renderer SwiftShader por software; no acredita GPU física ni teléfono real.",
+              limitation: hardwareAccelerated
+                ? `Laboratorio Chromium en PC con GPU física detectada y CPU${width < 768 ? "4×" : "1×"}; no acredita un teléfono real.`
+                : `Laboratorio Chromium con compositor por software y CPU${width < 768 ? "4×" : "1×"}; no acredita GPU física ni teléfono real.`,
             },
             null,
             2,
