@@ -82,7 +82,9 @@ for nombre in config.get('modulos',['recorridos','caos','estabilidad']):
         def con_medidas(guardian, observacion, pagina, carpeta_ev, indice):
             medidas_caos.append({'url': observacion.url, 'acciones': observacion.acciones,
                 'fps': observacion.fps, 'congelada': observacion.congelada,
-                'estrellada': observacion.estrellada})
+                'estrellada': observacion.estrellada, 'rondas': list(observacion.rondas),
+                'errores_pagina': list(observacion.errores_pagina),
+                'errores_consola': list(observacion.errores_consola)})
             return evaluar(guardian, observacion, pagina, carpeta_ev, indice)
         modulo._hallazgos = con_medidas
     nuevos=modulo.ejecutar(ctx)

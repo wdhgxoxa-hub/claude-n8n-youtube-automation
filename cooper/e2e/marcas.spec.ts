@@ -335,6 +335,10 @@ for (const width of [1440, 390])
         pantallas,
         excluir_selectores: [
           'a[href^="/"]:not([href^="/marcas"]):not([href^="/api/marcas/medio/"])',
+          // Elegir otra marca o sección reescribe la URL: el caos saldría de la
+          // pantalla medida y perdería su cuenta. Ese cambio lo cubren recorridos.
+          ".marca-selector",
+          ".marca-tabs button",
         ],
         // El contrato común excluye las escrituras también en la ronda general;
         // Marcas y Montajes las ejercitan con acciones dirigidas autorizadas.
