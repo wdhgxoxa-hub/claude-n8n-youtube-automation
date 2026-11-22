@@ -29,6 +29,21 @@ async function post(page: Page, path: string, data: unknown) {
   expect(r.ok(), `${path}: ${await r.text()}`).toBe(true);
   return r.json();
 }
+async function comprobarAccesoEnViewport(page: Page, width: number) {
+  if (width > 390) return;
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    window.scrollTo(0, 0);
+  });
+  const action = await page
+    .getByRole("button", { name: "Continuar con Google" })
+    .boundingBox();
+  expect(action).not.toBeNull();
+  expect(action!.y).toBeGreaterThanOrEqual(0);
+  expect(action!.y + action!.height).toBeLessThanOrEqual(
+    page.viewportSize()!.height,
+  );
+}
 async function prepararMarcas(page: Page) {
   let data: EstadoMarcas = await (await page.request.get("/api/marcas")).json();
   if (!data.marcas.some((m) => m.nombre === "Casa Abierta · Ejemplo")) {
@@ -299,8 +314,16 @@ for (const width of widths)
         "incidencias",
         "avisos",
       ].map((name) => ({ name, path: `/${name}` })),
-      { name: "entrada", path: "/entrar" },
-      { name: "entrada-error", path: "/entrar?error=AccessDenied" },
+      {
+        name: "entrada",
+        path: "/entrar",
+        prepare: () => comprobarAccesoEnViewport(page, width),
+      },
+      {
+        name: "entrada-error",
+        path: "/entrar?error=AccessDenied",
+        prepare: () => comprobarAccesoEnViewport(page, width),
+      },
       { name: "enlace-invalido", path: "/revisar/whatsapp/enlace-invalido" },
     ];
     for (const screen of screens) {
