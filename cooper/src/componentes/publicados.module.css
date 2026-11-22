@@ -38,8 +38,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
   gap: var(--espacio-24);
-  padding-block: var(--espacio-24);
+  padding-block: var(--espacio-16);
   border-block: var(--borde-ancho) solid var(--linea);
+  --cifra-heroe: var(--texto-48);
 }
 .aclaracion {
   color: var(--texto-2);
@@ -88,19 +89,26 @@
   padding-inline: var(--espacio-12);
 }
 .pared {
-  --altura-fila: calc(var(--espacio-96) * 3);
+  display: grid;
+  gap: var(--espacio-32) var(--gutter);
+}
+/* Antes de medir el ancho las piezas existen pero no se pintan. */
+.pared[data-medida="pendiente"] {
+  visibility: hidden;
+}
+.fila {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--espacio-24) var(--espacio-16);
+  flex-wrap: nowrap;
   align-items: flex-start;
+  gap: var(--gutter);
+  min-width: 0;
 }
 .pagina .publicacion {
   container-type: inline-size;
   overflow: visible;
-  flex: var(--proporcion) 1 calc(var(--proporcion) * var(--altura-fila));
+  flex: none;
   display: block;
   min-width: 0;
-  max-width: 100%;
   padding: 0;
   margin: 0;
   background: var(--transparente);
@@ -110,7 +118,6 @@
 }
 .marco {
   position: relative;
-  aspect-ratio: var(--proporcion);
   border-radius: var(--radio-tarjeta);
   background: var(--sup-2);
   transition: transform var(--duracion-estado) var(--curva-salida);
@@ -135,6 +142,11 @@
   height: 100%;
   aspect-ratio: auto;
 }
+/* La caja de la fila puede diferir un 1 % de la proporción real: se recorta, no se deforma. */
+.contenedorMedio :global(.medio-poster),
+.contenedorMedio :global(.medio-preview) {
+  object-fit: cover !important;
+}
 .red,
 .cifrasSobreMedio {
   position: absolute;
@@ -151,7 +163,6 @@
   padding: var(--espacio-4) var(--espacio-12);
   border-radius: var(--radio-pildora);
   font-size: var(--texto-12);
-  text-transform: capitalize;
   pointer-events: none;
 }
 .cifrasSobreMedio {
@@ -195,18 +206,34 @@
   display: grid;
   gap: var(--espacio-4);
   padding-top: var(--espacio-12);
+  min-width: 0;
 }
 .piePublicacion h2 {
   margin: 0;
-  font-size: var(--texto-17);
+  font-size: var(--texto-15);
   font-weight: 500;
-  line-height: var(--interlinea-texto);
+  line-height: 1.3;
+}
+.piePublicacion h2 a {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
 }
 .piePublicacion p,
 .lecturas {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   color: var(--texto-2);
   font-size: var(--texto-12);
   line-height: var(--interlinea-texto);
+  overflow-wrap: anywhere;
+}
+.piePublicacion .canal {
+  -webkit-line-clamp: 1;
 }
 .dialogo {
   position: fixed;
@@ -272,16 +299,7 @@
   padding-block: var(--espacio-24);
   border-top: var(--borde-ancho) solid var(--linea);
 }
-@media (min-width: 768px) {
-  .pared::after {
-    content: "";
-    flex: 1000 1 0;
-  }
-}
 @media (min-width: 768px) and (max-width: 1199px) {
-  .heroes {
-    --cifra-heroe: var(--texto-48);
-  }
 }
 @media (max-width: 767px) {
   .heroes {
@@ -305,9 +323,6 @@
     flex-wrap: wrap;
     gap: var(--espacio-4);
   }
-  .pared {
-    --altura-fila: calc(var(--espacio-96) * 2 + var(--espacio-64));
-  }
   .hoja {
     padding: var(--espacio-24) var(--espacio-16);
   }
@@ -325,18 +340,34 @@
   }
 }
 
-@container (max-width: 240px) {
+/* Cifras de vidrio: la píldora se adapta al ancho de la pieza. */
+@container (min-width: 300px) {
+  .piePublicacion h2 {
+    font-size: var(--texto-17);
+  }
+}
+@container (max-width: 239px) {
+  .flecha {
+    display: none;
+  }
   .cifrasSobreMedio {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--espacio-8);
-    border-radius: var(--radio-tarjeta);
+    justify-content: flex-start;
+    gap: var(--espacio-12);
   }
-  .cifrasSobreMedio > span:nth-child(3) {
-    grid-row: 2;
+}
+@container (max-width: 159px) {
+  .cifrasSobreMedio .megusta {
+    display: none;
   }
-  .cifrasSobreMedio > svg {
-    grid-column: 2;
-    grid-row: 1 / 3;
+  .red {
+    max-width: calc(100% - var(--espacio-16));
+    top: var(--espacio-8);
+    left: var(--espacio-8);
+    padding-inline: var(--espacio-8);
+  }
+  .cifrasSobreMedio {
+    inset: auto var(--espacio-8) var(--espacio-8);
+    width: calc(100% - var(--espacio-16));
+    padding-inline: var(--espacio-12);
   }
 }

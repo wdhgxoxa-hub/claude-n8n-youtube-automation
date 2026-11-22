@@ -310,10 +310,8 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
       .getByRole("main")
       .getByRole("status")
       .filter({ hasText: /^\d+ publicaci/ }),
-  ).toContainText(
-    `${publicaciones.length} mediciones disponibles`,
-  );
-  await page.getByRole("button", { name: "instagram", exact: true }).click();
+  ).toContainText(`${publicaciones.length} mediciones disponibles`);
+  await page.getByRole("button", { name: "Instagram", exact: true }).click();
   const instagram = publicaciones.filter((p) => p.redes.includes("instagram"));
   await expect(page.locator(".publication:visible")).toHaveCount(
     agruparPublicaciones(instagram, resultados.ambitos).length,
@@ -664,7 +662,7 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
       .locator(".lesson:visible")
       .filter({ hasText: "Abrir con la cifra peruana" });
     await expect(
-      lesson.getByText("Posible causa:", { exact: false }),
+      lesson.getByText("Posible causa", { exact: false }),
     ).toBeVisible();
     await expect(
       lesson.getByText("Cambio aplicado", { exact: false }),

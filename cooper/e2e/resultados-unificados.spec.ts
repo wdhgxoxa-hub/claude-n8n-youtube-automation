@@ -91,7 +91,7 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await expect(page.getByText("125", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Cerrar cifras" }).click();
   await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
-  await page.getByRole("button", { name: "instagram", exact: true }).click();
+  await page.getByRole("button", { name: "Instagram", exact: true }).click();
   await expect(page.locator(".publication:visible")).toHaveCount(3);
   // Las capturas duplicadas del fixture comparten fecha: cualquiera de sus
   // destinos propios es válido, pero nunca uno de la persona ajena.
@@ -138,7 +138,7 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
     ),
   ).toBeVisible();
   await page.getByRole("button", { name: "Filtros", exact: true }).click();
-  await page.getByRole("button", { name: "youtube", exact: true }).click();
+  await page.getByRole("button", { name: "YouTube", exact: true }).click();
   await expect(page.locator(".lesson:visible")).toHaveCount(1);
   await expect(
     page

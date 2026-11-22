@@ -1,4 +1,5 @@
 "use client";
+import { nombreRed } from "@/lib/redes";
 import { useState } from "react";
 import Link from "next/link";
 import { Cifra } from "./primitivas";
@@ -305,7 +306,7 @@ export function EvidenciaLeccion({ leccion: l }: { leccion: Leccion }) {
                   "Video de origen"}
               </Link>
               {" · "}
-              {o.red}
+              {nombreRed(o.red)}
               {" · "}
               {o.ventana}
               {" · "}
