@@ -83,6 +83,12 @@
 .canal-ultimo > .medio {
   margin-bottom: var(--espacio-8);
 }
+.canal-ultimo:not(:has(.medio)) {
+  padding: var(--espacio-24);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--sup-2);
+}
 .canal-ultimo h3 {
   font-family: var(--fuente-display);
   font-size: var(--texto-20);
@@ -193,6 +199,11 @@
   margin: var(--espacio-48) 0 var(--espacio-24);
   gap: var(--espacio-16);
   align-items: baseline;
+}
+.avatares-diseno .library-section-title h2,
+.avatares-diseno .library-section-title span {
+  max-width: none;
+  text-align: left;
 }
 .avatares-diseno .library-section-title span {
   font-size: var(--texto-13);
@@ -651,7 +662,15 @@
 }
 @media (max-width: 767px) {
   .resto-page .page-heading {
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: var(--espacio-32);
+  }
+  .resto-page .page-heading > div {
+    width: 100%;
+  }
+  .resto-page .page-heading > .button {
+    min-height: var(--objetivo-tactil);
   }
   .canal-editorial,
   .resto-hoja {
@@ -681,7 +700,35 @@
     gap: var(--espacio-32);
   }
   .perfil-diseno .profile-portrait {
-    padding-block: 0 var(--espacio-24);
+    display: grid;
+    grid-template-columns: var(--espacio-64) minmax(0, 1fr);
+    gap: var(--espacio-16);
+    padding-block: 0 var(--espacio-8);
+  }
+  .perfil-diseno .profile-portrait > .resto-eyebrow,
+  .perfil-diseno .profile-portrait > .upload-button,
+  .perfil-diseno .profile-portrait > small {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin: 0;
+  }
+  .perfil-diseno .profile-portrait > img,
+  .perfil-diseno .portrait-initial {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    width: var(--espacio-64);
+    height: var(--espacio-64);
+    margin: 0;
+  }
+  .perfil-diseno .profile-portrait > h2 {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+  }
+  .perfil-diseno .profile-portrait > p {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: start;
   }
   .perfil-diseno .profile-form,
   .whatsapp-diseno.whatsapp-preferences {

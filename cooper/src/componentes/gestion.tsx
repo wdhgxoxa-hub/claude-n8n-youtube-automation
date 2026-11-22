@@ -165,12 +165,14 @@ export function Canales() {
                       href={`/videos/${ultimo.id}`}
                       className="canal-ultimo"
                     >
-                      <Medio
-                        poster={ultimo.medios?.poster?.url}
-                        preview={ultimo.medios?.preview?.url}
-                        videoId={ultimo.id}
-                        alt={ultimo.title}
-                      />
+                      {ultimo.medios?.poster && (
+                        <Medio
+                          poster={ultimo.medios.poster.url}
+                          preview={ultimo.medios.preview?.url}
+                          videoId={ultimo.id}
+                          alt={ultimo.title}
+                        />
+                      )}
                       <span className="resto-eyebrow">En este canal</span>
                       <h3>{ultimo.title}</h3>
                       <span className="canal-etapa">
