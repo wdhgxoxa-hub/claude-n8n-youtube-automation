@@ -1775,7 +1775,7 @@ function Pieza({
         )}
         <div className="actions">
           {["borrador", "pendiente", "programada"].includes(p.estado) && (
-            <button className="button" disabled={busy} onClick={editar}>
+            <button className="button secondary" disabled={busy} onClick={editar}>
               Editar pieza
             </button>
           )}
