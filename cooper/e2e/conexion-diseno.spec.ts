@@ -195,6 +195,31 @@ for (const ancho of anchos) {
     expect(caja).not.toBeNull();
     expect(caja!.x).toBeGreaterThanOrEqual(0);
     expect(caja!.x + caja!.width).toBeLessThanOrEqual(ancho);
+    const textosTapados = await page.evaluate(() => {
+      const aviso = document.querySelector('[data-testid="estado-conexion"]')!;
+      const cajaAviso = aviso.getBoundingClientRect();
+      return Array.from(
+        document.querySelectorAll(
+          ".topbar > span, .motion-toggle, .demo-label, h1",
+        ),
+      ).flatMap((elemento) => {
+        if (!elemento.getClientRects().length) return [];
+        const rango = document.createRange();
+        rango.selectNodeContents(elemento);
+        const solapa = Array.from(rango.getClientRects()).some(
+          (texto) =>
+            texto.left < cajaAviso.right &&
+            texto.right > cajaAviso.left &&
+            texto.top < cajaAviso.bottom &&
+            texto.bottom > cajaAviso.top,
+        );
+        return solapa ? [elemento.textContent?.trim()] : [];
+      });
+    });
+    expect(
+      textosTapados,
+      "La píldora debe dejar legible el encabezado",
+    ).toEqual([]);
     await page.evaluate(() => {
       window.__conexionEnsayo.modo = "sana";
     });
