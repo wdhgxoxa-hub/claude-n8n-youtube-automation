@@ -1,0 +1,147 @@
+/* Cooper conserva el vidrio y las medidas del armazón aprobado. */
+.cooper-panel .chat-pane {
+  background: var(--transparente);
+}
+.cooper-panel .chat-heading {
+  display: none;
+}
+.cooper-panel .chat-pane[data-vacio="true"] {
+  justify-content: flex-end;
+}
+.cooper-panel .chat-pane[data-vacio="true"] .conversation {
+  flex: 0 1 auto;
+  min-height: 0;
+  padding: var(--espacio-16);
+}
+.cooper-panel .chat-welcome {
+  align-items: flex-start;
+  text-align: left;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+.cooper-panel .chat-welcome h2 {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-28);
+  line-height: var(--interlinea-display);
+  letter-spacing: var(--tracking-display);
+}
+.cooper-panel .chat-welcome p {
+  margin: var(--espacio-12) 0 0;
+  max-width: none;
+  font-size: var(--texto-15);
+  line-height: var(--interlinea-texto);
+}
+.cooper-panel .cooper-suggestions {
+  display: flex;
+  margin: 0;
+  padding: var(--espacio-8) var(--espacio-16);
+  scroll-padding-inline: var(--espacio-16);
+  gap: var(--espacio-8);
+  mask-image: linear-gradient(
+    to right,
+    var(--transparente),
+    var(--lienzo) var(--espacio-16),
+    var(--lienzo) calc(100% - var(--espacio-16)),
+    var(--transparente)
+  );
+}
+.cooper-panel .cooper-suggestions[data-inicio="false"] {
+  mask-image: linear-gradient(
+    to right,
+    var(--lienzo) calc(100% - var(--espacio-16)),
+    var(--transparente)
+  );
+}
+.cooper-panel .cooper-suggestions[data-fin="false"] {
+  mask-image: linear-gradient(
+    to right,
+    var(--transparente),
+    var(--lienzo) var(--espacio-16)
+  );
+}
+.cooper-panel .cooper-suggestions[data-inicio="false"][data-fin="false"] {
+  mask-image: none;
+}
+.cooper-panel .cooper-suggestions .chip {
+  min-height: var(--objetivo-tactil);
+  font-size: var(--texto-13);
+  scroll-margin-inline: var(--espacio-16);
+}
+.cooper-panel .composer-area {
+  margin-top: 0;
+  border: 0;
+  padding-top: var(--espacio-8);
+}
+.cooper-panel .conversation {
+  padding: var(--espacio-16);
+  scrollbar-color: var(--linea-fuerte) var(--transparente);
+}
+.cooper-panel .message {
+  border-radius: var(--radio-tarjeta);
+  max-width: 100%;
+  margin-bottom: var(--espacio-24);
+}
+.cooper-panel .message.assistant {
+  background: var(--transparente);
+  padding-inline: 0;
+}
+.cooper-panel .message.user {
+  margin-left: var(--espacio-24);
+  background: var(--sup-3);
+}
+.cooper-panel .message p {
+  font-size: var(--texto-15);
+  line-height: var(--interlinea-texto);
+}
+.cooper-panel .message-author {
+  font-size: var(--texto-12);
+}
+.cooper-panel .composer textarea {
+  font-size: var(--texto-15);
+}
+.cooper-panel .send {
+  border-radius: var(--radio-pildora);
+}
+.cooper-panel .attachment-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  flex-wrap: wrap;
+  max-width: 100%;
+  padding: var(--espacio-8);
+  background: var(--sup-2);
+  border: var(--borde-ancho) solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+.cooper-panel .attachment-preview > a {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.cooper-panel .attachment-preview > button {
+  margin-left: auto;
+  min-width: var(--objetivo-tactil);
+  min-height: var(--objetivo-tactil);
+  border-radius: var(--radio-pildora);
+}
+.cooper-panel .attachment-preview img {
+  border-radius: var(--radio-control);
+}
+.cooper-panel .chat-new-messages {
+  align-self: center;
+  margin: var(--espacio-8);
+}
+@media (max-width: 1023px) {
+  .cooper-panel:not(.is-full) .chat-welcome h2 {
+    font-size: var(--texto-20);
+  }
+  .cooper-panel:not(.is-full) .chat-welcome p {
+    font-size: var(--texto-13);
+  }
+  .cooper-panel:not(.is-full) .chat-welcome br {
+    display: none;
+  }
+  .cooper-panel:not(.is-full) .chat-welcome h2 > span + span::before {
+    content: " ";
+  }
+}
