@@ -382,23 +382,31 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
     .getByRole("button", { name: "Videos", exact: true })
     .click();
   await page.getByRole("button", { name: "Pendientes", exact: true }).click();
-  await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
-    pendientes.length,
-  );
-  await expect(page.locator(".incident-state.corregido:visible")).toHaveCount(
-    0,
-  );
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Pendiente", { exact: true }),
+  ).toHaveCount(pendientes.length);
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Corregido", { exact: true }),
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "Corregidos", exact: true }).click();
-  await expect(page.locator(".incident-state.corregido:visible")).toHaveCount(
-    corregidos.length,
-  );
-  await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
-    0,
-  );
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Corregido", { exact: true }),
+  ).toHaveCount(corregidos.length);
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Pendiente", { exact: true }),
+  ).toHaveCount(0);
   for (const cambio of new Set(corregidos.map((i) => i.cambio)))
     await expect(
       page
-        .locator(".learning-section:visible")
+        .getByRole("region", { name: "Fallos y correcciones de videos" })
         .getByText(cambio, { exact: true })
         .first(),
     ).toBeVisible();
@@ -635,8 +643,11 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
       lesson.getByText("Posible causa:", { exact: false }),
     ).toBeVisible();
     await expect(
-      lesson.getByText("Cambio propuesto:", { exact: false }),
+      lesson.getByText("Cambio aplicado", { exact: false }),
     ).toBeVisible();
+    await lesson
+      .getByText("Ver las mediciones y el contexto", { exact: true })
+      .click();
     await expect(lesson.getByLabel("Evidencia de la lección")).toContainText(
       "Retención: 40 % en el segundo 3 (captura 2 h después del hito)",
     );
