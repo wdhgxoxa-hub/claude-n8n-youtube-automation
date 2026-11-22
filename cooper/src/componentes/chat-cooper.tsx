@@ -3,7 +3,7 @@ import { AnimatePresence, m as motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useId, useState, useEffect, type FormEvent } from "react";
-import { ArrowUp, Paperclip, X, AudioLines, ArrowUpRight } from "lucide-react";
+import { ArrowUp, Paperclip, X, AudioLines } from "lucide-react";
 import { partituraTexto, type EstadoCooper } from "@/marca/CooperCara";
 import { useEspacio, api, Notice } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
@@ -264,7 +264,7 @@ export function ChatCooper({
               className="chip"
               key={sugerencia}
               onClick={() => {
-                setText(sugerencia);
+                setText(({ "Crear mi primer canal": "Crea un canal: Ciencia cotidiana", "Crear otro canal": "Crea un canal: Ciencia cotidiana", "Dar forma a una idea": "Quiero un video: Por qué el cielo es azul", "Revisar mis pendientes": "¿Qué tengo pendiente?" } as Record<string, string>)[sugerencia] ?? sugerencia);
                 textarea.current?.focus();
               }}
             >
@@ -273,7 +273,8 @@ export function ChatCooper({
           ))}
         </div>
       )}
-      <section className="chat-pane" aria-label="Chat con Cooper">
+      <section className="chat-pane" aria-label="Chat con Cooper" data-estado={state} aria-busy={busy}>
+        <span className="sr-only" role="status">{state === "escuchando" ? "Te escucho" : busy ? "Cooper está preparando tu respuesta" : "Cooper está disponible"}</span>
         <div className="chat-heading">
           <div className="cooper-badge">
             <CooperPresencia />
@@ -311,42 +312,6 @@ export function ChatCooper({
                 Cuéntame qué quieres crear. Te acompaño desde el primer guion
                 hasta la publicación.
               </p>
-              <div className="suggestions">
-                {[
-                  "Crea un canal: Ciencia cotidiana",
-                  "Quiero un video: Por qué el cielo es azul",
-                  "¿Qué tengo pendiente?",
-                ].map((s, i) => (
-                  <motion.button
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      duration: reduced ? 0 : 0.22,
-                      delay: reduced ? 0 : i * 0.07,
-                    }}
-                    whileHover={reduced ? {} : { x: 3 }}
-                    whileTap={reduced ? {} : { scale: 0.98 }}
-                    key={s}
-                    onClick={() => {
-                      setText(s);
-                      textarea.current?.focus();
-                    }}
-                  >
-                    <span>
-                      {
-                        [
-                          data.channels.length
-                            ? "Crear otro canal"
-                            : "Crear mi primer canal",
-                          "Dar forma a una idea",
-                          "Revisar mis pendientes",
-                        ][i]
-                      }
-                    </span>
-                    <ArrowUpRight size={16} />
-                  </motion.button>
-                ))}
-              </div>
             </div>
           ) : (
             data.messages.map((m) => (

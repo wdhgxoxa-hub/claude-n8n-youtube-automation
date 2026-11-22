@@ -823,3 +823,8 @@ main#contenido .route-choreography > .page {
 .cooper-panel .composer-caption {
   margin-top: var(--espacio-4);
 }
+
+.entrada-estudio { min-width: 0; animation: route-in var(--duracion-entrada) var(--curva-salida) both; animation-delay: calc(var(--orden, 0) * var(--desfase-entrada)); }
+@keyframes ruta-fundido { from { opacity: 0; } }
+.route-choreography[data-navigation] { animation-name: ruta-fundido; }
+@media (prefers-reduced-motion: reduce) { .entrada-estudio { animation: none; } }

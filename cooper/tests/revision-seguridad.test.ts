@@ -257,3 +257,21 @@ it("protege perfil, evidencia y administración frente a referencias ajenas", as
       .status,
   ).toBe(403);
 });
+
+it("SSE abre el transporte mientras una conciliación lenta sigue pendiente", async () => {
+  let finish = () => {};
+  const sync = new Promise<void>((resolve) => { finish = resolve; });
+  vi.spyOn(FabricaSimulada.prototype, "sincronizar").mockImplementation(() => sync);
+  const abort = new AbortController();
+  const response = await stream(new Request("http://localhost/api/eventos", { signal: abort.signal }));
+  const reader = response.body!.getReader();
+  try {
+    const first = await reader.read();
+    expect(new TextDecoder().decode(first.value)).toBe(": conectado\n\n");
+    expect(response.headers.get("cache-control")).toContain("no-transform");
+  } finally {
+    abort.abort();
+    finish();
+    await reader.cancel();
+  }
+});

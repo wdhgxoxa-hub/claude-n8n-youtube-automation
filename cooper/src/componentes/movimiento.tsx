@@ -9,7 +9,6 @@ import {
 import {
   MotionConfigContext,
   m as motion,
-  useMotionValue,
 } from "framer-motion";
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function observarPreferencia(notify: () => void) {
@@ -102,8 +101,6 @@ export function TarjetaEdicion({
   index: number;
 }) {
   const reduced = useMovimientoReducido();
-  const rotateX = useMotionValue(0),
-    rotateY = useMotionValue(0);
   return (
     <motion.button
       className="queue-item"
@@ -111,28 +108,8 @@ export function TarjetaEdicion({
       onClick={onClick}
       initial={false}
       animate={{ opacity: 1 }}
-      style={
-        {
-          rotateX: reduced ? 0 : rotateX,
-          rotateY: reduced ? 0 : rotateY,
-          transformPerspective: 700,
-          "--card": index,
-        } as CSSProperties
-      }
-      onPointerMove={(event) => {
-        if (reduced || event.pointerType !== "mouse") return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        rotateX.set((0.5 - (event.clientY - bounds.top) / bounds.height) * 5);
-        rotateY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 5);
-      }}
-      onPointerLeave={() => {
-        rotateX.set(0);
-        rotateY.set(0);
-      }}
-      onBlur={() => {
-        rotateX.set(0);
-        rotateY.set(0);
-      }}
+      style={{ "--orden": Math.min(index, 7) } as CSSProperties}
+      whileHover={reduced ? {} : { y: -2 }}
       whileTap={reduced ? {} : { scale: 0.98 }}
     >
       {children}
@@ -174,4 +151,9 @@ export function usePausaMovimiento() {
     }
   };
   return [isPaused, setPaused] as const;
+}
+
+/** Entrada escalonada, una vez por montaje de la pantalla; tiempos en tokens.css. */
+export function Entrada({children, orden = 0}: {children: ReactNode; orden?: number}) {
+  return <div className="entrada-estudio" style={{"--orden": Math.min(Math.max(orden,0),7)} as CSSProperties}>{children}</div>;
 }

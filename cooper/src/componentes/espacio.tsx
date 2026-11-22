@@ -348,7 +348,7 @@ export function Espacio({
                   </nav>
                   <button
                     className="rail-more"
-                    onClick={() => setMenu(true)}
+                    onClick={(event) => { menuButton.current = event.currentTarget; setMenu(true); }}
                     aria-label="Más destinos"
                     aria-expanded={menu}
                   >
@@ -417,11 +417,10 @@ export function Espacio({
                   ))}
                 </nav>
                 <button
-                  ref={menuButton}
-                  className="mobile-more icon-button"
+                    className="mobile-more icon-button"
                   aria-label="Más destinos"
                   aria-expanded={menu}
-                  onClick={() => setMenu(true)}
+                  onClick={(event) => { menuButton.current = event.currentTarget; setMenu(true); }}
                 >
                   <Ellipsis size={20} />
                 </button>

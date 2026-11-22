@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Clapperboard } from "lucide-react";
 import { useEspacio, Empty } from "./espacio";
 import { FabricaVista, VideoMini } from "./fabrica-vista";
+import { Entrada } from "./movimiento";
 import { Cifra } from "./primitivas";
 import { esperaAprobacion } from "@/lib/etapas";
 export function Inicio() {
@@ -39,8 +40,8 @@ export function Inicio() {
                 <span>{pendientes.length} por revisar</span>
               </div>
               <div className="home-pending-grid">
-                {pendientes.slice(0, 4).map((v) => (
-                  <VideoMini key={v.id} video={v} />
+                {pendientes.slice(0, 4).map((v, i) => (
+                  <Entrada key={v.id} orden={i}><VideoMini video={v} /></Entrada>
                 ))}
               </div>
             </section>

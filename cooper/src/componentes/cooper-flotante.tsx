@@ -23,7 +23,7 @@ export function CooperFlotante({
   const reduced = useMovimientoReducido();
   const [completo, setCompleto] = useState(false);
   const opener = useRef<HTMLButtonElement>(null);
-  const panel = useRef<HTMLElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
   const video = data.videos.find(
     (v) => path === `/videos/${v.id}` && v.ownerId === data.user.id,
@@ -55,7 +55,7 @@ export function CooperFlotante({
           "Quiero una nueva idea",
           "Revisar mis pendientes",
         ]
-      : ["¿Qué tengo pendiente?", "Quiero crear un video", "¿Cómo vamos?"];
+      : [data.channels.some((c) => c.ownerId === data.user.id) ? "Crear otro canal" : "Crear mi primer canal", "Dar forma a una idea", "Revisar mis pendientes"];
   const pendiente = data.videos.some(
     (v) => v.ownerId === data.user.id && [3, 9].includes(v.stage),
   );
@@ -64,7 +64,7 @@ export function CooperFlotante({
     const sheet = panel.current;
     const trigger = opener.current;
     const media = window.matchMedia("(max-width: 1023px)");
-    sheet?.querySelector<HTMLButtonElement>("button")?.focus();
+    sheet?.querySelector<HTMLButtonElement>('button[aria-label="Cerrar Cooper"]')?.focus();
     const key = (event: KeyboardEvent) => {
       if (event.defaultPrevented) return;
       if (event.key === "Escape") cambiar(false);
@@ -111,7 +111,7 @@ export function CooperFlotante({
       </motion.button>
       <AnimatePresence initial={false}>
         {abierto && (
-          <motion.aside
+          <motion.div
             key="cooper"
             ref={panel}
             id="cooper-panel"
@@ -170,7 +170,7 @@ export function CooperFlotante({
               sugerencias={sugerencias}
             contextoMarca={marca?.nombre}
             />
-          </motion.aside>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
