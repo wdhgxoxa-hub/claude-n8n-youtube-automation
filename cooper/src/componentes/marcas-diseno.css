@@ -99,12 +99,7 @@
   letter-spacing: var(--tracking-display);
   overflow-wrap: anywhere;
 }
-.marca-tarjeta-tono {
-  color: var(--texto-2);
-  font-size: var(--texto-15);
-  line-height: var(--interlinea-texto);
-  max-width: 48ch;
-}
+
 .marca-redes {
   display: flex;
   flex-wrap: wrap;
@@ -251,6 +246,10 @@
   background: var(--sup-1);
 }
 .marcas-page .marca-vacia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
   max-width: calc(var(--espacio-96) * 7);
   margin: var(--espacio-32) auto var(--espacio-64);
   padding: var(--espacio-64) var(--espacio-32);
@@ -637,4 +636,43 @@
 html[data-motion-paused="true"] .marcas-page .marca-selector {
   transition-duration: var(--duracion-presion);
   transform: none;
+}
+
+/* La información de cada sección respira sin convertirse en otra tarjeta. */
+.marcas-page .marca-archivo-titulo {
+  grid-column: 1 / -1;
+  font-family: var(--fuente-display);
+  font-size: var(--texto-28);
+  font-weight: 500;
+  margin-bottom: var(--espacio-8);
+}
+.marcas-page .marca-resultados > h3,
+.marcas-page .competencia-panel > h2 {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-28);
+  font-weight: 500;
+  line-height: var(--interlinea-display);
+  margin-bottom: var(--espacio-24);
+}
+.marcas-page .marca-resultados > p,
+.marcas-page .competencia-panel > p {
+  color: var(--texto-2);
+  max-width: 62ch;
+  margin-block: var(--espacio-16);
+}
+.marcas-page .competencia-panel {
+  margin-top: var(--espacio-32);
+}
+.marcas-page .competencia-panel > ul {
+  margin-block: var(--espacio-24);
+  padding-left: var(--espacio-24);
+}
+.marcas-page .competencia-panel > h3 {
+  margin-top: var(--espacio-32);
+}
+.marcas-page .marca-estudio > * + * {
+  margin-top: var(--espacio-16);
+}
+.marcas-page .marca-citas {
+  margin-top: var(--espacio-48);
 }

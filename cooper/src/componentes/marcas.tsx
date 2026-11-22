@@ -146,6 +146,65 @@ export function Marcas({
       setBusy(false);
     }
   }
+  const archivoMarcas = (
+    <section className="marcas-archivo" aria-label="Tus marcas">
+      {marcaId && <h2 className="marca-archivo-titulo">Tus marcas</h2>}
+      {data.marcas.map((m) => {
+        const proxima = [...m.piezas]
+          .filter((p) =>
+            ["programada", "pendiente", "borrador"].includes(p.estado),
+          )
+          .sort((a, b) => a.programada - b.programada)[0];
+        const redesMarca = [
+          ...new Set(
+            m.cuentas.filter((c) => c.estado !== "revocada").map((c) => c.red),
+          ),
+        ];
+        return (
+          <button
+            key={m.id}
+            className={`marca-selector ${m.id === seleccion ? "selected" : ""}`}
+            style={{ "--tinte-marca": m.guia.colores[0] } as CSSProperties}
+            aria-pressed={m.id === seleccion}
+            onClick={() => {
+              setSeleccion(m.id);
+              setEditar(undefined);
+              setConexionAbierta(false);
+              cambiarSeccion(
+                seccion === "tienda" && !m.guia.tienda ? "calendario" : seccion,
+                m.id,
+              );
+            }}
+          >
+            <span className="marca-tarjeta-cabecera">
+              <AvatarMarca marca={m} />
+              <span className="marca-rubro">{nombreRubro[m.rubro]}</span>
+              <ArrowUpRight size={20} aria-hidden="true" />
+            </span>
+            <strong className="marca-tarjeta-nombre">{m.nombre}</strong>
+            <span className="marca-redes" aria-label="Redes de la marca">
+              {redesMarca.length ? (
+                redesMarca.map((red) => <span key={red}>{red}</span>)
+              ) : (
+                <span>Tu voz, por compartir</span>
+              )}
+            </span>
+            <span className="marca-proxima">
+              <span>Próxima publicación</span>
+              <strong>
+                {proxima?.datos.titulo ?? "Un espacio para tu próxima historia"}
+              </strong>
+              <small>
+                {proxima
+                  ? `${new Intl.DateTimeFormat("es-PE", { timeZone: m.zona, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(proxima.programada)} · ${proxima.estado === "programada" ? "Programada" : "Por revisar"}`
+                  : "Todavía sin fecha"}
+              </small>
+            </span>
+          </button>
+        );
+      })}
+    </section>
+  );
   return (
     <div className="page marcas-page">
       <Heading
@@ -248,75 +307,7 @@ export function Marcas({
           </Vacio>
         ) : (
           <div className="marcas-layout">
-            <section className="marcas-archivo" aria-label="Tus marcas">
-              {data.marcas.map((m) => {
-                const proxima = [...m.piezas]
-                  .filter((p) =>
-                    ["programada", "pendiente", "borrador"].includes(p.estado),
-                  )
-                  .sort((a, b) => a.programada - b.programada)[0];
-                const redesMarca = [
-                  ...new Set(
-                    m.cuentas
-                      .filter((c) => c.estado !== "revocada")
-                      .map((c) => c.red),
-                  ),
-                ];
-                return (
-                  <button
-                    key={m.id}
-                    className={`marca-selector ${m.id === seleccion ? "selected" : ""}`}
-                    style={
-                      { "--tinte-marca": m.guia.colores[0] } as CSSProperties
-                    }
-                    aria-pressed={m.id === seleccion}
-                    onClick={() => {
-                      setSeleccion(m.id);
-                      setEditar(undefined);
-                      setConexionAbierta(false);
-                      cambiarSeccion(
-                        seccion === "tienda" && !m.guia.tienda
-                          ? "calendario"
-                          : seccion,
-                        m.id,
-                      );
-                    }}
-                  >
-                    <span className="marca-tarjeta-cabecera">
-                      <AvatarMarca marca={m} />
-                      <span className="marca-rubro">
-                        {nombreRubro[m.rubro]}
-                      </span>
-                      <ArrowUpRight size={20} aria-hidden="true" />
-                    </span>
-                    <strong className="marca-tarjeta-nombre">{m.nombre}</strong>
-                    <span className="marca-tarjeta-tono">{m.guia.tono}</span>
-                    <span
-                      className="marca-redes"
-                      aria-label="Redes de la marca"
-                    >
-                      {redesMarca.length ? (
-                        redesMarca.map((red) => <span key={red}>{red}</span>)
-                      ) : (
-                        <span>Tu voz, por compartir</span>
-                      )}
-                    </span>
-                    <span className="marca-proxima">
-                      <span>Próxima publicación</span>
-                      <strong>
-                        {proxima?.datos.titulo ??
-                          "Un espacio para tu próxima historia"}
-                      </strong>
-                      <small>
-                        {proxima
-                          ? `${new Intl.DateTimeFormat("es-PE", { timeZone: m.zona, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(proxima.programada)} · ${proxima.estado === "programada" ? "Programada" : "Por revisar"}`
-                          : "Todavía sin fecha"}
-                      </small>
-                    </span>
-                  </button>
-                );
-              })}
-            </section>
+            {!marcaId && archivoMarcas}
             {marca && (
               <div
                 className="marca-mesa"
@@ -723,9 +714,11 @@ export function Marcas({
                   </>
                 )}
                 {seccion === "publicados" && (
-                  <section>
+                  <section className="marca-resultados">
                     <h3>Publicados</h3>
-                    <Link href="/publicados">Ver videos publicados</Link>
+                    <Link className="text-link" href="/publicados">
+                      Ver videos publicados
+                    </Link>
                     <p>
                       Las métricas ausentes se muestran como «Sin datos».{" "}
                       {data.simulada
@@ -754,9 +747,11 @@ export function Marcas({
                   </section>
                 )}
                 {seccion === "aprendizaje" && (
-                  <section>
+                  <section className="marca-resultados">
                     <h3>Aprendizaje de la marca</h3>
-                    <Link href="/aprendizaje">Ver aprendizaje de videos</Link>
+                    <Link className="text-link" href="/aprendizaje">
+                      Ver aprendizaje de videos
+                    </Link>
                     <p>
                       Conserva los resultados y las interrupciones para ajustar
                       el próximo calendario.
@@ -862,6 +857,7 @@ export function Marcas({
                 )}
               </div>
             )}
+            {marcaId && archivoMarcas}
           </div>
         )}
       </>
