@@ -97,12 +97,15 @@ function VideoOrigen({
         href={`/videos/${encodeURIComponent(origen.videoId)}`}
         className={styles.enlaceMedio}
       >
-        <span className="sr-only">Ver video: </span>
+        {/* El nombre lleva el título en texto: el póster tipográfico es
+            aria-hidden y la imagen real queda decorativa (sin repetirlo). */}
+        <span className="sr-only">Ver video: {titulo}</span>
         <div data-video-transition={nombreMedio(origen.videoId)}>
           <Medio
             poster={medio?.poster?.url}
             preview={medio?.preview?.url}
-            alt={titulo}
+            alt=""
+            titulo={titulo}
             videoId={origen.videoId}
             tinte={medio?.tinte ?? tinteEstable(ambitoId)}
             mediosIniciales={medio}
