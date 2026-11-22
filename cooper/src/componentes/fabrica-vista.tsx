@@ -159,7 +159,7 @@ export function FabricaVista({
   panelId: string;
   tabId: string;
 }) {
-  const { data, connected } = useEspacio();
+  const { data } = useEspacio();
   const [selected, setSelected] = useState("");
   const reduced = useMovimientoReducido();
   const active =
@@ -184,10 +184,6 @@ export function FabricaVista({
           <h2>La fábrica</h2>
           <p>Cada historia, un paso más cerca.</p>
         </div>
-        <span className="live-pill">
-          <i />
-          {connected ? "En vivo" : "Conectando"}
-        </span>
       </div>
       {pending.length > 0 && (
         <Link href={`/videos/${pending[0].id}`} className="approval-alert">

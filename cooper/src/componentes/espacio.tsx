@@ -10,6 +10,8 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
+import { conectarEventos, type EstadoConexion } from "@/lib/conexion-eventos";
+import "./estado-conexion.css";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
@@ -119,8 +121,10 @@ export function Espacio({
   logout: () => Promise<void>;
 }) {
   const [data, setData] = useState(initial),
-    [connected, setConnected] = useState(false),
+    [conexion, setConexion] = useState<EstadoConexion>("iniciando"),
+    [avisoConexion, setAvisoConexion] = useState(false),
     [menu, setMenu] = useState(false);
+  const connected = conexion === "activa";
   const path = usePathname();
   const ruta = useRef<HTMLDivElement>(null);
   const ultimaRuta = useRef(path);
@@ -172,62 +176,17 @@ export function Espacio({
   const refresh = useCallback(async () => {
     receive(await api<Estado>("estado", undefined, "GET"));
   }, [receive]);
-  useEffect(() => {
-    let source: EventSource | undefined;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let stopped = false;
-    let attempts = 0;
-    const controller = new AbortController();
-    const connect = () => {
-      if (stopped || !navigator.onLine) return;
-      if (timer) clearTimeout(timer);
-      source?.close();
-      source = new EventSource("/api/eventos");
-      const retry = () => {
-        if (stopped) return;
-        source?.close();
-        setConnected(false);
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(connect, Math.min(1000 * 2 ** attempts++, 30000));
-        void fetch("/api/estado", { signal: controller.signal })
-          .then((response) => {
-            if (!stopped && [401, 403].includes(response.status)) {
-              stopped = true;
-              clearTimeout(timer);
-              window.location.assign("/entrar");
-            }
-          })
-          .catch(() => {});
-      };
-      source.addEventListener("estado", (event) => {
-        try {
-          receive(JSON.parse(event.data));
-          setConnected(true);
-          attempts = 0;
-        } catch {
-          retry();
-        }
-      });
-      source.addEventListener("fallo", () => setConnected(false));
-      source.onerror = retry;
-    };
-    const offline = () => {
-      source?.close();
-      clearTimeout(timer);
-      setConnected(false);
-    };
-    connect();
-    window.addEventListener("offline", offline);
-    window.addEventListener("online", connect);
-    return () => {
-      stopped = true;
-      source?.close();
-      clearTimeout(timer);
-      controller.abort();
-      window.removeEventListener("online", connect);
-      window.removeEventListener("offline", offline);
-    };
-  }, [receive]);
+  useEffect(
+    () =>
+      conectarEventos<Estado>({
+        recibir: receive,
+        cambiar: (estado, aviso) => {
+          setConexion(estado);
+          setAvisoConexion(aviso);
+        },
+      }),
+    [receive],
+  );
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: light)");
     const apply = () =>
@@ -301,6 +260,7 @@ export function Espacio({
           <LayoutGroup id="estudio">
             <div
               className="workspace"
+              data-conexion={conexion}
               data-motion={isPaused || hidden || reduced ? "paused" : "playing"}
             >
               <a className="skip" href="#contenido" inert={menu}>
@@ -473,14 +433,21 @@ export function Espacio({
                   </button>
                   <span>Estudio Cooper</span>
                   <div className="topbar-right">
-                    <span
-                      className={`connection ${connected ? "online" : ""}`}
+                    <div
+                      className="connection-notice"
                       role="status"
                       aria-atomic="true"
                     >
-                      <i aria-hidden="true" />
-                      {connected ? "En vivo" : "Reconectando"}
-                    </span>
+                      {avisoConexion && (
+                        <span
+                          className="connection-pill"
+                          data-testid="estado-conexion"
+                        >
+                          <i aria-hidden="true" />
+                          Sin conexión, reintentando
+                        </span>
+                      )}
+                    </div>
                     <button
                       className="motion-toggle"
                       aria-pressed={isPaused}
@@ -488,9 +455,9 @@ export function Espacio({
                     >
                       {isPaused ? "Activar movimiento" : "Pausar movimiento"}
                     </button>
-                    <span className="demo-label">
-                      {data.demo ? "Demostración" : "Modo de prueba"}
-                    </span>
+                    {data.demo && (
+                      <span className="demo-label">Demostración</span>
+                    )}
                   </div>
                 </header>
                 <main ref={content} id="contenido" tabIndex={-1}>

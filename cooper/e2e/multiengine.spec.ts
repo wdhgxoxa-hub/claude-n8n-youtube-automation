@@ -34,7 +34,7 @@ async function entrar(page: Page, theme: string) {
   ).toBe(true);
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
 }
 
 // Recorre Tab de verdad: no sustituir por focus() ni click().
@@ -175,9 +175,9 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
   await expect(etapaVisible).toBeVisible();
   await expect(etapaVisible).toContainText("Aprobación de guion");
   await context.setOffline(true);
-  await expect(page.locator(".connection")).not.toHaveText("En vivo");
+  await expect(page.locator(".workspace")).not.toHaveAttribute("data-conexion", "activa");
   await context.setOffline(false);
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   const approve = page.getByRole("button", { name: "Aprobar", exact: true });
   for (const [stage, next] of [
     [3, "Aprobación final"],

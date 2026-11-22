@@ -5,7 +5,7 @@ const dir = ".cache/capturas-diseno";
 test.use({ timezoneId: "America/Lima" });
 async function ready(page: Page, path = "/") {
   await page.goto(path);
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   await expect(page.locator(".demo-label")).toHaveText("Demostración");
 }
 async function overflow(page: Page) {

@@ -1,0 +1,62 @@
+/* Sala de proyección: la capa flotante usa exclusivamente estos tokens.
+   Los nombres compartidos admiten la integración del sistema de diseno-base. */
+.connection-notice {
+  --conexion-superficie: rgba(17, 17, 20, 0.72);
+  --conexion-texto: #f5f5f7;
+  --conexion-linea: rgba(255, 255, 255, 0.08);
+  --conexion-aviso: #ffc53d;
+  --conexion-radio: 999px;
+  --conexion-espacio: 8px;
+  --conexion-margen: 16px;
+  --conexion-tamano: 13px;
+  --conexion-punto: 4px;
+  --conexion-blur: 24px;
+  --conexion-capa: 50;
+  --conexion-duracion: 240ms;
+  --conexion-reducida: 120ms;
+  --conexion-curva: cubic-bezier(0.16, 1, 0.3, 1);
+  --conexion-sombra:
+    0 24px 64px rgba(0, 0, 0, 0.6), inset 0 1px rgba(255, 255, 255, 0.06);
+  position: fixed;
+  inset-block-start: var(--conexion-margen);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  z-index: var(--conexion-capa);
+  pointer-events: none;
+}
+.connection-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--conexion-espacio);
+  padding: var(--conexion-espacio) var(--conexion-margen);
+  border: 1px solid var(--linea, var(--conexion-linea));
+  border-radius: var(--conexion-radio);
+  background: var(--conexion-superficie);
+  color: var(--texto, var(--conexion-texto));
+  backdrop-filter: blur(var(--conexion-blur)) saturate(160%);
+  box-shadow: var(--conexion-sombra);
+  font-size: var(--conexion-tamano);
+  line-height: 1.5;
+  white-space: nowrap;
+  animation: conexion-aparece var(--conexion-duracion) var(--conexion-curva)
+    both;
+}
+.connection-pill i {
+  width: var(--conexion-punto);
+  height: var(--conexion-punto);
+  border-radius: var(--conexion-radio);
+  background: var(--aviso, var(--conexion-aviso));
+}
+@keyframes conexion-aparece {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .connection-pill {
+    animation-duration: var(--conexion-reducida);
+  }
+}

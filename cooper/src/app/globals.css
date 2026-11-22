@@ -510,26 +510,6 @@ details[open] summary {
   align-items: center;
   gap: 20px;
 }
-.connection {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  width: 110px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.connection i,
-.live-pill i {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--muted);
-}
-.connection.online i,
-.live-pill i {
-  background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 8%, transparent);
-}
 .demo-label {
   font-size: 10px;
   border: 1px solid var(--line);
@@ -835,18 +815,7 @@ main:focus-visible {
   color: var(--muted);
   margin-top: 4px;
 }
-.live-pill {
-  font-size: 10px;
-  display: flex;
-  width: 96px;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--line);
-  border-radius: 30px;
-  padding: 5px 10px;
-  white-space: nowrap;
-}
+
 .approval-alert {
   display: flex;
   align-items: center;
@@ -2155,10 +2124,6 @@ main:focus-visible {
   }
   .demo-label {
     font-size: 9px;
-  }
-  .connection {
-    font-size: 10px;
-    width: 90px;
   }
   .menu-button {
     display: inline-flex;

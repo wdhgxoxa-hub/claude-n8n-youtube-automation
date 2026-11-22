@@ -18,7 +18,7 @@ async function login(page: Page) {
   );
   expect(response.ok()).toBe(true);
   await page.goto("/");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
 }
 async function settledFace(page: Page) {
   return page

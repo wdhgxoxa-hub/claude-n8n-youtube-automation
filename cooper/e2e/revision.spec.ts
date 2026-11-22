@@ -27,7 +27,7 @@ test("R08 recupera SSE después de una respuesta HTTP temporal", async ({
     else await route.continue();
   });
   await page.goto("/");
-  await expect(page.locator(".connection")).toHaveText("En vivo", {
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa", {
     timeout: 8000,
   });
   expect(attempts).toBeGreaterThan(1);
@@ -225,7 +225,7 @@ test("entrada, no encontrado y formularios accesibles en ambos temas y cuatro an
             document.documentElement.dataset.theme = theme;
           }, theme);
         } else {
-          await expect(page.locator(".connection")).toHaveText("En vivo");
+          await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
           if (screen === "pedir-video")
             await page
               .getByRole("button", { name: "Pedir video", exact: true })
