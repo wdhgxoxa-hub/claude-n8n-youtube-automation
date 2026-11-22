@@ -125,7 +125,9 @@ async function capture(
   const visibleDialogs: string[] = [];
   for (const selector of [".cooper-panel", ".more-sheet"])
     if (await page.locator(selector).isVisible()) visibleDialogs.push(selector);
-  const captureMode = visibleDialogs.length ? "viewport" : "full-page";
+  const captureMode: Evidence["captureMode"] = visibleDialogs.length
+    ? "viewport"
+    : "full-page";
   await page.evaluate(async (preserveScroll) => {
     await document.fonts.ready;
     if (!preserveScroll) window.scrollTo(0, 0);
@@ -702,7 +704,10 @@ test("Marcas: tres pasos, cinco secciones y edición en seis anchuras", async ({
     await page.goto("/marcas");
     await readyReduced(page);
     await page
-      .getByRole("button", { name: "Añadir marca o cuenta", exact: true })
+      .getByRole("button", {
+        name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+        exact: true,
+      })
       .first()
       .click();
     await capture(page, "marca-identidad", width, messages);
