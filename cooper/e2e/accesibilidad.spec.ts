@@ -685,7 +685,7 @@ for (const tema of temas) {
             page.getByRole("heading", { name: "Una idea. Todo por crear." }),
           ).toBeVisible();
         else if (["/canales", "/videos", "/publicados"].includes(ruta))
-          await expect(page.locator(".empty").first()).toBeVisible();
+          await expect(page.locator(".empty, .vacio").first()).toBeVisible();
         else if (ruta === "/aprendizaje")
           await expect(
             page.getByText("No hay aprendizajes para estos filtros."),

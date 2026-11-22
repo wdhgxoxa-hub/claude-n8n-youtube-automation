@@ -1,14 +1,23 @@
 "use client";
 import { useEffect, useId, useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
-import { Plus, ArrowUpRight, Trash2, Radio, Check } from "lucide-react";
+import { Plus, ArrowUpRight, Trash2, Check, X } from "lucide-react";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
 import { MediosVideo } from "./medios-video";
 import { Indicador } from "./movimiento";
 import { Recorrido, VideoMini } from "./fabrica-vista";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Orden } from "@/servicios/fabrica";
+import { Cifra, HojaVidrio, Medio, Vacio } from "./primitivas";
+import "./resto-diseno.css";
 export function Canales() {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [creating, setCreating] = useState(false);
+  useEffect(() => {
+    const sheet = dialog.current;
+    if (creating) sheet?.showModal();
+    else sheet?.close();
+  }, [creating]);
   const pending = useRef(false);
   const { data, refresh } = useEspacio();
   const [error, setError] = useState(""),
@@ -36,6 +45,7 @@ export function Canales() {
           : "Canal creado. Ya puedes pedir tu primer video.",
       );
       form.reset();
+      setCreating(false);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -83,25 +93,35 @@ export function Canales() {
     }
   }
   return (
-    <div className="page">
+    <div className="page resto-page canales-diseno">
       <Heading
         title="Tus canales"
         description="Cada canal tiene una voz. Dale dirección."
+        action={
+          data.channels.length > 0 ? (
+            <button
+              className="button"
+              onClick={() => setCreating(true)}
+              aria-haspopup="dialog"
+            >
+              <Plus size={17} />
+              Nuevo canal
+            </button>
+          ) : undefined
+        }
       />
-      <Notice error={error} message={message} />
-      <div className="management-layout">
-        <section className="channel-list">
-          {data.channels.length ? (
-            data.channels.map((c, index) => (
-              <article className="channel-card" key={c.id}>
-                <div className="channel-heading">
-                  <span className="channel-symbol">
-                    <Radio size={24} />
+      {!creating && <Notice error={error} message={message} />}
+      <section className="canales-coleccion" aria-label="Canales del estudio">
+        {data.channels.length ? (
+          data.channels.map((c, index) => {
+            const videos = data.videos.filter((v) => v.channelId === c.id);
+            const ultimo = videos.find((v) => v.medios?.poster) ?? videos[0];
+            return (
+              <article className="canal-editorial" key={c.id}>
+                <div className="canal-cabecera">
+                  <span className="resto-eyebrow">
+                    Canal {String(index + 1).padStart(2, "0")}
                   </span>
-                  <div>
-                    <small>{c.networks || "Identidad del canal"}</small>
-                    <h2>{c.name}</h2>
-                  </div>
                   <button
                     className="icon-button"
                     aria-label={`Borrar canal ${c.name}`}
@@ -110,67 +130,138 @@ export function Canales() {
                     <Trash2 size={17} />
                   </button>
                 </div>
-                <p>{c.niche}</p>
-                <Link className="button secondary" href={`/canales/${c.id}`}>
-                  Abrir biblia y operación
-                </Link>
-                <button
-                  className="button secondary"
-                  aria-pressed={c.newsMode}
-                  aria-label={`Modo noticia: ${c.newsMode ? "activado" : "desactivado"} de ${c.name}`}
-                  disabled={busy}
-                  onClick={() => void cambiarNoticia(c.id, !c.newsMode)}
-                >
-                  Modo noticia: {c.newsMode ? "activado" : "desactivado"}
-                </button>
-                <p className="muted">
-                  Noticias del día con fuentes verificadas e imágenes didácticas
-                  propias.
-                </p>
-                <div className="channel-meta">
-                  <span>
-                    {data.videos.filter((v) => v.channelId === c.id).length}{" "}
-                    {data.videos.filter((v) => v.channelId === c.id).length ===
-                    1
-                      ? "video"
-                      : "videos"}
-                  </span>
-                  <Link href="/videos" className="text-link">
-                    Ver producción <ArrowUpRight size={14} />
-                  </Link>
+                <div className="canal-cuerpo">
+                  <div className="canal-identidad">
+                    <p className="canal-redes">
+                      {c.networks || "Tus próximas historias"}
+                    </p>
+                    <h2>
+                      <Link href={`/canales/${c.id}`}>
+                        {c.name}
+                        <ArrowUpRight size={24} aria-hidden="true" />
+                      </Link>
+                    </h2>
+                    <p>{c.niche}</p>
+                    <div className="canal-cifras">
+                      <Cifra
+                        etiqueta={videos.length === 1 ? "Video" : "Videos"}
+                        valor={videos.length}
+                      />
+                      <Cifra
+                        etiqueta="Publicados"
+                        valor={videos.filter((v) => v.stage === 11).length}
+                      />
+                    </div>
+                    <Link
+                      className="button secondary"
+                      href={`/canales/${c.id}`}
+                    >
+                      Abrir biblia y operación
+                      <ArrowUpRight size={16} />
+                    </Link>
+                  </div>
+                  {ultimo ? (
+                    <Link
+                      href={`/videos/${ultimo.id}`}
+                      className="canal-ultimo"
+                    >
+                      <Medio
+                        poster={ultimo.medios?.poster?.url}
+                        preview={ultimo.medios?.preview?.url}
+                        videoId={ultimo.id}
+                        alt={ultimo.title}
+                      />
+                      <span className="resto-eyebrow">En este canal</span>
+                      <h3>{ultimo.title}</h3>
+                      <span className="canal-etapa">
+                        {ETAPAS[ultimo.stage]}
+                      </span>
+                    </Link>
+                  ) : (
+                    <div className="canal-sin-video">
+                      <span className="resto-eyebrow">Una voz propia</span>
+                      <p>El primer video empieza con una idea.</p>
+                      <Link className="text-link" href="/videos">
+                        Pedir un video <ArrowUpRight size={16} />
+                      </Link>
+                    </div>
+                  )}
                 </div>
-                <nav
-                  aria-label={`Operación de ${c.name}, canal ${index + 1}`}
-                  className="button-row"
-                >
-                  <Link href={`/redes?canal=${c.id}`}>Redes</Link>
-                  <Link href={`/rutina?canal=${c.id}`}>Metas</Link>
-                  <Link href={`/cuentas?canal=${c.id}`}>Adoptar cuenta</Link>
-                </nav>
+                <div className="canal-pie">
+                  <nav
+                    aria-label={`Operación de ${c.name}, canal ${index + 1}`}
+                    className="canal-enlaces"
+                  >
+                    <Link href={`/redes?canal=${c.id}`}>Redes</Link>
+                    <Link href={`/rutina?canal=${c.id}`}>Metas</Link>
+                    <Link href={`/cuentas?canal=${c.id}`}>Adoptar cuenta</Link>
+                  </nav>
+                  <details className="canal-noticias">
+                    <summary>
+                      Noticias {c.newsMode ? "activadas" : "en pausa"}
+                    </summary>
+                    <p>
+                      Noticias del día con fuentes verificadas e imágenes
+                      propias.
+                    </p>
+                    <button
+                      className="button secondary"
+                      aria-pressed={c.newsMode}
+                      aria-label={`Modo noticia: ${c.newsMode ? "activado" : "desactivado"} de ${c.name}`}
+                      disabled={busy}
+                      onClick={() => void cambiarNoticia(c.id, !c.newsMode)}
+                    >
+                      Modo noticia: {c.newsMode ? "activado" : "desactivado"}
+                    </button>
+                  </details>
+                </div>
               </article>
-            ))
-          ) : (
-            <Empty
-              title="Un espacio para tu primera historia"
-              description="Elige un tema que te interese y a quién quieres contárselo. Cooper usará esa dirección en cada guion."
-            >
-              <a href="#nuevo-canal" className="button secondary">
+            );
+          })
+        ) : (
+          <Vacio
+            titulo="Un espacio para tu primera historia"
+            descripcion="Elige un tema que te interese y a quién quieres contárselo. Cooper usará esa dirección en cada guion."
+            accion={
+              <button
+                className="button"
+                onClick={() => setCreating(true)}
+                aria-haspopup="dialog"
+              >
                 Dar nombre a mi canal
-              </a>
-            </Empty>
-          )}
-        </section>
-        <aside className="form-panel" id="nuevo-canal">
-          <span className="panel-icon">
-            <Plus size={23} />
-          </span>
-          <h2>Un nuevo canal</h2>
+                <ArrowUpRight size={17} />
+              </button>
+            }
+          />
+        )}
+      </section>
+      <dialog
+        ref={dialog}
+        className="resto-dialog"
+        aria-labelledby="nuevo-canal-titulo"
+        onCancel={() => setCreating(false)}
+        onClose={() => setCreating(false)}
+      >
+        <HojaVidrio className="resto-hoja">
+          <div className="resto-hoja-cabecera">
+            <span className="resto-eyebrow">Un nuevo comienzo</span>
+            <button
+              className="icon-button"
+              aria-label="Cerrar nuevo canal"
+              onClick={() => setCreating(false)}
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <h2 id="nuevo-canal-titulo">Un nuevo canal</h2>
           <p>El punto de partida para tus próximos videos.</p>
-          <form className="stack" onSubmit={execute}>
+          {creating && <Notice error={error} />}
+          <form className="stack" onSubmit={execute} aria-busy={busy}>
             <label>
               Nombre del canal
               <input
                 name="nombre"
+                autoFocus
                 placeholder="Ciencia cotidiana"
                 required
                 maxLength={120}
@@ -190,11 +281,12 @@ export function Canales() {
               Crear canal
             </button>
           </form>
-        </aside>
-      </div>
+        </HojaVidrio>
+      </dialog>
     </div>
   );
 }
+
 export function Videos() {
   const formId = useId();
   const pending = useRef(false);

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { api, useEspacio, Notice } from "./espacio";
+import "./resto-diseno.css";
 export function PreferenciasWhatsApp() {
   const id = useId();
   const { data, refresh } = useEspacio();
@@ -70,10 +71,11 @@ export function PreferenciasWhatsApp() {
   }
   return (
     <section
-      className="stack whatsapp-preferences"
+      className="stack whatsapp-preferences whatsapp-diseno"
       aria-labelledby={`${id}-titulo`}
     >
       <div>
+        <span className="resto-eyebrow">Cerca, estés donde estés</span>
         <h2 id={`${id}-titulo`}>Tus avisos por WhatsApp</h2>
         <p className="helper">
           Recibe las revisiones de tus videos y abre Cooper para verlas. Puedes
@@ -87,7 +89,8 @@ export function PreferenciasWhatsApp() {
           solo para esta demostración.
         </p>
       )}
-      <p>
+      <p className="whatsapp-numero" data-verificado={wa.verificado}>
+        <span className="whatsapp-punto" aria-hidden="true" />
         {wa.verificado
           ? `Número verificado: ${data.user.whatsapp}`
           : data.user.whatsapp

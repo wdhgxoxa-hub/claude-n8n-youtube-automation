@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useId, useState, type FormEvent } from "react";
-import { Camera, Check } from "lucide-react";
+import { Camera, Check, Pause, Play } from "lucide-react";
 import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir } from "./grabador";
 import { usePausaMovimiento } from "./movimiento";
 import { PreferenciasWhatsApp } from "./whatsapp";
+import "./resto-diseno.css";
 export function Perfil() {
   const id = useId();
   const [pausado, pausar] = usePausaMovimiento();
@@ -31,13 +32,14 @@ export function Perfil() {
     }
   }
   return (
-    <div className="page">
+    <div className="page resto-page perfil-diseno">
       <Heading
         title="A tu manera"
         description="Tu espacio también debe sentirse tuyo."
       />
       <div className="profile-layout">
         <aside className="profile-portrait">
+          <span className="resto-eyebrow">Tu espacio personal</span>
           {image ? (
             <Image
               unoptimized
@@ -112,8 +114,24 @@ export function Perfil() {
             <h2>Tu espacio</h2>
             <input type="hidden" name="theme" value="oscuro" />
             <input type="hidden" name="home" value="fabrica" />
-            <button type="button" className="button secondary" aria-pressed={pausado} onClick={() => pausar(!pausado)}>{pausado ? "Activar movimiento" : "Pausar movimiento"}</button>
-            <p className="helper">También respetamos la preferencia de movimiento de tu dispositivo.</p>
+            <div className="perfil-movimiento">
+              <div>
+                <h3>El ritmo lo eliges tú</h3>
+                <p className="helper">
+                  También respetamos la preferencia de movimiento de tu
+                  dispositivo.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="button secondary"
+                aria-pressed={pausado}
+                onClick={() => pausar(!pausado)}
+              >
+                {pausado ? <Play size={16} /> : <Pause size={16} />}
+                {pausado ? "Activar movimiento" : "Pausar movimiento"}
+              </button>
+            </div>
             <button className="button" disabled={busy}>
               <Check size={16} />
               Guardar perfil
