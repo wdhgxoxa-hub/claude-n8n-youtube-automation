@@ -688,9 +688,10 @@ for (const tema of temas) {
           await expect(
             page.getByRole("heading", { name: "Una idea. Todo por crear." }),
           ).toBeVisible();
-        else if (["/canales", "/videos"].includes(ruta))
+        else if (ruta === "/videos")
           await expect(page.locator(".empty").first()).toBeVisible();
-        else if (ruta === "/publicados")
+        // Canales y Publicados usan la primitiva Vacio de la sala de proyección.
+        else if (ruta === "/canales" || ruta === "/publicados")
           await expect(page.locator(".vacio").first()).toBeVisible();
         else if (ruta === "/aprendizaje")
           await expect(
