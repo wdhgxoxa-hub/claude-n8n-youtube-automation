@@ -302,8 +302,9 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
       .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
       .press("Enter");
     await expect(page.locator(".conversation")).toContainText("pendiente");
-    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
-      "De tu lado, de principio a fin.",
+    await expect(page.locator(".chat-pane")).toHaveAttribute(
+      "data-estado",
+      "reposo",
     );
     await ready(page, "/perfil");
     await page.getByRole("button", { name: "Pausar movimiento" }).click();

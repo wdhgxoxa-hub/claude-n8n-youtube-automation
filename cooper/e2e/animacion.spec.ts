@@ -152,19 +152,22 @@ test.describe("evidencia de movimiento", () => {
       .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
       .fill("¿Qué tengo pendiente?");
     await page.getByLabel("Enviar mensaje").click();
-    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
-      "Preparando tu solicitud…",
+    await expect(page.locator(".chat-pane")).toHaveAttribute(
+      "data-estado",
+      "pensando",
     );
     await expect(page.locator(".thinking")).toBeVisible();
     await expect(page.locator(".conversation")).toContainText("pendiente");
     await expect(page.locator(".response-word").first()).toBeVisible();
     await captura(page, "respuesta-1440");
-    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
-      "De tu lado, de principio a fin.",
+    await expect(page.locator(".chat-pane")).toHaveAttribute(
+      "data-estado",
+      "reposo",
     );
     await page.getByLabel("Grabar audio").click();
-    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
-      "Te escucho…",
+    await expect(page.locator(".chat-pane")).toHaveAttribute(
+      "data-estado",
+      "escuchando",
     );
     await expect(
       page.getByRole("status", { name: "Grabando audio" }),
