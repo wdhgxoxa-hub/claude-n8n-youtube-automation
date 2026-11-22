@@ -1,12 +1,19 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentPropsWithRef } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, m as motion } from "framer-motion";
+import { AnimatePresence, m as motion, useIsPresent } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
 import { ChatCooper as Chat } from "./chat-cooper";
+
+function DialogoCooper(props: ComponentPropsWithRef<"div">) {
+  const presente = useIsPresent();
+  // El diálogo termina al cerrar; solo su superficie conserva la salida animada.
+  // Así ningún control sigue activo mientras Motion devuelve la hoja al orbe.
+  return presente ? <div {...props} /> : null;
+}
 
 export function CooperFlotante({
   abierto,
@@ -132,71 +139,75 @@ export function CooperFlotante({
         {abierto && (
           <motion.div
             key="cooper"
-            ref={panel}
-            id="cooper-panel"
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
-            role="dialog"
-            onFocusCapture={(event) => {
-              // La hoja completa conserva espacio de escritura al abrir el teclado.
-              if (movil && event.target instanceof HTMLTextAreaElement)
-                setCompleto(true);
-            }}
-            aria-modal={movil || undefined}
-            aria-label="Cooper, tu compañero"
             layoutId={reduced ? undefined : "cooper-origen"}
             transition={reduced ? { duration: 0.12 } : resorte}
           >
-            <div
-              className="cooper-drag"
-              onPointerDown={(e) => {
-                dragStart.current = e.clientY;
-                e.currentTarget.setPointerCapture(e.pointerId);
+            <DialogoCooper
+              ref={panel}
+              id="cooper-panel"
+              className="cooper-dialogo"
+              role="dialog"
+              onFocusCapture={(event) => {
+                // La hoja completa conserva espacio de escritura al abrir el teclado.
+                if (movil && event.target instanceof HTMLTextAreaElement)
+                  setCompleto(true);
               }}
-              onPointerUp={(e) => {
-                const delta = e.clientY - (dragStart.current ?? e.clientY);
-                if (delta < -48) setCompleto(true);
-                if (delta > 64) {
-                  if (completo) setCompleto(false);
-                  else cambiar(false);
-                }
-                dragStart.current = null;
-              }}
-              aria-hidden="true"
+              aria-modal={movil || undefined}
+              aria-label="Cooper, tu compañero"
             >
-              <span />
-            </div>
-            <div className="cooper-panel-heading">
-              <span>
-                <strong>Cooper</strong>
-                <small>{contexto}</small>
-              </span>
-              <div>
-                <button
-                  className="icon-button cooper-expand"
-                  aria-label={completo ? "Reducir Cooper" : "Ampliar Cooper"}
-                  onClick={() => setCompleto(!completo)}
-                >
-                  {completo ? <Minimize2 size={20} /> : <Expand size={20} />}
-                </button>
-                <button
-                  className="icon-button"
-                  aria-label="Cerrar Cooper"
-                  onClick={() => cambiar(false)}
-                >
-                  <X size={20} />
-                </button>
+              <div
+                className="cooper-drag"
+                onPointerDown={(e) => {
+                  dragStart.current = e.clientY;
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                }}
+                onPointerUp={(e) => {
+                  const delta = e.clientY - (dragStart.current ?? e.clientY);
+                  if (delta < -48) setCompleto(true);
+                  if (delta > 64) {
+                    if (completo) setCompleto(false);
+                    else cambiar(false);
+                  }
+                  dragStart.current = null;
+                }}
+                aria-hidden="true"
+              >
+                <span />
               </div>
-            </div>
-            <Chat
-              key={video?.id || canal?.id || marca?.id || path}
-              canalId={canal?.id}
-              videoId={video?.id}
-              sugerencias={sugerencias}
-              contextoMarca={marca?.nombre}
-              alAdjuntar={() => {
-                if (movil) setCompleto(true);
-              }}
-            />
+              <div className="cooper-panel-heading">
+                <span>
+                  <strong>Cooper</strong>
+                  <small>{contexto}</small>
+                </span>
+                <div>
+                  <button
+                    className="icon-button cooper-expand"
+                    aria-label={completo ? "Reducir Cooper" : "Ampliar Cooper"}
+                    onClick={() => setCompleto(!completo)}
+                  >
+                    {completo ? <Minimize2 size={20} /> : <Expand size={20} />}
+                  </button>
+                  <button
+                    className="icon-button"
+                    aria-label="Cerrar Cooper"
+                    onClick={() => cambiar(false)}
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </div>
+              <Chat
+                key={video?.id || canal?.id || marca?.id || path}
+                canalId={canal?.id}
+                videoId={video?.id}
+                sugerencias={sugerencias}
+                contextoMarca={marca?.nombre}
+                alAdjuntar={() => {
+                  if (movil) setCompleto(true);
+                }}
+              />
+            </DialogoCooper>
           </motion.div>
         )}
       </AnimatePresence>

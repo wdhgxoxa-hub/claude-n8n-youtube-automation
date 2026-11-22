@@ -272,6 +272,13 @@ main#contenido {
   overflow: hidden;
   padding: 0;
 }
+.cooper-dialogo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
 .cooper-panel-heading {
   padding: var(--espacio-16);
   border-bottom: var(--borde-ancho) solid var(--linea);
@@ -778,10 +785,10 @@ main#contenido .route-choreography > .page {
   margin-left: auto;
   flex-shrink: 0;
 }
-.cooper-panel > .cooper-panel-heading {
+.cooper-dialogo > .cooper-panel-heading {
   flex-shrink: 0;
 }
-.cooper-panel > .memory-card {
+.cooper-dialogo > .memory-card {
   flex: 0 1 auto;
   max-height: 30%;
   overflow-y: auto;
@@ -791,13 +798,13 @@ main#contenido .route-choreography > .page {
   border-radius: 0;
   background: var(--transparente);
 }
-.cooper-panel > .memory-card .memory-heading {
+.cooper-dialogo > .memory-card .memory-heading {
   gap: var(--espacio-8);
 }
-.cooper-panel > .memory-card .memory-last {
+.cooper-dialogo > .memory-card .memory-last {
   flex-basis: 100%;
 }
-.cooper-panel > .memory-card .button {
+.cooper-dialogo > .memory-card .button {
   background: var(--transparente);
   border-color: var(--transparente);
   padding-inline: 0;
