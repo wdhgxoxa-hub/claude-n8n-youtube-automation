@@ -68,6 +68,29 @@ type TransitionObservation = {
   error: string | null;
 };
 
+async function finishViewTransition(page: Page) {
+  await page.evaluate(async () => {
+    const finished = (
+      window as Window & { cooperDesignTransitionFinished?: Promise<void> }
+    ).cooperDesignTransitionFinished;
+    if (!finished) throw new Error("La navegación no inició View Transition.");
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        finished,
+        new Promise<never>((_, reject) => {
+          timeout = setTimeout(
+            () => reject(new Error("View Transition no terminó en 5 segundos.")),
+            5000,
+          );
+        }),
+      ]);
+    } finally {
+      clearTimeout(timeout);
+    }
+  });
+}
+
 async function startMotionSample(page: Page, phase: string) {
   await page.evaluate((name) => {
     performance.mark(`diseno:${name}:inicio`);
@@ -550,6 +573,11 @@ for (const mode of ["medicion", "grabacion"] as const) {
             observations.push(observation);
             const id = observations.length;
             const transition = original(...args);
+            (
+              window as Window & {
+                cooperDesignTransitionFinished?: Promise<void>;
+              }
+            ).cooperDesignTransitionFinished = transition.finished;
             performance.mark(`diseno:view-transition:${id}:inicio`);
             void transition.updateCallbackDone.then(
               () => {
@@ -665,7 +693,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
           await expect(page).toHaveURL(
             new RegExp(`${path === "/" ? "/$" : path + "$"}`),
           );
-          await page.waitForTimeout(700);
+          await finishViewTransition(page);
           await finishPhase();
         }
         const target = page.locator(".video-mini").first();
@@ -673,7 +701,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
         await beginPhase("video-elemento-compartido");
         await target.click();
         await expect(page).toHaveURL(new RegExp(`${href}$`));
-        await page.waitForTimeout(800);
+        await finishViewTransition(page);
         await finishPhase();
         const transitions = await page.evaluate(
           () =>
