@@ -20,7 +20,7 @@ import {
   usePausaMovimiento,
 } from "./movimiento";
 import { Boton, Cifra, Medio, Tarjeta } from "./primitivas";
-import { useVideoMedios, estiloMedio } from "./portada-video";
+import { useVideoMedios, estiloMedio } from "./video-medios-cliente";
 import { nombreMedio } from "./transiciones";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import { nombreRed } from "@/lib/redes";
@@ -72,12 +72,10 @@ function MedioInicio({
       style={estiloMedio(medio)}
     >
       <Medio
-        poster={
-          medio?.poster?.origen === "tipografico"
-            ? undefined
-            : medio?.poster?.url
-        }
-        preview={heroe || vistaPrevia ? medio?.preview?.url : undefined}
+        // El medio ya llega consultado; la primitiva decide póster, espera o
+        // carátula con su estado real y solo reproduce donde se permite.
+        mediosIniciales={medio}
+        vistaPrevia={heroe || vistaPrevia}
         // Fuera del héroe, el mismo control ya contiene su título en texto;
         // el póster tipográfico lo muestra igualmente como carátula.
         alt={heroe ? video.title : ""}

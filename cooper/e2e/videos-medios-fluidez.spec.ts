@@ -61,6 +61,13 @@ for (const ancho of [390, 1440])
       .locator(`[data-video-medio="${datos.video.id}"]`)
       .first();
     await expect(medio).toHaveAttribute("data-estado", "pendiente");
+    // En la Línea de producción integrada, a 390 la pista apila sus doce
+    // estaciones y la cápsula queda bajo el pliegue: se lleva a la vista, como
+    // haría la persona, antes de medir su caja y su reproducción en vista.
+    await medio.scrollIntoViewIfNeeded();
+    const desplazamientoInicial = await page.evaluate(
+      () => document.scrollingElement?.scrollTop ?? 0,
+    );
     const cajaPendiente = await medio.boundingBox();
     if (!cajaPendiente) throw new Error("El medio no tiene un espacio visible");
     await page.evaluate(() => {
@@ -200,15 +207,19 @@ for (const ancho of [390, 1440])
     expect(estadistica.p95).toBeLessThanOrEqual(25);
     expect(estadistica.maximo).toBeLessThan(100);
     expect(estadistica.cls).toBe(0);
-    expect(Math.max(...desplazamientos)).toBeGreaterThan(0);
+    expect(Math.max(...desplazamientos)).toBeGreaterThan(desplazamientoInicial);
     await expect
       .poll(() => page.evaluate(() => document.scrollingElement?.scrollTop))
-      .toBe(0);
-    expect(await medio.boundingBox()).toEqual(cajaPendiente);
+      .toBe(desplazamientoInicial);
     await page.screenshot({
       path: `${salida}/medios-lista-${ancho}.png`,
       fullPage: true,
     });
+    // La cápsula integrada es una tarjeta: bajo el puntero se eleva 2 px con
+    // transform (DIRECCION §1), que no mueve el diseño. La caja reservada se
+    // compara en reposo, igual que el caso de hover de videos-medios.spec.
+    await page.mouse.move(0, 0);
+    await expect.poll(() => medio.boundingBox()).toEqual(cajaPendiente);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await expect(medio).toHaveAttribute("data-reproduciendo", "false");
     await page.goto(`/videos/${datos.video.id}`);

@@ -51,6 +51,15 @@ La revisión depende de fuente, publicación, propietario, montaje, título y ca
 
 En demo o fábrica simulada no hay descargas remotas automáticas; se permiten los MP4 ya guardados localmente y transportes ficticios explícitos de prueba. El modo n8n habilita únicamente lecturas públicas de los orígenes anteriores. No se añaden variables ni secretos. FFmpeg/FFprobe y las dependencias de Sharp ya existen en `deploy/Containerfile`.
 
+## Una sola primitiva en la interfaz (22-11-2026, Lima)
+
+Tras integrar «Sala de proyección» convivían dos componentes: `Medio` (`primitivas.tsx`, de `diseno-base`, usado por Fábrica, Inicio, Publicados, Aprendizaje y Canales) y `PortadaVideo` (de esta misión, que solo quedaba en el detalle sin archivo). Se unificó en `Medio`, porque es la primitiva del sistema de diseño y ya la usan todas las pantallas; `PortadaVideo` se retiró y su comportamiento correcto pasó a `Medio`:
+
+- Póster real con `object-fit: contain`: el medio se ve entero en cápsulas, pared, Inicio y detalle. Antes la cápsula y la pared lo recortaban (un 9:16 en un marco 4:5 perdía casi la mitad). En la cápsula, un vertical deja franjas laterales neutras: lo revisa la dirección de arte.
+- Vista previa silenciosa tras 180 ms de intención (puntero o foco); en móvil o pantallas sin puntero, al estar al 65 % en vista. La fuente se asigna solo en ese momento (ninguna descarga antes) y se detiene al salir, al ocultar la pestaña, con «Pausar movimiento» o con movimiento reducido. `data-preview` (`off`/`preparando`/`on`) y `data-reproduciendo` salen del estado de React.
+- Medio pendiente o no disponible: caja neutra reservada. El póster tipográfico (`Cartel`) queda solo para piezas sin medio (`sin_medio`, o sin vídeo asociado). Mostrar el cartel mientras se preparaba el derivado hacía saltar la cápsula al llegar el póster (CLS > 0).
+- Consultas compartidas por URL en `video-medios-cliente.ts`: un solo sondeo por medio, aunque lo muestren varias piezas o su visibilidad cambie. Si se pierde la vista, se pausa y se retoma con la misma espera. Un corte o un plazo vencido se reintenta con espera creciente; una respuesta 4xx no se repite.
+
 ## Precarga reproducible
 
 El script manual exige una **copia existente** dentro de `cooper/.cache`, resuelve symlinks y rechaza cualquier base fuera. No carga `.env`, no imprime usuarios, URLs ni rutas privadas y no cambia proveedores ni flujos. Recorre cada video y publicación de usuarios activos, usa la misma revisión/caché y resume conteos.

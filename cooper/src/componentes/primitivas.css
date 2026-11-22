@@ -89,13 +89,26 @@
 .medio-cuadrado {
   aspect-ratio: 1;
 }
+/* El contenido da la luz: un medio real se ve entero, nunca recortado. */
 .medio-poster,
 .medio-preview {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+/* Medio real en preparación o no disponible: caja reservada, sin carátula. */
+.medio-espera {
+  position: absolute;
+  inset: 0;
+  background: var(--sup-2);
+}
+/* Medio protagonista del detalle sin archivo: conserva la proporción de la visita. */
+.medio.medio-protagonista {
+  height: auto;
+  aspect-ratio: var(--medio-proporcion, 16 / 9);
+  max-height: 70vh;
 }
 .medio-preview {
   opacity: 0;
