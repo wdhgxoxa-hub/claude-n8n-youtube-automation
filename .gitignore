@@ -14,6 +14,7 @@ google-oauth-client*.json
 
 # Datos y artefactos locales, también fuera de cooper/.
 .cache/
+evidencias-diseno/
 data/
 *.sqlite
 *.sqlite-*
