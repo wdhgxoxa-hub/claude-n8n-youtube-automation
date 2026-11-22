@@ -41,9 +41,9 @@
   --texto-48: 48px;
   --texto-56: 56px;
   --texto-72: 72px;
-  --titulo-pantalla: clamp(var(--texto-40), 4.5vw, var(--texto-56));
+  --titulo-pantalla: var(--texto-40);
   --titulo-seccion: clamp(var(--texto-28), 3vw, var(--texto-40));
-  --cifra-heroe: clamp(var(--texto-48), 6vw, var(--texto-72));
+  --cifra-heroe: var(--texto-48);
   --interlinea-display: 1.05;
   --interlinea-texto: 1.5;
   --tracking-display: -0.02em;
@@ -94,6 +94,16 @@
 }
 @media (min-width: 768px) {
   :root {
+    --titulo-pantalla: clamp(
+      var(--texto-40),
+      calc(6.25vw - var(--espacio-8)),
+      var(--texto-56)
+    );
+    --cifra-heroe: clamp(
+      var(--texto-48),
+      calc(9.375vw - var(--espacio-24)),
+      var(--texto-72)
+    );
     --margen-pagina: var(--espacio-24);
     --gutter: var(--espacio-24);
     --columnas: 8;
@@ -101,6 +111,8 @@
 }
 @media (min-width: 1024px) {
   :root {
+    --titulo-pantalla: var(--texto-56);
+    --cifra-heroe: var(--texto-72);
     --margen-pagina: var(--espacio-32);
     --columnas: 12;
   }
