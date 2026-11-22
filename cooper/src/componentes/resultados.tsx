@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { api, useEspacio } from "./espacio";
 import { Boton, Chip, Cifra, HojaVidrio, Medio, Vacio } from "./primitivas";
-import { useVideoMedios, estiloMedio } from "./portada-video";
+import { useVideoMedios, estiloMedio } from "./video-medios-cliente";
 import { fecha, numero, MetricasVideo } from "./metricas-resultados";
 import {
   filtrarResultados,
@@ -420,12 +420,6 @@ function PublicacionPared({
           <div
             className={styles.contenedorMedio}
             data-video-transition={videoId ? nombreMedio(videoId) : undefined}
-            data-video-medio={videoId || undefined}
-            data-publicacion={p.tipo === "video" ? p.publicacion.id : undefined}
-            data-origen={
-              medio?.poster?.origen ??
-              (medio?.estado === "sin_medio" ? "tipografico" : "pendiente")
-            }
           >
             <Medio
               prioridad={orden === 0}

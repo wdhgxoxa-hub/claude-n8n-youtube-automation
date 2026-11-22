@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
 import { enlaceIncrustado } from "@/lib/enlaces-medios";
 import type { VideoMedios } from "@/contratos/video-medios";
-import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
+import { estiloMedio, useVideoMedios } from "./video-medios-cliente";
 import { nombreMedio } from "./transiciones";
 import { Medio } from "./primitivas";
 import { Cartel } from "./cartel";
@@ -109,18 +109,17 @@ export function MediosVideo({
               }}
               aria-label="Portada del video"
             >
-              {videoId ? (
-                <PortadaVideo
-                  videoId={videoId}
-                  titulo={titulo}
-                  inicial={medio}
-                  canal={canal}
-                  detalle={detalle}
-                  protagonista
-                />
-              ) : (
-                <Medio alt={titulo} canal={canal} detalle={detalle} />
-              )}
+              {/* La misma primitiva de todas las pantallas: póster real con
+                  vista previa, espera reservada o carátula si no hay medio.
+                  Su proporción la fija el halo para toda la visita. */}
+              <Medio
+                videoId={videoId || undefined}
+                mediosIniciales={medio}
+                alt={titulo}
+                canal={canal}
+                detalle={detalle}
+                className="medio-protagonista"
+              />
               <p>El archivo del video todavía no está disponible aquí.</p>
             </section>
           )}

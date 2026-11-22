@@ -3536,12 +3536,6 @@ input:is([type="checkbox"], [type="radio"]):checked {
   overflow: hidden;
   border-radius: var(--radio-tarjeta);
 }
-.publication-thumb img,
-.publication-thumb svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .metrics-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

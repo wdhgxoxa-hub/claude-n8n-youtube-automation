@@ -283,11 +283,6 @@
   border: 0;
   border-radius: 0;
 }
-/* La inline de Medio fija contain para el detalle; en la cápsula cubre. */
-.portada :global(.medio-poster),
-.portada :global(.medio-preview) {
-  object-fit: cover !important;
-}
 /* Con póster tipográfico, el título ya está en la carátula: el del cuerpo
    queda solo para lectores de pantalla y la cápsula no lo repite. */
 .enlaceCapsula:has(:global(.cartel)) .cuerpoCapsula h4 {

@@ -12,7 +12,7 @@ import {
 import { useEspacio } from "./espacio";
 import { InterruptorAprendizaje } from "./control-aprendizaje";
 import { Cifra, Chip, Medio } from "./primitivas";
-import { useVideoMedios } from "./portada-video";
+import { useVideoMedios } from "./video-medios-cliente";
 import { fecha, numero } from "./metricas-resultados";
 import { nombreRed } from "@/lib/redes";
 import { proporcionPublicacion, tinteEstable } from "@/lib/reticula";

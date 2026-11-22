@@ -145,11 +145,6 @@
   height: 100%;
   aspect-ratio: auto;
 }
-/* La caja de la fila puede diferir un 1 % de la proporción real: se recorta, no se deforma. */
-.contenedorMedio :global(.medio-poster),
-.contenedorMedio :global(.medio-preview) {
-  object-fit: cover !important;
-}
 .red,
 .cifrasSobreMedio {
   position: absolute;
