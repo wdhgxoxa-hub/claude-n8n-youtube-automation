@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 23:08 (Lima).
+Última actualización: 2026-11-22 01:55 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **22-11-2026, Lima — diseno-integracion implementado e integrado en su rama (NO desplegado, sin push):** fusionadas fix-inicio, fix-fabrica y fix-publicados (conflicto resuelto con `lib/cifras` + `lib/redes`); cifras y nombres de red con una sola fuente; póster tipográfico único (`Cartel`: Clash Display fluido por container queries, tinte radial/cónico, grano SVG, firma en Geist Mono) para toda pieza sin miniatura ni MP4; títulos de pantalla a 96 px (1440) / 88 px (390) en todas las rutas con armazón; Fábrica con bahías libres y pista colocada con contexto. Puerta local: lint/tipos/build 0/0, **702/703 unitarias** (único fallo aceptado: caché privada de Sentinel ausente en el entorno) y **237/237 flujos**. E2E, Sentinel, axe y Lighthouse **no ejecutados** aquí. 50 capturas finales en `evidencias-diseno/final/`. [Informe y autocrítica](informes/diseno-integracion.md).
 
 - **21-11-2026, Lima — diseno-conexion implementado y probado en su rama:** SSE con latido inmediato independiente de n8n, reanudación por cursor y entrega de estado sin esperar a vaciar el historial; cliente silencioso estando sano, aviso después de cinco segundos de corte detectado y reconexión con backoff. Código `534ee7b`; puerta limpia **483 unitarias / 114 E2E / 235 flujos, cero errores y advertencias**. Componente: 7/7 de diseño, 180 capturas, video móvil 1/1, Lighthouse móvil Inicio 93/100 y Publicados 100/100 (rendimiento/accesibilidad). Configuración activa de Caddy cotejada en lectura; parche/Compose y reversa preparados. **No integrado, publicado ni desplegado. La puerta global de diseño sigue no aprobada** hasta combinar las otras misiones; no se certifica la desaparición del incidente dentro de una sesión privada productiva. [Informe, evidencia y autocrítica](informes/diseno-conexion.md).
 
@@ -125,6 +127,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
+- **diseno-integracion:** revisión de Claude de las capturas finales; luego E2E/Sentinel en la PC de Walter, push y despliegue autorizados. [Informe](informes/diseno-integracion.md).
 - Observabilidad: entrega local cerrada para revisión e integración por el frente autorizado. La futura activación se coordinará después de `total-cierre`: nuevo paquete del monitor con `observabilidad.py`, overlay, lectura n8n y aceptación de fuentes reales. Los bundles certificados anteriores no incluyen el módulo nuevo y permanecen intactos. [Guía](cooper-observabilidad.md).
 - WhatsApp integrado solo en la rama de diseño; pausa real conservada, revisión pendiente.
 - Plantilla de tienda integrada solo en la rama de diseño; revisión de Claude pendiente.
@@ -159,6 +162,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 15. Medios: revisar con Claude el informe y las capturas finales; decidir integración/despliegue por separado, conservación y entrega de los MP4 en B2, tinte editorial y retención de derivados. Confirmar permisos oficiales de TikTok solo si hace falta obtener su portada. [Pendientes concretos](informes/diseno-medios.md#pendientes-de-walter).
 
 13. Revisar con Claude los commits y capturas de `diseno-conexion`, observar recuperación/latidos desde la sesión productiva legítima y decidir la aplicación de código y parche Caddy/Compose con su reversa. Cotejar de nuevo las huellas y coordinar la breve ventana del proxy antes de aplicarlo. No requiere iniciar otro OAuth. [Pendientes de la misión](informes/diseno-conexion.md#pendientes-de-walter).
+
+16. diseno-integracion: ejecutar en su PC `npm run test:e2e`, axe/Lighthouse y las dos rondas de Sistema Sentinel (no ejecutables en el entorno de la misión); reconectar GitHub para publicar la rama; autorizar el despliegue tras la revisión de Claude; aplicar el lote n8n que guarda `miniatura` y `url_video` para que las piezas reales muestren su medio en vez del póster tipográfico. [Detalle](informes/diseno-integracion.md#pendientes-de-walter).
 
 ## Ideas conversadas
 
