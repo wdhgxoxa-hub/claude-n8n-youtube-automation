@@ -361,6 +361,18 @@ export function Espacio({
                         })),
                       ].find((n) => n.path === path)?.label ?? "Estudio Cooper"}
                     </span>
+                    <div className="topbar-acciones">
+                    <button
+                      className="topbar-mas icon-button"
+                      aria-label="Más destinos"
+                      aria-expanded={menu}
+                      onClick={(event) => {
+                        menuButton.current = event.currentTarget;
+                        setMenu(true);
+                      }}
+                    >
+                      <Ellipsis size={20} />
+                    </button>
                     <Link
                       href="/perfil"
                       className="header-avatar"
@@ -378,6 +390,7 @@ export function Espacio({
                         <span>{data.user.name.slice(0, 1).toUpperCase()}</span>
                       )}
                     </Link>
+                    </div>
                   </header>
                   <main ref={content} id="contenido" tabIndex={-1}>
                     <div key={path} ref={ruta} className="route-choreography">
@@ -414,17 +427,6 @@ export function Espacio({
                     </Link>
                   ))}
                 </nav>
-                <button
-                  className="mobile-more icon-button"
-                  aria-label="Más destinos"
-                  aria-expanded={menu}
-                  onClick={(event) => {
-                    menuButton.current = event.currentTarget;
-                    setMenu(true);
-                  }}
-                >
-                  <Ellipsis size={20} />
-                </button>
               </div>
               <PildoraConexion aviso={avisoConexion} />
               <CooperFlotante

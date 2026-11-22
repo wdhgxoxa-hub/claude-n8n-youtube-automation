@@ -168,8 +168,13 @@ main#contenido {
   }
 }
 .mobile-dock,
-.mobile-more {
+.topbar .topbar-mas {
   display: none;
+}
+.topbar-acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
 }
 .more-backdrop {
   position: fixed;
@@ -537,19 +542,39 @@ main#contenido {
     padding: var(--espacio-16);
   }
   main#contenido {
+    /* Zona segura: la banda inferior (barra + orbe) nunca cubre contenido. */
     padding: var(--espacio-16) var(--espacio-16)
       calc(
-        var(--espacio-96) + var(--cooper-orbe) + var(--espacio-24) +
-          env(safe-area-inset-bottom)
+        var(--riel-ancho) + var(--espacio-32) + env(safe-area-inset-bottom)
       );
+  }
+  .topbar .topbar-mas {
+    display: inline-flex;
+    border: var(--borde-ancho) solid var(--linea-fuerte);
+    background: var(--sup-2);
+    border-radius: var(--radio-pildora);
+    width: calc(var(--objetivo-tactil) - var(--espacio-8));
+    height: calc(var(--objetivo-tactil) - var(--espacio-8));
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    color: var(--texto);
+    position: relative;
+  }
+  /* Área táctil de 48px sin agrandar el botón. */
+  .topbar .topbar-mas::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--espacio-4));
   }
   .mobile-dock {
     position: fixed;
     z-index: var(--capa-barra);
     display: grid;
     grid-template-columns: repeat(5, minmax(max-content, 1fr));
-    inset: auto var(--espacio-8)
-      max(var(--espacio-8), env(safe-area-inset-bottom));
+    /* El orbe de Cooper ocupa el extremo derecho de la misma banda. */
+    inset: auto calc(var(--cooper-orbe) + var(--espacio-16))
+      max(var(--espacio-8), env(safe-area-inset-bottom)) var(--espacio-8);
     min-height: var(--riel-ancho);
     padding: var(--espacio-8) 0;
     border-radius: var(--radio-panel);
@@ -578,22 +603,12 @@ main#contenido {
     text-align: center;
     line-height: var(--interlinea-texto);
   }
-  .mobile-more {
-    display: grid;
-    position: fixed;
-    z-index: var(--capa-barra);
-    bottom: calc(var(--espacio-96) + env(safe-area-inset-bottom));
-    left: var(--espacio-16);
-    background: var(--vidrio-fondo);
-    backdrop-filter: var(--vidrio-filtro);
-    border: var(--borde-ancho) solid var(--linea);
-    border-radius: var(--radio-pildora);
-    width: var(--objetivo-tactil);
-    height: var(--objetivo-tactil);
-  }
   .cooper-orb {
-    bottom: calc(var(--espacio-96) + env(safe-area-inset-bottom));
-    right: var(--espacio-16);
+    /* Centrado en la altura de la barra (72px): orbe 56px + 8px de aire. */
+    bottom: calc(
+      max(var(--espacio-8), env(safe-area-inset-bottom)) + var(--espacio-8)
+    );
+    right: var(--espacio-8);
   }
   .cooper-panel {
     inset: auto 0 0;
