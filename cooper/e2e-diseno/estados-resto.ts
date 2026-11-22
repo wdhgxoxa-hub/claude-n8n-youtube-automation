@@ -390,14 +390,18 @@ export async function capturarEstados(
       (request) => request.url() === healthPath && request.method() === "GET",
       { timeout: 10_000 },
     );
-    const healthError = async (route: Route) => {
-      await gate;
-      await route.fulfill({
-        status: 503,
-        json: {
-          error: "No pudimos consultar la operación. Vuelve a intentarlo.",
-        },
-      });
+    let healthSettled = Promise.resolve();
+    const healthError = (route: Route) => {
+      healthSettled = (async () => {
+        await gate;
+        await route.fulfill({
+          status: 503,
+          json: {
+            error: "No pudimos consultar la operación. Vuelve a intentarlo.",
+          },
+        });
+      })();
+      return healthSettled;
     };
     await page.route(healthPath, healthError, { times: 1 });
     try {
@@ -405,12 +409,13 @@ export async function capturarEstados(
         waitUntil: "domcontentloaded",
       });
       await pending;
-      await expect(page.locator(".operacion-carga")).toHaveAttribute(
+      const loading = page.getByRole("main").locator(".operacion-carga");
+      await expect(loading).toHaveAttribute(
         "aria-busy",
         "true",
       );
       await capture("salud-carga");
-      await expect(page.locator(".operacion-carga")).toBeVisible();
+      await expect(loading).toBeVisible();
       await expectedHttp(
         {
           estado: "salud-error",
@@ -429,6 +434,7 @@ export async function capturarEstados(
       await capture("salud-error");
     } finally {
       release();
+      await healthSettled;
       await page.unroute(healthPath, healthError);
     }
     await page
