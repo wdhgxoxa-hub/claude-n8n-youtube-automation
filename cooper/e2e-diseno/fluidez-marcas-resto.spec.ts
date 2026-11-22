@@ -13,6 +13,17 @@ const thresholds = {
   clsMax: 0.01,
 };
 
+function commitDelEnsayo() {
+  const commit =
+    process.env.COOPER_E2E_COMMIT ??
+    execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+  if (!/^[a-f0-9]{40}$/i.test(commit))
+    throw new Error(
+      "COOPER_E2E_COMMIT debe ser un SHA completo de 40 caracteres.",
+    );
+  return commit;
+}
+
 type Shift = PerformanceEntry & { value: number; hadRecentInput: boolean };
 type Sample = {
   phase: string;
@@ -151,6 +162,9 @@ for (const width of [390, 1440]) {
     context,
     browser,
   }, testInfo) => {
+    // El SHA público permite ejecutar en un contenedor sin montar el .git ajeno
+    // al worktree. Si no se proporciona, Git sigue siendo obligatorio.
+    const commit = commitDelEnsayo();
     mkdirSync(directory, { recursive: true });
     expect(
       page.video(),
@@ -342,9 +356,7 @@ for (const width of [390, 1440]) {
         `${directory}/cooper-fluidez-${width}.json`,
         JSON.stringify(
           {
-            commit: execFileSync("git", ["rev-parse", "HEAD"], {
-              encoding: "utf8",
-            }).trim(),
+            commit,
             measuredAt: new Date().toISOString(),
             viewport: { width, height: 900 },
             cpu,
