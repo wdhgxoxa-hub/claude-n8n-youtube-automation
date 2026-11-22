@@ -8,25 +8,29 @@ import type { VideoMedios } from "@/contratos/video-medios";
 import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
 import styles from "./portada-video.module.css";
 export function MediosVideo({
-  videoId,
+  videoId = "",
   datos,
   titulo,
   inicial,
 }: {
-  videoId: string;
+  videoId?: string;
   datos: Observabilidad;
   titulo: string;
   inicial?: VideoMedios;
 }) {
   const [fallo, setFallo] = useState(false);
-  const medio = useVideoMedios({ videoId, inicial });
+  const medio = useVideoMedios({ videoId, inicial, visible: Boolean(videoId) });
   const [proporcion] = useState(inicial?.relacionAspecto ?? 16 / 9);
   return (
     <>
       {datos.montaje ? (
         <section
           className={`real-player ${styles.reproductor}`}
-          style={{ ...estiloMedio(medio, proporcion), viewTransitionName: nombreMedio(videoId) }}
+          style={{
+            ...estiloMedio(medio, proporcion),
+            viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+          }}
+          data-tinte={Boolean(medio?.tinte)}
           aria-label="Video terminado"
         >
           <video
@@ -63,7 +67,11 @@ export function MediosVideo({
       ) : (
         <section
           className={`real-player ${styles.reproductor}`}
-          style={{ ...estiloMedio(medio, proporcion), viewTransitionName: nombreMedio(videoId) }}
+          style={{
+            ...estiloMedio(medio, proporcion),
+            viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+          }}
+          data-tinte={Boolean(medio?.tinte)}
           aria-label="Portada del video"
         >
           <PortadaVideo

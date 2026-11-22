@@ -269,16 +269,51 @@ export function Publicados({ initial }: { initial: Resultados }) {
                     className="publication-thumb"
                     aria-label={`${primero.tipo === "video" && primero.publicacion.miniatura ? "" : "Miniatura pendiente. "}Ver detalle de ${primero.titulo}`}
                   >
-                    <div data-video-transition={video ? nombreMedio(video.id) : undefined}>
+                    <div
+                      data-video-transition={
+                        video ? nombreMedio(video.id) : undefined
+                      }
+                    >
                       {primero.tipo === "video" ? (
                         <PortadaVideo
-                          videoId={primero.videoId ?? decodeURIComponent(primero.href.split("/").at(-1) ?? "")}
+                          videoId={
+                            primero.videoId ??
+                            decodeURIComponent(
+                              primero.href.split("/").at(-1) ?? "",
+                            )
+                          }
                           titulo={primero.titulo}
                           inicial={primero.medios}
                           publicacion={primero.publicacion.id}
                         />
-                      ) : <Medio alt="Miniatura pendiente" />}
+                      ) : (
+                        <Medio alt="Miniatura pendiente" />
+                      )}
                     </div>
+                  </Link>
+                  <div>
+                    <p className="muted">{primero.redes.join(" · ")}</p>
+                    <h2>
+                      <Link href={primero.href}>{primero.titulo}</Link>
+                    </h2>
+                  </div>
+                </div>
+                {grupo.registros.length > 1 && (
+                  <p>
+                    Una publicación, {grupo.registros.length} registros.
+                    Conservamos las mediciones de cada origen.
+                  </p>
+                )}
+                {grupo.registros.map((p) => (
+                  <div className="resultado-origen" key={p.id}>
+                    <Origen
+                      ambito={resultado.ambitos.find(
+                        (a) => a.id === p.ambitoId,
+                      )!}
+                      simulada={p.simulada}
+                    />
+                    <Link className="text-link" href={p.href}>
+                      Ver origen: {p.titulo}
                     </Link>
                     <p className="muted">
                       {fecha(p.fecha)}

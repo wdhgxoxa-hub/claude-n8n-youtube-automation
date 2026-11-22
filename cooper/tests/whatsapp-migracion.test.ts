@@ -42,7 +42,7 @@ it("actualiza las catorce migraciones integradas sin perder contactos ni envíos
     aplicarMigraciones(sqlite, resolve("drizzle"));
     expect(
       sqlite.prepare("SELECT count(*) AS n FROM __drizzle_migrations").get(),
-    ).toEqual({ n: 15 });
+    ).toEqual({ n: journal.entries.length });
     expect(
       sqlite.prepare("SELECT verified_at FROM whatsapp_contacts").get(),
     ).toEqual({ verified_at: 1 });

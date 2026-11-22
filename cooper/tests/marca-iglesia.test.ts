@@ -322,7 +322,12 @@ it("la migración conserva datos y protege las piezas heredadas aunque después 
     sqlite.exec(
       "CREATE TABLE __drizzle_migrations (id SERIAL PRIMARY KEY, hash TEXT NOT NULL, created_at NUMERIC)",
     );
-    for (const migration of migraciones.slice(0, -1)) {
+    for (const migration of migraciones.slice(
+      0,
+      migraciones.findIndex((migration) =>
+        migration.sql.some((sql) => sql.includes("revision_doctrinal")),
+      ),
+    )) {
       for (const statement of migration.sql) sqlite.exec(statement);
       sqlite
         .prepare(
