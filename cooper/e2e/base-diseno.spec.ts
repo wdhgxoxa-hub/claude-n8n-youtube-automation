@@ -467,9 +467,26 @@ for (const mode of ["medicion", "grabacion"] as const) {
       test(`ruta, Cooper y navegación en movimiento a ${width}px`, async ({
         page,
         context,
+        browser,
       }) => {
         await page.setViewportSize({ width, height: 900 });
         await page.emulateMedia({ reducedMotion: "no-preference" });
+        const browserClient = await browser.newBrowserCDPSession();
+        const systemInfo = await browserClient.send("SystemInfo.getInfo");
+        const renderer = {
+          devices: systemInfo.gpu.devices,
+          features: systemInfo.gpu.featureStatus,
+          renderer: systemInfo.gpu.auxAttributes?.glRenderer,
+          vendor: systemInfo.gpu.auxAttributes?.glVendor,
+          driver: systemInfo.gpu.auxAttributes?.displayType,
+          browserVersion: browser.version(),
+          launchOptions: [
+            "--enable-gpu",
+            "--use-gl=angle",
+            "--use-angle=swiftshader",
+          ],
+        };
+        await browserClient.detach();
         const client = await context.newCDPSession(page);
         await client.send("Emulation.setCPUThrottlingRate", {
           rate: width < 768 ? 4 : 1,
@@ -766,6 +783,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
           JSON.stringify(
             {
               viewport: width,
+              renderer,
               instrumentation: {
                 cdpTrace: true,
                 playwrightTrace: false,
@@ -781,7 +799,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
               trace: `traza-movimiento-${width}.json`,
               errors,
               limitation:
-                "Laboratorio Chromium local; no acredita un teléfono físico.",
+                "Laboratorio Chromium local con composición habilitada y renderer SwiftShader por software; no acredita GPU física ni teléfono real.",
             },
             null,
             2,
