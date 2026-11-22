@@ -128,8 +128,25 @@ export function VideoMini({
   const { data } = useEspacio();
   return (
     <Link href={`/videos/${video.id}`} className="video-mini">
-      <span className="film-thumbnail" data-video-transition={nombreMedio(video.id)}>
-        {video.observabilidad?.miniatura ? <Medio poster={video.observabilidad.miniatura} preview={video.observabilidad.montaje || undefined} alt={video.title} /> : data.demo ? <Portada title={video.title} /> : <span className="medio-pendiente" aria-label="Miniatura aún no disponible" />}
+      <span
+        className="film-thumbnail"
+        data-video-transition={nombreMedio(video.id)}
+      >
+        {video.observabilidad?.miniatura ? (
+          <Medio
+            videoId={video.id}
+            poster={video.observabilidad.miniatura}
+            preview={video.observabilidad.montaje || undefined}
+            alt={video.title}
+          />
+        ) : data.demo ? (
+          <Portada title={video.title} />
+        ) : (
+          <span
+            className="medio-pendiente"
+            aria-label="Miniatura aún no disponible"
+          />
+        )}
       </span>
       <div>
         <small>
@@ -249,7 +266,21 @@ export function FabricaVista({
                     onClick={() => setSelected(v.id)}
                   >
                     <span className="queue-cover">
-                      {v.observabilidad?.miniatura ? <Medio poster={v.observabilidad.miniatura} preview={v.observabilidad.montaje || undefined} alt={v.title} /> : data.demo ? <Portada title={v.title} /> : <span className="medio-pendiente" aria-label="Miniatura aún no disponible" />}
+                      {v.observabilidad?.miniatura ? (
+                        <Medio
+                          videoId={v.id}
+                          poster={v.observabilidad.miniatura}
+                          preview={v.observabilidad.montaje || undefined}
+                          alt={v.title}
+                        />
+                      ) : data.demo ? (
+                        <Portada title={v.title} />
+                      ) : (
+                        <span
+                          className="medio-pendiente"
+                          aria-label="Miniatura aún no disponible"
+                        />
+                      )}
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
                     </span>
                     <strong>{v.title}</strong>

@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { InterruptorAprendizaje } from "./control-aprendizaje";
 import Link from "next/link";
-import Image from "next/image";
 import { api, Heading, Empty, useEspacio } from "./espacio";
 import { Medio } from "./primitivas";
+import { nombreMedio } from "./transiciones";
 import {
   fecha,
   numero,
@@ -218,6 +218,7 @@ function useResultados(initial: Resultados) {
 }
 export function Publicados({ initial }: { initial: Resultados }) {
   const consulta = useResultados(initial);
+  const { data } = useEspacio();
   const { resultado, filtro, error } = consulta;
   const visibles = filtrarResultados(
     resultado.publicaciones,
@@ -243,12 +244,20 @@ export function Publicados({ initial }: { initial: Resultados }) {
         {cantidad(visibles.length, "resultado", "resultados")}
       </p>
       <p className="muted">
-        Cada red conserva sus propias cifras para que puedas comparar cómo va cada publicación.
+        Cada red conserva sus propias cifras para que puedas comparar cómo va
+        cada publicación.
       </p>
       {publicaciones.length ? (
         <div className="publications">
           {publicaciones.map((grupo) => {
             const primero = grupo.registros[0];
+            const video =
+              primero.tipo === "video"
+                ? data.videos.find(
+                    (v) =>
+                      primero.href === `/videos/${encodeURIComponent(v.id)}`,
+                  )
+                : undefined;
             return (
               <article key={grupo.id} className="publication">
                 <div className="publication-heading">
@@ -257,18 +266,27 @@ export function Publicados({ initial }: { initial: Resultados }) {
                     className="publication-thumb"
                     aria-label={`Ver detalle de ${primero.titulo}`}
                   >
-                    {primero.tipo === "video" &&
-                    primero.publicacion.miniatura ? (
-                      <Image
-                        unoptimized
-                        src={primero.publicacion.miniatura}
-                        alt=""
-                        width={240}
-                        height={160}
+                    <div
+                      data-video-transition={
+                        video ? nombreMedio(video.id) : undefined
+                      }
+                    >
+                      <Medio
+                        videoId={video?.id}
+                        poster={
+                          primero.tipo === "video"
+                            ? primero.publicacion.miniatura || undefined
+                            : undefined
+                        }
+                        preview={video?.observabilidad?.montaje || undefined}
+                        alt={
+                          primero.tipo === "video" &&
+                          primero.publicacion.miniatura
+                            ? primero.titulo
+                            : "Miniatura pendiente"
+                        }
                       />
-                    ) : (
-                      <Medio alt="Miniatura pendiente" />
-                    )}
+                    </div>
                   </Link>
                   <div>
                     <p className="muted">{primero.redes.join(" · ")}</p>

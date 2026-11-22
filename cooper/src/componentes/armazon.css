@@ -841,3 +841,19 @@ main#contenido .route-choreography > .page {
     animation: none;
   }
 }
+
+.publication-thumb > div,
+.publication-thumb .medio {
+  width: 100%;
+  height: 100%;
+}
+.publication-thumb .medio-espera {
+  padding: var(--espacio-8);
+}
+.publication-thumb .medio-espera span {
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-12);
+}
+.publication-thumb .medio-espera small {
+  display: none;
+}
