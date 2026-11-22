@@ -37,6 +37,15 @@ async function login(page: Page) {
   expect(response.ok()).toBe(true);
 }
 
+async function readyReduced(page: Page) {
+  await page.locator("main").waitFor({ state: "visible" });
+  if (await page.locator(".workspace").count())
+    await expect(page.locator(".workspace")).toHaveAttribute(
+      "data-motion",
+      "paused",
+    );
+}
+
 async function capture(
   page: Page,
   screen: string,
@@ -246,6 +255,9 @@ for (const width of widths) {
           await p
             .getByRole("button", { name: "Abrir Cooper", exact: true })
             .click();
+          await expect(
+            p.getByRole("textbox", { name: "Mensaje para Cooper" }),
+          ).toBeVisible();
         },
       },
       {
@@ -256,6 +268,9 @@ for (const width of widths) {
             .getByRole("button", { name: "Más destinos", exact: true })
             .filter({ visible: true })
             .click();
+          await expect(
+            p.getByRole("dialog", { name: "Más destinos", exact: true }),
+          ).toBeVisible();
         },
       },
       { name: "entrada", path: "/entrar" },
@@ -277,7 +292,7 @@ for (const width of widths) {
     for (const screen of screens) {
       messages.length = 0;
       await page.goto(screen.path);
-      await page.locator("main").waitFor({ state: "visible" });
+      await readyReduced(page);
       if (screen.prepare) await screen.prepare(page);
       const expected =
         screen.expectedStatus === 404
@@ -319,7 +334,7 @@ for (const width of [390, 1440]) {
     });
     await client.send("Tracing.start", {
       categories:
-        "devtools.timeline,blink.user_timing,disabled-by-default-devtools.timeline.frame",
+        "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame",
       transferMode: "ReturnAsStream",
     });
     const errors: string[] = [];
@@ -441,14 +456,43 @@ for (const width of [390, 1440]) {
     const metrics = await page.evaluate(async () => {
       let cls = 0;
       const longTasks: number[] = [];
+      const layoutShifts: unknown[] = [];
+      const startedAt = performance.now();
+      const fontsAtStart = document.fonts.status;
+      let fontsReadyAt: number | null = null;
+      void document.fonts.ready.then(() => {
+        fontsReadyAt = performance.now();
+      });
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === "longtask") longTasks.push(entry.duration);
-          else if (
-            !(entry as PerformanceEntry & { hadRecentInput: boolean })
-              .hadRecentInput
-          )
-            cls += (entry as PerformanceEntry & { value: number }).value;
+          else {
+            const shift = entry as PerformanceEntry & {
+              hadRecentInput: boolean;
+              value: number;
+              sources?: {
+                node?: Node;
+                previousRect: DOMRectReadOnly;
+                currentRect: DOMRectReadOnly;
+              }[];
+            };
+            if (!shift.hadRecentInput) cls += shift.value;
+            layoutShifts.push({
+              time: shift.startTime,
+              value: shift.value,
+              hadRecentInput: shift.hadRecentInput,
+              sources: shift.sources?.map(
+                ({ node, previousRect, currentRect }) => ({
+                  element:
+                    node instanceof Element
+                      ? `${node.tagName}${node.id ? `#${node.id}` : ""}.${Array.from(node.classList).join(".")}`
+                      : node?.nodeName,
+                  previous: previousRect.toJSON(),
+                  current: currentRect.toJSON(),
+                }),
+              ),
+            });
+          }
         }
       });
       observer.observe({ entryTypes: ["layout-shift", "longtask"] });
@@ -472,6 +516,10 @@ for (const width of [390, 1440]) {
         p95: sorted[Math.floor(sorted.length * 0.95)],
         cls,
         longTasks,
+        layoutShifts,
+        startedAt,
+        fontsAtStart,
+        fontsReadyAt,
       };
     });
     await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
@@ -531,6 +579,7 @@ test("Marcas: tres pasos, cinco secciones y edición en seis anchuras", async ({
   for (const width of widths) {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
     await page.goto("/marcas");
+    await readyReduced(page);
     await page
       .getByRole("button", { name: "Añadir marca o cuenta", exact: true })
       .first()
@@ -559,6 +608,7 @@ test("Marcas: tres pasos, cinco secciones y edición en seis anchuras", async ({
       "aprendizaje",
     ]) {
       await page.goto(`/marcas?marca=${brand.id}&seccion=${section}`);
+      await readyReduced(page);
       await capture(page, `marca-${section}`, width, messages);
     }
   }
@@ -578,6 +628,7 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
   for (const width of widths) {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
     await page.goto("/radar");
+    await readyReduced(page);
     let release!: () => void;
     const held = new Promise<void>((resolve) => {
       release = resolve;
@@ -616,9 +667,10 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
       { times: 1 },
     );
     await page.getByRole("button", { name: "Actualizar", exact: true }).click();
-    await expect(page.getByRole("alert")).toContainText(
-      "La fábrica no responde",
-    );
+    const failure = page
+      .getByRole("alert")
+      .filter({ hasText: "La fábrica no responde" });
+    await expect(failure).toContainText("La fábrica no responde");
     const expected = errors.filter((message) =>
       /Failed to load resource.*503/.test(message),
     );
@@ -639,7 +691,7 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
     );
     errors.splice(0, errors.length, ...unexpected);
     await page.getByRole("button", { name: "Actualizar", exact: true }).click();
-    await expect(page.getByRole("alert")).toHaveCount(0);
+    await expect(failure).toHaveCount(0);
     await capture(page, "operacion-recuperada", width, errors);
   }
   writeFileSync(
@@ -666,6 +718,7 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
   for (const width of widths) {
     await page.setViewportSize({ width, height: width < 1024 ? 844 : 1000 });
     await page.goto(`/videos/${target.id}`);
+    await readyReduced(page);
     await page
       .getByRole("button", { name: "Abrir Cooper", exact: true })
       .click();
@@ -708,9 +761,9 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
     await page
       .getByRole("button", { name: "Enviar mensaje", exact: true })
       .click();
-    await expect(page.getByRole("alert")).toContainText(
-      "Cooper necesita un momento",
-    );
+    await expect(
+      page.getByRole("alert").filter({ hasText: "Cooper necesita un momento" }),
+    ).toContainText("Cooper necesita un momento");
     const expected = errors.filter((message) =>
       /Failed to load resource.*503/.test(message),
     );
