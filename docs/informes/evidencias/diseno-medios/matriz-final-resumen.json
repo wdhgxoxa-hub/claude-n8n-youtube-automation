@@ -1,0 +1,124 @@
+{
+  "corte": "9f3a91050510f0c95c3d34e5ffc69b45aaf8c1d2",
+  "resultado": "FAIL",
+  "alcance": "33 pantallas/estados por anchura. Auditoría estricta del armazón completo, no solo medios.",
+  "anchuras": [
+    {
+      "ancho": 360,
+      "pantallas": 33,
+      "desbordamientos": 0,
+      "axeSeriasCriticas": 0,
+      "consola": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "deteccionesTokens": 5013,
+      "archivo": "evidencias-diseno/matriz-360.json",
+      "sha256": "63597c45fed8973cb7664f71e640e8a2c7528d8501587064fde79760e6df8a21"
+    },
+    {
+      "ancho": 390,
+      "pantallas": 33,
+      "desbordamientos": 0,
+      "axeSeriasCriticas": 0,
+      "consola": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "deteccionesTokens": 5014,
+      "archivo": "evidencias-diseno/matriz-390.json",
+      "sha256": "20363f5804355071950a88e93cccbad90c83ec1ba474e9225bf1613fa46ea40f"
+    },
+    {
+      "ancho": 768,
+      "pantallas": 33,
+      "desbordamientos": 0,
+      "axeSeriasCriticas": 0,
+      "consola": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "deteccionesTokens": 5045,
+      "archivo": "evidencias-diseno/matriz-768.json",
+      "sha256": "2de0233be3a9d17008b1f45621b0a8d97a0762b2df0da72ae2f927b7a7d0fb1a"
+    },
+    {
+      "ancho": 1024,
+      "pantallas": 33,
+      "desbordamientos": 0,
+      "axeSeriasCriticas": 0,
+      "consola": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "deteccionesTokens": 5099,
+      "archivo": "evidencias-diseno/matriz-1024.json",
+      "sha256": "3cbb8ca2a3093c69141c901e9ab3bfba762a0cda6bee2edc83a811c9bee03125"
+    },
+    {
+      "ancho": 1440,
+      "pantallas": 33,
+      "desbordamientos": 0,
+      "axeSeriasCriticas": 0,
+      "consola": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "deteccionesTokens": 5099,
+      "archivo": "evidencias-diseno/matriz-1440.json",
+      "sha256": "c04efd2293f91644ad4efa2636c575127151b5a737e7fea5bfbcc3f0d44b4be3"
+    },
+    {
+      "ancho": 1920,
+      "pantallas": 33,
+      "desbordamientos": 0,
+      "axeSeriasCriticas": 0,
+      "consola": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "deteccionesTokens": 5099,
+      "archivo": "evidencias-diseno/matriz-1920.json",
+      "sha256": "a0408d64b5ee06d2a3d81a81a32c53296ae3101d2013919a2c4cad0abe7a8e01"
+    }
+  ],
+  "totalDeteccionesTokens": 30369,
+  "notaTokens": "Detecciones repetidas por propiedad, elemento, ruta y anchura; no equivalen a defectos únicos.",
+  "notaConsola": "Un error HTTP 404 por anchura durante el recorrido que incluye /inexistente. La lista agregada no conserva URL; los traces locales conservan el recorrido. No se filtra ni se declara consola cero.",
+  "revisionesVisuales": [
+    "revision-visual-movil.md",
+    "revision-visual-tablet.md",
+    "revision-visual-escritorio.md"
+  ],
+  "fuentes": [
+    {
+      "archivo": "evidencias-diseno/desviaciones-tokens.json",
+      "sha256": "a0420ff07facd529a09a03e7c9d52459538b971bbf4468cd2f289af0fac5fc23"
+    },
+    {
+      "archivo": "evidencias-diseno/playwright.json",
+      "sha256": "877c91fee42e4706d44b6f831276b653d881ac07cd592405da6a02bda4805a25"
+    }
+  ],
+  "deteccionesPorPropiedad": {
+    "color": 14854,
+    "backgroundColor": 3403,
+    "font-size": 1592,
+    "borderTopLeftRadius": 2630,
+    "borderTopRightRadius": 2630,
+    "borderBottomLeftRadius": 2630,
+    "borderBottomRightRadius": 2630
+  },
+  "fuentesMenoresDe12px": {
+    "11px": 840,
+    "10px": 554,
+    "9px": 198
+  },
+  "radiosFueraDeTokens": {
+    "4px": 1640,
+    "2px": 1560,
+    "50%": 3928,
+    "12px": 512,
+    "30px": 40,
+    "6px": 296,
+    "3px": 40,
+    "9px": 2160,
+    "7px": 48,
+    "16px": 272,
+    "10px": 24
+  }
+}
