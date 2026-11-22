@@ -215,7 +215,7 @@
 .marcas-page .marca-calendario-titulo > svg {
   display: none;
 }
-.marcas-page .marca-calendario-titulo h3 {
+.marcas-page .marca-calendario-titulo :is(h2, h3) {
   font-family: var(--fuente-display);
   font-size: var(--texto-28);
   font-weight: 500;
@@ -383,7 +383,7 @@
 .marcas-page .marca-estudio {
   line-height: var(--interlinea-texto);
 }
-.marcas-page .marca-estudio h3 {
+.marcas-page .marca-estudio :is(h2, h3) {
   font-family: var(--fuente-display);
   font-size: var(--titulo-seccion);
   margin-block: var(--espacio-16);
@@ -676,7 +676,7 @@ html[data-motion-paused="true"] .marcas-page .marca-selector {
   font-weight: 500;
   margin: 0;
 }
-.marcas-page .marca-resultados > h3,
+.marcas-page .marca-resultados > :is(h2, h3),
 .marcas-page .competencia-panel > h2 {
   font-family: var(--fuente-display);
   font-size: var(--texto-28);

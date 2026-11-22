@@ -259,6 +259,10 @@ export function Marcas({
       })}
     </section>
   );
+  // Con una marca abierta su nombre es el h1 de la página: las secciones bajan
+  // un solo nivel (h2) y sus fichas, h3. En el archivo general el h2 es la marca.
+  const TituloSeccion = marcaId ? "h2" : "h3";
+  const TituloFicha = marcaId ? "h3" : "h4";
   return (
     <div className="page marcas-page">
       <Heading
@@ -589,7 +593,7 @@ export function Marcas({
                 {seccion === "estudio" && (
                   <section className="marca-estudio">
                     <BookOpen size={26} />
-                    <h3>Estudiar antes de publicar</h3>
+                    <TituloSeccion>Estudiar antes de publicar</TituloSeccion>
                     <p>
                       Reúne textos, imágenes disponibles, horarios y rendimiento
                       de tus publicaciones anteriores.
@@ -660,7 +664,7 @@ export function Marcas({
                   <>
                     <div className="marca-calendario-titulo">
                       <CalendarDays size={24} />
-                      <h3>Próximas publicaciones</h3>
+                      <TituloSeccion>Próximas publicaciones</TituloSeccion>
                     </div>
                     <p>
                       El horario sugerido usa {marca.zona}. Walter aprueba cada
@@ -767,7 +771,7 @@ export function Marcas({
                 )}
                 {seccion === "publicados" && (
                   <section className="marca-resultados">
-                    <h3>Publicados</h3>
+                    <TituloSeccion>Publicados</TituloSeccion>
                     <Link className="text-link" href="/publicados">
                       Ver videos publicados
                     </Link>
@@ -800,7 +804,7 @@ export function Marcas({
                 )}
                 {seccion === "aprendizaje" && (
                   <section className="marca-resultados">
-                    <h3>Aprendizaje de la marca</h3>
+                    <TituloSeccion>Aprendizaje de la marca</TituloSeccion>
                     <Link className="text-link" href="/aprendizaje">
                       Ver aprendizaje de videos
                     </Link>
@@ -816,7 +820,7 @@ export function Marcas({
                           key={p.id}
                           id={`aprendizaje-${p.id}`}
                         >
-                          <h4>{p.datos.titulo}</h4>
+                          <TituloFicha>{p.datos.titulo}</TituloFicha>
                           <p>
                             {p.aviso ||
                               `Resultado observado: ${p.metricas?.interacciones ?? "Sin datos"} interacciones. Compara con el mismo formato antes de cambiar la frecuencia.`}
