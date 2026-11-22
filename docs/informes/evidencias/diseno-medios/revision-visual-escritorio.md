@@ -1,6 +1,6 @@
 # Revisión visual de escritorio — diseno-medios
 
-Fecha: 21 de noviembre de 2026, Lima. Revisor: subagente de interfaz. Alcance: 33 pantallas/estados a 1440 y 1920 px, **66 capturas revisadas**. No se ejecutaron pruebas ni se modificó el armazón durante esta revisión.
+Fecha: 21 de noviembre de 2026, Lima. Revisor: subagente de interfaz. Alcance: 33 pantallas/estados a 1440 y 1920 px, **66 capturas iniciales y las 66 capturas finales revisadas visualmente**. No se ejecutaron pruebas ni se modificó el armazón durante esta revisión.
 
 ## Dictamen
 
@@ -90,6 +90,52 @@ Se volvieron a inspeccionar los seis originales de Inicio, Fábrica y Publicado 
 | Fábrica 1024 | `5389767362f9e6caa2474b0d071cdbb1f09b6a27463b658509d6958ce0bcdc8a` | Mismo truncado correcto; títulos completos disponibles fuera de la miniatura. Cola sin colisión. |
 
 **Resultado del cierre focal: los tres hallazgos propios están corregidos y verificados visualmente.** No se cambió producto ni se ejecutaron pruebas pesadas durante esta recaptura documental. La revisión global permanece condicionada por los límites del armazón y por la puerta completa coordinada por la raíz.
+
+## Inspección completa de los 66 PNG finales
+
+Tras el cierre focal se inspeccionaron visualmente **los 33 pares finales completos, 66 de 66 PNG**, del mismo snapshot `9f3a910` y producto `53b17df`. Esta tanda incluye las vistas ajenas a medios y los estados vacíos; no se limita a las ocho capturas ampliadas del anexo anterior. Se usaron las [33 hojas finales y sus 66 originales](../../../../evidencias-diseno/revision-escritorio/final-completa/), preservando toda la altura de cada página. Además se examinaron los últimos 1100 px de Canal y Ajustes de fábrica en ambas anchuras, a escala original, para comprobar sus cierres y controles.
+
+El inventario final coincide exactamente con el inicial: 33 nombres por cada ancho, sin faltantes ni sustituciones. **32 archivos son idénticos byte por byte y 34 son distintos**; todos se abrieron visualmente, incluidos los idénticos. El [manifiesto de la tanda completa](revision-visual-escritorio-completa-final.json) registra los 66 SHA-256, las horas de los PNG finales y su igualdad o diferencia frente al manifiesto inicial. La diferencia de hash no se atribuye automáticamente al producto: las capturas también contienen horas y frases de ensayo variables.
+
+Cada fila siguiente confirma la observación de **ambas anchuras finales**, comparada con el registro inicial. «Distinto» e «idéntico» describen los dos PNG del par frente a sus originales iniciales, no una comparación entre 1440 y 1920.
+
+| Pantalla final, 1440 y 1920 | Comparación de archivos | Comprobación visual de esta tanda |
+| --- | --- | --- |
+| 01 Inicio | Distinto | Cola con dos líneas dentro de cada caja y chip en su reserva lateral; título exterior completo. Chat y mascota siguen dominando la jerarquía previa. |
+| 02 Fábrica | Distinto | Panel compartido completo; mismo resultado de las cartelas y chips que Inicio. Progreso, acciones y miniatura principal conservan alineación. |
+| 03 Videos | Distinto | Las cuatro filas mantienen alturas y separadores regulares. Cartelas con dos líneas, sin letras aisladas debajo; títulos exteriores y pistas sin invasión. |
+| 04 Detalle de video | Distinto | Título de portada completo, aviso neutral debajo y panel lateral separado. El final del guion queda visible. |
+| 05 Aprobación de guion | Distinto | «¿A qué huele la lluvia?» cabe en portada y cabecera. Aviso de archivo ausente completo; botones y etapas no pisan el medio. |
+| 06 Aprobación final | Distinto | «La ciudad antes del ruido» ocupa una línea dentro de la portada. Caja, aviso neutral, guion y acción lateral sin recortes. |
+| 07 Publicado | Distinto | El título largo se distribuye en dos líneas. Confirmado el aviso «El archivo del video todavía no está disponible aquí», separado de la sección de redes. |
+| 08 Pedir video | Distinto | Formulario y foco visibles; lista inferior completa. Títulos de las cartelas contenidos y títulos exteriores sin truncado inesperado. |
+| 09 Publicados | Distinto | Tres miniaturas tipográficas encajan en sus tarjetas sin tocar métricas ni gráficos. Se conserva el hueco de la cuarta tarjeta y la jerarquía dominada por métricas. |
+| 10 Aprendizaje | Distinto | Filtros, lección y dos correcciones completos, con bordes y separaciones regulares. Continúa sin la secuencia audiovisual de DIRECCION. |
+| 11 Marcas | Idéntico | Estado vacío y sus dos puntos de entrada permanecen íntegros. Sin nueva caja de medios ni colisión. |
+| 12 Canales | Idéntico | Dos tarjetas y formulario lateral completos. Alineación y espacios interiores amplios iguales a la primera pasada. |
+| 13 Canal / Biblia | Idéntico | Revisadas todas las filas y el cierre ampliado en ambos anchos. Último campo, botón y enlace de configuración enteros. |
+| 14 Radar | Distinto | Idea, recomendación y botón de pedir video separados; hora de ensayo visible. No se altera la composición abierta anterior. |
+| 15 Rutina y metas | Distinto | Decisión y formulario conservan columnas sin solape. Acción final visible; queda el espacio vacío previo a la izquierda. |
+| 16 Especialistas y redes | Idéntico | Recomendación, conexión, selección de plataformas y botón final completos. Sin portadas afectadas en esta estructura. |
+| 17 Referencias | Idéntico | Referencia pendiente, desplegable y acción final separados por líneas. No aparece una imagen inventada para un recurso pendiente. |
+| 18 Adoptar cuenta | Idéntico | Texto de identidad y formulario lateral alineados. Todos los controles caben en su tarjeta. |
+| 19 Programados | Distinto | Tres registros completos con título, fecha y enlace, separados regularmente. La ausencia de miniaturas corresponde al armazón de esta vista. |
+| 20 Decisiones | Distinto | Dos decisiones con sus controles y botones completos. No hay cruces entre el segundo formulario y el cierre de página. |
+| 21 Incidencias | Idéntico | Mensaje vacío y enlace de aprendizaje enteros; amplitud de espacio y ornamento previos sin cambios. |
+| 22 Avisos | Idéntico | Explicación de estados y enlace completos. No hay aviso oculto por la cabecera ni una caja de medios añadida. |
+| 23 Avatares | Idéntico | Cuatro tarjetas con ilustraciones declaradas ficticias, títulos y controles contenidos. No se confunden con miniaturas de videos de fábrica. |
+| 24 Voces | Idéntico | Dos tarjetas de ondas completas y alineadas; controles de reproducción dentro de sus cajas. Vacío lateral previo conservado. |
+| 25 Crear avatar | Distinto | Frase de ensayo, controles de archivo y consentimiento caben en las columnas. Catálogo inferior completo, sin contacto con el formulario. |
+| 26 Crear voz | Distinto | Frase variable y controles completos; botón de creación separado del catálogo de voces. Sin recorte en el cierre. |
+| 27 Perfil | Idéntico | Identidad, apariencia y avisos conservan sus cajas. Sigue visible el selector de tema claro, desviación global anterior. |
+| 28 Administración | Distinto | Tabla, recuerdos, revisión de identidad e invitaciones completos. Columnas de gasto y acceso alineadas; no hay medio nuevo aquí. |
+| 29 Ajustes de fábrica | Idéntico | Formulario completo y cierre ampliado en ambas anchuras: último campo, botón y registro de cambios sin cortes. |
+| 30 Entrada | Idéntico | Título principal, acceso y pie dentro de las dos columnas. Continúa la decoración y el espacio negativo del armazón previo. |
+| 31 Entrada con error | Idéntico | Aviso íntegro entre el texto y el botón de acceso; no desplaza contenido fuera de su columna. |
+| 32 No encontrado | Idéntico | Título, explicación y acción completos, sin choque con la ilustración superior. |
+| 33 Enlace vencido | Idéntico | Título y acción sin recortes. Persiste la diferencia de alineación a 1440 respecto a No encontrado, ya registrada como composición previa. |
+
+**Resultado de la tanda completa: no se observaron nuevos defectos propios de medios en los 66 PNG finales.** Se mantienen cerrados el solape de cola, la letra huérfana de miniaturas compactas y el aviso inexacto del detalle publicado. Se mantienen también las reservas sobre jerarquía, tokens y armazón global: esta inspección completa no convierte esas desviaciones en conformidad ni acredita movimiento o medios reales. No se ejecutaron pruebas, no se modificó producto y no se integró ni desplegó durante esta tanda documental.
 
 ## Pendientes de Walter
 
