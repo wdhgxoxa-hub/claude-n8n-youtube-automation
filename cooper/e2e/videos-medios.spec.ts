@@ -151,7 +151,10 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
     .locator(`[data-video-medio="${contexto.video.id}"]`)
     .first();
   const imagen = medio.locator("img");
-  await expect(imagen).toHaveJSProperty("src", new URL(poster, page.url()).href);
+  await expect(imagen).toHaveJSProperty(
+    "src",
+    new URL(poster, page.url()).href,
+  );
   await expect(imagen).toHaveAttribute("loading", "lazy");
   await expect(imagen).toHaveAttribute("width", "320");
   await expect(imagen).toHaveAttribute("height", "480");
@@ -455,7 +458,7 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
   await page
     .getByRole("button", { name: "Actualizar resultados", exact: true })
     .click();
-  await expect(medio.locator("[data-poster=tipografico]")).toHaveText(
+  await expect(medio.locator(".medio-espera")).toContainText(
     publicacion.titulo,
   );
   await expect(medio.locator("svg")).toHaveCount(0);

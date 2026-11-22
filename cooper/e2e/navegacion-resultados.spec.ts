@@ -66,7 +66,10 @@ test("Resultados enlaza las secciones de Marcas y conserva el destino al recarga
       .click();
     await expect(page).toHaveURL(new RegExp(`/${ruta}$`));
     await expect(
-      page.getByRole("heading", { name: etiqueta, exact: true }),
+      page.getByRole("heading", {
+        name: ruta === "publicados" ? "La pared" : "Lo que aprendimos",
+        exact: true,
+      }),
     ).toBeVisible();
   }
   mkdirSync(".cache/total-sentinel/marcas", { recursive: true });
