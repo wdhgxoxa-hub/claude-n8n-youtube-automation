@@ -45,6 +45,8 @@ export async function capturarFormulariosOperacion(
   };
   page.on("request", watchWrites);
   const screens: string[] = [];
+  let reconciliationFixtureStarted = false;
+  let reconciliationFixtureRemoved = false;
   const capture = async (name: string) => {
     expect(writes, "Abrir y revisar no ejecuta operaciones").toEqual([]);
     await shot(name);
@@ -114,6 +116,7 @@ export async function capturarFormulariosOperacion(
     // El emisor existente inserta un caso ficticio en la base temporal E2E.
     // No se consulta ni cambia ninguna operación externa.
     await page.goto("about:blank");
+    reconciliationFixtureStarted = true;
     const session = await page.request.post(`${fixture}/sesion`, {
       data: {
         email: "admin@example.test",
@@ -150,6 +153,24 @@ export async function capturarFormulariosOperacion(
     await capture("administracion-conciliacion-revisar");
   } finally {
     page.off("request", watchWrites);
+    if (reconciliationFixtureStarted) {
+      await page.goto("about:blank");
+      const cleanup = await page.request.post(`${fixture}/sesion`, {
+        data: {
+          email: "admin@example.test",
+          secret: process.env.COOPER_E2E_SECRET,
+          escenario: "conciliacion-retirar",
+        },
+      });
+      expect(cleanup.ok(), "Retirar el caso ficticio de conciliación").toBe(true);
+      const response = await page.request.get(`${origin}/api/estado`);
+      expect(response.ok()).toBe(true);
+      const state: Estado = await response.json();
+      expect(state.chat.tarjetas.map((card) => card.id)).not.toContain(
+        "e2e-conciliacion",
+      );
+      reconciliationFixtureRemoved = true;
+    }
     mkdirSync("../evidencias-diseno", { recursive: true });
     writeFileSync(
       `../evidencias-diseno/formularios-operacion-${width}.json`,
@@ -159,8 +180,9 @@ export async function capturarFormulariosOperacion(
           servidor: "E2E demo, proveedores simulados y base temporal",
           pantallas: screens,
           escriturasDesdeNavegador: writes,
+          casoConciliacionRetirado: reconciliationFixtureRemoved,
           limite:
-            "La revisión de conciliación usa el caso e2e-conciliacion del emisor aislado. Ninguna solicitud ni conciliación se confirma.",
+            "La revisión usa el caso e2e-conciliacion del emisor aislado y lo retira al terminar. Ninguna solicitud ni conciliación se confirma.",
         },
         null,
         2,

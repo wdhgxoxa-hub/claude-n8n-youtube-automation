@@ -13,7 +13,7 @@ import {
   chatMemories,
   chatSessions,
 } from "../src/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { crearReto } from "../src/servicios/biblioteca";
 import { prepararResultados } from "./fixtures-resultados";
 import { VozSimulada } from "../src/servicios/proveedores/simulados";
@@ -148,6 +148,24 @@ const server = createServer(async (req, res) => {
           expiresAt: Date.now() + 600000,
         })
         .onConflictDoNothing()
+        .run();
+    }
+    // Retira sólo el caso de la matriz, sin alterar otras acciones del usuario.
+    if (
+      input.escenario === "conciliacion-retirar" &&
+      process.env.COOPER_DEMO === "1" &&
+      user.role === "admin" &&
+      input.email.endsWith("@example.test")
+    ) {
+      db()
+        .delete(chatActions)
+        .where(
+          and(
+            eq(chatActions.id, "e2e-conciliacion"),
+            eq(chatActions.ownerId, user.id),
+            eq(chatActions.fingerprint, "ensayo"),
+          ),
+        )
         .run();
     }
     if (input.montaje === "crear" || input.montaje === "cambiar")
