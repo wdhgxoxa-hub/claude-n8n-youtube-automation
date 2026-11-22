@@ -28,10 +28,12 @@ export function Cartel({
       <span className="cartel-composicion">
         {(firma || detalle) && (
           <span className="cartel-cabecera">
-            <span className="cartel-canal">{firma}</span>
+            <span className="cartel-canal">{firma}</span>{" "}
             {detalle && <span className="cartel-detalle">{detalle}</span>}
           </span>
         )}
+        {/* Los espacios (invisibles en flex) separan las palabras en el texto
+            del cartel: «N.º 01 Título», no «N.º 01Título» (WCAG 2.5.3). */}{" "}
         <span className="cartel-titulo" data-poster="tipografico">
           {titulo}
         </span>
