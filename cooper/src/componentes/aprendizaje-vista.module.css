@@ -43,6 +43,7 @@
 .resumen {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: var(--espacio-8) var(--espacio-24);
   padding-block: var(--espacio-24);
@@ -197,6 +198,7 @@
   width: fit-content;
   display: inline-flex;
   align-items: center;
+  gap: var(--espacio-4);
   min-height: var(--objetivo-tactil);
   color: var(--texto);
   text-decoration: underline;

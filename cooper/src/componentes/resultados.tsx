@@ -138,7 +138,7 @@ export function Filtros({
         <Boton
           variante="fantasma"
           className={styles.actualizar}
-          aria-label="Actualizar resultados"
+          aria-label={ocupado ? "Actualizando resultados" : "Actualizar resultados"}
           disabled={ocupado}
           onClick={actualizar}
         >
