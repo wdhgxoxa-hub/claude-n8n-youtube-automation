@@ -7,6 +7,7 @@
   --conexion-aviso: #ffc53d;
   --conexion-radio: 999px;
   --conexion-espacio: 8px;
+  --conexion-espacio-compacto: 4px;
   --conexion-margen: 16px;
   --conexion-anclaje: 16px;
   --conexion-tamano: 13px;
@@ -59,6 +60,9 @@
 @media (max-width: 1023px) {
   .connection-notice {
     --conexion-anclaje: 48px;
+  }
+  .connection-pill {
+    padding-block: var(--conexion-espacio-compacto);
   }
 }
 @media (prefers-reduced-motion: reduce) {

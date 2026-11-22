@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   entrarConexion,
@@ -80,6 +80,7 @@ for (const ancho of anchos) {
   }) => {
     test.setTimeout(300_000);
     mkdirSync(salida, { recursive: true });
+    rmSync(`${salida}/auditoria-${ancho}.json`, { force: true });
     await page.setViewportSize({ width: ancho, height: 900 });
     await page.emulateMedia({ reducedMotion: "reduce" });
     const estado = await entrarConexion(page, true);
