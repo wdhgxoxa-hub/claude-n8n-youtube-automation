@@ -1,5 +1,5 @@
 import {
-  test,
+  test as base,
   expect,
   request,
   type BrowserContext,
@@ -19,6 +19,17 @@ import Database from "better-sqlite3";
 import type { Estado } from "../src/servicios/datos";
 import type { Resultados } from "../src/contratos/resultados";
 import { capture, evidenceDir, startSample, stopSample } from "./auditoria";
+
+const test = base.extend({
+  // El viewport se fija antes de crear el contexto, también para que el vídeo
+  // móvil conserve su proporción vertical y no un lienzo de escritorio vacío.
+  viewport: async ({ viewport }, provideViewport, info) => {
+    const width = Number(
+      info.title.match(/a (\d+)px$/)?.[1] ?? viewport?.width ?? 1440,
+    );
+    await provideViewport({ width, height: 900 });
+  },
+});
 
 let cookies: Awaited<ReturnType<BrowserContext["cookies"]>>;
 const widths = [360, 390, 768, 1024, 1440, 1920];
@@ -198,9 +209,9 @@ for (const width of widths)
         );
       });
     for (const gap of heroGaps)
-      expect(gap, "Aire entre cifras de la misma fila").toBeGreaterThanOrEqual(
-        16,
-      );
+      expect
+        .soft(gap, "Aire entre cifras de la misma fila")
+        .toBeGreaterThanOrEqual(16);
     await expect(page.locator("main select")).toHaveCount(0);
     await expect(page.locator("main input[type=date]:visible")).toHaveCount(0);
     await capture(page, "publicados", width, consoleErrors);

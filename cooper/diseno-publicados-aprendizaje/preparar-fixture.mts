@@ -186,7 +186,11 @@ for (const [i, id] of ids.entries()) {
       output,
     ]);
   const local = readFileSync(output);
-  const fecha = new Date(Date.UTC(2026, 10, 8 + i, 16)).toISOString();
+  // Las aplicaciones se publican después de redactar la lección a las 17:00Z;
+  // su medición llega 24h después. Mantiene la secuencia sin atribuir causalidad.
+  const fecha = new Date(
+    Date.UTC(2026, 10, 8 + i, [1, 3, 5].includes(i) ? 20 : 16),
+  ).toISOString();
   const montaje = `https://cdn.creatomate.com/renders/${id}.mp4`;
   const publicacion = {
     id: `publicacion-${id}`,

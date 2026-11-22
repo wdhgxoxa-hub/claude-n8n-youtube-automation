@@ -18,6 +18,8 @@ Las doce publicaciones y tres lecciones son ficticias, marcadas por el adaptador
 
 Solo los escenarios nombrados **vacío, carga y recuperación explícitos** interceptan `/api/resultados`, después de comprobar la pantalla normal. Separan el diagnóstico HTTP 503 provocado de cualquier error inesperado y verifican recuperación contra el backend real.
 
+Cada lección se redacta después de medir el vídeo de origen. El vídeo que aplica la corrección se publica tres horas después y se mide a las 24 h. Esta cronología permite comparar observaciones; no demuestra causalidad.
+
 La batería espacia sus casos según las solicitudes recientes de la cuenta compartida: conserva las protecciones de tasa reales del servidor. La espera entre casos evita que la captura acelerada de doce medios por pantalla agote el presupuesto de una sesión antes de probar el teclado o la recuperación.
 
 ## Evidencia
