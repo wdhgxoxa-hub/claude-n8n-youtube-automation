@@ -76,9 +76,10 @@ function MedioInicio({
         // carátula con su estado real y solo reproduce donde se permite.
         mediosIniciales={medio}
         vistaPrevia={heroe || vistaPrevia}
-        // Fuera del héroe, el mismo control ya contiene su título en texto;
-        // el póster tipográfico lo muestra igualmente como carátula.
-        alt={heroe ? video.title : ""}
+        // El control que envuelve el medio ya nombra la pieza con texto (en el
+        // héroe, el título solo-lector junto a «Ver video»): la imagen es
+        // decorativa y el póster tipográfico (aria-hidden) no pierde el nombre.
+        alt=""
         titulo={video.title}
         canal={data.channels.find((c) => c.id === video.channelId)?.name}
         proporcion={vertical ? "vertical" : "horizontal"}
@@ -86,6 +87,7 @@ function MedioInicio({
       />
       {heroe && (
         <span className="inicio-reproducir">
+          <span className="sr-only">{video.title}: </span>
           <Play size={20} fill="currentColor" aria-hidden="true" />
           Ver video
         </span>
