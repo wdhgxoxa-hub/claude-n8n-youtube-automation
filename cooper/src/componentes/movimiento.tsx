@@ -31,14 +31,20 @@ export const resorte = { type: "spring", stiffness: 380, damping: 34 } as const;
 export function NumeroAnimado({
   value,
   money = false,
+  compact = false,
 }: {
   value: number;
   money?: boolean;
+  compact?: boolean;
 }) {
   const reduced = useMovimientoReducido();
   const label = new Intl.NumberFormat(
     "es-PE",
-    money ? { style: "currency", currency: "USD" } : {},
+    money
+      ? { style: "currency", currency: "USD" }
+      : compact
+        ? { notation: "compact", maximumFractionDigits: 1 }
+        : {},
   ).format(value);
   return (
     <span className="animated-number">

@@ -49,7 +49,9 @@ test.describe("evidencia de movimiento", () => {
     await page.waitForTimeout(950);
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
-    await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
+    await expect(page.locator(".inicio-etapas")).toHaveCount(3);
+    for (const track of await page.locator(".inicio-etapas").all())
+      await expect(track.locator("span")).toHaveCount(12);
     const face = page.locator(".cooper-orb .cooper-presencia video");
     await expect(face).toBeVisible();
     await expect
@@ -75,40 +77,29 @@ test.describe("evidencia de movimiento", () => {
     );
     expect(ownPublished).toBeDefined();
     expect(ownEditing).toBeDefined();
-    // El administrador ve demos de varios dueños con el mismo título. La cola
-    // conserva el orden del estado; el enlace de detalle comprueba el ID elegido.
-    const queue = page.locator(".queue-item");
-    await expect(queue).toHaveCount(state.videos.length);
-    const card = queue.nth(
-      state.videos.findIndex((video) => video.id === ownPublished!.id),
-    );
-    await expect(card).toHaveAccessibleName(
-      "12 Por qué el cielo cambia de color Publicado",
-    );
-    await card.hover({ position: { x: 8, y: 8 } });
-    await card.click();
-    await expect(page.locator(".factory-link")).toHaveAttribute(
-      "href",
-      `/videos/${ownPublished!.id}`,
-    );
-    await expect(page.getByRole("progressbar")).toHaveAttribute(
-      "aria-valuenow",
-      "12",
-    );
-    await expect(page.locator(".factory-progress .sr-only")).toHaveText("100");
-    const editing = queue.nth(
-      state.videos.findIndex((video) => video.id === ownEditing!.id),
+    // Inicio conserva sólo los videos propios; cada acceso identifica el recurso.
+    const hero = page.getByRole("link", {
+      name: `Ver video: ${ownPublished!.title}`,
+      exact: true,
+    });
+    await expect(hero).toHaveAttribute("href", `/videos/${ownPublished!.id}`);
+    await expect(page.locator(".inicio-hero")).toContainText("Publicado");
+    const editing = page.locator(
+      `.inicio-pista[href="/videos/${ownEditing!.id}"]`,
     );
     await expect(editing).toHaveAccessibleName(
-      "08 El mar también respira Montaje",
+      /El mar también respira.*Montaje/,
     );
-    await editing.click();
-    await expect(page.locator(".factory-link")).toHaveAttribute(
-      "href",
-      `/videos/${ownEditing!.id}`,
+    await expect(editing.locator(".inicio-etapas")).toHaveAttribute(
+      "aria-label",
+      "7 etapas completadas de 12. Montaje",
     );
+    await expect(editing.locator('[data-actual="true"]')).toHaveCount(1);
+    await expect(
+      editing.locator('.inicio-etapas [data-viva="true"]'),
+    ).toHaveCount(1);
     await page.waitForTimeout(750);
-    await captura(page, "fabrica-1440");
+    await captura(page, "inicio-1440");
     // El chat ahora termina al acabar el stream. Espaciamos sus frames reales
     // para observar también respuestas de una sola frase sin carreras con el sondeo.
     await page.evaluate(() => {
@@ -381,12 +372,16 @@ test("fluidez local y propiedades de animación sin cambios de geometría", asyn
   );
 });
 
-test("avance por evento: relleno, destello único y porcentaje final", async ({
+test("avance por evento: pista compacta y pulso en la etapa viva", async ({
   page,
 }) => {
   await login(page);
-  const state = await (await page.request.get("/api/estado")).json();
-  state.videos[0].stage = 8;
+  const state: Estado = await (await page.request.get("/api/estado")).json();
+  const video = state.videos.find(
+    (item) => item.ownerId === state.user.id && item.stage === 7,
+  )!;
+  expect(video).toBeDefined();
+  video.stage = 8;
   await page.route("**/api/eventos", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 400));
     await route.fulfill({
@@ -396,21 +391,31 @@ test("avance por evento: relleno, destello único y porcentaje final", async ({
     });
   });
   await page.reload();
-  await expect(page.getByRole("progressbar")).toHaveAttribute(
-    "aria-valuenow",
-    "8",
+  const track = page.locator(`.inicio-pista[href="/videos/${video.id}"]`);
+  await expect(track).toContainText("Control de calidad");
+  await expect(track.locator(".inicio-etapas")).toHaveAttribute(
+    "aria-label",
+    "8 etapas completadas de 12. Control de calidad",
   );
-  const ring = page
-    .locator(".factory-pane .journey li")
-    .nth(7)
-    .locator(".stage-spark");
+  await expect(
+    track.locator('.inicio-etapas [data-completa="true"]'),
+  ).toHaveCount(8);
+  await expect(
+    track.locator('.inicio-etapas [data-actual="true"]'),
+  ).toHaveCount(1);
+  const live = track.locator('.inicio-etapas [data-viva="true"]');
+  await expect(live).toHaveCount(1);
   await expect
-    .poll(() => ring.evaluate((el) => Number(getComputedStyle(el).opacity)), {
-      intervals: [20],
-    })
-    .toBeGreaterThan(0.01);
-  await expect(page.locator(".factory-progress .sr-only")).toHaveText("67");
-  await expect
-    .poll(() => ring.evaluate((el) => Number(getComputedStyle(el).opacity)))
-    .toBe(0);
+    .poll(() =>
+      live.evaluate(
+        (element) => element.getAnimations({ subtree: true }).length,
+      ),
+    )
+    .toBeGreaterThan(0);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(
+    await live.evaluate(
+      (element) => getComputedStyle(element, "::after").animationName,
+    ),
+  ).toBe("none");
 });

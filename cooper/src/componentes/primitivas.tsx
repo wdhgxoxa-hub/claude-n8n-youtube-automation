@@ -66,6 +66,7 @@ export function Medio({
   proporcion = "horizontal",
   idCompartido,
   videoId,
+  prioridad = false,
   className,
   children,
 }: {
@@ -75,6 +76,7 @@ export function Medio({
   proporcion?: "horizontal" | "vertical" | "cuadrado";
   idCompartido?: string;
   videoId?: string;
+  prioridad?: boolean;
   className?: string;
   children?: ReactNode;
 }) {
@@ -179,7 +181,13 @@ export function Medio({
           src={poster}
           alt={alt}
           fill
-          sizes="(max-width: 767px) 100vw, 50vw"
+          sizes={
+            prioridad
+              ? "(max-width: 767px) 100vw, (max-width: 1536px) 90vw, 1440px"
+              : "(max-width: 767px) 100vw, 50vw"
+          }
+          loading={prioridad ? "eager" : "lazy"}
+          fetchPriority={prioridad ? "high" : "auto"}
           unoptimized
         />
       ) : (
@@ -216,6 +224,7 @@ export function Cifra({
   serie = [],
   variacion,
   heroe = false,
+  compacta = false,
   className,
 }: {
   valor: number | null;
@@ -223,6 +232,7 @@ export function Cifra({
   serie?: readonly number[];
   variacion?: string;
   heroe?: boolean;
+  compacta?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -249,9 +259,12 @@ export function Cifra({
         {valor === null ? (
           "—"
         ) : visible && !reduced && !paused ? (
-          <NumeroAnimado value={valor} />
+          <NumeroAnimado value={valor} compact={compacta} />
         ) : (
-          new Intl.NumberFormat("es-PE").format(valor)
+          new Intl.NumberFormat(
+            "es-PE",
+            compacta ? { notation: "compact", maximumFractionDigits: 1 } : {},
+          ).format(valor)
         )}
       </div>
       {valor === null && <span className="cifra-detalle">Sin dato</span>}
