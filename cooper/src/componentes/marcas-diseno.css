@@ -13,6 +13,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gutter);
 }
+.marca-archivo-cabecera {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--espacio-16);
+}
 .marcas-page .marca-selector {
   position: relative;
   isolation: isolate;
@@ -660,11 +668,10 @@ html[data-motion-paused="true"] .marcas-page .marca-selector {
 
 /* La información de cada sección respira sin convertirse en otra tarjeta. */
 .marcas-page .marca-archivo-titulo {
-  grid-column: 1 / -1;
   font-family: var(--fuente-display);
   font-size: var(--texto-28);
   font-weight: 500;
-  margin-bottom: var(--espacio-8);
+  margin: 0;
 }
 .marcas-page .marca-resultados > h3,
 .marcas-page .competencia-panel > h2 {

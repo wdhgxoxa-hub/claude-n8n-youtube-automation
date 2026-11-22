@@ -182,9 +182,27 @@ export function Marcas({
       setBusy(false);
     }
   }
+  const accionNuevaMarca = !editor && data.marcas.length > 0 && (
+    <button
+      ref={newBrandButton}
+      className={`button ${marcaId ? "secondary" : "primary"}`}
+      disabled={busy}
+      aria-expanded={editor}
+      aria-controls={editor ? editorId : undefined}
+      onClick={() => abrirEditor()}
+    >
+      <Plus size={18} />
+      Añadir marca o cuenta
+    </button>
+  );
   const archivoMarcas = (
     <section className="marcas-archivo" aria-label="Tus marcas">
-      {marcaId && <h2 className="marca-archivo-titulo">Tus marcas</h2>}
+      {marcaId && (
+        <div className="marca-archivo-cabecera">
+          <h2 className="marca-archivo-titulo">Tus marcas</h2>
+          {accionNuevaMarca}
+        </div>
+      )}
       {data.marcas.map((m) => {
         const proxima = [...m.piezas]
           .filter((p) =>
@@ -244,23 +262,13 @@ export function Marcas({
   return (
     <div className="page marcas-page">
       <Heading
-        title="Marcas"
-        description="Una identidad para cada voz. Un lugar para cuidar lo que compartes."
-        action={
-          !editor && data.marcas.length > 0 ? (
-            <button
-              ref={newBrandButton}
-              className="button primary"
-              disabled={busy}
-              aria-expanded={editor}
-              aria-controls={editor ? editorId : undefined}
-              onClick={() => abrirEditor()}
-            >
-              <Plus size={18} />
-              Añadir marca o cuenta
-            </button>
-          ) : undefined
+        title={marcaId && marca ? marca.nombre : "Marcas"}
+        description={
+          marcaId && marca
+            ? nombreRubro[marca.rubro]
+            : "Una identidad para cada voz. Un lugar para cuidar lo que compartes."
         }
+        action={!marcaId ? accionNuevaMarca : undefined}
       />
       {!editor && !conexionAbierta && (
         <Notice error={error} message={message} />
@@ -353,11 +361,16 @@ export function Marcas({
               >
                 <section
                   className="marca-identidad"
-                  aria-labelledby="marca-nombre"
+                  aria-labelledby={!marcaId ? "marca-nombre" : undefined}
+                  aria-label={marcaId ? "Identidad de la marca" : undefined}
                 >
                   <div>
-                    <p className="marca-ceja">El universo de tu marca</p>
-                    <h2 id="marca-nombre">{marca.nombre}</h2>
+                    {!marcaId && (
+                      <>
+                        <p className="marca-ceja">El universo de tu marca</p>
+                        <h2 id="marca-nombre">{marca.nombre}</h2>
+                      </>
+                    )}
                     {marcaId ? (
                       <details className="marca-guia-resumen" key={marca.id}>
                         <summary>Guía de la marca</summary>
@@ -1802,7 +1815,11 @@ function Pieza({
         )}
         <div className="actions">
           {["borrador", "pendiente", "programada"].includes(p.estado) && (
-            <button className="button secondary" disabled={busy} onClick={editar}>
+            <button
+              className="button secondary"
+              disabled={busy}
+              onClick={editar}
+            >
               Editar pieza
             </button>
           )}
