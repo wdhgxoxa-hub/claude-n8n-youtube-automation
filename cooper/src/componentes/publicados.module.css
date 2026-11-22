@@ -93,11 +93,21 @@
 }
 .pared {
   display: grid;
+  /* La pista no crece con el contenido: la fila de reserva no ensancha la página. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--espacio-32) var(--gutter);
 }
-/* Antes de medir el ancho las piezas existen pero no se pintan. */
+/* Antes de medir el ancho las piezas existen pero no se pintan. Su fila de
+   reserva no puede ser más ancha que la pared: una fila sin cortes de piezas a
+   320 px desborda y el navegador móvil ensancha la vista (salta la barra fija). */
 .pared[data-medida="pendiente"] {
   visibility: hidden;
+}
+.pared[data-medida="pendiente"] .fila {
+  flex-wrap: wrap;
+}
+.pared[data-medida="pendiente"] .fila > * {
+  max-width: 100%;
 }
 .fila {
   display: flex;
