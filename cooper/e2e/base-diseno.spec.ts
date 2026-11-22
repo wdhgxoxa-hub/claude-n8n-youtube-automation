@@ -116,6 +116,33 @@ async function capture(
     .toEqual([]);
   expect.soft(violations, `${screen} ${width}: axe`).toEqual([]);
   expect.soft(messages, `${screen} ${width}: consola`).toEqual([]);
+  const panel = page.locator(".cooper-panel");
+  if (await panel.isVisible()) {
+    const box = (await panel.boundingBox())!;
+    const send = (await panel
+      .getByRole("button", { name: "Enviar mensaje", exact: true })
+      .boundingBox())!;
+    expect
+      .soft(send, `${screen} ${width}: compositor disponible`)
+      .not.toBeNull();
+    if (send) {
+      expect
+        .soft(send.y, `${screen} ${width}: enviar dentro de la hoja`)
+        .toBeGreaterThanOrEqual(box.y);
+      expect
+        .soft(
+          send.y + send.height,
+          `${screen} ${width}: enviar sin recorte inferior`,
+        )
+        .toBeLessThanOrEqual(box.y + box.height);
+      expect
+        .soft(
+          send.x + send.width,
+          `${screen} ${width}: enviar sin recorte lateral`,
+        )
+        .toBeLessThanOrEqual(box.x + box.width);
+    }
+  }
   return result;
 }
 
@@ -590,6 +617,91 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
   }
   writeFileSync(
     `${directory}/errores-provocados.json`,
+    JSON.stringify(diagnostics, null, 2) + "\n",
+  );
+});
+
+test("Cooper conserva el compositor con dos selectores, adjunto y error", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const state: Estado = await (await page.request.get("/api/estado")).json();
+  const target = state.videos.find(
+    (video) => video.ownerId === state.user.id && video.stage === 3,
+  )!;
+  const diagnostics: unknown[] = [];
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: width < 1024 ? 844 : 1000 });
+    await page.goto(`/videos/${target.id}`);
+    await page
+      .getByRole("button", { name: "Abrir Cooper", exact: true })
+      .click();
+    const panel = page.locator(".cooper-panel");
+    await expect(panel.locator(".composer-tools select")).toHaveCount(2);
+    const png = await page.evaluate(() => {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 48;
+      const context = canvas.getContext("2d")!;
+      context.fillStyle = getComputedStyle(
+        document.documentElement,
+      ).getPropertyValue("--tally");
+      context.fillRect(0, 0, 48, 48);
+      return canvas.toDataURL().split(",")[1];
+    });
+    await page
+      .getByLabel("Archivo adjunto", { exact: true })
+      .setInputFiles({
+        name: "referencia-de-ensayo.png",
+        mimeType: "image/png",
+        buffer: Buffer.from(png, "base64"),
+      });
+    await expect(
+      page.getByAltText("Vista previa de referencia-de-ensayo.png"),
+    ).toBeVisible();
+    await capture(page, "cooper-adjunto-selectores", width, []);
+    const errors: string[] = [];
+    const listener = (message: import("@playwright/test").ConsoleMessage) => {
+      if (["error", "warning"].includes(message.type()))
+        errors.push(message.text());
+    };
+    page.on("console", listener);
+    await page.route(
+      "**/api/chat",
+      (route) =>
+        route.fulfill({
+          status: 503,
+          contentType: "application/json",
+          body: JSON.stringify({
+            error: "Cooper necesita un momento. Vuelve a intentarlo.",
+          }),
+        }),
+      { times: 1 },
+    );
+    await page
+      .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
+      .fill("Revisa esta referencia de ensayo");
+    await page
+      .getByRole("button", { name: "Enviar mensaje", exact: true })
+      .click();
+    await expect(page.getByRole("alert")).toContainText(
+      "Cooper necesita un momento",
+    );
+    page.off("console", listener);
+    const expected = errors.filter((message) =>
+      /Failed to load resource.*503/.test(message),
+    );
+    const unexpected = errors.filter((message) => !expected.includes(message));
+    await capture(
+      page,
+      "cooper-error-con-adjunto",
+      width,
+      unexpected,
+      expected,
+    );
+    diagnostics.push({ width, expectedHttpStatus: 503, expected, unexpected });
+  }
+  writeFileSync(
+    `${directory}/chat-errores-provocados.json`,
     JSON.stringify(diagnostics, null, 2) + "\n",
   );
 });
