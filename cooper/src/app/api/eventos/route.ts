@@ -14,6 +14,7 @@ export async function GET(request: Request) {
     const release = reserveStream(user.id);
     const encoder = new TextEncoder();
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let heartbeat: ReturnType<typeof setInterval> | undefined;
     let stopped = false;
     let stop = () => {};
     let lastSync = 0;
@@ -36,6 +37,7 @@ export async function GET(request: Request) {
           request.signal.removeEventListener("abort", stop);
           stopped = true;
           if (timer) clearTimeout(timer);
+          if (heartbeat) clearInterval(heartbeat);
           try {
             controller.close();
           } catch {
@@ -47,6 +49,12 @@ export async function GET(request: Request) {
           stop();
           return;
         }
+        // Abrir el transporte antes de esperar una conciliación lenta. No envía datos.
+        controller.enqueue(encoder.encode(": conectado\n\n"));
+        heartbeat = setInterval(() => {
+          if (!stopped && (controller.desiredSize ?? 0) > 0)
+            controller.enqueue(encoder.encode(": latido\n\n"));
+        }, 15000);
         const tick = async () => {
           if (stopped) return;
           try {
@@ -156,7 +164,7 @@ export async function GET(request: Request) {
     return new Response(stream, {
       headers: {
         "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache, no-store",
+        "Cache-Control": "no-cache, no-store, no-transform",
         Connection: "keep-alive",
         "X-Accel-Buffering": "no",
       },

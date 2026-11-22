@@ -1,6 +1,6 @@
 "use client";
 import { PanelCompetencia } from "./competencia";
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus, Palette, CalendarDays, BookOpen, ArrowLeft } from "lucide-react";
@@ -78,6 +78,10 @@ export function Marcas({
     setEditor(false);
   }
   const marca = data.marcas.find((m) => m.id === seleccion);
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("cooper-marca", { detail: marca ? { nombre: marca.nombre } : null }));
+    return () => { window.dispatchEvent(new CustomEvent("cooper-marca", { detail: null })); };
+  }, [marca]);
   function cambiarSeccion(valor: string) {
     setSeccion(valor);
     const url = new URL(window.location.href);
@@ -176,10 +180,7 @@ export function Marcas({
                   >
                     <span
                       className="marca-muestra"
-                      style={{
-                        background: m.guia.colores[0],
-                        borderColor: m.guia.colores[1],
-                      }}
+                      style={{ "--tinte-marca": m.guia.colores[0] } as CSSProperties}
                       aria-hidden="true"
                     />
                     <span>

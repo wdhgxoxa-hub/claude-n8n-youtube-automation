@@ -1,0 +1,23 @@
+{
+  "fuente": "Gemini_Generated_Gif_dnwgtddnwgtddnwg.gif.mp4",
+  "sha256Fuente": "433eb542b94b4d32efe23c4eb5506b6d458bb1765ff1dd7ccc596f3d7366ac6c",
+  "fuentePx": [
+    320,
+    180
+  ],
+  "salidaPx": [
+    180,
+    180
+  ],
+  "fotogramas": 30,
+  "fps": "10/1",
+  "duracionSegundos": 3.0,
+  "metodo": "fondo conectado + trimap + matting y descontaminación por fotograma",
+  "encoder": "libvpx-vp9 lossless yuva420p",
+  "errorMaximoAlfa": 1,
+  "bordesTransparentes": true,
+  "sinReescalado": true,
+  "sha256PNG": "8428c67ff77372372ecfb81fd04403ed71d8feb6af89f3c51ee680338a588a72",
+  "sha256WebM": "217fa164ed485fccca509be0ca837ff8eb5a946fd49bc5fe991354dbb087a7b5",
+  "limites": "Fuente comprimida a 10 fps; un solo gesto, no cinco estados. Usar hasta 112 CSS px."
+}

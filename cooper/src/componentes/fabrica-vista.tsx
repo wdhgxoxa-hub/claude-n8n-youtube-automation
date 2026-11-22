@@ -1,5 +1,4 @@
 "use client";
-import { IlustracionViva } from "./ilustracion-viva";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { animate, m as motion, useMotionValue } from "framer-motion";
@@ -8,6 +7,8 @@ import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Estado } from "@/servicios/datos";
 type Video = Estado["videos"][number];
 import { useEspacio, Empty } from "./espacio";
+import { Medio } from "./primitivas";
+import { nombreMedio } from "./transiciones";
 import { Portada } from "./portada";
 import {
   NumeroAnimado,
@@ -127,8 +128,8 @@ export function VideoMini({
   const { data } = useEspacio();
   return (
     <Link href={`/videos/${video.id}`} className="video-mini">
-      <span className="film-thumbnail">
-        <Portada title={video.title} />
+      <span className="film-thumbnail" data-video-transition={nombreMedio(video.id)}>
+        {video.observabilidad?.miniatura ? <Medio poster={video.observabilidad.miniatura} preview={video.observabilidad.montaje || undefined} alt={video.title} /> : data.demo ? <Portada title={video.title} /> : <span className="medio-pendiente" aria-label="Miniatura aún no disponible" />}
       </span>
       <div>
         <small>
@@ -159,7 +160,7 @@ export function FabricaVista({
   panelId: string;
   tabId: string;
 }) {
-  const { data, connected } = useEspacio();
+  const { data } = useEspacio();
   const [selected, setSelected] = useState("");
   const reduced = useMovimientoReducido();
   const active =
@@ -184,10 +185,6 @@ export function FabricaVista({
           <h2>La fábrica</h2>
           <p>Cada historia, un paso más cerca.</p>
         </div>
-        <span className="live-pill">
-          <i />
-          {connected ? "En vivo" : "Conectando"}
-        </span>
       </div>
       {pending.length > 0 && (
         <Link href={`/videos/${pending[0].id}`} className="approval-alert">
@@ -202,30 +199,6 @@ export function FabricaVista({
       )}
       {active ? (
         <>
-          <div
-            className="factory-cinema"
-            data-working={
-              active.productionState === "activa" &&
-              !esperaAprobacion(active.stage) &&
-              active.stage < 11
-            }
-          >
-            <IlustracionViva
-              nombre="fabrica"
-              activo={
-                active.productionState === "activa" &&
-                !esperaAprobacion(active.stage) &&
-                active.stage < 11
-              }
-            />
-            <span>
-              {active.stage === 11
-                ? "Historia publicada"
-                : esperaAprobacion(active.stage)
-                  ? "La siguiente escena la decides tú"
-                  : "Cada pieza encuentra su lugar"}
-            </span>
-          </div>
           <div className="factory-feature">
             <VideoMini video={active} />
           </div>

@@ -33,3 +33,6 @@ Thumbs.db
 
 # Node
 node_modules/
+
+# Capturas y recorridos reproducibles de la dirección de diseño.
+/evidencias-diseno/

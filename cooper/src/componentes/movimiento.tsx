@@ -29,7 +29,7 @@ export function useMovimientoReducido() {
   return reduced || config.reducedMotion === "always";
 }
 
-export const resorte = { type: "spring", stiffness: 360, damping: 32 } as const;
+export const resorte = { type: "spring", stiffness: 380, damping: 34 } as const;
 
 // Rodillos de tamaño fijo: solo transform, sin setState por fotograma ni cambios de ancho.
 export function NumeroAnimado({
@@ -56,8 +56,8 @@ export function NumeroAnimado({
                 initial={reduced ? false : { y: "0%" }}
                 animate={{ y: `${-Number(digit) * 10}%` }}
                 transition={{
-                  duration: reduced ? 0 : 0.7,
-                  ease: [0.22, 1, 0.36, 1],
+                  duration: reduced ? 0 : 0.64,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
               >
                 {"0\n1\n2\n3\n4\n5\n6\n7\n8\n9"}

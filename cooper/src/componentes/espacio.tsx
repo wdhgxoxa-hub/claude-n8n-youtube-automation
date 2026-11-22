@@ -18,11 +18,13 @@ import {
   MotionConfig,
   m as motion,
 } from "framer-motion";
-import { EscenaEstudio, CelebracionPublicacion } from "./escena-estudio";
-import { IlustracionViva } from "./ilustracion-viva";
+import { CelebracionPublicacion } from "./escena-estudio";
+import { CooperFlotante } from "./cooper-flotante";
+import { Transiciones } from "./transiciones";
+import { PildoraConexion } from "./primitivas";
+import "./armazon.css";
 import {
   Indicador,
-  NumeroAnimado,
   useMovimientoReducido,
   usePausaMovimiento,
 } from "./movimiento";
@@ -37,12 +39,11 @@ import {
   Settings2,
   ShieldCheck,
   LogOut,
-  PanelLeftClose,
+  Ellipsis,
   X,
 } from "lucide-react";
 import type { Estado } from "@/servicios/datos";
 import { Logo } from "@/marca/Logo";
-import { esperaAprobacion } from "@/lib/etapas";
 export async function api<T = unknown>(
   path: string,
   data?: unknown,
@@ -97,14 +98,22 @@ const cargarMovimiento = () =>
   import("./movimiento-funciones").then((module) => module.default);
 const nav = [
   { path: "/", label: "Inicio", icon: House },
-  { path: "/marcas", label: "Marcas", icon: Palette },
-  { path: "/canales", label: "Canales", icon: Radio },
-  { path: "/radar", label: "Operación", icon: Settings2 },
-  { path: "/videos", label: "Videos", icon: Clapperboard },
+  { path: "/videos", label: "Fábrica", icon: Clapperboard },
   { path: "/publicados", label: "Publicados", icon: ChartNoAxesCombined },
   { path: "/aprendizaje", label: "Aprendizaje", icon: BookOpen },
-  { path: "/avatares", label: "Avatares y voces", icon: UsersRound },
+  { path: "/marcas", label: "Marcas", icon: Palette },
 ];
+const extras = [
+  { path: "/canales", label: "Canales", icon: Radio },
+  { path: "/avatares", label: "Avatares y voces", icon: UsersRound },
+  { path: "/radar", label: "Operación", icon: Settings2 },
+  { path: "/perfil", label: "Mi perfil", icon: Settings2 },
+];
+function observarMovil(notify: () => void) {
+  const media = window.matchMedia("(max-width: 767px)");
+  media.addEventListener("change", notify);
+  return () => media.removeEventListener("change", notify);
+}
 function observarVisibilidad(notify: () => void) {
   document.addEventListener("visibilitychange", notify);
   return () => document.removeEventListener("visibilitychange", notify);
@@ -120,7 +129,9 @@ export function Espacio({
 }) {
   const [data, setData] = useState(initial),
     [connected, setConnected] = useState(false),
-    [menu, setMenu] = useState(false);
+    [menu, setMenu] = useState(false),
+    [cooper, setCooper] = useState(false);
+  const movil = useSyncExternalStore(observarMovil, () => window.matchMedia("(max-width: 767px)").matches, () => false);
   const path = usePathname();
   const ruta = useRef<HTMLDivElement>(null);
   const ultimaRuta = useRef(path);
@@ -133,7 +144,7 @@ export function Espacio({
     }
   }, [path]);
   const reduced = useMovimientoReducido();
-  const [isPaused, setPaused] = usePausaMovimiento();
+  const [isPaused] = usePausaMovimiento();
   const [celebration, setCelebration] = useState<string | null>(null);
   const previousVideos = useRef(initial.videos);
   const celebrationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -151,7 +162,7 @@ export function Espacio({
     if (published) {
       setCelebration(published.title);
       if (celebrationTimer.current) clearTimeout(celebrationTimer.current);
-      celebrationTimer.current = setTimeout(() => setCelebration(null), 9000);
+      celebrationTimer.current = setTimeout(() => setCelebration(null), 900);
     }
   }, []);
   useEffect(
@@ -208,7 +219,11 @@ export function Espacio({
           retry();
         }
       });
-      source.addEventListener("fallo", () => setConnected(false));
+      source.onopen = () => {
+        setConnected(true);
+        attempts = 0;
+      };
+      // Un fallo de conciliación no significa que el transporte SSE se haya cortado.
       source.onerror = retry;
     };
     const offline = () => {
@@ -229,20 +244,7 @@ export function Espacio({
     };
   }, [receive]);
   useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: light)");
-    const apply = () =>
-      (document.documentElement.dataset.theme =
-        data.user.theme === "sistema"
-          ? media.matches
-            ? "claro"
-            : "oscuro"
-          : data.user.theme);
-    apply();
-    media.addEventListener("change", apply);
-    return () => media.removeEventListener("change", apply);
-  }, [data.user.theme]);
-  useEffect(() => {
-    if (!menu || !window.matchMedia("(max-width: 767px)").matches) return;
+    if (!menu) return;
     const panel = sidebar.current;
     const opener = menuButton.current;
     const focusable = () =>
@@ -289,9 +291,6 @@ export function Espacio({
     previousPath.current = path;
     content.current?.focus({ preventScroll: true });
   }, [path]);
-  const pending = data.videos.filter(
-    (v) => v.productionState === "activa" && esperaAprobacion(v.stage),
-  ).length;
   return (
     <Context.Provider value={{ data, refresh, connected }}>
       <MotionConfig
@@ -303,43 +302,31 @@ export function Espacio({
               className="workspace"
               data-motion={isPaused || hidden || reduced ? "paused" : "playing"}
             >
-              <a className="skip" href="#contenido" inert={menu}>
-                Saltar al contenido
-              </a>
+              <Transiciones />
               <div
-                ref={sidebar}
-                role={menu ? "dialog" : "complementary"}
-                aria-modal={menu || undefined}
-                aria-label="Navegación del estudio"
-                id="navegacion"
-                className={`sidebar ${menu ? "is-open" : ""}`}
-                onClick={(event) => {
-                  if ((event.target as HTMLElement).closest("a[href]"))
-                    setMenu(false);
-                }}
+                className={`studio-shell ${cooper ? "cooper-open" : ""}`}
+                inert={menu || (cooper && movil)}
               >
-                <div className="sidebar-content">
-                  <Link href="/" className="brand" aria-label="Cooper, inicio">
-                    <Logo />
-                    <span>
-                      cooper<span className="brand-dot">.</span>
-                    </span>
-                  </Link>
-                  <button
-                    className="icon-button drawer-close"
-                    aria-label="Cerrar navegación"
-                    onClick={() => setMenu(false)}
+                <a className="skip" href="#contenido">
+                  Saltar al contenido
+                </a>
+                <aside
+                  className="glass-rail"
+                  aria-label="Navegación del estudio"
+                >
+                  <Link
+                    href="/"
+                    className="rail-brand"
+                    aria-label="Cooper, inicio"
                   >
-                    <X size={20} />
-                  </button>
-                  <div className="workspace-label">Tu espacio de creación</div>
+                    <Logo size={32} />
+                    <span>cooper.</span>
+                  </Link>
                   <nav aria-label="Principal">
                     {nav.map(({ path: href, label, icon: Icon }) => (
                       <Link
-                        onClick={() => setMenu(false)}
                         key={href}
                         href={href}
-                        prefetch={href === "/radar" ? false : undefined}
                         aria-current={
                           (href === "/" ? path === "/" : path.startsWith(href))
                             ? "page"
@@ -349,162 +336,150 @@ export function Espacio({
                         {(href === "/"
                           ? path === "/"
                           : path.startsWith(href)) && (
-                          <Indicador
-                            id="navegacion"
-                            className="nav-indicator"
-                          />
+                          <Indicador id="riel" className="nav-indicator" />
                         )}
-                        <Icon size={19} />
+                        <Icon size={20} />
                         <span>{label}</span>
-                        {href === "/videos" && pending > 0 && (
-                          <span className="nav-count">{pending}</span>
-                        )}
                       </Link>
                     ))}
                   </nav>
-                  <div className="sidebar-note">
-                    <p>En tu estudio</p>
-                    <Link href="/videos">
-                      <strong>
-                        <NumeroAnimado
-                          value={data.videos.filter((v) => v.stage < 11).length}
-                        />
-                      </strong>{" "}
-                      videos en producción
-                    </Link>
-                    <Link href="/videos">
-                      <strong>
-                        <NumeroAnimado value={pending} />
-                      </strong>{" "}
-                      por aprobar
-                    </Link>
-                    <div className="sidebar-summary-track" aria-hidden="true">
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <i
-                          key={i}
-                          className={
-                            data.videos.some((v) => v.stage === i)
-                              ? "occupied"
-                              : ""
-                          }
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <nav className="bottom-nav" aria-label="Cuenta">
-                    {data.user.role === "admin" && (
-                      <Link
-                        onClick={() => setMenu(false)}
-                        href="/admin"
-                        aria-current={path === "/admin" ? "page" : undefined}
-                      >
-                        {path === "/admin" && (
-                          <Indicador
-                            id="navegacion"
-                            className="nav-indicator"
-                          />
-                        )}
-                        <ShieldCheck size={18} />
-                        Administración
-                      </Link>
-                    )}
+                  <button
+                    className="rail-more"
+                    onClick={() => setMenu(true)}
+                    aria-label="Más destinos"
+                    aria-expanded={menu}
+                  >
+                    <Ellipsis size={20} />
+                    <span>Más</span>
+                  </button>
+                </aside>
+                <div className="main-column">
+                  <header className="topbar">
+                    <span>
+                      {[
+                        ...nav,
+                        ...extras,
+                        { path: "/admin", label: "Administración" },
+                      ].find((n) => n.path === path)?.label ?? "Estudio Cooper"}
+                    </span>
                     <Link
-                      onClick={() => setMenu(false)}
                       href="/perfil"
-                      aria-current={path === "/perfil" ? "page" : undefined}
+                      className="header-avatar"
+                      aria-label="Mi perfil"
                     >
-                      {path === "/perfil" && (
-                        <Indicador id="navegacion" className="nav-indicator" />
+                      {data.user.image ? (
+                        <Image
+                          unoptimized
+                          src={data.user.image}
+                          width={40}
+                          height={40}
+                          alt=""
+                        />
+                      ) : (
+                        <span>{data.user.name.slice(0, 1).toUpperCase()}</span>
                       )}
-                      <Settings2 size={18} />
-                      Mi perfil
                     </Link>
+                  </header>
+                  <main ref={content} id="contenido" tabIndex={-1}>
+                    <div key={path} ref={ruta} className="route-choreography">
+                      {children}
+                    </div>
+                    {celebration && (
+                      <CelebracionPublicacion
+                        title={celebration}
+                        cerrar={() => setCelebration(null)}
+                      />
+                    )}
+                  </main>
+                </div>
+                <nav className="mobile-dock" aria-label="Principal móvil">
+                  {nav.map(({ path: href, label, icon: Icon }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      aria-current={
+                        (href === "/" ? path === "/" : path.startsWith(href))
+                          ? "page"
+                          : undefined
+                      }
+                    >
+                      {(href === "/"
+                        ? path === "/"
+                        : path.startsWith(href)) && (
+                        <Indicador id="barra-movil" className="nav-indicator" />
+                      )}
+                      <Icon size={20} />
+                      <span>{label}</span>
+                    </Link>
+                  ))}
+                </nav>
+                <button
+                  ref={menuButton}
+                  className="mobile-more icon-button"
+                  aria-label="Más destinos"
+                  aria-expanded={menu}
+                  onClick={() => setMenu(true)}
+                >
+                  <Ellipsis size={20} />
+                </button>
+              </div>
+              <PildoraConexion conectado={connected} />
+              <CooperFlotante
+                abierto={cooper}
+                cambiar={setCooper}
+                movil={movil}
+              />
+              {menu && (
+                <div
+                  className="more-backdrop"
+                  onClick={(event) => {
+                    if (event.target === event.currentTarget) setMenu(false);
+                  }}
+                >
+                  <div
+                    ref={sidebar}
+                    className="more-sheet hoja-vidrio"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Más destinos"
+                  >
+                    <header>
+                      <h2>Tu estudio</h2>
+                      <button
+                        className="icon-button"
+                        aria-label="Cerrar navegación"
+                        onClick={() => setMenu(false)}
+                      >
+                        <X size={20} />
+                      </button>
+                    </header>
+                    <nav>
+                      {extras.map(({ path: href, label, icon: Icon }) => (
+                        <Link
+                          key={href}
+                          href={href}
+                          onClick={() => setMenu(false)}
+                        >
+                          <Icon size={20} />
+                          {label}
+                        </Link>
+                      ))}
+                      {data.user.role === "admin" && (
+                        <Link href="/admin" onClick={() => setMenu(false)}>
+                          <ShieldCheck size={20} />
+                          Administración
+                        </Link>
+                      )}
+                    </nav>
                     <form action={logout}>
-                      <button className="nav-button">
-                        <LogOut size={18} />
+                      <button className="button secondary">
+                        <LogOut size={20} />
                         Cerrar sesión
                       </button>
                     </form>
-                  </nav>
-                  <div className="identity">
-                    {data.user.image ? (
-                      <Image
-                        unoptimized
-                        src={data.user.image}
-                        width={36}
-                        height={36}
-                        alt=""
-                      />
-                    ) : (
-                      <span className="initial">
-                        {data.user.name.slice(0, 1).toUpperCase()}
-                      </span>
-                    )}
-                    <div>
-                      <strong>{data.user.name}</strong>
-                      <small>
-                        {data.user.role === "admin"
-                          ? "Administrador"
-                          : "Equipo Cooper"}
-                      </small>
-                    </div>
                   </div>
                 </div>
-              </div>
-              {menu && (
-                <button
-                  className="drawer-backdrop"
-                  aria-label="Cerrar menú"
-                  tabIndex={-1}
-                  onClick={() => setMenu(false)}
-                />
               )}
-              <div className="main-column" inert={menu}>
-                <header className="topbar">
-                  <button
-                    ref={menuButton}
-                    className="icon-button menu-button"
-                    aria-label="Abrir navegación"
-                    aria-controls="navegacion"
-                    aria-expanded={menu}
-                    onClick={() => setMenu(!menu)}
-                  >
-                    <PanelLeftClose size={20} />
-                  </button>
-                  <span>Estudio Cooper</span>
-                  <div className="topbar-right">
-                    <span
-                      className={`connection ${connected ? "online" : ""}`}
-                      role="status"
-                      aria-atomic="true"
-                    >
-                      <i aria-hidden="true" />
-                      {connected ? "En vivo" : "Reconectando"}
-                    </span>
-                    <button
-                      className="motion-toggle"
-                      aria-pressed={isPaused}
-                      onClick={() => setPaused(!isPaused)}
-                    >
-                      {isPaused ? "Activar movimiento" : "Pausar movimiento"}
-                    </button>
-                    <span className="demo-label">
-                      {data.demo ? "Demostración" : "Modo de prueba"}
-                    </span>
-                  </div>
-                </header>
-                <main ref={content} id="contenido" tabIndex={-1}>
-                  <div key={path} ref={ruta} className="route-choreography">
-                    {children}
-                  </div>
-                  {celebration && (
-                    <CelebracionPublicacion
-                      title={celebration}
-                      cerrar={() => setCelebration(null)}
-                    />
-                  )}
-                </main>
-              </div>
             </div>
           </LayoutGroup>
         </LazyMotion>
@@ -533,7 +508,6 @@ export function Heading({
         </motion.h1>
         <p>{description}</p>
       </div>
-      <EscenaEstudio />
       {action}
     </div>
   );
@@ -549,25 +523,6 @@ export function Empty({
 }) {
   return (
     <div className="empty">
-      <IlustracionViva
-        nombre="cooper-recibe"
-        className="empty-companion"
-        prioritaria
-      />
-      <div className="empty-story" aria-hidden="true">
-        <span>
-          <i className="story-idea" />
-          Tu idea
-        </span>
-        <span>
-          <i className="story-script" />
-          Un guion
-        </span>
-        <span>
-          <i className="story-film" />
-          Tu video
-        </span>
-      </div>
       <h2>{title}</h2>
       <p>{description}</p>
       {children}

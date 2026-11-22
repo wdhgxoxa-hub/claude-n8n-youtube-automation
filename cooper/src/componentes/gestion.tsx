@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { m as motion } from "framer-motion";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
+import { nombreMedio } from "./transiciones";
 import { MediosVideo } from "./medios-video";
 import { Portada } from "./portada";
 import { Indicador, useMovimientoReducido } from "./movimiento";
@@ -498,7 +499,7 @@ export function DetalleVideo({ id }: { id: string }) {
       <div className="detail-layout">
         <div>
           {!video.observabilidad.montaje && data.demo && (
-            <section className="preview" aria-label="Vista previa simulada">
+            <section className="preview" aria-label="Vista previa simulada" style={{ viewTransitionName: nombreMedio(video.id) }}>
               <motion.div
                 className="preview-art"
                 animate={{ scale: playing && !reduced ? 1.08 : 1 }}
@@ -533,7 +534,7 @@ export function DetalleVideo({ id }: { id: string }) {
               montaje.
             </p>
           )}
-          <MediosVideo datos={video.observabilidad} titulo={video.title} />
+          <MediosVideo datos={video.observabilidad} titulo={video.title} videoId={video.id} />
           {(video.avatarId || video.voiceId) && (
             <div className="presenter-summary">
               <span>

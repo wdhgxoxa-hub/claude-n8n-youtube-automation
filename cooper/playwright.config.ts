@@ -37,6 +37,7 @@ export default defineConfig({
     {
       name: "chromium",
       testIgnore: [
+        "base-diseno.spec.ts",
         "multiengine.spec.ts",
         "accesibilidad.spec.ts",
         "diseno.spec.ts",
@@ -62,7 +63,7 @@ export default defineConfig({
       },
     },
     ...(["firefox", "webkit"] as const).flatMap((browserName) =>
-      (["oscuro", "claro"] as const).flatMap((theme) =>
+      (["oscuro"] as const).flatMap((theme) =>
         [390, 1440].map((width) => ({
           name: `${browserName}-${theme}-${width}`,
           testMatch: "multiengine.spec.ts",

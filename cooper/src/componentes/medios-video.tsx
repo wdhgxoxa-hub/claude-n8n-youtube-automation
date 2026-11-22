@@ -1,4 +1,5 @@
 "use client";
+import { nombreMedio } from "./transiciones";
 import { useState } from "react";
 import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
@@ -6,15 +7,17 @@ import { enlaceIncrustado } from "@/lib/enlaces-medios";
 export function MediosVideo({
   datos,
   titulo,
+  videoId,
 }: {
   datos: Observabilidad;
   titulo: string;
+  videoId?: string;
 }) {
   const [fallo, setFallo] = useState(false);
   return (
     <>
       {datos.montaje && (
-        <section className="real-player" aria-label="Video terminado">
+        <section className="real-player" aria-label="Video terminado" style={{ viewTransitionName: videoId ? nombreMedio(videoId) : undefined }}>
           <video
             key={datos.montaje}
             controls

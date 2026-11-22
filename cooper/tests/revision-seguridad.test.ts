@@ -163,6 +163,8 @@ it("R04 vuelve a comprobar la sesión tras esperar a la fábrica", async () => {
   );
   const reader = response.body!.getReader();
   try {
+    const first = await reader.read();
+    expect(new TextDecoder().decode(first.value)).toBe(": conectado\n\n");
     expect((await reader.read()).done).toBe(true);
   } finally {
     controller.abort();

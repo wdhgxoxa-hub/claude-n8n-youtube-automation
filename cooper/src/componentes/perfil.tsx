@@ -4,9 +4,11 @@ import { useId, useState, type FormEvent } from "react";
 import { Camera, Check } from "lucide-react";
 import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir } from "./grabador";
+import { usePausaMovimiento } from "./movimiento";
 import { PreferenciasWhatsApp } from "./whatsapp";
 export function Perfil() {
   const id = useId();
+  const [pausado, pausar] = usePausaMovimiento();
   const { data, refresh } = useEspacio();
   const [error, setError] = useState(""),
     [message, setMessage] = useState(""),
@@ -108,45 +110,10 @@ export function Perfil() {
             </label>
             <div className="form-divider" />
             <h2>Tu espacio</h2>
-            <fieldset>
-              <legend>Apariencia</legend>
-              <div className="choice-row">
-                {[
-                  ["oscuro", "Noche"],
-                  ["claro", "Día"],
-                  ["sistema", "Sistema"],
-                ].map(([value, label]) => (
-                  <label className="choice" key={value}>
-                    <input
-                      type="radio"
-                      name="theme"
-                      value={value}
-                      defaultChecked={data.user.theme === value}
-                    />
-                    <span
-                      className={`theme-swatch ${value}`}
-                      aria-hidden="true"
-                    />
-                    {label}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-            <label>
-              <span id={`${id}-inicio-etiqueta`}>Al abrir Cooper</span>
-              <select
-                name="home"
-                defaultValue={data.user.home}
-                aria-labelledby={`${id}-inicio-etiqueta`}
-                aria-describedby={`${id}-inicio-ayuda`}
-              >
-                <option value="chat">Conversar con Cooper</option>
-                <option value="fabrica">Ver la fábrica</option>
-              </select>
-              <span className="helper" id={`${id}-inicio-ayuda`}>
-                En celular, esta será tu primera pestaña.
-              </span>
-            </label>
+            <input type="hidden" name="theme" value="oscuro" />
+            <input type="hidden" name="home" value="fabrica" />
+            <button type="button" className="button secondary" aria-pressed={pausado} onClick={() => pausar(!pausado)}>{pausado ? "Activar movimiento" : "Pausar movimiento"}</button>
+            <p className="helper">También respetamos la preferencia de movimiento de tu dispositivo.</p>
             <button className="button" disabled={busy}>
               <Check size={16} />
               Guardar perfil

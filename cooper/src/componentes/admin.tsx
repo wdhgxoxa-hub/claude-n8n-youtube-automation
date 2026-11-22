@@ -2,13 +2,14 @@
 import { useState, type FormEvent } from "react";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
 import type { Administracion } from "@/servicios/datos";
-import { api, Heading, Notice } from "./espacio";
+import { api, Heading, Notice, useEspacio } from "./espacio";
 import { m as motion } from "framer-motion";
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import { MemoriaAdmin } from "./memoria";
 import { ConciliacionAdmin } from "./conciliacion";
 export function Admin({ initial }: { initial: Administracion }) {
   const reduced = useMovimientoReducido();
+  const { data: estudio } = useEspacio();
   const [data, setData] = useState(initial),
     [period, setPeriod] = useState<"day" | "week" | "month">("day"),
     [error, setError] = useState(""),
@@ -53,6 +54,7 @@ export function Admin({ initial }: { initial: Administracion }) {
           </span>
         }
       />
+      {estudio.demo && <p className="helper">Modo de prueba · datos de demostración.</p>}
       <Notice error={error} />
       {data.users.some((u) => u.alert) && (
         <div role="alert" className="spend-alert">
