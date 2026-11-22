@@ -37,9 +37,11 @@ import "./inicio.css";
 function MedioInicio({
   video,
   heroe = false,
+  vistaPrevia = false,
 }: {
   video: VideoInicio;
   heroe?: boolean;
+  vistaPrevia?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const [cerca, setCerca] = useState(heroe);
@@ -70,7 +72,7 @@ function MedioInicio({
     >
       <Medio
         poster={medio?.poster?.url}
-        preview={medio?.preview?.url}
+        preview={heroe || vistaPrevia ? medio?.preview?.url : undefined}
         alt={video.title}
         proporcion={vertical ? "vertical" : "horizontal"}
         prioridad={heroe}
@@ -361,7 +363,7 @@ export function Inicio({ ahora }: { ahora: number }) {
                       <Link
                         href={`/videos/${video.id}`}
                       >
-                        <MedioInicio video={video} />
+                        <MedioInicio video={video} vistaPrevia />
                         <span className="sr-only">Revisar: {video.title}</span>
                       </Link>
                       <div className="inicio-pendiente-cuerpo">
