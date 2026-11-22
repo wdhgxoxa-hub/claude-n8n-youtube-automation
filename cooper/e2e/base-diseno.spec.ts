@@ -934,6 +934,14 @@ for (const width of [390, 1440]) {
       const originalCount = state.videos.filter(
         (video) => video.ownerId === state.user.id && video.stage < 11,
       ).length;
+      // El video añadido pertenece únicamente al fixture SSE de esta prueba.
+      await page.route("**/api/videos/ensayo-cifra-adicional/tinte", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ color: null }),
+        }),
+      );
       state.videos.push({ ...target, id: "ensayo-cifra-adicional", stage: 0 });
       await page.evaluate(() => {
         window.dispatchEvent(new Event("offline"));
