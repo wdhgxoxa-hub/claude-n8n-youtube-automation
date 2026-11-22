@@ -168,7 +168,10 @@ export function PortadaVideo({
     const timer = setTimeout(() => {
       permisoPreview.current = true;
       setPreparado(true);
-      if (player)
+      // En el primer hover React todavía tiene que colocar src. El efecto
+      // siguiente inicia play después de ese commit; en visitas posteriores
+      // el recurso ya está preparado y puede arrancar aquí.
+      if (player?.getAttribute("src"))
         void player
           .play()
           .then(() => {
@@ -186,6 +189,15 @@ export function PortadaVideo({
     };
   }, [reproducir, medio?.preview?.url]);
 
+  useEffect(() => {
+    const player = reproductor.current;
+    if (!preparado || !permisoPreview.current || !player) return;
+    void player.play().catch(() => {
+      /* El póster permanece si el navegador bloquea play. */
+    });
+    return () => player.pause();
+  }, [preparado, medio?.preview?.url]);
+
   const poster = medio?.poster?.url;
   return (
     <span
@@ -194,6 +206,7 @@ export function PortadaVideo({
       style={estiloMedio(medio, proporcion)}
       data-video-medio={videoId}
       data-publicacion={publicacion}
+      data-estado={falloPoster ? "no_disponible" : medio?.estado ?? "pendiente"}
       data-origen={
         medio?.poster?.origen ??
         (medio?.estado === "sin_medio" ? "tipografico" : "pendiente")
@@ -221,9 +234,10 @@ export function PortadaVideo({
         <Portada title={titulo} />
       ) : (
         <span className={styles.espera}>
-          {medio?.estado === "no_disponible" || falloPoster
-            ? "Portada no disponible"
-            : "Preparando portada"}
+          {protagonista &&
+            (medio?.estado === "no_disponible" || falloPoster
+              ? "Portada no disponible"
+              : "Preparando portada")}
         </span>
       )}
       {medio?.preview && (
@@ -237,10 +251,6 @@ export function PortadaVideo({
           tabIndex={-1}
           width={medio.ancho}
           height={medio.alto}
-          onCanPlay={(event) => {
-            if (reproducir && permisoPreview.current)
-              void event.currentTarget.play().catch(() => {});
-          }}
           onPlaying={() => setReproduciendo(true)}
           onPause={() => setReproduciendo(false)}
           onError={() => setReproduciendo(false)}
