@@ -1,5 +1,6 @@
 "use client";
-import { Esqueleto } from "./primitivas";
+import { Cifra, Esqueleto } from "./primitivas";
+import "./operacion-diseno.css";
 import { PanelCompetencia } from "./competencia";
 import {
   useCallback,
@@ -174,6 +175,92 @@ export function PantallaOperacion({
     "referencias",
     "cuentas",
   ].includes(vista);
+  const descripcion: Record<VistaOperacion, string> = {
+    biblia: "La voz, las ideas y los límites de tu canal.",
+    radar: "Encuentra la próxima historia que merece contarse.",
+    rutina: "Un ritmo de publicación que puedes sostener.",
+    redes: "Cada video, en el lugar y el momento adecuados.",
+    referencias: "Las personas y los lugares que dan identidad a tu canal.",
+    cuentas: "Dale continuidad a una cuenta que ya es tuya.",
+    programados: "Lo que viene después de la última aprobación.",
+    decisiones: "Tu mirada hace avanzar la producción.",
+    incidencias: "Lo que necesita atención para volver a avanzar.",
+    avisos: "Sigue las novedades que Cooper te ha enviado.",
+    ajustes: "Decide cómo trabaja la fábrica a partir de ahora.",
+  };
+  const resumen = op
+    ? vista === "radar" && canal
+      ? [
+          { etiqueta: "Ideas por explorar", valor: canal.radar.ideas.length },
+          { etiqueta: "Sonidos sugeridos", valor: canal.radar.sonidos.length },
+        ]
+      : vista === "rutina" && canal
+        ? [
+            { etiqueta: "Videos por semana", valor: canal.metas.videos_semana },
+            {
+              etiqueta: "Retención mínima · %",
+              valor: Math.round(canal.metas.retencion_min * 100),
+            },
+          ]
+        : vista === "redes" && canal
+          ? [
+              { etiqueta: "Redes elegidas", valor: canal.redes.length },
+              {
+                etiqueta: "Recomendaciones",
+                valor: canal.especialistas.length,
+              },
+            ]
+          : vista === "referencias" && canal
+            ? [
+                {
+                  etiqueta: "Referencias del canal",
+                  valor: canal.referencias.length,
+                },
+              ]
+            : vista === "programados"
+              ? [
+                  {
+                    etiqueta: "Publicaciones en calendario",
+                    valor: op.publicaciones.length,
+                  },
+                ]
+              : vista === "decisiones"
+                ? [
+                    {
+                      etiqueta: "Decisiones pendientes",
+                      valor: op.decisiones.length,
+                    },
+                  ]
+                : vista === "incidencias"
+                  ? [
+                      {
+                        etiqueta: "Incidencias por revisar",
+                        valor: op.fallos.length,
+                      },
+                    ]
+                  : vista === "avisos"
+                    ? [
+                        {
+                          etiqueta: "Avisos registrados",
+                          valor: op.avisos.length,
+                        },
+                      ]
+                    : []
+    : [];
+  const resumenTitulo: Partial<Record<VistaOperacion, string>> = {
+    radar: "De la curiosidad al próximo guion.",
+    rutina: "Tu ritmo, semana a semana.",
+    redes: "Cada red tiene su momento.",
+    referencias: "Un mundo visual reconocible.",
+    programados: "Lo próximo en salir.",
+    decisiones: op?.decisiones.length
+      ? "Esto necesita tu mirada."
+      : "Estás al día.",
+    incidencias: op?.fallos.length
+      ? "Retomemos lo que se detuvo."
+      : "Sin incidencias registradas.",
+    avisos: "Las noticias de tus videos.",
+  };
   const base = { canalId: canal?.id || "", confirmado: true as const };
   function meta(e: FormEvent<HTMLFormElement>) {
     const f = datos(e);
@@ -190,15 +277,8 @@ export function PantallaOperacion({
     });
   }
   return (
-    <div className="page operation-page">
-      <Heading
-        title={titulo}
-        description={
-          vista === "ajustes"
-            ? "Control administrativo. Los cambios se aplican a los siguientes pasos de producción."
-            : "Lo que la fábrica sabe, decide y necesita de ti."
-        }
-      />
+    <div className="page operation-page operacion-diseno">
+      <Heading title={titulo} description={descripcion[vista]} />
       <nav aria-label="Operación de la fábrica" className="operation-nav">
         {pantallas.map(([v, n, url]) => (
           <Link
@@ -222,11 +302,7 @@ export function PantallaOperacion({
       </nav>
       <div className="operation-toolbar">
         <p className="muted">
-          {op?.modo === "simulada"
-            ? "Fábrica simulada. Los ejemplos no consultan cuentas externas."
-            : op
-              ? `Actualizado ${fecha(op.actualizado)} · Hora de Lima`
-              : ""}
+          {op ? `Actualizado ${fecha(op.actualizado)} · Hora de Lima` : ""}
         </p>
         <button
           ref={actualizar}
@@ -237,6 +313,21 @@ export function PantallaOperacion({
           Actualizar
         </button>
       </div>
+      {resumen.length > 0 && (
+        <section className="operacion-resumen" aria-label="De un vistazo">
+          <div className="operacion-contexto">
+            <span className="operacion-kicker">
+              {canal && necesitaCanal ? canal.nombre : "Tu estudio"}
+            </span>
+            <p>{resumenTitulo[vista]}</p>
+          </div>
+          <div className="operacion-cifras">
+            {resumen.map((cifra) => (
+              <Cifra key={cifra.etiqueta} {...cifra} heroe />
+            ))}
+          </div>
+        </section>
+      )}
       <Notice error={error} message={mensaje} />
       {pendiente && (
         <div
@@ -369,7 +460,10 @@ export function PantallaOperacion({
         </div>
       )}
       {cargando ? (
-        <Esqueleto etiqueta="Consultando la fábrica…" />
+        <div className="operacion-carga" aria-busy="true">
+          <Esqueleto etiqueta="Consultando la fábrica…" />
+          <Esqueleto etiqueta="Cargando actividad…" />
+        </div>
       ) : null}
       {necesitaCanal && op && (
         <label className="operation-channel">
@@ -407,42 +501,50 @@ export function PantallaOperacion({
           </p>
           <div className="operation-fields">
             {Object.entries(camposBiblia).map(([campo, label]) => (
-              <form
-                className="stack"
-                key={campo}
-                onSubmit={(e) => {
-                  const f = datos(e);
-                  preparar({
-                    ...base,
-                    accion: "biblia",
-                    campo: campo as keyof typeof camposBiblia,
-                    valor: String(f.get("valor")),
-                  });
-                }}
-              >
-                <label htmlFor={`${formularioId}-${campo}`}>
-                  {label}
-                  <textarea
-                    id={`${formularioId}-${campo}`}
-                    aria-label={label}
-                    name="valor"
-                    defaultValue={canal.biblia[campo] || ""}
-                    maxLength={6000}
-                    placeholder={
-                      campos[campo as keyof typeof campos].tipo === "numero"
-                        ? "Segundos, entre 0 y 120"
-                        : undefined
-                    }
-                    rows={3}
-                  />
-                </label>
-                <button
-                  className="button secondary"
-                  disabled={ocupado || !!pendiente}
-                >
-                  Revisar {label.toLowerCase()}
-                </button>
-              </form>
+              <article className="operation-biblia-campo" key={campo}>
+                <h3>{label}</h3>
+                <p className="operation-biblia-texto">
+                  {canal.biblia[campo] || "Por definir junto a Cooper."}
+                </p>
+                <details className="operation-controls">
+                  <summary>Editar {label.toLowerCase()}</summary>
+                  <form
+                    className="stack"
+                    onSubmit={(e) => {
+                      const f = datos(e);
+                      preparar({
+                        ...base,
+                        accion: "biblia",
+                        campo: campo as keyof typeof camposBiblia,
+                        valor: String(f.get("valor")),
+                      });
+                    }}
+                  >
+                    <label htmlFor={`${formularioId}-${campo}`}>
+                      {label}
+                      <textarea
+                        id={`${formularioId}-${campo}`}
+                        aria-label={label}
+                        name="valor"
+                        defaultValue={canal.biblia[campo] || ""}
+                        maxLength={6000}
+                        placeholder={
+                          campos[campo as keyof typeof campos].tipo === "numero"
+                            ? "Segundos, entre 0 y 120"
+                            : undefined
+                        }
+                        rows={3}
+                      />
+                    </label>
+                    <button
+                      className="button secondary"
+                      disabled={ocupado || !!pendiente}
+                    >
+                      Revisar {label.toLowerCase()}
+                    </button>
+                  </form>
+                </details>
+              </article>
             ))}
           </div>
           <Link href="/redes" className="text-link">
@@ -548,68 +650,71 @@ export function PantallaOperacion({
           </section>
           <section className="operation-sheet">
             <h2>Metas semanales</h2>
-            <form
-              className="stack"
-              key={canal.id + JSON.stringify(canal.metas)}
-              onSubmit={meta}
-            >
-              <label>
-                Videos por semana
-                <input
-                  name="cantidad"
-                  type="number"
-                  min={0}
-                  max={21}
-                  required
-                  defaultValue={canal.metas.videos_semana}
-                />
-              </label>
-              <label>
-                Formato
-                <select name="formato" defaultValue={canal.metas.formato}>
-                  <option value="short">Corto vertical</option>
-                  <option value="largo">Largo</option>
-                </select>
-              </label>
-              <label>
-                Retención mínima (%)
-                <input
-                  name="retencion"
-                  type="number"
-                  min={0}
-                  max={100}
-                  required
-                  defaultValue={Math.round(canal.metas.retencion_min * 100)}
-                />
-              </label>
-              <label className="checkbox">
-                <input
-                  name="auto"
-                  type="checkbox"
-                  defaultChecked={canal.metas.auto}
-                />
-                Producir automáticamente hacia la meta
-              </label>
-              {data.user.role === "admin" && (
+            <details className="operation-controls">
+              <summary>Ajustar metas</summary>
+              <form
+                className="stack"
+                key={canal.id + JSON.stringify(canal.metas)}
+                onSubmit={meta}
+              >
                 <label>
-                  Nuevo presupuesto semanal (USD)
+                  Videos por semana
                   <input
-                    name="presupuesto"
+                    name="cantidad"
                     type="number"
                     min={0}
-                    max={200}
-                    step="0.01"
-                    placeholder="Conservar el actual"
+                    max={21}
+                    required
+                    defaultValue={canal.metas.videos_semana}
                   />
                 </label>
-              )}
-              <p className="muted">
-                Cada guion y video mantiene su aprobación.
-              </p>
-              <button className="button" disabled={ocupado || !!pendiente}>
-                Revisar metas
-              </button>
-            </form>
+                <label>
+                  Formato
+                  <select name="formato" defaultValue={canal.metas.formato}>
+                    <option value="short">Corto vertical</option>
+                    <option value="largo">Largo</option>
+                  </select>
+                </label>
+                <label>
+                  Retención mínima (%)
+                  <input
+                    name="retencion"
+                    type="number"
+                    min={0}
+                    max={100}
+                    required
+                    defaultValue={Math.round(canal.metas.retencion_min * 100)}
+                  />
+                </label>
+                <label className="checkbox">
+                  <input
+                    name="auto"
+                    type="checkbox"
+                    defaultChecked={canal.metas.auto}
+                  />
+                  Producir automáticamente hacia la meta
+                </label>
+                {data.user.role === "admin" && (
+                  <label>
+                    Nuevo presupuesto semanal (USD)
+                    <input
+                      name="presupuesto"
+                      type="number"
+                      min={0}
+                      max={200}
+                      step="0.01"
+                      placeholder="Conservar el actual"
+                    />
+                  </label>
+                )}
+                <p className="muted">
+                  Cada guion y video mantiene su aprobación.
+                </p>
+                <button className="button" disabled={ocupado || !!pendiente}>
+                  Revisar metas
+                </button>
+              </form>
+            </details>
           </section>
         </div>
       )}
@@ -680,56 +785,59 @@ export function PantallaOperacion({
                 varias redes se gestionan por separado.
               </p>
             </div>
-            <form
-              className="stack"
-              key={canal.id + canal.perfil}
-              onSubmit={(e) => {
-                const f = datos(e);
-                preparar({
-                  ...base,
-                  accion: "redes",
-                  perfil: String(f.get("perfil")),
-                  redes: f.getAll("red") as (
-                    "youtube" | "tiktok" | "instagram" | "facebook"
-                  )[],
-                  zona: String(f.get("zona")),
-                });
-              }}
-            >
-              <label>
-                Perfil de publicación
-                <input
-                  name="perfil"
-                  required
-                  pattern="[A-Za-z0-9_.\-]{2,60}"
-                  defaultValue={canal.perfil}
-                />
-              </label>
-              <p className="muted">
-                Usa el nombre del perfil conectado por el administrador.
-              </p>
-              <fieldset>
-                <legend>Plataformas</legend>
-                {["youtube", "tiktok", "instagram", "facebook"].map((r) => (
-                  <label className="checkbox" key={r}>
-                    <input
-                      type="checkbox"
-                      name="red"
-                      value={r}
-                      defaultChecked={canal.redes.includes(r as "youtube")}
-                    />
-                    {r}
-                  </label>
-                ))}
-              </fieldset>
-              <label>
-                Zona horaria
-                <input name="zona" required defaultValue={canal.zona} />
-              </label>
-              <button className="button" disabled={ocupado || !!pendiente}>
-                Revisar redes
-              </button>
-            </form>
+            <details className="operation-controls">
+              <summary>Editar redes</summary>
+              <form
+                className="stack"
+                key={canal.id + canal.perfil}
+                onSubmit={(e) => {
+                  const f = datos(e);
+                  preparar({
+                    ...base,
+                    accion: "redes",
+                    perfil: String(f.get("perfil")),
+                    redes: f.getAll("red") as (
+                      "youtube" | "tiktok" | "instagram" | "facebook"
+                    )[],
+                    zona: String(f.get("zona")),
+                  });
+                }}
+              >
+                <label>
+                  Perfil de publicación
+                  <input
+                    name="perfil"
+                    required
+                    pattern="[A-Za-z0-9_.\-]{2,60}"
+                    defaultValue={canal.perfil}
+                  />
+                </label>
+                <p className="muted">
+                  Usa el nombre del perfil conectado por el administrador.
+                </p>
+                <fieldset>
+                  <legend>Plataformas</legend>
+                  {["youtube", "tiktok", "instagram", "facebook"].map((r) => (
+                    <label className="checkbox" key={r}>
+                      <input
+                        type="checkbox"
+                        name="red"
+                        value={r}
+                        defaultChecked={canal.redes.includes(r as "youtube")}
+                      />
+                      {r}
+                    </label>
+                  ))}
+                </fieldset>
+                <label>
+                  Zona horaria
+                  <input name="zona" required defaultValue={canal.zona} />
+                </label>
+                <button className="button" disabled={ocupado || !!pendiente}>
+                  Revisar redes
+                </button>
+              </form>
+            </details>
           </section>
         </div>
       )}
@@ -847,44 +955,46 @@ export function PantallaOperacion({
             </p>
             <Link href="/decisiones">Revisar propuestas pendientes</Link>
           </section>
-          <form
-            className="stack operation-sheet"
-            onSubmit={(e) => {
-              const f = datos(e);
-              preparar({
-                ...base,
-                accion: "adoptar",
-                cuenta: String(f.get("cuenta")),
-                red: f.get("red") as "youtube" | "tiktok" | "instagram",
-              });
-            }}
-          >
-            <h2>Estudiar una cuenta</h2>
-            <label>
-              Red
-              <select name="red">
-                <option value="youtube">YouTube</option>
-                <option value="tiktok">TikTok</option>
-                <option value="instagram">Instagram</option>
-              </select>
-            </label>
-            <label>
-              Usuario de la cuenta
-              <input
-                name="cuenta"
-                placeholder="@tu_cuenta"
-                pattern="@?[\w.\-]{2,60}"
-                required
-              />
-            </label>
-            <p className="muted">
-              Se estudiará su identidad y se preparará una propuesta para este
-              canal. La conexión para publicar se configura en Redes.
-            </p>
-            <button className="button" disabled={ocupado || !!pendiente}>
-              Revisar adopción
-            </button>
-          </form>
+          <details className="operation-controls">
+            <summary>Estudiar una cuenta</summary>
+            <form
+              className="stack"
+              onSubmit={(e) => {
+                const f = datos(e);
+                preparar({
+                  ...base,
+                  accion: "adoptar",
+                  cuenta: String(f.get("cuenta")),
+                  red: f.get("red") as "youtube" | "tiktok" | "instagram",
+                });
+              }}
+            >
+              <label>
+                Red
+                <select name="red">
+                  <option value="youtube">YouTube</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="instagram">Instagram</option>
+                </select>
+              </label>
+              <label>
+                Usuario de la cuenta
+                <input
+                  name="cuenta"
+                  placeholder="@tu_cuenta"
+                  pattern="@?[\w.\-]{2,60}"
+                  required
+                />
+              </label>
+              <p className="muted">
+                Se estudiará su identidad y se preparará una propuesta para este
+                canal. La conexión para publicar se configura en Redes.
+              </p>
+              <button className="button" disabled={ocupado || !!pendiente}>
+                Revisar adopción
+              </button>
+            </form>
+          </details>
         </div>
       )}
       {op && vista === "programados" && (
@@ -1091,69 +1201,90 @@ export function PantallaOperacion({
       {vista === "ajustes" && ajustes && (
         <section>
           <h2>Controles de producción</h2>
-          <form
-            key={ajustes.revision}
-            className="stack"
-            onSubmit={(e) => {
-              const f = datos(e);
-              const valores: Record<string, string | number | boolean> = {};
-              for (const [k, c] of Object.entries(catalogo)) {
-                const v =
-                  c.tipo === "boolean"
-                    ? f.get(k) === "on"
-                    : c.tipo === "number"
-                      ? Number(f.get(k))
-                      : String(f.get(k));
-                if (v !== ajustes.valores[k]) valores[k] = v;
-              }
-              if (!Object.keys(valores).length) {
-                setMensaje("No hay cambios que guardar.");
-                return;
-              }
-              preparar({
-                accion: "ajustes",
-                revision: ajustes.revision,
-                valores,
-                confirmado: true,
-              });
-            }}
-          >
-            <div className="operation-fields">
-              {Object.entries(catalogo).map(([k, c]) => (
-                <label
-                  key={k}
-                  className={c.tipo === "boolean" ? "checkbox" : ""}
-                >
-                  {c.tipo === "boolean" ? (
-                    <>
-                      <input
-                        type="checkbox"
-                        name={k}
-                        defaultChecked={ajustes.valores[k] === true}
-                      />
-                      {c.etiqueta}
-                    </>
-                  ) : (
-                    <>
-                      {c.etiqueta}
-                      <input
-                        name={k}
-                        type={c.tipo === "number" ? "number" : "text"}
-                        required
-                        defaultValue={String(ajustes.valores[k] ?? "")}
-                        min={"min" in c ? c.min : undefined}
-                        max={"max" in c ? c.max : undefined}
-                        step={"entero" in c && c.entero ? "1" : "any"}
-                      />
-                    </>
-                  )}
-                </label>
+          <p className="muted">
+            Así está preparada la fábrica. Los cambios pasan por tu revisión
+            antes de aplicarse.
+          </p>
+          <dl className="operation-estado-controles">
+            {Object.entries(catalogo)
+              .filter(([, control]) => control.tipo === "boolean")
+              .map(([clave, control]) => (
+                <div key={clave}>
+                  <dt>{control.etiqueta}</dt>
+                  <dd data-activo={ajustes.valores[clave] === true}>
+                    {ajustes.valores[clave] === true
+                      ? "Habilitado"
+                      : "En pausa"}
+                  </dd>
+                </div>
               ))}
-            </div>
-            <button className="button" disabled={ocupado || !!pendiente}>
-              Revisar ajustes
-            </button>
-          </form>
+          </dl>
+          <details className="operation-controls">
+            <summary>Editar controles de producción</summary>
+            <form
+              key={ajustes.revision}
+              className="stack"
+              onSubmit={(e) => {
+                const f = datos(e);
+                const valores: Record<string, string | number | boolean> = {};
+                for (const [k, c] of Object.entries(catalogo)) {
+                  const v =
+                    c.tipo === "boolean"
+                      ? f.get(k) === "on"
+                      : c.tipo === "number"
+                        ? Number(f.get(k))
+                        : String(f.get(k));
+                  if (v !== ajustes.valores[k]) valores[k] = v;
+                }
+                if (!Object.keys(valores).length) {
+                  setMensaje("No hay cambios que guardar.");
+                  return;
+                }
+                preparar({
+                  accion: "ajustes",
+                  revision: ajustes.revision,
+                  valores,
+                  confirmado: true,
+                });
+              }}
+            >
+              <div className="operation-fields">
+                {Object.entries(catalogo).map(([k, c]) => (
+                  <label
+                    key={k}
+                    className={c.tipo === "boolean" ? "checkbox" : ""}
+                  >
+                    {c.tipo === "boolean" ? (
+                      <>
+                        <input
+                          type="checkbox"
+                          name={k}
+                          defaultChecked={ajustes.valores[k] === true}
+                        />
+                        {c.etiqueta}
+                      </>
+                    ) : (
+                      <>
+                        {c.etiqueta}
+                        <input
+                          name={k}
+                          type={c.tipo === "number" ? "number" : "text"}
+                          required
+                          defaultValue={String(ajustes.valores[k] ?? "")}
+                          min={"min" in c ? c.min : undefined}
+                          max={"max" in c ? c.max : undefined}
+                          step={"entero" in c && c.entero ? "1" : "any"}
+                        />
+                      </>
+                    )}
+                  </label>
+                ))}
+              </div>
+              <button className="button" disabled={ocupado || !!pendiente}>
+                Revisar ajustes
+              </button>
+            </form>
+          </details>
           <h2>Registro de cambios</h2>
           {ajustes.historial.length ? (
             ajustes.historial.map((h, i) => (

@@ -62,6 +62,7 @@ test("conciliación administrativa: consulta, evidencia, cierre durable y acceso
   await page
     .getByRole("button", { name: "Consultar operaciones interrumpidas" })
     .click();
+  await page.getByText("Buscar una operación por ID", { exact: true }).click();
   await page
     .getByLabel("Identificador de operación", { exact: true })
     .fill("e2e-conciliacion");

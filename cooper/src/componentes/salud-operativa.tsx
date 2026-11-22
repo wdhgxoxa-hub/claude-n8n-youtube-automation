@@ -21,7 +21,8 @@ import type {
 } from "@/contratos/alertas-salud";
 import { ETAPAS } from "@/lib/etapas";
 import { api, Heading, Notice } from "./espacio";
-import styles from "./salud-operativa.module.css";
+import { Cifra, Esqueleto } from "./primitivas";
+import "./operacion-diseno.css";
 
 const etiquetasEstado: Record<EstadoSalud, string> = {
   ok: "Operativo",
@@ -153,7 +154,7 @@ function money(value: number | null) {
 }
 function Estado({ value }: { value: EstadoSalud }) {
   return (
-    <span className={styles.badge} data-state={value}>
+    <span className={"salud-badge"} data-state={value}>
       {value === "degradado" || value === "error" ? (
         <TriangleAlert size={15} aria-hidden="true" />
       ) : (
@@ -174,12 +175,12 @@ function CabeceraFuente({
 }) {
   return (
     <>
-      <div className={styles.sectionHead}>
+      <div className={"salud-sectionHead"}>
         <h2 id={id}>{title}</h2>
         <Estado value={source.estado} />
       </div>
-      <p className={styles.muted}>{source.detalle}</p>
-      <p className={styles.muted}>
+      <p className={"salud-muted"}>{source.detalle}</p>
+      <p className={"salud-muted"}>
         Datos de la fuente: {fecha(source.actualizado)} (Lima).
       </p>
     </>
@@ -195,7 +196,7 @@ function Metrica({
   detail?: string;
 }) {
   return (
-    <div className={styles.metric}>
+    <div className={"salud-metric"}>
       <dt>{label}</dt>
       <dd>
         {children}
@@ -218,6 +219,7 @@ export function SaludOperativa() {
   const fetching = useRef(false);
   const mounted = useRef(false);
   const generation = useRef(0);
+  const controles = useRef<HTMLDetailsElement>(null);
   const refresh = useCallback(async (force = false) => {
     if (fetching.current && !force) return;
     fetching.current = true;
@@ -291,10 +293,10 @@ export function SaludOperativa() {
   const conflict =
     draft && data && draft.revision !== data.configuracion.revision;
   return (
-    <div className="page">
+    <div className="page salud-diseno">
       <Heading
         title="Salud de la operación"
-        description="n8n, servidor y fábrica. Información y controles exclusivos del administrador."
+        description="Una mirada a la producción y a lo que la mantiene en marcha."
         action={
           <span className="admin-badge">
             <ShieldCheck size={16} />
@@ -302,8 +304,8 @@ export function SaludOperativa() {
           </span>
         }
       />
-      <div className={styles.panel}>
-        <nav className={styles.links} aria-label="Controles de la operación">
+      <div className={"salud-panel"}>
+        <nav className={"salud-links"} aria-label="Controles de la operación">
           <Link href="/admin">Equipo y conciliación</Link>
           <Link href="/incidencias" prefetch={false}>
             Resolver incidencias
@@ -315,7 +317,7 @@ export function SaludOperativa() {
             Ajustes de fábrica
           </Link>
         </nav>
-        <div className={styles.toolbar}>
+        <div className={"salud-toolbar"}>
           <div>
             <p>Última consulta: {fecha(salud?.actualizado ?? null)} (Lima).</p>
             <p>Actualización cada minuto mientras esta pestaña está visible.</p>
@@ -334,11 +336,44 @@ export function SaludOperativa() {
         </div>
         <Notice error={error} />
         {!data && !error && (
-          <p role="status">Consultando la salud de la operación…</p>
+          <div className="operacion-carga" aria-busy="true">
+            <Esqueleto etiqueta="Consultando la salud de la operación…" />
+            <Esqueleto etiqueta="Cargando fuentes de salud…" />
+          </div>
         )}
         {salud && (
           <>
-            <nav className={styles.summary} aria-label="Resumen de salud">
+            <section
+              className="salud-pulso"
+              aria-label="La operación, de un vistazo"
+            >
+              <div>
+                <span className="operacion-kicker">Ahora en el estudio</span>
+                <h2>
+                  {salud.alertas.length
+                    ? "Hay cosas por revisar"
+                    : "Todo a la vista"}
+                </h2>
+                <p>
+                  {salud.alertas.length
+                    ? "Empieza por las alertas y sigue cada caso hasta su origen."
+                    : "Revisa las fuentes antes de dar la operación por comprobada."}
+                </p>
+              </div>
+              <div className="operacion-cifras">
+                <Cifra
+                  valor={salud.fabrica.enCurso}
+                  etiqueta="En producción"
+                  heroe
+                />
+                <Cifra
+                  valor={salud.alertas.length}
+                  etiqueta="Alertas actuales"
+                  heroe
+                />
+              </div>
+            </section>
+            <nav className={"salud-summary"} aria-label="Resumen de salud">
               {(
                 [
                   ["n8n", "n8n"],
@@ -349,32 +384,38 @@ export function SaludOperativa() {
                 <a href={`#salud-${key}`} key={key}>
                   <strong>{title}</strong>
                   <Estado value={salud[key].estado} />
-                  <p className={styles.muted}>{salud[key].detalle}</p>
+                  <p className={"salud-muted"}>{salud[key].detalle}</p>
                 </a>
               ))}
             </nav>
-            <section className={styles.section} aria-labelledby="salud-alertas">
-              <div className={styles.sectionHead}>
+            <section
+              className={"salud-section"}
+              aria-labelledby="salud-alertas"
+            >
+              <div className={"salud-sectionHead"}>
                 <h2 id="salud-alertas">Alertas actuales</h2>
                 <a
                   href="#configurar-alertas"
                   className="button secondary small"
+                  onClick={() => {
+                    if (controles.current) controles.current.open = true;
+                  }}
                 >
                   Configurar umbrales
                 </a>
               </div>
               {salud.alertas.length === 0 ? (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   No se detectaron alertas en los datos disponibles. Las fuentes
                   sin datos se indican por separado.
                 </p>
               ) : (
-                <ul className={styles.list}>
+                <ul className={"salud-list"}>
                   {salud.alertas.map((alerta) => (
                     <li key={alerta.codigo}>
-                      <div className={styles.itemHead}>
+                      <div className={"salud-itemHead"}>
                         <strong>{alerta.titulo}</strong>
-                        <span className={styles.badge} data-state="alerta">
+                        <span className={"salud-badge"} data-state="alerta">
                           {alerta.severidad === "critica" ? "Crítica" : "Aviso"}{" "}
                           ·{" "}
                           {alerta.fuente === "vps"
@@ -391,7 +432,7 @@ export function SaludOperativa() {
               )}
             </section>
             <section
-              className={styles.section}
+              className={"salud-section"}
               id="salud-n8n"
               aria-labelledby="titulo-n8n"
             >
@@ -400,7 +441,7 @@ export function SaludOperativa() {
                 title="n8n · Ejecuciones y workflows"
                 source={salud.n8n}
               />
-              <dl className={styles.metrics}>
+              <dl className={"salud-metrics"}>
                 <Metrica label="Workflows activos">
                   {salud.n8n.workflowsDisponibles
                     ? numero(salud.n8n.workflowsActivos)
@@ -417,23 +458,23 @@ export function SaludOperativa() {
                     : "Sin datos"}
                 </Metrica>
               </dl>
-              <p className={styles.muted}>
+              <p className={"salud-muted"}>
                 Ventana desde {fecha(salud.n8n.ventanaDesde)} (Lima).
                 {salud.n8n.ejecucionesTruncadas &&
                   " Muestra parcial de ejecuciones; puede haber más resultados."}
               </p>
               <h3>Fallos y causas</h3>
               {!salud.n8n.ejecucionesDisponibles ? (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   No se pudieron consultar las ejecuciones. No es posible
                   determinar si hubo fallos.
                 </p>
               ) : salud.n8n.fallosRecientes.length === 0 ? (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   No hay fallos en la muestra disponible.
                 </p>
               ) : (
-                <ul className={styles.list}>
+                <ul className={"salud-list"}>
                   {salud.n8n.fallosRecientes.map((run) => (
                     <li key={run.id}>
                       <strong>{run.workflow}</strong>
@@ -454,10 +495,10 @@ export function SaludOperativa() {
                   <summary>
                     Ver ejecuciones consultadas ({salud.n8n.ejecuciones.length})
                   </summary>
-                  <ul className={styles.list}>
+                  <ul className={"salud-list"}>
                     {salud.n8n.ejecuciones.map((run) => (
                       <li key={run.id}>
-                        <div className={styles.itemHead}>
+                        <div className={"salud-itemHead"}>
                           <strong>{run.workflow}</strong>
                           <span>{etiquetasEjecucion[run.estado]}</span>
                         </div>
@@ -475,10 +516,10 @@ export function SaludOperativa() {
                   <summary>
                     Ver workflows ({salud.n8n.workflows.length})
                   </summary>
-                  <ul className={styles.list}>
+                  <ul className={"salud-list"}>
                     {salud.n8n.workflows.map((workflow) => (
                       <li key={workflow.id}>
-                        <div className={styles.itemHead}>
+                        <div className={"salud-itemHead"}>
                           <strong>{workflow.nombre}</strong>
                           <span>{workflow.activo ? "Activo" : "Inactivo"}</span>
                         </div>
@@ -487,19 +528,19 @@ export function SaludOperativa() {
                   </ul>
                 </details>
               ) : (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   No se pudieron consultar los workflows.
                 </p>
               )}
               {salud.n8n.workflowsTruncados && (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   Lista parcial de workflows; el total activo corresponde a la
                   muestra consultada.
                 </p>
               )}
             </section>
             <section
-              className={styles.section}
+              className={"salud-section"}
               id="salud-vps"
               aria-labelledby="titulo-vps"
             >
@@ -514,7 +555,7 @@ export function SaludOperativa() {
                   cuenta esta pausa.
                 </p>
               )}
-              <dl className={styles.metrics}>
+              <dl className={"salud-metrics"}>
                 <Metrica
                   label="Disco libre"
                   detail={
@@ -540,10 +581,10 @@ export function SaludOperativa() {
                 </Metrica>
               </dl>
               <h3>Disponibilidad de servicios</h3>
-              <ul className={styles.list}>
+              <ul className={"salud-list"}>
                 {Object.entries(salud.vps.servicios).map(([name, estado]) => (
                   <li key={name}>
-                    <div className={styles.itemHead}>
+                    <div className={"salud-itemHead"}>
                       <strong>
                         {(
                           {
@@ -567,14 +608,14 @@ export function SaludOperativa() {
               </ul>
               <h3>Certificados HTTPS</h3>
               {salud.vps.certificados.length === 0 ? (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   No hay mediciones de certificados.
                 </p>
               ) : (
-                <ul className={styles.list}>
+                <ul className={"salud-list"}>
                   {salud.vps.certificados.map((cert) => (
                     <li key={cert.servicio}>
-                      <div className={styles.itemHead}>
+                      <div className={"salud-itemHead"}>
                         <strong>
                           {cert.servicio === "cooper" ? "Cooper" : "n8n"}
                         </strong>
@@ -589,12 +630,12 @@ export function SaludOperativa() {
               )}
               <h3>Copias de seguridad</h3>
               {salud.vps.copias.length === 0 ? (
-                <p className={styles.muted}>No hay registros de copias.</p>
+                <p className={"salud-muted"}>No hay registros de copias.</p>
               ) : (
-                <ul className={styles.list}>
+                <ul className={"salud-list"}>
                   {salud.vps.copias.map((copy) => (
                     <li key={copy.tipo}>
-                      <div className={styles.itemHead}>
+                      <div className={"salud-itemHead"}>
                         <strong>
                           {copy.tipo === "local"
                             ? "Copia local"
@@ -613,7 +654,7 @@ export function SaludOperativa() {
               )}
             </section>
             <section
-              className={styles.section}
+              className={"salud-section"}
               id="salud-fabrica"
               aria-labelledby="titulo-fabrica"
             >
@@ -622,7 +663,7 @@ export function SaludOperativa() {
                 title="Fábrica · Producción y costes"
                 source={salud.fabrica}
               />
-              <dl className={styles.metrics}>
+              <dl className={"salud-metrics"}>
                 <Metrica label="En producción">
                   {numero(salud.fabrica.enCurso)}
                 </Metrica>
@@ -648,7 +689,7 @@ export function SaludOperativa() {
                   {money(salud.fabrica.gastoDiarioUsd)}
                 </Metrica>
               </dl>
-              <p className={styles.muted}>
+              <p className={"salud-muted"}>
                 {salud.fabrica.gastoFuente === "simulada"
                   ? "Importes de ejemplo; no representan facturación real."
                   : salud.fabrica.gastoFuente === "n8n_estimado"
@@ -661,21 +702,21 @@ export function SaludOperativa() {
               </p>
               <h3>Seguimiento de videos</h3>
               {salud.fabrica.videos.length === 0 ? (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   No hay videos en la muestra disponible.
                 </p>
               ) : (
-                <ul className={styles.list}>
+                <ul className={"salud-list"}>
                   {salud.fabrica.videos.map((video) => (
                     <li key={video.id}>
-                      <div className={styles.itemHead}>
+                      <div className={"salud-itemHead"}>
                         <Link href={`/videos/${encodeURIComponent(video.id)}`}>
                           {video.titulo}
                         </Link>
                         <span
                           className={
                             video.estado === "colgado"
-                              ? styles.badge
+                              ? "salud-badge"
                               : undefined
                           }
                           data-state="alerta"
@@ -696,7 +737,7 @@ export function SaludOperativa() {
                 </ul>
               )}
               {salud.fabrica.videosTruncados && (
-                <p className={styles.muted}>
+                <p className={"salud-muted"}>
                   Se muestra una lista parcial. Abre Videos para consultar el
                   resto.
                 </p>
@@ -709,16 +750,16 @@ export function SaludOperativa() {
         )}
         {data && draft && (
           <section
-            className={styles.section}
+            className={"salud-section"}
             id="configurar-alertas"
             aria-labelledby="titulo-alertas-config"
           >
             <h2 id="titulo-alertas-config">Umbrales y avisos por Telegram</h2>
-            <p className={styles.muted}>
+            <p className={"salud-muted"}>
               Los umbrales señalan cuándo revisar la operación. Los cambios se
               aplican después de revisarlos y guardarlos.
             </p>
-            <dl className={styles.metrics}>
+            <dl className={"salud-metrics"}>
               <Metrica
                 label="Telegram"
                 detail={
@@ -743,7 +784,7 @@ export function SaludOperativa() {
                 {data.telegram.pendientes}
               </Metrica>
             </dl>
-            <p className={styles.muted}>
+            <p className={"salud-muted"}>
               Última evaluación: {fecha(data.telegram.ultimaEvaluacion)}. Último
               envío: {fecha(data.telegram.ultimoEnvio)} (Lima).
             </p>
@@ -755,7 +796,7 @@ export function SaludOperativa() {
             )}
             <Notice error={saveError} message={message} />
             {conflict && (
-              <div className={styles.review} role="status">
+              <div className={"salud-review"} role="status">
                 <p>
                   La configuración guardada cambió mientras editabas. Tus
                   cambios siguen aquí; carga la versión guardada para volver a
@@ -773,146 +814,152 @@ export function SaludOperativa() {
                 </button>
               </div>
             )}
-            <form
-              className={styles.form}
-              onSubmit={(event) => {
-                if (review) void guardar(event);
-                else {
-                  event.preventDefault();
-                  setReview(true);
-                  setConfirmed(false);
-                  setSaveError("");
-                }
-              }}
-            >
-              <fieldset className={styles.fieldset} disabled={saving}>
-                <legend>Umbrales de atención</legend>
-                <div className={styles.fields}>
-                  {campos.map((field) => (
-                    <label key={field.clave} htmlFor={`salud-${field.clave}`}>
-                      {field.etiqueta}
-                      <input
-                        id={`salud-${field.clave}`}
-                        aria-label={field.etiqueta}
-                        type="number"
-                        min={field.min}
-                        max={field.max}
-                        step={field.step ?? 1}
-                        required
-                        value={
-                          Number.isNaN(draft.umbrales[field.clave])
-                            ? ""
-                            : draft.umbrales[field.clave]
-                        }
-                        aria-describedby={`ayuda-${field.clave}`}
-                        onChange={(event) =>
-                          cambiar({
-                            ...draft,
-                            umbrales: {
-                              ...draft.umbrales,
-                              [field.clave]: event.currentTarget.valueAsNumber,
-                            },
-                          })
-                        }
-                      />
-                      <span
-                        className={styles.muted}
-                        id={`ayuda-${field.clave}`}
-                      >
-                        {field.ayuda}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <fieldset className={styles.fieldset} disabled={saving}>
-                <legend>Entrega de avisos</legend>
-                <label className={styles.checkbox}>
-                  <input
-                    type="checkbox"
-                    checked={draft.telegramActivo}
-                    onChange={(event) =>
-                      cambiar({
-                        ...draft,
-                        telegramActivo: event.target.checked,
-                      })
-                    }
-                  />
-                  Activar avisos por Telegram
-                </label>
-                <p className={styles.muted}>
-                  Solo se envían avisos con el destino configurado. No se
-                  incluyen credenciales ni contenido privado de ejecuciones.
-                </p>
-                <div className={styles.fields}>
-                  <label htmlFor="salud-recordatorio">
-                    Recordatorio de una alerta persistente (minutos)
+            <details className="salud-controles" ref={controles}>
+              <summary>Editar umbrales y avisos</summary>
+              <form
+                className={"salud-form"}
+                onSubmit={(event) => {
+                  if (review) void guardar(event);
+                  else {
+                    event.preventDefault();
+                    setReview(true);
+                    setConfirmed(false);
+                    setSaveError("");
+                  }
+                }}
+              >
+                <fieldset className={"salud-fieldset"} disabled={saving}>
+                  <legend>Umbrales de atención</legend>
+                  <div className={"salud-fields"}>
+                    {campos.map((field) => (
+                      <label key={field.clave} htmlFor={`salud-${field.clave}`}>
+                        {field.etiqueta}
+                        <input
+                          id={`salud-${field.clave}`}
+                          aria-label={field.etiqueta}
+                          type="number"
+                          min={field.min}
+                          max={field.max}
+                          step={field.step ?? 1}
+                          required
+                          value={
+                            Number.isNaN(draft.umbrales[field.clave])
+                              ? ""
+                              : draft.umbrales[field.clave]
+                          }
+                          aria-describedby={`ayuda-${field.clave}`}
+                          onChange={(event) =>
+                            cambiar({
+                              ...draft,
+                              umbrales: {
+                                ...draft.umbrales,
+                                [field.clave]:
+                                  event.currentTarget.valueAsNumber,
+                              },
+                            })
+                          }
+                        />
+                        <span
+                          className={"salud-muted"}
+                          id={`ayuda-${field.clave}`}
+                        >
+                          {field.ayuda}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <fieldset className={"salud-fieldset"} disabled={saving}>
+                  <legend>Entrega de avisos</legend>
+                  <label className={"salud-checkbox"}>
                     <input
-                      id="salud-recordatorio"
-                      type="number"
-                      min={15}
-                      max={10080}
-                      step={1}
-                      required
-                      value={
-                        Number.isNaN(draft.recordatorioMinutos)
-                          ? ""
-                          : draft.recordatorioMinutos
-                      }
+                      type="checkbox"
+                      checked={draft.telegramActivo}
                       onChange={(event) =>
                         cambiar({
                           ...draft,
-                          recordatorioMinutos:
-                            event.currentTarget.valueAsNumber,
+                          telegramActivo: event.target.checked,
                         })
                       }
                     />
+                    Activar avisos por Telegram
                   </label>
-                </div>
-              </fieldset>
-              {review && (
-                <div className={styles.review}>
-                  <h3>Revisa antes de guardar</h3>
-                  <ul>
-                    {campos.map((field) => (
-                      <li key={field.clave}>
-                        {field.etiqueta}:{" "}
-                        <strong>{draft.umbrales[field.clave]}</strong>
+                  <p className={"salud-muted"}>
+                    Solo se envían avisos con el destino configurado. No se
+                    incluyen credenciales ni contenido privado de ejecuciones.
+                  </p>
+                  <div className={"salud-fields"}>
+                    <label htmlFor="salud-recordatorio">
+                      Recordatorio de una alerta persistente (minutos)
+                      <input
+                        id="salud-recordatorio"
+                        type="number"
+                        min={15}
+                        max={10080}
+                        step={1}
+                        required
+                        value={
+                          Number.isNaN(draft.recordatorioMinutos)
+                            ? ""
+                            : draft.recordatorioMinutos
+                        }
+                        onChange={(event) =>
+                          cambiar({
+                            ...draft,
+                            recordatorioMinutos:
+                              event.currentTarget.valueAsNumber,
+                          })
+                        }
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+                {review && (
+                  <div className={"salud-review"}>
+                    <h3>Revisa antes de guardar</h3>
+                    <ul>
+                      {campos.map((field) => (
+                        <li key={field.clave}>
+                          {field.etiqueta}:{" "}
+                          <strong>{draft.umbrales[field.clave]}</strong>
+                        </li>
+                      ))}
+                      <li>
+                        Telegram:{" "}
+                        <strong>
+                          {draft.telegramActivo ? "activado" : "desactivado"}
+                        </strong>
                       </li>
-                    ))}
-                    <li>
-                      Telegram:{" "}
-                      <strong>
-                        {draft.telegramActivo ? "activado" : "desactivado"}
-                      </strong>
-                    </li>
-                    <li>
-                      Recordatorios: cada{" "}
-                      <strong>{draft.recordatorioMinutos} minutos</strong>
-                    </li>
-                  </ul>
-                  <label className={styles.checkbox}>
-                    <input
-                      type="checkbox"
-                      checked={confirmed}
-                      disabled={saving}
-                      onChange={(event) => setConfirmed(event.target.checked)}
-                    />
-                    He revisado los umbrales y la entrega de avisos.
-                  </label>
-                </div>
-              )}
-              <button
-                className="button"
-                disabled={saving || Boolean(conflict) || (review && !confirmed)}
-              >
-                {saving
-                  ? "Guardando…"
-                  : review
-                    ? "Guardar configuración de alertas"
-                    : "Revisar cambios"}
-              </button>
-            </form>
+                      <li>
+                        Recordatorios: cada{" "}
+                        <strong>{draft.recordatorioMinutos} minutos</strong>
+                      </li>
+                    </ul>
+                    <label className={"salud-checkbox"}>
+                      <input
+                        type="checkbox"
+                        checked={confirmed}
+                        disabled={saving}
+                        onChange={(event) => setConfirmed(event.target.checked)}
+                      />
+                      He revisado los umbrales y la entrega de avisos.
+                    </label>
+                  </div>
+                )}
+                <button
+                  className="button"
+                  disabled={
+                    saving || Boolean(conflict) || (review && !confirmed)
+                  }
+                >
+                  {saving
+                    ? "Guardando…"
+                    : review
+                      ? "Guardar configuración de alertas"
+                      : "Revisar cambios"}
+                </button>
+              </form>
+            </details>
           </section>
         )}
       </div>

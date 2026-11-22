@@ -200,6 +200,7 @@ test("salud administrativa: guarda umbrales, exige revisión y conserva conflict
     await expect(
       page.getByRole("heading", { level: 1, name: "Salud de la operación" }),
     ).toBeVisible();
+    await page.getByText("Editar umbrales y avisos", { exact: true }).click();
     const gasto = page.getByRole("spinbutton", {
       name: "Gasto diario de aviso (USD)",
       exact: true,
@@ -232,6 +233,7 @@ test("salud administrativa: guarda umbrales, exige revisión y conserva conflict
         .filter({ hasText: "Configuración de alertas guardada." }),
     ).toBeVisible();
     await page.reload();
+    await page.getByText("Editar umbrales y avisos", { exact: true }).click();
     await expect(gasto).toHaveValue("42.75");
     await gasto.fill("55");
     const saved = (await (
@@ -462,6 +464,7 @@ test("salud: refresco periódico conserva los cambios y permite recuperar una co
       : route.fulfill({ json: snapshot }),
   );
   await page.goto("/admin/salud");
+  await page.getByText("Editar umbrales y avisos", { exact: true }).click();
   const gasto = page.getByRole("spinbutton", {
     name: "Gasto diario de aviso (USD)",
     exact: true,

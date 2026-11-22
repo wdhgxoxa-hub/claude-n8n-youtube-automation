@@ -5,6 +5,8 @@ import type {
   PanelConciliacion,
 } from "@/servicios/conciliacion";
 import { api, Notice } from "./espacio";
+import { Esqueleto, Vacio } from "./primitivas";
+import "./operacion-diseno.css";
 export function ConciliacionAdmin() {
   const [data, setData] = useState<PanelConciliacion | null>(null);
   const [seleccion, setSeleccion] = useState<CasoConciliacion | null>(null);
@@ -24,7 +26,7 @@ export function ConciliacionAdmin() {
     }
   }
   return (
-    <section className="stack identity-reviews">
+    <section className="stack identity-reviews conciliacion-diseno">
       <h2>Operaciones por conciliar</h2>
       <p>
         Consulta el resultado de una operación interrumpida. Ninguna acción de
@@ -38,62 +40,24 @@ export function ConciliacionAdmin() {
       >
         Consultar operaciones interrumpidas
       </button>
+      {busy && !data && (
+        <Esqueleto
+          className="operacion-carga"
+          etiqueta="Buscando operaciones interrumpidas…"
+        />
+      )}
       {data && (
         <>
-          <form
-            className="stack"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const f = new FormData(e.currentTarget);
-              setBusy(true);
-              setError("");
-              try {
-                const params = new URLSearchParams({
-                  tipo: String(f.get("tipo")),
-                  id: String(f.get("id")),
-                });
-                setSeleccion(
-                  await api<CasoConciliacion>(
-                    `admin/conciliacion?${params}`,
-                    undefined,
-                    "GET",
-                  ),
-                );
-              } catch (e) {
-                setError((e as Error).message);
-              } finally {
-                setBusy(false);
-              }
-            }}
-          >
-            <label>
-              Tipo de operación
-              <select name="tipo">
-                {[
-                  "chat",
-                  "fabrica",
-                  "whatsapp",
-                  "accion_whatsapp",
-                  "marca",
-                  "ingesta",
-                ].map((tipo) => (
-                  <option key={tipo}>{tipo}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Identificador de operación
-              <input name="id" required maxLength={512} />
-            </label>
-            <button className="button secondary" disabled={busy}>
-              Buscar operación por ID
-            </button>
-          </form>
           <p className="helper">
             Hasta {data.limitePorTipo} operaciones por tipo. Conserva el
             identificador para consultar un cierre.
           </p>
-          {!data.casos.length && <p>No hay operaciones por conciliar.</p>}
+          {!data.casos.length && (
+            <Vacio
+              titulo="Todo está revisado"
+              descripcion="No hay operaciones por conciliar."
+            />
+          )}
           {data.casos.map((c) => (
             <div className="stack identity-review" key={`${c.tipo}:${c.id}`}>
               <strong>
@@ -117,6 +81,58 @@ export function ConciliacionAdmin() {
               </button>
             </div>
           ))}
+          <details className="conciliacion-buscar">
+            <summary>Buscar una operación por ID</summary>
+            <form
+              className="stack"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const f = new FormData(e.currentTarget);
+                setBusy(true);
+                setError("");
+                try {
+                  const params = new URLSearchParams({
+                    tipo: String(f.get("tipo")),
+                    id: String(f.get("id")),
+                  });
+                  setSeleccion(
+                    await api<CasoConciliacion>(
+                      `admin/conciliacion?${params}`,
+                      undefined,
+                      "GET",
+                    ),
+                  );
+                } catch (e) {
+                  setError((e as Error).message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              <label>
+                Tipo de operación
+                <select name="tipo">
+                  {[
+                    "chat",
+                    "fabrica",
+                    "whatsapp",
+                    "accion_whatsapp",
+                    "marca",
+                    "ingesta",
+                  ].map((tipo) => (
+                    <option key={tipo}>{tipo}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Identificador de operación
+                <input name="id" required maxLength={512} />
+              </label>
+              <button className="button secondary" disabled={busy}>
+                Buscar operación por ID
+              </button>
+            </form>
+          </details>
           {seleccion && (
             <form
               className="stack identity-review"
