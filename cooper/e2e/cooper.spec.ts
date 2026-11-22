@@ -142,7 +142,10 @@ test("conversa, pide un video, observa SSE y aprueba las dos puertas", async ({
     "Aprobación final",
   );
   await page.getByRole("button", { name: "Aprobar", exact: true }).click();
-  await expect(page.locator(".journey li.current")).toContainText("Publicado");
+  const publicado = page.locator(".journey li").last();
+  await expect(publicado).toContainText("Publicado");
+  await expect(publicado).toHaveClass(/\bcompleted\b/);
+  await expect(page.locator(".journey li.current")).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajenas", async ({

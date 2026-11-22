@@ -52,10 +52,19 @@ type MotionSample = {
   phase: string;
   startedAt: number;
   intervals: number[];
+  frameTimeline: { at: number; delta: number }[];
   longTasks: number[];
   previous: number;
   active: boolean;
   observer: PerformanceObserver;
+};
+type TransitionObservation = {
+  names: string[];
+  startedAt: number;
+  updateDoneAt: number | null;
+  readyAt: number | null;
+  finishedAt: number | null;
+  error: string | null;
 };
 
 async function startMotionSample(page: Page, phase: string) {
@@ -65,6 +74,7 @@ async function startMotionSample(page: Page, phase: string) {
       phase: name,
       startedAt: performance.now(),
       intervals: [],
+      frameTimeline: [],
       longTasks: [],
       previous: 0,
       active: true,
@@ -79,7 +89,10 @@ async function startMotionSample(page: Page, phase: string) {
     ).cooperDesignSample = sample;
     const frame = (time: number) => {
       if (!sample.active) return;
-      if (sample.previous) sample.intervals.push(time - sample.previous);
+      if (sample.previous) {
+        sample.intervals.push(time - sample.previous);
+        sample.frameTimeline.push({ at: time, delta: time - sample.previous });
+      }
       sample.previous = time;
       requestAnimationFrame(frame);
     };
@@ -99,6 +112,41 @@ async function stopMotionSample(page: Page) {
     sample.observer.disconnect();
     performance.mark(`diseno:${sample.phase}:fin`);
     const sorted = [...sample.intervals].sort((a, b) => a - b);
+    const transitions = (
+      (window as Window & { transitionsObserved?: TransitionObservation[] })
+        .transitionsObserved ?? []
+    ).filter((transition) => transition.startedAt >= sample.startedAt);
+    const animations = transitions.map((transition) => {
+      // La API pausa el render entre las capturas. Conservamos ese coste como
+      // latencia; el presupuesto de fotogramas corresponde a ready → finished.
+      const frames = sample.frameTimeline
+        .filter(
+          ({ at, delta }) =>
+            transition.readyAt !== null &&
+            transition.finishedAt !== null &&
+            at - delta >= transition.readyAt &&
+            at <= transition.finishedAt,
+        )
+        .map(({ delta }) => delta);
+      const ordered = [...frames].sort((a, b) => a - b);
+      return {
+        frames: frames.length,
+        fps: frames.length
+          ? 1000 /
+            (frames.reduce((sum, value) => sum + value, 0) / frames.length)
+          : 0,
+        p95: ordered[Math.floor(ordered.length * 0.95)] ?? Infinity,
+        latencyUntilReady:
+          transition.readyAt === null
+            ? null
+            : transition.readyAt - transition.startedAt,
+        duration:
+          transition.readyAt === null || transition.finishedAt === null
+            ? null
+            : transition.finishedAt - transition.readyAt,
+        transition,
+      };
+    });
     return {
       phase: sample.phase,
       duration: performance.now() - sample.startedAt,
@@ -110,6 +158,9 @@ async function stopMotionSample(page: Page) {
       p95: sorted[Math.floor(sorted.length * 0.95)],
       maxFrame: Math.max(...sample.intervals),
       longTasks: sample.longTasks,
+      frameTimeline: sample.frameTimeline,
+      transitions,
+      animations,
     };
   });
 }
@@ -412,14 +463,30 @@ for (const width of widths) {
 
 for (const mode of ["medicion", "grabacion"] as const) {
   test.describe(`Movimiento: ${mode}`, () => {
-    test.use({ video: mode === "grabacion" ? "on" : "off", trace: "off" });
     for (const width of [390, 1440]) {
       test(`ruta, Cooper y navegación en movimiento a ${width}px`, async ({
         page,
         context,
+        browser,
       }) => {
         await page.setViewportSize({ width, height: 900 });
         await page.emulateMedia({ reducedMotion: "no-preference" });
+        const browserClient = await browser.newBrowserCDPSession();
+        const systemInfo = await browserClient.send("SystemInfo.getInfo");
+        const renderer = {
+          devices: systemInfo.gpu.devices,
+          features: systemInfo.gpu.featureStatus,
+          renderer: systemInfo.gpu.auxAttributes?.glRenderer,
+          vendor: systemInfo.gpu.auxAttributes?.glVendor,
+          driver: systemInfo.gpu.auxAttributes?.displayType,
+          browserVersion: browser.version(),
+          launchOptions: [
+            "--enable-gpu",
+            "--use-gl=angle",
+            "--use-angle=swiftshader",
+          ],
+        };
+        await browserClient.detach();
         const client = await context.newCDPSession(page);
         await client.send("Emulation.setCPUThrottlingRate", {
           rate: width < 768 ? 4 : 1,
@@ -427,7 +494,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
         if (mode === "medicion")
           await client.send("Tracing.start", {
             categories:
-              "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame",
+              "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame,cc,viz,gpu",
             transferMode: "ReturnAsStream",
           });
         const errors: string[] = [];
@@ -448,14 +515,14 @@ for (const mode of ["medicion", "grabacion"] as const) {
         await page.evaluate(() => {
           const original = document.startViewTransition?.bind(document);
           if (!original) return;
-          const observations: { names: string[] }[] = [];
+          const observations: TransitionObservation[] = [];
           (
             window as Window & { transitionsObserved?: typeof observations }
           ).transitionsObserved = observations;
           document.startViewTransition = (
             ...args: Parameters<typeof original>
           ) => {
-            observations.push({
+            const observation: TransitionObservation = {
               names: [
                 ...document.querySelectorAll<HTMLElement>(
                   "[data-video-transition]",
@@ -463,8 +530,44 @@ for (const mode of ["medicion", "grabacion"] as const) {
               ]
                 .map((element) => element.style.viewTransitionName)
                 .filter(Boolean),
-            });
-            return original(...args);
+              startedAt: performance.now(),
+              updateDoneAt: null,
+              readyAt: null,
+              finishedAt: null,
+              error: null,
+            };
+            observations.push(observation);
+            const id = observations.length;
+            const transition = original(...args);
+            performance.mark(`diseno:view-transition:${id}:inicio`);
+            void transition.updateCallbackDone.then(
+              () => {
+                observation.updateDoneAt = performance.now();
+                performance.mark(`diseno:view-transition:${id}:dom-listo`);
+              },
+              (error: Error) => {
+                observation.error = error.message;
+              },
+            );
+            void transition.ready.then(
+              () => {
+                observation.readyAt = performance.now();
+                performance.mark(`diseno:view-transition:${id}:animacion`);
+              },
+              (error: Error) => {
+                observation.error = error.message;
+              },
+            );
+            void transition.finished.then(
+              () => {
+                observation.finishedAt = performance.now();
+                performance.mark(`diseno:view-transition:${id}:fin`);
+              },
+              (error: Error) => {
+                observation.error = error.message;
+              },
+            );
+            return transition;
           };
         });
         await expect(
@@ -560,8 +663,11 @@ for (const mode of ["medicion", "grabacion"] as const) {
         await finishPhase();
         const transitions = await page.evaluate(
           () =>
-            (window as Window & { transitionsObserved?: { names: string[] }[] })
-              .transitionsObserved ?? [],
+            (
+              window as Window & {
+                transitionsObserved?: TransitionObservation[];
+              }
+            ).transitionsObserved ?? [],
         );
         expect(transitions.length).toBeGreaterThanOrEqual(6);
         expect(
@@ -677,12 +783,15 @@ for (const mode of ["medicion", "grabacion"] as const) {
           JSON.stringify(
             {
               viewport: width,
+              renderer,
               instrumentation: {
                 cdpTrace: true,
                 playwrightTrace: false,
                 video: false,
                 screenshotsDuringMeasurement: false,
                 recordedSeparately: true,
+                viewTransitionFrameBudget: "ready → finished",
+                totalInteractionAndPreparationRetained: true,
               },
               cpu: width < 768 ? 4 : 1,
               metrics,
@@ -690,7 +799,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
               trace: `traza-movimiento-${width}.json`,
               errors,
               limitation:
-                "Laboratorio Chromium local; no acredita un teléfono físico.",
+                "Laboratorio Chromium local con composición habilitada y renderer SwiftShader por software; no acredita GPU física ni teléfono real.",
             },
             null,
             2,
@@ -703,12 +812,37 @@ for (const mode of ["medicion", "grabacion"] as const) {
           [],
         );
         for (const sample of interactions) {
-          expect
-            .soft(sample.fps, `${sample.phase}: fluidez real de interacción`)
-            .toBeGreaterThanOrEqual(57);
-          expect
-            .soft(sample.p95, `${sample.phase}: percentil95 de fotograma`)
-            .toBeLessThanOrEqual(25);
+          for (const animation of sample.animations) {
+            expect
+              .soft(
+                animation.transition.error,
+                `${sample.phase}: transición válida`,
+              )
+              .toBeNull();
+            expect
+              .soft(
+                animation.transition.readyAt,
+                `${sample.phase}: animación iniciada`,
+              )
+              .not.toBeNull();
+            expect
+              .soft(
+                animation.transition.finishedAt,
+                `${sample.phase}: animación terminada`,
+              )
+              .not.toBeNull();
+          }
+          const frameSamples = sample.animations.length
+            ? sample.animations
+            : [sample];
+          for (const frames of frameSamples) {
+            expect
+              .soft(frames.fps, `${sample.phase}: fluidez real de animación`)
+              .toBeGreaterThanOrEqual(57);
+            expect
+              .soft(frames.p95, `${sample.phase}: percentil95 de fotograma`)
+              .toBeLessThanOrEqual(25);
+          }
           expect
             .soft(
               sample.longTasks.filter((duration) => duration >= 100),
