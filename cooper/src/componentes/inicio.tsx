@@ -73,7 +73,8 @@ function MedioInicio({
       <Medio
         poster={medio?.poster?.url}
         preview={heroe || vistaPrevia ? medio?.preview?.url : undefined}
-        alt={video.title}
+        // Fuera del héroe, el mismo control ya contiene su título en texto.
+        alt={heroe ? video.title : ""}
         proporcion={vertical ? "vertical" : "horizontal"}
         prioridad={heroe}
       />
