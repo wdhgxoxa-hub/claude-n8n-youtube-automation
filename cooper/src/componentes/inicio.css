@@ -616,9 +616,9 @@
 [data-motion="paused"] .inicio-escena {
   transition: none;
 }
-/* Con póster tipográfico la carátula ya lleva el título: el del texto
-   queda para lectores de pantalla y no se repite a la vista. */
-.inicio-hero:has(.cartel) .inicio-hero-texto h2,
+/* Con póster tipográfico la carátula ya lleva el título: el de la tarjeta
+   queda para lectores de pantalla y no se repite a la vista. El héroe
+   conserva su título display 56 (DIRECCION §4) como pie de la carátula. */
 .inicio-pendiente:has(.cartel) .inicio-pendiente-cuerpo h3 {
   position: absolute;
   width: 1px;

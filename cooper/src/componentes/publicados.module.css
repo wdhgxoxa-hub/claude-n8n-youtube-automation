@@ -160,9 +160,19 @@
   color: var(--texto);
 }
 .contenedorMedio {
-  /* Insignia de red arriba y cifras de vidrio abajo: el póster las respeta. */
-  --cartel-reserva-arriba: var(--espacio-32);
+  /* Cifras de vidrio abajo: el póster deja libre su franja. */
   --cartel-reserva-abajo: calc(var(--objetivo-tactil) + var(--espacio-12));
+}
+/* La insignia de red ocupa la esquina izquierda y el canal ya va en el pie:
+   la firma del póster se reduce al número, a la derecha de la insignia, y el
+   título conserva toda la altura en las tarjetas bajas. */
+.contenedorMedio :global(.cartel-canal) {
+  display: none;
+}
+.contenedorMedio :global(.cartel-cabecera) {
+  justify-content: flex-end;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 .red {
   top: var(--espacio-12);
