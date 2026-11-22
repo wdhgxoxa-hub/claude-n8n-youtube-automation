@@ -8,7 +8,6 @@ import { partituraTexto, type EstadoCooper } from "@/marca/CooperCara";
 import { useEspacio, api, Notice } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
 import { Revelado } from "./titular";
-import { CooperPresencia } from "@/marca/CooperPresencia";
 import { Grabador, subir } from "./grabador";
 import { leerSSE } from "@/lib/stream";
 import type { EventoChat, TarjetaChat } from "@/servicios/chat/tipos";
@@ -302,24 +301,6 @@ export function ChatCooper({
               ? "Cooper está preparando tu respuesta"
               : "Cooper está disponible"}
         </span>
-        <div className="chat-heading">
-          <div className="cooper-badge">
-            <CooperPresencia />
-          </div>
-          <div>
-            <h2>Cooper</h2>
-            <p role="status" aria-atomic="true">
-              {state === "escuchando"
-                ? "Te escucho…"
-                : busy
-                  ? waiting
-                    ? "Sigo preparando tu respuesta. Puedes cancelar la espera."
-                    : "Preparando tu solicitud…"
-                  : "De tu lado, de principio a fin."}
-            </p>
-          </div>
-          <span className="chat-online" role="img" aria-label="Disponible" />
-        </div>
         <div
           className="conversation"
           role="log"
@@ -453,10 +434,13 @@ export function ChatCooper({
               </article>
             ))}
           {busy && !partial && (
-            <div className="thinking" role="status">
+            <div className="thinking" role="status" aria-atomic="true">
               <span />
               <span />
-              <span /> Cooper está pensando
+              <span />
+              {waiting
+                ? "Sigo preparando tu respuesta. Puedes cancelar la espera."
+                : "Cooper está pensando"}
             </div>
           )}
           <div ref={end} />
