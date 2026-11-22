@@ -3,25 +3,45 @@ import { useState } from "react";
 import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
 import { enlaceIncrustado } from "@/lib/enlaces-medios";
+import type { VideoMedios } from "@/contratos/video-medios";
+import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
+import styles from "./portada-video.module.css";
 export function MediosVideo({
+  videoId,
   datos,
   titulo,
+  inicial,
 }: {
+  videoId: string;
   datos: Observabilidad;
   titulo: string;
+  inicial?: VideoMedios;
 }) {
   const [fallo, setFallo] = useState(false);
+  const medio = useVideoMedios({ videoId, inicial });
+  const [proporcion] = useState(inicial?.relacionAspecto ?? 16 / 9);
   return (
     <>
-      {datos.montaje && (
-        <section className="real-player" aria-label="Video terminado">
+      {datos.montaje ? (
+        <section
+          className={`real-player ${styles.reproductor}`}
+          style={estiloMedio(medio, proporcion)}
+          aria-label="Video terminado"
+        >
           <video
             key={datos.montaje}
             controls
             playsInline
-            preload={datos.miniatura ? "none" : "metadata"}
-            poster={datos.miniatura || undefined}
+            preload="none"
+            poster={
+              (medio?.poster?.origen !== "tipografico" && medio?.poster?.url) ||
+              datos.miniatura ||
+              medio?.poster?.url ||
+              undefined
+            }
             src={datos.montaje}
+            width={inicial?.ancho ?? 1600}
+            height={inicial?.alto ?? 900}
             onError={() => setFallo(true)}
             onLoadedData={() => setFallo(false)}
             aria-label={`Video terminado: ${titulo}`}
@@ -38,6 +58,23 @@ export function MediosVideo({
               más tarde.
             </p>
           )}
+        </section>
+      ) : (
+        <section
+          className={`real-player ${styles.reproductor}`}
+          style={estiloMedio(medio, proporcion)}
+          aria-label="Portada del video"
+        >
+          <PortadaVideo
+            videoId={videoId}
+            titulo={titulo}
+            inicial={medio}
+            protagonista
+          />
+          <p>
+            El video terminado aparecerá aquí cuando la fábrica complete el
+            montaje.
+          </p>
         </section>
       )}
       {datos.escenas.length > 0 && (

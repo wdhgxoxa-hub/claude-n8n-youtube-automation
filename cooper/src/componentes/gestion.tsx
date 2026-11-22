@@ -1,20 +1,10 @@
 "use client";
 import { useEffect, useId, useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
-import {
-  Plus,
-  ArrowUpRight,
-  Trash2,
-  Radio,
-  Check,
-  Play,
-  Pause,
-} from "lucide-react";
-import { m as motion } from "framer-motion";
+import { Plus, ArrowUpRight, Trash2, Radio, Check } from "lucide-react";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
 import { MediosVideo } from "./medios-video";
-import { Portada } from "./portada";
-import { Indicador, useMovimientoReducido } from "./movimiento";
+import { Indicador } from "./movimiento";
 import { Recorrido, VideoMini } from "./fabrica-vista";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Orden } from "@/servicios/fabrica";
@@ -435,11 +425,9 @@ export function DetalleVideo({ id }: { id: string }) {
   const pending = useRef(false);
   const { data, refresh } = useEspacio();
   const video = data.videos.find((v) => v.id === id);
-  const reduced = useMovimientoReducido();
   const [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [playing, setPlaying] = useState(false),
     [changes, setChanges] = useState(false);
   async function act(path: string, value: unknown) {
     if (pending.current) return;
@@ -497,43 +485,13 @@ export function DetalleVideo({ id }: { id: string }) {
       )}
       <div className="detail-layout">
         <div>
-          {!video.observabilidad.montaje && data.demo && (
-            <section className="preview" aria-label="Vista previa simulada">
-              <motion.div
-                className="preview-art"
-                animate={{ scale: playing && !reduced ? 1.08 : 1 }}
-                transition={{ duration: reduced ? 0 : 8 }}
-              >
-                <Portada title={video.title} />
-              </motion.div>
-              <div className="preview-content">
-                <span>Vista previa simulada</span>
-                <h2>{video.title}</h2>
-                <button
-                  className="preview-play"
-                  onClick={() => setPlaying(!playing)}
-                  aria-label={
-                    playing ? "Pausar vista previa" : "Reproducir vista previa"
-                  }
-                >
-                  {playing ? <Pause size={22} /> : <Play size={22} />}
-                </button>
-              </div>
-              <div className="preview-footer">
-                <span>9:16 · 60 segundos</span>
-                <span>
-                  {playing ? "Reproduciendo maqueta" : "Maqueta de producción"}
-                </span>
-              </div>
-            </section>
-          )}
-          {!video.observabilidad.montaje && !data.demo && (
-            <p className="notice">
-              El video terminado aparecerá aquí cuando la fábrica complete el
-              montaje.
-            </p>
-          )}
-          <MediosVideo datos={video.observabilidad} titulo={video.title} />
+          <MediosVideo
+            key={video.id}
+            videoId={video.id}
+            datos={video.observabilidad}
+            titulo={video.title}
+            inicial={video.medios}
+          />
           {(video.avatarId || video.voiceId) && (
             <div className="presenter-summary">
               <span>

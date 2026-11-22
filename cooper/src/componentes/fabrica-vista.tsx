@@ -8,7 +8,7 @@ import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Estado } from "@/servicios/datos";
 type Video = Estado["videos"][number];
 import { useEspacio, Empty } from "./espacio";
-import { Portada } from "./portada";
+import { PortadaVideo } from "./portada-video";
 import {
   NumeroAnimado,
   TarjetaEdicion,
@@ -128,7 +128,12 @@ export function VideoMini({
   return (
     <Link href={`/videos/${video.id}`} className="video-mini">
       <span className="film-thumbnail">
-        <Portada title={video.title} />
+        <PortadaVideo
+          key={video.id}
+          videoId={video.id}
+          titulo={video.title}
+          inicial={video.medios}
+        />
       </span>
       <div>
         <small>
@@ -276,7 +281,11 @@ export function FabricaVista({
                     onClick={() => setSelected(v.id)}
                   >
                     <span className="queue-cover">
-                      <Portada title={v.title} />
+                      <PortadaVideo
+                        videoId={v.id}
+                        titulo={v.title}
+                        inicial={v.medios}
+                      />
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
                     </span>
                     <strong>{v.title}</strong>

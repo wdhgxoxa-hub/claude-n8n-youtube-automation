@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { InterruptorAprendizaje } from "./control-aprendizaje";
 import Link from "next/link";
-import Image from "next/image";
 import { api, Heading, Empty, useEspacio } from "./espacio";
 import { Portada } from "./portada";
+import { PortadaVideo } from "./portada-video";
 import {
   fecha,
   numero,
@@ -258,14 +258,17 @@ export function Publicados({ initial }: { initial: Resultados }) {
                     className="publication-thumb"
                     aria-label={`Ver detalle de ${primero.titulo}`}
                   >
-                    {primero.tipo === "video" &&
-                    primero.publicacion.miniatura ? (
-                      <Image
-                        unoptimized
-                        src={primero.publicacion.miniatura}
-                        alt=""
-                        width={240}
-                        height={160}
+                    {primero.tipo === "video" ? (
+                      <PortadaVideo
+                        videoId={
+                          primero.videoId ??
+                          decodeURIComponent(
+                            primero.href.split("/").at(-1) ?? "",
+                          )
+                        }
+                        titulo={primero.titulo}
+                        inicial={primero.medios}
+                        publicacion={primero.publicacion.id}
                       />
                     ) : (
                       <Portada title={primero.titulo} />

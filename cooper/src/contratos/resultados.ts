@@ -1,5 +1,6 @@
 import type { Incidencia, Leccion, Publicacion } from "./observabilidad";
 import type { Metricas } from "@/servicios/marcas/tipos";
+import type { VideoMedios } from "./video-medios";
 
 export type AmbitoResultado = {
   id: string;
@@ -19,7 +20,13 @@ type Registro = {
 };
 export type PublicacionResultado = Registro &
   (
-    | { tipo: "video"; publicacion: Publicacion; identidad: string }
+    | {
+        tipo: "video";
+        publicacion: Publicacion;
+        identidad: string;
+        videoId?: string;
+        medios?: VideoMedios;
+      }
     | {
         tipo: "marca";
         metricas: Metricas | null;
