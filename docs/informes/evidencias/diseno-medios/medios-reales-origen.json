@@ -1,0 +1,22 @@
+{
+  "youtube": [
+    {
+      "archivo": "youtube-oficial-1.jpg",
+      "bytes": 11191,
+      "sha256": "9db760df099bda856f536c2e9ffb7416eb2a660ddc263e556c5a7998990b0ec7"
+    },
+    {
+      "archivo": "youtube-oficial-2.jpg",
+      "bytes": 7820,
+      "sha256": "ba9a5a2f1e191e8c0c7ad62ae559a1d637031bf1b579fe046f505b24912f157e"
+    }
+  ],
+  "mp4": {
+    "archivo_cache": "cooper/.cache/diseno-medios-real/original.mp4",
+    "host": "f002.backblazeb2.com",
+    "bucket": "creatomate-c8xg3hsxdu",
+    "bytes": 17866060,
+    "sha256": "727421fdd1fbc2c705c6457a58496e90a84349b0ae7e27ee0cd20482b084f0a3",
+    "fuentes_unicas": 2
+  }
+}

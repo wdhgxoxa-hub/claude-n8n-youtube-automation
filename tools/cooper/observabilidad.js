@@ -3,6 +3,16 @@ function jsonCooper(value, fallback) { try { return JSON.parse(value || 'null') 
 function urlCooper(value) { const s=String(value || ''); return /^https:\/\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::443)?(?:[/?#][^\s\\<>]*)?$/i.test(s) ? s : ''; }
 function fechaCooper(value) { const n = typeof value === 'number' ? value : Date.parse(value); return Number.isFinite(n) && n > 0 ? new Date(n).toISOString() : null; }
 function numeroCooper(value) { return value !== null && value !== '' && value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null; }
+function miniaturaPublicadaCooper(red, url, historial) {
+  if (red !== 'youtube') return '';
+  const id = String(url).match(/^https:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|shorts\/|embed\/)([\w-]{11})(?:[?&#]|$)/)?.[1]
+    || String(url).match(/^https:\/\/youtu\.be\/([\w-]{11})(?:[?&#]|$)/)?.[1];
+  if (!id || !Array.isArray(historial)) return '';
+  // La URL procede de snippet.thumbnails, guardada por la lectura oficial existente.
+  // No reconstruir nombres de imagen ni usar la miniatura de otro video/publicación.
+  return historial.filter(m => fechaCooper(m?.fecha)).sort((a,b)=>Date.parse(b.fecha)-Date.parse(a.fecha)).map(m=>urlCooper(m.miniaturaPublicada))
+    .find(u=>u.match(/^https:\/\/(?:[a-z0-9-]+\.)?ytimg\.com\/(?:vi|vi_webp)\/([\w-]{11})\//i)?.[1] === id) || '';
+}
 function textoCooper(value, max = 2000) {
   // Los textos libres de especialistas pueden mencionar datos administrativos.
   return String(value || '').replace(/https?:\/\/\S+/gi, '[enlace]').replace(/(?:Bearer|Apikey)\s+\S+/gi, '[privado]')
@@ -37,11 +47,13 @@ function observabilidadCooper(v, planos, publicaciones, eventos, aprobaciones) {
     // Cada red confirmada se conserva aunque otra red del envío falle.
     const resultados = Array.isArray(r.publicaciones) ? r.publicaciones.filter(x => x.publicado === true) : p.estado === 'publicado' ? (r.urls || [p.url]).filter(Boolean).map(url => ({url,red: inferirRedCooper(url)})) : [];
     const historiales = jsonCooper(p.metricas_historial, {});
-    return resultados.map(x => ({ id:String(p.request_id)+':'+x.red, red:String(x.red || p.plataforma || 'Otra red'),url:urlCooper(x.url),fecha:fechaCooper(p.publicado_en),miniatura:urlCooper(v.miniatura_url),
+    return resultados.map(x => ({ id:String(p.request_id)+':'+x.red, red:String(x.red || p.plataforma || 'Otra red'),url:urlCooper(x.url),fecha:fechaCooper(p.publicado_en),
+      miniatura:['youtube','tiktok'].includes(x.red)?miniaturaPublicadaCooper(x.red,x.url,jsonCooper(v.metricas_youtube,[])):urlCooper(v.miniatura_url),montaje:urlCooper(p.url_video),
       historial:(Array.isArray(historiales[x.red]) ? historiales[x.red] : []).map(medicionCooper).filter(Boolean).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-90) }));
   });
   if (v.youtube_id && v.estado === 'publicado' && !publicadas.some(p => p.red === 'youtube' && p.url.includes(v.youtube_id))) {
-    publicadas.push({id:'youtube:'+v.youtube_id,red:'youtube',url:'https://www.youtube.com/watch?v='+encodeURIComponent(v.youtube_id),fecha:fechaCooper(v.publicado_en),miniatura:urlCooper(v.miniatura_url),historial:jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean).slice(-90)});
+    const url='https://www.youtube.com/watch?v='+encodeURIComponent(v.youtube_id);
+    publicadas.push({id:'youtube:'+v.youtube_id,red:'youtube',url,fecha:fechaCooper(v.publicado_en),miniatura:miniaturaPublicadaCooper('youtube',url,jsonCooper(v.metricas_youtube,[])),montaje:urlCooper(v.render_url),historial:jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean).slice(-90)});
   }
   const ytHist=jsonCooper(v.metricas_youtube,[]).map(medicionCooper).filter(Boolean);
   for (const p of publicadas) if (p.red==='youtube') {
