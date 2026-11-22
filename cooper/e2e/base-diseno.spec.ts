@@ -877,7 +877,12 @@ for (const mode of ["medicion", "grabacion"] as const) {
           await finishViewTransition(page);
           await finishPhase();
         }
-        const target = page.locator(".video-mini").first();
+        // El Inicio integrado ya no tiene .video-mini (solo existía en la Fábrica
+        // antigua): la miniatura compartida es cualquier medio enlazado al detalle.
+        const target = page
+          .locator('main a[href^="/videos/"]')
+          .filter({ has: page.locator(".medio") })
+          .first();
         const href = await target.getAttribute("href");
         await beginPhase("video-elemento-compartido");
         await target.click();
@@ -1456,7 +1461,7 @@ for (const width of [390, 1440]) {
       });
       await page.goto("/");
       const media = page
-        .locator(`.video-mini[href="/videos/${target.id}"] .medio`)
+        .locator(`main a[href="/videos/${target.id}"] .medio`)
         .first();
       await expect(media).toBeVisible();
       await media.scrollIntoViewIfNeeded();
