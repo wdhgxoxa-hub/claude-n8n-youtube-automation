@@ -1,0 +1,303 @@
+[
+  {
+    "variante": "original",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 31.65007675143612,
+      "p95": 33.40000000000009,
+      "maximo": 33.40000000000009,
+      "muestras": 96
+    }
+  },
+  {
+    "variante": "orbe-pausado",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": false,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 60.001325996154605,
+      "p95": 16.700000000000273,
+      "maximo": 16.800000000000182,
+      "muestras": 181
+    }
+  },
+  {
+    "variante": "preview-pausada",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": false,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 60.00259900760342,
+      "p95": 16.700000000000273,
+      "maximo": 16.800000000000182,
+      "muestras": 181
+    }
+  },
+  {
+    "variante": "sin-filtros",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 31.823886611492004,
+      "p95": 33.40000000000009,
+      "maximo": 33.40000000000009,
+      "muestras": 96
+    }
+  },
+  {
+    "variante": "sin-vidrio-orbe",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 31.823886611492004,
+      "p95": 33.40000000000009,
+      "maximo": 50,
+      "muestras": 96
+    }
+  },
+  {
+    "variante": "orbe-aislado",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 31.824941604547256,
+      "p95": 33.40000000000009,
+      "maximo": 50,
+      "muestras": 96
+    }
+  },
+  {
+    "variante": "video-promovido",
+    "videos": [
+      {
+        "src": "/__ensayo-medios/medios-preview.mp4",
+        "clase": "medio-preview",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 66,
+          "y": 728.390625,
+          "width": 306,
+          "height": 171.25,
+          "top": 728.390625,
+          "right": 372,
+          "bottom": 899.640625,
+          "left": 66
+        }
+      },
+      {
+        "src": "/cooper-cara/cooper.webm",
+        "clase": "",
+        "activo": true,
+        "visible": true,
+        "caja": {
+          "x": 319,
+          "y": 749,
+          "width": 56,
+          "height": 56,
+          "top": 749,
+          "right": 375,
+          "bottom": 805,
+          "left": 319
+        }
+      }
+    ],
+    "metrica": {
+      "fps": 31.64974284583938,
+      "p95": 33.40000000000009,
+      "maximo": 50,
+      "muestras": 96
+    }
+  }
+]

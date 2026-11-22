@@ -1,0 +1,2687 @@
+{
+  "version": 1,
+  "mision": "diseno-fabrica-video",
+  "generado_en_lima": "2026-11-21T23:45:54.076786-05:00",
+  "estado": "verificado",
+  "alcance": "Lista cerrada de 180 capturas PNG (15 estados × 6 anchos × página completa/primer viewport) y los dos videos finales de interacciones de esta misión. Metadatos calculados a partir de los archivos locales, sin incluir configuraciones de ejecución ni archivos ajenos.",
+  "conteo": {
+    "estados": 15,
+    "anchos": 6,
+    "imagenes": 180,
+    "videos": 2,
+    "archivos_evidencia": 182
+  },
+  "anchos": [
+    360,
+    390,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "pantallas": [
+    "fabrica",
+    "fabrica-pedir",
+    "fabrica-vacia",
+    "video-montaje",
+    "video-guion",
+    "video-aprobacion",
+    "video-publicado",
+    "video-metricas",
+    "video-lecciones",
+    "video-corregir",
+    "video-programar",
+    "video-pausado",
+    "video-cancelado",
+    "video-metricas-vacias",
+    "video-lecciones-vacias"
+  ],
+  "zona_horaria": "America/Lima",
+  "algoritmo_integridad": "SHA-256",
+  "fecha_archivo_origen": "mtime del archivo, expresado en America/Lima; no sustituye el instante interno de captura.",
+  "imagenes": [
+    {
+      "archivo": "evidencias-diseno/fabrica-360.png",
+      "bytes": 103770,
+      "sha256": "0c1819af31a21a12bb329f2ac844e2bd4bb0d67a876e5d123b587adf47e85b3d",
+      "fecha_archivo_lima": "2026-11-21T23:23:40.668243-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2180
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-360-viewport.png",
+      "bytes": 72271,
+      "sha256": "e34def663c507e69dae50ccb61e5bb95a1c7a02c2b498788314100b1e13f3016",
+      "fecha_archivo_lima": "2026-11-21T23:23:40.616242-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-360.png",
+      "bytes": 129008,
+      "sha256": "9e314f48609f32754533e0fbd6d8bd36dd3a7719aff49cf8dca3c51dfc45f74f",
+      "fecha_archivo_lima": "2026-11-21T23:23:41.759253-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2778
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-360-viewport.png",
+      "bytes": 52962,
+      "sha256": "61cf061cb5d2210eb5e39564797cd7b6acb188b74e2b4dc5355d41ebd8692f26",
+      "fecha_archivo_lima": "2026-11-21T23:23:41.691253-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-360.png",
+      "bytes": 24140,
+      "sha256": "a2dce582ad6768b81ce132b826628578c86a703ab422331bd27853841619529f",
+      "fecha_archivo_lima": "2026-11-21T23:24:39.514802-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 1041
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-360-viewport.png",
+      "bytes": 38938,
+      "sha256": "7aa6968a89ec13ba6c41662ea569697f059a7d95282b87dfdcfe9af287178f4d",
+      "fecha_archivo_lima": "2026-11-21T23:24:39.465802-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-360.png",
+      "bytes": 334057,
+      "sha256": "c08b7c1bbcd4b8b77896231a02a521768a4a88d0e13025d27038aa447589fe2e",
+      "fecha_archivo_lima": "2026-11-21T23:23:47.448308-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2774
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-360-viewport.png",
+      "bytes": 270074,
+      "sha256": "13072bb0b1e9f02caa674dd2a9d91509a24a0ea9f4406a3243dd6f270503d911",
+      "fecha_archivo_lima": "2026-11-21T23:23:47.336307-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-360.png",
+      "bytes": 303978,
+      "sha256": "9d33b46d2058f72114a7f871cc44b9f3cec351cdfdefe58ab3b972fe87300123",
+      "fecha_archivo_lima": "2026-11-21T23:23:53.046361-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2847
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-360-viewport.png",
+      "bytes": 235972,
+      "sha256": "40fc1f3891ba156294d76042f1dbb6e947af0ee33aa076ac856138c96cc449aa",
+      "fecha_archivo_lima": "2026-11-21T23:23:52.940360-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-360.png",
+      "bytes": 321838,
+      "sha256": "a516344fd5891dfe71172c5151f02704d0fff03c6caaaaf856b6d531788dde64",
+      "fecha_archivo_lima": "2026-11-21T23:23:58.612414-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2744
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-360-viewport.png",
+      "bytes": 262837,
+      "sha256": "0f911ef967827e7cf52fc5960878fdb78f6771c5b3b5a49da932c024cddcbafe",
+      "fecha_archivo_lima": "2026-11-21T23:23:58.514413-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-360.png",
+      "bytes": 361544,
+      "sha256": "4866901b00c9158191edcf4acba13253254e22af88b219b8afcbc7122c777bcc",
+      "fecha_archivo_lima": "2026-11-21T23:24:04.213467-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2871
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-360-viewport.png",
+      "bytes": 294343,
+      "sha256": "5ccdf24df1833f4a07f68770694f6a075b4fbc0511be3e62b08939456efc4423",
+      "fecha_archivo_lima": "2026-11-21T23:24:04.115466-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-360.png",
+      "bytes": 331381,
+      "sha256": "4d85737e681a938eb7abb85409323d5cd8919beb1e2f28de1fdd0e6721fea6c0",
+      "fecha_archivo_lima": "2026-11-21T23:24:07.808501-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2188
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-360-viewport.png",
+      "bytes": 294343,
+      "sha256": "5ccdf24df1833f4a07f68770694f6a075b4fbc0511be3e62b08939456efc4423",
+      "fecha_archivo_lima": "2026-11-21T23:24:07.717501-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-360.png",
+      "bytes": 337763,
+      "sha256": "5223c7d2fa77abac12a8b80003879822ac78bf8f6684b234d174057d8a4c579d",
+      "fecha_archivo_lima": "2026-11-21T23:24:11.341535-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2246
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-360-viewport.png",
+      "bytes": 294343,
+      "sha256": "5ccdf24df1833f4a07f68770694f6a075b4fbc0511be3e62b08939456efc4423",
+      "fecha_archivo_lima": "2026-11-21T23:24:11.267820-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-360.png",
+      "bytes": 337101,
+      "sha256": "362bd8a499dc496e39558d0bc24a1c2efcc14f2c581bbabaea2f36d94e5e97df",
+      "fecha_archivo_lima": "2026-11-21T23:24:17.013589-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 3138
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-360-viewport.png",
+      "bytes": 262837,
+      "sha256": "0f911ef967827e7cf52fc5960878fdb78f6771c5b3b5a49da932c024cddcbafe",
+      "fecha_archivo_lima": "2026-11-21T23:24:16.931588-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-360.png",
+      "bytes": 338653,
+      "sha256": "6e9ca3ab629617bd93ccf8e8a7cf3f0921c02c02073581cb104d49061460b2f7",
+      "fecha_archivo_lima": "2026-11-21T23:24:20.613623-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 3154
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-360-viewport.png",
+      "bytes": 262837,
+      "sha256": "0f911ef967827e7cf52fc5960878fdb78f6771c5b3b5a49da932c024cddcbafe",
+      "fecha_archivo_lima": "2026-11-21T23:24:20.515622-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-360.png",
+      "bytes": 333940,
+      "sha256": "1e946cf1bf003780abf7623cbfaa8733fce67d3b04d5cf3d2cdfc1ae6a0be897",
+      "fecha_archivo_lima": "2026-11-21T23:24:26.257891-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2774
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-360-viewport.png",
+      "bytes": 270074,
+      "sha256": "13072bb0b1e9f02caa674dd2a9d91509a24a0ea9f4406a3243dd6f270503d911",
+      "fecha_archivo_lima": "2026-11-21T23:24:26.170676-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-360.png",
+      "bytes": 331612,
+      "sha256": "7955b63d16d8d34e30945fa440963f5f26afe61d98d7c75d446ed5d3d15f04f2",
+      "fecha_archivo_lima": "2026-11-21T23:24:30.525717-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2702
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-360-viewport.png",
+      "bytes": 270074,
+      "sha256": "13072bb0b1e9f02caa674dd2a9d91509a24a0ea9f4406a3243dd6f270503d911",
+      "fecha_archivo_lima": "2026-11-21T23:24:30.449717-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-360.png",
+      "bytes": 272739,
+      "sha256": "1846760d9a0012db9ac7f313ce4c4b3ffb16c5180a68e121c2e7769435591b7d",
+      "fecha_archivo_lima": "2026-11-21T23:24:34.282753-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2261
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-360-viewport.png",
+      "bytes": 235972,
+      "sha256": "40fc1f3891ba156294d76042f1dbb6e947af0ee33aa076ac856138c96cc449aa",
+      "fecha_archivo_lima": "2026-11-21T23:24:34.190752-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-360.png",
+      "bytes": 274031,
+      "sha256": "6fbfbf808c2741d436c0948d4762cc5d9e76512c6add15cca0c3912758b4d7fb",
+      "fecha_archivo_lima": "2026-11-21T23:24:37.833999-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 360,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2284
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-360-viewport.png",
+      "bytes": 235972,
+      "sha256": "40fc1f3891ba156294d76042f1dbb6e947af0ee33aa076ac856138c96cc449aa",
+      "fecha_archivo_lima": "2026-11-21T23:24:37.744786-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 360,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-390.png",
+      "bytes": 108527,
+      "sha256": "a19ee7d226caf1baa49a41bd948336900db1625ae153a0d580f41815708be302",
+      "fecha_archivo_lima": "2026-11-21T23:24:40.780814-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2180
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-390-viewport.png",
+      "bytes": 78367,
+      "sha256": "ae8dad5cbf79a22fb59f4c8777390aee7ee29da9cdfa04afdd3e12f5d002fc22",
+      "fecha_archivo_lima": "2026-11-21T23:24:40.720814-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-390.png",
+      "bytes": 133217,
+      "sha256": "c17925e733d85fd0514710299edb33163f667b423b618ec96543ff133b2a31df",
+      "fecha_archivo_lima": "2026-11-21T23:24:41.804824-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2778
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-390-viewport.png",
+      "bytes": 53178,
+      "sha256": "4d87801ebdcbd571b6cd5a96d0311792109cfaa95d5f36c7251d832a5b1d1514",
+      "fecha_archivo_lima": "2026-11-21T23:24:41.734823-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-390.png",
+      "bytes": 24308,
+      "sha256": "1b281960392d7085ebf4b5118f1af7613549a91cdb69c66d8948eb35430bc3c6",
+      "fecha_archivo_lima": "2026-11-21T23:25:38.230357-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 1041
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-390-viewport.png",
+      "bytes": 39066,
+      "sha256": "55c8c88b198aa91c4731f41436b2ccf8806f36cf3f8b8bce5a7ab9f599945cf7",
+      "fecha_archivo_lima": "2026-11-21T23:25:38.184356-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-390.png",
+      "bytes": 336233,
+      "sha256": "34c1eab38aaffb8fffb344443bc4b9eb4e436d41dd6d82745ad7059730d239bc",
+      "fecha_archivo_lima": "2026-11-21T23:24:47.474878-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2749
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-390-viewport.png",
+      "bytes": 272317,
+      "sha256": "9406ab0c18f0a80b97d380735403b1cd13639c61135270f4dedfe146e1ffcdf1",
+      "fecha_archivo_lima": "2026-11-21T23:24:47.367877-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-390.png",
+      "bytes": 331885,
+      "sha256": "73021f9d069d7a31365f6c48a9a0952eafb89de13c77ab3ed4c0c8536f94312f",
+      "fecha_archivo_lima": "2026-11-21T23:24:53.216932-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2852
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-390-viewport.png",
+      "bytes": 255379,
+      "sha256": "c6a7916cf26cd2968735b33e731ca479ca59dd3fa2549387526e83b95a0e243c",
+      "fecha_archivo_lima": "2026-11-21T23:24:53.126931-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-390.png",
+      "bytes": 323564,
+      "sha256": "a3978afb14999cfeecfa57b4fded3886c4f4eddef3cbb371deb94e3900bff922",
+      "fecha_archivo_lima": "2026-11-21T23:24:58.771985-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2719
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-390-viewport.png",
+      "bytes": 264726,
+      "sha256": "88721ae533270e33be6b3b1d29ebcfb5ccf5119bfbc879ed1fd6132da020d2fe",
+      "fecha_archivo_lima": "2026-11-21T23:24:58.682984-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-390.png",
+      "bytes": 363688,
+      "sha256": "b1dc2bff79470ce6d3aa67f08b9278a8aff091e437e9ab86c2c9ed2f4cdb51de",
+      "fecha_archivo_lima": "2026-11-21T23:25:04.325037-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2846
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-390-viewport.png",
+      "bytes": 296284,
+      "sha256": "4a9f0ed886d086ed2e442777414b1ee8643b6f2eab07b47a4b73fa2f42dadda4",
+      "fecha_archivo_lima": "2026-11-21T23:25:04.245036-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-390.png",
+      "bytes": 333959,
+      "sha256": "9f77e2bdbe9ebd17d0ffedc343088a432f9449aec795f5f2594a6dace2781103",
+      "fecha_archivo_lima": "2026-11-21T23:25:07.892071-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2188
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-390-viewport.png",
+      "bytes": 296284,
+      "sha256": "4a9f0ed886d086ed2e442777414b1ee8643b6f2eab07b47a4b73fa2f42dadda4",
+      "fecha_archivo_lima": "2026-11-21T23:25:07.811070-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-390.png",
+      "bytes": 340696,
+      "sha256": "75a8e79f175aa5bcdc9e0ccc6abf15d1e5883eee37e483c3c4320791a6ca6406",
+      "fecha_archivo_lima": "2026-11-21T23:25:11.474105-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2223
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-390-viewport.png",
+      "bytes": 296284,
+      "sha256": "4a9f0ed886d086ed2e442777414b1ee8643b6f2eab07b47a4b73fa2f42dadda4",
+      "fecha_archivo_lima": "2026-11-21T23:25:11.377104-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-390.png",
+      "bytes": 339200,
+      "sha256": "f2c12fae21604b1908e10143ce97795f5c7487b45ba766ea60fba271f6da737e",
+      "fecha_archivo_lima": "2026-11-21T23:25:15.313141-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 3112
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-390-viewport.png",
+      "bytes": 264726,
+      "sha256": "88721ae533270e33be6b3b1d29ebcfb5ccf5119bfbc879ed1fd6132da020d2fe",
+      "fecha_archivo_lima": "2026-11-21T23:25:15.211140-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-390.png",
+      "bytes": 339283,
+      "sha256": "3057415f8350dd23ddb172efbd73dc70a2790fb50ed0d1ee9b640ba23021d706",
+      "fecha_archivo_lima": "2026-11-21T23:25:18.965175-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 3079
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-390-viewport.png",
+      "bytes": 264726,
+      "sha256": "88721ae533270e33be6b3b1d29ebcfb5ccf5119bfbc879ed1fd6132da020d2fe",
+      "fecha_archivo_lima": "2026-11-21T23:25:18.860174-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-390.png",
+      "bytes": 336114,
+      "sha256": "42ef1f690b7305143d04fba2f043bfe602796368df35115c6528167ef08eb66c",
+      "fecha_archivo_lima": "2026-11-21T23:25:24.105224-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2749
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-390-viewport.png",
+      "bytes": 272317,
+      "sha256": "9406ab0c18f0a80b97d380735403b1cd13639c61135270f4dedfe146e1ffcdf1",
+      "fecha_archivo_lima": "2026-11-21T23:25:24.007223-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-390.png",
+      "bytes": 333458,
+      "sha256": "8ff6c752543f655c0a7bc433b6aca24875dcd0b035eb1c355e815bda1bb9dff1",
+      "fecha_archivo_lima": "2026-11-21T23:25:28.938269-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2677
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-390-viewport.png",
+      "bytes": 272317,
+      "sha256": "9406ab0c18f0a80b97d380735403b1cd13639c61135270f4dedfe146e1ffcdf1",
+      "fecha_archivo_lima": "2026-11-21T23:25:28.842268-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-390.png",
+      "bytes": 301324,
+      "sha256": "faac28436173203ad1d01ca77fa2a688625ec9be33ff78f39a1ce4d9d70bcdf3",
+      "fecha_archivo_lima": "2026-11-21T23:25:32.758305-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2292
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-390-viewport.png",
+      "bytes": 255379,
+      "sha256": "c6a7916cf26cd2968735b33e731ca479ca59dd3fa2549387526e83b95a0e243c",
+      "fecha_archivo_lima": "2026-11-21T23:25:32.650304-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-390.png",
+      "bytes": 302351,
+      "sha256": "0a6b0fa53a8edea54d52662ae66e091e3cf73e506425b02e2bf9e15b08d51d49",
+      "fecha_archivo_lima": "2026-11-21T23:25:36.306023-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 390,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 2292
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-390-viewport.png",
+      "bytes": 255379,
+      "sha256": "c6a7916cf26cd2968735b33e731ca479ca59dd3fa2549387526e83b95a0e243c",
+      "fecha_archivo_lima": "2026-11-21T23:25:36.210338-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 390,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-768.png",
+      "bytes": 108658,
+      "sha256": "c17e905444a595f29a5acab6d59a870d488e58981d3f70c33e0e0d4df45c7a63",
+      "fecha_archivo_lima": "2026-11-21T23:31:58.953875-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 1733
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-768-viewport.png",
+      "bytes": 77621,
+      "sha256": "5027fc8ebb45aa685dae55a36d2200045c80c53b90664df72d9ccaee96111e2d",
+      "fecha_archivo_lima": "2026-11-21T23:31:58.881874-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-768.png",
+      "bytes": 135780,
+      "sha256": "1183a43cd3bb6148136b9ff32638e57897e7774a2af45d18e8d243676e445b1e",
+      "fecha_archivo_lima": "2026-11-21T23:32:00.022884-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2347
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-768-viewport.png",
+      "bytes": 59975,
+      "sha256": "58a05c2b95df502d1f0b6c5c592a3de449671b200d2133f655d1ff9e1ff9d58c",
+      "fecha_archivo_lima": "2026-11-21T23:31:59.957884-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-768.png",
+      "bytes": 36840,
+      "sha256": "265ec2102f81c9c7c660da39983082e117993c4cf8c8fdc979c414a0a8fd6bf0",
+      "fecha_archivo_lima": "2026-11-21T23:32:54.898384-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 931
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-768-viewport.png",
+      "bytes": 43526,
+      "sha256": "e62e50f3200029d7c7aca5973c09e22a19ef6d4d2f7774b9a63cf4ad16e2f85a",
+      "fecha_archivo_lima": "2026-11-21T23:32:54.849383-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-768.png",
+      "bytes": 380724,
+      "sha256": "f14a5be5bd8e0482b6f00c7513865ae3e2392798c0ca19555e41a7b98ca1ff5e",
+      "fecha_archivo_lima": "2026-11-21T23:32:03.802919-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2360
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-768-viewport.png",
+      "bytes": 293457,
+      "sha256": "e6f95d7405b116a90e74d821d8b91047aa4599cdd752efa229dc7b68d783d56c",
+      "fecha_archivo_lima": "2026-11-21T23:32:03.706918-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-768.png",
+      "bytes": 377146,
+      "sha256": "66a8b7f21e7e2ba6a00c226b9606697771db45cb14b5eceec24807331888fe3f",
+      "fecha_archivo_lima": "2026-11-21T23:32:09.349969-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2441
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-768-viewport.png",
+      "bytes": 280450,
+      "sha256": "10ab400acca76f6a0f7049d565da9b975190ef30930dbb2952105f5fee903bf1",
+      "fecha_archivo_lima": "2026-11-21T23:32:09.242969-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-768.png",
+      "bytes": 366790,
+      "sha256": "d06fe221b105c0da47b268611cb994063a952cb3f189b49c9164551045bf2132",
+      "fecha_archivo_lima": "2026-11-21T23:32:14.875110-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2308
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-768-viewport.png",
+      "bytes": 286601,
+      "sha256": "d763970d8b3ed897881940a6e17e72c484409a6474ae27519142e6dfb6c66ced",
+      "fecha_archivo_lima": "2026-11-21T23:32:14.782019-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-768.png",
+      "bytes": 403825,
+      "sha256": "85f5ab0268316653d2c9ec52162dcf361e3c83de52bec9d1dcde024e5c999554",
+      "fecha_archivo_lima": "2026-11-21T23:32:20.435070-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2435
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-768-viewport.png",
+      "bytes": 316243,
+      "sha256": "1d6f5851992e0c603b99d6494a21dc070ea2792955c6c78f90f7b0b8b4a163e0",
+      "fecha_archivo_lima": "2026-11-21T23:32:20.341069-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-768.png",
+      "bytes": 366024,
+      "sha256": "b93a23e9cd8643f735610894845bc7f6a360ede62509a0610a6878ea89597e20",
+      "fecha_archivo_lima": "2026-11-21T23:32:23.969103-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2104
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-768-viewport.png",
+      "bytes": 316243,
+      "sha256": "1d6f5851992e0c603b99d6494a21dc070ea2792955c6c78f90f7b0b8b4a163e0",
+      "fecha_archivo_lima": "2026-11-21T23:32:23.873102-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-768.png",
+      "bytes": 370816,
+      "sha256": "216587ad8eaa97941964eab06284a7d5f7cedad2fe4c41a5818232bad5ea881e",
+      "fecha_archivo_lima": "2026-11-21T23:32:27.501135-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2033
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-768-viewport.png",
+      "bytes": 316243,
+      "sha256": "1d6f5851992e0c603b99d6494a21dc070ea2792955c6c78f90f7b0b8b4a163e0",
+      "fecha_archivo_lima": "2026-11-21T23:32:27.403134-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-768.png",
+      "bytes": 382756,
+      "sha256": "4f2dfb233a60eb72bdd5f9cd7e56680d136e7a1647d4bdbc34557f4c358b9f2e",
+      "fecha_archivo_lima": "2026-11-21T23:32:31.290169-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2687
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-768-viewport.png",
+      "bytes": 286601,
+      "sha256": "d763970d8b3ed897881940a6e17e72c484409a6474ae27519142e6dfb6c66ced",
+      "fecha_archivo_lima": "2026-11-21T23:32:31.191168-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-768.png",
+      "bytes": 384681,
+      "sha256": "78e1c1aac1c0a84d9b86d7b9434d36cbd7044b412ff04b11073e8655b7fa5a17",
+      "fecha_archivo_lima": "2026-11-21T23:32:34.907202-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2684
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-768-viewport.png",
+      "bytes": 286601,
+      "sha256": "d763970d8b3ed897881940a6e17e72c484409a6474ae27519142e6dfb6c66ced",
+      "fecha_archivo_lima": "2026-11-21T23:32:34.802201-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-768.png",
+      "bytes": 380602,
+      "sha256": "67a056419f58ed61d84e8fd546d696e1c49e1302bce28fe5ac4ec70c98db37bf",
+      "fecha_archivo_lima": "2026-11-21T23:32:39.967248-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2360
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-768-viewport.png",
+      "bytes": 293457,
+      "sha256": "e6f95d7405b116a90e74d821d8b91047aa4599cdd752efa229dc7b68d783d56c",
+      "fecha_archivo_lima": "2026-11-21T23:32:39.873247-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-768.png",
+      "bytes": 377591,
+      "sha256": "9ebdd7bf1febe9b99aa9b8571d78863c62a9127c5840cd0f4d95b135650b9606",
+      "fecha_archivo_lima": "2026-11-21T23:32:43.556281-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2360
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-768-viewport.png",
+      "bytes": 293457,
+      "sha256": "e6f95d7405b116a90e74d821d8b91047aa4599cdd752efa229dc7b68d783d56c",
+      "fecha_archivo_lima": "2026-11-21T23:32:43.453280-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-768.png",
+      "bytes": 336665,
+      "sha256": "34d3c1799af2b244111ad1d2729702a4fefaca117e2ef0ee234a165763512c24",
+      "fecha_archivo_lima": "2026-11-21T23:32:49.153332-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2177
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-768-viewport.png",
+      "bytes": 280450,
+      "sha256": "10ab400acca76f6a0f7049d565da9b975190ef30930dbb2952105f5fee903bf1",
+      "fecha_archivo_lima": "2026-11-21T23:32:49.057808-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-768.png",
+      "bytes": 338215,
+      "sha256": "3393dae1c1f5bdd9f979da4b3cdcdec69fd7479eb39f4e839683ad96ec50a741",
+      "fecha_archivo_lima": "2026-11-21T23:32:52.703364-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 768,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2177
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-768-viewport.png",
+      "bytes": 280450,
+      "sha256": "10ab400acca76f6a0f7049d565da9b975190ef30930dbb2952105f5fee903bf1",
+      "fecha_archivo_lima": "2026-11-21T23:32:52.608363-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 768,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1024.png",
+      "bytes": 115318,
+      "sha256": "f20b01588bb381117a1ee13094f7074e2e0a3e1014de6f7073d0988d20189456",
+      "fecha_archivo_lima": "2026-11-21T23:26:36.813906-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1394
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1024-viewport.png",
+      "bytes": 97459,
+      "sha256": "8f7ada38bf53d8d2d71c568972918fb013efa09d319ebc3fa04a2df23d3e2617",
+      "fecha_archivo_lima": "2026-11-21T23:26:36.740905-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1024.png",
+      "bytes": 140217,
+      "sha256": "a4c69ff14b19327984f43dd80fea84c96b334feb3b330a9a62865a4d8ae5b33d",
+      "fecha_archivo_lima": "2026-11-21T23:26:37.921916-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1829
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1024-viewport.png",
+      "bytes": 70299,
+      "sha256": "5d800fdd4e594ee9da6a21a65466b560fc021412aed25d8f7a83aa1cf36b257d",
+      "fecha_archivo_lima": "2026-11-21T23:26:37.856915-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1024.png",
+      "bytes": 39624,
+      "sha256": "b2d52d32b5966800ad6cd1702910b3faaeab6348a946e2016c8b12df54b29a72",
+      "fecha_archivo_lima": "2026-11-21T23:27:26.117365-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 925
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1024-viewport.png",
+      "bytes": 45807,
+      "sha256": "d27116224150bd763345bbb861e50686a8e44b42fe733b48a202a239042bdf33",
+      "fecha_archivo_lima": "2026-11-21T23:27:26.072365-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1024.png",
+      "bytes": 394993,
+      "sha256": "781fed2016c74e0f50752abe7456d49ab28bbd29d8a8beee3a31b59c00d615d3",
+      "fecha_archivo_lima": "2026-11-21T23:26:41.762952-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2213
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1024-viewport.png",
+      "bytes": 302630,
+      "sha256": "e546d369c5d10562a0d88bc1053fa4be7a457a51f9c7f92d9c01e27bf6ea34ac",
+      "fecha_archivo_lima": "2026-11-21T23:26:41.653951-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1024.png",
+      "bytes": 388656,
+      "sha256": "c437be768f69f782084d501ae5e3c34b1bdbf85be16bd415fb2be362623a7150",
+      "fecha_archivo_lima": "2026-11-21T23:26:45.482987-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2316
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1024-viewport.png",
+      "bytes": 285109,
+      "sha256": "a97e2397a14a804698b7795b629f4f290c80d89fa091ae128f29c415e2272c5d",
+      "fecha_archivo_lima": "2026-11-21T23:26:45.372986-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1024.png",
+      "bytes": 375183,
+      "sha256": "41f50622952b40cedf755ab111751db652dbddcad34fd95d0606672ba95831d2",
+      "fecha_archivo_lima": "2026-11-21T23:26:49.193021-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2166
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1024-viewport.png",
+      "bytes": 294583,
+      "sha256": "0f49c64058564841d356c3cc0121fe752e8c863b40fc0d219fa82b02ee2ddf53",
+      "fecha_archivo_lima": "2026-11-21T23:26:49.109020-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1024.png",
+      "bytes": 417949,
+      "sha256": "e97fec485f64c1219b78c4d154d35ad2525ac6de9d07dd89d6eb90fc257038c5",
+      "fecha_archivo_lima": "2026-11-21T23:26:53.001057-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2310
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1024-viewport.png",
+      "bytes": 324592,
+      "sha256": "ff4ae6dcb2cdf32677681ce65696c43d7ac0dd6e4abef09f9cf5784e4f58bcb8",
+      "fecha_archivo_lima": "2026-11-21T23:26:52.891056-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1024.png",
+      "bytes": 378829,
+      "sha256": "3bdef1189c9fd4d3934b29959cd2f70a41ecdb1be267f12611326ef1740a477b",
+      "fecha_archivo_lima": "2026-11-21T23:26:56.565090-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1928
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1024-viewport.png",
+      "bytes": 324592,
+      "sha256": "ff4ae6dcb2cdf32677681ce65696c43d7ac0dd6e4abef09f9cf5784e4f58bcb8",
+      "fecha_archivo_lima": "2026-11-21T23:26:56.469089-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1024.png",
+      "bytes": 386720,
+      "sha256": "f39948377ab2c0f39d0eaeb7a2c96ccad9830d6dca1597f5698326075011d682",
+      "fecha_archivo_lima": "2026-11-21T23:27:00.098123-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1958
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1024-viewport.png",
+      "bytes": 324592,
+      "sha256": "ff4ae6dcb2cdf32677681ce65696c43d7ac0dd6e4abef09f9cf5784e4f58bcb8",
+      "fecha_archivo_lima": "2026-11-21T23:27:00.010122-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1024.png",
+      "bytes": 392238,
+      "sha256": "e00d0e100ecf8218afe832017c6663c6389e9de8691582c97c9f16a31c4a613d",
+      "fecha_archivo_lima": "2026-11-21T23:27:03.859158-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2545
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1024-viewport.png",
+      "bytes": 294583,
+      "sha256": "0f49c64058564841d356c3cc0121fe752e8c863b40fc0d219fa82b02ee2ddf53",
+      "fecha_archivo_lima": "2026-11-21T23:27:03.772157-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1024.png",
+      "bytes": 392653,
+      "sha256": "7552ae4004318f92af3be9582a0f8442ecd24ca4a825efe0f5168b12e459b0eb",
+      "fecha_archivo_lima": "2026-11-21T23:27:07.512192-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2522
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1024-viewport.png",
+      "bytes": 294583,
+      "sha256": "0f49c64058564841d356c3cc0121fe752e8c863b40fc0d219fa82b02ee2ddf53",
+      "fecha_archivo_lima": "2026-11-21T23:27:07.405812-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1024.png",
+      "bytes": 394258,
+      "sha256": "703f243867ef28999b67d8649fdc92e524f72df7e27d08b92863560604a87305",
+      "fecha_archivo_lima": "2026-11-21T23:27:12.653240-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2213
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1024-viewport.png",
+      "bytes": 302630,
+      "sha256": "e546d369c5d10562a0d88bc1053fa4be7a457a51f9c7f92d9c01e27bf6ea34ac",
+      "fecha_archivo_lima": "2026-11-21T23:27:12.559239-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1024.png",
+      "bytes": 392498,
+      "sha256": "b13d7a66a2974440969a0a15c96cb675828e762a89c78203754ba7f4f66546a2",
+      "fecha_archivo_lima": "2026-11-21T23:27:16.186273-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2213
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1024-viewport.png",
+      "bytes": 302105,
+      "sha256": "80abcb0d7ca56932672bf3a3efbbab931b1c7e4b9c36b5e15cc1b927d8ffc119",
+      "fecha_archivo_lima": "2026-11-21T23:27:16.086272-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1024.png",
+      "bytes": 351618,
+      "sha256": "0cf49258d863073562ffb9e36deed47fc3bf6c0cae00f2221c33f8b12a6e9172",
+      "fecha_archivo_lima": "2026-11-21T23:27:21.700324-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2103
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1024-viewport.png",
+      "bytes": 285109,
+      "sha256": "a97e2397a14a804698b7795b629f4f290c80d89fa091ae128f29c415e2272c5d",
+      "fecha_archivo_lima": "2026-11-21T23:27:21.602323-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1024.png",
+      "bytes": 353319,
+      "sha256": "c309a50982c46f859f182f0d93cff1acf20e645d816715a2a15c9be19d8c28e3",
+      "fecha_archivo_lima": "2026-11-21T23:27:25.216357-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2103
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1024-viewport.png",
+      "bytes": 285109,
+      "sha256": "a97e2397a14a804698b7795b629f4f290c80d89fa091ae128f29c415e2272c5d",
+      "fecha_archivo_lima": "2026-11-21T23:27:25.118356-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 1024,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1440.png",
+      "bytes": 147171,
+      "sha256": "aa14125457473720c6673c9577f1868cb5068855056c79879a0a7f2978d74cce",
+      "fecha_archivo_lima": "2026-11-21T23:27:27.452378-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1394
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1440-viewport.png",
+      "bytes": 124519,
+      "sha256": "b17a36cca398ce5c789d7222843109457949099cd43bc76629a7db4bb5063f93",
+      "fecha_archivo_lima": "2026-11-21T23:27:27.380377-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1440.png",
+      "bytes": 171907,
+      "sha256": "3f832a8bb4ab1016166ecc7b10442bb60f0ed0a037b3124f45238071367f7ed7",
+      "fecha_archivo_lima": "2026-11-21T23:27:28.509387-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1829
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1440-viewport.png",
+      "bytes": 72944,
+      "sha256": "302360ece66e953008383ba799924f9e09a6fcefbe706c3596f146fe6e7b7e0e",
+      "fecha_archivo_lima": "2026-11-21T23:27:28.437387-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1440.png",
+      "bytes": 41075,
+      "sha256": "f108606ccf5cd06fb352464d09f5508abe528a91a5c226955da56ec616e0993a",
+      "fecha_archivo_lima": "2026-11-21T23:28:23.402897-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 925
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1440-viewport.png",
+      "bytes": 47863,
+      "sha256": "92d4ce737a9d956988d583ee8a12512906621a7bf68d5d027bdc78fca6aa6e08",
+      "fecha_archivo_lima": "2026-11-21T23:28:23.343896-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1440.png",
+      "bytes": 410854,
+      "sha256": "32a4c6fd4742d88acdc983a3d23304724451a341f9fb0c7fdd62b3b3ab23575c",
+      "fecha_archivo_lima": "2026-11-21T23:27:34.098439-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1876
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1440-viewport.png",
+      "bytes": 339421,
+      "sha256": "69b9b6e20906714f4074b13e52b9b8cf1338d48931310ec15e4475c8ab3f95bb",
+      "fecha_archivo_lima": "2026-11-21T23:27:34.009439-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1440.png",
+      "bytes": 399729,
+      "sha256": "637aecefd012ab7753243675dc049a845819b51740454acd2081bcf0d000cdd9",
+      "fecha_archivo_lima": "2026-11-21T23:27:37.844474-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1980
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1440-viewport.png",
+      "bytes": 324411,
+      "sha256": "3f1609722b00f8770759379f9b3bb16afbd942c51c110220df5ddbccb9c58ff5",
+      "fecha_archivo_lima": "2026-11-21T23:27:37.727473-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1440.png",
+      "bytes": 390289,
+      "sha256": "0a5a79b9129ba62e7fa0ad6e5ec133d4d8af18f46ff831c48047588cbabfe3ae",
+      "fecha_archivo_lima": "2026-11-21T23:27:41.601509-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1888
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1440-viewport.png",
+      "bytes": 320124,
+      "sha256": "1780114c3d02d8cc076eddfb295ca5e2dc7fc62b87fb11affdd6dff150a7eac4",
+      "fecha_archivo_lima": "2026-11-21T23:27:41.501508-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1440.png",
+      "bytes": 428276,
+      "sha256": "199ac671eb1e3c29b9680a955e7bffe37a1a677fdbb3e198620b0a5f1c92f4ad",
+      "fecha_archivo_lima": "2026-11-21T23:27:45.369544-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1973
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1440-viewport.png",
+      "bytes": 359359,
+      "sha256": "f63ae3f6c8d2e536055d662a6acce76e4b627318c0d3bd387d74f69ab7a6d0a8",
+      "fecha_archivo_lima": "2026-11-21T23:27:45.257543-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1440.png",
+      "bytes": 392850,
+      "sha256": "028c377950a21bc757cfddbee949701df136d679f6fc30d267a4c7af0a123e0f",
+      "fecha_archivo_lima": "2026-11-21T23:27:48.934577-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1643
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1440-viewport.png",
+      "bytes": 359359,
+      "sha256": "f63ae3f6c8d2e536055d662a6acce76e4b627318c0d3bd387d74f69ab7a6d0a8",
+      "fecha_archivo_lima": "2026-11-21T23:27:48.840576-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1440.png",
+      "bytes": 399947,
+      "sha256": "22dfaa17d28d10e1667b8dc79c2c4d5e2b79273dd467e97bb7adda3a6c7287e2",
+      "fecha_archivo_lima": "2026-11-21T23:27:52.495610-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1673
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1440-viewport.png",
+      "bytes": 359359,
+      "sha256": "f63ae3f6c8d2e536055d662a6acce76e4b627318c0d3bd387d74f69ab7a6d0a8",
+      "fecha_archivo_lima": "2026-11-21T23:27:52.389609-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1440.png",
+      "bytes": 408442,
+      "sha256": "f7f889eeb09145f4a28ebd89a78962ef24960c0750e31da6be55ebf930863549",
+      "fecha_archivo_lima": "2026-11-21T23:27:58.191663-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 2267
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1440-viewport.png",
+      "bytes": 321360,
+      "sha256": "24966c984475719432c71c3c8d8e7e5ab91531e8e513079aa073865b7da3db05",
+      "fecha_archivo_lima": "2026-11-21T23:27:58.074662-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1440.png",
+      "bytes": 409910,
+      "sha256": "55047bdfbde1e611086c612020e935ae7b5939e9ee9be04302f8335945717b4b",
+      "fecha_archivo_lima": "2026-11-21T23:28:01.844697-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 2245
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1440-viewport.png",
+      "bytes": 321360,
+      "sha256": "24966c984475719432c71c3c8d8e7e5ab91531e8e513079aa073865b7da3db05",
+      "fecha_archivo_lima": "2026-11-21T23:28:01.737696-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1440.png",
+      "bytes": 410090,
+      "sha256": "5d149119ca164ce683f78881169e5edfc9b6bd09121edd727bbeeeb91f2904e3",
+      "fecha_archivo_lima": "2026-11-21T23:28:07.582750-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1876
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1440-viewport.png",
+      "bytes": 339256,
+      "sha256": "fa94c46eb8059ce72a26820347528c7c46eca7d8fbbb756c80f1cb43a39ed558",
+      "fecha_archivo_lima": "2026-11-21T23:28:07.464749-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1440.png",
+      "bytes": 406984,
+      "sha256": "3528d091d73540620b41e4adbd0311b2c33a53b6671222516c9888d9130b8dbc",
+      "fecha_archivo_lima": "2026-11-21T23:28:11.962791-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1876
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1440-viewport.png",
+      "bytes": 337921,
+      "sha256": "0daf9fe53342be29e514f1a47176929e8c26488620dcede9ddb82811ee0daef7",
+      "fecha_archivo_lima": "2026-11-21T23:28:11.850037-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1440.png",
+      "bytes": 365778,
+      "sha256": "36c200ba61293ddea4e797870879bf73351e682a85d3d9e5def986efddc0a345",
+      "fecha_archivo_lima": "2026-11-21T23:28:17.609843-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1818
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1440-viewport.png",
+      "bytes": 324411,
+      "sha256": "3f1609722b00f8770759379f9b3bb16afbd942c51c110220df5ddbccb9c58ff5",
+      "fecha_archivo_lima": "2026-11-21T23:28:17.507842-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1440.png",
+      "bytes": 367480,
+      "sha256": "ecf04fab878e6b032a0c1488c739b7e5ad4cce7a05071da3ca943c39e017c293",
+      "fecha_archivo_lima": "2026-11-21T23:28:21.172876-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1818
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1440-viewport.png",
+      "bytes": 324411,
+      "sha256": "3f1609722b00f8770759379f9b3bb16afbd942c51c110220df5ddbccb9c58ff5",
+      "fecha_archivo_lima": "2026-11-21T23:28:21.071875-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 1440,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1920.png",
+      "bytes": 153840,
+      "sha256": "e4bea28161d7001c1523ee6d2a1173911a3087a4e33f23a795d8a407ca51417e",
+      "fecha_archivo_lima": "2026-11-21T23:28:24.879910-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1394
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1920-viewport.png",
+      "bytes": 128403,
+      "sha256": "2db285e7e5877c30161bf8096d4e93669c4c9a3cd5fab40af27157ed6662804e",
+      "fecha_archivo_lima": "2026-11-21T23:28:24.782909-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1920.png",
+      "bytes": 180928,
+      "sha256": "850da555e4743a6c2786b07457fa30f9e297ecafae2dfb7d31ef2df7cd3f6631",
+      "fecha_archivo_lima": "2026-11-21T23:28:26.083921-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1829
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1920-viewport.png",
+      "bytes": 73412,
+      "sha256": "2518c40e28ee15ed853acce5d3ca56ad95f11c9d60f104973400d1ec6dd7d8e6",
+      "fecha_archivo_lima": "2026-11-21T23:28:25.975920-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-pedir",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1920.png",
+      "bytes": 42532,
+      "sha256": "a453b9b72e2082dc661ec1ab697a364dda6147fb13a83b0eb82814548e04bbd3",
+      "fecha_archivo_lima": "2026-11-21T23:29:24.369459-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 925
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1920-viewport.png",
+      "bytes": 49491,
+      "sha256": "b189975c36a34af996d80f47c50647e315718e62cdbf179e6c7f1ee54464ca2f",
+      "fecha_archivo_lima": "2026-11-21T23:29:24.319459-05:00",
+      "tipo": "image/png",
+      "pantalla": "fabrica-vacia",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1920.png",
+      "bytes": 417521,
+      "sha256": "3bb056603966eaf2f37938173810a58ec354c4d1007c939cff6ce262015c926b",
+      "fecha_archivo_lima": "2026-11-21T23:28:31.778974-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1876
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1920-viewport.png",
+      "bytes": 343726,
+      "sha256": "0b308175243909a25f1b7579ac1e2f8bef3a4544006b4ac6e79bdb6779a33a08",
+      "fecha_archivo_lima": "2026-11-21T23:28:31.655973-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-montaje",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1920.png",
+      "bytes": 407952,
+      "sha256": "3e2fb2deb541479ff3e5efaad4607e100749fd6ab06bb93888dc2e974374024c",
+      "fecha_archivo_lima": "2026-11-21T23:28:35.534009-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1980
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1920-viewport.png",
+      "bytes": 330043,
+      "sha256": "879bbe3e1f794e5f7999995b10bc577506ca3153bb6863b1d3a7dd668f0a69db",
+      "fecha_archivo_lima": "2026-11-21T23:28:35.411008-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-guion",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1920.png",
+      "bytes": 397517,
+      "sha256": "df308c390e1be22b9b73ab6f0ae952f91e88edfba41ea061e98fc67f52e3fe7a",
+      "fecha_archivo_lima": "2026-11-21T23:28:41.141708-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1888
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1920-viewport.png",
+      "bytes": 324933,
+      "sha256": "a8394c5249d6bde6d02b8020174e9fceb1f4c3c2cda02766a3ad21f96dc09360",
+      "fecha_archivo_lima": "2026-11-21T23:28:41.033517-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-aprobacion",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1920.png",
+      "bytes": 435466,
+      "sha256": "cec178f9c42836aaf2dbe22a439614d529794b93d244bec12b51a96d47878cb0",
+      "fecha_archivo_lima": "2026-11-21T23:28:46.729112-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1973
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1920-viewport.png",
+      "bytes": 363591,
+      "sha256": "bd84297f75ca2d8fd3e9a6d51ba88e4b9eae3e19b3338713861a6cbabf6659b8",
+      "fecha_archivo_lima": "2026-11-21T23:28:46.613111-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-publicado",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1920.png",
+      "bytes": 398675,
+      "sha256": "ad40c3e91e91ffb209d5801c9a3f2ff9ce204d533e33195d37191a02bab35f32",
+      "fecha_archivo_lima": "2026-11-21T23:28:50.326145-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1643
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1920-viewport.png",
+      "bytes": 363591,
+      "sha256": "bd84297f75ca2d8fd3e9a6d51ba88e4b9eae3e19b3338713861a6cbabf6659b8",
+      "fecha_archivo_lima": "2026-11-21T23:28:50.230145-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1920.png",
+      "bytes": 406206,
+      "sha256": "c756663f34c7a0d4e9a3f10e178e5ee05bec86ae96498a4acc75be35961d722b",
+      "fecha_archivo_lima": "2026-11-21T23:28:53.877178-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1673
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1920-viewport.png",
+      "bytes": 363591,
+      "sha256": "bd84297f75ca2d8fd3e9a6d51ba88e4b9eae3e19b3338713861a6cbabf6659b8",
+      "fecha_archivo_lima": "2026-11-21T23:28:53.779177-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1920.png",
+      "bytes": 416719,
+      "sha256": "5214c8118070b71c74ab0c41fee7424ca9131c19d3bdeed034e690744be095f8",
+      "fecha_archivo_lima": "2026-11-21T23:28:59.547230-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 2267
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1920-viewport.png",
+      "bytes": 326137,
+      "sha256": "4537647c7234a1d89c22372e94650a1f380fb554c0ad802579170f34ebc17cff",
+      "fecha_archivo_lima": "2026-11-21T23:28:59.420229-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-corregir",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1920.png",
+      "bytes": 417653,
+      "sha256": "06a5d69b1e5492031d1799583de8cdca0a6c6ef96aa40c0aff126614b94e83cf",
+      "fecha_archivo_lima": "2026-11-21T23:29:03.190264-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 2245
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1920-viewport.png",
+      "bytes": 326137,
+      "sha256": "4537647c7234a1d89c22372e94650a1f380fb554c0ad802579170f34ebc17cff",
+      "fecha_archivo_lima": "2026-11-21T23:29:03.071263-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-programar",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1920.png",
+      "bytes": 416798,
+      "sha256": "d56831dbbaa126b0eaf58e21ce8960bf91c89dfdaa6da7f3f2de56db70327df4",
+      "fecha_archivo_lima": "2026-11-21T23:29:08.943317-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1876
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1920-viewport.png",
+      "bytes": 343555,
+      "sha256": "cb0801b62759a26f4e659ae24a0d85762e22a0a08c47abdbe16b5d282e654593",
+      "fecha_archivo_lima": "2026-11-21T23:29:08.814316-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-pausado",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1920.png",
+      "bytes": 413824,
+      "sha256": "9607aea6cfc77713493ace29622d0fe763f791f77f0e04c86c9a4ff9883f92d0",
+      "fecha_archivo_lima": "2026-11-21T23:29:13.318357-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1876
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1920-viewport.png",
+      "bytes": 342472,
+      "sha256": "19b5ba7aab2f53a311255ae4e92638a70170a1e1d9fd4698bb2be6213f97b6d1",
+      "fecha_archivo_lima": "2026-11-21T23:29:13.192356-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-cancelado",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1920.png",
+      "bytes": 373326,
+      "sha256": "8a0bbe4e1a646d81d6e02cf6e6f1b20e632f34647845081076ecd63d72a68b01",
+      "fecha_archivo_lima": "2026-11-21T23:29:19.018410-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1818
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1920-viewport.png",
+      "bytes": 330043,
+      "sha256": "879bbe3e1f794e5f7999995b10bc577506ca3153bb6863b1d3a7dd668f0a69db",
+      "fecha_archivo_lima": "2026-11-21T23:29:18.891409-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-metricas-vacias",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1920.png",
+      "bytes": 374821,
+      "sha256": "eaaf65196bfc626bf26cccb5557950fe9cd29f4dfbdc2b439bfc5463de5dd6cf",
+      "fecha_archivo_lima": "2026-11-21T23:29:22.656443-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1818
+      }
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1920-viewport.png",
+      "bytes": 330043,
+      "sha256": "879bbe3e1f794e5f7999995b10bc577506ca3153bb6863b1d3a7dd668f0a69db",
+      "fecha_archivo_lima": "2026-11-21T23:29:22.531442-05:00",
+      "tipo": "image/png",
+      "pantalla": "video-lecciones-vacias",
+      "ancho_solicitado": 1920,
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      }
+    }
+  ],
+  "videos": [
+    {
+      "archivo": "evidencias-diseno/interacciones-fabrica-video-390.webm",
+      "bytes": 1989014,
+      "sha256": "d773c274685fc4fba1b5ea508faae6213e85882307f985524c06a58e64e27a90",
+      "fecha_archivo_lima": "2026-11-21T23:39:53.008151-05:00",
+      "tipo": "video/webm",
+      "ancho_solicitado": 390,
+      "dimensiones": {
+        "ancho": 390,
+        "alto": 900
+      },
+      "codec": "vp9",
+      "duracion_segundos": 15.96,
+      "renovacion_posterior_a_lima": "2026-11-21T23:39:00-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/interacciones-fabrica-video-1440.webm",
+      "bytes": 4357422,
+      "sha256": "e0e38e25204293f9c66c1581ac376de5c5987eaa7d072f15c0774773dc26333e",
+      "fecha_archivo_lima": "2026-11-21T23:40:07.534281-05:00",
+      "tipo": "video/webm",
+      "ancho_solicitado": 1440,
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "codec": "vp9",
+      "duracion_segundos": 15.24,
+      "renovacion_posterior_a_lima": "2026-11-21T23:39:00-05:00"
+    }
+  ],
+  "validacion_revisiones": {
+    "resultado": "coinciden_180_de_180",
+    "hashes_coincidentes": 180,
+    "discrepancias": [],
+    "revisiones": [
+      {
+        "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-360.json",
+        "bytes": 41339,
+        "sha256": "ffec29aa8a72360f181a4715f3f98a9f8a09e79715848af733e97356b53cd0d8",
+        "fecha_archivo_lima": "2026-11-21T23:28:36.011013-05:00",
+        "ancho": 360,
+        "estado_revision_visual": "aprobado_con_limitaciones",
+        "imagenes_esperadas": 30,
+        "imagenes_revisadas": 30,
+        "hashes_coincidentes": 30,
+        "hashes_distintos": [],
+        "sin_revision": [],
+        "fuera_de_matriz": []
+      },
+      {
+        "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-390.json",
+        "bytes": 41339,
+        "sha256": "d15437aed34d47bc9d7dc782faaca9a9931f83aa1646a28560ba96f326f71012",
+        "fecha_archivo_lima": "2026-11-21T23:28:36.023350-05:00",
+        "ancho": 390,
+        "estado_revision_visual": "aprobado_con_limitaciones",
+        "imagenes_esperadas": 30,
+        "imagenes_revisadas": 30,
+        "hashes_coincidentes": 30,
+        "hashes_distintos": [],
+        "sin_revision": [],
+        "fuera_de_matriz": []
+      },
+      {
+        "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-768.json",
+        "bytes": 46393,
+        "sha256": "6e8ce08cfac5e5afa097f05c14ab2ae7f9efc1de5fc46686ed711d1aaeb1c9d3",
+        "fecha_archivo_lima": "2026-11-21T23:36:14.046995-05:00",
+        "ancho": 768,
+        "estado_revision_visual": "aprobado_con_limitaciones",
+        "imagenes_esperadas": 30,
+        "imagenes_revisadas": 30,
+        "hashes_coincidentes": 30,
+        "hashes_distintos": [],
+        "sin_revision": [],
+        "fuera_de_matriz": []
+      },
+      {
+        "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-1024.json",
+        "bytes": 43666,
+        "sha256": "6cdbfff61a5ba5b8fc6e1b9e2cd3ca3268b645b2fb4c09714a6bc3d2256e2c5f",
+        "fecha_archivo_lima": "2026-11-21T23:29:44.867416-05:00",
+        "ancho": 1024,
+        "estado_revision_visual": "aprobado_con_limitaciones",
+        "imagenes_esperadas": 30,
+        "imagenes_revisadas": 30,
+        "hashes_coincidentes": 30,
+        "hashes_distintos": [],
+        "sin_revision": [],
+        "fuera_de_matriz": []
+      },
+      {
+        "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-1440.json",
+        "bytes": 36018,
+        "sha256": "b4626678f456bb044d4d378d8d9141e7631e1a0a8fb88c75469da3e3e4a8b0b0",
+        "fecha_archivo_lima": "2026-11-21T23:45:28.430247-05:00",
+        "ancho": 1440,
+        "estado_revision_visual": "aprobado_con_limitaciones",
+        "imagenes_esperadas": 30,
+        "imagenes_revisadas": 30,
+        "hashes_coincidentes": 30,
+        "hashes_distintos": [],
+        "sin_revision": [],
+        "fuera_de_matriz": []
+      },
+      {
+        "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-1920.json",
+        "bytes": 43863,
+        "sha256": "998b67fa49095649064f22740b6b9dbb76013f906e43b54fdeaee151977bb6bc",
+        "fecha_archivo_lima": "2026-11-21T23:45:28.447794-05:00",
+        "ancho": 1920,
+        "estado_revision_visual": "aprobado_con_limitaciones",
+        "imagenes_esperadas": 30,
+        "imagenes_revisadas": 30,
+        "hashes_coincidentes": 30,
+        "hashes_distintos": [],
+        "sin_revision": [],
+        "fuera_de_matriz": []
+      }
+    ]
+  }
+}

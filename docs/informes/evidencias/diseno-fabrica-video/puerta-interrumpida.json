@@ -1,0 +1,66 @@
+{
+  "inicio": "2026-11-22T04:35:16.422Z",
+  "fin": "2026-11-22T04:37:17.581Z",
+  "herramientas": {
+    "node": "24.22.3",
+    "npm": "12.2.2",
+    "python": "3.14.7",
+    "uv": "0.12.24",
+    "sistema": "debian 12",
+    "sentinel": "6764bbdcab91719947e93ba1cc476cbefafb58e8"
+  },
+  "pasos": [
+    {
+      "nombre": "ci",
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 5756,
+      "sha256": "c2187d849202799ba64f64fe16c98e1e9d309eced13fe696e85a9e21151dcc9c"
+    },
+    {
+      "nombre": "preparacion",
+      "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 4230,
+      "sha256": "744335fb781f9e50e3a4124b6d89837df31807fb4f7c5a5f0bf7703b17cbde7b"
+    },
+    {
+      "nombre": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 4019,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "typecheck",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 3134,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "unitarias",
+      "comando": "npm test",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 40660,
+      "sha256": "57e1f4234659e56ef994d9aeb6f6884605baa83f5cab68d5693f34f642dd4948"
+    },
+    {
+      "nombre": "e2e",
+      "comando": "npm run test:e2e",
+      "rc": 1,
+      "advertencias": 0,
+      "duracion_ms": 63147,
+      "sha256": "4cc46b230d18d530e8c0869d6e426c670957ec74eaaf0b69d33d4f648ecf2ea2"
+    }
+  ],
+  "resultado": "FAIL",
+  "error": "e2e: rc 1, 0 advertencias. Consulte .cache/puerta/e2e.log.",
+  "clasificacion": "DIAGNOSTICO_NO_ACEPTADO",
+  "motivo": "Interrupción explícita del coordinador durante E2E para adelantar la pausa del orbe antes del inicio de preview y repetir la puerta completa sobre el código corregido. Instalación, preparación, lint, tipos y 508 unitarias habían pasado."
+}

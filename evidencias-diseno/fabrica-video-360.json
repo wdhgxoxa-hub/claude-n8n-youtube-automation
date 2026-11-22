@@ -1,0 +1,315 @@
+{
+  "evidence": [
+    {
+      "screen": "fabrica",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-1.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        },
+        {
+          "src": "/__diseno/vista-previa-2.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        },
+        {
+          "src": "/__diseno/vista-previa-3.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        },
+        {
+          "src": "/__diseno/vista-previa-4.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "fabrica-pedir",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-1.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        },
+        {
+          "src": "/__diseno/vista-previa-2.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        },
+        {
+          "src": "/__diseno/vista-previa-3.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        },
+        {
+          "src": "/__diseno/vista-previa-4.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-montaje",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-1.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-guion",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": null,
+          "paused": true,
+          "ready": 0,
+          "network": 0,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-aprobacion",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-3.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-publicado",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-4.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-metricas",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-4.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-lecciones",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-4.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-corregir",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-3.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-programar",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-3.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-pausado",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-1.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-cancelado",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": "/__diseno/vista-previa-1.mp4",
+          "paused": true,
+          "ready": 0,
+          "network": 1,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-metricas-vacias",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": null,
+          "paused": true,
+          "ready": 0,
+          "network": 0,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "video-lecciones-vacias",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [
+        {
+          "src": null,
+          "paused": true,
+          "ready": 0,
+          "network": 0,
+          "error": null,
+          "preload": "none"
+        }
+      ],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    },
+    {
+      "screen": "fabrica-vacia",
+      "width": 360,
+      "overflow": 0,
+      "small": [],
+      "violations": [],
+      "media": [],
+      "fixedElements": "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa"
+    }
+  ],
+  "errors": [],
+  "fixture": "Datos de demostración locales; fotogramas de render existente, sin producción ni publicación"
+}

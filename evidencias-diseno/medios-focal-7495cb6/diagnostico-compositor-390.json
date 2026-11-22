@@ -1,0 +1,30 @@
+{
+  "antesTraza": {
+    "fps": 32.96848213108269,
+    "p95": 33.40000000000009,
+    "maximo": 33.40000000000009,
+    "muestras": 100,
+    "videosActivos": 2
+  },
+  "duranteTraza": {
+    "fps": 32.96848213108268,
+    "p95": 33.400000000000546,
+    "maximo": 33.400000000000546,
+    "muestras": 100,
+    "videosActivos": 2
+  },
+  "videosPausados": {
+    "fps": 57.680832725585105,
+    "p95": 16.800000000000182,
+    "maximo": 33.400000000000546,
+    "muestras": 174,
+    "videosActivos": 0
+  },
+  "sinFiltros": {
+    "fps": 60.00331510028178,
+    "p95": 16.799999999999272,
+    "maximo": 16.80000000000109,
+    "muestras": 181,
+    "videosActivos": 0
+  }
+}

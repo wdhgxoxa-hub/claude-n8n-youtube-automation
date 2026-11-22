@@ -1,0 +1,868 @@
+{
+  "version": 2,
+  "mision": "diseno-fabrica-video",
+  "revisor": "Codex / subagente video",
+  "revisado_en_lima": "2026-11-21T23:36:14.046622-05:00",
+  "ancho_solicitado": 768,
+  "alcance": "Inspección visual individual con view_image de las 30 PNG recapturadas después del ajuste tablet 0412e9d: 15 pantallas/estados, página completa y primer viewport. Los hashes identifican exactamente los archivos revisados. No se ejecutaron builds ni tests en esta revisión.",
+  "estado": "aprobado_con_limitaciones",
+  "conteo": {
+    "pantallas": 15,
+    "imagenes": 30,
+    "pendiente_recaptura": 0
+  },
+  "pruebas_ejecutadas_en_esta_revision": [],
+  "hallazgos_resueltos": [
+    "Los selectores de Pedir video tienen una columna de ancho completo y ya no cortan sus valores.",
+    "La identidad y la decisión del detalle se apilan: «combustible» permanece íntegro y los títulos no parten palabras.",
+    "Las métricas se organizan en dos columnas; 18,420 y 864 ya no se tocan.",
+    "El riel de Fábrica vacía está contraído y deja visible todo el encabezado.",
+    "El círculo nativo de carga no aparece en ninguno de los medios revisados.",
+    "El orbe dispone de margen lateral y no tapa contenido ni acciones.",
+    "La X de Corregir y Programar permanece arriba a la derecha."
+  ],
+  "pendientes": [],
+  "autocritica": "A 768 px la composición corregida recupera títulos íntegros, valores de formularios completos y separación entre cifras sin reducir tipografía. El reproductor domina el primer viewport y las decisiones requieren desplazamiento vertical. La pista mantiene ancho interno desplazable y las etapas avanzadas quedan fuera del encuadre inicial aunque el estado y el contador son visibles. Las bandas negras preservan el formato vertical, el halo resulta discreto y las notas laterales del guion tienen una columna estrecha pero legible. Esta revisión estática acredita composición de los archivos identificados, no reproducción, interacción, autorización ni rendimiento.",
+  "imagenes": [
+    {
+      "archivo": "evidencias-diseno/fabrica-768.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 1733
+      },
+      "sha256": "c17e905444a595f29a5acab6d59a870d488e58981d3f70c33e0e0d4df45c7a63",
+      "capturada_archivo_lima": "2026-11-21T23:31:58.953875-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Título display, filtros y cifras claros; la cápsula conserva el fotograma real, canal, título y estado.",
+        "La pista horizontal presenta estaciones sucesivas con flechas y una nota que explican la continuidad.",
+        "El feed pasa bajo la pista en dos columnas y conserva horas relativas y enlaces legibles.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "Las doce estaciones no caben simultáneamente: la pista y la tira numérica requieren desplazamiento horizontal interno; la página no desborda.",
+        "La cápsula y el feed requieren desplazamiento vertical desde el primer viewport."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-768-viewport.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "5027fc8ebb45aa685dae55a36d2200045c80c53b90664df72d9ccaee96111e2d",
+      "capturada_archivo_lima": "2026-11-21T23:31:58.881874-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Encabezado, CTA, filtros, cifras y comienzo de la pista se leen completos; la cápsula continúa bajo el pliegue.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "Las doce estaciones no caben simultáneamente: la pista y la tira numérica requieren desplazamiento horizontal interno; la página no desborda.",
+        "La cápsula y el feed requieren desplazamiento vertical desde el primer viewport."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-768.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2347
+      },
+      "sha256": "1183a43cd3bb6148136b9ff32638e57897e7774a2af45d18e8d243676e445b1e",
+      "capturada_archivo_lima": "2026-11-21T23:32:00.022884-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Formulario en una sola columna: Canal, Idea del video, Presentador, Voz y Presencia del avatar tienen ancho suficiente.",
+        "Las opciones «Selecciona un canal» y «Solo en algunas partes» se leen completas; el foco naranja identifica Canal.",
+        "Enviar a la fábrica y Cancelar permanecen separados; la producción se desplaza hacia abajo sin colisiones.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El formulario de una columna aumenta la altura total de la página, a cambio de mantener completos los valores seleccionados."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-768-viewport.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "58a05c2b95df502d1f0b6c5c592a3de449671b200d2133f655d1ff9e1ff9d58c",
+      "capturada_archivo_lima": "2026-11-21T23:31:59.957884-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Los cinco campos aparecen a ancho completo y sus valores no se truncan; ambos botones se ven en el borde inferior.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El formulario de una columna aumenta la altura total de la página, a cambio de mantener completos los valores seleccionados."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-768.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 931
+      },
+      "sha256": "265ec2102f81c9c7c660da39983082e117993c4cf8c8fdc979c414a0a8fd6bf0",
+      "capturada_archivo_lima": "2026-11-21T23:32:54.898384-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Encabezado completo y riel contraído; no aparece la expansión accidental de navegación.",
+        "La invitación «Tu primera idea va aquí» y su explicación mantienen una jerarquía clara, sin inventar cifras.",
+        "Pedir video permanece visible y el orbe no tapa la invitación.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-768-viewport.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "e62e50f3200029d7c7aca5973c09e22a19ef6d4d2f7774b9a63cf4ad16e2f85a",
+      "capturada_archivo_lima": "2026-11-21T23:32:54.849383-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El encabezado y la invitación están completos; el riel permanece contraído y el orbe ocupa su espacio lateral.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-768.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2360
+      },
+      "sha256": "f14a5be5bd8e0482b6f00c7513865ae3e2392798c0ca19555e41a7b98ca1ff5e",
+      "capturada_archivo_lima": "2026-11-21T23:32:03.802919-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma real del surtidor y protagonista completo, sin círculo de carga, con controles nativos visibles.",
+        "El título «Lo que pagas cuando llenas el tanque» ocupa el ancho antes de la decisión apilada; no divide palabras.",
+        "Montaje, contador 08 / 12, Aprobar atenuado y acciones secundarias conservan su jerarquía; Guion y notas se distinguen.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-768-viewport.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "e6f95d7405b116a90e74d821d8b91047aa4599cdd752efa229dc7b68d783d56c",
+      "capturada_archivo_lima": "2026-11-21T23:32:03.706918-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-768.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2441
+      },
+      "sha256": "66a8b7f21e7e2ba6a00c226b9606697771db45cb14b5eceec24807331888fe3f",
+      "capturada_archivo_lima": "2026-11-21T23:32:09.349969-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Póster real de la jarra y aviso «El archivo del video todavía no está disponible aquí.»; no se finge reproducción.",
+        "Título completo en dos líneas, estado Aprobación de guion y acción Aprobar dominante en la composición apilada.",
+        "La estación 04 se ve activa y el guion conserva apertura, desarrollo, cierre y notas separadas.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El texto superior parcialmente cortado pertenece al fotograma de origen; el contenedor conserva la imagen sin un recorte nuevo.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-768-viewport.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "10ab400acca76f6a0f7049d565da9b975190ef30930dbb2952105f5fee903bf1",
+      "capturada_archivo_lima": "2026-11-21T23:32:09.242969-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El texto superior parcialmente cortado pertenece al fotograma de origen; el contenedor conserva la imagen sin un recorte nuevo.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-768.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2308
+      },
+      "sha256": "d06fe221b105c0da47b268611cb994063a952cb3f189b49c9164551045bf2132",
+      "capturada_archivo_lima": "2026-11-21T23:32:14.875110-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor protagonista con fotograma real del hombre contando dinero y controles nativos; no aparece spinner.",
+        "El título «De la refinería al grifo» no se rompe y precede al estado Aprobación final y decisión a ancho completo.",
+        "Aprobar domina sobre Pedir cambios y Programar; contador 10 / 12 y pestañas están legibles.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-768-viewport.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "d763970d8b3ed897881940a6e17e72c484409a6474ae27519142e6dfb6c66ced",
+      "capturada_archivo_lima": "2026-11-21T23:32:14.782019-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-768.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2435
+      },
+      "sha256": "85f5ab0268316653d2c9ec52162dcf361e3c83de52bec9d1dcde024e5c999554",
+      "capturada_archivo_lima": "2026-11-21T23:32:20.435070-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma real de los grifos completo y sin círculo de carga.",
+        "«Quién decide el precio del combustible» queda en dos líneas sin dividir «combustible»; estado Publicado bajo el título.",
+        "Aprobar y Pedir cambios se distinguen atenuados de Programar; contador 12 / 12, guion y recursos plegados son legibles.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-768-viewport.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "1d6f5851992e0c603b99d6494a21dc070ea2792955c6c78f90f7b0b8b4a163e0",
+      "capturada_archivo_lima": "2026-11-21T23:32:20.341069-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-768.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2104
+      },
+      "sha256": "b93a23e9cd8643f735610894845bc7f6a360ede62509a0610a6878ea89597e20",
+      "capturada_archivo_lima": "2026-11-21T23:32:23.969103-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El título conserva «combustible» íntegro y la decisión apilada tiene aire suficiente.",
+        "La pestaña Métricas muestra fecha de medición, plataforma youtube y cuatro cifras en dos columnas.",
+        "18,420 vistas, 864 me gusta, 72 comentarios y 68 de retención media tienen separación clara; ninguna cifra invade la contigua.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-768-viewport.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "1d6f5851992e0c603b99d6494a21dc070ea2792955c6c78f90f7b0b8b4a163e0",
+      "capturada_archivo_lima": "2026-11-21T23:32:23.873102-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-768.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2033
+      },
+      "sha256": "216587ad8eaa97941964eab06284a7d5f7cedad2fe4c41a5818232bad5ea881e",
+      "capturada_archivo_lima": "2026-11-21T23:32:27.501135-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El título conserva «combustible» íntegro y el fotograma no muestra círculo de carga.",
+        "La pestaña Lecciones diferencia número 01, fecha, «Hipótesis por contrastar» y titular editorial.",
+        "Qué observamos y Qué cambia se leen completos y sin colisiones, manteniendo la condición de hipótesis.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-768-viewport.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "1d6f5851992e0c603b99d6494a21dc070ea2792955c6c78f90f7b0b8b4a163e0",
+      "capturada_archivo_lima": "2026-11-21T23:32:27.403134-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-768.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2687
+      },
+      "sha256": "4f2dfb233a60eb72bdd5f9cd7e56680d136e7a1647d4bdbc34557f4c358b9f2e",
+      "capturada_archivo_lima": "2026-11-21T23:32:31.290169-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor limpio y decisión a ancho completo antes del formulario de corrección.",
+        "«Hagámoslo más tuyo.» conserva la X de cierre arriba a la derecha, sin saltar debajo del título.",
+        "La etiqueta Qué cambiamos, textarea con foco visible y Enviar cambios caben sin recortes.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-768-viewport.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "d763970d8b3ed897881940a6e17e72c484409a6474ae27519142e6dfb6c66ced",
+      "capturada_archivo_lima": "2026-11-21T23:32:31.191168-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-768.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2684
+      },
+      "sha256": "78e1c1aac1c0a84d9b86d7b9434d36cbd7044b412ff04b11073e8655b7fa5a17",
+      "capturada_archivo_lima": "2026-11-21T23:32:34.907202-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor limpio y acciones a ancho completo antes del formulario de programación.",
+        "«Elige su momento.» y la X de cierre permanecen alineados; el texto explica aprobaciones y zona horaria del dispositivo.",
+        "Fecha y hora local muestra foco visible y calendario; Programar publicación se lee completo.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El selector nativo conserva el formato mm/dd/yyyy del navegador de pruebas aunque la etiqueta y la explicación están en español.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-768-viewport.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "d763970d8b3ed897881940a6e17e72c484409a6474ae27519142e6dfb6c66ced",
+      "capturada_archivo_lima": "2026-11-21T23:32:34.802201-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El selector nativo conserva el formato mm/dd/yyyy del navegador de pruebas aunque la etiqueta y la explicación están en español.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-768.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2360
+      },
+      "sha256": "67a056419f58ed61d84e8fd546d696e1c49e1302bce28fe5ac4ec70c98db37bf",
+      "capturada_archivo_lima": "2026-11-21T23:32:39.967248-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma real limpio, título completo y estado «En pausa» claramente legible.",
+        "La decisión apilada conserva Aprobar atenuado, Pedir cambios y Programar sin colisiones.",
+        "Contador 08 / 12, guion y notas permanecen visibles en la página completa.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-768-viewport.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "e6f95d7405b116a90e74d821d8b91047aa4599cdd752efa229dc7b68d783d56c",
+      "capturada_archivo_lima": "2026-11-21T23:32:39.873247-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-768.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2360
+      },
+      "sha256": "9ebdd7bf1febe9b99aa9b8571d78863c62a9127c5840cd0f4d95b135650b9606",
+      "capturada_archivo_lima": "2026-11-21T23:32:43.556281-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma real limpio y estado Cancelado bajo el título completo.",
+        "El mensaje explica que la producción ya no admite cambios; las tres acciones se ven atenuadas.",
+        "Guion y notas quedan legibles; no se presenta el control editable de referencias/publicación.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-768-viewport.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "e6f95d7405b116a90e74d821d8b91047aa4599cdd752efa229dc7b68d783d56c",
+      "capturada_archivo_lima": "2026-11-21T23:32:43.453280-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro.",
+        "La pista inicia en Radar: la etapa actual avanzada requiere desplazamiento horizontal interno; estado y contador mantienen el contexto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-768.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2177
+      },
+      "sha256": "34d3c1799af2b244111ad1d2729702a4fefaca117e2ef0ee234a165763512c24",
+      "capturada_archivo_lima": "2026-11-21T23:32:49.153332-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El póster real y el aviso de archivo todavía no disponible permanecen íntegros.",
+        "La pestaña Métricas muestra «La historia sigue con tu audiencia.» y explica qué aparecerá después de publicar.",
+        "El vacío no inventa cifras ni convierte ausencia de datos en ceros; título y acciones no colisionan.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El texto superior parcialmente cortado pertenece al fotograma de origen; no se atribuye a un desbordamiento de la interfaz.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-768-viewport.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "10ab400acca76f6a0f7049d565da9b975190ef30930dbb2952105f5fee903bf1",
+      "capturada_archivo_lima": "2026-11-21T23:32:49.057808-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El texto superior parcialmente cortado pertenece al fotograma de origen; no se atribuye a un desbordamiento de la interfaz.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-768.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 2177
+      },
+      "sha256": "3393dae1c1f5bdd9f979da4b3cdcdec69fd7479eb39f4e839683ad96ec50a741",
+      "capturada_archivo_lima": "2026-11-21T23:32:52.703364-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El póster real y el aviso de archivo todavía no disponible permanecen íntegros.",
+        "La pestaña Lecciones muestra «Todavía estamos escuchando.» y explica que aparecerá una lección vinculada.",
+        "El vacío no fabrica conclusiones; título, acciones y texto completo mantienen su jerarquía.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El texto superior parcialmente cortado pertenece al fotograma de origen; no se atribuye a un desbordamiento de la interfaz.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-768-viewport.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 768,
+        "alto": 900
+      },
+      "sha256": "10ab400acca76f6a0f7049d565da9b975190ef30930dbb2952105f5fee903bf1",
+      "capturada_archivo_lima": "2026-11-21T23:32:52.608363-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport prioriza el medio fotográfico real; no se observa círculo de carga ni solapamiento con el riel o el orbe.",
+        "El estado inferior y sus controles se contrastaron individualmente en la captura completa del mismo par.",
+        "Riel y orbe aparecen una sola vez; el espacio reservado a Cooper lo mantiene fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El texto superior parcialmente cortado pertenece al fotograma de origen; no se atribuye a un desbordamiento de la interfaz.",
+        "El primer viewport de 900 px prioriza el medio y deja título, decisiones y pestañas bajo el pliegue.",
+        "Las bandas negras laterales conservan el material vertical; el halo de tinte es muy sutil sobre negro."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    }
+  ]
+}

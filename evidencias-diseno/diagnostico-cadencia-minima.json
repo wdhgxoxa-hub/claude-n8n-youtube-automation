@@ -1,0 +1,230 @@
+[
+  {
+    "canal": "headless-shell",
+    "medio": "ninguno",
+    "cpu": 4,
+    "renderizador": [
+      {
+        "vendorId": 0,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Intel)",
+        "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+        "driverVendor": "Mesa",
+        "driverVersion": "25.0.7"
+      }
+    ],
+    "funciones": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "disabled_software",
+      "vulkan": "disabled_off",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webgpu_on_vk_via_gl_interop": "disabled_off",
+      "webnn": "disabled_off"
+    },
+    "fps": 60.00132599615461,
+    "p95": 16.799999999999955,
+    "maximo": 16.800000000000182,
+    "muestras": 181,
+    "videoActivo": false,
+    "transform": "matrix(1, 0, 0, 1, 232.016, 0)"
+  },
+  {
+    "canal": "headless-shell",
+    "medio": "fotografico",
+    "cpu": 4,
+    "renderizador": [
+      {
+        "vendorId": 0,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Intel)",
+        "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+        "driverVendor": "Mesa",
+        "driverVersion": "25.0.7"
+      }
+    ],
+    "funciones": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "disabled_software",
+      "vulkan": "disabled_off",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webgpu_on_vk_via_gl_interop": "disabled_off",
+      "webnn": "disabled_off"
+    },
+    "fps": 60.00331510028178,
+    "p95": 16.799999999999955,
+    "maximo": 16.800000000000182,
+    "muestras": 181,
+    "videoActivo": true,
+    "transform": "matrix(1, 0, 0, 1, 220.029, 0)"
+  },
+  {
+    "canal": "headless-shell",
+    "medio": "orbe",
+    "cpu": 4,
+    "renderizador": [
+      {
+        "vendorId": 0,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Intel)",
+        "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+        "driverVendor": "Mesa",
+        "driverVersion": "25.0.7"
+      }
+    ],
+    "funciones": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "disabled_software",
+      "vulkan": "disabled_off",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webgpu_on_vk_via_gl_interop": "disabled_off",
+      "webnn": "disabled_off"
+    },
+    "fps": 60.00331510028178,
+    "p95": 16.700000000000273,
+    "maximo": 16.800000000000182,
+    "muestras": 181,
+    "videoActivo": true,
+    "transform": "matrix(1, 0, 0, 1, 224.024, 0)"
+  },
+  {
+    "canal": "chromium",
+    "medio": "ninguno",
+    "cpu": 4,
+    "renderizador": [
+      {
+        "vendorId": 0,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Intel)",
+        "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+        "driverVendor": "Mesa",
+        "driverVersion": "25.0.7"
+      }
+    ],
+    "funciones": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "disabled_software",
+      "vulkan": "disabled_off",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webgpu_on_vk_via_gl_interop": "disabled_off",
+      "webnn": "disabled_off"
+    },
+    "fps": 60.00331510028178,
+    "p95": 16.799999999999955,
+    "maximo": 16.800000000000182,
+    "muestras": 181,
+    "videoActivo": false,
+    "transform": "matrix(1, 0, 0, 1, 236.039, 0)"
+  },
+  {
+    "canal": "chromium",
+    "medio": "fotografico",
+    "cpu": 4,
+    "renderizador": [
+      {
+        "vendorId": 0,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Intel)",
+        "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+        "driverVendor": "Mesa",
+        "driverVersion": "25.0.7"
+      }
+    ],
+    "funciones": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "disabled_software",
+      "vulkan": "disabled_off",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webgpu_on_vk_via_gl_interop": "disabled_off",
+      "webnn": "disabled_off"
+    },
+    "fps": 60.00132599615461,
+    "p95": 16.799999999999955,
+    "maximo": 16.800000000000182,
+    "muestras": 181,
+    "videoActivo": true,
+    "transform": "matrix(1, 0, 0, 1, 224.038, 0)"
+  },
+  {
+    "canal": "chromium",
+    "medio": "orbe",
+    "cpu": 4,
+    "renderizador": [
+      {
+        "vendorId": 0,
+        "deviceId": 0,
+        "vendorString": "Google Inc. (Intel)",
+        "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+        "driverVendor": "Mesa",
+        "driverVersion": "25.0.7"
+      }
+    ],
+    "funciones": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "disabled_software",
+      "vulkan": "disabled_off",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webgpu_on_vk_via_gl_interop": "disabled_off",
+      "webnn": "disabled_off"
+    },
+    "fps": 60.00132599615461,
+    "p95": 16.700000000000273,
+    "maximo": 16.800000000000182,
+    "muestras": 181,
+    "videoActivo": true,
+    "transform": "matrix(1, 0, 0, 1, 224.018, 0)"
+  }
+]

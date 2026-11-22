@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "actualizadoEnLima": "2026-11-21T23:39:49-05:00",
+  "commit": "7495cb6",
+  "cambio": "El orbe cede su reproducción desde la intención de vista previa durante los 180 ms existentes; conserva su cara, reanuda al salir y respeta movimiento reducido. No afecta al reproductor manual.",
+  "ventanaMediosSegundos": 3,
+  "umbralesSinCambios": {
+    "fpsMinimo": 57,
+    "p95MaximoMs": 25,
+    "maximoMenorQueMs": 100,
+    "cls": 0
+  },
+  "historial": [
+    {
+      "fase": "Dos videos simultáneos",
+      "estado": "diagnóstico, no aceptación",
+      "resultado": "31,5–31,8 FPS en headless-shell y Chromium completo, separados o solapados; cada fuente sola ronda 60 FPS.",
+      "fuentes": [
+        "evidencias-diseno/medios-focal-7495cb6/diagnostico-dos-videos.json",
+        "evidencias-diseno/medios-focal-7495cb6/diagnostico-cadencia-minima.json",
+        "evidencias-diseno/medios-focal-7495cb6/diagnostico-filtros-videos.json"
+      ]
+    },
+    {
+      "fase": "Cesión solo al evento play",
+      "estado": "intento fallido, 4 de 5 pruebas",
+      "origen": "Salida de ejecución focal 92570, rc=1",
+      "mobile": {
+        "fps": 56.35670479031991,
+        "p95Ms": 33.299999999999955,
+        "maximoMs": 33.39999999999998,
+        "cls": 0
+      },
+      "desktop": {
+        "fps": 57.35123487485497,
+        "p95Ms": 16.800000000000182,
+        "maximoMs": 33.39999999999998,
+        "cls": 0
+      },
+      "diagnostico": "Los huecos se concentraron en los primeros 417 ms. La ventana no se desplazó."
+    },
+    {
+      "fase": "Cesión desde intención preparando",
+      "estado": "aceptación focal, 5 de 5 pruebas",
+      "origen": "Salida de ejecución focal 97236, rc=0",
+      "duracionSuiteSegundos": 16.4,
+      "metricas": {
+        "390": {
+          "fps": 60.00331510028178,
+          "p95": 16.700000000000273,
+          "maximo": 16.800000000000182,
+          "muestras": 181,
+          "cls": 0,
+          "renderizador": {
+            "dispositivos": [
+              {
+                "vendorId": 0,
+                "deviceId": 0,
+                "vendorString": "Google Inc. (Intel)",
+                "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+                "driverVendor": "Mesa",
+                "driverVersion": "25.0.7"
+              }
+            ],
+            "funciones": {
+              "2d_canvas": "enabled",
+              "direct_rendering_display_compositor": "disabled_off_ok",
+              "gpu_compositing": "enabled",
+              "multiple_raster_threads": "enabled_on",
+              "opengl": "enabled_on",
+              "rasterization": "enabled",
+              "skia_graphite": "disabled_off",
+              "trees_in_viz": "disabled_off",
+              "video_decode": "enabled",
+              "video_encode": "disabled_software",
+              "vulkan": "disabled_off",
+              "webgl": "enabled",
+              "webgpu": "enabled",
+              "webgpu_on_vk_via_gl_interop": "disabled_off",
+              "webnn": "disabled_off"
+            },
+            "software": false
+          },
+          "cpu": 4,
+          "archivoSintetico": false,
+          "procedencia": "diseno-fabrica-video/medios/procedencia.json",
+          "cumpleObjetivo": true
+        },
+        "1440": {
+          "fps": 58.01425493121167,
+          "p95": 16.800000000000182,
+          "maximo": 50,
+          "muestras": 175,
+          "cls": 0,
+          "renderizador": {
+            "dispositivos": [
+              {
+                "vendorId": 0,
+                "deviceId": 0,
+                "vendorString": "Google Inc. (Intel)",
+                "deviceString": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 25.0.7-2~bpo12+1)",
+                "driverVendor": "Mesa",
+                "driverVersion": "25.0.7"
+              }
+            ],
+            "funciones": {
+              "2d_canvas": "enabled",
+              "direct_rendering_display_compositor": "disabled_off_ok",
+              "gpu_compositing": "enabled",
+              "multiple_raster_threads": "enabled_on",
+              "opengl": "enabled_on",
+              "rasterization": "enabled",
+              "skia_graphite": "disabled_off",
+              "trees_in_viz": "disabled_off",
+              "video_decode": "enabled",
+              "video_encode": "disabled_software",
+              "vulkan": "disabled_off",
+              "webgl": "enabled",
+              "webgpu": "enabled",
+              "webgpu_on_vk_via_gl_interop": "disabled_off",
+              "webnn": "disabled_off"
+            },
+            "software": false
+          },
+          "cpu": 1,
+          "archivoSintetico": false,
+          "procedencia": "diseno-fabrica-video/medios/procedencia.json",
+          "cumpleObjetivo": true
+        }
+      }
+    }
+  ],
+  "verificacion": {
+    "comando": "podman exec -w /ensayo/cooper cooper-diseno-fabrica-video-mesa npm run test:e2e -- videos-medios.spec.ts",
+    "build": "0 errores y 0 advertencias",
+    "eslintFocal": "0 errores y 0 advertencias",
+    "casos": [
+      "Hover de 180 ms y preview silenciosa; orbe pausado y reanudado; preferencias desde Perfil y movimiento reducido; Axe",
+      "Medios 390 con CPU x4, CLS y traza",
+      "Medios 1440, detalle y desbordamiento a seis anchos",
+      "Publicados: medio de su publicación, fallback y transición desde título",
+      "Derivado disponible después de diez consultas"
+    ],
+    "limite": "Puerta focal. La puerta común completa y la puerta de diseño pertenecen a sus propios recibos."
+  },
+  "entorno": {
+    "contenedor": "cooper-diseno-fabrica-video-mesa",
+    "gpu": "Intel ARL, Mesa25.0.7, ANGLE gl-egl; identificación exacta en métricas",
+    "simulacion": "Viewport390 con CPU x4; no dispositivo móvil físico"
+  },
+  "indice": "evidencias-diseno/medios-indice.json",
+  "fuenteMedios": "cooper/diseno-fabrica-video/medios/procedencia.json",
+  "licencia": "Render real preexistente de Margen Real, reutilización local autorizada. No se acredita una licencia libre independiente.",
+  "snapshot": {
+    "commit": "7495cb6",
+    "ruta": "evidencias-diseno/medios-focal-7495cb6",
+    "archivos": 20,
+    "verificacion": "SHA-256 y tamaño verificados antes de copiar; SHA-256 verificado de nuevo tras copia.",
+    "motivo": "Conservar la aceptación focal mientras la puerta común renueva los artefactos de raíz."
+  },
+  "fuenteIndice": "Los 20 artefactos indexados apuntan al snapshot inmutable medios-focal-7495cb6; rutaOriginal conserva la procedencia de cada copia. La puerta común puede renovar las rutas originales."
+}

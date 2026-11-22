@@ -1,0 +1,803 @@
+{
+  "version": 3,
+  "mision": "diseno-fabrica-video",
+  "revisor": "Codex / agente coordinador root",
+  "registrado_por": "Codex / subagente fabrica",
+  "revisado_en_lima": "2026-11-21T23:45:28.413214-05:00",
+  "ancho_solicitado": 1440,
+  "alcance": "Registro delegado de la inspección visual de las 30 imágenes finales de 15 estados, confirmada expresamente por el coordinador root; el subagente fabrica registra sus conclusiones y los hashes actuales, sin atribuirse la inspección de este ancho. Combinación no exhaustiva de estados; la aprobación corresponde sólo a su composición visual y no equivale a aceptación de Claude ni a verificación de interacción, reproducción, rendimiento o puerta común.",
+  "estado": "aprobado_con_limitaciones",
+  "conteo": {
+    "pantallas": 15,
+    "imagenes": 30,
+    "pendiente_recaptura": 0,
+    "pendiente_reproductor_visible": 0
+  },
+  "matriz_origen": {
+    "archivo": "evidencias-diseno/fabrica-video-1440.json",
+    "sha256": "c28a2183f2159959ea33f6269d4ced28be2d31859cb3cfcc19ab8bdc13856642",
+    "modificado_en_lima": "2026-11-21T23:28:23.408897-05:00",
+    "estados": 15,
+    "errores_reportados": []
+  },
+  "pruebas_ejecutadas_en_esta_revision": [],
+  "hallazgos_resueltos": [
+    "El coordinador confirma las 30 capturas finales de 1440 sin bloqueos visuales."
+  ],
+  "pendientes": [],
+  "autocritica": "El coordinador informa aprobación visual con limitaciones: halo muy sutil, retratos preservados con bandas y Aprobar deshabilitado demasiado prominente en cancelación. La revisión visual no acredita interacción ni rendimiento.",
+  "imagenes": [
+    {
+      "archivo": "evidencias-diseno/fabrica-1440.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1394
+      },
+      "sha256": "aa14125457473720c6673c9577f1868cb5068855056c79879a0a7f2978d74cce",
+      "capturada_archivo_lima": "2026-11-21T23:27:27.452378-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "La pista requiere desplazamiento interior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1440-viewport.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "b17a36cca398ce5c789d7222843109457949099cd43bc76629a7db4bb5063f93",
+      "capturada_archivo_lima": "2026-11-21T23:27:27.380377-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "La pista requiere desplazamiento interior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1440.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1829
+      },
+      "sha256": "3f832a8bb4ab1016166ecc7b10442bb60f0ed0a037b3124f45238071367f7ed7",
+      "capturada_archivo_lima": "2026-11-21T23:27:28.509387-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "La pista requiere desplazamiento interior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1440-viewport.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "302360ece66e953008383ba799924f9e09a6fcefbe706c3596f146fe6e7b7e0e",
+      "capturada_archivo_lima": "2026-11-21T23:27:28.437387-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "La pista requiere desplazamiento interior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1440.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 925
+      },
+      "sha256": "f108606ccf5cd06fb352464d09f5508abe528a91a5c226955da56ec616e0993a",
+      "capturada_archivo_lima": "2026-11-21T23:28:23.402897-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1440-viewport.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "92d4ce737a9d956988d583ee8a12512906621a7bf68d5d027bdc78fca6aa6e08",
+      "capturada_archivo_lima": "2026-11-21T23:28:23.343896-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1440.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1876
+      },
+      "sha256": "32a4c6fd4742d88acdc983a3d23304724451a341f9fb0c7fdd62b3b3ab23575c",
+      "capturada_archivo_lima": "2026-11-21T23:27:34.098439-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1440-viewport.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "69b9b6e20906714f4074b13e52b9b8cf1338d48931310ec15e4475c8ab3f95bb",
+      "capturada_archivo_lima": "2026-11-21T23:27:34.009439-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1440.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1980
+      },
+      "sha256": "637aecefd012ab7753243675dc049a845819b51740454acd2081bcf0d000cdd9",
+      "capturada_archivo_lima": "2026-11-21T23:27:37.844474-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1440-viewport.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "3f1609722b00f8770759379f9b3bb16afbd942c51c110220df5ddbccb9c58ff5",
+      "capturada_archivo_lima": "2026-11-21T23:27:37.727473-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1440.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1888
+      },
+      "sha256": "0a5a79b9129ba62e7fa0ad6e5ec133d4d8af18f46ff831c48047588cbabfe3ae",
+      "capturada_archivo_lima": "2026-11-21T23:27:41.601509-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1440-viewport.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "1780114c3d02d8cc076eddfb295ca5e2dc7fc62b87fb11affdd6dff150a7eac4",
+      "capturada_archivo_lima": "2026-11-21T23:27:41.501508-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1440.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1973
+      },
+      "sha256": "199ac671eb1e3c29b9680a955e7bffe37a1a677fdbb3e198620b0a5f1c92f4ad",
+      "capturada_archivo_lima": "2026-11-21T23:27:45.369544-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1440-viewport.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "f63ae3f6c8d2e536055d662a6acce76e4b627318c0d3bd387d74f69ab7a6d0a8",
+      "capturada_archivo_lima": "2026-11-21T23:27:45.257543-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1440.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1643
+      },
+      "sha256": "028c377950a21bc757cfddbee949701df136d679f6fc30d267a4c7af0a123e0f",
+      "capturada_archivo_lima": "2026-11-21T23:27:48.934577-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1440-viewport.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "f63ae3f6c8d2e536055d662a6acce76e4b627318c0d3bd387d74f69ab7a6d0a8",
+      "capturada_archivo_lima": "2026-11-21T23:27:48.840576-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1440.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1673
+      },
+      "sha256": "22dfaa17d28d10e1667b8dc79c2c4d5e2b79273dd467e97bb7adda3a6c7287e2",
+      "capturada_archivo_lima": "2026-11-21T23:27:52.495610-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1440-viewport.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "f63ae3f6c8d2e536055d662a6acce76e4b627318c0d3bd387d74f69ab7a6d0a8",
+      "capturada_archivo_lima": "2026-11-21T23:27:52.389609-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1440.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 2267
+      },
+      "sha256": "f7f889eeb09145f4a28ebd89a78962ef24960c0750e31da6be55ebf930863549",
+      "capturada_archivo_lima": "2026-11-21T23:27:58.191663-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1440-viewport.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "24966c984475719432c71c3c8d8e7e5ab91531e8e513079aa073865b7da3db05",
+      "capturada_archivo_lima": "2026-11-21T23:27:58.074662-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1440.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 2245
+      },
+      "sha256": "55047bdfbde1e611086c612020e935ae7b5939e9ee9be04302f8335945717b4b",
+      "capturada_archivo_lima": "2026-11-21T23:28:01.844697-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1440-viewport.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "24966c984475719432c71c3c8d8e7e5ab91531e8e513079aa073865b7da3db05",
+      "capturada_archivo_lima": "2026-11-21T23:28:01.737696-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1440.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1876
+      },
+      "sha256": "5d149119ca164ce683f78881169e5edfc9b6bd09121edd727bbeeeb91f2904e3",
+      "capturada_archivo_lima": "2026-11-21T23:28:07.582750-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1440-viewport.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "fa94c46eb8059ce72a26820347528c7c46eca7d8fbbb756c80f1cb43a39ed558",
+      "capturada_archivo_lima": "2026-11-21T23:28:07.464749-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1440.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1876
+      },
+      "sha256": "3528d091d73540620b41e4adbd0311b2c33a53b6671222516c9888d9130b8dbc",
+      "capturada_archivo_lima": "2026-11-21T23:28:11.962791-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles.",
+        "Aprobar deshabilitado conserva una prominencia visual alta en cancelación."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1440-viewport.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "0daf9fe53342be29e514f1a47176929e8c26488620dcede9ddb82811ee0daef7",
+      "capturada_archivo_lima": "2026-11-21T23:28:11.850037-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles.",
+        "Aprobar deshabilitado conserva una prominencia visual alta en cancelación."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1440.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1818
+      },
+      "sha256": "36c200ba61293ddea4e797870879bf73351e682a85d3d9e5def986efddc0a345",
+      "capturada_archivo_lima": "2026-11-21T23:28:17.609843-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1440-viewport.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "3f1609722b00f8770759379f9b3bb16afbd942c51c110220df5ddbccb9c58ff5",
+      "capturada_archivo_lima": "2026-11-21T23:28:17.507842-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1440.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 1818
+      },
+      "sha256": "ecf04fab878e6b032a0c1488c739b7e5ad4cce7a05071da3ca943c39e017c293",
+      "capturada_archivo_lima": "2026-11-21T23:28:21.172876-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1440-viewport.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1440,
+        "alto": 900
+      },
+      "sha256": "3f1609722b00f8770759379f9b3bb16afbd942c51c110220df5ddbccb9c58ff5",
+      "capturada_archivo_lima": "2026-11-21T23:28:21.071875-05:00",
+      "inspeccion": "Revisión delegada: inspección final confirmada por coordinador root; registro y hash por subagente fabrica.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El coordinador root confirmó la inspección de esta imagen final dentro del conjunto de 30 y no detectó bloqueos visuales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "Retratos preservados con bandas laterales.",
+        "Halo muy sutil en los detalles."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    }
+  ]
+}

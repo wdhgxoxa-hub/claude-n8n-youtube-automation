@@ -1,0 +1,99 @@
+{
+  "mision": "diseno-fabrica-video",
+  "revisado_en_lima": "2026-11-21T23:28:49.702451-05:00",
+  "metodo": "Auditoría estática de DIRECCION §5, código y arneses. No se ejecutaron builds, pruebas ni navegador en esta revisión.",
+  "estado": "auditoria_estatica_historica_previa_al_cierre",
+  "criterios": [
+    {
+      "criterio": "Capturas y autocrítica",
+      "cobertura": "Arnés ampliado a15 estados ×6 anchos ×página completa/viewport, en evidencias-diseno/ raíz. Revisión visual final360/390 completada con30 imágenes por ancho, incluidas pausa/cancelación y vacíos de Métricas/Lecciones; las60 imágenes fueron reabiertas individualmente y registradas por hash. Otros anchos y puerta final a cargo del coordinador.",
+      "limite": "Combinación pertinente no exhaustiva: no incluye detalle no disponible ni errores de acciones/backend. La puerta común protege esos contratos funcionales.",
+      "fuentes": [
+        "cooper/diseno-fabrica-video/puerta.spec.ts",
+        "docs/informes/evidencias/diseno-fabrica-video/revision-360.json",
+        "docs/informes/evidencias/diseno-fabrica-video/revision-390.json"
+      ]
+    },
+    {
+      "criterio": "Axe, consola, overflow y tamaño mínimo",
+      "cobertura": "Cada captura falla con serious/critical de Axe, desbordamiento de página o texto visible menor a12px. La matriz conserva errores/avisos de consola y falla si hay alguno.",
+      "limite": "La presencia de assertions no acredita su ejecución final.",
+      "fuentes": [
+        "cooper/diseno-fabrica-video/puerta.spec.ts"
+      ]
+    },
+    {
+      "criterio": "Tokens y movimiento",
+      "cobertura": "Guardián global analiza colores, tamaños y radios fuera de tokens. LineaProduccion lee duración/curva CSS compartidas, SSR con duración0, coordenadas y duración finitas. Motion layout=false con movimiento reducido o pausa de perfil por proveedor existente.",
+      "limite": "El hook usa tokens estáticos de :root; no pretende escuchar mutaciones arbitrarias de hojas CSS. Última traza leída: CLS0, FPS31.43 y p95 33.4ms; rendimiento todavía no aceptado.",
+      "fuentes": [
+        "cooper/tests/tokens-diseno.test.ts",
+        "cooper/src/componentes/linea-produccion.tsx",
+        "cooper/src/componentes/movimiento.tsx",
+        "cooper/src/componentes/espacio.tsx",
+        "evidencias-diseno/fabrica-movimiento.json"
+      ]
+    },
+    {
+      "criterio": "Teclado y foco",
+      "cobertura": "Añadidas assertions al recorrido existente: mapa por Enter, carril con flechas, pestañas con ArrowLeft/ArrowRight/Home/End, panel seleccionado y foco; formularios abren con Enter y cierran con Escape devolviendo foco.",
+      "limite": "Nuevas assertions sin ejecutar en esta revisión. Foco de cápsula usa offset interior−4px para evitar recorte, distinto del +2px exacto de DIRECCION.",
+      "fuentes": [
+        "cooper/diseno-fabrica-video/puerta.spec.ts",
+        "cooper/src/componentes/linea-produccion.module.css",
+        "cooper/src/componentes/detalle-video.tsx"
+      ]
+    },
+    {
+      "criterio": "Feed SSE y permisos",
+      "cobertura": "Feed usa estado autorizado de useEspacio; endpoint revalida sesión y filtra dueño/admin. Acciones conservan requireOwner backend y own/admin UI. Se añadió al recorrido stage+updatedAt y assertion del nuevo suceso, datetime y hora relativa.",
+      "limite": "La matriz simula transporte; SSE real y aislamiento están en la puerta común. El feed representa últimas actualizaciones/publicaciones/incidencias persistidas, no historial completo de cada transición.",
+      "fuentes": [
+        "cooper/src/componentes/linea-produccion.tsx",
+        "cooper/src/componentes/espacio.tsx",
+        "cooper/src/app/api/eventos/route.ts",
+        "cooper/src/servicios/datos.ts",
+        "cooper/src/app/api/[...ruta]/route.ts",
+        "cooper/e2e/cooper.spec.ts",
+        "cooper/tests/revision-seguridad.test.ts"
+      ]
+    },
+    {
+      "criterio": "Lighthouse móvil",
+      "cobertura": "Auditor específico disponible para Inicio/Publicados: rendimiento≥90, accesibilidad100, buenas prácticas100 y advertencias0.",
+      "limite": "No existía evidencias-diseno/lighthouse/resumen.json al revisar; pendiente ejecución final del coordinador.",
+      "fuentes": [
+        "cooper/scripts/auditar-base-diseno.mjs"
+      ]
+    }
+  ],
+  "desviaciones_visuales_documentables": [
+    "Título y feed pequeños usan Clash20px; la dirección define display28–72px. No se alteró composición durante la auditoría.",
+    "Primera cápsula móvil: fotograma visible, título bajo el pliegue. Carril con desplazamiento interior.",
+    "Detalle móvil prioriza medio; acciones/pestañas quedan bajo el primer viewport y etapas finales requieren desplazamiento horizontal."
+  ],
+  "cambios_propios": [
+    "Guards de coordenadas vacías y duraciones no finitas en useTransicionRuta.",
+    "Assertions de teclado/foco/fecha de feed en bloque recorrido y transición compartida; sin modificar captura ni traza de rendimiento.",
+    "Cuatro estados pertinentes añadidos a la matriz; mutación local de productionState restaurada en finally, sin cambiar el fixture de interacción."
+  ],
+  "validacion_en_esta_revision": [
+    "git diff --check sin incidencias"
+  ],
+  "pruebas_ejecutadas_en_esta_revision": [],
+  "evidencia_revisiones": {
+    "360": {
+      "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-360.json",
+      "sha256": "ffec29aa8a72360f181a4715f3f98a9f8a09e79715848af733e97356b53cd0d8",
+      "imagenes": 30,
+      "spinners_visibles": 0
+    },
+    "390": {
+      "archivo": "docs/informes/evidencias/diseno-fabrica-video/revision-390.json",
+      "sha256": "d15437aed34d47bc9d7dc782faaca9a9931f83aa1646a28560ba96f326f71012",
+      "imagenes": 30,
+      "spinners_visibles": 0
+    }
+  },
+  "nota_cierre": "Este recibo conserva el estado de la auditoría estática a23:28. La ejecución y medición finales se acreditan en puerta-diseno-fabrica.json, medios-rendimiento.json, puerta-comun.json y Lighthouse; no usar las mediciones antiguas de este documento como resultado final."
+}
