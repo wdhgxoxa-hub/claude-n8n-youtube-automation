@@ -26,7 +26,10 @@ export function MediosVideo({
       {datos.montaje ? (
         <section
           className={`real-player ${styles.reproductor}`}
-          style={{ ...estiloMedio(medio, proporcion), viewTransitionName: nombreMedio(videoId) }}
+          style={{
+            ...estiloMedio(medio, proporcion),
+            viewTransitionName: nombreMedio(videoId),
+          }}
           aria-label="Video terminado"
         >
           <video
@@ -63,7 +66,10 @@ export function MediosVideo({
       ) : (
         <section
           className={`real-player ${styles.reproductor}`}
-          style={{ ...estiloMedio(medio, proporcion), viewTransitionName: nombreMedio(videoId) }}
+          style={{
+            ...estiloMedio(medio, proporcion),
+            viewTransitionName: nombreMedio(videoId),
+          }}
           aria-label="Portada del video"
         >
           <PortadaVideo

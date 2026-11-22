@@ -131,9 +131,13 @@ export function VideoMini({
   heading?: 2 | 3;
 }) {
   const Title = heading === 2 ? "h2" : "h3";
+  const { data } = useEspacio();
   return (
     <Link href={`/videos/${video.id}`} className="video-mini">
-      <span className="film-thumbnail" data-video-transition={nombreMedio(video.id)}>
+      <span
+        className="film-thumbnail"
+        data-video-transition={nombreMedio(video.id)}
+      >
         <PortadaVideo
           key={video.id}
           videoId={video.id}
