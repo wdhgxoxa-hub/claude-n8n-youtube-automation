@@ -568,6 +568,12 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   const diagnostics: unknown[] = [];
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (["error", "warning"].includes(message.type()))
+      errors.push(message.text());
+  });
   for (const width of widths) {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
     await page.goto("/radar");
@@ -588,19 +594,13 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
       page.getByText("Consultando la fábrica…", { exact: true }),
     ).toBeVisible();
     try {
-      await capture(page, "operacion-cargando", width, []);
+      await capture(page, "operacion-cargando", width, errors);
     } finally {
       release();
     }
     await expect(
       page.getByRole("button", { name: "Actualizar", exact: true }),
     ).toBeEnabled();
-    const errors: string[] = [];
-    const listener = (message: import("@playwright/test").ConsoleMessage) => {
-      if (["error", "warning"].includes(message.type()))
-        errors.push(message.text());
-    };
-    page.on("console", listener);
     await page.route(
       "**/api/operacion",
       async (route) => {
@@ -618,7 +618,6 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
     await expect(page.getByRole("alert")).toContainText(
       "La fábrica no responde",
     );
-    page.off("console", listener);
     const expected = errors.filter((message) =>
       /Failed to load resource.*503/.test(message),
     );
@@ -637,8 +636,10 @@ test("cargas y errores recuperables conservan la interfaz en seis anchuras", asy
       unexpected,
       expected,
     );
+    errors.splice(0, errors.length, ...unexpected);
     await page.getByRole("button", { name: "Actualizar", exact: true }).click();
     await expect(page.getByRole("alert")).toHaveCount(0);
+    await capture(page, "operacion-recuperada", width, errors);
   }
   writeFileSync(
     `${directory}/errores-provocados.json`,
@@ -650,6 +651,12 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (["error", "warning"].includes(message.type()))
+      errors.push(message.text());
+  });
   const state: Estado = await (await page.request.get("/api/estado")).json();
   const target = state.videos.find(
     (video) => video.ownerId === state.user.id && video.stage === 3,
@@ -681,13 +688,7 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
     await expect(
       page.getByAltText("Vista previa de referencia-de-ensayo.png"),
     ).toBeVisible();
-    await capture(page, "cooper-adjunto-selectores", width, []);
-    const errors: string[] = [];
-    const listener = (message: import("@playwright/test").ConsoleMessage) => {
-      if (["error", "warning"].includes(message.type()))
-        errors.push(message.text());
-    };
-    page.on("console", listener);
+    await capture(page, "cooper-adjunto-selectores", width, errors);
     await page.route(
       "**/api/chat",
       (route) =>
@@ -709,7 +710,6 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
     await expect(page.getByRole("alert")).toContainText(
       "Cooper necesita un momento",
     );
-    page.off("console", listener);
     const expected = errors.filter((message) =>
       /Failed to load resource.*503/.test(message),
     );
@@ -722,6 +722,7 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
       expected,
     );
     diagnostics.push({ width, expectedHttpStatus: 503, expected, unexpected });
+    errors.splice(0, errors.length, ...unexpected);
   }
   writeFileSync(
     `${directory}/chat-errores-provocados.json`,
