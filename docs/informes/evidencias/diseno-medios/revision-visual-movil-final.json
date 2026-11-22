@@ -1,0 +1,472 @@
+{
+  "revision": "66 PNG finales inspeccionados visualmente, página completa",
+  "baseCaptura": "9f3a910",
+  "ultimoCambioProducto": "53b17df",
+  "fechaRevisionLima": "2026-11-21T22:53:07.581155-05:00",
+  "metodo": "11 hojas de contacto finales sin recorte vertical; originales adicionales indicados en revision-visual-movil.md",
+  "cantidad": 66,
+  "capturas": [
+    {
+      "nombre": "inicio",
+      "ancho": 360,
+      "alto": 1225,
+      "sha256": "341ccc29a4502fbf95e543ba9bdda0a04f091c7846fce1449ba1e2cf5e746ea3",
+      "fechaLima": "2026-11-21T22:39:48.496825-05:00"
+    },
+    {
+      "nombre": "fabrica",
+      "ancho": 360,
+      "alto": 1621,
+      "sha256": "e258581326b76fa944ad5f1b109c77bddcc83f8989ffe8eeb8e748a1bf5d5e2a",
+      "fechaLima": "2026-11-21T22:39:49.467833-05:00"
+    },
+    {
+      "nombre": "videos",
+      "ancho": 360,
+      "alto": 950,
+      "sha256": "c465ddc62ea5816cde66294672ebb593f7d74e3741c706c0c64eae6a250c020a",
+      "fechaLima": "2026-11-21T22:39:50.211840-05:00"
+    },
+    {
+      "nombre": "detalle-video",
+      "ancho": 360,
+      "alto": 1909,
+      "sha256": "c42b4462104ba3a4bbf91727e3f2585f588048d96a9744cc5725998d74719d01",
+      "fechaLima": "2026-11-21T22:39:50.985847-05:00"
+    },
+    {
+      "nombre": "aprobacion-guion",
+      "ancho": 360,
+      "alto": 1934,
+      "sha256": "da52d0b06ba04d373fb72f42e6b28b4b995cfe0769ee3f715d474ab38225cef0",
+      "fechaLima": "2026-11-21T22:39:51.773853-05:00"
+    },
+    {
+      "nombre": "aprobacion-final",
+      "ancho": 360,
+      "alto": 1964,
+      "sha256": "265d0e5b5819f07694a1614853b8f66e6e93fbc89f77f4abba20f5423e160423",
+      "fechaLima": "2026-11-21T22:39:52.554860-05:00"
+    },
+    {
+      "nombre": "publicado",
+      "ancho": 360,
+      "alto": 2187,
+      "sha256": "1d58a14a49ddae536a00f3d2669633deaa5a588a6cc58727f36d3b12a49f462e",
+      "fechaLima": "2026-11-21T22:39:53.341867-05:00"
+    },
+    {
+      "nombre": "pedir-video",
+      "ancho": 360,
+      "alto": 1584,
+      "sha256": "cf7ca0953d174a4b645100a4dc5f81bd621accdcb4e93b0c8e763e6394ffa61c",
+      "fechaLima": "2026-11-21T22:39:54.162874-05:00"
+    },
+    {
+      "nombre": "publicados",
+      "ancho": 360,
+      "alto": 3308,
+      "sha256": "e8c8c5a640a5bf3b50163cc0829fe289e0512ebba631e5770bb2e87eca233d71",
+      "fechaLima": "2026-11-21T22:39:55.077882-05:00"
+    },
+    {
+      "nombre": "aprendizaje",
+      "ancho": 360,
+      "alto": 2461,
+      "sha256": "c17a2aed990c522b32837b8710b30178d4a49277d4a2c1bcab11ba5d7c422a0a",
+      "fechaLima": "2026-11-21T22:39:55.875889-05:00"
+    },
+    {
+      "nombre": "marcas",
+      "ancho": 360,
+      "alto": 900,
+      "sha256": "30ec7adec8720ff97ff3b2bb35024a740f11371038f59343ce81764fc2aa6d0d",
+      "fechaLima": "2026-11-21T22:39:56.562895-05:00"
+    },
+    {
+      "nombre": "canales",
+      "ancho": 360,
+      "alto": 1837,
+      "sha256": "403ca95e519073dd3ce02d8ec875ab0d830634da8558d5d8bbf62bfc12202a9e",
+      "fechaLima": "2026-11-21T22:39:57.302901-05:00"
+    },
+    {
+      "nombre": "canal",
+      "ancho": 360,
+      "alto": 7332,
+      "sha256": "f64bd6c9b2e635891ca3c4efeaed19ce25d8a4eb8fbbafb168bf3b37c4b322a8",
+      "fechaLima": "2026-11-21T22:39:58.294910-05:00"
+    },
+    {
+      "nombre": "radar",
+      "ancho": 360,
+      "alto": 1573,
+      "sha256": "fb23345ece21835866d7f391c17701c19a82d82943ede263551d9a6a43104785",
+      "fechaLima": "2026-11-21T22:39:59.069081-05:00"
+    },
+    {
+      "nombre": "rutina",
+      "ancho": 360,
+      "alto": 1625,
+      "sha256": "697a702a3274ba9044b41307cb2480847e80174303b1431bb94f402fcc371e1b",
+      "fechaLima": "2026-11-21T22:39:59.817923-05:00"
+    },
+    {
+      "nombre": "redes",
+      "ancho": 360,
+      "alto": 1992,
+      "sha256": "4fa089c32775cd6600058a0795a4d7623cce437605e01a005a0df9eae495f2f3",
+      "fechaLima": "2026-11-21T22:40:00.573930-05:00"
+    },
+    {
+      "nombre": "referencias",
+      "ancho": 360,
+      "alto": 1101,
+      "sha256": "a2f8446c548abc34b90371b7534f2356f918414d58e97620e6962d22a5cbc00d",
+      "fechaLima": "2026-11-21T22:40:01.308936-05:00"
+    },
+    {
+      "nombre": "cuentas",
+      "ancho": 360,
+      "alto": 1307,
+      "sha256": "58e7d280926694efc04e2fe6a4e2bcb645a86f6da5d7c3fc85c0a6152e4be48d",
+      "fechaLima": "2026-11-21T22:40:02.049942-05:00"
+    },
+    {
+      "nombre": "programados",
+      "ancho": 360,
+      "alto": 1130,
+      "sha256": "908908de9a96888dfe6544c1487a33b88354fca1aa96040bd4c86519f440344e",
+      "fechaLima": "2026-11-21T22:40:02.811949-05:00"
+    },
+    {
+      "nombre": "decisiones",
+      "ancho": 360,
+      "alto": 1616,
+      "sha256": "45a8562452618f0f4ca3b10ce67f7cc3d6e70ca2ed745fac8b6b0ca1b1392694",
+      "fechaLima": "2026-11-21T22:40:03.599956-05:00"
+    },
+    {
+      "nombre": "incidencias",
+      "ancho": 360,
+      "alto": 900,
+      "sha256": "0ac5055e9d06ed28b799e605bbc0f9f0e7340cf5151a00d45b5436eeefeeb71c",
+      "fechaLima": "2026-11-21T22:40:04.307962-05:00"
+    },
+    {
+      "nombre": "avisos",
+      "ancho": 360,
+      "alto": 900,
+      "sha256": "283a66e13e5ea7bc85a8238d63f8c2a340fe001cafc968d1b5c7b0fda5129855",
+      "fechaLima": "2026-11-21T22:40:05.043968-05:00"
+    },
+    {
+      "nombre": "avatares",
+      "ancho": 360,
+      "alto": 1270,
+      "sha256": "91a38026a060ed5bf651d5d4eccfb0f070686f12597ce57fe3ef14f3f4ab3a27",
+      "fechaLima": "2026-11-21T22:40:05.831975-05:00"
+    },
+    {
+      "nombre": "voces",
+      "ancho": 360,
+      "alto": 992,
+      "sha256": "ba9905c7fae423e7ad65835808985b6b921ab9f2f36baaf1c82e9d6ec9b7bf0f",
+      "fechaLima": "2026-11-21T22:40:06.625982-05:00"
+    },
+    {
+      "nombre": "crear-avatar",
+      "ancho": 360,
+      "alto": 2320,
+      "sha256": "4d48da0b824b6c00579494368047eba05c7f511b91bc09dbc3f80df7b9766cec",
+      "fechaLima": "2026-11-21T22:40:07.507990-05:00"
+    },
+    {
+      "nombre": "crear-voz",
+      "ancho": 360,
+      "alto": 1979,
+      "sha256": "bcedaa7cd412d6adb0bb67a9cdc8127cf43f1b99e71e68babba6ea16da6bcdc7",
+      "fechaLima": "2026-11-21T22:40:08.352997-05:00"
+    },
+    {
+      "nombre": "perfil",
+      "ancho": 360,
+      "alto": 1727,
+      "sha256": "f4dd6de4fa3257059c3bb71971ab2cb3a94eb167aaeb054d7e7696792d3ca1ea",
+      "fechaLima": "2026-11-21T22:40:09.119004-05:00"
+    },
+    {
+      "nombre": "admin",
+      "ancho": 360,
+      "alto": 2357,
+      "sha256": "cc8d1cc9ed9a8fef7a67d9012b0362dcb34d27dc1cc75556edf1c4806cb7b811",
+      "fechaLima": "2026-11-21T22:40:09.922011-05:00"
+    },
+    {
+      "nombre": "admin-fabrica",
+      "ancho": 360,
+      "alto": 5458,
+      "sha256": "65d91ce62b7408e37400fd8bc0651b7522b6a7d6b84e882b9a33be04f09b7fc4",
+      "fechaLima": "2026-11-21T22:40:10.863019-05:00"
+    },
+    {
+      "nombre": "entrada",
+      "ancho": 360,
+      "alto": 974,
+      "sha256": "d5375b198fe83a6e2779454014f1a7a4687dd7d5c3596069237dd1b0c705ca75",
+      "fechaLima": "2026-11-21T22:40:11.525025-05:00"
+    },
+    {
+      "nombre": "entrada-error",
+      "ancho": 360,
+      "alto": 1077,
+      "sha256": "4775e6cb24da25288d07339fdb2a1e40be188f5e4eed5108a33d582835bc58bb",
+      "fechaLima": "2026-11-21T22:40:12.178030-05:00"
+    },
+    {
+      "nombre": "no-encontrado",
+      "ancho": 360,
+      "alto": 900,
+      "sha256": "374071f4d5b6cef9a285ed1fa8e2124d25353461eb0c4f2e572ae4121f5be0dc",
+      "fechaLima": "2026-11-21T22:40:12.789036-05:00"
+    },
+    {
+      "nombre": "enlace-vencido",
+      "ancho": 360,
+      "alto": 900,
+      "sha256": "9cc0d4bea13271ec0990b69b37798c9a20b44298e8decf2e8db08689cfcf8264",
+      "fechaLima": "2026-11-21T22:40:13.406412-05:00"
+    },
+    {
+      "nombre": "inicio",
+      "ancho": 390,
+      "alto": 1165,
+      "sha256": "6d22a8927b6097bff983c109cf984b2fb10df56cc6921b06fe6b3910c06f7c3f",
+      "fechaLima": "2026-11-21T22:40:19.302092-05:00"
+    },
+    {
+      "nombre": "fabrica",
+      "ancho": 390,
+      "alto": 1590,
+      "sha256": "97aa99dc70f5c0d2ad0a61ecdda1825584395d8194f1da1f10c7799c00baed97",
+      "fechaLima": "2026-11-21T22:40:20.283101-05:00"
+    },
+    {
+      "nombre": "videos",
+      "ancho": 390,
+      "alto": 900,
+      "sha256": "a0f53e694c6008a60ae43aa6592a0fb1ce0334b8ad36015e488ca0b44895f2c3",
+      "fechaLima": "2026-11-21T22:40:21.041107-05:00"
+    },
+    {
+      "nombre": "detalle-video",
+      "ancho": 390,
+      "alto": 1925,
+      "sha256": "4b3802cbd91f99453c7a5f0d700ed07500e343f4ee67872f756dcb6863d7a127",
+      "fechaLima": "2026-11-21T22:40:21.839114-05:00"
+    },
+    {
+      "nombre": "aprobacion-guion",
+      "ancho": 390,
+      "alto": 1927,
+      "sha256": "6f6ceb17c2cff620df6e2f7ff13ff176bbbd198afdd0b52e570eaeaa7131fc65",
+      "fechaLima": "2026-11-21T22:40:22.653873-05:00"
+    },
+    {
+      "nombre": "aprobacion-final",
+      "ancho": 390,
+      "alto": 1957,
+      "sha256": "373434b01bae6133288bf9423bf47a4310a7f718d89e371e8c30aa0fd6d18b3a",
+      "fechaLima": "2026-11-21T22:40:23.438026-05:00"
+    },
+    {
+      "nombre": "publicado",
+      "ancho": 390,
+      "alto": 2179,
+      "sha256": "0e30ca3efd83337ed40ee0a20f19435b346ead2a717b3fd56723352248a3680c",
+      "fechaLima": "2026-11-21T22:40:24.239469-05:00"
+    },
+    {
+      "nombre": "pedir-video",
+      "ancho": 390,
+      "alto": 1515,
+      "sha256": "f82900dd2777233b2f7f74281e86dff2259b8a76667f499ed628ffbeddc3e4ee",
+      "fechaLima": "2026-11-21T22:40:25.032142-05:00"
+    },
+    {
+      "nombre": "publicados",
+      "ancho": 390,
+      "alto": 3330,
+      "sha256": "886e751f0cf2afe776af51f27478203cd3d20fd182b2bc53fe120bbdfc9e5370",
+      "fechaLima": "2026-11-21T22:40:25.971150-05:00"
+    },
+    {
+      "nombre": "aprendizaje",
+      "ancho": 390,
+      "alto": 2388,
+      "sha256": "32cda77c1816fe63cb475d504fcc104506231001e9fd94a614c346eaf0be3f01",
+      "fechaLima": "2026-11-21T22:40:26.793157-05:00"
+    },
+    {
+      "nombre": "marcas",
+      "ancho": 390,
+      "alto": 900,
+      "sha256": "59628e0dbe386edd91b6b09fa8a67f67327926fee8ee52f7c9f2bc55f4694506",
+      "fechaLima": "2026-11-21T22:40:27.480163-05:00"
+    },
+    {
+      "nombre": "canales",
+      "ancho": 390,
+      "alto": 1737,
+      "sha256": "973512d0249fca7d2e58142b569e7d04033085fc7ba62d87fcc1c9d876e1f461",
+      "fechaLima": "2026-11-21T22:40:28.254170-05:00"
+    },
+    {
+      "nombre": "canal",
+      "ancho": 390,
+      "alto": 7269,
+      "sha256": "df3db7b0a5dc59d149bfe3c62a001eb423415a0ac98bbfd2a6a27f4957036e94",
+      "fechaLima": "2026-11-21T22:40:29.288537-05:00"
+    },
+    {
+      "nombre": "radar",
+      "ancho": 390,
+      "alto": 1508,
+      "sha256": "308fbf38cbda11e232f2c1a48af3db0022935221c9a85b131c7c77879fedd1ef",
+      "fechaLima": "2026-11-21T22:40:30.068186-05:00"
+    },
+    {
+      "nombre": "rutina",
+      "ancho": 390,
+      "alto": 1560,
+      "sha256": "07298121baea49527a078ef47f6a97d4c411c9ad32e6d2a248895bcc8465bb58",
+      "fechaLima": "2026-11-21T22:40:30.825192-05:00"
+    },
+    {
+      "nombre": "redes",
+      "ancho": 390,
+      "alto": 1950,
+      "sha256": "bbb3175b45912dabc2219172230bdb9d818ac5583b5b7bb38a08b072b385b5ad",
+      "fechaLima": "2026-11-21T22:40:31.606199-05:00"
+    },
+    {
+      "nombre": "referencias",
+      "ancho": 390,
+      "alto": 1036,
+      "sha256": "e9f667645318b32e3757166bcb5d6e479d7f7ac1000fbc38408661176e904c9f",
+      "fechaLima": "2026-11-21T22:40:32.378206-05:00"
+    },
+    {
+      "nombre": "cuentas",
+      "ancho": 390,
+      "alto": 1264,
+      "sha256": "0b34b8b577a93b8974f671b0dcab7d88d8ee41b7f4b5b7da3eec47b061da0cea",
+      "fechaLima": "2026-11-21T22:40:33.148212-05:00"
+    },
+    {
+      "nombre": "programados",
+      "ancho": 390,
+      "alto": 1088,
+      "sha256": "6bf9b1e6c443195f3d87669a38e0cbaef15ffd7a62d3d3a068e634232dfcb019",
+      "fechaLima": "2026-11-21T22:40:33.915219-05:00"
+    },
+    {
+      "nombre": "decisiones",
+      "ancho": 390,
+      "alto": 1574,
+      "sha256": "a5047937994bafa01dabd58afbda00a7fdcc7fba64ca1d72a330fcd63432689d",
+      "fechaLima": "2026-11-21T22:40:34.683226-05:00"
+    },
+    {
+      "nombre": "incidencias",
+      "ancho": 390,
+      "alto": 900,
+      "sha256": "5983483f7a47fd5c4706a9a6683d81c0a070b22d467c07f279a120fd74ca6971",
+      "fechaLima": "2026-11-21T22:40:35.409232-05:00"
+    },
+    {
+      "nombre": "avisos",
+      "ancho": 390,
+      "alto": 900,
+      "sha256": "e9a2e386dbe835e9fec1110c012fcf295aa7061ca5204c2c2442dba8361573d1",
+      "fechaLima": "2026-11-21T22:40:36.143238-05:00"
+    },
+    {
+      "nombre": "avatares",
+      "ancho": 390,
+      "alto": 1270,
+      "sha256": "c55db071fa960e688195cb4e2b3be13844866fb1da367a85aad20bb342e79fad",
+      "fechaLima": "2026-11-21T22:40:36.944245-05:00"
+    },
+    {
+      "nombre": "voces",
+      "ancho": 390,
+      "alto": 992,
+      "sha256": "f59e1fae79f623e03ca0be7237062ad0c7000f40930fd05d88267a57fc63567e",
+      "fechaLima": "2026-11-21T22:40:37.746252-05:00"
+    },
+    {
+      "nombre": "crear-avatar",
+      "ancho": 390,
+      "alto": 2333,
+      "sha256": "ad84abc0ea88aa2064c4efe7e01e72774024ad2302e1ead49b103be7469e9757",
+      "fechaLima": "2026-11-21T22:40:38.592259-05:00"
+    },
+    {
+      "nombre": "crear-voz",
+      "ancho": 390,
+      "alto": 1931,
+      "sha256": "380f9cb11a5936654ac761ccf36b82cf57fadb053f2c6134ee5e11a0bc03f5a7",
+      "fechaLima": "2026-11-21T22:40:39.451267-05:00"
+    },
+    {
+      "nombre": "perfil",
+      "ancho": 390,
+      "alto": 1727,
+      "sha256": "43fb04927cb95e7880d4a991b41e6748868041636bf86fdda2ce84c44c8c2b80",
+      "fechaLima": "2026-11-21T22:40:40.233274-05:00"
+    },
+    {
+      "nombre": "admin",
+      "ancho": 390,
+      "alto": 2357,
+      "sha256": "bb33651c8c47d82a8505216a1578fa6d27007401ee207c41388923fa6883cce8",
+      "fechaLima": "2026-11-21T22:40:41.076281-05:00"
+    },
+    {
+      "nombre": "admin-fabrica",
+      "ancho": 390,
+      "alto": 5393,
+      "sha256": "382b5904997c2572275be8744c9410c110132f141e216dd1ac0a1aac24a99f24",
+      "fechaLima": "2026-11-21T22:40:41.998289-05:00"
+    },
+    {
+      "nombre": "entrada",
+      "ancho": 390,
+      "alto": 925,
+      "sha256": "0ac463d1d3ac30524ab091e5dfd22a9fb01ffd00fea87cc2f752b700bcd37479",
+      "fechaLima": "2026-11-21T22:40:42.675295-05:00"
+    },
+    {
+      "nombre": "entrada-error",
+      "ancho": 390,
+      "alto": 1028,
+      "sha256": "2a1f2f4d5b7afa60af9f8b366bf4d7743178c863ed39a90478d8862ef05940ff",
+      "fechaLima": "2026-11-21T22:40:43.329301-05:00"
+    },
+    {
+      "nombre": "no-encontrado",
+      "ancho": 390,
+      "alto": 900,
+      "sha256": "f3fc62bff709499828f32201d0646c523c30be30c52c3a96404c36eca2c5dcec",
+      "fechaLima": "2026-11-21T22:40:43.941306-05:00"
+    },
+    {
+      "nombre": "enlace-vencido",
+      "ancho": 390,
+      "alto": 900,
+      "sha256": "34291c797b81440e181f733327c886accf13e5012696c81bd98ca944d99e8a03",
+      "fechaLima": "2026-11-21T22:40:44.556311-05:00"
+    }
+  ]
+}

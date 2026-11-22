@@ -90,10 +90,7 @@ export function MediosVideo({
               ) : (
                 <Medio alt={titulo} />
               )}
-              <p>
-                El video terminado aparecerá aquí cuando la fábrica complete el
-                montaje.
-              </p>
+              <p>El archivo del video todavía no está disponible aquí.</p>
             </section>
           )}
         </div>

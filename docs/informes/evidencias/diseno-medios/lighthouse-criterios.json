@@ -1,0 +1,29 @@
+{
+  "corte": "9f3a91050510f0c95c3d34e5ffc69b45aaf8c1d2",
+  "comando": "node scripts/auditoria.mjs --rendimiento --rutas=/,/publicados --dispositivo=mobile",
+  "salidaEjecutor": 1,
+  "umbralEjecutor": 95,
+  "resultadoEjecutor": "FAIL",
+  "umbralDIRECCION": 90,
+  "resultadoDIRECCION": "PASS",
+  "accesibilidadExigida": 100,
+  "mediciones": [
+    {
+      "ruta": "/",
+      "rendimiento": 93,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "advertencias": 0,
+      "comprobacionesBinariasFallidas": 0
+    },
+    {
+      "ruta": "/publicados",
+      "rendimiento": 92,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "advertencias": 0,
+      "comprobacionesBinariasFallidas": 0
+    }
+  ],
+  "nota": "No se modificó el umbral del ejecutor ni se ocultó su RC 1. Los valores medidos cumplen literalmente la sección 5 (>=90/100)."
+}

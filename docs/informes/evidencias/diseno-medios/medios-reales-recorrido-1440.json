@@ -1,0 +1,38 @@
+{
+  "poster": {
+    "archivo": "b2-real-poster.webp",
+    "bytes": 36778,
+    "sha256": "81ebcfe161024e23de721252f3995b88507892150b05714f6d27c2bca8349e4f",
+    "ancho": 900,
+    "alto": 1600
+  },
+  "preview": {
+    "archivo": "b2-real-preview.mp4",
+    "bytes": 336834,
+    "sha256": "0bbef53ea911e5016929605e5351f0218d8dfb5c624d740a522474d3d18ede75",
+    "ancho": 360,
+    "alto": 640,
+    "segundos": 5,
+    "audio": false
+  },
+  "original": {
+    "ancho": 1080,
+    "alto": 1920,
+    "disponibleEnEnsayo": false
+  },
+  "datosInterfaz": "Fixture local autenticado; las imágenes y el extracto son derivados del render existente. No acredita publicación real ni reproducción del MP4 original completo.",
+  "ancho": 1440,
+  "consola": [],
+  "solicitudesExternas": [],
+  "solicitudes": {
+    "metadata:montaje-e2e-08dc4a43-5eb3-4646-bb9a-9a8806fb4520": 7,
+    "poster:montaje-e2e-08dc4a43-5eb3-4646-bb9a-9a8806fb4520": 1,
+    "preview:montaje-e2e-08dc4a43-5eb3-4646-bb9a-9a8806fb4520": 2,
+    "metadata:medio-real-distante": 2,
+    "poster:medio-real-distante": 2
+  },
+  "navegacionInternaSinRecarga": true,
+  "lazyDistanteAntesDeScroll": true,
+  "pausaFueraDeVista": true,
+  "visibilidad": "Motor headless mantuvo visible la pestaña; señal document.hidden + visibilitychange simulada explícitamente"
+}
