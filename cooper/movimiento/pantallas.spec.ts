@@ -61,7 +61,34 @@ async function medir(page: Page) {
     };
   });
 }
+// Comprueba la pausa con el control real del Perfil, abierto en otra pestaña
+// del mismo navegador: la preferencia viaja por localStorage y la pantalla
+// medida debe detenerse en vivo, sin recargar (src/componentes/movimiento.tsx).
+async function cambiarMovimiento(
+  perfil: Page,
+  current: Page,
+  pausar: boolean,
+) {
+  const [antes, despues] = pausar
+    ? ["Pausar movimiento", "Activar movimiento"]
+    : ["Activar movimiento", "Pausar movimiento"];
+  await perfil.getByRole("button", { name: antes, exact: true }).click();
+  await expect(
+    perfil.getByRole("button", { name: despues, exact: true }),
+  ).toHaveAttribute("aria-pressed", String(pausar));
+  // La entrada (/entrar) no tiene armazón; el resto lo marca en .workspace.
+  if (await current.locator(".workspace").count())
+    await expect(current.locator(".workspace")).toHaveAttribute(
+      "data-motion",
+      pausar ? "paused" : "playing",
+    );
+}
 for (const width of [1440, 390])
+  // El tema claro se retiró (docs/diseno/DIRECCION.md:7, «tema oscuro, único
+  // tema de esta versión»; src/app/layout.tsx fija data-theme="oscuro"), pero
+  // la API y la base aún aceptan «claro» guardado de antes. La variante
+  // «claro» comprueba ahora que un perfil heredado con «claro» ve la misma
+  // sala oscura, sin errores y con los mismos umbrales.
   for (const theme of ["oscuro", "claro"])
     test(`${width} ${theme}: pantallas, scroll, pausa, vídeo y CPU ${width === 390 ? 4 : 1}x`, async ({
       browser,
@@ -141,8 +168,19 @@ for (const width of [1440, 390])
         });
         await current.goto(path);
         await expect(current.locator("h1:visible")).toHaveCount(1);
-        if (path !== "/entrar")
-          await expect(current.locator(".connection")).toHaveText("En vivo");
+        await expect(current.locator("html")).toHaveAttribute(
+          "data-theme",
+          "oscuro",
+        );
+        // El diseño nuevo ya no pinta «En vivo»: solo avisa del corte. El
+        // enlace en vivo se lee en data-conexion del armazón.
+        if (path !== "/entrar") {
+          await expect(current.locator(".workspace")).toHaveAttribute(
+            "data-conexion",
+            "activa",
+          );
+          await expect(current.getByTestId("estado-conexion")).toHaveCount(0);
+        }
         await expect(
           current.getByText("Consultando la fábrica…", { exact: true }),
         ).toHaveCount(0);
@@ -178,11 +216,24 @@ for (const width of [1440, 390])
           await button.click();
           await expect(button).toBeEnabled();
         }
-        const pause = current.getByRole("button", {
-          name: "Pausar movimiento",
-          exact: true,
-        });
-        await pause.click();
+        // «Pausar movimiento» vive ahora solo en /perfil (src/componentes/perfil.tsx).
+        let perfil = current;
+        if (path !== "/perfil") {
+          perfil = await context.newPage();
+          perfil.on("pageerror", (e) => errors.push(`perfil: ${e.message}`));
+          perfil.on("console", (m) => {
+            if (m.type() === "error") errors.push(`perfil: ${m.text()}`);
+          });
+          await perfil.goto("/perfil");
+          await current.bringToFront();
+          // Abrir otra pestaña no debe pausar por sí solo (pestaña oculta).
+          if (await current.locator(".workspace").count())
+            await expect(current.locator(".workspace")).toHaveAttribute(
+              "data-motion",
+              "playing",
+            );
+        }
+        await cambiarMovimiento(perfil, current, true);
         await current.waitForTimeout(150);
         expect(
           await current.evaluate(() =>
@@ -201,9 +252,8 @@ for (const width of [1440, 390])
               })),
           ),
         ).toEqual([]);
-        await current
-          .getByRole("button", { name: "Activar movimiento", exact: true })
-          .click();
+        await cambiarMovimiento(perfil, current, false);
+        if (perfil !== current) await perfil.close();
         const interactions = ["entrada", "scroll", "pausa", "reanudar"];
         if (await button.count()) interactions.push("actualizar");
         const review = path.startsWith("/canales/")
@@ -218,6 +268,24 @@ for (const width of [1440, 390])
                 "/admin/fabrica": "Revisar ajustes",
               } as Record<string, string>
             )[path];
+        // Los formularios de revisión viven ahora plegados en un <details>.
+        const desplegable = path.startsWith("/canales/")
+          ? "Editar tono"
+          : (
+              {
+                "/rutina": "Ajustar metas",
+                "/redes": "Editar redes",
+                "/cuentas": "Estudiar una cuenta",
+                "/admin/fabrica": "Editar controles de producción",
+              } as Record<string, string>
+            )[path];
+        if (desplegable) {
+          await current
+            .getByRole("main")
+            .getByText(desplegable, { exact: true })
+            .click();
+          interactions.push(`abrir «${desplegable}»`);
+        }
         if (path === "/cuentas")
           await current
             .getByLabel("Usuario de la cuenta")
@@ -245,15 +313,24 @@ for (const width of [1440, 390])
           interactions.push("preparar cambios", "cancelar sin enviar");
         }
         if (path === "/marcas") {
+          // «Competencia» es una sección nueva de la marca en este diseño.
+          const secciones = current.getByRole("navigation", {
+            name: "Secciones de la marca",
+            exact: true,
+          });
           for (const tab of [
             "Estudio",
+            "Competencia",
             "Publicados",
             "Aprendizaje",
             "Calendario",
           ]) {
-            await current
+            await secciones
               .getByRole("button", { name: tab, exact: true })
               .click();
+            await expect(
+              secciones.getByRole("button", { name: tab, exact: true }),
+            ).toHaveAttribute("aria-current", "page");
             expect(
               (await new AxeBuilder({ page: current }).analyze()).violations,
             ).toEqual([]);
@@ -261,26 +338,85 @@ for (const width of [1440, 390])
           }
         }
         if (path === "/publicados") {
+          // El gráfico de evolución vive ahora en el diálogo de cifras de cada
+          // publicación de video (src/componentes/resultados.tsx).
           await current
+            .getByRole("button", { name: "Filtros", exact: true })
+            .click();
+          await current
+            .getByRole("group", { name: "Tipo de publicación" })
+            .getByRole("button", { name: "Videos", exact: true })
+            .click();
+          await current
+            .getByRole("button", { name: /^Ver cifras de / })
+            .filter({ visible: true })
+            .first()
+            .click();
+          const cifras = current.locator("dialog[open]");
+          await expect(cifras).toBeVisible();
+          await cifras
             .getByLabel("Métrica del gráfico")
             .first()
             .selectOption("meGusta");
           await current.waitForTimeout(650);
-          await current
+          await cifras
             .getByText("Ver datos de evolución", { exact: true })
             .first()
             .click();
-          await expect(current.getByRole("table").first()).toBeVisible();
-          interactions.push("cambiar métrica", "abrir tabla");
+          await expect(cifras.getByRole("table").first()).toBeVisible();
+          expect(
+            (await new AxeBuilder({ page: current }).analyze()).violations,
+          ).toEqual([]);
+          await cifras
+            .getByRole("button", { name: "Cerrar cifras", exact: true })
+            .click();
+          await expect(cifras).toHaveCount(0);
+          interactions.push(
+            "abrir filtros",
+            "filtrar videos",
+            "abrir cifras",
+            "cambiar métrica",
+            "abrir tabla",
+            "cerrar cifras",
+          );
         }
         if (path === "/aprendizaje") {
           await current
+            .getByRole("group", { name: "Filtrar fallos" })
             .getByRole("button", { name: "Corregidos", exact: true })
             .click();
+          await expect(
+            current
+              .getByRole("group", { name: "Filtrar fallos" })
+              .getByRole("button", { name: "Corregidos", exact: true }),
+          ).toHaveAttribute("aria-pressed", "true");
           await current.waitForTimeout(350);
           interactions.push("filtrar corregidos");
         }
         await current.evaluate(() => window.scrollTo(0, 0));
+        // Reanudar el movimiento vuelve a lanzar las entradas de un solo uso
+        // (opacidad desde 0); axe audita el estado asentado, no un fundido a
+        // medias. Se ignoran los bucles y las ligadas al scroll, que no acaban.
+        const animacionesAntesDeAxe = await current.evaluate(async () => {
+          const finitas = document
+            .getAnimations()
+            .filter(
+              (a) =>
+                a.playState === "running" &&
+                a.timeline instanceof DocumentTimeline &&
+                Number.isFinite(a.effect?.getComputedTiming().endTime),
+            );
+          await Promise.race([
+            Promise.all(finitas.map((a) => a.finished.catch(() => null))),
+            new Promise((resolve) => setTimeout(resolve, 5000)),
+          ]);
+          return finitas.map(
+            (a) =>
+              (a as CSSAnimation).animationName ||
+              (a as CSSTransition).transitionProperty ||
+              a.constructor.name,
+          );
+        });
         const axe = await new AxeBuilder({ page: current }).analyze();
         expect(axe.violations).toEqual([]);
         const controles = await current
@@ -321,6 +457,7 @@ for (const width of [1440, 390])
           ...measure,
           video: `${name}.webm`,
           interacciones: interactions,
+          animacionesAntesDeAxe,
           controles,
         });
         writeFileSync(
