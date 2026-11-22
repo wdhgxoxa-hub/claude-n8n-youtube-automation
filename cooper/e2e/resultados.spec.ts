@@ -1,6 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
 import type { Estado } from "../src/servicios/datos";
-import type { Resultados } from "../src/contratos/resultados";
+import {
+  agruparPublicaciones,
+  type Resultados,
+} from "../src/contratos/resultados";
 import type { Leccion } from "../src/contratos/observabilidad";
 import { readFileSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
@@ -104,7 +107,7 @@ test("Aprendizaje activa y pausa la medición con persistencia y permiso adminis
   );
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Aprendizaje", exact: true }),
+    page.getByRole("heading", { name: "Lo que aprendimos", exact: true }),
   ).toBeVisible();
   await expect(control).toHaveCount(0);
 });
@@ -152,6 +155,9 @@ test("Publicados presenta intervalos YouTube en segundos sin recortar repeticion
   await page.route("**/api/resultados", (r) => r.fulfill({ json: resultados }));
   await page.goto("/publicados");
   await actualizarResultados(page);
+  await page
+    .getByRole("button", { name: `Ver cifras de ${publicada.titulo}` })
+    .click();
   await expect(page.locator(".resultado-origen:visible")).toHaveCount(1);
   await page.getByText("Retención por intervalo", { exact: true }).click();
   const tabla = page.getByRole("table", { name: "Curva de retención" });
@@ -165,8 +171,109 @@ test("Publicados presenta intervalos YouTube en segundos sin recortar repeticion
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: `Ver origen: ${publicada.titulo}` }),
+    page.getByRole("link", { name: `Ver video o pieza: ${publicada.titulo}` }),
   ).toHaveAttribute("href", publicada.href);
+});
+test("La pared ordena por vistas, cuenta cada publicación una vez y pliega los filtros", async ({
+  page,
+}) => {
+  const resultados: Resultados = await (
+    await page.request.get("/api/resultados")
+  ).json();
+  const base = resultados.publicaciones.find((p) => p.tipo === "video")!;
+  if (base.tipo !== "video") throw new Error("Falta publicación de ejemplo");
+  const crear = (id: string, titulo: string, dia: string, vistas: number) => ({
+    ...base,
+    id,
+    identidad: id,
+    titulo,
+    fecha: `2026-11-${dia}T12:00:00Z`,
+    publicacion: {
+      ...base.publicacion,
+      id,
+      fecha: `2026-11-${dia}T12:00:00Z`,
+      historial: [
+        {
+          fecha: `2026-11-${dia}T18:00:00Z`,
+          vistas,
+          meGusta: 19214,
+          comentarios: 0,
+          retencion: null,
+        },
+      ],
+    },
+  });
+  const record = crear("pared-record", "La historia que más llegó", "01", 400);
+  resultados.publicaciones = [
+    crear("pared-reciente", "La historia más reciente", "20", 120),
+    record,
+    { ...record, id: "pared-otra-lectura" },
+  ];
+  await page.route("**/api/resultados", (r) => r.fulfill({ json: resultados }));
+  await page.goto("/publicados");
+  await actualizarResultados(page);
+  await expect(
+    page.getByRole("button", { name: "Filtros", exact: true }),
+  ).toHaveAttribute("aria-expanded", "false");
+  await expect(page.getByRole("combobox")).toHaveCount(0);
+  await expect(page.locator(".publication").first()).toContainText(
+    "La historia que más llegó",
+  );
+  const cifras = page.getByRole("region", { name: "Cifras del periodo" });
+  await expect(
+    cifras
+      .locator("figure")
+      .filter({ hasText: "Vistas" })
+      .locator(".cifra-valor .sr-only"),
+  ).toHaveText("520");
+  await expect(
+    cifras
+      .locator("figure")
+      .filter({ hasText: "Publicaciones" })
+      .locator(".cifra-valor .sr-only"),
+  ).toHaveText("2");
+  for (const width of [360, 390, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect
+      .poll(() =>
+        cifras.locator("figure").evaluateAll((figuras) =>
+          figuras.every((figura) => {
+            const valor = figura.querySelector<HTMLElement>(".cifra-valor")!;
+            return valor.scrollWidth <= figura.clientWidth;
+          }),
+        ),
+      )
+      .toBe(true);
+  }
+  await page
+    .getByRole("button", { name: "Mejor rendimiento", exact: true })
+    .click();
+  await expect(page.locator(".publication").first()).toContainText(
+    "La historia más reciente",
+  );
+  await page
+    .getByRole("button", { name: "Todo el periodo", exact: true })
+    .click();
+  const periodo = page.getByRole("dialog", { name: "Elegir periodo" });
+  await expect(periodo).toBeVisible();
+  await periodo.getByLabel("Desde (Lima)").fill("2026-11-10");
+  await periodo
+    .getByRole("button", { name: "Ver resultados", exact: true })
+    .click();
+  await expect(periodo).not.toBeVisible();
+  await expect(page.locator(".publication")).toHaveCount(1);
+  await page
+    .getByRole("button", { name: "Ver cifras de La historia más reciente" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "La historia más reciente" }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("button", {
+      name: "Ver cifras de La historia más reciente",
+    }),
+  ).toBeFocused();
 });
 test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección", async ({
   page,
@@ -186,15 +293,17 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
   expect(corregidos.length).toBeGreaterThan(0);
   await page.goto("/publicados");
   await expect(
-    page.getByRole("heading", { name: "Publicados", exact: true }),
+    page.getByRole("heading", { name: "La pared", exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page
-    .getByRole("combobox", { name: "Tipo", exact: true })
-    .selectOption("video");
+    .getByRole("group", { name: "Tipo de publicación" })
+    .getByRole("button", { name: "Videos", exact: true })
+    .click();
   // Una tarjeta puede agrupar varias fuentes; comprobar cada registro evita
   // perder métricas al agrupar y no incluye publicaciones de Marcas ajenas.
-  await expect(page.locator(".resultado-origen:visible")).toHaveCount(
-    publicaciones.length,
+  await expect(page.locator(".publication:visible")).toHaveCount(
+    agruparPublicaciones(publicaciones, resultados.ambitos).length,
   );
   await expect(
     page
@@ -202,17 +311,23 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
       .getByRole("status")
       .filter({ hasText: /^\d+ publicaci/ }),
   ).toContainText(
-    `${publicaciones.length} ${publicaciones.length === 1 ? "resultado" : "resultados"}`,
+    `${publicaciones.length} mediciones disponibles`,
   );
   await page.getByRole("button", { name: "instagram", exact: true }).click();
   const instagram = publicaciones.filter((p) => p.redes.includes("instagram"));
-  await expect(page.locator(".resultado-origen:visible")).toHaveCount(
-    instagram.length,
+  await expect(page.locator(".publication:visible")).toHaveCount(
+    agruparPublicaciones(instagram, resultados.ambitos).length,
   );
   const sinRetencion = instagram.find((p) =>
     p.publicacion.historial.every((m) => m.retencion === null),
   )!;
   expect(sinRetencion).toBeDefined();
+  await page
+    .locator(".publication:visible")
+    .filter({ has: page.locator(`a[href="${sinRetencion.href}"]`) })
+    .getByRole("button", { name: `Ver cifras de ${sinRetencion.titulo}` })
+    .first()
+    .click();
   const publicacion = page
     .locator(".resultado-origen:visible")
     .filter({ has: page.locator(`a[href="${sinRetencion.href}"]`) })
@@ -281,27 +396,37 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
     });
   }
   await page.goto("/aprendizaje");
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page
-    .getByRole("combobox", { name: "Tipo", exact: true })
-    .selectOption("video");
+    .getByRole("group", { name: "Tipo de publicación" })
+    .getByRole("button", { name: "Videos", exact: true })
+    .click();
   await page.getByRole("button", { name: "Pendientes", exact: true }).click();
-  await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
-    pendientes.length,
-  );
-  await expect(page.locator(".incident-state.corregido:visible")).toHaveCount(
-    0,
-  );
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Pendiente", { exact: true }),
+  ).toHaveCount(pendientes.length);
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Corregido", { exact: true }),
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "Corregidos", exact: true }).click();
-  await expect(page.locator(".incident-state.corregido:visible")).toHaveCount(
-    corregidos.length,
-  );
-  await expect(page.locator(".incident-state.pendiente:visible")).toHaveCount(
-    0,
-  );
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Corregido", { exact: true }),
+  ).toHaveCount(corregidos.length);
+  await expect(
+    page
+      .getByRole("region", { name: "Fallos y correcciones de videos" })
+      .getByText("Pendiente", { exact: true }),
+  ).toHaveCount(0);
   for (const cambio of new Set(corregidos.map((i) => i.cambio)))
     await expect(
       page
-        .locator(".learning-section:visible")
+        .getByRole("region", { name: "Fallos y correcciones de videos" })
         .getByText(cambio, { exact: true })
         .first(),
     ).toBeVisible();
@@ -542,8 +667,11 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
       lesson.getByText("Posible causa:", { exact: false }),
     ).toBeVisible();
     await expect(
-      lesson.getByText("Cambio propuesto:", { exact: false }),
+      lesson.getByText("Cambio aplicado", { exact: false }),
     ).toBeVisible();
+    await lesson
+      .getByText("Ver las mediciones y el contexto", { exact: true })
+      .click();
     await expect(lesson.getByLabel("Evidencia de la lección")).toContainText(
       "Retención: 40 % en el segundo 3 (captura 2 h después del hito)",
     );
@@ -553,7 +681,9 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
       ),
     ).toBeVisible();
     await expect(
-      lesson.getByRole("link", { name: video.title }),
+      lesson
+        .getByLabel("Evidencia de la lección")
+        .getByRole("link", { name: video.title, exact: true }),
     ).toHaveAttribute("href", "/videos/" + video.id);
     expect(
       await page.evaluate(

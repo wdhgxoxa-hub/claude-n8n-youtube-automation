@@ -42,14 +42,16 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await page.goto("/publicados");
   await expect(page.locator(".publication:visible")).toHaveCount(4);
   await expect(
-    page.getByRole("combobox", { name: "Dueño", exact: true }),
+    page.getByRole("group", { name: "Dueño", exact: true }),
   ).toHaveCount(0);
   await expect(
-    page.getByText("Una publicación, 2 registros.", { exact: false }),
+    page.getByText("2 mediciones disponibles", { exact: true }),
   ).toHaveCount(2);
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page
-    .getByRole("combobox", { name: "Tipo", exact: true })
-    .selectOption("marca");
+    .getByRole("group", { name: "Tipo de publicación" })
+    .getByRole("button", { name: "Marcas", exact: true })
+    .click();
   await expect(page.locator(".publication:visible")).toHaveCount(2);
   await expect(
     page.getByText("Fecha sin registrar", { exact: false }).first(),
@@ -57,30 +59,50 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await expect(
     page.getByText("Sin dato", { exact: true }).first(),
   ).toBeVisible();
-  await page.getByLabel("Desde (Lima)").fill("2026-11-20");
-  await expect(page.locator(".publication:visible")).toHaveCount(0);
-  await page.getByRole("button", { name: "Limpiar filtros" }).click();
   await page
-    .getByRole("combobox", { name: "Canal o marca", exact: true })
-    .selectOption(propio.ambitos.find((a) => a.tipo === "video")!.id);
+    .getByRole("button", { name: "Todo el periodo", exact: true })
+    .click();
+  await page.getByLabel("Desde (Lima)").fill("2026-11-20");
+  await page
+    .getByRole("button", { name: "Ver resultados", exact: true })
+    .click();
+  await expect(page.locator(".publication:visible")).toHaveCount(0);
+  await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
+  await page
+    .getByRole("group", { name: "Canal o marca" })
+    .getByRole("button", { name: /· Canal$/ })
+    .click();
+  await page
+    .getByRole("button", { name: "Todo el periodo", exact: true })
+    .click();
   await page.getByLabel("Desde (Lima)").fill("2026-11-20");
   await page.getByLabel("Hasta (Lima)").fill("2026-11-20");
+  await page
+    .getByRole("button", { name: "Ver resultados", exact: true })
+    .click();
   await expect(page.locator(".publication:visible")).toHaveCount(1);
   await expect(
     page
       .getByRole("main")
       .getByRole("status")
       .filter({ hasText: /^\d+ publicaci/ }),
-  ).toHaveText("1 publicación · 2 resultados");
+  ).toHaveText("1 publicación · 2 mediciones disponibles");
+  await page.getByRole("button", { name: /^Ver cifras de / }).click();
   await expect(page.getByText("125", { exact: true }).first()).toBeVisible();
-  await page.getByRole("button", { name: "Limpiar filtros" }).click();
+  await page.getByRole("button", { name: "Cerrar cifras" }).click();
+  await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
   await page.getByRole("button", { name: "instagram", exact: true }).click();
   await expect(page.locator(".publication:visible")).toHaveCount(3);
-  const marca = propio.publicaciones.find((p) => p.tipo === "marca")!;
-  await page
-    .locator(`a[href="${marca.href}"]`)
-    .filter({ hasText: "Ver origen" })
-    .click();
+  // Las capturas duplicadas del fixture comparten fecha: cualquiera de sus
+  // destinos propios es válido, pero nunca uno de la persona ajena.
+  const enlaceMarca = page
+    .locator('.publication-thumb[href^="/marcas?pieza="]')
+    .first();
+  const destinoMarca = await enlaceMarca.getAttribute("href");
+  expect(
+    propio.publicaciones.filter((p) => p.tipo === "marca").map((p) => p.href),
+  ).toContain(destinoMarca);
+  await enlaceMarca.click();
   await expect(
     page.getByRole("heading", { name: "Horizonte", exact: true }),
   ).toBeVisible();
@@ -91,7 +113,9 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   ).toHaveAttribute("aria-current", "page");
   await page.reload();
   await expect(
-    page.locator(`#pieza-${marca.id.replace("marca:", "")}`),
+    page.locator(
+      `#pieza-${new URL(destinoMarca!, "http://localhost").searchParams.get("pieza")}`,
+    ),
   ).toBeVisible();
   await page.goto("/aprendizaje");
   await expect(
@@ -100,13 +124,20 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await expect(
     page.getByRole("heading", { name: "Abrir con una pregunta verificable" }),
   ).toHaveCount(1);
+  await page
+    .getByText("Ver las mediciones y el contexto", { exact: true })
+    .first()
+    .click();
   await expect(page.getByLabel("Evidencia de la lección")).toContainText("24h");
   await expect(page.getByLabel("Aplicaciones de la lección")).toContainText(
     "Apertura revisada",
   );
   await expect(
-    page.getByText("Estudio descriptivo; no es una lección validada."),
+    page.getByText(
+      "Estudio descriptivo; todavía no es una lección comprobada.",
+    ),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page.getByRole("button", { name: "youtube", exact: true }).click();
   await expect(page.locator(".lesson:visible")).toHaveCount(1);
   await expect(
@@ -114,8 +145,8 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
       .getByRole("main")
       .getByRole("status")
       .filter({ hasText: /^\d+ lecci/ }),
-  ).toHaveText("1 lección de videos · 0 registros de Marcas");
-  await page.getByRole("button", { name: "Limpiar filtros" }).click();
+  ).toHaveText("1 lección · 0 de marcas");
+  await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
   await page.route("**/api/resultados", (r) =>
     r.fulfill({ status: 503, json: { error: "Ensayo" } }),
   );
@@ -137,6 +168,17 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
           (t) => (document.documentElement.dataset.theme = t),
           tema,
         );
+        // El contraste se mide al completar la entrada escalonada; su estado
+        // intermedio transparente tiene una comprobación de movimiento aparte.
+        await expect
+          .poll(() =>
+            page
+              .locator(".entrada-estudio")
+              .evaluateAll((elementos) =>
+                elementos.every((el) => getComputedStyle(el).opacity === "1"),
+              ),
+          )
+          .toBe(true);
         expect((await new AxeBuilder({ page }).analyze()).violations).toEqual(
           [],
         );
@@ -153,13 +195,16 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
     }
   await entrar(page, "admin@example.test");
   await page.goto("/publicados");
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page
-    .getByRole("combobox", { name: "Dueño", exact: true })
-    .selectOption(propio.ambitos[0].ownerId);
+    .getByRole("group", { name: "Dueño" })
+    .getByRole("button", { name: propio.ambitos[0].propietario, exact: true })
+    .click();
   await expect(page.locator(".publication:visible")).toHaveCount(4);
   await page
-    .getByRole("combobox", { name: "Dueño", exact: true })
-    .selectOption(ajeno.ambitos[0].ownerId);
+    .getByRole("group", { name: "Dueño" })
+    .getByRole("button", { name: ajeno.ambitos[0].propietario, exact: true })
+    .click();
   await expect(page.locator(".publication:visible")).toHaveCount(4);
   await page.goto("/aprendizaje");
   await expect(

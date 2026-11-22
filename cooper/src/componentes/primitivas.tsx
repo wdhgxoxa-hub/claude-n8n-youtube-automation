@@ -82,6 +82,7 @@ export function Medio({
   mediosIniciales,
   publicacionId,
   enCola = false,
+  tinte: tinteInicial,
   className,
   children,
 }: {
@@ -95,6 +96,8 @@ export function Medio({
   mediosIniciales?: VideoMedios;
   publicacionId?: string;
   enCola?: boolean;
+  /** Color ya extraído por el adaptador de medios; evita consultar dos veces. */
+  tinte?: string;
   className?: string;
   children?: ReactNode;
 }) {
@@ -120,7 +123,11 @@ export function Medio({
         posterInicial ||
         medio?.poster?.url;
   const preview = medio?.preview?.url ?? previewInicial;
-  const tinte = medio?.tinte ? estiloMedio(medio) : undefined;
+  const tinte = tinteInicial
+    ? ({ "--tinte": tinteInicial } as CSSProperties)
+    : medio?.tinte
+      ? estiloMedio(medio)
+      : undefined;
 
   useEffect(() => {
     const element = root.current;

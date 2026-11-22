@@ -688,11 +688,15 @@ for (const tema of temas) {
           await expect(
             page.getByRole("heading", { name: "Una idea. Todo por crear." }),
           ).toBeVisible();
-        else if (["/canales", "/videos", "/publicados"].includes(ruta))
-          await expect(page.locator(".empty, .vacio").first()).toBeVisible();
+        else if (["/canales", "/videos"].includes(ruta))
+          await expect(page.locator(".empty").first()).toBeVisible();
+        else if (ruta === "/publicados")
+          await expect(page.locator(".vacio").first()).toBeVisible();
         else if (ruta === "/aprendizaje")
           await expect(
-            page.getByText("No hay aprendizajes para estos filtros."),
+            page.getByRole("heading", {
+              name: "El próximo puede empezar mejor.",
+            }),
           ).toBeVisible();
         await revisar(nombre);
         if (ruta === "/" && ancho === 360) {
