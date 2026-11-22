@@ -38,7 +38,9 @@ const entries = files
     };
   })
   .sort((a, b) => a.width - b.width || a.name.localeCompare(b.name));
-const videos = files.filter((file) => file.endsWith(".webm"));
+const missionVideo =
+  /^(?:pantallas-y-hojas|teclado-filtros-medición-y-movimiento-reducido|recorrido-grabado-de-interacciones|vacío-carga-y-recuperación-explícitos)-a-(?:360|390|768|1024|1440|1920)px\.webm$/;
+const videos = files.filter((file) => missionVideo.test(file));
 const motion = widths.flatMap((width) => {
   const file = resolve(directory, `movimiento-${width}.json`);
   return existsSync(file)
