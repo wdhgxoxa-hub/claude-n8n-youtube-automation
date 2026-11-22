@@ -27,6 +27,7 @@ export function conectarEventos<T>({
   let disconnectedAt: number | undefined;
   let openedAt = 0;
   let lastActivity = 0;
+  let lastEventId = "";
   let state: EstadoConexion = "iniciando";
 
   const close = () => {
@@ -92,11 +93,10 @@ export function conectarEventos<T>({
     retryTimer = setTimeout(connect, delay);
     void checkSession();
   };
-  const healthy = (hasState = false) => {
+  const healthy = () => {
     if (stopped) return;
     lastActivity = Date.now();
-    if (hasState || lastActivity - openedAt >= TIEMPOS_CONEXION.estable)
-      attempts = 0;
+    if (lastActivity - openedAt >= TIEMPOS_CONEXION.estable) attempts = 0;
     state = "activa";
     disconnectedAt = undefined;
     clearTimeout(warningTimer);
@@ -108,7 +108,11 @@ export function conectarEventos<T>({
     if (stopped || !navigator.onLine) return;
     clearTimeout(retryTimer);
     close();
-    const current = new EventSource("/api/eventos");
+    const current = new EventSource(
+      lastEventId
+        ? `/api/eventos?ultimoEvento=${encodeURIComponent(lastEventId)}`
+        : "/api/eventos",
+    );
     source = current;
     openedAt = Date.now();
     healthTimer = setTimeout(retry, TIEMPOS_CONEXION.apertura);
@@ -119,14 +123,17 @@ export function conectarEventos<T>({
     current.addEventListener("latido", () => {
       if (active()) healthy();
     });
-    current.addEventListener("progreso", () => {
-      if (active()) healthy();
+    current.addEventListener("progreso", (event) => {
+      if (!active()) return;
+      if (event.lastEventId && event.lastEventId.length <= 128)
+        lastEventId = event.lastEventId;
+      healthy();
     });
     current.addEventListener("estado", (event) => {
       if (!active()) return;
       try {
         recibir(JSON.parse(event.data));
-        healthy(true);
+        healthy();
       } catch {
         retry();
       }
