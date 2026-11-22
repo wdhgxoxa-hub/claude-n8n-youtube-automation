@@ -1,0 +1,41 @@
+{
+  "corte": "854a0398028c6e7fd74bde18f9bd681ce959589e",
+  "unitarias": {
+    "numPassedTests": 485,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "success": true
+  },
+  "e2e": {
+    "startTime": "2026-11-22T03:50:31.056Z",
+    "duration": 936093.831,
+    "expected": 108,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "archivos": [
+    {
+      "archivoLocal": ".cache/diseno-medios-ci/cooper/.cache/puerta/resultado.json",
+      "bytes": 2436,
+      "sha256": "06ebd7a192bb60a9af05d8b834f3e4786ca23026ecfb853e4700bfe53a4864fe"
+    },
+    {
+      "archivoLocal": ".cache/diseno-medios-ci/cooper/.cache/puerta/vitest.json",
+      "bytes": 149273,
+      "sha256": "a4c7c24e82fd5caf6d9ad88ce6998ec2dc192a5e9f94e51da880e933641c49b9"
+    },
+    {
+      "archivoLocal": ".cache/diseno-medios-ci/cooper/.cache/puerta/playwright.json",
+      "bytes": 6145670,
+      "sha256": "ea6b7f56cba65d06d6f9981a0615e951627998c94943a560be7f367f7ee7dcf3"
+    }
+  ],
+  "contenedor": {
+    "imagen": "f3f8a618672568027d79b05735c54fc9aebeffc5c97e1860b3a7389b9f1d5e03",
+    "nombre": "cooper-diseno-medios-puerta-final-3",
+    "exitCodePodman": 0,
+    "nota": "Podman events acredita died 0 y remove 0. El canal PTY reportó 143 al recoger su sesión; ese código de transporte no es el exit code del contenedor. Todos los comandos y el recibo de la puerta terminaron en 0/PASS."
+  }
+}

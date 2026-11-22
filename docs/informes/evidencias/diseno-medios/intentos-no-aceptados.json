@@ -1,0 +1,37 @@
+{
+  "nota": "Intentos detenidos tras descubrir fallos; no cuentan como aceptación. Conservados localmente con logs, capturas y traces. La puerta final se ejecutó de nuevo desde npm ci.",
+  "intentos": [
+    {
+      "intento": 1,
+      "resultado": "FAIL",
+      "origen": {
+        "commit": "02978cc573d78cde38e9cfcbeac2d7ac38a94af1",
+        "limpio": true,
+        "metodo": "git archive HEAD; entorno y navegadores aislados preparados previamente"
+      },
+      "inicio": "2026-11-22T03:10:07.822Z",
+      "fin": "2026-11-22T03:21:09.281Z",
+      "error": "e2e: rc 1, 0 advertencias. Consulte .cache/puerta/e2e.log.",
+      "archivoLocal": ".cache/diseno-medios-intento-1/puerta/resultado.json",
+      "sha256": "1a38fe157846d654be52843d668554cbb4bf1ec106370a20067d937436f03d70"
+    },
+    {
+      "intento": 2,
+      "resultado": "FAIL",
+      "origen": {
+        "commit": "9f3a91050510f0c95c3d34e5ffc69b45aaf8c1d2",
+        "limpio": true,
+        "metodo": "git archive HEAD; caché y navegadores aislados preparados previamente"
+      },
+      "inicio": "2026-11-22T03:44:05.400Z",
+      "fin": "2026-11-22T03:47:36.272Z",
+      "error": "e2e: rc 1, 0 advertencias. Consulte .cache/puerta/e2e.log.",
+      "archivoLocal": ".cache/diseno-medios-intento-2/puerta/resultado.json",
+      "sha256": "1338c79d8fa519c0fa4ecb89d5cfe4bd5d01d3d5814c8c7a7c18c0f00cb30e53"
+    }
+  ],
+  "focalParcialIdentidad": {
+    "archivoLocal": ".cache/diseno-medios-focal-identidad-parcial/ejecucion.log",
+    "resultado": "1 PASS (identidad reparada), 1 FAIL anterior al selector (caso de avatar requiere canal creado por la suite completa)."
+  }
+}

@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 19:05 (Lima).
+Última actualización: 2026-11-21 23:08 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — diseno-medios implementado y probado localmente:** rama/worktree propios; API tipada y caché privada de póster, preview FFmpeg silenciosa ≤600 KB, tinte y dimensiones; migración 14→15, carga diferida y espacio reservado. Puerta común completa en `854a039`: **485 unitarias/108 E2E/237 flujos, 0 errores/0 advertencias/0 omisiones**. MP4 existente verificado: preview real 5 s, 336.834 bytes; 198 capturas finales revisadas, axe 0/overflow 0, Lighthouse móvil 93/92 y accesibilidad 100. **Puerta global de diseño no aprobada** por tokens/armazón heredados y 404 del recorrido de errores; no se relajó. El delta del puente se generó offline. **Sin integración, push ni despliegue**, y sin escrituras en VPS/n8n desde esta misión. [Informe y pendientes](informes/diseno-medios.md), [puerta](informes/evidencias/diseno-medios/puerta-comun.json).
 
 - **21-11-2026, Lima — total-integrador / total-cierre cerrados:** implementado, probado, integrado, publicado por fast-forward a `mio/main` y `mio/version-chatgpt`, y desplegado en https://cooper.cooperestudio.com. Runtime b3 exacto, puerta 467 unitarias/103 E2E/235 flujos y rondas 123+123 PASS; extras 269 regresiones PASS, cero advertencias. Se conservó el env Google. [Informe final](informes/total-cierre.md), [historia integrada](informes/total-integrador.md).
 
@@ -113,6 +115,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
+- **diseno-medios:** revisión de Claude e integración futura con el armazón de `diseno-base`; no se declara aceptación global de la sección 5. Diagnóstico, capturas y límites de producción listos para revisar; nada de este frente está desplegado. [Informe](informes/diseno-medios.md).
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
 - Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
 - Sexta oleada anunciada por Claude (iglesia, tienda, WhatsApp y observabilidad): conservada para la pasada posterior al despliegue. No se incorporó ni sobrescribió su trabajo concurrente al cerrar esta versión.
@@ -132,6 +135,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 10. Definir retención y excepciones antes de purgar originales, consentimientos, mensajes, derivados/copias. Cotejar operaciones inciertas sin recibo. Identificar la clave administrativa anterior mediante su ID en la instalación correcta antes de revocarla; no se afirma que siga activa.
 
 11. Margen Real: confirmar URL/ID del TikTok propio y el homónimo mexicano; revisar descriptor Perú, capacidad del piloto y aplicación editorial. [Detalle](informes/total-margen-estrategia.md#pendientes-de-walter).
+
+12. Medios: revisar con Claude el informe y las capturas finales; decidir integración/despliegue por separado, conservación y entrega de los MP4 en B2, tinte editorial y retención de derivados. Confirmar permisos oficiales de TikTok solo si hace falta obtener su portada. [Pendientes concretos](informes/diseno-medios.md#pendientes-de-walter).
 
 ## Ideas conversadas
 
