@@ -20,7 +20,11 @@ test("Resultados enlaza las secciones de Marcas y conserva el destino al recarga
   const errores: string[] = [];
   page.on("pageerror", (error) => errores.push(error.message));
   await page.goto("/marcas");
-  await page.getByRole("button", { name: "Añadir marca o cuenta" }).click();
+  await page
+    .getByRole("button", {
+      name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+    })
+    .click();
   await page
     .getByRole("textbox", { name: "Nombre de la marca" })
     .fill("Marca para navegación");

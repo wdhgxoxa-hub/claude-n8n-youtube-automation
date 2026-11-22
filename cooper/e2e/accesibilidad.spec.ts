@@ -457,7 +457,11 @@ for (const tema of temas) {
       await revisar("perfil-validacion-numero");
 
       await abrir(page, "/marcas", tema);
-      await page.getByRole("button", { name: "Añadir marca o cuenta" }).click();
+      await page
+        .getByRole("button", {
+          name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+        })
+        .click();
       await revisar("marca-identidad");
       await page
         .getByRole("textbox", { name: "Nombre de la marca" })

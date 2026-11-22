@@ -36,6 +36,7 @@ test("Pedir video conserva el foco al cancelar y respeta el control elegido mien
 }) => {
   await page.goto("/videos");
   const abrir = page.getByRole("button", { name: "Pedir video", exact: true });
+  await expect(abrir).toHaveCount(1);
   await abrir.focus();
   await page.keyboard.press("Enter");
   await expect(abrir).toHaveAttribute("aria-expanded", "true");
@@ -91,7 +92,10 @@ test("Alta de marca anuncia cada paso y devuelve el foco al salir", async ({
   page,
 }) => {
   await page.goto("/marcas");
-  const abrir = page.getByRole("button", { name: "Añadir marca o cuenta" });
+  const abrir = page.getByRole("button", {
+    name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+  });
+  await expect(abrir).toHaveCount(1);
   await abrir.focus();
   await page.keyboard.press("Enter");
   await expect(

@@ -19,7 +19,11 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
   const errores: string[] = [];
   page.on("pageerror", (e) => errores.push(e.message));
   await page.goto("/marcas");
-  await page.getByRole("button", { name: "Añadir marca o cuenta" }).click();
+  await page
+    .getByRole("button", {
+      name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+    })
+    .click();
   await page
     .getByLabel("Nombre de la marca", { exact: true })
     .fill("Marca de montajes");

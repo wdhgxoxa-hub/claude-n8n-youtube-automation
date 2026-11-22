@@ -24,7 +24,11 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   await page.goto("/marcas");
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.getByRole("button", { name: "Añadir marca o cuenta" }).click();
+  await page
+    .getByRole("button", {
+      name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+    })
+    .click();
   await page
     .getByRole("textbox", { name: "Nombre de la marca" })
     .fill("Iglesia de ensayo");

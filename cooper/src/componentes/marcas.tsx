@@ -121,7 +121,7 @@ export function Marcas({
         title="Marcas"
         description="Una identidad para cada voz. Un lugar para cuidar lo que compartes."
         action={
-          !editor ? (
+          !editor && data.marcas.length > 0 ? (
             <button
               ref={newBrandButton}
               className="button primary"
@@ -171,7 +171,12 @@ export function Marcas({
                 Tu iglesia, una tienda, Margen Real o una cuenta del equipo.
                 Cada marca conserva su guía y sus publicaciones.
               </p>
-              <button className="button" onClick={() => abrirEditor()}>
+              <button
+                ref={newBrandButton}
+                className="button primary"
+                disabled={busy}
+                onClick={() => abrirEditor()}
+              >
                 Crear mi primera marca
               </button>
             </section>
