@@ -22,9 +22,15 @@ export function CooperPresencia({
     const previews = new Map<HTMLVideoElement, () => void>();
     const update = () => {
       // El contenido tiene prioridad; la cara estática y el botón siguen visibles.
-      if (!activo || reduced || paused || document.hidden || previews.size)
+      if (!activo || reduced || paused || document.hidden || previews.size) {
         video.pause();
-      else void video.play().catch(() => {});
+        // Retira también la capa de composición del video detenido. La imagen
+        // inferior conserva la cara sin competir con la vista previa grande.
+        video.style.visibility = "hidden";
+      } else {
+        video.style.visibility = "";
+        void video.play().catch(() => {});
+      }
     };
     const watch = (preview: HTMLVideoElement) => {
       if (preview.paused || preview.ended || previews.has(preview)) return;
