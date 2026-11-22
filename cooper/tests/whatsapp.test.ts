@@ -601,26 +601,42 @@ describe("Cola durable y transporte", () => {
   );
   it("Cloud API usa ruta oficial, Bearer, timeout, sin redirección y jamás filtra respuesta privada", async () => {
     vi.stubEnv("WHATSAPP_TOKEN", randomBytes(32).toString("hex"));
+    vi.stubEnv("WHATSAPP_WABA_ID", "987654321");
     verify();
     encolarVideo(await video());
     const message = construirMensaje(jobs()[0]);
-    const transport = vi
+    const enviar = vi
       .fn<typeof fetch>()
       .mockResolvedValue(Response.json({ messages: [{ id: "wamid.ensayo" }] }));
+    const transport = vi.fn<typeof fetch>((url, init) =>
+      init?.method === "GET"
+        ? Promise.resolve(
+            Response.json({
+              data: [
+                {
+                  name: "cooper_aprobacion_guion",
+                  language: "es",
+                  status: "APPROVED",
+                },
+              ],
+            }),
+          )
+        : enviar(url, init),
+    );
     expect(await new WhatsAppCloudAPI(transport).enviar(message)).toEqual({
       id: "wamid.ensayo",
     });
-    expect(transport.mock.calls[0][0]).toBe(
+    expect(enviar.mock.calls[0][0]).toBe(
       "https://graph.facebook.com/v27.0/123456789/messages",
     );
-    expect(transport.mock.calls[0][1]).toMatchObject({
+    expect(enviar.mock.calls[0][1]).toMatchObject({
       method: "POST",
       redirect: "error",
       cache: "no-store",
       body: JSON.stringify(message),
     });
-    expect(transport.mock.calls[0][1]?.headers).toHaveProperty("Authorization");
-    transport.mockResolvedValue(
+    expect(enviar.mock.calls[0][1]?.headers).toHaveProperty("Authorization");
+    enviar.mockResolvedValue(
       Response.json(
         { error: { code: 130429, message: "dato privado" } },
         { status: 429, headers: { "retry-after": "60" } },
@@ -633,11 +649,11 @@ describe("Cola durable y transporte", () => {
       codigo: "130429",
       esperaMs: 60000,
     });
-    transport.mockRejectedValue(new Error("dato privado"));
+    enviar.mockRejectedValue(new Error("dato privado"));
     await expect(
       new WhatsAppCloudAPI(transport).enviar(message),
     ).rejects.toMatchObject({ clase: "incierto", codigo: "red" });
-    transport.mockResolvedValue(Response.json({}));
+    enviar.mockResolvedValue(Response.json({}));
     await expect(
       new WhatsAppCloudAPI(transport).enviar(message),
     ).rejects.toMatchObject({ clase: "incierto" });
@@ -655,7 +671,7 @@ describe("Webhook firmado y decisiones", () => {
       (await webhook(signed(envelope({}), "sha256=" + "0".repeat(64)))).status,
     ).toBe(401);
     expect((await webhook(signed(envelope({}), "SHA256=x"))).status).toBe(401);
-    const oversized = "x".repeat(1024 * 1024 + 1);
+    const oversized = "x".repeat(3 * 1024 * 1024 + 1);
     expect((await webhook(signed(oversized))).status).toBe(413);
     verify();
     const payload = envelope({

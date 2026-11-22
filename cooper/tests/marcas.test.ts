@@ -22,6 +22,7 @@ import {
   estadoMarcas,
   guardarPieza,
   enviarRevision,
+  revisarDoctrina,
   decidirPieza,
   procesarMarcas,
   actualizarMetricas,
@@ -86,6 +87,20 @@ async function escenario(
   const p = guardarPieza(ana, m.id, d);
   return { m, c, p, d };
 }
+function revisarDoctrinaDeEnsayo(id: string) {
+  revisarDoctrina(admin, id, 1, {
+    revisorPastoral: "Responsable pastoral de ensayo",
+    observaciones: "Revisión pastoral de ensayo de la pieza completa.",
+    comprobaciones: [
+      "fuentes_cotejadas",
+      "contexto_biblico",
+      "coherencia_confesional",
+      "tono_pastoral",
+      "datos_y_permisos",
+      "revision_final",
+    ],
+  });
+}
 it("aísla marcas, archivos, cuentas y mutaciones; Walter ve todo", async () => {
   const { m, c, p } = await escenario();
   expect(estadoMarcas(ana).marcas.some((x) => x.id === m.id)).toBe(true);
@@ -128,6 +143,8 @@ it("solo Walter aprueba una revisión exacta, editar invalida aprobación y se r
     (await sharp(Buffer.from(medio.data, "base64")).metadata()).width,
   ).toBe(1080);
   expect(() => decidirPieza(ana, p.id, 1, true)).toThrow();
+  expect(() => decidirPieza(admin, p.id, 1, true)).toThrow();
+  revisarDoctrinaDeEnsayo(p.id);
   decidirPieza(admin, p.id, 1, true);
   const red = new RedSimulada(),
     spy = vi.spyOn(red, "publicar");
@@ -140,6 +157,7 @@ it("solo Walter aprueba una revisión exacta, editar invalida aprobación y se r
 it("no duplica en trabajadores concurrentes y alimenta métricas", async () => {
   const { p } = await escenario();
   await enviarRevision(ana, p.id, 1);
+  revisarDoctrinaDeEnsayo(p.id);
   decidirPieza(admin, p.id, 1, true);
   const red = new RedSimulada();
   const spy = vi.spyOn(red, "publicar");
@@ -153,6 +171,7 @@ it("no duplica en trabajadores concurrentes y alimenta métricas", async () => {
 it("timeout posterior al envío se concilia sin reenviar; desconexión cancela cola", async () => {
   const { p } = await escenario();
   await enviarRevision(ana, p.id, 1);
+  revisarDoctrinaDeEnsayo(p.id);
   decidirPieza(admin, p.id, 1, true);
   const red = new RedSimulada();
   const spy = vi.spyOn(red, "publicar").mockRejectedValue(new Error("timeout"));
@@ -162,6 +181,7 @@ it("timeout posterior al envío se concilia sin reenviar; desconexión cancela c
   expect(spy).toHaveBeenCalledTimes(1);
   const b = await escenario();
   await enviarRevision(ana, b.p.id, 1);
+  revisarDoctrinaDeEnsayo(b.p.id);
   decidirPieza(admin, b.p.id, 1, true);
   revocarCuenta(ana, b.c.id);
   expect(obtenerPieza(ana, b.p.id).p.estado).toBe("cancelada");
@@ -182,6 +202,7 @@ it("bloquea cuentas suspendidas y medios ajenos antes de publicar", async () => 
     .run();
   expect(() => guardarPieza(ana, m.id, { ...d, adjuntos: [id] })).toThrow();
   await enviarRevision(ana, p.id, 1);
+  revisarDoctrinaDeEnsayo(p.id);
   decidirPieza(admin, p.id, 1, true);
   db().update(users).set({ active: false }).where(eq(users.id, ana.id)).run();
   const red = new RedSimulada();
@@ -233,6 +254,7 @@ it("citas exactas: rechaza invención, versión incorrecta, referencia sin cotej
     citas: datos.citas,
   });
   await enviarRevision(ana, q.id, 1);
+  revisarDoctrinaDeEnsayo(q.id);
   registrarCita(admin, {
     ...cita,
     texto: "Cotejo modificado",
@@ -272,6 +294,7 @@ it("especialista usa el proveedor existente sin herramientas de aprobación", as
 it("URLs firmadas solo entregan la revisión aprobada y no permiten otra pieza", async () => {
   const { p } = await escenario();
   await enviarRevision(ana, p.id, 1);
+  revisarDoctrinaDeEnsayo(p.id);
   decidirPieza(admin, p.id, 1, true);
   vi.stubEnv("AUTH_URL", "https://cooper.example.test");
   db()
@@ -646,6 +669,7 @@ it("webhook de WhatsApp aprueba una sola vez la revisión de marca con remitente
   vi.stubEnv("WHATSAPP_PHONE_NUMBER_ID", "123");
   const { p } = await escenario();
   await enviarRevision(ana, p.id, 1);
+  revisarDoctrinaDeEnsayo(p.id);
   encolarMarca(p.id, true);
   const job = db()
     .select()

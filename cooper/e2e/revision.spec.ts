@@ -256,6 +256,16 @@ test("entrada, no encontrado y formularios accesibles en el tema oscuro y cuatro
                 exact: true,
               })
               .click();
+            // Axe debe medir el contraste del estado presentado, una vez que
+            // termina la entrada de las tarjetas, también al cambiar a Voces.
+            await expect
+              .poll(() =>
+                page.locator(".asset-grid .asset-card").evaluateAll((cards) =>
+                  cards.length > 0 &&
+                  cards.every((card) => getComputedStyle(card).opacity === "1"),
+                ),
+              )
+              .toBe(true);
           }
         }
         expect(

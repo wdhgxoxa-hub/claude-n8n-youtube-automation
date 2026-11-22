@@ -123,7 +123,7 @@ test("Alta de marca anuncia cada paso y devuelve el foco al salir", async ({
     page.getByText("Guía visual", { exact: true }).last(),
   ).toBeFocused();
   await page
-    .getByRole("button", { name: "Volver a marcas", exact: true })
+    .getByRole("button", { name: "Cerrar", exact: true })
     .press("Enter");
   await expect(abrir).toBeFocused();
 });
@@ -141,6 +141,7 @@ test("Confirmar operación permite cancelar con Escape y retomar el control de o
   expect(respuesta.ok()).toBe(true);
   const { id } = await respuesta.json();
   await page.goto(`/canales/${id}`);
+  await page.locator(".operation-controls > summary").first().click();
   const revisar = page.getByRole("button", { name: /^Revisar / }).first();
   await revisar.focus();
   await page.keyboard.press("Enter");

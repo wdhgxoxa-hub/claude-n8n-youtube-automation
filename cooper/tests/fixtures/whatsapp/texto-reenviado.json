@@ -1,0 +1,30 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "id": "100000000000002",
+    "changes": [{
+      "field": "messages",
+      "value": {
+        "messaging_product": "whatsapp",
+        "metadata": {
+          "display_phone_number": "15555550100",
+          "phone_number_id": "100000000000001"
+        },
+        "contacts": [{
+          "profile": { "name": "Persona sintética de Cooper" },
+          "wa_id": "15555550101",
+          "user_id": "US.10000000000000000001"
+        }],
+        "messages": [{
+          "from": "15555550101",
+          "from_user_id": "US.10000000000000000001",
+          "id": "wamid.simulado.reenviado.1",
+          "timestamp": "1795262400",
+          "type": "text",
+          "context": { "forwarded": true },
+          "text": { "body": "Una idea para mi siguiente video." }
+        }]
+      }
+    }]
+  }]
+}

@@ -11,7 +11,7 @@ import {
 import { join, resolve } from "node:path";
 import { aplicarMigraciones } from "@/db/migraciones";
 
-it("migra 14→15 conservando videos y observabilidad; reejecutar no duplica ni genera medios", () => {
+it("migra desde las 14 originales hasta el diario integrado conservando videos y observabilidad; reejecutar no duplica ni genera medios", () => {
   const directory = mkdtempSync(".cache/migracion-video-medios-");
   const sqlite = new Database(":memory:");
   sqlite.pragma("foreign_keys = ON");
@@ -40,7 +40,7 @@ it("migra 14→15 conservando videos y observabilidad; reejecutar no duplica ni 
     expect(sqlite.prepare("SELECT * FROM videos").get()).toEqual(anterior);
     expect(
       sqlite.prepare("SELECT count(*) n FROM __drizzle_migrations").get(),
-    ).toEqual({ n: 15 });
+    ).toEqual({ n: journal.entries.length });
     expect(sqlite.prepare("SELECT count(*) n FROM video_medios").get()).toEqual(
       { n: 0 },
     );

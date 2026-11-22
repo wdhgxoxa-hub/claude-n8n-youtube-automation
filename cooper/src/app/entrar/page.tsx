@@ -1,7 +1,7 @@
 import { destinoRevision } from "@/lib/revision-whatsapp";
 import { signIn } from "@/auth";
 import { Logo } from "@/marca/Logo";
-import { Revelado } from "@/componentes/titular";
+import "@/componentes/resto-diseno.css";
 export const metadata = { title: "Entrar al estudio" };
 export default async function Entrar({
   searchParams,
@@ -11,32 +11,39 @@ export default async function Entrar({
   const { error, revision } = await searchParams;
   const redirectTo = destinoRevision(revision);
   return (
-    <main className="login">
+    <main className="login entrada-diseno">
       <section className="login-story">
         <div className="brand">
           <Logo size={42} />
           <span>cooper.</span>
         </div>
         <div className="login-headline">
+          <span className="resto-eyebrow">Tu estudio de creación</span>
           <h1>
-            <Revelado texto="Las ideas buenas" />
+            Una idea.
             <br />
-            <Revelado texto="no se quedan" inicio={3} />
+            Todo lo que
             <br />
-            <Revelado texto="en el chat." inicio={6} />
+            puede <span>ser.</span>
           </h1>
           <p>
-            Un estudio de creación.
+            De la primera conversación a la última mirada.
             <br />
-            Todo tu equipo, en movimiento.
+            Tus historias tienen un lugar.
           </p>
         </div>
         <div className="login-track" aria-hidden="true">
-          <span>Idea</span>
+          <span>
+            <b>01</b> Idea
+          </span>
           <i />
-          <span>Creación</span>
+          <span>
+            <b>02</b> Creación
+          </span>
           <i />
-          <span>Publicación</span>
+          <span>
+            <b>03</b> Publicación
+          </span>
         </div>
         <small>Hecho para contar lo que importa.</small>
       </section>
@@ -63,7 +70,7 @@ export default async function Entrar({
               await signIn("google", { redirectTo });
             }}
           >
-            <button className="google-button">
+            <button className="google-button button">
               <svg
                 width="20"
                 height="20"

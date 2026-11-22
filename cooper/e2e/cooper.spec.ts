@@ -851,6 +851,13 @@ test("modo noticia por canal se detiene sin verificación real", async ({
   expect(created.status()).toBe(200);
   const { id } = await created.json();
   await page.goto("/canales");
+  await page
+    .locator(".canal-editorial")
+    .filter({
+      has: page.getByRole("heading", { name: "Observatorio del día" }),
+    })
+    .locator("summary")
+    .click();
   const toggle = page.getByRole("button", {
     name: /Modo noticia: .* de Observatorio del día/,
   });
@@ -887,6 +894,13 @@ test("modo noticia por canal se detiene sin verificación real", async ({
     state.videos.find((v: { id: string }) => v.id === video.id),
   ).toMatchObject({ newsMode: true, stage: 2, productionState: "pausada" });
   await page.goto("/canales");
+  await page
+    .locator(".canal-editorial")
+    .filter({
+      has: page.getByRole("heading", { name: "Observatorio del día" }),
+    })
+    .locator("summary")
+    .click();
   await page
     .getByRole("button", { name: /Modo noticia: .* de Observatorio del día/ })
     .click();

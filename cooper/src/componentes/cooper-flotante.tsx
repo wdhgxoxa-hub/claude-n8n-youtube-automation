@@ -1,7 +1,12 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutGroup, m as motion } from "framer-motion";
+import {
+  LayoutGroup,
+  m as motion,
+  useMotionValue,
+  animate,
+} from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
@@ -24,6 +29,7 @@ export function CooperFlotante({
   const opener = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
+  const dragY = useMotionValue(0);
   useLayoutEffect(() => {
     // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
     panel.current?.removeAttribute("data-projecting");
@@ -45,6 +51,11 @@ export function CooperFlotante({
       "/publicados": "Tus publicaciones",
       "/aprendizaje": "Lo que aprendimos",
       "/marcas": "Tus marcas",
+      "/canales": "Tus canales",
+      "/avatares": "Avatares y voces",
+      "/perfil": "Tu espacio",
+      "/admin": "Tu equipo",
+      "/admin/salud": "Salud de la operación",
     }[path] ??
       "Tu estudio");
   const sugerencias = video
@@ -65,13 +76,37 @@ export function CooperFlotante({
             "Quiero preparar una publicación",
             "Revisar el calendario de mi marca",
           ]
-        : [
+        : ((
+            {
+              "/marcas": [
+                "Dar forma a una marca",
+                "Preparar una publicación",
+                "Revisar mis pendientes",
+              ],
+              "/publicados": [
+                "¿Cómo van mis publicaciones?",
+                "¿Qué funcionó mejor?",
+                "Preparar el siguiente video",
+              ],
+              "/aprendizaje": [
+                "¿Qué aprendimos esta semana?",
+                "¿Qué puedo mejorar?",
+                "Dar forma a una idea",
+              ],
+              "/avatares": [
+                "Elegir una voz para mi video",
+                "Quiero un presentador",
+                "¿Cómo preparo mi avatar?",
+              ],
+              "/perfil": ["Configurar mis avisos", "¿Qué tengo pendiente?"],
+            } as Record<string, string[]>
+          )[path] ?? [
             data.channels.some((c) => c.ownerId === data.user.id)
               ? "Crear otro canal"
               : "Crear mi primer canal",
             "Dar forma a una idea",
             "Revisar mis pendientes",
-          ];
+          ]);
   const pendiente = data.videos.some(
     (v) => v.ownerId === data.user.id && [3, 9].includes(v.stage),
   );
@@ -133,8 +168,7 @@ export function CooperFlotante({
           <span className="cooper-tally" aria-label="Tienes algo por revisar" />
         )}
       </motion.button>
-      {/* Desmontar el diálogo al cerrar evita retener controles activos.
-          LayoutGroup conserva la proyección del orbe desde su última medida. */}
+      {/* Desmontar al cerrar evita retener controles activos; LayoutGroup conserva la proyección del orbe. */}
       {abierto && (
         <motion.div
           key="cooper"
@@ -143,6 +177,7 @@ export function CooperFlotante({
           className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
           data-projecting={reduced ? undefined : "true"}
           role="dialog"
+          style={{ y: dragY }}
           onFocusCapture={(event) => {
             // La hoja completa conserva espacio de escritura al abrir el teclado.
             if (movil && event.target instanceof HTMLTextAreaElement)
@@ -165,6 +200,15 @@ export function CooperFlotante({
               dragStart.current = e.clientY;
               e.currentTarget.setPointerCapture(e.pointerId);
             }}
+            onPointerMove={(e) => {
+              if (dragStart.current === null) return;
+              const distance = e.clientY - dragStart.current;
+              dragY.set(distance < 0 ? distance * 0.2 : distance);
+            }}
+            onPointerCancel={() => {
+              dragStart.current = null;
+              animate(dragY, 0, reduced ? { duration: 0 } : resorte);
+            }}
             onPointerUp={(e) => {
               const delta = e.clientY - (dragStart.current ?? e.clientY);
               if (delta < -48) setCompleto(true);
@@ -173,6 +217,7 @@ export function CooperFlotante({
                 else cambiar(false);
               }
               dragStart.current = null;
+              animate(dragY, 0, reduced ? { duration: 0 } : resorte);
             }}
             aria-hidden="true"
           >

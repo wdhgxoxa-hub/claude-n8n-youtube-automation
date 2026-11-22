@@ -11,12 +11,15 @@ import {
   Check,
   Trash2,
   AudioLines,
+  X,
 } from "lucide-react";
 import { CONSENTIMIENTO, ESTADOS_MEDIO } from "@/servicios/medios";
 import { CooperCara } from "@/marca/CooperCara";
 import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir, Grabador } from "./grabador";
 import { Indicador, useMovimientoReducido } from "./movimiento";
+import { HojaVidrio } from "./primitivas";
+import "./resto-diseno.css";
 function Retrato({ variant, moving }: { variant: string; moving: boolean }) {
   const reduced = useMovimientoReducido();
   moving = moving && !reduced;
@@ -155,9 +158,9 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
     }
   }
   return (
-    <div className="page">
+    <div className="page resto-page avatares-diseno">
       <Heading
-        title="Dale una cara. Dale una voz."
+        title="Avatares y voces"
         description="Personajes que cuentan tus historias contigo."
         action={
           <button
@@ -256,12 +259,25 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
         </button>
       )}
       {creating && (
-        <section
+        <HojaVidrio
           className="identity-form"
           id={formId}
           aria-labelledby={`${formId}-titulo`}
         >
           <div>
+            <div className="resto-hoja-cabecera">
+              <span className="resto-eyebrow">Tu propia presencia</span>
+              <button
+                className="icon-button"
+                aria-label="Cerrar creación"
+                onClick={() => {
+                  restoreFocus.current = true;
+                  setCreating(false);
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
             <h2 id={`${formId}-titulo`}>Tu identidad, bajo tu control.</h2>
             <p>
               Solo puedes crear una versión de ti. Queda privada hasta que
@@ -393,7 +409,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                 : "Enviar a revisión de identidad"}
             </button>
           </form>
-        </section>
+        </HojaVidrio>
       )}
       <div className="library-section-title">
         <h2>Del estudio</h2>
@@ -406,7 +422,7 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
         animate="visible"
         variants={{
           inicio: {},
-          visible: { transition: { staggerChildren: reduced ? 0 : 0.06 } },
+          visible: { transition: { staggerChildren: reduced ? 0 : 0.04 } },
         }}
       >
         {data.catalogo
@@ -416,8 +432,12 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
               className="asset-card"
               key={a.id}
               variants={{
-                inicio: { y: reduced ? 0 : 8 },
-                visible: { y: 0, transition: { duration: reduced ? 0 : 0.25 } },
+                inicio: { opacity: reduced ? 1 : 0, y: reduced ? 0 : 12 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: reduced ? 0.12 : 0.42 },
+                },
               }}
             >
               <div className={`asset-portrait ${a.style}`}>
@@ -437,7 +457,10 @@ export function Avatares({ fotoId = "" }: { fotoId?: string }) {
                       }
                     />
                   ) : (
-                    <span className="helper">Vista previa en movimiento</span>
+                    <div className="avatar-presentacion">
+                      <span aria-hidden="true">{a.name.slice(0, 1)}</span>
+                      <small>Conoce a {a.name}</small>
+                    </div>
                   )
                 ) : a.kind === "voz" ? (
                   <div

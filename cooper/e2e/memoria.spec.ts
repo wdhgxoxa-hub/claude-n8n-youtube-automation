@@ -162,6 +162,7 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
   ).toHaveCount(0);
   await expect(memoria).toContainText("Todavía no hay recuerdos guardados.");
   await page.reload();
+  await abrirCooper(page);
   await expect(
     page.getByRole("heading", { name: "Donde lo dejamos" }),
   ).toHaveCount(0);
@@ -180,6 +181,7 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
     ).status(),
   ).toBe(200);
   await page.reload();
+  await abrirCooper(page);
   await page
     .getByRole("button", { name: "Ver lo recordado", exact: true })
     .click();

@@ -4,6 +4,8 @@ Consulta de fuentes oficiales: 20 de noviembre de 2026. Implementación para Gra
 
 Alta posterior del 21 de noviembre: [resultado real, plantillas y pendientes](informes/cooper-whatsapp-alta.md). El párrafo anterior describe la implementación de fase 4, no el estado del alta posterior.
 
+Actualización `total-whatsapp-listo`, 21-11-2026, Lima: [los tres pasos exactos de Walter en Meta](whatsapp-activacion-meta.md) concentran pago, App Secret y callback definitivo. El número y el dominio ya constan en los informes anteriores; los procedimientos de alta de esta página se conservan como referencia, no como indicación de repetirlos. Esta misión prepara código y ensayos locales; no acredita integración, despliegue ni entrega real.
+
 ## Qué recibe cada persona
 
 En **Mi perfil**, guardar un teléfono E.164 no activa ningún envío. La persona acepta recibir un código, lo solicita por WhatsApp, lo introduce en Cooper y elige sus avisos: guion, aprobación final y publicación. Solo Walter puede activar el aviso de gasto diario. Por defecto todos están desactivados. Cambiar el teléfono elimina su verificación, preferencias y ventana de atención, cancela la cola pendiente e invalida los enlaces anteriores. Una nueva verificación también invalida enlaces antiguos.
@@ -13,6 +15,8 @@ El código tiene seis cifras, diez minutos de validez, cinco intentos de comprob
 Los enlaces duran 24 horas desde que se crea el aviso. Su HMAC vincula el ID opaco del aviso y su caducidad; el servidor comprueba además cuenta activa, lista permitida, teléfono verificado, preferencias, dueño y revisión concreta. Requieren la sesión habitual de Cooper, incluso para Walter: no permiten leer ni aprobar el video de otra persona. Abrir un enlace no aprueba nada. Si caducó, el usuario puede abrir el video desde su espacio.
 
 Fuera de la ventana de atención se envía una plantilla con enlace. Si el usuario escribe al número de Cooper, puede recibir los botones **Aprobar** y **Cambios** de sus revisiones pendientes. El texto libre «aprobar» no decide nada. Dentro de la ventana, un nuevo aviso de revisión puede incluir directamente esos botones. Una pulsación debe coincidir con el ID de mensaje enviado, teléfono, dueño y revisión. «Cambios» transmite una solicitud genérica de corrección; la persona detalla su comentario en Cooper. «baja», «stop» o «cancelar» desactivan todos sus avisos y cancelan los pendientes.
+
+El texto entrante de un teléfono verificado, consentido y autorizado se guarda en una cola durable y pasa por el chat de Cooper del mismo dueño. El webhook confirma la recepción después de persistir; no espera al modelo. La conversación aparece en el historial web. Las respuestas de chat al teléfono tienen como máximo 18 palabras y 240 caracteres; la salida del modelo se reduce a una frase. Los textos que superan 6.000 caracteres reciben una petición breve de acortarlos y no se envían al modelo. Una propuesta de cambio conserva la tarjeta **Confirmar / Cancelar** en la web: un «sí» por WhatsApp no la consume. Los botones de revisión existentes mantienen su autorización específica. Una baja, suspensión o cambio de teléfono se revalida antes y después del turno y antes de enviar.
 
 Meta permite mensajes libres e interactivos durante las 24 horas posteriores al último mensaje del usuario; un mensaje nuevo reinicia esa ventana. Fuera de ella exige plantillas aprobadas. Se comprueba la ventana al **despachar**, no solo al encolar. [Mensajes de servicio](https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/send-messages), [botones interactivos](https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-reply-buttons-messages).
 
@@ -31,10 +35,10 @@ El archivo [`.env.example`](../cooper/.env.example) contiene únicamente nombres
 | Variable | Uso |
 | --- | --- |
 | `COOPER_MENSAJERIA` | `simulada` por defecto; `whatsapp` selecciona Cloud API. Otros valores se rechazan. |
-| `COOPER_MENSAJERIA_PAUSA` | `1` impide iniciar el consumidor al arrancar Node. Reiniciar para aplicar. No es un interruptor de emergencia sobre solicitudes ya en vuelo. |
+| `COOPER_MENSAJERIA_PAUSA` | `1` pausa procesamiento de chat, decisiones entrantes y nuevos envíos. Se comprueba en cada ciclo y antes del POST a Meta. Cambiar la configuración del servicio exige el reinicio operativo habitual; no retira solicitudes ya en vuelo. |
 | `WHATSAPP_TOKEN` | Token privado para enviar, solo servidor. |
 | `WHATSAPP_PHONE_NUMBER_ID` | ID del número empresarial, no el teléfono ni el ID de WABA. |
-| `WHATSAPP_WABA_ID` | Cuenta de WhatsApp para administrar plantillas y suscribir la app. El transporte de mensajes sigue usando el ID del número. |
+| `WHATSAPP_WABA_ID` | Cuenta de WhatsApp; obligatoria para consultar aprobación antes de enviar cada plantilla real. También filtra entradas y permite administrar plantillas/suscribir la app. El envío sigue usando el ID del número. |
 | `WHATSAPP_APP_SECRET` | Secreto de la aplicación para verificar firmas entrantes. |
 | `WHATSAPP_VERIFY_TOKEN` | Valor privado elegido para el desafío de alta del webhook; no es el token de envío. |
 | `AUTH_SECRET` | Existente; mínimo 32 caracteres para HMAC de códigos y enlaces, con separación de propósitos. Rotarlo invalida códigos y enlaces pendientes. |
@@ -49,7 +53,7 @@ En la integración final, la migración aditiva `0006_whatsapp` sigue a `0005_ch
 
 ## Plantillas en español para revisión
 
-Cinco JSON válidos y separados en [`cooper/whatsapp/plantillas/`](../cooper/whatsapp/plantillas/):
+Seis JSON separados en [`cooper/whatsapp/plantillas/`](../cooper/whatsapp/plantillas/), incluidos los cinco originales y el aviso adicional de Marcas:
 
 | Nombre | Categoría solicitada | Contenido |
 | --- | --- | --- |
@@ -58,26 +62,27 @@ Cinco JSON válidos y separados en [`cooper/whatsapp/plantillas/`](../cooper/wha
 | `cooper_video_publicado` | `UTILITY` | Confirmación de publicación y enlace al estado. |
 | `cooper_alerta_gasto_admin` | `UTILITY` | Total diario y enlace privado de administración. Solo Walter. |
 | `cooper_verificar_numero` | `AUTHENTICATION` | Código de un uso con botón para copiar, aviso de diez minutos y TTL de entrega de 600 segundos. |
+| `cooper_aprobacion_marca` | `UTILITY` | Pieza de Marcas y enlace de revisión; solo Walter si activa esa preferencia. No consta presentada en el alta histórica. |
 
-Todas usan `language: "es"`. Las cuatro de utilidad incluyen ejemplos ficticios y botón URL dinámico. El cuerpo de autenticación lo localiza Meta; no se sustituye por texto libre. Las reglas de creación y envío del botón OTP son distintas: se crea como `OTP/COPY_CODE` y se envía como componente `button`, `sub_type: "url"`, índice `0`, con el mismo código que el cuerpo. [Plantillas de utilidad](https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/utility-templates/utility-templates), [plantillas de autenticación con código](https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/authentication-templates/copy-code-button-authentication-templates).
+Todas usan `language: "es"`. Las de utilidad incluyen ejemplos ficticios y botón URL dinámico. El cuerpo de autenticación lo localiza Meta; no se sustituye por texto libre. Las reglas de creación y envío del botón OTP son distintas: se crea como `OTP/COPY_CODE` y se envía como componente `button`, `sub_type: "url"`, índice `0`, con el mismo código que el cuerpo. [Plantillas de utilidad](https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/utility-templates/utility-templates), [plantillas de autenticación con código](https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/authentication-templates/copy-code-button-authentication-templates).
 
-**Único dato pendiente de los JSON:** el dominio real. Los originales usan `https://cooper.example.org`; no enviarlos a revisión con ese dominio. Preparar los cinco cuerpos definitivos, sin red ni secretos, desde `cooper/`:
+Los originales usan `https://cooper.example.org`; no enviarlos a revisión con ese dominio. El origen definitivo consta en el informe del VPS: `https://cooper.cooperestudio.com`. Preparar los cuerpos definitivos, sin red ni secretos, desde `cooper/`:
 
 ```bash
-node scripts/whatsapp-plantillas.mjs https://DOMINIO-DE-COOPER .cache/plantillas-meta
+node scripts/whatsapp-plantillas.mjs https://cooper.cooperestudio.com .cache/plantillas-meta
 ```
 
-El generador exige HTTPS, reemplaza el origen en URL y ejemplos, y rechaza sobrescribir archivos. Cada JSON resultante es un cuerpo independiente para `POST https://graph.facebook.com/v27.0/{WABA_ID}/message_templates` con la autorización de administración correspondiente. **No** enviar los cinco como un array. También se pueden transcribir en WhatsApp Manager. [Endpoint oficial de creación](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/).
+El generador exige HTTPS, reemplaza el origen en URL y ejemplos, y rechaza sobrescribir archivos. Cada JSON resultante es un cuerpo independiente para `POST https://graph.facebook.com/v27.0/{WABA_ID}/message_templates` con la autorización de administración correspondiente. **No** enviarlos como un array. También se pueden transcribir en WhatsApp Manager. [Endpoint oficial de creación](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/).
 
-Walter revisa textos, dominio y categoría y espera `APPROVED` en los cinco nombres antes de activar. Meta puede rechazar o reclasificar las plantillas; el código no supone que estos borradores estén aprobados. Nombres, idioma y orden de parámetros deben conservarse o cambiarse también en el emisor. Esta integración no automatiza el envío a revisión ni consulta su aprobación.
+Walter revisa textos, dominio y categoría y espera `APPROVED` en los cinco nombres originales antes de activar, más `cooper_aprobacion_marca` si habilita avisos de Marcas. Meta puede rechazar o reclasificar las plantillas; el código no supone que estos borradores estén aprobados. Nombres, idioma y orden de parámetros deben conservarse o cambiarse también en el emisor. Antes de cada envío de plantilla, el transporte consulta `GET /v27.0/{WABA_ID}/message_templates` y exige coincidencia exacta de nombre/idioma en estado `APPROVED`. La consulta usa `whatsapp_business_management`, falla cerrada y no se reemplaza por una lista de nombres supuestamente aprobados. El envío a revisión sigue siendo manual; los JSON del repositorio no acreditan aprobación.
 
 ## Webhook
 
-Callback: `https://DOMINIO-DE-COOPER/api/whatsapp/webhook`. Necesita HTTPS público con certificado válido. Configurar el verify token en el panel sin publicarlo. Suscribir el campo **messages**, que transporta tanto mensajes entrantes como estados de entrega, y la app a la cuenta correspondiente. La referencia de suscripción es `POST /v27.0/{WABA_ID}/subscribed_apps`; comprobar mediante `GET` sobre esa misma ruta. [Configuración del endpoint](https://developers.facebook.com/documentation/business-messaging/whatsapp/webhooks/create-webhook-endpoint), [suscripción de aplicación](https://developers.facebook.com/documentation/business-messaging/whatsapp/reference/whatsapp-business-account/subscribed-apps-api).
+Callback definitivo según el VPS documentado: `https://cooper.cooperestudio.com/api/whatsapp/webhook`. Necesita HTTPS público con certificado válido y el despliegue aceptado por su responsable. Configurar el verify token en el panel sin publicarlo. Suscribir el campo **messages**, que transporta tanto mensajes entrantes como estados de entrega, y la app a la cuenta correspondiente. La referencia de suscripción es `POST /v27.0/{WABA_ID}/subscribed_apps`; comprobar mediante `GET` sobre esa misma ruta. [Configuración del endpoint](https://developers.facebook.com/documentation/business-messaging/whatsapp/webhooks/create-webhook-endpoint), [suscripción de aplicación](https://developers.facebook.com/documentation/business-messaging/whatsapp/reference/whatsapp-business-account/subscribed-apps-api).
 
 - GET verifica `hub.mode=subscribe` y el verify token y devuelve `hub.challenge` como texto plano.
 - POST calcula HMAC-SHA256 sobre los **bytes originales**, usando el app secret, y compara en tiempo constante `X-Hub-Signature-256`. El verify token no sustituye la firma.
-- Rechaza firmas inválidas antes de procesar JSON. Acepta lotes hasta 1 MiB y filtra `metadata.phone_number_id`. No almacena cuerpos completos, textos entrantes, códigos ni enlaces en los registros.
+- Rechaza firmas inválidas antes de procesar JSON. Acepta lotes hasta 3 MiB y filtra `metadata.phone_number_id` y, cuando está configurado, `entry.id` contra `WHATSAPP_WABA_ID`. No registra cuerpos, códigos ni enlaces en logs. El texto entrante autorizado se conserva privadamente en la cola de chat y en el historial de su dueño.
 - Deduplica mensajes por ID persistido. Conserva recibos de entrega, con ID, destinatario, estado, fecha y código numérico de error. Los estados fuera de orden no hacen retroceder `read` a `sent`. Los recibos que llegan antes del retorno HTTP se concilian al guardar el ID remoto.
 - Solo mensajes recientes y de números verificados abren la ventana. Los eventos antiguos no la prolongan. Una revisión recibe como máximo una decisión por WhatsApp, incluso si se pulsan botones de dos avisos distintos o Meta repite el webhook.
 
@@ -132,6 +137,8 @@ Meta reintenta webhooks fallidos durante hasta siete días. El receptor admite n
 
 SQLite guarda contactos, cola, intentos, decisiones, mensajes procesados y entregas. El progreso del puente y del simulador encola bajo la transacción existente; el consumidor también concilia revisiones pendientes. Antes de cada envío vuelve a comprobar acceso, consentimiento, teléfono, modalidad, recurso y revisión. El destinatario siempre sale del dueño persistido, nunca del cuerpo enviado por el navegador.
 
+La migración aditiva `0019_whatsapp_chat` conserva las tablas anteriores y añade `whatsapp_chat_jobs`. El ID de mensaje entrante deduplica el turno y su respuesta saliente. Los turnos pendientes sobreviven a un reinicio; una reserva de chat abandonada queda `incierto` porque pudo guardar historial o una tarjeta. No se ejecuta de nuevo automáticamente. Una reserva web ocupada devuelve 409 antes del modelo y permite aplazar el turno de WhatsApp con espera creciente hasta 60 segundos. Un rechazo 429 anterior al modelo se aplaza 15 minutos, hasta cinco intentos; al agotarlos queda `fallido`. Estos rechazos no se confunden con un error después de invocar el modelo, que conserva `incierto`. Los turnos se procesan en orden por dueño; una respuesta fuera de su ventana se cancela sin sustituirla por una plantilla genérica.
+
 Las claves de deduplicación identifican dueño, video, revisión y verificación del número. La reserva usa una transacción `IMMEDIATE`, evitando que dos consumidores de la misma SQLite envíen la misma fila. No se ofrece coordinación entre bases distintas.
 
 - Máximo cinco intentos por hora y veinte por día móvil por cuenta, con seis segundos mínimos entre intentos. OTP incluido. Son límites de **mensajería**, no de videos ni gasto. Un intento ocupa cuota aunque falle. Las filas aplazadas pueden caducar antes de disponer de cuota.
@@ -140,28 +147,31 @@ Las claves de deduplicación identifican dueño, video, revisión y verificació
 - Una decisión que pudo llegar a n8n se conserva como `incierta`; si el proceso muere queda `procesando`. Revisar en Cooper/n8n antes de repetir por la web. No reproducir automáticamente la corrección, que podría haberse ejecutado. Las aprobaciones n8n reutilizan además la idempotencia del puente existente.
 - El retorno de `/messages` significa aceptación, no entrega. La entrega real procede del webhook. Solo el simulador produce una entrega ficticia inmediata.
 
-`GET /api/whatsapp` devuelve el historial propio, sin cuerpos ni teléfonos. `GET /api/whatsapp/resumen` requiere administrador y devuelve conteos por estado de envíos y decisiones. Para investigar una excepción, revisar las tablas `whatsapp_outbox` y `whatsapp_actions` en el servidor con acceso administrativo; no exportar sus datos personales. La alerta de gasto consulta la fuente administrativa existente cada minuto solo si Walter la activó, mantiene la etiqueta de simulación/estimación y no añade una tarifa WhatsApp supuesta a los gastos audiovisuales.
+`GET /api/whatsapp` devuelve el historial propio, sin cuerpos ni teléfonos. `GET /api/whatsapp/resumen` requiere administrador y devuelve conteos por estado de conversaciones, envíos y decisiones. Para investigar una excepción, revisar las tablas `whatsapp_chat_jobs`, `whatsapp_outbox` y `whatsapp_actions` en el servidor con acceso administrativo; no exportar sus datos personales. La alerta de gasto consulta la fuente administrativa existente cada minuto solo si Walter la activó, mantiene la etiqueta de simulación/estimación y no añade una tarifa WhatsApp supuesta a los gastos audiovisuales.
 
 Conservar la base en volumen persistente. No purgar la deduplicación antes del período de reentrega de Meta ni mientras existan acciones/enlaces vigentes. La política de retención y copias pertenece a la fase 5. No se eliminan automáticamente los registros en esta fase. Enlaces, teléfonos y SQLite son privados; evitar registrar URLs completas en el proxy. Una baja no puede retirar un mensaje ya transmitido ni impedir una solicitud que estaba en vuelo.
 
-## Costos: ya no se factura por conversación
+El inventario de retención incluye metadatos de los nuevos turnos, sin exportar textos, respuestas ni teléfonos. La simulación no purga mensajes ni acredita borrado de copias; la política sigue pendiente de Walter.
 
-La página oficial vigente describe cobro **por mensaje entregado**, según mercado del destinatario y categoría. Los mensajes de servicio son gratuitos; Meta también contempla gratuidad para utilidad en respuesta al usuario dentro de la ventana de atención. Autenticación tiene su categoría y tarifas. Hay niveles de volumen y supuestos especiales de entrada gratuita. No usar una tabla histórica de precios por conversación para presupuestar Cooper. [Precios oficiales y selector por mercado](https://business.whatsapp.com/products/platform-pricing).
+## Costos: precios actuales por mensaje
 
-Walter debe seleccionar **Perú**, moneda y categoría en el tarifario vigente al activar y conservar esa fecha de referencia. Esta guía no fija una tarifa que pueda cambiar. Estimación operativa: sumar los mensajes de utilidad facturables y los OTP entregados, cada uno multiplicado por su tarifa vigente y tramo aplicable; añadir impuestos o cargos de intermediario solo si se contrata alguno. El transporte aquí es directo a Meta. Los recibos no se presentan como factura ni se deduce el costo de un HTTP 200.
+La documentación oficial consultada el 21-11-2026 describe cobro **por mensaje entregado**, según mercado del destinatario y categoría. Desde el 01-10-2026 los mensajes de servicio tienen un tramo gratuito de 1.000 entregas al mes por número; después pueden facturarse. Los mensajes de utilidad también pueden facturarse dentro de la ventana de atención. Existen excepciones y condiciones específicas; no deducir gratuidad de que el usuario escribió primero. [Precios oficiales vigentes](https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/).
 
-La consulta pública del documento técnico de pricing solicitó login; se usó la página pública oficial, sin iniciar sesión. No se efectuaron pagos.
+Walter debe revisar mercado del destinatario, moneda y categoría en el tarifario vigente al activar y conservar esa fecha de referencia. Esta guía no fija una tarifa que pueda cambiar. El presupuesto debe contemplar utilidad, OTP y los mensajes de servicio facturables, con sus tramos y condiciones; añadir impuestos o cargos de intermediario solo si se contrata alguno. El transporte aquí es directo a Meta. Los recibos no se presentan como factura ni se deduce el costo de un HTTP 200.
+
+La consulta pública actual accedió a la documentación técnica de precios sin login. No se efectuaron pagos. La ruta oficial para corregir el método de la cuenta es [Billing Hub](https://business.facebook.com/latest/billing_hub/payment_methods/).
 
 ## Ensayo y límites
 
 `npm test -- tests/whatsapp.test.ts` usa SQLite temporal y transportes simulados, con la red bloqueada salvo mocks explícitos. Incluye OTP, permisos, cambios de número, enlaces, ventana, firmas, respuestas, deduplicación, orden de entregas, fallos, límites y contratos HTTP. `npm run test:e2e -- whatsapp.spec.ts` comprueba el perfil, código simulado, preferencias, cambio de número y axe a 390/1440 px. La puerta final de misión ejecuta además todas las suites y la regresión de workflows.
 
+Los [payloads oficiales simulados](../cooper/tests/fixtures/whatsapp/README.md) conservan el sobre actual de Meta para texto, texto reenviado sin `context.id`, BSUID sin teléfono, botones y estados fuera de orden. Los identificadores y mensajes son ficticios; las firmas se generan solo para el ensayo. No sustituyen una prueba real con Meta.
+
 No se validaron entrega real, aprobación de plantillas, calidad de número, facturación, OAuth, certificados, latencia pública ni cuotas de la cuenta de Meta. No se desplegó Cooper ni n8n. El consumidor requiere Node persistente; no está diseñado para funciones efímeras. La propuesta visual conserva Manrope, grafito, marfil, celeste y los controles existentes del perfil, sin introducir un sistema visual distinto.
 
 ## Pendientes de Walter
 
-- Número dedicado, portfolio, aplicación y verificaciones de Meta; confirmar acceso a las cuentas y permisos aplicables.
-- Dominio HTTPS y callback definitivo; coordinar servidor persistente, proxy sin registro de enlaces privados y copias con fase 5.
-- Revisar los cinco JSON, generar con el dominio y obtener aprobación de Meta, incluida la plantilla OTP.
-- Cargar las cuatro variables privadas, confirmar tarifas y medio de facturación, y autorizar un ensayo real con cada destinatario.
-- Definir retención y revisión de estados inciertos; decidir si se necesitan identidades BSUID además de teléfonos.
+- Completar [los tres pasos en Meta](whatsapp-activacion-meta.md): pago, entrega privada del App Secret y configuración del callback/campo `messages`. El número, portfolio, app y dominio ya constan en los informes de alta/VPS; no volver a pedir su creación.
+- Resolver el permiso de la plantilla OTP y las verificaciones que Meta solicite; revisar las cinco plantillas originales y la adicional de Marcas si se usa, con el origen definitivo y aprobación efectiva.
+- Coordinar integración y despliegue con su responsable y autorizar después el ensayo real. Cada integrante verifica su número y consiente los avisos; conservar mensajería pausada hasta esa aceptación.
+- Definir retención y revisión de estados inciertos; decidir si se necesitan identidades BSUID además de teléfonos. Los mensajes sin teléfono se ignoran de forma segura porque todavía no existe un vínculo explícito de BSUID con una cuenta de Cooper.

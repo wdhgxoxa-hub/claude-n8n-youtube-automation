@@ -8,6 +8,7 @@ import {
   whatsappDeliveries as deliveries,
   whatsappActions as actions,
   whatsappAttempts as attempts,
+  whatsappChatJobs,
   type Video,
   type User,
   type AvisoWhatsApp,
@@ -25,6 +26,7 @@ import {
 import {
   ErrorMensajeria,
   proveedorMensajeria,
+  mensajeriaPausada,
   type ProveedorMensajeria,
   type MensajeWhatsApp,
 } from "./proveedor";
@@ -64,9 +66,14 @@ export function avisoVigente(
     !c.verifiedAt ||
     c.verifiedAt !== job.contactVerifiedAt ||
     !c.consentAt ||
-    !preferencias(c.preferences)[job.kind]
+    (job.kind !== "chat" && !preferencias(c.preferences)[job.kind])
   )
     throw new ErrorHttp(403, "Este aviso está desactivado.");
+  if (job.kind === "chat") {
+    if (c.incomingAt <= now - DIA || c.incomingAt > now)
+      throw new ErrorHttp(410, "La ventana de respuesta terminó.");
+    return { user, contacto: c };
+  }
   if (job.kind === "gasto") {
     if (user.role !== "admin") throw new ErrorHttp(403, "Aviso no disponible.");
     return { user, contacto: c };
@@ -165,6 +172,45 @@ export function encolarGasto(admin: User, detail: string, now = Date.now()) {
     .onConflictDoNothing()
     .run();
 }
+export function encolarRespuestaChat(
+  entrada: {
+    id: string;
+    ownerId: string;
+    phone: string;
+    contactVerifiedAt: number;
+    simulated: boolean;
+  },
+  texto: string,
+  now = Date.now(),
+) {
+  const c = contacto(entrada.ownerId);
+  const detail = Array.from(texto.trim()).slice(0, 280).join("");
+  if (!detail) throw new ErrorHttp(400, "La respuesta está vacía.");
+  const job: AvisoWhatsApp = {
+    id: randomUUID(),
+    dedupeKey: `chat:${entrada.id}`,
+    ownerId: entrada.ownerId,
+    phone: entrada.phone,
+    contactVerifiedAt: entrada.contactVerifiedAt,
+    kind: "chat",
+    resourceId: entrada.id,
+    revision: "",
+    detail,
+    interactive: false,
+    simulated: entrada.simulated,
+    state: "pendiente",
+    attempts: 0,
+    nextAt: now,
+    leaseAt: 0,
+    remoteId: "",
+    delivery: "",
+    errorCode: "",
+    expiresAt: (c?.incomingAt ?? 0) + DIA,
+    createdAt: now,
+  };
+  avisoVigente(job, now);
+  db().insert(outbox).values(job).onConflictDoNothing().run();
+}
 export function construirMensaje(
   job: AvisoWhatsApp,
   now = Date.now(),
@@ -176,6 +222,13 @@ export function construirMensaje(
     to: job.phone.slice(1),
   };
   const text = (value: string) => ({ type: "text", text: value });
+  if (job.kind === "chat")
+    return {
+      ...base,
+      type: "text",
+      context: { message_id: job.resourceId },
+      text: { body: job.detail, preview_url: false },
+    };
   if (job.kind === "verificacion") {
     const code = codigoVerificacion(job.id);
     return {
@@ -292,6 +345,9 @@ export async function procesarCola(
   provider: ProveedorMensajeria = proveedorMensajeria(),
   now = Date.now(),
 ) {
+  if (mensajeriaPausada()) return;
+  const inicio = Date.now();
+  const reloj = () => now + Math.max(0, Date.now() - inicio);
   // Un proceso que murió tras enviar pudo entregar: una reserva vencida nunca se reenvía automáticamente.
   db()
     .update(outbox)
@@ -299,18 +355,20 @@ export async function procesarCola(
     .where(and(eq(outbox.state, "enviando"), lte(outbox.leaseAt, now - 60000)))
     .run();
   for (let i = 0; i < 20; i++) {
+    if (mensajeriaPausada()) break;
+    const actual = reloj();
     const job = db().transaction(
       (tx) => {
         const row = tx
           .select()
           .from(outbox)
-          .where(and(eq(outbox.state, "pendiente"), lte(outbox.nextAt, now)))
+          .where(and(eq(outbox.state, "pendiente"), lte(outbox.nextAt, actual)))
           .orderBy(outbox.createdAt)
           .limit(1)
           .get();
         if (!row) return;
         try {
-          avisoVigente(row, now);
+          avisoVigente(row, actual);
         } catch {
           tx.update(outbox)
             .set({ state: "cancelado" })
@@ -331,17 +389,17 @@ export async function procesarCola(
           .where(
             and(
               eq(attempts.ownerId, row.ownerId),
-              gte(attempts.createdAt, now - DIA),
+              gte(attempts.createdAt, actual - DIA),
             ),
           )
           .all();
-        const recent = day.filter((j) => j.createdAt > now - HORA);
+        const recent = day.filter((j) => j.createdAt > actual - HORA);
         const last = day.reduce((max, j) => Math.max(max, j.createdAt), 0);
-        if (day.length >= 20 || recent.length >= 5 || now - last < 6000) {
+        if (day.length >= 20 || recent.length >= 5 || actual - last < 6000) {
           tx.update(outbox)
             .set({
               nextAt: Math.max(
-                now + 6000,
+                actual + 6000,
                 day.length >= 20
                   ? Math.min(...day.map((j) => j.createdAt)) + DIA
                   : recent.length >= 5
@@ -353,27 +411,45 @@ export async function procesarCola(
             .run();
           return null;
         }
+        const attemptId = randomUUID();
         tx.insert(attempts)
           .values({
-            id: randomUUID(),
+            id: attemptId,
             jobId: row.id,
             ownerId: row.ownerId,
-            createdAt: now,
+            createdAt: actual,
           })
           .run();
         tx.update(outbox)
-          .set({ state: "enviando", leaseAt: now, attempts: row.attempts + 1 })
+          .set({
+            state: "enviando",
+            leaseAt: actual,
+            attempts: row.attempts + 1,
+          })
           .where(eq(outbox.id, row.id))
           .run();
-        return { ...row, attempts: row.attempts + 1 };
+        return {
+          ...row,
+          leaseAt: actual,
+          attempts: row.attempts + 1,
+          attemptId,
+        };
       },
       { behavior: "immediate" },
     );
     if (job === undefined) break;
     if (!job) continue;
     try {
-      const message = construirMensaje(job, now);
-      const result = await provider.enviar(message, job.id);
+      const message = construirMensaje(job, reloj());
+      const result = await provider.enviar(message, job.id, () => {
+        const current = reloj();
+        const { contacto: c } = avisoVigente(job, current);
+        if (
+          message.type !== "template" &&
+          (c.incomingAt <= current - DIA || c.incomingAt > current)
+        )
+          throw new ErrorHttp(410, "La ventana de respuesta terminó.");
+      });
       db()
         .update(outbox)
         .set({
@@ -386,7 +462,7 @@ export async function procesarCola(
           and(
             eq(outbox.id, job.id),
             eq(outbox.state, "enviando"),
-            eq(outbox.leaseAt, now),
+            eq(outbox.leaseAt, job.leaseAt),
           ),
         )
         .run();
@@ -398,7 +474,7 @@ export async function procesarCola(
             remoteId: result.id,
             phone: job.phone,
             state: "delivered",
-            occurredAt: now,
+            occurredAt: reloj(),
           })
           .onConflictDoNothing()
           .run();
@@ -411,6 +487,24 @@ export async function procesarCola(
               error instanceof ErrorHttp ? "permanente" : "incierto",
               error instanceof ErrorHttp ? "aviso_vencido" : "interno",
             );
+      if (e.codigo === "pausa") {
+        db().transaction((tx) => {
+          const released = tx
+            .update(outbox)
+            .set({ state: "pendiente", attempts: job.attempts - 1, leaseAt: 0 })
+            .where(
+              and(
+                eq(outbox.id, job.id),
+                eq(outbox.state, "enviando"),
+                eq(outbox.leaseAt, job.leaseAt),
+              ),
+            )
+            .run();
+          if (released.changes)
+            tx.delete(attempts).where(eq(attempts.id, job.attemptId)).run();
+        });
+        break;
+      }
       const retry = e.clase === "temporal" && job.attempts < 5;
       db()
         .update(outbox)
@@ -421,13 +515,14 @@ export async function procesarCola(
               ? "incierto"
               : "fallido",
           errorCode: e.codigo,
-          nextAt: now + Math.max(e.esperaMs, 30000 * 2 ** (job.attempts - 1)),
+          nextAt:
+            reloj() + Math.max(e.esperaMs, 30000 * 2 ** (job.attempts - 1)),
         })
         .where(
           and(
             eq(outbox.id, job.id),
             eq(outbox.state, "enviando"),
-            eq(outbox.leaseAt, now),
+            eq(outbox.leaseAt, job.leaseAt),
           ),
         )
         .run();
@@ -453,6 +548,14 @@ export function historial(user: User) {
 // Para diagnóstico administrativo, sin cuerpos, teléfonos ni enlaces firmados.
 export function resumenCola() {
   return {
+    conversaciones: db()
+      .select({
+        estado: whatsappChatJobs.state,
+        cantidad: sql<number>`count(*)`,
+      })
+      .from(whatsappChatJobs)
+      .groupBy(whatsappChatJobs.state)
+      .all(),
     envios: db()
       .select({ estado: outbox.state, cantidad: sql<number>`count(*)` })
       .from(outbox)

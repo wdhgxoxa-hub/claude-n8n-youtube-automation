@@ -39,13 +39,24 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
     page.getByRole("heading", { name: "Marca de montajes", exact: true }),
   ).toBeVisible();
   await page
-    .getByLabel("Nombre de la cuenta", { exact: true })
+    .getByRole("button", { name: "Cuentas y conexión", exact: true })
+    .click();
+  // El árbol saliente de la transición puede conservar etiquetas ocultas.
+  // Elegir el textbox accesible mantiene la misma acción visible del usuario.
+  await page
+    .getByRole("textbox", { name: "Nombre de la cuenta", exact: true })
     .fill("Montajes ficticios");
   await page
-    .getByLabel("Identificador de cuenta o perfil", { exact: true })
+    .getByRole("textbox", {
+      name: "Identificador de cuenta o perfil",
+      exact: true,
+    })
     .fill("7777777777");
   await page
-    .getByLabel("Página vinculada (para Instagram)", { exact: true })
+    .getByRole("textbox", {
+      name: "Página vinculada (para Instagram)",
+      exact: true,
+    })
     .fill("8888888888");
   await page
     .getByRole("button", { name: "Añadir cuenta", exact: true })
@@ -56,6 +67,10 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
   await expect(
     page.getByText("Conexión verificada.", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Crear una publicación", exact: true })
+    .click();
   const source = page.getByRole("combobox", {
     name: "Montaje aprobado de fábrica",
     exact: true,

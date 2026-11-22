@@ -8,6 +8,8 @@ import { partituraTexto, type EstadoCooper } from "@/marca/CooperCara";
 import { useEspacio, api, Notice } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
 import { Revelado } from "./titular";
+import { Chip } from "./primitivas";
+import "./cooper-conversacion.css";
 import { Grabador, subir } from "./grabador";
 import { leerSSE } from "@/lib/stream";
 import type { EventoChat, TarjetaChat } from "@/servicios/chat/tipos";
@@ -60,6 +62,25 @@ export function ChatCooper({
   const fileInput = useRef<HTMLInputElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+  const followConversation = useRef(true);
+  const [newMessages, setNewMessages] = useState(false);
+  function actualizarBordes() {
+    const el = suggestionsRef.current;
+    if (!el) return;
+    el.dataset.inicio = String(el.scrollLeft > 2);
+    el.dataset.fin = String(
+      el.scrollLeft + el.clientWidth < el.scrollWidth - 2,
+    );
+  }
+  useEffect(() => {
+    const el = suggestionsRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(actualizarBordes);
+    observer.observe(el);
+    actualizarBordes();
+    return () => observer.disconnect();
+  }, [sugerencias]);
   const focusComposer = useRef(false);
   useEffect(() => {
     if (focusComposer.current && !busy) {
@@ -70,11 +91,15 @@ export function ChatCooper({
   const [historical] = useState(() => new Set(data.messages.map((m) => m.id)));
   useEffect(() => {
     const list = end.current?.parentElement;
-    if (data.messages.length && list) list.scrollTop = list.scrollHeight;
+    if (!list || !data.messages.length) return;
+    if (followConversation.current) list.scrollTop = list.scrollHeight;
+    else setNewMessages(true);
   }, [data.messages.length, partial, cards.length]);
   async function send(e: FormEvent) {
     e.preventDefault();
     if (!text.trim() || sending.current || busy || uploading) return;
+    followConversation.current = true;
+    setNewMessages(false);
     sending.current = true;
     setBusy(true);
     setError("");
@@ -258,40 +283,11 @@ export function ChatCooper({
           textarea.current?.focus();
         }}
       />
-      {sugerencias.length > 0 && (
-        <div
-          className="cooper-suggestions"
-          aria-label="Sugerencias para esta pantalla"
-        >
-          {sugerencias.map((sugerencia) => (
-            <button
-              className="chip"
-              key={sugerencia}
-              onClick={() => {
-                setText(
-                  (
-                    {
-                      "Crear mi primer canal":
-                        "Crea un canal: Ciencia cotidiana",
-                      "Crear otro canal": "Crea un canal: Ciencia cotidiana",
-                      "Dar forma a una idea":
-                        "Quiero un video: Por qué el cielo es azul",
-                      "Revisar mis pendientes": "¿Qué tengo pendiente?",
-                    } as Record<string, string>
-                  )[sugerencia] ?? sugerencia,
-                );
-                textarea.current?.focus();
-              }}
-            >
-              {sugerencia}
-            </button>
-          ))}
-        </div>
-      )}
       <section
         className="chat-pane"
         aria-label="Chat con Cooper"
         data-estado={state}
+        data-vacio={data.messages.length === 0 && !submitted && !partial}
         aria-busy={busy}
       >
         <span className="sr-only" role="status">
@@ -303,6 +299,12 @@ export function ChatCooper({
         </span>
         <div
           className="conversation"
+          onScroll={(event) => {
+            const el = event.currentTarget;
+            followConversation.current =
+              el.scrollHeight - el.scrollTop - el.clientHeight < 64;
+            if (followConversation.current) setNewMessages(false);
+          }}
           role="log"
           tabIndex={0}
           aria-label="Conversación con Cooper"
@@ -312,14 +314,15 @@ export function ChatCooper({
           {data.messages.length === 0 && !submitted && !partial ? (
             <div className="chat-welcome">
               <h2>
-                <Revelado texto="Tú pones la idea." />
-                <br />
-                <Revelado texto="Yo pongo todo en marcha." inicio={4} />
+                <Revelado
+                  texto={
+                    contextoMarca
+                      ? "Démosle voz a tu marca."
+                      : "¿Qué creamos hoy?"
+                  }
+                />
               </h2>
-              <p>
-                Cuéntame qué quieres crear. Te acompaño desde el primer guion
-                hasta la publicación.
-              </p>
+              <p>Cuéntame tu idea. Te ayudo con el siguiente paso.</p>
             </div>
           ) : (
             data.messages.map((m) => (
@@ -445,6 +448,50 @@ export function ChatCooper({
           )}
           <div ref={end} />
         </div>
+        {newMessages && (
+          <button
+            className="chat-new-messages chip"
+            onClick={() => {
+              const list = end.current?.parentElement;
+              list?.scrollTo({ top: list.scrollHeight });
+              followConversation.current = true;
+              setNewMessages(false);
+            }}
+          >
+            Ir a los mensajes nuevos
+          </button>
+        )}
+        {sugerencias.length > 0 && (
+          <div
+            ref={suggestionsRef}
+            className="cooper-suggestions"
+            onScroll={actualizarBordes}
+            aria-label="Sugerencias para esta pantalla"
+          >
+            {sugerencias.map((sugerencia) => (
+              <Chip
+                key={sugerencia}
+                onClick={() => {
+                  setText(
+                    (
+                      {
+                        "Crear mi primer canal":
+                          "Crea un canal: Ciencia cotidiana",
+                        "Crear otro canal": "Crea un canal: Ciencia cotidiana",
+                        "Dar forma a una idea":
+                          "Quiero un video: Por qué el cielo es azul",
+                        "Revisar mis pendientes": "¿Qué tengo pendiente?",
+                      } as Record<string, string>
+                    )[sugerencia] ?? sugerencia,
+                  );
+                  textarea.current?.focus();
+                }}
+              >
+                {sugerencia}
+              </Chip>
+            ))}
+          </div>
+        )}
         <div className="composer-area">
           <Notice error={error} />
           {transcript && (
@@ -633,10 +680,14 @@ export function ChatCooper({
             </div>
           </form>
           <p className="composer-caption" role="status">
-            {data.chat.simulado ? "Chat de demostración. " : ""}
+            {data.demo
+              ? "Ejemplo · "
+              : data.chat.simulado
+                ? "Modo básico temporal. "
+                : ""}
             {uploading
               ? "Guardando archivo…"
-              : "Cooper propone. Tú tienes la última palabra."}
+              : "Cooper propone. Tú decides."}
           </p>
           <p className="sr-only" id={messageHelpId}>
             Pulsa Entrar para enviar o Mayús y Entrar para escribir otra línea.

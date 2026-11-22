@@ -1,11 +1,14 @@
 import { and, eq, inArray, ne, notExists, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { users, videos, whatsappContacts, whatsappOutbox } from "@/db/schema";
-import { proveedorMensajeria } from "./proveedor";
+import { mensajeriaPausada, proveedorMensajeria } from "./proveedor";
+import { procesarChatWhatsApp } from "./chat-whatsapp";
 import { contacto, cuentaActiva, preferencias } from "./cuentas";
 import { encolarVideo, encolarGasto, procesarCola } from "./cola";
 let lastCosts = 0;
 export async function cicloMensajeria(now = Date.now()) {
+  if (mensajeriaPausada()) return;
+  const inicio = Date.now();
   const ambitos = db()
     .select()
     .from(whatsappContacts)
@@ -85,7 +88,8 @@ export async function cicloMensajeria(now = Date.now()) {
       }
     }
   }
-  await procesarCola(undefined, now);
+  await procesarChatWhatsApp(now + Math.max(0, Date.now() - inicio));
+  await procesarCola(undefined, now + Math.max(0, Date.now() - inicio));
 }
 const globals = globalThis as typeof globalThis & {
   cooperWhatsAppTimer?: ReturnType<typeof setInterval>;

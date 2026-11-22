@@ -13,6 +13,16 @@ Misión `cooper-marcas`, base `version-chatgpt` (`16341ab`). Solo Walter y su eq
 7. El trabajador despertado por n8n publica solo piezas aprobadas y vencidas, con dueño y aprobador activos. HTTP 200/202 de carga no significa «publicada». Los checkpoints de Meta/Upload-Post se persisten. Un timeout o interrupción incierta exige conciliación; no se reenvía automáticamente. La desconexión cancela lo aún no enviado, pero una llamada remota en curso puede terminar.
 8. **Publicados / Aprendizaje**, dentro de Marcas, conserva métricas por pieza, fecha de captura y avisos de conciliación. Ausencia de datos significa `null`, no cero. Las nuevas medidas actualizan el estudio con la hora de confirmación de la publicación; ninguna modifica automáticamente el texto ni aprueba piezas.
 
+## Plantilla para la futura tienda de ropa
+
+La misión `total-marca-tienda` añade una plantilla optativa de moda/ecommerce en el alta de Marcas. Se guarda mediante el servicio y los permisos existentes, como parte de la guía privada. El nombre, la identidad y el calendario iniciales se identifican como **ejemplo**: no son datos de una tienda operativa de Walter. Guardar la marca no crea cuentas, piezas, publicaciones ni conexiones externas.
+
+La sección **Tienda** reúne el especialista, cinco pilares (lanzamientos, lookbooks, reels de producto, ofertas y UGC), un calendario editorial de ejemplo y la preparación del catálogo web. El calendario es una propuesta para revisar; no reserva fechas ni programa envíos. Las piezas reales siguen el calendario habitual y la revisión de Walter. El especialista exige datos confirmados de producto y condiciones de promoción, además del permiso para reutilizar contenido de personas; nunca inventa stock, descuentos, testimonios o atributos ambientales.
+
+Las métricas de conversión de la tienda permanecen **Sin datos**. Una demostración separada permite entender los cálculos sin incorporar cifras ficticias a Publicados ni Aprendizaje. Las ausencias y los denominadores cero se conservan como `null`. La conexión futura debe aportar una fuente verificable, periodo y atribución coherentes antes de presentar ventas o ingresos como resultados propios.
+
+El catálogo permanece **Desconectado**, con plataforma y URL por definir. El contrato describe la información necesaria de producto/variante, precio, moneda, disponibilidad y fecha de actualización; no implementa un cliente de Shopify, WooCommerce u otro proveedor, ni inicia solicitudes de red. La selección de plataforma, nombre definitivo, audiencia, productos, políticas comerciales, permisos UGC y activación real queda pendiente de Walter. Detalles y evidencia: [informe de la misión](informes/total-marca-tienda.md).
+
 ## Montajes de fábrica
 
 ### Recuperar un enlace de montaje

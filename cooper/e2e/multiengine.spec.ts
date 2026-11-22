@@ -225,6 +225,8 @@ test("pausa persistente, movimiento reducido y accesibilidad en ambos tamaños",
   page,
 }) => {
   await entrar(page);
+  // El primer salto también abandona precargas del riel y de sus videos.
+  await esperarPrecargas(page);
   await page.goto("/perfil");
   const pausa = page.getByRole("button", { name: "Pausar movimiento" });
   await teclado(page, pausa);

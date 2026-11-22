@@ -4,8 +4,16 @@ import { timingSafeEqual } from "node:crypto";
 import { encode } from "next-auth/jwt";
 import { loginGoogle } from "../src/lib/identidad";
 import { db } from "../src/db";
-import { assets, attachments, users, chatActions } from "../src/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  assets,
+  attachments,
+  users,
+  chatActions,
+  messages,
+  chatMemories,
+  chatSessions,
+} from "../src/db/schema";
+import { and, eq } from "drizzle-orm";
 import { crearReto } from "../src/servicios/biblioteca";
 import { prepararResultados } from "./fixtures-resultados";
 import { VozSimulada } from "../src/servicios/proveedores/simulados";
@@ -111,6 +119,18 @@ const server = createServer(async (req, res) => {
     )
       throw new ErrorHttp(403, "Solo cuentas ficticias");
     const user = loginGoogle(input.email, input.email.split("@")[0]);
+    // Reinicio exclusivo del chat ficticio de la matriz; no se expone en Next.
+    if (
+      input.escenario === "conversacion-vacia" &&
+      process.env.COOPER_DEMO === "1" &&
+      input.email.endsWith("@example.test")
+    ) {
+      db().transaction((tx) => {
+        tx.delete(messages).where(eq(messages.ownerId, user.id)).run();
+        tx.delete(chatMemories).where(eq(chatMemories.ownerId, user.id)).run();
+        tx.delete(chatSessions).where(eq(chatSessions.ownerId, user.id)).run();
+      });
+    }
     if (input.escenario === "conciliacion" && user.role === "admin") {
       db()
         .insert(chatActions)
@@ -128,6 +148,24 @@ const server = createServer(async (req, res) => {
           expiresAt: Date.now() + 600000,
         })
         .onConflictDoNothing()
+        .run();
+    }
+    // Retira sólo el caso de la matriz, sin alterar otras acciones del usuario.
+    if (
+      input.escenario === "conciliacion-retirar" &&
+      process.env.COOPER_DEMO === "1" &&
+      user.role === "admin" &&
+      input.email.endsWith("@example.test")
+    ) {
+      db()
+        .delete(chatActions)
+        .where(
+          and(
+            eq(chatActions.id, "e2e-conciliacion"),
+            eq(chatActions.ownerId, user.id),
+            eq(chatActions.fingerprint, "ensayo"),
+          ),
+        )
         .run();
     }
     if (input.montaje === "crear" || input.montaje === "cambiar")

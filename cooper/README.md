@@ -2,7 +2,7 @@
 
 Esta integración añade aprendizaje con métricas reales, competencia pública por canal, chat por el plan de la PC, conciliación, seguimiento durable de biblioteca, reutilización de montajes y resultados unificados. El [informe vigente](../docs/informes/cooper-total.md) y [ESTADO](../docs/ESTADO.md) distinguen lo implementado, probado y desplegado de la aceptación humana pendiente. El lote n8n lo aplica el orquestador con respaldo y reversa comprobados.
 
-La secuencia actual contiene catorce migraciones. Conserva las ocho originales y `0008_observabilidad`, `0009_memoria`, `0010_marcas`, `0011_montajes_fabrica`, `0017_biblioteca` y `0018_rendimiento`; no se renumeran diarios aplicados. Las bases experimentales con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas. El procedimiento de la [integración 3](../docs/cooper-integracion3-despliegue.md) se conserva como antecedente de las once migraciones de la PC.
+La secuencia conserva las catorce migraciones integradas hasta `0018_rendimiento` y añade, en orden, `0019_video_medios`, `0019_revision_doctrinal` y `0019_whatsapp_chat`. Los nombres SQL se conservan; las entradas nuevas tienen índices y fechas crecientes. Ningún diario productivo se modifica.
 
 Recorrido conjunto reproducible, con todas las E2E anteriores, memoria, Marcas, movimiento, estrés y videos continuos a 1440/390 px:
 
@@ -20,9 +20,15 @@ Avatares de foto, clonación de voz, catálogo y transcripción reales: [configu
 
 WhatsApp Business: verificación de número, preferencias, enlaces firmados, botones, cola durable y transporte real/simulado en [cooper-whatsapp.md](../docs/cooper-whatsapp.md). Desactivado para envíos reales por defecto; requiere alta y plantillas aprobadas por Meta.
 
+El webhook firmado recibe también texto del número verificado y lo lleva al mismo chat privado de Cooper. Un trabajador responde con hasta 18 palabras; las tarjetas de acciones se confirman en la web. Revalida dueño, consentimiento y ventana de 24 horas antes del envío, comprueba aprobación de plantillas en Meta y respeta `COOPER_MENSAJERIA_PAUSA=1`. La recepción queda persistida durante la pausa; los resultados inciertos no se repiten automáticamente. [Tres pasos de Walter en Meta](../docs/whatsapp-activacion-meta.md) e [informe de implementación y pruebas](../docs/informes/total-whatsapp-listo.md).
+
 Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). El puente está activo y una llamada real corta del crítico pasó desde el contenedor. El modo noticia permanece apagado en todos los canales. En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. El ensayo completo de noticias y del respaldo pago queda pendiente.
 
 Marcas y redes: [guía de uso, fuentes oficiales y lote n8n](../docs/cooper-marcas.md). Marcas privadas, estudio de cuentas, plantillas propias, especialistas, calendario, aprobación de Walter y métricas; modo simulado por defecto. [Informe de la misión](../docs/informes/cooper-marcas.md).
+
+En Marcas, Walter dispone de **Preparar Iglesia (por confirmar)**: crea su perfil privado una vez y conserva las ediciones posteriores, sin conectar cuentas ni crear publicaciones. Incluye especialista reformado, calendario semanal propuesto en Lima y plantillas de versículo, devocional, anuncios y reel. Seleccionar una plantilla rellena el formulario y su próximo horario semanal; se guarda como ejemplo hasta sustituir sus datos. La traducción bíblica y la identidad siguen por confirmar. No hay recurrencia automática.
+
+Una pieza de iglesia necesita vista previa, revisión doctrinal registrada por Walter con responsable pastoral, fuentes/observaciones y seis comprobaciones, y después aprobación humana para programarla. Se revalida antes de publicar, también cuando la aprobación llega por WhatsApp. Editar o pedir cambios retira la revisión; cambiar la guía exige guardar una nueva revisión. Los ejemplos y marcadores pendientes no se aprueban. La migración `0019_revision_doctrinal` añade la evidencia y conserva la obligación en piezas heredadas aunque cambie el rubro. No certifica automáticamente la doctrina ni autentica al responsable pastoral: Walter documenta su revisión. [Alcance y pendientes](../docs/informes/total-marca-iglesia.md).
 
 M05 añade reutilización de montajes propios aprobados en Marcas: referencia por video/revisión, copia privada exacta de MP4 hasta 50 MiB, consentimiento revalidado y recuperación de enlace desde la fábrica. Migración aditiva `0011_montajes_fabrica`; no vuelve a generar medios ni amplía el límite de adjuntos manuales. [Uso, recuperación y retención pendiente](../docs/cooper-marcas.md#recuperar-un-enlace-de-montaje).
 Operaciones interrumpidas: Administración incluye [conciliación por recibo/ID](../docs/cooper-conciliacion.md), consultas sin reenvío y decisiones con evidencia. Conserva reservas y registra cierres; no publica, libera reservas ni reactiva cuentas. Código local M03 pendiente de integración y despliegue.
@@ -367,6 +373,13 @@ Requiere la [preparación reproducible](#puerta-reproducible-desde-cero) de Sent
 
 
 ## Operación completa de la fábrica
+
+Administración enlaza **Salud de la operación**: n8n, VPS, videos sin avance y
+costes, con fuentes parciales o vencidas identificadas. Permite revisar umbrales y
+activar avisos Telegram, apagados por defecto. El trabajador funciona sin una
+pestaña abierta y conserva entrega incierta, deduplicación y recuperación. La
+[guía de observabilidad](../docs/cooper-observabilidad.md) describe configuración,
+límites y el recolector/overlay opcionales, aún sin desplegar por esta misión.
 
 La navegación Operación reúne Biblia del canal, Radar, Rutina y metas, Especialistas y redes, Referencias, Adoptar cuenta, Programados, Decisiones, Incidencias y Avisos. Administración incluye Ajustes de fábrica: interruptores, presupuestos, modelos y calendario, con revisión del cambio y registro. Cada acción exige confirmación explícita y el servidor comprueba el dueño; los ajustes requieren administrador. El modo simulado conserva sus cambios y se identifica en pantalla.
 

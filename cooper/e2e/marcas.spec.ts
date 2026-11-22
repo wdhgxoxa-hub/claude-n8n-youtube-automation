@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawn } from "node:child_process";
+import { revisionDoctrinalIglesia } from "../src/servicios/marcas/iglesia";
 const fixture = () => `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT}`;
 test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", async ({
   page,
@@ -41,6 +42,12 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     page.getByRole("heading", { name: "Iglesia de ensayo", exact: true }),
   ).toBeVisible();
   await page
+    .getByRole("button", { name: "Cuentas y conexión", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Cuentas y conexión", exact: true }),
+  ).toBeVisible();
+  await page
     .getByLabel("Nombre de la cuenta", { exact: true })
     .fill("@iglesia_ensayo");
   await page
@@ -58,6 +65,10 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   await expect(
     page.getByText("Conexión verificada.", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Cuentas y conexión", exact: true }),
+  ).toBeFocused();
   await page.getByRole("button", { name: "Estudio", exact: true }).click();
   await page
     .getByRole("button", { name: "Estudiar la cuenta", exact: true })
@@ -88,6 +99,9 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("button", { name: "Calendario", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Crear una publicación", exact: true })
+    .click();
   await page
     .getByLabel("Título de la pieza", { exact: true })
     .fill("Nos reunimos el domingo");
@@ -161,6 +175,30 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     }
   }
   await page
+    .getByRole("button", { name: "Revisar doctrina", exact: true })
+    .click();
+  await page
+    .getByLabel("Responsable pastoral", { exact: true })
+    .fill("Responsable ficticio del ensayo");
+  await page
+    .getByLabel("Observaciones y fuentes de la revisión", { exact: true })
+    .fill(
+      "Revisión ficticia de fuentes, contexto, tono y permisos de la pieza completa.",
+    );
+  for (const control of revisionDoctrinalIglesia) {
+    await page.getByLabel(control.etiqueta).check();
+  }
+  await page
+    .getByRole("button", { name: "Registrar revisión doctrinal", exact: true })
+    .click();
+  await expect(
+    page.getByText(
+      "Revisión doctrinal registrada. Ya puedes aprobar esta pieza.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
     .getByRole("button", { name: "Aprobar y programar", exact: true })
     .click();
   await expect(
@@ -205,7 +243,7 @@ test("Marcas: la sección activa queda visible en móvil sin desplazar la págin
   async function comprobarSeccion(nombre: string) {
     const active = strip.getByRole("button", { name: nombre, exact: true });
     await expect(active).toHaveAttribute("aria-current", "page");
-    await expect(active).toHaveClass("active");
+    await expect(active).toHaveClass(/\bchip-activo\b/);
     await expect
       .poll(() =>
         active.evaluate((tab) => {

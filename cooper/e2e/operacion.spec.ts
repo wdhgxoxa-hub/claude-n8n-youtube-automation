@@ -150,9 +150,7 @@ test("operación: el HTML inicial contiene los datos y actualizar mantiene la co
   page,
 }) => {
   const html = await (await page.request.get("/radar")).text();
-  expect(html).toContain(
-    ">Fábrica simulada. Los ejemplos no consultan cuentas externas.<",
-  );
+  expect(html).toContain(">Ideas de ejemplo para explorar tu canal.<");
   expect(html).toContain("Por qué reconocemos el olor de la lluvia");
   let consultas = 0;
   await page.route("**/api/operacion", (route) => {
@@ -208,6 +206,12 @@ test("operación: biblia, metas, redes, referencias y adopción con confirmació
   const op = await (await page.request.get("/api/operacion")).json();
   const id = op.canales[0].id;
   await page.goto(`/canales/${id}`);
+  // El servidor puede conservar un buffer de Suspense fuera del contenido
+  // visible mientras entrega la ruta; la interacción pertenece al main actual.
+  await page
+    .getByRole("main")
+    .getByText("Editar tono", { exact: true })
+    .click();
   await page
     .getByRole("textbox", { name: "Tono", exact: true })
     .fill("Cálido y preciso, sin exageraciones.");
@@ -221,20 +225,27 @@ test("operación: biblia, metas, redes, referencias y adopción con confirmació
   await page.getByRole("button", { name: "Revisar tono", exact: true }).click();
   await confirmar(page);
   await page.reload();
+  await page
+    .getByRole("main")
+    .getByText("Editar tono", { exact: true })
+    .click();
   await expect(
     page.getByRole("textbox", { name: "Tono", exact: true }),
   ).toHaveValue("Cálido y preciso, sin exageraciones.");
   await page.goto("/rutina");
+  await page.getByText("Ajustar metas", { exact: true }).click();
   await page.getByLabel("Videos por semana").fill("4");
   await page.getByLabel("Producir automáticamente").check();
   await page.getByRole("button", { name: "Revisar metas" }).click();
   await confirmar(page);
   await expect(page.getByLabel("Videos por semana")).toHaveValue("4");
   await page.goto("/redes");
+  await page.getByText("Editar redes", { exact: true }).click();
   await page.getByLabel("Perfil de publicación").fill("ciencia_e2e");
   await page.getByRole("button", { name: "Revisar redes" }).click();
   await confirmar(page);
   await page.reload();
+  await page.getByText("Editar redes", { exact: true }).click();
   await expect(page.getByLabel("Perfil de publicación")).toHaveValue(
     "ciencia_e2e",
   );
@@ -247,6 +258,7 @@ test("operación: biblia, metas, redes, referencias y adopción con confirmació
     page.getByText("Solicitud de referencias registrada.", { exact: false }),
   ).toBeVisible();
   await page.goto("/cuentas");
+  await page.getByText("Estudiar una cuenta", { exact: true }).click();
   await page.getByLabel("Usuario de la cuenta").fill("@ciencia_e2e");
   await page.getByRole("button", { name: "Revisar adopción" }).click();
   await confirmar(page);
@@ -269,6 +281,9 @@ test("operación: una idea produce un video, los ajustes registran cambios y el 
     ),
   ).toBe(true);
   await page.goto("/admin/fabrica");
+  await page
+    .getByText("Editar controles de producción", { exact: true })
+    .click();
   const control = page.getByLabel("Voz", { exact: true });
   const anterior = await control.isChecked();
   await control.setChecked(!anterior);

@@ -4,7 +4,12 @@ import {
 } from "../competencia";
 import { competenciaVigente } from "@/contratos/competencia.mjs";
 import { observarImagenes } from "./visual";
-import { randomUUID, createHmac, timingSafeEqual } from "node:crypto";
+import {
+  randomUUID,
+  createHmac,
+  createHash,
+  timingSafeEqual,
+} from "node:crypto";
 import { and, eq, inArray, lte, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
@@ -22,7 +27,13 @@ import {
 } from "@/db/schema";
 import { ErrorHttp, requireAdmin, requireOwner } from "@/lib/permisos";
 import { cuentaActiva } from "@/servicios/mensajeria/cuentas";
-import { marcaSchema, cuentaSchema, piezaSchema } from "./tipos";
+import {
+  marcaSchema,
+  cuentaSchema,
+  piezaSchema,
+  revisionDoctrinalSchema,
+} from "./tipos";
+import { perfilIglesia } from "./iglesia";
 import { estudiar, proximoHorario } from "./estudio";
 import { verificarCitas, registrarCita, proponerTexto } from "./especialistas";
 import { proveedorRed, type RedSocial } from "./redes";
@@ -100,6 +111,34 @@ export function estadoMarcas(user: User) {
   };
 }
 export type EstadoMarcas = ReturnType<typeof estadoMarcas>;
+export function prepararIglesia(user: User) {
+  requireAdmin(user);
+  requireAdmin(cuentaActiva(user.id));
+  const id = `iglesia-${user.id}`;
+  return db().transaction(
+    () => {
+      const anterior = db()
+        .select()
+        .from(marcas)
+        .where(eq(marcas.id, id))
+        .get();
+      if (anterior) {
+        requireOwner(user, anterior);
+        return anterior;
+      }
+      const data = marcaSchema.parse({
+        nombre: perfilIglesia.nombre,
+        rubro: perfilIglesia.rubro,
+        zona: perfilIglesia.zona,
+        guia: perfilIglesia.guia,
+      });
+      const value = { ...data, id, ownerId: user.id, createdAt: Date.now() };
+      db().insert(marcas).values(value).run();
+      return db().select().from(marcas).where(eq(marcas.id, id)).get()!;
+    },
+    { behavior: "immediate" },
+  );
+}
 function validarLogo(m: { ownerId: string; guia: Marca["guia"] }) {
   if (!m.guia.logoId) return;
   const a = db()
@@ -339,6 +378,11 @@ export function guardarPieza(
       !["borrador", "pendiente", "programada"].includes(anterior.estado))
   )
     throw new ErrorHttp(409, "La pieza cambió o ya está en publicación.");
+  // La obligación nace en servidor y no puede retirarse cambiando el rubro
+  // de la marca ni enviando un booleano falso desde el cliente.
+  datos.requiereRevisionDoctrinal =
+    Boolean(anterior?.datos.requiereRevisionDoctrinal) ||
+    m.rubro === "iglesia-reformada";
   // Un borrador puede tener citas pendientes; dueño/medios se comprueban antes de exponerlos.
   for (const id of datos.adjuntos) {
     const a = db()
@@ -360,6 +404,7 @@ export function guardarPieza(
     estado: "borrador" as const,
     aprobadaPor: "",
     aprobadaRevision: 0,
+    revisionDoctrinal: null,
     mediosIds: [],
     checkpoint: {},
     updatedAt: now,
@@ -421,6 +466,119 @@ export async function enviarRevision(user: User, id: string, revision: number) {
   const { encolarMarca } = await import("./whatsapp");
   encolarMarca(id);
 }
+function huellaGuia(m: Pick<Marca, "rubro" | "guia">) {
+  const g = m.guia;
+  return createHash("sha256")
+    .update(
+      JSON.stringify({
+        rubro: m.rubro,
+        colores: g.colores,
+        tipografia: g.tipografia,
+        logoId: g.logoId,
+        tono: g.tono,
+        versionBiblia: g.versionBiblia,
+      }),
+    )
+    .digest("hex");
+}
+function requiereDoctrina(m: Marca, p: PiezaMarca) {
+  return m.rubro === "iglesia-reformada" || p.datos.requiereRevisionDoctrinal;
+}
+function comprobarDatosReales(m: Marca, p: PiezaMarca) {
+  const contenido = [
+    p.datos.titulo,
+    p.datos.texto,
+    p.datos.detalle,
+    ...p.datos.diapositivas,
+  ].join("\n");
+  if (
+    p.datos.ejemplo ||
+    (requiereDoctrina(m, p) &&
+      (/\bEJEMPLO\b/.test(contenido) ||
+        /\[[^\]]*(?:por confirmar|pendiente)[^\]]*\]/i.test(contenido)))
+  )
+    throw new ErrorHttp(
+      409,
+      "La pieza contiene datos de ejemplo. Sustitúyelos y guarda una nueva revisión antes de aprobar.",
+    );
+}
+function comprobarGuiaDoctrinal(m: Marca, p: PiezaMarca) {
+  if (/por confirmar/i.test(m.guia.versionBiblia))
+    throw new ErrorHttp(
+      409,
+      "Confirma la versión bíblica de la marca antes de revisar la doctrina.",
+    );
+  if (huellaGuia(m) !== huellaGuia({ ...m, guia: p.guia }))
+    throw new ErrorHttp(
+      409,
+      "La guía de la marca cambió. Guarda una nueva revisión de la pieza.",
+    );
+}
+export function revisarDoctrina(
+  user: User,
+  id: string,
+  revision: number,
+  raw: unknown,
+  now = Date.now(),
+) {
+  requireAdmin(user);
+  requireAdmin(cuentaActiva(user.id));
+  const datos = revisionDoctrinalSchema.parse(raw);
+  const { p, m } = obtenerPieza(user, id);
+  if (!requiereDoctrina(m, p))
+    throw new ErrorHttp(409, "Esta pieza no requiere revisión doctrinal.");
+  if (p.estado !== "pendiente" || p.revision !== revision)
+    throw new ErrorHttp(409, "Esta revisión ya cambió o recibió una decisión.");
+  comprobarDatosReales(m, p);
+  comprobarGuiaDoctrinal(m, p);
+  comprobarPieza(m, p, proveedorRed());
+  if (!p.mediosIds.length)
+    throw new ErrorHttp(409, "Falta la composición revisable.");
+  const evidencia = {
+    ...datos,
+    revision,
+    revisadaPor: user.id,
+    fecha: now,
+    huellaGuia: huellaGuia(m),
+  };
+  const changed = db()
+    .update(piezasMarca)
+    .set({
+      revisionDoctrinal: evidencia,
+      updatedAt: now,
+    })
+    .where(
+      and(
+        eq(piezasMarca.id, id),
+        eq(piezasMarca.revision, revision),
+        eq(piezasMarca.estado, "pendiente"),
+      ),
+    )
+    .run().changes;
+  if (!changed) throw new ErrorHttp(409, "La pieza cambió. Recarga la página.");
+  return evidencia;
+}
+function comprobarRevisionDoctrinal(m: Marca, p: PiezaMarca) {
+  comprobarDatosReales(m, p);
+  if (!requiereDoctrina(m, p)) return;
+  comprobarGuiaDoctrinal(m, p);
+  const evidencia = p.revisionDoctrinal;
+  if (
+    !evidencia ||
+    evidencia.revision !== p.revision ||
+    evidencia.huellaGuia !== huellaGuia(m)
+  )
+    throw new ErrorHttp(
+      409,
+      "Registra la revisión doctrinal de esta revisión antes de aprobar y programar.",
+    );
+  revisionDoctrinalSchema.parse({
+    revisorPastoral: evidencia.revisorPastoral,
+    observaciones: evidencia.observaciones,
+    comprobaciones: evidencia.comprobaciones,
+  });
+  requireAdmin(cuentaActiva(evidencia.revisadaPor));
+}
 export function decidirPieza(
   user: User,
   id: string,
@@ -434,6 +592,7 @@ export function decidirPieza(
     throw new ErrorHttp(409, "Esta revisión ya cambió o recibió una decisión.");
   if (aprobar) {
     comprobarPieza(m, p, proveedorRed());
+    comprobarRevisionDoctrinal(m, p);
     if (p.programada <= now)
       throw new ErrorHttp(
         409,
@@ -448,6 +607,7 @@ export function decidirPieza(
       estado: aprobar ? "programada" : "borrador",
       aprobadaPor: aprobar ? user.id : "",
       aprobadaRevision: aprobar ? revision : 0,
+      revisionDoctrinal: aprobar ? p.revisionDoctrinal : null,
       updatedAt: now,
     })
     .where(
@@ -584,6 +744,7 @@ export async function procesarMarcas(
       if (p.aprobadaRevision !== p.revision)
         throw new ErrorHttp(409, "La pieza no tiene aprobación vigente.");
       const c = comprobarPieza(m, p, red);
+      comprobarRevisionDoctrinal(m, p);
       if (
         c.red === "facebook" &&
         p.datos.formato === "reel" &&
@@ -734,6 +895,10 @@ export async function rutaMarcas(
   if (method === "GET" && !id) return estadoMarcas(user);
   if (method !== "POST") throw new ErrorHttp(405, "Método no permitido.");
   if (!id) return guardarMarca(user, raw);
+  if (id === "iglesia") {
+    z.object({}).strict().parse(raw);
+    return prepararIglesia(user);
+  }
   if (id === "montajes") {
     z.object({}).strict().parse(raw);
     // Lectura del puente existente, con permisos del usuario autenticado.
@@ -760,14 +925,23 @@ export async function rutaMarcas(
   if (id === "pieza") {
     const data = z
       .object({
-        accion: z.enum(["enviar", "aprobar", "cambios", "editar"]),
+        accion: z.enum([
+          "enviar",
+          "aprobar",
+          "cambios",
+          "editar",
+          "revisar-doctrina",
+        ]),
         revision: z.number().int().positive(),
         datos: piezaSchema.optional(),
+        doctrina: revisionDoctrinalSchema.optional(),
       })
       .strict()
       .parse(raw);
     if (data.accion === "enviar")
       await enviarRevision(user, action, data.revision);
+    else if (data.accion === "revisar-doctrina")
+      return revisarDoctrina(user, action, data.revision, data.doctrina);
     else if (data.accion === "editar") {
       const { m } = obtenerPieza(user, action);
       return guardarPieza(user, m.id, data.datos, action, data.revision);

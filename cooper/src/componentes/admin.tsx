@@ -1,5 +1,6 @@
 "use client";
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
 import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice, useEspacio } from "./espacio";
@@ -7,6 +8,8 @@ import { m as motion } from "framer-motion";
 import { Indicador, NumeroAnimado, useMovimientoReducido } from "./movimiento";
 import { MemoriaAdmin } from "./memoria";
 import { ConciliacionAdmin } from "./conciliacion";
+import { Cifra } from "./primitivas";
+import "./operacion-diseno.css";
 export function Admin({ initial }: { initial: Administracion }) {
   const reduced = useMovimientoReducido();
   const { data: estudio } = useEspacio();
@@ -43,7 +46,7 @@ export function Admin({ initial }: { initial: Administracion }) {
   }
   const total = data.users.reduce((a, u) => a + u[period], 0);
   return (
-    <div className="page">
+    <div className="page administracion-diseno">
       <Heading
         title="El equipo, en perspectiva"
         description="Acceso y gasto. Solo visibles para ti."
@@ -54,7 +57,10 @@ export function Admin({ initial }: { initial: Administracion }) {
           </span>
         }
       />
-      {estudio.demo && <p className="helper">Modo de prueba · datos de demostración.</p>}
+      {estudio.demo && (
+        <p className="helper">Modo de prueba · datos de demostración.</p>
+      )}
+
       <Notice error={error} />
       {data.users.some((u) => u.alert) && (
         <div role="alert" className="spend-alert">
@@ -74,11 +80,13 @@ export function Admin({ initial }: { initial: Administracion }) {
       )}
       <section className="spend-section">
         <div className="spend-head">
-          <div>
-            <span className="muted">Gasto del equipo</span>
-            <p className="spend-total">
-              <NumeroAnimado value={total} money />
-            </p>
+          <div className="administracion-cifras">
+            <Cifra valor={total} etiqueta="Gasto del equipo · USD" heroe />
+            <Cifra
+              valor={data.users.filter((u) => u.active).length}
+              etiqueta="Personas con acceso"
+              heroe
+            />
           </div>
           <div className="filters" role="group" aria-label="Periodo del gasto">
             {(
@@ -158,6 +166,22 @@ export function Admin({ initial }: { initial: Administracion }) {
             </div>
           ))}
         </div>
+      </section>
+      <section
+        className="administracion-salud"
+        aria-labelledby="salud-operativa-enlace"
+      >
+        <div>
+          <span className="operacion-kicker">Detrás de cada video</span>
+          <h2 id="salud-operativa-enlace">Salud de la operación</h2>
+          <p className="helper">
+            Revisa la producción, el servidor y los avisos que necesitan
+            atención.
+          </p>
+        </div>
+        <Link href="/admin/salud" className="button secondary" prefetch={false}>
+          Abrir salud de la operación
+        </Link>
       </section>
       <MemoriaAdmin personas={data.users} />
       <ConciliacionAdmin />

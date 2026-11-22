@@ -43,9 +43,9 @@ test.describe("evidencia de movimiento", () => {
     });
     await page.goto("/entrar");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Las ideas buenas",
+      "Una idea.",
     );
-    await page.screenshot({ path: `${dir}/entrada-revelado-1440.png` });
+    await page.screenshot({ path: `${dir}/entrada-inicial-1440.png` });
     await page.waitForTimeout(950);
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
