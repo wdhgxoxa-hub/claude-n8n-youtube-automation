@@ -4,7 +4,7 @@ Fecha: 21 de noviembre de 2026, Lima. Revisor: subagente de interfaz. Alcance: 3
 
 ## Dictamen
 
-Las portadas tipográficas de lista, detalle y Publicados mantienen cajas estables y títulos visibles en escritorio. La cola tenía un defecto propio: su insignia de etapa pisaba la última línea de la cartela. Se corrigió en `4b862e8`. La inspección complementaria de los originales de 768 y 1024 px confirmó una palabra partida en la miniatura de 64 px; se corrigió en `5fc8495`. Ambas correcciones necesitan la recaptura posterior coordinada por la raíz; **las capturas que fundamentan este documento son anteriores a esas correcciones**.
+Las portadas tipográficas de lista, detalle y Publicados mantienen cajas estables y títulos visibles en escritorio. La cola tenía un defecto propio: su insignia de etapa pisaba la última línea de la cartela. Se corrigió en `4b862e8`. La inspección complementaria de los originales de 768 y 1024 px confirmó una palabra partida en la miniatura de 64 px; se corrigió en `5fc8495`. **Ambas correcciones se confirmaron visualmente en la recaptura final de las 22:40–22:42 Lima**, junto con el aviso neutral de disponibilidad de `53b17df`. Las hojas de contacto y los 66 originales de la primera pasada se conservan como evidencia anterior; el anexo final identifica las capturas posteriores y sus hashes.
 
 La dirección visual global no está aprobada: las capturas conservan el armazón anterior, el acento azul, la jerarquía y los ornamentos anteriores. El contenido audiovisual sigue ocupando una fracción pequeña de Inicio y Publicados. Esta misión conserva ese armazón por alcance expreso; sus cambios de medios no constituyen una implementación completa de «Sala de proyección».
 
@@ -20,15 +20,15 @@ Esta matriz usa el estado de demostración: las cartelas corresponden a videos s
 
 | Hallazgo | Evidencia | Acción y estado |
 | --- | --- | --- |
-| La insignia inferior izquierda de la cola pisa la segunda línea: «respira», «lluvia» o «ruido». Aparece tanto a 1440 como a 1920. | [Recorte 1440 al tamaño original](../../../../evidencias-diseno/revision-escritorio/cola-1440-previa.png), [1920](../../../../evidencias-diseno/revision-escritorio/cola-1920-previa.png); hojas 01 y 02. | `4b862e8`: contexto de cola, reserva lateral de 32 px para la insignia, padding de 8 px y máximo dos líneas de 12/18 px. No se cambian caja, chip ni estructura. Implementado; pendiente confirmar con recaptura. |
-| En 64×64, el padding de 12 px deja 40 px útiles y parte «también» en «tambié / n…». | [Original 768](../../../../evidencias-diseno/revision-escritorio/fabrica-768-previa.png), [1024](../../../../evidencias-diseno/revision-escritorio/fabrica-1024-previa.png). Comprobación complementaria a escritorio. | `5fc8495`: padding base de 8 px y dos líneas; se mantiene fuente de 12 px. El contexto protagonista conserva tres líneas. Implementado; pendiente confirmar con recaptura. |
+| La insignia inferior izquierda de la cola pisa la segunda línea: «respira», «lluvia» o «ruido». Aparece tanto a 1440 como a 1920. | [Recorte 1440 al tamaño original](../../../../evidencias-diseno/revision-escritorio/cola-1440-previa.png), [1920](../../../../evidencias-diseno/revision-escritorio/cola-1920-previa.png); hojas 01 y 02. | `4b862e8`: contexto de cola, reserva lateral de 32 px para la insignia, padding de 8 px y máximo dos líneas de 12/18 px. No se cambian caja, chip ni estructura. Confirmado visualmente en Inicio y Fábrica finales a 1440/1920: chip separado y texto dentro de la caja. |
+| En 64×64, el padding de 12 px deja 40 px útiles y parte «también» en «tambié / n…». | [Original 768](../../../../evidencias-diseno/revision-escritorio/fabrica-768-previa.png), [1024](../../../../evidencias-diseno/revision-escritorio/fabrica-1024-previa.png). Comprobación complementaria a escritorio. | `5fc8495`: padding base de 8 px y dos líneas; se mantiene fuente de 12 px. El contexto protagonista conserva tres líneas. Confirmado a 768/1024: dos líneas con elipsis; desaparece la tercera línea con una letra suelta. El título completo sigue visible junto a la miniatura. |
 | La cartela protagonista cabe; el título largo del publicado utiliza dos líneas completas, sin tocar los límites de la imagen. | Hojas 04–07 y [detalle a escala original](../../../../evidencias-diseno/revision-escritorio/detalle-video-1920-original.png). | Sin corrección de geometría necesaria. El vacío deliberado identifica la ausencia de archivo; no simula una miniatura real. |
 | Las miniaturas de Publicados encajan y el título exterior sigue alineado con la red; las métricas no las invaden. | Hoja 09 y [recorte original](../../../../evidencias-diseno/revision-escritorio/publicados-1440-detalle.png). | Sin solape observado. El tamaño pequeño de la miniatura y el predominio de métricas son límites del armazón, no falta de carga del nuevo componente. |
-| El detalle de un video marcado publicado, sin archivo en la demostración, dice «cuando la fábrica complete el montaje». | Hoja 07. | Corregido después de esta captura: «El archivo del video todavía no está disponible aquí». La ausencia del archivo ya no se atribuye a una etapa pendiente. La raíz recapturará el estado final. |
+| El detalle de un video marcado publicado, sin archivo en la demostración, dice «cuando la fábrica complete el montaje». | Hoja 07. | `53b17df`, confirmado en las capturas finales a 1440/1920: «El archivo del video todavía no está disponible aquí». Texto completo y sin recorte; la ausencia del archivo ya no se atribuye a una etapa pendiente. |
 
 ## Registro de las 33 pantallas
 
-Cada fila documenta el par 1440/1920, no solo una de las resoluciones. «Sin recorte» se refiere al contenido principal observado; no implica conformidad con los tokens globales.
+Cada fila documenta el par 1440/1920 de la primera pasada, no solo una de las resoluciones. Los defectos corregidos posteriormente se cierran en el anexo final. «Sin recorte» se refiere al contenido principal observado; no implica conformidad con los tokens globales.
 
 | Hoja / pantalla | Observación comparada |
 | --- | --- |
@@ -73,6 +73,23 @@ Cada fila documenta el par 1440/1920, no solo una de las resoluciones. «Sin rec
 - Inicio dedicado al chat, ornamento de etapas y barra de recuerdos antes del contenido. La miniatura no puede convertirse en héroe sin cambiar la composición autorizada.
 - Publicados organiza tarjetas de métricas con filtros de formulario. Para alcanzar «La pared» se necesita trabajo de armazón separado.
 - Las capturas estáticas no acreditan View Transitions, contador, orbe, abrir/cerrar Cooper ni la barra móvil. Esta revisión tampoco sustituye el ensayo de movimiento de medios o la medición de Lighthouse.
+
+## Cierre de la recaptura final
+
+Snapshot de la ejecución centralizada: `9f3a910`; último commit de producto: `53b17df`. Las matrices de 1440 y 1920 se completaron el 21 de noviembre a las **22:42:25 y 22:42:59 Lima**, respectivamente. Ambas superan el umbral de las 22:40 solicitado para distinguir esta ejecución. Cada matriz final conserva 33 pantallas, cero desbordamientos, cero entradas axe y 5099 entradas de desviación de tokens; las correcciones focales no eliminan el incumplimiento del sistema visual global.
+
+Se volvieron a inspeccionar los seis originales de Inicio, Fábrica y Publicado a 1440/1920, más Fábrica a 768/1024 para comprobar la miniatura de 64 px. Las ocho capturas finales y las dos matrices se conservan en [revision-escritorio/final](../../../../evidencias-diseno/revision-escritorio/final/). El [manifiesto final versionado](revision-visual-escritorio-final.json) incluye cada archivo, SHA-256 completo, hora exacta y snapshot. Inicio y Fábrica tienen el mismo hash en cada ancho porque muestran el mismo panel compartido de escritorio; no se ha contado una imagen distinta donde no la hay.
+
+| Captura final | SHA-256 | Resultado visual |
+| --- | --- | --- |
+| Inicio y Fábrica 1440 | `8270db2ec3b0da85e4d9555d6f09e50d439adededf1d10bf2d87d6cdf190122d` | Dos líneas de cola completas; insignias a la izquierda sin invadir el texto. |
+| Inicio y Fábrica 1920 | `65dbab27b47e90eca2b0834b7d5fdf417986e7cd8192386c9f34201927fcebb2` | Títulos y chips separados; caja protagonista y título exterior conservan alineación. |
+| Publicado 1440 | `f175776a2723275b3f0fb4783ec47e703f9d6bc4017e05586e166db283491af7` | Aviso neutral completo debajo de la portada, sin afirmar un montaje pendiente. |
+| Publicado 1920 | `750fee81c16e9df2fa7c61f7e7a2fda50eb43112648105df869efe015ecaee9d` | Mismo aviso confirmado, sin recorte ni desplazamiento del panel lateral. |
+| Fábrica 768 | `4becb96e8df45c0acf87b7246db12ec0efe1949690822dd6435a31345fedc129` | Miniatura de 64 px limitada a dos líneas con elipsis, sin tercera línea huérfana. Cola sin colisión. |
+| Fábrica 1024 | `5389767362f9e6caa2474b0d071cdbb1f09b6a27463b658509d6958ce0bcdc8a` | Mismo truncado correcto; títulos completos disponibles fuera de la miniatura. Cola sin colisión. |
+
+**Resultado del cierre focal: los tres hallazgos propios están corregidos y verificados visualmente.** No se cambió producto ni se ejecutaron pruebas pesadas durante esta recaptura documental. La revisión global permanece condicionada por los límites del armazón y por la puerta completa coordinada por la raíz.
 
 ## Pendientes de Walter
 
