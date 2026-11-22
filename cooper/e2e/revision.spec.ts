@@ -1,3 +1,4 @@
+import { abrirCooper, abrirMasDestinos } from "./ayudas-diseno";
 import { test, expect } from "@playwright/test";
 const secret = process.env.COOPER_E2E_SECRET!;
 test.beforeEach(async ({ page }) => {
@@ -26,10 +27,15 @@ test("R08 recupera SSE después de una respuesta HTTP temporal", async ({
       });
     else await route.continue();
   });
+  const conectado = page.waitForResponse(
+    (r) => new URL(r.url()).pathname === "/api/eventos" && r.ok(),
+    { timeout: 8000 },
+  );
   await page.goto("/");
-  await expect(page.locator(".connection")).toHaveText("En vivo", {
-    timeout: 8000,
-  });
+  await conectado;
+  await expect(
+    page.getByText("Sin conexión, reintentando", { exact: true }),
+  ).toBeHidden();
   expect(attempts).toBeGreaterThan(1);
 });
 test("R09 el menú móvil contiene el foco y lo devuelve al cerrar", async ({
@@ -37,17 +43,23 @@ test("R09 el menú móvil contiene el foco y lo devuelve al cerrar", async ({
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await page.getByRole("button", { name: "Abrir navegación" }).click();
-  await expect(page.locator(".sidebar a").first()).toBeFocused();
+  await abrirMasDestinos(page);
+  await expect(
+    page
+      .getByRole("dialog", { name: "Más destinos", exact: true })
+      .getByRole("button", { name: "Cerrar navegación" }),
+  ).toBeFocused();
   for (let i = 0; i < 14; i++) {
     await page.keyboard.press("Tab");
     expect(
-      await page.evaluate(() => !!document.activeElement?.closest(".sidebar")),
+      await page.evaluate(
+        () => !!document.activeElement?.closest(".more-sheet"),
+      ),
     ).toBe(true);
   }
   await page.keyboard.press("Escape");
   await expect(
-    page.getByRole("button", { name: "Abrir navegación" }),
+    page.getByRole("button", { name: "Más destinos", exact: true }),
   ).toBeFocused();
 });
 test("privacidad en HTML, JSON y carga de sesión Auth.js", async ({
@@ -116,6 +128,7 @@ test("privacidad en HTML, JSON y carga de sesión Auth.js", async ({
     expect(first.headers()["content-security-policy"]).not.toBe(
       second.headers()["content-security-policy"],
     );
+    await abrirMasDestinos(other);
     await other
       .getByRole("button", { name: "Cerrar sesión", exact: true })
       .click();
@@ -166,6 +179,7 @@ test("R13 libera el micrófono cuando MediaRecorder no puede iniciar", async ({
     });
   });
   await page.goto("/");
+  await abrirCooper(page);
   await page.getByRole("button", { name: "Grabar audio", exact: true }).click();
   await expect(
     page
@@ -182,12 +196,12 @@ test("R13 libera el micrófono cuando MediaRecorder no puede iniciar", async ({
     ),
   ).toBe(true);
 });
-test("entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras", async ({
+test("entrada, no encontrado y formularios accesibles en el tema oscuro y cuatro anchuras", async ({
   page,
 }) => {
   test.setTimeout(180000);
   const { default: AxeBuilder } = await import("@axe-core/playwright");
-  for (const theme of ["oscuro", "claro"]) {
+  for (const theme of ["oscuro"]) {
     expect(
       (
         await page.request.patch("/api/perfil", {
@@ -220,12 +234,12 @@ test("entrada, no encontrado y formularios accesibles en ambos temas y cuatro an
                 : "/avatares";
         await page.goto(path);
         if (["entrada", "no-encontrado"].includes(screen)) {
-          // La entrada no tiene selector: se inspecciona también el juego de tokens claro.
+          // La entrada no tiene selector: se inspecciona el único juego de tokens oscuro.
           await page.evaluate((theme) => {
             document.documentElement.dataset.theme = theme;
           }, theme);
         } else {
-          await expect(page.locator(".connection")).toHaveText("En vivo");
+          await expect(page.locator(".workspace")).toBeVisible();
           if (screen === "pedir-video")
             await page
               .getByRole("button", { name: "Pedir video", exact: true })

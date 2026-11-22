@@ -1,3 +1,4 @@
+import { abrirCooper, cerrarCooper, abrirMasDestinos } from "./ayudas-diseno";
 import { test, expect, type Page, type TestInfo } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -11,7 +12,7 @@ import { competenciaVacia } from "../src/contratos/competencia.mjs";
 // Axe comprueba solo contenido visible: cada menú, formulario y estado se abre
 // antes del escaneo. No se excluyen nodos ni se deshabilitan reglas.
 const raiz = ".cache/accesibilidad";
-const temas = ["oscuro", "claro"] as const;
+const temas = ["oscuro"] as const;
 const anchos = [360, 1440] as const;
 type Tema = (typeof temas)[number];
 type Muestra = {
@@ -69,7 +70,7 @@ async function abrir(page: Page, ruta: string, tema: Tema) {
     page.getByText("Consultando la fábrica…", { exact: true }),
   ).toHaveCount(0);
   // Entrada, 404 y revisión de WhatsApp no ofrecen un selector de tema público.
-  // Se ensayan sus dos juegos de tokens, sin afirmar que existe ese selector.
+  // Se ensayan el juego único de tokens oscuros, sin afirmar que existe ese selector.
   if ((await page.locator(".workspace").count()) === 0) {
     await page.evaluate((value) => {
       document.documentElement.dataset.theme = value;
@@ -365,31 +366,27 @@ for (const tema of temas) {
       const estado = await preparar(page, tema, ancho);
       const revisar = auditor(page, info, tema, ancho, "interacciones");
       await abrir(page, "/", tema);
-      if (ancho === 360) {
-        await page.getByRole("button", { name: "Abrir navegación" }).click();
-        await revisar("navegacion-movil-abierta");
-        await page.keyboard.press("Escape");
-        await expect(
-          page.getByRole("button", { name: "Abrir navegación" }),
-        ).toBeFocused();
-        await page.getByRole("tab", { name: /Fábrica/ }).click();
-      }
-      await revisar("fabrica-visible");
-      if (ancho === 360) await page.getByRole("tab", { name: /Chat/ }).click();
-      await page.getByRole("button", { name: "Conocer el estudio" }).click();
-      const dialogo = page.getByRole("dialog");
-      await expect(dialogo).toBeVisible();
-      for (let paso = 1; paso <= 3; paso++) {
-        await revisar(`bienvenida-paso-${paso}`);
-        if (paso < 3)
-          await dialogo
-            .getByRole("button", { name: "Continuar", exact: true })
-            .click();
-      }
+      await abrirMasDestinos(page);
+      await revisar("mas-destinos-abierto");
       await page.keyboard.press("Escape");
       await expect(
-        page.getByRole("button", { name: "Conocer el estudio" }),
+        page
+          .getByRole("button", { name: "Más destinos", exact: true })
+          .filter({ visible: true }),
       ).toBeFocused();
+      await revisar("inicio-con-fabrica-visible");
+      const cooper = await abrirCooper(page);
+      await revisar("cooper-contextual-abierto");
+      if (ancho === 360) {
+        await cooper
+          .getByRole("button", { name: "Ampliar Cooper", exact: true })
+          .click();
+        await revisar("cooper-hoja-completa");
+        await cooper
+          .getByRole("button", { name: "Reducir Cooper", exact: true })
+          .click();
+      }
+      await cerrarCooper(page);
 
       await abrir(page, "/videos", tema);
       await page
@@ -536,7 +533,9 @@ for (const tema of temas) {
         await route.fulfill({ json: operacion });
       });
       await page.goto("/radar");
-      await page.getByRole("button", { name: "Actualizar", exact: true }).click();
+      await page
+        .getByRole("button", { name: "Actualizar", exact: true })
+        .click();
       await expect(
         page.getByRole("status").filter({ hasText: "Consultando la fábrica…" }),
       ).toBeVisible();
@@ -561,7 +560,9 @@ for (const tema of temas) {
         }),
       );
       await abrir(page, "/avisos", tema);
-      await page.getByRole("button", { name: "Actualizar", exact: true }).click();
+      await page
+        .getByRole("button", { name: "Actualizar", exact: true })
+        .click();
       await expect(page.locator('.notice[role="alert"]')).toContainText(
         "Pulsa Actualizar",
       );
@@ -664,7 +665,9 @@ for (const tema of temas) {
             page.waitForResponse(
               (r) => new URL(r.url()).pathname === "/api/operacion",
             ),
-            page.getByRole("button", { name: "Actualizar", exact: true }).click(),
+            page
+              .getByRole("button", { name: "Actualizar", exact: true })
+              .click(),
           ]);
           expect(respuesta.ok()).toBe(true);
           await expect(
@@ -673,19 +676,20 @@ for (const tema of temas) {
         }
         // Esperar al estado vacío recibido, en lugar del HTML SSR poblado.
         if (ruta === "/")
-          await expect(page.locator(".factory-pane .empty")).toHaveCount(1);
+          await expect(
+            page.getByRole("heading", { name: "Una idea. Todo por crear." }),
+          ).toBeVisible();
         else if (["/canales", "/videos", "/publicados"].includes(ruta))
           await expect(page.locator(".empty").first()).toBeVisible();
         else if (ruta === "/aprendizaje")
           await expect(
-            page.getByText(
-              "No hay aprendizajes para estos filtros.",
-            ),
+            page.getByText("No hay aprendizajes para estos filtros."),
           ).toBeVisible();
         await revisar(nombre);
         if (ruta === "/" && ancho === 360) {
-          await page.getByRole("tab", { name: /Fábrica/ }).click();
-          await revisar("fabrica-vacia");
+          await abrirCooper(page);
+          await revisar("cooper-sin-conversacion");
+          await cerrarCooper(page);
         }
       }
 

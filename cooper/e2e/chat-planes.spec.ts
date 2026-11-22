@@ -1,3 +1,4 @@
+import { abrirCooper } from "./ayudas-diseno";
 import { test, expect } from "@playwright/test";
 
 test("respuesta completa mantiene la boca y la espera se puede cancelar", async ({
@@ -14,6 +15,7 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
   );
   expect(session.ok()).toBe(true);
   await page.goto("/");
+  await abrirCooper(page);
   await page.route("**/api/chat", async (route) => {
     await route.fulfill({
       status: 200,
@@ -29,10 +31,14 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
     page.getByRole("textbox", { name: "Mensaje para Cooper", exact: true }),
   ).toBeEnabled();
   await expect(
-    page.locator(".chat-heading").getByRole("img", { name: "Cooper hablando", exact: true }),
+    page
+      .locator(".chat-heading")
+      .getByRole("img", { name: "Cooper hablando", exact: true }),
   ).toHaveAttribute("data-cooper-state", "hablando");
   await expect(
-    page.locator(".chat-heading").getByRole("img", { name: "Cooper reposo", exact: true }),
+    page
+      .locator(".chat-heading")
+      .getByRole("img", { name: "Cooper reposo", exact: true }),
   ).toHaveAttribute("data-cooper-state", "reposo", { timeout: 8000 });
   await page.unroute("**/api/chat");
   // Fetch que espera a la cancelación, sin enviar una petición al servidor.
@@ -66,7 +72,9 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
       "Cancelaste la espera. Revisa las tarjetas pendientes antes de repetir el pedido.",
     ),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Enviar mensaje" })).toBeEnabled();
+  await expect(
+    page.getByRole("button", { name: "Enviar mensaje" }),
+  ).toBeEnabled();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,

@@ -1,3 +1,4 @@
+import { abrirCooper } from "./ayudas-diseno";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -17,7 +18,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function accesible(page: Page) {
-  for (const tema of ["oscuro", "claro"]) {
+  for (const tema of ["oscuro"]) {
     await page.evaluate((valor) => {
       document.documentElement.dataset.theme = valor;
     }, tema);
@@ -210,6 +211,7 @@ test("Micrófono denegado muestra una recuperación en español", async ({
     });
   });
   await page.goto("/");
+  await abrirCooper(page);
   const grabar = page.getByRole("button", {
     name: "Grabar audio",
     exact: true,

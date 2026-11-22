@@ -126,7 +126,7 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
     for (const width of [390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`/${ruta}`);
-      for (const tema of ["claro", "oscuro"]) {
+      for (const tema of ["oscuro"]) {
         await page.evaluate(
           (t) => (document.documentElement.dataset.theme = t),
           tema,

@@ -1,3 +1,4 @@
+import { abrirCooper } from "./ayudas-diseno";
 import { test, expect, type APIRequestContext } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync } from "node:fs";
@@ -58,6 +59,7 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
     ).status(),
   ).toBe(200);
   await page.goto("/");
+  await abrirCooper(page);
   await expect(
     page.getByRole("heading", { name: "Donde lo dejamos" }),
   ).toBeVisible();
@@ -85,7 +87,7 @@ test("recuerdos privados, regreso al estudio, revisión administrativa y borrado
   const memoria = page.getByRole("region", { name: "Memoria de Cooper" });
   await expect(memoria).toContainText("Luz de barrio");
   await expect(memoria).toContainText("Prefiero videos cortos");
-  for (const tema of ["oscuro", "claro"]) {
+  for (const tema of ["oscuro"]) {
     await page.evaluate((t) => {
       document.documentElement.dataset.theme = t;
     }, tema);

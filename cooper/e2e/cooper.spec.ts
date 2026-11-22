@@ -1,3 +1,4 @@
+import { abrirCooper, cerrarCooper, abrirMasDestinos } from "./ayudas-diseno";
 import {
   test,
   expect,
@@ -95,8 +96,9 @@ test("conversa, pide un video, observa SSE y aprueba las dos puertas", async ({
   page.on("pageerror", (error) => errors.push(error.message));
   await login(page.request);
   await page.goto("/");
+  await abrirCooper(page);
   await expect(
-    page.getByRole("heading", { name: "Hagamos algo bueno." }),
+    page.getByRole("heading", { name: /Hoy en el estudio/ }),
   ).toBeVisible();
   const message = page.getByRole("textbox", { name: "Mensaje para Cooper" });
   await message.fill("Crea un canal: Ciencia cotidiana");
@@ -119,7 +121,8 @@ test("conversa, pide un video, observa SSE y aprueba las dos puertas", async ({
     path: "test-results/visual/inicio-1440.png",
     fullPage: true,
   });
-  await page.locator(".factory-link").click();
+  await cerrarCooper(page);
+  await page.goto(`/videos/${videoId}`);
   await expect(
     page.getByRole("heading", { level: 1, name: "Por qué el cielo es azul" }),
   ).toBeVisible();
@@ -148,6 +151,7 @@ test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajena
 }) => {
   await login(page.request);
   await page.goto("/");
+  await abrirCooper(page);
   const before = await (await page.request.get("/api/estado")).json();
   await page
     .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
@@ -177,6 +181,7 @@ test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajena
   ).toBe(404);
   await other.close();
   await page.reload();
+  await abrirCooper(page);
   await expect(card).toBeVisible();
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
@@ -237,6 +242,7 @@ test("boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream",
     };
   });
   await page.goto("/");
+  await abrirCooper(page);
   await page
     .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
     .fill("Revisa mi idea");
@@ -285,13 +291,13 @@ test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
   await page.goto("/admin");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Tu primera historia empieza aquí" }),
+    page.getByRole("heading", { name: "Una idea. Todo por crear." }),
   ).toBeVisible();
   const event = await page.evaluate(
     () =>
@@ -309,7 +315,8 @@ test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
 test("adjuntos y grabación con transcripción editable", async ({ page }) => {
   await login(page.request);
   await page.goto("/");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await abrirCooper(page);
+  await expect(page.locator(".workspace")).toBeVisible();
   const chooser = page.waitForEvent("filechooser");
   await page
     .getByRole("button", { name: "Adjuntar archivo", exact: true })
@@ -355,7 +362,8 @@ test("una foto del chat abre el avatar privado sin omitir verificación", async 
 }) => {
   await login(page.request);
   await page.goto("/");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await abrirCooper(page);
+  await expect(page.locator(".workspace")).toBeVisible();
   const chooser = page.waitForEvent("filechooser");
   await page
     .getByRole("button", { name: "Adjuntar archivo", exact: true })
@@ -456,7 +464,7 @@ test("biblioteca propia, verificación simulada, privacidad y compartir", async 
   ).toHaveLength(0);
   await other.close();
 });
-test("perfil guarda tema, inicio y WhatsApp; móvil y teclado", async ({
+test("perfil guarda datos y pausa; acceso móvil al estudio y Cooper", async ({
   page,
 }) => {
   await login(page.request);
@@ -466,31 +474,42 @@ test("perfil guarda tema, inicio y WhatsApp; móvil y teclado", async ({
     .getByRole("textbox", { name: "Tu nombre", exact: true })
     .fill("Ana del equipo");
   await page.getByRole("textbox", { name: /^WhatsApp/ }).fill("+51987654321");
-  await page.getByRole("radio", { name: "Día", exact: true }).check();
-  await page
-    .getByRole("combobox", { name: "Al abrir Cooper", exact: true })
-    .selectOption("fabrica");
+  await expect(
+    page.getByRole("radio", { name: "Día", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("combobox", { name: "Al abrir Cooper", exact: true }),
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "Guardar perfil" }).click();
   await expect(page.getByText("Tu perfil está actualizado.")).toBeVisible();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "claro");
-  await page.goto("/");
-  await expect(page.getByRole("tab", { name: /Fábrica/ })).toHaveAttribute(
-    "aria-selected",
-    "true",
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "oscuro");
+  await page
+    .getByRole("button", { name: "Pausar movimiento", exact: true })
+    .click();
+  await expect(page.locator(".workspace")).toHaveAttribute(
+    "data-motion",
+    "paused",
   );
-  await page.getByRole("tab", { name: "Chat", exact: true }).click();
+  await page.goto("/");
+  await expect(
+    page.getByRole("tab", { name: "Chat", exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("textbox", { name: "Mensaje para Cooper" }),
-  ).toBeVisible();
+  ).toHaveCount(0);
+  await abrirCooper(page);
   await noOverflow(page);
-  await page.getByRole("button", { name: "Abrir navegación" }).click();
-  await page.getByRole("link", { name: "Mi perfil" }).click();
-  await page.getByRole("radio", { name: "Noche", exact: true }).check();
+  const menu = await abrirMasDestinos(page);
+  await menu.getByRole("link", { name: "Mi perfil", exact: true }).click();
+  await expect(
+    page.getByRole("textbox", { name: "Tu nombre", exact: true }),
+  ).toHaveValue("Ana del equipo");
+  await expect(page.getByRole("textbox", { name: /^WhatsApp/ })).toHaveValue(
+    "+51987654321",
+  );
   await page
-    .getByRole("combobox", { name: "Al abrir Cooper", exact: true })
-    .selectOption("chat");
-  await page.getByRole("button", { name: "Guardar perfil" }).click();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "oscuro");
+    .getByRole("button", { name: "Activar movimiento", exact: true })
+    .click();
 });
 test("administración, gastos por periodo, alerta y revocación inmediata", async ({
   page,
@@ -498,7 +517,7 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
 }) => {
   await login(page.request, "admin@example.test");
   await page.goto("/admin");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "El equipo, en perspectiva" }),
   ).toBeVisible();
@@ -530,7 +549,7 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   await login(other.request, "luis@example.test");
   const suspendedPage = await other.newPage();
   await suspendedPage.goto("/");
-  await expect(suspendedPage.locator(".connection")).toHaveText("En vivo");
+  await expect(suspendedPage.locator(".workspace")).toBeVisible();
   const row = page.getByRole("row").filter({ hasText: "luis@example.test" });
   await row.getByRole("button", { name: "Desactivar" }).click();
   expect((await other.request.get("/api/estado")).status()).toBe(401);
@@ -543,7 +562,7 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
     fullPage: true,
   });
 });
-test("auditoría AA de todas las pantallas, anchuras y ambos temas", async ({
+test("auditoría AA de todas las pantallas, anchuras y el tema oscuro", async ({
   page,
 }) => {
   test.setTimeout(240000);
@@ -554,15 +573,14 @@ test("auditoría AA de todas las pantallas, anchuras y ambos temas", async ({
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await noOverflow(page);
-    await expect(page.locator(".connection")).toHaveText("En vivo");
-    if (width < 768) await page.getByRole("tab", { name: /Fábrica/ }).click();
+    await expect(page.locator(".workspace")).toBeVisible();
     await noOverflow(page);
     await page.screenshot({
       path: `test-results/visual/inicio-${width}.png`,
       fullPage: true,
     });
   }
-  for (const theme of ["oscuro", "claro"]) {
+  for (const theme of ["oscuro"]) {
     const state = await (await page.request.get("/api/estado")).json();
     await page.request.patch("/api/perfil", {
       data: {
@@ -586,7 +604,7 @@ test("auditoría AA de todas las pantallas, anchuras y ambos temas", async ({
         await page.setViewportSize({ width, height: 900 });
         await page.goto(path);
         await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
-        await expect(page.locator(".connection")).toHaveText("En vivo");
+        await expect(page.locator(".workspace")).toBeVisible();
         await noOverflow(page);
         const results = await new AxeBuilder({ page })
           .withTags([
@@ -604,13 +622,13 @@ test("auditoría AA de todas las pantallas, anchuras y ambos temas", async ({
           fullPage: true,
         });
         if (path === "/" && width < 768) {
-          await page.getByRole("tab", { name: /Fábrica/ }).click();
+          await abrirCooper(page);
           await noOverflow(page);
           expect((await new AxeBuilder({ page }).analyze()).violations).toEqual(
             [],
           );
           await page.screenshot({
-            path: `test-results/visual/fabrica-${theme}-${width}.png`,
+            path: `test-results/visual/cooper-${theme}-${width}.png`,
             fullPage: true,
           });
         }
@@ -630,7 +648,7 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
 }) => {
   await login(page.request);
   await page.goto("/videos");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toBeVisible();
   await page.getByRole("button", { name: "Pedir video", exact: true }).click();
   const state = await (await page.request.get("/api/estado")).json();
   await page
@@ -669,6 +687,7 @@ test("bienvenida vacía: las tres acciones quedan antes del compositor", async (
   for (const width of [390, 768, 1440]) {
     await page.setViewportSize({ width, height: 700 });
     await page.goto("/");
+    await abrirCooper(page);
     const first = page.getByRole("button", { name: "Crear mi primer canal" });
     await expect(first).toBeVisible();
     const actions = await page.locator(".suggestions:visible").boundingBox();

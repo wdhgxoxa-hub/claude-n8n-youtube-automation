@@ -1,3 +1,4 @@
+import { abrirCooper } from "./ayudas-diseno";
 import {
   test,
   expect,
@@ -48,7 +49,7 @@ async function entrar(request: APIRequestContext) {
   expect(response.status()).toBe(200);
 }
 
-test("inicio a 360 px: pestañas, navegación modal y ruta completa por teclado", async ({
+test("inicio a 360 px: barra móvil, hojas y ruta completa por teclado", async ({
   page,
 }) => {
   await entrar(page.request);
@@ -56,95 +57,83 @@ test("inicio a 360 px: pestañas, navegación modal y ruta completa por teclado"
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await comprobarReferenciasAccesibles(page);
-  const chat = page.getByRole("tab", { name: "Chat", exact: true });
-  const fabrica = page.getByRole("tab", { name: /Fábrica/ });
-  await chat.focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(fabrica).toBeFocused();
-  await expect(fabrica).toHaveAttribute("aria-selected", "true");
-  await expect(chat).toHaveAttribute("tabindex", "-1");
-  await expect(page.getByRole("tabpanel", { name: "Chat" })).toBeHidden();
-  await expect(page.getByRole("tabpanel", { name: /Fábrica/ })).toBeVisible();
-  await page.keyboard.press("Tab");
-  await expect(page.getByRole("tabpanel", { name: /Fábrica/ })).toBeFocused();
-  await page.keyboard.press("Shift+Tab");
-  await expect(fabrica).toBeFocused();
-  await page.keyboard.press("ArrowRight");
-  await expect(chat).toBeFocused();
-  await page.keyboard.press("End");
-  await expect(fabrica).toBeFocused();
-  await page.keyboard.press("Home");
-  await expect(chat).toBeFocused();
-  await page.keyboard.press("ArrowLeft");
-  await expect(fabrica).toBeFocused();
-  await page.keyboard.press("Home");
-  await page.keyboard.press("Tab");
-  await expect(page.getByRole("tabpanel", { name: "Chat" })).toBeFocused();
-
-  const opener = page.getByRole("button", { name: "Abrir navegación" });
+  const navegacion = page.getByRole("navigation", {
+    name: "Principal móvil",
+    exact: true,
+  });
+  await expect(navegacion.getByRole("link")).toHaveText([
+    "Inicio",
+    "Fábrica",
+    "Publicados",
+    "Aprendizaje",
+    "Marcas",
+  ]);
+  await expect(
+    navegacion.getByRole("link", { name: "Inicio", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  const opener = page
+    .getByRole("button", { name: "Más destinos", exact: true })
+    .filter({ visible: true });
   await opener.focus();
   await page.keyboard.press("Enter");
-  const menu = page.getByRole("dialog", { name: "Navegación del estudio" });
-  const brand = menu.getByRole("link", { name: "Cooper, inicio" });
-  await expect(brand).toBeFocused();
-  await expect(page.locator(".main-column")).toHaveAttribute("inert", "");
-  await expect(
-    page.getByRole("link", {
-      name: "Saltar al contenido",
-      includeHidden: true,
-    }),
-  ).toHaveAttribute("inert", "");
+  const menu = page.getByRole("dialog", { name: "Más destinos", exact: true });
+  const cerrar = menu.getByRole("button", {
+    name: "Cerrar navegación",
+    exact: true,
+  });
+  await expect(cerrar).toBeFocused();
+  await expect(page.locator(".studio-shell")).toHaveAttribute("inert", "");
   await page.keyboard.press("Shift+Tab");
   await expect(
-    menu.getByRole("button", { name: "Cerrar sesión" }),
+    menu.getByRole("button", { name: "Cerrar sesión", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Tab");
-  await expect(brand).toBeFocused();
-  for (const theme of ["claro", "oscuro"]) {
-    await page.evaluate((value) => {
-      document.documentElement.dataset.theme = value;
-    }, theme);
-    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  }
+  await expect(cerrar).toBeFocused();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.keyboard.press("Escape");
   await expect(opener).toBeFocused();
   await expect(menu).toHaveCount(0);
-  await page.keyboard.press("Enter");
-  await menu.getByRole("link", { name: /videos en producción/ }).focus();
+  await navegacion.getByRole("link", { name: "Fábrica", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/videos$/);
-  await expect(page).toHaveTitle("Videos · Cooper");
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Videos" }),
-  ).toBeVisible();
   await expect(page.getByRole("main")).toBeFocused();
-  await expect(page.getByRole("dialog")).toHaveCount(0);
-  await expect(page.locator(".main-column")).not.toHaveAttribute("inert", "");
-
-  await opener.press("Enter");
-  await menu
-    .getByRole("navigation", { name: "Principal", exact: true })
+  await expect(page.locator(".studio-shell")).not.toHaveAttribute("inert", "");
+  await navegacion
     .getByRole("link", { name: "Inicio", exact: true })
     .press("Enter");
   await expect(page).toHaveTitle("Inicio · Cooper");
   await expect(
-    page.getByRole("tab", { name: "Chat", exact: true }),
-  ).toBeVisible();
-  await comprobarReferenciasAccesibles(page);
-  await expect(
     page.getByRole("textbox", { name: "Mensaje para Cooper" }),
-  ).toHaveAccessibleDescription(/Pulsa Entrar para enviar/);
-  const bienvenida = page.getByRole("button", { name: "Conocer el estudio" });
-  await bienvenida.press("Enter");
+  ).toHaveCount(0);
+  const orbe = page.getByRole("button", { name: "Abrir Cooper", exact: true });
+  await orbe.press("Enter");
+  const panel = page.getByRole("dialog", {
+    name: "Cooper, tu compañero",
+    exact: true,
+  });
+  await expect(panel).toBeVisible();
+  await expect(page.locator(".studio-shell")).toHaveAttribute("inert", "");
   await expect(
-    page.getByRole("dialog", { name: "Una idea, un equipo." }),
-  ).toBeVisible();
+    panel.getByRole("textbox", { name: "Mensaje para Cooper" }),
+  ).toHaveAccessibleDescription(/Pulsa Entrar para enviar/);
   await comprobarReferenciasAccesibles(page);
+  const ampliar = panel.getByRole("button", {
+    name: "Ampliar Cooper",
+    exact: true,
+  });
+  await ampliar.press("Enter");
+  await expect(panel).toHaveClass(/is-full/);
+  await panel
+    .getByRole("button", { name: "Reducir Cooper", exact: true })
+    .press("Enter");
+  await expect(panel).not.toHaveClass(/is-full/);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.keyboard.press("Escape");
-  await expect(bienvenida).toBeFocused();
+  await expect(orbe).toBeFocused();
+  await expect(panel).toHaveCount(0);
 });
 
-test("recuerdos: retomar desde fábrica y cancelar o borrar conservan el foco", async ({
+test("recuerdos: retomar desde Cooper y cancelar o borrar conservan el foco", async ({
   page,
 }) => {
   await entrar(page.request);
@@ -161,15 +150,15 @@ test("recuerdos: retomar desde fábrica y cancelar o borrar conservan el foco", 
   await page.setViewportSize({ width: 360, height: 800 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await page.getByRole("tab", { name: /Fábrica/ }).click();
+  await abrirCooper(page);
   await page.getByRole("button", { name: "Retomar", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(
     page.getByRole("textbox", { name: "Mensaje para Cooper", exact: true }),
   ).toBeFocused();
   await expect(
-    page.getByRole("tab", { name: "Chat", exact: true }),
-  ).toHaveAttribute("aria-selected", "true");
+    page.getByRole("dialog", { name: "Cooper, tu compañero", exact: true }),
+  ).toBeVisible();
 
   await page
     .getByRole("button", { name: "Ver lo recordado", exact: true })
@@ -189,7 +178,7 @@ test("recuerdos: retomar desde fábrica y cancelar o borrar conservan el foco", 
   await expect(
     page.getByRole("group", { name: "Confirmación de borrado" }),
   ).toBeVisible();
-  for (const theme of ["oscuro", "claro"]) {
+  for (const theme of ["oscuro"]) {
     await page.evaluate((value) => {
       document.documentElement.dataset.theme = value;
     }, theme);
@@ -220,29 +209,14 @@ test("chat: salto al contenido, composición, confirmaciones y errores con tecla
   await entrar(page.request);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  const { user } = await (await page.request.get("/api/estado")).json();
-  try {
-    expect(
-      (
-        await page.request.patch("/api/perfil", {
-          data: { ...user, home: "fabrica" },
-        })
-      ).status(),
-    ).toBe(200);
-    await page.goto("/");
-    await expect(page.locator(".studio:visible")).toHaveClass(/tab-fabrica/);
-  } finally {
-    // Restaurar la preferencia compartida; Inicio conserva su selección montada.
-    expect(
-      (await page.request.patch("/api/perfil", { data: user })).status(),
-    ).toBe(200);
-  }
+  await page.goto("/");
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Saltar al contenido" }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("main")).toBeFocused();
+  await abrirCooper(page);
   const message = page.getByRole("textbox", {
     name: "Mensaje para Cooper",
     exact: true,

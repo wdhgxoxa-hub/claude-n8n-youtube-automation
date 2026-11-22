@@ -1,10 +1,17 @@
-import { test, expect, type Page, type Locator, type Request } from "@playwright/test";
+import { abrirCooper } from "./ayudas-diseno";
+import {
+  test,
+  expect,
+  type Page,
+  type Locator,
+  type Request,
+} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { execFileSync } from "node:child_process";
 import type { Estado } from "../src/servicios/datos";
 
 // Reutiliza el emisor Auth.js y la fábrica demo existentes, sin OAuth.
-async function entrar(page: Page, theme: string) {
+async function entrar(page: Page) {
   expect(
     (
       await page.request.post(
@@ -25,7 +32,7 @@ async function entrar(page: Page, theme: string) {
         data: {
           name: state.user.name,
           image: state.user.image,
-          theme,
+          theme: "oscuro",
           home: "chat",
           whatsapp: "",
         },
@@ -33,8 +40,8 @@ async function entrar(page: Page, theme: string) {
     ).ok(),
   ).toBe(true);
   await page.goto("/");
-  await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "oscuro");
+  await expect(page.locator(".workspace")).toBeVisible();
 }
 
 // Recorre Tab de verdad: no sustituir por focus() ni click().
@@ -58,22 +65,32 @@ async function teclado(page: Page, target: Locator, backwards = false) {
 }
 
 const errores = new WeakMap<Page, string[]>();
-const precargas = new WeakMap<Page, { pendientes: Set<Request>; actividad: number }>();
+const precargas = new WeakMap<
+  Page,
+  { pendientes: Set<Request>; actividad: number }
+>();
 async function esperarPrecargas(page: Page) {
   // Next programa las precargas por lotes. Un hueco vacío entre dos lotes no
   // significa que hayan terminado; recargar ahí aborta el siguiente en WebKit.
   // Esperamos silencio real de RSC sin silenciar errores ni contar el SSE.
   const desde = performance.now();
-  await expect.poll(() => {
-    const estado = precargas.get(page)!;
-    return estado.pendientes.size === 0 &&
-      performance.now() - Math.max(desde, estado.actividad) >= 500;
-  }).toBe(true);
+  await expect
+    .poll(() => {
+      const estado = precargas.get(page)!;
+      return (
+        estado.pendientes.size === 0 &&
+        performance.now() - Math.max(desde, estado.actividad) >= 500
+      );
+    })
+    .toBe(true);
 }
 test.beforeEach(async ({ page }) => {
   const list: string[] = [];
   errores.set(page, list);
-  const estado = { pendientes: new Set<Request>(), actividad: performance.now() };
+  const estado = {
+    pendientes: new Set<Request>(),
+    actividad: performance.now(),
+  };
   precargas.set(page, estado);
   page.on("request", (r) => {
     if (r.url().includes("_rsc=")) {
@@ -120,14 +137,16 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
   await teclado(page, google);
   await expect(google).toBeFocused(); // No iniciar OAuth.
   expect((await page.request.get("/api/estado")).status()).toBe(401);
-  await entrar(page, info.project.metadata.theme);
+  await entrar(page);
   const salto = page.getByRole("link", { name: "Saltar al contenido" });
   await teclado(page, salto);
   await page.keyboard.press("Enter");
   await expect(page.locator("#contenido")).toBeFocused();
-  const message = page
-    .getByRole("main")
-    .getByRole("textbox", { name: "Mensaje para Cooper", exact: true });
+  await abrirCooper(page);
+  const message = page.getByRole("textbox", {
+    name: "Mensaje para Cooper",
+    exact: true,
+  });
   await expect(message).toHaveCount(1);
   await expect(message).toBeVisible();
   const canal = `M11 ${info.project.name}`;
@@ -175,9 +194,16 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
   await expect(etapaVisible).toBeVisible();
   await expect(etapaVisible).toContainText("Aprobación de guion");
   await context.setOffline(true);
-  await expect(page.locator(".connection")).not.toHaveText("En vivo");
+  const desconectado = page.getByText("Sin conexión, reintentando", {
+    exact: true,
+  });
+  await expect(desconectado).toBeVisible({ timeout: 12000 });
+  const reconectado = page.waitForResponse(
+    (r) => new URL(r.url()).pathname === "/api/eventos" && r.ok(),
+  );
   await context.setOffline(false);
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await reconectado;
+  await expect(desconectado).toBeHidden();
   const approve = page.getByRole("button", { name: "Aprobar", exact: true });
   for (const [stage, next] of [
     [3, "Aprobación final"],
@@ -199,8 +225,9 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
 
 test("pausa persistente, movimiento reducido y accesibilidad en ambos tamaños", async ({
   page,
-}, info) => {
-  await entrar(page, info.project.metadata.theme);
+}) => {
+  await entrar(page);
+  await page.goto("/perfil");
   const pausa = page.getByRole("button", { name: "Pausar movimiento" });
   await teclado(page, pausa);
   await page.keyboard.press("Enter");
@@ -277,7 +304,8 @@ test("grabación nativa con señal sintética y reproducción de medios soportad
   page,
   browserName,
 }, info) => {
-  await entrar(page, info.project.metadata.theme);
+  await entrar(page);
+  await abrirCooper(page);
   const supported = await page.evaluate(() => ({
     grabacion: Object.fromEntries(
       ["audio/webm", "audio/ogg", "audio/mp4"].map((mime) => [
@@ -327,9 +355,10 @@ test("grabación nativa con señal sintética y reproducción de medios soportad
     await expect(
       page.getByText("Transcripción simulada.", { exact: false }),
     ).toBeVisible();
-    const message = page
-      .getByRole("main")
-      .getByRole("textbox", { name: "Mensaje para Cooper", exact: true });
+    const message = page.getByRole("textbox", {
+      name: "Mensaje para Cooper",
+      exact: true,
+    });
     await expect(message).toHaveCount(1);
     await expect(message).toBeVisible();
     await expect(message).not.toHaveValue("");

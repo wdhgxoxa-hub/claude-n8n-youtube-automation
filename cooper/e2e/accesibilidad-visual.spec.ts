@@ -1,7 +1,8 @@
+import { abrirCooper } from "./ayudas-diseno";
 import { test, expect } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 
-test("contraste de campos, ayudas y foco visible en ambos temas", async ({
+test("contraste de campos, ayudas y foco visible en el tema oscuro", async ({
   page,
 }) => {
   expect(
@@ -21,9 +22,9 @@ test("contraste de campos, ayudas y foco visible en ambos temas", async ({
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/perfil");
   await expect(page).toHaveTitle("Tu perfil · Cooper");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator(".workspace")).toBeVisible();
   const muestras = [];
-  for (const theme of ["oscuro", "claro"]) {
+  for (const theme of ["oscuro"]) {
     await page.evaluate((value) => {
       document.documentElement.dataset.theme = value;
     }, theme);
@@ -83,6 +84,7 @@ test("contraste de campos, ayudas y foco visible en ambos temas", async ({
         .evaluate((el) => getComputedStyle(el).outlineStyle),
     )
     .toBe("solid");
+  await abrirCooper(page);
   const composer = page.getByRole("textbox", { name: "Mensaje para Cooper" });
   await composer.focus();
   expect
