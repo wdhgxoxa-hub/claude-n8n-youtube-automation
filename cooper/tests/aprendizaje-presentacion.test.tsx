@@ -170,6 +170,34 @@ it("muestra el póster de la red que dio origen a la lección cuando hay cortes 
   );
 });
 
+it("no compara la retención de un segundo concreto con el promedio del siguiente video", () => {
+  const datos = ejemplo();
+  const aprendizaje = datos.aprendizajes[0];
+  if (aprendizaje.tipo !== "video")
+    throw new Error("Fixture de video inválida");
+  aprendizaje.leccion.origenes![0].segundo = 3;
+  const html = pintar(datos);
+  expect(html).toContain("Esperando el siguiente resultado");
+  expect(html).not.toContain("Antes: 40 %");
+});
+
+it("compara retención en el mismo segundo cuando existe ese punto en la curva siguiente", () => {
+  const datos = ejemplo();
+  const aprendizaje = datos.aprendizajes[0];
+  const siguiente = datos.publicaciones[0];
+  if (aprendizaje.tipo !== "video" || siguiente.tipo !== "video")
+    throw new Error("Fixture de video inválida");
+  aprendizaje.leccion.origenes![0].segundo = 3;
+  siguiente.publicacion.historial[0].curvaRetencion = [
+    { segundo: 3, porcentaje: 0.48 },
+    { segundo: 8, porcentaje: 0.32 },
+  ];
+  const html = pintar(datos);
+  expect(html).toContain("Antes: 40 % · 24h · segundo 3");
+  expect(html).toContain('class="cifra-valor">48</div>');
+  expect(html).not.toContain('class="cifra-valor">63</div>');
+});
+
 it.each([
   "otra red",
   "otra ventana",

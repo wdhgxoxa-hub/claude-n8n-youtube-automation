@@ -24,4 +24,6 @@ La matriz 360/390/768/1024/1440/1920 guarda PNG de página completa y primer vie
 
 La medición de hover se ejecuta sin grabación ni traza de Playwright para evitar su coste: CPU 4× a 390 y normal a 1440; registra FPS, p95, CLS y long tasks. Sus umbrales son ≥57 FPS, p95 ≤25 ms y CLS ≤0,01. Son muestras de Chromium en laboratorio, no una certificación de un teléfono físico. Lighthouse y la revisión visual humana del informe de misión complementan esta puerta.
 
+Lighthouse móvil de Inicio y Publicados se ejecuta aparte con `node diseno-publicados-aprendizaje/lighthouse.mjs`, usando el fixture real local de doce publicaciones. No ejecutar mediciones de rendimiento al mismo tiempo que el build u otras suites.
+
 Documentación oficial consultada: [capturas Playwright](https://playwright.dev/docs/screenshots), [videos](https://playwright.dev/docs/videos), [axe con Playwright](https://playwright.dev/docs/accessibility-testing) y [PerformanceObserver](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver).

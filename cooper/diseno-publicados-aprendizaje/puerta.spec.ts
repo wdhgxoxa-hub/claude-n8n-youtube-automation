@@ -310,12 +310,37 @@ test.describe("medición sin grabación", () => {
       await page.goto("/publicados");
       await expect(page.locator(".publication")).toHaveCount(12);
       await page.waitForTimeout(1000);
+      await cdp.send("Tracing.start", {
+        categories:
+          "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame",
+        transferMode: "ReturnAsStream",
+      });
       await startSample(page);
       await page.locator(".publication-thumb .medio").first().hover();
       await page.waitForTimeout(1500);
       await page.mouse.move(0, 0);
       await page.waitForTimeout(700);
       const sample = await stopSample(page);
+      const completed = new Promise<string>((accept) =>
+        cdp.once("Tracing.tracingComplete", (event) => accept(event.stream!)),
+      );
+      await cdp.send("Tracing.end");
+      const handle = await completed;
+      const traceChunks: string[] = [];
+      for (;;) {
+        const chunk = await cdp.send("IO.read", { handle });
+        traceChunks.push(
+          chunk.base64Encoded
+            ? Buffer.from(chunk.data, "base64").toString("utf8")
+            : chunk.data,
+        );
+        if (chunk.eof) break;
+      }
+      await cdp.send("IO.close", { handle });
+      writeFileSync(
+        `${evidenceDir}/traza-movimiento-${width}.json`,
+        traceChunks.join(""),
+      );
       writeFileSync(
         `${evidenceDir}/movimiento-${width}.json`,
         JSON.stringify(

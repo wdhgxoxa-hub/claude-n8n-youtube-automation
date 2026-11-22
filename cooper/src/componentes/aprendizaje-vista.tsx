@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
-import type { Leccion } from "@/contratos/observabilidad";
+import type { Leccion, Medicion } from "@/contratos/observabilidad";
 import {
   filtrarResultados,
   type AprendizajeResultado,
@@ -32,6 +32,16 @@ function valorEvidencia(origen: Evidencia) {
   return origen.metrica === "retencion"
     ? Math.round(origen.valor * 100)
     : origen.valor;
+}
+
+function valorComparable(medicion: Medicion, origen: Evidencia) {
+  if (origen.segundo !== undefined) {
+    return origen.metrica === "retencion"
+      ? medicion.curvaRetencion?.find((p) => p.segundo === origen.segundo)
+          ?.porcentaje
+      : undefined;
+  }
+  return medicion[origen.metrica];
 }
 
 function publicacionVideo(
@@ -135,13 +145,13 @@ function EfectoSiguiente({
         .filter(
           (m) =>
             m.ventana === origen.ventana &&
-            m[origen.metrica] != null &&
+            valorComparable(m, origen) != null &&
             Date.parse(m.fecha) >= Date.parse(l.fecha),
         )
         .sort((a, b) => Date.parse(a.fecha) - Date.parse(b.fecha))
         .at(-1)
     : undefined;
-  const valor = origen ? medicion?.[origen.metrica] : null;
+  const valor = origen && medicion ? valorComparable(medicion, origen) : null;
   return (
     <div className={styles.efecto}>
       <span className={styles.paso}>05 / El siguiente video</span>
@@ -152,7 +162,7 @@ function EfectoSiguiente({
               origen.metrica === "retencion" ? Math.round(valor * 100) : valor
             }
             etiqueta={`${metricas[origen.metrica]}${origen.metrica === "retencion" ? " (%)" : ""}`}
-            variacion={`Antes: ${numero(valorEvidencia(origen))}${origen.metrica === "retencion" ? " %" : ""} · ${origen.ventana}`}
+            variacion={`Antes: ${numero(valorEvidencia(origen))}${origen.metrica === "retencion" ? " %" : ""} · ${origen.ventana}${origen.segundo !== undefined ? ` · segundo ${numero(origen.segundo)}` : ""}`}
             className={styles.cifraEfecto}
           />
           <Link className={styles.enlace} href={siguiente.href}>
