@@ -435,7 +435,12 @@ export function PantallaOperacion({
                             {(catalogo as Record<string, { etiqueta: string }>)[
                               key
                             ]?.etiqueta || key}
-                            : {String(val)}
+                            :{" "}
+                            {typeof val === "boolean"
+                              ? val
+                                ? "Sí"
+                                : "No"
+                              : String(val)}
                           </p>
                         ))
                       : k === "campo"
