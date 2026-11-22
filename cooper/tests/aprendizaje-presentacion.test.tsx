@@ -130,6 +130,46 @@ it("compara la última medición de la misma red y ventana sin atribuir causalid
   expect(fetch).not.toHaveBeenCalled();
 });
 
+it("muestra el póster de la red que dio origen a la lección cuando hay cortes distintos", () => {
+  const datos = ejemplo();
+  const publicacion = datos.publicaciones[0];
+  if (publicacion.tipo !== "video")
+    throw new Error("Fixture de video inválida");
+  for (const red of ["instagram", "youtube"]) {
+    datos.publicaciones.push({
+      ...publicacion,
+      id: `origen-${red}`,
+      videoId: "anterior",
+      href: "/videos/anterior",
+      titulo: "Video anterior",
+      publicacion: { ...publicacion.publicacion, id: `origen-${red}`, red },
+      medios: {
+        version: 1,
+        videoId: "anterior",
+        estado: "listo",
+        poster: {
+          url: `/api/videos/anterior/medios/poster?red=${red}`,
+          origen: "render",
+          ancho: 1600,
+          alto: 900,
+        },
+        preview: null,
+        tinte: "",
+        ancho: 1600,
+        alto: 900,
+        relacionAspecto: 16 / 9,
+        origenDimensiones: "video",
+        actualizadoEn: 0,
+      },
+    });
+  }
+  const html = pintar(datos);
+  expect(html).toContain("/api/videos/anterior/medios/poster?red=youtube");
+  expect(html).not.toContain(
+    "/api/videos/anterior/medios/poster?red=instagram",
+  );
+});
+
 it.each([
   "otra red",
   "otra ventana",

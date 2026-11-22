@@ -345,8 +345,10 @@ function PublicacionPared({
   grupo,
   ambitos,
   abrir,
+  orden,
 }: {
   grupo: Grupo;
+  orden: number;
   ambitos: AmbitoResultado[];
   abrir: () => void;
 }) {
@@ -386,12 +388,13 @@ function PublicacionPared({
   const ambito = ambitos.find((a) => a.id === p.ambitoId)!;
   return (
     <article
-      className={`${styles.publicacion} publication`}
+      className={`${styles.publicacion} publication${orden < 8 ? " entrada-estudio" : ""}`}
       data-publicacion-id={p.id}
       style={
         {
           ...estiloMedio(medio, proporcion),
           "--proporcion": proporcion,
+          "--orden": Math.min(orden, 7),
         } as CSSProperties
       }
     >
@@ -558,10 +561,11 @@ export function Publicados({ initial }: { initial: Resultados }) {
       </div>
       {publicaciones.length ? (
         <section className={styles.pared} aria-label="Publicaciones ordenadas">
-          {publicaciones.map((grupo) => (
+          {publicaciones.map((grupo, indice) => (
             <PublicacionPared
               key={grupo.id}
               grupo={grupo}
+              orden={indice}
               ambitos={resultado.ambitos}
               abrir={() => {
                 seleccionar(grupo);

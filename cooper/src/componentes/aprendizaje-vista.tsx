@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import type { Leccion } from "@/contratos/observabilidad";
 import {
@@ -38,11 +38,13 @@ function publicacionVideo(
   resultado: Resultados,
   videoId: string,
   ambitoId: string,
+  red?: string,
 ) {
   return resultado.publicaciones.find(
     (p): p is Extract<PublicacionResultado, { tipo: "video" }> =>
       p.tipo === "video" &&
       p.ambitoId === ambitoId &&
+      (!red || p.publicacion.red.toLowerCase() === red.toLowerCase()) &&
       (p.videoId === videoId ||
         p.href === `/videos/${encodeURIComponent(videoId)}`),
   );
@@ -59,7 +61,12 @@ function VideoOrigen({
 }) {
   const { data } = useEspacio();
   const video = data.videos.find((v) => v.id === origen.videoId);
-  const publicacion = publicacionVideo(resultado, origen.videoId, ambitoId);
+  const publicacion = publicacionVideo(
+    resultado,
+    origen.videoId,
+    ambitoId,
+    origen.red,
+  );
   const medio = useVideoMedios({
     videoId: origen.videoId,
     inicial: publicacion?.medios ?? video?.medios,
@@ -187,7 +194,10 @@ function LeccionEnTiempo({
       <span className={styles.numero} aria-hidden="true">
         {String(indice + 1).padStart(2, "0")}
       </span>
-      <article className={`lesson ${styles.leccion}`}>
+      <article
+        className={`lesson ${styles.leccion}${indice < 8 ? " entrada-estudio" : ""}`}
+        style={{ "--orden": Math.min(indice, 7) } as CSSProperties}
+      >
         <header className={styles.cabeceraLeccion}>
           <div className={styles.metaLinea}>
             <time dateTime={registro.fecha ?? undefined}>
