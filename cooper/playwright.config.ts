@@ -4,6 +4,13 @@ const baseURL = `http://127.0.0.1:${process.env.COOPER_E2E_PORT ?? "3107"}`;
 const demoURL = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`;
 const secret = process.env.COOPER_E2E_SECRET ?? randomBytes(32).toString("hex");
 process.env.COOPER_E2E_SECRET = secret;
+// Firefox y WebKit: 390 y 1440 en la puerta; las rondas piden la matriz entera
+// con COOPER_ANCHOS_MOTORES=360,390,768,1024,1440,1920.
+const anchosMotores = (process.env.COOPER_ANCHOS_MOTORES ?? "390,1440")
+  .split(",")
+  .map(Number);
+if (!anchosMotores.every((w) => Number.isInteger(w) && w >= 320 && w <= 2560))
+  throw new Error("COOPER_ANCHOS_MOTORES no válido.");
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false,
@@ -66,7 +73,7 @@ export default defineConfig({
     },
     ...(["firefox", "webkit"] as const).flatMap((browserName) =>
       (["oscuro"] as const).flatMap((theme) =>
-        [390, 1440].map((width) => ({
+        anchosMotores.map((width) => ({
           name: `${browserName}-${theme}-${width}`,
           testMatch: "multiengine.spec.ts",
           metadata: { theme },
