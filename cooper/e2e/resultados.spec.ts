@@ -196,8 +196,13 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
   await expect(page.locator(".resultado-origen:visible")).toHaveCount(
     publicaciones.length,
   );
-  await expect(page.getByRole("main").getByRole("status")).toContainText(
-    `${publicaciones.length} registros de origen`,
+  await expect(
+    page
+      .getByRole("main")
+      .getByRole("status")
+      .filter({ hasText: /^\d+ publicaci/ }),
+  ).toContainText(
+    `${publicaciones.length} ${publicaciones.length === 1 ? "resultado" : "resultados"}`,
   );
   await page.getByRole("button", { name: "instagram", exact: true }).click();
   const instagram = publicaciones.filter((p) => p.redes.includes("instagram"));

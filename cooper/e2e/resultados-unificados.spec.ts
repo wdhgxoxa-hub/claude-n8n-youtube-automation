@@ -66,9 +66,12 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await page.getByLabel("Desde (Lima)").fill("2026-11-20");
   await page.getByLabel("Hasta (Lima)").fill("2026-11-20");
   await expect(page.locator(".publication:visible")).toHaveCount(1);
-  await expect(page.getByRole("main").getByRole("status")).toHaveText(
-    "1 publicación · 2 resultados",
-  );
+  await expect(
+    page
+      .getByRole("main")
+      .getByRole("status")
+      .filter({ hasText: /^\d+ publicaci/ }),
+  ).toHaveText("1 publicación · 2 resultados");
   await expect(page.getByText("125", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Limpiar filtros" }).click();
   await page.getByRole("button", { name: "instagram", exact: true }).click();
@@ -106,9 +109,12 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   ).toBeVisible();
   await page.getByRole("button", { name: "youtube", exact: true }).click();
   await expect(page.locator(".lesson:visible")).toHaveCount(1);
-  await expect(page.getByRole("main").getByRole("status")).toHaveText(
-    "1 lección de videos · 0 registros de Marcas",
-  );
+  await expect(
+    page
+      .getByRole("main")
+      .getByRole("status")
+      .filter({ hasText: /^\d+ lecci/ }),
+  ).toHaveText("1 lección de videos · 0 registros de Marcas");
   await page.getByRole("button", { name: "Limpiar filtros" }).click();
   await page.route("**/api/resultados", (r) =>
     r.fulfill({ status: 503, json: { error: "Ensayo" } }),
