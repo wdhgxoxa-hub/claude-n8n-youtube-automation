@@ -1,0 +1,43 @@
+{
+  "fecha": "2026-11-22T03:04:47.363Z",
+  "origen": "MP4 público existente, sin producción nueva",
+  "archivoOriginal": ".cache/diseno-medios-real/original.mp4",
+  "sha256Original": "727421fdd1fbc2c705c6457a58496e90a84349b0ae7e27ee0cd20482b084f0a3",
+  "ancho": 1080,
+  "alto": 1920,
+  "tinte": "hsl(0 0% 45%)",
+  "bytesPoster": 36778,
+  "bytesPreview": 336834,
+  "duracion": 5,
+  "tiempoMs": 971,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 360,
+        "height": 640
+      }
+    ],
+    "format": {
+      "duration": "5.000000"
+    }
+  },
+  "postersOficiales": [
+    {
+      "archivo": "youtube-oficial-1.webp",
+      "ancho": 480,
+      "alto": 360,
+      "tinte": "hsl(0 0% 45%)",
+      "bytes": 15000
+    },
+    {
+      "archivo": "youtube-oficial-2.webp",
+      "ancho": 480,
+      "alto": 360,
+      "tinte": "hsl(0 0% 45%)",
+      "bytes": 8098
+    }
+  ]
+}

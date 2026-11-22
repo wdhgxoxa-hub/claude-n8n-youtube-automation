@@ -1,0 +1,16 @@
+✔ pulido: métricas por publicación, nulos distintos de cero y un punto por día (2.468352ms)
+✔ pulido: la proyección aísla medios, lecciones, rechazos y resoluciones (8.168688ms)
+✔ pulido: red publicada se conserva ante fallo parcial y no se confunde enviado con publicado (0.691141ms)
+✔ medios: publicados conservan el MP4 de cada corte y la miniatura oficial de su YouTube (1.301051ms)
+✔ medios: miniatura oficial toma la lectura más reciente válida y excluye URLs con credenciales (0.764508ms)
+✔ pulido: periodicidad diaria acotada y ningún análisis sin evidencia persistida (0.749039ms)
+✔ pulido: piezas usa los archivos finales de sonido/avatar y el orden del montaje (0.627207ms)
+✔ pulido: conserva el porcentaje medio visto de YouTube sin recortarlo a 100 % (1.856083ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.128654
