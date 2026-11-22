@@ -272,6 +272,12 @@
   padding-block: var(--espacio-24);
   border-top: var(--borde-ancho) solid var(--linea);
 }
+@media (min-width: 768px) {
+  .pared::after {
+    content: "";
+    flex: 1000 1 0;
+  }
+}
 @media (min-width: 768px) and (max-width: 1199px) {
   .heroes {
     --cifra-heroe: var(--texto-48);
