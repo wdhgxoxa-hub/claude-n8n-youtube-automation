@@ -1,0 +1,8 @@
+{
+  "base": {
+    "deploy/Caddyfile": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "deploy/compose.yaml": "b3071fc8b069fec5f522ea7d69c4232ac8436519b09810178e610bdf649eedb7",
+    "deploy/compose.chat.yaml": "44e4bd58bbe4fbeed106d9b356a7ce2ceef0279f887d58d1da1cba7cde70b164"
+  },
+  "caddy_candidato_sha256": "5c62b1698a383ad6bab8e1bf71466c11f16afed02a8b185c817de4c6bae93517"
+}

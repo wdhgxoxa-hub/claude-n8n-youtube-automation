@@ -1,0 +1,70 @@
+{
+  "at_utc": "2026-11-22T03:01:16.575Z",
+  "caddy_image": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+  "next_version": "16.4.6",
+  "node_version": "v24.22.3",
+  "scope": "Proxy Caddy real + transporte HTTP/compresión real de Next; origen sintético, loopback, sin sesión ni fábrica real",
+  "baseline_sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+  "candidate_sha256": "5c62b1698a383ad6bab8e1bf71466c11f16afed02a8b185c817de4c6bae93517",
+  "patch_reverse_exact": true,
+  "caddy_adapt_warnings": 0,
+  "compose_only_caddy_mount": true,
+  "compose_reverse_exact": true,
+  "normal_response_keeps_gzip": true,
+  "reconnections": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "active_after_disconnects": 0,
+  "results": [
+    {
+      "case": "rojo_sin_primer_byte",
+      "path": "/api/eventos?sin_latido&lento",
+      "status": 504,
+      "content_encoding": null,
+      "headers_ms": 35032,
+      "first_event_ms": null,
+      "total_ms": 35033
+    },
+    {
+      "case": "verde_latidos_durante_sincronizacion_lenta",
+      "path": "/api/eventos?lento&no_transform",
+      "status": 200,
+      "content_encoding": null,
+      "headers_ms": 5,
+      "first_event_ms": 5,
+      "total_ms": 37012
+    },
+    {
+      "case": "gzip_original_sin_bloqueo",
+      "path": "/api/eventos",
+      "status": 200,
+      "content_encoding": "gzip",
+      "headers_ms": 6,
+      "first_event_ms": 6,
+      "total_ms": 6
+    },
+    {
+      "case": "identity_por_ruta",
+      "path": "/api/eventos",
+      "status": 200,
+      "content_encoding": null,
+      "headers_ms": 2,
+      "first_event_ms": 2,
+      "total_ms": 2
+    },
+    {
+      "case": "identity_por_ruta",
+      "path": "/api/chat",
+      "status": 200,
+      "content_encoding": null,
+      "headers_ms": 1,
+      "first_event_ms": 1,
+      "total_ms": 1
+    }
+  ]
+}

@@ -9,6 +9,8 @@
 
 ## Hecho
 
+- **21-11-2026, Lima — diseno-conexion implementado y probado en su rama:** SSE con latido inmediato independiente de n8n, reanudación por cursor y entrega de estado sin esperar a vaciar el historial; cliente silencioso estando sano, aviso después de cinco segundos de corte detectado y reconexión con backoff. Código `534ee7b`; puerta limpia **483 unitarias / 114 E2E / 235 flujos, cero errores y advertencias**. Componente: 7/7 de diseño, 180 capturas, video móvil 1/1, Lighthouse móvil Inicio 93/100 y Publicados 100/100 (rendimiento/accesibilidad). Configuración activa de Caddy cotejada en lectura; parche/Compose y reversa preparados. **No integrado, publicado ni desplegado. La puerta global de diseño sigue no aprobada** hasta combinar las otras misiones; no se certifica la desaparición del incidente dentro de una sesión privada productiva. [Informe, evidencia y autocrítica](informes/diseno-conexion.md).
+
 - **21-11-2026, Lima — diseno-medios implementado y probado localmente:** rama/worktree propios; API tipada y caché privada de póster, preview FFmpeg silenciosa ≤600 KB, tinte y dimensiones; migración 14→15, carga diferida y espacio reservado. Puerta común completa en `854a039`: **485 unitarias/108 E2E/237 flujos, 0 errores/0 advertencias/0 omisiones**. MP4 existente verificado: preview real 5 s, 336.834 bytes; 198 capturas finales revisadas, axe 0/overflow 0, Lighthouse móvil 93/92 y accesibilidad 100. **Puerta global de diseño no aprobada** por tokens/armazón heredados y 404 del recorrido de errores; no se relajó. El delta del puente se generó offline. **Sin integración, push ni despliegue**, y sin escrituras en VPS/n8n desde esta misión. [Informe y pendientes](informes/diseno-medios.md), [puerta](informes/evidencias/diseno-medios/puerta-comun.json).
 
 - **21-11-2026, Lima — total-integrador / total-cierre cerrados:** implementado, probado, integrado, publicado por fast-forward a `mio/main` y `mio/version-chatgpt`, y desplegado en https://cooper.cooperestudio.com. Runtime b3 exacto, puerta 467 unitarias/103 E2E/235 flujos y rondas 123+123 PASS; extras 269 regresiones PASS, cero advertencias. Se conservó el env Google. [Informe final](informes/total-cierre.md), [historia integrada](informes/total-integrador.md).
@@ -116,6 +118,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 ## En curso
 
 - **diseno-medios:** revisión de Claude e integración futura con el armazón de `diseno-base`; no se declara aceptación global de la sección 5. Diagnóstico, capturas y límites de producción listos para revisar; nada de este frente está desplegado. [Informe](informes/diseno-medios.md).
+- Revisión de Claude de `diseno-conexion` y combinación con `diseno-base`/`diseno-medios`: corregir las desviaciones globales de tokens/pantallas y repetir su puerta de diseño. La corrección de conexión y el parche reversible permanecen en su rama, pendientes de integración y despliegue autorizados. [Detalle](informes/diseno-conexion.md#puerta-de-diseño-y-autocrítica).
+
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
 - Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
 - Sexta oleada anunciada por Claude (iglesia, tienda, WhatsApp y observabilidad): conservada para la pasada posterior al despliegue. No se incorporó ni sobrescribió su trabajo concurrente al cerrar esta versión.
@@ -137,6 +141,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 11. Margen Real: confirmar URL/ID del TikTok propio y el homónimo mexicano; revisar descriptor Perú, capacidad del piloto y aplicación editorial. [Detalle](informes/total-margen-estrategia.md#pendientes-de-walter).
 
 12. Medios: revisar con Claude el informe y las capturas finales; decidir integración/despliegue por separado, conservación y entrega de los MP4 en B2, tinte editorial y retención de derivados. Confirmar permisos oficiales de TikTok solo si hace falta obtener su portada. [Pendientes concretos](informes/diseno-medios.md#pendientes-de-walter).
+
+13. Revisar con Claude los commits y capturas de `diseno-conexion`, observar recuperación/latidos desde la sesión productiva legítima y decidir la aplicación de código y parche Caddy/Compose con su reversa. Cotejar de nuevo las huellas y coordinar la breve ventana del proxy antes de aplicarlo. No requiere iniciar otro OAuth. [Pendientes de la misión](informes/diseno-conexion.md#pendientes-de-walter).
 
 ## Ideas conversadas
 

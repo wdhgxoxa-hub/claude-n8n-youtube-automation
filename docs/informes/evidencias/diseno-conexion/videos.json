@@ -1,0 +1,50 @@
+[
+  {
+    "prueba": "360: todas las rutas, estados de conexión y diagnóstico de diseño heredado",
+    "archivo": "videos/recorrido-360.webm",
+    "sha256": "93504822c78ccde31d9cc0296dc5ba35ef2c9abd0bd0aba16170db29c12115c5",
+    "videos_auxiliares_axe": 29
+  },
+  {
+    "prueba": "390: todas las rutas, estados de conexión y diagnóstico de diseño heredado",
+    "archivo": "videos/recorrido-390.webm",
+    "sha256": "010e171d6bba8a3b02ea0b714577662aefa12a379258d543df9dc6135488c8b3",
+    "videos_auxiliares_axe": 29
+  },
+  {
+    "prueba": "768: todas las rutas, estados de conexión y diagnóstico de diseño heredado",
+    "archivo": "videos/recorrido-768.webm",
+    "sha256": "87a06d90b77949a4ecf00579d881e36870b7962ba4264bf0236592d2c6d4f74d",
+    "videos_auxiliares_axe": 29
+  },
+  {
+    "prueba": "1024: todas las rutas, estados de conexión y diagnóstico de diseño heredado",
+    "archivo": "videos/recorrido-1024.webm",
+    "sha256": "58c79924485f430f4bed31749d8a331104889dd496f51891dfdfac3d7df1ec03",
+    "videos_auxiliares_axe": 29
+  },
+  {
+    "prueba": "1440: todas las rutas, estados de conexión y diagnóstico de diseño heredado",
+    "archivo": "videos/recorrido-1440.webm",
+    "sha256": "df0ca312adf4e7eb10c91ffed7d765dc7c812ce7cc92dcb71ff2c599ae3fa5bd",
+    "videos_auxiliares_axe": 29
+  },
+  {
+    "prueba": "1920: todas las rutas, estados de conexión y diagnóstico de diseño heredado",
+    "archivo": "videos/recorrido-1920.webm",
+    "sha256": "a90ca7e8e2824bd2b55085880b8e1fed5e5cad191f7a478554e2d31f5ec6a7f8",
+    "videos_auxiliares_axe": 29
+  },
+  {
+    "prueba": "video: corte, recuperación, navegación y menú móvil existentes",
+    "archivo": "videos/corte-recuperacion-navegacion.webm",
+    "sha256": "8dc3ed009b85feaa71cc40054a5e387d90ed81ef984f8516b7ba76f08a363cc8",
+    "videos_auxiliares_axe": 0
+  },
+  {
+    "prueba": "Misma prueba de corte, recuperación y navegación en resolución nativa",
+    "archivo": "videos/corte-recuperacion-movil-390.webm",
+    "resolucion": "390x844",
+    "sha256": "5479727f829828f987875ea00bc3827ba9363a48f7f1567f298f8c2080ffbd23"
+  }
+]

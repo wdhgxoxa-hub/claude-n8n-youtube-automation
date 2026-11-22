@@ -18,7 +18,7 @@ async function login(page: Page) {
   );
   expect(response.ok()).toBe(true);
   await page.goto("/");
-  await expect(page.locator("main")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function settledFace(page: Page) {

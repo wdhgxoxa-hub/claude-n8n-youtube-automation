@@ -1,0 +1,158 @@
+[
+  {
+    "checkout": "ci-limpia-pEPnVq",
+    "commit_archivado": "57a4a9e65efb6b97ed677e6393f48284358ce0e0",
+    "inicio": "2026-11-22T02:59:13.831Z",
+    "resultado_de_aceptacion": "INTERRUMPIDO; no se contabiliza como puerta aprobada",
+    "motivo": "Detenido al incorporar correcciones posteriores de backoff/cursor.",
+    "pasos_finalizados": [
+      {
+        "nombre": "ci",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "preparacion",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "lint",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "typecheck",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "unitarias",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "e2e",
+        "rc": 1,
+        "advertencias": 0
+      }
+    ]
+  },
+  {
+    "checkout": "ci-limpia-U2m8U2",
+    "commit_archivado": "eff0d110f9a85f67d1b88899f56e86367694d1aa",
+    "inicio": "2026-11-22T03:04:19.508Z",
+    "resultado_de_aceptacion": "INTERRUMPIDO; no se contabiliza como puerta aprobada",
+    "motivo": "Detenido al corregir la estabilidad desde la apertura real.",
+    "pasos_finalizados": [
+      {
+        "nombre": "ci",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "preparacion",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "lint",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "typecheck",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "unitarias",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "e2e",
+        "rc": 1,
+        "advertencias": 0
+      }
+    ]
+  },
+  {
+    "checkout": "ci-limpia-tdJzAp",
+    "commit_archivado": "3f732c5edb0278e6cda0c12733b3e31cb50cb250",
+    "inicio": "2026-11-22T03:14:01.221Z",
+    "resultado_de_aceptacion": "INTERRUMPIDO; no se contabiliza como puerta aprobada",
+    "motivo": "Detenido tras detectar y corregir el margen tipográfico móvil en la revisión visual; sustituido por el archivo 8fe926b.",
+    "pasos_finalizados": [
+      {
+        "nombre": "ci",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "preparacion",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "lint",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "typecheck",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "unitarias",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "e2e",
+        "rc": 1,
+        "advertencias": 0
+      }
+    ]
+  },
+  {
+    "checkout": "ci-limpia-FgoFl0",
+    "commit_archivado": "8fe926b8d70b311bef75248cc202a41b11699699",
+    "inicio": "2026-11-22T03:18:43.070Z",
+    "resultado_de_aceptacion": "INTERRUMPIDO; no se contabiliza como puerta aprobada",
+    "motivo": "Revisión final reprodujo demora del estado con historial grande y cursor bloqueado con fechas iguales; sustitución por 534ee7b. No se suavizaron comprobaciones.",
+    "pasos_finalizados": [
+      {
+        "nombre": "ci",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "preparacion",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "lint",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "typecheck",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "unitarias",
+        "rc": 0,
+        "advertencias": 0
+      },
+      {
+        "nombre": "e2e",
+        "rc": 1,
+        "advertencias": 0
+      }
+    ]
+  }
+]

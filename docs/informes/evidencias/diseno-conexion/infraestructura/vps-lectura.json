@@ -1,0 +1,86 @@
+{
+  "mission": "diseno-conexion",
+  "mode": "VPS read-only; no deployment, reload, restart or configuration mutation",
+  "observed_at_utc": [
+    "2026-11-22T03:24:12.994163+00:00",
+    "2026-11-22T03:25:14.886045+00:00"
+  ],
+  "observed_at_lima": "2026-11-21 22:24–22:25",
+  "documented_access": {
+    "destination_source": "docs/informes/total-matriz-cierre-63c412c.md:100",
+    "identity_path_source": "docs/informes/cooper-vps-real.md:173",
+    "deployment_path_source": "docs/cooper-vps.md:35",
+    "destination": "operador@144.91.88.253",
+    "ssh_options": [
+      "-F /dev/null",
+      "-i /home/david/.ssh/cooper_vps",
+      "-o IdentitiesOnly=yes",
+      "-o BatchMode=yes",
+      "-o StrictHostKeyChecking=yes",
+      "-o UpdateHostKeys=no",
+      "-o ConnectTimeout=8",
+      "-o ConnectionAttempts=1"
+    ],
+    "private_ssh_config_opened": false,
+    "credential_contents_read_or_printed": false,
+    "interactive_login_or_password_prompt": false
+  },
+  "public_caddy_file": {
+    "path": "/opt/cooper/deploy/Caddyfile",
+    "sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "matches_tested_repository_baseline": true,
+    "has_response_buffers": false,
+    "has_encode": false,
+    "filtered_directives": [
+      "flush_interval -1",
+      "stream_close_delay 5m",
+      "dial_timeout 5s",
+      "response_header_timeout 35s",
+      "flush_interval -1",
+      "flush_interval -1"
+    ]
+  },
+  "container_projection": {
+    "name": "cooper-caddy-1",
+    "image": "docker.io/library/caddy:2.11.8-alpine@sha256:84202bd39c87ddba4611c3c85e7cb9c96d529bd536acf96a6d66cee4057fe8a3",
+    "health": "healthy",
+    "mount_source": "/opt/cooper/deploy/Caddyfile",
+    "mount_target": "/etc/caddy/Caddyfile",
+    "mounted_sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+    "matches_tested_caddy_image_and_file": true
+  },
+  "active_caddy_cooper_route": {
+    "source": "GET of specific scalar fields in the Caddy loopback admin API; no complete config dump",
+    "host_verified": "cooper.cooperestudio.com",
+    "handler_verified": "reverse_proxy",
+    "flush_interval_ns": -1,
+    "stream_close_delay_ns": 300000000000,
+    "dial_timeout_ns": 5000000000,
+    "response_header_timeout_ns": 35000000000,
+    "upstreams": [{ "dial": "cooper:3000" }],
+    "matches_tested_cooper_proxy_values": true
+  },
+  "sanitized_read_operations": [
+    "python3: SHA-256 of /opt/cooper/deploy/Caddyfile and regex projection restricted to flush_interval, stream_close_delay, dial_timeout, response_header_timeout; booleans for encode/response_buffers",
+    "sudo -n docker ps --filter label=com.docker.compose.service=caddy --format '{{.Names}} {{.Image}} {{.Status}}'",
+    "sudo -n docker inspect --format '{{range .Mounts}}{{if eq .Destination \"/etc/caddy/Caddyfile\"}}{{.Source}}{{end}}{{end}}' cooper-caddy-1",
+    "sudo -n docker exec cooper-caddy-1 sha256sum /etc/caddy/Caddyfile",
+    "sudo -n docker inspect --format '{{.Config.Image}}' cooper-caddy-1",
+    "sudo -n docker inspect --format '{{.State.Health.Status}}' cooper-caddy-1",
+    "sudo -n docker exec cooper-caddy-1 wget -q -T 5 -O - http://127.0.0.1:2019/config/apps/http/servers/srv0/routes/0/match/0/host",
+    "sudo -n docker exec cooper-caddy-1 wget -q -T 5 -O - http://127.0.0.1:2019/config/apps/http/servers/srv0/routes/0/handle/0/routes/0/handle/2/handler",
+    "The same GET prefix queried only: flush_interval, stream_close_delay, transport/dial_timeout, transport/response_header_timeout, upstreams"
+  ],
+  "prohibited_data_not_accessed": [
+    "real .env files or environment variable values",
+    "private SSH configuration or credential contents",
+    "cookies, browser sessions, OAuth credentials",
+    "complete docker inspect or Compose interpolated configuration",
+    "raw logs, databases, n8n workflows or provider payloads"
+  ],
+  "limitations": [
+    "Confirms deployed Caddy image, mounted file and selected active proxy values; does not reproduce an authenticated production SSE session.",
+    "The private session incident remains a code/laboratory diagnosis pending confirmation with Walter's existing legitimate session.",
+    "No application or infrastructure changes were deployed. The identity patch remains a local proposal."
+  ]
+}

@@ -1,0 +1,188 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 48ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.0s
+  Running TypeScript ...
+  Finished TypeScript in 4.5s ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4)
+  Generating static pages using 23 workers (2/4)
+  Generating static pages using 23 workers (3/4)
+✓ Generating static pages using 23 workers (4/4) in 88ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/admin/conciliacion
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 114 tests using 1 worker
+
+  ✓    1 [chromium] › e2e/accesibilidad-formularios.spec.ts:33:1 › Pedir video conserva el foco al cancelar y respeta el control elegido mientras guarda (1.3s)
+  ✓    2 [chromium] › e2e/accesibilidad-formularios.spec.ts:89:1 › Alta de marca anuncia cada paso y devuelve el foco al salir (1.5s)
+  ✓    3 [chromium] › e2e/accesibilidad-formularios.spec.ts:126:1 › Confirmar operación permite cancelar con Escape y retomar el control de origen (1.4s)
+  ✓    4 [chromium] › e2e/accesibilidad-formularios.spec.ts:155:1 › WhatsApp asocia el código rechazado con una explicación y permite corregirlo (1.2s)
+  ✓    5 [chromium] › e2e/accesibilidad-formularios.spec.ts:201:1 › Micrófono denegado muestra una recuperación en español (1.0s)
+  ✓    6 [chromium] › e2e/accesibilidad-formularios.spec.ts:226:1 › Carga interrumpida conserva el control y explica la recuperación en español (218ms)
+  ✓    7 [chromium] › e2e/accesibilidad-formularios.spec.ts:251:1 › Biblioteca recupera el foco tras rechazar una carga sin quitarlo de otro campo (282ms)
+  ✓    8 [chromium] › e2e/accesibilidad-teclado.spec.ts:51:1 › inicio a 360 px: pestañas, navegación modal y ruta completa por teclado (1.3s)
+  ✓    9 [chromium] › e2e/accesibilidad-teclado.spec.ts:147:1 › recuerdos: retomar desde fábrica y cancelar o borrar conservan el foco (1.3s)
+  ✓   10 [chromium] › e2e/accesibilidad-teclado.spec.ts:217:1 › chat: salto al contenido, composición, confirmaciones y errores con teclado (1.2s)
+  ✓   11 [chromium] › e2e/accesibilidad-teclado.spec.ts:304:1 › perfil conserva los campos y explica fallos de conexión y respuesta en español (369ms)
+  ✓   12 [chromium] › e2e/accesibilidad-visual.spec.ts:4:1 › contraste de campos, ayudas y foco visible en ambos temas (368ms)
+  ✓   13 [chromium] › e2e/biblioteca-trabajador.spec.ts:4:1 › la biblioteca termina con la ventana cerrada, sin SSE ni consultas que impulsen el trabajo (2.2s)
+  ✓   14 [chromium] › e2e/chat-planes.spec.ts:3:1 › respuesta completa mantiene la boca y la espera se puede cancelar (16.7s)
+  ✓   15 [chromium] › e2e/conciliacion.spec.ts:4:1 › conciliación administrativa: consulta, evidencia, cierre durable y acceso aislado (2.9s)
+  ✓   16 [chromium] › e2e/conexion.spec.ts:10:3 › Conexión discreta y recuperación SSE › inicio sano y latidos sin novedades mantienen la interfaz silenciosa (290ms)
+  ✓   17 [chromium] › e2e/conexion.spec.ts:29:3 › Conexión discreta y recuperación SSE › un corte breve se recupera sin mostrar una alerta (295ms)
+  ✓   18 [chromium] › e2e/conexion.spec.ts:51:3 › Conexión discreta y recuperación SSE › un corte real espera más de cinco segundos y usa backoff acotado (397ms)
+  ✓   19 [chromium] › e2e/conexion.spec.ts:103:3 › Conexión discreta y recuperación SSE › las conexiones que caen tras cada estado conservan el backoff (298ms)
+  ✓   20 [chromium] › e2e/conexion.spec.ts:131:3 › Conexión discreta y recuperación SSE › una apertura lenta y volver a la pestaña no anulan el backoff (309ms)
+  ✓   21 [chromium] › e2e/conexion.spec.ts:173:3 › Conexión discreta y recuperación SSE › reconectar conserva el cursor del último progreso recibido (245ms)
+  ✓   22 [chromium] › e2e/conexion.spec.ts:197:3 › Conexión discreta y recuperación SSE › una apertura colgada no queda conectando para siempre (315ms)
+  ✓   23 [chromium] › e2e/conexion.spec.ts:224:3 › Conexión discreta y recuperación SSE › un fallo desde el primer intento también avisa y se recupera (295ms)
+  ✓   24 [chromium] › e2e/conexion.spec.ts:251:3 › Conexión discreta y recuperación SSE › el watchdog recupera un stream abierto que deja de emitir (329ms)
+  ✓   25 [chromium] › e2e/conexion.spec.ts:277:3 › Conexión discreta y recuperación SSE › fallo del relé con latidos activos no finge una desconexión (263ms)
+  ✓   26 [chromium] › e2e/conexion.spec.ts:294:3 › Conexión discreta y recuperación SSE › corte de red real del navegador y regreso online recuperan el SSE (5.6s)
+  ✓   27 [chromium] › e2e/cooper.spec.ts:37:1 › entrada pública, cabeceras y protección de rutas (564ms)
+  ✓   28 [chromium] › e2e/cooper.spec.ts:91:1 › conversa, pide un video, observa SSE y aprueba las dos puertas (9.9s)
+  ✓   29 [chromium] › e2e/cooper.spec.ts:145:1 › chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajenas (1.8s)
+  ✓   30 [chromium] › e2e/cooper.spec.ts:200:1 › boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream (5.4s)
+  ✓   31 [chromium] › e2e/cooper.spec.ts:263:1 › aísla usuarios, gasto, chat, SSE y acciones de video (524ms)
+  ✓   32 [chromium] › e2e/cooper.spec.ts:309:1 › adjuntos y grabación con transcripción editable (1.5s)
+  ✓   33 [chromium] › e2e/cooper.spec.ts:352:1 › una foto del chat abre el avatar privado sin omitir verificación (1.6s)
+  ✓   34 [chromium] › e2e/cooper.spec.ts:407:1 › biblioteca propia, verificación simulada, privacidad y compartir (5.9s)
+  ✓   35 [chromium] › e2e/cooper.spec.ts:459:1 › perfil guarda tema, inicio y WhatsApp; móvil y teclado (1.9s)
+  ✓   36 [chromium] › e2e/cooper.spec.ts:495:1 › administración, gastos por periodo, alerta y revocación inmediata (1.7s)
+  ✓   37 [chromium] › e2e/cooper.spec.ts:546:1 › auditoría AA de todas las pantallas, anchuras y ambos temas (30.2s)
+  ✓   38 [chromium] › e2e/cooper.spec.ts:628:1 › elige avatar, voz y presencia al pedir un video desde la biblioteca (438ms)
+  ✓   39 [chromium] › e2e/cooper.spec.ts:663:1 › bienvenida vacía: las tres acciones quedan antes del compositor (567ms)
+  ✓   40 [chromium] › e2e/cooper.spec.ts:684:1 › identidad con frase renovable, formulario accesible y entrenamiento en vivo (5.6s)
+  ✓   41 [chromium] › e2e/cooper.spec.ts:789:1 › modo noticia por canal se detiene sin verificación real (1.6s)
+  ✓   42 [chromium] › e2e/marcas.spec.ts:7:1 › Marcas: alta, estudio, pieza, revisión, edición y matriz accesible (8.0s)
+  ✓   43 [chromium] › e2e/marcas.spec.ts:184:3 › Marcas: Sentinel 1440 recorre sus cinco secciones con el guardián activo (2.6m)
+  ✓   44 [chromium] › e2e/marcas.spec.ts:184:3 › Marcas: Sentinel 390 recorre sus cinco secciones con el guardián activo (2.6m)
+  ✓   45 [chromium] › e2e/memoria.spec.ts:12:1 › recuerdos privados, regreso al estudio, revisión administrativa y borrado (7.8s)
+  ✓   46 [chromium] › e2e/montajes.spec.ts:4:1 › reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambia la fábrica (3.5s)
+  ✓   47 [chromium] › e2e/navegacion-resultados.spec.ts:5:1 › Resultados enlaza las secciones de Marcas y conserva el destino al recargar (8.1s)
+  ✓   48 [chromium] › e2e/resultados-unificados.spec.ts:15:1 › consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados y origen (7.1s)
+  ✓   49 [chromium] › e2e/revision.spec.ts:15:1 › R08 recupera SSE después de una respuesta HTTP temporal (1.6s)
+  ✓   50 [chromium] › e2e/revision.spec.ts:35:1 › R09 el menú móvil contiene el foco y lo devuelve al cerrar (353ms)
+  ✓   51 [chromium] › e2e/revision.spec.ts:53:1 › privacidad en HTML, JSON y carga de sesión Auth.js (496ms)
+  ✓   52 [chromium] › e2e/revision.spec.ts:128:1 › R12 conserva el correo de invitación cuando falla la red (323ms)
+  ✓   53 [chromium] › e2e/revision.spec.ts:148:1 › R13 libera el micrófono cuando MediaRecorder no puede iniciar (345ms)
+  ✓   54 [chromium] › e2e/revision.spec.ts:185:1 › entrada, no encontrado y formularios accesibles en ambos temas y cuatro anchuras (21.5s)
+  ✓   55 [chromium] › e2e/seguridad.spec.ts:3:1 › mutaciones exigen origen comprobado y JSON exacto; la sesión sigue utilizable (38ms)
+  ✓   56 [chromium] › e2e/whatsapp.spec.ts:5:1 › WhatsApp: verificar número, elegir avisos, revocar al cambiar y revisar accesibilidad (2.4s)
+  ✓   57 [demostracion] › e2e/accesibilidad.spec.ts:305:5 › axe: todas las rutas, oscuro, 360px (16.2s)
+  ✓   58 [demostracion] › e2e/accesibilidad.spec.ts:361:5 › axe: formularios, menús y confirmaciones, oscuro, 360px (10.8s)
+  ✓   59 [demostracion] › e2e/accesibilidad.spec.ts:519:5 › axe: vacíos, carga, errores y recuperación, oscuro, 360px (11.0s)
+  ✓   60 [demostracion] › e2e/accesibilidad.spec.ts:305:5 › axe: todas las rutas, oscuro, 1440px (17.1s)
+  ✓   61 [demostracion] › e2e/accesibilidad.spec.ts:361:5 › axe: formularios, menús y confirmaciones, oscuro, 1440px (12.2s)
+  ✓   62 [demostracion] › e2e/accesibilidad.spec.ts:519:5 › axe: vacíos, carga, errores y recuperación, oscuro, 1440px (12.9s)
+  ✓   63 [demostracion] › e2e/accesibilidad.spec.ts:305:5 › axe: todas las rutas, claro, 360px (15.3s)
+  ✓   64 [demostracion] › e2e/accesibilidad.spec.ts:361:5 › axe: formularios, menús y confirmaciones, claro, 360px (11.3s)
+  ✓   65 [demostracion] › e2e/accesibilidad.spec.ts:519:5 › axe: vacíos, carga, errores y recuperación, claro, 360px (12.0s)
+  ✓   66 [demostracion] › e2e/accesibilidad.spec.ts:305:5 › axe: todas las rutas, claro, 1440px (19.7s)
+  ✓   67 [demostracion] › e2e/accesibilidad.spec.ts:361:5 › axe: formularios, menús y confirmaciones, claro, 1440px (13.1s)
+  ✓   68 [demostracion] › e2e/accesibilidad.spec.ts:519:5 › axe: vacíos, carga, errores y recuperación, claro, 1440px (11.5s)
+  ✓   69 [demostracion] › e2e/diseno.spec.ts:33:1 › demostración: siete pantallas, dos tamaños y fábrica seleccionable (7.9s)
+  ✓   70 [demostracion] › e2e/diseno.spec.ts:110:1 › movimiento opcional, teclado y retícula en seis anchuras (1.0s)
+  ✓   71 [demostracion] › e2e/diseno.spec.ts:169:1 › capturas finales: todas las pantallas y formularios demo en ambos temas (36.8s)
+  ✓   72 [demostracion] › e2e/diseno.spec.ts:293:1 › I08 identidad se hidrata en Lima y Cooper no emite errores SVG (12.9s)
+  ✓   73 [demostracion] › e2e/diseno.spec.ts:329:1 › la barra lateral cubre páginas largas y permite navegar con poca altura (4.8s)
+  ✓   74 [demostracion] › e2e/diseno.spec.ts:404:1 › integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas (25.6s)
+  ✓   75 [demostracion] › e2e/operacion.spec.ts:30:1 › radar presenta competencia, diferenciación y límites sin inventar mediciones (963ms)
+  ✓   76 [demostracion] › e2e/operacion.spec.ts:149:1 › operación: el HTML inicial contiene los datos y actualizar mantiene la consulta explícita (272ms)
+  ✓   77 [demostracion] › e2e/operacion.spec.ts:176:1 › canales con nombres repetidos conservan menús accesibles distintos (662ms)
+  ✓   78 [demostracion] › e2e/operacion.spec.ts:205:1 › operación: biblia, metas, redes, referencias y adopción con confirmación y persistencia (1.7s)
+  ✓   79 [demostracion] › e2e/operacion.spec.ts:255:1 › operación: una idea produce un video, los ajustes registran cambios y el fallo de lectura se recupera (1.1s)
+  ✓   80 [demostracion] › e2e/operacion.spec.ts:307:1 › operación: la aprobación exige confirmar y el estado no muestra datos administrativos (329ms)
+  ✓   81 [demostracion] › e2e/operacion.spec.ts:326:1 › operación: referencias editables y solicitudes de radar y conexión permanecen en el simulador (930ms)
+  ✓   82 [demostracion] › e2e/resultados.spec.ts:41:1 › Aprendizaje activa y pausa la medición con persistencia y permiso administrativo (923ms)
+  ✓   83 [demostracion] › e2e/resultados.spec.ts:112:1 › Publicados presenta intervalos YouTube en segundos sin recortar repeticiones (395ms)
+  ✓   84 [demostracion] › e2e/resultados.spec.ts:171:1 › Publicados y Aprendizaje: filtros, gráfico, tabla y estados de corrección (1.1s)
+  ✓   85 [demostracion] › e2e/resultados.spec.ts:304:1 › el montaje real se reproduce y sustituye la maqueta; galería y embeds usan URLs exactas (1.3s)
+  ✓   86 [demostracion] › e2e/resultados.spec.ts:472:1 › Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejora (1.5s)
+  ✓   87 [demostracion] › e2e/animacion.spec.ts:38:3 › evidencia de movimiento › entrada, fábrica, mirada, chat, audio y adjunto en movimiento (12.6s)
+  ✓   88 [demostracion] › e2e/animacion.spec.ts:223:1 › pausa y movimiento reducido detienen efectos activos, incluso al navegar (3.1s)
+  ✓   89 [demostracion] › e2e/animacion.spec.ts:298:1 › fluidez local y propiedades de animación sin cambios de geometría (6.8s)
+  ✓   90 [demostracion] › e2e/animacion.spec.ts:387:1 › avance por evento: relleno, destello único y porcentaje final (1.9s)
+  ✓   91 [firefox-oscuro-390] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.0s)
+  ✓   92 [firefox-oscuro-390] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (4.0s)
+
+  ✓   93 [firefox-oscuro-390] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (2.7s)
+  ✓   94 [firefox-oscuro-1440] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.1s)
+  ✓   95 [firefox-oscuro-1440] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (4.9s)
+
+  ✓   96 [firefox-oscuro-1440] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (3.4s)
+  ✓   97 [firefox-claro-390] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.0s)
+  ✓   98 [firefox-claro-390] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (4.2s)
+
+  ✓   99 [firefox-claro-390] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (2.7s)
+  ✓  100 [firefox-claro-1440] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (13.5s)
+  ✓  101 [firefox-claro-1440] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (4.9s)
+
+  ✓  102 [firefox-claro-1440] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (3.1s)
+  ✓  103 [webkit-oscuro-390] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.2s)
+  ✓  104 [webkit-oscuro-390] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (5.0s)
+
+  ✓  105 [webkit-oscuro-390] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (1.8s)
+  ✓  106 [webkit-oscuro-1440] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.2s)
+  ✓  107 [webkit-oscuro-1440] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (5.7s)
+
+  ✓  108 [webkit-oscuro-1440] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (1.9s)
+  ✓  109 [webkit-claro-390] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.0s)
+  ✓  110 [webkit-claro-390] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (4.9s)
+
+  ✓  111 [webkit-claro-390] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (1.7s)
+  ✓  112 [webkit-claro-1440] › e2e/multiengine.spec.ts:113:1 › entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales (12.3s)
+  ✓  113 [webkit-claro-1440] › e2e/multiengine.spec.ts:200:1 › pausa persistente, movimiento reducido y accesibilidad en ambos tamaños (5.8s)
+
+  ✓  114 [webkit-claro-1440] › e2e/multiengine.spec.ts:276:1 › grabación nativa con señal sintética y reproducción de medios soportados (2.1s)
+
+  Slow test file: [chromium] › e2e/marcas.spec.ts (5.4m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  114 passed (15.7m)

@@ -4,7 +4,6 @@ import Image from "next/image";
 import {
   useEffect,
   useRef,
-  useState,
   type ButtonHTMLAttributes,
   type CSSProperties,
   type HTMLAttributes,
@@ -315,20 +314,17 @@ export function Vacio({
   );
 }
 
-function CorteConexion() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const timeout = setTimeout(() => setVisible(true), 5_000);
-    return () => clearTimeout(timeout);
-  }, []);
-  return visible ? (
-    <span className="pildora-conexion" role="status">
-      <i aria-hidden="true" />
-      Sin conexión, reintentando
-    </span>
-  ) : null;
-}
-
-export function PildoraConexion({ conectado }: { conectado: boolean }) {
-  return conectado ? null : <CorteConexion />;
+/** Aviso de corte real: `aviso` lo decide conectarEventos (corte sostenido >5 s).
+ * La región de estado queda montada para que el anuncio sea fiable. */
+export function PildoraConexion({ aviso }: { aviso: boolean }) {
+  return (
+    <div className="connection-notice" role="status" aria-atomic="true">
+      {aviso && (
+        <span className="pildora-conexion" data-testid="estado-conexion">
+          <i aria-hidden="true" />
+          Sin conexión, reintentando
+        </span>
+      )}
+    </div>
+  );
 }

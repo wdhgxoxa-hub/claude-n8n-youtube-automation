@@ -1,0 +1,374 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/eventos-conexion.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/diseno-conexion/cooper
+
+ ❯ tests/eventos-conexion.test.ts (16 tests | 3 failed) 305ms
+   × un historial de mil eventos entrega estado desde el primer tick y avanza cien por tick 32ms
+   × más de cien eventos con la misma fecha avanzan sin duplicarse ni bloquearse 9ms
+   × la contrapresión conserva el cursor hasta que el consumidor acepta un lote 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/eventos-conexion.test.ts > un historial de mil eventos entrega estado desde el primer tick y avanza cien por tick
+AssertionError: expected [ …(2) ] to deeply equal [ …(100) ]
+
+- Expected
++ Received
+
+  [
+    "8d6a58a3-b781-47cc-84a0-bcdb48bbfdb7",
+    "66231391-90dd-4d87-ae72-1b23255bfb60",
+-   "1c9640cf-d12a-4bae-9ac4-57860e431d84",
+-   "6d0fc582-82ca-4ca0-9933-0a74df74be96",
+-   "f0d27f26-437b-40a9-b2bc-de212ae3db1c",
+-   "ec879260-65a1-4d98-bc0d-c1f71634f11c",
+-   "3f52c6b3-7af3-41a3-90ee-d644a589d186",
+-   "640a262f-9c63-46bd-bdff-f9455df4d8bc",
+-   "01878c39-c241-4781-8f85-43919180c01e",
+-   "e89bb759-f44e-4b38-af9a-a39b5d33bfab",
+-   "c8551675-5aed-4467-b32f-3830384e9d3b",
+-   "4562955d-19a8-4858-8271-8fa1d6981a0a",
+-   "2ccbb492-ee2d-462b-b74f-83a51b94e916",
+-   "56850ed5-f616-4620-beb4-1b1b7e8ea352",
+-   "c973cc1f-d3dc-4164-afc9-8ab4c01e17ab",
+-   "102a2f45-e3eb-41a4-b6f3-a75ac4cf6c01",
+-   "2f73d85f-853d-4200-8fb0-19cd98e7828e",
+-   "e0fae3c1-f9a7-4842-ae27-9dc6b9675291",
+-   "7e4532f0-d8af-44de-8c50-9f07e9989f18",
+-   "4477890d-ab89-47fe-8fa4-37ce3f8c8680",
+-   "36a03155-2e83-4706-946f-32d2757c1b76",
+-   "0ec704c1-7eaf-4fa7-b33d-47f78882e46f",
+-   "c5f69df8-3305-4a15-ba0a-2d512653ab00",
+-   "849a3ed7-ba2a-4bbb-86d0-8ea8a1bde26b",
+-   "60b31f00-3a57-4ebc-a17d-c2059a7686a7",
+-   "8f4da5d5-6283-41bb-b889-5ddf99d20c84",
+-   "f5385e29-a3aa-4ca1-b6cc-eb16f3ce543a",
+-   "0e9c9a23-55ea-4fcc-a8a9-d96d52e9e590",
+-   "f153b9ea-7733-43a6-9ca8-dc8180441bae",
+-   "28bfba18-d76f-4580-b76b-0d63d6179da7",
+-   "25cc163c-3411-43b8-a7de-e324a27f1799",
+-   "e5baf080-ff3a-42e4-8bd2-55e484fb1b18",
+-   "14bccc0c-9004-42cf-9ed1-73a6e5716037",
+-   "1b95b6e5-4a81-4f98-82d6-cd50bed7b134",
+-   "d1894a68-686e-46af-8882-de822d300ddc",
+-   "01eecdaa-8681-491c-8c8e-0984a3d75626",
+-   "63006465-4922-4b16-a90e-628c677352a6",
+-   "60f11449-d703-4e7c-9e90-c343cd702bea",
+-   "f57feb7c-2034-456b-bc59-7f4e899ab93f",
+-   "17ab10cc-9086-4d9a-9a5b-eb5ffc232ca2",
+-   "a9da7693-b891-4f52-a42d-83058dc4eeab",
+-   "601520f7-c7b8-4da9-95c2-9f39378d9112",
+-   "7fa812c8-06e1-4b52-b604-a0c3cd67efef",
+-   "d0f4298d-7990-4fe1-b0e8-f311b788725d",
+-   "9e75f46e-4cdd-4ffe-b071-5a3376ed7833",
+-   "ed31a21b-aab8-4026-b585-122f2e3fd06b",
+-   "1e7cddba-0ba1-496a-b12b-3a65b4a758ca",
+-   "882b6cf0-6bc3-4049-9cfc-48f659f24ec2",
+-   "b87bbafa-feaa-4eb8-9a22-3b3915878b90",
+-   "e175b7e4-43b0-46c3-858a-e9c9b1e48230",
+-   "99d21e43-dd43-4222-b25c-881c6c0e5826",
+-   "39243c1e-6d87-450e-8195-f2cb944547b3",
+-   "6d96fd93-6cbe-4e18-8ce7-918dfc2516c9",
+-   "58c4da68-2e4e-466b-8f78-1bc0d31532e4",
+-   "e31b0b17-6dcf-4be3-8dd3-92503a871aac",
+-   "d7bd6330-5886-4222-9032-9bfa87386e4a",
+-   "af758078-a554-411c-9501-45a99586f252",
+-   "730ec956-5fcd-4132-9962-1e3fd59050f3",
+-   "9add090c-2a4c-414b-90a1-5175394da51d",
+-   "5426f1af-542a-44ab-b350-d44e2163da93",
+-   "f473a391-6223-4686-9a8f-4dcd1373a311",
+-   "b9975a73-7294-4823-ba4f-76e03a2d7f03",
+-   "e173bb87-8b2a-42c0-9f5d-8ffcd4e840c4",
+-   "faa62b8f-1c0c-4326-959c-e6ee722f5295",
+-   "c398d191-f514-401d-93c3-33c3677e29a9",
+-   "91b0c6c8-c9d6-4931-a97d-c9b0d54d36ca",
+-   "1467e271-d047-401d-b294-1f5528397d11",
+-   "c6942a71-557a-4fc6-9d50-431c523bf7fe",
+-   "2db28f84-f033-41f2-9cbf-cba022820d9a",
+-   "8e2c732d-f4ca-42b8-ba8e-88b06def0b2d",
+-   "e129324d-e745-46bc-bd29-1952aa44947c",
+-   "9679449b-420b-403c-9364-ec2277231698",
+-   "30dc565c-317e-4058-8ed6-abdc04c97b5c",
+-   "86c08f95-a565-46eb-819b-20a493eba901",
+-   "e4cf16eb-87d8-441a-9f9e-ba1e5afa74f1",
+-   "f78f5831-5a90-4c87-8e81-0b3fbc9bc491",
+-   "ca4f8650-f2aa-4eda-a53c-2c1c2237018d",
+-   "46bdcf07-ed5d-4598-89b7-d13ba8472fab",
+-   "6debbc87-79e3-441d-b6c8-c8d1fb684dab",
+-   "77f1aea2-fe7d-42be-a504-2de060f64f5f",
+-   "40d2cdc2-50a2-4a91-a563-80014e57bd4e",
+-   "c1def5fa-878c-4eea-8d0c-0d9eba849edd",
+-   "b6a4a0d6-e31f-44d1-814e-13b0a46548ee",
+-   "0f9655a7-b979-4c66-bade-aeec9f0e49db",
+-   "2a8a3884-1dc8-43da-9aa6-e81ffb794634",
+-   "b7ac6e0d-c592-4ec9-a5ea-b65a44b0c850",
+-   "a6f5ce4e-6e2f-4aa0-a6bc-e69e40d0cf84",
+-   "05a69bcc-555c-447e-a8a4-ca711e7b47a4",
+-   "7f832e97-a4ef-49a6-a66a-b7437d0cd421",
+-   "5781190f-ee78-4030-8690-2ad150e2b072",
+-   "5648880d-3f5f-45f8-9336-0554f5c86cac",
+-   "65c41e24-9498-478b-b193-6642722e7894",
+-   "f279fd08-0597-440f-bdc8-6f78cb694eaa",
+-   "3242b362-5419-42bf-b673-cd4f48c990a2",
+-   "75e03e85-a77d-4e21-9619-32d6bec4d1a5",
+-   "4685680c-987d-415f-8b59-9a5a7b1c0792",
+-   "eaf56540-74f8-4985-9aaa-1eb260ff581f",
+-   "ea7bc834-b2fa-444e-9075-1fb1645f5348",
+-   "bd38bd76-726d-4042-a12f-f9f26bd61af8",
+-   "5287505e-0564-45ee-8a31-8992134f5109",
+  ]
+
+ ❯ tests/eventos-conexion.test.ts:302:43
+    300|   );
+    301|   const stream = await abrir();
+    302|   expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, 100));
+       |                                           ^
+    303|   expect(stream.chunks.join("")).toContain("event: estado");
+    304|   for (let batch = 2; batch <= 10; batch++) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/eventos-conexion.test.ts > más de cien eventos con la misma fecha avanzan sin duplicarse ni bloquearse
+AssertionError: expected [ …(2) ] to deeply equal [ …(100) ]
+
+- Expected
++ Received
+
+  [
+    "00b01c07-6b53-4ac6-aa8a-974cd9d46d37",
+    "012752bd-e796-4cb7-bb70-f51282fd405e",
+-   "0181542f-3d41-4690-9fd6-01862af4e620",
+-   "018f8a73-c6b1-4fbd-a918-ca26802e0223",
+-   "03491ac9-1298-4038-8026-8da1a4dfa2c6",
+-   "044741ed-8d16-4d8c-9bd6-fdc93759a520",
+-   "0509875b-57ea-4236-b929-dde258a0707a",
+-   "07a3304c-170e-4372-ad28-98fd4b173666",
+-   "092a3f70-be8b-4a76-845f-3a5372252b50",
+-   "0a0fa96a-e87e-4d64-a58a-9de229f8eb0e",
+-   "0a607234-05a0-4035-94e6-55c3e45b8b61",
+-   "0b89e7bc-d370-41df-aac4-f6dc505c63df",
+-   "0ba0c001-b005-469a-9e25-e5c9fef5ae70",
+-   "0bb54e24-6445-4edc-8661-fdacb648a655",
+-   "0cb55516-4bbb-4a90-9fd4-163d4ebab22e",
+-   "0f9f5e75-bbd4-40c2-afd7-130d1a101b1c",
+-   "0fc9edb3-55fe-46bc-81c7-65349f2812f8",
+-   "10e7b1d1-be2a-49a9-ac5d-6ab98ef73e4d",
+-   "118fd7e7-3294-4320-8e41-7d0e478275a0",
+-   "1370472b-dbf0-4157-95f6-b8432e693590",
+-   "139e47e6-a453-4a88-a6d0-8a6a17b46423",
+-   "1534136d-c2da-4ee8-8c60-2b92ba92e97f",
+-   "1537c59e-9594-49e3-8108-9e36125eb618",
+-   "169e12b8-3d0c-4283-9487-1712c4f055cd",
+-   "1720e74d-41b2-41cf-b308-3be9bb2942e4",
+-   "1cbb89e3-16db-4931-97ed-dc4a49159fd9",
+-   "2340f5d2-aeb9-48be-b68b-8ea415387665",
+-   "237c1e55-4a2c-4fba-8c3e-8d67781c930b",
+-   "240f8b4d-d1d5-46d8-9055-b95c335a924e",
+-   "24122996-98f9-4d66-8e72-432b1fc0f6da",
+-   "245acd4d-ae04-4f10-aaea-3db6a90234fa",
+-   "25d5875f-49bd-4381-97fd-d169666ef3a1",
+-   "26749a03-80cb-430f-af1a-ae16254a9cda",
+-   "27771dd0-c706-48d7-8fc3-0021505e3dd6",
+-   "27f07a64-7f0d-4ad4-9bdc-26799448ef49",
+-   "2847c505-1421-4d3e-bf54-1c7183561444",
+-   "2996c2cb-5ed5-4a2b-8014-e3ebe0e78869",
+-   "2baf7f6c-d028-4b2f-a16d-f706be46ef25",
+-   "2e64413e-6794-40ba-87fd-a854d3289f85",
+-   "2f1e232a-cf13-4843-b7e1-a168280babbb",
+-   "2fecdcc9-fd8c-45bc-8a75-7900c8fb9fda",
+-   "305bf5c0-cfdb-4b98-8e75-cce9f2776efd",
+-   "3123a1f8-bb96-4f2a-81a6-7fe07684a0b8",
+-   "314ce385-a85d-4d1d-8acf-ce49babb61db",
+-   "3186e9e2-175c-4058-99f8-514a5d155ba4",
+-   "31bb9099-5eab-45fc-a967-da65210919a9",
+-   "322ee4dd-c15a-4f2b-9165-05d7784aedaa",
+-   "32c0831b-1c43-4916-aced-27482fd9178b",
+-   "33d9fcc4-4da3-4b64-93de-8182e884edae",
+-   "34f1f0dd-8e80-448c-a2db-c058254b55fd",
+-   "36f0bc28-56f3-4ad0-895a-5686f42bcd2f",
+-   "37c8e9a2-ea0c-4599-81c3-0a01e1837ef1",
+-   "382e257f-3df0-41ec-9b95-362bf43ca5ae",
+-   "3864bfca-35c7-42db-b72b-59e314640155",
+-   "38c94984-abd4-49bb-93c1-259b1d98349c",
+-   "3a461535-84a6-4593-b971-2753c3a63f23",
+-   "3cdfd44e-0c9c-4274-8c21-d6463640a28c",
+-   "3dd773f6-c884-4fcc-9fa5-afcd70c4086b",
+-   "3e538309-e40d-4d0f-89bc-471b291967fa",
+-   "3eebdc00-3825-49a0-9a4e-04e1382e4585",
+-   "3f4e6a42-8ba9-414c-89b3-382524b94483",
+-   "40d4b542-2ba5-48c4-ac71-5443fd23462b",
+-   "428bc357-387b-4283-9f1c-3c18c1449407",
+-   "432a22ae-aa95-484d-91e9-5a77b4bbd132",
+-   "45bda089-8b84-407c-a6b3-4389272f496c",
+-   "474904e8-2fe5-48ad-953b-6e15deb46078",
+-   "47c940bc-a1d8-4086-8b86-8a4460905227",
+-   "4a8736e2-12f2-4a6a-b53c-e72538280337",
+-   "4e04e8f2-18de-4931-9aad-a8ca48ffa0f5",
+-   "4ee46c26-f360-42db-a06f-e465ef473992",
+-   "50d9e0a5-3656-42f8-bd62-8f69392e47c4",
+-   "50e67792-2def-481d-9a01-59be2bc6a5f1",
+-   "521a8355-ba1a-44bb-9f18-728aa9cc8183",
+-   "52f1ae5a-fdbd-4f16-815e-dcba0d4d1806",
+-   "53ea1ddf-2cc8-449b-8db5-d69fbf0231f4",
+-   "53f2218b-8a4d-462f-94e9-a8b9cafa44d8",
+-   "56a30037-5cf0-4b70-8b78-b5d50b117618",
+-   "59f24705-0f13-4c43-862c-bd84b7a1d5dd",
+-   "5c862ef1-e748-4927-8a9a-c425125e0d83",
+-   "5d8dea8a-cd34-4e1a-b60e-e723ad62357e",
+-   "60660d3f-47de-426e-8d84-4734fa269313",
+-   "61742556-d120-47da-b05b-fb51155f5fd2",
+-   "61cd65ef-308d-4a06-bb99-45fbb8d67bfb",
+-   "61ce96fe-a8c1-49c8-8409-1ee096b470a3",
+-   "6262ef2d-536e-4078-b006-1bd5ac633b86",
+-   "628b7c3f-d43d-4042-9f62-de8cddd4da98",
+-   "63fff1f2-8aab-4a11-917e-d3c86a431fce",
+-   "644a0a72-5fcb-4352-b777-f4e6a13b23c1",
+-   "6516578b-a6bc-4e62-885d-847853f5e224",
+-   "68075301-b0f4-491b-a653-da017909c300",
+-   "6ab0f4b7-1734-4c68-b558-c829ef58e56c",
+-   "6b52a6ae-f9f7-404d-9874-47adce0ba8be",
+-   "6b87b538-25b5-484c-948e-f2e1b0805c9a",
+-   "6d51c0e5-7389-4d16-ad78-10458ad2bb03",
+-   "6dfe55b5-49b5-4fd1-b1ec-3e0add6fe8cd",
+-   "6eea6674-4ce0-489a-a903-a0823d9b5801",
+-   "6f1a977e-f27d-4058-a4c4-b812f1ab1cb8",
+-   "6fa8d3da-9d59-45bf-a69f-9239daf52faf",
+-   "6fb99a0b-f175-461f-88fa-1fbca2d5ad4b",
+-   "726c79f1-0ee6-422f-a580-f4b9d85c5672",
+  ]
+
+ ❯ tests/eventos-conexion.test.ts:317:43
+    315|   ).sort();
+    316|   const stream = await abrir();
+    317|   expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, 100));
+       |                                           ^
+    318|   await vi.advanceTimersByTimeAsync(2000);
+    319|   expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, 200));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/eventos-conexion.test.ts > la contrapresión conserva el cursor hasta que el consumidor acepta un lote
+AssertionError: expected [ Array(1) ] to deeply equal [ …(100) ]
+
+- Expected
++ Received
+
+  [
+    "10172a8d-c800-4043-9e82-54b52abca2fd",
+-   "a6bddd1e-7cdd-4143-90a8-792838b81046",
+-   "0bf0047d-21f0-4d55-ad07-0e3a851478ad",
+-   "fbd46a41-1b44-4b23-b47a-3e1dc7fb089c",
+-   "8fd3bc07-add5-4b91-8d57-0fbfa04968c2",
+-   "af580086-9e32-48f5-8991-f9f9ccac386b",
+-   "14a31f1c-689b-4762-9286-6b2340d6a01a",
+-   "c95d4372-270b-40e7-9647-8594740f7fdf",
+-   "978396cd-0211-440f-a760-3a990bd852b7",
+-   "7d9ed568-5a43-43e1-9ad0-d90c6017f00c",
+-   "e29e94df-5f0d-4500-a4f5-109a5a776b6f",
+-   "afe21775-4f20-4489-9702-0a56bdaf40a6",
+-   "018d0d25-ed51-409c-936f-aab41466c2b7",
+-   "c85fe9fe-bbc5-4919-b664-0b8010c56b1c",
+-   "f4f2dbd7-51f6-4ba6-82eb-d21a7b1e1b02",
+-   "fd93578b-a2b5-479b-8310-058866177258",
+-   "f6ea2ea2-3fa5-482f-9165-6e418603339f",
+-   "4631de39-38e5-4749-a7ca-9c96d867cd61",
+-   "aae030a6-2f63-492f-aa45-ea9727dddff4",
+-   "83e7cc6c-0bc0-4168-8456-cab49a6ccc71",
+-   "69753fac-8dfd-49e8-8720-cca2cd099708",
+-   "1b25f182-79f0-4c0e-9759-cce1a91acd9c",
+-   "6b89df50-e786-42f1-bcb1-29ae26016a5f",
+-   "ecc5a7c9-fd9b-4c1c-9e2c-768ab1305156",
+-   "139d77ec-5f25-43f9-8496-1b94883499f8",
+-   "b3d48890-642f-4202-817b-c6227a807e7e",
+-   "0f7e7153-2d5e-4108-9c6d-966d596feab7",
+-   "0dc08b1d-3dc1-46bb-acd6-f43bb59fdcfb",
+-   "f9c3fd36-2bea-421e-9669-41df4bef7ece",
+-   "e5276926-173d-47d4-873d-3047dd5d55ec",
+-   "6e142221-28f8-4924-82ff-b76f4872c201",
+-   "b3af2e65-9ca8-4bcf-a364-29f798e73e22",
+-   "cf6ded26-99b8-4d93-a9db-64a760ae78f5",
+-   "3e2f42fd-ee06-487a-8989-14dc210d6eb9",
+-   "70f6ddee-a16c-4e74-9a34-02cfb926e732",
+-   "36e87f6d-2d74-4fc2-9c3d-dc2ad43ed189",
+-   "4e324339-e9d4-42e3-85de-8ff743fabe11",
+-   "919289cb-fad1-4b9c-9dc7-720ea18ca3e3",
+-   "5986630b-02c0-4fb7-95e3-ad89510583d6",
+-   "4d773d3c-66ba-4284-b490-a6216fba071e",
+-   "d78a5c6b-adf2-4cbb-93f9-1803ab73f8fe",
+-   "e4d33dba-4406-4861-af65-d3be8b20028f",
+-   "88f6fa66-97ac-4803-a2c0-f07c6b72bd03",
+-   "f75bd90b-dec6-4f0a-bdb5-d810c22eb8c8",
+-   "e483e053-7c9e-45f8-b087-0cdf79509c00",
+-   "a44f0117-ca7c-456d-9432-f3b4278c1e83",
+-   "c74b1b10-1a1b-44ad-b747-94d3b71593f8",
+-   "9a5ce7c0-383f-4a20-82a6-7ccd75229c8a",
+-   "d91c6ea6-4719-4509-ab71-aab065eee35d",
+-   "38b932a9-8d2f-4fd4-a7ae-0753810062d8",
+-   "358d7f03-c3b4-412d-b1f1-d326c27eae16",
+-   "e4d20ff5-306d-4ba9-aba7-6e0f949a01cf",
+-   "b0a189ac-b974-4961-b0b6-e90b9823b9f4",
+-   "424b8d46-99b3-4b67-920a-e9b70501c859",
+-   "a0960550-6ff8-4656-90cb-c4c06ea83ba9",
+-   "9b15e495-e38f-420d-adff-0205e14393bb",
+-   "8f1f4e17-5a09-44b5-95ed-aec4cb2e1dc0",
+-   "a8817eb5-7d58-4774-a7d1-cd683a93ae9e",
+-   "6547c8be-904d-4963-9f0a-cd159887cdbb",
+-   "8d964f05-8eb6-4f6d-abe1-16f2bdafc44d",
+-   "028450ab-b968-4331-88b5-9fa42d88b424",
+-   "045cc7ca-2941-4c88-b24c-e7cbec41ea8f",
+-   "5f6188ca-bbff-44f0-9f01-83990132ee21",
+-   "1529b8a7-a957-4fc6-8c97-39a75866fa8b",
+-   "cb04b231-5723-44f9-925f-78bff6984c82",
+-   "e7384e9c-cd0b-467a-9e28-8c77a223e411",
+-   "3c718918-4de5-4761-8130-c3e39ce1a21e",
+-   "d7b91390-a8c6-4b77-837c-a9d867ecc23f",
+-   "aebb7f39-654c-432f-aabc-d6e44fcdc890",
+-   "5064839b-3557-455d-bd67-8f269c9bd7be",
+-   "af784964-0286-4167-bc72-12beb90271f3",
+-   "e8f887ce-b76b-4c56-ab89-cdfcf78aacaf",
+-   "c009a1ee-d1de-4505-bc4a-f9a9513c7855",
+-   "26d945aa-f295-44a7-ad2f-668c8fb3d09a",
+-   "5b932ed8-a451-4262-9cdc-5519ac826a6d",
+-   "f807f758-f199-4800-8dcb-d16aa123e0c8",
+-   "03219d68-704b-4a7d-9a80-9b043ae74e54",
+-   "4943e2ba-5be0-4121-bf11-13186d28d397",
+-   "5d87a48c-9248-454f-8359-dd9bc5d04d06",
+-   "d4e1e9b2-ad5f-42d4-ab50-9b7ebd673c2f",
+-   "3b8bd69a-488d-4287-9638-dfbad7643717",
+-   "d83a1fa6-8313-4c82-bd2b-c95d2df7eb8f",
+-   "6a71c21c-d986-4629-8848-4f8b144a5c2c",
+-   "b7eb3159-4f68-4049-9888-df290fea2965",
+-   "5c698985-a1e5-4595-9e83-877696233583",
+-   "01d2e42c-741b-4265-b9cc-dd3ed660f030",
+-   "8f5982c6-7ae1-4558-afc1-289abe174c10",
+-   "bf1b6e31-45b5-46d6-83fa-44ddd2ecf633",
+-   "2dd54ae8-20da-4f6c-a113-340afef77328",
+-   "bcda7b6b-7aa5-4fb0-b5dc-8919f7feabd4",
+-   "5493ed4b-c1c5-45b8-a95d-de05aa4d6998",
+-   "3dd4f3d0-da39-4386-a51f-1d71c96206aa",
+-   "3d3e0c5e-90e9-49da-96c4-3511a263316e",
+-   "a6ca9acd-6aee-42c1-b89b-8adcee080f83",
+-   "f8264097-c27d-4559-9736-7771a0870be9",
+-   "c477e47d-b966-468a-8fbf-eb55badab209",
+-   "324e1f86-ffe9-4116-9574-43b245097d3b",
+-   "16fb8dfa-de3e-48d8-95cc-89ca1486bbb7",
+-   "5aacff38-5052-45a4-94fa-8da1eadd4825",
+-   "c15c4120-edde-4b16-af68-0ed8d6d78e90",
+  ]
+
+ ❯ tests/eventos-conexion.test.ts:341:37
+    339|   await vi.advanceTimersByTimeAsync(2000);
+    340|   const chunk = new TextDecoder().decode((await next).value);
+    341|   expect(progresoRecibido([chunk])).toEqual(ids.slice(0, 100));
+       |                                     ^
+    342|   expect(chunk).toContain("event: estado");
+    343|   await reader.cancel();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 passed (16)
+   Start at  22:30:36
+   Duration  1.00s (transform 265ms, setup 27ms, import 583ms, tests 305ms, environment 0ms)

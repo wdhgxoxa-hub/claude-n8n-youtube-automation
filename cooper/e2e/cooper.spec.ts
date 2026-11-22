@@ -297,7 +297,7 @@ test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
   await page.goto("/admin");
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   await expect(
     page.getByRole("heading", { name: "Este espacio no está disponible." }),
   ).toBeVisible();
@@ -324,7 +324,7 @@ test("adjuntos y grabación con transcripción editable", async ({ page }) => {
   await page.goto("/");
   const panel = await abrirCooper(page);
   await expect(panel).not.toHaveClass(/is-full/);
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   const chooser = page.waitForEvent("filechooser");
   await page
     .getByRole("button", { name: "Adjuntar archivo", exact: true })
@@ -379,7 +379,7 @@ test("una foto del chat abre el avatar privado sin omitir verificación", async 
   await login(page.request);
   await page.goto("/");
   await abrirCooper(page);
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   const chooser = page.waitForEvent("filechooser");
   await page
     .getByRole("button", { name: "Adjuntar archivo", exact: true })
@@ -533,7 +533,7 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
 }) => {
   await login(page.request, "admin@example.test");
   await page.goto("/admin");
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   await expect(
     page.getByRole("heading", { name: "El equipo, en perspectiva" }),
   ).toBeVisible();
@@ -565,7 +565,7 @@ test("administración, gastos por periodo, alerta y revocación inmediata", asyn
   await login(other.request, "luis@example.test");
   const suspendedPage = await other.newPage();
   await suspendedPage.goto("/");
-  await expect(suspendedPage.locator(".workspace")).toBeVisible();
+  await expect(suspendedPage.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   const row = page.getByRole("row").filter({ hasText: "luis@example.test" });
   await row.getByRole("button", { name: "Desactivar" }).click();
   expect((await other.request.get("/api/estado")).status()).toBe(401);
@@ -589,7 +589,7 @@ test("auditoría AA de todas las pantallas, anchuras y el tema oscuro", async ({
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await noOverflow(page);
-    await expect(page.locator(".workspace")).toBeVisible();
+    await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
     await noOverflow(page);
     await page.screenshot({
       path: `test-results/visual/inicio-${width}.png`,
@@ -620,7 +620,7 @@ test("auditoría AA de todas las pantallas, anchuras y el tema oscuro", async ({
         await page.setViewportSize({ width, height: 900 });
         await page.goto(path);
         await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
-        await expect(page.locator(".workspace")).toBeVisible();
+        await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
         await noOverflow(page);
         const results = await new AxeBuilder({ page })
           .withTags([
@@ -664,7 +664,7 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
 }) => {
   await login(page.request);
   await page.goto("/videos");
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   await page.getByRole("button", { name: "Pedir video", exact: true }).click();
   const state = await (await page.request.get("/api/estado")).json();
   await page

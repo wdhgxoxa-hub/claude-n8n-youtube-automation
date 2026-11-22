@@ -11,6 +11,8 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
+import { conectarEventos, type EstadoConexion } from "@/lib/conexion-eventos";
+import "./estado-conexion.css";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
@@ -131,9 +133,11 @@ export function Espacio({
   logout: () => Promise<void>;
 }) {
   const [data, setData] = useState(initial),
-    [connected, setConnected] = useState(false),
+    [conexion, setConexion] = useState<EstadoConexion>("iniciando"),
+    [avisoConexion, setAvisoConexion] = useState(false),
     [menu, setMenu] = useState(false),
     [cooper, setCooper] = useState(false);
+  const connected = conexion === "activa";
   const [marcaContexto, definirMarca] = useState<{
     id: string;
     nombre: string;
@@ -208,66 +212,17 @@ export function Espacio({
   const refresh = useCallback(async () => {
     receive(await api<Estado>("estado", undefined, "GET"));
   }, [receive]);
-  useEffect(() => {
-    let source: EventSource | undefined;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let stopped = false;
-    let attempts = 0;
-    const controller = new AbortController();
-    const connect = () => {
-      if (stopped || !navigator.onLine) return;
-      if (timer) clearTimeout(timer);
-      source?.close();
-      source = new EventSource("/api/eventos");
-      const retry = () => {
-        if (stopped) return;
-        source?.close();
-        setConnected(false);
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(connect, Math.min(1000 * 2 ** attempts++, 30000));
-        void fetch("/api/estado", { signal: controller.signal })
-          .then((response) => {
-            if (!stopped && [401, 403].includes(response.status)) {
-              stopped = true;
-              clearTimeout(timer);
-              window.location.assign("/entrar");
-            }
-          })
-          .catch(() => {});
-      };
-      source.addEventListener("estado", (event) => {
-        try {
-          receive(JSON.parse(event.data));
-          setConnected(true);
-          attempts = 0;
-        } catch {
-          retry();
-        }
-      });
-      source.onopen = () => {
-        setConnected(true);
-        attempts = 0;
-      };
-      // Un fallo de conciliación no significa que el transporte SSE se haya cortado.
-      source.onerror = retry;
-    };
-    const offline = () => {
-      source?.close();
-      clearTimeout(timer);
-      setConnected(false);
-    };
-    connect();
-    window.addEventListener("offline", offline);
-    window.addEventListener("online", connect);
-    return () => {
-      stopped = true;
-      source?.close();
-      clearTimeout(timer);
-      controller.abort();
-      window.removeEventListener("online", connect);
-      window.removeEventListener("offline", offline);
-    };
-  }, [receive]);
+  useEffect(
+    () =>
+      conectarEventos<Estado>({
+        recibir: receive,
+        cambiar: (estado, aviso) => {
+          setConexion(estado);
+          setAvisoConexion(aviso);
+        },
+      }),
+    [receive],
+  );
   useEffect(() => {
     if (!menu) return;
     const panel = sidebar.current;
@@ -324,6 +279,7 @@ export function Espacio({
           <LayoutGroup id="estudio">
             <div
               className="workspace"
+              data-conexion={conexion}
               data-motion={isPaused || hidden || reduced ? "paused" : "playing"}
             >
               <Transiciones />
@@ -470,7 +426,7 @@ export function Espacio({
                   <Ellipsis size={20} />
                 </button>
               </div>
-              <PildoraConexion conectado={connected} />
+              <PildoraConexion aviso={avisoConexion} />
               <CooperFlotante
                 abierto={cooper}
                 cambiar={setCooper}

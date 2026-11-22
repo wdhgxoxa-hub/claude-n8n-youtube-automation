@@ -1,0 +1,74 @@
+{
+  "at_utc": "2026-11-22T02:54:45.303871+00:00",
+  "origin": "https://cooper.cooperestudio.com",
+  "authentication": "none; no OAuth, no cookies sent or retained",
+  "operation": "GET read-only; bodies discarded",
+  "results": [
+    {
+      "path": "/api/salud",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+        "Transfer-Encoding": "chunked",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Via": "1.1 Caddy"
+      },
+      "headers_ms": 642
+    },
+    {
+      "path": "/api/eventos",
+      "status": 401,
+      "headers": {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+        "Transfer-Encoding": "chunked",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Via": "1.1 Caddy"
+      },
+      "headers_ms": 568
+    },
+    {
+      "path": "/api/estado",
+      "status": 401,
+      "headers": {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+        "Transfer-Encoding": "chunked",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Via": "1.1 Caddy"
+      },
+      "headers_ms": 564
+    },
+    {
+      "path": "/entrar",
+      "status": 200,
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "Transfer-Encoding": "chunked",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Via": "1.1 Caddy"
+      },
+      "headers_ms": 614
+    },
+    {
+      "path": "/",
+      "status": 307,
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "Transfer-Encoding": "chunked",
+        "Strict-Transport-Security": "max-age=31536000",
+        "X-Content-Type-Options": "nosniff",
+        "Location": "/entrar",
+        "Via": "1.1 Caddy"
+      },
+      "headers_ms": 592
+    }
+  ]
+}

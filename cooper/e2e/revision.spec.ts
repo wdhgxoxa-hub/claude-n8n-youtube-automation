@@ -33,9 +33,10 @@ test("R08 recupera SSE después de una respuesta HTTP temporal", async ({
   );
   await page.goto("/");
   await conectado;
-  await expect(
-    page.getByText("Sin conexión, reintentando", { exact: true }),
-  ).toBeHidden();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa", {
+    timeout: 8000,
+  });
+  await expect(page.getByTestId("estado-conexion")).toHaveCount(0);
   expect(attempts).toBeGreaterThan(1);
 });
 test("R09 el menú móvil contiene el foco y lo devuelve al cerrar", async ({
@@ -239,7 +240,7 @@ test("entrada, no encontrado y formularios accesibles en el tema oscuro y cuatro
             document.documentElement.dataset.theme = theme;
           }, theme);
         } else {
-          await expect(page.locator(".workspace")).toBeVisible();
+          await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
           if (screen === "pedir-video")
             await page
               .getByRole("button", { name: "Pedir video", exact: true })

@@ -694,13 +694,6 @@ main#contenido {
 .cooper-orb .cooper-presencia {
   pointer-events: none;
 }
-.pildora-conexion {
-  position: fixed;
-  z-index: var(--capa-aviso);
-  top: var(--espacio-16);
-  left: 50%;
-  transform: translateX(-50%);
-}
 .home-overview > figure {
   border-right: var(--borde-ancho) solid var(--linea);
 }

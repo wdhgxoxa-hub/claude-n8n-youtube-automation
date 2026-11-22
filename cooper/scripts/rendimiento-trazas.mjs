@@ -440,7 +440,10 @@ try {
         path !== "/no-existe" &&
         !path.startsWith("/revisar/")
       )
-        await expect(page.locator(".connection")).toHaveText("En vivo");
+        await expect(page.locator(".workspace")).toHaveAttribute(
+          "data-conexion",
+          "activa",
+        );
       await expect(
         page.getByText("Consultando la fábrica…", { exact: true }),
       ).toHaveCount(0);

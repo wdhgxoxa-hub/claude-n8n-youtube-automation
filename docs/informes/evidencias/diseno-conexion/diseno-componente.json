@@ -1,0 +1,65 @@
+{
+  "exigirGlobales": false,
+  "resumen": [
+    {
+      "ancho": 360,
+      "capturas": 28,
+      "componente": true,
+      "tokens": 10012,
+      "axeSerias": 0,
+      "desbordamientos": 0,
+      "consola": 1,
+      "errores": 0
+    },
+    {
+      "ancho": 390,
+      "capturas": 28,
+      "componente": true,
+      "tokens": 10012,
+      "axeSerias": 0,
+      "desbordamientos": 0,
+      "consola": 1,
+      "errores": 0
+    },
+    {
+      "ancho": 768,
+      "capturas": 28,
+      "componente": true,
+      "tokens": 10387,
+      "axeSerias": 0,
+      "desbordamientos": 0,
+      "consola": 1,
+      "errores": 0
+    },
+    {
+      "ancho": 1024,
+      "capturas": 28,
+      "componente": true,
+      "tokens": 10943,
+      "axeSerias": 0,
+      "desbordamientos": 0,
+      "consola": 1,
+      "errores": 0
+    },
+    {
+      "ancho": 1440,
+      "capturas": 28,
+      "componente": true,
+      "tokens": 10937,
+      "axeSerias": 0,
+      "desbordamientos": 0,
+      "consola": 1,
+      "errores": 0
+    },
+    {
+      "ancho": 1920,
+      "capturas": 28,
+      "componente": true,
+      "tokens": 10937,
+      "axeSerias": 0,
+      "desbordamientos": 0,
+      "consola": 1,
+      "errores": 0
+    }
+  ]
+}

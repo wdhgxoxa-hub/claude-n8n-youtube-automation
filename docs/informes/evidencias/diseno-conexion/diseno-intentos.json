@@ -1,0 +1,26 @@
+[
+  {
+    "codigo": "6c0ed9e",
+    "pruebas": "7/7 PASS",
+    "aceptacion": "RECHAZADA visualmente",
+    "causa": "Píldora a 16 px tapa controles en 360/390 y contexto en 768."
+  },
+  {
+    "codigo": "3f732c5",
+    "pruebas": "5 PASS,2 FAIL",
+    "aceptacion": "RECHAZADA",
+    "causa": "Anclaje 48 px deja solape con caja tipográfica h1 en 360/390; aserción nueva lo detecta."
+  },
+  {
+    "codigo": "8fe926b",
+    "pruebas": "7/7 PASS",
+    "aceptacion": "Componente aceptado; diseño global FAIL",
+    "causa": "Padding vertical 4 px y descarte de manifiestos previos; código servidor todavía recibe corrección posterior."
+  },
+  {
+    "codigo": "534ee7b",
+    "pruebas": "7/7 PASS y video móvil 1/1 PASS",
+    "aceptacion": "Componente aceptado sobre código final; diseño global FAIL",
+    "revision": "18 hojas/180 capturas inspeccionadas; detalle 360/768/1440 revisado por QA; sin nuevos defectos del componente."
+  }
+]

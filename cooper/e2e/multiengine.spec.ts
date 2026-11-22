@@ -41,7 +41,7 @@ async function entrar(page: Page) {
   ).toBe(true);
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "oscuro");
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
 }
 
 // Recorre Tab de verdad: no sustituir por focus() ni click().
@@ -194,16 +194,14 @@ test("entrada, teclado, chat, reconexión SSE y dos aprobaciones manuales", asyn
   await expect(etapaVisible).toBeVisible();
   await expect(etapaVisible).toContainText("Aprobación de guion");
   await context.setOffline(true);
-  const desconectado = page.getByText("Sin conexión, reintentando", {
-    exact: true,
+  const desconectado = page.getByTestId("estado-conexion");
+  await expect(desconectado).toHaveText("Sin conexión, reintentando", {
+    timeout: 12000,
   });
-  await expect(desconectado).toBeVisible({ timeout: 12000 });
-  const reconectado = page.waitForResponse(
-    (r) => new URL(r.url()).pathname === "/api/eventos" && r.ok(),
-  );
+  await expect(page.locator(".workspace")).not.toHaveAttribute("data-conexion", "activa");
   await context.setOffline(false);
-  await reconectado;
-  await expect(desconectado).toBeHidden();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
+  await expect(desconectado).toHaveCount(0);
   const approve = page.getByRole("button", { name: "Aprobar", exact: true });
   for (const [stage, next] of [
     [3, "Aprobación final"],

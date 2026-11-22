@@ -1,0 +1,10 @@
+npm notice run cooper@0.1.0 test
+npm notice run vitest run --run tests/eventos-conexion.test.ts tests/revision-seguridad.test.ts tests/puente.test.ts
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/diseno-conexion/cooper
+
+
+ Test Files  3 passed (3)
+      Tests  53 passed (53)
+   Start at  22:31:07
+   Duration  3.02s (transform 1.07s, setup 33ms, import 2.06s, tests 666ms, environment 0ms)

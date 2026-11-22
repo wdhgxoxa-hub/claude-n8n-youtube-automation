@@ -1,0 +1,80 @@
+npm notice run cooper@0.1.0 test:e2e
+npm notice run node scripts/e2e.mjs --project=chromium conexion.spec.ts
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 46ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1013ms
+  Running TypeScript ...
+  Finished TypeScript in 3.1s ...
+  Collecting page data using 23 workers ...
+  Generating static pages using 23 workers (0/4) ...
+  Generating static pages using 23 workers (1/4)
+  Generating static pages using 23 workers (2/4)
+  Generating static pages using 23 workers (3/4)
+✓ Generating static pages using 23 workers (4/4) in 87ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/fabrica
+├ ƒ /api/[...ruta]
+├ ƒ /api/admin/conciliacion
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/eventos
+├ ƒ /api/marcas/medio/[id]
+├ ƒ /api/marcas/operar
+├ ƒ /api/n8n/webhook
+├ ƒ /api/salud
+├ ƒ /api/whatsapp/webhook
+├ ƒ /aprendizaje
+├ ƒ /avatares
+├ ƒ /avisos
+├ ƒ /canales
+├ ƒ /canales/[id]
+├ ƒ /cuentas
+├ ƒ /decisiones
+├ ƒ /entrar
+├ ○ /icon.svg
+├ ƒ /incidencias
+├ ƒ /marcas
+├ ƒ /perfil
+├ ƒ /programados
+├ ƒ /publicados
+├ ƒ /radar
+├ ƒ /redes
+├ ƒ /referencias
+├ ƒ /revisar/whatsapp/[token]
+├ ƒ /rutina
+├ ƒ /videos
+└ ƒ /videos/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+Running 11 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/conexion.spec.ts:10:3 › Conexión discreta y recuperación SSE › inicio sano y latidos sin novedades mantienen la interfaz silenciosa (525ms)
+  ✓   2 [chromium] › e2e/conexion.spec.ts:29:3 › Conexión discreta y recuperación SSE › un corte breve se recupera sin mostrar una alerta (352ms)
+  ✓   3 [chromium] › e2e/conexion.spec.ts:51:3 › Conexión discreta y recuperación SSE › un corte real espera más de cinco segundos y usa backoff acotado (450ms)
+  ✓   4 [chromium] › e2e/conexion.spec.ts:103:3 › Conexión discreta y recuperación SSE › las conexiones que caen tras cada estado conservan el backoff (338ms)
+  ✓   5 [chromium] › e2e/conexion.spec.ts:131:3 › Conexión discreta y recuperación SSE › una apertura lenta y volver a la pestaña no anulan el backoff (325ms)
+  ✓   6 [chromium] › e2e/conexion.spec.ts:173:3 › Conexión discreta y recuperación SSE › reconectar conserva el cursor del último progreso recibido (279ms)
+  ✓   7 [chromium] › e2e/conexion.spec.ts:197:3 › Conexión discreta y recuperación SSE › una apertura colgada no queda conectando para siempre (327ms)
+  ✓   8 [chromium] › e2e/conexion.spec.ts:224:3 › Conexión discreta y recuperación SSE › un fallo desde el primer intento también avisa y se recupera (302ms)
+  ✓   9 [chromium] › e2e/conexion.spec.ts:251:3 › Conexión discreta y recuperación SSE › el watchdog recupera un stream abierto que deja de emitir (376ms)
+  ✓  10 [chromium] › e2e/conexion.spec.ts:277:3 › Conexión discreta y recuperación SSE › fallo del relé con latidos activos no finge una desconexión (294ms)
+  ✓  11 [chromium] › e2e/conexion.spec.ts:294:3 › Conexión discreta y recuperación SSE › corte de red real del navegador y regreso online recuperan el SSE (5.6s)
+
+  11 passed (11.3s)
+npm notice
+npm notice New patch version of npm available! 12.2.2 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice

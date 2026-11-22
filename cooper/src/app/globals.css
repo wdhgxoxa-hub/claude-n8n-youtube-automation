@@ -478,26 +478,6 @@ details[open] summary {
   align-items: center;
   gap: var(--espacio-16);
 }
-.connection {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espacio-8);
-  width: 110px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.connection i,
-.live-pill i {
-  width: 5px;
-  height: 5px;
-  border-radius: var(--radio-pildora);
-  background: var(--texto-2);
-}
-.connection.online i,
-.live-pill i {
-  background: var(--tally);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tally) 8%, transparent);
-}
 .demo-label {
   font-size: var(--texto-12);
   border: 1px solid var(--linea);
@@ -803,18 +783,7 @@ main:focus-visible {
   color: var(--texto-2);
   margin-top: var(--espacio-4);
 }
-.live-pill {
-  font-size: var(--texto-12);
-  display: flex;
-  width: 96px;
-  flex-shrink: 0;
-  align-items: center;
-  gap: var(--espacio-8);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio-panel);
-  padding: var(--espacio-4) var(--espacio-8);
-  white-space: nowrap;
-}
+
 .approval-alert {
   display: flex;
   align-items: center;
@@ -2110,10 +2079,6 @@ main:focus-visible {
   }
   .demo-label {
     font-size: var(--texto-12);
-  }
-  .connection {
-    font-size: var(--texto-12);
-    width: 90px;
   }
   .menu-button {
     display: inline-flex;

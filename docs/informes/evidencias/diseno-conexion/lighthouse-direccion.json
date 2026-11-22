@@ -1,0 +1,24 @@
+{
+  "criterio": "DIRECCION.md sección 5: rendimiento móvil >=90 y accesibilidad 100",
+  "commit_codigo": "534ee7b9a72cb7480f133ddda9fbacc5ba092977",
+  "resultado": "PASS",
+  "mediciones": [
+    {
+      "ruta": "/",
+      "rendimiento": 93,
+      "accesibilidad": 100,
+      "cls": 0,
+      "advertencias": 0,
+      "cumple_direccion": true
+    },
+    {
+      "ruta": "/publicados",
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "cls": 0,
+      "advertencias": 0,
+      "cumple_direccion": true
+    }
+  ],
+  "arnes_general": "exit1: exige >=95; Inicio 93. Umbral original intacto."
+}

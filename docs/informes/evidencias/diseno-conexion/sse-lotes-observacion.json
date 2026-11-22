@@ -1,0 +1,19 @@
+{
+  "fecha": "2026-11-21",
+  "tipo": "reproduccion-local-sin-red",
+  "antes": "80a0ea6 y descendientes sin cambio del SSE",
+  "cola": {
+    "highWaterMark": 1,
+    "historial": 1000,
+    "ticks": 5,
+    "progresosRecibidos": 10,
+    "estadosRecibidos": 0,
+    "estimacionSegundosPrimerEstado": 1000
+  },
+  "regresion": {
+    "comando": "npm test -- --run tests/eventos-conexion.test.ts",
+    "log": "sse-lotes-rojo.log",
+    "resultado": "13 pruebas aprobadas; 3 nuevas regresiones fallan antes de corregir"
+  },
+  "limite": "Ensayo local y reloj simulado; no mide ni modifica producción"
+}

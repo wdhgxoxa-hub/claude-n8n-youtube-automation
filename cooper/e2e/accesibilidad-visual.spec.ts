@@ -22,7 +22,7 @@ test("contraste de campos, ayudas y foco visible en el tema oscuro", async ({
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/perfil");
   await expect(page).toHaveTitle("Tu perfil · Cooper");
-  await expect(page.locator(".workspace")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   const muestras = [];
   for (const theme of ["oscuro"]) {
     await page.evaluate((value) => {

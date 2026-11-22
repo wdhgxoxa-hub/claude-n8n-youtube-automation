@@ -5,7 +5,7 @@ const dir = ".cache/capturas-diseno";
 test.use({ timezoneId: "America/Lima" });
 async function ready(page: Page, path = "/") {
   await page.goto(path);
-  await expect(page.locator("main")).toBeVisible();
+  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
   await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function overflow(page: Page) {
