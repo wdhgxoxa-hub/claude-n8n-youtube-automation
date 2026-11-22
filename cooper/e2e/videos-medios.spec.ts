@@ -207,17 +207,22 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
   expect(await medio.boundingBox()).toEqual(caja);
   await medio.hover();
   await expect(medio).toHaveAttribute("data-reproduciendo", "true");
+  const rutaMedios = page.url();
+  await page.goto("/perfil");
   await page
     .getByRole("button", { name: "Pausar movimiento", exact: true })
     .click();
+  await page.goto(rutaMedios);
   await medio.hover();
   await expect(medio).toHaveAttribute("data-quieto", "true");
   await expect
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).paused))
     .toBe(true);
+  await page.goto("/perfil");
   await page
     .getByRole("button", { name: "Activar movimiento", exact: true })
     .click();
+  await page.goto(rutaMedios);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await medio.hover();
   await expect(medio).toHaveAttribute("data-quieto", "true");
