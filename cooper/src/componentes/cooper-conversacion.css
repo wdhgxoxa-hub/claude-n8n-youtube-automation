@@ -132,11 +132,15 @@
   margin: var(--espacio-8);
 }
 @media (max-width: 1023px) {
+  .cooper-panel:not(.is-full) .chat-pane[data-vacio="true"] .conversation {
+    padding-block: var(--espacio-8);
+  }
   .cooper-panel:not(.is-full) .chat-welcome h2 {
     font-size: var(--texto-20);
   }
   .cooper-panel:not(.is-full) .chat-welcome p {
     font-size: var(--texto-13);
+    margin-top: var(--espacio-8);
   }
   .cooper-panel:not(.is-full) .chat-welcome br {
     display: none;

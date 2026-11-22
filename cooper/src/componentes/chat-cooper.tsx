@@ -681,13 +681,13 @@ export function ChatCooper({
           </form>
           <p className="composer-caption" role="status">
             {data.demo
-              ? "Conversación de ejemplo. "
+              ? "Ejemplo · "
               : data.chat.simulado
                 ? "Modo básico temporal. "
                 : ""}
             {uploading
               ? "Guardando archivo…"
-              : "Cooper propone. Tú tienes la última palabra."}
+              : "Cooper propone. Tú decides."}
           </p>
           <p className="sr-only" id={messageHelpId}>
             Pulsa Entrar para enviar o Mayús y Entrar para escribir otra línea.
