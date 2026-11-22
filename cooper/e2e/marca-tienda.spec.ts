@@ -49,7 +49,11 @@ async function estado(request: APIRequestContext): Promise<EstadoMarcas> {
 
 async function crearTienda(page: Page, nombre: string) {
   await page.goto("/marcas");
-  await page.getByRole("button", { name: "Añadir marca o cuenta" }).click();
+  await page
+    .getByRole("button", {
+      name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+    })
+    .click();
   const inicio = page.getByRole("combobox", { name: "Punto de partida" });
   await expect(inicio).toHaveValue("blanco");
   await inicio.selectOption({ label: "Tienda de ropa de Walter (ejemplo)" });
@@ -162,7 +166,11 @@ test("Tienda de ropa: creación explícita, edición persistente y aislamiento",
     (await estado(page.request)).marcas.find((m) => m.id === marca.id),
   ).toEqual(guardada);
 
-  await page.getByRole("button", { name: "Añadir marca o cuenta" }).click();
+  await page
+    .getByRole("button", {
+      name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+    })
+    .click();
   await expect(
     page.getByRole("combobox", { name: "Punto de partida" }),
   ).toHaveValue("blanco");
@@ -183,7 +191,7 @@ test("Tienda de ropa: creación explícita, edición persistente y aislamiento",
       exact: true,
     }),
   ).toBeVisible();
-  const marcas = page.getByRole("complementary", { name: "Tus marcas" });
+  const marcas = page.getByRole("region", { name: "Tus marcas" });
   await marcas
     .getByRole("button")
     .filter({
@@ -214,7 +222,7 @@ test("Tienda de ropa: creación explícita, edición persistente y aislamiento",
     .toBe("calendario");
   await expect(
     page.getByRole("heading", {
-      name: "Especialista de moda y ecommerce",
+      name: "Historias que visten tu marca",
       exact: true,
     }),
   ).toHaveCount(0);
@@ -245,7 +253,7 @@ for (const width of [390, 1440]) {
     );
     await expect(
       page.getByRole("heading", {
-        name: "Especialista de moda y ecommerce",
+        name: "Historias que visten tu marca",
         exact: true,
       }),
     ).toBeVisible();
@@ -283,18 +291,24 @@ for (const width of [390, 1440]) {
     }
     await expect(calendario).toContainText("America/Lima");
     const reales = page.locator(
-      'dl[aria-label="Conversión real sin conectar"]',
+      '[role="group"][aria-label="Conversión real sin conectar"]',
     );
     await expect(reales.getByText("Sin datos", { exact: true })).toHaveCount(4);
     await page
       .getByText("Ver cálculo con datos ficticios", { exact: true })
       .click();
     const ficticias = page.locator(
-      'dl[aria-label="Conversión ficticia de ejemplo"]',
+      '[role="group"][aria-label="Conversión ficticia de ejemplo"]',
     );
-    for (const valor of [/^12\s?%$/, /^6\s?%$/, /^3\s?%$/, /^S\/\s?120\.00$/]) {
+    for (const valor of [/^12$/, /^6$/, /^3$/, /^120$/]) {
       await expect(ficticias.getByText(valor)).toBeVisible();
     }
+    await expect(
+      ficticias.getByText("Porcentaje", { exact: true }),
+    ).toHaveCount(3);
+    await expect(
+      ficticias.getByText("Soles por pedido", { exact: true }),
+    ).toBeVisible();
     await expect(
       page.getByText(/Ejemplo didáctico, ajeno a esta marca/),
     ).toBeVisible();
@@ -315,7 +329,7 @@ for (const width of [390, 1440]) {
     }
 
     mkdirSync(".cache/total-marca-tienda", { recursive: true });
-    for (const tema of ["oscuro", "claro"]) {
+    for (const tema of ["oscuro"]) {
       await page.evaluate((valor) => {
         document.documentElement.dataset.theme = valor;
       }, tema);

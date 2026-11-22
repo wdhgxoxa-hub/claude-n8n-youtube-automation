@@ -11,14 +11,14 @@ export function IglesiaEditorial() {
       className="marca-iglesia"
       aria-labelledby="iglesia-editorial-titulo"
     >
+      <p className="marca-ceja">La semana de tu comunidad</p>
       <h3 id="iglesia-editorial-titulo">
         Contenido reformado para la congregación
       </h3>
       <p>
-        Especialista de doctrina reformada: Escritura como autoridad suprema;
-        Westminster y Heidelberg como referencias subordinadas. Tono reverente y
-        pastoral, sin sensacionalismo. La adopción confesional de la iglesia
-        requiere confirmación pastoral.
+        Una palabra que acompaña, una invitación a encontrarse. Cada pieza
+        conserva un tono reverente y pastoral, con la Escritura como autoridad
+        suprema.
       </p>
       <h4>Calendario semanal propuesto</h4>
       <p>
@@ -38,6 +38,10 @@ export function IglesiaEditorial() {
       </ol>
       <details>
         <summary>Plantillas, revisión y pendientes de Walter</summary>
+        <p>
+          Westminster y Heidelberg son referencias subordinadas. La adopción
+          confesional de la iglesia requiere confirmación pastoral.
+        </p>
         <ul>
           {plantillasIglesia.map((p) => (
             <li key={p.id}>

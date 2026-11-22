@@ -42,6 +42,12 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     page.getByRole("heading", { name: "Iglesia de ensayo", exact: true }),
   ).toBeVisible();
   await page
+    .getByRole("button", { name: "Cuentas y conexión", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Cuentas y conexión", exact: true }),
+  ).toBeVisible();
+  await page
     .getByLabel("Nombre de la cuenta", { exact: true })
     .fill("@iglesia_ensayo");
   await page
@@ -59,6 +65,10 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   await expect(
     page.getByText("Conexión verificada.", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Cuentas y conexión", exact: true }),
+  ).toBeFocused();
   await page.getByRole("button", { name: "Estudio", exact: true }).click();
   await page
     .getByRole("button", { name: "Estudiar la cuenta", exact: true })
@@ -89,6 +99,9 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("button", { name: "Calendario", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Crear una publicación", exact: true })
+    .click();
   await page
     .getByLabel("Título de la pieza", { exact: true })
     .fill("Nos reunimos el domingo");
@@ -162,6 +175,9 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     }
   }
   await page
+    .getByRole("button", { name: "Revisar doctrina", exact: true })
+    .click();
+  await page
     .getByLabel("Responsable pastoral", { exact: true })
     .fill("Responsable ficticio del ensayo");
   await page
@@ -175,6 +191,13 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   await page
     .getByRole("button", { name: "Registrar revisión doctrinal", exact: true })
     .click();
+  await expect(
+    page.getByText(
+      "Revisión doctrinal registrada. Ya puedes aprobar esta pieza.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
   await page
     .getByRole("button", { name: "Aprobar y programar", exact: true })
     .click();

@@ -43,6 +43,11 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   await page.goto("/marcas");
   await page
     .getByRole("button", {
+      name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+    })
+    .click();
+  await page
+    .getByRole("button", {
       name: "Preparar Iglesia (por confirmar)",
       exact: true,
     })
@@ -57,6 +62,9 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
     (await page.request.post("/api/marcas/iglesia", { data: {} })).status(),
   ).toBe(200);
   expect((await marcaIglesia(page.request)).id).toBe(inicial.id);
+  await page
+    .getByText("Plantillas, revisión y pendientes de Walter", { exact: true })
+    .click();
   await expect(page.getByText(/Westminster/).first()).toBeVisible();
   await expect(page.getByText(/Heidelberg/).first()).toBeVisible();
   const editorial = page.getByRole("region", {
@@ -73,6 +81,9 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
     await expect(editorial).toContainText(horario);
   }
 
+  await page
+    .getByRole("button", { name: "Crear una publicación", exact: true })
+    .click();
   for (const nombre of [
     "versículo de la semana",
     "devocional pastoral",
@@ -94,6 +105,10 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   }
   expect((await marcaIglesia(page.request)).piezas).toEqual([]);
 
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Cuentas y conexión", exact: true })
+    .click();
   await page
     .getByLabel("Nombre de la cuenta", { exact: true })
     .fill("@iglesia_ficticia");
@@ -113,6 +128,10 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   await expect(
     page.getByText("Conexión verificada.", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Crear una publicación", exact: true })
+    .click();
   await page
     .getByRole("button", {
       name: "Usar plantilla de anuncios de la congregación",
@@ -138,6 +157,9 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   await expect(
     pieza.getByRole("button", { name: "Aprobar y programar", exact: true }),
   ).toBeDisabled();
+  await pieza
+    .getByRole("button", { name: "Revisar doctrina", exact: true })
+    .click();
   await expect(
     pieza.getByRole("button", {
       name: "Registrar revisión doctrinal",
@@ -153,6 +175,7 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   ).toBe(409);
   expect((await marcaIglesia(page.request)).piezas[0].estado).toBe("pendiente");
 
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
   await page.getByRole("button", { name: "Editar guía", exact: true }).click();
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
@@ -194,6 +217,9 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
     pieza.getByRole("button", { name: "Aprobar y programar", exact: true }),
   ).toBeDisabled();
   await pieza
+    .getByRole("button", { name: "Revisar doctrina", exact: true })
+    .click();
+  await pieza
     .getByLabel("Responsable pastoral", { exact: true })
     .fill("Responsable ficticio del ensayo");
   await pieza
@@ -210,6 +236,13 @@ test("Iglesia: ejemplo privado, calendario, revisión doctrinal humana y nueva r
   await pieza
     .getByRole("button", { name: "Registrar revisión doctrinal", exact: true })
     .click();
+  await expect(
+    page.getByText(
+      "Revisión doctrinal registrada. Ya puedes aprobar esta pieza.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
   await expect(
     pieza.getByRole("button", { name: "Aprobar y programar", exact: true }),
   ).toBeEnabled();

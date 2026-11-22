@@ -438,6 +438,9 @@ for (const tema of temas) {
       await page.getByRole("button", { name: "Cancelar", exact: true }).click();
 
       await abrir(page, "/admin/fabrica", tema);
+      await page
+        .getByText("Editar controles de producción", { exact: true })
+        .click();
       const voz = page.getByLabel("Voz", { exact: true });
       await voz.setChecked(!(await voz.isChecked()));
       await page.getByRole("button", { name: "Revisar ajustes" }).click();
@@ -498,6 +501,7 @@ for (const tema of temas) {
       await revisar("marca-calendario-poblado");
       await page.getByText("Crear una publicación", { exact: true }).click();
       await revisar("marca-editor-publicacion");
+      await page.getByRole("button", { name: "Cerrar", exact: true }).click();
       const secciones = page.getByRole("navigation", {
         name: "Secciones de la marca",
       });

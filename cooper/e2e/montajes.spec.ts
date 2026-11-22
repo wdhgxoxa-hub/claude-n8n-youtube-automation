@@ -38,6 +38,9 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
   await expect(
     page.getByRole("heading", { name: "Marca de montajes", exact: true }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Cuentas y conexión", exact: true })
+    .click();
   // El árbol saliente de la transición puede conservar etiquetas ocultas.
   // Elegir el textbox accesible mantiene la misma acción visible del usuario.
   await page
@@ -64,6 +67,10 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
   await expect(
     page.getByText("Conexión verificada.", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Crear una publicación", exact: true })
+    .click();
   const source = page.getByRole("combobox", {
     name: "Montaje aprobado de fábrica",
     exact: true,
