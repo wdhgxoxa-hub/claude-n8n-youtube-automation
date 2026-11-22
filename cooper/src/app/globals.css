@@ -92,6 +92,7 @@ a {
   touch-action: manipulation;
 }
 button {
+  border-radius: var(--radio-pildora);
   cursor: pointer;
   color: inherit;
   background: transparent;
@@ -2629,6 +2630,7 @@ main:focus-visible {
   gap: var(--espacio-8);
 }
 .queue-item {
+  border-radius: var(--radio-tarjeta);
   text-align: left;
   padding: 0 0 var(--espacio-8);
   border-bottom: 2px solid transparent;
@@ -2870,9 +2872,6 @@ main:focus-visible {
   }
   .motion-toggle {
     font-size: var(--texto-12);
-  }
-  .topbar > span {
-    display: none;
   }
   .studio {
     min-height: 0;
@@ -4888,7 +4887,6 @@ h2 {
   font-weight: 500;
   letter-spacing: var(--tracking-display);
 }
-button,
 .button,
 .icon-button,
 .send,
