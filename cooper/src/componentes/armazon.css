@@ -467,6 +467,29 @@ main#contenido {
   animation-duration: var(--duracion-ruta);
   animation-timing-function: var(--curva-entrada-salida);
 }
+/* La navegación no se funde con la página: queda quieta y en vivo, así el
+   indicador activo se desliza dentro de la transición (§3). */
+.glass-rail {
+  view-transition-name: riel;
+}
+.mobile-dock {
+  view-transition-name: barra-movil;
+}
+::view-transition-group(riel),
+::view-transition-group(barra-movil),
+::view-transition-new(riel),
+::view-transition-new(barra-movil) {
+  animation: none;
+}
+::view-transition-old(riel),
+::view-transition-old(barra-movil) {
+  display: none;
+}
+/* Ruta pedida y aún en camino: la pantalla sigue viva y el enlace lo dice. */
+a[data-navegando] {
+  opacity: 0.72;
+  transition: opacity var(--duracion-estado) var(--curva-salida);
+}
 @keyframes route-in {
   from {
     opacity: 0;

@@ -1,8 +1,10 @@
 import { Esqueleto } from "@/componentes/primitivas";
+import { RetenerEsqueleto } from "@/componentes/transiciones";
 import "@/componentes/resto-diseno.css";
 export default function Loading() {
   return (
     <div className="page carga-diseno" data-ruta-cargando aria-busy="true">
+      <RetenerEsqueleto />
       <Esqueleto className="carga-titulo" etiqueta="Preparando tu espacio" />
       <div className="carga-contenido" aria-hidden="true">
         <div className="esqueleto carga-protagonista" />
