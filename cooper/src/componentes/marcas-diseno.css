@@ -335,10 +335,13 @@
   margin-bottom: var(--espacio-32);
 }
 .marca-hoja-cabecera h2 {
+  flex: 1;
+  min-width: 0;
   font-family: var(--fuente-display);
   font-size: var(--texto-40);
   font-weight: 500;
   line-height: var(--interlinea-display);
+  overflow-wrap: anywhere;
 }
 .marca-hoja-cabecera .boton {
   flex: 0 0 var(--objetivo-tactil);
