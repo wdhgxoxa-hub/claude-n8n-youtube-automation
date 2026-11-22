@@ -116,6 +116,12 @@ export function CooperFlotante({
         onClick={() => cambiar(!abierto)}
         layoutId={reduced ? undefined : "cooper-origen"}
         transition={resorte}
+        onLayoutAnimationStart={() =>
+          opener.current?.setAttribute("data-projecting", "true")
+        }
+        onLayoutAnimationComplete={() =>
+          opener.current?.removeAttribute("data-projecting")
+        }
         hidden={abierto}
       >
         <CooperPresencia />
