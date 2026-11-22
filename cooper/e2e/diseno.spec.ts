@@ -112,7 +112,6 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   await ready(page, "/perfil");
   await page.getByRole("button", { name: "Pausar movimiento" }).click();
   await ready(page);
-  await page.getByRole("button", { name: "Abrir Cooper", exact: true }).click();
   await expect(page.locator(".workspace")).toHaveAttribute(
     "data-motion",
     "paused",
@@ -131,7 +130,6 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
-    await overflow(page);
     await overflow(page);
   }
   expect(
