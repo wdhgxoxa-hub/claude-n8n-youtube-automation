@@ -90,7 +90,10 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
   await page.getByRole("button", { name: "instagram", exact: true }).click();
   await expect(page.locator(".publication:visible")).toHaveCount(3);
-  const marca = propio.publicaciones.find((p) => p.tipo === "marca")!;
+  // La tarjeta agrupada enlaza la captura más reciente, igual que sus cifras.
+  const marca = propio.publicaciones
+    .filter((p) => p.tipo === "marca")
+    .sort((a, b) => (b.metricas?.capturadas ?? 0) - (a.metricas?.capturadas ?? 0))[0];
   await page.locator(`.publication-thumb[href="${marca.href}"]`).click();
   await expect(
     page.getByRole("heading", { name: "Horizonte", exact: true }),
