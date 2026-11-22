@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useId, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import type { Leccion, Medicion } from "@/contratos/observabilidad";
 import {
@@ -424,6 +424,10 @@ function EjemploVacio({ filtrado }: { filtrado: boolean }) {
 }
 
 export function Aprendizaje({ initial }: { initial: Resultados }) {
+  // Ids por instancia: si Next conserva la copia transmitida oculta
+  // (body > div#S:0[hidden]) junto al render activo, no se repiten.
+  const idMarcas = useId();
+  const idCorrecciones = useId();
   const { data } = useEspacio();
   const consulta = useResultados(initial);
   const { resultado, filtro, error } = consulta;
@@ -500,14 +504,11 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
         <EjemploVacio filtrado={Object.values(filtro).some(Boolean)} />
       )}
       {!!marcas.length && (
-        <section
-          className={styles.seccion}
-          aria-labelledby="observaciones-marcas"
-        >
+        <section className={styles.seccion} aria-labelledby={idMarcas}>
           <div className={styles.tituloSeccion}>
             <div>
               <p className={styles.paso}>Otra mirada</p>
-              <h2 id="observaciones-marcas">Lo que cuentan tus marcas</h2>
+              <h2 id={idMarcas}>Lo que cuentan tus marcas</h2>
             </div>
             <Link className={styles.enlace} href="/marcas?seccion=aprendizaje">
               Ver las marcas ↗
@@ -559,11 +560,11 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
           ))}
         </section>
       )}
-      <section className={styles.seccion} aria-labelledby="correcciones-videos">
+      <section className={styles.seccion} aria-labelledby={idCorrecciones}>
         <div className={styles.tituloSeccion}>
           <div>
             <p className={styles.paso}>Durante el camino</p>
-            <h2 id="correcciones-videos">Fallos y correcciones de videos</h2>
+            <h2 id={idCorrecciones}>Fallos y correcciones de videos</h2>
           </div>
           <div
             className={styles.chips}
