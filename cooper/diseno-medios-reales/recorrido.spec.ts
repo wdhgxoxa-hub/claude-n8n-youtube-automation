@@ -361,10 +361,15 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
     fullPage: true,
   });
   await navegar(page, "/publicados");
+  const actualizado = page.waitForResponse("**/api/resultados");
   await page
     .getByRole("button", { name: "Actualizar resultados", exact: true })
     .click();
-  const publicado = page.locator(".publication-thumb [data-video-medio]");
+  await (await actualizado).finished();
+  await expect(page.locator(".publication-thumb")).toHaveCount(1);
+  const publicado = page.locator(
+    `.publication-thumb [data-video-medio="${original.id}"][data-publicacion="extracto-local"]`,
+  );
   await expect(publicado.locator("img")).toHaveAttribute(
     "src",
     urlAsset(original.id, "poster"),

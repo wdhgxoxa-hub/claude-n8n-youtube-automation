@@ -7,7 +7,7 @@ import type { VideoMedios } from "../src/contratos/video-medios";
 import type { Resultados } from "../src/contratos/resultados";
 
 const salida = "../evidencias-diseno";
-const origen = "https://media.example.test";
+const origen = "/__ensayo-medios";
 const poster = `${origen}/medios-poster.jpg`;
 const preview = `${origen}/medios-preview.mp4`;
 let mp4: Buffer;
@@ -106,8 +106,8 @@ async function preparar(page: Page, retenerMedios = false) {
   });
   let vistasPrevias = 0;
   let completos = 0;
-  await page.route(`${origen}/**`, (route) => {
-    if (route.request().url() === preview) vistasPrevias++;
+  await page.route(`**${origen}/**`, (route) => {
+    if (new URL(route.request().url()).pathname === preview) vistasPrevias++;
     if (route.request().url().endsWith("completo.mp4")) completos++;
     return route.fulfill({
       contentType: route.request().url().endsWith(".jpg")
@@ -240,7 +240,7 @@ for (const ancho of [390, 1440])
     const medio = page
       .locator(`[data-video-medio="${datos.video.id}"]`)
       .first();
-    await expect(medio).toHaveText("Preparando portada");
+    await expect(medio).toHaveAttribute("data-estado", "pendiente");
     const cajaPendiente = await medio.boundingBox();
     await page.evaluate(() => {
       const state = {
@@ -417,10 +417,15 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
     route.fulfill({ json: resultados }),
   );
   await page.goto("/publicados");
+  const actualizado = page.waitForResponse("**/api/resultados");
   await page
     .getByRole("button", { name: "Actualizar resultados", exact: true })
     .click();
-  const medio = page.locator(".publication-thumb [data-video-medio]");
+  await (await actualizado).finished();
+  await expect(page.locator(".publication-thumb")).toHaveCount(1);
+  const medio = page.locator(
+    `.publication-thumb [data-video-medio="${datos.video.id}"][data-publicacion="${publicacion.publicacion.id}"]`,
+  );
   await expect(medio).toHaveAttribute(
     "data-publicacion",
     publicacion.publicacion.id,
@@ -465,7 +470,7 @@ test("un derivado lento termina visible después de más de ocho consultas", asy
   });
   await page.goto("/videos");
   const medio = page.locator(`[data-video-medio="${datos.video.id}"]`).first();
-  await expect(medio).toHaveText("Preparando portada");
+  await expect(medio).toHaveAttribute("data-estado", "pendiente");
   await expect.poll(() => consultas).toBe(1);
   for (let consulta = 2; consulta <= 10; consulta++) {
     const respuesta = page.waitForResponse(
