@@ -472,6 +472,10 @@ test("grabación nativa con señal sintética y reproducción de medios soportad
     }),
   );
   await page.goto(`/videos/${video.id}`);
+  await expect(page.locator(".scene-gallery audio")).toBeHidden();
+  await page
+    .getByText("Piezas de la historia y publicaciones", { exact: true })
+    .click();
   for (const selector of [".real-player video", ".scene-gallery audio"]) {
     const player = page.locator(selector);
     await expect(player).toBeVisible();

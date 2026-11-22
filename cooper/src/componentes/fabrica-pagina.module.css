@@ -1,0 +1,60 @@
+.page {
+  width: 100%;
+  min-width: 0;
+  padding: var(--espacio-48) var(--margen-pagina) var(--espacio-96);
+}
+
+.page :global(.page-heading) {
+  align-items: flex-end;
+  margin-bottom: var(--espacio-48);
+}
+
+.page :global(.page-heading h1) {
+  font-family: var(--fuente-display);
+  font-size: var(--titulo-pantalla);
+  line-height: var(--interlinea-display);
+  letter-spacing: var(--tracking-display);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.page :global(.page-heading p) {
+  font-size: var(--texto-15);
+  max-width: 48ch;
+  margin-top: var(--espacio-16);
+}
+
+.page :global(.filters) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-8);
+  margin-bottom: var(--espacio-24);
+}
+
+.page :global(.filters button) {
+  min-height: var(--objetivo-tactil);
+}
+
+@media (max-width: 767px) {
+  .page {
+    padding-top: var(--espacio-32);
+  }
+  .page :global(.page-heading) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espacio-16);
+    margin-bottom: var(--espacio-24);
+  }
+  .page :global(.page-heading > :first-child) {
+    width: 100%;
+  }
+  .page :global(.filters) {
+    flex-wrap: nowrap;
+    gap: var(--espacio-4);
+  }
+  .page :global(.filters button) {
+    padding-inline: var(--espacio-8);
+    font-size: var(--texto-12);
+  }
+}

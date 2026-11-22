@@ -8,7 +8,7 @@ import type { Estado } from "@/servicios/datos";
 type Video = Estado["videos"][number];
 import { useEspacio, Empty } from "./espacio";
 import { nombreMedio } from "./transiciones";
-import { PortadaVideo } from "./portada-video";
+import { Medio } from "./primitivas";
 import {
   NumeroAnimado,
   TarjetaEdicion,
@@ -138,11 +138,11 @@ export function VideoMini({
         className="film-thumbnail"
         data-video-transition={nombreMedio(video.id)}
       >
-        <PortadaVideo
+        <Medio
           key={video.id}
           videoId={video.id}
-          titulo={video.title}
-          inicial={video.medios}
+          alt={video.title}
+          mediosIniciales={video.medios}
         />
       </span>
       <div>
@@ -263,10 +263,10 @@ export function FabricaVista({
                     onClick={() => setSelected(v.id)}
                   >
                     <span className="queue-cover">
-                      <PortadaVideo
+                      <Medio
                         videoId={v.id}
-                        titulo={v.title}
-                        inicial={v.medios}
+                        alt={v.title}
+                        mediosIniciales={v.medios}
                         enCola
                       />
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
