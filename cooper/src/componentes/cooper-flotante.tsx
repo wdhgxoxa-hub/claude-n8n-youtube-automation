@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
-const Chat = dynamic(() => import("./chat-cooper").then((m) => m.ChatCooper));
+import { ChatCooper as Chat } from "./chat-cooper";
 
 export function CooperFlotante({
   abierto,
@@ -116,9 +115,15 @@ export function CooperFlotante({
         onClick={() => cambiar(!abierto)}
         layoutId={reduced ? undefined : "cooper-origen"}
         transition={resorte}
+        onLayoutAnimationStart={() =>
+          opener.current?.setAttribute("data-projecting", "true")
+        }
+        onLayoutAnimationComplete={() =>
+          opener.current?.removeAttribute("data-projecting")
+        }
         hidden={abierto}
       >
-        <CooperPresencia />
+        <CooperPresencia activo={!abierto} />
         {pendiente && (
           <span className="cooper-tally" aria-label="Tienes algo por revisar" />
         )}
