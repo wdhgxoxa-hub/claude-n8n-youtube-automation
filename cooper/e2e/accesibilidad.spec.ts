@@ -69,6 +69,11 @@ async function abrir(page: Page, ruta: string, tema: Tema) {
   await expect(
     page.getByText("Consultando la fábrica…", { exact: true }),
   ).toHaveCount(0);
+  // Las cargas con esqueleto (loading.tsx) transmiten la página en un
+  // body > div#S:n[hidden] que React revela en el siguiente fotograma o hasta
+  // 300 ms después. Se audita el documento ya revelado; si la copia oculta
+  // se quedara (ids duplicados reales), esta espera falla y lo delata.
+  await expect(page.locator('body > div[hidden][id^="S:"]')).toHaveCount(0);
   // Entrada, 404 y revisión de WhatsApp no ofrecen un selector de tema público.
   // Se ensayan el juego único de tokens oscuros, sin afirmar que existe ese selector.
   if ((await page.locator(".workspace").count()) === 0) {
@@ -688,9 +693,10 @@ for (const tema of temas) {
           await expect(
             page.getByRole("heading", { name: "Una idea. Todo por crear." }),
           ).toBeVisible();
-        else if (["/canales", "/videos"].includes(ruta))
+        else if (ruta === "/videos")
           await expect(page.locator(".empty").first()).toBeVisible();
-        else if (ruta === "/publicados")
+        // Canales y Publicados usan la primitiva Vacio de la sala de proyección.
+        else if (ruta === "/canales" || ruta === "/publicados")
           await expect(page.locator(".vacio").first()).toBeVisible();
         else if (ruta === "/aprendizaje")
           await expect(

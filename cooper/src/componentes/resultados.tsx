@@ -394,6 +394,8 @@ function PublicacionPared({
   const cifras = ultimaCifra(p);
   const ambito = ambitos.find((a) => a.id === p.ambitoId)!;
   const red = p.redes.map(nombreRed).join(" · ") || "Sin red";
+  // Número de la pieza en la pared: firma visible del póster tipográfico.
+  const numeroPieza = `N.º ${String(orden + 1).padStart(2, "0")}`;
   return (
     <article
       className={`${styles.publicacion} publication${orden < 8 ? " entrada-estudio" : ""}`}
@@ -415,7 +417,9 @@ function PublicacionPared({
         <Link
           href={p.href}
           className={`publication-thumb ${styles.enlaceMedio}`}
-          aria-label={`Ver detalle de ${p.titulo}`}
+          // WCAG 2.5.3 (nombre en la etiqueta): el nombre empieza por el texto
+          // visible del póster («N.º 01» y título) y termina con la acción.
+          aria-label={`${numeroPieza} · ${p.titulo} · Ver detalle`}
         >
           <div
             className={styles.contenedorMedio}
@@ -430,7 +434,7 @@ function PublicacionPared({
               preview={medio?.preview?.url}
               alt={p.titulo}
               canal={ambito.nombre}
-              detalle={`N.º ${String(orden + 1).padStart(2, "0")}`}
+              detalle={numeroPieza}
               videoId={videoId || undefined}
               className={styles.medio}
               proporcion={

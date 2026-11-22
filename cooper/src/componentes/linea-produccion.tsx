@@ -13,7 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
-import { m as motion, type Transition } from "framer-motion";
+import { LayoutGroup, m as motion, type Transition } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -260,6 +260,15 @@ export function LineaProduccion({
     return { etapa, videos, fila };
   });
   const filas = Math.max(1, ...porEtapa.map((videos) => videos.length));
+  // Las animaciones de posición cuentan movimientos DENTRO de la línea (una
+  // cápsula que cambia de estación, un suceso nuevo). Sin estas firmas, y
+  // dentro del grupo «estudio», cualquier actualización ajena (abrir «Pedir
+  // video», el indicador de filtros) hacía que estaciones y cápsulas se
+  // deslizaran 640 ms desde su sitio anterior, por encima del formulario.
+  const firmaLinea = piezas
+    .map((video) => `${video.id}:${video.stage}:${video.productionState}`)
+    .join("|");
+  const firmaSucesos = sucesos.map((suceso) => suceso.id).join("|");
 
   const medirVista = useCallback(() => {
     const elemento = carril.current;
@@ -440,258 +449,268 @@ export function LineaProduccion({
         </div>
       </div>
 
-      <div className={styles.composicion}>
-        <div className={styles.mesa}>
-          <motion.div
-            ref={carril}
-            className={styles.carril}
-            layoutScroll
-            tabIndex={0}
-            role="region"
-            aria-label="Estaciones de producción; desplázate para recorrerlas"
-            data-inicio={vista.inicio}
-            data-fin={vista.fin}
-            onScroll={medirVista}
-            onKeyDown={teclado}
-            onPointerDown={empezarArrastre}
-            onPointerMove={moverArrastre}
-            onPointerUp={terminarArrastre}
-            onPointerCancel={terminarArrastre}
-            onClickCapture={(evento) => {
-              if (arrastre.current.movido) {
-                evento.preventDefault();
-                evento.stopPropagation();
-              }
-            }}
-          >
-            <div
-              className={styles.pista}
-              style={{ "--filas": filas } as CSSProperties}
+      {/* Grupo propio: las actualizaciones del resto del estudio no arrastran
+          a la línea a una animación de posición. */}
+      <LayoutGroup id="linea-produccion" inherit={false}>
+        <div className={styles.composicion}>
+          <div className={styles.mesa}>
+            <motion.div
+              ref={carril}
+              className={styles.carril}
+              layoutScroll
+              tabIndex={0}
+              role="region"
+              aria-label="Estaciones de producción; desplázate para recorrerlas"
+              data-inicio={vista.inicio}
+              data-fin={vista.fin}
+              onScroll={medirVista}
+              onKeyDown={teclado}
+              onPointerDown={empezarArrastre}
+              onPointerMove={moverArrastre}
+              onPointerUp={terminarArrastre}
+              onPointerCancel={terminarArrastre}
+              onClickCapture={(evento) => {
+                if (arrastre.current.movido) {
+                  evento.preventDefault();
+                  evento.stopPropagation();
+                }
+              }}
             >
-              {estaciones.map(({ etapa, videos, fila }) => (
-                <motion.div
-                  key={`estacion-${etapa}`}
-                  layout={reducido ? false : "position"}
-                  initial={false}
-                  transition={transicion}
-                  data-estacion={etapa}
-                  className={styles.estacion}
-                  data-ocupada={videos.length > 0}
-                  data-aprobacion={esperaAprobacion(etapa)}
-                  style={
-                    {
-                      "--estacion": etapa + 1,
-                      "--fila-movil": fila,
-                    } as CSSProperties
-                  }
-                >
-                  <button
-                    type="button"
-                    className={styles.numeroEstacion}
-                    onClick={() => irAEstacion(etapa)}
-                    aria-label={`${String(etapa + 1).padStart(2, "0")} ${ETAPAS[etapa]}, ${videos.length} ${videos.length === 1 ? "video" : "videos"}`}
-                  >
-                    {String(etapa + 1).padStart(2, "0")}
-                  </button>
-                  <div className={styles.nombreEstacion}>
-                    <h3>{ETAPAS[etapa]}</h3>
-                    <p>
-                      {videos.length
-                        ? `${videos.length} ${videos.length === 1 ? "video" : "videos"}`
-                        : "Sin videos"}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-              {estaciones
-                .filter(({ videos }) => !videos.length)
-                .map(({ etapa }) => (
-                  <div
-                    key={`bahia-${etapa}`}
-                    className={styles.bahia}
-                    aria-hidden="true"
-                    style={{ "--estacion": etapa + 1 } as CSSProperties}
-                  >
-                    <span className={styles.bahiaEstado}>Libre</span>
-                    <span className={styles.bahiaNumero}>
-                      {String(etapa + 1).padStart(2, "0")}
-                    </span>
-                    <span className={styles.bahiaOficio}>{OFICIO[etapa]}</span>
-                  </div>
-                ))}
-              {piezas.map((video) => {
-                const estacion = estaciones[video.stage];
-                const posicion = estacion.videos.findIndex(
-                  (item) => item.id === video.id,
-                );
-                const esperando =
-                  video.productionState === "activa" &&
-                  esperaAprobacion(video.stage);
-                const pausado =
-                  video.productionState === "pausada" ||
-                  video.productionState === "cancelada";
-                const vivo =
-                  video.productionState === "activa" &&
-                  video.stage < 11 &&
-                  !esperando;
-                return (
-                  <motion.article
-                    key={video.id}
+              <div
+                className={styles.pista}
+                style={{ "--filas": filas } as CSSProperties}
+              >
+                {estaciones.map(({ etapa, videos, fila }) => (
+                  <motion.div
+                    key={`estacion-${etapa}`}
                     layout={reducido ? false : "position"}
-                    className={styles.capsula}
-                    data-capsula={video.id}
-                    data-etapa={video.stage}
-                    data-espera={esperando}
-                    data-pausado={pausado}
-                    data-vivo={vivo}
-                    style={
-                      {
-                        "--estacion": video.stage + 1,
-                        "--fila": posicion + 2,
-                        "--fila-movil": estacion.fila + posicion + 1,
-                        "--proporcion": proporcionMedio(video).toFixed(4),
-                        "--tinte": video.medios?.tinte,
-                      } as CSSProperties
-                    }
+                    layoutDependency={firmaLinea}
                     initial={false}
                     transition={transicion}
+                    data-estacion={etapa}
+                    className={styles.estacion}
+                    data-ocupada={videos.length > 0}
+                    data-aprobacion={esperaAprobacion(etapa)}
+                    style={
+                      {
+                        "--estacion": etapa + 1,
+                        "--fila-movil": fila,
+                      } as CSSProperties
+                    }
                   >
-                    <Link
-                      href={`/videos/${video.id}`}
-                      className={styles.enlaceCapsula}
-                      draggable={false}
+                    <button
+                      type="button"
+                      className={styles.numeroEstacion}
+                      onClick={() => irAEstacion(etapa)}
+                      aria-label={`${String(etapa + 1).padStart(2, "0")} ${ETAPAS[etapa]}, ${videos.length} ${videos.length === 1 ? "video" : "videos"}`}
                     >
-                      <span className="sr-only">
-                        {ETAPAS[video.stage]}. Abrir detalle:{" "}
+                      {String(etapa + 1).padStart(2, "0")}
+                    </button>
+                    <div className={styles.nombreEstacion}>
+                      <h3>{ETAPAS[etapa]}</h3>
+                      <p>
+                        {videos.length
+                          ? `${videos.length} ${videos.length === 1 ? "video" : "videos"}`
+                          : "Sin videos"}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+                {estaciones
+                  .filter(({ videos }) => !videos.length)
+                  .map(({ etapa }) => (
+                    <div
+                      key={`bahia-${etapa}`}
+                      className={styles.bahia}
+                      aria-hidden="true"
+                      style={{ "--estacion": etapa + 1 } as CSSProperties}
+                    >
+                      <span className={styles.bahiaEstado}>Libre</span>
+                      <span className={styles.bahiaNumero}>
+                        {String(etapa + 1).padStart(2, "0")}
                       </span>
-                      <div
-                        className={styles.portada}
-                        data-video-transition={nombreMedio(video.id)}
+                      <span className={styles.bahiaOficio}>
+                        {OFICIO[etapa]}
+                      </span>
+                    </div>
+                  ))}
+                {piezas.map((video) => {
+                  const estacion = estaciones[video.stage];
+                  const posicion = estacion.videos.findIndex(
+                    (item) => item.id === video.id,
+                  );
+                  const esperando =
+                    video.productionState === "activa" &&
+                    esperaAprobacion(video.stage);
+                  const pausado =
+                    video.productionState === "pausada" ||
+                    video.productionState === "cancelada";
+                  const vivo =
+                    video.productionState === "activa" &&
+                    video.stage < 11 &&
+                    !esperando;
+                  return (
+                    <motion.article
+                      key={video.id}
+                      layout={reducido ? false : "position"}
+                      layoutDependency={firmaLinea}
+                      className={styles.capsula}
+                      data-capsula={video.id}
+                      data-etapa={video.stage}
+                      data-espera={esperando}
+                      data-pausado={pausado}
+                      data-vivo={vivo}
+                      style={
+                        {
+                          "--estacion": video.stage + 1,
+                          "--fila": posicion + 2,
+                          "--fila-movil": estacion.fila + posicion + 1,
+                          "--proporcion": proporcionMedio(video).toFixed(4),
+                          "--tinte": video.medios?.tinte,
+                        } as CSSProperties
+                      }
+                      initial={false}
+                      transition={transicion}
+                    >
+                      <Link
+                        href={`/videos/${video.id}`}
+                        className={styles.enlaceCapsula}
+                        draggable={false}
                       >
-                        <Medio
-                          videoId={video.id}
-                          mediosIniciales={video.medios}
-                          alt={video.title}
-                          canal={
-                            data.channels.find(
+                        <span className="sr-only">
+                          {ETAPAS[video.stage]}. Abrir detalle:{" "}
+                        </span>
+                        <div
+                          className={styles.portada}
+                          data-video-transition={nombreMedio(video.id)}
+                        >
+                          <Medio
+                            videoId={video.id}
+                            mediosIniciales={video.medios}
+                            alt={video.title}
+                            canal={
+                              data.channels.find(
+                                (canal) => canal.id === video.channelId,
+                              )?.name
+                            }
+                            detalle={`Etapa ${String(video.stage + 1).padStart(2, "0")}`}
+                            enCola
+                          />
+                          <span className={styles.etapa} aria-hidden="true">
+                            Etapa {String(video.stage + 1).padStart(2, "0")}
+                          </span>
+                        </div>
+                        <div className={styles.cuerpoCapsula}>
+                          <span className={styles.canal}>
+                            {data.channels.find(
                               (canal) => canal.id === video.channelId,
-                            )?.name
-                          }
-                          detalle={`Etapa ${String(video.stage + 1).padStart(2, "0")}`}
-                          enCola
-                        />
-                        <span className={styles.etapa} aria-hidden="true">
-                          Etapa {String(video.stage + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-                      <div className={styles.cuerpoCapsula}>
-                        <span className={styles.canal}>
-                          {data.channels.find(
-                            (canal) => canal.id === video.channelId,
-                          )?.name ?? "Tu canal"}
-                        </span>
-                        <h4>{video.title}</h4>
-                        <span className={styles.estadoCapsula}>
-                          {pausado ? (
-                            <Pause size={14} aria-hidden="true" />
-                          ) : video.stage === 11 ? (
-                            <Check size={14} aria-hidden="true" />
-                          ) : (
-                            <span
-                              className={styles.puntoEstado}
-                              aria-hidden="true"
-                            />
-                          )}
-                          <span>{estadoVideo(video)}</span>
-                          <ArrowUpRight size={16} aria-hidden="true" />
-                        </span>
-                      </div>
-                    </Link>
-                  </motion.article>
-                );
-              })}
+                            )?.name ?? "Tu canal"}
+                          </span>
+                          <h4>{video.title}</h4>
+                          <span className={styles.estadoCapsula}>
+                            {pausado ? (
+                              <Pause size={14} aria-hidden="true" />
+                            ) : video.stage === 11 ? (
+                              <Check size={14} aria-hidden="true" />
+                            ) : (
+                              <span
+                                className={styles.puntoEstado}
+                                aria-hidden="true"
+                              />
+                            )}
+                            <span>{estadoVideo(video)}</span>
+                            <ArrowUpRight size={16} aria-hidden="true" />
+                          </span>
+                        </div>
+                      </Link>
+                    </motion.article>
+                  );
+                })}
+              </div>
+            </motion.div>
+            <div className={styles.pieCarril}>
+              <p aria-live="off">
+                Estaciones <strong>{vista.desde}</strong>–
+                <strong>{vista.hasta}</strong> de 12 · arrastra o usa las
+                flechas
+              </p>
+              <div>
+                <Boton
+                  variante="fantasma"
+                  onClick={() => desplazar(-1)}
+                  disabled={vista.inicio}
+                  aria-label="Ver estaciones anteriores"
+                >
+                  <ArrowLeft size={18} />
+                </Boton>
+                <Boton
+                  variante="fantasma"
+                  onClick={() => desplazar(1)}
+                  disabled={vista.fin}
+                  aria-label="Ver estaciones siguientes"
+                >
+                  <ArrowRight size={18} />
+                </Boton>
+              </div>
             </div>
-          </motion.div>
-          <div className={styles.pieCarril}>
-            <p aria-live="off">
-              Estaciones <strong>{vista.desde}</strong>–
-              <strong>{vista.hasta}</strong> de 12 · arrastra o usa las flechas
-            </p>
-            <div>
-              <Boton
-                variante="fantasma"
-                onClick={() => desplazar(-1)}
-                disabled={vista.inicio}
-                aria-label="Ver estaciones anteriores"
-              >
-                <ArrowLeft size={18} />
-              </Boton>
-              <Boton
-                variante="fantasma"
-                onClick={() => desplazar(1)}
-                disabled={vista.fin}
-                aria-label="Ver estaciones siguientes"
-              >
-                <ArrowRight size={18} />
-              </Boton>
-            </div>
-          </div>
-          {!piezas.length && (
-            <p className={styles.vacio}>
-              La línea está lista. Tu próxima historia empieza con una idea.
-            </p>
-          )}
-        </div>
-
-        <aside
-          className={styles.actividad}
-          aria-labelledby="actividad-produccion-titulo"
-        >
-          <div className={styles.actividadTitulo}>
-            <h2 id="actividad-produccion-titulo">Lo que está pasando</h2>
-            {connected && (
-              <span className={styles.enVivo}>
-                <i aria-hidden="true" />
-                En vivo
-              </span>
+            {!piezas.length && (
+              <p className={styles.vacio}>
+                La línea está lista. Tu próxima historia empieza con una idea.
+              </p>
             )}
           </div>
-          <ol className={styles.sucesos} aria-label="Últimos movimientos">
-            {sucesos.map((suceso) => (
-              <motion.li
-                key={suceso.id}
-                data-tipo={suceso.tipo}
-                layout={reducido ? false : "position"}
-                initial={false}
-                transition={transicion}
-              >
-                <span className={styles.marcaSuceso} aria-hidden="true" />
-                <p>{suceso.texto}</p>
-                <Link href={`/videos/${suceso.video.id}`}>
-                  <span>{suceso.video.title}</span>
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </Link>
-                <time
-                  dateTime={new Date(suceso.fecha).toISOString()}
-                  title={fechaCompleta.format(suceso.fecha)}
+
+          <aside
+            className={styles.actividad}
+            aria-labelledby="actividad-produccion-titulo"
+          >
+            <div className={styles.actividadTitulo}>
+              <h2 id="actividad-produccion-titulo">Lo que está pasando</h2>
+              {connected && (
+                <span className={styles.enVivo}>
+                  <i aria-hidden="true" />
+                  En vivo
+                </span>
+              )}
+            </div>
+            <ol className={styles.sucesos} aria-label="Últimos movimientos">
+              {sucesos.map((suceso) => (
+                <motion.li
+                  key={suceso.id}
+                  data-tipo={suceso.tipo}
+                  layout={reducido ? false : "position"}
+                  layoutDependency={firmaSucesos}
+                  initial={false}
+                  transition={transicion}
                 >
-                  {horaRelativa(suceso.fecha, ahora)}
-                </time>
-              </motion.li>
-            ))}
-          </ol>
-          {!sucesos.length && (
-            <p className={styles.actividadVacia}>
-              Los avances de tus videos aparecerán aquí.
-            </p>
-          )}
-          <span className="sr-only" role="status">
-            {sucesos[0]
-              ? `${sucesos[0].video.title}: ${sucesos[0].texto}`
-              : "Sin movimientos recientes"}
-          </span>
-        </aside>
-      </div>
+                  <span className={styles.marcaSuceso} aria-hidden="true" />
+                  <p>{suceso.texto}</p>
+                  <Link href={`/videos/${suceso.video.id}`}>
+                    <span>{suceso.video.title}</span>
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </Link>
+                  <time
+                    dateTime={new Date(suceso.fecha).toISOString()}
+                    title={fechaCompleta.format(suceso.fecha)}
+                  >
+                    {horaRelativa(suceso.fecha, ahora)}
+                  </time>
+                </motion.li>
+              ))}
+            </ol>
+            {!sucesos.length && (
+              <p className={styles.actividadVacia}>
+                Los avances de tus videos aparecerán aquí.
+              </p>
+            )}
+            <span className="sr-only" role="status">
+              {sucesos[0]
+                ? `${sucesos[0].video.title}: ${sucesos[0].texto}`
+                : "Sin movimientos recientes"}
+            </span>
+          </aside>
+        </div>
+      </LayoutGroup>
     </section>
   );
 }

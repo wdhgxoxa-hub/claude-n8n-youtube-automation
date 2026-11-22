@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 import type { Estado } from "../src/servicios/datos";
+import { terminadosInicio } from "../src/componentes/inicio-datos";
 const dir = ".cache/animacion";
 async function captura(page: Page, name: string) {
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -18,7 +19,10 @@ async function login(page: Page) {
   );
   expect(response.ok()).toBe(true);
   await page.goto("/");
-  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
+  await expect(page.locator(".workspace")).toHaveAttribute(
+    "data-conexion",
+    "activa",
+  );
   await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function settledFace(page: Page) {
@@ -49,8 +53,8 @@ test.describe("evidencia de movimiento", () => {
     await page.waitForTimeout(950);
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
-    await expect(page.locator(".inicio-etapas")).toHaveCount(3);
-    for (const track of await page.locator(".inicio-etapas").all())
+    await expect(page.locator("main .inicio-etapas")).toHaveCount(3);
+    for (const track of await page.locator("main .inicio-etapas").all())
       await expect(track.locator("span")).toHaveCount(12);
     const face = page.locator(".cooper-orb .cooper-presencia video");
     await expect(face).toBeVisible();
@@ -78,14 +82,28 @@ test.describe("evidencia de movimiento", () => {
     expect(ownPublished).toBeDefined();
     expect(ownEditing).toBeDefined();
     // Inicio conserva sólo los videos propios; cada acceso identifica el recurso.
+    // El héroe integrado (DIRECCION §4) es el último terminado o publicado
+    // (etapa ≥ 9): se calcula con la misma regla del Inicio, no se supone.
+    const protagonista = terminadosInicio(
+      state.videos.filter((video) => video.ownerId === state.user.id),
+    )[0];
+    expect(protagonista).toBeDefined();
     const hero = page.locator("main .inicio-hero-enlace");
     await expect(hero).toHaveAccessibleName(
-      /Por qué el cielo cambia de color.*Ver video/,
+      new RegExp(
+        `${protagonista.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}.*Ver video`,
+      ),
     );
-    await expect(hero).toHaveAttribute("href", `/videos/${ownPublished!.id}`);
-    await expect(page.locator(".inicio-hero")).toContainText("Publicado");
+    await expect(hero).toHaveAttribute("href", `/videos/${protagonista.id}`);
+    await expect(page.locator("main .inicio-hero")).toContainText(
+      protagonista.stage === 11
+        ? "Publicado"
+        : protagonista.stage === 10
+          ? "Programado"
+          : "Listo para revisar",
+    );
     const editing = page.locator(
-      `.inicio-pista[href="/videos/${ownEditing!.id}"]`,
+      `main .inicio-pista[href="/videos/${ownEditing!.id}"]`,
     );
     await expect(editing).toHaveAccessibleName(
       /El mar también respira.*Montaje/,
@@ -391,7 +409,7 @@ test("avance por evento: pista compacta y pulso en la etapa viva", async ({
     });
   });
   await page.reload();
-  const track = page.locator(`.inicio-pista[href="/videos/${video.id}"]`);
+  const track = page.locator(`main .inicio-pista[href="/videos/${video.id}"]`);
   await expect(track).toContainText("Control de calidad");
   await expect(track.locator(".inicio-etapas")).toHaveAttribute(
     "aria-label",

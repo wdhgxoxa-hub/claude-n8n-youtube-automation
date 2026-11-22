@@ -1,11 +1,17 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
+import type { Estado } from "../src/servicios/datos";
+import { terminadosInicio } from "../src/componentes/inicio-datos";
+import { ETAPAS } from "../src/lib/etapas";
 const dir = ".cache/capturas-diseno";
 test.use({ timezoneId: "America/Lima" });
 async function ready(page: Page, path = "/") {
   await page.goto(path);
-  await expect(page.locator(".workspace")).toHaveAttribute("data-conexion", "activa");
+  await expect(page.locator(".workspace")).toHaveAttribute(
+    "data-conexion",
+    "activa",
+  );
   await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function overflow(page: Page) {
@@ -74,14 +80,22 @@ test("demostración: siete pantallas, dos tamaños y acceso a producción", asyn
       });
     }
     await ready(page);
-    await expect(page.locator(".inicio-hero")).toContainText(
-      "Por qué el cielo cambia de color",
+    // El héroe integrado (DIRECCION §4) muestra el último video terminado o
+    // publicado (etapa ≥ 9), no siempre el publicado: se calcula con la misma
+    // regla del Inicio sobre los videos propios del estado demo.
+    const propios = (state as Estado).videos.filter(
+      (v) => v.ownerId === state.user.id,
     );
-    await expect(page.locator(".inicio-etapas")).toHaveCount(3);
-    for (const track of await page.locator(".inicio-etapas").all())
+    const protagonista = terminadosInicio(propios)[0];
+    expect(protagonista).toBeDefined();
+    await expect(page.locator("main .inicio-hero")).toContainText(
+      protagonista.title,
+    );
+    await expect(page.locator("main .inicio-etapas")).toHaveCount(3);
+    for (const track of await page.locator("main .inicio-etapas").all())
       await expect(track.locator("span")).toHaveCount(12);
     const review = page
-      .locator(".inicio-pendiente")
+      .locator("main .inicio-pendiente")
       .filter({ hasText: "¿A qué huele la lluvia?" });
     await expect(review).toContainText("Guion");
     await review.getByRole("link", { name: "Revisar", exact: true }).click();
@@ -94,15 +108,22 @@ test("demostración: siete pantallas, dos tamaños y acceso a producción", asyn
     await ready(page);
     const hero = page.locator("main .inicio-hero-enlace");
     await expect(hero).toHaveAccessibleName(
-      /Por qué el cielo cambia de color.*Ver video/,
+      new RegExp(
+        `${protagonista.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}.*Ver video`,
+      ),
     );
     await hero.click();
-    await expect(page.locator(".journey li.current")).toContainText(
-      "Publicado",
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      protagonista.title,
     );
+    // La etapa 11 (Publicado) se pinta como completada; aria-current marca
+    // siempre la etapa del video, sea cual sea el protagonista.
+    await expect(
+      page.locator('.journey li[aria-current="step"]'),
+    ).toContainText(ETAPAS[protagonista.stage]);
     await ready(page);
     await page
-      .locator(".inicio-pista")
+      .locator("main .inicio-pista")
       .filter({ hasText: "El mar también respira" })
       .click();
     await expect(page.locator(".journey li.current")).toContainText("Montaje");
@@ -141,12 +162,12 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   }
   expect(
     await page
-      .locator('.inicio-etapas [data-viva="true"]')
+      .locator('main .inicio-etapas [data-viva="true"]')
       .first()
       .evaluate((el) => getComputedStyle(el, "::after").animationName),
   ).toBe("none");
   const review = page
-    .locator(".inicio-pendiente")
+    .locator("main .inicio-pendiente")
     .filter({ hasText: "¿A qué huele la lluvia?" })
     .getByRole("link", { name: "Revisar", exact: true });
   await review.focus();

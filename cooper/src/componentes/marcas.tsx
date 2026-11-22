@@ -734,6 +734,7 @@ export function Marcas({
                       .map((p) => (
                         <Pieza
                           key={p.id}
+                          Titulo={TituloFicha}
                           p={p}
                           marca={marca}
                           admin={admin}
@@ -786,6 +787,7 @@ export function Marcas({
                       .map((p) => (
                         <Pieza
                           key={p.id}
+                          Titulo={TituloFicha}
                           p={p}
                           marca={marca}
                           admin={admin}
@@ -1649,7 +1651,10 @@ function Pieza({
   errorOperacion,
   editar,
   accion,
+  Titulo,
 }: {
+  /** Un nivel por debajo del título de su sección (h3 con marca abierta). */
+  Titulo: "h3" | "h4";
   p: PiezaMarca;
   marca: MarcaVista;
   admin: boolean;
@@ -1681,7 +1686,7 @@ function Pieza({
             timeStyle: "short",
           }).format(p.programada)}
         </time>
-        <h4>{p.datos.titulo}</h4>
+        <Titulo>{p.datos.titulo}</Titulo>
         <p>
           {p.datos.formato} · {p.estado} · Revisión {p.revision}
         </p>

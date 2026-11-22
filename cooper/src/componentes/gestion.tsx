@@ -299,6 +299,7 @@ export function Videos() {
   const formId = useId();
   const pending = useRef(false);
   const createButton = useRef<HTMLButtonElement>(null);
+  const createForm = useRef<HTMLFormElement>(null);
   const restoreFocus = useRef(false);
   const { data, refresh } = useEspacio();
   const [filter, setFilter] = useState("todos"),
@@ -312,6 +313,15 @@ export function Videos() {
         createButton.current?.focus();
     }
   }, [creating, busy]);
+  useEffect(() => {
+    // Al abrirse, el formulario entero (con «Enviar» y «Cancelar») queda a la
+    // vista sobre la barra móvil fija: scroll-padding-bottom marca su zona.
+    if (creating)
+      createForm.current?.scrollIntoView({
+        block: "nearest",
+        behavior: "instant",
+      });
+  }, [creating]);
   function closeCreate() {
     restoreFocus.current = true;
     setCreating(false);
@@ -391,6 +401,7 @@ export function Videos() {
       <Notice error={error} />
       {creating && (
         <form
+          ref={createForm}
           id={formId}
           className="inline-form"
           onSubmit={create}
