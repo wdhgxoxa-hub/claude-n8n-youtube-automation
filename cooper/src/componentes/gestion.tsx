@@ -404,7 +404,11 @@ export function Videos() {
                     title={name}
                     key={name}
                     className={
-                      i < v.stage ? "done" : i === v.stage ? "active" : ""
+                      i < v.stage || v.stage === 11
+                        ? "done"
+                        : i === v.stage
+                          ? "active"
+                          : ""
                     }
                   />
                 ))}
