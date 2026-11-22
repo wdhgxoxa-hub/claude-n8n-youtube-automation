@@ -212,7 +212,7 @@ export function MemoriaAdmin({
       <h2>Recuerdos del equipo</h2>
       <p className="helper">
         Consulta privada del administrador. Cada persona gestiona el borrado de
-        sus recuerdos desde Inicio.
+        sus recuerdos desde Cooper.
       </p>
       <label>
         Persona para consultar recuerdos
