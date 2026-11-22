@@ -295,16 +295,10 @@ export function Espacio({
         }
       }
     };
-    const media = window.matchMedia("(max-width: 767px)");
-    const resize = () => {
-      if (!media.matches) setMenu(false);
-    };
-    media.addEventListener("change", resize);
     const before = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", close);
     return () => {
-      media.removeEventListener("change", resize);
       document.body.style.overflow = before;
       window.removeEventListener("keydown", close);
       opener?.focus();

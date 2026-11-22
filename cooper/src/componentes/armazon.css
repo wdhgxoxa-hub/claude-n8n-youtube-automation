@@ -101,7 +101,7 @@
   left: 0;
   height: var(--espacio-16);
   width: var(--foco-ancho);
-  background: var(--tally);
+  background: var(--texto-2);
 }
 .glass-rail:hover nav a,
 .glass-rail:focus-within nav a,
