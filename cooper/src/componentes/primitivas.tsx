@@ -66,6 +66,7 @@ export function Medio({
   proporcion = "horizontal",
   idCompartido,
   videoId,
+  tinte: tinteInicial,
   className,
   children,
 }: {
@@ -75,6 +76,8 @@ export function Medio({
   proporcion?: "horizontal" | "vertical" | "cuadrado";
   idCompartido?: string;
   videoId?: string;
+  /** Color ya extraído por el adaptador de medios; evita consultar dos veces. */
+  tinte?: string;
   className?: string;
   children?: ReactNode;
 }) {
@@ -84,7 +87,12 @@ export function Medio({
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
   const permitted = !reduced && !paused;
-  const tinte = useTinteVideo(videoId ?? idCompartido);
+  const tinteConsultado = useTinteVideo(
+    tinteInicial ? undefined : videoId ?? idCompartido,
+  );
+  const tinte = tinteInicial
+    ? ({ "--tinte": tinteInicial } as CSSProperties)
+    : tinteConsultado;
 
   function stop() {
     if (timer.current) clearTimeout(timer.current);
