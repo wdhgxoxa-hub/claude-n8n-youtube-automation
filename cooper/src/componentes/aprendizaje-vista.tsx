@@ -88,16 +88,13 @@ function VideoOrigen({
       <Link
         href={`/videos/${encodeURIComponent(origen.videoId)}`}
         className={styles.enlaceMedio}
-        aria-label={`Ver video: ${titulo}`}
       >
-        <div
-          data-video-transition={nombreMedio(origen.videoId)}
-          aria-hidden="true"
-        >
+        <span className="sr-only">Ver video: </span>
+        <div data-video-transition={nombreMedio(origen.videoId)}>
           <Medio
             poster={medio?.poster?.url}
             preview={medio?.preview?.url}
-            alt={medio?.poster ? titulo : "Portada todavía no disponible"}
+            alt={titulo}
             videoId={origen.videoId}
             tinte={medio?.tinte}
             proporcion={
@@ -388,7 +385,7 @@ function EjemploVacio({ filtrado }: { filtrado: boolean }) {
           </li>
           <li>
             <span>La señal</span>
-            <strong>40 % sigue mirando a los 3 s</strong>
+            <strong>40 % sigue mirando a los 3{"\u00a0"}s</strong>
           </li>
           <li>
             <span>La causa posible</span>
