@@ -10,12 +10,16 @@ import { capturarFormulariosOperacion } from "./formularios-operacion";
 
 const directory = "../evidencias-diseno";
 const widths = [360, 390, 768, 1024, 1440, 1920];
-async function login(page: Page, email = "admin@example.test") {
+async function login(
+  page: Page,
+  email = "admin@example.test",
+  escenario?: string,
+) {
   expect(
     (
       await page.request.post(
         `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_FIXTURE_PORT}/sesion`,
-        { data: { email, secret: process.env.COOPER_E2E_SECRET } },
+        { data: { email, secret: process.env.COOPER_E2E_SECRET, escenario } },
       )
     ).ok(),
   ).toBe(true);
@@ -307,6 +311,8 @@ for (const width of widths)
       await shot(screen.name);
     }
     messages.length = 0;
+    await page.goto("about:blank");
+    await login(page, "admin@example.test", "conversacion-vacia");
     await page.goto("/marcas");
     const panel = await abrirCooper(page);
     const welcome = await panel.locator(".chat-welcome").boundingBox();
