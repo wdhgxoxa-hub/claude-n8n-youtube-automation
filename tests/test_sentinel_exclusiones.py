@@ -38,6 +38,8 @@ HTML = '''<!doctype html><html lang="es"><meta charset="utf-8"><title>Contrato d
 <button class="mutante">Estudiar la cuenta</button>
 <button class="mutante">Proponer texto con el especialista</button>
 <button class="mutante">Pedir cambios</button>
+<button class="mutante">Preparar Iglesia (por confirmar)</button>
+<button class="mutante">Registrar revisión doctrinal</button>
 <a id="externo" href="https://www.youtube.com/watch?v=solo-ejemplo" target="_blank" rel="noreferrer">Abrir publicación</a>
 <label><input id="filtro" type="checkbox" role="switch">Mostrar hipótesis</label>
 <select id="red"><option>todas</option><option>youtube</option></select>

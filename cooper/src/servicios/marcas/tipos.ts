@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { redes, rubros, formatos } from "./opciones";
+import { controlesDoctrinalesIglesia } from "./iglesia";
 export { redes, rubros, formatos } from "./opciones";
 export const guiaSchema = z.object({
   colores: z
@@ -63,6 +64,8 @@ export const piezaSchema = z
     citas: z.array(citaSchema).max(10).default([]),
     programada: z.string().datetime({ offset: true }).optional(),
     origen: z.enum(["web", "chat", "whatsapp", "fabrica"]).default("web"),
+    ejemplo: z.boolean().optional(),
+    requiereRevisionDoctrinal: z.boolean().optional(),
     videoId: z.string().max(100).default(""),
     montaje: z
       .object({ revision: z.string().regex(/^[a-f0-9]{64}$/) })
@@ -80,6 +83,25 @@ export const piezaSchema = z
   );
 export type Guia = z.infer<typeof guiaSchema>;
 export type PiezaDatos = z.infer<typeof piezaSchema>;
+export const revisionDoctrinalSchema = z
+  .object({
+    revisorPastoral: z.string().trim().min(3).max(150),
+    observaciones: z.string().trim().min(20).max(2000),
+    comprobaciones: z
+      .array(z.enum(controlesDoctrinalesIglesia))
+      .length(controlesDoctrinalesIglesia.length)
+      .refine(
+        (v) => new Set(v).size === controlesDoctrinalesIglesia.length,
+        "Completa cada comprobación doctrinal una sola vez.",
+      ),
+  })
+  .strict();
+export type RevisionDoctrinal = z.infer<typeof revisionDoctrinalSchema> & {
+  revision: number;
+  revisadaPor: string;
+  fecha: number;
+  huellaGuia: string;
+};
 export type Red = (typeof redes)[number];
 export type Formato = (typeof formatos)[number];
 export type Metricas = {

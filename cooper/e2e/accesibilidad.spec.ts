@@ -282,6 +282,7 @@ function marcaDeEnsayo(ownerId: string): EstadoMarcas["marcas"][number] {
       },
       guia,
       revision: 1,
+      revisionDoctrinal: null,
       estado,
       aprobadaPor: index === 1 ? ownerId : "",
       aprobadaRevision: index,

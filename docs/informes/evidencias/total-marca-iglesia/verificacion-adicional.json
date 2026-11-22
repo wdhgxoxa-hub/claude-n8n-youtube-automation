@@ -1,0 +1,30 @@
+{
+  "commit_probado": "370506d1f1f34a99fca455d4d7254d9717700091",
+  "fecha_lima": "2026-11-21",
+  "contrato_sentinel": {
+    "comando": "/ensayo/cooper/.cache/sentinel-venv/bin/python /ensayo/tests/test_sentinel_exclusiones.py",
+    "entorno": "Contenedor propio localhost/cooper-ci:370506d1f1f3, red externa deshabilitada",
+    "resultado": "PASS",
+    "rc": 0,
+    "pruebas": 3,
+    "advertencias": 0,
+    "log": {
+      "ruta_local": "cooper/.cache/iglesia-contrato-sentinel.log",
+      "sha256": "856aab133e6219a701f5f7fb6a341a0b1b474037b3059ed5951ab14dca9ec601"
+    }
+  },
+  "revision_visual": {
+    "resultado": "Calendario, identidad provisional y formulario de revisión completos; sin solapamientos detectados en las dos capturas.",
+    "limite": "Inspección visual de capturas; no aceptación pastoral, de teléfono físico ni de producción.",
+    "capturas": [
+      {
+        "ruta_local": ".cache/ci-limpia-Z1ikum/checkout/cooper/.cache/capturas-iglesia/revision-doctrinal-390.png",
+        "sha256": "3550e20b3aad3221a31ecf449a70956e9b3d6b9f0cad0149cad1823e68c84175"
+      },
+      {
+        "ruta_local": ".cache/ci-limpia-Z1ikum/checkout/cooper/.cache/capturas-iglesia/revision-doctrinal-1440.png",
+        "sha256": "926203a283fa628d2b88735b921fdbd99b53d1934b02f4388e380f5ecd6f8b39"
+      }
+    ]
+  }
+}

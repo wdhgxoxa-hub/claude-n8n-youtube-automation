@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawn } from "node:child_process";
+import { revisionDoctrinalIglesia } from "../src/servicios/marcas/iglesia";
 const fixture = () => `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT}`;
 test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", async ({
   page,
@@ -160,6 +161,20 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
       });
     }
   }
+  await page
+    .getByLabel("Responsable pastoral", { exact: true })
+    .fill("Responsable ficticio del ensayo");
+  await page
+    .getByLabel("Observaciones y fuentes de la revisión", { exact: true })
+    .fill(
+      "Revisión ficticia de fuentes, contexto, tono y permisos de la pieza completa.",
+    );
+  for (const control of revisionDoctrinalIglesia) {
+    await page.getByLabel(control.etiqueta).check();
+  }
+  await page
+    .getByRole("button", { name: "Registrar revisión doctrinal", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Aprobar y programar", exact: true })
     .click();
