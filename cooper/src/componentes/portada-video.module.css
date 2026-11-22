@@ -84,7 +84,7 @@
 }
 .protagonista .cartelaTitulo {
   -webkit-line-clamp: 3;
-  font-size: clamp(var(--texto-20), 3vw, var(--texto-40));
+  font-size: var(--titulo-seccion);
   line-height: var(--interlinea-display);
   letter-spacing: var(--tracking-display);
 }
