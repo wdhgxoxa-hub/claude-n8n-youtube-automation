@@ -30,7 +30,14 @@ const resumen = anchos.map((ancho) => {
 console.log(JSON.stringify({ exigirGlobales, resumen }, null, 2));
 if (
   resumen.some(
-    (r) => !r.componente || r.errores || (exigirGlobales && r.tokens > 0),
+    (r) =>
+      !r.componente ||
+      r.errores ||
+      (exigirGlobales &&
+        (r.tokens > 0 ||
+          r.axeSerias > 0 ||
+          r.desbordamientos > 0 ||
+          r.consola > 0)),
   )
 )
   process.exitCode = 1;

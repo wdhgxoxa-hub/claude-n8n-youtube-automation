@@ -158,12 +158,21 @@ for (const ancho of anchos) {
     // de las otras pantallas que queda íntegra en el manifiesto anterior.
     await page.goto("/");
     await esperarConexion(page);
+    const contenidoAntes = await page.locator("#contenido").boundingBox();
     await page.evaluate(() => window.__conexionEnsayo.cortar());
     await expect(page.getByTestId("estado-conexion")).toHaveText(
       "Sin conexión, reintentando",
       { timeout: 8_000 },
     );
     await expect(page.getByTestId("estado-conexion")).toBeVisible();
+    const contenidoDurante = await page.locator("#contenido").boundingBox();
+    expect(contenidoAntes).not.toBeNull();
+    expect(contenidoDurante).not.toBeNull();
+    for (const dimension of ["x", "y", "width", "height"] as const)
+      expect(contenidoDurante![dimension]).toBeCloseTo(
+        contenidoAntes![dimension],
+        1,
+      );
     await page.screenshot({
       path: `${salida}/conexion-interrumpida-${ancho}.png`,
       fullPage: true,
@@ -258,14 +267,13 @@ test("video: corte, recuperación, navegación y menú móvil existentes", async
     window.__conexionEnsayo.modo = "sana";
   });
   await esperarConexion(page);
-  const menu = page.getByRole("button", { name: "Abrir menú" });
-  if (await menu.count()) {
-    await menu.click();
-    await page.waitForTimeout(500);
-    await page.getByRole("link", { name: "Publicados", exact: true }).click();
-    await expect(page).toHaveURL(/publicados/);
-    await page.waitForTimeout(1_000);
-  }
+  await page
+    .getByRole("button", { name: "Abrir navegación", exact: true })
+    .click();
+  await page.waitForTimeout(500);
+  await page.getByRole("link", { name: "Publicados", exact: true }).click();
+  await expect(page).toHaveURL(/publicados/);
+  await page.waitForTimeout(1_000);
   const video = page.video();
   await page.close();
   await video?.saveAs(`${salida}/conexion-recorrido-390.webm`);
