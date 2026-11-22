@@ -1,0 +1,47 @@
+{
+  "motivo": "Los logs originales incluyen retornos de carro de progreso y espacios al final de línea. El .log es la copia de lectura normalizada; el .log.gz conserva exactamente los bytes originales. Los SHA-256 de los recibos de ejecución corresponden a esos bytes originales, tras descomprimir.",
+  "archivos": [
+    {
+      "lectura": "diseno-cierre.log",
+      "original_gzip": "diseno-cierre.log.gz",
+      "sha256_original": "f8645086a850848e18127fd29064990dfe09cc56c0fab10f7394be12c6ca6577",
+      "sha256_lectura": "85fe7fef933fc128340d9ef51aa4572589364b1ca8696eb35a9fba268b032079"
+    },
+    {
+      "lectura": "focal-apertura.log",
+      "original_gzip": "focal-apertura.log.gz",
+      "sha256_original": "2011c9bc42054c2da6990d87380d9fa2bf690a8b234fc2dbe259eedd619a3392",
+      "sha256_lectura": "6ff016457617d8c10da5688444b60d0d8bcd35f566930abcd1a9830d0174b9e0"
+    },
+    {
+      "lectura": "puerta/build.log",
+      "original_gzip": "puerta/build.log.gz",
+      "sha256_original": "895fcb7049f20c74677d0182658cd35fc207038538b565f3f05cb96f61a67f8f",
+      "sha256_lectura": "ca27c6fe5301739bd19912253b7af2d8416a4b89618960df3663c3a8112e787c"
+    },
+    {
+      "lectura": "puerta/e2e.log",
+      "original_gzip": "puerta/e2e.log.gz",
+      "sha256_original": "eedd2632982f20110b02c6e50e1caf3e750eacacc71e8317ef81b2cc4e89dc31",
+      "sha256_lectura": "a13ba7d4736833fe67461830efe29f00e755c8c14131394f82735784b4d6268f"
+    },
+    {
+      "lectura": "sse-lotes-rojo.log",
+      "original_gzip": "sse-lotes-rojo.log.gz",
+      "sha256_original": "e45526d8cce5b10f99ffa6cefeefe077dfe0425371351edaa15c9572b7fa08d6",
+      "sha256_lectura": "3ee24b6b5b7c39556cf56a038079e6b7bb3dd603aaa4eef1db083d38a9ce7e72"
+    },
+    {
+      "lectura": "sse-lotes-verde.log",
+      "original_gzip": "sse-lotes-verde.log.gz",
+      "sha256_original": "3b696d366630785d8cc2479963b79e7d90440d94cb6304c5e91e46733f2c9a5c",
+      "sha256_lectura": "97699f3338965ccdd0de68ce98e5c910f740be86de91e7f3ae764642e5e170a5"
+    },
+    {
+      "lectura": "video-movil-final.log",
+      "original_gzip": "video-movil-final.log.gz",
+      "sha256_original": "1a018bfca961bf15e6665afde16998856c1cfc750b61f8f7d766576c1dc8012f",
+      "sha256_lectura": "b9150d76a4c065ba092bec39944dc6457487a14d4d76ae2e46552f635daeb74c"
+    }
+  ]
+}

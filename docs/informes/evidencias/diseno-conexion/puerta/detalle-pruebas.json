@@ -1,0 +1,35 @@
+{
+  "commit": "534ee7b9a72cb7480f133ddda9fbacc5ba092977",
+  "playwright": {
+    "estadisticas": {
+      "startTime": "2026-11-22T03:34:15.080Z",
+      "duration": 942876.9079999999,
+      "expected": 114,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "resultados": 114,
+    "reintentos": 0,
+    "proyectos": [
+      "chromium",
+      "demostracion",
+      "firefox-oscuro-390",
+      "firefox-oscuro-1440",
+      "firefox-claro-390",
+      "firefox-claro-1440",
+      "webkit-oscuro-390",
+      "webkit-oscuro-1440",
+      "webkit-claro-390",
+      "webkit-claro-1440"
+    ]
+  },
+  "vitest": {
+    "numTotalTests": 483,
+    "numPassedTests": 483,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "success": true
+  }
+}

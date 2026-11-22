@@ -1,0 +1,8 @@
+{
+  "commit_codigo": "534ee7b9a72cb7480f133ddda9fbacc5ba092977",
+  "archivo_fuentes_sha256": "e9ee839a7da0ae683e8f6ac2c4b07784e023c61d502ab342b448b1ed8bd1c056",
+  "checkout_ensayo": "/home/david/Proyectos/cooper-wt/diseno-conexion/.cache/ci-limpia-U2m8U2/checkout",
+  "archivos_versionados_comparados": 2077,
+  "archivos_diferentes": [],
+  "nota": "Todos los archivos versionados del ensayo visual se extrajeron de git archive 534ee7b y coinciden por blob SHA-1. Se conservaron dependencias/cachés de ensayo y una configuración adicional solo para grabar 390x844. La puerta común usa por separado un checkout nuevo."
+}

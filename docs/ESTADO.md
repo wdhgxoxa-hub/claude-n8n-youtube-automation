@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 19:05 (Lima).
+Última actualización: 2026-11-21 22:51 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — diseno-conexion implementado y probado en su rama:** SSE con latido inmediato independiente de n8n, reanudación por cursor y entrega de estado sin esperar a vaciar el historial; cliente silencioso estando sano, aviso después de cinco segundos de corte detectado y reconexión con backoff. Código `534ee7b`; puerta limpia **483 unitarias / 114 E2E / 235 flujos, cero errores y advertencias**. Componente: 7/7 de diseño, 180 capturas, video móvil 1/1, Lighthouse móvil Inicio 93/100 y Publicados 100/100 (rendimiento/accesibilidad). Configuración activa de Caddy cotejada en lectura; parche/Compose y reversa preparados. **No integrado, publicado ni desplegado. La puerta global de diseño sigue no aprobada** hasta combinar las otras misiones; no se certifica la desaparición del incidente dentro de una sesión privada productiva. [Informe, evidencia y autocrítica](informes/diseno-conexion.md).
 
 - **21-11-2026, Lima — total-integrador / total-cierre cerrados:** implementado, probado, integrado, publicado por fast-forward a `mio/main` y `mio/version-chatgpt`, y desplegado en https://cooper.cooperestudio.com. Runtime b3 exacto, puerta 467 unitarias/103 E2E/235 flujos y rondas 123+123 PASS; extras 269 regresiones PASS, cero advertencias. Se conservó el env Google. [Informe final](informes/total-cierre.md), [historia integrada](informes/total-integrador.md).
 
@@ -113,6 +115,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
+- Revisión de Claude de `diseno-conexion` y combinación con `diseno-base`/`diseno-medios`: corregir las desviaciones globales de tokens/pantallas y repetir su puerta de diseño. La corrección de conexión y el parche reversible permanecen en su rama, pendientes de integración y despliegue autorizados. [Detalle](informes/diseno-conexion.md#puerta-de-diseño-y-autocrítica).
+
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
 - Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
 - Sexta oleada anunciada por Claude (iglesia, tienda, WhatsApp y observabilidad): conservada para la pasada posterior al despliegue. No se incorporó ni sobrescribió su trabajo concurrente al cerrar esta versión.
@@ -132,6 +136,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 10. Definir retención y excepciones antes de purgar originales, consentimientos, mensajes, derivados/copias. Cotejar operaciones inciertas sin recibo. Identificar la clave administrativa anterior mediante su ID en la instalación correcta antes de revocarla; no se afirma que siga activa.
 
 11. Margen Real: confirmar URL/ID del TikTok propio y el homónimo mexicano; revisar descriptor Perú, capacidad del piloto y aplicación editorial. [Detalle](informes/total-margen-estrategia.md#pendientes-de-walter).
+
+12. Revisar con Claude los commits y capturas de `diseno-conexion`, observar recuperación/latidos desde la sesión productiva legítima y decidir la aplicación de código y parche Caddy/Compose con su reversa. Cotejar de nuevo las huellas y coordinar la breve ventana del proxy antes de aplicarlo. No requiere iniciar otro OAuth. [Pendientes de la misión](informes/diseno-conexion.md#pendientes-de-walter).
 
 ## Ideas conversadas
 

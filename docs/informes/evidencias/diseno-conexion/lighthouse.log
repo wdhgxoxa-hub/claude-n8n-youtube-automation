@@ -1,0 +1,10 @@
+/ oscuro mobile: {"performance":0.93,"accessibility":1,"best-practices":1}; advertencias=0
+/publicados oscuro mobile: {"performance":1,"accessibility":1,"best-practices":1}; advertencias=0
+file:///ensayo/cooper/scripts/auditoria.mjs:306
+    throw new Error(
+          ^
+
+Error: La auditoría requiere rendimiento >=95, accesibilidad/buenas prácticas 100, ninguna advertencia ni comprobación binaria fallida.
+    at file:///ensayo/cooper/scripts/auditoria.mjs:306:11
+
+Node.js v24.22.3

@@ -6,7 +6,7 @@
 
 La [sonda pública](publico.json) hizo únicamente cinco GET sin autenticación, conservó una lista cerrada de cabeceras y descartó los cuerpos. Salud y entrada responden 200; `/` redirige a `/entrar`; `/api/eventos` y `/api/estado` responden 401 en aproximadamente 0,6 segundos. El salto público declara Caddy. No apareció compresión en estas solicitudes con `Accept-Encoding: identity`.
 
-Esto prueba disponibilidad pública y protección de la sesión, **no reproduce el incidente de una sesión privada**. El navegador conectado no estaba disponible y no se inició OAuth. No se atribuyen a producción los tiempos ni las condiciones del laboratorio. Tampoco se accedió por SSH: la configuración efectiva y sus posibles diferencias respecto de Git quedan pendientes del operador.
+Esto prueba disponibilidad pública y protección de la sesión, **no reproduce el incidente de una sesión privada**. El navegador conectado no estaba disponible y no se inició OAuth. No se atribuyen a producción los tiempos ni las condiciones del laboratorio. La [lectura posterior por SSH](vps-lectura.json), mediante el acceso ya documentado y sin interacción, sí confirmó la imagen/digest, el montaje y la huella exacta del Caddyfile. También comprobó únicamente los valores escalares de la ruta activa de Cooper: `flush_interval -1`, cierre 300 s, conexión 5 s, cabeceras 35 s y destino `cooper:3000`. Coinciden con el ensayo y Caddy estaba saludable. No se leyeron variables de entorno reales, secretos ni logs; no se recargó, reinició ni modificó ningún servicio.
 
 La causa de código que sí se reproduce es la espera de la primera sincronización de fábrica antes del primer byte SSE. El transporte de Next instalado solo vacía las cabeceras al escribir el primer chunk. El proxy espera 35 segundos por esas cabeceras. El adaptador n8n tiene tres intentos de hasta diez segundos, backoff y serialización por dueño; varias pestañas pueden añadir espera en cola. Un backend lento puede mantener «Conectando» y llegar a vencer el plazo del proxy aunque el servidor web esté sano.
 
@@ -39,7 +39,7 @@ Archivos públicos:
 - [caddy-reversa.patch](caddy-reversa.patch): deshace exactamente ese cambio.
 - [compose.sse.yaml](compose.sse.yaml): sustituye solo el bind mount `/etc/caddy/Caddyfile` por la ruta absoluta pública `COOPER_CADDY_SSE_CANDIDATO`.
 - [compose.sse-reversa.yaml](compose.sse-reversa.yaml): restituye el montaje público anterior mediante `COOPER_CADDY_SSE_ANTERIOR`. Se coloca después del overlay candidato, conservando los demás overlays vigentes.
-- [huellas-base.json](huellas-base.json): identidades SHA-256 de los tres archivos base y del Caddyfile candidato. Son huellas del repositorio; no acreditan igualdad con el archivo efectivo del VPS.
+- [huellas-base.json](huellas-base.json): identidades SHA-256 de los tres archivos base y del Caddyfile candidato. Son huellas del repositorio; `vps-lectura.json` acredita su igualdad con el archivo efectivo y montado el 21-11-2026 a las 22:24–22:25 Lima. Deben volver a cotejarse al aplicar el cambio.
 
 Preparación local sin leer configuración privada:
 
@@ -62,6 +62,7 @@ Reversa: para la modalidad canónica, aplicar `caddy-reversa.patch` solo sobre e
 ## Fuentes oficiales consultadas el 21-11-2026
 
 - [Caddy reverse_proxy: streaming y transporte](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy): flush inmediato para SSE, significado de espera de cabeceras y opciones de stream.
+- [Caddy API](https://caddyserver.com/docs/api): lectura GET de valores específicos de la configuración activa, sin exportar el documento completo.
 - [Caddy timeouts globales](https://caddyserver.com/docs/caddyfile/options#timeouts): diferencia entre duración de respuesta y espera keepalive.
 - [HTML Standard: Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html#authoring-notes): eventos, reconexión y latidos para intermediarios.
 - [Next compress](https://nextjs.org/docs/app/api-reference/config/next-config-js/compress) y código instalado `next/dist/server/pipe-readable.js`: compresión predeterminada, cabeceras al primer chunk y vaciado posterior.
@@ -70,4 +71,4 @@ Reversa: para la modalidad canónica, aplicar `caddy-reversa.patch` solo sobre e
 
 ## Pendientes de Walter
 
-Completar con Claude la observación desde la sesión productiva legítima y aceptar la ventana del proxy si decide aplicar el parche. La misión entrega código y evidencia local; no certifica todavía la desaparición del incidente en producción, la configuración efectiva del VPS ni una sesión Google privada real.
+Completar con Claude la observación desde la sesión productiva legítima y aceptar la ventana del proxy si decide aplicar el parche. La misión entrega código y evidencia local; no certifica todavía la desaparición del incidente desde una sesión Google privada de producción. La configuración efectiva de Caddy sí se cotejó en lectura, según el recibo citado.
