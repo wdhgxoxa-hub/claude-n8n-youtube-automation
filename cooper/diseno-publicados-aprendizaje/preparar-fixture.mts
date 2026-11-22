@@ -145,7 +145,7 @@ const manifest = [];
 for (const [i, id] of ids.entries()) {
   const horizontal = [1, 3, 6, 9].includes(i);
   const output = resolve(mediaDir, `${id}.mp4`);
-  const at = [0.7, 2, 4, 39, 40, 41, 42, 44, 45, 47.5, 48, 48.5][i];
+  const at = [0.7, 2, 4, 39.5, 40, 41, 42, 44, 45, 47.5, 48, 48.5][i];
   if (!existsSync(output))
     execFileSync("ffmpeg", [
       "-v",
