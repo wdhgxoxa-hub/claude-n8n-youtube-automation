@@ -479,7 +479,7 @@ test("Marcas: tres pasos, cinco secciones y edición en seis anchuras", async ({
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
     await page.goto("/marcas");
     await page
-      .getByRole("button", { name: "Añadir marca", exact: true })
+      .getByRole("button", { name: "Añadir marca o cuenta", exact: true })
       .first()
       .click();
     await capture(page, "marca-identidad", width, messages);
