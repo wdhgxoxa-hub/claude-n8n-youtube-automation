@@ -4003,7 +4003,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   border-bottom: 1px solid var(--linea);
   overflow-wrap: anywhere;
 }
-.marca-pieza h4 {
+.marca-pieza :is(h3, h4) {
   font-size: var(--texto-20);
   margin: var(--espacio-8) 0;
 }
