@@ -67,6 +67,7 @@ export function Medio({
   idCompartido,
   videoId,
   tinte: tinteInicial,
+  prioritario = false,
   className,
   children,
 }: {
@@ -78,6 +79,8 @@ export function Medio({
   videoId?: string;
   /** Color ya extraído por el adaptador de medios; evita consultar dos veces. */
   tinte?: string;
+  /** Reservado al medio visible que puede ser el LCP de la pantalla. */
+  prioritario?: boolean;
   className?: string;
   children?: ReactNode;
 }) {
@@ -188,6 +191,8 @@ export function Medio({
           alt={alt}
           fill
           sizes="(max-width: 767px) 100vw, 50vw"
+          loading={prioritario ? "eager" : "lazy"}
+          fetchPriority={prioritario ? "high" : "auto"}
           unoptimized
         />
       ) : (

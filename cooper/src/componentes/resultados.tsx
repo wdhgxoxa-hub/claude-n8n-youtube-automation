@@ -415,6 +415,7 @@ function PublicacionPared({
             }
           >
             <Medio
+              prioritario={orden === 0}
               tinte={medio?.tinte}
               poster={medio?.poster?.url}
               preview={medio?.preview?.url}
