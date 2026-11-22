@@ -423,27 +423,10 @@ main#contenido {
   border: var(--borde-ancho) solid var(--linea);
   min-width: 0;
 }
-:root {
-  view-transition-name: none;
-}
-main#contenido {
-  view-transition-name: contenido;
-}
-::view-transition-group(contenido) {
-  /* El contenido cambia de altura entre rutas; su imagen no se estira. */
-  animation: none;
-}
-::view-transition-old(contenido),
-::view-transition-new(contenido) {
-  width: 100%;
-  height: 100%;
-  object-fit: none;
-  object-position: left top;
-}
-::view-transition-old(contenido) {
+::view-transition-old(root) {
   animation: route-out var(--duracion-entrada) var(--curva-salida) both;
 }
-::view-transition-new(contenido) {
+::view-transition-new(root) {
   animation: route-in var(--duracion-entrada) var(--curva-salida) both;
 }
 ::view-transition-group(*) {
