@@ -398,6 +398,7 @@ function PublicacionPared({
     <article
       className={`${styles.publicacion} publication${orden < 8 ? " entrada-estudio" : ""}`}
       data-publicacion-id={p.id}
+      data-pieza
       style={
         {
           ...estiloMedio(medio, proporcion),
@@ -469,7 +470,7 @@ function PublicacionPared({
         </button>
       </div>
       <div className={styles.piePublicacion}>
-        <h2>
+        <h2 className="titulo-pieza">
           <Link href={p.href}>{p.titulo}</Link>
         </h2>
         <p className={styles.canal}>{ambito.nombre}</p>

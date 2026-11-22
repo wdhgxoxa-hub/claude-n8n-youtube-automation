@@ -212,6 +212,19 @@ summary {
 details[open] summary {
   color: var(--texto);
 }
+/* Una sola regla para el título repetido: si la pieza (data-pieza) muestra
+   la carátula tipográfica (.cartel, que ya lleva el título), el texto con
+   .titulo-pieza queda solo para lectores y no se repite a la vista. Con
+   póster o video real no hay .cartel y el título sigue visible. */
+[data-pieza]:has(.cartel) .titulo-pieza {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .sr-only {
   position: absolute !important;
   width: 1px !important;

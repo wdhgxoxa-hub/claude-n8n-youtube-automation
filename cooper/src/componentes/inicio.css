@@ -616,14 +616,8 @@
 [data-motion="paused"] .inicio-escena {
   transition: none;
 }
-/* Con póster tipográfico la carátula ya lleva el título: el de la tarjeta
-   queda para lectores de pantalla y no se repite a la vista. El héroe
-   conserva su título display 56 (DIRECCION §4) como pie de la carátula. */
-.inicio-pendiente:has(.cartel) .inicio-pendiente-cuerpo h3 {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+/* Sin título repetido, el pie del héroe se compone desde arriba: estado,
+   canal y enlace a la izquierda frente a las cifras, sin hueco al fondo. */
+.inicio-hero:has(.cartel) .inicio-hero-pie {
+  align-items: start;
 }

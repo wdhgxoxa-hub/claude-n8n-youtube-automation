@@ -201,7 +201,7 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
       return transicion;
     };
   });
-  await page.locator(".publication h2 a").click();
+  await page.locator(".publication a.publication-thumb").click();
   await expect(page).toHaveURL(new RegExp(`/videos/${datos.video.id}$`));
   await expect
     .poll(() =>

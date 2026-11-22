@@ -195,6 +195,7 @@ function Carrusel({
               type="button"
               key={video.id}
               className="inicio-selector"
+              data-pieza
               aria-pressed={video.id === seleccionado}
               onClick={() => {
                 if (!arrastrando.current) seleccionar(index);
@@ -235,7 +236,7 @@ function Carrusel({
                 <span aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <strong>{video.title}</strong>
+                <strong className="titulo-pieza">{video.title}</strong>
                 {video.id === seleccionado && (
                   <Check size={16} aria-hidden="true" />
                 )}
@@ -268,7 +269,11 @@ function Heroe({
   });
   return (
     <div className="inicio-proyeccion">
-      <section className="inicio-hero" aria-label="Video protagonista">
+      <section
+        className="inicio-hero"
+        aria-label="Video protagonista"
+        data-pieza
+      >
         <div
           className="inicio-escena"
           style={{ "--tinte": medios?.tinte } as CSSProperties}
@@ -294,7 +299,7 @@ function Heroe({
               </span>
               <span>{canal(video.channelId)}</span>
             </p>
-            <h2>{video.title}</h2>
+            <h2 className="titulo-pieza">{video.title}</h2>
             <Link href={`/videos/${video.id}`} className="inicio-enlace">
               Entrar a la historia <ArrowUpRight size={18} />
             </Link>
@@ -383,7 +388,7 @@ export function Inicio({ ahora }: { ahora: number }) {
               <div className="inicio-pendientes-grid">
                 {pendientes.map((video, index) => (
                   <Entrada key={video.id} orden={Math.min(index, 7)}>
-                    <Tarjeta className="inicio-pendiente">
+                    <Tarjeta className="inicio-pendiente" data-pieza>
                       <Link href={`/videos/${video.id}`}>
                         <MedioInicio video={video} vistaPrevia />
                         <span className="sr-only">Revisar: {video.title}</span>
@@ -395,7 +400,7 @@ export function Inicio({ ahora }: { ahora: number }) {
                             {video.stage === 3 ? "Guion" : "Montaje final"}
                           </span>
                         </p>
-                        <h3>{video.title}</h3>
+                        <h3 className="titulo-pieza">{video.title}</h3>
                         <div className="inicio-pendiente-accion">
                           <p>
                             {video.stage === 3

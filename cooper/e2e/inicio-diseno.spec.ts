@@ -653,67 +653,75 @@ test("Inicio: reflow equivalente al 200% con título largo y teclado", async ({
       "main .inicio-hero h2, main .inicio-flechas button, main .inicio-pendiente-accion .boton, .mobile-dock a",
     )
     .evaluateAll((elements) =>
-      elements.map((element) => {
-        const box = element.getBoundingClientRect();
-        const range = document.createRange();
-        range.selectNodeContents(element);
-        const textRects = Array.from(range.getClientRects());
-        const ancestors = [];
-        let clipped =
-          box.left < -1 ||
-          box.right > innerWidth + 1 ||
-          textRects.some(
-            (rect) => rect.left < -1 || rect.right > innerWidth + 1,
-          );
-        for (
-          let current: Element | null = element;
-          current;
-          current = current.parentElement
-        ) {
-          const style = getComputedStyle(current),
-            rect = current.getBoundingClientRect();
-          const clipsX = ["hidden", "clip", "scroll", "auto"].includes(
-            style.overflowX,
-          );
-          const clipsY = ["hidden", "clip", "scroll", "auto"].includes(
-            style.overflowY,
-          );
-          // El scroll vertical del documento es navegación, no truncado del texto.
-          const pageScroller =
-            current === document.documentElement || current === document.body;
-          if (
-            !pageScroller &&
+      // Con carátula tipográfica el título es solo-lector (1 px): no se mide.
+      elements
+        .filter(
+          (element) =>
+            !element.matches(".titulo-pieza") ||
+            element.getBoundingClientRect().width > 1,
+        )
+        .map((element) => {
+          const box = element.getBoundingClientRect();
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          const textRects = Array.from(range.getClientRects());
+          const ancestors = [];
+          let clipped =
+            box.left < -1 ||
+            box.right > innerWidth + 1 ||
             textRects.some(
-              (text) =>
-                (clipsX &&
-                  (text.left < rect.left - 1 || text.right > rect.right + 1)) ||
-                (clipsY &&
-                  (text.top < rect.top - 1 || text.bottom > rect.bottom + 1)),
+              (rect) => rect.left < -1 || rect.right > innerWidth + 1,
+            );
+          for (
+            let current: Element | null = element;
+            current;
+            current = current.parentElement
+          ) {
+            const style = getComputedStyle(current),
+              rect = current.getBoundingClientRect();
+            const clipsX = ["hidden", "clip", "scroll", "auto"].includes(
+              style.overflowX,
+            );
+            const clipsY = ["hidden", "clip", "scroll", "auto"].includes(
+              style.overflowY,
+            );
+            // El scroll vertical del documento es navegación, no truncado del texto.
+            const pageScroller =
+              current === document.documentElement || current === document.body;
+            if (
+              !pageScroller &&
+              textRects.some(
+                (text) =>
+                  (clipsX &&
+                    (text.left < rect.left - 1 ||
+                      text.right > rect.right + 1)) ||
+                  (clipsY &&
+                    (text.top < rect.top - 1 || text.bottom > rect.bottom + 1)),
+              )
             )
-          )
-            clipped = true;
-          ancestors.push({
-            tag: current.tagName,
-            className: current.className,
-            overflowX: style.overflowX,
-            overflowY: style.overflowY,
-            width: rect.width,
-            height: rect.height,
-          });
-        }
-        return {
-          text:
-            element.textContent?.trim() || element.getAttribute("aria-label"),
-          clipped,
-          clientWidth: element.clientWidth,
-          scrollWidth: element.scrollWidth,
-          clientHeight: element.clientHeight,
-          scrollHeight: element.scrollHeight,
-          box: box.toJSON(),
-          textRects: textRects.map((rect) => rect.toJSON()),
-          ancestors,
-        };
-      }),
+              clipped = true;
+            ancestors.push({
+              tag: current.tagName,
+              className: current.className,
+              overflowX: style.overflowX,
+              overflowY: style.overflowY,
+              width: rect.width,
+              height: rect.height,
+            });
+          }
+          return {
+            text:
+              element.textContent?.trim() || element.getAttribute("aria-label"),
+            clipped,
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+            clientHeight: element.clientHeight,
+            scrollHeight: element.scrollHeight,
+            box: box.toJSON(),
+            textRects: textRects.map((rect) => rect.toJSON()),
+            ancestors,
+          };
+        }),
     );
   const clipped = textGeometry.filter((item) => item.clipped);
   writeFileSync(
