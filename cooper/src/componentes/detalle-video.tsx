@@ -288,6 +288,8 @@ export function DetalleVideo({ id }: { id: string }) {
             datos={video.observabilidad}
             titulo={video.title}
             inicial={video.medios}
+            canal={canal?.name}
+            detalle={`Etapa ${String(video.stage + 1).padStart(2, "0")}`}
             seccion="reproductor"
           />
         </div>

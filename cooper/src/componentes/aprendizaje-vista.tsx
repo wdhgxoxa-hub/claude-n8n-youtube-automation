@@ -18,7 +18,6 @@ import { nombreRed } from "@/lib/redes";
 import { proporcionPublicacion, tinteEstable } from "@/lib/reticula";
 import { Filtros, Origen, useResultados } from "./resultados";
 import { nombreMedio } from "./transiciones";
-import "./cartela-pieza.css";
 import styles from "./aprendizaje-vista.module.css";
 
 const metricas = {
@@ -99,11 +98,7 @@ function VideoOrigen({
         className={styles.enlaceMedio}
       >
         <span className="sr-only">Ver video: </span>
-        <div
-          data-video-transition={nombreMedio(origen.videoId)}
-          className="cartela-pieza"
-          data-cartela="mini"
-        >
+        <div data-video-transition={nombreMedio(origen.videoId)}>
           <Medio
             poster={medio?.poster?.url}
             preview={medio?.preview?.url}

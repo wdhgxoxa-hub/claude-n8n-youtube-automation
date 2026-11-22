@@ -32,7 +32,7 @@ function invalidDeclaration(property: string, value: string) {
     return "nombre de color fuera de tokens";
   if (/^(?:font-size|fontSize)$/.test(property)) {
     if (
-      !/^(?:inherit|var\(--(?:texto-(?:12|13|15|17|20|28|40|48|56|72)|titulo-pantalla|titulo-seccion|cifra-heroe|cifra-fluida|cifra-fluida-menor)\))$/.test(
+      !/^(?:inherit|var\(--(?:texto-(?:12|13|15|17|20|28|40|48|56|72)|titulo-pantalla|titulo-seccion|titulo-cartel|cifra-heroe|cifra-fluida|cifra-fluida-menor)\))$/.test(
         value,
       )
     )
@@ -117,7 +117,6 @@ describe("guardián de Sala de proyección", () => {
             const property = node.name.getText(parsed);
             // Estos tres dibujos son contenido ilustrado, no colores de interfaz.
             const artwork = [
-              "componentes/portada.tsx",
               "componentes/avatares.tsx",
               "marca/CooperCara.tsx",
             ].includes(relative(root, path));

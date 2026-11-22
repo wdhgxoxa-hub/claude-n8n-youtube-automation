@@ -544,9 +544,7 @@ main#contenido {
   main#contenido {
     /* Zona segura: la banda inferior (barra + orbe) nunca cubre contenido. */
     padding: var(--espacio-16) var(--espacio-16)
-      calc(
-        var(--riel-ancho) + var(--espacio-32) + env(safe-area-inset-bottom)
-      );
+      calc(var(--riel-ancho) + var(--espacio-32) + env(safe-area-inset-bottom));
   }
   .topbar .topbar-mas {
     display: inline-flex;
@@ -929,14 +927,4 @@ main#contenido .route-choreography > .page {
 .publication-thumb .medio {
   width: 100%;
   height: 100%;
-}
-.publication-thumb .medio-espera {
-  padding: var(--espacio-8);
-}
-.publication-thumb .medio-espera span {
-  font-family: var(--fuente-texto);
-  font-size: var(--texto-12);
-}
-.publication-thumb .medio-espera small {
-  display: none;
 }

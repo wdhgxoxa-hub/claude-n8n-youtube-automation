@@ -44,6 +44,7 @@ function MedioInicio({
   vistaPrevia?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const { data } = useEspacio();
   const [cerca, setCerca] = useState(heroe);
   const medio = useVideoMedios({
     videoId: video.id,
@@ -65,16 +66,23 @@ function MedioInicio({
     <div
       ref={root}
       className={`inicio-medio halo-medio${heroe ? " inicio-medio-heroe" : ""}`}
-      data-tinte={Boolean(medio?.poster)}
+      data-tinte={Boolean(medio?.tinte)}
       data-proporcion={vertical ? "vertical" : "horizontal"}
       data-video-transition={nombreMedio(video.id)}
       style={estiloMedio(medio)}
     >
       <Medio
-        poster={medio?.poster?.url}
+        poster={
+          medio?.poster?.origen === "tipografico"
+            ? undefined
+            : medio?.poster?.url
+        }
         preview={heroe || vistaPrevia ? medio?.preview?.url : undefined}
-        // Fuera del héroe, el mismo control ya contiene su título en texto.
+        // Fuera del héroe, el mismo control ya contiene su título en texto;
+        // el póster tipográfico lo muestra igualmente como carátula.
         alt={heroe ? video.title : ""}
+        titulo={video.title}
+        canal={data.channels.find((c) => c.id === video.channelId)?.name}
         proporcion={vertical ? "vertical" : "horizontal"}
         prioridad={heroe}
       />
@@ -224,7 +232,9 @@ function Carrusel({
             >
               <MedioInicio video={video} />
               <span className="inicio-selector-texto">
-                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <span aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <strong>{video.title}</strong>
                 {video.id === seleccionado && (
                   <Check size={16} aria-hidden="true" />
@@ -264,10 +274,7 @@ function Heroe({
           style={{ "--tinte": medios?.tinte } as CSSProperties}
         >
           <span className="inicio-halo" aria-hidden="true" />
-          <Link
-            className="inicio-hero-enlace"
-            href={`/videos/${video.id}`}
-          >
+          <Link className="inicio-hero-enlace" href={`/videos/${video.id}`}>
             <MedioInicio key={video.id} video={video} heroe />
           </Link>
         </div>
@@ -299,8 +306,16 @@ function Heroe({
                 : "Las cifras llegan al publicar"}
             </p>
             <div className="inicio-hero-cifras">
-              <Cifra compacta etiqueta="Vistas" valor={medicion?.vistas ?? null} />
-              <Cifra compacta etiqueta="Me gusta" valor={medicion?.meGusta ?? null} />
+              <Cifra
+                compacta
+                etiqueta="Vistas"
+                valor={medicion?.vistas ?? null}
+              />
+              <Cifra
+                compacta
+                etiqueta="Me gusta"
+                valor={medicion?.meGusta ?? null}
+              />
               <Cifra
                 etiqueta="Comentarios"
                 valor={medicion?.comentarios ?? null}
@@ -370,9 +385,7 @@ export function Inicio({ ahora }: { ahora: number }) {
                 {pendientes.map((video, index) => (
                   <Entrada key={video.id} orden={Math.min(index, 7)}>
                     <Tarjeta className="inicio-pendiente">
-                      <Link
-                        href={`/videos/${video.id}`}
-                      >
+                      <Link href={`/videos/${video.id}`}>
                         <MedioInicio video={video} vistaPrevia />
                         <span className="sr-only">Revisar: {video.title}</span>
                       </Link>

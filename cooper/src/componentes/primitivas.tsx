@@ -11,14 +11,11 @@ import {
   type ReactNode,
 } from "react";
 import { useInView } from "framer-motion";
-import {
-  formatoCompacto,
-  formatoDecimal,
-  formatoEntero,
-} from "@/lib/cifras";
+import { formatoCompacto, formatoDecimal, formatoEntero } from "@/lib/cifras";
 import type { VideoMedios } from "@/contratos/video-medios";
 import { estiloMedio, useVideoMedios } from "./portada-video";
 import { nombreMedio } from "./transiciones";
+import { Cartel } from "./cartel";
 import {
   NumeroAnimado,
   useMovimientoReducido,
@@ -88,6 +85,9 @@ export function Medio({
   publicacionId,
   enCola = false,
   tinte: tinteInicial,
+  titulo,
+  canal,
+  detalle,
   className,
   children,
 }: {
@@ -103,6 +103,12 @@ export function Medio({
   enCola?: boolean;
   /** Color ya extraído por el adaptador de medios; evita consultar dos veces. */
   tinte?: string;
+  /** Título del póster tipográfico; por defecto, el texto alternativo. */
+  titulo?: string;
+  /** Firma del póster tipográfico (canal o marca). */
+  canal?: string;
+  /** Detalle editorial del póster tipográfico (etapa o número). */
+  detalle?: string;
   className?: string;
   children?: ReactNode;
 }) {
@@ -121,12 +127,15 @@ export function Medio({
     publicacion: publicacionId,
     visible: Boolean(medioId) && cerca,
   });
+  // El SVG tipográfico del servidor no es una imagen del video: en su lugar
+  // se compone el póster tipográfico con la fuente display y el tinte.
+  const tipografico =
+    medio?.poster?.origen === "tipografico" ? medio.poster.url : undefined;
   const poster =
     medio?.estado === "sin_medio"
       ? undefined
-      : (medio?.poster?.origen !== "tipografico" && medio?.poster?.url) ||
-        posterInicial ||
-        medio?.poster?.url;
+      : (!tipografico && medio?.poster?.url) ||
+        (posterInicial !== tipografico ? posterInicial : undefined);
   const preview = medio?.preview?.url ?? previewInicial;
   const tinte = tinteInicial
     ? ({ "--tinte": tinteInicial } as CSSProperties)
@@ -258,10 +267,7 @@ export function Medio({
           onError={() => setFalloPoster(poster)}
         />
       ) : (
-        <div className="medio-espera">
-          <span data-poster="tipografico">{alt}</span>
-          <small>El medio aparecerá aquí</small>
-        </div>
+        <Cartel titulo={titulo ?? alt} canal={canal} detalle={detalle} />
       )}
       {preview && (
         <video
@@ -343,10 +349,10 @@ export function Cifra({
             compact={compacta}
             decimales={decimales}
           />
+        ) : decimales !== undefined ? (
+          formatoDecimal(valor, decimales)
         ) : (
-          decimales !== undefined
-            ? formatoDecimal(valor, decimales)
-            : (compacta ? formatoCompacto : formatoEntero)(valor)
+          (compacta ? formatoCompacto : formatoEntero)(valor)
         )}
       </div>
       {valor === null && <span className="cifra-detalle">Sin dato</span>}

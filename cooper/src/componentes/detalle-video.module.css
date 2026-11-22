@@ -45,7 +45,7 @@
   background: transparent;
   border: 0;
 }
-.proyeccion :global(.real-player) > video {
+.proyeccion :global(.real-player) video {
   max-height: calc(var(--espacio-96) * 6);
 }
 .proyeccion :global(.player-caption) {

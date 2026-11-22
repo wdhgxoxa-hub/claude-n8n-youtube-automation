@@ -156,6 +156,11 @@
   border: var(--borde-ancho) solid var(--linea);
   color: var(--texto);
 }
+.contenedorMedio {
+  /* Insignia de red arriba y cifras de vidrio abajo: el póster las respeta. */
+  --cartel-reserva-arriba: var(--espacio-32);
+  --cartel-reserva-abajo: calc(var(--objetivo-tactil) + var(--espacio-4));
+}
 .red {
   top: var(--espacio-12);
   left: var(--espacio-12);

@@ -26,7 +26,6 @@ import {
   type PublicacionResultado,
 } from "@/contratos/resultados";
 import type { Metricas } from "@/servicios/marcas/tipos";
-import "./cartela-pieza.css";
 import styles from "./publicados.module.css";
 import { nombreMedio } from "./transiciones";
 import { ParedJustificada } from "./pared-justificada";
@@ -418,7 +417,7 @@ function PublicacionPared({
           aria-label={`Ver detalle de ${p.titulo}`}
         >
           <div
-            className={`${styles.contenedorMedio} cartela-pieza`}
+            className={styles.contenedorMedio}
             data-video-transition={videoId ? nombreMedio(videoId) : undefined}
             data-video-medio={videoId || undefined}
             data-publicacion={p.tipo === "video" ? p.publicacion.id : undefined}
@@ -435,6 +434,8 @@ function PublicacionPared({
               poster={medio?.poster?.url}
               preview={medio?.preview?.url}
               alt={p.titulo}
+              canal={ambito.nombre}
+              detalle={`N.º ${String(orden + 1).padStart(2, "0")}`}
               videoId={videoId || undefined}
               className={styles.medio}
               proporcion={

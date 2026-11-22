@@ -172,7 +172,8 @@
 
 .enlaceMedio {
   display: block;
-  width: fit-content;
+  /* El póster tipográfico es absoluto: el enlace no puede medirse por su contenido. */
+  width: 100%;
   max-width: 100%;
   overflow: hidden;
   border-radius: var(--radio-tarjeta);
@@ -184,6 +185,10 @@
 
 .miniatura {
   width: 100%;
+}
+
+.enlaceMedio:has(:global(.medio-vertical)) {
+  width: fit-content;
 }
 
 .miniatura:global(.medio-vertical) {

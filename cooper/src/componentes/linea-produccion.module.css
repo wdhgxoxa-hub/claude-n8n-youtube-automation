@@ -235,20 +235,18 @@
 .portada :global(.medio-preview) {
   object-fit: cover !important;
 }
-.portada :global(.medio-espera) {
-  gap: 0;
-  padding: var(--espacio-16);
-}
-.portada :global(.medio-espera) span {
-  display: -webkit-box;
+/* Con póster tipográfico, el título ya está en la carátula: el del cuerpo
+   queda solo para lectores de pantalla y la cápsula no lo repite. */
+.enlaceCapsula:has(:global(.cartel)) .cuerpoCapsula h4 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  font-size: var(--texto-15);
-  line-height: 1.3;
-  overflow-wrap: break-word;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.portada :global(.medio-espera) small {
+.portada:has(:global(.cartel)) .etapa {
+  /* El póster tipográfico ya firma la etapa en su cabecera. */
   display: none;
 }
 .etapa {

@@ -142,6 +142,8 @@ export function VideoMini({
           key={video.id}
           videoId={video.id}
           alt={video.title}
+          canal={data.channels.find((c) => c.id === video.channelId)?.name}
+          detalle={`Etapa ${String(video.stage + 1).padStart(2, "0")}`}
           mediosIniciales={video.medios}
         />
       </span>

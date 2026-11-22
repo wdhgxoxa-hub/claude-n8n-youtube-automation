@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import type { VideoMedios } from "@/contratos/video-medios";
 import { useMovimientoReducido } from "./movimiento";
-import { Portada } from "./portada";
+import { Cartel } from "./cartel";
 import styles from "./portada-video.module.css";
 
 const consultas = new Map<string, Promise<VideoMedios>>();
@@ -97,9 +97,13 @@ export function PortadaVideo({
   publicacion,
   protagonista = false,
   enCola = false,
+  canal,
+  detalle,
 }: {
   videoId: string;
   titulo: string;
+  canal?: string;
+  detalle?: string;
   inicial?: VideoMedios;
   publicacion?: string;
   protagonista?: boolean;
@@ -200,7 +204,11 @@ export function PortadaVideo({
     return () => player.pause();
   }, [preparado, medio?.preview?.url]);
 
-  const poster = medio?.poster?.url;
+  // El SVG tipográfico del servidor se sustituye por el póster compuesto.
+  const poster =
+    medio?.estado !== "sin_medio" && medio?.poster?.origen !== "tipografico"
+      ? medio?.poster?.url
+      : undefined;
   return (
     <span
       ref={contenedor}
@@ -209,7 +217,9 @@ export function PortadaVideo({
       data-video-medio={videoId}
       data-publicacion={publicacion}
       data-contexto={enCola ? "cola" : undefined}
-      data-estado={falloPoster ? "no_disponible" : medio?.estado ?? "pendiente"}
+      data-estado={
+        falloPoster ? "no_disponible" : (medio?.estado ?? "pendiente")
+      }
       data-origen={
         medio?.poster?.origen ??
         (medio?.estado === "sin_medio" ? "tipografico" : "pendiente")
@@ -220,9 +230,7 @@ export function PortadaVideo({
       onPointerLeave={() => setHover(false)}
       aria-hidden="true"
     >
-      {medio?.estado === "sin_medio" && !protagonista ? (
-        <Portada title={titulo} />
-      ) : poster && falloPoster !== poster ? (
+      {poster && falloPoster !== poster ? (
         <Image
           src={poster}
           alt=""
@@ -233,15 +241,8 @@ export function PortadaVideo({
           unoptimized
           onError={() => setFalloPoster(poster)}
         />
-      ) : medio?.estado === "sin_medio" ? (
-        <Portada title={titulo} />
       ) : (
-        <span className={styles.espera}>
-          {protagonista &&
-            (medio?.estado === "no_disponible" || falloPoster
-              ? "Portada no disponible"
-              : "Preparando portada")}
-        </span>
+        <Cartel titulo={titulo} canal={canal} detalle={detalle} />
       )}
       {medio?.preview && (
         <video

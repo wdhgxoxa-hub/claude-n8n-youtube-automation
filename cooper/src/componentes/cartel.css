@@ -1,0 +1,198 @@
+/* Póster tipográfico (DIRECCION §1 tinte, §4 medios): carátula de cine para
+   la pieza sin miniatura ni MP4. Un único estilo para todos los tamaños;
+   el tamaño lo decide el contenedor, nunca el contexto que lo usa.
+   Los contextos solo pueden reservar franjas para lo que superponen:
+   --cartel-reserva-arriba / --cartel-reserva-abajo. */
+.cartel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  container: cartel / size;
+  color: var(--texto);
+  background:
+    /* Fuente de luz: el tinte entra por arriba a la derecha, como un foco. */
+    radial-gradient(
+      120% 95% at 92% -8%,
+      color-mix(in srgb, var(--tinte) 66%, var(--transparente)) 0%,
+      color-mix(in srgb, var(--tinte) 30%, var(--transparente)) 34%,
+      color-mix(in srgb, var(--tinte) 8%, var(--transparente)) 58%,
+      var(--transparente) 76%
+    ),
+    /* Haces cónicos muy tenues desde el mismo foco: profundidad sin ruido. */
+    conic-gradient(
+        from 200deg at 92% -8%,
+        var(--transparente) 0deg,
+        color-mix(in srgb, var(--tinte) 16%, var(--transparente)) 18deg,
+        var(--transparente) 40deg,
+        color-mix(in srgb, var(--tinte) 10%, var(--transparente)) 64deg,
+        var(--transparente) 92deg
+      ),
+    /* Viñeta: la esquina del título cae a negro para el contraste AA. */
+    radial-gradient(
+        110% 80% at 0% 100%,
+        var(--lienzo) 0%,
+        color-mix(in srgb, var(--lienzo) 70%, var(--transparente)) 45%,
+        var(--transparente) 80%
+      ),
+    var(--lienzo);
+  box-shadow: inset 0 0 0 var(--borde-ancho)
+    color-mix(in srgb, var(--tinte) 20%, var(--transparente));
+}
+/* Grano de película: ruido estático, sin animación ni coste de pintura. */
+.cartel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--grano);
+  background-size: 180px 180px;
+  opacity: var(--grano-opacidad);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.cartel-composicion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--espacio-12);
+  height: 100%;
+  padding: calc(var(--cartel-aire) + var(--cartel-reserva-arriba, 0px))
+    var(--cartel-aire)
+    calc(var(--cartel-aire) + var(--cartel-reserva-abajo, 0px));
+}
+.cartel-cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espacio-12);
+  min-width: 0;
+  padding-bottom: var(--espacio-8);
+  border-bottom: var(--borde-ancho) solid
+    color-mix(in srgb, var(--tinte) 34%, var(--linea-fuerte));
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-12);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cartel-canal {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cartel-detalle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--espacio-8);
+}
+/* Punto del tinte: la «luz» del canal junto al número de la pieza. */
+.cartel-detalle::before {
+  content: "";
+  width: var(--espacio-8);
+  height: var(--espacio-8);
+  border-radius: var(--radio-pildora);
+  background: var(--tinte);
+}
+.cartel-titulo {
+  display: -webkit-box;
+  max-inline-size: 15ch;
+  margin-top: auto;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  font-family: var(--fuente-display);
+  font-size: var(--titulo-cartel);
+  font-weight: 600;
+  line-height: var(--interlinea-cartel);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+/* Piezas estrechas o bajas: sin firma, tres líneas y aire mínimo. */
+/* Piezas estrechas: la firma se reduce al número; el título gana ancho. */
+@container cartel (max-width: 239px) {
+  .cartel-canal {
+    display: none;
+  }
+  .cartel-cabecera {
+    justify-content: flex-end;
+  }
+  .cartel-titulo {
+    max-inline-size: none;
+  }
+}
+/* Miniaturas: solo el título, en tres líneas y con el aire mínimo. */
+@container cartel (max-width: 159px) or (max-height: 111px) {
+  .cartel-cabecera {
+    display: none;
+  }
+  .cartel-titulo {
+    -webkit-line-clamp: 3;
+  }
+}
+/* Formatos verticales: el título se mide por el ancho, más grande. */
+@container cartel (aspect-ratio < 3 / 4) {
+  .cartel-titulo {
+    --titulo-cartel: clamp(var(--texto-12), 14cqi, var(--texto-56));
+    max-inline-size: none;
+  }
+}
+/* El medio teñido ya dibuja el borde del tinte: no duplicarlo. */
+.medio[data-tinte="true"] > .cartel {
+  box-shadow: none;
+}
+/* Reproductor del detalle sin miniatura real: el cartel es el botón de inicio. */
+.reproductor-pantalla {
+  position: relative;
+  /* «Ver video» ocupa la esquina inferior del cartel. */
+  --cartel-reserva-abajo: var(--objetivo-tactil);
+}
+.reproductor-cartel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--lienzo);
+  color: var(--texto);
+  cursor: pointer;
+  text-align: left;
+}
+.reproductor-cartel:focus-visible {
+  outline: var(--foco-ancho) solid var(--tally);
+  outline-offset: calc(-1 * var(--foco-ancho));
+}
+.reproductor-play {
+  position: absolute;
+  right: var(--espacio-16);
+  bottom: var(--espacio-16);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  min-height: var(--objetivo-tactil);
+  padding: 0 var(--espacio-24) 0 var(--espacio-16);
+  border: var(--borde-ancho) solid var(--linea-fuerte);
+  border-radius: var(--radio-pildora);
+  background: var(--vidrio-fondo);
+  backdrop-filter: var(--vidrio-filtro);
+  font-size: var(--texto-13);
+  font-weight: 500;
+  transition: transform var(--duracion-estado) var(--curva-salida);
+}
+.reproductor-cartel:hover .reproductor-play {
+  transform: translateY(var(--elevacion-tarjeta));
+}
+.reproductor-cartel:active .reproductor-play {
+  transform: scale(var(--presion-escala));
+  transition-duration: var(--duracion-presion);
+}

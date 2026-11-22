@@ -42,6 +42,8 @@
   width: 100%;
 }
 .inicio-medio-heroe {
+  /* «Ver video» ocupa la franja inferior del póster tipográfico. */
+  --cartel-reserva-abajo: var(--objetivo-tactil);
   width: min(100%, calc(var(--espacio-96) * 10));
   margin-inline: auto;
 }
@@ -497,27 +499,6 @@
 .inicio-primera-proyeccion > svg {
   color: var(--texto-2);
 }
-.inicio-pista-mini .medio-espera {
-  padding: var(--espacio-8);
-}
-.inicio-pista-mini .medio-espera span {
-  font-family: var(--fuente-texto);
-  font-size: var(--texto-12);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.inicio-pista-mini .medio-espera small {
-  display: none;
-}
-.inicio-selector .medio-espera {
-  padding: var(--espacio-8);
-}
-.inicio-selector .medio-espera span {
-  /* El título completo ya acompaña a la miniatura, fuera del encuadre. */
-  display: none;
-}
 @container (max-width: 1000px) {
   .inicio-hero-pie {
     grid-template-columns: 1fr;
@@ -587,9 +568,6 @@
   }
   .inicio-pista-mini .medio {
     aspect-ratio: 1;
-  }
-  .inicio-pista-mini .medio-espera span {
-    -webkit-line-clamp: 2;
   }
   .inicio-metricas-grid {
     grid-template-columns: minmax(0, 1fr);

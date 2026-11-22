@@ -539,6 +539,12 @@ export function LineaProduccion({
                           videoId={video.id}
                           mediosIniciales={video.medios}
                           alt={video.title}
+                          canal={
+                            data.channels.find(
+                              (canal) => canal.id === video.channelId,
+                            )?.name
+                          }
+                          detalle={`Etapa ${String(video.stage + 1).padStart(2, "0")}`}
                           enCola
                         />
                         <span className={styles.etapa} aria-hidden="true">

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Play } from "lucide-react";
 import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
 import { enlaceIncrustado } from "@/lib/enlaces-medios";
@@ -7,21 +8,32 @@ import type { VideoMedios } from "@/contratos/video-medios";
 import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
 import { nombreMedio } from "./transiciones";
 import { Medio } from "./primitivas";
+import { Cartel } from "./cartel";
 export function MediosVideo({
   videoId = "",
   datos,
   titulo,
   inicial,
+  canal,
+  detalle,
   seccion = "todo",
 }: {
   videoId?: string;
   datos: Observabilidad;
   titulo: string;
   inicial?: VideoMedios;
+  canal?: string;
+  detalle?: string;
   seccion?: "todo" | "reproductor" | "recursos";
 }) {
   const [fallo, setFallo] = useState(false);
+  const [iniciado, setIniciado] = useState(false);
+  const pantalla = useRef<HTMLVideoElement>(null);
   const medio = useVideoMedios({ videoId, inicial, visible: Boolean(videoId) });
+  const posterReal =
+    (medio?.poster?.origen !== "tipografico" && medio?.poster?.url) ||
+    datos.miniatura ||
+    undefined;
   const [proporcion] = useState(inicial?.relacionAspecto ?? 16 / 9);
   return (
     <>
@@ -39,26 +51,43 @@ export function MediosVideo({
               }}
               aria-label="Video terminado"
             >
-              <video
-                key={datos.montaje}
-                controls
-                playsInline
-                preload="none"
-                poster={
-                  (medio?.poster?.origen !== "tipografico" &&
-                    medio?.poster?.url) ||
-                  datos.miniatura ||
-                  medio?.poster?.url ||
-                  undefined
-                }
-                src={datos.montaje}
-                width={inicial?.ancho ?? 1600}
-                height={inicial?.alto ?? 900}
-                style={{ aspectRatio: proporcion, objectFit: "contain" }}
-                onError={() => setFallo(true)}
-                onLoadedData={() => setFallo(false)}
-                aria-label={`Video terminado: ${titulo}`}
-              />
+              <div className="reproductor-pantalla">
+                <video
+                  ref={pantalla}
+                  key={datos.montaje}
+                  controls
+                  playsInline
+                  preload="none"
+                  poster={posterReal}
+                  src={datos.montaje}
+                  width={inicial?.ancho ?? 1600}
+                  height={inicial?.alto ?? 900}
+                  style={{ aspectRatio: proporcion, objectFit: "contain" }}
+                  onError={() => setFallo(true)}
+                  onLoadedData={() => setFallo(false)}
+                  onPlay={() => setIniciado(true)}
+                  aria-label={`Video terminado: ${titulo}`}
+                />
+                {!posterReal && !iniciado && (
+                  // Sin miniatura real, la carátula tipográfica hace de póster
+                  // y es el propio control para empezar a ver el video.
+                  <button
+                    type="button"
+                    className="reproductor-cartel"
+                    onClick={() => {
+                      setIniciado(true);
+                      void pantalla.current?.play().catch(() => {});
+                    }}
+                    aria-label={`Reproducir: ${titulo}`}
+                  >
+                    <Cartel titulo={titulo} canal={canal} detalle={detalle} />
+                    <span className="reproductor-play" aria-hidden="true">
+                      <Play size={20} fill="currentColor" />
+                      Ver video
+                    </span>
+                  </button>
+                )}
+              </div>
               <div className="player-caption">
                 <strong>Video terminado</strong>
                 <a href={datos.montaje} target="_blank" rel="noreferrer">
@@ -85,10 +114,12 @@ export function MediosVideo({
                   videoId={videoId}
                   titulo={titulo}
                   inicial={medio}
+                  canal={canal}
+                  detalle={detalle}
                   protagonista
                 />
               ) : (
-                <Medio alt={titulo} />
+                <Medio alt={titulo} canal={canal} detalle={detalle} />
               )}
               <p>El archivo del video todavía no está disponible aquí.</p>
             </section>
