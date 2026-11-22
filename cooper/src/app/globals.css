@@ -2647,7 +2647,7 @@ main:focus-visible {
   border-radius: var(--radio-control);
   margin-bottom: var(--espacio-8);
 }
-.queue-cover > span {
+.queue-cover > span:not([data-video-medio]) {
   position: absolute;
   bottom: 4px;
   left: 4px;

@@ -7,9 +7,8 @@ import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import type { Estado } from "@/servicios/datos";
 type Video = Estado["videos"][number];
 import { useEspacio, Empty } from "./espacio";
-import { Medio } from "./primitivas";
 import { nombreMedio } from "./transiciones";
-import { Portada } from "./portada";
+import { PortadaVideo } from "./portada-video";
 import {
   NumeroAnimado,
   TarjetaEdicion,
@@ -132,28 +131,15 @@ export function VideoMini({
   heading?: 2 | 3;
 }) {
   const Title = heading === 2 ? "h2" : "h3";
-  const { data } = useEspacio();
   return (
     <Link href={`/videos/${video.id}`} className="video-mini">
-      <span
-        className="film-thumbnail"
-        data-video-transition={nombreMedio(video.id)}
-      >
-        {video.observabilidad?.miniatura ? (
-          <Medio
-            videoId={video.id}
-            poster={video.observabilidad.miniatura}
-            preview={video.observabilidad.montaje || undefined}
-            alt={video.title}
-          />
-        ) : data.demo ? (
-          <Portada title={video.title} />
-        ) : (
-          <span
-            className="medio-pendiente"
-            aria-label="Miniatura aún no disponible"
-          />
-        )}
+      <span className="film-thumbnail" data-video-transition={nombreMedio(video.id)}>
+        <PortadaVideo
+          key={video.id}
+          videoId={video.id}
+          titulo={video.title}
+          inicial={video.medios}
+        />
       </span>
       <div>
         <small>
@@ -273,21 +259,12 @@ export function FabricaVista({
                     onClick={() => setSelected(v.id)}
                   >
                     <span className="queue-cover">
-                      {v.observabilidad?.miniatura ? (
-                        <Medio
-                          videoId={v.id}
-                          poster={v.observabilidad.miniatura}
-                          preview={v.observabilidad.montaje || undefined}
-                          alt={v.title}
-                        />
-                      ) : data.demo ? (
-                        <Portada title={v.title} />
-                      ) : (
-                        <span
-                          className="medio-pendiente"
-                          aria-label="Miniatura aún no disponible"
-                        />
-                      )}
+                      <PortadaVideo
+                        videoId={v.id}
+                        titulo={v.title}
+                        inicial={v.medios}
+                        enCola
+                      />
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
                     </span>
                     <strong>{v.title}</strong>

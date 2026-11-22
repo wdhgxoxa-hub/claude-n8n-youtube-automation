@@ -152,6 +152,44 @@ export type Video = typeof videos.$inferSelect;
 export type Channel = typeof channels.$inferSelect;
 export type Asset = typeof assets.$inferSelect;
 
+// Derivados privados y descartables. La revisión evita servir una portada vieja
+// tras un nuevo montaje; los originales permanecen en su almacenamiento actual.
+export const videoMedios = sqliteTable("video_medios", {
+  clave: text("clave").primaryKey(),
+  videoId: text("video_id")
+    .notNull()
+    .references(() => videos.id, { onDelete: "cascade" }),
+  publicacionId: text("publicacion_id").notNull().default(""),
+  revision: text("revision").notNull(),
+  estado: text("estado")
+    .$type<import("@/contratos/video-medios").VideoMedios["estado"]>()
+    .notNull(),
+  posterData: text("poster_data").notNull().default(""),
+  posterMime: text("poster_mime").notNull().default("image/webp"),
+  posterOrigen: text("poster_origen")
+    .$type<import("@/contratos/video-medios").OrigenPoster>()
+    .notNull()
+    .default("render"),
+  posterAncho: integer("poster_ancho").notNull().default(1600),
+  posterAlto: integer("poster_alto").notNull().default(900),
+  previewData: text("preview_data").notNull().default(""),
+  previewBytes: integer("preview_bytes").notNull().default(0),
+  previewDuracion: real("preview_duracion").notNull().default(0),
+  tinte: text("tinte").notNull(),
+  ancho: integer("ancho").notNull().default(1600),
+  alto: integer("alto").notNull().default(900),
+  origenDimensiones: text("origen_dimensiones")
+    .$type<
+      import("@/contratos/video-medios").VideoMedios["origenDimensiones"]
+    >()
+    .notNull()
+    .default("reserva"),
+  actualizadoEn: integer("actualizado_en").notNull(),
+  reintentarEn: integer("reintentar_en").notNull().default(0),
+  intentos: integer("intentos").notNull().default(0),
+  reservaHasta: integer("reserva_hasta").notNull().default(0),
+});
+
 export const bridgeCommands = sqliteTable("bridge_commands", {
   id: text("id").primaryKey(),
   ownerId: text("owner_id")

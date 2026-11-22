@@ -1844,6 +1844,31 @@ test('pulido: red publicada se conserva ante fallo parcial y no se confunde envi
  const out=run(js,{json:{v:{video_id:'v'},p}})[0].json;
  assert.equal(out.publicaciones.length,1);assert.equal(out.publicaciones[0].red,'youtube');
 });
+test('medios: publicados conservan el MP4 de cada corte y la miniatura oficial de su YouTube',()=>{
+ const miniatura='https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg';
+ const v={video_id:'v',estado:'publicado',youtube_id:'abcdefghijk',render_url:'https://cdn.test/principal.mp4',miniatura_url:'https://cdn.test/fabrica.jpg',metricas_youtube:JSON.stringify([
+  {fecha:'2026-11-19T00:00:00Z',miniaturaPublicada:miniatura},
+  {fecha:'2026-11-20T00:00:00Z',miniaturaPublicada:'https://i.ytimg.com/vi/ABCDEFGHIJK/hqdefault.jpg'},
+  {fecha:'2026-11-21T00:00:00Z',miniaturaPublicada:'https://i.ytimg.com.evil.test/vi/abcdefghijk/hqdefault.jpg'},
+ ])};
+ const p=[{video_id:'v',request_id:'r1',estado:'publicado',url_video:'https://cdn.test/corte.mp4',resultado:JSON.stringify({publicaciones:[{red:'youtube',url:'https://youtube.com/watch?v=abcdefghijk',publicado:true},{red:'tiktok',url:'https://www.tiktok.com/@canal/video/123456789',publicado:true}]})}];
+ const out=run(OBS+'return [{json:observabilidadCooper($json.v,[],$json.p,[],[])}];',{json:{v,p}})[0].json;
+ assert.equal(out.montaje,v.render_url);assert.equal(out.miniatura,v.miniatura_url);
+ assert.equal(out.publicaciones[0].montaje,p[0].url_video);assert.equal(out.publicaciones[0].miniatura,miniatura);
+ assert.equal(out.publicaciones[1].montaje,p[0].url_video);assert.equal(out.publicaciones[1].miniatura,'');
+ const sin=run(OBS+'return [{json:observabilidadCooper($json,[],[],[],[])}];',{json:{...v,metricas_youtube:'[]'}})[0].json;
+ assert.equal(sin.publicaciones[0].montaje,v.render_url);assert.equal(sin.publicaciones[0].miniatura,'');
+});
+test('medios: miniatura oficial toma la lectura más reciente válida y excluye URLs con credenciales',()=>{
+ const oficial='https://i.ytimg.com/vi_webp/abcdefghijk/maxresdefault.webp';
+ const historial=[{fecha:'2026-11-20T00:00:00Z',miniaturaPublicada:oficial},{fecha:'2026-11-19T00:00:00Z',miniaturaPublicada:'https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg'},{fecha:'2026-11-21T00:00:00Z',miniaturaPublicada:'https://usuario:clave@i.ytimg.com/vi/abcdefghijk/hqdefault.jpg'}];
+ const ejecutar=(red,url,h=historial)=>run(OBS+'return [{json:{miniatura:miniaturaPublicadaCooper($json.red,$json.url,$json.historial)}}];',{json:{red,url,historial:h}})[0].json.miniatura;
+ assert.equal(ejecutar('youtube','https://youtu.be/abcdefghijk'),oficial);
+ assert.equal(ejecutar('youtube','https://youtube.com/shorts/abcdefghijk'),oficial);
+ assert.equal(ejecutar('youtube','https://youtube.com.evil.test/watch?v=abcdefghijk'),'');
+ assert.equal(ejecutar('youtube','https://youtube.com/watch?v=abcdefghijk',{}),'');
+ assert.equal(ejecutar('tiktok','https://www.tiktok.com/@canal/video/123456789'),'');
+});
 test('pulido: periodicidad diaria acotada y ningún análisis sin evidencia persistida',()=>{
  const videos=Array.from({length:110},(_,i)=>({video_id:String(i),youtube_id:'y',publicado_en:'2026-01-01T00:00:00Z'}));
  assert.equal(run(codeOf(APR,'Toca medir'),{all:{$input:videos}}).length,100);
