@@ -6,11 +6,10 @@
   container-type: inline-size;
 }
 .inicio-titulo {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: var(--espacio-32);
-  margin-bottom: calc(-1 * var(--espacio-32));
+  display: grid;
+  gap: var(--espacio-12);
+  justify-items: start;
+  margin-bottom: calc(-1 * var(--espacio-16));
 }
 .inicio-titulo h1,
 .inicio-hero h2 {
@@ -20,10 +19,10 @@
   line-height: var(--interlinea-display);
   letter-spacing: var(--tracking-display);
 }
-.inicio-titulo > p {
-  flex-shrink: 0;
+.inicio-titulo .inicio-subtitulo {
+  max-width: 36ch;
   color: var(--texto-2);
-  font-size: var(--texto-13);
+  font-size: var(--texto-17);
   line-height: var(--interlinea-texto);
 }
 .inicio-proyeccion {
@@ -49,12 +48,33 @@
 .inicio-medio-heroe[data-proporcion="vertical"] {
   width: min(100%, calc(var(--espacio-96) * 3));
 }
-.inicio-medio-heroe[data-tinte="true"]::before {
-  animation: inicio-tinte var(--duracion-ruta) var(--curva-salida) both;
+/* El halo vive en la escena, no en el medio: persiste entre videos y solo cambia de tinte. */
+@property --tinte-halo {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
 }
-@keyframes inicio-tinte {
-  from { opacity: 0; }
-  to { opacity: var(--halo-opacidad); }
+.inicio-escena {
+  position: relative;
+  isolation: isolate;
+  --tinte-halo: var(--tinte);
+  transition: --tinte-halo var(--duracion-ruta) var(--curva-entrada-salida);
+}
+.inicio-halo {
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--espacio-96)) 0;
+  background: radial-gradient(
+    closest-side,
+    var(--tinte-halo) 45%,
+    var(--transparente)
+  );
+  opacity: var(--halo-opacidad);
+  filter: var(--halo-filtro);
+  pointer-events: none;
+}
+.inicio-medio-heroe::before {
+  display: none;
 }
 .inicio-medio .medio-poster,
 .inicio-medio .medio-preview {
@@ -87,6 +107,7 @@
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: var(--espacio-48);
   align-items: end;
+  padding-top: var(--espacio-16);
 }
 .inicio-hero-texto {
   display: grid;
@@ -138,8 +159,11 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--espacio-16);
 }
+.inicio-hero-cifras .cifra {
+  container-type: inline-size;
+}
 .inicio-hero-cifras .cifra-valor {
-  font-size: var(--texto-28);
+  font-size: var(--cifra-fluida-menor);
 }
 .inicio-carrusel {
   min-width: 0;
@@ -432,12 +456,13 @@
 .inicio-metricas-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--espacio-32);
+  gap: var(--espacio-24);
   padding-block: var(--espacio-32);
   border-block: var(--borde-ancho) solid var(--linea);
 }
 .inicio-metrica {
   min-width: 0;
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--espacio-16);
@@ -445,8 +470,9 @@
 .inicio-metrica .cifra {
   gap: var(--espacio-16);
 }
-.inicio-metrica .cifra-detalle {
-  min-height: var(--espacio-48);
+/* Cifra fluida: 9 caracteres («105,3 mil») caben siempre dentro de su columna. */
+.inicio-metrica .cifra-valor {
+  font-size: var(--cifra-fluida);
 }
 .inicio-metrica > p {
   margin-top: auto;
@@ -493,9 +519,6 @@
   display: none;
 }
 @container (max-width: 1000px) {
-  .inicio-titulo > p {
-    display: none;
-  }
   .inicio-hero-pie {
     grid-template-columns: 1fr;
     gap: var(--espacio-24);
@@ -572,9 +595,6 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--espacio-32) var(--espacio-16);
   }
-  .inicio-metrica .cifra-detalle {
-    min-height: var(--espacio-48);
-  }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
   .inicio-carrusel-cabecera {
@@ -602,7 +622,9 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .inicio-medio-heroe[data-tinte="true"]::before { animation-duration: var(--duracion-presion); }
+  .inicio-escena {
+    transition-duration: var(--duracion-presion);
+  }
   .inicio-etapas [data-viva="true"]::after {
     animation: none;
   }
@@ -613,4 +635,6 @@
 [data-motion="paused"] .inicio-etapas [data-viva="true"]::after {
   animation: none;
 }
-[data-motion="paused"] .inicio-medio-heroe[data-tinte="true"]::before { animation: none; }
+[data-motion="paused"] .inicio-escena {
+  transition: none;
+}

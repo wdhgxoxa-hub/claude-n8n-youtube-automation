@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { m, animate, useMotionValue } from "framer-motion";
 import {
   ArrowDown,
@@ -250,15 +250,27 @@ function Heroe({
   const video = videos.find((v) => v.id === seleccionado) ?? videos[0];
   const publicacion = publicacionPrincipal(video);
   const medicion = ultimaMedicion(publicacion);
+  // El halo es una capa persistente: al cambiar de video solo cambia su tinte (640ms).
+  const medios = useVideoMedios({
+    videoId: video.id,
+    inicial: video.medios,
+    visible: true,
+  });
   return (
     <div className="inicio-proyeccion">
       <section className="inicio-hero" aria-label="Video protagonista">
-        <Link
-          className="inicio-hero-enlace"
-          href={`/videos/${video.id}`}
+        <div
+          className="inicio-escena"
+          style={{ "--tinte": medios?.tinte } as CSSProperties}
         >
-          <MedioInicio key={video.id} video={video} heroe />
-        </Link>
+          <span className="inicio-halo" aria-hidden="true" />
+          <Link
+            className="inicio-hero-enlace"
+            href={`/videos/${video.id}`}
+          >
+            <MedioInicio key={video.id} video={video} heroe />
+          </Link>
+        </div>
         <div className="inicio-hero-pie">
           <div
             className="inicio-hero-texto"
@@ -318,16 +330,12 @@ export function Inicio({ ahora }: { ahora: number }) {
   return (
     <div className="page inicio-estudio">
       <header className="inicio-titulo">
-        <div>
-          <p className="eyebrow">COOPER / ESTUDIO</p>
-          <h1>
-            Hoy en el estudio<span className="title-stop">.</span>
-          </h1>
-        </div>
-        <p>
-          De la primera idea
-          <br />
-          al momento de compartirla.
+        <p className="eyebrow">COOPER / ESTUDIO</p>
+        <h1>
+          Hoy en el estudio<span className="title-stop">.</span>
+        </h1>
+        <p className="inicio-subtitulo">
+          De la primera idea al momento de compartirla.
         </p>
       </header>
       {propios.length ? (
@@ -537,6 +545,7 @@ export function Inicio({ ahora }: { ahora: number }) {
                     variacion={dato.valor === null ? undefined : dato.variacion}
                     heroe
                     compacta
+                    decimales={etiqueta.startsWith("Retención") ? 1 : undefined}
                   />
                   <p>{nota}</p>
                 </div>
