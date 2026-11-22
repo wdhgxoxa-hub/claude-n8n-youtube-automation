@@ -1,0 +1,417 @@
+{
+  "snapshot": "9f3a910",
+  "ultimoCommitProducto": "53b17df",
+  "inventarioCoincide": true,
+  "capturas": 66,
+  "identicasBytes": 32,
+  "archivos": [
+    {
+      "archivo": "inicio-1440.png",
+      "sha256": "8270db2ec3b0da85e4d9555d6f09e50d439adededf1d10bf2d87d6cdf190122d",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:41:57.808946-05:00"
+    },
+    {
+      "archivo": "inicio-1920.png",
+      "sha256": "65dbab27b47e90eca2b0834b7d5fdf417986e7cd8192386c9f34201927fcebb2",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:31.789243-05:00"
+    },
+    {
+      "archivo": "fabrica-1440.png",
+      "sha256": "8270db2ec3b0da85e4d9555d6f09e50d439adededf1d10bf2d87d6cdf190122d",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:41:58.928956-05:00"
+    },
+    {
+      "archivo": "fabrica-1920.png",
+      "sha256": "65dbab27b47e90eca2b0834b7d5fdf417986e7cd8192386c9f34201927fcebb2",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:32.933254-05:00"
+    },
+    {
+      "archivo": "videos-1440.png",
+      "sha256": "e56d557904972e88e408ac80eea0095a5a24f303bbfcf0937a4fa54f548c2121",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:41:59.786963-05:00"
+    },
+    {
+      "archivo": "videos-1920.png",
+      "sha256": "02e745e618dd099a9ba67df08f07da46adc8b024d22f5dd2a5e95575033f4cf6",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:33.796261-05:00"
+    },
+    {
+      "archivo": "detalle-video-1440.png",
+      "sha256": "959516dc9b5aea441e34242cd0128b37af53185b7305051dc8cddd1f1a925fc5",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:00.646971-05:00"
+    },
+    {
+      "archivo": "detalle-video-1920.png",
+      "sha256": "564b5d863cb27a8d1f2146c7f3c9f0f57107018406502b26c63ad9d767f2a42d",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:34.698269-05:00"
+    },
+    {
+      "archivo": "aprobacion-guion-1440.png",
+      "sha256": "9b6df9046c923b1d3bda5aed450040af81912afeba9859f667db5f7c9cdd9208",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:01.519979-05:00"
+    },
+    {
+      "archivo": "aprobacion-guion-1920.png",
+      "sha256": "b4f81a5859dff95c28be9df30f52ac7a7e9f3a85014f9fc95ca1d48a017bb046",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:35.610277-05:00"
+    },
+    {
+      "archivo": "aprobacion-final-1440.png",
+      "sha256": "d60642218b1574b7fecc42e7132a8432b00f18a8e37efb95613c45cbccb3dcb4",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:02.422986-05:00"
+    },
+    {
+      "archivo": "aprobacion-final-1920.png",
+      "sha256": "1ded50bbce2a989146846b3b1337f8cd4a39deb651c3fed342af367ea76a5298",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:36.537285-05:00"
+    },
+    {
+      "archivo": "publicado-1440.png",
+      "sha256": "f175776a2723275b3f0fb4783ec47e703f9d6bc4017e05586e166db283491af7",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:03.295994-05:00"
+    },
+    {
+      "archivo": "publicado-1920.png",
+      "sha256": "750fee81c16e9df2fa7c61f7e7a2fda50eb43112648105df869efe015ecaee9d",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:37.475293-05:00"
+    },
+    {
+      "archivo": "pedir-video-1440.png",
+      "sha256": "a22d2b308901f50466c00b0d4fec40c3aceb68d819dbce12123456fe7c64170d",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:04.182002-05:00"
+    },
+    {
+      "archivo": "pedir-video-1920.png",
+      "sha256": "e7db154cc8ad92a40730bc303e0c5103c965154b440e818f460305cc66f97099",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:38.388302-05:00"
+    },
+    {
+      "archivo": "publicados-1440.png",
+      "sha256": "e989588ecbe77cd2fe5534a9833d6e703a91a1a05881f973103a8bf907f8620f",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:05.220011-05:00"
+    },
+    {
+      "archivo": "publicados-1920.png",
+      "sha256": "a822d305b3214601a43959a9525da53c966822be2926ff99fdd49b8aabe3a41f",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:39.383310-05:00"
+    },
+    {
+      "archivo": "aprendizaje-1440.png",
+      "sha256": "dcb3ec8a61ddd446b73334b96843d453e494b0d05dbf00b69c5f0538fb9c69cb",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:06.162019-05:00"
+    },
+    {
+      "archivo": "aprendizaje-1920.png",
+      "sha256": "596907cc85a7e45ce1b3ce172c0f7eebe5749eb3a654f37d18f2ab9ad087d354",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:40.279318-05:00"
+    },
+    {
+      "archivo": "marcas-1440.png",
+      "sha256": "414a38a27065dd7de6436928819f669c797438ab80da547679a790ecc6dbafeb",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:06.897025-05:00"
+    },
+    {
+      "archivo": "marcas-1920.png",
+      "sha256": "e73a2dab233326b1c02a2c1eb4d4cfe733fd1e73e08293c08b7ae077d605301b",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:41.018325-05:00"
+    },
+    {
+      "archivo": "canales-1440.png",
+      "sha256": "ae95ec2641e6bf82fb205da83b61fd63a7948f1a4542fa7d6e0c9781df545b32",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:07.722032-05:00"
+    },
+    {
+      "archivo": "canales-1920.png",
+      "sha256": "0fcf277ba79df1cb4717021f06676529fca06ae557a9a890b421f8997f0ec26c",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:41.815332-05:00"
+    },
+    {
+      "archivo": "canal-1440.png",
+      "sha256": "cde16818dead46952dc440ae63bb17e7b4c1af4cabc9435d6c741155d06e5ed7",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:08.888042-05:00"
+    },
+    {
+      "archivo": "canal-1920.png",
+      "sha256": "c8d669f9c3465dd43be5fdddad87e24d45ea25f60006a3f896adff396ab57599",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:42.943342-05:00"
+    },
+    {
+      "archivo": "radar-1440.png",
+      "sha256": "ca0ffff77a1c348c6b5cd096d7f225da92e61ff70e753f52fc327265099e9cf9",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:09.713049-05:00"
+    },
+    {
+      "archivo": "radar-1920.png",
+      "sha256": "812ea4fa99366e1225cfa31f9c5436916bc3c7267cedbd5631e7109a14a4efab",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:43.783349-05:00"
+    },
+    {
+      "archivo": "rutina-1440.png",
+      "sha256": "b9b66ea42914ed359b3efbcd06830ca0aa1b962ca182e6e92a5e44ce15fb377c",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:10.544057-05:00"
+    },
+    {
+      "archivo": "rutina-1920.png",
+      "sha256": "687c4b0059abfcce70164dc0e1c8a2d20845f1950ca351f55b2dabb677be5bea",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:44.593356-05:00"
+    },
+    {
+      "archivo": "redes-1440.png",
+      "sha256": "97b3fc11c7a72a2000991c6e60f956cc9c29f7aec0e4c1f04b8a0a5067d57fdb",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:11.403064-05:00"
+    },
+    {
+      "archivo": "redes-1920.png",
+      "sha256": "e3ee4c71760ea1e3070b71313e40550fdf4b910264dc2a4f60803a7840b55f21",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:45.455364-05:00"
+    },
+    {
+      "archivo": "referencias-1440.png",
+      "sha256": "81ad7b5338cf38282ae622696cbbf38157272f916926316e3aa0972abf5b5396",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:12.191071-05:00"
+    },
+    {
+      "archivo": "referencias-1920.png",
+      "sha256": "9cb79a94628e05e9fe38d3e1350a614106a476f17d87cb8f9bfc7bb536bf2a2c",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:46.262371-05:00"
+    },
+    {
+      "archivo": "cuentas-1440.png",
+      "sha256": "5c3b91a4a22c625781d4ab82b3bdd8b30812e8146835c73a1461ecf09b2fa93c",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:12.991078-05:00"
+    },
+    {
+      "archivo": "cuentas-1920.png",
+      "sha256": "8ccdf6a21bd2e2e6400685bd82a69ab026eb58fc21ff1b513281a3893daac7cd",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:47.047378-05:00"
+    },
+    {
+      "archivo": "programados-1440.png",
+      "sha256": "dc6c9185a228c7d87d81168efbec904239ef3847d4d49af93d31a023b1d2b749",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:13.775085-05:00"
+    },
+    {
+      "archivo": "programados-1920.png",
+      "sha256": "104543bb315dc5662a362b3497144e92a541d9efbb3d32241a92257a45fe530e",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:47.823385-05:00"
+    },
+    {
+      "archivo": "decisiones-1440.png",
+      "sha256": "591476d3ca533f047833af91a81bfd3d441c8d3fb7c37786ed4e93e095b8c1ae",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:14.601092-05:00"
+    },
+    {
+      "archivo": "decisiones-1920.png",
+      "sha256": "9bc431193af9910951460e5a3352ac7ce8c72dcfc10b9c5d78034c5a2e0bb924",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:48.639392-05:00"
+    },
+    {
+      "archivo": "incidencias-1440.png",
+      "sha256": "865294d4e445c35fb5b0635d9065fd6d1e2bee3db8e48893f7f7cded5c427016",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:15.333098-05:00"
+    },
+    {
+      "archivo": "incidencias-1920.png",
+      "sha256": "f5492af5483aca5c99ae1905ddede1edcc9956ff47966c9d0c03ed88d88247e3",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:49.386398-05:00"
+    },
+    {
+      "archivo": "avisos-1440.png",
+      "sha256": "82d513706f6ca447a093ad548a4e2bd8ba5c3a5ac6b38ea002f7e8bc8a6d4f91",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:16.089105-05:00"
+    },
+    {
+      "archivo": "avisos-1920.png",
+      "sha256": "9b9e2845f8dae09f77449c0d3ffbe80c95c86c6a1b25df155e25ea01796af89f",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:50.135405-05:00"
+    },
+    {
+      "archivo": "avatares-1440.png",
+      "sha256": "ea4ce26da090515bbeea633adb8b1fd9ccedecc7634120b641b484690f9f6804",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:16.923112-05:00"
+    },
+    {
+      "archivo": "avatares-1920.png",
+      "sha256": "5b43efc3e34314dfa0c714cae8435ef0c2e3baef412f5b423f1d04fe2b780748",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:50.944412-05:00"
+    },
+    {
+      "archivo": "voces-1440.png",
+      "sha256": "8c632fdbeb7dd07689e5d89422a41bea1799c703b09d30be2fc9d6be2170a60c",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:17.768120-05:00"
+    },
+    {
+      "archivo": "voces-1920.png",
+      "sha256": "0e16cccbbd50d49c8999eff8ce115aa2e8a20ede55b3e33f399281b5787262e6",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:51.778419-05:00"
+    },
+    {
+      "archivo": "crear-avatar-1440.png",
+      "sha256": "e76b9a2bb217387ac0d53755aab56925f750d4dcc90fe9516e22b7dda245b757",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:18.694128-05:00"
+    },
+    {
+      "archivo": "crear-avatar-1920.png",
+      "sha256": "fb12a8c92f16b82c71d6edbc8a610ce108448c4d4449a0528bbd34122cf84c73",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:52.737428-05:00"
+    },
+    {
+      "archivo": "crear-voz-1440.png",
+      "sha256": "af4f603d2e51357d4bfa4bf2fca1ba5cc4b39a8d8ddd17388d7343810743aed2",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:19.677136-05:00"
+    },
+    {
+      "archivo": "crear-voz-1920.png",
+      "sha256": "30e8f794f304f3e50fcd3ac039d3747bee992248b83147613fff5c729db3e339",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:53.726437-05:00"
+    },
+    {
+      "archivo": "perfil-1440.png",
+      "sha256": "841bf8e97cf0c93e8cafc63c8b3440bd4d55d49cd41b7a18bb76dbdd5f7a9f99",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:20.498144-05:00"
+    },
+    {
+      "archivo": "perfil-1920.png",
+      "sha256": "122d698931e29e99db930b4c22eafd84e65ca40667540632c9c9334fc5ec4905",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:54.555444-05:00"
+    },
+    {
+      "archivo": "admin-1440.png",
+      "sha256": "69962259723b12cedf4ede250c25e84cc1b35ad48503910a43ba2ee0f72f1ae5",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:21.370152-05:00"
+    },
+    {
+      "archivo": "admin-1920.png",
+      "sha256": "80a09f4c9a1191a83d122a2eef3e970f428f1053bf6067af6542b8d824f4a0e1",
+      "igualAlOriginal": false,
+      "modificadoEnLima": "2026-11-21T22:42:55.458452-05:00"
+    },
+    {
+      "archivo": "admin-fabrica-1440.png",
+      "sha256": "5e4d713199bb9e7628807f6aa5541eb37ece32447da739d283fcd9b43e3735e5",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:22.375160-05:00"
+    },
+    {
+      "archivo": "admin-fabrica-1920.png",
+      "sha256": "be8a1a0b4e11d6f36b1d9cd2f5426d00a6632667ab4022475a6a9ded9e87f818",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:56.450461-05:00"
+    },
+    {
+      "archivo": "entrada-1440.png",
+      "sha256": "775d46feca98795ffed781f40f46bb4690ea8a6e5c53640bf996370b608e65fd",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:23.054166-05:00"
+    },
+    {
+      "archivo": "entrada-1920.png",
+      "sha256": "49de908b338c1e99d2705b3556b6bb651a5ce64c30973145f04f99412120c1f5",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:57.141467-05:00"
+    },
+    {
+      "archivo": "entrada-error-1440.png",
+      "sha256": "f36ff457691ab60c39c04ca5d488ca89d8e936ae38437de3396aba92fa281254",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:23.736172-05:00"
+    },
+    {
+      "archivo": "entrada-error-1920.png",
+      "sha256": "87397609b8dc5313258fb00c5f64c804626975386a6bc3fb6e3517891ec62d68",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:57.803473-05:00"
+    },
+    {
+      "archivo": "no-encontrado-1440.png",
+      "sha256": "330ba8d8fa38089f46d648f93b1c9e35d33800b06426a000fa7665378b7ca9a1",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:24.392178-05:00"
+    },
+    {
+      "archivo": "no-encontrado-1920.png",
+      "sha256": "57adf9da127543363b0626aba720d264a615ddfcb5fdff0dfe7a5849c658f15c",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:58.445478-05:00"
+    },
+    {
+      "archivo": "enlace-vencido-1440.png",
+      "sha256": "4e62aff57c21b7b9ad89e6d8f17b13ac42df435c8650cad3ea4fe1b6cdbd9cad",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:25.031184-05:00"
+    },
+    {
+      "archivo": "enlace-vencido-1920.png",
+      "sha256": "26bded54a4d5e6f8aa4d21b86b6fa17a13ecea527afa35832e8454ecb81fd3fa",
+      "igualAlOriginal": true,
+      "modificadoEnLima": "2026-11-21T22:42:59.099484-05:00"
+    }
+  ],
+  "inspeccionVisual": {
+    "capturasRevisadas": 66,
+    "paresRevisados": 33,
+    "anchos": [
+      1440,
+      1920
+    ],
+    "metodo": "33 hojas completas, originales focales y cierres de Canal y Ajustes de fábrica a escala original en ambas anchuras",
+    "directorioEvidencia": "evidencias-diseno/revision-escritorio/final-completa",
+    "comparacionInicial": "evidencias-diseno/revision-escritorio/manifiesto.json",
+    "resultado": "Sin nuevos defectos propios de medios; persisten las desviaciones globales del armazón documentadas."
+  }
+}
