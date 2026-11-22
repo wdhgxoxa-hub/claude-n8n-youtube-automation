@@ -27,7 +27,9 @@ export default defineConfig({
     extraHTTPHeaders: { Referer: baseURL },
     timezoneId: "America/Lima",
     viewport: { width: 1440, height: 900 },
-    trace: "retain-on-failure",
+    // La traza CDP de rendimiento se guarda aparte, sin registrar las
+    // solicitudes autenticadas del contexto en una traza de Playwright.
+    trace: "off",
     video: "on",
     screenshot: "only-on-failure",
   },
