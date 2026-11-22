@@ -126,6 +126,7 @@ export function DetalleVideo({ id }: { id: string }) {
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const origenFormulario = useRef<HTMLButtonElement | null>(null);
   const recuperarFoco = useRef(false);
+  const pista = useRef<HTMLDivElement>(null);
   const [pestana, setPestana] = useState<Pestana>("Guion");
   const [formulario, setFormulario] = useState<"corregir" | "programar" | null>(
     null,
@@ -139,6 +140,30 @@ export function DetalleVideo({ id }: { id: string }) {
     recuperarFoco.current = false;
     origenFormulario.current?.focus();
   }, [formulario, busy]);
+
+  /** Marca de qué lado de la pista de etapas aún hay más recorrido. */
+  function medirPista() {
+    const elemento = pista.current;
+    if (!elemento) return;
+    elemento.dataset.inicio = String(elemento.scrollLeft <= 1);
+    elemento.dataset.fin = String(
+      elemento.scrollLeft >= elemento.scrollWidth - elemento.clientWidth - 1,
+    );
+  }
+
+  // En pantallas angostas la pista se desplaza: la etapa viva llega a la vista.
+  const etapaActual = video?.stage;
+  useEffect(() => {
+    const elemento = pista.current;
+    if (!elemento || etapaActual === undefined) return;
+    const actual = elemento.querySelector<HTMLElement>('[aria-current="step"]');
+    if (actual && actual.offsetLeft + actual.offsetWidth > elemento.clientWidth)
+      elemento.scrollLeft = Math.max(
+        0,
+        actual.offsetLeft - actual.offsetWidth / 2,
+      );
+    medirPista();
+  }, [etapaActual]);
 
   function cerrarFormulario() {
     recuperarFoco.current = true;
@@ -435,7 +460,9 @@ export function DetalleVideo({ id }: { id: string }) {
           </span>
         </div>
         <div
+          ref={pista}
           className={styles.pista}
+          onScroll={medirPista}
           tabIndex={0}
           role="region"
           aria-label={`Etapas del video. Etapa actual: ${estado}`}
