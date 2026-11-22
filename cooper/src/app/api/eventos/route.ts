@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { and, eq, gt, asc } from "drizzle-orm";
+import { and, or, eq, gt, asc } from "drizzle-orm";
 import { users, events } from "@/db/schema";
 import { ErrorHttp } from "@/lib/permisos";
 import { currentUser } from "@/lib/sesion";
@@ -174,6 +174,7 @@ export async function GET(request: Request) {
           try {
             const authorized = await authorize();
             if (!authorized) return;
+            if (stopped || (controller.desiredSize ?? 0) <= 0) return;
             const progress = db()
               .select()
               .from(events)
@@ -183,31 +184,35 @@ export async function GET(request: Request) {
                   authorized.role === "admin"
                     ? undefined
                     : eq(events.ownerId, authorized.id),
-                  gt(events.createdAt, cursorTime - 1),
+                  or(
+                    gt(events.createdAt, cursorTime),
+                    and(
+                      eq(events.createdAt, cursorTime),
+                      gt(events.id, cursorId),
+                    ),
+                  ),
                 ),
               )
               .orderBy(asc(events.createdAt), asc(events.id))
               .limit(100)
               .all();
-            for (const event of progress) {
-              if (
-                event.createdAt < cursorTime ||
-                (event.createdAt === cursorTime && event.id <= cursorId)
-              )
-                continue;
-              if (
-                !send(
-                  `id: ${event.id}\nevent: progreso\ndata: ${event.payload}\n\n`,
+            // La cola admite un chunk: agrupar el lote evita que sus primeros
+            // eventos ocupen ese cupo y posterguen el estado durante minutos.
+            const frame =
+              progress
+                .map(
+                  (event) =>
+                    `id: ${event.id}\nevent: progreso\ndata: ${event.payload}\n\n`,
                 )
-              )
-                break;
-              cursorTime = event.createdAt;
-              cursorId = event.id;
+                .join("") +
+              `event: estado\ndata: ${JSON.stringify(estado(authorized))}\n\n`;
+            if (send(frame)) {
+              const last = progress.at(-1);
+              if (last) {
+                cursorTime = last.createdAt;
+                cursorId = last.id;
+              }
             }
-            if (!stopped && (controller.desiredSize ?? 0) > 0)
-              send(
-                `event: estado\ndata: ${JSON.stringify(estado(authorized))}\n\n`,
-              );
           } catch {
             send(
               'event: fallo\ndata: {"error":"No se pudo actualizar el estudio. Volveremos a intentarlo."}\n\n',

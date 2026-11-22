@@ -286,3 +286,75 @@ it("el administrador retoma eventos del mismo equipo que su stream ya autoriza",
   expect(text).toContain(`id: ${next}\n`);
   expect(text).toContain("event: estado");
 });
+
+function progresoRecibido(chunks: string[]) {
+  return [...chunks.join("").matchAll(/^id: ([\da-f-]+)$/gm)].map(
+    (match) => match[1],
+  );
+}
+
+it("un historial de mil eventos entrega estado desde el primer tick y avanza cien por tick", async () => {
+  vi.stubEnv("COOPER_SIMULACION_MS", "2000");
+  const ids = db().transaction(() =>
+    Array.from({ length: 1000 }, (_, index) =>
+      registrarProgreso(active.id, Date.now() - 1000 + index),
+    ),
+  );
+  const stream = await abrir();
+  expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, 100));
+  expect(stream.chunks.join("")).toContain("event: estado");
+  for (let batch = 2; batch <= 10; batch++) {
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, batch * 100));
+  }
+  expect(
+    stream.chunks.filter((chunk) => chunk.includes("event: estado")),
+  ).toHaveLength(10);
+});
+
+it("más de cien eventos con la misma fecha avanzan sin duplicarse ni bloquearse", async () => {
+  vi.stubEnv("COOPER_SIMULACION_MS", "2000");
+  const ids = db()
+    .transaction(() =>
+      Array.from({ length: 250 }, () =>
+        registrarProgreso(active.id, Date.now() - 1000),
+      ),
+    )
+    .sort();
+  const stream = await abrir();
+  expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, 100));
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(progresoRecibido(stream.chunks)).toEqual(ids.slice(0, 200));
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(progresoRecibido(stream.chunks)).toEqual(ids);
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(progresoRecibido(stream.chunks)).toEqual(ids);
+  expect(
+    stream.chunks.filter((chunk) => chunk.includes("event: estado")),
+  ).toHaveLength(4);
+});
+
+it("la contrapresión conserva el cursor hasta que el consumidor acepta un lote", async () => {
+  vi.stubEnv("COOPER_SIMULACION_MS", "2000");
+  const ids = db().transaction(() =>
+    Array.from({ length: 150 }, (_, index) =>
+      registrarProgreso(active.id, Date.now() - 1000 + index),
+    ),
+  );
+  const aborter = new AbortController();
+  aborters.push(aborter);
+  const response = await GET(
+    new Request("http://localhost/api/eventos", { signal: aborter.signal }),
+  );
+  await vi.advanceTimersByTimeAsync(6000);
+  const reader = response.body!.getReader();
+  expect(new TextDecoder().decode((await reader.read()).value)).toBe(
+    "event: latido\ndata: {}\n\n",
+  );
+  const next = reader.read();
+  await vi.advanceTimersByTimeAsync(2000);
+  const chunk = new TextDecoder().decode((await next).value);
+  expect(progresoRecibido([chunk])).toEqual(ids.slice(0, 100));
+  expect(chunk).toContain("event: estado");
+  await reader.cancel();
+});
