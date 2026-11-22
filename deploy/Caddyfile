@@ -32,6 +32,9 @@ http://{$COOPER_DOMAIN}, http://{$N8N_DOMAIN} {
 
 {$COOPER_DOMAIN} {
 	import seguridad
+	# Evitar compresión en los dos transportes SSE; el resto conserva gzip.
+	@flujosCooper path /api/eventos /api/chat
+	request_header @flujosCooper Accept-Encoding identity
 	request_body {
 		max_size 9MB
 	}
