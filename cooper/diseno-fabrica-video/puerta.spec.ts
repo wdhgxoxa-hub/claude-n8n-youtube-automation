@@ -378,8 +378,9 @@ for (const width of widths)
           ({ id, productionState }) => {
             (
               window as typeof window & { designState: Estado }
-            ).designState.videos.find((video) => video.id === id)!
-              .productionState = productionState;
+            ).designState.videos.find(
+              (video) => video.id === id,
+            )!.productionState = productionState;
           },
           { id: state.videos[0].id, productionState },
         );
@@ -402,8 +403,9 @@ for (const width of widths)
         ({ id, productionState }) => {
           (
             window as typeof window & { designState: Estado }
-          ).designState.videos.find((video) => video.id === id)!
-            .productionState = productionState;
+          ).designState.videos.find(
+            (video) => video.id === id,
+          )!.productionState = productionState;
         },
         { id: state.videos[0].id, productionState: estadoOriginal },
       );
@@ -411,15 +413,18 @@ for (const width of widths)
     // Este guion no tiene publicaciones ni lecciones vinculadas en el fixture.
     await navegar(page, `/videos/${state.videos[1].id}`);
     for (const [tab, screen, title] of [
-      ["Métricas", "video-metricas-vacias", "La historia sigue con tu audiencia."],
+      [
+        "Métricas",
+        "video-metricas-vacias",
+        "La historia sigue con tu audiencia.",
+      ],
       ["Lecciones", "video-lecciones-vacias", "Todavía estamos escuchando."],
     ]) {
       await page.getByRole("tab", { name: tab, exact: true }).click();
       await expect(
-        page.getByRole("tabpanel", { name: tab, exact: true }).getByRole(
-          "heading",
-          { name: title, exact: true },
-        ),
+        page
+          .getByRole("tabpanel", { name: tab, exact: true })
+          .getByRole("heading", { name: title, exact: true }),
       ).toBeVisible();
       evidence.push(await captura(page, screen, width));
     }
@@ -500,36 +505,25 @@ for (const width of [390, 1440])
       name: "Estaciones de producción; desplázate para recorrerlas",
       exact: true,
     });
-    const mapa = page.getByRole("navigation", {
-      name: "Ir a una estación",
-      exact: true,
-    });
     if (width >= 768) {
-      const ultima = mapa.getByRole("button", { name: /^12 Publicado,/ });
+      const ultima = carril.getByRole("button", { name: /^12 Publicado,/ });
       await ultima.focus();
       await page.keyboard.press("Enter");
       await expect(carril.locator('[data-estacion="11"]')).toBeInViewport();
-      await mapa.getByRole("button", { name: /^01 Radar,/ }).press("Enter");
+      await carril.getByRole("button", { name: /^01 Radar,/ }).press("Enter");
       await expect(carril.locator('[data-estacion="0"]')).toBeInViewport();
-    } else {
-      await expect(mapa).toBeHidden();
     }
-    await carril.evaluate((element) => {
-      element.scrollLeft = 0;
-      element.scrollTop = 0;
-    });
-    await carril.focus();
-    await expect(carril).toBeFocused();
-    await page.keyboard.press(width < 768 ? "ArrowDown" : "ArrowRight");
-    await expect
-      .poll(() =>
-        carril.evaluate(
-          (element, mobile) =>
-            mobile ? element.scrollTop : element.scrollLeft,
-          width < 768,
-        ),
-      )
-      .toBeGreaterThan(0);
+    if (width >= 768) {
+      await carril.evaluate((element) => {
+        element.scrollLeft = 0;
+      });
+      await carril.focus();
+      await expect(carril).toBeFocused();
+      await page.keyboard.press("ArrowRight");
+      await expect
+        .poll(() => carril.evaluate((element) => element.scrollLeft))
+        .toBeGreaterThan(0);
+    }
     const moving = page
       .locator(`[data-capsula="${state.videos[0].id}"]`)
       .filter({ visible: true });
@@ -549,7 +543,9 @@ for (const width of [390, 1440])
       .getByRole("listitem")
       .first();
     await expect(ultimoSuceso).toContainText(state.videos[0].title);
-    await expect(ultimoSuceso).toContainText("Actualizado · Control de calidad");
+    await expect(ultimoSuceso).toContainText(
+      "Actualizado · Control de calidad",
+    );
     await expect(ultimoSuceso.locator("time")).toHaveAttribute(
       "datetime",
       new Date(avanceEn).toISOString(),

@@ -1,4 +1,5 @@
 .pagina {
+  padding-top: var(--espacio-8);
   padding-bottom: var(--espacio-64);
 }
 .breadcrumb,
@@ -27,6 +28,16 @@
 }
 .proyeccion {
   min-width: 0;
+}
+/* Halo de tinte: el resplandor sobresale del marco del medio (el propio medio
+   es opaco, así que sólo se ve el borde), sin pasar de la opacidad de tokens. */
+.proyeccion :global(.halo-medio)::before {
+  inset: calc(-1 * var(--margen-pagina));
+  background: radial-gradient(
+    closest-side,
+    var(--tinte) 72%,
+    var(--transparente) 100%
+  );
 }
 .proyeccion :global(.real-player) {
   margin: 0;
@@ -172,13 +183,28 @@
 .pista {
   overflow-x: auto;
   padding-bottom: var(--espacio-8);
+  --fade-ini: 0px;
+  --fade-fin: 0px;
+  mask-image: linear-gradient(
+    to right,
+    var(--transparente) 0,
+    var(--lienzo) var(--fade-ini),
+    var(--lienzo) calc(100% - var(--fade-fin)),
+    var(--transparente) 100%
+  );
+}
+.pista[data-inicio="false"] {
+  --fade-ini: var(--espacio-32);
+}
+.pista[data-fin="false"] {
+  --fade-fin: var(--espacio-32);
+}
+.pista:focus-visible {
+  outline-offset: calc(-1 * var(--foco-ancho));
 }
 .pista :global(.journey) {
   display: grid;
-  grid-template-columns: repeat(
-    12,
-    minmax(calc(var(--espacio-96) + var(--espacio-8)), 1fr)
-  );
+  grid-template-columns: repeat(12, minmax(var(--espacio-96), 1fr));
   gap: 0;
   margin: 0;
   padding: 0;

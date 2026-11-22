@@ -40,7 +40,11 @@
   color: var(--texto);
   background: var(--sup-1);
   box-shadow: inset 0 0 0 var(--borde-ancho)
-    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, var(--transparente));
+    color-mix(
+      in srgb,
+      var(--tinte, var(--transparente)) 20%,
+      var(--transparente)
+    );
 }
 .cartelaTitulo {
   display: -webkit-box;
@@ -77,7 +81,11 @@
   max-height: 70vh;
   border-radius: var(--radio-tarjeta);
   border: var(--borde-ancho) solid
-    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, var(--transparente));
+    color-mix(
+      in srgb,
+      var(--tinte, var(--transparente)) 20%,
+      var(--transparente)
+    );
 }
 .protagonista .cartela {
   padding: var(--espacio-24);
@@ -87,31 +95,6 @@
   font-size: var(--titulo-seccion);
   line-height: var(--interlinea-display);
   letter-spacing: var(--tracking-display);
-}
-.reproductor {
-  position: relative;
-  isolation: isolate;
-}
-.reproductor::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(ellipse, var(--tinte, var(--transparente)), var(--transparente) 70%);
-  opacity: var(--halo-opacidad);
-  filter: var(--halo-filtro);
-  pointer-events: none;
-}
-.reproductor[class] video {
-  display: block;
-  width: 100%;
-  aspect-ratio: var(--medio-proporcion);
-  max-height: 70vh;
-  object-fit: contain;
-  background: var(--sup-1);
-  border-radius: var(--radio-tarjeta);
-  border: var(--borde-ancho) solid
-    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, var(--transparente));
 }
 @media (prefers-reduced-motion: reduce) {
   .medio video {
