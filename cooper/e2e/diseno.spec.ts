@@ -365,12 +365,13 @@ test("riel y barra móvil permanecen accesibles en páginas largas y alturas peq
   }
 });
 
-test("integración final: chat, noticias y WhatsApp en cuatro anchuras y tema oscuro", async ({
+test("integración final: chat, noticias y WhatsApp en seis anchuras y tema oscuro", async ({
   page,
 }) => {
   test.setTimeout(180000);
   const output = ".cache/capturas-final2";
   mkdirSync(output, { recursive: true });
+  mkdirSync("../evidencias-diseno", { recursive: true });
   const manifest: {
     archivo: string;
     tema: string;
@@ -408,7 +409,7 @@ test("integración final: chat, noticias y WhatsApp en cuatro anchuras y tema os
       await page.evaluate((value) => {
         document.documentElement.dataset.theme = value;
       }, theme);
-      for (const width of [360, 390, 768, 1440]) {
+      for (const width of [360, 390, 768, 1024, 1440, 1920]) {
         await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
         await overflow(page);
         if (name === "chat-foto") {
@@ -429,17 +430,21 @@ test("integración final: chat, noticias y WhatsApp en cuatro anchuras y tema os
           ).violations,
           `${name} ${theme} ${width}`,
         ).toEqual([]);
-        if (width === 390 || width === 1440) {
+        {
           await page.evaluate(() => {
             if (document.activeElement instanceof HTMLElement)
               document.activeElement.blur();
             window.scrollTo(0, 0);
           });
           const archivo = `${name}-${theme}-${width}.png`;
-          await page.screenshot({
+          const screenshot = await page.screenshot({
             path: `${output}/${archivo}`,
             fullPage: true,
           });
+          writeFileSync(
+            `../evidencias-diseno/${name}-${width}.png`,
+            screenshot,
+          );
           manifest.push({
             archivo,
             tema: theme,

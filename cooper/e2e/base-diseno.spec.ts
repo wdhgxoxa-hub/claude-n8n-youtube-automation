@@ -723,6 +723,68 @@ for (const width of [390, 1440]) {
       await player.evaluate((element) => (element as HTMLVideoElement).paused),
     ).toBe(true);
     await capture(page, "medio-reducido-fixture", width, errors);
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.addInitScript(() => {
+      const traces: { name: string; duration: string }[] = [];
+      (
+        window as Window & { sparklineAnimations?: typeof traces }
+      ).sparklineAnimations = traces;
+      document.addEventListener("animationstart", (event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.matches(".cifra-grafica path")
+        )
+          traces.push({
+            name: event.animationName,
+            duration: getComputedStyle(event.target).animationDuration,
+          });
+      });
+    });
+    await page.goto("/publicados");
+    const sparkline = page.locator(".cifra-grafica path").first();
+    await sparkline.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (window as Window & { sparklineAnimations?: unknown[] })
+              .sparklineAnimations?.length ?? 0,
+        ),
+      )
+      .toBeGreaterThan(0);
+    await expect
+      .poll(() =>
+        sparkline.evaluate(
+          (element) => getComputedStyle(element).strokeDashoffset,
+        ),
+      )
+      .toBe("0px");
+    const animations = await page.evaluate(
+      () =>
+        (
+          window as Window & {
+            sparklineAnimations?: { name: string; duration: string }[];
+          }
+        ).sparklineAnimations,
+    );
+    expect(
+      animations?.every(
+        (animation) =>
+          animation.name === "cifra-trazo" && animation.duration === "0.64s",
+      ),
+    ).toBe(true);
+    writeFileSync(
+      `${directory}/minigrafica-${width}.json`,
+      JSON.stringify(
+        {
+          source: "Historial persistido del simulador de demostración",
+          animations,
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    await capture(page, "cifra-minigrafica", width, errors);
     expect(errors).toEqual([]);
   });
 }
