@@ -244,7 +244,8 @@ function Heroe({
   videos: VideoInicio[];
   canal: (id: string) => string;
 }) {
-  const [seleccionado, seleccionar] = useState(videos[0].id);
+  // Sigue al último recibido hasta que la persona elija una pieza del carrusel.
+  const [seleccionado, seleccionar] = useState<string | null>(null);
   const video = videos.find((v) => v.id === seleccionado) ?? videos[0];
   const publicacion = publicacionPrincipal(video);
   const medicion = ultimaMedicion(publicacion);
