@@ -25,7 +25,7 @@ test.use({
 });
 
 for (const ancho of [390, 1440])
-  test(`medios ${ancho}: espacio reservado, movimiento visible y traza`, async ({
+  test(`medios ${ancho}: espacio reservado, desplazamiento visible y traza`, async ({
     page,
     context,
     browser,
@@ -37,6 +37,24 @@ for (const ancho of [390, 1440])
     const systemInfo = await browserClient.send("SystemInfo.getInfo");
     await browserClient.detach();
     const datos = await preparar(page, true);
+    // Una lista desplazable permite medir interacción visible. Dos vídeos de
+    // baja frecuencia (preview + orbe) activan el ahorro de cuadros de Chromium
+    // en reposo; ese reloj no mide la fluidez de una interacción a 60 Hz.
+    // Conservamos el archivo; cada entrada simulada tiene identidad propia y
+    // su respuesta de medios, igual que la entrada principal de este ensayo.
+    const otrosVideos = Array.from({ length: 5 }, (_, indice) => {
+      const id = `${datos.video.id}-recorrido-${indice}`;
+      return {
+        ...datos.video,
+        id,
+        medios: { ...datos.medio, videoId: id },
+      };
+    });
+    datos.estado.videos.push(...otrosVideos);
+    for (const video of otrosVideos)
+      await page.route(`**/api/videos/${video.id}/medios`, (route) =>
+        route.fulfill({ json: video.medios }),
+      );
     await page.setViewportSize({ width: ancho, height: 900 });
     await page.goto("/videos");
     const medio = page
@@ -44,6 +62,7 @@ for (const ancho of [390, 1440])
       .first();
     await expect(medio).toHaveAttribute("data-estado", "pendiente");
     const cajaPendiente = await medio.boundingBox();
+    if (!cajaPendiente) throw new Error("El medio no tiene un espacio visible");
     await page.evaluate(() => {
       const state = {
         value: 0,
@@ -74,6 +93,10 @@ for (const ancho of [390, 1440])
       .toBe(320);
     if (ancho === 1440) await medio.hover();
     await expect(medio).toHaveAttribute("data-reproduciendo", "true");
+    await page.mouse.move(
+      cajaPendiente.x + cajaPendiente.width / 2,
+      cajaPendiente.y + cajaPendiente.height / 2,
+    );
     const cdp = await context.newCDPSession(page);
     await cdp.send("Emulation.setCPUThrottlingRate", {
       rate: ancho === 390 ? 4 : 1,
@@ -82,7 +105,7 @@ for (const ancho of [390, 1440])
       categories: "devtools.timeline,blink.user_timing,cc,viz,gpu",
       transferMode: "ReturnAsStream",
     });
-    const estadistica = await page.evaluate(
+    const medicion = page.evaluate(
       () =>
         new Promise<{
           fps: number;
@@ -90,6 +113,7 @@ for (const ancho of [390, 1440])
           maximo: number;
           muestras: number;
           cls: number;
+          intervalos: number[];
         }>((resolve) => {
           const tiempos: number[] = [];
           let primero = 0,
@@ -113,12 +137,22 @@ for (const ancho of [390, 1440])
                 maximo: Math.max(...tiempos),
                 muestras: tiempos.length,
                 cls: shift.value,
+                intervalos: tiempos,
               });
             }
           };
           requestAnimationFrame(frame);
         }),
     );
+    const desplazamientos: number[] = [];
+    for (let paso = 0; paso < 24; paso++) {
+      await page.mouse.wheel(0, paso % 2 ? -80 : 80);
+      await page.waitForTimeout(125);
+      desplazamientos.push(
+        await page.evaluate(() => document.scrollingElement?.scrollTop ?? 0),
+      );
+    }
+    const estadistica = await medicion;
     const final = new Promise<{ stream?: string }>((resolve) =>
       cdp.once("Tracing.tracingComplete", resolve),
     );
@@ -143,6 +177,8 @@ for (const ancho of [390, 1440])
           ...estadistica,
           cpu: ancho === 390 ? 4 : 1,
           archivoSintetico: true,
+          escenario: "desplazamiento real de una lista con vistas previas",
+          desplazamientos,
           instrumentacion: {
             grabacion: false,
             trazaPlaywright: false,
@@ -163,6 +199,10 @@ for (const ancho of [390, 1440])
     expect(estadistica.p95).toBeLessThanOrEqual(25);
     expect(estadistica.maximo).toBeLessThan(100);
     expect(estadistica.cls).toBe(0);
+    expect(Math.max(...desplazamientos)).toBeGreaterThan(0);
+    await expect
+      .poll(() => page.evaluate(() => document.scrollingElement?.scrollTop))
+      .toBe(0);
     expect(await medio.boundingBox()).toEqual(cajaPendiente);
     await page.screenshot({
       path: `${salida}/medios-lista-${ancho}.png`,
