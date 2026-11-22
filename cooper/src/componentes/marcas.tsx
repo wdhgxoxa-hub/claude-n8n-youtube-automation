@@ -61,6 +61,8 @@ export function Marcas({
   const [business, setBusiness] = useState<Record<string, boolean>>({});
   const editorOrigin = useRef<HTMLElement | null>(null);
   const newBrandButton = useRef<HTMLButtonElement>(null);
+  const sectionStrip = useRef<HTMLElement>(null);
+  const activeSection = useRef<HTMLButtonElement>(null);
   const restoreEditorFocus = useRef(false);
   useEffect(() => {
     if (!editor && !busy && restoreEditorFocus.current) {
@@ -72,6 +74,26 @@ export function Marcas({
         )?.focus();
     }
   }, [editor, busy]);
+  useEffect(() => {
+    const strip = sectionStrip.current;
+    const active = activeSection.current;
+    if (!strip || !active) return;
+    function mostrarSeccion() {
+      if (!strip || !active) return;
+      const bounds = strip.getBoundingClientRect();
+      const tab = active.getBoundingClientRect();
+      const left = bounds.left + strip.clientLeft;
+      const right = left + strip.clientWidth;
+      // Desplazar solo la tira: conservar la posición vertical de la página.
+      if (tab.left < left) strip.scrollLeft += tab.left - left;
+      else if (tab.right > right) strip.scrollLeft += tab.right - right;
+    }
+    mostrarSeccion();
+    const observer = new ResizeObserver(mostrarSeccion);
+    observer.observe(strip);
+    observer.observe(active);
+    return () => observer.disconnect();
+  }, [editor, seleccion, seccion]);
   function abrirEditor(editar = false) {
     editorOrigin.current =
       document.activeElement instanceof HTMLElement
@@ -378,6 +400,7 @@ export function Marcas({
                     </form>
                   </details>
                   <nav
+                    ref={sectionStrip}
                     className="marca-tabs"
                     aria-label="Secciones de la marca"
                   >
@@ -389,6 +412,7 @@ export function Marcas({
                       ["aprendizaje", "Aprendizaje"],
                     ].map(([v, label]) => (
                       <button
+                        ref={seccion === v ? activeSection : null}
                         className={seccion === v ? "active" : ""}
                         aria-current={seccion === v ? "page" : undefined}
                         key={v}
