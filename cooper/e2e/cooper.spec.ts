@@ -693,7 +693,7 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
     .click();
   const resumen = page
     .getByRole("main")
-    .locator(".detail-layout:visible .presenter-summary");
+    .locator("[data-video-detalle]:visible .presenter-summary");
   await expect(resumen).toContainText("Presentador: Cooper");
   await expect(resumen).toContainText("Voz: Clara");
   await expect(resumen).toContainText("En todo el video");
@@ -815,7 +815,7 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
     final.videos.find((v: { id: string }) => v.id === video.id),
   ).toMatchObject({ voiceId: own.id, productionState: "cancelada" });
   await page.goto(`/videos/${video.id}`);
-  const detalle = page.getByRole("main").locator(".detail-layout:visible");
+  const detalle = page.getByRole("main").locator("[data-video-detalle]:visible");
   await expect(detalle).toHaveCount(1);
   await expect(
     page.getByRole("status").filter({ hasText: "Video cancelado" }),

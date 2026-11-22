@@ -1,0 +1,93 @@
+{
+  "origen": {
+    "archivo": "diseno-medios/cooper/.cache/diseno-medios-real/original.mp4",
+    "sha256": "727421fdd1fbc2c705c6457a58496e90a84349b0ae7e27ee0cd20482b084f0a3",
+    "bytes": 17866060,
+    "ancho": 1080,
+    "alto": 1920,
+    "duracion": 56.066667,
+    "procedencia": "Render existente del proyecto Margen Real, acreditado por docs/informes/evidencias/diseno-medios/medios-reales-origen.json. Reutilización local sin descargas ni publicación; no se atribuye licencia libre al original."
+  },
+  "derivados": [
+    {
+      "numero": 1,
+      "segundo": 4,
+      "poster": {
+        "archivo": "fotograma-1.webp",
+        "sha256": "0d98837753ab9391100ef68d6b7f3a2eaf2e4617dde6fcb15153ffc50f4e58c9",
+        "bytes": 83488,
+        "ancho": 720,
+        "alto": 1280
+      },
+      "preview": {
+        "archivo": "vista-previa-1.mp4",
+        "sha256": "d6ee08cd227c080a583ca6b0a3fc4a5eb1ee83b031110d4ba5ef979c61354a0a",
+        "bytes": 189051,
+        "ancho": 360,
+        "alto": 640,
+        "duracion": 5,
+        "audio": false
+      }
+    },
+    {
+      "numero": 2,
+      "segundo": 7,
+      "poster": {
+        "archivo": "fotograma-2.webp",
+        "sha256": "115e0b03b969c8492af668779b5e2e061fa45883ddf09c1dbbf7bce92f12955d",
+        "bytes": 58112,
+        "ancho": 720,
+        "alto": 1280
+      },
+      "preview": {
+        "archivo": "vista-previa-2.mp4",
+        "sha256": "82d026e8389cad9ce9368cd0ac4587278da170379a048476df7ee756b5f2bb95",
+        "bytes": 197927,
+        "ancho": 360,
+        "alto": 640,
+        "duracion": 5,
+        "audio": false
+      }
+    },
+    {
+      "numero": 3,
+      "segundo": 43,
+      "poster": {
+        "archivo": "fotograma-3.webp",
+        "sha256": "6f9450348bf1e0950c3cdb7ae35003dc3fd3799f80110e7d768a9d8258666bc9",
+        "bytes": 70152,
+        "ancho": 720,
+        "alto": 1280
+      },
+      "preview": {
+        "archivo": "vista-previa-3.mp4",
+        "sha256": "dec69b0f6de76a0bfaa08f3a8daa7b40118be55c1865ff279c632ca3382afbb5",
+        "bytes": 266194,
+        "ancho": 360,
+        "alto": 640,
+        "duracion": 5,
+        "audio": false
+      }
+    },
+    {
+      "numero": 4,
+      "segundo": 49,
+      "poster": {
+        "archivo": "fotograma-4.webp",
+        "sha256": "495034999a1aace7cda0a9a70a967fb5e5f34301a62d58fdb03ed94cdec56ce8",
+        "bytes": 120694,
+        "ancho": 720,
+        "alto": 1280
+      },
+      "preview": {
+        "archivo": "vista-previa-4.mp4",
+        "sha256": "e831dd3117606addbf684154d2ec50b6aaf52a2fa8cf6bdb32dc6e78b08986ac",
+        "bytes": 215404,
+        "ancho": 360,
+        "alto": 640,
+        "duracion": 5,
+        "audio": false
+      }
+    }
+  ]
+}

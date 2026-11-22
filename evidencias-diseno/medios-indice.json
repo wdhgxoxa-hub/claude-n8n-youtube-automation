@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "actualizadoEnLima": "2026-11-21T23:41:02-05:00",
+  "alcance": "Medios, vistas previas y diagnóstico de concurrencia. Los diagnósticos no sustituyen las pruebas de aceptación.",
+  "archivos": [
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/diagnostico-cadencia-minima.json",
+      "bytes": 7002,
+      "sha256": "199437b5c73bd0f240de88cea9912f6fbc88c5209412a45c93818c0396b938c6",
+      "rutaOriginal": "evidencias-diseno/diagnostico-cadencia-minima.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/diagnostico-compositor-390.json",
+      "bytes": 654,
+      "sha256": "a9e941d9779938b469cf20344600c804633d5dadb4e7e898c522d58243e09bbb",
+      "rutaOriginal": "evidencias-diseno/diagnostico-compositor-390.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/diagnostico-dos-videos.json",
+      "bytes": 4651,
+      "sha256": "f6f278edf8b69b6aecda60ecd45d510b5e3b2f4b1e90a304eb3555a00e8271c4",
+      "rutaOriginal": "evidencias-diseno/diagnostico-dos-videos.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/diagnostico-filtros-videos.json",
+      "bytes": 6483,
+      "sha256": "3d1e64381840f437ed413ddb5a4011d5ee0439bd731dcea495c7345afec31d92",
+      "rutaOriginal": "evidencias-diseno/diagnostico-filtros-videos.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-detalle-1024.png",
+      "bytes": 276747,
+      "sha256": "bcaf25932501768292cba1fbe660a7090185f0de56b1b6f1be86732b82a968ef",
+      "rutaOriginal": "evidencias-diseno/medios-detalle-1024.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-detalle-1440.png",
+      "bytes": 255198,
+      "sha256": "611df70f2964cbb21a2916f87354ac8cb195fd8dff5f89b3540d037ae5375f51",
+      "rutaOriginal": "evidencias-diseno/medios-detalle-1440.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-detalle-1920.png",
+      "bytes": 281359,
+      "sha256": "57dc59c5c0c959a2657d7f1169150850ce2b051441f1c8d41e8434dd3799b64e",
+      "rutaOriginal": "evidencias-diseno/medios-detalle-1920.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-detalle-360.png",
+      "bytes": 119013,
+      "sha256": "c586e35b7eda837d24b241a637a4a6b4b59c85fdec771e2cfb4eb74adf13374e",
+      "rutaOriginal": "evidencias-diseno/medios-detalle-360.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-detalle-390.png",
+      "bytes": 127579,
+      "sha256": "60935734332b2e18177f67d8769881ff93e51ca909e14bbe3460a022747fe786",
+      "rutaOriginal": "evidencias-diseno/medios-detalle-390.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-detalle-768.png",
+      "bytes": 190397,
+      "sha256": "5df3136267430d48e4a08926ec8076ecd49e7fecdd5870dee0d6a607c824897f",
+      "rutaOriginal": "evidencias-diseno/medios-detalle-768.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-fluidez-1440.json",
+      "bytes": 1185,
+      "sha256": "17814b4d4403e852a24c38169346bb298971728b528664b44304862799cb98ed",
+      "rutaOriginal": "evidencias-diseno/medios-fluidez-1440.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-fluidez-390.json",
+      "bytes": 1201,
+      "sha256": "d940db1e3e938f69e201a4a03131abed3264c244f9e12a2d5170d197270e592f",
+      "rutaOriginal": "evidencias-diseno/medios-fluidez-390.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-hover-1440.png",
+      "bytes": 104266,
+      "sha256": "900b246d1f939594d2fa41b214fa175ac865185ebac77823b61a31c225bc6753",
+      "rutaOriginal": "evidencias-diseno/medios-hover-1440.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-hover-pausa-1440.webm",
+      "bytes": 248690,
+      "sha256": "2043ff886f24c62e5c3aabd1a484dfed7a01d005ee834b74a25927d9eff7c310",
+      "rutaOriginal": "evidencias-diseno/medios-hover-pausa-1440.webm"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-lista-1440.png",
+      "bytes": 103558,
+      "sha256": "6817a0ddd55651d92ea43e9910e791c146b2c85a1d404f464c5e8917f844bdc0",
+      "rutaOriginal": "evidencias-diseno/medios-lista-1440.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-lista-390.png",
+      "bytes": 98087,
+      "sha256": "7c3bb9e64d9890d922fc6a1b4657478561111c7242f175ec8b31dc33d82aeabf",
+      "rutaOriginal": "evidencias-diseno/medios-lista-390.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-publicados-1440.png",
+      "bytes": 135615,
+      "sha256": "328551142ba2e2cb6d6fa3a0ee513ffff675f49f507ca21d26d89e495f3ac0cd",
+      "rutaOriginal": "evidencias-diseno/medios-publicados-1440.png"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-publicados-1440.webm",
+      "bytes": 179480,
+      "sha256": "f8b5bd901ca4d64088037d916f954c02b63196bd4bfbcad4d3a5ac781fb97f6c",
+      "rutaOriginal": "evidencias-diseno/medios-publicados-1440.webm"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-traza-1440.json",
+      "bytes": 701754,
+      "sha256": "94caaaa987937c755bc94495d8ed3817264dd483c9e9aa6c6c664fad6246a93b",
+      "rutaOriginal": "evidencias-diseno/medios-traza-1440.json"
+    },
+    {
+      "ruta": "evidencias-diseno/medios-focal-7495cb6/medios-traza-390.json",
+      "bytes": 707235,
+      "sha256": "6f95137dbf94461be2c8cfb404a46b3538652b0906583572fa4bd0e50c560f18",
+      "rutaOriginal": "evidencias-diseno/medios-traza-390.json"
+    }
+  ],
+  "snapshot": {
+    "commit": "7495cb6",
+    "ruta": "evidencias-diseno/medios-focal-7495cb6",
+    "archivos": 20,
+    "verificacion": "SHA-256 y tamaño verificados antes de copiar; SHA-256 verificado de nuevo tras copia.",
+    "motivo": "Conservar la aceptación focal mientras la puerta común renueva los artefactos de raíz."
+  }
+}

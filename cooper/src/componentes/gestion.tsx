@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useId, useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
-import { Plus, ArrowUpRight, Trash2, Check, X } from "lucide-react";
+import { Plus, ArrowUpRight, Trash2, X } from "lucide-react";
 import { api, useEspacio, Heading, Empty, Notice } from "./espacio";
-import { MediosVideo } from "./medios-video";
 import { Indicador } from "./movimiento";
-import { Recorrido, VideoMini } from "./fabrica-vista";
+import { LineaProduccion } from "./linea-produccion";
+import styles from "./fabrica-pagina.module.css";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
-import type { Orden } from "@/servicios/fabrica";
 import { Cifra, HojaVidrio, Medio, Vacio } from "./primitivas";
 import "./resto-diseno.css";
 export function Canales() {
@@ -352,10 +351,10 @@ export function Videos() {
     }
   }
   return (
-    <div className="page">
+    <div className={`page ${styles.page}`}>
       <Heading
-        title="Tus videos"
-        description="Ideas en movimiento. Historias listas para salir."
+        title="Línea de producción"
+        description="De la primera idea a la última mirada. Cada historia, a su ritmo."
         action={
           <button
             ref={createButton}
@@ -480,39 +479,7 @@ export function Videos() {
         ))}
       </div>
       {visible.length ? (
-        <div className="video-list">
-          {visible.map((v) => (
-            <div className="video-list-row" key={v.id}>
-              <VideoMini video={v} heading={2} />
-              <div
-                className="mini-stages"
-                role="img"
-                aria-label={`Etapa ${v.stage + 1} de 12`}
-              >
-                {ETAPAS.map((name, i) => (
-                  <span
-                    title={name}
-                    key={name}
-                    className={
-                      i < v.stage || v.stage === 11
-                        ? "done"
-                        : i === v.stage
-                          ? "active"
-                          : ""
-                    }
-                  />
-                ))}
-              </div>
-              <span className="video-date" title="Fecha de creación (Lima)">
-                {new Intl.DateTimeFormat("es", {
-                  day: "numeric",
-                  month: "short",
-                  timeZone: "America/Lima",
-                }).format(v.createdAt)}
-              </span>
-            </div>
-          ))}
-        </div>
+        <LineaProduccion videos={visible} />
       ) : (
         <Empty
           title={filter === "todos" ? "Tu primera idea va aquí" : "Todo al día"}
@@ -526,241 +493,4 @@ export function Videos() {
     </div>
   );
 }
-export function DetalleVideo({ id }: { id: string }) {
-  const pending = useRef(false);
-  const { data, refresh } = useEspacio();
-  const video = data.videos.find((v) => v.id === id);
-  const [error, setError] = useState(""),
-    [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false),
-    [changes, setChanges] = useState(false);
-  async function act(path: string, value: unknown) {
-    if (pending.current) return;
-    pending.current = true;
-    setBusy(true);
-    setError("");
-    try {
-      await api(path, value);
-      await refresh();
-      setMessage("Cambios guardados. La fábrica continúa.");
-      setChanges(false);
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      pending.current = false;
-      setBusy(false);
-    }
-  }
-  if (!video)
-    return (
-      <div className="page">
-        <Empty
-          title="Video no disponible"
-          description="Puede haberse eliminado o pertenecer a otro espacio."
-        >
-          <Link href="/videos" className="button">
-            Volver a videos
-          </Link>
-        </Empty>
-      </div>
-    );
-  const own = video.ownerId === data.user.id || data.user.role === "admin";
-  const cancelled = video.productionState === "cancelada";
-  async function order(e: FormEvent<HTMLFormElement>, evento: Orden["evento"]) {
-    e.preventDefault();
-    const values = new FormData(e.currentTarget);
-    let texto = String(values.get("texto"));
-    if (evento === "programar") texto = new Date(texto).toISOString();
-    await act("orden", { evento, recursoId: id, texto });
-  }
-  return (
-    <div className="page">
-      <Link href="/videos" className="back-link">
-        Videos / Detalle
-      </Link>
-      <Heading
-        title={video.title}
-        description={`${data.channels.find((c) => c.id === video.channelId)?.name ?? "Canal"} · ${cancelled ? "Cancelado" : video.productionState === "pausada" ? "En pausa" : ETAPAS[video.stage]}`}
-      />
-      <Notice error={error} message={message} />
-      {video.productionNotice && (
-        <p className="notice" role="status">
-          {video.productionNotice}
-        </p>
-      )}
-      <div className="detail-layout">
-        <div>
-          <MediosVideo
-            key={video.id}
-            videoId={video.id}
-            datos={video.observabilidad}
-            titulo={video.title}
-            inicial={video.medios}
-          />
-          {(video.avatarId || video.voiceId) && (
-            <div className="presenter-summary">
-              <span>
-                Presentador:{" "}
-                {[...data.catalogo, ...data.assets].find(
-                  (a) => a.id === video.avatarId,
-                )?.name ??
-                  (video.avatarId
-                    ? "Presentador elegido no disponible"
-                    : "Sin presentador")}
-              </span>
-              <span>
-                Voz:{" "}
-                {[...data.catalogo, ...data.assets].find(
-                  (a) => a.id === video.voiceId,
-                )?.name ??
-                  (video.voiceId
-                    ? "Voz elegida no disponible"
-                    : "Según el guion")}
-              </span>
-              <span>
-                {video.avatarPlacement === "completo"
-                  ? "En todo el video"
-                  : "En algunas partes"}
-              </span>
-            </div>
-          )}
-          <section className="script-panel">
-            <div className="section-top">
-              <h2>El guion</h2>
-              <span className="muted">Versión de trabajo</span>
-            </div>
-            <div className="script-text">
-              {video.script.split("\n\n").map((p, i) => (
-                <p key={i}>{p.replace(/^# /, "")}</p>
-              ))}
-            </div>
-            {video.feedback && (
-              <div className="feedback">
-                <strong>Tu última indicación</strong>
-                <p>{video.feedback}</p>
-              </div>
-            )}
-          </section>
-          {own && !cancelled && (
-            <details className="production-details">
-              <summary>Referencias y publicación</summary>
-              <p className="muted">
-                {video.scheduledAt
-                  ? `Publicación: ${new Date(video.scheduledAt).toLocaleString("es", { timeZone: "America/Lima" })} (Lima)`
-                  : "La publicación espera ambas aprobaciones."}
-              </p>
-              <form
-                className="stack"
-                onSubmit={(e) => void order(e, "programar")}
-              >
-                <label>
-                  Fecha y hora local
-                  <input name="texto" type="datetime-local" required />
-                </label>
-                <button className="button secondary" disabled={busy}>
-                  Programar publicación
-                </button>
-              </form>
-              <form
-                className="stack"
-                onSubmit={(e) => void order(e, "referencias")}
-              >
-                <label>
-                  Referencias
-                  <textarea
-                    name="texto"
-                    defaultValue={video.references}
-                    maxLength={6000}
-                    required
-                    rows={3}
-                  />
-                </label>
-                <button className="button secondary" disabled={busy}>
-                  Guardar referencias
-                </button>
-              </form>
-            </details>
-          )}
-        </div>
-        <aside className="review-panel">
-          <h2>
-            {cancelled
-              ? "Video cancelado."
-              : esperaAprobacion(video.stage)
-                ? "Tu mirada hace la diferencia."
-                : "Así va tu video."}
-          </h2>
-          <p>
-            {cancelled
-              ? "Tu elección se conserva. Esta producción ya no admite aprobaciones ni cambios."
-              : esperaAprobacion(video.stage)
-                ? "Revisa el contenido. Avanzamos cuando nos des el visto bueno."
-                : "Cada etapa prepara la siguiente. Te avisamos cuando necesitemos tu aprobación."}
-          </p>
-          <div className="review-actions">
-            <button
-              className="button"
-              disabled={busy || cancelled || !esperaAprobacion(video.stage)}
-              onClick={() => void act(`videos/${id}/aprobar`, {})}
-            >
-              <Check size={17} />
-              Aprobar
-            </button>
-            <button
-              className="button secondary"
-              disabled={busy || cancelled || video.stage === 11}
-              onClick={() => setChanges(!changes)}
-            >
-              Pedir cambios
-            </button>
-          </div>
-          {changes && !cancelled && (
-            <form
-              className="stack changes-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                void act(`videos/${id}/cambios`, {
-                  texto: new FormData(e.currentTarget).get("texto"),
-                });
-              }}
-            >
-              <label>
-                ¿Qué cambiamos?
-                <textarea
-                  name="texto"
-                  autoFocus
-                  required
-                  minLength={3}
-                  maxLength={6000}
-                  rows={4}
-                />
-              </label>
-              <button className="button" disabled={busy}>
-                Enviar cambios
-              </button>
-            </form>
-          )}
-          <Recorrido
-            stage={video.stage}
-            productionState={video.productionState}
-          />
-          <button
-            className="text-button danger"
-            onClick={async () => {
-              if (!window.confirm("¿Borrar este video?")) return;
-              try {
-                await api(`videos/${id}`, undefined, "DELETE");
-                await refresh();
-              } catch (e) {
-                setError((e as Error).message);
-              }
-            }}
-          >
-            <Trash2 size={15} />
-            Borrar video
-          </button>
-        </aside>
-      </div>
-    </div>
-  );
-}
+export { DetalleVideo } from "./detalle-video";

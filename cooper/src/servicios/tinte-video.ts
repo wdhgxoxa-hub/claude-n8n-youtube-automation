@@ -54,9 +54,10 @@ export async function tinteVideo(
   const origen =
     datos.miniatura || datos.publicaciones.find((p) => p.miniatura)?.miniatura;
   if (!origen) return null;
-  // El caché privado se crea en ejecución; no pertenece al paquete desplegable.
+  // El caché privado se crea en ejecución; no es un recurso del bundle.
   const directorio = resolve(
-    /* turbopackIgnore: true */ opciones.directorio ??
+    /* turbopackIgnore: true */
+    opciones.directorio ??
       `${rutaBase(process.env.COOPER_DATABASE_PATH ?? "./data/cooper.sqlite", process.env.COOPER_DEMO === "1")}.tintes`,
   );
   // Una configuración equivocada nunca convierte el caché en un recurso público.

@@ -8,9 +8,11 @@ import {
 export function CooperPresencia({
   size = 56,
   activo = true,
+  cederAPreview = false,
 }: {
   size?: 56 | 112;
   activo?: boolean;
+  cederAPreview?: boolean;
 }) {
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
@@ -19,59 +21,77 @@ export function CooperPresencia({
   useEffect(() => {
     const video = player.current;
     if (!video) return;
-    const previews = new Map<HTMLVideoElement, () => void>();
     const update = () => {
-      // El contenido tiene prioridad; la cara estática y el botón siguen visibles.
-      if (!activo || reduced || paused || document.hidden || previews.size) {
+      // El contenido tiene prioridad: la cara sigue presente mientras su loop
+      // cede la reproducción a una vista previa visible de la producción.
+      const previewActiva =
+        cederAPreview &&
+        [
+          ...document.querySelectorAll<HTMLVideoElement>("video.medio-preview"),
+        ].some(
+          (preview) =>
+            ((!preview.paused && !preview.ended) ||
+              preview
+                .closest("[data-preview]")
+                ?.getAttribute("data-preview") === "preparando") &&
+            preview.checkVisibility(),
+        );
+      if (!activo || reduced || paused || document.hidden || previewActiva) {
         video.pause();
-        // Retira también la capa de composición del video detenido. La imagen
-        // inferior conserva la cara sin competir con la vista previa grande.
+        // Retira también la capa de composición del video detenido; la
+        // imagen inferior conserva la cara (aporte de diseno-inicio).
         video.style.visibility = "hidden";
       } else {
         video.style.visibility = "";
         void video.play().catch(() => {});
       }
     };
-    const watch = (preview: HTMLVideoElement) => {
-      if (preview.paused || preview.ended || previews.has(preview)) return;
-      const release = () => {
-        // Una pausa encolada antes de otro play no libera un medio ya reanudado.
-        if (!preview.paused && !preview.ended && preview.readyState !== 0) return;
-        preview.removeEventListener("pause", release);
-        preview.removeEventListener("ended", release);
-        preview.removeEventListener("emptied", release);
-        previews.delete(preview);
-        update();
-      };
-      previews.set(preview, release);
-      // Directos al elemento: también liberan al desmontar el medio del carrusel.
-      preview.addEventListener("pause", release);
-      preview.addEventListener("ended", release);
-      preview.addEventListener("emptied", release);
-      update();
-    };
-    const onPlay = (event: Event) => {
+    const cambioPreview = (event: Event) => {
       if (
         event.target instanceof HTMLVideoElement &&
         event.target.matches(".medio-preview")
       )
-        watch(event.target);
+        update();
     };
-    document.querySelectorAll<HTMLVideoElement>(".medio-preview").forEach(watch);
-    document.addEventListener("play", onPlay, true);
+    // La intención llega antes de play. Las retiradas cubren la navegación,
+    // donde React puede desconectar la preview antes del evento pause.
+    const cambiosPreview = cederAPreview
+      ? new MutationObserver((records) => {
+          if (
+            records.some(
+              (record) =>
+                record.type === "attributes" ||
+                [...record.removedNodes].some(
+                  (node) =>
+                    node instanceof Element &&
+                    (node.matches(".medio-preview") ||
+                      node.querySelector(".medio-preview")),
+                ),
+            )
+          )
+            update();
+        })
+      : null;
     update();
     document.addEventListener("visibilitychange", update);
+    if (cederAPreview) {
+      for (const evento of ["play", "pause", "ended"])
+        document.addEventListener(evento, cambioPreview, true);
+      cambiosPreview?.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["data-preview"],
+      });
+    }
     return () => {
       document.removeEventListener("visibilitychange", update);
-      document.removeEventListener("play", onPlay, true);
-      for (const [preview, release] of previews) {
-        preview.removeEventListener("pause", release);
-        preview.removeEventListener("ended", release);
-        preview.removeEventListener("emptied", release);
-      }
+      for (const evento of ["play", "pause", "ended"])
+        document.removeEventListener(evento, cambioPreview, true);
+      cambiosPreview?.disconnect();
       video.pause();
     };
-  }, [activo, reduced, paused]);
+  }, [activo, reduced, paused, cederAPreview]);
   return (
     <span
       className="cooper-presencia"

@@ -4,13 +4,16 @@ import Image from "next/image";
 import {
   useEffect,
   useRef,
+  useState,
   type ButtonHTMLAttributes,
   type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
 import { useInView } from "framer-motion";
-import { useTinteVideo } from "./tinte-video";
+import type { VideoMedios } from "@/contratos/video-medios";
+import { estiloMedio, useVideoMedios } from "./portada-video";
+import { nombreMedio } from "./transiciones";
 import {
   NumeroAnimado,
   useMovimientoReducido,
@@ -57,15 +60,28 @@ export function Tarjeta({ className, ...props }: HTMLAttributes<HTMLElement>) {
   return <article {...props} className={clases("tarjeta", className)} />;
 }
 
+/** CSS puede normalizar 180ms como .18s al compilar. */
+function esperaPreview() {
+  const valor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--duracion-preview")
+    .trim();
+  const milisegundos =
+    Number.parseFloat(valor) * (valor.endsWith("ms") ? 1 : 1000);
+  return Number.isFinite(milisegundos) ? milisegundos : 180;
+}
+
 /** Un medio real o su espera. Nunca inventa una miniatura ni inicia sonido. */
 export function Medio({
-  poster,
-  preview,
+  poster: posterInicial,
+  preview: previewInicial,
   alt,
   proporcion = "horizontal",
   idCompartido,
   videoId,
   prioridad = false,
+  mediosIniciales,
+  publicacionId,
+  enCola = false,
   className,
   children,
 }: {
@@ -76,6 +92,9 @@ export function Medio({
   idCompartido?: string;
   videoId?: string;
   prioridad?: boolean;
+  mediosIniciales?: VideoMedios;
+  publicacionId?: string;
+  enCola?: boolean;
   className?: string;
   children?: ReactNode;
 }) {
@@ -85,42 +104,66 @@ export function Medio({
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
   const permitted = !reduced && !paused;
-  const tinte = useTinteVideo(videoId ?? idCompartido);
+  const [cerca, setCerca] = useState(false);
+  const [falloPoster, setFalloPoster] = useState("");
+  const medioId = videoId ?? idCompartido;
+  const medio = useVideoMedios({
+    videoId: medioId ?? "",
+    inicial: mediosIniciales,
+    publicacion: publicacionId,
+    visible: Boolean(medioId) && cerca,
+  });
+  const poster =
+    medio?.estado === "sin_medio"
+      ? undefined
+      : (medio?.poster?.origen !== "tipografico" && medio?.poster?.url) ||
+        posterInicial ||
+        medio?.poster?.url;
+  const preview = medio?.preview?.url ?? previewInicial;
+  const tinte = medio?.tinte ? estiloMedio(medio) : undefined;
+
+  useEffect(() => {
+    const element = root.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setCerca(entry.isIntersecting),
+      { rootMargin: "240px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   function stop() {
     if (timer.current) clearTimeout(timer.current);
     timer.current = null;
     video.current?.pause();
-    if (root.current) root.current.dataset.preview = "off";
+    if (root.current) {
+      root.current.dataset.preview = "off";
+      root.current.dataset.reproduciendo = "false";
+    }
   }
 
   function start() {
-    if (!permitted || !preview || timer.current) return;
-    const delay =
-      Number.parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--duracion-preview",
-        ),
-      ) || 180;
+    if (!permitted || !preview || document.hidden) return;
+    if (timer.current) clearTimeout(timer.current);
+    // La intención ya da prioridad al contenido durante la espera de 180 ms.
+    if (root.current) root.current.dataset.preview = "preparando";
     timer.current = setTimeout(() => {
       timer.current = null;
-      void video.current?.play().catch(() => {
-        /* El póster sigue disponible si no hay codec o permiso. */
-      });
-    }, delay);
+      void video.current?.play().catch(stop);
+    }, esperaPreview());
   }
 
   useEffect(() => {
     const element = root.current;
     const player = video.current;
     if (!element || !player) return;
-    let viewportTimer: ReturnType<typeof setTimeout> | undefined;
     const halt = () => {
       if (timer.current) clearTimeout(timer.current);
       timer.current = null;
-      clearTimeout(viewportTimer);
       player.pause();
       element.dataset.preview = "off";
+      element.dataset.reproduciendo = "false";
     };
     if (!permitted) halt();
     const observer = new IntersectionObserver(
@@ -129,16 +172,18 @@ export function Medio({
           halt();
           return;
         }
-        if (permitted && window.matchMedia("(hover: none)").matches) {
-          const delay =
-            Number.parseFloat(
-              getComputedStyle(document.documentElement).getPropertyValue(
-                "--duracion-preview",
-              ),
-            ) || 180;
-          viewportTimer = setTimeout(() => {
-            void player.play().catch(() => {});
-          }, delay);
+        if (
+          permitted &&
+          !document.hidden &&
+          (window.matchMedia("(max-width: 767px), (hover: none)").matches ||
+            element.matches(":hover, :focus-within"))
+        ) {
+          if (timer.current) clearTimeout(timer.current);
+          element.dataset.preview = "preparando";
+          timer.current = setTimeout(() => {
+            timer.current = null;
+            void player.play().catch(halt);
+          }, esperaPreview());
         }
       },
       { threshold: 0.65 },
@@ -160,12 +205,24 @@ export function Medio({
       ref={root}
       className={clases("medio", `medio-${proporcion}`, className)}
       data-preview="off"
+      data-video-medio={medioId}
+      data-publicacion={publicacionId}
+      data-contexto={enCola ? "cola" : undefined}
+      data-estado={
+        falloPoster ? "no_disponible" : (medio?.estado ?? "pendiente")
+      }
+      data-origen={
+        medio?.poster?.origen ?? (poster ? "miniatura" : "pendiente")
+      }
+      data-reproduciendo="false"
+      data-quieto={!permitted}
+      data-video-transition={medioId ? nombreMedio(medioId) : undefined}
       data-tinte={Boolean(tinte)}
       style={
         {
           ...tinte,
           viewTransitionName: idCompartido
-            ? `video-${idCompartido.replace(/[^a-zA-Z0-9_-]/g, "-")}`
+            ? nombreMedio(idCompartido)
             : undefined,
         } as CSSProperties
       }
@@ -174,24 +231,23 @@ export function Medio({
       onFocus={start}
       onBlur={stop}
     >
-      {poster ? (
+      {poster && falloPoster !== poster ? (
         <Image
           className="medio-poster"
           src={poster}
           alt={alt}
-          fill
-          sizes={
-            prioridad
-              ? "(max-width: 767px) 100vw, (max-width: 1536px) 90vw, 1440px"
-              : "(max-width: 767px) 100vw, 50vw"
-          }
+          width={medio?.poster?.ancho ?? 1600}
+          height={medio?.poster?.alto ?? 900}
           loading={prioridad ? "eager" : "lazy"}
           fetchPriority={prioridad ? "high" : "auto"}
+          decoding="async"
           unoptimized
+          style={medio ? { objectFit: "contain" } : undefined}
+          onError={() => setFalloPoster(poster)}
         />
       ) : (
         <div className="medio-espera">
-          <span>{alt}</span>
+          <span data-poster="tipografico">{alt}</span>
           <small>El medio aparecerá aquí</small>
         </div>
       )}
@@ -206,8 +262,18 @@ export function Medio({
           preload="none"
           aria-hidden="true"
           tabIndex={-1}
+          style={medio ? { objectFit: "contain" } : undefined}
           onPlaying={() => {
-            if (root.current) root.current.dataset.preview = "on";
+            if (root.current) {
+              root.current.dataset.preview = "on";
+              root.current.dataset.reproduciendo = "true";
+            }
+          }}
+          onPause={() => {
+            if (root.current) {
+              root.current.dataset.preview = "off";
+              root.current.dataset.reproduciendo = "false";
+            }
           }}
           onError={stop}
         />

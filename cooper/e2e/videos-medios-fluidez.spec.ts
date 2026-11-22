@@ -90,7 +90,7 @@ for (const ancho of [390, 1440])
           .locator("img")
           .evaluate((el) => (el as HTMLImageElement).naturalWidth),
       )
-      .toBe(320);
+      .toBe(720);
     if (ancho === 1440) await medio.hover();
     await expect(medio).toHaveAttribute("data-reproduciendo", "true");
     await page.mouse.move(
@@ -176,7 +176,8 @@ for (const ancho of [390, 1440])
         {
           ...estadistica,
           cpu: ancho === 390 ? 4 : 1,
-          archivoSintetico: true,
+          archivoSintetico: false,
+          procedencia: "diseno-fabrica-video/medios/procedencia.json",
           escenario: "desplazamiento real de una lista con vistas previas",
           desplazamientos,
           instrumentacion: {

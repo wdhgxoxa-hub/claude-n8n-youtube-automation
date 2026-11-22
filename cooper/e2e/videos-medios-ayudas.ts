@@ -1,53 +1,21 @@
 import { expect, type Page } from "@playwright/test";
-import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync } from "node:fs";
 import type { Estado } from "../src/servicios/datos";
 import type { VideoMedios } from "../src/contratos/video-medios";
 
 export const salida = "../evidencias-diseno";
 export const origen = "/__ensayo-medios";
-export const poster = `${origen}/medios-poster.jpg`;
+export const poster = `${origen}/medios-poster.webp`;
 const preview = `${origen}/medios-preview.mp4`;
 let mp4: Buffer;
 let jpg: Buffer;
 
 export function crearMediosDeEnsayo() {
   mkdirSync(salida, { recursive: true });
-  mkdirSync(".cache/diseno-medios", { recursive: true });
-  const archivo = ".cache/diseno-medios/preview-sintetica.mp4";
-  execFileSync("ffmpeg", [
-    "-v",
-    "error",
-    "-y",
-    "-f",
-    "lavfi",
-    "-i",
-    "testsrc2=s=320x480:r=15:d=5",
-    "-an",
-    "-c:v",
-    "libx264",
-    "-threads",
-    "1",
-    "-b:v",
-    "400k",
-    "-pix_fmt",
-    "yuv420p",
-    "-movflags",
-    "+faststart",
-    archivo,
-  ]);
-  execFileSync("ffmpeg", [
-    "-v",
-    "error",
-    "-y",
-    "-i",
-    archivo,
-    "-frames:v",
-    "1",
-    ".cache/diseno-medios/poster-sintetico.jpg",
-  ]);
-  mp4 = readFileSync(archivo);
-  jpg = readFileSync(".cache/diseno-medios/poster-sintetico.jpg");
+  // Derivados del render existente (diseno-fabrica-video); procedencia y
+  // hashes en diseno-fabrica-video/medios/procedencia.json.
+  mp4 = readFileSync("diseno-fabrica-video/medios/vista-previa-1.mp4");
+  jpg = readFileSync("diseno-fabrica-video/medios/fotograma-1.webp");
   expect(mp4.byteLength).toBeLessThanOrEqual(600000);
 }
 
@@ -71,7 +39,7 @@ export async function preparar(page: Page, retenerMedios = false) {
     version: 1,
     videoId: video.id,
     estado: "listo",
-    poster: { url: poster, origen: "render", ancho: 320, alto: 480 },
+    poster: { url: poster, origen: "render", ancho: 720, alto: 1280 },
     preview: {
       url: preview,
       mime: "video/mp4",
@@ -80,9 +48,9 @@ export async function preparar(page: Page, retenerMedios = false) {
     },
     tinte: "#997755",
     origenDimensiones: "video",
-    ancho: 320,
-    alto: 480,
-    relacionAspecto: 2 / 3,
+    ancho: 360,
+    alto: 640,
+    relacionAspecto: 9 / 16,
     actualizadoEn: Date.now(),
   };
   video.medios = {
@@ -101,16 +69,23 @@ export async function preparar(page: Page, retenerMedios = false) {
   page.on("console", (m) => {
     if (["error", "warning"].includes(m.type())) errores.push(m.text());
   });
+  await page.route("**/*", (route) => {
+    const destino = new URL(route.request().url());
+    if (["127.0.0.1", "localhost"].includes(destino.hostname))
+      return route.continue();
+    errores.push(`Petición externa bloqueada: ${destino.hostname}`);
+    return route.abort("blockedbyclient");
+  });
   let vistasPrevias = 0;
   let completos = 0;
   await page.route(`**${origen}/**`, (route) => {
     if (new URL(route.request().url()).pathname === preview) vistasPrevias++;
     if (route.request().url().endsWith("completo.mp4")) completos++;
     return route.fulfill({
-      contentType: route.request().url().endsWith(".jpg")
-        ? "image/jpeg"
+      contentType: route.request().url().endsWith(".webp")
+        ? "image/webp"
         : "video/mp4",
-      body: route.request().url().endsWith(".jpg") ? jpg : mp4,
+      body: route.request().url().endsWith(".webp") ? jpg : mp4,
     });
   });
   await page.route("**/api/estado", (route) => route.fulfill({ json: estado }));

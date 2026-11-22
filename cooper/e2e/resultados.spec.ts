@@ -432,6 +432,10 @@ test("el montaje real se reproduce y sustituye la maqueta; galería y embeds usa
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).currentTime))
     .toBeGreaterThan(0.1);
   expect(solicitudesVideo).toBeGreaterThan(0);
+  await expect(page.getByAltText("Imagen de la escena 1")).toBeHidden();
+  await page
+    .getByText("Piezas de la historia y publicaciones", { exact: true })
+    .click();
   await expect(page.getByLabel("Clip de la escena 1")).toHaveAttribute(
     "poster",
     "https://media.example.test/ensayo.png",

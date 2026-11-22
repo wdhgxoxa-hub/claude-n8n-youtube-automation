@@ -1,0 +1,850 @@
+{
+  "version": 3,
+  "mision": "diseno-fabrica-video",
+  "revisor": "Codex / subagente fabrica",
+  "revisado_en_lima": "2026-11-21T23:28:36.010821-05:00",
+  "ancho_solicitado": 360,
+  "alcance": "Revisión visual individual de las30 imágenes finales de15 estados pertinentes: página completa y primer viewport. Combinación no exhaustiva de estados; la aprobación corresponde sólo a su composición visual y no equivale a aceptación de Claude ni verificación de interacción/reproducción/rendimiento.",
+  "estado": "aprobado_con_limitaciones",
+  "conteo": {
+    "pantallas": 15,
+    "imagenes": 30,
+    "pendiente_reproductor_visible": 0
+  },
+  "matriz_origen": {
+    "archivo": "evidencias-diseno/fabrica-video-360.json",
+    "sha256": "f4c20aae3d889fb30274bddd28837a6c6c9e0235479665796992afdf8ab36521",
+    "modificado_en_lima": "2026-11-21T23:24:39.518802-05:00",
+    "estados": 15,
+    "errores_reportados": []
+  },
+  "pruebas_ejecutadas_en_esta_revision": [],
+  "hallazgos_resueltos": [
+    "Spinner ausente en todos los reproductores inspeccionados, incluida Aprobación360.",
+    "Cierre X de Corregir y Programar alineado a la derecha.",
+    "Pausa, cancelación y vacíos de Métricas/Lecciones ahora tienen evidencia visual individual."
+  ],
+  "pendientes": [],
+  "autocritica": "La Fábrica muestra un fotograma en la vista inicial, pero el título de la primera cápsula queda bajo el pliegue y las doce estaciones requieren desplazamiento interior. La portada horizontal conserva medios verticales con bandas amplias y un sujeto pequeño. En detalle, el medio domina la vista y desplaza acciones/pestañas; las etapas finales se consultan con desplazamiento horizontal. El póster de guion contiene texto parcialmente cortado en su borde superior. Los vacíos son claros y no inventan datos; la cancelación podría reducir más la prominencia de Aprobar deshabilitado. No se detectaron elementos fijos duplicados ni desbordamiento de página.",
+  "imagenes": [
+    {
+      "archivo": "evidencias-diseno/fabrica-360.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2180
+      },
+      "sha256": "0c1819af31a21a12bb329f2ac844e2bd4bb0d67a876e5d123b587adf47e85b3d",
+      "capturada_archivo_lima": "2026-11-21T23:23:40.668243-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Jerarquía clara de título, acción Pedir video, filtros y cifras; la cápsula de aprobación tiene canal, título y estado íntegros.",
+        "Carril vertical alineado con estaciones numeradas; su borde inferior deja ver parcialmente la etapa siguiente y conserva flechas de recorrido.",
+        "El feed conserva hora relativa, descripción y enlace legibles, con separación consistente entre sucesos.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Recorrer todas las estaciones requiere desplazamiento dentro del carril, además del desplazamiento de página.",
+        "El título de la primera cápsula queda bajo el primer viewport.",
+        "La portada16:9 conserva el fotograma vertical con bandas amplias; el sujeto ocupa una franja estrecha."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-360-viewport.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "e34def663c507e69dae50ccb61e5bb95a1c7a02c2b498788314100b1e13f3016",
+      "capturada_archivo_lima": "2026-11-21T23:23:40.616242-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El primer fotograma entra en la vista inicial bajo la estación04 y las cifras.",
+        "Título y estado de la cápsula quedan bajo el pliegue; la barra móvil y el orbe aparecen una sola vez.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "Recorrer todas las estaciones requiere desplazamiento dentro del carril, además del desplazamiento de página.",
+        "El título de la primera cápsula queda bajo el primer viewport.",
+        "La portada16:9 conserva el fotograma vertical con bandas amplias; el sujeto ocupa una franja estrecha."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-360.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2778
+      },
+      "sha256": "9e314f48609f32754533e0fbd6d8bd36dd3a7719aff49cf8dca3c51dfc45f74f",
+      "capturada_archivo_lima": "2026-11-21T23:23:41.759253-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Formulario contextual completo, con campos alineados, foco naranja del selector Canal y acciones Enviar a la fábrica/Cancelar sin recorte.",
+        "La producción y el feed permanecen debajo del formulario con su jerarquía conservada.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "La última selección y las acciones finales requieren desplazamiento.",
+        "La imagen no verifica teclado virtual ni envío del formulario."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-360-viewport.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "61cf061cb5d2210eb5e39564797cd7b6acb188b74e2b4dc5355d41ebd8692f26",
+      "capturada_archivo_lima": "2026-11-21T23:23:41.691253-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Canal, idea, presentador y voz son legibles; el campo inicial conserva foco visible.",
+        "La barra móvil se superpone al borde inferior del formulario; el resto se verifica en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "La última selección y las acciones finales requieren desplazamiento.",
+        "La imagen no verifica teclado virtual ni envío del formulario."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-360.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 1041
+      },
+      "sha256": "a2dce582ad6768b81ce132b826628578c86a703ab422331bd27853841619529f",
+      "capturada_archivo_lima": "2026-11-21T23:24:39.514802-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Mensaje vacío centrado, breve y legible; Pedir video permanece como única acción principal.",
+        "El espacio libre es amplio y no se inventan miniaturas, cifras ni eventos.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Composición deliberadamente sobria y extensa; la captura no acredita creación de un video."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-360-viewport.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "7aa6968a89ec13ba6c41662ea569697f059a7d95282b87dfdcfe9af287178f4d",
+      "capturada_archivo_lima": "2026-11-21T23:24:39.465802-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Mensaje y acción caben en la vista inicial; barra inferior y orbe no se duplican ni cubren el mensaje.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "Composición deliberadamente sobria y extensa; la captura no acredita creación de un video."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-360.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2774
+      },
+      "sha256": "c08b7c1bbcd4b8b77896231a02a521768a4a88d0e13025d27038aa447589fe2e",
+      "capturada_archivo_lima": "2026-11-21T23:23:47.448308-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma real y controles nativos nítidos, sin arco de carga; título display y estado Montaje se leen completos.",
+        "Aprobar se distingue como deshabilitado; las acciones secundarias y el guion mantienen orden y alineación.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-360-viewport.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "13072bb0b1e9f02caa674dd2a9d91509a24a0ea9f4406a3243dd6f270503d911",
+      "capturada_archivo_lima": "2026-11-21T23:23:47.336307-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El medio domina la vista inicial; controles nativos visibles y ausencia de spinner confirmada.",
+        "El orbe y la barra permanecen por debajo del área principal de reproducción.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-360.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2847
+      },
+      "sha256": "9d33b46d2058f72114a7f871cc44b9f3cec351cdfdefe58ab3b972fe87300123",
+      "capturada_archivo_lima": "2026-11-21T23:23:53.046361-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Póster fotográfico y aviso explícito de archivo todavía no disponible; no se finge un reproductor activo.",
+        "Aprobación de guion, Aprobar y guion de trabajo tienen jerarquía clara.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El texto incrustado del fotograma se corta en el borde superior; no se atribuye su causa sin revisar el original.",
+        "El aviso de indisponibilidad queda junto al borde inferior ocupado por la barra a360px y bajo el primer viewport a390px.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-360-viewport.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "40fc1f3891ba156294d76042f1dbb6e947af0ee33aa076ac856138c96cc449aa",
+      "capturada_archivo_lima": "2026-11-21T23:23:52.940360-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Póster nítido, sin icono de reproducción ni carga; el texto incrustado en su borde superior aparece parcialmente cortado.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "El texto incrustado del fotograma se corta en el borde superior; no se atribuye su causa sin revisar el original.",
+        "El aviso de indisponibilidad queda junto al borde inferior ocupado por la barra a360px y bajo el primer viewport a390px.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-360.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2744
+      },
+      "sha256": "a516344fd5891dfe71172c5151f02704d0fff03c6caaaaf856b6d531788dde64",
+      "capturada_archivo_lima": "2026-11-21T23:23:58.612414-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor estable sin indicador de carga, título completo y estado Aprobación final claramente diferenciados.",
+        "Aprobar concentra el acento; Pedir cambios/Programar mantienen una fila secundaria y el guion no presenta colisiones.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-360-viewport.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "0f911ef967827e7cf52fc5960878fdb78f6771c5b3b5a49da932c024cddcbafe",
+      "capturada_archivo_lima": "2026-11-21T23:23:58.514413-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma completo y controles nativos claros; el spinner que existía en la revisión anterior de360px ya no aparece.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-360.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2871
+      },
+      "sha256": "4866901b00c9158191edcf4acba13253254e22af88b219b8afcbc7122c777bcc",
+      "capturada_archivo_lima": "2026-11-21T23:24:04.213467-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Estado Publicado y mensaje de respuesta de audiencia legibles; título, guion y notas mantienen ritmo vertical.",
+        "La reproducción está disponible y las acciones no disponibles se distinguen visualmente.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-360-viewport.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "5ccdf24df1833f4a07f68770694f6a075b4fbc0511be3e62b08939456efc4423",
+      "capturada_archivo_lima": "2026-11-21T23:24:04.115466-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma y controles nativos estables, sin spinner; subtítulo del medio visible e íntegro.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-360.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2188
+      },
+      "sha256": "4d85737e681a938eb7abb85409323d5cd8919beb1e2f28de1fdd0e6721fea6c0",
+      "capturada_archivo_lima": "2026-11-21T23:24:07.808501-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Métricas seleccionada con claridad; cuatro cifras en dos columnas, etiquetas completas y sin colisiones.",
+        "Red y fecha de medición dan contexto a vistas, me gusta, comentarios y retención.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "La evidencia estática no acredita la animación de los contadores.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-360-viewport.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "5ccdf24df1833f4a07f68770694f6a075b4fbc0511be3e62b08939456efc4423",
+      "capturada_archivo_lima": "2026-11-21T23:24:07.717501-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El primer viewport conserva el reproductor; la pestaña y las cifras están más abajo y se evalúan en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "La evidencia estática no acredita la animación de los contadores.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-360.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2246
+      },
+      "sha256": "5223c7d2fa77abac12a8b80003879822ac78bf8f6684b234d174057d8a4c579d",
+      "capturada_archivo_lima": "2026-11-21T23:24:11.341535-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Lecciones, índice01 y titular display organizan el contenido con buena jerarquía.",
+        "Hipótesis por contrastar, Qué observamos y Qué cambia son legibles y no se presentan como causalidad demostrada.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-360-viewport.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "5ccdf24df1833f4a07f68770694f6a075b4fbc0511be3e62b08939456efc4423",
+      "capturada_archivo_lima": "2026-11-21T23:24:11.267820-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor estable en la vista inicial; la lección seleccionada está más abajo y se verifica en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-360.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 3138
+      },
+      "sha256": "362bd8a499dc496e39558d0bc24a1c2efcc14f2c581bbabaea2f36d94e5e97df",
+      "capturada_archivo_lima": "2026-11-21T23:24:17.013589-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Hoja contextual íntegra con cierre X alineado a la derecha, título, textarea enfocado y Enviar cambios sin recortes.",
+        "La hoja conserva contexto tras las acciones principales y antes del recorrido.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "La imagen no acredita envío ni comportamiento del teclado virtual.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-360-viewport.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "0f911ef967827e7cf52fc5960878fdb78f6771c5b3b5a49da932c024cddcbafe",
+      "capturada_archivo_lima": "2026-11-21T23:24:16.931588-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Medio estable y sin spinner; el formulario abierto queda fuera del primer viewport y se revisa en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "La imagen no acredita envío ni comportamiento del teclado virtual.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-360.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 3154
+      },
+      "sha256": "6e9ca3ab629617bd93ccf8e8a7cf3f0921c02c02073581cb104d49061460b2f7",
+      "capturada_archivo_lima": "2026-11-21T23:24:20.613623-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Hoja contextual con cierre X a la derecha, fecha/hora local enfocada y botón de programación completos.",
+        "El texto explica que la publicación espera ambas aprobaciones y usa la zona horaria del dispositivo.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El control nativo muestra mm/dd/yyyy según la configuración de este navegador.",
+        "La imagen no acredita programación real ni teclado virtual.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-360-viewport.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "0f911ef967827e7cf52fc5960878fdb78f6771c5b3b5a49da932c024cddcbafe",
+      "capturada_archivo_lima": "2026-11-21T23:24:20.515622-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor estable y sin spinner; la hoja de programación aparece más abajo en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "El control nativo muestra mm/dd/yyyy según la configuración de este navegador.",
+        "La imagen no acredita programación real ni teclado virtual.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-360.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2774
+      },
+      "sha256": "1e946cf1bf003780abf7623cbfaa8733fce67d3b04d5cf3d2cdfc1ae6a0be897",
+      "capturada_archivo_lima": "2026-11-21T23:24:26.257891-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Etiqueta En pausa visible bajo el título; guion y notas permanecen legibles y el medio disponible no pierde su encuadre.",
+        "Aprobar está visualmente deshabilitado, mientras las acciones secundarias conservan su tratamiento.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Esta captura identifica la pausa, pero no aporta su causa ni una acción de reanudación.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-360-viewport.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "13072bb0b1e9f02caa674dd2a9d91509a24a0ea9f4406a3243dd6f270503d911",
+      "capturada_archivo_lima": "2026-11-21T23:24:26.170676-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor estable sin spinner; la etiqueta de pausa queda debajo del primer viewport.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "Esta captura identifica la pausa, pero no aporta su causa ni una acción de reanudación.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-360.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2702
+      },
+      "sha256": "7955b63d16d8d34e30945fa440963f5f26afe61d98d7c75d446ed5d3d15f04f2",
+      "capturada_archivo_lima": "2026-11-21T23:24:30.525717-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Etiqueta Cancelado y explicación de que la producción ya no admite cambios son claras.",
+        "Las tres acciones aparecen deshabilitadas; guion y notas siguen disponibles como lectura.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Aprobar conserva gran presencia cromática aun deshabilitado; es una oportunidad de afinar la jerarquía del estado cancelado.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-360-viewport.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "13072bb0b1e9f02caa674dd2a9d91509a24a0ea9f4406a3243dd6f270503d911",
+      "capturada_archivo_lima": "2026-11-21T23:24:30.449717-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El medio continúa visible y estable; el estado cancelado se encuentra más abajo en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "Aprobar conserva gran presencia cromática aun deshabilitado; es una oportunidad de afinar la jerarquía del estado cancelado.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-360.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2261
+      },
+      "sha256": "1846760d9a0012db9ac7f313ce4c4b3ffb16c5180a68e121c2e7769435591b7d",
+      "capturada_archivo_lima": "2026-11-21T23:24:34.282753-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Métricas seleccionada y vacío editorial Después del estreno/La historia sigue con tu audiencia legibles, sin cifras ficticias.",
+        "El texto explica cuándo aparecerán vistas, respuesta y retención; el aviso de video no disponible se conserva.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Se conserva el texto parcialmente cortado dentro del fotograma de guion.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-360-viewport.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "40fc1f3891ba156294d76042f1dbb6e947af0ee33aa076ac856138c96cc449aa",
+      "capturada_archivo_lima": "2026-11-21T23:24:34.190752-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Póster sin reproducción disponible; el vacío de Métricas queda bajo el primer viewport y se verifica completo en la otra imagen.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "Se conserva el texto parcialmente cortado dentro del fotograma de guion.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-360.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 2284
+      },
+      "sha256": "6fbfbf808c2741d436c0948d4762cc5d9e76512c6add15cca0c3912758b4d7fb",
+      "capturada_archivo_lima": "2026-11-21T23:24:37.833999-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Lecciones seleccionada y vacío Todavía estamos escuchando con titular y explicación íntegros.",
+        "El mensaje evita inventar aprendizajes y mantiene aire coherente con el resto del detalle.",
+        "Captura nativa de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "Se conserva el texto parcialmente cortado dentro del fotograma de guion.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-360-viewport.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 360,
+        "alto": 900
+      },
+      "sha256": "40fc1f3891ba156294d76042f1dbb6e947af0ee33aa076ac856138c96cc449aa",
+      "capturada_archivo_lima": "2026-11-21T23:24:37.744786-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Póster estable; el mensaje de Lecciones está fuera del primer viewport y se revisa en la captura completa.",
+        "Primer viewport con orbe y barra móvil reales, sin duplicaciones."
+      ],
+      "limitaciones": [
+        "Se conserva el texto parcialmente cortado dentro del fotograma de guion.",
+        "El protagonismo del medio desplaza título, acciones y pestañas bajo el primer viewport.",
+        "La pista de etapas requiere desplazamiento horizontal para ver las estaciones finales."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    }
+  ]
+}

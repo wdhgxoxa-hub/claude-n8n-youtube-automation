@@ -9,27 +9,11 @@ export function Transiciones() {
   const path = usePathname();
   const reduced = useMovimientoReducido();
   const resolver = useRef<(() => void) | null>(null);
+  const cancelarEspera = useRef<(() => void) | null>(null);
   useEffect(() => {
-    // Next puede cambiar el pathname mientras Suspense aún muestra loading.tsx.
-    // La nueva captura debe contener la página, no el esqueleto que la precede.
-    const finalizar = () => {
-      if (document.querySelector("[data-ruta-cargando]")) return;
-      resolver.current?.();
-      resolver.current = null;
-      observer.disconnect();
-    };
-    const observer = new MutationObserver(finalizar);
-    if (resolver.current) {
-      observer.observe(document.getElementById("contenido") ?? document.body, {
-        childList: true,
-        subtree: true,
-      });
-      finalizar();
-    }
-    return () => observer.disconnect();
+    resolver.current?.();
   }, [path]);
   useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined;
     const click = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -60,32 +44,84 @@ export function Transiciones() {
         return;
       event.preventDefault();
       // Solo la miniatura activada toma el nombre; evita duplicados de un mismo video.
-      const thumbnail = link.querySelector<HTMLElement>(
-        "[data-video-transition]",
-      );
+      const videoPath = /^\/videos\/([^/]+)$/.exec(url.pathname);
+      const targetName = videoPath
+        ? nombreMedio(decodeURIComponent(videoPath[1]))
+        : undefined;
+      const thumbnail =
+        link.querySelector<HTMLElement>("[data-video-transition]") ??
+        // El título y la miniatura de Publicados son enlaces distintos al mismo video.
+        (targetName
+          ? Array.from(
+              document.querySelectorAll<HTMLElement>("[data-video-transition]"),
+            ).find(
+              (element) =>
+                element.dataset.videoTransition === targetName &&
+                element.getClientRects().length > 0,
+            )
+          : undefined);
       if (thumbnail)
         thumbnail.style.viewTransitionName =
           thumbnail.dataset.videoTransition ?? "";
+      cancelarEspera.current?.();
       const transition = document.startViewTransition(
         () =>
           new Promise<void>((resolve) => {
-            resolver.current = resolve;
+            const terminar = () => {
+              observer.disconnect();
+              clearTimeout(timeout);
+              if (resolver.current === comprobar) resolver.current = null;
+              if (cancelarEspera.current === terminar)
+                cancelarEspera.current = null;
+              resolve();
+            };
+            const comprobar = () => {
+              if (location.pathname !== url.pathname) return;
+              // Conserva la espera de Suspense incorporada por diseno-base.
+              if (document.querySelector("[data-ruta-cargando]")) return;
+              // Next puede actualizar el pathname antes de insertar el segmento
+              // del detalle. Solo fotografiamos cuando su medio ya tiene caja.
+              if (
+                targetName &&
+                !Array.from(
+                  document.querySelectorAll<HTMLElement>(
+                    '[style*="view-transition-name"]',
+                  ),
+                ).some(
+                  (element) =>
+                    element !== thumbnail &&
+                    element.style.viewTransitionName === targetName &&
+                    element.getClientRects().length > 0 &&
+                    getComputedStyle(element).visibility !== "hidden",
+                )
+              )
+                return;
+              terminar();
+            };
+            const observer = new MutationObserver(comprobar);
+            observer.observe(document.body, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              attributeFilter: ["style", "class", "hidden"],
+            });
+            const timeout = setTimeout(terminar, 4000);
+            resolver.current = comprobar;
+            cancelarEspera.current = terminar;
             router.push(url.pathname + url.search + url.hash);
-            timeout = setTimeout(resolve, 4000);
+            comprobar();
           }),
       );
       void transition.finished
         .catch(() => {})
         .finally(() => {
-          clearTimeout(timeout);
           if (thumbnail) thumbnail.style.viewTransitionName = "";
         });
     };
     document.addEventListener("click", click, true);
     return () => {
       document.removeEventListener("click", click, true);
-      resolver.current?.();
-      clearTimeout(timeout);
+      cancelarEspera.current?.();
     };
   }, [router, reduced]);
   return null;

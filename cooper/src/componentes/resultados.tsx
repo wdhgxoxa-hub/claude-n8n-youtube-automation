@@ -5,7 +5,6 @@ import Link from "next/link";
 import { api, Heading, Empty, useEspacio } from "./espacio";
 import { Medio } from "./primitivas";
 import { nombreMedio } from "./transiciones";
-import { PortadaVideo } from "./portada-video";
 import {
   fecha,
   numero,
@@ -271,24 +270,45 @@ export function Publicados({ initial }: { initial: Resultados }) {
                   >
                     <div
                       data-video-transition={
-                        video ? nombreMedio(video.id) : undefined
+                        primero.tipo === "video"
+                          ? nombreMedio(
+                              primero.videoId ??
+                                video?.id ??
+                                decodeURIComponent(
+                                  primero.href.split("/").at(-1) ?? "",
+                                ),
+                            )
+                          : undefined
                       }
                     >
-                      {primero.tipo === "video" ? (
-                        <PortadaVideo
-                          videoId={
-                            primero.videoId ??
-                            decodeURIComponent(
-                              primero.href.split("/").at(-1) ?? "",
-                            )
-                          }
-                          titulo={primero.titulo}
-                          inicial={primero.medios}
-                          publicacion={primero.publicacion.id}
-                        />
-                      ) : (
-                        <Medio alt="Miniatura pendiente" />
-                      )}
+                      <Medio
+                        videoId={
+                          primero.tipo === "video"
+                            ? (primero.videoId ?? video?.id)
+                            : undefined
+                        }
+                        mediosIniciales={
+                          primero.tipo === "video" ? primero.medios : undefined
+                        }
+                        publicacionId={
+                          primero.tipo === "video"
+                            ? primero.publicacion.id
+                            : undefined
+                        }
+                        poster={
+                          primero.tipo === "video"
+                            ? primero.medios?.poster?.url ||
+                              primero.publicacion.miniatura ||
+                              undefined
+                            : undefined
+                        }
+                        preview={
+                          primero.tipo === "video"
+                            ? primero.medios?.preview?.url
+                            : undefined
+                        }
+                        alt={primero.titulo}
+                      />
                     </div>
                   </Link>
                   <div>

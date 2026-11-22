@@ -1,89 +1,101 @@
 "use client";
-import { nombreMedio } from "./transiciones";
 import { useState } from "react";
 import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
 import { enlaceIncrustado } from "@/lib/enlaces-medios";
 import type { VideoMedios } from "@/contratos/video-medios";
 import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
-import styles from "./portada-video.module.css";
+import { nombreMedio } from "./transiciones";
+import { Medio } from "./primitivas";
 export function MediosVideo({
   videoId = "",
   datos,
   titulo,
   inicial,
+  seccion = "todo",
 }: {
   videoId?: string;
   datos: Observabilidad;
   titulo: string;
   inicial?: VideoMedios;
+  seccion?: "todo" | "reproductor" | "recursos";
 }) {
   const [fallo, setFallo] = useState(false);
   const medio = useVideoMedios({ videoId, inicial, visible: Boolean(videoId) });
   const [proporcion] = useState(inicial?.relacionAspecto ?? 16 / 9);
   return (
     <>
-      {datos.montaje ? (
-        <section
-          className={`real-player ${styles.reproductor}`}
-          style={{
-            ...estiloMedio(medio, proporcion),
-            viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
-          }}
+      {seccion !== "recursos" && (
+        <div
+          className="halo-medio"
           data-tinte={Boolean(medio?.tinte)}
-          aria-label="Video terminado"
+          style={estiloMedio(medio, proporcion)}
         >
-          <video
-            key={datos.montaje}
-            controls
-            playsInline
-            preload="none"
-            poster={
-              (medio?.poster?.origen !== "tipografico" && medio?.poster?.url) ||
-              datos.miniatura ||
-              medio?.poster?.url ||
-              undefined
-            }
-            src={datos.montaje}
-            width={inicial?.ancho ?? 1600}
-            height={inicial?.alto ?? 900}
-            onError={() => setFallo(true)}
-            onLoadedData={() => setFallo(false)}
-            aria-label={`Video terminado: ${titulo}`}
-          />
-          <div className="player-caption">
-            <strong>Video terminado</strong>
-            <a href={datos.montaje} target="_blank" rel="noreferrer">
-              Abrir video
-            </a>
-          </div>
-          {fallo && (
-            <p role="status">
-              No se pudo cargar el video. Prueba el enlace o vuelve a intentarlo
-              más tarde.
-            </p>
+          {datos.montaje ? (
+            <section
+              className="real-player"
+              style={{
+                viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+              }}
+              aria-label="Video terminado"
+            >
+              <video
+                key={datos.montaje}
+                controls
+                playsInline
+                preload="none"
+                poster={
+                  (medio?.poster?.origen !== "tipografico" &&
+                    medio?.poster?.url) ||
+                  datos.miniatura ||
+                  medio?.poster?.url ||
+                  undefined
+                }
+                src={datos.montaje}
+                width={inicial?.ancho ?? 1600}
+                height={inicial?.alto ?? 900}
+                style={{ aspectRatio: proporcion, objectFit: "contain" }}
+                onError={() => setFallo(true)}
+                onLoadedData={() => setFallo(false)}
+                aria-label={`Video terminado: ${titulo}`}
+              />
+              <div className="player-caption">
+                <strong>Video terminado</strong>
+                <a href={datos.montaje} target="_blank" rel="noreferrer">
+                  Abrir video
+                </a>
+              </div>
+              {fallo && (
+                <p role="status">
+                  No se pudo cargar el video. Prueba el enlace o vuelve a
+                  intentarlo más tarde.
+                </p>
+              )}
+            </section>
+          ) : (
+            <section
+              className="real-player"
+              style={{
+                viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+              }}
+              aria-label="Portada del video"
+            >
+              {videoId ? (
+                <PortadaVideo
+                  videoId={videoId}
+                  titulo={titulo}
+                  inicial={medio}
+                  protagonista
+                />
+              ) : (
+                <Medio alt={titulo} />
+              )}
+              <p>El archivo del video todavía no está disponible aquí.</p>
+            </section>
           )}
-        </section>
-      ) : (
-        <section
-          className={`real-player ${styles.reproductor}`}
-          style={{
-            ...estiloMedio(medio, proporcion),
-            viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
-          }}
-          data-tinte={Boolean(medio?.tinte)}
-          aria-label="Portada del video"
-        >
-          <PortadaVideo
-            videoId={videoId}
-            titulo={titulo}
-            inicial={medio}
-            protagonista
-          />
-          <p>El archivo del video todavía no está disponible aquí.</p>
-        </section>
+        </div>
       )}
-      {datos.escenas.length > 0 && (
+      {seccion !== "reproductor" && datos.escenas.length > 0 && (
         <section className="scene-gallery" aria-label="Piezas por escena">
           <h2>Piezas por escena</h2>
           <div className="scene-grid">
@@ -126,7 +138,7 @@ export function MediosVideo({
           </div>
         </section>
       )}
-      {datos.publicaciones.length > 0 && (
+      {seccion !== "reproductor" && datos.publicaciones.length > 0 && (
         <section className="published-players" aria-label="Videos publicados">
           <h2>En las redes</h2>
           {datos.publicaciones.map((p) => {

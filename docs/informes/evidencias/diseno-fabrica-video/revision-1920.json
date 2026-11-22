@@ -1,0 +1,895 @@
+{
+  "version": 3,
+  "mision": "diseno-fabrica-video",
+  "revisor": "Codex / subagente fabrica",
+  "registrado_por": "Codex / subagente fabrica",
+  "revisado_en_lima": "2026-11-21T23:45:28.413214-05:00",
+  "ancho_solicitado": 1920,
+  "alcance": "Revisión visual individual con view_image de las 30 imágenes finales de 15 estados pertinentes: página completa y primer viewport. Combinación no exhaustiva de estados; la aprobación corresponde sólo a su composición visual y no equivale a aceptación de Claude ni a verificación de interacción, reproducción, rendimiento o puerta común.",
+  "estado": "aprobado_con_limitaciones",
+  "conteo": {
+    "pantallas": 15,
+    "imagenes": 30,
+    "pendiente_recaptura": 0,
+    "pendiente_reproductor_visible": 0
+  },
+  "matriz_origen": {
+    "archivo": "evidencias-diseno/fabrica-video-1920.json",
+    "sha256": "5c88e5ec7d06708c1b2c953d208d98f7975451e9a7f2b413b51ffc76baf48be8",
+    "modificado_en_lima": "2026-11-21T23:29:24.375459-05:00",
+    "estados": 15,
+    "errores_reportados": []
+  },
+  "pruebas_ejecutadas_en_esta_revision": [],
+  "hallazgos_resueltos": [
+    "Ningún reproductor inspeccionado presenta spinner.",
+    "Los cierres X de Corregir y Programar están alineados a la derecha.",
+    "Pausa, cancelación y vacíos cuentan con evidencia visual individual."
+  ],
+  "pendientes": [],
+  "autocritica": "El ancho máximo centra la composición y deja márgenes generosos. Medio, título y acciones comparten el primer viewport de detalle; las etapas, pestañas y hojas quedan más abajo. La Fábrica exige desplazamiento horizontal interior y el título de la primera cápsula queda bajo el pliegue inicial. Los retratos con bandas reducen el área fotográfica útil y el halo apenas se percibe. El póster de guion contiene texto cortado arriba. Pausa comunica el estado sin explicar causa o reanudación; cancelación conserva demasiado peso en Aprobar deshabilitado. Los vacíos explican la ausencia de datos sin inventarlos. No se observan desbordamientos de página ni capas fijas duplicadas.",
+  "imagenes": [
+    {
+      "archivo": "evidencias-diseno/fabrica-1920.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1394
+      },
+      "sha256": "e4bea28161d7001c1523ee6d2a1173911a3087a4e33f23a795d8a407ca51417e",
+      "capturada_archivo_lima": "2026-11-21T23:28:24.879910-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Título display, acción Pedir video y filtros mantienen una jerarquía clara dentro del ancho máximo centrado.",
+        "El mapa de doce estaciones y el feed lateral están alineados; el carril inicial muestra las estaciones ocupadas 04 y 08 y parte de 10.",
+        "Las horas relativas y los títulos del feed se leen sin solaparse.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "La pista sólo muestra parte de las doce estaciones; necesita desplazamiento horizontal interior.",
+        "Las portadas horizontales conservan medios verticales con bandas amplias y sujetos estrechos.",
+        "El cuerpo y título de la primera cápsula quedan bajo el pliegue inicial."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1920-viewport.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "2db285e7e5877c30161bf8096d4e93669c4c9a3cd5fab40af27157ed6662804e",
+      "capturada_archivo_lima": "2026-11-21T23:28:24.782909-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Título display, acción Pedir video y filtros mantienen una jerarquía clara dentro del ancho máximo centrado.",
+        "El mapa de doce estaciones y el feed lateral están alineados; el carril inicial muestra las estaciones ocupadas 04 y 08 y parte de 10.",
+        "Las horas relativas y los títulos del feed se leen sin solaparse.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "La pista sólo muestra parte de las doce estaciones; necesita desplazamiento horizontal interior.",
+        "Las portadas horizontales conservan medios verticales con bandas amplias y sujetos estrechos.",
+        "El cuerpo y título de la primera cápsula quedan bajo el pliegue inicial."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1920.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1829
+      },
+      "sha256": "850da555e4743a6c2786b07457fa30f9e297ecafae2dfb7d31ef2df7cd3f6631",
+      "capturada_archivo_lima": "2026-11-21T23:28:26.083921-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El formulario se integra entre el encabezado y los filtros; campos, etiquetas y botones conservan alineación y separación.",
+        "La selección de canal muestra foco visible; el campo de idea aprovecha la columna amplia.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El formulario desplaza el carril de producción por debajo del primer viewport.",
+        "El reparto de columnas deja aire libre a la derecha de los campos cortos."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1920-viewport.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "2518c40e28ee15ed853acce5d3ca56ad95f11c9d60f104973400d1ec6dd7d8e6",
+      "capturada_archivo_lima": "2026-11-21T23:28:25.975920-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El formulario se integra entre el encabezado y los filtros; campos, etiquetas y botones conservan alineación y separación.",
+        "La selección de canal muestra foco visible; el campo de idea aprovecha la columna amplia.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El formulario desplaza el carril de producción por debajo del primer viewport.",
+        "El reparto de columnas deja aire libre a la derecha de los campos cortos."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1920.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 925
+      },
+      "sha256": "a453b9b72e2082dc661ec1ab697a364dda6147fb13a83b0eb82814548e04bbd3",
+      "capturada_archivo_lima": "2026-11-21T23:29:24.369459-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El estado vacío centra un mensaje claro y conserva la acción Pedir video arriba a la derecha.",
+        "El espacio libre comunica ausencia de producciones sin añadir cifras ni cápsulas ficticias.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El vacío ocupa mucho espacio deliberadamente; no representa estados de error o filtrado sin resultados."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1920-viewport.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "b189975c36a34af996d80f47c50647e315718e62cdbf179e6c7f1ee54464ca2f",
+      "capturada_archivo_lima": "2026-11-21T23:29:24.319459-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El estado vacío centra un mensaje claro y conserva la acción Pedir video arriba a la derecha.",
+        "El espacio libre comunica ausencia de producciones sin añadir cifras ni cápsulas ficticias.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El vacío ocupa mucho espacio deliberadamente; no representa estados de error o filtrado sin resultados."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1920.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1876
+      },
+      "sha256": "3bb056603966eaf2f37938173810a58ec354c4d1007c939cff6ce262015c926b",
+      "capturada_archivo_lima": "2026-11-21T23:28:31.778974-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El reproductor y el título en tres líneas forman dos columnas proporcionadas.",
+        "El estado Montaje y las tres acciones se leen completos junto al medio.",
+        "La vista completa muestra las doce etapas y el guion con notas de producción en una segunda columna.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "Aprobar deshabilitado conserva más peso visual que los controles secundarios."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1920-viewport.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "0b308175243909a25f1b7579ac1e2f8bef3a4544006b4ac6e79bdb6779a33a08",
+      "capturada_archivo_lima": "2026-11-21T23:28:31.655973-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El reproductor y el título en tres líneas forman dos columnas proporcionadas.",
+        "El estado Montaje y las tres acciones se leen completos junto al medio.",
+        "La vista completa muestra las doce etapas y el guion con notas de producción en una segunda columna.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "Aprobar deshabilitado conserva más peso visual que los controles secundarios."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1920.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1980
+      },
+      "sha256": "3e2fb2deb541479ff3e5efaad4607e100749fd6ab06bb93888dc2e974374024c",
+      "capturada_archivo_lima": "2026-11-21T23:28:35.534009-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El póster fotográfico domina la columna izquierda, con aviso explícito de archivo de video todavía no disponible.",
+        "Aprobación de guion, el título y la acción Aprobar están destacados junto al póster.",
+        "La vista completa conserva la etapa 04 y el guion con apertura, desarrollo y cierre.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "El texto incrustado en el borde superior del póster aparece parcialmente cortado; esta captura no permite atribuirlo al medio de origen o a su ajuste."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1920-viewport.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "879bbe3e1f794e5f7999995b10bc577506ca3153bb6863b1d3a7dd668f0a69db",
+      "capturada_archivo_lima": "2026-11-21T23:28:35.411008-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "El póster fotográfico domina la columna izquierda, con aviso explícito de archivo de video todavía no disponible.",
+        "Aprobación de guion, el título y la acción Aprobar están destacados junto al póster.",
+        "La vista completa conserva la etapa 04 y el guion con apertura, desarrollo y cierre.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "El texto incrustado en el borde superior del póster aparece parcialmente cortado; esta captura no permite atribuirlo al medio de origen o a su ajuste."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1920.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1888
+      },
+      "sha256": "df308c390e1be22b9b73ab6f0ae952f91e88edfba41ea061e98fc67f52e3fe7a",
+      "capturada_archivo_lima": "2026-11-21T23:28:41.141708-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El reproductor muestra el fotograma y sus controles sin spinner.",
+        "El título en dos líneas y el acento de Aprobación final dirigen la mirada a Aprobar.",
+        "La vista completa presenta la etapa 10 y el texto del guion sin cortes.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1920-viewport.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "a8394c5249d6bde6d02b8020174e9fceb1f4c3c2cda02766a3ad21f96dc09360",
+      "capturada_archivo_lima": "2026-11-21T23:28:41.033517-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El reproductor muestra el fotograma y sus controles sin spinner.",
+        "El título en dos líneas y el acento de Aprobación final dirigen la mirada a Aprobar.",
+        "La vista completa presenta la etapa 10 y el texto del guion sin cortes.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1920.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1973
+      },
+      "sha256": "cec178f9c42836aaf2dbe22a439614d529794b93d244bec12b51a96d47878cb0",
+      "capturada_archivo_lima": "2026-11-21T23:28:46.729112-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El medio conserva el montaje vertical de las estaciones de servicio y el título se lee completo.",
+        "El estado Publicado se acompaña de un mensaje coherente y controles atenuados.",
+        "La vista completa presenta las doce etapas terminadas y el acceso a piezas/publicaciones.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "Aprobar deshabilitado conserva más peso visual que los controles secundarios."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1920-viewport.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "bd84297f75ca2d8fd3e9a6d51ba88e4b9eae3e19b3338713861a6cbabf6659b8",
+      "capturada_archivo_lima": "2026-11-21T23:28:46.613111-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "El medio conserva el montaje vertical de las estaciones de servicio y el título se lee completo.",
+        "El estado Publicado se acompaña de un mensaje coherente y controles atenuados.",
+        "La vista completa presenta las doce etapas terminadas y el acceso a piezas/publicaciones.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "Aprobar deshabilitado conserva más peso visual que los controles secundarios."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1920.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1643
+      },
+      "sha256": "ad40c3e91e91ffb209d5801c9a3f2ff9ce204d533e33195d37191a02bab35f32",
+      "capturada_archivo_lima": "2026-11-21T23:28:50.326145-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La vista completa presenta Métricas seleccionada, fecha de medición y cuatro cifras alineadas en una fila.",
+        "Vistas, Me gusta, Comentarios y Retención media mantienen una jerarquía numérica clara sin cuadros adicionales.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1920-viewport.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "bd84297f75ca2d8fd3e9a6d51ba88e4b9eae3e19b3338713861a6cbabf6659b8",
+      "capturada_archivo_lima": "2026-11-21T23:28:50.230145-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La vista completa presenta Métricas seleccionada, fecha de medición y cuatro cifras alineadas en una fila.",
+        "Vistas, Me gusta, Comentarios y Retención media mantienen una jerarquía numérica clara sin cuadros adicionales.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1920.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1673
+      },
+      "sha256": "c756663f34c7a0d4e9a3f10e178e5ee05bec86ae96498a4acc75be35961d722b",
+      "capturada_archivo_lima": "2026-11-21T23:28:53.877178-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La vista completa distingue Lecciones seleccionada y una entrada editorial numerada.",
+        "La hipótesis, la observación y el cambio propuesto mantienen jerarquía y separación legibles.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1920-viewport.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "bd84297f75ca2d8fd3e9a6d51ba88e4b9eae3e19b3338713861a6cbabf6659b8",
+      "capturada_archivo_lima": "2026-11-21T23:28:53.779177-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La vista completa distingue Lecciones seleccionada y una entrada editorial numerada.",
+        "La hipótesis, la observación y el cambio propuesto mantienen jerarquía y separación legibles.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1920.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 2267
+      },
+      "sha256": "5214c8118070b71c74ab0c41fee7424ca9131c19d3bdeed034e690744be095f8",
+      "capturada_archivo_lima": "2026-11-21T23:28:59.547230-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La hoja en flujo aparece bajo el medio con cierre X alineado a la derecha.",
+        "El textarea presenta foco visible y el botón Enviar cambios comparte su ancho; el resto de la página conserva el contexto.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "La hoja empieza al final del primer viewport; sus campos requieren desplazamiento vertical desde la parte superior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1920-viewport.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "4537647c7234a1d89c22372e94650a1f380fb554c0ad802579170f34ebc17cff",
+      "capturada_archivo_lima": "2026-11-21T23:28:59.420229-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La hoja en flujo aparece bajo el medio con cierre X alineado a la derecha.",
+        "El textarea presenta foco visible y el botón Enviar cambios comparte su ancho; el resto de la página conserva el contexto.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "La hoja empieza al final del primer viewport; sus campos requieren desplazamiento vertical desde la parte superior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1920.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 2245
+      },
+      "sha256": "06a5d69b1e5492031d1799583de8cdca0a6c6ef96aa40c0aff126614b94e83cf",
+      "capturada_archivo_lima": "2026-11-21T23:29:03.190264-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La hoja en flujo diferencia título, explicación de aprobaciones/zona horaria, fecha local y acción.",
+        "El campo fecha muestra foco visible y el cierre X está alineado a la derecha.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "La hoja empieza al final del primer viewport; sus campos requieren desplazamiento vertical desde la parte superior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1920-viewport.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "4537647c7234a1d89c22372e94650a1f380fb554c0ad802579170f34ebc17cff",
+      "capturada_archivo_lima": "2026-11-21T23:29:03.071263-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "La hoja en flujo diferencia título, explicación de aprobaciones/zona horaria, fecha local y acción.",
+        "El campo fecha muestra foco visible y el cierre X está alineado a la derecha.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "La hoja empieza al final del primer viewport; sus campos requieren desplazamiento vertical desde la parte superior."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1920.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1876
+      },
+      "sha256": "d56831dbbaa126b0eaf58e21ce8960bf91c89dfdaa6da7f3f2de56db70327df4",
+      "capturada_archivo_lima": "2026-11-21T23:29:08.943317-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "En pausa se lee junto al título y se repite en Montaje dentro de la pista.",
+        "El reproductor conserva el fotograma y los controles sin spinner; el guion permanece disponible.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "La etiqueta de pausa no explica su causa ni una acción de reanudación en esta vista."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1920-viewport.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "cb0801b62759a26f4e659ae24a0d85762e22a0a08c47abdbe16b5d282e654593",
+      "capturada_archivo_lima": "2026-11-21T23:29:08.814316-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "En pausa se lee junto al título y se repite en Montaje dentro de la pista.",
+        "El reproductor conserva el fotograma y los controles sin spinner; el guion permanece disponible.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "La etiqueta de pausa no explica su causa ni una acción de reanudación en esta vista."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1920.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1876
+      },
+      "sha256": "9607aea6cfc77713493ace29622d0fe763f791f77f0e04c86c9a4ff9883f92d0",
+      "capturada_archivo_lima": "2026-11-21T23:29:13.318357-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Cancelado se lee junto al título y en la pista; la explicación indica que la producción ya no admite cambios.",
+        "Pedir cambios y Programar aparecen atenuados, y el contenido existente permanece visible.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "Aprobar deshabilitado conserva un bloque naranja de mucha prominencia, pese a la cancelación."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1920-viewport.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "19b5ba7aab2f53a311255ae4e92638a70170a1e1d9fd4698bb2be6213f97b6d1",
+      "capturada_archivo_lima": "2026-11-21T23:29:13.192356-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Cancelado se lee junto al título y en la pista; la explicación indica que la producción ya no admite cambios.",
+        "Pedir cambios y Programar aparecen atenuados, y el contenido existente permanece visible.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "Aprobar deshabilitado conserva un bloque naranja de mucha prominencia, pese a la cancelación."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1920.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1818
+      },
+      "sha256": "8a0bbe4e1a646d81d6e02cf6e6f1b20e632f34647845081076ecd63d72a68b01",
+      "capturada_archivo_lima": "2026-11-21T23:29:19.018410-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "La vista completa presenta Métricas seleccionada y el mensaje La historia sigue con tu audiencia.",
+        "El vacío explica cuándo aparecerán vistas, respuesta y retención, sin representar datos inexistentes.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "El texto incrustado en el borde superior del póster aparece parcialmente cortado; esta captura no permite atribuirlo al medio de origen o a su ajuste."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1920-viewport.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "879bbe3e1f794e5f7999995b10bc577506ca3153bb6863b1d3a7dd668f0a69db",
+      "capturada_archivo_lima": "2026-11-21T23:29:18.891409-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "La vista completa presenta Métricas seleccionada y el mensaje La historia sigue con tu audiencia.",
+        "El vacío explica cuándo aparecerán vistas, respuesta y retención, sin representar datos inexistentes.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "El texto incrustado en el borde superior del póster aparece parcialmente cortado; esta captura no permite atribuirlo al medio de origen o a su ajuste."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1920.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 1818
+      },
+      "sha256": "eaaf65196bfc626bf26cccb5557950fe9cd29f4dfbdc2b439bfc5463de5dd6cf",
+      "capturada_archivo_lima": "2026-11-21T23:29:22.656443-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "La vista completa presenta Lecciones seleccionada y el mensaje Todavía estamos escuchando.",
+        "El vacío explica que falta una lección vinculada y conserva la jerarquía editorial sin inventar entradas.",
+        "Captura de página completa sin capas flotantes repetidas."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "El texto incrustado en el borde superior del póster aparece parcialmente cortado; esta captura no permite atribuirlo al medio de origen o a su ajuste."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1920-viewport.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1920,
+        "alto": 900
+      },
+      "sha256": "879bbe3e1f794e5f7999995b10bc577506ca3153bb6863b1d3a7dd668f0a69db",
+      "capturada_archivo_lima": "2026-11-21T23:29:22.531442-05:00",
+      "inspeccion": "view_image individual; imagen final reabierta y evaluada.",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "La vista completa presenta Lecciones seleccionada y el mensaje Todavía estamos escuchando.",
+        "El vacío explica que falta una lección vinculada y conserva la jerarquía editorial sin inventar entradas.",
+        "Captura del primer viewport, con el orbe visible una sola vez y fuera de los controles."
+      ],
+      "limitaciones": [
+        "El halo es muy sutil sobre el fondo negro.",
+        "El medio vertical conserva bandas laterales amplias.",
+        "Las etapas y pestañas quedan bajo el primer viewport de 900 px de alto.",
+        "El texto incrustado en el borde superior del póster aparece parcialmente cortado; esta captura no permite atribuirlo al medio de origen o a su ajuste."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    }
+  ]
+}

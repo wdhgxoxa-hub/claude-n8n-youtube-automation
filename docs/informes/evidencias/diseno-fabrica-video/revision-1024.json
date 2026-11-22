@@ -1,0 +1,840 @@
+{
+  "version": 2,
+  "mision": "diseno-fabrica-video",
+  "revisor": "Codex / subagente video",
+  "revisado_en_lima": "2026-11-21T23:29:44.867095-05:00",
+  "ancho_solicitado": 1024,
+  "alcance": "Inspección visual individual con view_image de 15 pantallas/estados, página completa y primer viewport. Los 30 hashes identifican exactamente los archivos revisados de la matriz final. No se ejecutaron builds ni tests en esta revisión.",
+  "estado": "aprobado_con_limitaciones",
+  "conteo": {
+    "pantallas": 15,
+    "imagenes": 30,
+    "pendiente_recaptura": 0
+  },
+  "pruebas_ejecutadas_en_esta_revision": [],
+  "hallazgos_resueltos": [
+    "El riel de Fábrica vacía está contraído y deja visible todo el encabezado.",
+    "El círculo nativo de carga ya no aparece en Corregir ni en los demás reproductores.",
+    "El orbe dispone de espacio lateral y no tapa contenido ni acciones.",
+    "El cierre X de Corregir permanece alineado arriba a la derecha."
+  ],
+  "pendientes": [],
+  "autocritica": "A 1024 px el reproductor domina el primer viewport y desplaza título y acciones bajo el pliegue. Las bandas laterales negras preservan íntegro el material vertical, pero ocupan una parte importante del ancho. La pista empieza en Radar y las etapas 09–12 requieren desplazamiento; estado y contador mantienen el contexto. El halo es muy sutil sobre negro. Títulos completos, métricas separadas, formularios y estados vacíos resultan legibles sin colisiones. La inspección estática de imágenes no acredita interacciones, reproducción ni rendimiento.",
+  "imagenes": [
+    {
+      "archivo": "evidencias-diseno/fabrica-1024.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1394
+      },
+      "sha256": "f20b01588bb381117a1ee13094f7074e2e0a3e1014de6f7073d0988d20189456",
+      "capturada_archivo_lima": "2026-11-21T23:26:36.813906-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Título display, filtros y cifras claros; la cápsula conserva el fotograma real completo y su jerarquía de canal, título y estado.",
+        "La pista horizontal deja ver estaciones sucesivas; sus flechas y la nota de recorrido indican continuidad.",
+        "El feed lateral queda separado de la pista y conserva horas relativas y enlaces legibles.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "La primera cápsula y las estaciones restantes requieren desplazamiento; la tira numérica no muestra las doce simultáneamente a 1024 px."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-1024-viewport.png",
+      "pantalla": "fabrica",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "8f7ada38bf53d8d2d71c568972918fb013efa09d319ebc3fa04a2df23d3e2617",
+      "capturada_archivo_lima": "2026-11-21T23:26:36.740905-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Título display, filtros y cifras claros; la cápsula conserva el fotograma real completo y su jerarquía de canal, título y estado.",
+        "La pista horizontal deja ver estaciones sucesivas; sus flechas y la nota de recorrido indican continuidad.",
+        "El feed lateral queda separado de la pista y conserva horas relativas y enlaces legibles.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "La primera cápsula y las estaciones restantes requieren desplazamiento; la tira numérica no muestra las doce simultáneamente a 1024 px."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1024.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1829
+      },
+      "sha256": "a4c69ff14b19327984f43dd80fea84c96b334feb3b330a9a62865a4d8ae5b33d",
+      "capturada_archivo_lima": "2026-11-21T23:26:37.921916-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Formulario alineado en dos columnas, con etiquetas legibles, foco visible en Canal y acciones Enviar a la fábrica/Cancelar identificables.",
+        "La producción se desplaza hacia abajo sin colisiones entre formulario, filtros y cifras.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-pedir-1024-viewport.png",
+      "pantalla": "fabrica-pedir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "5d800fdd4e594ee9da6a21a65466b560fc021412aed25d8f7a83aa1cf36b257d",
+      "capturada_archivo_lima": "2026-11-21T23:26:37.856915-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Formulario alineado en dos columnas, con etiquetas legibles, foco visible en Canal y acciones Enviar a la fábrica/Cancelar identificables.",
+        "La producción se desplaza hacia abajo sin colisiones entre formulario, filtros y cifras.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1024.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 925
+      },
+      "sha256": "b2d52d32b5966800ad6cd1702910b3faaeab6348a946e2016c8b12df54b29a72",
+      "capturada_archivo_lima": "2026-11-21T23:27:26.117365-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Mensaje vacío breve y centrado; Pedir video permanece visible.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página.",
+        "Riel en reposo: encabezado y filtros completos, sin el hover accidental de la matriz previa."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/fabrica-vacia-1024-viewport.png",
+      "pantalla": "fabrica-vacia",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "d27116224150bd763345bbb861e50686a8e44b42fe733b48a202a239042bdf33",
+      "capturada_archivo_lima": "2026-11-21T23:27:26.072365-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": null,
+      "observaciones": [
+        "Mensaje vacío breve y centrado; Pedir video permanece visible.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "Riel en reposo: encabezado y filtros completos, sin el hover accidental de la matriz previa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1024.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2213
+      },
+      "sha256": "781fed2016c74e0f50752abe7456d49ab28bbd29d8a8beee3a31b59c00d615d3",
+      "capturada_archivo_lima": "2026-11-21T23:26:41.762952-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma fotográfico vertical con controles nativos, encuadre íntegro y sin indicador de carga.",
+        "Título y estado Montaje mantienen jerarquía; el botón Aprobar se ve deshabilitado y las acciones secundarias conservan su posición.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-montaje-1024-viewport.png",
+      "pantalla": "video-montaje",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "e546d369c5d10562a0d88bc1053fa4be7a457a51f9c7f92d9c01e27bf6ea34ac",
+      "capturada_archivo_lima": "2026-11-21T23:26:41.653951-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma fotográfico vertical con controles nativos, encuadre íntegro y sin indicador de carga.",
+        "Título y estado Montaje mantienen jerarquía; el botón Aprobar se ve deshabilitado y las acciones secundarias conservan su posición.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1024.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2316
+      },
+      "sha256": "c437be768f69f782084d501ae5e3c34b1bdbf85be16bd415fb2be362623a7150",
+      "capturada_archivo_lima": "2026-11-21T23:26:45.482987-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Portada fotográfica real y aviso claro de archivo aún no disponible; la imagen no simula un reproductor funcional.",
+        "La etapa 04 Aprobación de guion queda destacada en la pista; Guion y notas de producción presentan columnas alineadas y legibles.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual.",
+        "El fotograma original incluye texto editorial recortado en su propio encuadre; la vista conserva el medio íntegro sin inventar contenido."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-guion-1024-viewport.png",
+      "pantalla": "video-guion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "a97e2397a14a804698b7795b629f4f290c80d89fa091ae128f29c415e2272c5d",
+      "capturada_archivo_lima": "2026-11-21T23:26:45.372986-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Portada fotográfica real y aviso claro de archivo aún no disponible; la imagen no simula un reproductor funcional.",
+        "La etapa 04 Aprobación de guion queda destacada en la pista; Guion y notas de producción presentan columnas alineadas y legibles.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual.",
+        "El fotograma original incluye texto editorial recortado en su propio encuadre; la vista conserva el medio íntegro sin inventar contenido."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1024.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2166
+      },
+      "sha256": "41f50622952b40cedf755ab111751db652dbddcad34fd95d0606672ba95831d2",
+      "capturada_archivo_lima": "2026-11-21T23:26:49.193021-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma íntegro y controles nativos limpios, sin indicador de carga.",
+        "Título display y aprobación final mantienen jerarquía; Aprobar usa el único acento de acción principal y Pedir cambios/Programar quedan agrupados.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-aprobacion-1024-viewport.png",
+      "pantalla": "video-aprobacion",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "0f49c64058564841d356c3cc0121fe752e8c863b40fc0d219fa82b02ee2ddf53",
+      "capturada_archivo_lima": "2026-11-21T23:26:49.109020-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Fotograma íntegro y controles nativos limpios, sin indicador de carga.",
+        "Título display y aprobación final mantienen jerarquía; Aprobar usa el único acento de acción principal y Pedir cambios/Programar quedan agrupados.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1024.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2310
+      },
+      "sha256": "e97fec485f64c1219b78c4d154d35ad2525ac6de9d07dd89d6eb90fc257038c5",
+      "capturada_archivo_lima": "2026-11-21T23:26:53.001057-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor con fotograma íntegro y sin indicador de carga; estado Publicado y contador 12/12 legibles.",
+        "Guion mantiene su estructura de apertura, desarrollo y cierre; las referencias y piezas quedan plegadas y el pie no se superpone.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-publicado-1024-viewport.png",
+      "pantalla": "video-publicado",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "ff4ae6dcb2cdf32677681ce65696c43d7ac0dd6e4abef09f9cf5784e4f58bcb8",
+      "capturada_archivo_lima": "2026-11-21T23:26:52.891056-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Reproductor con fotograma íntegro y sin indicador de carga; estado Publicado y contador 12/12 legibles.",
+        "Guion mantiene su estructura de apertura, desarrollo y cierre; las referencias y piezas quedan plegadas y el pie no se superpone.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1024.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1928
+      },
+      "sha256": "3bdef1189c9fd4d3934b29959cd2f70a41ecdb1be267f12611326ef1740a477b",
+      "capturada_archivo_lima": "2026-11-21T23:26:56.565090-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Métricas seleccionada inequívocamente y red/fecha de medición visibles.",
+        "Las cuatro cifras 18,420 / 864 / 72 / 68 se leen completas, en columnas alineadas con sus etiquetas; el reproductor está limpio.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-1024-viewport.png",
+      "pantalla": "video-metricas",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "ff4ae6dcb2cdf32677681ce65696c43d7ac0dd6e4abef09f9cf5784e4f58bcb8",
+      "capturada_archivo_lima": "2026-11-21T23:26:56.469089-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Métricas seleccionada inequívocamente y red/fecha de medición visibles.",
+        "Las cuatro cifras 18,420 / 864 / 72 / 68 se leen completas, en columnas alineadas con sus etiquetas; el reproductor está limpio.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1024.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 1958
+      },
+      "sha256": "f39948377ab2c0f39d0eaeb7a2c96ccad9830d6dca1597f5698326075011d682",
+      "capturada_archivo_lima": "2026-11-21T23:27:00.098123-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Lecciones seleccionada; número 01, hipótesis, fecha, observación y cambio propuesto mantienen una secuencia clara.",
+        "El título largo de la lección se ajusta sin cortar palabras ni invadir el margen; el reproductor está limpio.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-1024-viewport.png",
+      "pantalla": "video-lecciones",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "ff4ae6dcb2cdf32677681ce65696c43d7ac0dd6e4abef09f9cf5784e4f58bcb8",
+      "capturada_archivo_lima": "2026-11-21T23:27:00.010122-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Lecciones seleccionada; número 01, hipótesis, fecha, observación y cambio propuesto mantienen una secuencia clara.",
+        "El título largo de la lección se ajusta sin cortar palabras ni invadir el margen; el reproductor está limpio.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1024.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2545
+      },
+      "sha256": "e00d0e100ecf8218afe832017c6663c6389e9de8691582c97c9f16a31c4a613d",
+      "capturada_archivo_lima": "2026-11-21T23:27:03.859158-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Formulario de corrección debajo de las acciones, con título, etiqueta, textarea enfocado y acción final alineados.",
+        "El cierre X permanece arriba a la derecha; ya no salta a una segunda fila.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página.",
+        "Recaptura final sin círculo nativo de carga; controles del reproductor estabilizados."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-corregir-1024-viewport.png",
+      "pantalla": "video-corregir",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "0f49c64058564841d356c3cc0121fe752e8c863b40fc0d219fa82b02ee2ddf53",
+      "capturada_archivo_lima": "2026-11-21T23:27:03.772157-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Formulario de corrección debajo de las acciones, con título, etiqueta, textarea enfocado y acción final alineados.",
+        "El cierre X permanece arriba a la derecha; ya no salta a una segunda fila.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "Recaptura final sin círculo nativo de carga; controles del reproductor estabilizados.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1024.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "completa",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2522
+      },
+      "sha256": "7552ae4004318f92af3be9582a0f8442ecd24ca4a825efe0f5168b12e459b0eb",
+      "capturada_archivo_lima": "2026-11-21T23:27:07.512192-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Formulario de programación amplio, con aviso de zona horaria, fecha/hora local enfocada y acción final inequívoca.",
+        "Cierre X alineado arriba a la derecha; el reproductor está limpio y la pista/Guion conservan su espacio inferior.",
+        "Página completa sin elementos fijos duplicados; no se observa desbordamiento horizontal de la página."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual.",
+        "El selector nativo muestra mm/dd/yyyy según la configuración del navegador de captura; la etiqueta de producto permanece en español."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-programar-1024-viewport.png",
+      "pantalla": "video-programar",
+      "tipo_captura": "viewport",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "sha256": "0f49c64058564841d356c3cc0121fe752e8c863b40fc0d219fa82b02ee2ddf53",
+      "capturada_archivo_lima": "2026-11-21T23:27:07.405812-05:00",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Formulario de programación amplio, con aviso de zona horaria, fecha/hora local enfocada y acción final inequívoca.",
+        "Cierre X alineado arriba a la derecha; el reproductor está limpio y la pista/Guion conservan su espacio inferior.",
+        "Primer viewport con riel y orbe reales, una sola vez; el contenido inferior se contrasta con la captura completa.",
+        "El espacio reservado a Cooper mantiene el orbe fuera del contenido y controles."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La pista comienza en Radar: las etapas finales requieren desplazamiento horizontal, aunque estado y contador informan la etapa actual.",
+        "El selector nativo muestra mm/dd/yyyy según la configuración del navegador de captura; la etiqueta de producto permanece en español."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1024.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "completa",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Estado En pausa y etapa 08 con etiqueta En pausa inequívocos en la página completa; el contador conserva la referencia de producción.",
+        "Fotograma real y controles nativos sin indicador de carga; el guion permanece legible y el texto de estado no colisiona con las acciones.",
+        "Página completa sin elementos fijos duplicados ni desbordamiento horizontal observado."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "703f243867ef28999b67d8649fdc92e524f72df7e27d08b92863560604a87305",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2213
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:12.653240-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-pausado-1024-viewport.png",
+      "pantalla": "video-pausado",
+      "tipo_captura": "viewport",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Estado En pausa y etapa 08 con etiqueta En pausa inequívocos en la página completa; el contador conserva la referencia de producción.",
+        "Fotograma real y controles nativos sin indicador de carga; el guion permanece legible y el texto de estado no colisiona con las acciones.",
+        "Primer viewport con riel y orbe una sola vez; la reserva lateral mantiene libres los controles. El contenido inferior se contrasta en su captura completa."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "e546d369c5d10562a0d88bc1053fa4be7a457a51f9c7f92d9c01e27bf6ea34ac",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:12.559239-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1024.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "completa",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Estado Cancelado y texto de producción sin cambios legibles; Aprobar, Pedir cambios y Programar se ven deshabilitados.",
+        "La etapa 08 muestra Cancelado y las referencias dejan de presentar edición; el guion y el medio permanecen consultables visualmente.",
+        "Página completa sin elementos fijos duplicados ni desbordamiento horizontal observado."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "b13d7a66a2974440969a0a15c96cb675828e762a89c78203754ba7f4f66546a2",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2213
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:16.186273-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-cancelado-1024-viewport.png",
+      "pantalla": "video-cancelado",
+      "tipo_captura": "viewport",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Estado Cancelado y texto de producción sin cambios legibles; Aprobar, Pedir cambios y Programar se ven deshabilitados.",
+        "La etapa 08 muestra Cancelado y las referencias dejan de presentar edición; el guion y el medio permanecen consultables visualmente.",
+        "Primer viewport con riel y orbe una sola vez; la reserva lateral mantiene libres los controles. El contenido inferior se contrasta en su captura completa."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "80abcb0d7ca56932672bf3a3efbbab931b1c7e4b9c36b5e15cc1b927d8ffc119",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:16.086272-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1024.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "completa",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Métricas seleccionada y mensaje La historia sigue con tu audiencia, con explicación breve de cuándo aparecerán datos.",
+        "No hay cifras ficticias ni ceros usados como mediciones; portada fotográfica y aviso de archivo todavía no disponible conservan contexto.",
+        "Página completa sin elementos fijos duplicados ni desbordamiento horizontal observado."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "0cf49258d863073562ffb9e36deed47fc3bf6c0cae00f2221c33f8b12a6e9172",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2103
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:21.700324-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-metricas-vacias-1024-viewport.png",
+      "pantalla": "video-metricas-vacias",
+      "tipo_captura": "viewport",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Métricas seleccionada y mensaje La historia sigue con tu audiencia, con explicación breve de cuándo aparecerán datos.",
+        "No hay cifras ficticias ni ceros usados como mediciones; portada fotográfica y aviso de archivo todavía no disponible conservan contexto.",
+        "Primer viewport con riel y orbe una sola vez; la reserva lateral mantiene libres los controles. El contenido inferior se contrasta en su captura completa."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "a97e2397a14a804698b7795b629f4f290c80d89fa091ae128f29c415e2272c5d",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:21.602323-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1024.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "completa",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Lecciones seleccionada; Todavía estamos escuchando explica que falta una lección vinculada al video.",
+        "El vacío conserva jerarquía y aire, sin inventar causalidad, métricas o tarjetas de relleno.",
+        "Página completa sin elementos fijos duplicados ni desbordamiento horizontal observado."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "c309a50982c46f859f182f0d93cff1acf20e645d816715a2a15c9be19d8c28e3",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 2103
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:25.216357-05:00"
+    },
+    {
+      "archivo": "evidencias-diseno/video-lecciones-vacias-1024-viewport.png",
+      "pantalla": "video-lecciones-vacias",
+      "tipo_captura": "viewport",
+      "inspeccion": "view_image individual",
+      "resultado": "aprobado_con_limitaciones",
+      "composicion": "aprobada_con_limitaciones",
+      "spinner_visible": false,
+      "hero_aprobado": true,
+      "observaciones": [
+        "Pestaña Lecciones seleccionada; Todavía estamos escuchando explica que falta una lección vinculada al video.",
+        "El vacío conserva jerarquía y aire, sin inventar causalidad, métricas o tarjetas de relleno.",
+        "Primer viewport con riel y orbe una sola vez; la reserva lateral mantiene libres los controles. El contenido inferior se contrasta en su captura completa."
+      ],
+      "limitaciones": [
+        "El primer viewport prioriza el medio; título completo, acciones y pestañas requieren desplazamiento vertical.",
+        "La revisión visual de un estado no sustituye la prueba de sus permisos ni interacciones."
+      ],
+      "elementos_fijos_duplicados_observados": false,
+      "desbordamiento_pagina_observado": false,
+      "sha256": "a97e2397a14a804698b7795b629f4f290c80d89fa091ae128f29c415e2272c5d",
+      "dimensiones": {
+        "ancho": 1024,
+        "alto": 900
+      },
+      "capturada_archivo_lima": "2026-11-21T23:27:25.118356-05:00"
+    }
+  ]
+}

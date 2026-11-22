@@ -25,12 +25,13 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
     new URL(poster, page.url()).href,
   );
   await expect(imagen).toHaveAttribute("loading", "lazy");
-  await expect(imagen).toHaveAttribute("width", "320");
-  await expect(imagen).toHaveAttribute("height", "480");
+  await expect(imagen).toHaveAttribute("width", "720");
+  await expect(imagen).toHaveAttribute("height", "1280");
   await expect(imagen).toHaveCSS("object-fit", "contain");
   await expect(medio.locator("svg")).toHaveCount(0);
   await expect(medio).toHaveCSS("--tinte", "#997755");
   expect(contexto.peticiones()).toEqual({ vistasPrevias: 0, completos: 0 });
+  await medio.scrollIntoViewIfNeeded();
   const caja = await medio.boundingBox();
   await medio.evaluate((el) => {
     el.addEventListener(
@@ -52,6 +53,10 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
   });
   await medio.hover();
   const player = medio.locator("video");
+  const orbe = page.locator(".cooper-orb .cooper-presencia video");
+  await expect
+    .poll(() => orbe.evaluate((el) => (el as HTMLVideoElement).paused))
+    .toBe(true);
   await expect
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).currentTime))
     .toBeGreaterThan(0.1);
@@ -73,7 +78,10 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).paused))
     .toBe(true);
   await expect(medio).toHaveAttribute("data-reproduciendo", "false");
-  expect(await medio.boundingBox()).toEqual(caja);
+  await expect
+    .poll(() => orbe.evaluate((el) => (el as HTMLVideoElement).paused))
+    .toBe(false);
+  await expect.poll(() => medio.boundingBox()).toEqual(caja);
   await medio.hover();
   await expect(medio).toHaveAttribute("data-reproduciendo", "true");
   await page.getByRole("link", { name: "Mi perfil", exact: true }).click();
@@ -100,6 +108,8 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
   await expect
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).paused))
     .toBe(true);
+  // El modo reducido muestra la cara estática; ninguna reproducción oculta.
+  await expect(orbe).toHaveCount(0);
   expect(contexto.peticiones().completos).toBe(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(contexto.errores).toEqual([]);
@@ -120,6 +130,7 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
   if (publicacion.tipo !== "video")
     throw new Error("Falta publicación ficticia");
   publicacion.videoId = datos.video.id;
+  publicacion.href = `/videos/${datos.video.id}`;
   publicacion.medios = {
     ...datos.medio,
     poster: { ...datos.medio.poster!, origen: "youtube" },
@@ -170,6 +181,43 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
     publicacion.titulo,
   );
   await expect(medio.locator("svg")).toHaveCount(0);
+  await page.evaluate(() => {
+    const original = document.startViewTransition.bind(document);
+    const registro = { nombre: "", lista: false };
+    (
+      window as Window & { transicionTitulo?: typeof registro }
+    ).transicionTitulo = registro;
+    document.startViewTransition = (...args: Parameters<typeof original>) => {
+      registro.nombre =
+        document.querySelector<HTMLElement>(
+          ".publication-thumb [data-video-transition]",
+        )?.style.viewTransitionName ?? "";
+      const transicion = original(...args);
+      void transicion.ready
+        .then(() => {
+          registro.lista = true;
+        })
+        .catch(() => {});
+      return transicion;
+    };
+  });
+  await page.locator(".publication h2 a").click();
+  await expect(page).toHaveURL(new RegExp(`/videos/${datos.video.id}$`));
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (
+            window as Window & {
+              transicionTitulo?: { nombre: string; lista: boolean };
+            }
+          ).transicionTitulo,
+      ),
+    )
+    .toEqual({
+      nombre: `video-${datos.video.id}`,
+      lista: true,
+    });
   expect(datos.errores).toEqual([]);
   const grabacion = page.video();
   await page.close();

@@ -1,0 +1,65 @@
+{
+  "mision": "diseno-fabrica-video",
+  "fecha_lima": "2026-11-21T23:34:56.676024-05:00",
+  "resultado": "PASS",
+  "matriz": {
+    "comando": "npm run test:e2e -- --config=playwright.fabrica-video.config.ts --grep 'pantallas y estados|recorrido y transición'",
+    "pruebas": 8,
+    "fallos": 0,
+    "reintentos": 0,
+    "omitidas": 0,
+    "anchos": [
+      360,
+      390,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "estados_por_ancho": 15,
+    "imagenes": 180
+  },
+  "cierre": {
+    "comando": "npm run test:e2e -- --config=playwright.fabrica-video.config.ts --grep 'pantallas y estados a 768|recorrido y transición|avance de cápsula'",
+    "pruebas": 4,
+    "fallos": 0,
+    "reintentos": 0,
+    "omitidas": 0,
+    "codigo": "c237b11",
+    "motivo": "Regenera tablet y grabaciones tras los ajustes de composición y prioridad de la vista previa; mide Motion con CPU4 y compositor Intel."
+  },
+  "logs": [
+    {
+      "archivo": "cooper-fabrica-matriz-cierre.log",
+      "sha256": "985793b8f27f38af39d58d714517f1ad6f2249f160ca2ed1577085eb71ffda54"
+    },
+    {
+      "archivo": "cooper-fabrica-cierre-focal.log",
+      "sha256": "1de5425f60c6565244cc8bd7f7f01d1d3ac268b18b24b7fdd728369d296eb2f9"
+    },
+    {
+      "archivo": "cooper-fabrica-recorridos-finales.log",
+      "sha256": "c1bd411d9e94bd949f301e7ff9df1161dab3b56d338c1ebf93016ce0edf5ac00"
+    }
+  ],
+  "limite": "Recibo sin configuración Playwright ni credenciales efímeras. La matriz no pretende agotar todas las combinaciones de datos, permisos y errores.",
+  "cierre_definitivo": {
+    "codigo": "7495cb6",
+    "comando": "npm run test:e2e -- --config=playwright.fabrica-video.config.ts --grep 'recorrido y transición|avance de cápsula'",
+    "pruebas": 3,
+    "fallos": 0,
+    "reintentos": 0,
+    "omitidas": 0,
+    "duracion_segundos": 37.2,
+    "motivo": "Renovación de grabaciones y traza después de anticipar la pausa del orbe durante la intención de preview."
+  },
+  "movimiento": {
+    "fps": 60.003158060950604,
+    "p95": 16.700000000000273,
+    "max": 16.800000000000182,
+    "cls": 0,
+    "animationDuration": 633.2999999999997,
+    "animationFrames": 38,
+    "sampleFps": 60.00171433469528
+  }
+}
