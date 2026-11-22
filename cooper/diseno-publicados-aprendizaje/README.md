@@ -26,4 +26,6 @@ La medición de hover se ejecuta sin grabación ni traza de Playwright para evit
 
 Lighthouse móvil de Inicio y Publicados se ejecuta aparte con `node diseno-publicados-aprendizaje/lighthouse.mjs`, usando el fixture real local de doce publicaciones. No ejecutar mediciones de rendimiento al mismo tiempo que el build u otras suites.
 
+Después de la puerta, `node diseno-publicados-aprendizaje/indice.mjs` genera `evidencias-diseno/index.html` y un manifiesto JSON. Agrupa todos los pares de capturas por ancho, sus auditorías y vídeos para la revisión visual completa.
+
 Documentación oficial consultada: [capturas Playwright](https://playwright.dev/docs/screenshots), [videos](https://playwright.dev/docs/videos), [axe con Playwright](https://playwright.dev/docs/accessibility-testing) y [PerformanceObserver](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver).
