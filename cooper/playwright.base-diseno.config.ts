@@ -1,6 +1,18 @@
 import { defineConfig, devices } from "@playwright/test";
 import config from "./playwright.config";
 
+const browser = {
+  ...devices["Desktop Chrome"],
+  // Conserva el compositor del navegador; SwiftShader sigue siendo software.
+  launchOptions: {
+    args: ["--enable-gpu", "--use-gl=angle", "--use-angle=swiftshader"],
+  },
+  baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
+  extraHTTPHeaders: {
+    Referer: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
+  },
+};
+
 export default defineConfig({
   ...config,
   testDir: "./e2e",
@@ -24,12 +36,19 @@ export default defineConfig({
   projects: [
     {
       name: "base-diseno",
+      grepInvert: /Movimiento: medicion/,
       use: {
-        ...devices["Desktop Chrome"],
-        baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
-        extraHTTPHeaders: {
-          Referer: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
-        },
+        ...browser,
+        trace: "off",
+      },
+    },
+    {
+      name: "base-diseno-medicion",
+      grep: /Movimiento: medicion/,
+      use: {
+        ...browser,
+        video: "off",
+        trace: "off",
       },
     },
   ],

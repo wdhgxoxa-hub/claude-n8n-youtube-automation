@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "@/componentes/estado-espacio.css";
 const clash = localFont({
   src: "../../public/fonts/ClashDisplay-Variable.woff2",
   variable: "--font-clash",

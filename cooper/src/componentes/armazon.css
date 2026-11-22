@@ -227,6 +227,10 @@ main#contenido {
 .cooper-orb[hidden] {
   display: none;
 }
+.cooper-orb[data-projecting="true"] {
+  /* El orbe se proyecta desde el panel: el vidrio vuelve al tamaño estable. */
+  backdrop-filter: none;
+}
 .cooper-live-logo {
   display: grid;
   place-items: center;
