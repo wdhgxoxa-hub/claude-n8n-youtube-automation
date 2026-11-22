@@ -212,7 +212,7 @@ test("DIRECCION exige tamaño, radios y colores del sistema completo", async () 
     JSON.stringify(deviations, null, 2) + "\n",
   );
   expect(
-    deviations,
+    deviations.length,
     "El armazón heredado debe migrarse en diseno-base antes de aceptar la puerta global.",
-  ).toEqual([]);
+  ).toBe(0);
 });
