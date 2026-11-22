@@ -26,7 +26,7 @@ export function useTinteVideo(videoId?: string): CSSProperties | undefined {
       });
     return () => controller.abort();
   }, [videoId]);
-  return tinte?.id === videoId
-    ? ({ "--tinte": tinte?.color } as CSSProperties)
+  return tinte && tinte.id === videoId
+    ? ({ "--tinte": tinte.color } as CSSProperties)
     : undefined;
 }
