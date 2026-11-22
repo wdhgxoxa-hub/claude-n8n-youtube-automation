@@ -2,13 +2,17 @@ import { expect, type Page } from "@playwright/test";
 import type { Estado } from "../src/servicios/datos";
 
 export type ModoConexion = "sana" | "fallo" | "colgada" | "silencio";
-type RegistroConexion = { abierta: number; cerrada: number | null };
+type RegistroConexion = {
+  abierta: number;
+  cerrada: number | null;
+  url: string;
+};
 type ControlConexion = {
   modo: ModoConexion;
   registros: RegistroConexion[];
   maximasActivas: number;
   cortar: () => void;
-  emitir: (tipo: string, datos?: unknown) => void;
+  emitir: (tipo: string, datos?: unknown, ultimoEvento?: string) => void;
 };
 declare global {
   interface Window {
@@ -52,9 +56,10 @@ export async function simularConexion(
           for (const fuente of fuentes)
             if (fuente.readyState !== 2) fuente.emitir("error");
         },
-        emitir(tipo, datos) {
+        emitir(tipo, datos, ultimoEvento) {
           for (const fuente of fuentes)
-            if (fuente.readyState !== 2) fuente.emitir(tipo, datos);
+            if (fuente.readyState !== 2)
+              fuente.emitir(tipo, datos, ultimoEvento);
         },
       };
       class FuenteEnsayo extends EventTarget {
@@ -75,7 +80,7 @@ export async function simularConexion(
         constructor(url: string | URL) {
           super();
           this.url = String(url);
-          this.registro = { abierta: Date.now(), cerrada: null };
+          this.registro = { abierta: Date.now(), cerrada: null, url: this.url };
           control.registros.push(this.registro);
           fuentes.push(this);
           control.maximasActivas = Math.max(
@@ -95,12 +100,15 @@ export async function simularConexion(
             }, 15_000);
           });
         }
-        emitir(tipo: string, datos?: unknown) {
+        emitir(tipo: string, datos?: unknown, ultimoEvento = "") {
           if (this.readyState === 2) return;
           if (tipo === "open") this.readyState = 1;
           const event = ["open", "error"].includes(tipo)
             ? new Event(tipo)
-            : new MessageEvent(tipo, { data: JSON.stringify(datos ?? {}) });
+            : new MessageEvent(tipo, {
+                data: JSON.stringify(datos ?? {}),
+                lastEventId: ultimoEvento,
+              });
           this.dispatchEvent(event);
           if (tipo === "open") this.onopen?.(event);
           if (tipo === "error") this.onerror?.(event);

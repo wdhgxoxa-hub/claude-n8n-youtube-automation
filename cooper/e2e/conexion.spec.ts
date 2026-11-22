@@ -85,7 +85,9 @@ test.describe("Conexión discreta y recuperación SSE", () => {
     });
     await page.clock.runFor(30_000);
     await esperarConexion(page);
-    // Estado confirmado reinicia la espera al mínimo, sin conexiones paralelas.
+    // Solo una sesión estable reinicia la espera: recibir estado y volver a
+    // caer enseguida no debe producir una tormenta de reconexiones.
+    await page.clock.runFor(15_000);
     const recuperada = await page.evaluate(() => {
       window.__conexionEnsayo.cortar();
       return Date.now();
@@ -96,6 +98,58 @@ test.describe("Conexión discreta y recuperación SSE", () => {
         () => window.__conexionEnsayo.registros.at(-1)!.abierta,
       ),
     ).toBe(recuperada + 1_000);
+  });
+
+  test("las conexiones que caen tras cada estado conservan el backoff", async ({
+    page,
+  }) => {
+    const estado = await entrarConexion(page);
+    await page.clock.install();
+    await simularConexion(page, estado);
+    await page.goto("/");
+    await esperarConexion(page);
+    await pausarRelojConexion(page);
+    for (const demora of [1_000, 2_000, 4_000]) {
+      const inicio = await page.evaluate(() => {
+        window.__conexionEnsayo.cortar();
+        window.__conexionEnsayo.modo = "sana";
+        return Date.now();
+      });
+      await page.clock.runFor(demora);
+      await esperarConexion(page);
+      expect(
+        await page.evaluate(
+          () => window.__conexionEnsayo.registros.at(-1)!.abierta,
+        ),
+      ).toBe(inicio + demora);
+    }
+    expect(
+      await page.evaluate(() => window.__conexionEnsayo.maximasActivas),
+    ).toBe(1);
+  });
+
+  test("reconectar conserva el cursor del último progreso recibido", async ({
+    page,
+  }) => {
+    const estado = await entrarConexion(page);
+    await page.clock.install();
+    await simularConexion(page, estado);
+    await page.goto("/");
+    await esperarConexion(page);
+    await pausarRelojConexion(page);
+    await page.evaluate(() => {
+      window.__conexionEnsayo.emitir("progreso", {}, "evento-001");
+      window.__conexionEnsayo.cortar();
+      window.__conexionEnsayo.modo = "sana";
+    });
+    await page.clock.runFor(1_000);
+    await esperarConexion(page);
+    const url = await page.evaluate(
+      () => window.__conexionEnsayo.registros.at(-1)!.url,
+    );
+    expect(
+      new URL(url, "http://127.0.0.1").searchParams.get("ultimoEvento"),
+    ).toBe("evento-001");
   });
 
   test("una apertura colgada no queda conectando para siempre", async ({
