@@ -62,6 +62,7 @@ type TransitionObservation = {
   names: string[];
   startedAt: number;
   updateDoneAt: number | null;
+  loadingAtSnapshot: boolean | null;
   readyAt: number | null;
   finishedAt: number | null;
   error: string | null;
@@ -541,6 +542,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
                 .filter(Boolean),
               startedAt: performance.now(),
               updateDoneAt: null,
+              loadingAtSnapshot: null,
               readyAt: null,
               finishedAt: null,
               error: null,
@@ -552,6 +554,9 @@ for (const mode of ["medicion", "grabacion"] as const) {
             void transition.updateCallbackDone.then(
               () => {
                 observation.updateDoneAt = performance.now();
+                observation.loadingAtSnapshot = Boolean(
+                  document.querySelector("[data-ruta-cargando]"),
+                );
                 performance.mark(`diseno:view-transition:${id}:dom-listo`);
               },
               (error: Error) => {
@@ -688,6 +693,14 @@ for (const mode of ["medicion", "grabacion"] as const) {
           `${directory}/transiciones-${mode === "grabacion" ? "grabacion-" : ""}${width}.json`,
           JSON.stringify(transitions, null, 2) + "\n",
         );
+        for (const [index, transition] of transitions.entries()) {
+          expect
+            .soft(
+              transition.loadingAtSnapshot,
+              `Transición ${index + 1}: la captura contiene la página definitiva`,
+            )
+            .toBe(false);
+        }
         if (mode === "grabacion") {
           await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
           expect(errors).toEqual([]);
