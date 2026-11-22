@@ -1,17 +1,14 @@
 .pagina {
-  gap: var(--espacio-24);
+  padding-top: var(--espacio-16);
 }
 .cabecera {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--espacio-24);
-  padding-block: var(--espacio-16) var(--espacio-8);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--espacio-8) var(--espacio-24);
 }
-.contexto {
-  margin-bottom: var(--espacio-12);
-  color: var(--texto-2);
-  font-size: var(--texto-13);
+.cabecera > div {
+  display: contents;
 }
 .cabecera h1 {
   font-family: var(--fuente-display);
@@ -20,12 +17,15 @@
   letter-spacing: var(--tracking-display);
 }
 .intro {
-  margin-top: var(--espacio-16);
+  grid-column: 1 / -1;
+  grid-row: 2;
   color: var(--texto-2);
   font-size: var(--texto-17);
   line-height: var(--interlinea-texto);
 }
 .enlaceMarcas {
+  grid-column: 2;
+  grid-row: 1;
   display: inline-flex;
   gap: var(--espacio-8);
   align-items: center;
@@ -34,6 +34,7 @@
   color: var(--texto-2);
 }
 .heroes {
+  margin-top: var(--espacio-24);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--espacio-24);
@@ -43,7 +44,8 @@
 .aclaracion {
   color: var(--texto-2);
   font-size: var(--texto-12);
-  margin-top: calc(-1 * var(--espacio-12));
+  margin-top: var(--espacio-8);
+  margin-bottom: var(--espacio-16);
 }
 .filtros {
   display: grid;
@@ -74,6 +76,7 @@
   border-right: var(--borde-ancho) solid var(--linea);
 }
 .controlPared {
+  margin-block: var(--espacio-8);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -268,18 +271,16 @@
   border-top: var(--borde-ancho) solid var(--linea);
 }
 @media (max-width: 767px) {
-  .cabecera {
-    display: block;
-  }
-  .enlaceMarcas {
-    margin-top: var(--espacio-8);
-  }
   .heroes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    padding-block: var(--espacio-16);
     gap: var(--espacio-24) var(--espacio-16);
   }
   .heroes > :first-child {
     grid-column: 1 / -1;
+  }
+  .cifrasLargas {
+    grid-template-columns: minmax(0, 1fr);
   }
   .actualizar span {
     display: none;
@@ -318,7 +319,7 @@
     gap: var(--espacio-8);
     border-radius: var(--radio-tarjeta);
   }
-  .cifrasSobreMedio > span:nth-child(2) {
+  .cifrasSobreMedio > span:nth-child(3) {
     grid-row: 2;
   }
   .cifrasSobreMedio > svg {

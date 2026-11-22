@@ -73,10 +73,7 @@ export function InterruptorAprendizaje() {
           <span aria-hidden="true" />
         </label>
       </div>
-      <p>
-        Recoge resultados a las 24 h, 72 h y 7 días para preparar las lecciones
-        del siguiente guion. Al pausarlo, lo aprendido se queda contigo.
-      </p>
+      <p>Mide a las 24 h, 72 h y 7 días. Pausar conserva lo aprendido.</p>
       {error && (
         <p role="alert">
           {error}{" "}

@@ -432,11 +432,8 @@ function PublicacionPared({
           </div>
         </Link>
         <span className={styles.red}>{p.redes.join(" · ") || "Sin red"}</span>
-        <button
-          className={styles.cifrasSobreMedio}
-          onClick={abrir}
-          aria-label={`Ver cifras de ${p.titulo}`}
-        >
+        <button className={styles.cifrasSobreMedio} onClick={abrir}>
+          <span className="sr-only">Ver cifras de {p.titulo}: </span>
           <span>
             <Eye size={16} aria-hidden="true" />
             <strong>{numero(cifras.vistas)}</strong>
@@ -500,34 +497,31 @@ export function Publicados({ initial }: { initial: Resultados }) {
     },
   );
   const cifras = publicaciones.map((g) => ultimaCifra(principal(g)));
+  const likes = sumaMedida(cifras.map((m) => m.likes));
+  const cifrasLargas =
+    (likes ?? 0) >= 1_000_000 || publicaciones.length >= 1_000;
   return (
     <div className={`page ${styles.pagina}`}>
       <header className={styles.cabecera}>
         <div>
-          <p className={styles.contexto}>Publicados</p>
           <h1>La pared</h1>
-          <p className={styles.intro}>
-            Historias que ya están ahí fuera.
-            <br />
-            Mira cuáles están llegando más lejos.
-          </p>
+          <p className={styles.intro}>Mira qué historias llegan más lejos.</p>
         </div>
         <Link href="/marcas?seccion=publicados" className={styles.enlaceMarcas}>
-          Publicados de marcas
+          Ver marcas
           <ArrowUpRight size={16} aria-hidden="true" />
         </Link>
       </header>
-      <section className={styles.heroes} aria-label="Cifras del periodo">
+      <section
+        className={`${styles.heroes}${cifrasLargas ? ` ${styles.cifrasLargas}` : ""}`}
+        aria-label="Cifras del periodo"
+      >
         <Cifra
           heroe
           etiqueta="Vistas"
           valor={sumaMedida(cifras.map((m) => m.vistas))}
         />
-        <Cifra
-          heroe
-          etiqueta="Me gusta de videos"
-          valor={sumaMedida(cifras.map((m) => m.likes))}
-        />
+        <Cifra heroe etiqueta="Me gusta de videos" valor={likes} />
         <Cifra heroe etiqueta="Publicaciones" valor={publicaciones.length} />
       </section>
       <p className={styles.aclaracion}>

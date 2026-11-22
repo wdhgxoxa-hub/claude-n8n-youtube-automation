@@ -420,7 +420,6 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
     <div className={`page ${styles.pagina}`}>
       <header className={styles.cabecera}>
         <div>
-          <p className={styles.paso}>Aprendizaje</p>
           <h1>Lo que aprendimos</h1>
           <p className={styles.introduccion}>
             Una señal. Un cambio. Un siguiente intento.

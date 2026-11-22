@@ -196,7 +196,7 @@ test("La pared ordena por vistas, cuenta cada publicación una vez y pliega los 
         {
           fecha: `2026-11-${dia}T18:00:00Z`,
           vistas,
-          meGusta: 10,
+          meGusta: 19214,
           comentarios: 0,
           retencion: null,
         },
@@ -232,6 +232,19 @@ test("La pared ordena por vistas, cuenta cada publicación una vez y pliega los 
       .filter({ hasText: "Publicaciones" })
       .locator(".cifra-valor"),
   ).toHaveText("2");
+  for (const width of [360, 390, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect
+      .poll(() =>
+        cifras.locator("figure").evaluateAll((figuras) =>
+          figuras.every((figura) => {
+            const valor = figura.querySelector<HTMLElement>(".cifra-valor")!;
+            return valor.scrollWidth <= figura.clientWidth;
+          }),
+        ),
+      )
+      .toBe(true);
+  }
   await page
     .getByRole("button", { name: "Mejor rendimiento", exact: true })
     .click();
