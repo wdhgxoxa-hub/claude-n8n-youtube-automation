@@ -248,7 +248,12 @@ export function Canales() {
         className="resto-dialog"
         aria-labelledby="nuevo-canal-titulo"
         onCancel={() => setCreating(false)}
-        onClose={() => setCreating(false)}
+        // El evento `close` llega en una tarea aparte: si la hoja se reabrió
+        // antes (Escape y Enter seguidos), un cierre atrasado no debe volver a
+        // cerrarla. Solo se sincroniza el estado si el diálogo sigue cerrado.
+        onClose={(event) => {
+          if (!event.currentTarget.open) setCreating(false);
+        }}
       >
         <HojaVidrio className="resto-hoja">
           <div className="resto-hoja-cabecera">

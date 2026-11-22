@@ -31,6 +31,11 @@ test("canales: la hoja conserva foco, errores y creación sin dejar la colecció
   await expect(hoja).not.toBeVisible();
   await expect(abrir).toBeFocused();
   await abrir.press("Enter");
+  await expect(hoja).toBeVisible();
+  // El `close` nativo del cierre anterior llega en otra tarea; si aparece con
+  // la hoja ya reabierta (Escape y Enter seguidos), no debe volver a cerrarla.
+  await hoja.evaluate((d) => d.dispatchEvent(new Event("close")));
+  await expect(hoja).toBeVisible();
   await hoja
     .getByRole("textbox", { name: "Nombre del canal" })
     .fill("Historias del barrio");
