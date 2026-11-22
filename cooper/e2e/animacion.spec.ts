@@ -53,7 +53,16 @@ test.describe("evidencia de movimiento", () => {
     await page.waitForTimeout(950);
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
-    await expect(page.locator("main .inicio-etapas")).toHaveCount(3);
+    // Otras pruebas de la demostración crean videos; la cuenta sale del estado vivo.
+    const inicial: Estado = await (await page.request.get("/api/estado")).json();
+    const enProduccion = inicial.videos.filter(
+      (v) =>
+        v.ownerId === inicial.user.id &&
+        v.stage < 11 &&
+        v.productionState !== "cancelada",
+    ).length;
+    expect(enProduccion).toBeGreaterThanOrEqual(3);
+    await expect(page.locator("main .inicio-etapas")).toHaveCount(enProduccion);
     for (const track of await page.locator("main .inicio-etapas").all())
       await expect(track.locator("span")).toHaveCount(12);
     const face = page.locator(".cooper-orb .cooper-presencia video");
