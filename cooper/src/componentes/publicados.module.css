@@ -36,7 +36,7 @@
 .heroes {
   margin-top: var(--espacio-24);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
   gap: var(--espacio-24);
   padding-block: var(--espacio-24);
   border-block: var(--borde-ancho) solid var(--linea);

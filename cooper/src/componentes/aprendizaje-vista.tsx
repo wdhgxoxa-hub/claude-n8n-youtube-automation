@@ -90,7 +90,10 @@ function VideoOrigen({
         className={styles.enlaceMedio}
         aria-label={`Ver video: ${titulo}`}
       >
-        <div data-video-transition={nombreMedio(origen.videoId)}>
+        <div
+          data-video-transition={nombreMedio(origen.videoId)}
+          aria-hidden="true"
+        >
           <Medio
             poster={medio?.poster?.url}
             preview={medio?.preview?.url}
