@@ -20,7 +20,7 @@ export const fecha = (value: string | null) =>
       }).format(new Date(value))
     : "Fecha sin registrar";
 export const numero = (value: number | null | undefined) =>
-  value == null ? "Sin dato" : new Intl.NumberFormat("es").format(value);
+  value == null ? "Sin dato" : new Intl.NumberFormat("es-PE").format(value);
 function Evolucion({ historial }: { historial: Medicion[] }) {
   const [metrica, setMetrica] = useState<
     "vistas" | "meGusta" | "comentarios" | "retencion"
