@@ -46,6 +46,7 @@ export function CooperFlotante({
   useLayoutEffect(() => {
     // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
     superficie.current?.removeAttribute("data-projecting");
+    opener.current?.removeAttribute("data-projecting");
   }, [reduced]);
   const video = data.videos.find(
     (v) => path === `/videos/${v.id}` && v.ownerId === data.user.id,
