@@ -7,7 +7,7 @@ import {
   type CSSProperties,
 } from "react";
 import Link from "next/link";
-import { m as motion } from "framer-motion";
+import { m as motion, type Transition } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -45,6 +45,45 @@ const fechaRelativa = new Intl.RelativeTimeFormat("es-PE", {
 function observarReloj(notify: () => void) {
   const timer = setInterval(notify, 30_000);
   return () => clearInterval(timer);
+}
+
+// Los tokens viven en la hoja base estática; React vuelve a comprobar el
+// snapshot al hidratar y en cada render, sin duplicar sus valores en JS.
+function observarTokens() {
+  return () => undefined;
+}
+
+function leerTokensRuta() {
+  const css = window.getComputedStyle(document.documentElement);
+  return `${css.getPropertyValue("--duracion-ruta")}|${css.getPropertyValue("--curva-salida")}`;
+}
+
+function useTransicionRuta(reducido: boolean): Transition {
+  const tokens = useSyncExternalStore(observarTokens, leerTokensRuta, () => "");
+  const [tiempo, curva] = tokens.split("|");
+  const duracion = tiempo?.trim().match(/^(\d*\.?\d+)(ms|s)$/);
+  const coordenadas = curva
+    ?.trim()
+    .match(/^cubic-bezier\(([^)]+)\)$/)?.[1]
+    .split(",")
+    .map(Number);
+  if (
+    reducido ||
+    !duracion ||
+    coordenadas?.length !== 4 ||
+    !coordenadas.every(Number.isFinite) ||
+    coordenadas[0] < 0 ||
+    coordenadas[0] > 1 ||
+    coordenadas[2] < 0 ||
+    coordenadas[2] > 1
+  )
+    return { layout: { duration: 0 } };
+  return {
+    layout: {
+      duration: Number(duracion[1]) / (duracion[2] === "ms" ? 1_000 : 1),
+      ease: coordenadas as [number, number, number, number],
+    },
+  };
 }
 
 function horaRelativa(fecha: number, ahora: number) {
@@ -123,6 +162,7 @@ export function LineaProduccion({ videos }: { videos?: readonly Video[] }) {
   const { data, connected } = useEspacio();
   const piezas = videos ?? data.videos;
   const reducido = useMovimientoReducido();
+  const transicion = useTransicionRuta(reducido);
   const carril = useRef<HTMLDivElement>(null);
   const primeraVisita = useRef(true);
   const ahora = useSyncExternalStore(
@@ -236,7 +276,7 @@ export function LineaProduccion({ videos }: { videos?: readonly Video[] }) {
                 className={styles.mapaEstacion}
                 data-ocupada={porEtapa[etapa].length > 0}
                 onClick={() => irAEstacion(etapa)}
-                aria-label={`${nombre}, ${porEtapa[etapa].length} ${porEtapa[etapa].length === 1 ? "video" : "videos"}`}
+                aria-label={`${String(etapa + 1).padStart(2, "0")} ${nombre}, ${porEtapa[etapa].length} ${porEtapa[etapa].length === 1 ? "video" : "videos"}`}
                 title={nombre}
               >
                 <span>{String(etapa + 1).padStart(2, "0")}</span>
@@ -272,12 +312,7 @@ export function LineaProduccion({ videos }: { videos?: readonly Video[] }) {
                   key={`estacion-${etapa}`}
                   layout={reducido ? false : "position"}
                   initial={false}
-                  transition={{
-                    layout: {
-                      duration: reducido ? 0 : 0.64,
-                      ease: [0.16, 1, 0.3, 1],
-                    },
-                  }}
+                  transition={transicion}
                   data-estacion={etapa}
                   className={styles.estacion}
                   data-ocupada={videos.length > 0}
@@ -331,12 +366,7 @@ export function LineaProduccion({ videos }: { videos?: readonly Video[] }) {
                       } as CSSProperties
                     }
                     initial={false}
-                    transition={{
-                      layout: {
-                        duration: reducido ? 0 : 0.64,
-                        ease: [0.16, 1, 0.3, 1],
-                      },
-                    }}
+                    transition={transicion}
                   >
                     <Link
                       href={`/videos/${video.id}`}
@@ -430,12 +460,7 @@ export function LineaProduccion({ videos }: { videos?: readonly Video[] }) {
                 data-tipo={suceso.tipo}
                 layout={reducido ? false : "position"}
                 initial={false}
-                transition={{
-                  layout: {
-                    duration: reducido ? 0 : 0.64,
-                    ease: [0.16, 1, 0.3, 1],
-                  },
-                }}
+                transition={transicion}
               >
                 <span className={styles.marcaSuceso} aria-hidden="true" />
                 <time

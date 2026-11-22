@@ -130,6 +130,18 @@
   gap: var(--espacio-24);
   margin-bottom: var(--espacio-24);
 }
+.edicion .seccionCabecera {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+.edicion .seccionCabecera > div {
+  flex: 1;
+  min-width: 0;
+}
+.edicion .seccionCabecera > button {
+  flex: 0 0 var(--objetivo-tactil);
+  padding-inline: 0;
+}
 .seccionCabecera h2,
 .vacio h2,
 .leccion h2 {

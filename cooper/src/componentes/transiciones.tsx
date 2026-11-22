@@ -9,12 +9,11 @@ export function Transiciones() {
   const path = usePathname();
   const reduced = useMovimientoReducido();
   const resolver = useRef<(() => void) | null>(null);
+  const cancelarEspera = useRef<(() => void) | null>(null);
   useEffect(() => {
     resolver.current?.();
-    resolver.current = null;
   }, [path]);
   useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined;
     const click = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -64,26 +63,63 @@ export function Transiciones() {
       if (thumbnail)
         thumbnail.style.viewTransitionName =
           thumbnail.dataset.videoTransition ?? "";
+      cancelarEspera.current?.();
       const transition = document.startViewTransition(
         () =>
           new Promise<void>((resolve) => {
-            resolver.current = resolve;
+            const terminar = () => {
+              observer.disconnect();
+              clearTimeout(timeout);
+              if (resolver.current === comprobar) resolver.current = null;
+              if (cancelarEspera.current === terminar)
+                cancelarEspera.current = null;
+              resolve();
+            };
+            const comprobar = () => {
+              if (location.pathname !== url.pathname) return;
+              // Next puede actualizar el pathname antes de insertar el segmento
+              // del detalle. Solo fotografiamos cuando su medio ya tiene caja.
+              if (
+                targetName &&
+                !Array.from(
+                  document.querySelectorAll<HTMLElement>(
+                    '[style*="view-transition-name"]',
+                  ),
+                ).some(
+                  (element) =>
+                    element !== thumbnail &&
+                    element.style.viewTransitionName === targetName &&
+                    element.getClientRects().length > 0 &&
+                    getComputedStyle(element).visibility !== "hidden",
+                )
+              )
+                return;
+              terminar();
+            };
+            const observer = new MutationObserver(comprobar);
+            observer.observe(document.body, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              attributeFilter: ["style", "class", "hidden"],
+            });
+            const timeout = setTimeout(terminar, 4000);
+            resolver.current = comprobar;
+            cancelarEspera.current = terminar;
             router.push(url.pathname + url.search + url.hash);
-            timeout = setTimeout(resolve, 4000);
+            comprobar();
           }),
       );
       void transition.finished
         .catch(() => {})
         .finally(() => {
-          clearTimeout(timeout);
           if (thumbnail) thumbnail.style.viewTransitionName = "";
         });
     };
     document.addEventListener("click", click, true);
     return () => {
       document.removeEventListener("click", click, true);
-      resolver.current?.();
-      clearTimeout(timeout);
+      cancelarEspera.current?.();
     };
   }, [router, reduced]);
   return null;
