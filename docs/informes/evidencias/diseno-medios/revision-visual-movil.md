@@ -2,7 +2,7 @@
 
 Fecha: 21 de noviembre de 2026, Lima. Revisión independiente de las **66 capturas completas: 33 a 360 px y 33 a 390 px**, obtenidas de `.cache/diseno-medios-ci/evidencias-diseno/`. No falta ninguna de esas capturas. Se revisaron once hojas de contacto con los dos anchos emparejados y los originales de Fábrica, detalle y Publicados. Las hojas de consulta están en `.cache/revision-visual-movil/pares-01.png` a `pares-11.png`; no sustituyen los originales.
 
-La matriz muestra **datos de demostración sin MP4**. Es evidencia del estado sin medio y de la integración en el armazón existente; no demuestra por sí sola la presentación de los MP4 reales de B2 ni las miniaturas oficiales de YouTube. Las capturas `medios-detalle-*` y `medios-lista-*` del recorrido focal usan un MP4 sintético. La revisión del contenido real se añadirá al recibir `medios-reales-*`.
+La matriz muestra **datos de demostración sin MP4**. Es evidencia del estado sin medio y de la integración en el armazón existente; no demuestra por sí sola la presentación de los MP4 reales de B2 ni las miniaturas oficiales de YouTube. Las capturas `medios-detalle-*` y `medios-lista-*` del recorrido focal usan un MP4 sintético. La revisión adicional de contenido real figura más abajo, separada de esta matriz de demostración.
 
 ## Resultado y defecto de medios
 
@@ -61,6 +61,26 @@ Cada fila corresponde a los dos archivos `<nombre>-360.png` y `<nombre>-390.png`
 | entrada-error | 1077 | 1028 | Mensaje de error visible antes del acceso; sin colisión. |
 | no-encontrado | 900 | 900 | Estado y retorno completos; ilustración anterior. |
 | enlace-vencido | 900 | 900 | Explicación y retorno completos; ilustración anterior. |
+
+## Anexo: render existente, ensayo móvil de 390 px
+
+Se inspeccionaron los cinco PNG `medios-reales-*-390.png` completos. Proceden de un **fixture local autenticado con derivados del MP4 existente en B2**, no de una publicación nueva. El reproductor del fixture recibe el extracto silencioso de cinco segundos: **no se reprodujo en este recorrido el MP4 original completo**. La publicación de prueba está rotulada «archivo local» y «Datos simulados».
+
+| Captura adicional | Tamaño | Valoración |
+|---|---:|---|
+| medios-reales-lista-390 | 390 × 900 | El render ocupa la primera miniatura; encuadre vertical íntegro con bandas laterales dentro de la caja heredada. Título completo separado del medio, sin colisión. |
+| medios-reales-detalle-390 | 390 × 1879 | Video vertical protagonista, alineado con el contenido; persona, rótulo y subtítulo visibles. Proporción conservada, sin estiramiento ni recorte introducido por la interfaz. Los controles muestran 0:05 y silencio. |
+| medios-reales-publicados-390 | 390 × 1746 | Miniatura real junto al título; no montañas ni cartela sustitutiva. El formulario sigue relegando el medio a la parte inferior: límite del armazón, no resuelto por servir el archivo. |
+| medios-reales-fabrica-390 | 390 × 900 | La pieza seleccionada muestra el render real, con título y estado fuera de la imagen. Es una captura de viewport; no representa toda la pista. |
+| medios-reales-cola-390 | 320 × 1740 | Captura del elemento `.queue` dentro del viewport de 390 px. Primera pieza con render íntegro; veinte cartelas y último medio pendiente. El chip está separado del texto en las cartelas de esta revisión; M1 aún requiere la recaptura final de sus títulos originales. |
+
+El póster examinado mide 900 × 1600 y pesa 36.778 bytes. La vista previa mide 360 × 640, dura 5 s, pesa 336.834 bytes y no contiene pista de audio. Son derivados del original 1080 × 1920 documentado en el diagnóstico. La oscuridad y el tinte neutro proceden del material; no se añadieron imágenes o colores de relleno. En las miniaturas pequeñas el detalle fino pierde legibilidad por su tamaño físico, pero se conserva la composición del render. Para darles el protagonismo de «La pared» es necesaria la nueva retícula de Publicados.
+
+`medios-reales-recorrido-390.json` registra consola vacía, cero solicitudes externas, navegación interna sin recarga, carga del medio distante tras acercarlo mediante scroll y pausa al sacar el primero de vista. La pieza distante de la **cola** permanece pendiente en su PNG porque esa captura de elemento no equivale a recorrer cada celda; el ensayo de carga diferida se realiza en la lista. No se interpreta el recuadro pendiente como ausencia del MP4.
+
+La prueba de pausa por cambio de pestaña tiene un límite explícito: Chromium headless conservó la página visible y el ensayo **simuló `document.hidden` y `visibilitychange`**. Acredita la respuesta a la señal, no la ocultación nativa del navegador. La captura incluye asimismo «Reconectando/Conectando» por el SSE del fixture y el enlace enfocado «Saltar al contenido» superpuesto al filtro y a una fila de la cola durante el recorrido. Son estados visibles de la evidencia, no se retiraron para disimularlos; no constituyen contenido del medio.
+
+No se detectó un nuevo defecto de recorte, alineación o deformación del **render real** en estas cinco capturas. Esta valoración no acredita una publicación remota, las miniaturas oficiales de todas las redes ni la puerta global de diseño.
 
 ## Evidencia automática y límites
 
