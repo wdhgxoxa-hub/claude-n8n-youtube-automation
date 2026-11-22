@@ -6,6 +6,24 @@ export type VideoInicio = Estado["videos"][number];
 const DIA = 86_400_000;
 const numero = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 1 });
 
+/** Corte estable entre SSR e hidratación; avanza con la evidencia propia recibida. */
+export function corteInicio(videos: readonly VideoInicio[], inicial: number) {
+  let corte = inicial;
+  for (const video of videos) {
+    if (Number.isFinite(video.createdAt))
+      corte = Math.max(corte, video.createdAt);
+    if (Number.isFinite(video.updatedAt))
+      corte = Math.max(corte, video.updatedAt);
+    // La observabilidad puede actualizarse sin un nuevo paso de producción ni updatedAt.
+    for (const publicacion of video.observabilidad.publicaciones)
+      for (const medicion of publicacion.historial) {
+        const fecha = Date.parse(medicion.fecha);
+        if (Number.isFinite(fecha)) corte = Math.max(corte, fecha);
+      }
+  }
+  return corte;
+}
+
 export function fechaTerminada(video: VideoInicio) {
   const fechas = video.observabilidad.publicaciones.flatMap((p) =>
     p.fecha && Number.isFinite(Date.parse(p.fecha))
@@ -99,7 +117,7 @@ function variacion(
   unidad = "%",
 ) {
   if (actual === null || anterior === null) return "Sin comparación todavía";
-  if (anterior === 0)
+  if (anterior === 0 && unidad !== "pp")
     return actual === 0 ? "Sin cambios" : "Primeros resultados";
   const diferencia =
     unidad === "pp"

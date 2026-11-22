@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resumenInicio, terminadosInicio, ultimaMedicion, type VideoInicio } from "@/componentes/inicio-datos";
+import { corteInicio, resumenInicio, terminadosInicio, ultimaMedicion, type VideoInicio } from "@/componentes/inicio-datos";
 import { sinObservabilidad, type Publicacion } from "@/contratos/observabilidad";
 
 const DIA = 86400000;
@@ -26,6 +26,58 @@ function video(id: string, opciones: Partial<VideoInicio> = {}): VideoInicio {
 }
 
 describe("Inicio: cifras con contexto y sin resultados inventados", () => {
+  it("conserva el instante SSR al hidratar con la misma evidencia o sin videos", () => {
+    const inicial = [video("inicial")];
+    const hidratado = structuredClone(inicial);
+    expect(corteInicio([], ahora)).toBe(ahora);
+    expect(corteInicio(inicial, ahora)).toBe(ahora);
+    expect(corteInicio(hidratado, ahora)).toBe(ahora);
+    expect(resumenInicio(hidratado, corteInicio(hidratado, ahora))).toEqual(
+      resumenInicio(inicial, ahora),
+    );
+  });
+
+  it("incluye mediciones SSE posteriores al SSR aunque updatedAt no cambie", () => {
+    const inicial = [video("medicion-viva")];
+    const siguiente = structuredClone(inicial);
+    const fechaNueva = ahora + 60_000;
+    siguiente[0].observabilidad.publicaciones[0].historial.push({
+      fecha: new Date(fechaNueva).toISOString(),
+      vistas: 2500,
+      seguidoresGanados: 25,
+      retencion: 0.7,
+      meGusta: 11,
+      comentarios: 3,
+    });
+    const recibido = structuredClone(siguiente);
+    const antes = resumenInicio(inicial, corteInicio(inicial, ahora));
+    const despues = resumenInicio(siguiente, corteInicio(siguiente, ahora));
+    expect(siguiente[0].updatedAt).toBe(inicial[0].updatedAt);
+    expect(corteInicio(siguiente, ahora)).toBe(fechaNueva);
+    expect(antes.vistas.valor).toBe(700);
+    expect(antes.retencion.valor).toBe(64);
+    expect(despues.vistas.valor).toBe(800);
+    expect(despues.seguidores.valor).toBe(8);
+    expect(despues.retencion.valor).toBe(70);
+    expect(siguiente).toEqual(recibido);
+  });
+
+  it("compara una retención anterior de cero en puntos porcentuales", () => {
+    const p = publicacion();
+    p.historial[7].retencion = 0;
+    p.historial.at(-1)!.retencion = 0.6;
+    const resultado = resumenInicio(
+      [video("retencion-desde-cero", {
+        observabilidad: { ...sinObservabilidad, publicaciones: [p] },
+      })],
+      ahora,
+    );
+    expect(resultado.retencion.valor).toBe(60);
+    expect(resultado.retencion.variacion).toBe(
+      "+60 pp frente al período anterior",
+    );
+  });
+
   it("calcula incremento semanal en una red sin sumar audiencias ni duplicar una publicación", () => {
     const v = video("v", { observabilidad: { ...sinObservabilidad, publicaciones: [publicacion(), publicacion("tiktok", "tiktok", 100)] } });
     const resultado = resumenInicio([v, video("copia", { observabilidad: v.observabilidad })], ahora);

@@ -24,6 +24,7 @@ import { useVideoMedios, estiloMedio } from "./portada-video";
 import { nombreMedio } from "./transiciones";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
 import {
+  corteInicio,
   nombreRed,
   publicacionPrincipal,
   resumenInicio,
@@ -309,7 +310,7 @@ export function Inicio({ ahora }: { ahora: number }) {
   const produccion = propios.filter(
     (v) => v.stage < 11 && v.productionState !== "cancelada",
   );
-  const resumen = resumenInicio(propios, ahora);
+  const resumen = resumenInicio(propios, corteInicio(propios, ahora));
   const canal = (id: string) =>
     data.channels.find((c) => c.id === id)?.name ?? "Tu canal";
   return (
