@@ -289,7 +289,15 @@ export const whatsappOutbox = sqliteTable("whatsapp_outbox", {
     .references(() => users.id),
   phone: text("phone").notNull(),
   kind: text("kind", {
-    enum: ["verificacion", "guion", "final", "publicado", "gasto", "marca"],
+    enum: [
+      "verificacion",
+      "guion",
+      "final",
+      "publicado",
+      "gasto",
+      "marca",
+      "chat",
+    ],
   }).notNull(),
   resourceId: text("resource_id").notNull().default(""),
   revision: text("revision").notNull().default(""),
@@ -329,6 +337,34 @@ export const whatsappDeliveries = sqliteTable("whatsapp_deliveries", {
 });
 export const whatsappInbox = sqliteTable("whatsapp_inbox", {
   id: text("id").primaryKey(),
+  createdAt: integer("created_at").notNull(),
+});
+// Recepción durable: el ACK del webhook no espera al proveedor del chat.
+export const whatsappChatJobs = sqliteTable("whatsapp_chat_jobs", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  phone: text("phone").notNull(),
+  text: text("text").notNull(),
+  response: text("response").notNull().default(""),
+  contactVerifiedAt: integer("contact_verified_at").notNull(),
+  simulated: integer("simulated", { mode: "boolean" }).notNull(),
+  state: text("state", {
+    enum: [
+      "pendiente",
+      "procesando",
+      "completado",
+      "cancelado",
+      "incierto",
+      "fallido",
+    ],
+  })
+    .notNull()
+    .default("pendiente"),
+  attempts: integer("attempts").notNull().default(0),
+  nextAt: integer("next_at").notNull(),
+  leaseAt: integer("lease_at").notNull().default(0),
   createdAt: integer("created_at").notNull(),
 });
 export const whatsappActions = sqliteTable("whatsapp_actions", {

@@ -2,7 +2,7 @@
 
 Esta integración añade aprendizaje con métricas reales, competencia pública por canal, chat por el plan de la PC, conciliación, seguimiento durable de biblioteca, reutilización de montajes y resultados unificados. El [informe vigente](../docs/informes/cooper-total.md) y [ESTADO](../docs/ESTADO.md) distinguen lo implementado, probado y desplegado de la aceptación humana pendiente. El lote n8n lo aplica el orquestador con respaldo y reversa comprobados.
 
-La secuencia actual contiene quince migraciones. Conserva las ocho originales y `0008_observabilidad`, `0009_memoria`, `0010_marcas`, `0011_montajes_fabrica`, `0017_biblioteca`, `0018_rendimiento` y añade `0019_revision_doctrinal`; no se renumeran diarios aplicados. Las bases experimentales con `0008_marcas` requieren una migración específica; no alterar el diario para forzarlas. El procedimiento de la [integración 3](../docs/cooper-integracion3-despliegue.md) se conserva como antecedente de las once migraciones de la PC.
+La secuencia conserva las catorce migraciones integradas hasta `0018_rendimiento` y añade, en orden, `0019_video_medios`, `0019_revision_doctrinal` y `0019_whatsapp_chat`. Los nombres SQL se conservan; las entradas nuevas tienen índices y fechas crecientes. Ningún diario productivo se modifica.
 
 Recorrido conjunto reproducible, con todas las E2E anteriores, memoria, Marcas, movimiento, estrés y videos continuos a 1440/390 px:
 
@@ -19,6 +19,8 @@ Estudio privado para pedir, seguir, revisar y aprobar videos. Implementación en
 Avatares de foto, clonación de voz, catálogo y transcripción reales: [configuración, fuentes oficiales, privacidad y ensayo manual](MEDIOS.md). Los selectores siguen en modo simulado por defecto. La entrega de fase 1 se conserva como evidencia histórica. Estado de esta integración, puerta completa, capturas y pasos manuales de Walter: [cooper-final.md](../docs/informes/cooper-final.md).
 
 WhatsApp Business: verificación de número, preferencias, enlaces firmados, botones, cola durable y transporte real/simulado en [cooper-whatsapp.md](../docs/cooper-whatsapp.md). Desactivado para envíos reales por defecto; requiere alta y plantillas aprobadas por Meta.
+
+El webhook firmado recibe también texto del número verificado y lo lleva al mismo chat privado de Cooper. Un trabajador responde con hasta 18 palabras; las tarjetas de acciones se confirman en la web. Revalida dueño, consentimiento y ventana de 24 horas antes del envío, comprueba aprobación de plantillas en Meta y respeta `COOPER_MENSAJERIA_PAUSA=1`. La recepción queda persistida durante la pausa; los resultados inciertos no se repiten automáticamente. [Tres pasos de Walter en Meta](../docs/whatsapp-activacion-meta.md) e [informe de implementación y pruebas](../docs/informes/total-whatsapp-listo.md).
 
 Fase 6: [modo noticia por canal y desde el chat](../docs/cooper-modo-noticia.md), con verificaciones obligatorias y medios propios; [puente local Codex y respaldo API](../docs/puente-codex.md). El puente está activo y una llamada real corta del crítico pasó desde el contenedor. El modo noticia permanece apagado en todos los canales. En el simulador las noticias se detienen en Verificación; necesitan fuentes reales para avanzar. El ensayo completo de noticias y del respaldo pago queda pendiente.
 

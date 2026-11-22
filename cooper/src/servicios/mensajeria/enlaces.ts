@@ -38,7 +38,8 @@ export function resolverEnlace(user: User, token: string, now = Date.now()) {
     !job ||
     job.ownerId !== user.id ||
     job.expiresAt !== Number(match[2]) ||
-    job.kind === "verificacion"
+    job.kind === "verificacion" ||
+    job.kind === "chat"
   )
     throw new ErrorHttp(404, "Enlace no disponible.");
   avisoVigente(job, now);

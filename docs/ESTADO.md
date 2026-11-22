@@ -25,6 +25,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 - **21-11-2026, Lima — plantilla de tienda de ropa implementada y probada:** alta optativa en Marcas, especialista moda/ecommerce, lanzamientos/lookbooks/reels/ofertas/UGC, calendario orientativo, conversión real sin datos y ejemplo separado; catálogo web futuro desconectado. Puerta limpia sobre `b889851`: 487 unitarias, 106 E2E y 235 flujos, instalación/lint/tipos/build PASS, cero errores, advertencias u omisiones. Cuatro capturas móvil/escritorio en ambos temas revisadas. Rama `total-marca-tienda`, sin integrar, publicar ni desplegar. [Informe](informes/total-marca-tienda.md), [puerta](informes/evidencias/total-marca-tienda/puerta-final.json).
 
+- **21-11-2026, Lima — WhatsApp con chat durable implementado:** `3ae1c59` en rama propia `total-whatsapp-listo`. Webhook firmado, texto al chat privado con respuesta corta, aprobación actual de plantillas, ventana de 24 h, pausa y reintentos seguros. Migración aditiva `0019_whatsapp_chat`; puerta completa sobre archivo limpio: **524 unitarias, 103 E2E y 235 flujos**, cero errores, advertencias, omisiones y reintentos. Implementado y probado localmente. No integrado ni desplegado por este frente. [Informe](informes/total-whatsapp-listo.md).
+
 - **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 
 - **Recuperación app posterior a PASS implementada y probada localmente:** extra separado con preparación/sello, manifiesto completo WAL/medios y recuperación exclusiva de Cooper/chat-cooper. Ciclo real b3→cbf tras escrituras PASS: cinco servicios ajenos intactos, datos posteriores archivados/restaurables, release previa y ningún puntero global. 20 focales/241 regresiones sin advertencias. Helpers certificados/bundle/producto intactos; integración y ejecución remota a cargo del integrador, todavía no acreditadas. [Receta y evidencia](informes/total-recuperacion-app.md).
@@ -117,6 +119,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
+- WhatsApp integrado solo en la rama de diseño; pausa real conservada, revisión pendiente.
 - Plantilla de tienda integrada solo en la rama de diseño; revisión de Claude pendiente.
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
 - Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
@@ -125,7 +128,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## Pendientes de Walter
 
-1. Resolver pago de Meta, configurar App Secret/firma y plantillas WhatsApp con Claude; mantener mensajería real pausada hasta aceptar la configuración.
+1. Resolver pago de Meta, entregar `WHATSAPP_APP_SECRET` por canal privado y configurar el webhook definitivo con `messages`; revisar aprobación de plantillas y autorizar un ensayo real después del despliegue aceptado. [Tres pasos exactos](whatsapp-activacion-meta.md). Mantener mensajería real pausada hasta aceptar la configuración; no repetir el alta ya registrada.
 2. Completar la aceptación privada con su sesión Google, aislamiento, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya están resueltos; no repetir el acceso root antiguo.
 3. Revisar con Claude las esperas 400/540, la asociación de la routine externa y las siete entradas históricas que siguen cerradas. Tres entradas seguras ya se reabrieron con pruebas. El guion del Short `v-mwp2bjgj-7fvq` sigue pendiente, sin reanudación ni aprobación en esta misión.
 4. Aceptar memoria/chat desde su sesión: 37/37 conversaciones ficticias con plan real no garantizan todas las respuestas futuras. La síntesis conserva su límite de doce segundos.
