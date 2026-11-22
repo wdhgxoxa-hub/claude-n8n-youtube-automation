@@ -410,282 +410,315 @@ for (const width of widths) {
   });
 }
 
-for (const width of [390, 1440]) {
-  test(`ruta, Cooper y navegación en movimiento a ${width}px`, async ({
-    page,
-    context,
-  }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.emulateMedia({ reducedMotion: "no-preference" });
-    const client = await context.newCDPSession(page);
-    await client.send("Emulation.setCPUThrottlingRate", {
-      rate: width < 768 ? 4 : 1,
-    });
-    await client.send("Tracing.start", {
-      categories:
-        "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame",
-      transferMode: "ReturnAsStream",
-    });
-    const errors: string[] = [];
-    const interactions: Awaited<ReturnType<typeof stopMotionSample>>[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
-    page.on("console", (message) => {
-      if (["warning", "error"].includes(message.type()))
-        errors.push(message.text());
-    });
-    await page.goto("/");
-    await page.evaluate(() => {
-      const original = document.startViewTransition?.bind(document);
-      if (!original) return;
-      const observations: { names: string[] }[] = [];
-      (
-        window as Window & { transitionsObserved?: typeof observations }
-      ).transitionsObserved = observations;
-      document.startViewTransition = (...args: Parameters<typeof original>) => {
-        observations.push({
-          names: [
-            ...document.querySelectorAll<HTMLElement>(
-              "[data-video-transition]",
-            ),
-          ]
-            .map((element) => element.style.viewTransitionName)
-            .filter(Boolean),
+for (const mode of ["medicion", "grabacion"] as const) {
+  test.describe(`Movimiento: ${mode}`, () => {
+    test.use({ video: mode === "grabacion" ? "on" : "off", trace: "off" });
+    for (const width of [390, 1440]) {
+      test(`ruta, Cooper y navegación en movimiento a ${width}px`, async ({
+        page,
+        context,
+      }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.emulateMedia({ reducedMotion: "no-preference" });
+        const client = await context.newCDPSession(page);
+        await client.send("Emulation.setCPUThrottlingRate", {
+          rate: width < 768 ? 4 : 1,
         });
-        return original(...args);
-      };
-    });
-    await expect(
-      page.getByRole("textbox", { name: "Mensaje para Cooper" }),
-    ).toHaveCount(0);
-    await expect(
-      page.locator("header").getByText("Modo de prueba", { exact: true }),
-    ).toHaveCount(0);
-    await expect(
-      page.locator("header").getByRole("button", { name: "Pausar movimiento" }),
-    ).toHaveCount(0);
-    await expect(page.locator(".pildora-conexion")).toHaveCount(0);
-    await startMotionSample(page, "cooper-abrir");
-    await page
-      .getByRole("button", { name: "Abrir Cooper", exact: true })
-      .click();
-    await expect(
-      page.getByRole("textbox", { name: "Mensaje para Cooper" }),
-    ).toBeVisible();
-    await page.waitForTimeout(700);
-    interactions.push(await stopMotionSample(page));
-    const sheet = page.locator(".cooper-panel");
-    if (width < 768) {
-      expect((await sheet.boundingBox())!.height).toBeCloseTo(900 * 0.62, 0);
-      const grip = page.locator(".cooper-drag");
-      const start = (await grip.boundingBox())!;
-      await startMotionSample(page, "cooper-arrastrar");
-      await page.mouse.move(
-        start.x + start.width / 2,
-        start.y + start.height / 2,
-      );
-      await page.mouse.down();
-      await page.mouse.move(start.x + start.width / 2, start.y - 100, {
-        steps: 8,
-      });
-      await page.mouse.up();
-      await expect(sheet).toHaveClass(/is-full/);
-      await page.waitForTimeout(700);
-      interactions.push(await stopMotionSample(page));
-      await page.evaluate(() =>
-        performance.mark("diseno:auditoria-fuera-medicion:inicio"),
-      );
-      await capture(page, "cooper-expandido", width, errors);
-      await page.evaluate(() =>
-        performance.mark("diseno:auditoria-fuera-medicion:fin"),
-      );
-      await page
-        .getByRole("button", { name: "Reducir Cooper", exact: true })
-        .click();
-      await expect(sheet).not.toHaveClass(/is-full/);
-    } else {
-      const panelBounds = (await sheet.boundingBox())!;
-      const contentBounds = (await page.locator("main").boundingBox())!;
-      expect(panelBounds.width).toBe(420);
-      expect(contentBounds.x + contentBounds.width).toBeLessThanOrEqual(
-        panelBounds.x,
-      );
-    }
-    await startMotionSample(page, "cooper-cerrar");
-    await page
-      .getByRole("button", { name: "Cerrar Cooper", exact: true })
-      .click();
-    await expect(
-      page.getByRole("textbox", { name: "Mensaje para Cooper" }),
-    ).toHaveCount(0);
-    await page.waitForTimeout(700);
-    interactions.push(await stopMotionSample(page));
-    for (const path of [
-      "/videos",
-      "/publicados",
-      "/aprendizaje",
-      "/marcas",
-      "/",
-    ]) {
-      const link = page
-        .locator(`a[href="${path}"]`)
-        .filter({ visible: true })
-        .first();
-      await startMotionSample(page, `ruta-${path.replaceAll("/", "_")}`);
-      await link.click();
-      await expect(page).toHaveURL(
-        new RegExp(`${path === "/" ? "/$" : path + "$"}`),
-      );
-      await page.waitForTimeout(700);
-      interactions.push(await stopMotionSample(page));
-    }
-    const target = page.locator(".video-mini").first();
-    const href = await target.getAttribute("href");
-    await startMotionSample(page, "video-elemento-compartido");
-    await target.click();
-    await expect(page).toHaveURL(new RegExp(`${href}$`));
-    await page.waitForTimeout(800);
-    interactions.push(await stopMotionSample(page));
-    const transitions = await page.evaluate(
-      () =>
-        (window as Window & { transitionsObserved?: { names: string[] }[] })
-          .transitionsObserved ?? [],
-    );
-    expect(transitions.length).toBeGreaterThanOrEqual(6);
-    expect(
-      transitions.some((transition) =>
-        transition.names.some((name) => name.startsWith("video-")),
-      ),
-    ).toBe(true);
-    writeFileSync(
-      `${directory}/transiciones-${width}.json`,
-      JSON.stringify(transitions, null, 2) + "\n",
-    );
-    await page.goto("/");
-    const metrics = await page.evaluate(async () => {
-      let cls = 0;
-      const longTasks: number[] = [];
-      const layoutShifts: unknown[] = [];
-      const startedAt = performance.now();
-      const fontsAtStart = document.fonts.status;
-      let fontsReadyAt: number | null = null;
-      void document.fonts.ready.then(() => {
-        fontsReadyAt = performance.now();
-      });
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === "longtask") longTasks.push(entry.duration);
-          else {
-            const shift = entry as PerformanceEntry & {
-              hadRecentInput: boolean;
-              value: number;
-              sources?: {
-                node?: Node;
-                previousRect: DOMRectReadOnly;
-                currentRect: DOMRectReadOnly;
-              }[];
-            };
-            if (!shift.hadRecentInput) cls += shift.value;
-            layoutShifts.push({
-              time: shift.startTime,
-              value: shift.value,
-              hadRecentInput: shift.hadRecentInput,
-              sources: shift.sources?.map(
-                ({ node, previousRect, currentRect }) => ({
-                  element:
-                    node instanceof Element
-                      ? `${node.tagName}${node.id ? `#${node.id}` : ""}.${Array.from(node.classList).join(".")}`
-                      : node?.nodeName,
-                  previous: previousRect.toJSON(),
-                  current: currentRect.toJSON(),
-                }),
-              ),
+        if (mode === "medicion")
+          await client.send("Tracing.start", {
+            categories:
+              "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame",
+            transferMode: "ReturnAsStream",
+          });
+        const errors: string[] = [];
+        const interactions: Awaited<ReturnType<typeof stopMotionSample>>[] = [];
+        const beginPhase = async (phase: string) => {
+          if (mode === "medicion") await startMotionSample(page, phase);
+        };
+        const finishPhase = async () => {
+          if (mode === "medicion")
+            interactions.push(await stopMotionSample(page));
+        };
+        page.on("pageerror", (error) => errors.push(error.message));
+        page.on("console", (message) => {
+          if (["warning", "error"].includes(message.type()))
+            errors.push(message.text());
+        });
+        await page.goto("/");
+        await page.evaluate(() => {
+          const original = document.startViewTransition?.bind(document);
+          if (!original) return;
+          const observations: { names: string[] }[] = [];
+          (
+            window as Window & { transitionsObserved?: typeof observations }
+          ).transitionsObserved = observations;
+          document.startViewTransition = (
+            ...args: Parameters<typeof original>
+          ) => {
+            observations.push({
+              names: [
+                ...document.querySelectorAll<HTMLElement>(
+                  "[data-video-transition]",
+                ),
+              ]
+                .map((element) => element.style.viewTransitionName)
+                .filter(Boolean),
             });
-          }
+            return original(...args);
+          };
+        });
+        await expect(
+          page.getByRole("textbox", { name: "Mensaje para Cooper" }),
+        ).toHaveCount(0);
+        await expect(
+          page.locator("header").getByText("Modo de prueba", { exact: true }),
+        ).toHaveCount(0);
+        await expect(
+          page
+            .locator("header")
+            .getByRole("button", { name: "Pausar movimiento" }),
+        ).toHaveCount(0);
+        await expect(page.locator(".pildora-conexion")).toHaveCount(0);
+        await beginPhase("cooper-abrir");
+        await page
+          .getByRole("button", { name: "Abrir Cooper", exact: true })
+          .click();
+        await expect(
+          page.getByRole("textbox", { name: "Mensaje para Cooper" }),
+        ).toBeVisible();
+        await page.waitForTimeout(700);
+        await finishPhase();
+        const sheet = page.locator(".cooper-panel");
+        if (width < 768) {
+          expect((await sheet.boundingBox())!.height).toBeCloseTo(
+            900 * 0.62,
+            0,
+          );
+          const grip = page.locator(".cooper-drag");
+          const start = (await grip.boundingBox())!;
+          await beginPhase("cooper-arrastrar");
+          await page.mouse.move(
+            start.x + start.width / 2,
+            start.y + start.height / 2,
+          );
+          await page.mouse.down();
+          await page.mouse.move(start.x + start.width / 2, start.y - 100, {
+            steps: 8,
+          });
+          await page.mouse.up();
+          await expect(sheet).toHaveClass(/is-full/);
+          await page.waitForTimeout(700);
+          await finishPhase();
+          if (mode === "grabacion")
+            await capture(page, "cooper-expandido", width, errors);
+          await page
+            .getByRole("button", { name: "Reducir Cooper", exact: true })
+            .click();
+          await expect(sheet).not.toHaveClass(/is-full/);
+        } else {
+          const panelBounds = (await sheet.boundingBox())!;
+          const contentBounds = (await page.locator("main").boundingBox())!;
+          expect(panelBounds.width).toBe(420);
+          expect(contentBounds.x + contentBounds.width).toBeLessThanOrEqual(
+            panelBounds.x,
+          );
         }
-      });
-      observer.observe({ entryTypes: ["layout-shift", "longtask"] });
-      const intervals: number[] = [];
-      await new Promise<void>((resolve) => {
-        let previous = 0,
-          start = 0;
-        function tick(now: number) {
-          if (!start) start = now;
-          if (previous) intervals.push(now - previous);
-          previous = now;
-          if (now - start < 2500) requestAnimationFrame(tick);
-          else resolve();
+        await beginPhase("cooper-cerrar");
+        await page
+          .getByRole("button", { name: "Cerrar Cooper", exact: true })
+          .click();
+        await expect(
+          page.getByRole("textbox", { name: "Mensaje para Cooper" }),
+        ).toHaveCount(0);
+        await page.waitForTimeout(700);
+        await finishPhase();
+        for (const path of [
+          "/videos",
+          "/publicados",
+          "/aprendizaje",
+          "/marcas",
+          "/",
+        ]) {
+          const link = page
+            .locator(`a[href="${path}"]`)
+            .filter({ visible: true })
+            .first();
+          await beginPhase(`ruta-${path.replaceAll("/", "_")}`);
+          await link.click();
+          await expect(page).toHaveURL(
+            new RegExp(`${path === "/" ? "/$" : path + "$"}`),
+          );
+          await page.waitForTimeout(700);
+          await finishPhase();
         }
-        requestAnimationFrame(tick);
+        const target = page.locator(".video-mini").first();
+        const href = await target.getAttribute("href");
+        await beginPhase("video-elemento-compartido");
+        await target.click();
+        await expect(page).toHaveURL(new RegExp(`${href}$`));
+        await page.waitForTimeout(800);
+        await finishPhase();
+        const transitions = await page.evaluate(
+          () =>
+            (window as Window & { transitionsObserved?: { names: string[] }[] })
+              .transitionsObserved ?? [],
+        );
+        expect(transitions.length).toBeGreaterThanOrEqual(6);
+        expect(
+          transitions.some((transition) =>
+            transition.names.some((name) => name.startsWith("video-")),
+          ),
+        ).toBe(true);
+        writeFileSync(
+          `${directory}/transiciones-${mode === "grabacion" ? "grabacion-" : ""}${width}.json`,
+          JSON.stringify(transitions, null, 2) + "\n",
+        );
+        if (mode === "grabacion") {
+          await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+          expect(errors).toEqual([]);
+          return;
+        }
+        await page.goto("/");
+        const metrics = await page.evaluate(async () => {
+          let cls = 0;
+          const longTasks: number[] = [];
+          const layoutShifts: unknown[] = [];
+          const startedAt = performance.now();
+          const fontsAtStart = document.fonts.status;
+          let fontsReadyAt: number | null = null;
+          void document.fonts.ready.then(() => {
+            fontsReadyAt = performance.now();
+          });
+          const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === "longtask")
+                longTasks.push(entry.duration);
+              else {
+                const shift = entry as PerformanceEntry & {
+                  hadRecentInput: boolean;
+                  value: number;
+                  sources?: {
+                    node?: Node;
+                    previousRect: DOMRectReadOnly;
+                    currentRect: DOMRectReadOnly;
+                  }[];
+                };
+                if (!shift.hadRecentInput) cls += shift.value;
+                layoutShifts.push({
+                  time: shift.startTime,
+                  value: shift.value,
+                  hadRecentInput: shift.hadRecentInput,
+                  sources: shift.sources?.map(
+                    ({ node, previousRect, currentRect }) => ({
+                      element:
+                        node instanceof Element
+                          ? `${node.tagName}${node.id ? `#${node.id}` : ""}.${Array.from(node.classList).join(".")}`
+                          : node?.nodeName,
+                      previous: previousRect.toJSON(),
+                      current: currentRect.toJSON(),
+                    }),
+                  ),
+                });
+              }
+            }
+          });
+          observer.observe({ entryTypes: ["layout-shift", "longtask"] });
+          const intervals: number[] = [];
+          await new Promise<void>((resolve) => {
+            let previous = 0,
+              start = 0;
+            function tick(now: number) {
+              if (!start) start = now;
+              if (previous) intervals.push(now - previous);
+              previous = now;
+              if (now - start < 2500) requestAnimationFrame(tick);
+              else resolve();
+            }
+            requestAnimationFrame(tick);
+          });
+          observer.disconnect();
+          const sorted = [...intervals].sort((a, b) => a - b);
+          return {
+            fps:
+              1000 / (intervals.reduce((a, b) => a + b, 0) / intervals.length),
+            p95: sorted[Math.floor(sorted.length * 0.95)],
+            cls,
+            longTasks,
+            layoutShifts,
+            startedAt,
+            fontsAtStart,
+            fontsReadyAt,
+          };
+        });
+        await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+        const finished = new Promise<string>((resolve, reject) => {
+          client.once("Tracing.tracingComplete", ({ stream }) => {
+            if (stream) resolve(stream);
+            else reject(new Error("Chromium no devolvió el archivo de traza."));
+          });
+        });
+        await client.send("Tracing.end");
+        const stream = await finished;
+        const tracePath = `${directory}/traza-movimiento-${width}.json`;
+        writeFileSync(tracePath, "");
+        while (true) {
+          const chunk = await client.send("IO.read", { handle: stream });
+          appendFileSync(
+            tracePath,
+            chunk.base64Encoded
+              ? Buffer.from(chunk.data, "base64")
+              : chunk.data,
+          );
+          if (chunk.eof) break;
+        }
+        await client.send("IO.close", { handle: stream });
+        writeFileSync(
+          `${directory}/movimiento-${width}.json`,
+          JSON.stringify(
+            {
+              viewport: width,
+              instrumentation: {
+                cdpTrace: true,
+                playwrightTrace: false,
+                video: false,
+                screenshotsDuringMeasurement: false,
+                recordedSeparately: true,
+              },
+              cpu: width < 768 ? 4 : 1,
+              metrics,
+              interactions,
+              trace: `traza-movimiento-${width}.json`,
+              errors,
+              limitation:
+                "Laboratorio Chromium local; no acredita un teléfono físico.",
+            },
+            null,
+            2,
+          ) + "\n",
+        );
+        expect(metrics.fps).toBeGreaterThanOrEqual(57);
+        expect(metrics.p95).toBeLessThanOrEqual(25);
+        expect(metrics.cls).toBe(0);
+        expect(metrics.longTasks.filter((duration) => duration >= 100)).toEqual(
+          [],
+        );
+        for (const sample of interactions) {
+          expect
+            .soft(sample.fps, `${sample.phase}: fluidez real de interacción`)
+            .toBeGreaterThanOrEqual(57);
+          expect
+            .soft(sample.p95, `${sample.phase}: percentil95 de fotograma`)
+            .toBeLessThanOrEqual(25);
+          expect
+            .soft(
+              sample.longTasks.filter((duration) => duration >= 100),
+              `${sample.phase}: bloqueo de interfaz`,
+            )
+            .toEqual([]);
+        }
+        expect(errors).toEqual([]);
       });
-      observer.disconnect();
-      const sorted = [...intervals].sort((a, b) => a - b);
-      return {
-        fps: 1000 / (intervals.reduce((a, b) => a + b, 0) / intervals.length),
-        p95: sorted[Math.floor(sorted.length * 0.95)],
-        cls,
-        longTasks,
-        layoutShifts,
-        startedAt,
-        fontsAtStart,
-        fontsReadyAt,
-      };
-    });
-    await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
-    const finished = new Promise<string>((resolve, reject) => {
-      client.once("Tracing.tracingComplete", ({ stream }) => {
-        if (stream) resolve(stream);
-        else reject(new Error("Chromium no devolvió el archivo de traza."));
-      });
-    });
-    await client.send("Tracing.end");
-    const stream = await finished;
-    const tracePath = `${directory}/traza-movimiento-${width}.json`;
-    writeFileSync(tracePath, "");
-    while (true) {
-      const chunk = await client.send("IO.read", { handle: stream });
-      appendFileSync(
-        tracePath,
-        chunk.base64Encoded ? Buffer.from(chunk.data, "base64") : chunk.data,
-      );
-      if (chunk.eof) break;
     }
-    await client.send("IO.close", { handle: stream });
-    writeFileSync(
-      `${directory}/movimiento-${width}.json`,
-      JSON.stringify(
-        {
-          viewport: width,
-          cpu: width < 768 ? 4 : 1,
-          metrics,
-          interactions,
-          trace: `traza-movimiento-${width}.json`,
-          errors,
-          limitation:
-            "Laboratorio Chromium local; no acredita un teléfono físico.",
-        },
-        null,
-        2,
-      ) + "\n",
-    );
-    expect(metrics.fps).toBeGreaterThanOrEqual(57);
-    expect(metrics.p95).toBeLessThanOrEqual(25);
-    expect(metrics.cls).toBe(0);
-    expect(metrics.longTasks.filter((duration) => duration >= 100)).toEqual([]);
-    for (const sample of interactions) {
-      expect
-        .soft(sample.fps, `${sample.phase}: fluidez real de interacción`)
-        .toBeGreaterThanOrEqual(57);
-      expect
-        .soft(sample.p95, `${sample.phase}: percentil95 de fotograma`)
-        .toBeLessThanOrEqual(25);
-      expect
-        .soft(
-          sample.longTasks.filter((duration) => duration >= 100),
-          `${sample.phase}: bloqueo de interfaz`,
-        )
-        .toEqual([]);
-    }
-    expect(errors).toEqual([]);
   });
 }
 
