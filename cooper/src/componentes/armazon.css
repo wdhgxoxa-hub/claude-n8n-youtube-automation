@@ -787,10 +787,9 @@ main#contenido .route-choreography > .page {
 }
 .cooper-panel .composer-tools {
   display: grid;
-  grid-template-columns: var(--objetivo-tactil) var(--objetivo-tactil) minmax(
-      0,
-      1fr
-    ) var(--objetivo-tactil);
+  grid-template-columns:
+    var(--objetivo-tactil) var(--objetivo-tactil) minmax(0, 1fr)
+    var(--objetivo-tactil);
   align-items: center;
   gap: var(--espacio-4);
 }
@@ -824,7 +823,21 @@ main#contenido .route-choreography > .page {
   margin-top: var(--espacio-4);
 }
 
-.entrada-estudio { min-width: 0; animation: route-in var(--duracion-entrada) var(--curva-salida) both; animation-delay: calc(var(--orden, 0) * var(--desfase-entrada)); }
-@keyframes ruta-fundido { from { opacity: 0; } }
-.route-choreography[data-navigation] { animation-name: ruta-fundido; }
-@media (prefers-reduced-motion: reduce) { .entrada-estudio { animation: none; } }
+.entrada-estudio {
+  min-width: 0;
+  animation: route-in var(--duracion-entrada) var(--curva-salida) both;
+  animation-delay: calc(var(--orden, 0) * var(--desfase-entrada));
+}
+@keyframes ruta-fundido {
+  from {
+    opacity: 0;
+  }
+}
+.route-choreography[data-navigation] {
+  animation-name: ruta-fundido;
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrada-estudio {
+    animation: none;
+  }
+}

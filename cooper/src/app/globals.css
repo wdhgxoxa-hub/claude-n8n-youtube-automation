@@ -178,7 +178,7 @@ textarea {
 }
 input[type="checkbox"],
 input[type="radio"] {
-  accent-color: var(--tally);
+  accent-color: var(--texto-2);
   width: 18px;
   height: 18px;
   flex-shrink: 0;
@@ -229,7 +229,7 @@ details[open] summary {
   left: 16px;
   z-index: 100;
   padding: var(--espacio-12);
-  background: var(--tally);
+  background: var(--texto-2);
   color: var(--sobre-tally);
 }
 .skip:focus {
@@ -302,7 +302,7 @@ details[open] summary {
   display: inline-flex;
   align-items: center;
   gap: var(--espacio-8);
-  color: var(--tally);
+  color: var(--texto-2);
   font-size: var(--texto-13);
   min-height: 44px;
 }
@@ -327,7 +327,7 @@ details[open] summary {
 .notice {
   padding: var(--espacio-12) var(--espacio-16);
   background: var(--sup-3);
-  border-left: 2px solid var(--tally);
+  border-left: 2px solid var(--info);
   border-radius: var(--radio-control);
   margin: var(--espacio-12) 0;
   color: var(--texto);
@@ -372,7 +372,7 @@ details[open] summary {
   letter-spacing: -1.5px;
 }
 .brand-dot {
-  color: var(--tally);
+  color: var(--texto-2);
 }
 .workspace-label {
   color: var(--texto-2);
@@ -404,8 +404,8 @@ details[open] summary {
 }
 .sidebar nav a[aria-current="page"] {
   background: var(--sup-3);
-  color: var(--tally);
-  box-shadow: inset 2px 0 var(--tally);
+  color: var(--texto-2);
+  box-shadow: inset 2px 0 var(--texto-2);
 }
 .nav-count {
   margin-left: auto;
@@ -671,7 +671,7 @@ main:focus-visible {
   gap: var(--espacio-4);
   min-height: 40px;
   font-size: var(--texto-12);
-  color: var(--tally);
+  color: var(--texto-2);
   margin: var(--espacio-4) var(--espacio-8) 0 0;
 }
 .thinking {
@@ -824,7 +824,7 @@ main:focus-visible {
   padding: var(--espacio-12);
   border-radius: var(--radio-control);
   margin-top: var(--espacio-16);
-  color: var(--tally);
+  color: var(--texto-2);
 }
 .approval-alert span {
   flex: 1;
@@ -868,7 +868,7 @@ main:focus-visible {
   place-items: center;
   flex-shrink: 0;
   overflow: hidden;
-  color: var(--tally);
+  color: var(--texto-2);
 }
 .film-thumbnail svg {
   width: 100%;
@@ -1083,7 +1083,7 @@ main:focus-visible {
   width: 48px;
   height: 48px;
   border: 1px solid var(--linea);
-  color: var(--tally);
+  color: var(--texto-2);
   border-radius: var(--radio-tarjeta);
   flex-shrink: 0;
 }
@@ -1302,7 +1302,7 @@ main:focus-visible {
 }
 .feedback {
   padding: var(--espacio-16);
-  border-left: 2px solid var(--tally);
+  border-left: 2px solid var(--info);
   background: var(--sup-2);
   font-size: var(--texto-12);
 }
@@ -1433,7 +1433,7 @@ main:focus-visible {
   position: relative;
 }
 .choice:has(:checked) {
-  border-color: var(--tally);
+  border-color: var(--texto-2);
 }
 .choice input {
   position: absolute;
@@ -1507,7 +1507,7 @@ main:focus-visible {
 }
 .spend-bar > div {
   height: 100%;
-  background: var(--tally);
+  background: var(--sube);
 }
 .spend-alert {
   padding: var(--espacio-16);
@@ -1664,7 +1664,7 @@ main:focus-visible {
   align-items: center;
   width: 80%;
   height: 72px;
-  color: var(--tally);
+  color: var(--texto-2);
 }
 .waveform span {
   width: 4px;
@@ -1709,7 +1709,7 @@ main:focus-visible {
 .identity-form blockquote {
   font-size: var(--texto-17);
   line-height: 1.7;
-  border-left: 2px solid var(--tally);
+  border-left: 2px solid var(--texto-2);
   padding-left: var(--espacio-16);
   margin: var(--espacio-32) 0;
 }
@@ -1823,7 +1823,7 @@ main:focus-visible {
   position: absolute;
   width: 5px;
   height: 5px;
-  border: 1px solid var(--tally);
+  border: 1px solid var(--texto-2);
   border-radius: var(--radio-pildora);
   top: -2px;
   left: 50%;
@@ -1845,7 +1845,7 @@ main:focus-visible {
 }
 .entry-mark {
   display: block;
-  color: var(--tally);
+  color: var(--texto-2);
   margin-bottom: var(--espacio-32);
 }
 .entry-inner h2 {
@@ -2142,7 +2142,7 @@ main:focus-visible {
     border-bottom: 2px solid transparent;
   }
   .mobile-tabs button[aria-selected="true"] {
-    color: var(--tally);
+    color: var(--texto-2);
     border-color: transparent;
   }
   .studio {
@@ -2545,7 +2545,7 @@ main:focus-visible {
   background: currentColor;
 }
 .video-status.pending {
-  color: var(--tally);
+  color: var(--aviso);
 }
 .video-status.finished {
   color: var(--sube);
@@ -2637,7 +2637,7 @@ main:focus-visible {
   min-width: 0;
 }
 .queue-item[aria-pressed="true"] {
-  border-bottom-color: var(--tally);
+  border-bottom-color: var(--texto-2);
 }
 .queue-cover {
   display: block;
@@ -2716,7 +2716,7 @@ main:focus-visible {
   position: absolute;
   left: calc(50% - 6px);
   top: 27px;
-  border-left: 15px solid var(--tally);
+  border-left: 15px solid var(--texto-2);
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
 }
@@ -2751,7 +2751,7 @@ main:focus-visible {
   border-top: 2px solid var(--sube);
 }
 .channel-card:nth-child(even) {
-  border-top-color: var(--tally);
+  border-top-color: var(--texto-2);
 }
 .channel-heading small {
   font-size: var(--texto-12);
@@ -2779,7 +2779,7 @@ main:focus-visible {
   font-size: var(--texto-12);
 }
 .video-mini:hover :is(h2, h3) {
-  color: var(--tally);
+  color: var(--texto-2);
 }
 .preview-art {
   position: absolute;
@@ -3085,7 +3085,7 @@ main:focus-visible {
   height: 100%;
   border: 0;
   border-radius: 0;
-  background: var(--tally);
+  background: var(--texto-2);
   animation: idea-transit 6s ease-in-out infinite;
 }
 .login-track i:nth-of-type(2):after {
@@ -3122,7 +3122,7 @@ main:focus-visible {
   inset: 0;
   border-radius: inherit;
   background: var(--sup-3);
-  border-left: 2px solid var(--tally);
+  border-left: 2px solid var(--texto-2);
   z-index: -1;
   pointer-events: none;
 }
@@ -3130,7 +3130,7 @@ main:focus-visible {
   position: absolute;
   inset: auto 12px 0;
   height: 2px;
-  background: var(--tally);
+  background: var(--texto-2);
   pointer-events: none;
 }
 .number-reels {
@@ -3338,7 +3338,7 @@ main:focus-visible {
 .spend-bar-ink {
   display: block;
   height: 100%;
-  background: var(--tally);
+  background: var(--sube);
   transform-origin: left;
   animation: chart-draw var(--duracion-ruta) var(--curva-salida);
 }
@@ -3424,7 +3424,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
 .chat-confirmation {
   margin: var(--espacio-16) 0;
   padding: var(--espacio-16);
-  border-left: 2px solid var(--tally);
+  border-left: 2px solid var(--info);
   background: var(--sup-2);
 }
 .chat-confirmation h3 {
@@ -3654,7 +3654,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
 }
 .incident-state {
   font-size: var(--texto-13);
-  color: var(--tally);
+  color: var(--aviso);
 }
 .incident-state.corregido {
   color: var(--texto);
@@ -3691,8 +3691,8 @@ input:is([type="checkbox"], [type="radio"]):checked {
   text-decoration: none;
 }
 .operation-nav a[aria-current="page"] {
-  color: var(--tally);
-  box-shadow: 0 2px var(--tally);
+  color: var(--texto-2);
+  box-shadow: 0 2px var(--texto-2);
 }
 .operation-toolbar,
 .button-row {
@@ -3794,7 +3794,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   padding: var(--espacio-16) 0;
 }
 .operation-confirm {
-  border: 2px solid var(--tally);
+  border: 2px solid var(--aviso);
   background: var(--sup-2);
   padding: var(--espacio-24);
   border-radius: var(--radio-panel);
@@ -3854,7 +3854,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
 }
 .marcas-demo {
   padding: var(--espacio-12) var(--espacio-16);
-  border-left: 3px solid var(--tally);
+  border-left: 3px solid var(--info);
   color: var(--texto-2);
 }
 .marcas-layout {
@@ -3936,7 +3936,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   white-space: nowrap;
 }
 .marca-tabs button.active {
-  border-color: var(--tally);
+  border-color: var(--texto-2);
   color: var(--texto);
 }
 .marca-conexion,
@@ -4155,7 +4155,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   overflow: hidden;
   pointer-events: none;
   contain: layout paint;
-  color: var(--tally);
+  color: var(--texto-2);
 }
 .scene-parallax {
   position: absolute;
@@ -4170,7 +4170,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   border-radius: var(--radio-pildora);
   background: radial-gradient(
     ellipse,
-    color-mix(in srgb, var(--tally) 12%, transparent),
+    color-mix(in srgb, var(--texto-2) 12%, transparent),
     transparent 68%
   );
   animation: scene-light 8s ease-in-out infinite;
@@ -4252,7 +4252,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   background: linear-gradient(
     90deg,
     transparent,
-    color-mix(in srgb, var(--tally) 17%, transparent),
+    color-mix(in srgb, var(--texto-2) 17%, transparent),
     transparent
   );
   animation: scene-scan 5.8s var(--curva-salida) infinite;
@@ -4651,7 +4651,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   background: var(--linea);
 }
 .tour-progress i[data-active="true"] {
-  background: var(--tally);
+  background: var(--texto-2);
 }
 @keyframes tour-arrive {
   from {
@@ -4710,7 +4710,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   display: block;
   width: 16px;
   height: 24px;
-  border: 1px solid var(--tally);
+  border: 1px solid var(--texto-2);
   border-radius: var(--radio-control);
   animation: wave-studio 1s ease-in-out infinite alternate;
 }

@@ -55,7 +55,19 @@ export function CooperFlotante({
           "Quiero una nueva idea",
           "Revisar mis pendientes",
         ]
-      : [data.channels.some((c) => c.ownerId === data.user.id) ? "Crear otro canal" : "Crear mi primer canal", "Dar forma a una idea", "Revisar mis pendientes"];
+      : marca
+        ? [
+            "¿Qué sigue para esta marca?",
+            "Quiero preparar una publicación",
+            "Revisar el calendario de mi marca",
+          ]
+        : [
+            data.channels.some((c) => c.ownerId === data.user.id)
+              ? "Crear otro canal"
+              : "Crear mi primer canal",
+            "Dar forma a una idea",
+            "Revisar mis pendientes",
+          ];
   const pendiente = data.videos.some(
     (v) => v.ownerId === data.user.id && [3, 9].includes(v.stage),
   );
@@ -64,7 +76,9 @@ export function CooperFlotante({
     const sheet = panel.current;
     const trigger = opener.current;
     const media = window.matchMedia("(max-width: 1023px)");
-    sheet?.querySelector<HTMLButtonElement>('button[aria-label="Cerrar Cooper"]')?.focus();
+    sheet
+      ?.querySelector<HTMLButtonElement>('button[aria-label="Cerrar Cooper"]')
+      ?.focus();
     const key = (event: KeyboardEvent) => {
       if (event.defaultPrevented) return;
       if (event.key === "Escape") cambiar(false);
@@ -117,7 +131,7 @@ export function CooperFlotante({
             id="cooper-panel"
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
             role="dialog"
-          aria-modal={movil || undefined}
+            aria-modal={movil || undefined}
             aria-label="Cooper, tu compañero"
             layoutId={reduced ? undefined : "cooper-origen"}
             transition={reduced ? { duration: 0.12 } : resorte}
@@ -168,7 +182,7 @@ export function CooperFlotante({
               canalId={canal?.id}
               videoId={video?.id}
               sugerencias={sugerencias}
-            contextoMarca={marca?.nombre}
+              contextoMarca={marca?.nombre}
             />
           </motion.div>
         )}

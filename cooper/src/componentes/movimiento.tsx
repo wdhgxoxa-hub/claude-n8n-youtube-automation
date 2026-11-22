@@ -6,10 +6,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import {
-  MotionConfigContext,
-  m as motion,
-} from "framer-motion";
+import { MotionConfigContext, m as motion } from "framer-motion";
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function observarPreferencia(notify: () => void) {
   const media = window.matchMedia(motionQuery);
@@ -154,6 +151,19 @@ export function usePausaMovimiento() {
 }
 
 /** Entrada escalonada, una vez por montaje de la pantalla; tiempos en tokens.css. */
-export function Entrada({children, orden = 0}: {children: ReactNode; orden?: number}) {
-  return <div className="entrada-estudio" style={{"--orden": Math.min(Math.max(orden,0),7)} as CSSProperties}>{children}</div>;
+export function Entrada({
+  children,
+  orden = 0,
+}: {
+  children: ReactNode;
+  orden?: number;
+}) {
+  return (
+    <div
+      className="entrada-estudio"
+      style={{ "--orden": Math.min(Math.max(orden, 0), 7) } as CSSProperties}
+    >
+      {children}
+    </div>
+  );
 }
