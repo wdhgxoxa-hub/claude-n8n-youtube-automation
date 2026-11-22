@@ -17,7 +17,9 @@ import { catalogo, revisiones } from "./biblioteca";
 import { proveedorAvatar, proveedorVoz } from "./proveedores";
 import { estadoChat } from "./chat";
 import { estadoWhatsApp } from "./mensajeria/cuentas";
+import { crearLectorVideoMedios } from "./video-medios";
 export function estado(user: User) {
+  const leerMedio = crearLectorVideoMedios(user);
   return {
     chat: estadoChat(user),
     demo: process.env.COOPER_DEMO === "1",
@@ -47,6 +49,7 @@ export function estado(user: User) {
       .map(({ observability, ...video }) => ({
         ...video,
         observabilidad: leerObservabilidad(observability),
+        medios: leerMedio({ ...video, observability }),
       })),
     messages: db()
       .select()

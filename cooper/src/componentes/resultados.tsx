@@ -266,27 +266,40 @@ export function Publicados({ initial }: { initial: Resultados }) {
                   <Link
                     href={primero.href}
                     className="publication-thumb"
-                    aria-label={`${primero.tipo === "video" && primero.publicacion.miniatura ? "" : "Miniatura pendiente. "}Ver detalle de ${primero.titulo}`}
+                    aria-label={`Ver detalle de ${primero.titulo}`}
                   >
                     <div
                       data-video-transition={
-                        video ? nombreMedio(video.id) : undefined
+                        primero.tipo === "video"
+                          ? nombreMedio(
+                              primero.videoId ??
+                                video?.id ??
+                                decodeURIComponent(
+                                  primero.href.split("/").at(-1) ?? "",
+                                ),
+                            )
+                          : undefined
                       }
                     >
                       <Medio
-                        videoId={video?.id}
-                        poster={
+                        videoId={
                           primero.tipo === "video"
-                            ? primero.publicacion.miniatura || undefined
+                            ? (primero.videoId ?? video?.id)
                             : undefined
                         }
-                        preview={video?.observabilidad?.montaje || undefined}
-                        alt={
-                          primero.tipo === "video" &&
-                          primero.publicacion.miniatura
-                            ? primero.titulo
-                            : "Miniatura pendiente"
+                        poster={
+                          primero.tipo === "video"
+                            ? primero.medios?.poster?.url ||
+                              primero.publicacion.miniatura ||
+                              undefined
+                            : undefined
                         }
+                        preview={
+                          primero.tipo === "video"
+                            ? primero.medios?.preview?.url
+                            : undefined
+                        }
+                        alt={primero.titulo}
                       />
                     </div>
                   </Link>
