@@ -33,3 +33,6 @@ Thumbs.db
 
 # Node
 node_modules/
+
+# Capturas y videos reproducibles de la puerta de diseño.
+/evidencias-diseno/
