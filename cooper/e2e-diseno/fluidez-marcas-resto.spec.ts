@@ -179,11 +179,7 @@ for (const width of [390, 1440]) {
       vendor: systemInfo.gpu.auxAttributes?.glVendor,
       driver: systemInfo.gpu.auxAttributes?.displayType,
       browserVersion: browser.version(),
-      launchOptions: [
-        "--enable-gpu",
-        "--use-gl=angle",
-        "--use-angle=swiftshader",
-      ],
+      launchOptions: testInfo.project.use.launchOptions?.args ?? [],
     };
     await browserClient.detach();
     const client = await context.newCDPSession(page);
@@ -373,7 +369,7 @@ for (const width of [390, 1440]) {
                   ? String(failure)
                   : null,
             limitation:
-              "Laboratorio Chromium local con composición SwiftShader por software y CPU 4× móvil. No acredita GPU física, teclado virtual ni teléfono real. Los tiempos completos y todos los fotogramas se conservan, incluidos los que exceden el presupuesto.",
+              "Laboratorio Chromium local con el renderizador CDP registrado y CPU 4× en el viewport móvil. No acredita rendimiento de teléfono físico ni teclado virtual. Los tiempos completos y todos los fotogramas se conservan, incluidos los que exceden el presupuesto.",
           },
           null,
           2,
