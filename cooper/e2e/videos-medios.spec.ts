@@ -82,12 +82,19 @@ async function preparar(page: Page) {
       bytes: mp4.byteLength,
     },
     tinte: "#997755",
+    origenDimensiones: "video",
     ancho: 320,
     alto: 480,
     relacionAspecto: 2 / 3,
     actualizadoEn: Date.now(),
   };
-  video.medios = { ...medio, estado: "pendiente", poster: null, preview: null };
+  video.medios = {
+    ...medio,
+    estado: "pendiente",
+    poster: null,
+    preview: null,
+    origenDimensiones: "reserva",
+  };
   video.observabilidad.montaje = `${origen}/medios-completo.mp4`;
   video.observabilidad.miniatura = poster;
   video.observabilidad.publicaciones = [];
