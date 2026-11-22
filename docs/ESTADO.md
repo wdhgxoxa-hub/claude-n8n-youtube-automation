@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 18:16 (Lima).
+Última actualización: 2026-11-21 19:05 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,16 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — total-integrador / total-cierre cerrados:** implementado, probado, integrado, publicado por fast-forward a `mio/main` y `mio/version-chatgpt`, y desplegado en https://cooper.cooperestudio.com. Runtime b3 exacto, puerta 467 unitarias/103 E2E/235 flujos y rondas 123+123 PASS; extras 269 regresiones PASS, cero advertencias. Se conservó el env Google. [Informe final](informes/total-cierre.md), [historia integrada](informes/total-integrador.md).
+
+- **Operación productiva verificada:** Cooper/relés b3, n8n/runner 2.47.6 y Caddy 2.11.8; siete servicios saludables tras reinicio automático real. Lote n8n integrado con export/diff/reversa, 45 workflows/31 activos y datos conservados. Aprendizaje y Radar activos; workers Marcas activos en modo simulado, sin publicación real. Los seis disparadores de Radar/Aprendizaje/Marcas se verificaron activos y sin errores después del reinicio. Cuatro rutas HeyGen/ElevenLabs siguen bloqueadas por credenciales ausentes. [Lote](informes/evidencias/total-integrador/cierre-n8n/aplicacion-lote.json), [Radar](informes/total-cierre-radar.md), [Marcas](informes/total-cierre-marcas.md).
+
+- **Respaldo final y acceso público aceptados:** snapshot `6f72cf7944cb785c75de8e56e2c82cb4cb9bc6436c8e4718dd12ef11495a17e1`, réplica del mismo ID y restauración de 25 archivos/dos bases PASS. QA pública de 22 pantallas protegidas/seis API401, entrada/rechazo 1440/390, axe0/errores0 y videos PASS. Google configurado; no se inició OAuth. [Réplica](informes/evidencias/total-integrador/cierre-despliegue/final/replica-comparacion.json), [reinicio](informes/evidencias/total-integrador/cierre-despliegue/final/reinicio-despues.json), [QA](informes/evidencias/total-integrador/cierre-despliegue/final/qa-publica.json).
+
+- **H19 integrado con límites explícitos:** corrección del OOM y Resolver incorporados en la imagen/lote aceptados. El ensayo standalone b3 pasó bajo 1 GiB/swap0; producción mantiene 1 GiB y host sin swap, aunque Docker permite 2 GiB combinados. La medición histórica Data Tables de 10.000 videos bajó la proyección administrativa 9.136→197 ms; máximo total 1.070 ms frente al presupuesto de 1.000 ms, sin afirmar una nueva medición inferior. [Memoria](informes/total-memoria-vps.md), [medición](informes/total-volumen-n8n.md), [aceptación b3](informes/total-integrador-operacion-b3.md).
+
+Los registros que siguen conservan los cortes históricos de cada frente. Los pendientes de integración/despliegue de esta versión quedaron resueltos por el cierre anterior; los pendientes humanos y las ideas se mantienen en sus secciones.
 
 - **21-11-2026, Lima — horario Radar preparado y probado localmente:** extra separado habilita únicamente `Cada mañana (radar)` a las 07:40 America/Lima, con permiso de texto cerrado, credenciales existentes y CAS de siete fuentes. 254 regresiones operativas sin advertencias; CLI real sin red acredita importación/publicación, reversa posterior a PASS y fallo inyectado con restauración byte a byte, nueve tablas y 44 workflows ajenos preservados. Bundle, imagen b3, workflows y generador intactos. Aún sin integración ni despliegue desde este frente; ejecutar después del lote certificado y antes de Marcas, con nueva copia/CAS. [Informe](informes/total-cierre-radar.md), [receta](cooper-horario-radar.md).
 
@@ -103,25 +113,18 @@
 
 ## En curso
 
-- Integración `total-integrador`: incorpora frentes cerrados desde `a69e374`, preservando los worktrees activos. Verificación y despliegue autorizados en curso; el cierre distinguirá las pruebas nuevas de evidencias históricas.
-
-- **H19, condición de memoria real comprobada:** Cooper VPS tiene 1 GiB de RAM y el host no tiene swap, aunque el cgroup permite hasta 1 GiB de swap si existiera. El candidato conserva esos límites. Un ensayo que usó swap no acredita esa condición; competencia repetirá sin swap. Consulta read-only, sin cambiar servicios, límites o imagen. [Recibo](informes/total-memoria-vps.md).
-
-- H19 ampliado: Data Tables real con 10.000 videos detectó unos nueve segundos de proyección administrativa por filtros repetidos. Agrupación por ID implementada y contrastada: proyección administrativa 9.136→197 ms, respuestas idénticas en cuatro casos. El total máximo sigue en 1.070 ms frente al presupuesto comparativo de 1.000 ms; límite explícito. Delta único de Resolver y reversa ensayados en ambos motores; aplicación remota pendiente. No cambia Cooper ni su imagen. [Medición inicial](informes/total-volumen-n8n.md).
-
-- Orquestador `cooper-total`: corregir la legibilidad de la tabla de Publicados móvil detectada en revisión visual; cerrar Radar/vidIQ tras aislar dos columnas de eventos ausentes y corregir la sonda, completar dos rondas Sentinel+Playwright con videos; aceptar y desplegar exactamente la imagen nueva, comprobar acceso público, refrescar réplica y publicar las dos ramas autorizadas del remoto propio. Los fallos técnicos siguen a cargo de Codex.
-- Imagen nueva y parches n8n/runner 2.47.6/Caddy 2.11.8: ensayos de migración, Compose y reversa aprobados; aplicación remota después de las dos rondas. El runtime Marcas conserva simulación y publicación apagada.
-- Aceptación privada del VPS: sesión Google real, aislamiento, SSE y adjuntos. No se iniciará OAuth ni se fabricará una sesión de producción.
-- Las ventanas futuras de aprendizaje necesitan tiempo y publicaciones aprobadas; el siguiente guion probado fue un borrador. No hay un nuevo video corregido ni mejora de métricas atribuida.
-- La PC conserva la base del corte; no sincroniza escrituras posteriores del VPS. Conciliar datos antes de cualquier reversa a la PC. [Instalación y reversa local](cooper-integracion3-despliegue.md).
+- Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
+- Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
+- Sexta oleada anunciada por Claude (iglesia, tienda, WhatsApp y observabilidad): conservada para la pasada posterior al despliegue. No se incorporó ni sobrescribió su trabajo concurrente al cerrar esta versión.
+- La PC tiene la réplica verificada del snapshot final; no sincroniza escrituras posteriores del VPS. Conciliar datos antes de cualquier reversa a la PC. [Instalación y reversa local](cooper-integracion3-despliegue.md).
 
 ## Pendientes de Walter
 
 1. Resolver pago de Meta, configurar App Secret/firma y plantillas WhatsApp con Claude; mantener mensajería real pausada hasta aceptar la configuración.
-2. Probar Google, aislamiento, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya están resueltos; no repetir el acceso root antiguo.
+2. Completar la aceptación privada con su sesión Google, aislamiento, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya están resueltos; no repetir el acceso root antiguo.
 3. Revisar con Claude las esperas 400/540, la asociación de la routine externa y las siete entradas históricas que siguen cerradas. Tres entradas seguras ya se reabrieron con pruebas. El guion del Short `v-mwp2bjgj-7fvq` sigue pendiente, sin reanudación ni aprobación en esta misión.
 4. Aceptar memoria/chat desde su sesión: 37/37 conversaciones ficticias con plan real no garantizan todas las respuestas futuras. La síntesis conserva su límite de doce segundos.
-5. Fijar presupuestos, modelos, interruptores, perfiles de publicación y permisos/consentimientos; autorizar por separado un ensayo real de medios, producción y publicación. El texto API de pago queda bloqueado.
+5. Fijar presupuestos, modelos, interruptores, perfiles de publicación y permisos/consentimientos; autorizar por separado un ensayo real de medios, producción y publicación. El texto API de pago queda bloqueado. Aportar credenciales/permisos HeyGen/ElevenLabs únicamente si se decide usar las cuatro rutas todavía bloqueadas.
 6. Revisar los videos y probar un teléfono físico de gama media, Safari y tecnologías de asistencia si se utilizan. La emulación no sustituye esa aceptación.
 7. Marcas/noticias: definir identidades/dueños, activos/permisos, corpus bíblico/guía pastoral y canales editoriales; aprobar plantilla WhatsApp y decidir el primer ensayo real.
 8. Mantener disponible la PC para el plan y la réplica gratuita; custodiar recuperación offline. Elegir aviso independiente si cae todo el VPS/n8n. Túnel, réplica y restauración están probados; no se crearon cuentas ni pagos externos.
