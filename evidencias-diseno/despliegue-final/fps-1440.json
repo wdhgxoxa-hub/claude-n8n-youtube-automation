@@ -1,0 +1,64 @@
+{
+  "ancho": 1440,
+  "renderizador": {
+    "gl": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 26.2.6-arch3.1)",
+    "proveedor": "Google Inc. (Intel)",
+    "composicionGpu": "enabled",
+    "navegador": "159.0.8154.6",
+    "argumentos": [
+      "--enable-gpu",
+      "--use-gl=angle",
+      "--use-angle=gl-egl"
+    ]
+  },
+  "cpu": "1×",
+  "metodo": "requestAnimationFrame en la página + traza CDP guardada; sin grabación de video",
+  "umbrales": {
+    "fpsMedio": ">= 57",
+    "p95Ms": "<= 25",
+    "cuadrosMayores50ms": 0,
+    "cls": 0
+  },
+  "fases": [
+    {
+      "fase": "carrusel",
+      "ventanaMs": 698,
+      "cuadros": 41,
+      "fpsMedio": 60,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "fase": "cooper-abrir",
+      "latenciaClicAProyeccionMs": 11,
+      "ventanaMs": 733,
+      "cuadros": 43,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.059,
+      "tareasLargasMs": []
+    },
+    {
+      "fase": "transicion",
+      "latenciaHastaAnimarMs": 32,
+      "ventanaMs": 658,
+      "cuadros": 39,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    }
+  ],
+  "traza": "traza-1440.json",
+  "consola": []
+}

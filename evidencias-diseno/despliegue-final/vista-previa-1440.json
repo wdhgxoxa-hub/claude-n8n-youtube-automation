@@ -1,0 +1,28 @@
+{
+  "ancho": 1440,
+  "reproduccion": {
+    "src": "/__despliegue-medios/vista-previa-1.mp4",
+    "ancho": 360,
+    "alto": 640,
+    "duracion": 5,
+    "silenciado": true,
+    "pausado": false,
+    "tiempo": 0.2071,
+    "transicion": "opacity 0.24s"
+  },
+  "mp4": {
+    "archivo": "diseno-fabrica-video/medios/vista-previa-1.mp4",
+    "sha256": "d6ee08cd227c080a583ca6b0a3fc4a5eb1ee83b031110d4ba5ef979c61354a0a",
+    "bytes": 189051
+  },
+  "esperaHastaPlayMs": 185,
+  "fundidoEntradaMs": 200,
+  "cuadrosConOpacidadIntermedia": 24,
+  "secuenciaDataPreview": [
+    "preparando",
+    "on",
+    "off"
+  ],
+  "peticionesPreview": 1,
+  "consola": []
+}

@@ -1,0 +1,39 @@
+{
+  "ancho": 390,
+  "tintesPorPieza": [
+    "hsl(0 0% 47%)",
+    "hsl(0 0% 45%)",
+    "hsl(0 0% 45%)",
+    "hsl(0 0% 53%)",
+    "hsl(0 0% 47%)"
+  ],
+  "tinteA": {
+    "pieza": 3,
+    "declarado": "hsl(0 0% 45%)",
+    "computado": "rgb(115, 115, 115)"
+  },
+  "tinteB": {
+    "pieza": 4,
+    "declarado": "hsl(0 0% 53%)",
+    "computado": "rgb(135, 135, 135)"
+  },
+  "transicionCss": [
+    {
+      "propiedad": "--tinte-halo",
+      "duracion": 640,
+      "curva": "cubic-bezier(0.65, 0, 0.35, 1)"
+    }
+  ],
+  "tintesIntermediosDistintos": 17,
+  "duracionHastaUltimoCambioMs": 417,
+  "sentidoArrastre": "derecha",
+  "metodoArrastre": "toque-cdp",
+  "limitePx": 987,
+  "xInicial": -821,
+  "xAlSoltar": -619.7,
+  "xFinal": 2.82967,
+  "cuadrosQueSiguenMoviendoTrasSoltar": 83,
+  "seleccionIntacta": true,
+  "xEnReposo": 0,
+  "consola": []
+}

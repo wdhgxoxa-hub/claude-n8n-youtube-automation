@@ -1,0 +1,27 @@
+{
+ "cooper": {
+  "conteos": {
+   "principal_desde_publicacion": 2,
+   "principal_sin_fuente_tipografico": 3,
+   "pub_url_publica": 3,
+   "publicaciones": 3,
+   "videos": 5
+  },
+  "hosts_mp4": {},
+  "redes": {
+   "youtube": 2,
+   "tiktok": 1
+  }
+ },
+ "n8n_publicaciones": {
+  "data_table_user_OMPWHAVy…": {
+   "filas": 4,
+   "url_video_no_vacios": 4,
+   "mp4_unicos": 2,
+   "hosts": {
+    "f002.backblazeb2.com": 4
+   },
+   "con_miniatura": "sin_columna"
+  }
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "modalidad": "parche canónico (diseno-conexion) + recreación solo de caddy",
+ "anterior_sha256": "17515ce1927fa921b8f3f7242c2e3cfe024b24b99b8b6e9874e9d1e1f442153c",
+ "aplicado_sha256": "5c62b1698a383ad6bab8e1bf71466c11f16afed02a8b185c817de4c6bae93517",
+ "reversa": "install Caddyfile.anterior (17515ce1…) en /opt/cooper/deploy/Caddyfile y recrear solo caddy; copias en /var/lib/cooper-operacion/despliegue-final-caddy/ y caddy-reversa.patch",
+ "antes": [
+  "2026-11-22T23:22:54Z",
+  "2026-11-22T08:15:04.225635704Z"
+ ],
+ "aplicado": [
+  "2026-11-22T23:23:14Z",
+  "2026-11-22T23:22:57.400880495Z",
+  "healthy"
+ ],
+ "servicios": [
+  [
+   "cooper-caddy-1",
+   "Up 17 seconds (healthy)"
+  ],
+  [
+   "cooper-chat-cooper-1",
+   "Up About a minute (healthy)"
+  ],
+  [
+   "cooper-chat-n8n-1",
+   "Up 15 hours (healthy)"
+  ],
+  [
+   "cooper-chat-runner-1",
+   "Up 15 hours (healthy)"
+  ],
+  [
+   "cooper-cooper-1",
+   "Up About a minute (healthy)"
+  ],
+  [
+   "cooper-n8n-1",
+   "Up 15 hours (healthy)"
+  ],
+  [
+   "cooper-runner-1",
+   "Up 15 hours (healthy)"
+  ]
+ ],
+ "resultado": "FIN_OK"
+}

@@ -1,0 +1,65 @@
+{
+  "ancho": 1440,
+  "pausaPorVisibilidad": {
+    "enPausa": "paused",
+    "alVolver": "playing",
+    "opacidadMinima": 1,
+    "arranquesTrasReanudar": 0
+  },
+  "elementos": 10,
+  "retrasosMs": [
+    0,
+    40,
+    80,
+    120,
+    160,
+    200,
+    240,
+    280,
+    280,
+    280
+  ],
+  "retrasosDistintos": 8,
+  "duracion": "0.42s",
+  "nombre": "route-in",
+  "fotogramaInicial": {
+    "opacidad": "0",
+    "transform": "translateY(var(--desplazamiento-entrada))",
+    "desplazamiento": "12px"
+  },
+  "arranquesPorElemento": [
+    [
+      0
+    ],
+    [
+      33
+    ],
+    [
+      65
+    ],
+    [
+      116
+    ],
+    [
+      149
+    ],
+    [
+      182
+    ],
+    [
+      232
+    ],
+    [
+      265
+    ],
+    [
+      266
+    ],
+    [
+      266
+    ]
+  ],
+  "arranquesTrasRerender": 0,
+  "entregasEnVivoDuranteLaPrueba": 2,
+  "consola": []
+}

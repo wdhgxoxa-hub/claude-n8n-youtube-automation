@@ -1,0 +1,689 @@
+{
+  "config": {
+    "argv": [
+      "/usr/bin/node",
+      "/home/david/Proyectos/cooper-wt/diseno-final/cooper/node_modules/@playwright/test/cli.js",
+      "test",
+      "-c",
+      "playwright.despliegue-final.config.ts"
+    ],
+    "configFile": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/playwright.despliegue-final.config.ts",
+    "rootDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/david/Proyectos/cooper-wt/diseno-final/evidencias-diseno/despliegue-final/salida-playwright",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "movimiento-1440",
+        "name": "movimiento-1440",
+        "testDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+        "testIgnore": [],
+        "testMatch": [
+          "movimiento.spec.ts"
+        ],
+        "timeout": 300000
+      },
+      {
+        "outputDir": "/home/david/Proyectos/cooper-wt/diseno-final/evidencias-diseno/despliegue-final/salida-playwright",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "movimiento-390",
+        "name": "movimiento-390",
+        "testDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+        "testIgnore": [],
+        "testMatch": [
+          "movimiento.spec.ts"
+        ],
+        "timeout": 300000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": {},
+        "outputDir": "/home/david/Proyectos/cooper-wt/diseno-final/evidencias-diseno/despliegue-final/salida-playwright",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "movimiento-1440",
+        "testDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+        "snapshotDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+        "testIgnore": [],
+        "testMatch": "movimiento.spec.ts",
+        "timeout": 300000,
+        "use": {
+          "baseURL": "http://127.0.0.1:46745",
+          "extraHTTPHeaders": {
+            "Referer": "http://127.0.0.1:46745"
+          },
+          "launchOptions": {
+            "args": [
+              "--enable-gpu",
+              "--use-gl=angle",
+              "--use-angle=gl-egl"
+            ]
+          },
+          "permissions": [
+            "microphone"
+          ],
+          "trace": "off",
+          "screenshot": "only-on-failure",
+          "video": "on",
+          "timezoneId": "America/Lima",
+          "browserName": "chromium",
+          "deviceScaleFactor": 1,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "isMobile": false,
+          "hasTouch": false
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "movimiento-1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/david/Proyectos/cooper-wt/diseno-final/evidencias-diseno/despliegue-final/salida-playwright",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "movimiento-390",
+        "testDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+        "snapshotDir": "/home/david/Proyectos/cooper-wt/diseno-final/cooper/despliegue-final",
+        "testIgnore": [],
+        "testMatch": "movimiento.spec.ts",
+        "timeout": 300000,
+        "use": {
+          "baseURL": "http://127.0.0.1:46745",
+          "extraHTTPHeaders": {
+            "Referer": "http://127.0.0.1:46745"
+          },
+          "launchOptions": {
+            "args": [
+              "--enable-gpu",
+              "--use-gl=angle",
+              "--use-angle=gl-egl"
+            ]
+          },
+          "permissions": [
+            "microphone"
+          ],
+          "trace": "off",
+          "screenshot": "only-on-failure",
+          "video": "on",
+          "timezoneId": "America/Lima",
+          "browserName": "chromium",
+          "deviceScaleFactor": 1,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "movimiento-390"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../evidencias-diseno/despliegue-final/playwright.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "movimiento.spec.ts",
+      "file": "movimiento.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "1 Transición de ruta: miniatura → reproductor (elemento compartido) y fundido de respaldo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2863,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:04:52.849Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2668,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:23.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-de50c8e69381c38a44ca",
+          "file": "movimiento.spec.ts",
+          "line": 769,
+          "column": 1
+        },
+        {
+          "title": "2 Entradas escalonadas: 40 ms, máximo 8, una vez por visita",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5183,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:04:55.773Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5040,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:26.691Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-e6c0d30a69592f2874ef",
+          "file": "movimiento.spec.ts",
+          "line": 874,
+          "column": 1
+        },
+        {
+          "title": "3 Vista previa de medios con MP4 real",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1854,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:00.967Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1746,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:31.736Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-59fd003db9fbbf75fa05",
+          "file": "movimiento.spec.ts",
+          "line": 1043,
+          "column": 1
+        },
+        {
+          "title": "4 Cifras que suben al entrar en vista",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2144,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:02.825Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2076,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:33.488Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-0577930fad493b1a88bc",
+          "file": "movimiento.spec.ts",
+          "line": 1162,
+          "column": 1
+        },
+        {
+          "title": "5 Carrusel del héroe: arrastre con inercia y cambio de tinte",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5044,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:04.974Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5433,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:35.568Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-9824cca7d90a6f79ace8",
+          "file": "movimiento.spec.ts",
+          "line": 1244,
+          "column": 1
+        },
+        {
+          "title": "6 Cooper: abrir, cerrar y contexto de la pantalla",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3433,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:10.023Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6216,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:41.005Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-90ef888ff0ac5b8e359f",
+          "file": "movimiento.spec.ts",
+          "line": 1381,
+          "column": 1
+        },
+        {
+          "title": "8 prefers-reduced-motion: sin desplazamientos ni autoplay, fundidos ≤120 ms, todo funcional",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4090,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:13.460Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4112,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:49.626Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-981c0be0a0e9e6ccd6e5",
+          "file": "movimiento.spec.ts",
+          "line": 1587,
+          "column": 1
+        },
+        {
+          "title": "9 Fotogramas: transición, carrusel y apertura de Cooper (390 con CPU 4×)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-1440",
+              "projectName": "movimiento-1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6123,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:17.554Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6661,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:53.742Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-1dc5a79d818fb45d915a",
+          "file": "movimiento.spec.ts",
+          "line": 1735,
+          "column": 1
+        },
+        {
+          "title": "7 Barra inferior móvil: 5 pestañas, indicador animado y «Más»",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movimiento-390",
+              "projectName": "movimiento-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2397,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T23:05:47.225Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "04062e20f5201915f34e-66dc51e215986017e288",
+          "file": "movimiento.spec.ts",
+          "line": 1494,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-22T23:04:51.059Z",
+    "duration": 69404.564,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

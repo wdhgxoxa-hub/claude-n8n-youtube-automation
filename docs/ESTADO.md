@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-22 01:55 (Lima).
+Última actualización: 2026-11-22 18:50 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **22-11-2026, Lima — despliegue-final: rediseño «Sala de proyección» implementado, probado, integrado, publicado y desplegado.** Commit `bc0693b4` en https://cooper.cooperestudio.com (imagen `sha256:fa120a2d…`), con respaldo sellado y reversa aislada PASS; Caddy con el parche SSE de diseno-conexion; delta n8n de diseno-medios PASS (una sola pila, 0 entradas reabiertas, 0 disparadores nuevos, sin publicación). Puerta: lint/tipos/build 0 avisos, **708/708 unitarias, 120/120 E2E, 237/237 flujos**; rondas Sentinel + Playwright (Chromium, Firefox y WebKit en 6 anchos) **164/164 y 164/164**; movimiento real 17/17 a 60 fps; Lighthouse móvil Inicio 0,90 y Publicados 1,00, accesibilidad 1,00. Producción sin sesión PASS (22 pantallas protegidas, 6 API en 401, axe 0, Sentinel 0 hallazgos). **No verificado:** pantallas con sesión y medios reales (se generan en la primera visita con sesión). [Informe](informes/despliegue-final.md).
 
 - **22-11-2026, Lima — diseno-integracion implementado e integrado en su rama (NO desplegado, sin push):** fusionadas fix-inicio, fix-fabrica y fix-publicados (conflicto resuelto con `lib/cifras` + `lib/redes`); cifras y nombres de red con una sola fuente; póster tipográfico único (`Cartel`: Clash Display fluido por container queries, tinte radial/cónico, grano SVG, firma en Geist Mono) para toda pieza sin miniatura ni MP4; títulos de pantalla a 96 px (1440) / 88 px (390) en todas las rutas con armazón; Fábrica con bahías libres y pista colocada con contexto. Puerta local: lint/tipos/build 0/0, **702/703 unitarias** (único fallo aceptado: caché privada de Sentinel ausente en el entorno) y **237/237 flujos**. E2E, Sentinel, axe y Lighthouse **no ejecutados** aquí. 50 capturas finales en `evidencias-diseno/final/`. [Informe y autocrítica](informes/diseno-integracion.md).
 
@@ -127,12 +129,10 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
-- **diseno-integracion:** revisión de Claude de las capturas finales; luego E2E/Sentinel en la PC de Walter, push y despliegue autorizados. [Informe](informes/diseno-integracion.md).
 - Observabilidad: entrega local cerrada para revisión e integración por el frente autorizado. La futura activación se coordinará después de `total-cierre`: nuevo paquete del monitor con `observabilidad.py`, overlay, lectura n8n y aceptación de fuentes reales. Los bundles certificados anteriores no incluyen el módulo nuevo y permanecen intactos. [Guía](cooper-observabilidad.md).
 - WhatsApp integrado solo en la rama de diseño; pausa real conservada, revisión pendiente.
 - Plantilla de tienda integrada solo en la rama de diseño; revisión de Claude pendiente.
-- **diseno-medios:** revisión de Claude e integración futura con el armazón de `diseno-base`; no se declara aceptación global de la sección 5. Diagnóstico, capturas y límites de producción listos para revisar; nada de este frente está desplegado. [Informe](informes/diseno-medios.md).
-- Revisión de Claude de `diseno-conexion` y combinación con `diseno-base`/`diseno-medios`: corregir las desviaciones globales de tokens/pantallas y repetir su puerta de diseño. La corrección de conexión y el parche reversible permanecen en su rama, pendientes de integración y despliegue autorizados. [Detalle](informes/diseno-conexion.md#puerta-de-diseño-y-autocrítica).
+- diseno-integracion, diseno-medios y diseno-conexion quedaron integrados y desplegados por despliegue-final (ver «Hecho»); solo falta su aceptación con sesión (pendientes 2 y 15).
 
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
 - Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
@@ -142,7 +142,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 ## Pendientes de Walter
 
 1. Resolver pago de Meta, entregar `WHATSAPP_APP_SECRET` por canal privado y configurar el webhook definitivo con `messages`; revisar aprobación de plantillas y autorizar un ensayo real después del despliegue aceptado. [Tres pasos exactos](whatsapp-activacion-meta.md). Mantener mensajería real pausada hasta aceptar la configuración; no repetir el alta ya registrada.
-2. Completar la aceptación privada con su sesión Google, aislamiento, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. IP/SSH/DNS ya están resueltos; no repetir el acceso root antiguo.
+2. Completar la aceptación privada con su sesión Google, aislamiento, SSE y adjuntos en el VPS y revisar Cooper local en Chrome. Confirmar que, con la conexión sana, ya no aparece «Reconectando» ni ningún aviso de conexión. IP/SSH/DNS ya están resueltos; no repetir el acceso root antiguo.
 3. Revisar con Claude las esperas 400/540, la asociación de la routine externa y las siete entradas históricas que siguen cerradas. Tres entradas seguras ya se reabrieron con pruebas. El guion del Short `v-mwp2bjgj-7fvq` sigue pendiente, sin reanudación ni aprobación en esta misión.
 4. Aceptar memoria/chat desde su sesión: 37/37 conversaciones ficticias con plan real no garantizan todas las respuestas futuras. La síntesis conserva su límite de doce segundos.
 5. Fijar presupuestos, modelos, interruptores, perfiles de publicación y permisos/consentimientos; autorizar por separado un ensayo real de medios, producción y publicación. El texto API de pago queda bloqueado. Aportar credenciales/permisos HeyGen/ElevenLabs únicamente si se decide usar las cuatro rutas todavía bloqueadas.
@@ -159,11 +159,9 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 13. Tienda de ropa: definir nombre/público/activos, productos y condiciones comerciales, plataforma/dominio, fuente y atribución de conversiones, calendario y permisos UGC/cuentas. Revisar la plantilla con Claude y autorizar por separado la futura conexión y el primer ensayo real. [Detalle](informes/total-marca-tienda.md#pendientes-de-walter).
 
 14. Observabilidad: revisar umbrales y destino Telegram antes de activar avisos; coordinar con el operador la release y aceptación de fuentes reales. Decidir convivencia con los avisos históricos y cobertura externa ante caída total del VPS (pendiente 8). [Detalle](informes/total-observabilidad.md#pendientes-de-walter).
-15. Medios: revisar con Claude el informe y las capturas finales; decidir integración/despliegue por separado, conservación y entrega de los MP4 en B2, tinte editorial y retención de derivados. Confirmar permisos oficiales de TikTok solo si hace falta obtener su portada. [Pendientes concretos](informes/diseno-medios.md#pendientes-de-walter).
-
-13. Revisar con Claude los commits y capturas de `diseno-conexion`, observar recuperación/latidos desde la sesión productiva legítima y decidir la aplicación de código y parche Caddy/Compose con su reversa. Cotejar de nuevo las huellas y coordinar la breve ventana del proxy antes de aplicarlo. No requiere iniciar otro OAuth. [Pendientes de la misión](informes/diseno-conexion.md#pendientes-de-walter).
-
-16. diseno-integracion: ejecutar en su PC `npm run test:e2e`, axe/Lighthouse y las dos rondas de Sistema Sentinel (no ejecutables en el entorno de la misión); reconectar GitHub para publicar la rama; autorizar el despliegue tras la revisión de Claude; aplicar el lote n8n que guarda `miniatura` y `url_video` para que las piezas reales muestren su medio en vez del póster tipográfico. [Detalle](informes/diseno-integracion.md#pendientes-de-walter).
+15. Medios reales: abrir una vez Inicio y Publicados con su sesión para que se generen pósteres y vistas previas; después Claude repite el recuento. Hoy: 0 medios generados; 3 de 5 videos quedarán con carátula tipográfica porque nunca se montaron. [Detalle](informes/despliegue-final.md#medios-reales).
+16. Decidir si el tour «Conocer el estudio» (hoy sin uso) se retira del código o vuelve al Inicio.
+17. Decidir si se aceptan las fuentes enteras (Inicio en 0,90 justo en Lighthouse) o se recortan para ganar margen.
 
 ## Ideas conversadas
 

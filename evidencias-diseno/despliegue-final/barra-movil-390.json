@@ -1,0 +1,741 @@
+{
+  "ancho": 390,
+  "pestanas": [
+    {
+      "texto": "Inicio",
+      "x": 9,
+      "ancho": 54.328125,
+      "alto": 54,
+      "actual": "page"
+    },
+    {
+      "texto": "Fábrica",
+      "x": 63.328125,
+      "ancho": 54.328125,
+      "alto": 54,
+      "actual": null
+    },
+    {
+      "texto": "Publicados",
+      "x": 117.65625,
+      "ancho": 70,
+      "alto": 54,
+      "actual": null
+    },
+    {
+      "texto": "Aprendizaje",
+      "x": 187.65625,
+      "ancho": 75,
+      "alto": 54,
+      "actual": null
+    },
+    {
+      "texto": "Marcas",
+      "x": 262.65625,
+      "ancho": 54.328125,
+      "alto": 54,
+      "actual": null
+    }
+  ],
+  "indicadorOrigenX": 9,
+  "indicadorDestinoX": 63.328125,
+  "cuadrosIntermedios": 13,
+  "duracionIndicadorMs": 199,
+  "serieIndicador": [
+    {
+      "at": 0,
+      "x": 9,
+      "transform": "",
+      "enlace": "Inicio",
+      "vt": true
+    },
+    {
+      "at": 16,
+      "x": 9,
+      "transform": "",
+      "enlace": "Inicio",
+      "vt": true
+    },
+    {
+      "at": 35,
+      "x": 9,
+      "transform": "",
+      "enlace": "Inicio",
+      "vt": true
+    },
+    {
+      "at": 52,
+      "x": 9,
+      "transform": "",
+      "enlace": "Inicio",
+      "vt": true
+    },
+    {
+      "at": 84,
+      "x": 9,
+      "transform": "translate3d(-54.3281px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 101,
+      "x": 11.20473861694336,
+      "transform": "translate3d(-52.1234px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 117,
+      "x": 16.74378204345703,
+      "transform": "translate3d(-46.5843px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 133,
+      "x": 23.277172088623047,
+      "transform": "translate3d(-40.051px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 150,
+      "x": 30.46591567993164,
+      "transform": "translate3d(-32.8622px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 167,
+      "x": 36.83797836303711,
+      "transform": "translate3d(-26.4901px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 183,
+      "x": 42.835479736328125,
+      "transform": "translate3d(-20.4926px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 200,
+      "x": 47.8939094543457,
+      "transform": "translate3d(-15.4342px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 216,
+      "x": 52.007423400878906,
+      "transform": "translate3d(-11.3207px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 233,
+      "x": 55.08219909667969,
+      "transform": "translate3d(-8.24593px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 250,
+      "x": 57.610416412353516,
+      "transform": "translate3d(-5.71771px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 267,
+      "x": 59.501365661621094,
+      "transform": "translate3d(-3.82676px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 283,
+      "x": 60.80965042114258,
+      "transform": "translate3d(-2.51847px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 300,
+      "x": 61.805545806884766,
+      "transform": "translate3d(-1.52258px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 317,
+      "x": 62.49010467529297,
+      "transform": "translate3d(-0.83802px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 333,
+      "x": 62.92193603515625,
+      "transform": "translate3d(-0.406191px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 350,
+      "x": 63.21637725830078,
+      "transform": "translate3d(-0.111749px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 367,
+      "x": 63.39080047607422,
+      "transform": "translate3d(0.0626741px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 383,
+      "x": 63.479736328125,
+      "transform": "translate3d(0.151613px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 400,
+      "x": 63.52141189575195,
+      "transform": "translate3d(0.193285px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 417,
+      "x": 63.528812408447266,
+      "transform": "translate3d(0.200689px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 433,
+      "x": 63.5174674987793,
+      "transform": "translate3d(0.189343px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 450,
+      "x": 63.495323181152344,
+      "transform": "translate3d(0.1672px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 467,
+      "x": 63.46908187866211,
+      "transform": "translate3d(0.140958px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 483,
+      "x": 63.444217681884766,
+      "transform": "translate3d(0.116094px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 500,
+      "x": 63.4197883605957,
+      "transform": "translate3d(0.0916652px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 517,
+      "x": 63.39850997924805,
+      "transform": "translate3d(0.0703841px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 533,
+      "x": 63.38169860839844,
+      "transform": "translate3d(0.0535745px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 550,
+      "x": 63.367191314697266,
+      "transform": "translate3d(0.039068px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 567,
+      "x": 63.35582733154297,
+      "transform": "translate3d(0.0277005px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 583,
+      "x": 63.34760284423828,
+      "transform": "translate3d(0.0194772px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 600,
+      "x": 63.34104919433594,
+      "transform": "translate3d(0.0129234px, 0px, 0px)",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 617,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 633,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 650,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 667,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 683,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 700,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 717,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 733,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 750,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 767,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 783,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 800,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 816,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 833,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 850,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 867,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 883,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 900,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 917,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 933,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 950,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 967,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 983,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1000,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1016,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1033,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1050,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1067,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1083,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1100,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1117,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1133,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1150,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1167,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1183,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1200,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1216,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1233,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1250,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1267,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1283,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1300,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1316,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1333,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1350,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1366,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1383,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1400,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1416,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1433,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1450,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1466,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1483,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1500,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1516,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1533,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1550,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1566,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1583,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1600,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    },
+    {
+      "at": 1616,
+      "x": 63.328125,
+      "transform": "none",
+      "enlace": "Fábrica",
+      "vt": true
+    }
+  ],
+  "hojaMas": {
+    "x": 8,
+    "y": 370,
+    "width": 374,
+    "height": 466
+  },
+  "destinosEnHoja": [
+    "Canales",
+    "Avatares y voces",
+    "Operación",
+    "Mi perfil",
+    "Administración"
+  ],
+  "botonMasEnLaBarraInferior": false,
+  "botonMasEn": "cabecera (.topbar-mas)",
+  "consola": []
+}

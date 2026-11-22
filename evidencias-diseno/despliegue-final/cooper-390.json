@@ -1,0 +1,71 @@
+{
+  "ancho": 390,
+  "proyeccionOrbePanel": {
+    "clic": 192.70000004768372,
+    "inicio": 200,
+    "finProyeccion": 804.5,
+    "inicioFundido": 820.7000000476837,
+    "finFundido": 937.6000000238419,
+    "fundidos": 4
+  },
+  "panel": {
+    "x": 0,
+    "y": 320.734375,
+    "ancho": 390,
+    "alto": 523.265625
+  },
+  "main": {
+    "antes": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 2303.546875
+    },
+    "despues": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 2303.546875
+    }
+  },
+  "hojaCompleta": {
+    "x": 0,
+    "y": 0,
+    "width": 390,
+    "height": 844
+  },
+  "cerrarArrastrando": true,
+  "contextos": [
+    {
+      "pantalla": "video",
+      "esperado": "¿A qué huele la lluvia?",
+      "contexto": "¿A qué huele la lluvia?",
+      "chips": [
+        "¿En qué etapa está este video?",
+        "¿Qué falta por revisar?",
+        "Quiero corregir este video"
+      ]
+    },
+    {
+      "pantalla": "marca",
+      "esperado": "Iglesia (por confirmar)",
+      "contexto": "Iglesia (por confirmar)",
+      "chips": [
+        "¿Qué sigue para esta marca?",
+        "Quiero preparar una publicación",
+        "Revisar el calendario de mi marca"
+      ]
+    },
+    {
+      "pantalla": "inicio",
+      "esperado": "Hoy en el estudio",
+      "contexto": "Hoy en el estudio",
+      "chips": [
+        "Crear otro canal",
+        "Dar forma a una idea",
+        "Revisar mis pendientes"
+      ]
+    }
+  ],
+  "consola": []
+}

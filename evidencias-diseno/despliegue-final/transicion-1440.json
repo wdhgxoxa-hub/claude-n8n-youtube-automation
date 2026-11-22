@@ -1,0 +1,238 @@
+{
+  "ancho": 1440,
+  "apiDisponible": true,
+  "llamadasStartViewTransition": 1,
+  "nombreMiniatura": [
+    "video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3"
+  ],
+  "nombreReproductorDetalle": "video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3",
+  "latenciaHastaAnimarMs": 38,
+  "duracionAnimacionMs": 654,
+  "error": null,
+  "pseudoElementos": [
+    {
+      "pseudo": "::view-transition-group(video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3)",
+      "nombre": "-ua-view-transition-group-anim-video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3",
+      "duracion": 640,
+      "curva": "linear",
+      "propiedades": [
+        "width",
+        "transform",
+        "height",
+        "backdropFilter"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "width": "288px",
+        "transform": "matrix(1, 0, 0, 1, 592, 240)",
+        "height": "512px",
+        "backdropFilter": "none",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "replace",
+        "width": "681.328px",
+        "transform": "matrix(1, 0, 0, 1, 128, 176)",
+        "height": "608px",
+        "backdropFilter": "none",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-group(root)",
+      "nombre": "-ua-view-transition-group-anim-root",
+      "duracion": 640,
+      "curva": "linear",
+      "propiedades": [
+        "width",
+        "transform",
+        "height",
+        "backdropFilter"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "width": "1440px",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "height": "900px",
+        "backdropFilter": "none",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "replace",
+        "width": "1440px",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "height": "900px",
+        "backdropFilter": "none",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-new(root)",
+      "nombre": "route-in",
+      "duracion": 420,
+      "curva": "linear",
+      "propiedades": [
+        "transform",
+        "opacity"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "composite": "auto",
+        "transform": "translateY(12px)",
+        "opacity": "0",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "composite": "replace",
+        "transform": "none",
+        "opacity": "1",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-old(root)",
+      "nombre": "route-out",
+      "duracion": 420,
+      "curva": "linear",
+      "propiedades": [
+        "transform",
+        "opacity"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "composite": "replace",
+        "transform": "none",
+        "opacity": "1",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "composite": "auto",
+        "transform": "translateY(-12px)",
+        "opacity": "0",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-new(video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3)",
+      "nombre": "-ua-view-transition-fade-in",
+      "duracion": 640,
+      "curva": "linear",
+      "propiedades": [
+        "opacity"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "opacity": "0",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "replace",
+        "opacity": "1",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-new(video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3)",
+      "nombre": "-ua-mix-blend-mode-plus-lighter",
+      "duracion": 640,
+      "curva": "linear",
+      "propiedades": [
+        "mixBlendMode"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "mixBlendMode": "plus-lighter",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "mixBlendMode": "plus-lighter",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-old(video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3)",
+      "nombre": "-ua-view-transition-fade-out",
+      "duracion": 640,
+      "curva": "linear",
+      "propiedades": [
+        "opacity"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "replace",
+        "opacity": "1",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "opacity": "0",
+        "computedOffset": 1
+      }
+    },
+    {
+      "pseudo": "::view-transition-old(video-demo-2999247d-493b-43f1-95a7-3bca9bb7b575-3)",
+      "nombre": "-ua-mix-blend-mode-plus-lighter",
+      "duracion": 640,
+      "curva": "linear",
+      "propiedades": [
+        "mixBlendMode"
+      ],
+      "primero": {
+        "offset": 0,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "mixBlendMode": "plus-lighter",
+        "computedOffset": 0
+      },
+      "ultimo": {
+        "offset": 1,
+        "easing": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "composite": "auto",
+        "mixBlendMode": "plus-lighter",
+        "computedOffset": 1
+      }
+    }
+  ],
+  "respaldoSinApi": [
+    {
+      "nombre": "ruta-fundido",
+      "duracion": 240,
+      "propiedades": [
+        "opacity"
+      ]
+    }
+  ],
+  "peticiones": {
+    "eventos": 6,
+    "previews": 0,
+    "posters": 8,
+    "externas": []
+  },
+  "consola": []
+}

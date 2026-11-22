@@ -1,0 +1,41 @@
+{
+ "commit": "bc0693b4f091dad646eaecd4a462564b95cba32f",
+ "imagen": "localhost/cooper:bc0693b4f091dad646eaecd4a462564b95cba32f",
+ "procedimiento": "preflight → recuperar-app preparar → actualizar-solo-cooper → recuperar-app sellar (docs/cooper-recuperacion-app.md)",
+ "preflight": {
+  "estado": "PREFLIGHT_PASS",
+  "archivos_publicos": 27,
+  "entorno_consumido": false,
+  "estado_operativo_creado": false,
+  "mutaciones": false
+ },
+ "preparar": {
+  "estado": "PREPARADO",
+  "recibo_sha256": "ca7f4c892494808255fb638fe69560e065da475db7a377e480573978b0db0a16"
+ },
+ "anterior_id": "sha256:71f7a3894e4a7fd84b89fd228506ab8b4d9ac13bd0c5a872303a16abc0248508",
+ "recibo_actualizador": "/var/lib/cooper-operacion/solo-cooper-20261122T232058Z/resultado.json",
+ "actualizador": {
+  "resultado": "PASS",
+  "imagen": "localhost/cooper:bc0693b4f091dad646eaecd4a462564b95cba32f",
+  "imagen_id_desplegada": "sha256:fa120a2db5cab531d69263cf065b9843a55b6b5665a476b94effc66fdbae36ad",
+  "reversa_aislada": "PASS",
+  "migraciones_antes": 14,
+  "migraciones_despues": 17,
+  "tablas_anteriores_conservadas": 28,
+  "servicios_ajenos_sin_cambios": true,
+  "caddy_sin_cambios": true,
+  "respaldo_sha256": "9b24811090765151c6bc3e9fe45d949da0e1cd5884a91a651c485fe4a616e4b3",
+  "fecha_utc": "2026-11-22T23:21:38Z"
+ },
+ "sello": {
+  "estado": "SELLADO",
+  "recibo_sha256": "873c4ca3b70f0d9ac10f9718efe6d4281f58b770ecb4e64bcd05aab5e3a35da1"
+ },
+ "huellas": {
+  "/var/lib/cooper-operacion/despliegue-final-app-bc0693b4f091/preparacion.json": "ca7f4c892494808255fb638fe69560e065da475db7a377e480573978b0db0a16",
+  "/var/lib/cooper-operacion/solo-cooper-20261122T232058Z/resultado.json": "270bb65ef99179df8c1664c5c639b6b67a886b921e43d061611790445d942c03",
+  "/var/lib/cooper-operacion/despliegue-final-app-bc0693b4f091/sello.json": "873c4ca3b70f0d9ac10f9718efe6d4281f58b770ecb4e64bcd05aab5e3a35da1"
+ },
+ "fin": "2026-11-22T23:21:44Z"
+}

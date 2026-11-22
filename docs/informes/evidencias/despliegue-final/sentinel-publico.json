@@ -1,0 +1,36 @@
+{
+ "1440": {
+  "herramienta": "Sistema Sentinel",
+  "origen": "https://cooper.cooperestudio.com",
+  "ancho": 1440,
+  "alcance": "Entrada pública sin sesión; pantallas privadas pendientes",
+  "hallazgos": 0,
+  "modulos": [
+   {
+    "modulo": "recorridos",
+    "hallazgos": 0
+   },
+   {
+    "modulo": "estabilidad",
+    "hallazgos": 0
+   }
+  ]
+ },
+ "390": {
+  "herramienta": "Sistema Sentinel",
+  "origen": "https://cooper.cooperestudio.com",
+  "ancho": 390,
+  "alcance": "Entrada pública sin sesión; pantallas privadas pendientes",
+  "hallazgos": 0,
+  "modulos": [
+   {
+    "modulo": "recorridos",
+    "hallazgos": 0
+   },
+   {
+    "modulo": "estabilidad",
+    "hallazgos": 0
+   }
+  ]
+ }
+}

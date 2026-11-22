@@ -1,0 +1,46 @@
+{
+ "ejecutor": {
+  "estado": "PASS",
+  "modo": "n8n",
+  "control_sha256": "7fd0d4d96e19650ffb92b82d437a5a2c1d7e851cd439911e89eef3d675ea4d0d",
+  "recibo_sha256": "e191c0263bc67bdff426f1bc0244495726627c9f173dd04768b55d83f134146b"
+ },
+ "recibo_campos_publicos": {
+  "estado": "PASS",
+  "modalidad": "workflows",
+  "entrada_sha256": "3b9f4bafbc8895fa8e6be7911dd632a2b71bceae8b094e4bac0d91673427e9ba",
+  "manifiesto_sha256": "805d80776fb32a9a09ca0cadec6bc2eb865b4ed892da9aee528ad194d3b49134",
+  "ensayo_y_reversa_previa": "PASS",
+  "flujos_importados": 5,
+  "snapshot_previo": "2e3f7042289265efe72a81d691a16e3180309e1abfad2b043803da24f2965626",
+  "columnas_agregadas": 0,
+  "columnas_idempotentes": "PASS",
+  "flujos_antes": 45,
+  "flujos_despues": 45,
+  "flujos_ajenos_preservados": "PASS",
+  "tablas_negocio_preservadas": 9,
+  "filas_negocio": 185,
+  "tablas_negocio_sha256": "2f3afa6ebe33c6f48ae9613d6ee423dc9bdc201e162b6aa7e7f40f1c9c4a403a",
+  "salud_stack": "PASS",
+  "entradas_pausadas_reabiertas": [],
+  "disparadores_habilitados": [],
+  "disparadores_dependencias_pausados": [],
+  "pausados_por_credencial": [],
+  "pasos_bloqueados_por_credencial": [],
+  "republicados_originales": [
+   "FabAprendizaje01",
+   "xorCR0lfNlil8Ovy",
+   "FabErrores000001",
+   "FabOrquestador01",
+   "FabPublicacion01"
+  ],
+  "esquema_productivo": {
+   "ok": true,
+   "tablas_revisadas": 9,
+   "columnas_faltantes": [],
+   "tipos_incompatibles": [],
+   "referencias_incompatibles": [],
+   "referencias_dinamicas_sin_resolver": []
+  }
+ }
+}

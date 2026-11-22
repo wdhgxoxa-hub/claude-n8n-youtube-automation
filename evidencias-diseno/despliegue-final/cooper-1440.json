@@ -1,0 +1,64 @@
+{
+  "ancho": 1440,
+  "proyeccionOrbePanel": {
+    "clic": 191.5,
+    "inicio": 198,
+    "finProyeccion": 804.3999999761581,
+    "inicioFundido": 821.1999999880791,
+    "finFundido": 954.5,
+    "fundidos": 3
+  },
+  "panel": {
+    "x": 1004,
+    "y": 16,
+    "ancho": 420,
+    "alto": 868
+  },
+  "main": {
+    "antes": {
+      "x": 96,
+      "y": 80,
+      "width": 1344,
+      "height": 1661.40625
+    },
+    "despues": {
+      "x": 96,
+      "y": 80,
+      "width": 900,
+      "height": 1748.6875
+    }
+  },
+  "contextos": [
+    {
+      "pantalla": "video",
+      "esperado": "¿A qué huele la lluvia?",
+      "contexto": "¿A qué huele la lluvia?",
+      "chips": [
+        "¿En qué etapa está este video?",
+        "¿Qué falta por revisar?",
+        "Quiero corregir este video"
+      ]
+    },
+    {
+      "pantalla": "marca",
+      "esperado": "Iglesia (por confirmar)",
+      "contexto": "Iglesia (por confirmar)",
+      "chips": [
+        "¿Qué sigue para esta marca?",
+        "Quiero preparar una publicación",
+        "Revisar el calendario de mi marca"
+      ]
+    },
+    {
+      "pantalla": "inicio",
+      "esperado": "Hoy en el estudio",
+      "contexto": "Hoy en el estudio",
+      "chips": [
+        "Crear otro canal",
+        "Dar forma a una idea",
+        "Revisar mis pendientes"
+      ]
+    }
+  ],
+  "consola": []
+}

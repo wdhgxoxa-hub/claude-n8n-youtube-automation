@@ -1,0 +1,34 @@
+{
+  "ancho": 1440,
+  "sinAutoplay": {
+    "dataPreview": "off",
+    "quieto": "true",
+    "pausado": true,
+    "tiempo": 0,
+    "visible": "none"
+  },
+  "arrastreReducido": {
+    "xAntes": -351,
+    "xSoltar": 0,
+    "xFinal": 0
+  },
+  "funcional": {
+    "entradasSinAnimacion": true,
+    "sinAutoplay": true,
+    "tinteSinInterpolar": true,
+    "arrastreFunciona": true,
+    "sinInercia": true,
+    "cifrasDirectas": true,
+    "cooper": true,
+    "mas": true,
+    "rutaSinTransicion": true,
+    "rutaSinCoreografia": true,
+    "detalle": true
+  },
+  "cuadrosRegistrados": 234,
+  "animaciones": [],
+  "desplazan": [],
+  "fundidosLargos": [],
+  "animacionesMayores120ms": [],
+  "consola": []
+}
