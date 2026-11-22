@@ -4919,10 +4919,6 @@ a.text-link,
 .notice {
   border-left-color: var(--info);
 }
-.live-pill,
-.live-pill i {
-  color: var(--tally);
-}
 .skeleton {
   border-radius: var(--radio-tarjeta);
 }
