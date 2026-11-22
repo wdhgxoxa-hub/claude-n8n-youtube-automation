@@ -151,7 +151,7 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
     .locator(`[data-video-medio="${contexto.video.id}"]`)
     .first();
   const imagen = medio.locator("img");
-  await expect(imagen).toHaveAttribute("src", poster);
+  await expect(imagen).toHaveJSProperty("src", new URL(poster, page.url()).href);
   await expect(imagen).toHaveAttribute("loading", "lazy");
   await expect(imagen).toHaveAttribute("width", "320");
   await expect(imagen).toHaveAttribute("height", "480");
@@ -259,7 +259,10 @@ for (const ancho of [390, 1440])
       state.observer.observe({ type: "layout-shift" });
     });
     datos.liberarMedios();
-    await expect(medio.locator("img")).toHaveAttribute("src", poster);
+    await expect(medio.locator("img")).toHaveJSProperty(
+      "src",
+      new URL(poster, page.url()).href,
+    );
     await expect
       .poll(() =>
         medio
@@ -363,7 +366,10 @@ for (const ancho of [390, 1440])
     const player = page.getByLabel(`Video terminado: ${datos.video.title}`, {
       exact: true,
     });
-    await expect(player).toHaveAttribute("poster", poster);
+    await expect(player).toHaveJSProperty(
+      "poster",
+      new URL(poster, page.url()).href,
+    );
     await expect(player).toHaveAttribute("preload", "none");
     const caja = await player.boundingBox();
     await player.evaluate(async (el) => {
@@ -431,7 +437,10 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
     publicacion.publicacion.id,
   );
   await expect(medio).toHaveAttribute("data-origen", "youtube");
-  await expect(medio.locator("img")).toHaveAttribute("src", poster);
+  await expect(medio.locator("img")).toHaveJSProperty(
+    "src",
+    new URL(poster, page.url()).href,
+  );
   await page.screenshot({
     path: `${salida}/medios-publicados-1440.png`,
     fullPage: true,
@@ -482,6 +491,9 @@ test("un derivado lento termina visible después de más de ocho consultas", asy
     await page.clock.runFor(1);
     await expect.poll(() => consultas).toBe(consulta);
   }
-  await expect(medio.locator("img")).toHaveAttribute("src", poster);
+  await expect(medio.locator("img")).toHaveJSProperty(
+    "src",
+    new URL(poster, page.url()).href,
+  );
   expect(datos.errores).toEqual([]);
 });

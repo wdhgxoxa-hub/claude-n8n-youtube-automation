@@ -265,9 +265,9 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
   const distante = page.locator(
     `.video-list [data-video-medio="${distanteId}"]`,
   );
-  await expect(primero.locator("img")).toHaveAttribute(
+  await expect(primero.locator("img")).toHaveJSProperty(
     "src",
-    urlAsset(original.id, "poster"),
+    new URL(urlAsset(original.id, "poster"), page.url()).href,
   );
   expect((await distante.boundingBox())!.y).toBeGreaterThan(1140);
   expect(peticiones.get(`metadata:${distanteId}`) ?? 0).toBe(0);
@@ -286,9 +286,9 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
       primero.locator("video").evaluate((v) => (v as HTMLVideoElement).paused),
     )
     .toBe(true);
-  await expect(distante.locator("img")).toHaveAttribute(
+  await expect(distante.locator("img")).toHaveJSProperty(
     "src",
-    urlAsset(distanteId, "poster"),
+    new URL(urlAsset(distanteId, "poster"), page.url()).href,
   );
   expect(peticiones.get(`metadata:${distanteId}`)).toBeGreaterThan(0);
   if (ancho === 390)
@@ -342,9 +342,9 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
   const reproductor = page.getByLabel(`Video terminado: ${original.title}`, {
     exact: true,
   });
-  await expect(reproductor).toHaveAttribute(
+  await expect(reproductor).toHaveJSProperty(
     "poster",
-    urlAsset(original.id, "poster"),
+    new URL(urlAsset(original.id, "poster"), page.url()).href,
   );
   await reproductor.evaluate(async (el) => {
     const v = el as HTMLVideoElement;
@@ -370,9 +370,9 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
   const publicado = page.locator(
     `.publication-thumb [data-video-medio="${original.id}"][data-publicacion="extracto-local"]`,
   );
-  await expect(publicado.locator("img")).toHaveAttribute(
+  await expect(publicado.locator("img")).toHaveJSProperty(
     "src",
-    urlAsset(original.id, "poster"),
+    new URL(urlAsset(original.id, "poster"), page.url()).href,
   );
   await page.screenshot({
     path: `${salida}/medios-reales-publicados-${ancho}.png`,
@@ -381,9 +381,9 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
   await navegar(page, "/");
   if (ancho === 390) await page.getByRole("tab", { name: /Fábrica/ }).click();
   const fabrica = page.locator(".factory-pane:visible");
-  await expect(fabrica.locator(".factory-feature img")).toHaveAttribute(
+  await expect(fabrica.locator(".factory-feature img")).toHaveJSProperty(
     "src",
-    urlAsset(original.id, "poster"),
+    new URL(urlAsset(original.id, "poster"), page.url()).href,
   );
   await fabrica.locator(".factory-feature").scrollIntoViewIfNeeded();
   await page.screenshot({
