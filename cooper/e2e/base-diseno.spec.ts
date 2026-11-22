@@ -46,6 +46,72 @@ async function readyReduced(page: Page) {
     );
 }
 
+type MotionSample = {
+  phase: string;
+  startedAt: number;
+  intervals: number[];
+  longTasks: number[];
+  previous: number;
+  active: boolean;
+  observer: PerformanceObserver;
+};
+
+async function startMotionSample(page: Page, phase: string) {
+  await page.evaluate((name) => {
+    performance.mark(`diseno:${name}:inicio`);
+    const sample: MotionSample = {
+      phase: name,
+      startedAt: performance.now(),
+      intervals: [],
+      longTasks: [],
+      previous: 0,
+      active: true,
+      observer: new PerformanceObserver((entries) => {
+        for (const entry of entries.getEntries())
+          sample.longTasks.push(entry.duration);
+      }),
+    };
+    sample.observer.observe({ type: "longtask" });
+    (
+      window as Window & { cooperDesignSample?: MotionSample }
+    ).cooperDesignSample = sample;
+    const frame = (time: number) => {
+      if (!sample.active) return;
+      if (sample.previous) sample.intervals.push(time - sample.previous);
+      sample.previous = time;
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }, phase);
+}
+
+async function stopMotionSample(page: Page) {
+  return page.evaluate(async () => {
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => resolve()),
+    );
+    const sample = (window as Window & { cooperDesignSample?: MotionSample })
+      .cooperDesignSample;
+    if (!sample) throw new Error("La fase de movimiento no se inició.");
+    sample.active = false;
+    sample.observer.disconnect();
+    performance.mark(`diseno:${sample.phase}:fin`);
+    const sorted = [...sample.intervals].sort((a, b) => a - b);
+    return {
+      phase: sample.phase,
+      duration: performance.now() - sample.startedAt,
+      frames: sample.intervals.length,
+      fps:
+        1000 /
+        (sample.intervals.reduce((sum, value) => sum + value, 0) /
+          sample.intervals.length),
+      p95: sorted[Math.floor(sorted.length * 0.95)],
+      maxFrame: Math.max(...sample.intervals),
+      longTasks: sample.longTasks,
+    };
+  });
+}
+
 async function capture(
   page: Page,
   screen: string,
@@ -338,6 +404,7 @@ for (const width of [390, 1440]) {
       transferMode: "ReturnAsStream",
     });
     const errors: string[] = [];
+    const interactions: Awaited<ReturnType<typeof stopMotionSample>>[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => {
       if (["warning", "error"].includes(message.type()))
@@ -374,6 +441,7 @@ for (const width of [390, 1440]) {
       page.locator("header").getByRole("button", { name: "Pausar movimiento" }),
     ).toHaveCount(0);
     await expect(page.locator(".pildora-conexion")).toHaveCount(0);
+    await startMotionSample(page, "cooper-abrir");
     await page
       .getByRole("button", { name: "Abrir Cooper", exact: true })
       .click();
@@ -381,11 +449,13 @@ for (const width of [390, 1440]) {
       page.getByRole("textbox", { name: "Mensaje para Cooper" }),
     ).toBeVisible();
     await page.waitForTimeout(700);
+    interactions.push(await stopMotionSample(page));
     const sheet = page.locator(".cooper-panel");
     if (width < 768) {
       expect((await sheet.boundingBox())!.height).toBeCloseTo(900 * 0.62, 0);
       const grip = page.locator(".cooper-drag");
       const start = (await grip.boundingBox())!;
+      await startMotionSample(page, "cooper-arrastrar");
       await page.mouse.move(
         start.x + start.width / 2,
         start.y + start.height / 2,
@@ -396,7 +466,15 @@ for (const width of [390, 1440]) {
       });
       await page.mouse.up();
       await expect(sheet).toHaveClass(/is-full/);
+      await page.waitForTimeout(700);
+      interactions.push(await stopMotionSample(page));
+      await page.evaluate(() =>
+        performance.mark("diseno:auditoria-fuera-medicion:inicio"),
+      );
       await capture(page, "cooper-expandido", width, errors);
+      await page.evaluate(() =>
+        performance.mark("diseno:auditoria-fuera-medicion:fin"),
+      );
       await page
         .getByRole("button", { name: "Reducir Cooper", exact: true })
         .click();
@@ -409,12 +487,15 @@ for (const width of [390, 1440]) {
         panelBounds.x,
       );
     }
+    await startMotionSample(page, "cooper-cerrar");
     await page
       .getByRole("button", { name: "Cerrar Cooper", exact: true })
       .click();
     await expect(
       page.getByRole("textbox", { name: "Mensaje para Cooper" }),
     ).toHaveCount(0);
+    await page.waitForTimeout(700);
+    interactions.push(await stopMotionSample(page));
     for (const path of [
       "/videos",
       "/publicados",
@@ -426,17 +507,21 @@ for (const width of [390, 1440]) {
         .locator(`a[href="${path}"]`)
         .filter({ visible: true })
         .first();
+      await startMotionSample(page, `ruta-${path.replaceAll("/", "_")}`);
       await link.click();
       await expect(page).toHaveURL(
         new RegExp(`${path === "/" ? "/$" : path + "$"}`),
       );
       await page.waitForTimeout(700);
+      interactions.push(await stopMotionSample(page));
     }
     const target = page.locator(".video-mini").first();
     const href = await target.getAttribute("href");
+    await startMotionSample(page, "video-elemento-compartido");
     await target.click();
     await expect(page).toHaveURL(new RegExp(`${href}$`));
     await page.waitForTimeout(800);
+    interactions.push(await stopMotionSample(page));
     const transitions = await page.evaluate(
       () =>
         (window as Window & { transitionsObserved?: { names: string[] }[] })
@@ -549,6 +634,7 @@ for (const width of [390, 1440]) {
           viewport: width,
           cpu: width < 768 ? 4 : 1,
           metrics,
+          interactions,
           trace: `traza-movimiento-${width}.json`,
           errors,
           limitation:
@@ -562,6 +648,20 @@ for (const width of [390, 1440]) {
     expect(metrics.p95).toBeLessThanOrEqual(25);
     expect(metrics.cls).toBe(0);
     expect(metrics.longTasks.filter((duration) => duration >= 100)).toEqual([]);
+    for (const sample of interactions) {
+      expect
+        .soft(sample.fps, `${sample.phase}: fluidez real de interacción`)
+        .toBeGreaterThanOrEqual(57);
+      expect
+        .soft(sample.p95, `${sample.phase}: percentil95 de fotograma`)
+        .toBeLessThanOrEqual(25);
+      expect
+        .soft(
+          sample.longTasks.filter((duration) => duration >= 100),
+          `${sample.phase}: bloqueo de interfaz`,
+        )
+        .toEqual([]);
+    }
     expect(errors).toEqual([]);
   });
 }
