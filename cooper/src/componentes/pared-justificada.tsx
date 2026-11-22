@@ -31,8 +31,15 @@ export function ParedJustificada({
   pieza: (indice: number, medida: Medida) => ReactNode;
 }) {
   const raiz = useRef<HTMLElement>(null);
-  const [filas, setFilas] = useState<Medida[][] | null>(null);
   const clave = proporciones.join("|");
+  // Las filas solo valen para las proporciones con que se midieron: al filtrar,
+  // la lista cambia antes que la medida y unas filas viejas pedirían piezas que
+  // ya no existen. Hasta volver a medir se usa la reserva sin pintar.
+  const [medida, setMedida] = useState<{
+    clave: string;
+    filas: Medida[][];
+  } | null>(null);
+  const filas = medida?.clave === clave ? medida.filas : null;
 
   useEfectoDeDiseno(() => {
     const el = raiz.current;
@@ -50,10 +57,11 @@ export function ParedJustificada({
           hueco,
         },
       );
-      setFilas((previo) =>
-        previo && JSON.stringify(previo) === JSON.stringify(siguiente)
+      setMedida((previo) =>
+        previo?.clave === clave &&
+        JSON.stringify(previo.filas) === JSON.stringify(siguiente)
           ? previo
-          : siguiente,
+          : { clave, filas: siguiente },
       );
     };
     medir();
