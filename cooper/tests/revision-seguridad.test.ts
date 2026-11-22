@@ -163,7 +163,14 @@ it("R04 vuelve a comprobar la sesión tras esperar a la fábrica", async () => {
   );
   const reader = response.body!.getReader();
   try {
-    expect((await reader.read()).done).toBe(true);
+    let text = "";
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      text += new TextDecoder().decode(chunk.value);
+    }
+    expect(text).toContain("event: latido");
+    expect(text).not.toMatch(/event: (estado|progreso)/);
   } finally {
     controller.abort();
     await reader.cancel();
