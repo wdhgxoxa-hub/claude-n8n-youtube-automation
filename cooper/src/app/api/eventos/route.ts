@@ -60,7 +60,12 @@ export async function GET(request: Request) {
       const receipt = db()
         .select()
         .from(events)
-        .where(and(eq(events.id, lastEvent), eq(events.ownerId, user.id)))
+        .where(
+          and(
+            eq(events.id, lastEvent),
+            user.role === "admin" ? undefined : eq(events.ownerId, user.id),
+          ),
+        )
         .get();
       if (receipt) {
         cursorTime = receipt.createdAt;

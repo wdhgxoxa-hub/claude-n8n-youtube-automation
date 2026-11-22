@@ -266,3 +266,23 @@ it.each(["ajeno", "inexistente", "malformado", "largo"])(
     expect(text).toContain("event: estado");
   },
 );
+
+it("el administrador retoma eventos del mismo equipo que su stream ya autoriza", async () => {
+  const own = registrarProgreso(active.id, Date.now() - 3000);
+  const colleagueEmail = `${randomUUID()}@example.test`;
+  db()
+    .insert(allowedEmails)
+    .values({ email: colleagueEmail, createdAt: Date.now() })
+    .run();
+  const colleague = loginGoogle(colleagueEmail, "Integrante del equipo");
+  const cursor = registrarProgreso(colleague.id, Date.now() - 2000);
+  const next = registrarProgreso(colleague.id, Date.now() - 1000);
+  active = { ...active, role: "admin" };
+  const stream = await abrir(`?ultimoEvento=${cursor}`);
+  await vi.advanceTimersByTimeAsync(1000);
+  const text = stream.chunks.join("");
+  expect(text).not.toContain(`id: ${own}\n`);
+  expect(text).not.toContain(`id: ${cursor}\n`);
+  expect(text).toContain(`id: ${next}\n`);
+  expect(text).toContain("event: estado");
+});
