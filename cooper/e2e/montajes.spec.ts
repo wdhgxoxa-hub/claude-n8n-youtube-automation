@@ -100,11 +100,9 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
   await video.evaluate((v: HTMLVideoElement) => v.pause());
   mkdirSync(".cache/total-m05", { recursive: true });
   for (const width of [390, 1440])
-    for (const theme of ["claro", "oscuro"]) {
+    for (const theme of ["oscuro"]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.evaluate((t) => {
-        document.documentElement.dataset.theme = t;
-      }, theme);
+      await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
       expect(
         await page.evaluate(

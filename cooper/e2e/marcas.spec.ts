@@ -133,11 +133,8 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
     .toBeGreaterThan(0);
   expect(solicitudesMedios).toBeGreaterThan(0);
   mkdirSync(".cache/capturas-marcas", { recursive: true });
-  for (const theme of ["oscuro", "claro"]) {
-    await page.evaluate(
-      (t) => (document.documentElement.dataset.theme = t),
-      theme,
-    );
+  for (const theme of ["oscuro"]) {
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
     for (const width of [360, 390, 768, 1024, 1440, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       await expect

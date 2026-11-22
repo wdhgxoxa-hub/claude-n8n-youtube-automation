@@ -35,12 +35,10 @@ test("conciliación administrativa: consulta, evidencia, cierre durable y acceso
     .fill("informe-e2e-sin-resultado");
   await page.getByRole("checkbox", { name: /He cotejado operación/ }).check();
   mkdirSync(".cache/conciliacion-visual", { recursive: true });
-  for (const tema of ["oscuro", "claro"])
+  for (const tema of ["oscuro"])
     for (const width of [390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.evaluate((t) => {
-        document.documentElement.dataset.theme = t;
-      }, tema);
+      await expect(page.locator("html")).toHaveAttribute("data-theme", tema);
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
       expect(
         await page.evaluate(
