@@ -350,6 +350,25 @@ export function Videos() {
       setBusy(false);
     }
   }
+  const filtros = (
+    <div className="filters" role="group" aria-label="Filtrar videos">
+      {[
+        ["todos", "Todos"],
+        ["proceso", "En producción"],
+        ["pendientes", "Por aprobar"],
+        ["publicados", "Publicados"],
+      ].map(([id, label]) => (
+        <button
+          key={id}
+          aria-pressed={filter === id}
+          onClick={() => setFilter(id)}
+        >
+          {filter === id && <Indicador id="filtro-videos" />}
+          {label}
+        </button>
+      ))}
+    </div>
+  );
   return (
     <div className={`page ${styles.page}`}>
       <Heading
@@ -461,34 +480,22 @@ export function Videos() {
           )}
         </form>
       )}
-      <div className="filters" role="group" aria-label="Filtrar videos">
-        {[
-          ["todos", "Todos"],
-          ["proceso", "En producción"],
-          ["pendientes", "Por aprobar"],
-          ["publicados", "Publicados"],
-        ].map(([id, label]) => (
-          <button
-            key={id}
-            aria-pressed={filter === id}
-            onClick={() => setFilter(id)}
-          >
-            {filter === id && <Indicador id="filtro-videos" />}
-            {label}
-          </button>
-        ))}
-      </div>
       {visible.length ? (
-        <LineaProduccion videos={visible} />
+        <LineaProduccion videos={visible} filtros={filtros} />
       ) : (
-        <Empty
-          title={filter === "todos" ? "Tu primera idea va aquí" : "Todo al día"}
-          description={
-            filter === "todos"
-              ? "Pide un video y sigue su recorrido de principio a fin."
-              : "No hay videos en este estado."
-          }
-        />
+        <>
+          {filtros}
+          <Empty
+            title={
+              filter === "todos" ? "Tu primera idea va aquí" : "Todo al día"
+            }
+            description={
+              filter === "todos"
+                ? "Pide un video y sigue su recorrido de principio a fin."
+                : "No hay videos en este estado."
+            }
+          />
+        </>
       )}
     </div>
   );
