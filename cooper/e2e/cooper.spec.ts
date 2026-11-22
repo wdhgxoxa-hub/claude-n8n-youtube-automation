@@ -651,13 +651,12 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
       has: page.getByRole("heading", { name: "Cooper explica las mareas" }),
     })
     .click();
-  await expect(page.locator(".presenter-summary")).toContainText(
-    "Presentador: Cooper",
-  );
-  await expect(page.locator(".presenter-summary")).toContainText("Voz: Clara");
-  await expect(page.locator(".presenter-summary")).toContainText(
-    "En todo el video",
-  );
+  const resumen = page
+    .getByRole("main")
+    .locator(".detail-layout:visible .presenter-summary");
+  await expect(resumen).toContainText("Presentador: Cooper");
+  await expect(resumen).toContainText("Voz: Clara");
+  await expect(resumen).toContainText("En todo el video");
 });
 
 test("bienvenida vacía: las tres acciones quedan antes del compositor", async ({
@@ -763,20 +762,24 @@ test("identidad con frase renovable, formulario accesible y entrenamiento en viv
     final.videos.find((v: { id: string }) => v.id === video.id),
   ).toMatchObject({ voiceId: own.id, productionState: "cancelada" });
   await page.goto(`/videos/${video.id}`);
+  const detalle = page.getByRole("main").locator(".detail-layout:visible");
+  await expect(detalle).toHaveCount(1);
   await expect(
     page.getByRole("status").filter({ hasText: "Video cancelado" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Aprobar", exact: true }),
+    detalle.getByRole("button", { name: "Aprobar", exact: true }),
   ).toBeDisabled();
   await expect(
-    page.getByRole("button", { name: "Pedir cambios" }),
+    detalle.getByRole("button", { name: "Pedir cambios" }),
   ).toBeDisabled();
-  await expect(page.locator(".presenter-summary")).toContainText(
+  await expect(detalle.locator(".presenter-summary")).toContainText(
     "Voz de prueba",
   );
-  await expect(page.locator(".journey .current small")).toHaveText("Cancelado");
-  await expect(page.locator(".stage-live")).toHaveCount(0);
+  await expect(detalle.locator(".journey .current small")).toHaveText(
+    "Cancelado",
+  );
+  await expect(detalle.locator(".stage-live")).toHaveCount(0);
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.screenshot({
