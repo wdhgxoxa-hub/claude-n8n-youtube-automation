@@ -345,7 +345,6 @@ export function Inicio({ ahora }: { ahora: number }) {
   return (
     <div className="page inicio-estudio">
       <header className="inicio-titulo">
-        <p className="eyebrow">COOPER / ESTUDIO</p>
         <h1>
           Hoy en el estudio<span className="title-stop">.</span>
         </h1>

@@ -1,10 +1,7 @@
-/* La cabecera de contexto ocupa 80px y el armazón suma 24 de relleno: este
-   margen negativo deja el título a 96px del borde, para que la pista y las
-   primeras cápsulas entren en el primer viewport. */
+/* El arranque vertical (96px) lo fija el armazón para todas las pantallas. */
 .page {
   width: 100%;
   min-width: 0;
-  margin-top: calc(-1 * var(--espacio-8));
   padding: 0 var(--margen-pagina) var(--espacio-96);
 }
 

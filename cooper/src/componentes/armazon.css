@@ -159,7 +159,8 @@
 main#contenido {
   max-width: var(--ancho-contenido);
   margin: 0 auto;
-  padding: var(--espacio-24) var(--espacio-32) var(--espacio-96);
+  /* Cabecera de 80px + 16: el título de toda pantalla arranca a 96px. */
+  padding: var(--espacio-16) var(--espacio-32) var(--espacio-96);
 }
 @media (min-width: 768px) {
   .studio-shell:not(.cooper-open) main#contenido {
@@ -754,9 +755,16 @@ main#contenido {
 
 /* El contenedor principal es el único responsable del margen de las pantallas. */
 main#contenido .route-choreography > .page {
+  /* …y del arranque vertical: ninguna pantalla suma aire propio sobre su título. */
+  padding-top: 0;
+  margin-top: 0;
   padding-inline: 0;
   max-width: none;
   margin-inline: 0;
+}
+main#contenido .route-choreography > .page > .page-heading:first-child {
+  padding-top: 0;
+  margin-top: 0;
 }
 .glass-rail:hover nav a span:not(.nav-indicator),
 .glass-rail:focus-within nav a span:not(.nav-indicator) {
