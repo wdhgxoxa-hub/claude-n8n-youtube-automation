@@ -1,0 +1,281 @@
+/* Primitivas de Sala de proyección. Los valores de diseño viven en tokens.css. */
+.boton,
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-8);
+  min-height: var(--objetivo-tactil);
+  padding: var(--espacio-12) var(--espacio-24);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-pildora);
+  font-size: var(--texto-13);
+  font-weight: 600;
+  line-height: var(--interlinea-texto);
+  transition:
+    transform var(--duracion-estado) var(--curva-salida),
+    border-color var(--duracion-estado),
+    background-color var(--duracion-estado);
+}
+.boton-primario {
+  background: var(--tally);
+  color: var(--sobre-tally);
+  border-color: var(--tally);
+}
+.boton-secundario,
+.chip {
+  background: var(--sup-2);
+  color: var(--texto);
+}
+.boton-fantasma {
+  background: var(--transparente);
+  border-color: var(--transparente);
+  color: var(--texto);
+}
+.boton-peligro {
+  background: var(--sup-2);
+  border-color: var(--baja);
+  color: var(--baja);
+}
+.boton:hover:not(:disabled),
+.chip:hover:not(:disabled) {
+  transform: translateY(var(--elevacion-tarjeta));
+  border-color: var(--linea-fuerte);
+}
+.boton:active:not(:disabled),
+.chip:active:not(:disabled) {
+  transform: scale(var(--presion-escala));
+  transition-duration: var(--duracion-presion);
+}
+.chip {
+  padding-inline: var(--espacio-16);
+  font-weight: 500;
+}
+.chip-activo {
+  background: var(--sup-3);
+  border-color: var(--texto-2);
+}
+.tarjeta {
+  position: relative;
+  min-width: 0;
+  padding: var(--espacio-24);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--sup-1);
+  box-shadow: none;
+  transition:
+    transform var(--duracion-estado) var(--curva-salida),
+    border-color var(--duracion-estado);
+}
+.tarjeta:has(a:hover, button:hover),
+.tarjeta:focus-within {
+  transform: translateY(var(--elevacion-tarjeta));
+  border-color: var(--linea-fuerte);
+}
+.medio {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: var(--radio-tarjeta);
+  background: var(--sup-2);
+}
+.medio-horizontal {
+  aspect-ratio: 16 / 9;
+}
+.medio-vertical {
+  aspect-ratio: 9 / 16;
+}
+.medio-cuadrado {
+  aspect-ratio: 1;
+}
+.medio-poster,
+.medio-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.medio-preview {
+  opacity: 0;
+  transition: opacity var(--duracion-estado);
+}
+.medio[data-preview="on"] .medio-preview {
+  opacity: 1;
+}
+.medio-contenido {
+  position: absolute;
+  inset: auto 0 0;
+  padding: var(--espacio-16);
+  background: linear-gradient(var(--transparente), var(--velo));
+}
+.medio-espera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--espacio-8);
+  height: 100%;
+  padding: var(--espacio-24);
+  color: var(--texto-2);
+  text-align: center;
+}
+.medio-espera span {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-28);
+  color: var(--texto);
+}
+.medio-espera small {
+  font-size: var(--texto-13);
+}
+.halo-medio {
+  position: relative;
+  isolation: isolate;
+}
+.halo-medio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse, var(--tinte), var(--transparente) 70%);
+  opacity: var(--halo-opacidad);
+  filter: var(--halo-filtro);
+  pointer-events: none;
+  transition: opacity var(--duracion-ruta);
+}
+.halo-medio > .medio {
+  border: 1px solid color-mix(in srgb, var(--tinte) 20%, var(--transparente));
+}
+.cifra {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--espacio-8);
+}
+.cifra figcaption,
+.cifra-detalle {
+  color: var(--texto-2);
+  font-size: var(--texto-13);
+}
+.cifra-valor {
+  font-family: var(--fuente-datos);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--texto-40);
+  font-weight: 500;
+  line-height: var(--interlinea-display);
+  letter-spacing: var(--tracking-display);
+  white-space: nowrap;
+}
+.cifra-heroe .cifra-valor {
+  font-size: var(--cifra-heroe);
+}
+.cifra-grafica {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  height: 40px;
+  color: var(--sube);
+  overflow: visible;
+}
+.cifra-grafica path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+}
+/* Excepción explícita §2 para el trazo de minigráficas. */
+.cifra[data-visible="true"] .cifra-grafica path {
+  animation: cifra-trazo var(--duracion-ruta) var(--curva-salida) both;
+}
+@keyframes cifra-trazo {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hoja-vidrio {
+  background: var(--vidrio-fondo);
+  backdrop-filter: var(--vidrio-filtro);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-panel);
+  box-shadow: var(--vidrio-brillo), var(--vidrio-sombra);
+}
+.esqueleto {
+  position: relative;
+  overflow: hidden;
+  min-height: var(--espacio-24);
+  border-radius: var(--radio-tarjeta);
+  background: var(--sup-2);
+}
+.esqueleto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--sup-3);
+  animation: esqueleto-respira var(--duracion-respiracion) ease-in-out infinite;
+}
+@keyframes esqueleto-respira {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espacio-16);
+  padding: var(--espacio-48) var(--espacio-32);
+  max-width: 64ch;
+}
+.vacio h2 {
+  font-family: var(--fuente-display);
+  font-size: var(--titulo-seccion);
+  line-height: var(--interlinea-display);
+}
+.vacio p {
+  color: var(--texto-2);
+  font-size: var(--texto-15);
+}
+.pildora-conexion {
+  display: inline-flex;
+  gap: var(--espacio-8);
+  align-items: center;
+  padding: var(--espacio-8) var(--espacio-12);
+  font-size: var(--texto-12);
+  color: var(--texto);
+  background: var(--vidrio-fondo);
+  backdrop-filter: var(--vidrio-filtro);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-pildora);
+}
+.pildora-conexion i {
+  width: var(--espacio-4);
+  height: var(--espacio-4);
+  border-radius: var(--radio-pildora);
+  background: var(--aviso);
+}
+@media (prefers-reduced-motion: reduce) {
+  .boton,
+  .chip,
+  .tarjeta {
+    transform: none !important;
+    transition-duration: var(--duracion-presion);
+  }
+  .medio-preview {
+    display: none;
+  }
+  .cifra-grafica path,
+  .esqueleto::after {
+    animation: none !important;
+  }
+}

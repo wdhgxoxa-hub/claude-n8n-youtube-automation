@@ -24,7 +24,6 @@
     "test:render:local": "node scripts/ensayo-total.mjs --render-local"
   },
   "dependencies": {
-    "@fontsource-variable/manrope": "^5.2.8",
     "better-sqlite3": "^13.2.0",
     "drizzle-orm": "^0.45.4",
     "framer-motion": "^12.23.24",

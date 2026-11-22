@@ -1,0 +1,106 @@
+/* Sala de proyección · DIRECCION.md §1. Única fuente del sistema visual. */
+:root {
+  color-scheme: dark;
+  --lienzo: #000000;
+  --sup-1: #0a0a0c;
+  --sup-2: #111114;
+  --sup-3: #18181c;
+  --linea: rgba(255, 255, 255, 0.08);
+  --linea-fuerte: rgba(255, 255, 255, 0.14);
+  --texto: #f5f5f7;
+  --texto-2: #a1a1aa;
+  --texto-3: #71717a;
+  --tally: #ff4d2e;
+  --tally-suave: rgba(255, 77, 46, 0.14);
+  --sobre-tally: var(--sup-1);
+  --sube: #3ddc97;
+  --baja: #ff6b6b;
+  --aviso: #ffc53d;
+  --info: #7cc4ff;
+  --tinte: var(--info);
+  --tinte-marca: var(--info);
+  --transparente: transparent;
+  --velo: rgba(0, 0, 0, 0.6);
+  --vidrio-fondo: rgba(17, 17, 20, 0.72);
+  --vidrio-filtro: blur(24px) saturate(160%);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --vidrio-sombra: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --halo-filtro: blur(120px);
+  --halo-opacidad: 0.22;
+
+  --fuente-display: var(--font-clash), sans-serif;
+  --fuente-texto: var(--font-geist), sans-serif;
+  --fuente-datos: var(--font-geist-mono), monospace;
+  --texto-12: 12px;
+  --texto-13: 13px;
+  --texto-15: 15px;
+  --texto-17: 17px;
+  --texto-20: 20px;
+  --texto-28: 28px;
+  --texto-40: 40px;
+  --texto-48: 48px;
+  --texto-56: 56px;
+  --texto-72: 72px;
+  --titulo-pantalla: clamp(var(--texto-40), 4.5vw, var(--texto-56));
+  --titulo-seccion: clamp(var(--texto-28), 3vw, var(--texto-40));
+  --cifra-heroe: clamp(var(--texto-48), 6vw, var(--texto-72));
+  --interlinea-display: 1.05;
+  --interlinea-texto: 1.5;
+  --tracking-display: -0.02em;
+
+  --espacio-4: 4px;
+  --espacio-8: 8px;
+  --espacio-12: 12px;
+  --espacio-16: 16px;
+  --espacio-24: 24px;
+  --espacio-32: 32px;
+  --espacio-48: 48px;
+  --espacio-64: 64px;
+  --espacio-96: 96px;
+  --radio-control: 8px;
+  --radio-tarjeta: 14px;
+  --radio-panel: 22px;
+  --radio-pildora: 999px;
+  --ancho-contenido: 1440px;
+  --margen-pagina: var(--espacio-16);
+  --gutter: var(--espacio-16);
+  --columnas: 4;
+  --objetivo-tactil: 48px;
+  --riel-ancho: 72px;
+  --riel-expandido: 232px;
+  --cooper-orbe: 56px;
+  --cooper-panel: 420px;
+  --foco-ancho: 2px;
+  --foco-offset: 2px;
+
+  --duracion-presion: 120ms;
+  --duracion-estado: 240ms;
+  --duracion-entrada: 420ms;
+  --duracion-ruta: 640ms;
+  --duracion-cifra: 800ms;
+  --duracion-preview: 180ms;
+  --duracion-respiracion: 4s;
+  --desfase-entrada: 40ms;
+  --curva-salida: cubic-bezier(0.16, 1, 0.3, 1);
+  --curva-entrada-salida: cubic-bezier(0.65, 0, 0.35, 1);
+  --presion-escala: 0.98;
+  --elevacion-tarjeta: -2px;
+  --desplazamiento-entrada: 12px;
+  --capa-barra: 30;
+  --capa-cooper: 40;
+  --capa-hoja: 50;
+  --capa-aviso: 60;
+}
+@media (min-width: 768px) {
+  :root {
+    --margen-pagina: var(--espacio-24);
+    --gutter: var(--espacio-24);
+    --columnas: 8;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --margen-pagina: var(--espacio-32);
+    --columnas: 12;
+  }
+}

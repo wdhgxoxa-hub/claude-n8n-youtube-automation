@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-const manrope = localFont({
-  src: "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2",
-  variable: "--font-manrope",
-  weight: "200 800",
+const clash = localFont({
+  src: "../../public/fonts/ClashDisplay-Variable.woff2",
+  variable: "--font-clash",
+  weight: "500 600",
   display: "swap",
   preload: true,
+});
+const geist = localFont({
+  src: "../../public/fonts/Geist-Variable.woff2",
+  variable: "--font-geist",
+  weight: "400 600",
+  display: "swap",
+  preload: true,
+});
+const geistMono = localFont({
+  src: "../../public/fonts/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
+  weight: "400 600",
+  display: "swap",
+  preload: false,
 });
 export const metadata: Metadata = {
   title: {
@@ -24,7 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" data-theme="oscuro" className={manrope.variable}>
+    <html
+      lang="es"
+      data-theme="oscuro"
+      className={`${clash.variable} ${geist.variable} ${geistMono.variable}`}
+    >
       <body>{children}</body>
     </html>
   );
