@@ -1155,7 +1155,9 @@ test("4 Cifras que suben al entrar en vista", async ({ browser }, testInfo) => {
         requestAnimationFrame(cuadro);
       };
       requestAnimationFrame(cuadro);
-      zona.scrollIntoView({ block: "center" });
+      // A 390 las cuatro cifras se apilan y la zona supera la pantalla: centrar
+      // la zona dejaría fuera la cifra medida. Se centra esa cifra.
+      zona.querySelector(".cifra-heroe")!.scrollIntoView({ block: "center" });
       await new Promise((r) => setTimeout(r, 1800));
       activo = false;
       const texto = zona.querySelector(".cifra-heroe .cifra-valor .sr-only")?.textContent ?? null;
