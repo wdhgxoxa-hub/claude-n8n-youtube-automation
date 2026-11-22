@@ -19,6 +19,12 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
   const medio = page
     .locator(`[data-video-medio="${contexto.video.id}"]`)
     .first();
+  // En la Línea de producción integrada la cápsula vive en un carril
+  // horizontal y la primitiva solo consulta su medio cuando está cerca de la
+  // vista (DIRECCION §4). El ensayo sustituye el estado del servidor por uno
+  // con un único video, así que la cápsula puede quedar fuera del carril: se
+  // lleva a la vista, como haría la persona (igual que videos-medios-fluidez).
+  await medio.scrollIntoViewIfNeeded();
   const imagen = medio.locator("img");
   await expect(imagen).toHaveJSProperty(
     "src",
@@ -239,6 +245,8 @@ test("un derivado lento termina visible después de más de ocho consultas", asy
   await page.goto("/videos");
   const medio = page.locator(`[data-video-medio="${datos.video.id}"]`).first();
   await expect(medio).toHaveAttribute("data-estado", "pendiente");
+  // La cápsula del carril horizontal consulta su medio solo cerca de la vista.
+  await medio.scrollIntoViewIfNeeded();
   await expect.poll(() => consultas).toBe(1);
   for (let consulta = 2; consulta <= 10; consulta++) {
     const respuesta = page.waitForResponse(
