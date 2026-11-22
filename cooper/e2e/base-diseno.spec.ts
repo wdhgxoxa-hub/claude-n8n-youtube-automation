@@ -43,11 +43,12 @@ async function capture(
   width: number,
   messages: string[],
   expectedBrowserDiagnostics: string[] = [],
+  options: { preserveScroll?: boolean } = {},
 ): Promise<Evidence> {
-  await page.evaluate(async () => {
+  await page.evaluate(async (preserveScroll) => {
     await document.fonts.ready;
-    window.scrollTo(0, 0);
-  });
+    if (!preserveScroll) window.scrollTo(0, 0);
+  }, options.preserveScroll);
   const geometry = await page.evaluate(() => ({
     overflow: Math.max(0, document.documentElement.scrollWidth - innerWidth),
     textBelowMinimum: Array.from(
@@ -731,196 +732,245 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
 });
 
 for (const width of [390, 1440]) {
-  test(`medios y contadores: reproducción local real y datos que cambian a ${width}px`, async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.emulateMedia({ reducedMotion: "no-preference" });
-    // El patrón audiovisual es un fixture explícito, nunca se presenta como una producción real.
-    const clip = execFileSync("ffmpeg", [
-      "-v",
-      "error",
-      "-f",
-      "lavfi",
-      "-i",
-      "testsrc2=s=480x270:r=24",
-      "-t",
-      "2",
-      "-an",
-      "-c:v",
-      "libx264",
-      "-threads",
-      "1",
-      "-pix_fmt",
-      "yuv420p",
-      "-movflags",
-      "frag_keyframe+empty_moov",
-      "-f",
-      "mp4",
-      "pipe:1",
-    ]);
-    const poster = execFileSync("ffmpeg", [
-      "-v",
-      "error",
-      "-f",
-      "lavfi",
-      "-i",
-      "testsrc2=s=480x270:r=24",
-      "-frames:v",
-      "1",
-      "-threads",
-      "1",
-      "-f",
-      "image2pipe",
-      "-vcodec",
-      "png",
-      "pipe:1",
-    ]);
-    await page.route("https://cooper-media.example.test/ensayo.mp4", (route) =>
-      route.fulfill({ status: 200, contentType: "video/mp4", body: clip }),
-    );
-    await page.route("https://cooper-media.example.test/ensayo.png", (route) =>
-      route.fulfill({ status: 200, contentType: "image/png", body: poster }),
-    );
-    const state: Estado = await (await page.request.get("/api/estado")).json();
-    const target = state.videos.find(
-      (video) => video.ownerId === state.user.id && video.stage === 3,
-    )!;
-    target.title = "Ensayo local de vista previa";
-    target.observabilidad.miniatura =
-      "https://cooper-media.example.test/ensayo.png";
-    target.observabilidad.montaje =
-      "https://cooper-media.example.test/ensayo.mp4";
-    await page.route("**/api/eventos", (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: "text/event-stream",
-        body: `event: estado\ndata: ${JSON.stringify(state)}\n\n`,
-      }),
-    );
-    await page.route("**/api/estado", (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(state),
-      }),
-    );
-    const errors: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
-    page.on("console", (message) => {
-      if (["error", "warning"].includes(message.type()))
-        errors.push(message.text());
-    });
-    await page.goto("/");
-    const media = page
-      .locator(`.video-mini[href="/videos/${target.id}"] .medio`)
-      .first();
-    await expect(media).toBeVisible();
-    await expect(media).toHaveAttribute("data-preview", "off");
-    await media.hover();
-    await expect(media).toHaveAttribute("data-preview", "on");
-    const player = media.locator("video");
-    expect(
-      await player.evaluate((element) => (element as HTMLVideoElement).muted),
-    ).toBe(true);
-    await expect
-      .poll(() =>
-        player.evaluate((element) => (element as HTMLVideoElement).currentTime),
-      )
-      .toBeGreaterThan(0.05);
-    await capture(page, "medio-vista-previa-fixture", width, errors);
-    await page.mouse.move(0, 0);
-    await expect(media).toHaveAttribute("data-preview", "off");
-    expect(
-      await player.evaluate((element) => (element as HTMLVideoElement).paused),
-    ).toBe(true);
-    const counter = page.locator(".home-overview .cifra").first();
-    const before = await counter.boundingBox();
-    const originalCount = state.videos.filter(
-      (video) => video.ownerId === state.user.id && video.stage < 11,
-    ).length;
-    state.videos.push({ ...target, id: "ensayo-cifra-adicional", stage: 0 });
-    await page.evaluate(() => {
-      window.dispatchEvent(new Event("offline"));
-      window.dispatchEvent(new Event("online"));
-    });
-    await expect(counter.locator(".sr-only")).toHaveText(
-      String(originalCount + 1),
-    );
-    await page.waitForTimeout(900);
-    const after = await counter.boundingBox();
-    expect(after?.width).toBe(before?.width);
-    await capture(page, "cifra-actualizada", width, errors);
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await media.hover();
-    await page.waitForTimeout(400);
-    await expect(media).toHaveAttribute("data-preview", "off");
-    expect(
-      await player.evaluate((element) => (element as HTMLVideoElement).paused),
-    ).toBe(true);
-    await capture(page, "medio-reducido-fixture", width, errors);
-    await page.emulateMedia({ reducedMotion: "no-preference" });
-    await page.addInitScript(() => {
-      const traces: { name: string; duration: string }[] = [];
-      (
-        window as Window & { sparklineAnimations?: typeof traces }
-      ).sparklineAnimations = traces;
-      document.addEventListener("animationstart", (event) => {
-        if (
-          event.target instanceof Element &&
-          event.target.matches(".cifra-grafica path")
-        )
-          traces.push({
-            name: event.animationName,
-            duration: getComputedStyle(event.target).animationDuration,
-          });
+  test.describe(`Medio con ${width < 768 ? "pantalla táctil" : "puntero"}`, () => {
+    test.use({ isMobile: width < 768, hasTouch: width < 768 });
+    test(`medios y contadores: reproducción local real y datos que cambian a ${width}px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      // El patrón audiovisual es un fixture explícito, nunca se presenta como una producción real.
+      const clip = execFileSync("ffmpeg", [
+        "-v",
+        "error",
+        "-f",
+        "lavfi",
+        "-i",
+        "testsrc2=s=480x270:r=24",
+        "-t",
+        "2",
+        "-an",
+        "-c:v",
+        "libx264",
+        "-threads",
+        "1",
+        "-pix_fmt",
+        "yuv420p",
+        "-movflags",
+        "frag_keyframe+empty_moov",
+        "-f",
+        "mp4",
+        "pipe:1",
+      ]);
+      const poster = execFileSync("ffmpeg", [
+        "-v",
+        "error",
+        "-f",
+        "lavfi",
+        "-i",
+        "testsrc2=s=480x270:r=24",
+        "-frames:v",
+        "1",
+        "-threads",
+        "1",
+        "-f",
+        "image2pipe",
+        "-vcodec",
+        "png",
+        "pipe:1",
+      ]);
+      await page.route(
+        "https://cooper-media.example.test/ensayo.mp4",
+        (route) =>
+          route.fulfill({ status: 200, contentType: "video/mp4", body: clip }),
+      );
+      await page.route(
+        "https://cooper-media.example.test/ensayo.png",
+        (route) =>
+          route.fulfill({
+            status: 200,
+            contentType: "image/png",
+            body: poster,
+          }),
+      );
+      const state: Estado = await (
+        await page.request.get("/api/estado")
+      ).json();
+      const target = state.videos.find(
+        (video) => video.ownerId === state.user.id && video.stage === 3,
+      )!;
+      target.title = "Ensayo local de vista previa";
+      target.observabilidad.miniatura =
+        "https://cooper-media.example.test/ensayo.png";
+      target.observabilidad.montaje =
+        "https://cooper-media.example.test/ensayo.mp4";
+      await page.route("**/api/eventos", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "text/event-stream",
+          body: `event: estado\ndata: ${JSON.stringify(state)}\n\n`,
+        }),
+      );
+      await page.route("**/api/estado", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(state),
+        }),
+      );
+      const errors: string[] = [];
+      page.on("pageerror", (error) => errors.push(error.message));
+      page.on("console", (message) => {
+        if (["error", "warning"].includes(message.type()))
+          errors.push(message.text());
       });
-    });
-    await page.goto("/publicados");
-    const sparkline = page.locator(".cifra-grafica path").first();
-    await sparkline.scrollIntoViewIfNeeded();
-    await expect
-      .poll(() =>
-        page.evaluate(
-          () =>
-            (window as Window & { sparklineAnimations?: unknown[] })
-              .sparklineAnimations?.length ?? 0,
+      await page.goto("/");
+      const media = page
+        .locator(`.video-mini[href="/videos/${target.id}"] .medio`)
+        .first();
+      await expect(media).toBeVisible();
+      await media.scrollIntoViewIfNeeded();
+      if (width < 768) {
+        expect(
+          await page.evaluate(() => matchMedia("(hover: none)").matches),
+        ).toBe(true);
+      } else {
+        await expect(media).toHaveAttribute("data-preview", "off");
+        await media.hover();
+      }
+      await expect(media).toHaveAttribute("data-preview", "on");
+      const player = media.locator("video");
+      expect(
+        await player.evaluate((element) => (element as HTMLVideoElement).muted),
+      ).toBe(true);
+      await expect
+        .poll(() =>
+          player.evaluate(
+            (element) => (element as HTMLVideoElement).currentTime,
+          ),
+        )
+        .toBeGreaterThan(0.05);
+      await capture(page, "medio-vista-previa-fixture", width, errors, [], {
+        preserveScroll: true,
+      });
+      if (width < 768) {
+        const visibleRatio = await media.evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          const top = box.top + scrollY;
+          const maxScroll = document.documentElement.scrollHeight - innerHeight;
+          const ratioAt = (scroll: number) =>
+            Math.max(
+              0,
+              Math.min(top + box.height, scroll + innerHeight) -
+                Math.max(top, scroll),
+            ) / box.height;
+          const position = ratioAt(0) < ratioAt(maxScroll) ? 0 : maxScroll;
+          window.scrollTo(0, position);
+          return ratioAt(position);
+        });
+        expect(visibleRatio).toBeLessThan(0.65);
+      } else await page.mouse.move(0, 0);
+      await expect(media).toHaveAttribute("data-preview", "off");
+      expect(
+        await player.evaluate(
+          (element) => (element as HTMLVideoElement).paused,
         ),
-      )
-      .toBeGreaterThan(0);
-    await expect
-      .poll(() =>
-        sparkline.evaluate(
-          (element) => getComputedStyle(element).strokeDashoffset,
+      ).toBe(true);
+      const counter = page.locator(".home-overview .cifra").first();
+      const before = await counter.boundingBox();
+      const originalCount = state.videos.filter(
+        (video) => video.ownerId === state.user.id && video.stage < 11,
+      ).length;
+      state.videos.push({ ...target, id: "ensayo-cifra-adicional", stage: 0 });
+      await page.evaluate(() => {
+        window.dispatchEvent(new Event("offline"));
+        window.dispatchEvent(new Event("online"));
+      });
+      await expect(counter.locator(".sr-only")).toHaveText(
+        String(originalCount + 1),
+      );
+      await page.waitForTimeout(900);
+      const after = await counter.boundingBox();
+      expect(after?.width).toBe(before?.width);
+      await capture(page, "cifra-actualizada", width, errors);
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await media.scrollIntoViewIfNeeded();
+      if (width >= 768) await media.hover();
+      await page.waitForTimeout(400);
+      await expect(media).toHaveAttribute("data-preview", "off");
+      expect(
+        await player.evaluate(
+          (element) => (element as HTMLVideoElement).paused,
         ),
-      )
-      .toBe("0px");
-    const animations = await page.evaluate(
-      () =>
+      ).toBe(true);
+      await capture(page, "medio-reducido-fixture", width, errors, [], {
+        preserveScroll: true,
+      });
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      await page.addInitScript(() => {
+        const traces: { name: string; duration: string }[] = [];
         (
-          window as Window & {
-            sparklineAnimations?: { name: string; duration: string }[];
-          }
-        ).sparklineAnimations,
-    );
-    expect(
-      animations?.every(
-        (animation) =>
-          animation.name === "cifra-trazo" && animation.duration === "0.64s",
-      ),
-    ).toBe(true);
-    writeFileSync(
-      `${directory}/minigrafica-${width}.json`,
-      JSON.stringify(
-        {
-          source: "Historial persistido del simulador de demostración",
-          animations,
-        },
-        null,
-        2,
-      ) + "\n",
-    );
-    await capture(page, "cifra-minigrafica", width, errors);
-    expect(errors).toEqual([]);
+          window as Window & { sparklineAnimations?: typeof traces }
+        ).sparklineAnimations = traces;
+        document.addEventListener("animationstart", (event) => {
+          if (
+            event.target instanceof Element &&
+            event.target.matches(".cifra-grafica path")
+          )
+            traces.push({
+              name: event.animationName,
+              duration: getComputedStyle(event.target).animationDuration,
+            });
+        });
+      });
+      await page.goto("/publicados");
+      const sparkline = page.locator(".cifra-grafica path").first();
+      await sparkline.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () =>
+              (window as Window & { sparklineAnimations?: unknown[] })
+                .sparklineAnimations?.length ?? 0,
+          ),
+        )
+        .toBeGreaterThan(0);
+      await expect
+        .poll(() =>
+          sparkline.evaluate(
+            (element) => getComputedStyle(element).strokeDashoffset,
+          ),
+        )
+        .toBe("0px");
+      const animations = await page.evaluate(
+        () =>
+          (
+            window as Window & {
+              sparklineAnimations?: { name: string; duration: string }[];
+            }
+          ).sparklineAnimations,
+      );
+      expect(
+        animations?.every(
+          (animation) =>
+            animation.name === "cifra-trazo" && animation.duration === "0.64s",
+        ),
+      ).toBe(true);
+      writeFileSync(
+        `${directory}/minigrafica-${width}.json`,
+        JSON.stringify(
+          {
+            source: "Historial persistido del simulador de demostración",
+            animations,
+          },
+          null,
+          2,
+        ) + "\n",
+      );
+      await capture(page, "cifra-minigrafica", width, errors, [], {
+        preserveScroll: true,
+      });
+      expect(errors).toEqual([]);
+    });
   });
 }
