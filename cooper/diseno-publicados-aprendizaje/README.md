@@ -18,6 +18,8 @@ Las doce publicaciones y tres lecciones son ficticias, marcadas por el adaptador
 
 Solo los escenarios nombrados **vacío, carga y recuperación explícitos** interceptan `/api/resultados`, después de comprobar la pantalla normal. Separan el diagnóstico HTTP 503 provocado de cualquier error inesperado y verifican recuperación contra el backend real.
 
+La batería espacia sus casos según las solicitudes recientes de la cuenta compartida: conserva las protecciones de tasa reales del servidor. La espera entre casos evita que la captura acelerada de doce medios por pantalla agote el presupuesto de una sesión antes de probar el teclado o la recuperación.
+
 ## Evidencia
 
 La matriz 360/390/768/1024/1440/1920 guarda PNG de página completa y primer viewport para ambas pantallas y sus estados. `fullPage` usa una sola captura nativa de Chromium: no cose viewports ni repite los elementos fijos. Los vídeos WebM documentan hover real, cifras al entrar, navegación, Cooper y barra móvil. Los informes JSON incluyen axe, consola, overflow y tokens; la prueba falla si encuentra texto inferior a 12 px, radios ajenos al sistema o colores ajenos a tokens y sus derivados documentados. Los estados vacíos conservan la explicación humana y el ejemplo de una lección.

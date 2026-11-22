@@ -7,8 +7,14 @@ import {
   type Route,
 } from "@playwright/test";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
+import { dirname, resolve } from "node:path";
 import Database from "better-sqlite3";
 import type { Estado } from "../src/servicios/datos";
 import type { Resultados } from "../src/contratos/resultados";
@@ -16,6 +22,22 @@ import { capture, evidenceDir, startSample, stopSample } from "./auditoria";
 
 let cookies: Awaited<ReturnType<BrowserContext["cookies"]>>;
 const widths = [360, 390, 768, 1024, 1440, 1920];
+const recentRequests: { at: number; media: boolean }[] = [];
+let requestsFile = "";
+
+async function waitForRequestBudget() {
+  for (;;) {
+    const now = Date.now();
+    while (recentRequests.length && recentRequests[0].at < now - 61000)
+      recentRequests.shift();
+    const media = recentRequests.filter((item) => item.media).length;
+    const api = recentRequests.length - media;
+    if (media < 150 && api < 40) break;
+    await new Promise((resume) =>
+      setTimeout(resume, Math.min(30000, recentRequests[0].at + 61001 - now)),
+    );
+  }
+}
 
 test.beforeAll(async ({ baseURL }) => {
   mkdirSync(evidenceDir, { recursive: true });
@@ -59,6 +81,10 @@ test.beforeAll(async ({ baseURL }) => {
     matches,
     "Una sola base de ensayo corresponde a la sesión",
   ).toHaveLength(1);
+  requestsFile = resolve(dirname(matches[0]), "diseno-solicitudes.json");
+  if (existsSync(requestsFile))
+    recentRequests.push(...JSON.parse(readFileSync(requestsFile, "utf8")));
+  await waitForRequestBudget();
   execFileSync(
     process.execPath,
     [
@@ -94,7 +120,23 @@ test.beforeAll(async ({ baseURL }) => {
 });
 
 test.beforeEach(async ({ context }) => {
+  // La batería reutiliza una cuenta real del emisor. Respeta sus límites de
+  // solicitudes: abrir muchas pantallas y cargar cada póster en segundos no
+  // representa el ritmo de lectura de una persona. No se desactiva ni simula
+  // la protección del servidor.
+  await waitForRequestBudget();
   await context.addCookies(cookies);
+});
+
+test.beforeEach(async ({ page }) => {
+  page.on("request", (request) => {
+    const path = new URL(request.url()).pathname;
+    if (path.startsWith("/api/"))
+      recentRequests.push({
+        at: Date.now(),
+        media: /\/api\/videos\/[^/]+\/medios(?:\/|$)/.test(path),
+      });
+  });
 });
 
 function errors(page: Page) {
@@ -139,6 +181,26 @@ for (const width of widths)
       "El margen empieza después de pagar las cuentas",
     );
     await expect(page.getByLabel("Cifras del periodo")).toBeVisible();
+    const heroGaps = await page
+      .getByLabel("Cifras del periodo")
+      .locator(".cifra-valor")
+      .evaluateAll((values) => {
+        const boxes = values.map((element) => {
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return range.getBoundingClientRect();
+        });
+        return boxes.flatMap((left, i) =>
+          boxes
+            .slice(i + 1)
+            .filter((right) => Math.abs(left.top - right.top) < 2)
+            .map((right) => right.left - left.right),
+        );
+      });
+    for (const gap of heroGaps)
+      expect(gap, "Aire entre cifras de la misma fila").toBeGreaterThanOrEqual(
+        16,
+      );
     await expect(page.locator("main select")).toHaveCount(0);
     await expect(page.locator("main input[type=date]:visible")).toHaveCount(0);
     await capture(page, "publicados", width, consoleErrors);
@@ -159,6 +221,42 @@ for (const width of widths)
       .click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await capture(page, "publicados-cifras", width, consoleErrors);
+    await page
+      .getByRole("dialog")
+      .getByText("Ver datos de evolución", { exact: true })
+      .click();
+    const table = page.getByRole("region", {
+      name: "Mediciones de la publicación",
+      exact: true,
+    });
+    await expect(table).toBeVisible();
+    await capture(page, "publicados-cifras-tabla", width, consoleErrors);
+    await table.focus();
+    await expect(table).toBeFocused();
+    if (await table.evaluate((el) => el.scrollWidth > el.clientWidth)) {
+      await page.keyboard.press("ArrowRight");
+      await expect
+        .poll(() => table.evaluate((el) => el.scrollLeft))
+        .toBeGreaterThan(0);
+    }
+    await table.evaluate((el) => {
+      el.scrollLeft = el.scrollWidth;
+    });
+    const lastColumnVisible = await table.evaluate((el) => {
+      const boundary = el.getBoundingClientRect();
+      const last = el
+        .querySelector("tbody td:last-child")!
+        .getBoundingClientRect();
+      return (
+        last.left >= boundary.left &&
+        last.right <= boundary.right + 1 &&
+        boundary.right <= innerWidth
+      );
+    });
+    expect
+      .soft(lastColumnVisible, "Última columna accesible dentro de la hoja")
+      .toBe(true);
+    await capture(page, "publicados-cifras-tabla-final", width, consoleErrors);
     await page.keyboard.press("Escape");
     await ready(page, "aprendizaje");
     await expect(page.getByRole("switch", { name: /Medición/ })).toBeEnabled();
@@ -290,7 +388,9 @@ for (const width of [390, 1440])
     ).toBeVisible();
     await page.waitForTimeout(1000);
     if (width < 768) {
-      const links = page.locator(".bottom-nav a");
+      const links = page
+        .getByRole("navigation", { name: "Principal móvil", exact: true })
+        .getByRole("link");
       expect(await links.count()).toBeGreaterThanOrEqual(4);
       for (const link of await links.all())
         expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(48);
@@ -389,7 +489,7 @@ for (const width of widths)
       await expect.poll(() => Boolean(pending)).toBe(true);
       await expect(
         page.getByRole("button", {
-          name: "Actualizar resultados",
+          name: "Actualizando resultados",
           exact: true,
         }),
       ).toBeDisabled();
@@ -400,7 +500,7 @@ for (const width of widths)
           error: "No pudimos actualizar las cifras. Inténtalo de nuevo.",
         },
       });
-      await expect(page.getByRole("alert")).toContainText(
+      await expect(page.locator("main").getByRole("alert")).toContainText(
         "No pudimos actualizar",
       );
       const expectedDiagnostics = consoleErrors.filter((m) =>
@@ -428,7 +528,7 @@ for (const width of widths)
       await page
         .getByRole("button", { name: "Actualizar resultados", exact: true })
         .click();
-      await expect(page.getByRole("alert")).toHaveCount(0);
+      await expect(page.locator("main").getByRole("alert")).toHaveCount(0);
       await expect(
         page.locator(screen === "publicados" ? ".publication" : ".lesson"),
       ).toHaveCount(screen === "publicados" ? 12 : 3);
@@ -466,4 +566,7 @@ test.afterEach(async ({ page }, info) => {
     await video.saveAs(
       `${evidenceDir}/${info.title.replace(/[^a-zA-Z0-9áéíóúñ]+/g, "-")}.webm`,
     );
+  // Solo marcas de tiempo y categoría; permite preservar la pausa si un fallo
+  // reinicia el worker. No contiene URLs, sesiones ni cabeceras.
+  if (requestsFile) writeFileSync(requestsFile, JSON.stringify(recentRequests));
 });
