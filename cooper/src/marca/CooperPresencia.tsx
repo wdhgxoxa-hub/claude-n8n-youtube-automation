@@ -5,7 +5,13 @@ import {
   useMovimientoReducido,
   usePausaMovimiento,
 } from "@/componentes/movimiento";
-export function CooperPresencia({ size = 56 }: { size?: 56 | 112 }) {
+export function CooperPresencia({
+  size = 56,
+  activo = true,
+}: {
+  size?: 56 | 112;
+  activo?: boolean;
+}) {
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
   const [failed, setFailed] = useState(false);
@@ -14,7 +20,7 @@ export function CooperPresencia({ size = 56 }: { size?: 56 | 112 }) {
     const video = player.current;
     if (!video) return;
     const update = () => {
-      if (reduced || paused || document.hidden) video.pause();
+      if (!activo || reduced || paused || document.hidden) video.pause();
       else void video.play().catch(() => {});
     };
     update();
@@ -23,7 +29,7 @@ export function CooperPresencia({ size = 56 }: { size?: 56 | 112 }) {
       document.removeEventListener("visibilitychange", update);
       video.pause();
     };
-  }, [reduced, paused]);
+  }, [activo, reduced, paused]);
   return (
     <span
       className="cooper-presencia"
@@ -47,7 +53,7 @@ export function CooperPresencia({ size = 56 }: { size?: 56 | 112 }) {
           muted
           playsInline
           loop
-          autoPlay
+          autoPlay={activo}
           preload="none"
           onError={() => setFailed(true)}
         />
