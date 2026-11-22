@@ -1,0 +1,189 @@
+{
+  "entorno": "Chromium local; laboratorio, sin métricas de campo",
+  "cache": "HTTP vacía antes de cada navegación; sesión ficticia conservada",
+  "buildId": "QHix0Qv0zCSzX3jFwenuv",
+  "lighthouse": "13.6.0",
+  "navegador": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/159.0.8154.6 Safari/537.36",
+  "mediciones": [
+    {
+      "path": "/",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-22T03:43:34.195Z",
+      "scores": {
+        "performance": 0.93,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 3203.821,
+        "total-blocking-time": 38.5,
+        "cumulative-layout-shift": 0
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "label": "Total",
+          "requestCount": 39,
+          "transferSize": 381256
+        },
+        {
+          "resourceType": "script",
+          "label": "Script",
+          "requestCount": 17,
+          "transferSize": 278537
+        },
+        {
+          "resourceType": "other",
+          "label": "Other",
+          "requestCount": 18,
+          "transferSize": 43246
+        },
+        {
+          "resourceType": "font",
+          "label": "Font",
+          "requestCount": 1,
+          "transferSize": 25372
+        },
+        {
+          "resourceType": "stylesheet",
+          "label": "Stylesheet",
+          "requestCount": 2,
+          "transferSize": 19029
+        },
+        {
+          "resourceType": "document",
+          "label": "Document",
+          "requestCount": 1,
+          "transferSize": 15072
+        },
+        {
+          "resourceType": "image",
+          "label": "Image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "label": "Media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "label": "Third-party",
+          "requestCount": 0,
+          "transferSize": 0
+        }
+      ],
+      "diagnostics": {
+        "unused-javascript": {
+          "value": 400,
+          "savingsBytes": 50355
+        },
+        "unused-css-rules": {
+          "value": 0,
+          "savingsBytes": 12578
+        },
+        "mainthread-work-breakdown": {
+          "value": 1501.9840000000058
+        },
+        "bootup-time": {
+          "value": 697.1800000000017
+        }
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/publicados",
+      "theme": "oscuro",
+      "formFactor": "mobile",
+      "fecha": "2026-11-22T03:43:40.380Z",
+      "scores": {
+        "performance": 0.92,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 3315.9622,
+        "total-blocking-time": 56,
+        "cumulative-layout-shift": 0
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "label": "Total",
+          "requestCount": 41,
+          "transferSize": 325146
+        },
+        {
+          "resourceType": "script",
+          "label": "Script",
+          "requestCount": 16,
+          "transferSize": 220280
+        },
+        {
+          "resourceType": "other",
+          "label": "Other",
+          "requestCount": 21,
+          "transferSize": 47291
+        },
+        {
+          "resourceType": "font",
+          "label": "Font",
+          "requestCount": 1,
+          "transferSize": 25372
+        },
+        {
+          "resourceType": "stylesheet",
+          "label": "Stylesheet",
+          "requestCount": 2,
+          "transferSize": 19029
+        },
+        {
+          "resourceType": "document",
+          "label": "Document",
+          "requestCount": 1,
+          "transferSize": 13174
+        },
+        {
+          "resourceType": "image",
+          "label": "Image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "label": "Media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "label": "Third-party",
+          "requestCount": 0,
+          "transferSize": 0
+        }
+      ],
+      "diagnostics": {
+        "unused-javascript": {
+          "value": 300,
+          "savingsBytes": 24612
+        },
+        "unused-css-rules": {
+          "value": 150,
+          "savingsBytes": 12633
+        },
+        "mainthread-work-breakdown": {
+          "value": 1420.996000000001
+        },
+        "bootup-time": {
+          "value": 423.955999999998
+        }
+      },
+      "warnings": [],
+      "failedAudits": []
+    }
+  ]
+}
