@@ -122,10 +122,24 @@ export function PantallaOperacion({
   }, [pendiente]);
   useEffect(() => {
     const nav = navegacion.current;
-    const activo = nav?.querySelector<HTMLElement>('[aria-current="page"]');
-    if (nav && activo && nav.scrollWidth > nav.clientWidth) {
-      nav.scrollLeft = activo.offsetLeft - nav.offsetLeft;
-    }
+    if (!nav) return;
+    const actualizarBordes = () => {
+      nav.dataset.inicio = String(nav.scrollLeft > 1);
+      nav.dataset.fin = String(
+        nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 1,
+      );
+    };
+    const activo = nav.querySelector<HTMLElement>('[aria-current="page"]');
+    if (activo && nav.scrollWidth > nav.clientWidth)
+      nav.scrollLeft = activo.offsetLeft;
+    actualizarBordes();
+    nav.addEventListener("scroll", actualizarBordes, { passive: true });
+    const observador = new ResizeObserver(actualizarBordes);
+    observador.observe(nav);
+    return () => {
+      nav.removeEventListener("scroll", actualizarBordes);
+      observador.disconnect();
+    };
   }, [vista]);
   useEffect(() => {
     if (!pendiente && !ocupado && restaurarFoco.current) {
@@ -565,7 +579,7 @@ export function PantallaOperacion({
         </section>
       )}
       {canal && vista === "radar" && (
-        <section>
+        <section className="operation-radar">
           <PanelCompetencia
             nombre={canal.nombre}
             competencia={canal.radar.competencia}
