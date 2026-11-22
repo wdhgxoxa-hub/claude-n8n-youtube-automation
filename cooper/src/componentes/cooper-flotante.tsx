@@ -1,19 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
-const cargarChat = () => import("./chat-cooper").then((m) => m.ChatCooper);
-const Chat = dynamic(cargarChat);
-const prepararChat = () => {
-  void cargarChat().catch(() => {
-    // La apertura conserva la recuperación del componente dinámico.
-  });
-};
+import { ChatCooper as Chat } from "./chat-cooper";
 
 export function CooperFlotante({
   abierto,
@@ -31,15 +24,6 @@ export function CooperFlotante({
   const opener = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
-  useEffect(() => {
-    // Preparar el módulo en reposo evita analizarlo durante el primer morfismo.
-    if (typeof window.requestIdleCallback === "function") {
-      const task = window.requestIdleCallback(prepararChat);
-      return () => window.cancelIdleCallback(task);
-    }
-    const task = window.setTimeout(prepararChat, 1000);
-    return () => window.clearTimeout(task);
-  }, []);
   const video = data.videos.find(
     (v) => path === `/videos/${v.id}` && v.ownerId === data.user.id,
   );
@@ -129,8 +113,6 @@ export function CooperFlotante({
         aria-expanded={abierto}
         aria-controls={abierto ? "cooper-panel" : undefined}
         onClick={() => cambiar(!abierto)}
-        onPointerEnter={prepararChat}
-        onFocus={prepararChat}
         layoutId={reduced ? undefined : "cooper-origen"}
         transition={resorte}
         onLayoutAnimationStart={() =>

@@ -468,23 +468,28 @@ for (const mode of ["medicion", "grabacion"] as const) {
         page,
         context,
         browser,
-      }) => {
+      }, testInfo) => {
         await page.setViewportSize({ width, height: 900 });
         await page.emulateMedia({ reducedMotion: "no-preference" });
         const browserClient = await browser.newBrowserCDPSession();
         const systemInfo = await browserClient.send("SystemInfo.getInfo");
+        const hardwareAccelerated =
+          systemInfo.gpu.featureStatus?.gpu_compositing === "enabled" &&
+          systemInfo.gpu.devices.some(
+            (device) => device.vendorId > 0 && device.vendorId !== 65535,
+          ) &&
+          !/SwiftShader|llvmpipe|lavapipe|software/i.test(
+            String(systemInfo.gpu.auxAttributes?.glRenderer ?? ""),
+          );
         const renderer = {
           devices: systemInfo.gpu.devices,
           features: systemInfo.gpu.featureStatus,
           renderer: systemInfo.gpu.auxAttributes?.glRenderer,
           vendor: systemInfo.gpu.auxAttributes?.glVendor,
           driver: systemInfo.gpu.auxAttributes?.displayType,
+          hardwareAccelerated,
           browserVersion: browser.version(),
-          launchOptions: [
-            "--enable-gpu",
-            "--use-gl=angle",
-            "--use-angle=swiftshader",
-          ],
+          launchOptions: testInfo.project.use.launchOptions?.args,
         };
         await browserClient.detach();
         const client = await context.newCDPSession(page);
@@ -798,8 +803,9 @@ for (const mode of ["medicion", "grabacion"] as const) {
               interactions,
               trace: `traza-movimiento-${width}.json`,
               errors,
-              limitation:
-                "Laboratorio Chromium local con composición habilitada y renderer SwiftShader por software; no acredita GPU física ni teléfono real.",
+              limitation: hardwareAccelerated
+                ? `Laboratorio Chromium en PC con GPU física detectada y CPU${width < 768 ? "4×" : "1×"}; no acredita un teléfono real.`
+                : `Laboratorio Chromium con compositor por software y CPU${width < 768 ? "4×" : "1×"}; no acredita GPU física ni teléfono real.`,
             },
             null,
             2,
