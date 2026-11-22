@@ -1,0 +1,9 @@
+
+ RUN  v4.1.12 /home/david/Proyectos/cooper-wt/diseno-medios/cooper
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  22:05:53
+   Duration  988ms (transform 546ms, setup 20ms, import 848ms, tests 42ms, environment 0ms)
+

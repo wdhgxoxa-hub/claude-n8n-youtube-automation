@@ -1,0 +1,120 @@
+.medio {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--sup-1);
+}
+.medio[data-video-medio] > img,
+.medio[data-video-medio] > video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.medio video {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duracion-estado) var(--curva-salida);
+}
+.medio[data-reproduciendo="true"] video {
+  opacity: 1;
+}
+.medio[data-quieto="true"] video {
+  transition-duration: var(--duracion-presion);
+}
+.cartela {
+  display: flex;
+  position: relative;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: var(--espacio-8);
+  overflow: hidden;
+  color: var(--texto);
+  background: var(--sup-1);
+  box-shadow: inset 0 0 0 var(--borde-ancho)
+    color-mix(in srgb, var(--tinte) 20%, var(--transparente));
+}
+.cartelaTitulo {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: var(--texto-12);
+  line-height: var(--interlinea-texto);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.medio[data-contexto="cola"] .cartela {
+  /* La insignia de etapa ocupa la esquina inferior izquierda. El título
+     conserva dos líneas completas, también en las portadas de 60px. */
+  padding: var(--espacio-8) var(--espacio-8) var(--espacio-8) var(--espacio-32);
+}
+.medio[data-contexto="cola"] .cartelaTitulo {
+  -webkit-line-clamp: 2;
+}
+.espera {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--espacio-12);
+  color: var(--texto);
+  font-size: var(--texto-12);
+  line-height: var(--interlinea-texto);
+  overflow-wrap: anywhere;
+}
+.protagonista {
+  height: auto;
+  aspect-ratio: var(--medio-proporcion);
+  max-height: 70vh;
+  border-radius: var(--radio-tarjeta);
+  border: var(--borde-ancho) solid
+    color-mix(in srgb, var(--tinte) 20%, var(--transparente));
+}
+.protagonista .cartela {
+  padding: var(--espacio-24);
+}
+.protagonista .cartelaTitulo {
+  -webkit-line-clamp: 3;
+  font-size: clamp(var(--texto-20), 3vw, var(--texto-40));
+  line-height: var(--interlinea-display);
+  letter-spacing: var(--tracking-display);
+}
+.reproductor {
+  position: relative;
+  isolation: isolate;
+}
+.reproductor::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse, var(--tinte), var(--transparente) 70%);
+  opacity: var(--halo-opacidad);
+  filter: var(--halo-filtro);
+  pointer-events: none;
+}
+.reproductor[class] video {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--medio-proporcion);
+  max-height: 70vh;
+  object-fit: contain;
+  background: var(--sup-1);
+  border-radius: var(--radio-tarjeta);
+  border: var(--borde-ancho) solid
+    color-mix(in srgb, var(--tinte) 20%, var(--transparente));
+}
+@media (prefers-reduced-motion: reduce) {
+  .medio video {
+    transition-duration: var(--duracion-presion);
+  }
+}

@@ -4,54 +4,87 @@ import { useState } from "react";
 import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
 import { enlaceIncrustado } from "@/lib/enlaces-medios";
-import { useTinteVideo } from "./tinte-video";
+import type { VideoMedios } from "@/contratos/video-medios";
+import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
+import styles from "./portada-video.module.css";
 export function MediosVideo({
+  videoId,
   datos,
   titulo,
-  videoId,
+  inicial,
 }: {
+  videoId: string;
   datos: Observabilidad;
   titulo: string;
-  videoId?: string;
+  inicial?: VideoMedios;
 }) {
   const [fallo, setFallo] = useState(false);
-  const tinte = useTinteVideo(videoId);
+  const medio = useVideoMedios({ videoId, inicial });
+  const [proporcion] = useState(inicial?.relacionAspecto ?? 16 / 9);
   return (
     <>
-      {datos.montaje && (
-        <div className="halo-medio" data-tinte={Boolean(tinte)} style={tinte}>
-          <section
-            className="real-player"
-            aria-label="Video terminado"
-            style={{
-              viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
-            }}
-          >
-            <video
-              key={datos.montaje}
-              controls
-              playsInline
-              preload={datos.miniatura ? "none" : "metadata"}
-              poster={datos.miniatura || undefined}
-              src={datos.montaje}
-              onError={() => setFallo(true)}
-              onLoadedData={() => setFallo(false)}
-              aria-label={`Video terminado: ${titulo}`}
-            />
-            <div className="player-caption">
-              <strong>Video terminado</strong>
-              <a href={datos.montaje} target="_blank" rel="noreferrer">
-                Abrir video
-              </a>
-            </div>
-            {fallo && (
-              <p role="status">
-                No se pudo cargar el video. Prueba el enlace o vuelve a
-                intentarlo más tarde.
-              </p>
-            )}
-          </section>
-        </div>
+      {datos.montaje ? (
+        <section
+          className={`real-player ${styles.reproductor}`}
+          style={{
+            ...estiloMedio(medio, proporcion),
+            viewTransitionName: nombreMedio(videoId),
+          }}
+          data-tinte={Boolean(medio?.tinte)}
+          aria-label="Video terminado"
+        >
+          <video
+            key={datos.montaje}
+            controls
+            playsInline
+            preload="none"
+            poster={
+              (medio?.poster?.origen !== "tipografico" && medio?.poster?.url) ||
+              datos.miniatura ||
+              medio?.poster?.url ||
+              undefined
+            }
+            src={datos.montaje}
+            width={inicial?.ancho ?? 1600}
+            height={inicial?.alto ?? 900}
+            onError={() => setFallo(true)}
+            onLoadedData={() => setFallo(false)}
+            aria-label={`Video terminado: ${titulo}`}
+          />
+          <div className="player-caption">
+            <strong>Video terminado</strong>
+            <a href={datos.montaje} target="_blank" rel="noreferrer">
+              Abrir video
+            </a>
+          </div>
+          {fallo && (
+            <p role="status">
+              No se pudo cargar el video. Prueba el enlace o vuelve a intentarlo
+              más tarde.
+            </p>
+          )}
+        </section>
+      ) : (
+        <section
+          className={`real-player ${styles.reproductor}`}
+          style={{
+            ...estiloMedio(medio, proporcion),
+            viewTransitionName: nombreMedio(videoId),
+          }}
+          data-tinte={Boolean(medio?.tinte)}
+          aria-label="Portada del video"
+        >
+          <PortadaVideo
+            videoId={videoId}
+            titulo={titulo}
+            inicial={medio}
+            protagonista
+          />
+          <p>
+            El video terminado aparecerá aquí cuando la fábrica complete el
+            montaje.
+          </p>
+        </section>
       )}
       {datos.escenas.length > 0 && (
         <section className="scene-gallery" aria-label="Piezas por escena">

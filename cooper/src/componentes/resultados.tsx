@@ -5,6 +5,7 @@ import Link from "next/link";
 import { api, Heading, Empty, useEspacio } from "./espacio";
 import { Medio } from "./primitivas";
 import { nombreMedio } from "./transiciones";
+import { PortadaVideo } from "./portada-video";
 import {
   fecha,
   numero,
@@ -266,28 +267,28 @@ export function Publicados({ initial }: { initial: Resultados }) {
                   <Link
                     href={primero.href}
                     className="publication-thumb"
-                    aria-label={`${primero.tipo === "video" && primero.publicacion.miniatura ? "" : "Miniatura pendiente. "}Ver detalle de ${primero.titulo}`}
+                    aria-label={`Ver detalle de ${primero.titulo}`}
                   >
                     <div
                       data-video-transition={
                         video ? nombreMedio(video.id) : undefined
                       }
                     >
-                      <Medio
-                        videoId={video?.id}
-                        poster={
-                          primero.tipo === "video"
-                            ? primero.publicacion.miniatura || undefined
-                            : undefined
-                        }
-                        preview={video?.observabilidad?.montaje || undefined}
-                        alt={
-                          primero.tipo === "video" &&
-                          primero.publicacion.miniatura
-                            ? primero.titulo
-                            : "Miniatura pendiente"
-                        }
-                      />
+                      {primero.tipo === "video" ? (
+                        <PortadaVideo
+                          videoId={
+                            primero.videoId ??
+                            decodeURIComponent(
+                              primero.href.split("/").at(-1) ?? "",
+                            )
+                          }
+                          titulo={primero.titulo}
+                          inicial={primero.medios}
+                          publicacion={primero.publicacion.id}
+                        />
+                      ) : (
+                        <Medio alt="Miniatura pendiente" />
+                      )}
                     </div>
                   </Link>
                   <div>
