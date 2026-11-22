@@ -54,6 +54,7 @@ const motion = [390, 1440].map((width) => {
     video: file(`inicio-interacciones-${width}.webm`),
     renderer: data.renderer,
     cpu: data.cpu,
+    ornamentalPlayback: data.ornamentalPlayback,
     samples: data.samples.map((sample) => ({
       phase: sample.phase,
       interactionFps: sample.fps,

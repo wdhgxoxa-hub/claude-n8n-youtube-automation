@@ -407,6 +407,44 @@ async function capture(
       ),
     )
     .toBe(0);
+  // Visible para Playwright no significa que la entrada haya alcanzado opacidad
+  // 1. Esperamos sus animaciones reales; no las desactivamos para la captura.
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await Promise.all(
+      document
+        .getAnimations()
+        .filter((animation) => {
+          const target = (animation.effect as KeyframeEffect | null)?.target;
+          return (
+            target instanceof Element &&
+            target.checkVisibility() &&
+            Number.isFinite(animation.effect?.getTiming().iterations) &&
+            animation.playState === "running"
+          );
+        })
+        .map((animation) => animation.finished.catch(() => {})),
+    );
+    await new Promise<void>((accept) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => accept())),
+    );
+  });
+  await expect
+    .poll(() =>
+      page.locator("main h1").evaluate((element) => {
+        for (
+          let current: Element | null = element;
+          current;
+          current = current.parentElement
+        ) {
+          const style = getComputedStyle(current);
+          if (Number(style.opacity) < 0.999 || style.visibility === "hidden")
+            return false;
+        }
+        return true;
+      }),
+    )
+    .toBe(true);
   const inspected = await audit(page);
   await page.screenshot({ path: `${directory}/${name}-${width}-viewport.png` });
   // Un solo fullPage nativo. Congela cada capa fija en su posición del primer
@@ -579,6 +617,192 @@ for (const width of widths) {
   });
 }
 
+test("Inicio: reflow equivalente al 200% con título largo y teclado", async ({
+  browser,
+}) => {
+  const baseURL = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT}`;
+  const context = await browser.newContext({
+    baseURL,
+    extraHTTPHeaders: { Referer: baseURL },
+    viewport: { width: 720, height: 500 },
+    deviceScaleFactor: 2,
+    timezoneId: "America/Lima",
+    reducedMotion: "reduce",
+  });
+  const page = await context.newPage();
+  const fixture = await prepare(page);
+  const title =
+    "La caja al final del día: lo que aprendimos al revisar cada gasto de una semana en el mercado";
+  fixture.finished[0].title = title;
+  await page.goto("/");
+  await expect(page.locator("main .inicio-hero h2")).toHaveText(title);
+  const first = page.locator("main .inicio-selector").first();
+  await first.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("main .inicio-selector").nth(1)).toBeFocused();
+  await expect(page.locator("main .inicio-selector").nth(1)).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await page.keyboard.press("Home");
+  await expect(first).toBeFocused();
+  await expect(page.locator("main .inicio-hero h2")).toHaveText(title);
+  const textGeometry = await page
+    .locator(
+      "main .inicio-hero h2, main .inicio-flechas button, main .inicio-pendiente-accion .boton, .mobile-dock a",
+    )
+    .evaluateAll((elements) =>
+      elements.map((element) => {
+        const box = element.getBoundingClientRect();
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const textRects = Array.from(range.getClientRects());
+        const ancestors = [];
+        let clipped =
+          box.left < -1 ||
+          box.right > innerWidth + 1 ||
+          textRects.some(
+            (rect) => rect.left < -1 || rect.right > innerWidth + 1,
+          );
+        for (
+          let current: Element | null = element;
+          current;
+          current = current.parentElement
+        ) {
+          const style = getComputedStyle(current),
+            rect = current.getBoundingClientRect();
+          const clipsX = ["hidden", "clip", "scroll", "auto"].includes(
+            style.overflowX,
+          );
+          const clipsY = ["hidden", "clip", "scroll", "auto"].includes(
+            style.overflowY,
+          );
+          // El scroll vertical del documento es navegación, no truncado del texto.
+          const pageScroller =
+            current === document.documentElement || current === document.body;
+          if (
+            !pageScroller &&
+            textRects.some(
+              (text) =>
+                (clipsX &&
+                  (text.left < rect.left - 1 || text.right > rect.right + 1)) ||
+                (clipsY &&
+                  (text.top < rect.top - 1 || text.bottom > rect.bottom + 1)),
+            )
+          )
+            clipped = true;
+          ancestors.push({
+            tag: current.tagName,
+            className: current.className,
+            overflowX: style.overflowX,
+            overflowY: style.overflowY,
+            width: rect.width,
+            height: rect.height,
+          });
+        }
+        return {
+          text:
+            element.textContent?.trim() || element.getAttribute("aria-label"),
+          clipped,
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+          clientHeight: element.clientHeight,
+          scrollHeight: element.scrollHeight,
+          box: box.toJSON(),
+          textRects: textRects.map((rect) => rect.toJSON()),
+          ancestors,
+        };
+      }),
+    );
+  const clipped = textGeometry.filter((item) => item.clipped);
+  writeFileSync(
+    `${directory}/inicio-reflow-geometria.json`,
+    JSON.stringify(textGeometry, null, 2) + "\n",
+  );
+  expect(clipped).toEqual([]);
+  await capture(page, "inicio-reflow-200", 720, fixture.errors);
+  const path = `${directory}/inicio-reflow-200-720.json`;
+  const evidence = JSON.parse(readFileSync(path, "utf8"));
+  writeFileSync(
+    path,
+    JSON.stringify(
+      {
+        ...evidence,
+        reflow: {
+          desktopPixels: { width: 1440, height: 1000 },
+          viewportCssPixels: { width: 720, height: 500 },
+          deviceScaleFactor: 2,
+          title,
+          clipped,
+          textGeometry,
+          scope:
+            "Emulación de reflow equivalente al 200%; no es zoom nativo del navegador ni un teléfono físico.",
+        },
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+  const review = page.locator("main .inicio-pendiente-accion .boton").first();
+  const href = await review.getAttribute("href");
+  await review.focus();
+  await expect(review).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(new RegExp(`${href}$`));
+  expect(fixture.errors).toEqual([]);
+  expect(fixture.external).toEqual([]);
+  await context.close();
+});
+
+test("Inicio: sigue el último terminado por SSE hasta una selección explícita", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const fixture = await prepare(page);
+  await page.goto("/");
+  await ready(page);
+  const original = fixture.finished[0];
+  const latest = structuredClone(original);
+  latest.id = "inicio-ensayo-nuevo-b";
+  latest.title = "Lo que dejó la jornada del sábado en la caja";
+  latest.updatedAt = Date.now() - 500;
+  latest.medios.videoId = latest.id;
+  latest.observabilidad.publicaciones.forEach((publication) => {
+    publication.fecha = new Date(latest.updatedAt).toISOString();
+    publication.id = `${latest.id}-${publication.red}`;
+  });
+  fixture.state.videos.unshift(latest);
+  const update = () =>
+    page.evaluate(() => {
+      window.dispatchEvent(new Event("offline"));
+      window.dispatchEvent(new Event("online"));
+    });
+  await update();
+  await expect(page.locator("main .inicio-hero h2")).toHaveText(latest.title);
+  await page
+    .locator("main .inicio-selector")
+    .filter({ hasText: original.title })
+    .click();
+  await expect(page.locator("main .inicio-hero h2")).toHaveText(original.title);
+  const newest = structuredClone(latest);
+  newest.id = "inicio-ensayo-nuevo-c";
+  newest.title = "La cuenta del domingo, antes de cerrar el mercado";
+  newest.updatedAt = Date.now();
+  newest.medios.videoId = newest.id;
+  newest.observabilidad.publicaciones.forEach((publication) => {
+    publication.fecha = new Date(newest.updatedAt).toISOString();
+    publication.id = `${newest.id}-${publication.red}`;
+  });
+  fixture.state.videos.unshift(newest);
+  await update();
+  await expect(page.locator("main .inicio-selector").first()).toContainText(
+    newest.title,
+  );
+  await expect(page.locator("main .inicio-hero h2")).toHaveText(original.title);
+  expect(fixture.errors).toEqual([]);
+  expect(fixture.external).toEqual([]);
+});
+
 type Sample = {
   intervals: number[];
   frameTimeline: { at: number; delta: number }[];
@@ -588,6 +812,8 @@ type Sample = {
   longTasks: number[];
   cls: number;
   observer: PerformanceObserver;
+  mediaEvents: { at: number; event: string; source: string; paused: boolean }[];
+  mediaListener?: (event: Event) => void;
 };
 type TransitionObservation = {
   names: string[];
@@ -607,6 +833,7 @@ async function startSample(page: Page) {
       active: true,
       longTasks: [],
       cls: 0,
+      mediaEvents: [],
       observer: new PerformanceObserver((entries) => {
         for (const entry of entries.getEntries()) {
           if (entry.entryType === "longtask")
@@ -622,6 +849,18 @@ async function startSample(page: Page) {
       }),
     };
     sample.observer.observe({ entryTypes: ["longtask", "layout-shift"] });
+    sample.mediaListener = (event: Event) => {
+      const video = event.target;
+      if (!(video instanceof HTMLVideoElement)) return;
+      sample.mediaEvents.push({
+        at: performance.now(),
+        event: event.type,
+        source: new URL(video.currentSrc || video.src, location.href).pathname,
+        paused: video.paused,
+      });
+    };
+    for (const name of ["play", "playing", "pause", "ended", "emptied"])
+      document.addEventListener(name, sample.mediaListener, true);
     (window as Window & { inicioSample?: Sample }).inicioSample = sample;
     const frame = (time: number) => {
       if (!sample.active) return;
@@ -641,6 +880,9 @@ async function stopSample(page: Page, phase: string) {
     const sample = (window as Window & { inicioSample?: Sample }).inicioSample!;
     sample.active = false;
     sample.observer.disconnect();
+    if (sample.mediaListener)
+      for (const name of ["play", "playing", "pause", "ended", "emptied"])
+        document.removeEventListener(name, sample.mediaListener, true);
     const sorted = [...sample.intervals].sort((a, b) => a - b);
     const transitions = (
       (window as Window & { inicioTransitions?: TransitionObservation[] })
@@ -682,6 +924,27 @@ async function stopSample(page: Page, phase: string) {
       cls: sample.cls,
       animations,
       frameTimeline: sample.frameTimeline,
+      mediaEvents: sample.mediaEvents,
+      media: Array.from(document.querySelectorAll("video")).map((video) => {
+        const box = video.getBoundingClientRect();
+        return {
+          source: new URL(video.currentSrc || video.src, location.href)
+            .pathname,
+          area:
+            video.closest(
+              ".inicio-hero,.inicio-carrusel,.inicio-pendientes,.cooper-orb",
+            )?.className ?? null,
+          paused: video.paused,
+          currentTime: video.currentTime,
+          inViewport:
+            box.width > 0 &&
+            box.height > 0 &&
+            box.bottom > 0 &&
+            box.top < innerHeight &&
+            box.right > 0 &&
+            box.left < innerWidth,
+        };
+      }),
     };
   }, phase);
 }
@@ -737,6 +1000,14 @@ for (const width of [390, 1440]) {
         await browserCdp.detach();
         const cdp = await context.newCDPSession(page);
         const samples: Awaited<ReturnType<typeof stopSample>>[] = [];
+        const ornamentalPlayback = {
+          visibleDuringPreview: false,
+          pausedDuringPreview: false,
+          staticFaceVisibleDuringPreview: false,
+          videoHiddenDuringPreview: false,
+          videoVisibleAfterPreview: false,
+          resumedAfterPreview: false,
+        };
         const phase = async (name: string, action: () => Promise<void>) => {
           if (!recording) await startSample(page);
           await action();
@@ -767,6 +1038,15 @@ for (const width of [390, 1440]) {
             )
             .toBeGreaterThan(0.1);
           await expect(hero.locator("video")).toHaveJSProperty("muted", true);
+          const orb = page.locator(".cooper-orb");
+          await expect(orb).toBeVisible();
+          await expect(orb.locator(".cooper-presencia img")).toBeVisible();
+          await expect(orb.locator("video")).toBeHidden();
+          await expect(orb.locator("video")).toHaveJSProperty("paused", true);
+          ornamentalPlayback.visibleDuringPreview = true;
+          ornamentalPlayback.pausedDuringPreview = true;
+          ornamentalPlayback.staticFaceVisibleDuringPreview = true;
+          ornamentalPlayback.videoHiddenDuringPreview = true;
         });
         await phase("seleccion-carrusel", async () => {
           await page
@@ -817,6 +1097,28 @@ for (const width of [390, 1440]) {
           await expect(
             page.locator("main .inicio-metricas .cifra-grafica"),
           ).toHaveCount(4);
+          await expect
+            .poll(() =>
+              page
+                .locator("main .medio-preview")
+                .evaluateAll((videos) =>
+                  videos.every((video) => (video as HTMLVideoElement).paused),
+                ),
+            )
+            .toBe(true);
+          const face = page.locator(".cooper-orb video");
+          await expect(face).toBeVisible();
+          await expect(face).toHaveJSProperty("paused", false);
+          const faceTime = await face.evaluate(
+            (video) => (video as HTMLVideoElement).currentTime,
+          );
+          await expect
+            .poll(() =>
+              face.evaluate((video) => (video as HTMLVideoElement).currentTime),
+            )
+            .not.toBe(faceTime);
+          ornamentalPlayback.resumedAfterPreview = true;
+          ornamentalPlayback.videoVisibleAfterPreview = true;
         });
         const counter = page
           .locator("main .inicio-metricas .cifra-heroe")
@@ -988,6 +1290,7 @@ for (const width of [390, 1440]) {
                 cpu: width < 768 ? 4 : 1,
                 renderer,
                 samples,
+                ornamentalPlayback,
                 transitions,
                 errors: fixture.errors,
                 instrumentation: {
@@ -1062,6 +1365,94 @@ for (const width of [390, 1440]) {
 // Control opcional de laboratorio. No forma parte de la puerta ni cambia la app;
 // permite distinguir el coste de la composición del coste de reproducir el MP4.
 if (process.env.COOPER_DIAGNOSTICO_INICIO === "1") {
+  test("Diagnóstico local de vista previa 1440", async ({ browser }) => {
+    const baseURL = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT}`;
+    const context = await browser.newContext({
+      baseURL,
+      viewport: { width: 1440, height: 900 },
+      extraHTTPHeaders: { Referer: baseURL },
+    });
+    const samples = [];
+    const staticFace = process.env.COOPER_DIAGNOSTICO_CARA === "1";
+    const controls = staticFace
+      ? {
+          "cara-estatica": "/* app actual sin modificación */",
+          "video-pausado-visible":
+            ".cooper-orb .cooper-presencia video{visibility:visible!important}",
+        }
+      : {
+          original: "/* sin modificación */",
+          "opacidad-sin-transicion":
+            ".inicio-hero-enlace .medio-preview{transition:none!important}",
+          "cara-pausada-oculta":
+            ".cooper-orb .cooper-presencia video{visibility:hidden!important}",
+          "boton-sin-vidrio":
+            ".inicio-reproducir{backdrop-filter:none!important}",
+          "preview-will-change":
+            ".inicio-hero-enlace .medio-preview{will-change:opacity}",
+          "preview-capa":
+            ".inicio-hero-enlace .medio-preview{transform:translateZ(0)}",
+        };
+    for (let repetition = 1; repetition <= (staticFace ? 6 : 3); repetition++) {
+      for (const [name, css] of Object.entries(controls)) {
+        const page = await context.newPage();
+        await prepare(page);
+        await page.emulateMedia({ reducedMotion: "no-preference" });
+        await page.goto("/");
+        await ready(page);
+        await page.addStyleTag({ content: css });
+        const cdp = await context.newCDPSession(page);
+        await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+        await cdp.send("Tracing.start", {
+          categories:
+            "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame,cc,viz,gpu",
+          transferMode: "ReturnAsStream",
+        });
+        const hero = page.locator("main .inicio-hero .medio").first();
+        await startSample(page);
+        await hero.scrollIntoViewIfNeeded();
+        await hero.hover();
+        await expect(hero).toHaveAttribute("data-preview", "on");
+        await expect
+          .poll(() =>
+            hero
+              .locator("video")
+              .evaluate((video) => (video as HTMLVideoElement).currentTime),
+          )
+          .toBeGreaterThan(0.1);
+        await expect(page.locator(".cooper-orb video")).toHaveJSProperty(
+          "paused",
+          true,
+        );
+        await page.waitForTimeout(900);
+        samples.push({ repetition, ...(await stopSample(page, name)) });
+        const finished = new Promise<string>((accept) =>
+          cdp.once("Tracing.tracingComplete", ({ stream }) => accept(stream!)),
+        );
+        await cdp.send("Tracing.end");
+        const stream = await finished;
+        const tracePath = `${directory}/inicio-diagnostico-preview-${name}-${repetition}.json`;
+        writeFileSync(tracePath, "");
+        while (true) {
+          const chunk = await cdp.send("IO.read", { handle: stream });
+          appendFileSync(
+            tracePath,
+            chunk.base64Encoded
+              ? Buffer.from(chunk.data, "base64")
+              : chunk.data,
+          );
+          if (chunk.eof) break;
+        }
+        await cdp.send("IO.close", { handle: stream });
+        await page.close();
+      }
+    }
+    writeFileSync(
+      `${directory}/inicio-diagnostico-${staticFace ? "cara-estatica" : "preview"}-1440.json`,
+      JSON.stringify(samples, null, 2) + "\n",
+    );
+    await context.close();
+  });
   test("Diagnóstico local de composición Inicio", async ({ browser }) => {
     const baseURL = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT}`;
     const context = await browser.newContext({
@@ -1087,6 +1478,11 @@ if (process.env.COOPER_DIAGNOSTICO_INICIO === "1") {
       "sin-vidrio",
       "video-composicion",
       "medio-composicion",
+      "sin-filtros-ni-animaciones",
+      "medio-contenido",
+      "sin-orbe",
+      "orbe-pausado-visible",
+      "animacion-control",
     ]) {
       await page
         .locator("#diagnostico-inicio")
@@ -1100,7 +1496,15 @@ if (process.env.COOPER_DIAGNOSTICO_INICIO === "1") {
               ? ".medio-preview{transform:translateZ(0)}"
               : scenario === "medio-composicion"
                 ? ".inicio-medio{transform:translateZ(0);isolation:isolate}"
-                : "";
+                : scenario === "sin-filtros-ni-animaciones"
+                  ? "*,*::before,*::after{filter:none!important;backdrop-filter:none!important;animation:none!important;transition:none!important}"
+                  : scenario === "medio-contenido"
+                    ? ".medio{contain:layout paint}"
+                    : scenario === "sin-orbe"
+                      ? ".cooper-orb{display:none!important}"
+                      : scenario === "animacion-control"
+                        ? "@keyframes diagnostico-mover{to{transform:translateX(-8px)}}.inicio-reproducir{animation:diagnostico-mover 1.6s linear infinite alternate!important}"
+                        : "";
       const style = await page.addStyleTag({
         content: css || "/* sin modificación */",
       });
@@ -1112,11 +1516,26 @@ if (process.env.COOPER_DIAGNOSTICO_INICIO === "1") {
         if (scenario === "sin-video") v.pause();
         else await v.play();
       }, scenario);
+      await page
+        .locator(".cooper-orb video")
+        .evaluate(async (element, scenario) => {
+          const player = element as HTMLVideoElement;
+          if (scenario === "orbe-pausado-visible") player.pause();
+          else await player.play();
+        }, scenario);
       await page.waitForTimeout(400);
       await startSample(page);
       await page.waitForTimeout(1200);
       samples.push(await stopSample(page, scenario));
     }
+    const styles = await page
+      .locator('head style,head link[rel="stylesheet"]')
+      .evaluateAll((elements) =>
+        elements.map((element) => element.outerHTML).join(""),
+      );
+    const orb = await page
+      .locator(".cooper-orb")
+      .evaluate((element) => element.outerHTML);
     await page.setContent(
       '<!doctype html><html><body style="background:#000;margin:16px"><video style="width:358px;height:201px" src="/__inicio-medios/03-caja.mp4" muted autoplay loop playsinline></video></body></html>',
     );
@@ -1134,6 +1553,22 @@ if (process.env.COOPER_DIAGNOSTICO_INICIO === "1") {
     await startSample(page);
     await page.waitForTimeout(1200);
     samples.push(await stopSample(page, "html-minimo-sin-video"));
+    await page.setContent(
+      `<!doctype html><html><head>${styles}</head><body><div class="workspace"><section style="display:flex;padding:16px;gap:8px"><video style="width:175px;height:100px" src="/__inicio-medios/03-caja.mp4" muted autoplay loop playsinline></video><video style="width:175px;height:100px" src="/__inicio-medios/03-caja.mp4" muted autoplay loop playsinline></video></section>${orb}</div></body></html>`,
+    );
+    await page.locator("video").evaluateAll(async (elements) => {
+      await Promise.all(
+        elements.map(async (element) => {
+          const video = element as HTMLVideoElement;
+          video.muted = true;
+          await video.play();
+        }),
+      );
+    });
+    await page.waitForTimeout(400);
+    await startSample(page);
+    await page.waitForTimeout(1200);
+    samples.push(await stopSample(page, "html-dos-videos-y-orbe"));
     writeFileSync(
       `${directory}/inicio-diagnostico-composicion.json`,
       JSON.stringify(samples, null, 2),
