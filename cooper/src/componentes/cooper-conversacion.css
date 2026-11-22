@@ -41,15 +41,15 @@
   mask-image: linear-gradient(
     to right,
     var(--transparente),
-    var(--lienzo) var(--espacio-16),
-    var(--lienzo) calc(100% - var(--espacio-16)),
+    var(--lienzo) var(--espacio-32),
+    var(--lienzo) calc(100% - var(--espacio-32)),
     var(--transparente)
   );
 }
 .cooper-panel .cooper-suggestions[data-inicio="false"] {
   mask-image: linear-gradient(
     to right,
-    var(--lienzo) calc(100% - var(--espacio-16)),
+    var(--lienzo) calc(100% - var(--espacio-32)),
     var(--transparente)
   );
 }
@@ -57,7 +57,7 @@
   mask-image: linear-gradient(
     to right,
     var(--transparente),
-    var(--lienzo) var(--espacio-16)
+    var(--lienzo) var(--espacio-32)
   );
 }
 .cooper-panel .cooper-suggestions[data-inicio="false"][data-fin="false"] {
@@ -144,4 +144,11 @@
   .cooper-panel:not(.is-full) .chat-welcome h2 > span + span::before {
     content: " ";
   }
+}
+
+.cooper-panel .composer-tools {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.cooper-panel .composer-tools > .send {
+  justify-self: end;
 }

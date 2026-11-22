@@ -333,14 +333,15 @@ export function ChatCooper({
           {data.messages.length === 0 && !submitted && !partial ? (
             <div className="chat-welcome">
               <h2>
-                <Revelado texto="Tú pones la idea." />
-                <br />
-                <Revelado texto="Yo pongo todo en marcha." inicio={4} />
+                <Revelado
+                  texto={
+                    contextoMarca
+                      ? "Démosle voz a tu marca."
+                      : "¿Qué creamos hoy?"
+                  }
+                />
               </h2>
-              <p>
-                Cuéntame qué quieres crear. Te acompaño desde el primer guion
-                hasta la publicación.
-              </p>
+              <p>Cuéntame tu idea. Te ayudo con el siguiente paso.</p>
             </div>
           ) : (
             data.messages.map((m) => (
