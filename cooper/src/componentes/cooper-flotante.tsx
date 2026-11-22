@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, m as motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, m as motion } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
@@ -105,7 +105,7 @@ export function CooperFlotante({
     };
   }, [abierto, cambiar]);
   return (
-    <>
+    <LayoutGroup id="cooper-flotante" inherit={false}>
       <motion.button
         ref={opener}
         className="cooper-orb"
@@ -206,6 +206,6 @@ export function CooperFlotante({
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </LayoutGroup>
   );
 }
