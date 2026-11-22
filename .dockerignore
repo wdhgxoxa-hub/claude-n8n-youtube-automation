@@ -19,3 +19,15 @@ cooper/tests
 cooper/e2e
 !deploy
 !deploy/Containerfile
+cooper/playwright*.config.ts
+cooper/cobertura
+cooper/despliegue-final
+cooper/diseno-fabrica-video
+cooper/diseno-medios
+cooper/diseno-medios-reales
+cooper/diseno-publicados-aprendizaje
+cooper/e2e-diseno
+cooper/evidencias-diseno
+cooper/integracion3
+cooper/movimiento
+cooper/pulido
