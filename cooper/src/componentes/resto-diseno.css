@@ -475,7 +475,7 @@
 .entrada-diseno .login-headline h1 {
   margin-block: var(--espacio-24);
   font-family: var(--fuente-display);
-  font-size: clamp(var(--texto-40), 5vw, var(--texto-72));
+  font-size: var(--titulo-pantalla);
   line-height: var(--interlinea-display);
   letter-spacing: var(--tracking-display);
   font-weight: 500;
