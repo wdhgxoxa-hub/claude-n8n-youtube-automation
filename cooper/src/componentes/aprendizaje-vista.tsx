@@ -450,12 +450,15 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
       )}
       <div className={styles.resumen}>
         <p role="status">
-          {videos.length} {videos.length === 1 ? "lección" : "lecciones"} de
-          videos · {marcas.length}{" "}
-          {marcas.length === 1 ? "observación" : "observaciones"} de marcas
+          {videos.length} {videos.length === 1 ? "lección" : "lecciones"} ·{" "}
+          {marcas.length} de marcas
         </p>
-        <Link className={styles.enlace} href="/marcas?seccion=aprendizaje">
-          Aprendizaje de marcas
+        <Link
+          className={styles.enlace}
+          href="/marcas?seccion=aprendizaje"
+          aria-label="Aprendizaje de marcas"
+        >
+          Marcas <span aria-hidden="true">↗</span>
         </Link>
       </div>
       {videos.length ? (

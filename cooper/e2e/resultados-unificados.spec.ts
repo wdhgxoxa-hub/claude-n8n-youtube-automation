@@ -90,11 +90,15 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
   await page.getByRole("button", { name: "instagram", exact: true }).click();
   await expect(page.locator(".publication:visible")).toHaveCount(3);
-  // La tarjeta agrupada enlaza la captura más reciente, igual que sus cifras.
-  const marca = propio.publicaciones
-    .filter((p) => p.tipo === "marca")
-    .sort((a, b) => (b.metricas?.capturadas ?? 0) - (a.metricas?.capturadas ?? 0))[0];
-  await page.locator(`.publication-thumb[href="${marca.href}"]`).click();
+  // Las capturas duplicadas del fixture comparten fecha: cualquiera de sus
+  // destinos propios es válido, pero nunca uno de la persona ajena.
+  const enlaceMarca = page
+    .locator('.publication-thumb[href^="/marcas?pieza="]')
+    .first();
+  expect(
+    propio.publicaciones.filter((p) => p.tipo === "marca").map((p) => p.href),
+  ).toContain(await enlaceMarca.getAttribute("href"));
+  await enlaceMarca.click();
   await expect(
     page.getByRole("heading", { name: "Horizonte", exact: true }),
   ).toBeVisible();
@@ -131,7 +135,7 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await page.getByRole("button", { name: "youtube", exact: true }).click();
   await expect(page.locator(".lesson:visible")).toHaveCount(1);
   await expect(page.getByRole("main").getByRole("status")).toHaveText(
-    "1 lección de videos · 0 observaciones de marcas",
+    "1 lección · 0 de marcas",
   );
   await page.getByRole("button", { name: "Limpiar filtros" }).first().click();
   await page.route("**/api/resultados", (r) =>

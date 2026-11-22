@@ -10,7 +10,6 @@ import {
   Eye,
   Heart,
   RefreshCw,
-  SlidersHorizontal,
   X,
 } from "lucide-react";
 import { api, useEspacio } from "./espacio";
@@ -120,7 +119,6 @@ export function Filtros({
           aria-controls={`${id}-chips`}
           onClick={() => abrir(!abierto)}
         >
-          <SlidersHorizontal size={16} aria-hidden="true" />
           Filtros
           {activos > 0 && <span className={styles.conteo}>{activos}</span>}
           <ChevronDown size={16} aria-hidden="true" />
