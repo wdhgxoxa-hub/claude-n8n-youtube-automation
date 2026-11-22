@@ -121,6 +121,19 @@ export function Marcas({
   }, [marca, definirMarca]);
   const seccionActiva =
     seccion === "tienda" && !marca?.guia.tienda ? "calendario" : seccion;
+  const guiaVisible = marca && (
+    <>
+      <p>{marca.guia.tono}</p>
+      <small>
+        {data.propietarios.find((u) => u.id === marca.ownerId)?.name ??
+          "Dueño de la marca"}{" "}
+        · {marca.zona} ·{" "}
+        {marca.guia.tipografia === "serif"
+          ? "Tipografía con remates"
+          : "Tipografía sin remates"}
+      </small>
+    </>
+  );
   function cambiarSeccion(valor: string, marcaSeleccionada = marca?.id) {
     setSeccion(valor);
     const url = new URL(window.location.href);
@@ -322,15 +335,14 @@ export function Marcas({
                   <div>
                     <p className="marca-ceja">El universo de tu marca</p>
                     <h2 id="marca-nombre">{marca.nombre}</h2>
-                    <p>{marca.guia.tono}</p>
-                    <small>
-                      {data.propietarios.find((u) => u.id === marca.ownerId)
-                        ?.name ?? "Dueño de la marca"}{" "}
-                      · {marca.zona} ·{" "}
-                      {marca.guia.tipografia === "serif"
-                        ? "Tipografía con remates"
-                        : "Tipografía sin remates"}
-                    </small>
+                    {marcaId ? (
+                      <details className="marca-guia-resumen" key={marca.id}>
+                        <summary>Guía de la marca</summary>
+                        <div>{guiaVisible}</div>
+                      </details>
+                    ) : (
+                      guiaVisible
+                    )}
                   </div>
                   <div className="marca-herramientas">
                     <Boton

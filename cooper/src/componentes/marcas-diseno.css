@@ -147,6 +147,26 @@
 .marcas-page .marca-identidad small {
   font-size: var(--texto-13);
 }
+.marca-guia-resumen summary {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  min-height: var(--objetivo-tactil);
+  color: var(--texto-2);
+  font-size: var(--texto-13);
+  cursor: pointer;
+}
+.marca-guia-resumen summary::before {
+  content: "+";
+  color: var(--texto);
+  font-family: var(--fuente-datos);
+}
+.marca-guia-resumen[open] summary::before {
+  content: "−";
+}
+.marca-guia-resumen > div {
+  padding-block: var(--espacio-8) var(--espacio-16);
+}
 .marca-ceja {
   color: var(--texto-2);
   font-size: var(--texto-12);
