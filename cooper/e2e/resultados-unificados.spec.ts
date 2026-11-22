@@ -95,9 +95,10 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   const enlaceMarca = page
     .locator('.publication-thumb[href^="/marcas?pieza="]')
     .first();
+  const destinoMarca = await enlaceMarca.getAttribute("href");
   expect(
     propio.publicaciones.filter((p) => p.tipo === "marca").map((p) => p.href),
-  ).toContain(await enlaceMarca.getAttribute("href"));
+  ).toContain(destinoMarca);
   await enlaceMarca.click();
   await expect(
     page.getByRole("heading", { name: "Horizonte", exact: true }),
@@ -109,7 +110,7 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   ).toHaveAttribute("aria-current", "page");
   await page.reload();
   await expect(
-    page.locator(`#pieza-${marca.id.replace("marca:", "")}`),
+    page.locator(`#pieza-${new URL(destinoMarca!, "http://localhost").searchParams.get("pieza")}`),
   ).toBeVisible();
   await page.goto("/aprendizaje");
   await expect(

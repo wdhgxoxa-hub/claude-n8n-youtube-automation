@@ -270,6 +270,11 @@
   padding-block: var(--espacio-24);
   border-top: var(--borde-ancho) solid var(--linea);
 }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .heroes {
+    --cifra-heroe: var(--texto-48);
+  }
+}
 @media (max-width: 767px) {
   .heroes {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
