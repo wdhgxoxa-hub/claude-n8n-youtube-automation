@@ -190,7 +190,7 @@
 }
 
 .espera {
-  font: 500 var(--texto-20) / 1.4 var(--fuente-display);
+  font: 500 var(--texto-20) / 1.4 var(--fuente-texto);
 }
 
 .enlace {
