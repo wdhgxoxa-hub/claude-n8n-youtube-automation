@@ -1,6 +1,13 @@
 "use client";
 import { PanelCompetencia } from "./competencia";
-import { useEffect, useId, useRef, useState, type FormEvent, type CSSProperties } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type CSSProperties,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus, Palette, CalendarDays, BookOpen, ArrowLeft } from "lucide-react";
@@ -114,17 +121,19 @@ export function Marcas({
         title="Marcas"
         description="Una identidad para cada voz. Un lugar para cuidar lo que compartes."
         action={
-          <button
-            ref={newBrandButton}
-            className="button primary"
-            disabled={busy}
-            aria-expanded={editor}
-            aria-controls={editor ? editorId : undefined}
-            onClick={() => abrirEditor()}
-          >
-            <Plus size={18} />
-            Añadir marca o cuenta
-          </button>
+          !editor ? (
+            <button
+              ref={newBrandButton}
+              className="button primary"
+              disabled={busy}
+              aria-expanded={editor}
+              aria-controls={editor ? editorId : undefined}
+              onClick={() => abrirEditor()}
+            >
+              <Plus size={18} />
+              Añadir marca o cuenta
+            </button>
+          ) : undefined
         }
       />
       <Notice error={error} message={message} />
@@ -181,7 +190,9 @@ export function Marcas({
                   >
                     <span
                       className="marca-muestra"
-                      style={{ "--tinte-marca": m.guia.colores[0] } as CSSProperties}
+                      style={
+                        { "--tinte-marca": m.guia.colores[0] } as CSSProperties
+                      }
                       aria-hidden="true"
                     />
                     <span>
@@ -217,7 +228,7 @@ export function Marcas({
                       </small>
                     </div>
                     <button
-                      className="button"
+                      className="button secondary"
                       onClick={() => abrirEditor(true)}
                     >
                       Editar guía
@@ -745,7 +756,7 @@ function EditorMarca({
   }
   return (
     <section className="marca-editor" id={id} aria-labelledby={`${id}-titulo`}>
-      <button className="button" onClick={cancelar} disabled={busy}>
+      <button className="button secondary" onClick={cancelar} disabled={busy}>
         <ArrowLeft size={16} />
         Volver a marcas
       </button>
@@ -884,7 +895,7 @@ function EditorMarca({
           {paso > 0 && (
             <button
               type="button"
-              className="button"
+              className="button secondary"
               disabled={busy}
               onClick={() => setPaso(paso - 1)}
             >
