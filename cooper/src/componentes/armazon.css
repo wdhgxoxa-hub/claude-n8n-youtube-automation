@@ -276,6 +276,15 @@ main#contenido {
   /* Conserva el vidrio en reposo sin rasterizar el filtro durante el morfismo. */
   backdrop-filter: none;
 }
+.cooper-panel > * {
+  opacity: 1;
+  transition: opacity var(--duracion-presion) var(--curva-salida);
+}
+.cooper-panel[data-projecting="true"] > * {
+  /* El contenido sigue montado y accesible mientras se transforma la superficie. */
+  opacity: 0;
+  transition: none;
+}
 .cooper-panel-heading {
   padding: var(--espacio-16);
   border-bottom: var(--borde-ancho) solid var(--linea);

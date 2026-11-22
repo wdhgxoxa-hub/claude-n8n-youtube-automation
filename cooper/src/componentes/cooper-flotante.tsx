@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, LayoutGroup, m as motion } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
@@ -24,6 +24,10 @@ export function CooperFlotante({
   const opener = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
+    panel.current?.removeAttribute("data-projecting");
+  }, [reduced]);
   const video = data.videos.find(
     (v) => path === `/videos/${v.id}` && v.ownerId === data.user.id,
   );
@@ -135,6 +139,7 @@ export function CooperFlotante({
             ref={panel}
             id="cooper-panel"
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
+            data-projecting={reduced ? undefined : "true"}
             role="dialog"
             onFocusCapture={(event) => {
               // La hoja completa conserva espacio de escritura al abrir el teclado.
