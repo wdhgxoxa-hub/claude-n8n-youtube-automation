@@ -132,7 +132,7 @@ export function CooperFlotante({
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
             role="dialog"
             onFocusCapture={(event) => {
-              // Con teclado y adjuntos, la hoja completa conserva espacio de escritura.
+              // La hoja completa conserva espacio de escritura al abrir el teclado.
               if (movil && event.target instanceof HTMLTextAreaElement)
                 setCompleto(true);
             }}
@@ -188,6 +188,9 @@ export function CooperFlotante({
               videoId={video?.id}
               sugerencias={sugerencias}
               contextoMarca={marca?.nombre}
+              alAdjuntar={() => {
+                if (movil) setCompleto(true);
+              }}
             />
           </motion.div>
         )}

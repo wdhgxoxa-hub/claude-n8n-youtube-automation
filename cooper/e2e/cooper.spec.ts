@@ -317,8 +317,10 @@ test("aísla usuarios, gasto, chat, SSE y acciones de video", async ({
 });
 test("adjuntos y grabación con transcripción editable", async ({ page }) => {
   await login(page.request);
+  await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/");
-  await abrirCooper(page);
+  const panel = await abrirCooper(page);
+  await expect(panel).not.toHaveClass(/is-full/);
   await expect(page.locator(".workspace")).toBeVisible();
   const chooser = page.waitForEvent("filechooser");
   await page
@@ -332,6 +334,12 @@ test("adjuntos y grabación con transcripción editable", async ({ page }) => {
     buffer: Buffer.from("Referencia de ciencia cotidiana"),
   });
   await expect(page.locator(".file-chips")).toContainText("referencia.txt");
+  await expect(panel).toHaveClass(/is-full/);
+  await expect(panel.locator(".cooper-panel-heading")).toBeInViewport({
+    ratio: 1,
+  });
+  await expect(panel.locator(".composer")).toBeInViewport({ ratio: 1 });
+  await expect(panel.locator(".composer-caption")).toBeInViewport({ ratio: 1 });
   await page
     .getByRole("textbox", { name: "Mensaje para Cooper" })
     .fill("Estas son mis referencias");

@@ -18,11 +18,13 @@ export function ChatCooper({
   videoId = "",
   sugerencias = [],
   contextoMarca,
+  alAdjuntar,
 }: {
   canalId?: string;
   videoId?: string;
   sugerencias?: string[];
   contextoMarca?: string;
+  alAdjuntar?: () => void;
 }) {
   const instanceId = useId();
   const messageId = `${instanceId}-mensaje`;
@@ -94,7 +96,9 @@ export function ChatCooper({
           Accept: "text/event-stream",
         },
         body: JSON.stringify({
-          texto: contextoMarca ? `Sobre mi marca «${contextoMarca}»: ${text}` : text,
+          texto: contextoMarca
+            ? `Sobre mi marca «${contextoMarca}»: ${text}`
+            : text,
           adjuntos: files.map((f) => f.id),
           canalId: channel || undefined,
           videoId: video || undefined,
@@ -218,6 +222,7 @@ export function ChatCooper({
     ...cards.filter((c) => !data.chat.tarjetas.some((a) => a.id === c.id)),
   ];
   async function attach(file: File, audio = false) {
+    alAdjuntar?.();
     setError("");
     setUploading(true);
     try {
@@ -264,7 +269,18 @@ export function ChatCooper({
               className="chip"
               key={sugerencia}
               onClick={() => {
-                setText(({ "Crear mi primer canal": "Crea un canal: Ciencia cotidiana", "Crear otro canal": "Crea un canal: Ciencia cotidiana", "Dar forma a una idea": "Quiero un video: Por qué el cielo es azul", "Revisar mis pendientes": "¿Qué tengo pendiente?" } as Record<string, string>)[sugerencia] ?? sugerencia);
+                setText(
+                  (
+                    {
+                      "Crear mi primer canal":
+                        "Crea un canal: Ciencia cotidiana",
+                      "Crear otro canal": "Crea un canal: Ciencia cotidiana",
+                      "Dar forma a una idea":
+                        "Quiero un video: Por qué el cielo es azul",
+                      "Revisar mis pendientes": "¿Qué tengo pendiente?",
+                    } as Record<string, string>
+                  )[sugerencia] ?? sugerencia,
+                );
                 textarea.current?.focus();
               }}
             >
@@ -273,8 +289,19 @@ export function ChatCooper({
           ))}
         </div>
       )}
-      <section className="chat-pane" aria-label="Chat con Cooper" data-estado={state} aria-busy={busy}>
-        <span className="sr-only" role="status">{state === "escuchando" ? "Te escucho" : busy ? "Cooper está preparando tu respuesta" : "Cooper está disponible"}</span>
+      <section
+        className="chat-pane"
+        aria-label="Chat con Cooper"
+        data-estado={state}
+        aria-busy={busy}
+      >
+        <span className="sr-only" role="status">
+          {state === "escuchando"
+            ? "Te escucho"
+            : busy
+              ? "Cooper está preparando tu respuesta"
+              : "Cooper está disponible"}
+        </span>
         <div className="chat-heading">
           <div className="cooper-badge">
             <CooperPresencia />
