@@ -30,7 +30,11 @@ export function CooperPresencia({
           ...document.querySelectorAll<HTMLVideoElement>("video.medio-preview"),
         ].some(
           (preview) =>
-            !preview.paused && !preview.ended && preview.checkVisibility(),
+            ((!preview.paused && !preview.ended) ||
+              preview
+                .closest("[data-preview]")
+                ?.getAttribute("data-preview") === "preparando") &&
+            preview.checkVisibility(),
         );
       if (!activo || reduced || paused || document.hidden || previewActiva)
         video.pause();
@@ -43,18 +47,20 @@ export function CooperPresencia({
       )
         update();
     };
-    // React puede retirar la vista previa antes de que su pausa alcance al
-    // documento. Observar solo retiradas permite reanudar también al navegar.
-    const retiradas = cederAPreview
+    // La intención llega antes de play. Las retiradas cubren la navegación,
+    // donde React puede desconectar la preview antes del evento pause.
+    const cambiosPreview = cederAPreview
       ? new MutationObserver((records) => {
           if (
-            records.some((record) =>
-              [...record.removedNodes].some(
-                (node) =>
-                  node instanceof Element &&
-                  (node.matches(".medio-preview") ||
-                    node.querySelector(".medio-preview")),
-              ),
+            records.some(
+              (record) =>
+                record.type === "attributes" ||
+                [...record.removedNodes].some(
+                  (node) =>
+                    node instanceof Element &&
+                    (node.matches(".medio-preview") ||
+                      node.querySelector(".medio-preview")),
+                ),
             )
           )
             update();
@@ -65,13 +71,18 @@ export function CooperPresencia({
     if (cederAPreview) {
       for (const evento of ["play", "pause", "ended"])
         document.addEventListener(evento, cambioPreview, true);
-      retiradas?.observe(document.body, { childList: true, subtree: true });
+      cambiosPreview?.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["data-preview"],
+      });
     }
     return () => {
       document.removeEventListener("visibilitychange", update);
       for (const evento of ["play", "pause", "ended"])
         document.removeEventListener(evento, cambioPreview, true);
-      retiradas?.disconnect();
+      cambiosPreview?.disconnect();
       video.pause();
     };
   }, [activo, reduced, paused, cederAPreview]);

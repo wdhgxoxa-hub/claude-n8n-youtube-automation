@@ -144,11 +144,11 @@ export function Medio({
   function start() {
     if (!permitted || !preview || document.hidden) return;
     if (timer.current) clearTimeout(timer.current);
+    // La intención ya da prioridad al contenido durante la espera de 180 ms.
+    if (root.current) root.current.dataset.preview = "preparando";
     timer.current = setTimeout(() => {
       timer.current = null;
-      void video.current?.play().catch(() => {
-        /* El póster sigue disponible si no hay codec o permiso. */
-      });
+      void video.current?.play().catch(stop);
     }, esperaPreview());
   }
 
@@ -177,9 +177,10 @@ export function Medio({
             element.matches(":hover, :focus-within"))
         ) {
           if (timer.current) clearTimeout(timer.current);
+          element.dataset.preview = "preparando";
           timer.current = setTimeout(() => {
             timer.current = null;
-            void player.play().catch(() => {});
+            void player.play().catch(halt);
           }, esperaPreview());
         }
       },
