@@ -54,7 +54,7 @@ test.beforeAll(() => {
   expect(mp4.byteLength).toBeLessThanOrEqual(600000);
 });
 
-async function preparar(page: Page) {
+async function preparar(page: Page, retenerMedios = false) {
   const r = await page.request.post(
     `http://127.0.0.1:${process.env.COOPER_E2E_FIXTURE_PORT}/sesion`,
     {
@@ -123,14 +123,21 @@ async function preparar(page: Page) {
       body: `event: estado\ndata: ${JSON.stringify(estado)}\n\n`,
     }),
   );
-  await page.route(`**/api/videos/${video.id}/medios`, (route) =>
-    route.fulfill({ json: medio }),
-  );
+  let liberarMedios: () => void = () => {};
+  const permiso = new Promise<void>((resolve) => {
+    liberarMedios = resolve;
+  });
+  if (!retenerMedios) liberarMedios();
+  await page.route(`**/api/videos/${video.id}/medios`, async (route) => {
+    await permiso;
+    return route.fulfill({ json: medio });
+  });
   return {
     estado,
     video,
     medio,
     errores,
+    liberarMedios,
     peticiones: () => ({ vistasPrevias, completos }),
   };
 }
@@ -227,13 +234,39 @@ for (const ancho of [390, 1440])
     page,
     context,
   }) => {
-    const datos = await preparar(page);
+    const datos = await preparar(page, true);
     await page.setViewportSize({ width: ancho, height: 900 });
     await page.goto("/videos");
     const medio = page
       .locator(`[data-video-medio="${datos.video.id}"]`)
       .first();
+    await expect(medio).toHaveText("Preparando portada");
+    const cajaPendiente = await medio.boundingBox();
+    await page.evaluate(() => {
+      const state = {
+        value: 0,
+        observer: new PerformanceObserver((entries) => {
+          for (const entry of entries.getEntries()) {
+            const shift = entry as PerformanceEntry & {
+              value: number;
+              hadRecentInput: boolean;
+            };
+            if (!shift.hadRecentInput) state.value += shift.value;
+          }
+        }),
+      };
+      (window as typeof window & { clsMedios: typeof state }).clsMedios = state;
+      state.observer.observe({ type: "layout-shift" });
+    });
+    datos.liberarMedios();
     await expect(medio.locator("img")).toHaveAttribute("src", poster);
+    await expect
+      .poll(() =>
+        medio
+          .locator("img")
+          .evaluate((el) => (el as HTMLImageElement).naturalWidth),
+      )
+      .toBe(320);
     if (ancho === 1440) await medio.hover();
     await expect(medio).toHaveAttribute("data-reproduciendo", "true");
     const cdp = await context.newCDPSession(page);
@@ -251,6 +284,7 @@ for (const ancho of [390, 1440])
           p95: number;
           maximo: number;
           muestras: number;
+          cls: number;
         }>((resolve) => {
           const tiempos: number[] = [];
           let primero = 0,
@@ -262,11 +296,18 @@ for (const ancho of [390, 1440])
             if (ahora - primero < 3000) requestAnimationFrame(frame);
             else {
               const ordenados = [...tiempos].sort((a, b) => a - b);
+              const shift = (
+                window as typeof window & {
+                  clsMedios: { value: number; observer: PerformanceObserver };
+                }
+              ).clsMedios;
+              shift.observer.disconnect();
               resolve({
                 fps: (tiempos.length * 1000) / (ahora - primero),
                 p95: ordenados[Math.floor(ordenados.length * 0.95)],
                 maximo: Math.max(...tiempos),
                 muestras: tiempos.length,
+                cls: shift.value,
               });
             }
           };
@@ -300,12 +341,18 @@ for (const ancho of [390, 1440])
           cumpleObjetivo:
             estadistica.fps >= 57 &&
             estadistica.p95 <= 25 &&
-            estadistica.maximo < 100,
+            estadistica.maximo < 100 &&
+            estadistica.cls === 0,
         },
         null,
         2,
       ),
     );
+    expect(estadistica.fps).toBeGreaterThanOrEqual(57);
+    expect(estadistica.p95).toBeLessThanOrEqual(25);
+    expect(estadistica.maximo).toBeLessThan(100);
+    expect(estadistica.cls).toBe(0);
+    expect(await medio.boundingBox()).toEqual(cajaPendiente);
     await page.screenshot({
       path: `${salida}/medios-lista-${ancho}.png`,
       fullPage: true,
