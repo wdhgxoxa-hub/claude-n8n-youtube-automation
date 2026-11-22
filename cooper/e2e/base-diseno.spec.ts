@@ -17,6 +17,8 @@ type Evidence = {
   width: number;
   path: string;
   file: string;
+  captureMode: "viewport" | "full-page";
+  visibleDialogs: string[];
   violations: unknown[];
   overflow: number;
   textBelowMinimum: unknown[];
@@ -120,6 +122,10 @@ async function capture(
   expectedBrowserDiagnostics: string[] = [],
   options: { preserveScroll?: boolean } = {},
 ): Promise<Evidence> {
+  const visibleDialogs: string[] = [];
+  for (const selector of [".cooper-panel", ".more-sheet"])
+    if (await page.locator(selector).isVisible()) visibleDialogs.push(selector);
+  const captureMode = visibleDialogs.length ? "viewport" : "full-page";
   await page.evaluate(async (preserveScroll) => {
     await document.fonts.ready;
     if (!preserveScroll) window.scrollTo(0, 0);
@@ -165,13 +171,28 @@ async function capture(
     (violation) =>
       violation.impact === "serious" || violation.impact === "critical",
   );
+  for (const selector of visibleDialogs)
+    await expect(
+      page.locator(selector),
+      `${screen} ${width}: la hoja permanece visible tras axe`,
+    ).toBeVisible();
   const file = `${screen}-${width}.png`;
-  await page.screenshot({ path: `${directory}/${file}`, fullPage: true });
+  await page.screenshot({
+    path: `${directory}/${file}`,
+    fullPage: captureMode === "full-page",
+  });
+  for (const selector of visibleDialogs)
+    await expect(
+      page.locator(selector),
+      `${screen} ${width}: la captura conserva la hoja abierta`,
+    ).toBeVisible();
   const result = {
     screen,
     width,
     path: new URL(page.url()).pathname,
     file,
+    captureMode,
+    visibleDialogs,
     violations,
     ...geometry,
     console: [...messages],
