@@ -18,7 +18,7 @@ import {
   MotionConfig,
   m as motion,
 } from "framer-motion";
-import { CelebracionPublicacion } from "./escena-estudio";
+import { CelebracionPublicacion, type Momento } from "./escena-estudio";
 import { CooperFlotante } from "./cooper-flotante";
 import { Transiciones } from "./transiciones";
 import { PildoraConexion } from "./primitivas";
@@ -133,8 +133,15 @@ export function Espacio({
     [connected, setConnected] = useState(false),
     [menu, setMenu] = useState(false),
     [cooper, setCooper] = useState(false);
-  const [marcaContexto, definirMarca] = useState<{id: string; nombre: string} | null>(null);
-  const movil = useSyncExternalStore(observarMovil, () => window.matchMedia("(max-width: 1023px)").matches, () => false);
+  const [marcaContexto, definirMarca] = useState<{
+    id: string;
+    nombre: string;
+  } | null>(null);
+  const movil = useSyncExternalStore(
+    observarMovil,
+    () => window.matchMedia("(max-width: 1023px)").matches,
+    () => false,
+  );
   const path = usePathname();
   const ruta = useRef<HTMLDivElement>(null);
   const ultimaRuta = useRef(path);
@@ -148,22 +155,36 @@ export function Espacio({
   }, [path]);
   const reduced = useMovimientoReducido();
   const [isPaused] = usePausaMovimiento();
-  const [celebration, setCelebration] = useState<string | null>(null);
+  const [celebration, setCelebration] = useState<{
+    title: string;
+    videoId: string;
+    momento: Momento;
+  } | null>(null);
   const previousVideos = useRef(initial.videos);
   const celebrationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const receive = useCallback((next: Estado) => {
-    const published = next.videos.find(
-      (v) =>
-        v.stage === 11 &&
-        previousVideos.current.some((p) => p.id === v.id && p.stage < 11),
-    );
+    const cambio = next.videos.flatMap((video) => {
+      const anterior = previousVideos.current.find((v) => v.id === video.id);
+      if (!anterior || anterior.stage === video.stage) return [];
+      let momento: Momento | undefined;
+      if (video.stage === 11 && anterior.stage < 11) momento = "publicado";
+      else if (video.stage === 9 && anterior.stage < 9) momento = "terminado";
+      else if (
+        (anterior.stage === 3 && video.stage === 4) ||
+        (anterior.stage === 9 && video.stage === 10)
+      )
+        momento = "aprobado";
+      return momento
+        ? [{ title: video.title, videoId: video.id, momento }]
+        : [];
+    })[0];
     previousVideos.current = next.videos;
     // Conservar la celebración y evitar repintar latidos SSE idénticos.
     setData((previous) =>
       JSON.stringify(previous) === JSON.stringify(next) ? previous : next,
     );
-    if (published) {
-      setCelebration(published.title);
+    if (cambio) {
+      setCelebration(cambio);
       if (celebrationTimer.current) clearTimeout(celebrationTimer.current);
       celebrationTimer.current = setTimeout(() => setCelebration(null), 900);
     }
@@ -295,7 +316,9 @@ export function Espacio({
     content.current?.focus({ preventScroll: true });
   }, [path]);
   return (
-    <Context.Provider value={{ data, refresh, connected, marcaContexto, definirMarca }}>
+    <Context.Provider
+      value={{ data, refresh, connected, marcaContexto, definirMarca }}
+    >
       <MotionConfig
         reducedMotion={isPaused || hidden || reduced ? "always" : "user"}
       >
@@ -348,7 +371,10 @@ export function Espacio({
                   </nav>
                   <button
                     className="rail-more"
-                    onClick={(event) => { menuButton.current = event.currentTarget; setMenu(true); }}
+                    onClick={(event) => {
+                      menuButton.current = event.currentTarget;
+                      setMenu(true);
+                    }}
                     aria-label="Más destinos"
                     aria-expanded={menu}
                   >
@@ -363,6 +389,22 @@ export function Espacio({
                         ...nav,
                         ...extras,
                         { path: "/admin", label: "Administración" },
+                        { path: "/rutina", label: "Rutina" },
+                        { path: "/redes", label: "Redes" },
+                        { path: "/referencias", label: "Referencias" },
+                        { path: "/cuentas", label: "Cuentas" },
+                        { path: "/decisiones", label: "Decisiones" },
+                        { path: "/programados", label: "Programados" },
+                        { path: "/avisos", label: "Avisos" },
+                        { path: "/incidencias", label: "Incidencias" },
+                        ...data.videos.map((video) => ({
+                          path: `/videos/${video.id}`,
+                          label: video.title,
+                        })),
+                        ...data.channels.map((canal) => ({
+                          path: `/canales/${canal.id}`,
+                          label: canal.name,
+                        })),
                       ].find((n) => n.path === path)?.label ?? "Estudio Cooper"}
                     </span>
                     <Link
@@ -389,7 +431,9 @@ export function Espacio({
                     </div>
                     {celebration && (
                       <CelebracionPublicacion
-                        title={celebration}
+                        title={celebration.title}
+                        momento={celebration.momento}
+                        videoId={celebration.videoId}
                         cerrar={() => setCelebration(null)}
                       />
                     )}
@@ -417,10 +461,13 @@ export function Espacio({
                   ))}
                 </nav>
                 <button
-                    className="mobile-more icon-button"
+                  className="mobile-more icon-button"
                   aria-label="Más destinos"
                   aria-expanded={menu}
-                  onClick={(event) => { menuButton.current = event.currentTarget; setMenu(true); }}
+                  onClick={(event) => {
+                    menuButton.current = event.currentTarget;
+                    setMenu(true);
+                  }}
                 >
                   <Ellipsis size={20} />
                 </button>

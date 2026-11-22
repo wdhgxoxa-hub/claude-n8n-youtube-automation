@@ -1,6 +1,10 @@
 "use client";
 import { useId, useRef, useState } from "react";
 import { Check } from "lucide-react";
+import { m as motion } from "framer-motion";
+import { resorte, useMovimientoReducido } from "./movimiento";
+import { useTinteVideo } from "./tinte-video";
+export type Momento = "publicado" | "terminado" | "aprobado" | "record";
 
 const pasos = [
   {
@@ -82,22 +86,41 @@ export function BienvenidaAnimada() {
 export function CelebracionPublicacion({
   title,
   cerrar,
+  momento = "publicado",
+  videoId,
 }: {
   title: string;
   cerrar: () => void;
+  momento?: Momento;
+  videoId?: string;
 }) {
+  const reduced = useMovimientoReducido();
+  const tinte = useTinteVideo(videoId);
+  const texto = {
+    publicado: ["Publicación confirmada", "Ya está en el mundo."],
+    terminado: ["Video terminado", "Listo para tu mirada."],
+    aprobado: ["Aprobación confirmada", "Aprobado. Seguimos."],
+    record: ["Nuevo récord", "Llegaste más lejos."],
+  }[momento];
   return (
     <aside
       className="publication-celebration"
-      aria-label="Publicación confirmada"
+      aria-label={texto[0]}
+      style={tinte}
     >
-      <span className="publication-badge" aria-hidden="true">
+      <motion.span
+        className="publication-badge"
+        aria-hidden="true"
+        initial={reduced ? false : { scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={reduced ? { duration: 0 } : resorte}
+      >
         <Check size={24} />
-      </span>
+      </motion.span>
       <div role="status">
-        <strong>Ya está en el mundo.</strong>
+        <strong>{texto[1]}</strong>
         <p>{title}</p>
-        <small>Publicación confirmada</small>
+        <small>{texto[0]}</small>
       </div>
       <button
         className="icon-button"

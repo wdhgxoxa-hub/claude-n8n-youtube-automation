@@ -63,16 +63,23 @@ export function Recorrido({
       initial="hidden"
       animate="visible"
       variants={{
-        visible: { transition: { staggerChildren: reduced ? 0 : 0.025 } },
+        visible: { transition: { staggerChildren: 0 } },
       }}
     >
       {ETAPAS.map((name, index) => (
         <motion.li
           key={name}
           variants={{ hidden: { opacity: 0.45 }, visible: { opacity: 1 } }}
-          transition={{ duration: reduced ? 0 : 0.2 }}
+          transition={{
+            duration: reduced ? 0 : 0.42,
+            delay: reduced ? 0 : Math.min(index, 7) * 0.04,
+          }}
           className={
-            index < stage ? "completed" : index === stage ? "current" : "future"
+            index < stage || (stage === 11 && index === 11)
+              ? "completed"
+              : index === stage
+                ? "current"
+                : "future"
           }
           aria-current={index === stage ? "step" : undefined}
         >
@@ -81,7 +88,7 @@ export function Recorrido({
               <motion.span
                 initial={false}
                 animate={{ scaleY: index < stage || stage === 11 ? 1 : 0 }}
-                transition={{ duration: reduced ? 0 : 0.6 }}
+                transition={{ duration: reduced ? 0 : 0.64 }}
               />
             </span>
           )}
@@ -109,7 +116,7 @@ export function Recorrido({
               </small>
             )}
           </div>
-          {index === stage && productionState === "activa" && (
+          {index === stage && stage !== 11 && productionState === "activa" && (
             <span className="stage-live" />
           )}
         </motion.li>

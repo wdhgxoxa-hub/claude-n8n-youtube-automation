@@ -131,6 +131,11 @@ export function CooperFlotante({
             id="cooper-panel"
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
             role="dialog"
+            onFocusCapture={(event) => {
+              // Con teclado y adjuntos, la hoja completa conserva espacio de escritura.
+              if (movil && event.target instanceof HTMLTextAreaElement)
+                setCompleto(true);
+            }}
             aria-modal={movil || undefined}
             aria-label="Cooper, tu compañero"
             layoutId={reduced ? undefined : "cooper-origen"}
