@@ -54,6 +54,8 @@
 }
 .glass-rail nav {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: var(--espacio-8);
   margin-top: var(--espacio-32);
 }
@@ -68,6 +70,7 @@
   gap: var(--espacio-4);
   height: var(--espacio-64);
   width: 100%;
+  min-width: 0;
   color: var(--texto-2);
   font-size: var(--texto-12);
   border-radius: var(--radio-control);
@@ -108,6 +111,13 @@
   justify-content: flex-start;
   padding-left: var(--espacio-16);
   gap: var(--espacio-16);
+}
+.glass-rail:hover nav a span:not(.nav-indicator),
+.glass-rail:focus-within nav a span:not(.nav-indicator) {
+  width: auto;
+  max-width: none;
+  text-align: left;
+  white-space: nowrap;
 }
 .rail-more {
   margin-top: auto;
