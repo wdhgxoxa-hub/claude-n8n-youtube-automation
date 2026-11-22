@@ -1,0 +1,71 @@
+{
+  "inicio": "2026-11-21T22:58:00.977Z",
+  "herramientas": {
+    "node": "24.22.3",
+    "npm": "12.2.2",
+    "python": "3.14.7",
+    "uv": "0.12.24",
+    "sistema": "debian 12",
+    "sentinel": "6764bbdcab91719947e93ba1cc476cbefafb58e8"
+  },
+  "pasos": [
+    {
+      "nombre": "ci",
+      "comando": "npm ci",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 8192,
+      "sha256": "27c8639be0bdc007da313b7ba5adce1a0ba22dba0db9bf997c238a3fa402b73c"
+    },
+    {
+      "nombre": "preparacion",
+      "comando": "/usr/local/bin/node scripts/preparar-pruebas.mjs",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 65494,
+      "sha256": "e63cfaaf3caaa16c69e1379123fc1111bc370d837e7e6f5cf95ecef2a8a17645"
+    },
+    {
+      "nombre": "lint",
+      "comando": "npm run lint",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 3865,
+      "sha256": "82ef02fe294108ee62820c4aac466a1c844a5d882fc917b8239cd96439fed007"
+    },
+    {
+      "nombre": "typecheck",
+      "comando": "npm run typecheck",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 4159,
+      "sha256": "0781fae003f31f2e4c5d3eaff30c5369a49d8b236b5cfb6c916d9d89daef524f"
+    },
+    {
+      "nombre": "unitarias",
+      "comando": "npm test",
+      "rc": 0,
+      "advertencias": 0,
+      "duracion_ms": 34221,
+      "sha256": "c1bbfe656a9ac9e5ec2aee4d20f50b1badf9e260d6cf780b2d466c852d0a1ce5"
+    },
+    {
+      "nombre": "e2e",
+      "comando": "npm run test:e2e",
+      "rc": 1,
+      "advertencias": 0,
+      "duracion_ms": 343869,
+      "sha256": "f76d7ff714e96af9188ac67cb091d0a07ad581ec89ccba1a00da76b3a6d0dd54"
+    }
+  ],
+  "resultado": "FAIL",
+  "origen": {
+    "commit": "5acf1a56bde866deab50631c16dacb4f416f93ca",
+    "archivo_sha256": "30ba0af6d8adcb39906d6013efcbfe0461785bb411ad8ba771edee09af508591",
+    "limpio": true,
+    "sentinel_revision": "6764bbdcab91719947e93ba1cc476cbefafb58e8",
+    "sentinel_fuentes": "caché privada verificada, fuera del archivo y de la imagen"
+  },
+  "error": "e2e: rc 1, 0 advertencias. Consulte .cache/puerta/e2e.log.",
+  "fin": "2026-11-21T23:05:41.097Z"
+}

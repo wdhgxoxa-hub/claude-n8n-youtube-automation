@@ -23,6 +23,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 - **21-11-2026, Lima — Iglesia preparada y probada localmente:** alta privada e idempotente de «Iglesia (por confirmar)», especialista reformado, cuatro plantillas con ejemplos explícitos y calendario semanal propuesto. Revisión doctrinal por revisión de pieza y aprobación humana separada, exigidas también por API/WhatsApp/trabajador; ejemplos y revisiones obsoletas bloqueados. Código `370506d`: puerta completa **492 unitarias/104 E2E/235 flujos**, instalación/lint/tipos/build PASS, cero errores, advertencias u omisiones; contrato Sentinel adicional 3/3. Implementado y probado en `total-marca-iglesia`, **sin integrar ni desplegar**, sin crear la marca en una base real. [Informe y pendientes](informes/total-marca-iglesia.md), [puerta](informes/evidencias/total-marca-iglesia/puerta.json).
 
+- **21-11-2026, Lima — plantilla de tienda de ropa implementada y probada:** alta optativa en Marcas, especialista moda/ecommerce, lanzamientos/lookbooks/reels/ofertas/UGC, calendario orientativo, conversión real sin datos y ejemplo separado; catálogo web futuro desconectado. Puerta limpia sobre `b889851`: 487 unitarias, 106 E2E y 235 flujos, instalación/lint/tipos/build PASS, cero errores, advertencias u omisiones. Cuatro capturas móvil/escritorio en ambos temas revisadas. Rama `total-marca-tienda`, sin integrar, publicar ni desplegar. [Informe](informes/total-marca-tienda.md), [puerta](informes/evidencias/total-marca-tienda/puerta-final.json).
+
 - **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 
 - **Recuperación app posterior a PASS implementada y probada localmente:** extra separado con preparación/sello, manifiesto completo WAL/medios y recuperación exclusiva de Cooper/chat-cooper. Ciclo real b3→cbf tras escrituras PASS: cinco servicios ajenos intactos, datos posteriores archivados/restaurables, release previa y ningún puntero global. 20 focales/241 regresiones sin advertencias. Helpers certificados/bundle/producto intactos; integración y ejecución remota a cargo del integrador, todavía no acreditadas. [Receta y evidencia](informes/total-recuperacion-app.md).
@@ -115,6 +117,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
+- Plantilla de tienda integrada solo en la rama de diseño; revisión de Claude pendiente.
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
 - Observación de ventanas naturales: Radar a las 07:40 Lima, reloj de Métricas y futuros ciclos de aprendizaje. No se adelantaron disparos productivos; los disparadores registrados y el ensayo local no equivalen a una ejecución futura ya ocurrida. Las hipótesis necesitan tiempo y publicaciones aprobadas; no se atribuye mejora causal.
 - Sexta oleada anunciada por Claude (iglesia, tienda, WhatsApp y observabilidad): conservada para la pasada posterior al despliegue. No se incorporó ni sobrescribió su trabajo concurrente al cerrar esta versión.
@@ -136,6 +139,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 11. Margen Real: confirmar URL/ID del TikTok propio y el homónimo mexicano; revisar descriptor Perú, capacidad del piloto y aplicación editorial. [Detalle](informes/total-margen-estrategia.md#pendientes-de-walter).
 
 12. Iglesia: confirmar nombre y autorización, confesiones/ediciones y traducción bíblica con corpus cotejado; designar responsable pastoral, validar calendario y aportar cuentas, materiales y permisos. La integración y cualquier primer ensayo real requieren revisión independiente. [Detalle](informes/total-marca-iglesia.md#pendientes-de-walter).
+
+12. Tienda de ropa: definir nombre/público/activos, productos y condiciones comerciales, plataforma/dominio, fuente y atribución de conversiones, calendario y permisos UGC/cuentas. Revisar la plantilla con Claude y autorizar por separado la futura conexión y el primer ensayo real. [Detalle](informes/total-marca-tienda.md#pendientes-de-walter).
 
 ## Ideas conversadas
 
