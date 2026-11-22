@@ -673,10 +673,15 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
     await expect(lesson.getByLabel("Evidencia de la lección")).toContainText(
       "Retención: 40 % en el segundo 3 (captura 2 h después del hito)",
     );
+    // La línea de tiempo de «Lo que aprendimos» (DIRECCION §4) cierra cada
+    // lección con el paso «El siguiente video»: aplicada, sin afirmar mejora.
     await expect(
-      lesson.getByText(
-        "Aplicada en guiones; el efecto aún necesita nuevas métricas.",
-      ),
+      lesson.getByText("Esperando el siguiente resultado", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      lesson.getByText("Ya está aplicado. Falta medir el siguiente video.", {
+        exact: true,
+      }),
     ).toBeVisible();
     await expect(
       lesson
