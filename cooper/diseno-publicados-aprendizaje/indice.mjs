@@ -41,16 +41,35 @@ const entries = files
 const missionVideo =
   /^(?:pantallas-y-hojas|teclado-filtros-medición-y-movimiento-reducido|recorrido-grabado-de-interacciones|vacío-carga-y-recuperación-explícitos)-a-(?:360|390|768|1024|1440|1920)px\.webm$/;
 const videos = files.filter((file) => missionVideo.test(file));
+const reviews = [
+  "revision-aprendizaje.md",
+  "revision-publicados.md",
+  "revision-videos/revision.json",
+].filter((file) => existsSync(resolve(directory, file)));
 const motion = widths.flatMap((width) => {
   const file = resolve(directory, `movimiento-${width}.json`);
   return existsSync(file)
     ? [{ width, ...JSON.parse(readFileSync(file, "utf8")) }]
     : [];
 });
+const lighthousePath = resolve(directory, "lighthouse/resumen.json");
+const lighthouse = existsSync(lighthousePath)
+  ? JSON.parse(readFileSync(lighthousePath, "utf8"))
+  : null;
+const motionPassed =
+  motion.length === 2 &&
+  motion.every((sample) => sample.fps >= 57 && sample.p95 <= 25 && sample.cls <= 0.01);
+const performance = {
+  passed: motionPassed && lighthouse?.passed === true,
+  motionPassed,
+  lighthousePassed: lighthouse?.passed ?? null,
+  lighthouse,
+};
 writeFileSync(
   resolve(directory, "indice-publicados-aprendizaje.json"),
-  JSON.stringify({ entries, videos, motion }, null, 2) + "\n",
+  JSON.stringify({ entries, videos, reviews, motion, performance }, null, 2) + "\n",
 );
+const performanceSummary = `<section id="rendimiento"><h2>${performance.passed ? "Rendimiento aprobado" : "Rendimiento pendiente de corregir o medir"}</h2><p>Las capturas aprobadas no cierran por sí solas la puerta de diseño. Umbrales: ≥57 FPS, p95 ≤25 ms, CLS ≤0,01; Lighthouse móvil ≥90 en rendimiento y 100 en accesibilidad y buenas prácticas, sin advertencias.</p><ul>${motion.map((sample) => `<li><a href="movimiento-${sample.width}.json">${sample.width}px: ${sample.fps.toFixed(2)} FPS, p95 ${sample.p95.toFixed(2)} ms, CLS ${sample.cls}</a> · ${sample.fps >= 57 && sample.p95 <= 25 && sample.cls <= 0.01 ? "APROBADO" : "FALLO"}</li>`).join("") || "<li>Sin mediciones de fluidez.</li>"}${lighthouse?.measurements?.map((measurement) => `<li><a href="lighthouse/${escape(measurement.screen)}.html">Lighthouse ${escape(measurement.screen)}</a>: ${measurement.scores.performance}/${measurement.scores.accessibility}/${measurement.scores["best-practices"]}; advertencias ${measurement.warnings.length}</li>`).join("") || "<li>Sin auditoría Lighthouse.</li>"}</ul><p>Laboratorio Chromium en host compartido; no equivale a un teléfono físico.</p></section>`;
 const summary = (entry) =>
   `Axe serias: ${entry.seriousAxe ?? "sin informe"} · tokens: ${entry.tokens ?? "sin informe"} · overflow: ${entry.overflow ?? "sin informe"} · consola: ${entry.console ?? "sin informe"}`;
 const body = widths
@@ -67,7 +86,7 @@ const body = widths
   .join("");
 writeFileSync(
   resolve(directory, "index.html"),
-  `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Publicados y Aprendizaje · Evidencias</title><style>:root{color-scheme:dark;--lienzo:#000;--texto:#f5f5f7;--texto-2:#a1a1aa;--sup:#111114;--linea:rgba(255,255,255,.14)}*{box-sizing:border-box}body{margin:0;padding:32px;background:var(--lienzo);color:var(--texto);font:15px/1.5 system-ui,sans-serif}h1{font-size:40px;line-height:1.1}h2{font-size:28px;margin-top:48px}h3{font-size:17px}a{color:inherit}nav{display:flex;gap:24px;flex-wrap:wrap}p{color:var(--texto-2)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px}article{border:1px solid var(--linea);border-radius:14px;padding:16px;background:var(--sup)}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pair a{display:grid;gap:8px}img{width:100%;height:320px;object-fit:contain;background:var(--lienzo)}video{max-width:100%;max-height:560px}.videos{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}summary{cursor:pointer}</style><h1>Publicados y Aprendizaje</h1><p>Evidencia local con datos ficticios y medios fotográficos del render existente. Cada enlace abre la captura original. Los estados de error 503 son provocados y están documentados por separado.</p><nav>${widths.map((width) => `<a href="#ancho-${width}">${width}px</a>`).join("")}<a href="#videos">Vídeos</a><a href="medios/procedencia.json">Procedencia</a><a href="indice-publicados-aprendizaje.json">Manifiesto</a></nav>${body}<section id="videos"><h2>Interacciones</h2><div class="videos">${videos.map((file) => `<details><summary>${escape(file)}</summary><video controls preload="none" src="${escape(file)}"></video></details>`).join("")}</div></section></html>\n`,
+  `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Publicados y Aprendizaje · Evidencias</title><style>:root{color-scheme:dark;--lienzo:#000;--texto:#f5f5f7;--texto-2:#a1a1aa;--sup:#111114;--linea:rgba(255,255,255,.14)}*{box-sizing:border-box}body{margin:0;padding:32px;background:var(--lienzo);color:var(--texto);font:15px/1.5 system-ui,sans-serif}h1{font-size:40px;line-height:1.1}h2{font-size:28px;margin-top:48px}h3{font-size:17px}a{color:inherit}nav{display:flex;gap:24px;flex-wrap:wrap}p{color:var(--texto-2)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px}article{border:1px solid var(--linea);border-radius:14px;padding:16px;background:var(--sup)}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pair a{display:grid;gap:8px}img{width:100%;height:320px;object-fit:contain;background:var(--lienzo)}video{max-width:100%;max-height:560px}.videos{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}summary{cursor:pointer}</style><h1>Publicados y Aprendizaje</h1><p>Evidencia local con datos ficticios y medios fotográficos del render existente. Cada enlace abre la captura original. Los estados de error 503 son provocados y están documentados por separado.</p><nav>${widths.map((width) => `<a href="#ancho-${width}">${width}px</a>`).join("")}<a href="#rendimiento">Rendimiento</a><a href="#videos">Vídeos</a><a href="medios/procedencia.json">Procedencia</a><a href="indice-publicados-aprendizaje.json">Manifiesto</a>${reviews.map((file) => `<a href="${escape(file)}">${escape(file.replace("revision-", "Revisión ").replace(/\.(md|json)$/, ""))}</a>`).join("")}</nav>${performanceSummary}${body}<section id="videos"><h2>Interacciones</h2><div class="videos">${videos.map((file) => `<details><summary>${escape(file)}</summary><video controls preload="none" src="${escape(file)}"></video></details>`).join("")}</div></section></html>\n`,
 );
 console.log(
   `Índice: ${entries.length} pares de captura y ${videos.length} vídeos.`,
