@@ -9,13 +9,17 @@ import styles from "./portada-video.module.css";
 
 const consultas = new Map<string, Promise<VideoMedios>>();
 const ESPERA_PREVIEW_MS = 180;
-const REINTENTOS_PENDIENTE = 8;
+const PLAZO_MEDIOS_MS = 300_000;
+const ESPERA_MAXIMA_MS = 15_000;
 
 /** La caché durable está en servidor; solo unifica solicitudes simultáneas. */
 function consultar(url: string): Promise<VideoMedios> {
   const activa = consultas.get(url);
   if (activa) return activa;
-  const solicitud = fetch(url, { credentials: "same-origin" })
+  const solicitud = fetch(url, {
+    credentials: "same-origin",
+    signal: AbortSignal.timeout(15_000),
+  })
     .then(async (r) => {
       if (!r.ok) throw new Error("Medio no disponible");
       return (await r.json()) as VideoMedios;
@@ -41,10 +45,14 @@ export function useVideoMedios({
     url: string;
     datos: VideoMedios;
   }>();
+  const plazos = useRef(new Map<string, number>());
   const estadoInicial = inicial?.estado;
   const actualizadoInicial = inicial?.actualizadoEn;
   useEffect(() => {
     if (!visible || estadoInicial === "sin_medio") return;
+    const vence = plazos.current.get(url) ?? Date.now() + PLAZO_MEDIOS_MS;
+    plazos.current.set(url, vence);
+    if (Date.now() >= vence) return;
     let cancelado = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let intentos = 0;
@@ -53,8 +61,9 @@ export function useVideoMedios({
         const datos = await consultar(url);
         if (cancelado) return;
         setRespuesta({ url, datos });
-        if (datos.estado === "pendiente" && ++intentos < REINTENTOS_PENDIENTE)
-          timer = setTimeout(leer, 1500);
+        const espera = Math.min(1500 * 2 ** intentos++, ESPERA_MAXIMA_MS);
+        if (datos.estado === "pendiente" && Date.now() + espera < vence)
+          timer = setTimeout(leer, espera);
       } catch {
         // La cartela o el póster recibido permanece visible sin romper el enlace.
       }
@@ -195,7 +204,9 @@ export function PortadaVideo({
       onPointerLeave={() => setHover(false)}
       aria-hidden="true"
     >
-      {poster && falloPoster !== poster ? (
+      {medio?.estado === "sin_medio" && !protagonista ? (
+        <Portada title={titulo} />
+      ) : poster && falloPoster !== poster ? (
         <Image
           src={poster}
           alt=""

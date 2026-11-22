@@ -396,3 +396,33 @@ test("Publicados usa el medio de su publicación y conserva fallback tipográfic
   await page.close();
   await grabacion?.saveAs(`${salida}/medios-publicados-1440.webm`);
 });
+
+test("un derivado lento termina visible después de más de ocho consultas", async ({
+  page,
+}) => {
+  await page.clock.install();
+  const datos = await preparar(page);
+  let consultas = 0;
+  await page.route(`**/api/videos/${datos.video.id}/medios`, (route) => {
+    consultas++;
+    return route.fulfill({
+      json: consultas < 10 ? datos.video.medios : datos.medio,
+    });
+  });
+  await page.goto("/videos");
+  const medio = page.locator(`[data-video-medio="${datos.video.id}"]`).first();
+  await expect(medio).toHaveText("Preparando portada");
+  await expect.poll(() => consultas).toBe(1);
+  for (let consulta = 2; consulta <= 10; consulta++) {
+    const respuesta = page.waitForResponse(
+      (r) =>
+        new URL(r.url()).pathname === `/api/videos/${datos.video.id}/medios`,
+    );
+    await page.clock.fastForward(15_000);
+    await (await respuesta).finished();
+    await page.clock.runFor(1);
+    await expect.poll(() => consultas).toBe(consulta);
+  }
+  await expect(medio.locator("img")).toHaveAttribute("src", poster);
+  expect(datos.errores).toEqual([]);
+});
