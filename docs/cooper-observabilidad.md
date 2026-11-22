@@ -187,5 +187,12 @@ Documentación oficial consultada antes de implementar:
 
 Transporte Telegram: [sendMessage](https://core.telegram.org/bots/api#sendmessage)
 y [espera ante límites](https://core.telegram.org/bots/api#responseparameters).
+API pública n8n: [ejecuciones y redacción de datos](https://docs.n8n.io/connect/n8n-api/build-and-run/executions),
+[workflows y versión activa](https://docs.n8n.io/connect/n8n-api/build-and-run/workflows),
+[autenticación y alcances](https://docs.n8n.io/connect/n8n-api/authentication.md),
+[paginación](https://docs.n8n.io/connect/n8n-api/pagination.md).
+La clave necesita `execution:list`, `execution:read` y `workflow:list` donde la
+edición admita alcances. Si la versión o el permiso no permite consultar el detalle
+redactado, el fallo conserva una causa genérica y no desaparece del panel.
 Next.js: guías oficiales instaladas `node_modules/next/dist/docs/` para Route
 Handlers, componentes de servidor/cliente e instrumentación de arranque.

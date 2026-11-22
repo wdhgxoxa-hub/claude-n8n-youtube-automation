@@ -1,0 +1,125 @@
+{
+  "puerta_anterior": {
+    "commit": "e489a7c30e59a910321f5e3c7a2b83c825785b3c",
+    "aceptada": false,
+    "resultado": "Interrumpida después de observar tres fallos E2E; resto no acredita una puerta completa.",
+    "fallos": [
+      {
+        "caso": "- Name: salud-operativa.spec.ts >> salud administrativa: guarda umbrales, exige revisión y conserva conflictos entre sesiones\n- Location: e2e/salud-operativa.spec.ts:186:1",
+        "error": "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByRole('alert')\nExpected substring: \"Los umbrales cambiaron\"\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\" class=\"notice error notice-enter\">Los umbrales cambiaron. Actualiza antes de confir…</p> aka getByText('Los umbrales cambiaron.')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n\nCall log:\n  - Expect \"toContainText\" getByRole('alert') with timeout 15000ms\n  - waiting for getByRole('alert')\n",
+        "sha256_contexto": "1ff2345a8f68c0da6d771769055453940150605233d3fda65070b4693235a5ad"
+      },
+      {
+        "caso": "- Name: salud-operativa.spec.ts >> salud: refresco periódico conserva los cambios y permite recuperar una consulta fallida\n- Location: e2e/salud-operativa.spec.ts:415:1",
+        "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: getByRole('alert')\nExpected: \"La consulta de salud no está disponible.\"\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\" class=\"notice error notice-enter\">La consulta de salud no está disponible.</p> aka getByText('La consulta de salud no está')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n\nCall log:\n  - Expect \"toHaveText\" getByRole('alert') with timeout 15000ms\n  - waiting for getByRole('alert')\n    - locator resolved to <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div>\n    - unexpected value \"\"\n",
+        "sha256_contexto": "8d94da1c2319f29464e9e87348f4c4cf06385380d498de2144d608b3833e1e9b"
+      },
+      {
+        "caso": "- Name: whatsapp.spec.ts >> WhatsApp: verificar número, elegir avisos, revocar al cambiar y revisar accesibilidad\n- Location: e2e/whatsapp.spec.ts:5:1",
+        "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 200\nReceived: 409",
+        "sha256_contexto": "822823178cf9d4cad054d875c74f2cfd995b8c2580644b54dcdc8e3715e409e7"
+      }
+    ],
+    "log": "cooper/.cache/total-observabilidad-puerta-final.log",
+    "sha256_log": "f94eda2d2ea29bebfdb0eb51b40a101f0129a54e0799a13508e043e0c8b8f2c4",
+    "interrupciones": [
+      {
+        "caso": "- Name: diseno.spec.ts >> capturas finales: todas las pantallas y formularios demo en ambos temas\n- Location: e2e/diseno.spec.ts:169:1",
+        "error": "Error: frame.evaluate: Target page, context or browser has been closed",
+        "sha256_contexto": "3a91e5f77219e10d7236cf6d755476f5dd46fe17338aa8ad4ff7449e3e340570"
+      }
+    ],
+    "interrupcion_nota": "El caso de capturas demo estaba en ejecución al detener deliberadamente el contenedor después de los tres fallos; el cierre de navegador es consecuencia de esa interrupción."
+  },
+  "arreglo": {
+    "commit": "b24963bbec813754f1e8ee993f35101007063732",
+    "alcance": "Solo arnés E2E: alertas dentro de main y limpieza en finally de configuración y usuario ficticio; sin relajar aserciones ni límites de producto."
+  },
+  "focal": {
+    "comando": "node scripts/e2e.mjs --project=chromium e2e/salud-operativa.spec.ts e2e/whatsapp.spec.ts",
+    "entorno": "Debian 12, checkout de diagnóstico JAnyzV con servicio alertas-salud y spec actualizados; no es un archivo limpio ni reemplaza la puerta final.",
+    "rc": 0,
+    "aprobadas": 6,
+    "fallos": 0,
+    "advertencias": 0,
+    "log": "cooper/.cache/salud-whatsapp-focal.log",
+    "sha256_log": "7ea9ad78ca3bf406f23fbea6eabbc435d1d85ff2686f5fb6435d27ccab39c357"
+  },
+  "segundo_diagnostico": {
+    "commit": "b24963bbec813754f1e8ee993f35101007063732",
+    "aceptada": false,
+    "resultado": "Los cinco casos de Salud pasan; WhatsApp falla al crear su sesión ficticia (línea 41), no al invitar. Retirar la invitación dejó la décima cuenta creada.",
+    "sha256_contexto": "5c4e4425f5b192f7a04b708d75ed8b2abb3b7b738f7b69435dbe0c339b056247",
+    "correccion": "Reutilizar la cuenta Ana de la suite; comprobar que no cambia el número de usuarios ni la lista existente. No ampliar los límites del producto.",
+    "log": "cooper/.cache/total-observabilidad-puerta-cierre.log",
+    "sha256_log": "c64b023635daa6d6b621f94cd1a1c10fbf0295f5ad7957f7f451bc32cc8efbac",
+    "interrumpida": true
+  },
+  "focal_cuenta_ausente": {
+    "rc": 0,
+    "aprobadas": 6,
+    "fallos": 0,
+    "advertencias": 0,
+    "log": "cooper/.cache/salud-whatsapp-cuentas-focal.log",
+    "sha256_log": "cb2cc6b0135b1e951b7041b3c77460c5c08accaedc5ca09a50f209dafe47848f"
+  },
+  "focal_cuenta_existente": {
+    "comando": "node scripts/e2e.mjs --project=chromium e2e/cooper.spec.ts e2e/salud-operativa.spec.ts e2e/whatsapp.spec.ts --grep 'conversa, pide un video|salud|WhatsApp'",
+    "entorno": "Checkout de diagnóstico JAnyzV actualizado; datos efímeros y cuentas ficticias.",
+    "rc": 0,
+    "aprobadas": 8,
+    "fallos": 0,
+    "advertencias": 0,
+    "log": "cooper/.cache/salud-whatsapp-cuenta-existente.log",
+    "sha256_log": "1e607221b87b27d8bd37984e5ef4efebeadc0a34fd7b0eca25623810644bb07d"
+  },
+  "tercer_diagnostico": {
+    "commit": "05e3290463d620b9cb49284ac7f6599a48710132",
+    "resultado": "FAIL; E2E completo con 107 aprobadas y 1 fallo de selector preexistente en Montajes. Salud y WhatsApp aprobados.",
+    "estadisticas_e2e": {
+      "startTime": "2026-11-21T23:40:57.135Z",
+      "duration": 881195.323,
+      "expected": 107,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "error": "Error: locator.fill: Error: strict mode violation: getByLabel('Nombre de la cuenta', { exact: true }) resolved to 2 elements:\n    1) <input required=\"\" name=\"alias\" maxlength=\"100\" placeholder=\"@mi_cuenta\"/> aka getByRole('textbox', { name: 'Nombre de la cuenta' })\n    2) <input required=\"\" name=\"alias\" maxlength=\"100\" placeholder=\"@mi_cuenta\"/> aka getByPlaceholder('@mi_cuenta').nth(1)\n\nCall log:\n  - waiting for getByLabel('Nombre de la cuenta', { exact: true })\n",
+    "sha256_contexto": "581bb2696ad155c894ca9ed35791a9f1f1175a50d5893bb4ef2ae2b022826791",
+    "correccion": "Elegir los tres textbox por rol y nombre accesible; excluye el formulario oculto de transición sin esperas artificiales ni cambios de producto.",
+    "fuente_oficial": "https://playwright.dev/docs/api/class-page#page-get-by-role-option-include-hidden"
+  },
+  "arreglo_montajes": "a7dfb5dfdaec967b2e4f5c0c3e19c1c1eb80dd58",
+  "montajes_focales": [
+    {
+      "ronda": 1,
+      "servidores_y_base_nuevos": true,
+      "rc": 0,
+      "aprobadas": 2,
+      "advertencias": 0,
+      "log": ".cache/ci-limpia-JAnyzV/checkout/cooper/.cache/montajes-ronda-1.log",
+      "sha256": "065de6df54745cdacdaaf20c7439088c19b2882cdd101f03884f8a12169e5b19"
+    },
+    {
+      "ronda": 2,
+      "servidores_y_base_nuevos": true,
+      "rc": 0,
+      "aprobadas": 2,
+      "advertencias": 0,
+      "log": ".cache/ci-limpia-JAnyzV/checkout/cooper/.cache/montajes-ronda-2.log",
+      "sha256": "a34514915161d718b76f3464f19eefec763d98d163234eefacad62f13a5e0675"
+    },
+    {
+      "ronda": 3,
+      "servidores_y_base_nuevos": true,
+      "rc": 0,
+      "aprobadas": 2,
+      "advertencias": 0,
+      "log": ".cache/ci-limpia-JAnyzV/checkout/cooper/.cache/montajes-ronda-3.log",
+      "sha256": "c8a93ca7854bf6b02c322d8a35c3786dcdf39c4c26440b996b5e25c9fc88922f"
+    }
+  ],
+  "montajes_repeat_each_no_aceptado": "El diagnóstico --repeat-each=5 no era aislado: la cuenta de identificador fijo ya existía después de la primera prueba. Se interrumpió; SIGTERM no cerró su contenedor local en 10 s y Podman lo terminó. No se cuenta como prueba aprobada. Se reemplazó por tres procesos/servidores/bases temporales independientes, conservando el ensayo sin alterar la unicidad del producto.",
+  "montajes_repeat_each_log": "cooper/.cache/montajes-selector-focal.log",
+  "arreglo_cupos": "05e3290463d620b9cb49284ac7f6599a48710132"
+}

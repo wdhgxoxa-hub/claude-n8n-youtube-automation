@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-21 17:36 (Lima).
+Última actualización: 2026-11-21 19:18 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **21-11-2026, Lima — observabilidad implementada y probada localmente:** rama propia `total-observabilidad`, corte `a7dfb5d`. Panel administrativo de n8n/VPS/fábrica, causas legibles, videos sin avance y costes; controles existentes enlazados, umbrales auditados y avisos Telegram durables apagados por defecto. Recolector saneado y overlay de lectura preparados. Puerta limpia PASS: 506 unitarias/108 E2E/235 flujos; instalación, lint, tipos y build con cero errores y advertencias; 35 pruebas adicionales del recolector/monitor. Ocho vistas revisadas. No integrado, desplegado ni aceptado con fuentes reales; sin envíos Telegram ni cambios del VPS/n8n vivo. [Informe y pendientes](informes/total-observabilidad.md), [puerta](informes/evidencias/total-observabilidad/puerta.json).
 
 - **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 
@@ -99,6 +101,8 @@
 
 ## En curso
 
+- Observabilidad: entrega local cerrada para revisión e integración por el frente autorizado. La futura activación se coordinará después de `total-cierre`: nuevo paquete del monitor con `observabilidad.py`, overlay, lectura n8n y aceptación de fuentes reales. Los bundles certificados anteriores no incluyen el módulo nuevo y permanecen intactos. [Guía](cooper-observabilidad.md).
+
 - Integración `total-integrador`: incorpora frentes cerrados desde `a69e374`, preservando los worktrees activos. Verificación y despliegue autorizados en curso; el cierre distinguirá las pruebas nuevas de evidencias históricas.
 
 - **H19, condición de memoria real comprobada:** Cooper VPS tiene 1 GiB de RAM y el host no tiene swap, aunque el cgroup permite hasta 1 GiB de swap si existiera. El candidato conserva esos límites. Un ensayo que usó swap no acredita esa condición; competencia repetirá sin swap. Consulta read-only, sin cambiar servicios, límites o imagen. [Recibo](informes/total-memoria-vps.md).
@@ -125,6 +129,8 @@
 10. Definir retención y excepciones antes de purgar originales, consentimientos, mensajes, derivados/copias. Cotejar operaciones inciertas sin recibo. Identificar la clave administrativa anterior mediante su ID en la instalación correcta antes de revocarla; no se afirma que siga activa.
 
 11. Margen Real: confirmar URL/ID del TikTok propio y el homónimo mexicano; revisar descriptor Perú, capacidad del piloto y aplicación editorial. [Detalle](informes/total-margen-estrategia.md#pendientes-de-walter).
+
+12. Observabilidad: revisar umbrales y destino Telegram antes de activar avisos; coordinar con el operador la release y aceptación de fuentes reales. Decidir convivencia con los avisos históricos y cobertura externa ante caída total del VPS (pendiente 8). [Detalle](informes/total-observabilidad.md#pendientes-de-walter).
 
 ## Ideas conversadas
 
