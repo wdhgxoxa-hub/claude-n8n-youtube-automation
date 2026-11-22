@@ -1,5 +1,6 @@
 "use client";
 
+import { formatoFechaHora } from "@/lib/fechas";
 import { nombreRed } from "@/lib/redes";
 import {
   useCallback,
@@ -38,11 +39,6 @@ type Suceso = {
   tipo: "estado" | "publicacion" | "revision";
 };
 
-const fechaCompleta = new Intl.DateTimeFormat("es-PE", {
-  dateStyle: "medium",
-  timeStyle: "short",
-  timeZone: "America/Lima",
-});
 const fechaRelativa = new Intl.RelativeTimeFormat("es-PE", {
   numeric: "auto",
   style: "long",
@@ -99,7 +95,7 @@ function useTransicionRuta(reducido: boolean): Transition {
 }
 
 function horaRelativa(fecha: number, ahora: number) {
-  if (!ahora) return fechaCompleta.format(fecha);
+  if (!ahora) return formatoFechaHora(fecha);
   const minutos = Math.max(0, Math.floor((ahora - fecha) / 60_000));
   if (minutos < 1) return "Hace un momento";
   if (minutos < 60)
@@ -691,7 +687,7 @@ export function LineaProduccion({
                   </Link>
                   <time
                     dateTime={new Date(suceso.fecha).toISOString()}
-                    title={fechaCompleta.format(suceso.fecha)}
+                    title={formatoFechaHora(suceso.fecha)}
                   >
                     {horaRelativa(suceso.fecha, ahora)}
                   </time>

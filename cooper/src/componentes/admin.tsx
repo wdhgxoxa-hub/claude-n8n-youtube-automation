@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
 import { formatoMoneda } from "@/lib/cifras";
+import { formatoFechaHora } from "@/lib/fechas";
 import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice, useEspacio } from "./espacio";
 import { m as motion } from "framer-motion";
@@ -211,11 +212,7 @@ export function Admin({ initial }: { initial: Administracion }) {
             </h3>
             <blockquote>{a.phrase}</blockquote>
             <p className="helper">
-              {a.consentText} ·{" "}
-              {new Date(a.consentAt).toLocaleString("es-PE", {
-                timeZone: "America/Lima",
-              })}{" "}
-              (Lima)
+              {a.consentText} · {formatoFechaHora(a.consentAt)} (Lima)
             </p>
             <div className="button-row">
               {(JSON.parse(a.photoIds) as string[]).map((photo, i) => (

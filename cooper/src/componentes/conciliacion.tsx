@@ -4,6 +4,7 @@ import type {
   CasoConciliacion,
   PanelConciliacion,
 } from "@/servicios/conciliacion";
+import { formatoFechaHora } from "@/lib/fechas";
 import { api, Notice } from "./espacio";
 import { Esqueleto, Vacio } from "./primitivas";
 import "./operacion-diseno.css";
@@ -242,7 +243,7 @@ export function ConciliacionAdmin() {
                 <li key={h.id} style={{ overflowWrap: "anywhere" }}>
                   {h.accion} · {h.fuente} ·{" "}
                   {h.referencia || "Consulta por identificador"} ·{" "}
-                  {new Date(h.fecha).toLocaleString("es-PE")}
+                  {formatoFechaHora(h.fecha)}
                 </li>
               ))}
             </ul>

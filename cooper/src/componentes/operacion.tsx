@@ -1,5 +1,6 @@
 "use client";
 import { Cifra, Esqueleto } from "./primitivas";
+import { formatoFechaHora } from "@/lib/fechas";
 import "./operacion-diseno.css";
 import { PanelCompetencia } from "./competencia";
 import {
@@ -33,13 +34,7 @@ export type DatosInicialesOperacion = {
   error: string;
 };
 function fecha(value: string) {
-  return value
-    ? new Date(value).toLocaleString("es-PE", {
-        timeZone: "America/Lima",
-        dateStyle: "medium",
-        timeStyle: "short",
-      })
-    : "Sin fecha registrada";
+  return value ? formatoFechaHora(value) : "Sin fecha registrada";
 }
 function datos(e: FormEvent<HTMLFormElement>) {
   e.preventDefault();

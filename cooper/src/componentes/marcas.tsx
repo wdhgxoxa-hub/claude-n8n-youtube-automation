@@ -29,6 +29,7 @@ import {
   revisionDoctrinalIglesia,
 } from "@/servicios/marcas/iglesia";
 import { IglesiaEditorial } from "./marcas-iglesia";
+import { formatoDiaHora, formatoFechaHora } from "@/lib/fechas";
 
 import { crearPlantillaTienda } from "@/servicios/marcas/tienda-contenido";
 import { PanelMarcaTienda } from "./marca-tienda";
@@ -250,7 +251,7 @@ export function Marcas({
               </strong>
               <small>
                 {proxima
-                  ? `${new Intl.DateTimeFormat("es-PE", { timeZone: m.zona, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(proxima.programada)} · ${proxima.estado === "programada" ? "Programada" : "Por revisar"}`
+                  ? `${formatoDiaHora(proxima.programada, m.zona)} · ${proxima.estado === "programada" ? "Programada" : "Por revisar"}`
                   : "Todavía sin fecha"}
               </small>
             </span>
@@ -737,7 +738,6 @@ export function Marcas({
                           Titulo={TituloFicha}
                           p={p}
                           marca={marca}
-                          titulo={TituloFicha}
                           admin={admin}
                           busy={busy}
                           errorOperacion={error}
@@ -791,7 +791,6 @@ export function Marcas({
                           Titulo={TituloFicha}
                           p={p}
                           marca={marca}
-                          titulo={TituloFicha}
                           admin={admin}
                           busy={busy}
                           errorOperacion={error}
@@ -1648,7 +1647,6 @@ function EditorPieza({
 function Pieza({
   p,
   marca,
-  titulo: Titulo,
   admin,
   busy,
   errorOperacion,
@@ -1660,8 +1658,6 @@ function Pieza({
   Titulo: "h3" | "h4";
   p: PiezaMarca;
   marca: MarcaVista;
-  // Un nivel por debajo del título de su sección (h2 → h3; en el archivo, h3 → h4).
-  titulo: "h3" | "h4";
   admin: boolean;
   busy: boolean;
   errorOperacion: string;
@@ -1685,11 +1681,7 @@ function Pieza({
     <article className="marca-pieza" id={`pieza-${p.id}`}>
       <div>
         <time dateTime={new Date(p.programada).toISOString()}>
-          {new Intl.DateTimeFormat("es-PE", {
-            timeZone: marca.zona,
-            dateStyle: "medium",
-            timeStyle: "short",
-          }).format(p.programada)}
+          {formatoFechaHora(p.programada, marca.zona)}
         </time>
         <Titulo>{p.datos.titulo}</Titulo>
         <p>
@@ -1722,13 +1714,8 @@ function Pieza({
             <summary>Ver revisión doctrinal registrada</summary>
             <p className="marca-caption">{doctrina.observaciones}</p>
             <p>
-              Registrada el{" "}
-              {new Intl.DateTimeFormat("es-PE", {
-                timeZone: marca.zona,
-                dateStyle: "medium",
-                timeStyle: "short",
-              }).format(doctrina.fecha)}
-              . Una edición exige otra revisión doctrinal.
+              Registrada el {formatoFechaHora(doctrina.fecha, marca.zona)}. Una
+              edición exige otra revisión doctrinal.
             </p>
           </details>
         )}
