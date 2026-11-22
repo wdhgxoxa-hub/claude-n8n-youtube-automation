@@ -160,6 +160,15 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
           (t) => (document.documentElement.dataset.theme = t),
           tema,
         );
+        // El contraste se mide al completar la entrada escalonada; su estado
+        // intermedio transparente tiene una comprobación de movimiento aparte.
+        await expect
+          .poll(() =>
+            page.locator(".entrada-estudio").evaluateAll((elementos) =>
+              elementos.every((el) => getComputedStyle(el).opacity === "1"),
+            ),
+          )
+          .toBe(true);
         expect((await new AxeBuilder({ page }).analyze()).violations).toEqual(
           [],
         );
