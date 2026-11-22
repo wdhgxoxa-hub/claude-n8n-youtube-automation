@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import type { Estado } from "../src/servicios/datos";
 
@@ -312,6 +312,15 @@ for (const width of [390, 1440]) {
   }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: "no-preference" });
+    const client = await context.newCDPSession(page);
+    await client.send("Emulation.setCPUThrottlingRate", {
+      rate: width < 768 ? 4 : 1,
+    });
+    await client.send("Tracing.start", {
+      categories:
+        "devtools.timeline,blink.user_timing,disabled-by-default-devtools.timeline.frame",
+      transferMode: "ReturnAsStream",
+    });
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => {
@@ -428,10 +437,6 @@ for (const width of [390, 1440]) {
       JSON.stringify(transitions, null, 2) + "\n",
     );
     await page.goto("/");
-    const client = await context.newCDPSession(page);
-    await client.send("Emulation.setCPUThrottlingRate", {
-      rate: width < 768 ? 4 : 1,
-    });
     const metrics = await page.evaluate(async () => {
       let cls = 0;
       const longTasks: number[] = [];
@@ -469,6 +474,25 @@ for (const width of [390, 1440]) {
       };
     });
     await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+    const finished = new Promise<string>((resolve, reject) => {
+      client.once("Tracing.tracingComplete", ({ stream }) => {
+        if (stream) resolve(stream);
+        else reject(new Error("Chromium no devolvió el archivo de traza."));
+      });
+    });
+    await client.send("Tracing.end");
+    const stream = await finished;
+    const tracePath = `${directory}/traza-movimiento-${width}.json`;
+    writeFileSync(tracePath, "");
+    while (true) {
+      const chunk = await client.send("IO.read", { handle: stream });
+      appendFileSync(
+        tracePath,
+        chunk.base64Encoded ? Buffer.from(chunk.data, "base64") : chunk.data,
+      );
+      if (chunk.eof) break;
+    }
+    await client.send("IO.close", { handle: stream });
     writeFileSync(
       `${directory}/movimiento-${width}.json`,
       JSON.stringify(
@@ -476,6 +500,7 @@ for (const width of [390, 1440]) {
           viewport: width,
           cpu: width < 768 ? 4 : 1,
           metrics,
+          trace: `traza-movimiento-${width}.json`,
           errors,
           limitation:
             "Laboratorio Chromium local; no acredita un teléfono físico.",
@@ -648,13 +673,11 @@ test("Cooper conserva el compositor con dos selectores, adjunto y error", async 
       context.fillRect(0, 0, 48, 48);
       return canvas.toDataURL().split(",")[1];
     });
-    await page
-      .getByLabel("Archivo adjunto", { exact: true })
-      .setInputFiles({
-        name: "referencia-de-ensayo.png",
-        mimeType: "image/png",
-        buffer: Buffer.from(png, "base64"),
-      });
+    await page.getByLabel("Archivo adjunto", { exact: true }).setInputFiles({
+      name: "referencia-de-ensayo.png",
+      mimeType: "image/png",
+      buffer: Buffer.from(png, "base64"),
+    });
     await expect(
       page.getByAltText("Vista previa de referencia-de-ensayo.png"),
     ).toBeVisible();
