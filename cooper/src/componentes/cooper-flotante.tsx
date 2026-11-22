@@ -2,7 +2,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  AnimatePresence,
   LayoutGroup,
   m as motion,
   useMotionValue,
@@ -169,96 +168,95 @@ export function CooperFlotante({
           <span className="cooper-tally" aria-label="Tienes algo por revisar" />
         )}
       </motion.button>
-      <AnimatePresence initial={false}>
-        {abierto && (
-          <motion.div
-            key="cooper"
-            ref={panel}
-            id="cooper-panel"
-            className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
-            data-projecting={reduced ? undefined : "true"}
-            role="dialog"
-            style={{ y: dragY }}
-            onFocusCapture={(event) => {
-              // La hoja completa conserva espacio de escritura al abrir el teclado.
-              if (movil && event.target instanceof HTMLTextAreaElement)
-                setCompleto(true);
+      {/* Desmontar al cerrar evita retener controles activos; LayoutGroup conserva la proyección del orbe. */}
+      {abierto && (
+        <motion.div
+          key="cooper"
+          ref={panel}
+          id="cooper-panel"
+          className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
+          data-projecting={reduced ? undefined : "true"}
+          role="dialog"
+          style={{ y: dragY }}
+          onFocusCapture={(event) => {
+            // La hoja completa conserva espacio de escritura al abrir el teclado.
+            if (movil && event.target instanceof HTMLTextAreaElement)
+              setCompleto(true);
+          }}
+          aria-modal={movil || undefined}
+          aria-label="Cooper, tu compañero"
+          layoutId={reduced ? undefined : "cooper-origen"}
+          transition={reduced ? { duration: 0.12 } : resorte}
+          onLayoutAnimationStart={() =>
+            panel.current?.setAttribute("data-projecting", "true")
+          }
+          onLayoutAnimationComplete={() =>
+            panel.current?.removeAttribute("data-projecting")
+          }
+        >
+          <div
+            className="cooper-drag"
+            onPointerDown={(e) => {
+              dragStart.current = e.clientY;
+              e.currentTarget.setPointerCapture(e.pointerId);
             }}
-            aria-modal={movil || undefined}
-            aria-label="Cooper, tu compañero"
-            layoutId={reduced ? undefined : "cooper-origen"}
-            transition={reduced ? { duration: 0.12 } : resorte}
-            onLayoutAnimationStart={() =>
-              panel.current?.setAttribute("data-projecting", "true")
-            }
-            onLayoutAnimationComplete={() =>
-              panel.current?.removeAttribute("data-projecting")
-            }
+            onPointerMove={(e) => {
+              if (dragStart.current === null) return;
+              const distance = e.clientY - dragStart.current;
+              dragY.set(distance < 0 ? distance * 0.2 : distance);
+            }}
+            onPointerCancel={() => {
+              dragStart.current = null;
+              animate(dragY, 0, reduced ? { duration: 0 } : resorte);
+            }}
+            onPointerUp={(e) => {
+              const delta = e.clientY - (dragStart.current ?? e.clientY);
+              if (delta < -48) setCompleto(true);
+              if (delta > 64) {
+                if (completo) setCompleto(false);
+                else cambiar(false);
+              }
+              dragStart.current = null;
+              animate(dragY, 0, reduced ? { duration: 0 } : resorte);
+            }}
+            aria-hidden="true"
           >
-            <div
-              className="cooper-drag"
-              onPointerDown={(e) => {
-                dragStart.current = e.clientY;
-                e.currentTarget.setPointerCapture(e.pointerId);
-              }}
-              onPointerMove={(e) => {
-                if (dragStart.current === null) return;
-                const distance = e.clientY - dragStart.current;
-                dragY.set(distance < 0 ? distance * 0.2 : distance);
-              }}
-              onPointerCancel={() => {
-                dragStart.current = null;
-                animate(dragY, 0, reduced ? { duration: 0 } : resorte);
-              }}
-              onPointerUp={(e) => {
-                const delta = e.clientY - (dragStart.current ?? e.clientY);
-                if (delta < -48) setCompleto(true);
-                if (delta > 64) {
-                  if (completo) setCompleto(false);
-                  else cambiar(false);
-                }
-                dragStart.current = null;
-                animate(dragY, 0, reduced ? { duration: 0 } : resorte);
-              }}
-              aria-hidden="true"
-            >
-              <span />
+            <span />
+          </div>
+          <div className="cooper-panel-heading">
+            <span>
+              <strong>Cooper</strong>
+              <small>{contexto}</small>
+            </span>
+            <div>
+              <button
+                className="icon-button cooper-expand"
+                aria-label={completo ? "Reducir Cooper" : "Ampliar Cooper"}
+                onClick={() => setCompleto(!completo)}
+              >
+                {completo ? <Minimize2 size={20} /> : <Expand size={20} />}
+              </button>
+              <button
+                className="icon-button"
+                aria-label="Cerrar Cooper"
+                onClick={() => cambiar(false)}
+              >
+                <X size={20} />
+              </button>
             </div>
-            <div className="cooper-panel-heading">
-              <span>
-                <strong>Cooper</strong>
-                <small>{contexto}</small>
-              </span>
-              <div>
-                <button
-                  className="icon-button cooper-expand"
-                  aria-label={completo ? "Reducir Cooper" : "Ampliar Cooper"}
-                  onClick={() => setCompleto(!completo)}
-                >
-                  {completo ? <Minimize2 size={20} /> : <Expand size={20} />}
-                </button>
-                <button
-                  className="icon-button"
-                  aria-label="Cerrar Cooper"
-                  onClick={() => cambiar(false)}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-            </div>
-            <Chat
-              key={video?.id || canal?.id || marca?.id || path}
-              canalId={canal?.id}
-              videoId={video?.id}
-              sugerencias={sugerencias}
-              contextoMarca={marca?.nombre}
-              alAdjuntar={() => {
-                if (movil) setCompleto(true);
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+          <Chat
+            key={video?.id || canal?.id || marca?.id || path}
+            canalId={canal?.id}
+            videoId={video?.id}
+            sugerencias={sugerencias}
+            contextoMarca={marca?.nombre}
+            alAdjuntar={() => {
+              if (movil) setCompleto(true);
+            }}
+          />
+        </motion.div>
+      )}
     </LayoutGroup>
   );
 }
