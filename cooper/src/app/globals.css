@@ -2795,11 +2795,6 @@ main:focus-visible {
 .skeleton {
   animation: skeleton-breathe 1.7s ease-in-out infinite alternate;
 }
-.workspace[data-motion="paused"] *,
-.workspace[data-motion="paused"] *:before,
-.workspace[data-motion="paused"] *:after {
-  animation-play-state: paused !important;
-}
 @keyframes stage-pulse {
   0% {
     transform: scale(0.85);
@@ -3384,10 +3379,16 @@ input:is([type="checkbox"], [type="radio"]):checked {
     display: none;
   }
 }
+/* Pausa: posición final. La animación se acorta a cero en vez de quitarse:
+   con `animation: none` el navegador la recreaba al reanudar (o al volver a la
+   pestaña) y las entradas ya hechas volvían a empezar desde opacidad 0. Sin
+   congelar el reloj, al reanudar cada animación sigue donde le toca: las
+   entradas terminadas siguen terminadas y los bucles retoman su fase. */
 .workspace[data-motion="paused"] *,
 .workspace[data-motion="paused"] *:before,
 .workspace[data-motion="paused"] *:after {
-  animation: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
   transition: none !important;
 }
 @media (prefers-reduced-motion: reduce) {

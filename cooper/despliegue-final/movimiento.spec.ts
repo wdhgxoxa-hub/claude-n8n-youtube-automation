@@ -962,6 +962,44 @@ test("2 Entradas escalonadas: 40 ms, máximo 8, una vez por visita", async ({
     await expect.poll(() => ensayo.peticiones.eventos, { timeout: 12000 }).toBeGreaterThan(eventosAntes);
     await page.waitForTimeout(600);
     const despues = await leer();
+    // Pausa: posición final (movimiento-cooper.md). Ocultar la pestaña pausa el
+    // movimiento; al volver, las entradas ya hechas no deben relanzarse desde
+    // opacidad 0 (el estudio parpadeaba en cada cambio de pestaña).
+    const pausaVisibilidad = await page.evaluate(async () => {
+      const ws = document.querySelector(".workspace")!;
+      const fijar = (oculto: boolean) => {
+        Object.defineProperty(document, "hidden", { configurable: true, get: () => oculto });
+        Object.defineProperty(document, "visibilityState", {
+          configurable: true,
+          get: () => (oculto ? "hidden" : "visible"),
+        });
+        document.dispatchEvent(new Event("visibilitychange"));
+      };
+      fijar(true);
+      await new Promise((r) => setTimeout(r, 300));
+      const enPausa = ws.getAttribute("data-motion");
+      fijar(false);
+      let opacidadMinima = 1;
+      const fin = performance.now() + 700;
+      while (performance.now() < fin) {
+        await new Promise((r) => requestAnimationFrame(r));
+        for (const e of document.querySelectorAll<HTMLElement>(".entrada-estudio"))
+          opacidadMinima = Math.min(opacidadMinima, parseFloat(getComputedStyle(e).opacity));
+      }
+      // Devolver los getters reales del prototipo.
+      Reflect.deleteProperty(document, "hidden");
+      Reflect.deleteProperty(document, "visibilityState");
+      return { enPausa, alVolver: ws.getAttribute("data-motion"), opacidadMinima };
+    });
+    const trasPausa = await leer();
+    r.pausaPorVisibilidad = {
+      ...pausaVisibilidad,
+      arranquesTrasReanudar: trasPausa.entradas.length - despues.entradas.length,
+    };
+    expect(pausaVisibilidad.enPausa, "Pestaña oculta = movimiento en pausa").toBe("paused");
+    expect(pausaVisibilidad.alVolver).toBe("playing");
+    expect(trasPausa.entradas.length, "Reanudar no relanza las entradas").toBe(despues.entradas.length);
+    expect(pausaVisibilidad.opacidadMinima, "Sin parpadeo al reanudar").toBeGreaterThan(0.99);
     const retrasos = visita.elementos.map((e) => {
       const v = e.retrasoCss;
       return Math.round(parseFloat(v) * (v.endsWith("ms") ? 1 : 1000));
