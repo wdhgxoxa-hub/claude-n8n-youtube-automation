@@ -1,0 +1,26 @@
+/* La marca, la explicación y la salida comparten un único eje de lectura. */
+.estado-espacio {
+  max-width: calc(var(--ancho-contenido) * 2 / 3);
+  padding-block: var(--espacio-64);
+}
+.estado-espacio .entrada-marca {
+  justify-content: flex-start;
+  margin: 0 0 var(--espacio-16);
+}
+.estado-espacio h1 {
+  max-width: 20ch;
+  margin: 0;
+}
+.estado-espacio p {
+  max-width: 56ch;
+  color: var(--texto-2);
+  margin-block: var(--espacio-16) var(--espacio-24);
+}
+.estado-espacio .button {
+  align-self: flex-start;
+}
+@media (max-width: 767px) {
+  .estado-espacio {
+    padding-block: var(--espacio-32);
+  }
+}

@@ -23,7 +23,7 @@ export default async function RevisionWhatsApp({
     target = resolverEnlace(user, token);
   } catch {
     return (
-      <main className="page stack">
+      <main className="page stack estado-espacio">
         <EntradaMovimiento motivo="revision" />
         <h1>Este enlace ya no está disponible</h1>
         <p>

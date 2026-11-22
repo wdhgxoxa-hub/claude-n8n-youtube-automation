@@ -2,6 +2,7 @@
 import { useSyncExternalStore } from "react";
 import { Logo } from "@/marca/Logo";
 import { useMovimientoReducido, usePausaMovimiento } from "./movimiento";
+import "./estado-espacio.css";
 
 function visibility(notify: () => void) {
   document.addEventListener("visibilitychange", notify);
