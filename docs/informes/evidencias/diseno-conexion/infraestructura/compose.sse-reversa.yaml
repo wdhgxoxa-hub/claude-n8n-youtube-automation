@@ -1,0 +1,8 @@
+# Reversa del overlay: volver al montaje público anterior, sin tocar datos.
+services:
+  caddy:
+    volumes:
+      - type: bind
+        source: ${COOPER_CADDY_SSE_ANTERIOR:?Definir ruta absoluta del Caddyfile anterior}
+        target: /etc/caddy/Caddyfile
+        read_only: true

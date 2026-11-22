@@ -1,0 +1,9 @@
+# Overlay público revisable: montar una copia candidata, sin editar el archivo vivo.
+# La ruta absoluta se fija por el operador; no contiene credenciales.
+services:
+  caddy:
+    volumes:
+      - type: bind
+        source: ${COOPER_CADDY_SSE_CANDIDATO:?Definir ruta absoluta del Caddyfile revisado}
+        target: /etc/caddy/Caddyfile
+        read_only: true
