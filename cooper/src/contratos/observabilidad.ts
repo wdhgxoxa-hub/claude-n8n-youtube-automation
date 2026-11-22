@@ -41,6 +41,10 @@ export const publicacionSchema = z.object({
   url: urlMedio,
   fecha: fecha.nullable(),
   miniatura: urlMedio,
+  // Archivo exacto enviado a esta publicación; un corte puede diferir del montaje.
+  montaje: urlMedio.optional(),
+  ancho: z.number().int().positive().max(16384).optional(),
+  alto: z.number().int().positive().max(16384).optional(),
   historial: z.array(medicionSchema).max(90),
 });
 export const incidenciaSchema = z.object({

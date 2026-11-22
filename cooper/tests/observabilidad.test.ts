@@ -9,6 +9,7 @@ import {
   enlaceIncrustado,
   medicionSchema,
   observabilidadSchema,
+  publicacionSchema,
   sinObservabilidad,
 } from "@/contratos/observabilidad";
 it("reconoce solo reproductores oficiales y rechaza URLs ejecutables o credenciales", () => {
@@ -30,6 +31,39 @@ it("reconoce solo reproductores oficiales y rechaza URLs ejecutables o credencia
       montaje: "http://video.test/a.mp4",
     }).success,
   ).toBe(false);
+});
+it("conserva el montaje por publicación sin romper estados anteriores y valida sus dimensiones", () => {
+  const anterior = {
+    id: "publicacion-1",
+    red: "youtube",
+    url: "https://youtube.com/watch?v=abcdefghijk",
+    fecha: null,
+    miniatura: "",
+    historial: [],
+  };
+  expect(publicacionSchema.parse(anterior).montaje).toBeUndefined();
+  expect(
+    publicacionSchema.parse({
+      ...anterior,
+      montaje: "https://cdn.example.test/corte.mp4",
+      ancho: 1080,
+      alto: 1920,
+    }),
+  ).toMatchObject({
+    montaje: "https://cdn.example.test/corte.mp4",
+    ancho: 1080,
+    alto: 1920,
+  });
+  for (const cambio of [
+    { montaje: "https://user:pass@cdn.example.test/corte.mp4" },
+    { montaje: "file:///privado/corte.mp4" },
+    { ancho: 0 },
+    { alto: 1920.5 },
+    { ancho: 16385 },
+  ])
+    expect(
+      publicacionSchema.safeParse({ ...anterior, ...cambio }).success,
+    ).toBe(false);
 });
 it("sincroniza medios y métricas aunque la etapa no cambie; aísla dueños y costos", () => {
   const id = randomUUID(),

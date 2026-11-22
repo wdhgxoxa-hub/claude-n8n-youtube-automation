@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { db } from "@/db";
 import {
@@ -16,6 +16,7 @@ import {
   enlaceIncrustado,
 } from "@/contratos/observabilidad";
 import type { Resultados } from "@/contratos/resultados";
+import { crearLectorVideoMedios } from "./video-medios";
 
 const iso = (value: number) =>
   value > 0 && Number.isFinite(value) ? new Date(value).toISOString() : null;
@@ -25,6 +26,7 @@ const huella = (value: string) =>
 // Proyección de lectura: no sincroniza proveedores, publica ni genera lecciones.
 // Los dos contratos de métricas se conservan sin sumarlos ni convertir unidades.
 export function leerResultados(user: User): Resultados {
+  const leerMedio = crearLectorVideoMedios(user);
   const resultado: Resultados = {
     ambitos: [],
     publicaciones: [],
@@ -45,10 +47,8 @@ export function leerResultados(user: User): Resultados {
     .all();
   const propios = db()
     .select({
-      id: videos.id,
+      ...getTableColumns(videos),
       titulo: videos.title,
-      channelId: videos.channelId,
-      observability: videos.observability,
     })
     .from(videos)
     .innerJoin(
@@ -123,6 +123,8 @@ export function leerResultados(user: User): Resultados {
         id: `video:${v.id}:${p.red}:${id}:${indice}`,
         tipo: "video",
         fecha: p.fecha,
+        videoId: v.id,
+        medios: leerMedio(v, p.id),
         redes: [p.red.toLowerCase()],
         publicacion,
         identidad: huella(

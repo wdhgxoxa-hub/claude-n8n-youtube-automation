@@ -1,0 +1,56 @@
+{
+  "snapshot": "9f3a910",
+  "ultimoCommitProducto": "53b17df",
+  "archivos": [
+    {
+      "archivo": "inicio-1440.png",
+      "sha256": "8270db2ec3b0da85e4d9555d6f09e50d439adededf1d10bf2d87d6cdf190122d",
+      "modificadoEnLima": "2026-11-21T22:41:57.808946-05:00"
+    },
+    {
+      "archivo": "fabrica-1440.png",
+      "sha256": "8270db2ec3b0da85e4d9555d6f09e50d439adededf1d10bf2d87d6cdf190122d",
+      "modificadoEnLima": "2026-11-21T22:41:58.928956-05:00"
+    },
+    {
+      "archivo": "publicado-1440.png",
+      "sha256": "f175776a2723275b3f0fb4783ec47e703f9d6bc4017e05586e166db283491af7",
+      "modificadoEnLima": "2026-11-21T22:42:03.295994-05:00"
+    },
+    {
+      "archivo": "inicio-1920.png",
+      "sha256": "65dbab27b47e90eca2b0834b7d5fdf417986e7cd8192386c9f34201927fcebb2",
+      "modificadoEnLima": "2026-11-21T22:42:31.789243-05:00"
+    },
+    {
+      "archivo": "fabrica-1920.png",
+      "sha256": "65dbab27b47e90eca2b0834b7d5fdf417986e7cd8192386c9f34201927fcebb2",
+      "modificadoEnLima": "2026-11-21T22:42:32.933254-05:00"
+    },
+    {
+      "archivo": "publicado-1920.png",
+      "sha256": "750fee81c16e9df2fa7c61f7e7a2fda50eb43112648105df869efe015ecaee9d",
+      "modificadoEnLima": "2026-11-21T22:42:37.475293-05:00"
+    },
+    {
+      "archivo": "fabrica-768.png",
+      "sha256": "4becb96e8df45c0acf87b7246db12ec0efe1949690822dd6435a31345fedc129",
+      "modificadoEnLima": "2026-11-21T22:40:51.681373-05:00"
+    },
+    {
+      "archivo": "fabrica-1024.png",
+      "sha256": "5389767362f9e6caa2474b0d071cdbb1f09b6a27463b658509d6958ce0bcdc8a",
+      "modificadoEnLima": "2026-11-21T22:41:25.102663-05:00"
+    },
+    {
+      "archivo": "matriz-1440.json",
+      "sha256": "c04efd2293f91644ad4efa2636c575127151b5a737e7fea5bfbcc3f0d44b4be3",
+      "modificadoEnLima": "2026-11-21T22:42:25.033184-05:00"
+    },
+    {
+      "archivo": "matriz-1920.json",
+      "sha256": "a0408d64b5ee06d2a3d81a81a32c53296ae3101d2013919a2c4cad0abe7a8e01",
+      "modificadoEnLima": "2026-11-21T22:42:59.101484-05:00"
+    }
+  ]
+}
