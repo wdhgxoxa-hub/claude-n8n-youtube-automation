@@ -385,10 +385,18 @@ for (const width of [390, 1440])
     await expect(
       page.getByRole("textbox", { name: "Mensaje para Cooper" }),
     ).toBeVisible();
+    await expect(page.locator(".cooper-panel")).not.toHaveAttribute(
+      "data-projecting",
+      "true",
+    );
     await page.waitForTimeout(700);
     await page
       .getByRole("button", { name: "Cerrar Cooper", exact: true })
       .click();
+    const orb = page.getByRole("button", { name: "Abrir Cooper", exact: true });
+    await expect(orb).toBeVisible();
+    await expect(orb).not.toHaveAttribute("data-projecting", "true");
+    await page.waitForTimeout(350);
     await page
       .locator('a[href="/aprendizaje"]')
       .filter({ visible: true })
