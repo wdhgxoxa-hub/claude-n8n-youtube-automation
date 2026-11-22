@@ -172,6 +172,15 @@ for (const width of widths)
       page.locator(".lesson").first().locator(".cifra-valor").nth(1),
     ).toHaveText("58");
     await capture(page, "aprendizaje", width, consoleErrors);
+    await page
+      .locator(".lesson")
+      .first()
+      .getByText("Ver las mediciones y el contexto", { exact: true })
+      .click();
+    await expect(
+      page.locator(".lesson").first().getByLabel("Evidencia de la lección"),
+    ).toBeVisible();
+    await capture(page, "aprendizaje-evidencia", width, consoleErrors);
     expect(consoleErrors).toEqual([]);
   });
 
