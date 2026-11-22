@@ -17,7 +17,23 @@ export function CooperPresencia({
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
   const [failed, setFailed] = useState(false);
+  const [pintado, setPintado] = useState(false);
   const player = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    // Crear un <video> obliga a Chromium a abrir el canal con el proceso GPU de
+    // forma síncrona en el hilo principal. Si el GPU aún no está listo (navegador
+    // recién abierto o equipo cargado), la página queda congelada ~3 s antes de su
+    // primer cuadro. Tras dos cuadros pintados el canal ya existe y el reproductor
+    // nace sin bloquear; mientras tanto se ve la misma cara fija de debajo.
+    let segundo = 0;
+    const primero = requestAnimationFrame(() => {
+      segundo = requestAnimationFrame(() => setPintado(true));
+    });
+    return () => {
+      cancelAnimationFrame(primero);
+      cancelAnimationFrame(segundo);
+    };
+  }, []);
   useEffect(() => {
     const video = player.current;
     if (!video) return;
@@ -91,7 +107,7 @@ export function CooperPresencia({
       cambiosPreview?.disconnect();
       video.pause();
     };
-  }, [activo, reduced, paused, cederAPreview]);
+  }, [activo, reduced, paused, cederAPreview, pintado]);
   return (
     <span
       className="cooper-presencia"
@@ -105,7 +121,7 @@ export function CooperPresencia({
         height={size}
         unoptimized
       />
-      {!reduced && !paused && !failed && (
+      {pintado && !reduced && !paused && !failed && (
         <video
           ref={player}
           src="/cooper-cara/cooper.webm"
