@@ -676,6 +676,25 @@ main#contenido {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Por debajo de 390px las cinco etiquetas de 12px no caben junto al orbe:
+   la barra ocupa todo el ancho y el orbe se apoya sobre ella (DIRECCION §3). */
+@media (max-width: 389px) {
+  main#contenido {
+    padding-bottom: calc(
+      var(--riel-ancho) + var(--cooper-orbe) + var(--espacio-48) +
+        env(safe-area-inset-bottom)
+    );
+  }
+  .mobile-dock {
+    right: var(--espacio-8);
+  }
+  .cooper-orb {
+    bottom: calc(
+      max(var(--espacio-8), env(safe-area-inset-bottom)) + var(--riel-ancho) +
+        var(--espacio-8)
+    );
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
