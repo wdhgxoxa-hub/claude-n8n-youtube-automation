@@ -412,7 +412,6 @@ for (const width of widths) {
 
 for (const mode of ["medicion", "grabacion"] as const) {
   test.describe(`Movimiento: ${mode}`, () => {
-    test.use({ video: mode === "grabacion" ? "on" : "off", trace: "off" });
     for (const width of [390, 1440]) {
       test(`ruta, Cooper y navegación en movimiento a ${width}px`, async ({
         page,
