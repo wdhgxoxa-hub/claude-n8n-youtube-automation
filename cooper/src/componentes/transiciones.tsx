@@ -77,6 +77,8 @@ export function Transiciones() {
             };
             const comprobar = () => {
               if (location.pathname !== url.pathname) return;
+              // Conserva la espera de Suspense incorporada por diseno-base.
+              if (document.querySelector("[data-ruta-cargando]")) return;
               // Next puede actualizar el pathname antes de insertar el segmento
               // del detalle. Solo fotografiamos cuando su medio ya tiene caja.
               if (

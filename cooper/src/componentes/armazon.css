@@ -161,6 +161,12 @@ main#contenido {
   margin: 0 auto;
   padding: var(--espacio-24) var(--espacio-32) var(--espacio-96);
 }
+@media (min-width: 768px) {
+  .studio-shell:not(.cooper-open) main#contenido {
+    /* El orbe conserva un carril propio junto a botones y campos al desplazarse. */
+    padding-right: var(--espacio-96);
+  }
+}
 .mobile-dock,
 .mobile-more {
   display: none;
@@ -271,6 +277,19 @@ main#contenido {
   flex-direction: column;
   overflow: hidden;
   padding: 0;
+}
+.cooper-panel[data-projecting="true"] {
+  /* Conserva el vidrio en reposo sin rasterizar el filtro durante el morfismo. */
+  backdrop-filter: none;
+}
+.cooper-panel > * {
+  opacity: 1;
+  transition: opacity var(--duracion-presion) var(--curva-salida);
+}
+.cooper-panel[data-projecting="true"] > * {
+  /* El contenido sigue montado y accesible mientras se transforma la superficie. */
+  opacity: 0;
+  transition: none;
 }
 .cooper-panel-heading {
   padding: var(--espacio-16);

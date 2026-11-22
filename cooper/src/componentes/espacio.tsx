@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useRef,
+  useMemo,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
@@ -309,10 +310,13 @@ export function Espacio({
     previousPath.current = path;
     content.current?.focus({ preventScroll: true });
   }, [path]);
+  // Abrir una hoja no cambia los datos del estudio ni debe renderizar sus pantallas.
+  const contexto = useMemo(
+    () => ({ data, refresh, connected, marcaContexto, definirMarca }),
+    [data, refresh, connected, marcaContexto],
+  );
   return (
-    <Context.Provider
-      value={{ data, refresh, connected, marcaContexto, definirMarca }}
-    >
+    <Context.Provider value={contexto}>
       <MotionConfig
         reducedMotion={isPaused || hidden || reduced ? "always" : "user"}
       >

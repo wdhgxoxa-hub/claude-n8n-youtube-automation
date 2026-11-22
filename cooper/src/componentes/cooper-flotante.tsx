@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, m as motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, m as motion } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
@@ -24,6 +24,10 @@ export function CooperFlotante({
   const opener = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
+    panel.current?.removeAttribute("data-projecting");
+  }, [reduced]);
   const video = data.videos.find(
     (v) => path === `/videos/${v.id}` && v.ownerId === data.user.id,
   );
@@ -105,7 +109,7 @@ export function CooperFlotante({
     };
   }, [abierto, cambiar]);
   return (
-    <>
+    <LayoutGroup id="cooper-flotante" inherit={false}>
       <motion.button
         ref={opener}
         className="cooper-orb"
@@ -135,6 +139,7 @@ export function CooperFlotante({
             ref={panel}
             id="cooper-panel"
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
+            data-projecting={reduced ? undefined : "true"}
             role="dialog"
             onFocusCapture={(event) => {
               // La hoja completa conserva espacio de escritura al abrir el teclado.
@@ -145,6 +150,12 @@ export function CooperFlotante({
             aria-label="Cooper, tu compañero"
             layoutId={reduced ? undefined : "cooper-origen"}
             transition={reduced ? { duration: 0.12 } : resorte}
+            onLayoutAnimationStart={() =>
+              panel.current?.setAttribute("data-projecting", "true")
+            }
+            onLayoutAnimationComplete={() =>
+              panel.current?.removeAttribute("data-projecting")
+            }
           >
             <div
               className="cooper-drag"
@@ -200,6 +211,6 @@ export function CooperFlotante({
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </LayoutGroup>
   );
 }
