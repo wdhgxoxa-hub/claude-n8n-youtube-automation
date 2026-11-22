@@ -479,6 +479,9 @@ test("grabación nativa con señal sintética y reproducción de medios soportad
   for (const selector of [".real-player video", ".scene-gallery audio"]) {
     const player = page.locator(selector);
     await expect(player).toBeVisible();
+    // Abrir «Piezas de la historia» deja el reproductor fuera de la vista. WebKit
+    // (como Safari) detiene un video silenciado invisible; el usuario lo ve antes.
+    await player.scrollIntoViewIfNeeded();
     await player.evaluate(async (el: HTMLMediaElement) => {
       el.muted = true;
       await el.play();
