@@ -3575,7 +3575,7 @@ input:is([type="checkbox"], [type="radio"]):checked {
   font-size: var(--texto-13);
 }
 .metrics-strip dd {
-  font-size: var(--titulo-seccion);
+  font-size: var(--texto-28);
   margin: var(--espacio-8) 0 0;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
@@ -5088,4 +5088,15 @@ a.text-link,
   font-family: var(--fuente-display);
   line-height: var(--interlinea-display);
   letter-spacing: var(--tracking-display);
+}
+
+.metrics-strip dd[data-ausente="true"] {
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-15);
+  color: var(--texto-2);
+}
+@media (max-width: 600px) {
+  .metrics-strip dd {
+    font-size: var(--texto-20);
+  }
 }

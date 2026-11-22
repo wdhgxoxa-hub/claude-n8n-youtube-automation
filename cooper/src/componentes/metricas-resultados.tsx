@@ -54,7 +54,25 @@ function Evolucion({ historial }: { historial: Medicion[] }) {
       </label>
       {valores.length > 0 ? (
         <>
-          <Cifra etiqueta={metrica === "meGusta" ? "Me gusta" : metrica === "retencion" ? "Retención (%)" : metrica === "comentarios" ? "Comentarios" : "Vistas"} valor={metrica === "retencion" ? Math.round(valores.at(-1)![metrica]! * 100) : valores.at(-1)![metrica]!} serie={valores.map((d) => metrica === "retencion" ? d[metrica]! * 100 : d[metrica]!)} />
+          <Cifra
+            etiqueta={
+              metrica === "meGusta"
+                ? "Me gusta"
+                : metrica === "retencion"
+                  ? "Retención (%)"
+                  : metrica === "comentarios"
+                    ? "Comentarios"
+                    : "Vistas"
+            }
+            valor={
+              metrica === "retencion"
+                ? Math.round(valores.at(-1)![metrica]! * 100)
+                : valores.at(-1)![metrica]!
+            }
+            serie={valores.map((d) =>
+              metrica === "retencion" ? d[metrica]! * 100 : d[metrica]!,
+            )}
+          />
           <svg
             viewBox="0 0 600 150"
             role="img"
@@ -68,7 +86,7 @@ function Evolucion({ historial }: { historial: Medicion[] }) {
               style={{ transformOrigin: "24px 120px" }}
               initial={{ scaleX: reduced ? 1 : 0, opacity: reduced ? 1 : 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: reduced ? 0 : 0.6 }}
+              transition={{ duration: reduced ? 0 : 0.64 }}
             />
             {valores.map((d) => {
               const [cx, cy] = xy(d).split(",");
@@ -216,7 +234,7 @@ export function MetricasVideo({
         ].map(([label, value]) => (
           <div key={String(label)}>
             <dt>{label}</dt>
-            <dd>
+            <dd data-ausente={typeof value !== "number"}>
               {typeof value === "number" ? (
                 <NumeroAnimado value={value} />
               ) : (
@@ -227,7 +245,7 @@ export function MetricasVideo({
         ))}
         <div>
           <dt>Retención media</dt>
-          <dd>
+          <dd data-ausente={m?.retencion == null}>
             {m?.retencion == null ? (
               "Sin dato"
             ) : (
@@ -283,7 +301,8 @@ export function EvidenciaLeccion({ leccion: l }: { leccion: Leccion }) {
           {l.origenes.map((o, i) => (
             <li key={o.videoId + o.red + i}>
               <Link href={"/videos/" + encodeURIComponent(o.videoId)}>
-                {data.videos.find((v) => v.id === o.videoId)?.title || "Video de origen"}
+                {data.videos.find((v) => v.id === o.videoId)?.title ||
+                  "Video de origen"}
               </Link>
               {" · "}
               {o.red}

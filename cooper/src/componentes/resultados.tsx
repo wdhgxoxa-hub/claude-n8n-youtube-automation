@@ -36,7 +36,9 @@ function MetricasMarca({ metricas: m }: { metricas: Metricas | null }) {
         ].map(([label, value]) => (
           <div key={String(label)}>
             <dt>{label}</dt>
-            <dd>{numero(typeof value === "number" ? value : null)}</dd>
+            <dd data-ausente={typeof value !== "number"}>
+              {numero(typeof value === "number" ? value : null)}
+            </dd>
           </div>
         ))}
       </dl>
