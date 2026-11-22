@@ -2,6 +2,65 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/db";
 import { channels, videos, events, type User } from "@/db/schema";
 
+// Piezas de un mismo video en distintas redes: cada una con su título, formato
+// y cifras, para que la pared de ejemplo no repita una imagen ni una medida.
+const piezasDemo = [
+  {
+    red: "youtube",
+    titulo: "Por qué el cielo cambia de color",
+    retencion: [0.41, 0.46, 0.5, 0.54],
+    ancho: 1920,
+    alto: 1080,
+    dias: 7,
+    vistas: 6200,
+  },
+  {
+    red: "tiktok",
+    titulo: "El cielo no cambia de pintura",
+    retencion: [0.52, 0.5, 0.48, 0.51],
+    ancho: 1080,
+    alto: 1920,
+    dias: 6,
+    vistas: 4400,
+  },
+  {
+    red: "instagram",
+    titulo: "Cambia el camino de la luz",
+    retencion: [0.55, 0.58, 0.6, 0.62],
+    ancho: 1080,
+    alto: 1920,
+    dias: 6,
+    vistas: 1900,
+  },
+  {
+    red: "youtube",
+    titulo: "¿Por qué el atardecer es rojo?",
+    retencion: [0.55, 0.58, 0.6, 0.62],
+    ancho: 1080,
+    alto: 1920,
+    dias: 5,
+    vistas: 2700,
+  },
+  {
+    red: "tiktok",
+    titulo: "La luz azul se dispersa primero",
+    retencion: [0.55, 0.58, 0.6, 0.62],
+    ancho: 1080,
+    alto: 1920,
+    dias: 4,
+    vistas: 3300,
+  },
+  {
+    red: "instagram",
+    titulo: "Un cielo, tres colores",
+    retencion: [0.55, 0.58, 0.6, 0.62],
+    ancho: 1080,
+    alto: 1080,
+    dias: 3,
+    vistas: 1100,
+  },
+];
+
 // La marca persiste aunque el usuario borre los ejemplos: no se recrean al entrar.
 export function prepararDemo(user: User) {
   if (process.env.COOPER_DEMO !== "1") return;
@@ -22,6 +81,8 @@ export function prepararDemo(user: User) {
     const now = Date.now();
     const ciencia = `demo-${user.id}-ciencia`;
     const ciudad = `demo-${user.id}-ciudad`;
+    const lluvia = `demo-${user.id}-1`;
+    const cielo = `demo-${user.id}-3`;
     tx.insert(channels)
       .values([
         {
@@ -29,12 +90,57 @@ export function prepararDemo(user: User) {
           ownerId: user.id,
           learning: JSON.stringify([
             {
-              id: "demo-leccion",
+              id: "demo-leccion-respuesta",
               fecha: new Date(now - 86400000).toISOString(),
-              resumen:
-                "Abrir con una pregunta concreta ayudó a sostener la atención en tres historias de ejemplo.",
+              resumen: "La respuesta tiene que llegar antes que la explicación",
+              causa:
+                "La explicación tardaba ocho segundos en llegar y mucha gente se fue antes.",
+              correccion: "Abrir con la respuesta y contar el porqué después.",
+              nivel: "hipotesis",
               ganchos: ["Una pregunta cotidiana antes de la explicación."],
               temas: ["Fenómenos que podemos observar en casa."],
+              origenes: [
+                {
+                  videoId: cielo,
+                  red: "youtube",
+                  ventana: "24h",
+                  fecha: new Date(now - 6 * 86400000).toISOString(),
+                  metrica: "retencion",
+                  valor: 0.41,
+                  demoraHoras: 0,
+                },
+              ],
+              aplicaciones: [
+                {
+                  videoId: lluvia,
+                  cambio:
+                    "La respuesta abre el video y la explicación llega después.",
+                },
+              ],
+            },
+            {
+              id: "demo-leccion-primer-plano",
+              fecha: new Date(now - 2 * 86400000).toISOString(),
+              resumen: "El primer plano decide si siguen mirando",
+              causa:
+                "La primera imagen no mostraba qué estaba en juego hasta el tercer segundo.",
+              correccion:
+                "Mostrar la escena principal desde el primer segundo.",
+              nivel: "hipotesis",
+              ganchos: [],
+              temas: [],
+              origenes: [
+                {
+                  videoId: cielo,
+                  red: "tiktok",
+                  ventana: "72h",
+                  fecha: new Date(now - 3 * 86400000).toISOString(),
+                  metrica: "retencion",
+                  valor: 0.48,
+                  demoraHoras: 0,
+                },
+              ],
+              aplicaciones: [],
             },
           ]),
           name: "Ciencia cotidiana",
@@ -108,19 +214,33 @@ export function prepararDemo(user: User) {
             escenas: [],
             publicaciones:
               i === 3
-                ? ["youtube", "tiktok", "instagram"].map((red, k) => ({
-                    id: `demo-${red}`,
-                    red,
+                ? piezasDemo.map((pieza, k) => ({
+                    id: `demo-${k + 1}-${pieza.red}`,
+                    red: pieza.red,
+                    titulo: pieza.titulo,
                     url: "",
-                    fecha: new Date(now - 7 * 86400000).toISOString(),
+                    fecha: new Date(now - pieza.dias * 86400000).toISOString(),
                     miniatura: "",
-                    historial: [7, 5, 2, 0].map((dias, j) => ({
-                      fecha: new Date(now - dias * 86400000).toISOString(),
-                      vistas: (j + 1) * 1230 + k * 200,
-                      meGusta: (j + 1) * 45,
-                      comentarios: (j + 1) * 8,
-                      retencion: k === 2 ? null : 0.55 + j * 0.03,
-                    })),
+                    ancho: pieza.ancho,
+                    alto: pieza.alto,
+                    historial: [...new Set([1, 2, 3, pieza.dias])].map(
+                      (dias, j, todas) => ({
+                        fecha: new Date(
+                          now - (pieza.dias - dias) * 86400000,
+                        ).toISOString(),
+                        vistas: Math.round(
+                          (pieza.vistas * (j + 1)) / todas.length,
+                        ),
+                        meGusta: Math.round(
+                          (pieza.vistas * 0.037 * (j + 1)) / todas.length,
+                        ),
+                        comentarios: (j + 1) * 8,
+                        retencion:
+                          pieza.red === "instagram" ? null : pieza.retencion[j],
+                        ventana:
+                          dias === 1 ? "24h" : dias === 3 ? "72h" : undefined,
+                      }),
+                    ),
                   }))
                 : [],
             incidencias:

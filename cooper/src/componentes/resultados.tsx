@@ -26,8 +26,16 @@ import {
   type PublicacionResultado,
 } from "@/contratos/resultados";
 import type { Metricas } from "@/servicios/marcas/tipos";
+import "./cartela-pieza.css";
 import styles from "./publicados.module.css";
 import { nombreMedio } from "./transiciones";
+import { ParedJustificada } from "./pared-justificada";
+import { nombreRed } from "@/lib/redes";
+import {
+  proporcionPublicacion,
+  tinteEstable,
+  type Medida,
+} from "@/lib/reticula";
 
 export function cantidad(n: number, singular: string, plural: string) {
   return `${n} ${n === 1 ? singular : plural}`;
@@ -63,14 +71,19 @@ export function MetricasMarca({ metricas: m }: { metricas: Metricas | null }) {
 export function Origen({
   ambito,
   simulada,
+  conPropietario = true,
 }: {
   ambito: AmbitoResultado;
   simulada: boolean;
+  conPropietario?: boolean;
 }) {
+  const { data } = useEspacio();
+  // «Ejemplo» solo existe en modo demostración; en producción nunca aparece.
   return (
     <p className="muted">
-      {ambito.nombre} · {ambito.propietario}
-      {simulada ? " · Datos de ejemplo" : ""}
+      {ambito.nombre}
+      {conPropietario ? ` · ${ambito.propietario}` : ""}
+      {data.demo && simulada ? " · Datos de ejemplo" : ""}
     </p>
   );
 }
@@ -179,7 +192,7 @@ export function Filtros({
               activo={filtro.red === red}
               onClick={() => cambiar({ ...filtro, red })}
             >
-              {red || "Todas las redes"}
+              {red ? nombreRed(red) : "Todas las redes"}
             </Chip>
           ))}
         </div>
@@ -346,12 +359,15 @@ function PublicacionPared({
   ambitos,
   abrir,
   orden,
+  medida,
 }: {
   grupo: Grupo;
   orden: number;
+  medida: Medida;
   ambitos: AmbitoResultado[];
   abrir: () => void;
 }) {
+  const { data } = useEspacio();
   const p = principal(grupo);
   const videoId =
     p.tipo === "video"
@@ -375,17 +391,10 @@ function PublicacionPared({
     publicacion: p.tipo === "video" ? p.publicacion.id : undefined,
     visible: cerca && p.tipo === "video",
   });
-  // La proporción inicial reserva el espacio; la llegada del derivado no mueve la pared.
-  const [proporcion] = useState(
-    p.tipo === "video"
-      ? (p.medios?.relacionAspecto ??
-          (p.publicacion.ancho && p.publicacion.alto
-            ? p.publicacion.ancho / p.publicacion.alto
-            : 16 / 9))
-      : 1,
-  );
+  const proporcion = proporcionPublicacion(p);
   const cifras = ultimaCifra(p);
   const ambito = ambitos.find((a) => a.id === p.ambitoId)!;
+  const red = p.redes.map(nombreRed).join(" · ") || "Sin red";
   return (
     <article
       className={`${styles.publicacion} publication${orden < 8 ? " entrada-estudio" : ""}`}
@@ -393,19 +402,23 @@ function PublicacionPared({
       style={
         {
           ...estiloMedio(medio, proporcion),
-          "--proporcion": proporcion,
           "--orden": Math.min(orden, 7),
+          width: medida.ancho,
         } as CSSProperties
       }
     >
-      <div className={styles.marco} ref={contenedor}>
+      <div
+        className={styles.marco}
+        ref={contenedor}
+        style={{ height: medida.alto }}
+      >
         <Link
           href={p.href}
           className={`publication-thumb ${styles.enlaceMedio}`}
           aria-label={`Ver detalle de ${p.titulo}`}
         >
           <div
-            className={styles.contenedorMedio}
+            className={`${styles.contenedorMedio} cartela-pieza`}
             data-video-transition={videoId ? nombreMedio(videoId) : undefined}
             data-video-medio={videoId || undefined}
             data-publicacion={p.tipo === "video" ? p.publicacion.id : undefined}
@@ -416,7 +429,7 @@ function PublicacionPared({
           >
             <Medio
               prioridad={orden === 0}
-              tinte={medio?.tinte}
+              tinte={medio?.tinte ?? tinteEstable(p.ambitoId)}
               mediosIniciales={medio}
               publicacionId={p.tipo === "video" ? p.publicacion.id : undefined}
               poster={medio?.poster?.url}
@@ -434,7 +447,7 @@ function PublicacionPared({
             />
           </div>
         </Link>
-        <span className={styles.red}>{p.redes.join(" · ") || "Sin red"}</span>
+        <span className={styles.red}>{red}</span>
         <button className={styles.cifrasSobreMedio} onClick={abrir}>
           <span className="sr-only">Ver cifras de {p.titulo}: </span>
           <span>
@@ -442,21 +455,26 @@ function PublicacionPared({
             <strong>{numero(cifras.vistas)}</strong>
             <span className="sr-only"> vistas</span>
           </span>
-          <span>
+          <span className={styles.megusta}>
             <Heart size={16} aria-hidden="true" />
             <strong>{numero(cifras.likes)}</strong>
             <span className="sr-only"> me gusta</span>
           </span>
-          <ArrowUpRight size={16} aria-hidden="true" />
+          <ArrowUpRight
+            className={styles.flecha}
+            size={16}
+            aria-hidden="true"
+          />
         </button>
       </div>
       <div className={styles.piePublicacion}>
         <h2>
           <Link href={p.href}>{p.titulo}</Link>
         </h2>
+        <p className={styles.canal}>{ambito.nombre}</p>
         <p>
-          {ambito.nombre} · {fecha(p.fecha)}
-          {p.simulada ? " · Ejemplo" : ""}
+          {fecha(p.fecha)}
+          {data.demo && p.simulada ? " · Ejemplo" : ""}
         </p>
         {grupo.registros.length > 1 && (
           <span className={styles.lecturas}>
@@ -473,6 +491,7 @@ function PublicacionPared({
 }
 
 export function Publicados({ initial }: { initial: Resultados }) {
+  const { data } = useEspacio();
   const consulta = useResultados(initial);
   const { resultado, filtro, error } = consulta;
   const [orden, setOrden] = useState<"rendimiento" | "recientes">(
@@ -557,20 +576,25 @@ export function Publicados({ initial }: { initial: Resultados }) {
         </Boton>
       </div>
       {publicaciones.length ? (
-        <section className={styles.pared} aria-label="Publicaciones ordenadas">
-          {publicaciones.map((grupo, indice) => (
+        <ParedJustificada
+          etiqueta="Publicaciones ordenadas"
+          proporciones={publicaciones.map((g) =>
+            proporcionPublicacion(principal(g)),
+          )}
+          pieza={(indice, medida) => (
             <PublicacionPared
-              key={grupo.id}
-              grupo={grupo}
+              key={publicaciones[indice].id}
+              grupo={publicaciones[indice]}
               orden={indice}
+              medida={medida}
               ambitos={resultado.ambitos}
               abrir={() => {
-                seleccionar(grupo);
+                seleccionar(publicaciones[indice]);
                 detalle.current?.showModal();
               }}
             />
-          ))}
-        </section>
+          )}
+        />
       ) : (
         <Vacio
           titulo="Tu próxima historia puede abrir esta pared"
@@ -616,9 +640,13 @@ export function Publicados({ initial }: { initial: Resultados }) {
               <Origen
                 ambito={resultado.ambitos.find((a) => a.id === p.ambitoId)!}
                 simulada={p.simulada}
+                conPropietario={
+                  data.user.role === "admin" &&
+                  new Set(resultado.ambitos.map((a) => a.ownerId)).size > 1
+                }
               />
               <p className="muted">
-                {p.redes.join(" · ")} · {fecha(p.fecha)}
+                {p.redes.map(nombreRed).join(" · ")} · {fecha(p.fecha)}
                 {p.tipo === "marca" ? ` · ${p.formato} · ${p.cuenta}` : ""}
               </p>
               <Link className="text-link" href={p.href}>

@@ -49,7 +49,10 @@ export function InterruptorAprendizaje() {
       <div className={styles.controlCabecera}>
         <div className={styles.controlTitulo}>
           <strong>Medición automática</strong>
-          <span className={styles.controlEstado}>
+          <span
+            className={styles.controlEstado}
+            data-activa={ajustes?.valores.allowAnalytics === true}
+          >
             {ocupado
               ? "Guardando el cambio…"
               : !ajustes

@@ -128,70 +128,89 @@
   font-size: var(--texto-12);
 }
 
-.recorrido {
+.pasos {
   display: grid;
   gap: var(--espacio-24);
-  border-top: var(--borde-ancho) solid var(--linea);
-  padding-top: var(--espacio-24);
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-.origen,
-.sinOrigen,
-.origenTexto,
-.causa,
-.correccion,
-.efecto {
+.pasoItem {
   display: grid;
   align-content: start;
   gap: var(--espacio-12);
   min-width: 0;
+  padding-top: var(--espacio-16);
+  border-top: var(--borde-ancho) solid var(--linea-fuerte);
+}
+
+.pasoItem p {
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.etiquetaPaso {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  color: var(--texto-2);
+  font-size: var(--texto-13);
+  font-weight: 500;
+}
+
+.nPaso {
+  display: grid;
+  flex: none;
+  place-content: center;
+  width: var(--espacio-24);
+  height: var(--espacio-24);
+  border: var(--borde-ancho) solid var(--linea-fuerte);
+  border-radius: var(--radio-pildora);
+  font: var(--texto-12) var(--fuente-datos);
 }
 
 .enlaceMedio {
   display: block;
+  width: fit-content;
+  max-width: 100%;
   overflow: hidden;
   border-radius: var(--radio-tarjeta);
 }
 
+.enlaceMedio > div {
+  display: block;
+}
+
 .miniatura {
-  max-height: calc(var(--espacio-96) * 4);
+  width: 100%;
+}
+
+.miniatura:global(.medio-vertical) {
+  width: calc(var(--espacio-96) * 2 * 9 / 16);
+  height: calc(var(--espacio-96) * 2);
 }
 
 .tituloVideo {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   font-weight: 500;
-  line-height: 1.4;
 }
 
-.razonamiento {
-  display: grid;
-  gap: var(--espacio-24);
-  min-width: 0;
-}
-
-.senal {
-  display: grid;
-  gap: var(--espacio-8);
-  align-content: start;
-}
-
-.cifraSenal,
-.cifraEfecto {
+.cifraPaso {
+  --cifra-heroe: var(--texto-48);
   padding: 0;
   margin: 0;
 }
 
-.cifraSenal :global(.cifra-valor) {
+.cifraPaso :global(.cifra-valor) {
   color: var(--texto);
 }
 
-.correccion,
-.efecto {
-  border-top: var(--borde-ancho) solid var(--linea);
-  padding-top: var(--espacio-24);
-}
-
 .espera {
-  font: 500 var(--texto-20) / 1.4 var(--fuente-texto);
+  font: 500 var(--texto-17) / 1.4 var(--fuente-texto);
 }
 
 .enlace {
@@ -351,30 +370,6 @@
   background: var(--sup-1);
 }
 
-.ejemplo ol {
-  display: grid;
-  list-style: none;
-  gap: var(--espacio-24);
-  padding: 0;
-  margin: var(--espacio-24) 0 0;
-}
-
-.ejemplo li {
-  display: grid;
-  gap: var(--espacio-8);
-  padding-left: var(--espacio-16);
-  border-left: var(--borde-ancho) solid var(--linea-fuerte);
-}
-
-.ejemplo li span {
-  color: var(--texto-2);
-  font-size: var(--texto-13);
-}
-
-.ejemplo li strong {
-  font-weight: 500;
-}
-
 .control {
   display: grid;
   gap: var(--espacio-12);
@@ -401,6 +396,24 @@
 .control p {
   color: var(--texto-2);
   font-size: var(--texto-13);
+}
+
+.controlEstado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-8);
+}
+
+.controlEstado::before {
+  content: "";
+  width: var(--espacio-8);
+  height: var(--espacio-8);
+  border-radius: var(--radio-pildora);
+  background: var(--aviso);
+}
+
+.controlEstado[data-activa="true"]::before {
+  background: var(--sube);
 }
 
 .interruptor {
@@ -472,19 +485,19 @@
     padding-left: var(--espacio-64);
   }
 
-  .recorrido {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: var(--espacio-32);
+  .pasos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--espacio-24) var(--espacio-32);
+  }
+
+  .pasoVideo {
+    grid-column: 1 / -1;
   }
 
   .observacion,
   .incidente {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     gap: var(--espacio-32);
-  }
-
-  .ejemplo ol {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -495,17 +508,13 @@
     margin-bottom: var(--espacio-48);
   }
 
-  .razonamiento {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: var(--espacio-32);
-  }
-
-  .recorrido {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-  }
-
-  .ejemplo ol {
+  .pasos {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--espacio-24);
+  }
+
+  .pasoVideo {
+    grid-column: auto;
   }
 }
 
@@ -536,20 +545,6 @@
     height: var(--espacio-32);
     border: 0;
     border-radius: 0;
-  }
-
-  .origen {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-    gap: var(--espacio-16);
-  }
-
-  .origenTexto .meta {
-    font-size: var(--texto-12);
-  }
-
-  .miniatura {
-    max-height: calc(var(--espacio-96) * 2);
   }
 }
 

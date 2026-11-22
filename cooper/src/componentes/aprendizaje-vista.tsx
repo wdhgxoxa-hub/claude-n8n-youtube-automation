@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import type { Leccion, Medicion } from "@/contratos/observabilidad";
 import {
@@ -14,8 +14,11 @@ import { InterruptorAprendizaje } from "./control-aprendizaje";
 import { Cifra, Chip, Medio } from "./primitivas";
 import { useVideoMedios } from "./portada-video";
 import { fecha, numero } from "./metricas-resultados";
+import { nombreRed } from "@/lib/redes";
+import { proporcionPublicacion, tinteEstable } from "@/lib/reticula";
 import { Filtros, Origen, useResultados } from "./resultados";
 import { nombreMedio } from "./transiciones";
+import "./cartela-pieza.css";
 import styles from "./aprendizaje-vista.module.css";
 
 const metricas = {
@@ -83,37 +86,66 @@ function VideoOrigen({
     publicacion: publicacion?.publicacion.id,
   });
   const titulo = video?.title ?? publicacion?.titulo ?? "Video de origen";
+  const proporcion =
+    medio && medio.origenDimensiones !== "reserva"
+      ? medio.relacionAspecto
+      : publicacion
+        ? proporcionPublicacion(publicacion)
+        : (medio?.relacionAspecto ?? 16 / 9);
   return (
-    <div className={styles.origen}>
+    <>
       <Link
         href={`/videos/${encodeURIComponent(origen.videoId)}`}
         className={styles.enlaceMedio}
       >
         <span className="sr-only">Ver video: </span>
-        <div data-video-transition={nombreMedio(origen.videoId)}>
+        <div
+          data-video-transition={nombreMedio(origen.videoId)}
+          className="cartela-pieza"
+          data-cartela="mini"
+        >
           <Medio
             poster={medio?.poster?.url}
             preview={medio?.preview?.url}
             alt={titulo}
             videoId={origen.videoId}
-            tinte={medio?.tinte}
+            tinte={medio?.tinte ?? tinteEstable(ambitoId)}
             mediosIniciales={medio}
             publicacionId={publicacion?.publicacion.id}
-            proporcion={
-              (medio?.relacionAspecto ?? 16 / 9) < 1 ? "vertical" : "horizontal"
-            }
+            proporcion={proporcion < 1 ? "vertical" : "horizontal"}
             className={styles.miniatura}
           />
         </div>
       </Link>
-      <div className={styles.origenTexto}>
-        <span className={styles.paso}>01 / El video</span>
-        <p className={styles.tituloVideo}>{titulo}</p>
-        <p className={styles.meta}>
-          {origen.red} · {origen.ventana} · {fecha(origen.fecha)}
-        </p>
-      </div>
-    </div>
+      <p className={styles.tituloVideo}>{titulo}</p>
+      <p className={styles.meta}>
+        {nombreRed(origen.red)} · {origen.ventana} · {fecha(origen.fecha)}
+      </p>
+    </>
+  );
+}
+
+function Paso({
+  numero: n,
+  titulo,
+  clase,
+  children,
+}: {
+  numero: number;
+  titulo: string;
+  clase?: string;
+  children: ReactNode;
+}) {
+  return (
+    <li className={`${styles.pasoItem} ${clase ?? ""}`}>
+      <span className={styles.etiquetaPaso}>
+        <span className={styles.nPaso} aria-hidden="true">
+          {n}
+        </span>
+        {titulo}
+      </span>
+      {children}
+    </li>
   );
 }
 
@@ -155,39 +187,31 @@ function EfectoSiguiente({
         .at(-1)
     : undefined;
   const valor = origen && medicion ? valorComparable(medicion, origen) : null;
-  return (
-    <div className={styles.efecto}>
-      <span className={styles.paso}>05 / El siguiente video</span>
-      {origen && siguiente && valor != null ? (
-        <>
-          <Cifra
-            valor={
-              origen.metrica === "retencion" ? Math.round(valor * 100) : valor
-            }
-            etiqueta={`${metricas[origen.metrica]}${origen.metrica === "retencion" ? " (%)" : ""}`}
-            variacion={`Antes: ${numero(valorEvidencia(origen))}${origen.metrica === "retencion" ? " %" : ""} · ${origen.ventana}${origen.segundo !== undefined ? ` · segundo ${numero(origen.segundo)}` : ""}`}
-            className={styles.cifraEfecto}
-          />
-          <Link className={styles.enlace} href={siguiente.href}>
-            <span>{siguiente.titulo}</span>
-            <span aria-hidden="true">↗</span>
-          </Link>
-          <p className={styles.meta}>
-            Resultado observado. Todavía no demuestra que el cambio sea la
-            causa.
-          </p>
-        </>
-      ) : (
-        <>
-          <p className={styles.espera}>Esperando el siguiente resultado</p>
-          <p className={styles.meta}>
-            {l.aplicaciones?.length
-              ? "Aplicada en guiones; el efecto aún necesita nuevas métricas."
-              : "Primero aplicamos el cambio. Después comparamos la misma red y el mismo periodo."}
-          </p>
-        </>
-      )}
-    </div>
+  return origen && siguiente && valor != null ? (
+    <>
+      <Cifra
+        valor={origen.metrica === "retencion" ? Math.round(valor * 100) : valor}
+        etiqueta={`${metricas[origen.metrica]}${origen.metrica === "retencion" ? " (%)" : ""}`}
+        variacion={`Antes: ${numero(valorEvidencia(origen))}${origen.metrica === "retencion" ? " %" : ""} · ${origen.ventana}${origen.segundo !== undefined ? ` · segundo ${numero(origen.segundo)}` : ""}`}
+        className={styles.cifraPaso}
+      />
+      <Link className={styles.enlace} href={siguiente.href}>
+        <span>{siguiente.titulo}</span>
+        <span aria-hidden="true">↗</span>
+      </Link>
+      <p className={styles.meta}>
+        Resultado observado. Todavía no demuestra que el cambio sea la causa.
+      </p>
+    </>
+  ) : (
+    <>
+      <p className={styles.espera}>Esperando el siguiente resultado</p>
+      <p className={styles.meta}>
+        {l.aplicaciones?.length
+          ? "Ya está aplicado. Falta medir el siguiente video."
+          : "Primero aplicamos el cambio; luego comparamos con la misma red y el mismo periodo."}
+      </p>
+    </>
   );
 }
 
@@ -195,10 +219,12 @@ function LeccionEnTiempo({
   registro,
   resultado,
   indice,
+  propietarios,
 }: {
   registro: LeccionVideo;
   resultado: Resultados;
   indice: number;
+  propietarios: boolean;
 }) {
   const { data } = useEspacio();
   const l = registro.leccion;
@@ -219,9 +245,9 @@ function LeccionEnTiempo({
             </time>
             <span className={styles.etiqueta}>
               {l.nivel === "patron"
-                ? "Patrón por contrastar"
+                ? "Se repite en varios videos"
                 : l.origenes?.length
-                  ? "Hipótesis"
+                  ? "Por comprobar"
                   : "Apunte anterior"}
             </span>
           </div>
@@ -229,92 +255,86 @@ function LeccionEnTiempo({
           <Origen
             ambito={resultado.ambitos.find((a) => a.id === registro.ambitoId)!}
             simulada={registro.simulada}
+            conPropietario={propietarios}
           />
         </header>
-        <div className={styles.recorrido}>
-          {origen ? (
-            <VideoOrigen
-              origen={origen}
-              resultado={resultado}
-              ambitoId={registro.ambitoId}
-            />
-          ) : (
-            <div className={styles.sinOrigen}>
-              <span className={styles.paso}>01 / El video</span>
-              <p>No hay un video enlazado a este apunte.</p>
-              <Link className={styles.enlace} href={registro.href}>
-                Ver el canal ↗
-              </Link>
-            </div>
-          )}
-          <div className={styles.razonamiento}>
-            <div className={styles.senal}>
-              <span className={styles.paso}>02 / La señal</span>
-              <Cifra
-                valor={origen ? valorEvidencia(origen) : null}
-                etiqueta={
-                  origen
-                    ? `${metricas[origen.metrica]}${origen.metrica === "retencion" ? " (%)" : ""}`
-                    : "Sin cifra enlazada"
-                }
-                variacion={
-                  origen?.segundo !== undefined
-                    ? `En el segundo ${numero(origen.segundo)}`
-                    : origen?.ventana
-                }
-                heroe
-                className={styles.cifraSenal}
+        <ol className={styles.pasos} aria-label="Cómo llegamos a esta lección">
+          <Paso numero={1} titulo="El video" clase={styles.pasoVideo}>
+            {origen ? (
+              <VideoOrigen
+                origen={origen}
+                resultado={resultado}
+                ambitoId={registro.ambitoId}
               />
-            </div>
-            <div className={styles.causa}>
-              <span className={styles.paso}>03 / Posible causa:</span>
-              <p>
-                {l.causa ||
-                  "La causa todavía no se ha contrastado con los datos."}
-              </p>
+            ) : (
+              <>
+                <p>No hay un video enlazado a este apunte.</p>
+                <Link className={styles.enlace} href={registro.href}>
+                  Ver el canal ↗
+                </Link>
+              </>
+            )}
+          </Paso>
+          <Paso numero={2} titulo="Lo que falló">
+            <Cifra
+              valor={origen ? valorEvidencia(origen) : null}
+              etiqueta={
+                origen
+                  ? `${metricas[origen.metrica]}${origen.metrica === "retencion" ? " (%)" : ""}`
+                  : "Sin cifra enlazada"
+              }
+              variacion={
+                origen?.segundo !== undefined
+                  ? `En el segundo ${numero(origen.segundo)}`
+                  : origen?.ventana
+              }
+              heroe
+              className={styles.cifraPaso}
+            />
+          </Paso>
+          <Paso numero={3} titulo="Posible causa">
+            <p>{l.causa || "Todavía no la hemos contrastado con los datos."}</p>
+            <p className={styles.meta}>
+              {l.nivel === "patron"
+                ? "Se repite en tres o más videos; falta comprobar la causa."
+                : "Una pista para probar, todavía no una conclusión."}
+            </p>
+          </Paso>
+          <Paso
+            numero={4}
+            titulo={
+              l.aplicaciones?.length ? "Cambio aplicado" : "Cambio propuesto"
+            }
+          >
+            <p>{l.correccion || "Aún no hay un cambio concreto."}</p>
+            {!!l.aplicaciones?.length && (
+              <ul
+                className={styles.aplicaciones}
+                aria-label="Aplicaciones de la lección"
+              >
+                {l.aplicaciones.map((a, i) => (
+                  <li key={a.videoId + i}>
+                    <Link
+                      className={styles.enlace}
+                      href={`/videos/${encodeURIComponent(a.videoId)}`}
+                    >
+                      Ver guion ↗
+                    </Link>
+                    <span className={styles.meta}>{a.cambio}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!l.aplicaciones?.length && (
               <p className={styles.meta}>
-                {l.nivel === "patron"
-                  ? "Se repite en tres o más videos. La causa sigue por contrastar."
-                  : "Una pista para probar, todavía no una conclusión."}
+                Pendiente de aplicar en el siguiente guion.
               </p>
-            </div>
-            <div className={styles.correccion}>
-              <span className={styles.paso}>
-                04 /{" "}
-                {l.aplicaciones?.length
-                  ? "Cambio aplicado"
-                  : "Cambio propuesto:"}
-              </span>
-              <p>
-                {l.correccion || "Aún no se ha propuesto un cambio concreto."}
-              </p>
-              {!!l.aplicaciones?.length && (
-                <ul
-                  className={styles.aplicaciones}
-                  aria-label="Aplicaciones de la lección"
-                >
-                  {l.aplicaciones.map((a, i) => (
-                    <li key={a.videoId + i}>
-                      <Link
-                        className={styles.enlace}
-                        href={`/videos/${encodeURIComponent(a.videoId)}`}
-                      >
-                        Ver guion ↗
-                      </Link>
-                      <span>{a.cambio}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {!l.aplicaciones?.length && (
-                <p className={styles.meta}>
-                  Pendiente de aplicar en el siguiente guion.
-                </p>
-              )}
-            </div>
+            )}
+          </Paso>
+          <Paso numero={5} titulo="El siguiente video">
             <EfectoSiguiente registro={registro} resultado={resultado} />
-          </div>
-        </div>
+          </Paso>
+        </ol>
         <details className={styles.detalles}>
           <summary>Ver las mediciones y el contexto</summary>
           {!!l.aplicaciones?.length && (
@@ -341,7 +361,7 @@ function LeccionEnTiempo({
                         ?.titulo ||
                       "Video de origen"}
                   </Link>
-                  {` · ${o.red} · ${o.ventana} · ${metricas[o.metrica]}: ${numero(valorEvidencia(o))}${o.metrica === "retencion" ? " %" : ""}`}
+                  {` · ${nombreRed(o.red)} · ${o.ventana} · ${metricas[o.metrica]}: ${numero(valorEvidencia(o))}${o.metrica === "retencion" ? " %" : ""}`}
                   {o.segundo !== undefined &&
                     ` en el segundo ${numero(o.segundo)}`}
                   {o.demoraHoras > 0 &&
@@ -380,30 +400,25 @@ function EjemploVacio({ filtrado }: { filtrado: boolean }) {
         <span className={styles.etiqueta}>
           Ejemplo ficticio · así se lee una lección
         </span>
-        <ol>
-          <li>
-            <span>El video</span>
-            <strong>Una pregunta sobre el mar</strong>
-          </li>
-          <li>
-            <span>La señal</span>
-            <strong>40 % sigue mirando a los 3{"\u00a0"}s</strong>
-          </li>
-          <li>
-            <span>La causa posible</span>
-            <strong>La explicación tarda en llegar</strong>
-          </li>
-          <li>
-            <span>El cambio</span>
-            <strong>Abrir con la respuesta</strong>
-          </li>
-          <li>
-            <span>El siguiente</span>
-            <strong>Medir antes de sacar conclusiones</strong>
-          </li>
+        <ol className={styles.pasos}>
+          <Paso numero={1} titulo="El video">
+            <p>Una pregunta sobre el mar</p>
+          </Paso>
+          <Paso numero={2} titulo="Lo que falló">
+            <p>40 % sigue mirando a los 3{"\u00a0"}s</p>
+          </Paso>
+          <Paso numero={3} titulo="Posible causa">
+            <p>La explicación tarda en llegar</p>
+          </Paso>
+          <Paso numero={4} titulo="Cambio">
+            <p>Abrir con la respuesta</p>
+          </Paso>
+          <Paso numero={5} titulo="El siguiente video">
+            <p>Medir antes de sacar conclusiones</p>
+          </Paso>
         </ol>
       </div>
-      <Link className="button secondary" href="/publicados">
+      <Link className="boton boton-secundario" href="/publicados">
         Ver mis publicaciones
       </Link>
     </section>
@@ -427,6 +442,9 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
     resultado.ambitos,
     filtro,
   );
+  const propietarios =
+    data.user.role === "admin" &&
+    new Set(resultado.ambitos.map((a) => a.ownerId)).size > 1;
   const visibles = fallos.filter(
     (f) => estado === "todos" || f.incidencia.estado === estado,
   );
@@ -476,6 +494,7 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
               registro={l}
               resultado={resultado}
               indice={i}
+              propietarios={propietarios}
             />
           ))}
         </ol>
@@ -500,12 +519,14 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
             <article className={`lesson ${styles.observacion}`} key={l.id}>
               <div>
                 <p className={styles.meta}>
-                  {fecha(l.fecha)} · {l.redes.join(" · ") || "Todas las redes"}
+                  {fecha(l.fecha)} ·{" "}
+                  {l.redes.map(nombreRed).join(" · ") || "Todas las redes"}
                 </p>
                 <h3>{l.titulo}</h3>
                 <Origen
                   ambito={resultado.ambitos.find((a) => a.id === l.ambitoId)!}
                   simulada={l.simulada}
+                  conPropietario={propietarios}
                 />
               </div>
               <div className={styles.textoObservacion}>
@@ -583,6 +604,7 @@ export function Aprendizaje({ initial }: { initial: Resultados }) {
               <Origen
                 ambito={resultado.ambitos.find((a) => a.id === r.ambitoId)!}
                 simulada={r.simulada}
+                conPropietario={propietarios}
               />
             </div>
             <div>
