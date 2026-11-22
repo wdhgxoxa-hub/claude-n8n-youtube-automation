@@ -83,6 +83,10 @@
 .canal-ultimo > .medio {
   margin-bottom: var(--espacio-8);
 }
+.canal-ultimo .medio-poster,
+.canal-ultimo .medio-preview {
+  object-fit: contain;
+}
 .canal-ultimo:not(:has(.medio)) {
   padding: var(--espacio-24);
   border: 1px solid var(--linea);

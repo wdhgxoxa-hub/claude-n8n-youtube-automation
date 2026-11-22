@@ -170,6 +170,13 @@ export function Canales() {
                           poster={ultimo.medios.poster.url}
                           preview={ultimo.medios.preview?.url}
                           videoId={ultimo.id}
+                          proporcion={
+                            ultimo.medios.relacionAspecto === 1
+                              ? "cuadrado"
+                              : ultimo.medios.relacionAspecto < 1
+                                ? "vertical"
+                                : "horizontal"
+                          }
                           alt={ultimo.title}
                         />
                       )}

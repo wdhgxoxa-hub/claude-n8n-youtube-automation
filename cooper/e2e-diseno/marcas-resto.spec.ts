@@ -4,6 +4,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import type { EstadoMarcas } from "../src/servicios/marcas/servicio";
 import type { Estado } from "../src/servicios/datos";
 import { abrirCooper } from "../e2e/ayudas-diseno";
+import { capturarEstados } from "./estados-resto";
+import { instalarMedioReal } from "./medio-real";
 
 const directory = "../evidencias-diseno";
 const widths = [360, 390, 768, 1024, 1440, 1920];
@@ -340,6 +342,26 @@ for (const width of widths)
     await panel
       .getByRole("button", { name: "Cerrar Cooper", exact: true })
       .click();
+    const ensayo = await instalarMedioReal(page, state);
+    await page.goto("/canales");
+    await expect(
+      page.getByRole("heading", { name: ensayo.canal.name }),
+    ).toBeVisible();
+    await expect
+      .poll(() =>
+        page
+          .locator(".canal-ultimo .medio-poster")
+          .evaluate((el) => (el as HTMLImageElement).naturalWidth),
+      )
+      .toBe(900);
+    await shot("canales-medio-real");
+    expect(ensayo.solicitudesExternas).toEqual([]);
+    writeFileSync(
+      `${directory}/medio-real-${width}.json`,
+      JSON.stringify(ensayo.evidencia, null, 2),
+    );
+    await ensayo.cleanup();
+    await capturarEstados(page, shot, messages);
     writeFileSync(
       `${directory}/marcas-resto-manifest-${width}.json`,
       JSON.stringify(manifest, null, 2),
@@ -351,6 +373,24 @@ for (const width of [390, 1440])
     await page.setViewportSize({ width, height: 900 });
     await login(page);
     await page.goto("/canales");
+    const state: Estado = await (await page.request.get("/api/estado")).json();
+    const ensayo = await instalarMedioReal(page, state);
+    await page.reload();
+    const medio = page.locator(".canal-ultimo .medio");
+    await expect(medio).toBeVisible();
+    await medio.hover();
+    await expect(medio).toHaveAttribute("data-preview", "on");
+    await expect
+      .poll(() =>
+        medio
+          .locator("video")
+          .evaluate((el: HTMLVideoElement) => el.currentTime),
+      )
+      .toBeGreaterThan(0.5);
+    await page.mouse.move(0, 0);
+    await expect(medio).toHaveAttribute("data-preview", "off");
+    expect(ensayo.solicitudesExternas).toEqual([]);
+    await ensayo.cleanup();
     await page
       .getByRole("link", { name: "Marcas", exact: true })
       .filter({ visible: true })
@@ -395,7 +435,7 @@ for (const width of [390, 1440])
       .click();
     await page
       .getByRole("dialog", { name: "Más destinos", exact: true })
-      .getByRole("link", { name: "Perfil", exact: true })
+      .getByRole("link", { name: "Mi perfil", exact: true })
       .click();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await page
