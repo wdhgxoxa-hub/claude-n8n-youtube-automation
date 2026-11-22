@@ -376,7 +376,8 @@ for (const degradada of [false, true]) {
     await page.goto("/admin/salud");
     await expect(
       page.getByRole("region", { name: "Fábrica · Producción y costes" }),
-    ).toContainText("12.50");
+    // Formateador único es-PE de DIRECCION: coma decimal y prefijo US$.
+    ).toContainText("US$ 12,50");
     await expect(
       page.getByRole("link", { name: "El camino de una idea" }),
     ).toHaveAttribute("href", "/videos/video-observado");
