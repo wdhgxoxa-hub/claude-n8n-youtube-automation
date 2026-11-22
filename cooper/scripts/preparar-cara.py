@@ -155,6 +155,8 @@ def main():
         if len(images) != 30:
             parser.error("La fuente esperada tiene 30 fotogramas; revisar antes de exportar.")
         images[0].save(args.output / "cooper.png", optimize=True)
+        # Póster que se descarga en cada pantalla: WebP con alfa, ~9 KB frente a ~39 KB.
+        images[0].save(args.output / "cooper.webp", quality=90, alpha_quality=100, method=6)
         run(
             "ffmpeg", "-y", "-loglevel", "error", "-framerate", stream["r_frame_rate"],
             "-i", str(temporary / "alpha-%03d.png"), "-an", "-c:v", "libvpx-vp9",
@@ -191,6 +193,7 @@ def main():
             "bordesTransparentes": True, "sinReescalado": True,
             "sha256PNG": hashlib.sha256((args.output / "cooper.png").read_bytes()).hexdigest(),
             "sha256WebM": hashlib.sha256((args.output / "cooper.webm").read_bytes()).hexdigest(),
+            "sha256WebP": hashlib.sha256((args.output / "cooper.webp").read_bytes()).hexdigest(),
             "limites": "Fuente comprimida a 10 fps; un solo gesto, no cinco estados. Usar hasta 112 CSS px.",
         }
         (args.output / "verificacion.json").write_text(

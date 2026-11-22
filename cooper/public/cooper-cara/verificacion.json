@@ -19,5 +19,6 @@
   "sinReescalado": true,
   "sha256PNG": "8428c67ff77372372ecfb81fd04403ed71d8feb6af89f3c51ee680338a588a72",
   "sha256WebM": "217fa164ed485fccca509be0ca837ff8eb5a946fd49bc5fe991354dbb087a7b5",
+  "sha256WebP": "a349ebd66cc21e718fa6abdba2c1a37c757200b07839e949336fa88832b84166",
   "limites": "Fuente comprimida a 10 fps; un solo gesto, no cinco estados. Usar hasta 112 CSS px."
 }

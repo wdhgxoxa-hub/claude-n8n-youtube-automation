@@ -25,11 +25,30 @@ export function CooperPresencia({
     // recién abierto o equipo cargado), la página queda congelada ~3 s antes de su
     // primer cuadro. Tras dos cuadros pintados el canal ya existe y el reproductor
     // nace sin bloquear; mientras tanto se ve la misma cara fija de debajo.
-    let segundo = 0;
-    const primero = requestAnimationFrame(() => {
-      segundo = requestAnimationFrame(() => setPintado(true));
-    });
+    // Además el loop (~380 KB) espera a que la página termine de cargar y quede
+    // ociosa: en una red móvil lenta competía con el CSS, las fuentes y el
+    // JavaScript de la primera pintura y retrasaba el contenido principal.
+    let primero = 0,
+      segundo = 0,
+      ocioso = 0,
+      espera = 0;
+    const crear = () => {
+      primero = requestAnimationFrame(() => {
+        segundo = requestAnimationFrame(() => setPintado(true));
+      });
+    };
+    const trasCarga = () => {
+      // Safari no ofrece requestIdleCallback: allí basta un respiro tras la carga.
+      if (typeof window.requestIdleCallback === "function")
+        ocioso = window.requestIdleCallback(crear, { timeout: 2000 });
+      else espera = window.setTimeout(crear, 200);
+    };
+    if (document.readyState === "complete") trasCarga();
+    else window.addEventListener("load", trasCarga, { once: true });
     return () => {
+      window.removeEventListener("load", trasCarga);
+      if (ocioso) cancelIdleCallback(ocioso);
+      window.clearTimeout(espera);
       cancelAnimationFrame(primero);
       cancelAnimationFrame(segundo);
     };
@@ -115,7 +134,7 @@ export function CooperPresencia({
       aria-hidden="true"
     >
       <Image
-        src="/cooper-cara/cooper.png"
+        src="/cooper-cara/cooper.webp"
         alt=""
         width={size}
         height={size}
@@ -125,7 +144,7 @@ export function CooperPresencia({
         <video
           ref={player}
           src="/cooper-cara/cooper.webm"
-          poster="/cooper-cara/cooper.png"
+          poster="/cooper-cara/cooper.webp"
           width={size}
           height={size}
           muted

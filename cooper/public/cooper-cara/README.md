@@ -4,6 +4,7 @@ Recurso derivado del archivo entregado por Walter `Gemini_Generated_Gif_dnwgtddn
 
 - `cooper.webm`: VP9 con alfa real, 180×180 px nativos, 30 fotogramas, 3 segundos, 10 fps; 383.274 bytes al exportar. Recorte de cada fotograma, no máscara visual ni modo de mezcla CSS.
 - `cooper.png`: respaldo RGBA, primer fotograma, 180×180 px. Respaldo para movimiento reducido, pausa o error del video.
+- `cooper.webp`: el mismo primer fotograma en WebP con alfa (calidad 90, alfa 100), unos 9 KB frente a 39 KB del PNG. Es el que usa la interfaz como póster e imagen fija; se pide en todas las pantallas.
 - `evidencias-diseno/cara/calidad-56-112.png`: contacto de cuatro fotogramas a 56/112 px sobre negro, vidrio y fondo claro.
 - `evidencias-diseno/cara/calidad-navegador.png` y `evidencias-diseno/cara/calidad-parpadeo.png`: capturas Chromium a tamaño real, WebM y PNG sobre los mismos tres fondos.
 - `verificacion.json`: huella de la fuente y derivados, dimensiones, método y validación del canal alfa.
