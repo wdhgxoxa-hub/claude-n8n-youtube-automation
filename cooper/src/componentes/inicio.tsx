@@ -76,8 +76,8 @@ function MedioInicio({
         prioridad={heroe}
       />
       {heroe && (
-        <span className="inicio-reproducir" aria-hidden="true">
-          <Play size={20} fill="currentColor" />
+        <span className="inicio-reproducir">
+          <Play size={20} fill="currentColor" aria-hidden="true" />
           Ver video
         </span>
       )}
@@ -185,7 +185,6 @@ function Carrusel({
               key={video.id}
               className="inicio-selector"
               aria-pressed={video.id === seleccionado}
-              aria-label={`Mostrar video: ${video.title}`}
               onClick={() => {
                 if (!arrastrando.current) seleccionar(index);
               }}
@@ -253,7 +252,6 @@ function Heroe({
         <Link
           className="inicio-hero-enlace"
           href={`/videos/${video.id}`}
-          aria-label={`Ver video: ${video.title}`}
         >
           <MedioInicio key={video.id} video={video} heroe />
         </Link>
@@ -362,9 +360,9 @@ export function Inicio({ ahora }: { ahora: number }) {
                     <Tarjeta className="inicio-pendiente">
                       <Link
                         href={`/videos/${video.id}`}
-                        aria-label={`Revisar video: ${video.title}`}
                       >
                         <MedioInicio video={video} />
+                        <span className="sr-only">Revisar: {video.title}</span>
                       </Link>
                       <div className="inicio-pendiente-cuerpo">
                         <p className="inicio-nota">

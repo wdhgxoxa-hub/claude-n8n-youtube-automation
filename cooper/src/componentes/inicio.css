@@ -485,8 +485,12 @@
 .inicio-pista-mini .medio-espera small {
   display: none;
 }
+.inicio-selector .medio-espera {
+  padding: var(--espacio-8);
+}
 .inicio-selector .medio-espera span {
-  font-size: var(--texto-17);
+  /* El título completo ya acompaña a la miniatura, fuera del encuadre. */
+  display: none;
 }
 @container (max-width: 1000px) {
   .inicio-titulo > p {
@@ -507,6 +511,9 @@
   }
   .inicio-pendiente-accion {
     flex-wrap: wrap;
+  }
+  .inicio-pendiente-accion .boton {
+    margin-left: auto;
   }
   .inicio-pista {
     grid-template-columns: var(--espacio-96) minmax(0, 1fr) var(--espacio-24);
@@ -562,10 +569,17 @@
     -webkit-line-clamp: 2;
   }
   .inicio-metricas-grid {
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--espacio-32) var(--espacio-16);
   }
   .inicio-metrica .cifra-detalle {
     min-height: var(--espacio-48);
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .inicio-carrusel-cabecera {
+    justify-content: flex-start;
+    gap: var(--espacio-24);
   }
 }
 @media (max-width: 767px) {
