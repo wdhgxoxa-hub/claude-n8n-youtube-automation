@@ -11,6 +11,9 @@
   display: contents;
 }
 .cabecera h1 {
+  /* El enlace táctil (48px) puede ser más alto que el título en móvil: el
+     título no se desplaza por él y arranca donde el armazón lo coloca. */
+  align-self: start;
   font-family: var(--fuente-display);
   font-size: var(--titulo-pantalla);
   line-height: var(--interlinea-display);
@@ -159,7 +162,7 @@
 .contenedorMedio {
   /* Insignia de red arriba y cifras de vidrio abajo: el póster las respeta. */
   --cartel-reserva-arriba: var(--espacio-32);
-  --cartel-reserva-abajo: calc(var(--objetivo-tactil) + var(--espacio-4));
+  --cartel-reserva-abajo: calc(var(--objetivo-tactil) + var(--espacio-12));
 }
 .red {
   top: var(--espacio-12);

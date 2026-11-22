@@ -74,7 +74,9 @@ export function NumeroAnimado({
               </motion.span>
             </span>
           ) : (
-            <span key={i}>{digit}</span>
+            <span key={i} className={digit === "," ? "number-coma" : undefined}>
+              {digit}
+            </span>
           ),
         )}
       </span>

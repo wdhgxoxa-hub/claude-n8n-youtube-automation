@@ -159,6 +159,11 @@
 .number-reels {
   letter-spacing: 0;
 }
+/* En Geist Mono la coma ocupa un ancho de cifra: se ciñe para leer «56,4»
+   y no «56 , 4». */
+.number-reels > .number-coma {
+  margin-inline: -0.25ch;
+}
 .cifra-heroe .cifra-valor {
   font-size: var(--cifra-heroe);
 }

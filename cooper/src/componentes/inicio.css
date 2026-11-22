@@ -616,3 +616,14 @@
 [data-motion="paused"] .inicio-escena {
   transition: none;
 }
+/* Con póster tipográfico la carátula ya lleva el título: el del texto
+   queda para lectores de pantalla y no se repite a la vista. */
+.inicio-hero:has(.cartel) .inicio-hero-texto h2,
+.inicio-pendiente:has(.cartel) .inicio-pendiente-cuerpo h3 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
