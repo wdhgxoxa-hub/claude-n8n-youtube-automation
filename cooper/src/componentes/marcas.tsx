@@ -465,7 +465,7 @@ export function Marcas({
                           )}
                           {c.estado !== "revocada" && (
                             <button
-                              className="button"
+                              className="button secondary"
                               disabled={busy}
                               onClick={() =>
                                 void ejecutar(
@@ -1344,7 +1344,7 @@ function EditorPieza({
                     <button
                       key={p.id}
                       type="button"
-                      className="button"
+                      className="button secondary"
                       disabled={busy || working}
                       onClick={() => {
                         setTitulo(p.datos.titulo);
