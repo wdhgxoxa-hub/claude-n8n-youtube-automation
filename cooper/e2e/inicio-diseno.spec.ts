@@ -849,7 +849,7 @@ for (const width of [390, 1440]) {
         // Una muestra posterior a la carga SSR debe entrar por el evento en vivo.
         liveHistory.push({
           ...measurement,
-          en: new Date().toISOString(),
+          fecha: new Date().toISOString(),
           vistas: (measurement.vistas ?? 0) + 1440,
         });
         await phase("cifras-actualizadas-por-evento", async () => {
