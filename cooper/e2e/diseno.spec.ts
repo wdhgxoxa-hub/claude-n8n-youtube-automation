@@ -92,12 +92,11 @@ test("demostración: siete pantallas, dos tamaños y acceso a producción", asyn
       "Aprobación de guion",
     );
     await ready(page);
-    await page
-      .getByRole("link", {
-        name: "Ver video: Por qué el cielo cambia de color",
-        exact: true,
-      })
-      .click();
+    const hero = page.locator("main .inicio-hero-enlace");
+    await expect(hero).toHaveAccessibleName(
+      /Por qué el cielo cambia de color.*Ver video/,
+    );
+    await hero.click();
     await expect(page.locator(".journey li.current")).toContainText(
       "Publicado",
     );

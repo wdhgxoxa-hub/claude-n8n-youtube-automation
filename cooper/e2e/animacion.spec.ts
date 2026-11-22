@@ -78,10 +78,10 @@ test.describe("evidencia de movimiento", () => {
     expect(ownPublished).toBeDefined();
     expect(ownEditing).toBeDefined();
     // Inicio conserva sólo los videos propios; cada acceso identifica el recurso.
-    const hero = page.getByRole("link", {
-      name: `Ver video: ${ownPublished!.title}`,
-      exact: true,
-    });
+    const hero = page.locator("main .inicio-hero-enlace");
+    await expect(hero).toHaveAccessibleName(
+      /Por qué el cielo cambia de color.*Ver video/,
+    );
     await expect(hero).toHaveAttribute("href", `/videos/${ownPublished!.id}`);
     await expect(page.locator(".inicio-hero")).toContainText("Publicado");
     const editing = page.locator(

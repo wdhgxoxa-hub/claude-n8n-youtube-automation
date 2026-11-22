@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import config from "./playwright.config";
+import config from "./playwright.base-diseno.config";
 
 // Mismo servidor y emisor aislados que la puerta común; sin OAuth ni n8n.
 export default defineConfig({
@@ -32,6 +32,8 @@ export default defineConfig({
       name: "inicio-diseno",
       use: {
         ...devices["Desktop Chrome"],
+        // La base elige DRM/EGL si está disponible y SwiftShader si no lo está.
+        launchOptions: config.projects?.[0]?.use?.launchOptions,
         baseURL: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,
         extraHTTPHeaders: {
           Referer: `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`,

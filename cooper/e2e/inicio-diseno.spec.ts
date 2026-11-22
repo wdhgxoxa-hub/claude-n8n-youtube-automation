@@ -235,19 +235,19 @@ async function prepare(page: Page, scenario: Scenario = "demostracion") {
 }
 
 async function ready(page: Page, scenario: Scenario = "demostracion") {
-  await expect(page.locator(".inicio-estudio")).toHaveCount(1);
-  await expect(page.locator(".inicio-estudio")).toBeVisible();
+  await expect(page.locator("main .inicio-estudio")).toHaveCount(1);
+  await expect(page.locator("main .inicio-estudio")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: /Hoy en el estudio/, level: 1 }),
   ).toBeVisible();
   if (scenario === "demostracion" || scenario === "sin-medios") {
-    await expect(page.locator(".inicio-hero")).toContainText(
+    await expect(page.locator("main .inicio-hero")).toContainText(
       "La caja al final del día",
     );
-    await expect(page.locator(".inicio-selector")).toHaveCount(5);
+    await expect(page.locator("main .inicio-selector")).toHaveCount(5);
   }
   if (scenario === "vacio")
-    await expect(page.locator(".inicio-selector")).toHaveCount(0);
+    await expect(page.locator("main .inicio-selector")).toHaveCount(0);
   await page.evaluate(async () => {
     await document.fonts.ready;
     await Promise.all(
@@ -342,6 +342,17 @@ async function audit(page: Page) {
     probe.remove();
     return {
       overflow: Math.max(0, document.documentElement.scrollWidth - innerWidth),
+      figuresOverflow: Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "main .inicio-metricas .cifra-valor",
+        ),
+      )
+        .filter((element) => element.scrollWidth > element.clientWidth + 1)
+        .map((element) => ({
+          text: element.textContent,
+          width: element.clientWidth,
+          content: element.scrollWidth,
+        })),
       deviations: Array.from(
         new Map(
           deviations.map((item) => [JSON.stringify(item), item]),
@@ -381,7 +392,7 @@ async function capture(
   });
   await expect
     .poll(() =>
-      page.locator(".inicio-estudio img").evaluateAll(
+      page.locator("main .inicio-estudio img").evaluateAll(
         (images) =>
           images.filter((element) => {
             const image = element as HTMLImageElement,
@@ -469,6 +480,9 @@ async function capture(
   );
   expect.soft(inspected.overflow, `${name} ${width}: desbordamiento`).toBe(0);
   expect
+    .soft(inspected.figuresOverflow, `${name} ${width}: cifras sin solaparse`)
+    .toEqual([]);
+  expect
     .soft(inspected.deviations, `${name} ${width}: tokens y mínimo 12px`)
     .toEqual([]);
   expect.soft(inspected.serious, `${name} ${width}: axe`).toEqual([]);
@@ -501,22 +515,22 @@ for (const width of widths) {
         await expect(
           page.getByRole("heading", { name: "La fábrica", exact: true }),
         ).toHaveCount(0);
-        await expect(page.locator(".inicio-hero .cifra")).toHaveCount(3);
-        await expect(page.locator(".inicio-metricas .cifra-heroe")).toHaveCount(
-          4,
-        );
-        await expect(page.locator(".inicio-hero img")).toBeVisible();
+        await expect(page.locator("main .inicio-hero .cifra")).toHaveCount(3);
+        await expect(
+          page.locator("main .inicio-metricas .cifra-heroe"),
+        ).toHaveCount(4);
+        await expect(page.locator("main .inicio-hero img")).toBeVisible();
         expect(
           await page
-            .locator(".inicio-hero img")
+            .locator("main .inicio-hero img")
             .evaluate((img) => (img as HTMLImageElement).naturalWidth),
         ).toBeGreaterThan(100);
-        await expect(page.locator(".inicio-hero .medio")).toHaveAttribute(
+        await expect(page.locator("main .inicio-hero .medio")).toHaveAttribute(
           "data-preview",
           "off",
         );
         await expect(
-          page.locator(".inicio-hero .inicio-medio"),
+          page.locator("main .inicio-hero .inicio-medio"),
         ).toHaveAttribute(
           "data-video-transition",
           `video-${fixture.source.id}`,
@@ -525,16 +539,31 @@ for (const width of widths) {
           page.getByRole("textbox", { name: "Mensaje para Cooper" }),
         ).toHaveCount(0);
         await expect(page.locator(".pildora-conexion")).toHaveCount(0);
-        const first = page.locator(".inicio-selector").first();
+        if (width === 768) {
+          // El orbe no debe interceptar las flechas del carrusel en tableta.
+          await page
+            .getByRole("button", { name: "Video siguiente", exact: true })
+            .click();
+          await expect(
+            page.locator("main .inicio-selector").nth(1),
+          ).toHaveAttribute("aria-pressed", "true");
+          await page
+            .getByRole("button", { name: "Video anterior", exact: true })
+            .click();
+        }
+        const first = page.locator("main .inicio-selector").first();
         await first.focus();
         await page.keyboard.press("ArrowRight");
-        await expect(page.locator(".inicio-selector").nth(1)).toBeFocused();
-        await expect(page.locator(".inicio-selector").nth(1)).toHaveAttribute(
-          "aria-pressed",
-          "true",
-        );
+        await expect(
+          page.locator("main .inicio-selector").nth(1),
+        ).toBeFocused();
+        await expect(
+          page.locator("main .inicio-selector").nth(1),
+        ).toHaveAttribute("aria-pressed", "true");
         await page.keyboard.press("End");
-        await expect(page.locator(".inicio-selector").last()).toBeFocused();
+        await expect(
+          page.locator("main .inicio-selector").last(),
+        ).toBeFocused();
         await page.keyboard.press("Home");
         await expect(first).toBeFocused();
         await expect(first).toHaveAttribute("aria-pressed", "true");
@@ -552,17 +581,28 @@ for (const width of widths) {
 
 type Sample = {
   intervals: number[];
+  frameTimeline: { at: number; delta: number }[];
+  startedAt: number;
   previous: number;
   active: boolean;
   longTasks: number[];
   cls: number;
   observer: PerformanceObserver;
 };
+type TransitionObservation = {
+  names: string[];
+  startedAt: number;
+  readyAt: number | null;
+  finishedAt: number | null;
+  error: string | null;
+};
 
 async function startSample(page: Page) {
   await page.evaluate(() => {
     const sample: Sample = {
       intervals: [],
+      frameTimeline: [],
+      startedAt: performance.now(),
       previous: 0,
       active: true,
       longTasks: [],
@@ -585,7 +625,10 @@ async function startSample(page: Page) {
     (window as Window & { inicioSample?: Sample }).inicioSample = sample;
     const frame = (time: number) => {
       if (!sample.active) return;
-      if (sample.previous) sample.intervals.push(time - sample.previous);
+      if (sample.previous) {
+        sample.intervals.push(time - sample.previous);
+        sample.frameTimeline.push({ at: time, delta: time - sample.previous });
+      }
       sample.previous = time;
       requestAnimationFrame(frame);
     };
@@ -599,6 +642,36 @@ async function stopSample(page: Page, phase: string) {
     sample.active = false;
     sample.observer.disconnect();
     const sorted = [...sample.intervals].sort((a, b) => a - b);
+    const transitions = (
+      (window as Window & { inicioTransitions?: TransitionObservation[] })
+        .inicioTransitions ?? []
+    ).filter((transition) => transition.startedAt >= sample.startedAt);
+    const animations = transitions.map((transition) => {
+      // La API detiene el render durante las capturas. Se conserva esa latencia;
+      // el presupuesto de la animación mide ready → finished, como diseno-base.
+      const frames = sample.frameTimeline
+        .filter(
+          ({ at, delta }) =>
+            transition.readyAt !== null &&
+            transition.finishedAt !== null &&
+            at - delta >= transition.readyAt &&
+            at <= transition.finishedAt,
+        )
+        .map(({ delta }) => delta);
+      const ordered = [...frames].sort((a, b) => a - b);
+      return {
+        frames: frames.length,
+        fps: frames.length
+          ? 1000 / (frames.reduce((a, b) => a + b, 0) / frames.length)
+          : 0,
+        p95: ordered[Math.floor(ordered.length * 0.95)] ?? Infinity,
+        latencyUntilReady:
+          transition.readyAt === null
+            ? null
+            : transition.readyAt - transition.startedAt,
+        transition,
+      };
+    });
     return {
       phase: name,
       frames: sorted.length,
@@ -607,6 +680,8 @@ async function stopSample(page: Page, phase: string) {
       maxFrame: sorted.at(-1),
       longTasks: sample.longTasks,
       cls: sample.cls,
+      animations,
+      frameTimeline: sample.frameTimeline,
     };
   }, phase);
 }
@@ -616,7 +691,7 @@ for (const width of [390, 1440]) {
     test.describe(`${recording ? "Vídeo" : "Traza"} Inicio ${width}`, () => {
       test("vista previa, carrusel, cifras, detalle, Cooper y navegación", async ({
         browser,
-      }) => {
+      }, testInfo) => {
         const baseURL = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT ?? "3109"}`;
         const context = await browser.newContext({
           baseURL,
@@ -636,6 +711,30 @@ for (const width of [390, 1440]) {
         const page = await context.newPage();
         const fixture = await prepare(page);
         await page.emulateMedia({ reducedMotion: "no-preference" });
+        const browserCdp = await browser.newBrowserCDPSession();
+        const systemInfo = await browserCdp.send("SystemInfo.getInfo");
+        const renderer = {
+          devices: systemInfo.gpu.devices,
+          features: systemInfo.gpu.featureStatus,
+          renderer: systemInfo.gpu.auxAttributes?.glRenderer,
+          vendor: systemInfo.gpu.auxAttributes?.glVendor,
+          browserVersion: browser.version(),
+          driver: systemInfo.gpu.auxAttributes?.displayType,
+          hardwareAccelerated:
+            systemInfo.gpu.featureStatus?.gpu_compositing === "enabled" &&
+            systemInfo.gpu.devices.some(
+              (device) =>
+                (device.vendorId > 0 && device.vendorId !== 65535) ||
+                /Intel|NVIDIA|AMD|Radeon/i.test(
+                  `${device.vendorString} ${device.deviceString}`,
+                ),
+            ) &&
+            !/SwiftShader|llvmpipe|lavapipe|software/i.test(
+              String(systemInfo.gpu.auxAttributes?.glRenderer ?? ""),
+            ),
+          launchOptions: testInfo.project.use.launchOptions?.args,
+        };
+        await browserCdp.detach();
         const cdp = await context.newCDPSession(page);
         const samples: Awaited<ReturnType<typeof stopSample>>[] = [];
         const phase = async (name: string, action: () => Promise<void>) => {
@@ -652,10 +751,10 @@ for (const width of [390, 1440]) {
         if (!recording)
           await cdp.send("Tracing.start", {
             categories:
-              "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame",
+              "devtools.timeline,loading,blink.user_timing,disabled-by-default-devtools.timeline.frame,cc,viz,gpu",
             transferMode: "ReturnAsStream",
           });
-        const hero = page.locator(".inicio-hero .medio").first();
+        const hero = page.locator("main .inicio-hero .medio").first();
         await phase("vista-previa", async () => {
           await hero.scrollIntoViewIfNeeded();
           if (width >= 768) await hero.hover();
@@ -673,16 +772,15 @@ for (const width of [390, 1440]) {
           await page
             .getByRole("button", { name: "Video siguiente", exact: true })
             .click();
-          await expect(page.locator(".inicio-selector").nth(1)).toHaveAttribute(
-            "aria-pressed",
-            "true",
-          );
-          await expect(page.locator(".inicio-hero")).toContainText(
+          await expect(
+            page.locator("main .inicio-selector").nth(1),
+          ).toHaveAttribute("aria-pressed", "true");
+          await expect(page.locator("main .inicio-hero")).toContainText(
             fixture.finished[1].title,
           );
         });
-        const track = page.locator(".inicio-carrusel-pista");
-        const carouselWindow = page.locator(".inicio-carrusel-ventana");
+        const track = page.locator("main .inicio-carrusel-pista");
+        const carouselWindow = page.locator("main .inicio-carrusel-ventana");
         await carouselWindow.scrollIntoViewIfNeeded();
         const box = (await carouselWindow.boundingBox())!;
         const before = await track.evaluate(
@@ -712,15 +810,17 @@ for (const width of [390, 1440]) {
         )
           expect(after).not.toBe(before);
         await phase("cifras-y-minigraficas", async () => {
-          await page.locator(".inicio-metricas").scrollIntoViewIfNeeded();
+          await page.locator("main .inicio-metricas").scrollIntoViewIfNeeded();
           await expect(
-            page.locator(".inicio-metricas .cifra-heroe"),
+            page.locator("main .inicio-metricas .cifra-heroe"),
           ).toHaveCount(4);
           await expect(
-            page.locator(".inicio-metricas .cifra-grafica"),
+            page.locator("main .inicio-metricas .cifra-grafica"),
           ).toHaveCount(4);
         });
-        const counter = page.locator(".inicio-metricas .cifra-heroe").first();
+        const counter = page
+          .locator("main .inicio-metricas .cifra-heroe")
+          .first();
         const beforeCounter = await counter.boundingBox();
         const numericValue = fixture.finished.reduce((total, video, index) => {
           const history = video.observabilidad.publicaciones.find(
@@ -741,10 +841,17 @@ for (const width of [390, 1440]) {
         await expect(counter.locator(".cifra-valor .sr-only")).toHaveText(
           compact(numericValue),
         );
-        const measurement = fixture.finished[0].observabilidad.publicaciones
-          .find((publication) => publication.red === "youtube")!
-          .historial.at(-1)!;
-        measurement.vistas = (measurement.vistas ?? 0) + 1440;
+        const liveHistory =
+          fixture.finished[0].observabilidad.publicaciones.find(
+            (publication) => publication.red === "youtube",
+          )!.historial;
+        const measurement = liveHistory.at(-1)!;
+        // Una muestra posterior a la carga SSR debe entrar por el evento en vivo.
+        liveHistory.push({
+          ...measurement,
+          en: new Date().toISOString(),
+          vistas: (measurement.vistas ?? 0) + 1440,
+        });
         await phase("cifras-actualizadas-por-evento", async () => {
           await page.evaluate(() => {
             window.dispatchEvent(new Event("offline"));
@@ -779,31 +886,71 @@ for (const width of [390, 1440]) {
         await page.evaluate(() => {
           const original = document.startViewTransition?.bind(document);
           if (!original) return;
+          const observations: TransitionObservation[] = [];
+          (
+            window as Window & { inicioTransitions?: TransitionObservation[] }
+          ).inicioTransitions = observations;
           document.startViewTransition = (
             ...args: Parameters<typeof original>
           ) => {
+            const names = Array.from(
+              document.querySelectorAll("main [data-video-transition]"),
+            )
+              .map((element) => getComputedStyle(element).viewTransitionName)
+              .filter((name) => name !== "none");
+            const observation: TransitionObservation = {
+              names,
+              startedAt: performance.now(),
+              readyAt: null,
+              finishedAt: null,
+              error: null,
+            };
+            observations.push(observation);
             void (
               window as Window & {
                 registrarTransicionInicio?: (names: string[]) => Promise<void>;
               }
-            ).registrarTransicionInicio?.(
-              Array.from(document.querySelectorAll("[data-video-transition]"))
-                .map((element) => getComputedStyle(element).viewTransitionName)
-                .filter((name) => name !== "none"),
+            ).registrarTransicionInicio?.(names);
+            const transition = original(...args);
+            void transition.ready.then(
+              () => {
+                observation.readyAt = performance.now();
+              },
+              (error: unknown) => {
+                observation.error = String(error);
+              },
             );
-            return original(...args);
+            void transition.finished.then(
+              () => {
+                observation.finishedAt = performance.now();
+              },
+              (error: unknown) => {
+                observation.error = String(error);
+              },
+            );
+            return transition;
           };
         });
         await phase("elemento-compartido-detalle", async () => {
-          await page
-            .getByRole("link", {
-              name: `Ver video: ${fixture.finished[0].title}`,
-              exact: true,
-            })
-            .click();
+          const heroLink = page.locator("main .inicio-hero-enlace");
+          await expect(heroLink).toHaveAccessibleName(
+            /La caja al final del día.*Ver video/,
+          );
+          await heroLink.click();
           await expect(page).toHaveURL(
             new RegExp(`/videos/${fixture.source.id}$`),
           );
+          await page.waitForFunction(() => {
+            const transition = (
+              window as Window & {
+                inicioTransitions?: TransitionObservation[];
+              }
+            ).inicioTransitions?.at(-1);
+            return Boolean(
+              transition &&
+              (transition.finishedAt !== null || transition.error !== null),
+            );
+          });
         });
         expect(
           transitions.some((names) =>
@@ -839,6 +986,7 @@ for (const width of [390, 1440]) {
               {
                 width,
                 cpu: width < 768 ? 4 : 1,
+                renderer,
                 samples,
                 transitions,
                 errors: fixture.errors,
@@ -846,21 +994,46 @@ for (const width of [390, 1440]) {
                   video: false,
                   screenshots: false,
                   cdpTrace: true,
+                  viewTransitionFrameBudget: "ready → finished",
+                  totalInteractionAndPreparationRetained: true,
                 },
-                scope:
-                  "Interacciones tras aplicar fixture de demostración; Lighthouse mide la carga SSR por separado. Chromium local, no teléfono físico.",
+                scope: `Interacciones tras aplicar fixture de demostración; Lighthouse mide la carga SSR por separado. Chromium local ${renderer.hardwareAccelerated ? "con aceleración gráfica física verificada" : "con composición por software"}; CPU×${width < 768 ? 4 : 1}. No acredita un teléfono físico.`,
               },
               null,
               2,
             ) + "\n",
           );
           for (const sample of samples) {
-            expect
-              .soft(sample.fps, `${sample.phase}: FPS`)
-              .toBeGreaterThanOrEqual(57);
-            expect
-              .soft(sample.p95, `${sample.phase}: p95`)
-              .toBeLessThanOrEqual(25);
+            for (const animation of sample.animations) {
+              expect
+                .soft(
+                  animation.transition.error,
+                  `${sample.phase}: transición válida`,
+                )
+                .toBeNull();
+              expect
+                .soft(
+                  animation.transition.readyAt,
+                  `${sample.phase}: inicio de animación`,
+                )
+                .not.toBeNull();
+              expect
+                .soft(
+                  animation.transition.finishedAt,
+                  `${sample.phase}: fin de animación`,
+                )
+                .not.toBeNull();
+            }
+            for (const frames of sample.animations.length
+              ? sample.animations
+              : [sample]) {
+              expect
+                .soft(frames.fps, `${sample.phase}: FPS`)
+                .toBeGreaterThanOrEqual(57);
+              expect
+                .soft(frames.p95, `${sample.phase}: p95`)
+                .toBeLessThanOrEqual(25);
+            }
             expect.soft(sample.cls, `${sample.phase}: CLS`).toBe(0);
             expect
               .soft(
@@ -880,7 +1053,91 @@ for (const width of [390, 1440]) {
             `${directory}/inicio-interacciones-${width}.webm`,
           );
         }
+        await context.close();
       });
     });
   }
+}
+
+// Control opcional de laboratorio. No forma parte de la puerta ni cambia la app;
+// permite distinguir el coste de la composición del coste de reproducir el MP4.
+if (process.env.COOPER_DIAGNOSTICO_INICIO === "1") {
+  test("Diagnóstico local de composición Inicio", async ({ browser }) => {
+    const baseURL = `http://127.0.0.1:${process.env.COOPER_E2E_DEMO_PORT}`;
+    const context = await browser.newContext({
+      baseURL,
+      extraHTTPHeaders: { Referer: baseURL },
+      viewport: { width: 390, height: 900 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    await prepare(page);
+    await page.goto("/");
+    await ready(page);
+    const cdp = await context.newCDPSession(page);
+    await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+    const hero = page.locator("main .inicio-hero .medio");
+    await expect(hero).toHaveAttribute("data-preview", "on");
+    const samples = [];
+    for (const scenario of [
+      "original",
+      "sin-video",
+      "sin-halo",
+      "sin-vidrio",
+      "video-composicion",
+      "medio-composicion",
+    ]) {
+      await page
+        .locator("#diagnostico-inicio")
+        .evaluateAll((elements) => elements.forEach((e) => e.remove()));
+      const css =
+        scenario === "sin-halo"
+          ? ".halo-medio::before{display:none!important}"
+          : scenario === "sin-vidrio"
+            ? "*{backdrop-filter:none!important}"
+            : scenario === "video-composicion"
+              ? ".medio-preview{transform:translateZ(0)}"
+              : scenario === "medio-composicion"
+                ? ".inicio-medio{transform:translateZ(0);isolation:isolate}"
+                : "";
+      const style = await page.addStyleTag({
+        content: css || "/* sin modificación */",
+      });
+      await style.evaluate((e) =>
+        (e as HTMLElement).setAttribute("id", "diagnostico-inicio"),
+      );
+      await hero.locator("video").evaluate(async (e, scenario) => {
+        const v = e as HTMLVideoElement;
+        if (scenario === "sin-video") v.pause();
+        else await v.play();
+      }, scenario);
+      await page.waitForTimeout(400);
+      await startSample(page);
+      await page.waitForTimeout(1200);
+      samples.push(await stopSample(page, scenario));
+    }
+    await page.setContent(
+      '<!doctype html><html><body style="background:#000;margin:16px"><video style="width:358px;height:201px" src="/__inicio-medios/03-caja.mp4" muted autoplay loop playsinline></video></body></html>',
+    );
+    const bareVideo = page.locator("video");
+    await bareVideo.evaluate(async (e) => {
+      const v = e as HTMLVideoElement;
+      v.muted = true;
+      await v.play();
+    });
+    await page.waitForTimeout(400);
+    await startSample(page);
+    await page.waitForTimeout(1200);
+    samples.push(await stopSample(page, "html-minimo-video"));
+    await bareVideo.evaluate((e) => (e as HTMLVideoElement).pause());
+    await startSample(page);
+    await page.waitForTimeout(1200);
+    samples.push(await stopSample(page, "html-minimo-sin-video"));
+    writeFileSync(
+      `${directory}/inicio-diagnostico-composicion.json`,
+      JSON.stringify(samples, null, 2),
+    );
+    await context.close();
+  });
 }
