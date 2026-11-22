@@ -45,9 +45,22 @@ export function Transiciones() {
         return;
       event.preventDefault();
       // Solo la miniatura activada toma el nombre; evita duplicados de un mismo video.
-      const thumbnail = link.querySelector<HTMLElement>(
-        "[data-video-transition]",
-      );
+      const videoPath = /^\/videos\/([^/]+)$/.exec(url.pathname);
+      const targetName = videoPath
+        ? nombreMedio(decodeURIComponent(videoPath[1]))
+        : undefined;
+      const thumbnail =
+        link.querySelector<HTMLElement>("[data-video-transition]") ??
+        // El título y la miniatura de Publicados son enlaces distintos al mismo video.
+        (targetName
+          ? Array.from(
+              document.querySelectorAll<HTMLElement>("[data-video-transition]"),
+            ).find(
+              (element) =>
+                element.dataset.videoTransition === targetName &&
+                element.getClientRects().length > 0,
+            )
+          : undefined);
       if (thumbnail)
         thumbnail.style.viewTransitionName =
           thumbnail.dataset.videoTransition ?? "";

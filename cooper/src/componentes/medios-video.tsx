@@ -6,21 +6,22 @@ import { enlaceIncrustado } from "@/lib/enlaces-medios";
 import type { VideoMedios } from "@/contratos/video-medios";
 import { PortadaVideo, estiloMedio, useVideoMedios } from "./portada-video";
 import { nombreMedio } from "./transiciones";
+import { Medio } from "./primitivas";
 export function MediosVideo({
-  videoId,
+  videoId = "",
   datos,
   titulo,
   inicial,
   seccion = "todo",
 }: {
-  videoId: string;
+  videoId?: string;
   datos: Observabilidad;
   titulo: string;
   inicial?: VideoMedios;
   seccion?: "todo" | "reproductor" | "recursos";
 }) {
   const [fallo, setFallo] = useState(false);
-  const medio = useVideoMedios({ videoId, inicial });
+  const medio = useVideoMedios({ videoId, inicial, visible: Boolean(videoId) });
   const [proporcion] = useState(inicial?.relacionAspecto ?? 16 / 9);
   return (
     <>
@@ -33,7 +34,9 @@ export function MediosVideo({
           {datos.montaje ? (
             <section
               className="real-player"
-              style={{ viewTransitionName: nombreMedio(videoId) }}
+              style={{
+                viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+              }}
               aria-label="Video terminado"
             >
               <video
@@ -72,15 +75,21 @@ export function MediosVideo({
           ) : (
             <section
               className="real-player"
-              style={{ viewTransitionName: nombreMedio(videoId) }}
+              style={{
+                viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+              }}
               aria-label="Portada del video"
             >
-              <PortadaVideo
-                videoId={videoId}
-                titulo={titulo}
-                inicial={medio}
-                protagonista
-              />
+              {videoId ? (
+                <PortadaVideo
+                  videoId={videoId}
+                  titulo={titulo}
+                  inicial={medio}
+                  protagonista
+                />
+              ) : (
+                <Medio alt={titulo} />
+              )}
               <p>
                 El video terminado aparecerá aquí cuando la fábrica complete el
                 montaje.

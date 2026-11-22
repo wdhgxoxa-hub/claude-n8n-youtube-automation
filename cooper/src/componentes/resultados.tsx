@@ -287,6 +287,14 @@ export function Publicados({ initial }: { initial: Resultados }) {
                             ? (primero.videoId ?? video?.id)
                             : undefined
                         }
+                        mediosIniciales={
+                          primero.tipo === "video" ? primero.medios : undefined
+                        }
+                        publicacionId={
+                          primero.tipo === "video"
+                            ? primero.publicacion.id
+                            : undefined
+                        }
                         poster={
                           primero.tipo === "video"
                             ? primero.medios?.poster?.url ||
