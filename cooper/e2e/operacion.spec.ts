@@ -150,9 +150,7 @@ test("operación: el HTML inicial contiene los datos y actualizar mantiene la co
   page,
 }) => {
   const html = await (await page.request.get("/radar")).text();
-  expect(html).toContain(
-    ">Fábrica simulada. Los ejemplos no consultan cuentas externas.<",
-  );
+  expect(html).toContain(">Ideas de ejemplo para explorar tu canal.<");
   expect(html).toContain("Por qué reconocemos el olor de la lluvia");
   let consultas = 0;
   await page.route("**/api/operacion", (route) => {
@@ -208,7 +206,12 @@ test("operación: biblia, metas, redes, referencias y adopción con confirmació
   const op = await (await page.request.get("/api/operacion")).json();
   const id = op.canales[0].id;
   await page.goto(`/canales/${id}`);
-  await page.getByText("Editar tono", { exact: true }).click();
+  // El servidor puede conservar un buffer de Suspense fuera del contenido
+  // visible mientras entrega la ruta; la interacción pertenece al main actual.
+  await page
+    .getByRole("main")
+    .getByText("Editar tono", { exact: true })
+    .click();
   await page
     .getByRole("textbox", { name: "Tono", exact: true })
     .fill("Cálido y preciso, sin exageraciones.");
@@ -222,7 +225,10 @@ test("operación: biblia, metas, redes, referencias y adopción con confirmació
   await page.getByRole("button", { name: "Revisar tono", exact: true }).click();
   await confirmar(page);
   await page.reload();
-  await page.getByText("Editar tono", { exact: true }).click();
+  await page
+    .getByRole("main")
+    .getByText("Editar tono", { exact: true })
+    .click();
   await expect(
     page.getByRole("textbox", { name: "Tono", exact: true }),
   ).toHaveValue("Cálido y preciso, sin exageraciones.");
