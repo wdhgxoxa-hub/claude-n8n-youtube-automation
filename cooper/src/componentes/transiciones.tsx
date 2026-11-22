@@ -10,8 +10,23 @@ export function Transiciones() {
   const reduced = useMovimientoReducido();
   const resolver = useRef<(() => void) | null>(null);
   useEffect(() => {
-    resolver.current?.();
-    resolver.current = null;
+    // Next puede cambiar el pathname mientras Suspense aún muestra loading.tsx.
+    // La nueva captura debe contener la página, no el esqueleto que la precede.
+    const finalizar = () => {
+      if (document.querySelector("[data-ruta-cargando]")) return;
+      resolver.current?.();
+      resolver.current = null;
+      observer.disconnect();
+    };
+    const observer = new MutationObserver(finalizar);
+    if (resolver.current) {
+      observer.observe(document.getElementById("contenido") ?? document.body, {
+        childList: true,
+        subtree: true,
+      });
+      finalizar();
+    }
+    return () => observer.disconnect();
   }, [path]);
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
