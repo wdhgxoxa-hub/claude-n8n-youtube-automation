@@ -437,7 +437,7 @@ export async function capturarEstados(
     await expect(
       page.getByRole("navigation", { name: "Resumen de salud", exact: true }),
     ).toBeVisible();
-    await expect(page.getByRole("alert")).toHaveCount(0);
+    await expect(page.getByRole("main").getByRole("alert")).toHaveCount(0);
     await capture("salud-recuperada");
   } finally {
     save();

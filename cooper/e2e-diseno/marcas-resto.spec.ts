@@ -308,13 +308,23 @@ for (const width of widths)
     messages.length = 0;
     await page.goto("/marcas");
     const panel = await abrirCooper(page);
+    const welcome = await panel.locator(".chat-welcome").boundingBox();
+    const conversation = await panel.locator(".conversation").boundingBox();
+    expect(welcome!.y).toBeGreaterThanOrEqual(conversation!.y);
+    expect(welcome!.y + welcome!.height).toBeLessThanOrEqual(
+      conversation!.y + conversation!.height,
+    );
     await shot("cooper-abierto");
     const suggestions = panel.locator(".cooper-suggestions");
-    await expect(suggestions).toHaveAttribute("data-fin", "true");
+    const overflows = await suggestions.evaluate(
+      (el) => el.scrollWidth - el.clientWidth > 2,
+    );
+    await expect(suggestions).toHaveAttribute("data-fin", String(overflows));
     await suggestions.evaluate((el) => {
       el.scrollLeft = el.scrollWidth;
     });
     await expect(suggestions).toHaveAttribute("data-fin", "false");
+    await expect(suggestions).toHaveAttribute("data-inicio", String(overflows));
     await shot("cooper-chips-final");
     await panel
       .getByRole("textbox", { name: "Mensaje para Cooper" })
