@@ -237,6 +237,15 @@ main#contenido {
   /* El orbe se proyecta desde el panel: el vidrio vuelve al tamaño estable. */
   backdrop-filter: none;
 }
+.cooper-orb > * {
+  opacity: 1;
+  transition: opacity var(--duracion-presion) var(--curva-salida);
+}
+.cooper-orb[data-projecting="true"] > * {
+  /* La cara aparece a su tamaño nativo después de contraerse la superficie. */
+  opacity: 0;
+  transition: none;
+}
 .cooper-live-logo {
   display: grid;
   place-items: center;
