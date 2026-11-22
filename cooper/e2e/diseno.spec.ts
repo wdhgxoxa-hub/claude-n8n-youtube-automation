@@ -5,8 +5,8 @@ const dir = ".cache/capturas-diseno";
 test.use({ timezoneId: "America/Lima" });
 async function ready(page: Page, path = "/") {
   await page.goto(path);
-  await expect(page.locator(".connection")).toHaveText("En vivo");
-  await expect(page.locator(".demo-label")).toHaveText("Demostración");
+  await expect(page.locator("main")).toBeVisible();
+  await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function overflow(page: Page) {
   expect(
@@ -74,7 +74,6 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
       });
     }
     await ready(page);
-    if (width === 390) await page.getByRole("tab", { name: /Fábrica/ }).click();
     await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
     await page
       .getByRole("button", {
@@ -110,8 +109,10 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
 test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   page,
 }) => {
-  await ready(page);
+  await ready(page, "/perfil");
   await page.getByRole("button", { name: "Pausar movimiento" }).click();
+  await ready(page);
+  await page.getByRole("button", { name: "Abrir Cooper", exact: true }).click();
   await expect(page.locator(".workspace")).toHaveAttribute(
     "data-motion",
     "paused",
@@ -137,12 +138,13 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
     ),
   ).toEqual(before);
 
+  await ready(page, "/perfil");
   await page.getByRole("button", { name: "Activar movimiento" }).click();
+  await ready(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
     await overflow(page);
-    if (width < 768) await page.getByRole("tab", { name: /Fábrica/ }).click();
     await overflow(page);
   }
   expect(
@@ -166,7 +168,7 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   );
 });
 
-test("capturas finales: todas las pantallas y formularios demo en ambos temas", async ({
+test("capturas finales: todas las pantallas y formularios demo en el tema del estudio", async ({
   page,
 }) => {
   test.setTimeout(240000);
@@ -181,7 +183,7 @@ test("capturas finales: todas las pantallas y formularios demo en ambos temas", 
     demo: boolean;
   }[] = [];
   await page.emulateMedia({ reducedMotion: "reduce" });
-  for (const theme of ["oscuro", "claro"]) {
+  for (const theme of ["oscuro"]) {
     expect(
       (
         await page.request.patch("/api/perfil", {
@@ -224,8 +226,6 @@ test("capturas finales: todas las pantallas y formularios demo en ambos temas", 
             document.documentElement.dataset.theme = theme;
           }, theme);
         } else await ready(page, path);
-        if (name === "fabrica" && width === 390)
-          await page.getByRole("tab", { name: /Fábrica/ }).click();
         if (name === "voces" || name === "crear-voz")
           await page
             .getByRole("button", { name: "Voces", exact: true })
@@ -298,7 +298,7 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());
   });
-  for (const theme of ["oscuro", "claro"]) {
+  for (const theme of ["oscuro"]) {
     await page.request.patch("/api/perfil", {
       data: { name: "Walter", image: "", theme, home: "chat", whatsapp: "" },
     });
@@ -307,6 +307,9 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
       await page.waitForTimeout(900);
       expect(await page.locator('path[d="undefined"]').count()).toBe(0);
     }
+    await page
+      .getByRole("button", { name: "Abrir Cooper", exact: true })
+      .click();
     await page
       .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
       .fill("¿Qué tengo pendiente?");
@@ -319,6 +322,7 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
     await expect(
       page.getByRole("img", { name: "Cooper reposo" }),
     ).toBeVisible();
+    await ready(page, "/perfil");
     await page.getByRole("button", { name: "Pausar movimiento" }).click();
     await page.waitForTimeout(800);
     await page.getByRole("button", { name: "Activar movimiento" }).click();
@@ -326,7 +330,7 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
   expect(errors).toEqual([]);
 });
 
-test("la barra lateral cubre páginas largas y permite navegar con poca altura", async ({
+test("riel y barra móvil permanecen accesibles en páginas largas y alturas pequeñas", async ({
   page,
 }) => {
   test.setTimeout(120000);
@@ -340,68 +344,43 @@ test("la barra lateral cubre páginas largas y permite navegar con poca altura",
     ]) {
       await page.setViewportSize({ width, height: 480 });
       await ready(page, path);
-      if (width < 768) {
-        await page.getByRole("button", { name: "Abrir navegación" }).click();
-        const rail = await page.locator(".sidebar").boundingBox();
-        expect(rail?.y).toBe(0);
-        expect(rail?.height).toBe(480);
-        await page
-          .locator(".sidebar")
-          .getByRole("link", { name: "Mi perfil" })
-          .scrollIntoViewIfNeeded();
-        await expect(
-          page.locator(".sidebar").getByRole("link", { name: "Mi perfil" }),
-        ).toBeInViewport();
-      } else {
-        const bounds = await page.evaluate(() => {
-          const rail = document
-            .querySelector(".sidebar")!
-            .getBoundingClientRect();
-          const area = document
-            .querySelector(".workspace")!
-            .getBoundingClientRect();
-          return { rail: rail.bottom, area: area.bottom, height: area.height };
-        });
-        expect(bounds.height).toBeGreaterThan(480);
-        expect(bounds.rail).toBeCloseTo(bounds.area, 0);
-        await page.evaluate(() =>
-          window.scrollTo(0, document.body.scrollHeight),
-        );
-        expect(
-          await page.evaluate(() => {
-            const r = document
-              .querySelector(".sidebar")!
-              .getBoundingClientRect();
-            return (
-              r.bottom >=
-              Math.min(
-                innerHeight,
-                document.documentElement.getBoundingClientRect().bottom,
-              ) -
-                1
-            );
-          }),
-        ).toBe(true);
-      }
+      const navigation = page
+        .getByRole("navigation", {
+          name: /^Principal(?: móvil)?$/,
+          exact: true,
+        })
+        .filter({ visible: true });
+      await expect(navigation).toBeVisible();
+      await expect(navigation.getByRole("link")).toHaveCount(5);
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await expect(
+        navigation.getByRole("link", { name: "Inicio", exact: true }),
+      ).toBeInViewport();
+      await page
+        .getByRole("button", { name: "Más destinos", exact: true })
+        .filter({ visible: true })
+        .click();
+      const profile = page
+        .getByRole("link", { name: /^(?:Mi perfil|Perfil)$/ })
+        .filter({ visible: true })
+        .last();
+      await profile.scrollIntoViewIfNeeded();
+      await expect(profile).toBeInViewport();
       await overflow(page);
       await page.screenshot({
         path: `${dir}/barra-${name}-${width}-final.png`,
       });
-      if (width >= 768) await page.evaluate(() => window.scrollTo(0, 0));
-      else
-        await page.locator(".sidebar-content").evaluate((el) => {
-          el.scrollTop = 0;
-        });
+      await page.keyboard.press("Escape");
+      await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({
         path: `${dir}/barra-${name}-${width}.png`,
         fullPage: width >= 768,
       });
-      if (width < 768) await page.keyboard.press("Escape");
     }
   }
 });
 
-test("integración final: chat, noticias y WhatsApp en cuatro anchuras y dos temas", async ({
+test("integración final: chat, noticias y WhatsApp en cuatro anchuras y tema oscuro", async ({
   page,
 }) => {
   test.setTimeout(180000);
@@ -439,7 +418,7 @@ test("integración final: chat, noticias y WhatsApp en cuatro anchuras y dos tem
     ).ok(),
   ).toBe(true);
   async function matriz(name: string) {
-    for (const theme of ["oscuro", "claro"]) {
+    for (const theme of ["oscuro"]) {
       // Mantiene estados transitorios (adjunto/OTP) al cambiar los mismos tokens.
       await page.evaluate((value) => {
         document.documentElement.dataset.theme = value;
@@ -488,6 +467,7 @@ test("integración final: chat, noticias y WhatsApp en cuatro anchuras y dos tem
     }
   }
   await ready(page);
+  await page.getByRole("button", { name: "Abrir Cooper", exact: true }).click();
   await page
     .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
     .fill("Activa modo noticia");
@@ -520,6 +500,7 @@ test("integración final: chat, noticias y WhatsApp en cuatro anchuras y dos tem
   await ready(page, "/canales");
   await matriz("canal-noticias");
   await ready(page);
+  await page.getByRole("button", { name: "Abrir Cooper", exact: true }).click();
   const png = await page.evaluate(() => {
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 48;

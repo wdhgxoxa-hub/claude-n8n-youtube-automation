@@ -18,7 +18,8 @@ async function login(page: Page) {
   );
   expect(response.ok()).toBe(true);
   await page.goto("/");
-  await expect(page.locator(".connection")).toHaveText("En vivo");
+  await expect(page.locator("main")).toBeVisible();
+  await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function settledFace(page: Page) {
   return page
@@ -52,6 +53,9 @@ test.describe("evidencia de movimiento", () => {
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
     await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
+    await page
+      .getByRole("button", { name: "Abrir Cooper", exact: true })
+      .click();
     const gaze = page.locator(".chat-heading .cooper-gaze");
     await page.mouse.move(1380, 200);
     await expect
@@ -87,7 +91,9 @@ test.describe("evidencia de movimiento", () => {
       "12 Por qué el cielo cambia de color Publicado",
     );
     await card.hover({ position: { x: 8, y: 8 } });
-    await expect.poll(() => card.getAttribute("style")).toContain("rotateY");
+    await expect
+      .poll(() => card.evaluate((el) => getComputedStyle(el).transform))
+      .not.toBe("none");
     await card.click();
     await expect(page.locator(".factory-link")).toHaveAttribute(
       "href",
@@ -203,11 +209,15 @@ test.describe("evidencia de movimiento", () => {
     await captura(page, "adjunto-1440");
     await page
       .getByRole("navigation", { name: "Principal" })
-      .getByRole("link", { name: /^Videos/ })
+      .getByRole("link", { name: /^Fábrica/ })
       .click();
     await expect(
-      page.locator('.sidebar [aria-current="page"] .nav-indicator'),
+      page.locator('.glass-rail [aria-current="page"] .nav-indicator'),
     ).toHaveCount(1);
+    await page
+      .getByRole("button", { name: "Más destinos", exact: true })
+      .filter({ visible: true })
+      .click();
     await page
       .getByRole("link", { name: "Administración", exact: true })
       .click();
@@ -224,17 +234,20 @@ test("pausa y movimiento reducido detienen efectos activos, incluso al navegar",
   page,
 }) => {
   await login(page);
-  const contenido = page.locator(".route-choreography > :first-child");
-  await expect(contenido).toHaveCSS("animation-name", "none");
   await page
-    .getByRole("navigation", { name: "Principal" })
-    .getByRole("link", { name: /^Videos/ })
+    .getByRole("navigation", { name: /^Principal(?: móvil)?$/, exact: true })
+    .filter({ visible: true })
+    .getByRole("link", { name: "Fábrica", exact: true })
     .click();
-  await expect(contenido).toHaveCSS("animation-name", "route-arrive");
-  await page.getByRole("link", { name: "Inicio", exact: true }).click();
-  await expect(contenido).toHaveCSS("animation-name", "route-arrive");
+  await expect(page).toHaveURL(/\/videos$/);
+  await page.goto("/perfil");
   await page.getByRole("button", { name: "Pausar movimiento" }).click();
-  await expect(contenido).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".workspace")).toHaveAttribute(
+    "data-motion",
+    "paused",
+  );
+  await page.goto("/");
+  await page.getByRole("button", { name: "Abrir Cooper", exact: true }).click();
   await page.waitForTimeout(350);
   const before = await settledFace(page);
   await page.mouse.move(20, 30);
@@ -247,15 +260,13 @@ test("pausa y movimiento reducido detienen efectos activos, incluso al navegar",
           .length,
     ),
   ).toBe(0);
-  await page
-    .getByRole("navigation", { name: "Principal" })
-    .getByRole("link", { name: /^Videos/ })
-    .click();
+  await page.goto("/perfil");
   await expect(
     page.getByRole("button", { name: "Activar movimiento" }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Inicio", exact: true }).click();
   await page.getByRole("button", { name: "Activar movimiento" }).click();
+  await page.goto("/");
+  await page.getByRole("button", { name: "Abrir Cooper", exact: true }).click();
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForTimeout(350);
   const reducedFace = await settledFace(page);
@@ -271,7 +282,6 @@ test("pausa y movimiento reducido detienen efectos activos, incluso al navegar",
   ).toBe(0);
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
-    if (width < 768) await page.getByRole("tab", { name: /Fábrica/ }).click();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
