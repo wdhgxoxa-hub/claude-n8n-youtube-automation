@@ -74,7 +74,6 @@
   border: var(--borde-ancho) solid var(--linea-fuerte);
   border-radius: var(--radio-pildora);
   background: var(--vidrio-fondo);
-  backdrop-filter: var(--vidrio-filtro);
   color: var(--texto);
   font-size: var(--texto-13);
   transition: transform var(--duracion-estado) var(--curva-salida);
