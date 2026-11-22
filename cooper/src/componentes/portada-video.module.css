@@ -35,7 +35,7 @@
   transition-duration: var(--medio-fundido-reducido);
 }
 .cartela {
-  --cartela-espacio: 12px;
+  --cartela-espacio: 8px;
   --cartela-texto: #f5f5f7;
   --cartela-lienzo: #0a0a0c;
   display: flex;
@@ -55,7 +55,7 @@
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   font-size: 12px;
   line-height: 1.5;
   font-weight: 600;
@@ -92,6 +92,7 @@
   --cartela-espacio: 24px;
 }
 .protagonista .cartelaTitulo {
+  -webkit-line-clamp: 3;
   font-size: clamp(20px, 3vw, 40px);
   line-height: 1.1;
   letter-spacing: -0.02em;
