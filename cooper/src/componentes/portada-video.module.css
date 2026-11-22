@@ -61,6 +61,14 @@
   font-weight: 600;
   overflow-wrap: anywhere;
 }
+.medio[data-contexto="cola"] .cartela {
+  /* La insignia de etapa ocupa la esquina inferior izquierda. El título
+     conserva dos líneas completas, también en las portadas de 60px. */
+  padding: 8px 8px 8px 32px;
+}
+.medio[data-contexto="cola"] .cartelaTitulo {
+  -webkit-line-clamp: 2;
+}
 .espera {
   display: grid;
   place-items: center;

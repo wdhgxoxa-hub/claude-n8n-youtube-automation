@@ -285,6 +285,7 @@ export function FabricaVista({
                         videoId={v.id}
                         titulo={v.title}
                         inicial={v.medios}
+                        enCola
                       />
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
                     </span>

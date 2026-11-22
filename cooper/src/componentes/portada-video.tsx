@@ -96,12 +96,14 @@ export function PortadaVideo({
   inicial,
   publicacion,
   protagonista = false,
+  enCola = false,
 }: {
   videoId: string;
   titulo: string;
   inicial?: VideoMedios;
   publicacion?: string;
   protagonista?: boolean;
+  enCola?: boolean;
 }) {
   const contenedor = useRef<HTMLSpanElement>(null);
   const reproductor = useRef<HTMLVideoElement>(null);
@@ -206,6 +208,7 @@ export function PortadaVideo({
       style={estiloMedio(medio, proporcion)}
       data-video-medio={videoId}
       data-publicacion={publicacion}
+      data-contexto={enCola ? "cola" : undefined}
       data-estado={falloPoster ? "no_disponible" : medio?.estado ?? "pendiente"}
       data-origen={
         medio?.poster?.origen ??
