@@ -1,4 +1,5 @@
 // Solo servidor: este módulo importa Node/SQLite; el cliente importa únicamente el contrato.
+import { formatoMoneda, formatoPorcentaje } from "@/lib/cifras";
 import { open } from "node:fs/promises";
 import { constants } from "node:fs";
 import { z } from "@/contratos/validacion";
@@ -740,7 +741,7 @@ function derivarAlertas(
         "vps",
         "critica",
         "Poco espacio libre en el VPS",
-        `${vps.disco.librePorcentaje.toFixed(1)} % libre; umbral ${umbrales.discoLibrePorcentaje} %.`,
+        `${formatoPorcentaje(vps.disco.librePorcentaje)} libre; umbral ${formatoPorcentaje(umbrales.discoLibrePorcentaje)}.`,
       );
     if (
       vps.memoria &&
@@ -751,7 +752,7 @@ function derivarAlertas(
         "vps",
         "aviso",
         "Uso alto de memoria",
-        `${vps.memoria.usadaPorcentaje.toFixed(1)} % en uso; umbral ${umbrales.memoriaUsadaPorcentaje} %.`,
+        `${formatoPorcentaje(vps.memoria.usadaPorcentaje)} en uso; umbral ${formatoPorcentaje(umbrales.memoriaUsadaPorcentaje)}.`,
       );
     if (!vps.disco || !vps.memoria)
       agregar(
@@ -838,7 +839,7 @@ function derivarAlertas(
         "fabrica",
         "aviso",
         "Gasto diario elevado",
-        `${salud.fabrica.gastoDiarioUsd.toFixed(2)} USD ${salud.fabrica.gastoFuente === "n8n_estimado" ? "estimados" : "registrados"}; umbral ${umbrales.gastoDiarioUsd.toFixed(2)} USD, día de Lima.`,
+        `${formatoMoneda(salud.fabrica.gastoDiarioUsd)} ${salud.fabrica.gastoFuente === "n8n_estimado" ? "estimados" : "registrados"}; umbral ${formatoMoneda(umbrales.gastoDiarioUsd)}, día de Lima.`,
       );
   }
   return alertas;

@@ -1,3 +1,4 @@
+import { formatoMoneda } from "@/lib/cifras";
 import { and, eq, inArray, ne, notExists, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { users, videos, whatsappContacts, whatsappOutbox } from "@/db/schema";
@@ -80,7 +81,7 @@ export async function cicloMensajeria(now = Date.now()) {
         if (total >= data.threshold)
           encolarGasto(
             admin,
-            `${total.toFixed(2)} USD${data.fuente === "simulada" ? " (simulado)" : data.fuente === "n8n_estimado" ? " (estimado)" : ""}`,
+            `${formatoMoneda(total)}${data.fuente === "simulada" ? " (simulado)" : data.fuente === "n8n_estimado" ? " (estimado)" : ""}`,
             now,
           );
       } catch {

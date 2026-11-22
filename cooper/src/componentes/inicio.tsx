@@ -23,9 +23,9 @@ import { Boton, Cifra, Medio, Tarjeta } from "./primitivas";
 import { useVideoMedios, estiloMedio } from "./portada-video";
 import { nombreMedio } from "./transiciones";
 import { ETAPAS, esperaAprobacion } from "@/lib/etapas";
+import { nombreRed } from "@/lib/redes";
 import {
   corteInicio,
-  nombreRed,
   publicacionPrincipal,
   resumenInicio,
   terminadosInicio,

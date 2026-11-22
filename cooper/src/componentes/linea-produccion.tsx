@@ -1,5 +1,6 @@
 "use client";
 
+import { nombreRed } from "@/lib/redes";
 import {
   useCallback,
   useEffect,
@@ -46,13 +47,6 @@ const fechaRelativa = new Intl.RelativeTimeFormat("es-PE", {
   numeric: "auto",
   style: "long",
 });
-const REDES: Record<string, string> = {
-  youtube: "YouTube",
-  tiktok: "TikTok",
-  instagram: "Instagram",
-  facebook: "Facebook",
-};
-const nombreRed = (red: string) => REDES[red.toLowerCase()] ?? red;
 const capitalizar = (texto: string) =>
   texto.charAt(0).toLocaleUpperCase("es-PE") + texto.slice(1);
 

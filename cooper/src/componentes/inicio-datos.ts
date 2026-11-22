@@ -57,17 +57,6 @@ export function publicacionPrincipal(video: VideoInicio, red?: string) {
   );
 }
 
-export function nombreRed(red: string) {
-  return (
-    {
-      youtube: "YouTube",
-      tiktok: "TikTok",
-      instagram: "Instagram",
-      facebook: "Facebook",
-    }[red] ?? red
-  );
-}
-
 type Contador = "vistas" | "seguidoresGanados";
 type Dato = { valor: number | null; serie: number[]; variacion: string };
 

@@ -177,7 +177,7 @@ async function capture(
     fullPage: true,
     // Los accesos flotantes se documentan en el viewport; aquí no ocultan contenido.
     style:
-      ".mobile-dock, .mobile-more, .cooper-orb { visibility: hidden !important; }",
+      ".mobile-dock, .cooper-orb { visibility: hidden !important; }",
   });
   await page.evaluate(() => {
     const state = window as Window & {

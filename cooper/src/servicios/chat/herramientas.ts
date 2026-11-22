@@ -1,3 +1,4 @@
+import { formatoMoneda } from "@/lib/cifras";
 import { createHash } from "node:crypto";
 import { eq, and } from "drizzle-orm";
 import { z } from "zod";
@@ -235,7 +236,7 @@ export async function consultar(
       .where(eq(expenses.ownerId, user.id))
       .all()
       .reduce((n, r) => n + r.amount, 0);
-    return `Gasto propio registrado: ${total.toFixed(2)} USD (simulado).`;
+    return `Gasto propio registrado: ${formatoMoneda(total)} (simulado).`;
   }
   if (process.env.COOPER_DEMO !== "1" && process.env.COOPER_FABRICA === "n8n") {
     const f = new FabricaN8n();
