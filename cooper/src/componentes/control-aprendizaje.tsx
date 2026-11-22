@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { api } from "./espacio";
 import type { Ajustes } from "@/contratos/operacion";
+import styles from "./aprendizaje-vista.module.css";
 export function InterruptorAprendizaje() {
   const [ajustes, setAjustes] = useState<Ajustes | null>(null);
   const [error, setError] = useState("");
@@ -44,20 +45,37 @@ export function InterruptorAprendizaje() {
     }
   }
   return (
-    <section className="learning-section" aria-label="Control del aprendizaje">
-      <label className="checkbox">
-        <input
-          type="checkbox"
-          role="switch"
-          checked={ajustes?.valores.allowAnalytics === true}
-          disabled={!ajustes || ocupado}
-          onChange={() => void cambiar()}
-        />
-        Medición y aprendizaje automático
-      </label>
-      <p className="muted">
+    <section className={styles.control} aria-label="Control del aprendizaje">
+      <div className={styles.controlCabecera}>
+        <div className={styles.controlTitulo}>
+          <strong>Medición automática</strong>
+          <span className={styles.controlEstado}>
+            {ocupado
+              ? "Guardando el cambio…"
+              : !ajustes
+                ? error
+                  ? "No pudimos consultar el estado"
+                  : "Consultando el estado…"
+                : ajustes.valores.allowAnalytics === true
+                  ? "Activa"
+                  : "En pausa"}
+          </span>
+        </div>
+        <label className={styles.interruptor}>
+          <input
+            type="checkbox"
+            role="switch"
+            aria-label="Medición y aprendizaje automático"
+            checked={ajustes?.valores.allowAnalytics === true}
+            disabled={!ajustes || ocupado}
+            onChange={() => void cambiar()}
+          />
+          <span aria-hidden="true" />
+        </label>
+      </div>
+      <p>
         Recoge resultados a las 24 h, 72 h y 7 días para preparar las lecciones
-        del siguiente guion. Al pausarlo se conservan las lecciones registradas.
+        del siguiente guion. Al pausarlo, lo aprendido se queda contigo.
       </p>
       {error && (
         <p role="alert">
