@@ -67,7 +67,7 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   await page.getByLabel("Hasta (Lima)").fill("2026-11-20");
   await expect(page.locator(".publication:visible")).toHaveCount(1);
   await expect(page.getByRole("main").getByRole("status")).toHaveText(
-    "1 publicación · 2 registros de origen",
+    "1 publicación · 2 resultados",
   );
   await expect(page.getByText("125", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Limpiar filtros" }).click();
