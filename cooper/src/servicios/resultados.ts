@@ -121,6 +121,7 @@ export function leerResultados(user: User): Resultados {
       resultado.publicaciones.push({
         ...base,
         id: `video:${v.id}:${p.red}:${id}:${indice}`,
+        titulo: p.titulo?.trim() || v.titulo,
         tipo: "video",
         fecha: p.fecha,
         videoId: v.id,

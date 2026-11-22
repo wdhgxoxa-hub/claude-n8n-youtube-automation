@@ -38,6 +38,8 @@ export const medicionSchema = z.object({
 export const publicacionSchema = z.object({
   id: z.string().max(300),
   red: z.string().max(40),
+  // Título propio de esa red; sin él, la pieza usa el del video.
+  titulo: z.string().max(300).optional(),
   url: urlMedio,
   fecha: fecha.nullable(),
   miniatura: urlMedio,
