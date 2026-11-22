@@ -371,7 +371,7 @@ main#contenido {
   color: var(--texto-2);
 }
 .title-stop {
-  color: var(--tally);
+  color: var(--texto);
 }
 .home-overview {
   display: grid;

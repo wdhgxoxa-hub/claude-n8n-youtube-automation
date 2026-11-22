@@ -454,7 +454,7 @@ details[open] summary {
   display: grid;
   place-items: center;
   background: var(--sup-3);
-  color: var(--tally);
+  color: var(--texto);
   height: 36px;
   width: 36px;
   border-radius: var(--radio-pildora);
@@ -1368,7 +1368,7 @@ main:focus-visible {
   width: 112px;
   height: 112px;
   background: var(--sup-3);
-  color: var(--tally);
+  color: var(--texto);
   border-radius: var(--radio-pildora);
   display: grid;
   place-items: center;
@@ -3602,12 +3602,12 @@ input:is([type="checkbox"], [type="radio"]):checked {
 }
 .chart-line {
   fill: none;
-  stroke: var(--tally);
+  stroke: var(--sube);
   stroke-width: 3;
   stroke-linejoin: round;
 }
 .chart-point {
-  fill: var(--tally);
+  fill: var(--sube);
 }
 .chart-range {
   display: flex;
