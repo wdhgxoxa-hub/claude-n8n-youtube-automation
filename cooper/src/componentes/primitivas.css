@@ -139,12 +139,17 @@
   inset: 0;
   z-index: -1;
   background: radial-gradient(ellipse, var(--tinte), var(--transparente) 70%);
-  opacity: var(--halo-opacidad);
+  opacity: 0;
   filter: var(--halo-filtro);
   pointer-events: none;
   transition: opacity var(--duracion-ruta);
 }
-.halo-medio > .medio {
+.halo-medio[data-tinte="true"]::before {
+  opacity: var(--halo-opacidad);
+}
+.halo-medio[data-tinte="true"] > .medio,
+.halo-medio[data-tinte="true"] > .real-player,
+.medio[data-tinte="true"] {
   border: 1px solid color-mix(in srgb, var(--tinte) 20%, var(--transparente));
 }
 .cifra {

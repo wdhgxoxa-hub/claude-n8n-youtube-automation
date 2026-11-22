@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import type { Observabilidad } from "@/contratos/observabilidad";
 import { enlaceIncrustado } from "@/lib/enlaces-medios";
+import { useTinteVideo } from "./tinte-video";
 export function MediosVideo({
   datos,
   titulo,
@@ -14,34 +15,43 @@ export function MediosVideo({
   videoId?: string;
 }) {
   const [fallo, setFallo] = useState(false);
+  const tinte = useTinteVideo(videoId);
   return (
     <>
       {datos.montaje && (
-        <section className="real-player" aria-label="Video terminado" style={{ viewTransitionName: videoId ? nombreMedio(videoId) : undefined }}>
-          <video
-            key={datos.montaje}
-            controls
-            playsInline
-            preload={datos.miniatura ? "none" : "metadata"}
-            poster={datos.miniatura || undefined}
-            src={datos.montaje}
-            onError={() => setFallo(true)}
-            onLoadedData={() => setFallo(false)}
-            aria-label={`Video terminado: ${titulo}`}
-          />
-          <div className="player-caption">
-            <strong>Video terminado</strong>
-            <a href={datos.montaje} target="_blank" rel="noreferrer">
-              Abrir video
-            </a>
-          </div>
-          {fallo && (
-            <p role="status">
-              No se pudo cargar el video. Prueba el enlace o vuelve a intentarlo
-              más tarde.
-            </p>
-          )}
-        </section>
+        <div className="halo-medio" data-tinte={Boolean(tinte)} style={tinte}>
+          <section
+            className="real-player"
+            aria-label="Video terminado"
+            style={{
+              viewTransitionName: videoId ? nombreMedio(videoId) : undefined,
+            }}
+          >
+            <video
+              key={datos.montaje}
+              controls
+              playsInline
+              preload={datos.miniatura ? "none" : "metadata"}
+              poster={datos.miniatura || undefined}
+              src={datos.montaje}
+              onError={() => setFallo(true)}
+              onLoadedData={() => setFallo(false)}
+              aria-label={`Video terminado: ${titulo}`}
+            />
+            <div className="player-caption">
+              <strong>Video terminado</strong>
+              <a href={datos.montaje} target="_blank" rel="noreferrer">
+                Abrir video
+              </a>
+            </div>
+            {fallo && (
+              <p role="status">
+                No se pudo cargar el video. Prueba el enlace o vuelve a
+                intentarlo más tarde.
+              </p>
+            )}
+          </section>
+        </div>
       )}
       {datos.escenas.length > 0 && (
         <section className="scene-gallery" aria-label="Piezas por escena">

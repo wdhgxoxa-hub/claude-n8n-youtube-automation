@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { useInView } from "framer-motion";
+import { useTinteVideo } from "./tinte-video";
 import {
   NumeroAnimado,
   useMovimientoReducido,
@@ -64,6 +65,7 @@ export function Medio({
   alt,
   proporcion = "horizontal",
   idCompartido,
+  videoId,
   className,
   children,
 }: {
@@ -72,6 +74,7 @@ export function Medio({
   alt: string;
   proporcion?: "horizontal" | "vertical" | "cuadrado";
   idCompartido?: string;
+  videoId?: string;
   className?: string;
   children?: ReactNode;
 }) {
@@ -81,6 +84,7 @@ export function Medio({
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
   const permitted = !reduced && !paused;
+  const tinte = useTinteVideo(videoId ?? idCompartido);
 
   function stop() {
     if (timer.current) clearTimeout(timer.current);
@@ -155,12 +159,14 @@ export function Medio({
       ref={root}
       className={clases("medio", `medio-${proporcion}`, className)}
       data-preview="off"
+      data-tinte={Boolean(tinte)}
       style={
-        idCompartido
-          ? ({
-              viewTransitionName: `video-${idCompartido.replace(/[^a-zA-Z0-9_-]/g, "-")}`,
-            } as CSSProperties)
-          : undefined
+        {
+          ...tinte,
+          viewTransitionName: idCompartido
+            ? `video-${idCompartido.replace(/[^a-zA-Z0-9_-]/g, "-")}`
+            : undefined,
+        } as CSSProperties
       }
       onPointerEnter={start}
       onPointerLeave={stop}
