@@ -136,7 +136,16 @@ it("migra una caché aditiva, tipográfica y privada sin medio; escapa títulos 
   expect(response.headers.get("cache-control")).toBe(
     "private, max-age=0, must-revalidate",
   );
-  expect(await response.text()).toContain("&lt;propia&gt;");
+  const svg = await response.text();
+  expect(svg).toContain("&lt;propia&gt;");
+  // Toda la tipografía del póster sigue legible en el protagonista móvil.
+  const tamanos = [...svg.matchAll(/font-size="(\d+)"/g)].map((m) =>
+    Number(m[1]),
+  );
+  expect(tamanos.length).toBeGreaterThan(0);
+  expect(tamanos.every((size) => (size * 340) / 1600 >= 12)).toBe(true);
+  expect(svg).not.toContain("Una historia en preparación");
+  expect(svg).not.toContain("Sin archivo disponible");
   expect(normalizarTinte(255, 0, 0)).toBe("hsl(0 45% 50%)");
   expect(normalizarTinte(0, 0, 0)).toBe("hsl(0 0% 45%)");
   const row = db()

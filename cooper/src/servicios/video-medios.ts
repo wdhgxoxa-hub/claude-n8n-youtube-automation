@@ -103,6 +103,9 @@ function contexto(
   const revision = hash(
     JSON.stringify([
       1,
+      ...(!montaje && !miniatura && !publicacion?.url
+        ? ["tipografico-v2"]
+        : []),
       video.ownerId,
       video.title,
       video.channelId,
@@ -216,7 +219,7 @@ function tipografico(c: Contexto) {
     .join("");
   // SVG escrito por el servidor, sin HTML, enlaces, scripts ni texto sin escapar.
   return Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"><rect width="1600" height="900" fill="#0A0A0C"/><rect x="96" y="120" width="96" height="8" fill="${c.tinte}"/><text x="96" y="204" fill="${c.tinte}" font-family="sans-serif" font-size="28">${escapar(c.canal.slice(0, 70))}</text><text fill="#F5F5F7" font-family="sans-serif" font-size="72" font-weight="600">${title}</text><text x="96" y="804" fill="#A1A1AA" font-family="sans-serif" font-size="28">${c.video.stage >= 10 ? "Sin archivo disponible" : "Una historia en preparación"}</text></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"><rect width="1600" height="900" fill="#0A0A0C"/><rect x="96" y="120" width="96" height="8" fill="${c.tinte}"/><text fill="#F5F5F7" font-family="sans-serif" font-size="72" font-weight="600">${title}</text></svg>`,
   );
 }
 function guardarTipografico(c: Contexto) {

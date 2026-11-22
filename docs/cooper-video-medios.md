@@ -41,6 +41,8 @@ FFmpeg produce cinco segundos a 12 fps, sin audio, subtítulos, capítulos ni me
 
 El tinte dominante sale del póster decodificado (`sharp.stats().dominant`), convertido a HSL con saturación máxima 45 % y luminosidad 45–60 %. Se persiste en servidor. Sin medio real, el servidor genera un SVG tipográfico escapado con el título y un tinte estable del canal (hash del ID, S 30 %, L 52 %); todavía no existe un color editorial explícito de canal en el esquema. Un fallo de descarga de una fuente real devuelve `no_disponible`, nunca una ilustración de montañas ni un póster tipográfico que suplante ese medio.
 
+El póster tipográfico contiene solo el título y el acento de tinte; se retiraron canal y pie para evitar microtexto al reducirlo. A 340 px de ancho, el título equivale a 15,3 px. Por debajo de 267 px el texto dentro de la imagen queda por debajo de 12 px: las miniaturas pequeñas conservan su título HTML adyacente como lectura principal; no se certifica legibilidad del texto incrustado en todos los tamaños de miniatura. La revisión de caché distingue esta versión del póster.
+
 ## Caché y ejecución
 
 Las proyecciones SSR/SSE leen metadatos por lote sin blobs ni escrituras por tarjeta. El fallback tipográfico se materializa al pedir su asset. El endpoint JSON responde antes del trabajo pesado y agenda la preparación con `after` de Next.js. Hay dos trabajos simultáneos y dieciséis en espera por proceso; las peticiones idénticas comparten trabajo. Una reserva SQLite de cinco minutos evita repetir la misma revisión en procesos/reinicios. Tras interrumpirse el proceso, una futura solicitud recupera la reserva caducada.
