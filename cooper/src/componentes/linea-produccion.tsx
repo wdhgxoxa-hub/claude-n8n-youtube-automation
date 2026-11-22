@@ -66,10 +66,14 @@ function useTransicionRuta(reducido: boolean): Transition {
     ?.trim()
     .match(/^cubic-bezier\(([^)]+)\)$/)?.[1]
     .split(",")
-    .map(Number);
+    .map((valor) => (valor.trim() ? Number(valor) : NaN));
+  const segundos = duracion
+    ? Number(duracion[1]) / (duracion[2] === "ms" ? 1_000 : 1)
+    : 0;
   if (
     reducido ||
     !duracion ||
+    !Number.isFinite(segundos) ||
     coordenadas?.length !== 4 ||
     !coordenadas.every(Number.isFinite) ||
     coordenadas[0] < 0 ||
@@ -80,7 +84,7 @@ function useTransicionRuta(reducido: boolean): Transition {
     return { layout: { duration: 0 } };
   return {
     layout: {
-      duration: Number(duracion[1]) / (duracion[2] === "ms" ? 1_000 : 1),
+      duration: segundos,
       ease: coordenadas as [number, number, number, number],
     },
   };

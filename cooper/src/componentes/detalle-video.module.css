@@ -442,6 +442,20 @@
     margin-top: var(--espacio-8);
   }
 }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .direccion {
+    flex-direction: column;
+    gap: var(--espacio-24);
+  }
+  .decision {
+    flex-basis: auto;
+    width: 100%;
+  }
+  .cifras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--espacio-32) var(--espacio-24);
+  }
+}
 @media (max-width: 767px) {
   .breadcrumb {
     margin-bottom: var(--espacio-16);
