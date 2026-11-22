@@ -1,0 +1,68 @@
+{
+  "commit": "a7dfb5dfdaec967b2e4f5c0c3e19c1c1eb80dd58",
+  "datos": "Ficticios; sin sesiones ni datos de producción",
+  "matriz": "Operativa/degradada × claro/oscuro × 390/1440 px",
+  "revision_visual": "Ocho capturas inspeccionadas: sin cortes, solapamientos ni importes partidos. Misma presentación de la revisión anterior, salvo ilustración animada de cabecera.",
+  "axe_violaciones": 0,
+  "desbordamiento_horizontal": false,
+  "capturas": [
+    {
+      "archivo": "degradada-claro-1440.png",
+      "ancho": 1440,
+      "alto": 5077,
+      "sha256": "922c8864a678929025242356d17f89662d72e726c1dbf4cf916609c47e826a61",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/degradada-claro-1440.png",
+      "muestra_versionada": "degradada-claro-1440.png"
+    },
+    {
+      "archivo": "degradada-claro-390.png",
+      "ancho": 390,
+      "alto": 6877,
+      "sha256": "344785737128d51b63eb88dc3e6fce3411a1e034a8970beeb190b993da213961",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/degradada-claro-390.png"
+    },
+    {
+      "archivo": "degradada-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 5077,
+      "sha256": "728eff24a4e0f1791e87c2e897b83e57a84fdd164fc496a04c01a41a241f99ea",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/degradada-oscuro-1440.png"
+    },
+    {
+      "archivo": "degradada-oscuro-390.png",
+      "ancho": 390,
+      "alto": 6877,
+      "sha256": "62f1111b2dbbc6f25c52b743bc9ced8cea6a832965a8f85cdab446acdde7413a",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/degradada-oscuro-390.png",
+      "muestra_versionada": "degradada-oscuro-390.png"
+    },
+    {
+      "archivo": "operativa-claro-1440.png",
+      "ancho": 1440,
+      "alto": 4570,
+      "sha256": "35765c5f8b87784f5798aaa6d7e82a9110aa0042000b9ce3c233df7fd5c8ddd0",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/operativa-claro-1440.png"
+    },
+    {
+      "archivo": "operativa-claro-390.png",
+      "ancho": 390,
+      "alto": 6198,
+      "sha256": "96ba179f71a3fd91917f9fab5deef0dd0b824ba6034d7043bac0b676dfadb5b4",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/operativa-claro-390.png"
+    },
+    {
+      "archivo": "operativa-oscuro-1440.png",
+      "ancho": 1440,
+      "alto": 4570,
+      "sha256": "f5ab9607f906b74ecc2d276360833f760ca5aee85e799fcfa60612a6565a32bf",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/operativa-oscuro-1440.png"
+    },
+    {
+      "archivo": "operativa-oscuro-390.png",
+      "ancho": 390,
+      "alto": 6198,
+      "sha256": "7a30df611f9eb9728b8f28acc4f0211a21361340d951d2004e38062d44a8ceeb",
+      "origen_local": ".cache/ci-limpia-23Lm0E/checkout/cooper/.cache/salud-operativa-visual/operativa-oscuro-390.png"
+    }
+  ]
+}

@@ -374,6 +374,13 @@ Requiere la [preparación reproducible](#puerta-reproducible-desde-cero) de Sent
 
 ## Operación completa de la fábrica
 
+Administración enlaza **Salud de la operación**: n8n, VPS, videos sin avance y
+costes, con fuentes parciales o vencidas identificadas. Permite revisar umbrales y
+activar avisos Telegram, apagados por defecto. El trabajador funciona sin una
+pestaña abierta y conserva entrega incierta, deduplicación y recuperación. La
+[guía de observabilidad](../docs/cooper-observabilidad.md) describe configuración,
+límites y el recolector/overlay opcionales, aún sin desplegar por esta misión.
+
 La navegación Operación reúne Biblia del canal, Radar, Rutina y metas, Especialistas y redes, Referencias, Adoptar cuenta, Programados, Decisiones, Incidencias y Avisos. Administración incluye Ajustes de fábrica: interruptores, presupuestos, modelos y calendario, con revisión del cambio y registro. Cada acción exige confirmación explícita y el servidor comprueba el dueño; los ajustes requieren administrador. El modo simulado conserva sus cambios y se identifica en pantalla.
 
 `GET /api/operacion`, `POST /api/operacion` y `GET /api/admin/fabrica` usan el puente firmado existente. Las consultas `operacion`/`ajustes` y el control estructurado `control_fabrica` están reservados a la web; no amplían las herramientas del chat. La fábrica debe instalar los flujos del [lote revisable con reversa](../docs/cooper-cobertura-despliegue.md) para ofrecer los nuevos datos y controles. No se desplegó esta misión en vivo.

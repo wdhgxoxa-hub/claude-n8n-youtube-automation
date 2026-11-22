@@ -27,6 +27,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 - **21-11-2026, Lima — WhatsApp con chat durable implementado:** `3ae1c59` en rama propia `total-whatsapp-listo`. Webhook firmado, texto al chat privado con respuesta corta, aprobación actual de plantillas, ventana de 24 h, pausa y reintentos seguros. Migración aditiva `0019_whatsapp_chat`; puerta completa sobre archivo limpio: **524 unitarias, 103 E2E y 235 flujos**, cero errores, advertencias, omisiones y reintentos. Implementado y probado localmente. No integrado ni desplegado por este frente. [Informe](informes/total-whatsapp-listo.md).
 
+- **21-11-2026, Lima — observabilidad implementada y probada localmente:** rama propia `total-observabilidad`, corte `a7dfb5d`. Panel administrativo de n8n/VPS/fábrica, causas legibles, videos sin avance y costes; controles existentes enlazados, umbrales auditados y avisos Telegram durables apagados por defecto. Recolector saneado y overlay de lectura preparados. Puerta limpia PASS: 506 unitarias/108 E2E/235 flujos; instalación, lint, tipos y build con cero errores y advertencias; 35 pruebas adicionales del recolector/monitor. Ocho vistas revisadas. No integrado, desplegado ni aceptado con fuentes reales; sin envíos Telegram ni cambios del VPS/n8n vivo. [Informe y pendientes](informes/total-observabilidad.md), [puerta](informes/evidencias/total-observabilidad/puerta.json).
+
 - **21-11-2026, Lima — recuperación de Cooper posterior a PASS integrada:** `80a34ba`/`00a8492`, 241 regresiones y cuatro validaciones del paquete aprobadas. Reversa real local b3→cbf con SQLite/WAL/medios y escrituras posteriores preservadas; cinco servicios ajenos intactos. Extra público preparado en VPS, 27 archivos acreditados sin alterar bundle ni servicios. Preparar/sellar y despliegue siguen pendientes. [Informe](informes/total-integrador-recuperacion-app.md), [preflight](informes/evidencias/total-integrador/final/stage-recuperacion-app-b3.json).
 
 - **Recuperación app posterior a PASS implementada y probada localmente:** extra separado con preparación/sello, manifiesto completo WAL/medios y recuperación exclusiva de Cooper/chat-cooper. Ciclo real b3→cbf tras escrituras PASS: cinco servicios ajenos intactos, datos posteriores archivados/restaurables, release previa y ningún puntero global. 20 focales/241 regresiones sin advertencias. Helpers certificados/bundle/producto intactos; integración y ejecución remota a cargo del integrador, todavía no acreditadas. [Receta y evidencia](informes/total-recuperacion-app.md).
@@ -119,6 +121,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 
 ## En curso
 
+- Observabilidad: entrega local cerrada para revisión e integración por el frente autorizado. La futura activación se coordinará después de `total-cierre`: nuevo paquete del monitor con `observabilidad.py`, overlay, lectura n8n y aceptación de fuentes reales. Los bundles certificados anteriores no incluyen el módulo nuevo y permanecen intactos. [Guía](cooper-observabilidad.md).
 - WhatsApp integrado solo en la rama de diseño; pausa real conservada, revisión pendiente.
 - Plantilla de tienda integrada solo en la rama de diseño; revisión de Claude pendiente.
 - Aceptación privada del VPS: sesión Google legítima, aislamiento, SSE, adjuntos y memoria/chat. El login de Walter funcionaba antes del despliegue según su confirmación; la QA de cierre comprobó entrada/proveedor/protecciones sin iniciar OAuth.
@@ -144,6 +147,8 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 12. Iglesia: confirmar nombre y autorización, confesiones/ediciones y traducción bíblica con corpus cotejado; designar responsable pastoral, validar calendario y aportar cuentas, materiales y permisos. La integración y cualquier primer ensayo real requieren revisión independiente. [Detalle](informes/total-marca-iglesia.md#pendientes-de-walter).
 
 12. Tienda de ropa: definir nombre/público/activos, productos y condiciones comerciales, plataforma/dominio, fuente y atribución de conversiones, calendario y permisos UGC/cuentas. Revisar la plantilla con Claude y autorizar por separado la futura conexión y el primer ensayo real. [Detalle](informes/total-marca-tienda.md#pendientes-de-walter).
+
+12. Observabilidad: revisar umbrales y destino Telegram antes de activar avisos; coordinar con el operador la release y aceptación de fuentes reales. Decidir convivencia con los avisos históricos y cobertura externa ante caída total del VPS (pendiente 8). [Detalle](informes/total-observabilidad.md#pendientes-de-walter).
 
 ## Ideas conversadas
 

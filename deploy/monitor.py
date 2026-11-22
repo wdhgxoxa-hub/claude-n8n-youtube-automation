@@ -16,6 +16,7 @@ import time
 import urllib.request
 
 import operar
+import observabilidad
 
 SERVICES = ('cooper', 'n8n', 'runner', 'caddy')
 # El webhook es interno: Caddy no permite esta ruta y no se publica ningún puerto nuevo.
@@ -33,25 +34,31 @@ def age(path, now):
         return None
 
 
-def certificates_ok(env, now):
+def certificates_ok(env, now, observed=None):
     """Verifica ambos dominios públicos con CA/SNI y margen de renovación de 14 días."""
     try:
         context = ssl.create_default_context()
-        for key in ('COOPER_DOMAIN', 'N8N_DOMAIN'):
-            host = env[key]
-            if not host:
-                return False
-            with socket.create_connection((host, 443), timeout=10) as connection:
-                with context.wrap_socket(connection, server_hostname=host) as secure:
-                    expires = ssl.cert_time_to_seconds(secure.getpeercert()['notAfter'])
-                    if expires - now <= 14 * 86400:
-                        return False
-        return True
+        healthy = True
+        for key, name in (('COOPER_DOMAIN', 'cooper'), ('N8N_DOMAIN', 'n8n')):
+            try:
+                host = env[key]
+                if not host:
+                    raise ValueError('Dominio ausente')
+                with socket.create_connection((host, 443), timeout=10) as connection:
+                    with context.wrap_socket(connection, server_hostname=host) as secure:
+                        expires = ssl.cert_time_to_seconds(secure.getpeercert()['notAfter'])
+                        if observed is not None:
+                            observed.setdefault('certificates', {})[name] = expires
+                        if expires - now <= 14 * 86400:
+                            healthy = False
+            except (OSError, ValueError, KeyError, TypeError):
+                healthy = False
+        return healthy
     except (OSError, ValueError, KeyError, TypeError):
         return False
 
 
-def issues(env, now):
+def issues(env, now, observed=None):
     problems = []
     project = env.get('COMPOSE_PROJECT_NAME', 'cooper')
     for service in SERVICES:
@@ -60,18 +67,24 @@ def issues(env, now):
             healthy = result.returncode == 0 and result.stdout.strip() == 'running healthy unless-stopped'
         except (OSError, subprocess.SubprocessError):
             healthy = False
+        if observed is not None:
+            observed.setdefault('services', {})[service] = 'ok' if healthy else 'down'
         if not healthy:
             problems.append('servicio_' + service)
     # Código ya admitido por el workflow vivo: evita modificar flujos n8n.
-    if not certificates_ok(env, now):
+    if not certificates_ok(env, now, observed):
         problems.append('servicio_caddy')
     data = Path(env['DATA_ROOT'])
     disk = shutil.disk_usage(data)
+    if observed is not None:
+        observed['disk'] = {'totalBytes': disk.total, 'freeBytes': disk.free}
     if disk.free < max(2 * 1024**3, disk.total * .1):
         problems.append('disco_bajo')
     state = Path(env['STATE_ROOT'])
     for filename, maximum, label in [('ultima-copia.json', 30 * 3600, 'copia_local'), ('ultima-replica.json', 36 * 3600, 'copia_remota')]:
         elapsed = age(state / filename, now)
+        if observed is not None:
+            observed.setdefault('backups', {})['copy' if label == 'copia_local' else 'replica'] = elapsed
         if elapsed is None or elapsed > maximum:
             problems.append(label)
     try:
@@ -83,6 +96,15 @@ def issues(env, now):
     except (OSError, ValueError):
         problems.append('https_cooper')
     return sorted(set(problems))
+
+
+def public_snapshot(env, now, observed=None, maintenance=False):
+    # El snapshot es aditivo: un montaje no disponible no impide alertas previas.
+    # La web detecta explícitamente archivo ausente o fecha antigua.
+    try:
+        observabilidad.write_snapshot(env['STATE_ROOT'], now, observed, maintenance)
+    except (OSError, ValueError):
+        pass
 
 
 def envelope(problems, now, secret, prueba=False):
@@ -112,10 +134,16 @@ def monitor(env, now=None, force=False, probe=False):
             try:
                 fcntl.flock(operation, fcntl.LOCK_SH | fcntl.LOCK_NB)
             except BlockingIOError:
+                public_snapshot(env, now, maintenance=True)
                 return {'fecha': now, 'problemas': [], 'entrega': None, 'salud': 'MANTENIMIENTO'}
         if (state / 'mantenimiento').exists():
+            public_snapshot(env, now, maintenance=True)
             return {'fecha': now, 'problemas': [], 'entrega': None, 'salud': 'MANTENIMIENTO'}
-        found = issues(env, now)
+        observed = {'memory': observabilidad.memory()}
+        try:
+            found = issues(env, now, observed)
+        finally:
+            public_snapshot(env, now, observed)
         path = state / 'monitor.json'
         previous = json.loads(path.read_text()) if path.exists() else {}
         changed = previous.get('notificados') != found

@@ -1,0 +1,40 @@
+{
+  "fecha_lima": "2026-11-21T18:17:22.531678-05:00",
+  "commit": "e489a7c30e59a910321f5e3c7a2b83c825785b3c",
+  "entorno": "Temporal local, transportes y syscalls ficticios, sin servicios vivos",
+  "pasos": [
+    {
+      "comando": "python3 -W error -m unittest discover -s deploy/tests -p test_observabilidad.py -v",
+      "rc": 0,
+      "pruebas": 17,
+      "advertencias": 0,
+      "log": "cooper/.cache/observabilidad-recolector/test_observabilidad.py.log",
+      "sha256": "97dc4b5fd67ccf9da6c549063e8281d2c9176cedbfa95a7ebe7c97d4065b361a"
+    },
+    {
+      "comando": "python3 -W error -m unittest discover -s deploy/tests -p test_monitor.py -v",
+      "rc": 0,
+      "pruebas": 18,
+      "advertencias": 0,
+      "log": "cooper/.cache/observabilidad-recolector/test_monitor.py.log",
+      "sha256": "6e510360dc172573343f290d70202c868c57287d4a19b08030f87843aa4c63d9"
+    }
+  ],
+  "resultado": "PASS",
+  "equivalencia_con_cierre": {
+    "commit": "a7dfb5dfdaec967b2e4f5c0c3e19c1c1eb80dd58",
+    "sin_cambios_desde_prueba": true,
+    "archivos": {
+      "deploy/monitor.py": "b70f866061b589647a1425425d0f5edf6f77abd77c3a48b45c0a8fe168649c17",
+      "deploy/observabilidad.py": "7050aaef256b795e771169b3245e75690dfa32d3d2d5e937e51ea6adb6c8e58c",
+      "deploy/tests/test_monitor.py": "cf5809772c6afffeab971a955dda4b6b31fd323231472e503de39119c8eee297",
+      "deploy/tests/test_observabilidad.py": "b23ad732c886c7f939973fce8230941c171a5115961f059e97d6ce5fbf7acd3e"
+    },
+    "rutas_sin_cambios": [
+      "deploy/monitor.py",
+      "deploy/observabilidad.py",
+      "deploy/tests/test_monitor.py",
+      "deploy/tests/test_observabilidad.py"
+    ]
+  }
+}
