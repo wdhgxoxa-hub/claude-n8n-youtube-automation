@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { abrirCooper, cerrarCooper } from "../e2e/ayudas-diseno";
 
 const dir = `${process.env.COOPER_MOVIMIENTO_SALIDA || ".cache/videos-integracion3"}/${process.env.COOPER_MOVIMIENTO_RONDA || "diagnostico"}`;
 for (const width of [1440, 390]) {
@@ -27,6 +28,34 @@ for (const width of [1440, 390]) {
         })
       ).ok(),
     ).toBe(true);
+    // La demo no siembra marcas: sin una, /marcas solo ofrece «Crear mi
+    // primera marca» y no hay secciones que recorrer. Antes la dejaba otra
+    // prueba de la corrida completa; ahora el recorrido la prepara fuera del
+    // video, con el mismo alta que usa e2e/marcas.spec.ts.
+    const marcas = await (await page.request.get("/api/marcas")).json();
+    if (!marcas.marcas.length) {
+      await page.goto("/marcas");
+      await page
+        .getByRole("button", {
+          name: /^(Añadir marca o cuenta|Crear mi primera marca)$/,
+        })
+        .click();
+      await page
+        .getByRole("textbox", { name: "Nombre de la marca" })
+        .fill("Marca del recorrido");
+      await page
+        .getByRole("button", { name: "Continuar", exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: "Continuar", exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: "Guardar marca", exact: true })
+        .click();
+      await expect(
+        page.getByRole("heading", { name: "Marca del recorrido", exact: true }),
+      ).toBeVisible();
+    }
     const context = await browser.newContext({
       baseURL,
       storageState: await page.context().storageState(),
@@ -78,18 +107,27 @@ for (const width of [1440, 390]) {
       ).toHaveCount(0);
       await current.waitForTimeout(1000);
       if (path === "/") {
-        await current
-          .getByRole("button", { name: "Conocer el estudio" })
-          .click();
-        for (let step = 0; step < 2; step++) {
-          await current.waitForTimeout(750);
-          await current
-            .getByRole("button", { name: "Continuar", exact: true })
-            .click();
-        }
-        await current.getByRole("button", { name: "Empezar a crear" }).click();
+        // El recorrido «Conocer el estudio» salió del Inicio con el rediseño
+        // (e195ab17): la presentación la hace ahora Cooper flotante, que se
+        // abre con su bienvenida y se vuelve a cerrar sin dejar la página.
+        const panel = await abrirCooper(current);
+        await expect(
+          panel.getByRole("log", { name: "Conversación con Cooper" }),
+        ).toBeVisible();
+        await current.waitForTimeout(750);
+        await cerrarCooper(current);
+        await expect(
+          current.getByRole("button", { name: "Abrir Cooper", exact: true }),
+        ).toBeFocused();
         if (width === 390) {
-          await current.getByRole("tab", { name: /^Fábrica/ }).click();
+          // La pestaña móvil «Fábrica» del Inicio viejo es ahora el destino
+          // «Fábrica» de la barra inferior.
+          await current
+            .getByRole("navigation", { name: "Principal móvil" })
+            .getByRole("link", { name: "Fábrica", exact: true })
+            .click();
+          await expect(current).toHaveURL(/\/videos$/);
+          await expect(current.locator("h1:visible")).toHaveCount(1);
           await current.waitForTimeout(1000);
         }
       }
