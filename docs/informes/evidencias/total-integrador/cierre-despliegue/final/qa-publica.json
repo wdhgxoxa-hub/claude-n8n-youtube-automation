@@ -1,0 +1,165 @@
+{
+  "origen": "https://cooper.cooperestudio.com",
+  "fecha": "2026-11-22T00:00:42.523Z",
+  "alcance": "Entrada y control de acceso anónimo; NO recorrido privado autenticado",
+  "pantallas": [
+    {
+      "ruta": "/",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/canales",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/canales/comprobacion-sin-sesion",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/videos",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/videos/comprobacion-sin-sesion",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/avatares",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/publicados",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/aprendizaje",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/marcas",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/perfil",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/admin",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/admin/fabrica",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/radar",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/rutina",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/redes",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/referencias",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/cuentas",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/programados",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/decisiones",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/incidencias",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/avisos",
+      "destino": "/entrar",
+      "acceso_privado": false
+    },
+    {
+      "ruta": "/revisar/whatsapp/comprobacion-sin-sesion",
+      "destino": "/entrar",
+      "acceso_privado": false
+    }
+  ],
+  "apis": [
+    {
+      "ruta": "/api/estado",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/eventos",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/memoria",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/marcas",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/operacion",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/admin/fabrica",
+      "estado": 401
+    }
+  ],
+  "formatos": [
+    {
+      "ancho": 1440,
+      "alto": 900,
+      "tls": "TLS 1.3",
+      "axe": 0,
+      "desbordamientos": 0,
+      "errores": [],
+      "peticiones_bloqueadas": []
+    },
+    {
+      "ancho": 390,
+      "alto": 900,
+      "tls": "TLS 1.3",
+      "axe": 0,
+      "desbordamientos": 0,
+      "errores": [],
+      "peticiones_bloqueadas": []
+    }
+  ],
+  "oauth_iniciado": false,
+  "google_configurado": true
+}

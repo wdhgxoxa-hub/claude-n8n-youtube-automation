@@ -1,0 +1,60 @@
+{
+  "resultado": "PASS",
+  "videos": [
+    {
+      "archivo": "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-cierre-produccion-final/entrada-y-acceso-1440.webm",
+      "sha256": "e5c4727523ad919bca2283b5dab2aeb427f34e4c747eaee4e382cec9cb3e0c11",
+      "sonda": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1440,
+            "height": 900
+          }
+        ],
+        "format": {
+          "duration": "49.240000",
+          "size": "7531025"
+        }
+      },
+      "decodificacion": {
+        "codigo": 0,
+        "errores": false
+      },
+      "muestras": [
+        "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-cierre-produccion-final/video-1440-muestra-1.png",
+        "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-cierre-produccion-final/video-1440-muestra-2.png"
+      ]
+    },
+    {
+      "archivo": "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-cierre-produccion-final/entrada-y-acceso-390.webm",
+      "sha256": "df8fc29a06a290e840429721781872103353b38bf56c59b181b4f7c16b4cafd3",
+      "sonda": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 390,
+            "height": 900
+          }
+        ],
+        "format": {
+          "duration": "36.240000",
+          "size": "3112787"
+        }
+      },
+      "decodificacion": {
+        "codigo": 0,
+        "errores": false
+      },
+      "muestras": [
+        "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-cierre-produccion-final/video-390-muestra-1.png",
+        "/home/david/Proyectos/cooper-wt/total-integrador/.cache/total-cierre-produccion-final/video-390-muestra-2.png"
+      ]
+    }
+  ],
+  "alcance": "Decodificación completa y muestras 25%/75%; QA pública sin OAuth"
+}

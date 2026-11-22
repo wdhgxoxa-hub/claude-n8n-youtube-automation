@@ -1,0 +1,11 @@
+{
+  "resultado": "PASS",
+  "fecha_utc": "2026-11-21T23:57:45.364079+00:00",
+  "snapshot": "6f72cf7944cb785c75de8e56e2c82cb4cb9bc6436c8e4718dd12ef11495a17e1",
+  "identico": true,
+  "restauracion": "PASS",
+  "archivos": 25,
+  "bases": 2,
+  "manifiesto_completo_verificado": true,
+  "registro_previo": false
+}

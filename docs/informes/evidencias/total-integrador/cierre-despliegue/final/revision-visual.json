@@ -1,0 +1,41 @@
+{
+  "resultado": "PASS",
+  "fecha_utc": "2026-11-22T00:04:14.425945+00:00",
+  "capturas": [
+    {
+      "archivo": "entrada-1440.png",
+      "sha256": "cec0150950ed6f13e20dad6eb4ff8d323937fed61eb93cd32fc8c66d2a904851",
+      "inspeccion_visual": "PASS",
+      "observacion": "Texto legible, disposición coherente, sin solapamientos ni recortes de contenido en captura de página completa"
+    },
+    {
+      "archivo": "rechazo-1440.png",
+      "sha256": "6a940da58d9b6789861d5ce27614402ff622fa27520e859d2d2782410645f646",
+      "inspeccion_visual": "PASS",
+      "observacion": "Texto legible, disposición coherente, sin solapamientos ni recortes de contenido en captura de página completa"
+    },
+    {
+      "archivo": "entrada-390.png",
+      "sha256": "0ef63cd17924b6f70f408ccef357d3f31af4a53d5bcfaf743e4f5d73d4112c1e",
+      "inspeccion_visual": "PASS",
+      "observacion": "Texto legible, disposición coherente, sin solapamientos ni recortes de contenido en captura de página completa"
+    },
+    {
+      "archivo": "rechazo-390.png",
+      "sha256": "a3babd5fa3ae9c6ac70bbbe342e88ba3f374070b0cf9643a1fddd092b49cd688",
+      "inspeccion_visual": "PASS",
+      "observacion": "Texto legible, disposición coherente, sin solapamientos ni recortes de contenido en captura de página completa"
+    }
+  ],
+  "videos": {
+    "fotogramas_inspeccionados": 4,
+    "posiciones_por_video": [
+      "25%",
+      "75%"
+    ],
+    "resultado": "PASS",
+    "observacion": "La animación de entrada y logo progresa; no se observan roturas de diseño. En móvil el video muestra el viewport y las capturas completas incluyen el pie."
+  },
+  "oauth_iniciado": false,
+  "recorrido_privado": "PENDIENTE_SESION"
+}
