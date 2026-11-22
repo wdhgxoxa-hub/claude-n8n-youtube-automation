@@ -224,13 +224,13 @@ test("La pared ordena por vistas, cuenta cada publicación una vez y pliega los 
     cifras
       .locator("figure")
       .filter({ hasText: "Vistas" })
-      .locator(".cifra-valor"),
+      .locator(".cifra-valor .sr-only"),
   ).toHaveText("520");
   await expect(
     cifras
       .locator("figure")
       .filter({ hasText: "Publicaciones" })
-      .locator(".cifra-valor"),
+      .locator(".cifra-valor .sr-only"),
   ).toHaveText("2");
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
@@ -318,6 +318,8 @@ test("Publicados y Aprendizaje: filtros, gráfico, tabla y estados de correcció
   )!;
   expect(sinRetencion).toBeDefined();
   await page
+    .locator(".publication:visible")
+    .filter({ has: page.locator(`a[href="${sinRetencion.href}"]`) })
     .getByRole("button", { name: `Ver cifras de ${sinRetencion.titulo}` })
     .first()
     .click();
@@ -670,7 +672,9 @@ test("Aprendizaje conserva origen, hipótesis y aplicación sin afirmar una mejo
       ),
     ).toBeVisible();
     await expect(
-      lesson.getByRole("link", { name: video.title }),
+      lesson
+        .getByLabel("Evidencia de la lección")
+        .getByRole("link", { name: video.title, exact: true }),
     ).toHaveAttribute("href", "/videos/" + video.id);
     expect(
       await page.evaluate(
