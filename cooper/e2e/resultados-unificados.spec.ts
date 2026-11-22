@@ -110,7 +110,9 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
   ).toHaveAttribute("aria-current", "page");
   await page.reload();
   await expect(
-    page.locator(`#pieza-${new URL(destinoMarca!, "http://localhost").searchParams.get("pieza")}`),
+    page.locator(
+      `#pieza-${new URL(destinoMarca!, "http://localhost").searchParams.get("pieza")}`,
+    ),
   ).toBeVisible();
   await page.goto("/aprendizaje");
   await expect(
@@ -164,9 +166,11 @@ test("consulta conjunta: dos dueños, homónimos, filtros, ausencia, duplicados 
         // intermedio transparente tiene una comprobación de movimiento aparte.
         await expect
           .poll(() =>
-            page.locator(".entrada-estudio").evaluateAll((elementos) =>
-              elementos.every((el) => getComputedStyle(el).opacity === "1"),
-            ),
+            page
+              .locator(".entrada-estudio")
+              .evaluateAll((elementos) =>
+                elementos.every((el) => getComputedStyle(el).opacity === "1"),
+              ),
           )
           .toBe(true);
         expect((await new AxeBuilder({ page }).analyze()).violations).toEqual(

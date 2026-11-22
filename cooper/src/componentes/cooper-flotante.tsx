@@ -1,7 +1,18 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState, type ComponentPropsWithRef } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentPropsWithRef,
+} from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, LayoutGroup, m as motion, useIsPresent } from "framer-motion";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  m as motion,
+  useIsPresent,
+} from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
