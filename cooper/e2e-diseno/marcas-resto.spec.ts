@@ -70,7 +70,9 @@ async function prepararMarcas(page: Page) {
             : "La textura de lo cotidiano",
         texto: "Borrador de ejemplo para revisar con el equipo.",
         detalle: "Contenido de demostración",
-        programada: "2030-11-25T19:00:00-05:00",
+        programada: new Date(
+          Date.now() + 3 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
         ejemplo: true,
       });
     }
