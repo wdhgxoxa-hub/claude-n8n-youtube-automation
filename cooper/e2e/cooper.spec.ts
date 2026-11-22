@@ -113,9 +113,15 @@ test("conversa, pide un video, observa SSE y aprueba las dos puertas", async ({
   await expect(
     page.getByText("El video ya está en Radar.", { exact: false }),
   ).toBeVisible();
-  await expect(page.locator(".approval-alert")).toBeVisible();
+  const pendientes = page.getByRole("region", { name: /Te toca a ti/ });
+  await expect(
+    pendientes.getByRole("heading", { name: "Por qué el cielo es azul" }),
+  ).toBeVisible();
   const state = await (await page.request.get("/api/estado")).json();
   videoId = state.videos[0].id;
+  await expect(
+    pendientes.getByRole("link", { name: "Revisar", exact: true }),
+  ).toHaveAttribute("href", `/videos/${videoId}`);
   expect(state).not.toHaveProperty("expenses");
   await page.screenshot({
     path: "test-results/visual/inicio-1440.png",
