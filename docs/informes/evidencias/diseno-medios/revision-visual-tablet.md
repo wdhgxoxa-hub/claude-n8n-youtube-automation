@@ -2,22 +2,22 @@
 
 Fecha: 21 de noviembre de 2026, Lima. Misión `diseno-medios`.
 
-Se revisaron las 33 pantallas a **768 y 1024 px: 66 capturas, ninguna faltante**. La inspección comprende las doce hojas de contacto y los originales pertinentes, incluidos los tramos completos de los formularios largos. No se modificó el producto durante esta revisión ni se ejecutaron pruebas, reproducción o FFmpeg en paralelo con la puerta de rendimiento.
+Se revisaron las 33 pantallas a **768 y 1024 px: 66 capturas, ninguna faltante**. La inspección inicial comprende las doce hojas de contacto y los originales pertinentes, incluidos los tramos completos de los formularios largos. Tras corregir las cartelas, se volvieron a inspeccionar los cuatro originales de Inicio/Fábrica de la tanda final de las 22:41, sobre `9f3a910` (producto `53b17df`, correcciones visuales `4b862e8` y `5fc8495`). No se modificó el producto durante esta revisión ni se ejecutaron pruebas, reproducción o FFmpeg en paralelo con la puerta de rendimiento.
 
-**Esta tanda no acredita la puerta de diseño.** Hay un defecto de composición en las cartelas de medios de Fábrica, comunicado al responsable de interfaz para su corrección, y desviaciones importantes del armazón heredado respecto a `docs/diseno/DIRECCION.md`. No basta con que el contenido quepa en la ventana: la jerarquía, el protagonismo del video y la legibilidad todavía requieren trabajo de las misiones de armazón correspondientes.
+**Esta tanda no acredita la puerta de diseño global.** El defecto de composición de las cartelas de medios de Fábrica quedó corregido y comprobado en los cuatro originales finales. Persisten desviaciones importantes del armazón heredado respecto a `docs/diseno/DIRECCION.md`. No basta con que el contenido quepa en la ventana: la jerarquía, el protagonismo del video y la legibilidad todavía requieren trabajo de las misiones de armazón correspondientes.
 
 ## Evidencia e identidad de la tanda
 
 Origen de las capturas: `.cache/diseno-medios-ci/evidencias-diseno/{pantalla}-{ancho}.png`.
 
-Manifiestos revisados:
+Manifiestos finales revisados, escritos el 21 de noviembre de 2026 a las 22:41:17 y 22:41:50 de Lima respectivamente:
 
 | Archivo | SHA-256 |
 |---|---|
-| `matriz-768.json` | `a563fc75fe7e7eeb2977d11f24badaf5029c248b60f1f7ba2c1482cd8958b9f1` |
-| `matriz-1024.json` | `641ec815f05052e7276374056a6b0b147a818806f3b2531827a3397d5d046fa7` |
+| `matriz-768.json` | `2de0233be3a9d17008b1f45621b0a8d97a0762b2df0da72ae2f927b7a7d0fb1a` |
+| `matriz-1024.json` | `3cbb8ca2a3093c69141c901e9ab3bfba762a0cda6bee2edc83a811c9bee03125` |
 
-Hojas de contacto: `.cache/revision-tablet/contacto-{768,1024}-{1..6}.jpg`. Para leer los formularios de extremo a extremo se generaron recortes consecutivos, sin reescalar, de `canal`, `admin-fabrica` y `publicados`; el corte entre esos archivos es instrumental y no un recorte de la aplicación.
+Hojas de contacto de la revisión inicial: `.cache/revision-tablet/contacto-{768,1024}-{1..6}.jpg`. Para leer los formularios de extremo a extremo se generaron recortes consecutivos, sin reescalar, de `canal`, `admin-fabrica` y `publicados`; el corte entre esos archivos es instrumental y no un recorte de la aplicación. Los cuatro originales finales de Inicio/Fábrica se inspeccionaron directamente, sin reutilizar sus miniaturas de contacto antiguas. Los hashes iniciales terminaban en `958b9f1` y `46fa7`; se conservan completos en el commit `ad92847` para distinguir ambas tandas.
 
 | Medición del manifiesto | 768 px | 1024 px |
 |---|---:|---:|
@@ -34,12 +34,12 @@ La consola de cada manifiesto contiene exactamente `Failed to load resource: the
 
 ## Inventario de las 66 capturas
 
-Cada fila confirma revisión en ambos anchos. El nombre identifica directamente sus dos PNG en el directorio anterior. «Sin recorte» describe lo visible; no certifica foco, teclado o interacción.
+Cada fila confirma revisión en ambos anchos. El nombre identifica directamente sus dos PNG en el directorio anterior. Inicio/Fábrica incluyen la revalidación final; las otras 31 pantallas conservan la revisión visual inicial. Los manifiestos finales confirman de nuevo que existen los 66 PNG y aportan las métricas de la tabla anterior. «Sin recorte» describe lo visible; no certifica foco, teclado o interacción.
 
 | Pantalla | 768 | 1024 | Observación visual |
 |---|:---:|:---:|---|
-| `inicio` | Sí | Sí | Composición dividida chat/fábrica; cartelas de cola con recorte y chip sobre texto. |
-| `fabrica` | Sí | Sí | Mismo estado que Inicio; miniatura principal muy estrecha, etapas dominantes y cola afectada. |
+| `inicio` | Sí | Sí | Revalidación final: cartelas dentro del marco y chips separados del título; persiste división chat/fábrica. |
+| `fabrica` | Sí | Sí | Revalidación final: cola corregida; miniatura principal estrecha pero limitada a dos líneas, sin fragmento suelto. |
 | `videos` | Sí | Sí | Filas y miniaturas alineadas, títulos completos al lado, estados separados; sin solapamiento observado. |
 | `detalle-video` | Sí | Sí | Póster tipográfico protagonista contenido; a 1024 las etapas ocupan una columna lateral. |
 | `aprobacion-guion` | Sí | Sí | Guion y decisiones dentro de sus bloques; predominio del texto sobre la pieza. |
@@ -74,8 +74,8 @@ Cada fila confirma revisión en ambos anchos. El nombre identifica directamente 
 
 ## Hallazgos propios de medios
 
-1. **Cartelas de Fábrica: defecto visible que requiere revalidación.** En `fabrica-768.png`, cola «En la mesa de edición», el chip de etapa invade el título de las miniaturas y el inicio del título de la cuarta cartela queda fuera del marco. A 1024 los primeros títulos quedan demasiado bajos y los chips se interponen en el texto. También se observa en `inicio`. Es un problema de espacio del componente; el arreglo debe conservar el mínimo de 12 px, separar chip/título y limitar líneas dentro del marco. Se comunicó al responsable de interfaz; la matriz posterior a su corrección determinará el estado final.
-2. **Miniatura principal de 64 × 64 px:** el título «El mar también respira» se parte como «tambié / n…» en ambos anchos. El título adyacente sí está completo. No hay pérdida de identificación del video, pero la cartela estrecha resulta poco cuidada y debe revalidarse junto a la cola.
+1. **Cartelas de Fábrica: corregidas y revalidadas.** La primera tanda mostraba chips de etapa sobre los títulos y un inicio de título fuera del marco. En `inicio-768.png`, `fabrica-768.png`, `inicio-1024.png` y `fabrica-1024.png` finales, cada chip ocupa una franja lateral propia y los títulos caben en dos líneas, sin invasión del chip ni recorte superior. A 768 algunos títulos se abrevian con elipsis; el título exterior conserva la identificación completa. A 1024 los cuatro títulos de la cola se leen completos dentro de las cartelas. No se alteró el armazón para conseguirlo.
+2. **Miniatura principal de 64 × 64 px:** la primera tanda partía «El mar también respira» como «tambié / n…». En ambos anchos finales el contenido se limita a dos líneas y termina en elipsis dentro del marco; desaparece el fragmento aislado. El título adyacente permanece completo. La miniatura sigue siendo estrecha por la estructura existente: no equivale a un protagonista de gran formato.
 3. **Póster grande tipográfico:** el estado sin fuente utiliza título y acento del canal. Ya no contiene etiquetas pequeñas de canal o pie. No se observa recorte en el protagonista del detalle. Las miniaturas pequeñas usan título HTML y mantienen otra versión legible fuera del marco; la duplicación es repetitiva, aunque hace posible identificar la pieza sin depender del póster.
 4. **Fuentes demostradas:** esta matriz usa cuatro videos de demostración. Las cartelas tipográficas son coherentes con la ausencia de originales en esa simulación; las 66 imágenes no prueban la descarga de las redes ni la presencia de medios de producción. No aparece la ilustración de montañas como sustituto de un póster de video en estas pantallas. La ilustración decorativa de etapas/cabecera es parte del armazón y no acredita contenido real.
 5. **Comprobación auxiliar del medio vertical:** se inspeccionaron `medios-detalle-768.png` y `medios-detalle-1024.png` del mismo directorio. El video de patrón sintético se presenta entero, centrado y con bandas laterales, sin estiramiento ni corte vertical; a 768 las etapas quedan debajo y a 1024 al lado. No es un original de la fábrica. Esas dos capturas muestran «Reconectando» en la cabecera; una imagen fija no determina si el estado es transitorio.
@@ -94,4 +94,4 @@ Cada fila confirma revisión en ambos anchos. El nombre identifica directamente 
 
 La inspección es estática: no mide CLS, foco, reproducción, latencia, fallos intermitentes ni interacción de teclado. Los manifiestos aportan sus propios resultados de axe/desbordamiento; no sustituyen la revisión visual. La evidencia de derivados de originales reales está documentada por separado en `derivados-reales.json` y el diagnóstico de fuentes.
 
-Queda pendiente revalidar Inicio/Fábrica con las capturas posteriores a la corrección de las cartelas y atribuir el evento 404 antes de afirmar consola limpia. Los hallazgos de armazón se entregan a la dirección de diseño como pendientes existentes, sin introducir cambios de producto durante esta revisión ni presentarlos como aprobados.
+La revalidación de Inicio/Fábrica está completada en ambos anchos. Permanece pendiente atribuir el evento 404 antes de afirmar consola limpia. Las métricas de tokens, axe y desbordamiento finales coinciden con las iniciales; resolver el recorte de la cartela no modifica esas desviaciones de armazón. La comprobación final fue deliberadamente focal de los cuatro originales afectados, no una segunda inspección exhaustiva de las 66 pantallas. Los hallazgos de armazón se entregan a la dirección de diseño como pendientes existentes, sin introducir cambios de producto durante esta revisión ni presentarlos como aprobados.
