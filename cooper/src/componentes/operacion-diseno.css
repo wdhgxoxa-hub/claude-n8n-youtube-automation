@@ -86,8 +86,13 @@
   margin-bottom: var(--espacio-16);
 }
 .operacion-diseno .operation-toolbar > p {
+  flex: 1;
+  min-width: 0;
   font-size: var(--texto-13);
   color: var(--texto-2);
+}
+.operacion-diseno .operation-toolbar > button {
+  flex-shrink: 0;
 }
 .operacion-diseno .operation-channel {
   max-width: var(--cooper-panel);
@@ -309,8 +314,11 @@
 }
 .salud-panel {
   display: grid;
-  gap: var(--espacio-32);
+  gap: var(--espacio-24);
   min-width: 0;
+}
+.salud-diseno .salud-links {
+  margin-bottom: 0;
 }
 .salud-toolbar,
 .salud-sectionHead,
@@ -531,9 +539,34 @@
   }
 }
 @media (max-width: 767px) {
+  .operacion-diseno .operation-nav {
+    position: relative;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    padding-right: var(--espacio-24);
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      var(--lienzo),
+      var(--lienzo) calc(100% - var(--espacio-24)),
+      var(--transparente)
+    );
+  }
+  .operacion-diseno .operation-nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .operacion-diseno .operation-toolbar {
+    flex-wrap: nowrap;
+  }
   .operacion-resumen,
   .salud-pulso {
     padding-block: var(--espacio-24) var(--espacio-32);
+  }
+  .salud-pulso {
+    padding-top: 0;
   }
   .operacion-cifras,
   .administracion-cifras {

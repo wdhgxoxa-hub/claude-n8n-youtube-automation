@@ -305,6 +305,38 @@ export function SaludOperativa() {
         }
       />
       <div className={"salud-panel"}>
+        {salud && (
+          <section
+            className="salud-pulso"
+            aria-label="La operación, de un vistazo"
+          >
+            <div>
+              <span className="operacion-kicker">Ahora en el estudio</span>
+              <h2>
+                {salud.alertas.length
+                  ? "Hay cosas por revisar"
+                  : "Todo a la vista"}
+              </h2>
+              <p>
+                {salud.alertas.length
+                  ? "Empieza por las alertas y sigue cada caso hasta su origen."
+                  : "Revisa las fuentes antes de dar la operación por comprobada."}
+              </p>
+            </div>
+            <div className="operacion-cifras">
+              <Cifra
+                valor={salud.fabrica.enCurso}
+                etiqueta="En producción"
+                heroe
+              />
+              <Cifra
+                valor={salud.alertas.length}
+                etiqueta="Alertas actuales"
+                heroe
+              />
+            </div>
+          </section>
+        )}
         <nav className={"salud-links"} aria-label="Controles de la operación">
           <Link href="/admin">Equipo y conciliación</Link>
           <Link href="/incidencias" prefetch={false}>
@@ -343,36 +375,6 @@ export function SaludOperativa() {
         )}
         {salud && (
           <>
-            <section
-              className="salud-pulso"
-              aria-label="La operación, de un vistazo"
-            >
-              <div>
-                <span className="operacion-kicker">Ahora en el estudio</span>
-                <h2>
-                  {salud.alertas.length
-                    ? "Hay cosas por revisar"
-                    : "Todo a la vista"}
-                </h2>
-                <p>
-                  {salud.alertas.length
-                    ? "Empieza por las alertas y sigue cada caso hasta su origen."
-                    : "Revisa las fuentes antes de dar la operación por comprobada."}
-                </p>
-              </div>
-              <div className="operacion-cifras">
-                <Cifra
-                  valor={salud.fabrica.enCurso}
-                  etiqueta="En producción"
-                  heroe
-                />
-                <Cifra
-                  valor={salud.alertas.length}
-                  etiqueta="Alertas actuales"
-                  heroe
-                />
-              </div>
-            </section>
             <nav className={"salud-summary"} aria-label="Resumen de salud">
               {(
                 [

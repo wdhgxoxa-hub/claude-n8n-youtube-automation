@@ -73,6 +73,7 @@ export function PantallaOperacion({
     [seleccion, setSeleccion] = useState(canalId || ""),
     [pendiente, setPendiente] = useState<Control | null>(null);
   const bloqueo = useRef(false),
+    navegacion = useRef<HTMLElement>(null),
     confirmacion = useRef<HTMLDivElement>(null),
     origen = useRef<HTMLElement | null>(null),
     restaurarFoco = useRef(false),
@@ -119,6 +120,13 @@ export function PantallaOperacion({
   useEffect(() => {
     if (pendiente) confirmacion.current?.focus();
   }, [pendiente]);
+  useEffect(() => {
+    const nav = navegacion.current;
+    const activo = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (nav && activo && nav.scrollWidth > nav.clientWidth) {
+      nav.scrollLeft = activo.offsetLeft - nav.offsetLeft;
+    }
+  }, [vista]);
   useEffect(() => {
     if (!pendiente && !ocupado && restaurarFoco.current) {
       restaurarFoco.current = false;
@@ -279,7 +287,11 @@ export function PantallaOperacion({
   return (
     <div className="page operation-page operacion-diseno">
       <Heading title={titulo} description={descripcion[vista]} />
-      <nav aria-label="Operación de la fábrica" className="operation-nav">
+      <nav
+        ref={navegacion}
+        aria-label="Operación de la fábrica"
+        className="operation-nav"
+      >
         {pantallas.map(([v, n, url]) => (
           <Link
             key={v}
