@@ -1,5 +1,6 @@
 "use client";
 
+import { formatoEntero } from "@/lib/cifras";
 import {
   useId,
   useEffect,
@@ -105,9 +106,7 @@ function MetricasVideo({ video }: { video: Video }) {
             </div>
             {ultima?.seguidoresGanados != null && (
               <p className={styles.nota}>
-                {new Intl.NumberFormat("es-PE").format(
-                  ultima.seguidoresGanados,
-                )}{" "}
+                {formatoEntero(ultima.seguidoresGanados)}{" "}
                 seguidores ganados en esta medición.
               </p>
             )}

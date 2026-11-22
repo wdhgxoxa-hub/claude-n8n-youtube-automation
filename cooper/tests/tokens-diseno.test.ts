@@ -32,7 +32,7 @@ function invalidDeclaration(property: string, value: string) {
     return "nombre de color fuera de tokens";
   if (/^(?:font-size|fontSize)$/.test(property)) {
     if (
-      !/^(?:inherit|var\(--(?:texto-(?:12|13|15|17|20|28|40|48|56|72)|titulo-pantalla|titulo-seccion|cifra-heroe)\))$/.test(
+      !/^(?:inherit|var\(--(?:texto-(?:12|13|15|17|20|28|40|48|56|72)|titulo-pantalla|titulo-seccion|cifra-heroe|cifra-fluida|cifra-fluida-menor)\))$/.test(
         value,
       )
     )

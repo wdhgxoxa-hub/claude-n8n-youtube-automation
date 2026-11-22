@@ -44,6 +44,9 @@
   --titulo-pantalla: var(--texto-40);
   --titulo-seccion: clamp(var(--texto-28), 3vw, var(--texto-40));
   --cifra-heroe: var(--texto-48);
+  /* Cifras que se ajustan al ancho de su propia columna (contenedor con container-type). */
+  --cifra-fluida: clamp(var(--texto-28), 15cqi, var(--texto-48));
+  --cifra-fluida-menor: clamp(var(--texto-17), 14cqi, var(--texto-28));
   --interlinea-display: 1.05;
   --interlinea-texto: 1.5;
   --tracking-display: -0.02em;

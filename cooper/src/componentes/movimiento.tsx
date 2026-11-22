@@ -7,6 +7,12 @@ import {
   type ReactNode,
 } from "react";
 import { MotionConfigContext, m as motion } from "framer-motion";
+import {
+  formatoCompacto,
+  formatoDecimal,
+  formatoEntero,
+  formatoMoneda,
+} from "@/lib/cifras";
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function observarPreferencia(notify: () => void) {
   const media = window.matchMedia(motionQuery);
@@ -32,20 +38,22 @@ export function NumeroAnimado({
   value,
   money = false,
   compact = false,
+  decimales,
 }: {
   value: number;
   money?: boolean;
   compact?: boolean;
+  /** Con decimales fijos (p. ej. porcentajes) se muestra «63,5» en vez de entero. */
+  decimales?: number;
 }) {
   const reduced = useMovimientoReducido();
-  const label = new Intl.NumberFormat(
-    "es-PE",
-    money
-      ? { style: "currency", currency: "USD" }
+  const label = money
+    ? formatoMoneda(value)
+    : decimales !== undefined
+      ? formatoDecimal(value, decimales)
       : compact
-        ? { notation: "compact", maximumFractionDigits: 1 }
-        : {},
-  ).format(value);
+        ? formatoCompacto(value)
+        : formatoEntero(value);
   return (
     <span className="animated-number">
       <span className="sr-only">{label}</span>

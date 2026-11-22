@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { ShieldCheck, Plus, Trash2, TriangleAlert } from "lucide-react";
+import { formatoMoneda } from "@/lib/cifras";
 import type { Administracion } from "@/servicios/datos";
 import { api, Heading, Notice, useEspacio } from "./espacio";
 import { m as motion } from "framer-motion";
@@ -17,11 +18,7 @@ export function Admin({ initial }: { initial: Administracion }) {
     [period, setPeriod] = useState<"day" | "week" | "month">("day"),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
-  const money = (v: number) =>
-    new Intl.NumberFormat("es-PE", {
-      style: "currency",
-      currency: "USD",
-    }).format(v);
+  const money = formatoMoneda;
   async function mutate(path: string, value: unknown, method = "POST") {
     setBusy(true);
     setError("");

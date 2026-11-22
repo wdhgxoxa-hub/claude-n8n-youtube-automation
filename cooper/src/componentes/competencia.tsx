@@ -1,3 +1,4 @@
+import { formatoEntero } from "@/lib/cifras";
 import type { Competencia } from "@/contratos/competencia-schema";
 import {
   competenciaVacia,
@@ -99,9 +100,9 @@ export function PanelCompetencia({
                       {v.titulo || "Ver publicación destacada"}
                     </Fuente>
                     <br />
-                    {v.vistas.toLocaleString("es-PE")} vistas ·{" "}
+                    {formatoEntero(v.vistas)} vistas ·{" "}
                     {v.multiplicador}× la mediana (
-                    {v.mediana.toLocaleString("es-PE")}) de {v.muestra}{" "}
+                    {formatoEntero(v.mediana)}) de {v.muestra}{" "}
                     publicaciones anteriores del mismo formato.
                   </p>
                 ))
@@ -132,11 +133,11 @@ export function PanelCompetencia({
                           timeZone: "America/Lima",
                         })}
                         {" · "}
-                        {v.vistas.toLocaleString("es-PE")} vistas
+                        {formatoEntero(v.vistas)} vistas
                         {v.likes != null &&
-                          ` · ${v.likes.toLocaleString("es-PE")} me gusta`}
+                          ` · ${formatoEntero(v.likes)} me gusta`}
                         {v.comentarios != null &&
-                          ` · ${v.comentarios.toLocaleString("es-PE")} comentarios`}
+                          ` · ${formatoEntero(v.comentarios)} comentarios`}
                       </li>
                     ))}
                   </ul>

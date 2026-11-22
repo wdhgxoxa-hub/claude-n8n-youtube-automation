@@ -1,10 +1,10 @@
 import type { Estado } from "@/servicios/datos";
 import type { Medicion, Publicacion } from "@/contratos/observabilidad";
 import { periodosLima } from "@/lib/periodos";
+import { formatoVariacion } from "@/lib/cifras";
 
 export type VideoInicio = Estado["videos"][number];
 const DIA = 86_400_000;
-const numero = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 1 });
 
 /** Corte estable entre SSR e hidratación; avanza con la evidencia propia recibida. */
 export function corteInicio(videos: readonly VideoInicio[], inicial: number) {
@@ -123,7 +123,7 @@ function variacion(
     unidad === "pp"
       ? actual - anterior
       : ((actual - anterior) / anterior) * 100;
-  return `${diferencia > 0 ? "+" : ""}${numero.format(diferencia)} ${unidad} frente al período anterior`;
+  return `${formatoVariacion(diferencia, unidad === "pp" ? "pp" : "%")} frente al período anterior`;
 }
 
 function datoSemanal(

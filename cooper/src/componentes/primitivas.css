@@ -170,8 +170,13 @@
   font-size: var(--texto-40);
   font-weight: 500;
   line-height: var(--interlinea-display);
-  letter-spacing: var(--tracking-display);
+  /* Las cifras en Geist Mono conservan su paso natural: sin tracking artificial. */
+  letter-spacing: 0;
   white-space: nowrap;
+}
+.animated-number,
+.number-reels {
+  letter-spacing: 0;
 }
 .cifra-heroe .cifra-valor {
   font-size: var(--cifra-heroe);

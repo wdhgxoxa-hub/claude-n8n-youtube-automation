@@ -11,6 +11,11 @@ import {
   type ReactNode,
 } from "react";
 import { useInView } from "framer-motion";
+import {
+  formatoCompacto,
+  formatoDecimal,
+  formatoEntero,
+} from "@/lib/cifras";
 import type { VideoMedios } from "@/contratos/video-medios";
 import { estiloMedio, useVideoMedios } from "./portada-video";
 import { nombreMedio } from "./transiciones";
@@ -297,6 +302,7 @@ export function Cifra({
   variacion,
   heroe = false,
   compacta = false,
+  decimales,
   className,
 }: {
   valor: number | null;
@@ -305,6 +311,7 @@ export function Cifra({
   variacion?: string;
   heroe?: boolean;
   compacta?: boolean;
+  decimales?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -331,12 +338,15 @@ export function Cifra({
         {valor === null ? (
           "—"
         ) : visible && !reduced && !paused ? (
-          <NumeroAnimado value={valor} compact={compacta} />
+          <NumeroAnimado
+            value={valor}
+            compact={compacta}
+            decimales={decimales}
+          />
         ) : (
-          new Intl.NumberFormat(
-            "es-PE",
-            compacta ? { notation: "compact", maximumFractionDigits: 1 } : {},
-          ).format(valor)
+          decimales !== undefined
+            ? formatoDecimal(valor, decimales)
+            : (compacta ? formatoCompacto : formatoEntero)(valor)
         )}
       </div>
       {valor === null && <span className="cifra-detalle">Sin dato</span>}

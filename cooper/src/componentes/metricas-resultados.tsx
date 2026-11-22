@@ -1,4 +1,5 @@
 "use client";
+import { formatoEntero } from "@/lib/cifras";
 import { useState } from "react";
 import Link from "next/link";
 import { Cifra } from "./primitivas";
@@ -20,7 +21,7 @@ export const fecha = (value: string | null) =>
       }).format(new Date(value))
     : "Fecha sin registrar";
 export const numero = (value: number | null | undefined) =>
-  value == null ? "Sin dato" : new Intl.NumberFormat("es-PE").format(value);
+  value == null ? "Sin dato" : formatoEntero(value);
 function Evolucion({ historial }: { historial: Medicion[] }) {
   const [metrica, setMetrica] = useState<
     "vistas" | "meGusta" | "comentarios" | "retencion"

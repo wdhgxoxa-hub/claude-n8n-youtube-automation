@@ -7,6 +7,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { resolve } from "node:path";
+import { formatoCompacto } from "../src/lib/cifras";
 import type { Estado } from "../src/servicios/datos";
 import type { VideoMedios } from "../src/contratos/video-medios";
 import { abrirCooper, cerrarCooper, abrirMasDestinos } from "./ayudas-diseno";
@@ -1135,11 +1136,7 @@ for (const width of [390, 1440]) {
           );
         }, 0);
         expect(numericValue).toBeGreaterThan(0);
-        const compact = (value: number) =>
-          new Intl.NumberFormat("es-PE", {
-            notation: "compact",
-            maximumFractionDigits: 1,
-          }).format(value);
+        const compact = formatoCompacto;
         await expect(counter.locator(".cifra-valor .sr-only")).toHaveText(
           compact(numericValue),
         );

@@ -74,7 +74,7 @@ describe("Inicio: cifras con contexto y sin resultados inventados", () => {
     );
     expect(resultado.retencion.valor).toBe(60);
     expect(resultado.retencion.variacion).toBe(
-      "+60 pp frente al período anterior",
+      "+60\u00a0pp frente al período anterior",
     );
   });
 
@@ -86,7 +86,7 @@ describe("Inicio: cifras con contexto y sin resultados inventados", () => {
     expect(resultado.vistas.serie).toEqual([100, 200, 300, 400, 500, 600, 700]);
     expect(resultado.seguidores.valor).toBe(7);
     expect(resultado.retencion.valor).toBe(64);
-    expect(resultado.vistas.variacion).toBe("0 % frente al período anterior");
+    expect(resultado.vistas.variacion).toBe("0\u00a0% frente al período anterior");
   });
 
   it("no transforma límites ausentes o antiguos en cero ni en totales de siete días", () => {

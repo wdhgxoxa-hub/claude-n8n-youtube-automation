@@ -20,6 +20,7 @@ import type {
   PanelSalud as RespuestaSalud,
 } from "@/contratos/alertas-salud";
 import { ETAPAS } from "@/lib/etapas";
+import { formatoDecimal, formatoMoneda } from "@/lib/cifras";
 import { api, Heading, Notice } from "./espacio";
 import { Cifra, Esqueleto } from "./primitivas";
 import "./operacion-diseno.css";
@@ -139,18 +140,15 @@ function fecha(value: string | null) {
 function numero(value: number | null, suffix = "") {
   return value === null
     ? "Sin datos"
-    : `${new Intl.NumberFormat("es-PE", { maximumFractionDigits: 1 }).format(value)}${suffix}`;
+    : `${formatoDecimal(value)}${suffix}`;
 }
 function bytes(value: number) {
-  return `${new Intl.NumberFormat("es-PE", { maximumFractionDigits: 1 }).format(value / 1024 ** 3)} GiB`;
+  return `${formatoDecimal(value / 1024 ** 3)} GiB`;
 }
 function money(value: number | null) {
   return value === null
     ? "Sin datos"
-    : new Intl.NumberFormat("es-PE", {
-        style: "currency",
-        currency: "USD",
-      }).format(value);
+    : formatoMoneda(value);
 }
 function Estado({ value }: { value: EstadoSalud }) {
   return (
