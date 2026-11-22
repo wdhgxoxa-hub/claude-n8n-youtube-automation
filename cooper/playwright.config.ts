@@ -40,6 +40,7 @@ export default defineConfig({
         "multiengine.spec.ts",
         "accesibilidad.spec.ts",
         "diseno.spec.ts",
+        "conexion-diseno.spec.ts",
         "animacion.spec.ts",
         "resultados.spec.ts",
         "operacion.spec.ts",
