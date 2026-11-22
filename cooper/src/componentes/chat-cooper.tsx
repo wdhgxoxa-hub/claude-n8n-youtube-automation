@@ -17,10 +17,12 @@ export function ChatCooper({
   canalId = "",
   videoId = "",
   sugerencias = [],
+  contextoMarca,
 }: {
   canalId?: string;
   videoId?: string;
   sugerencias?: string[];
+  contextoMarca?: string;
 }) {
   const instanceId = useId();
   const messageId = `${instanceId}-mensaje`;
@@ -92,7 +94,7 @@ export function ChatCooper({
           Accept: "text/event-stream",
         },
         body: JSON.stringify({
-          texto: text,
+          texto: contextoMarca ? `Sobre mi marca «${contextoMarca}»: ${text}` : text,
           adjuntos: files.map((f) => f.id),
           canalId: channel || undefined,
           videoId: video || undefined,

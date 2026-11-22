@@ -249,7 +249,7 @@ export function FabricaVista({
                     onClick={() => setSelected(v.id)}
                   >
                     <span className="queue-cover">
-                      <Portada title={v.title} />
+                      {v.observabilidad?.miniatura ? <Medio poster={v.observabilidad.miniatura} preview={v.observabilidad.montaje || undefined} alt={v.title} /> : data.demo ? <Portada title={v.title} /> : <span className="medio-pendiente" aria-label="Miniatura aún no disponible" />}
                       <span>{String(v.stage + 1).padStart(2, "0")}</span>
                     </span>
                     <strong>{v.title}</strong>

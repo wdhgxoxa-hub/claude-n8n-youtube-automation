@@ -18,7 +18,7 @@ export function CooperFlotante({
   cambiar: (open: boolean) => void;
   movil: boolean;
 }) {
-  const { data } = useEspacio();
+  const { data, marcaContexto: marca } = useEspacio();
   const path = usePathname();
   const reduced = useMovimientoReducido();
   const [completo, setCompleto] = useState(false);
@@ -31,13 +31,6 @@ export function CooperFlotante({
   const canal = data.channels.find(
     (c) => c.id === video?.channelId || path === `/canales/${c.id}`,
   );
-  const [marca, setMarca] = useState<{ nombre: string } | null>(null);
-  useEffect(() => {
-    const recibir = (e: Event) =>
-      setMarca((e as CustomEvent<{ nombre: string } | null>).detail);
-    window.addEventListener("cooper-marca", recibir);
-    return () => window.removeEventListener("cooper-marca", recibir);
-  }, []);
   const contexto =
     video?.title ||
     canal?.name ||
@@ -70,7 +63,7 @@ export function CooperFlotante({
     if (!abierto) return;
     const sheet = panel.current;
     const trigger = opener.current;
-    const media = window.matchMedia("(max-width: 767px)");
+    const media = window.matchMedia("(max-width: 1023px)");
     sheet?.querySelector<HTMLButtonElement>("button")?.focus();
     const key = (event: KeyboardEvent) => {
       if (event.defaultPrevented) return;
@@ -171,10 +164,11 @@ export function CooperFlotante({
               </div>
             </div>
             <Chat
-              key={video?.id || canal?.id || path}
+              key={video?.id || canal?.id || marca?.id || path}
               canalId={canal?.id}
               videoId={video?.id}
               sugerencias={sugerencias}
+            contextoMarca={marca?.nombre}
             />
           </motion.aside>
         )}

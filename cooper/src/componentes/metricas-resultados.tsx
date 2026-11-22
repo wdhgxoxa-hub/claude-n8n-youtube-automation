@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { Cifra } from "./primitivas";
 import { useEspacio } from "./espacio";
 import { m as motion } from "framer-motion";
 import { NumeroAnimado, useMovimientoReducido } from "./movimiento";
@@ -53,6 +54,7 @@ function Evolucion({ historial }: { historial: Medicion[] }) {
       </label>
       {valores.length > 0 ? (
         <>
+          <Cifra etiqueta={metrica === "meGusta" ? "Me gusta" : metrica === "retencion" ? "Retención (%)" : metrica === "comentarios" ? "Comentarios" : "Vistas"} valor={metrica === "retencion" ? Math.round(valores.at(-1)![metrica]! * 100) : valores.at(-1)![metrica]!} serie={valores.map((d) => metrica === "retencion" ? d[metrica]! * 100 : d[metrica]!)} />
           <svg
             viewBox="0 0 600 150"
             role="img"

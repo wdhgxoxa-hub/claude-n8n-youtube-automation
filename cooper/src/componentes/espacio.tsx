@@ -88,6 +88,8 @@ const Context = createContext<{
   data: Estado;
   refresh: () => Promise<void>;
   connected: boolean;
+  marcaContexto: { id: string; nombre: string } | null;
+  definirMarca: (marca: { id: string; nombre: string } | null) => void;
 } | null>(null);
 export function useEspacio() {
   const value = useContext(Context);
@@ -110,7 +112,7 @@ const extras = [
   { path: "/perfil", label: "Mi perfil", icon: Settings2 },
 ];
 function observarMovil(notify: () => void) {
-  const media = window.matchMedia("(max-width: 767px)");
+  const media = window.matchMedia("(max-width: 1023px)");
   media.addEventListener("change", notify);
   return () => media.removeEventListener("change", notify);
 }
@@ -131,7 +133,8 @@ export function Espacio({
     [connected, setConnected] = useState(false),
     [menu, setMenu] = useState(false),
     [cooper, setCooper] = useState(false);
-  const movil = useSyncExternalStore(observarMovil, () => window.matchMedia("(max-width: 767px)").matches, () => false);
+  const [marcaContexto, definirMarca] = useState<{id: string; nombre: string} | null>(null);
+  const movil = useSyncExternalStore(observarMovil, () => window.matchMedia("(max-width: 1023px)").matches, () => false);
   const path = usePathname();
   const ruta = useRef<HTMLDivElement>(null);
   const ultimaRuta = useRef(path);
@@ -292,7 +295,7 @@ export function Espacio({
     content.current?.focus({ preventScroll: true });
   }, [path]);
   return (
-    <Context.Provider value={{ data, refresh, connected }}>
+    <Context.Provider value={{ data, refresh, connected, marcaContexto, definirMarca }}>
       <MotionConfig
         reducedMotion={isPaused || hidden || reduced ? "always" : "user"}
       >

@@ -78,10 +78,11 @@ export function Marcas({
     setEditor(false);
   }
   const marca = data.marcas.find((m) => m.id === seleccion);
+  const { definirMarca } = useEspacio();
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent("cooper-marca", { detail: marca ? { nombre: marca.nombre } : null }));
-    return () => { window.dispatchEvent(new CustomEvent("cooper-marca", { detail: null })); };
-  }, [marca]);
+    definirMarca(marca ? { id: marca.id, nombre: marca.nombre } : null);
+    return () => definirMarca(null);
+  }, [marca, definirMarca]);
   function cambiarSeccion(valor: string) {
     setSeccion(valor);
     const url = new URL(window.location.href);

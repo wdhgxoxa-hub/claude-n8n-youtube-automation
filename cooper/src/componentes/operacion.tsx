@@ -1,4 +1,5 @@
 "use client";
+import { Esqueleto } from "./primitivas";
 import { PanelCompetencia } from "./competencia";
 import {
   useCallback,
@@ -368,7 +369,7 @@ export function PantallaOperacion({
         </div>
       )}
       {cargando ? (
-        <p role="status">Consultando la fábrica…</p>
+        <Esqueleto etiqueta="Consultando la fábrica…" />
       ) : null}
       {necesitaCanal && op && (
         <label className="operation-channel">

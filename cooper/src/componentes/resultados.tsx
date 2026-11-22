@@ -4,7 +4,7 @@ import { InterruptorAprendizaje } from "./control-aprendizaje";
 import Link from "next/link";
 import Image from "next/image";
 import { api, Heading, Empty, useEspacio } from "./espacio";
-import { Portada } from "./portada";
+import { Medio } from "./primitivas";
 import {
   fecha,
   numero,
@@ -240,11 +240,10 @@ export function Publicados({ initial }: { initial: Resultados }) {
       {error && <p role="alert">{error}</p>}
       <p role="status">
         {cantidad(publicaciones.length, "publicación", "publicaciones")} ·{" "}
-        {cantidad(visibles.length, "registro", "registros")} de origen
+        {cantidad(visibles.length, "resultado", "resultados")}
       </p>
       <p className="muted">
-        Cada fuente conserva sus métricas. Solo agrupamos registros con una
-        misma identidad de publicación comprobable; no sumamos sus cifras.
+        Cada red conserva sus propias cifras para que puedas comparar cómo va cada publicación.
       </p>
       {publicaciones.length ? (
         <div className="publications">
@@ -268,7 +267,7 @@ export function Publicados({ initial }: { initial: Resultados }) {
                         height={160}
                       />
                     ) : (
-                      <Portada title={primero.titulo} />
+                      <Medio alt="Miniatura pendiente" />
                     )}
                   </Link>
                   <div>
