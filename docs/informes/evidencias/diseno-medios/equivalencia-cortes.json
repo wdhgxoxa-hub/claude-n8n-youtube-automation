@@ -1,0 +1,13 @@
+{
+  "corteVisual": "9f3a91050510f0c95c3d34e5ffc69b45aaf8c1d2",
+  "cortePuertaComun": "854a0398028c6e7fd74bde18f9bd681ce959589e",
+  "runtimeIdentico": true,
+  "metodo": "git diff --name-only entre los cortes; solo informes y el selector de una prueba E2E, sin diferencias de producto, migración ni dependencias.",
+  "archivosModificados": [
+    "cooper/e2e/cooper.spec.ts",
+    "docs/informes/evidencias/diseno-medios/revision-visual-escritorio-final.json",
+    "docs/informes/evidencias/diseno-medios/revision-visual-escritorio.md",
+    "docs/informes/evidencias/diseno-medios/revision-visual-movil.md",
+    "docs/informes/evidencias/diseno-medios/revision-visual-tablet.md"
+  ]
+}

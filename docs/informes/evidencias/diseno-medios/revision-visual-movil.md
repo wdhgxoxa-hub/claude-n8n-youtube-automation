@@ -1,6 +1,6 @@
 # Revisión visual móvil · diseno-medios
 
-Fecha: 21 de noviembre de 2026, Lima. Revisión independiente de las **66 capturas completas: 33 a 360 px y 33 a 390 px**, obtenidas de `.cache/diseno-medios-ci/evidencias-diseno/`. No falta ninguna de esas capturas. Se revisaron once hojas de contacto con los dos anchos emparejados y los originales de Fábrica, detalle y Publicados. Las hojas de consulta están en `.cache/revision-visual-movil/pares-01.png` a `pares-11.png`; no sustituyen los originales.
+Fecha: 21 de noviembre de 2026, Lima. Revisión independiente inicial y final de las **66 capturas completas: 33 a 360 px y 33 a 390 px**, obtenidas de `.cache/diseno-medios-ci/evidencias-diseno/`. No falta ninguna de esas capturas. Se revisaron once hojas de contacto iniciales y once finales, con los dos anchos emparejados y sin recortar las páginas verticalmente, además de originales relevantes. Las hojas de consulta están en `.cache/revision-visual-movil/pares-01.png` a `pares-11.png` y `pares-final-01.png` a `pares-final-11.png`; no sustituyen los originales.
 
 La matriz muestra **datos de demostración sin MP4**. Es evidencia del estado sin medio y de la integración en el armazón existente; no demuestra por sí sola la presentación de los MP4 reales de B2 ni las miniaturas oficiales de YouTube. Las capturas `medios-detalle-*` y `medios-lista-*` del recorrido focal usan un MP4 sintético. La revisión adicional de contenido real figura más abajo, separada de esta matriz de demostración.
 
@@ -8,7 +8,7 @@ La matriz muestra **datos de demostración sin MP4**. Es evidencia del estado si
 
 Los títulos, controles y tarjetas conservan sus márgenes al pasar de 360 a 390 px. No se observan nuevos solapamientos entre tarjetas, campos cortados lateralmente ni imágenes estiradas. El estado sin medio utiliza cartelas tipográficas, sin miniaturas de montañas. En las filas de Videos y las tarjetas de Publicados, el título corto de la cartela se trunca con puntos suspensivos y el título completo permanece al lado.
 
-**M1 · Corregible dentro de medios:** en `fabrica-360.png` y `fabrica-390.png`, sección «En la mesa de edición», las cartelas compactas recortan la última línea del título. El chip de etapa 04/10 pisa parte del texto de «¿A qué huele la lluvia?» y «La ciudad antes del ruido». No ocurre en el título exterior de la tarjeta. Comunicado a `interfaz_medios` para ajustar la reserva interior y el truncado de la cartela sin cambiar el armazón. Corregido por `interfaz_medios` en `4b862e8`: dos líneas de 12/18 px, relleno de 8 px y reserva lateral de 32 px para la insignia; dimensiones exteriores conservadas. Estado de esta primera revisión: corrección implementada, pendiente de verificar en captura posterior.
+**M1 · Corregido y verificado en la recaptura final:** en `fabrica-360.png` y `fabrica-390.png`, sección «En la mesa de edición», las cartelas compactas recortaban la última línea del título. El chip de etapa 04/10 pisaba parte del texto de «¿A qué huele la lluvia?» y «La ciudad antes del ruido». No ocurre en el título exterior de la tarjeta. Comunicado a `interfaz_medios` para ajustar la reserva interior y el truncado de la cartela sin cambiar el armazón. Corregido por `interfaz_medios` en `4b862e8`: dos líneas de 12/18 px, relleno de 8 px y reserva lateral de 32 px para la insignia; dimensiones exteriores conservadas. El ajuste posterior `5fc8495` aplica dos líneas y relleno de 8 px también a las miniaturas de 64 px. Verificación final: colisión resuelta en los originales de ambos anchos, según la comprobación fechada más abajo.
 
 La elección de un fondo oscuro y una señal de tinte discreta es honesta cuando falta medio. Su presencia visual es contenida; estas cartelas no deben confundirse con la evidencia de un video terminado. El mensaje bajo la cartela del detalle explica esa ausencia.
 
@@ -24,12 +24,12 @@ No se modificó producto ni CSS durante esta revisión. La aceptación de medios
 
 ## Inventario revisado
 
-Cada fila corresponde a los dos archivos `<nombre>-360.png` y `<nombre>-390.png`. Las alturas acreditan la inspección de página completa, incluidas las secciones posteriores al primer viewport.
+Cada fila corresponde a los dos archivos finales `<nombre>-360.png` y `<nombre>-390.png`, revisados nuevamente en su totalidad después de las correcciones. Las alturas acreditan la inspección de página completa, incluidas las secciones posteriores al primer viewport. El archivo adjunto [revision-visual-movil-final.json](revision-visual-movil-final.json) identifica los 66 originales finales mediante dimensiones, fecha Lima y SHA-256.
 
 | Captura | Alto 360 | Alto 390 | Observación de revisión |
 |---|---:|---:|---|
 | inicio | 1225 | 1165 | Chat y acciones alineados; jerarquía anterior. |
-| fabrica | 1621 | 1590 | Cartelas sin montañas; defecto M1 en tira inferior. |
+| fabrica | 1621 | 1590 | Cartelas sin montañas; M1 detectado inicialmente y resuelto en la recaptura final. |
 | videos | 950 | 900 | Lista estable; título completo al lado de la cartela. |
 | detalle-video | 1909 | 1925 | Cartela, guion y etapas sin colisiones; ausencia de medio explicada. |
 | aprobacion-guion | 1934 | 1927 | Dos acciones alineadas; guion legible. |
@@ -52,7 +52,7 @@ Cada fila corresponde a los dos archivos `<nombre>-360.png` y `<nombre>-390.png`
 | avisos | 900 | 900 | Historial vacío legible; no hay recorte. |
 | avatares | 1270 | 1270 | Cuatro muestras de demostración completas, sin confundirlas con videos reales. |
 | voces | 992 | 992 | Dos muestras y vacío de biblioteca completos. |
-| crear-avatar | 2350 | 2302 | Formulario, consentimiento y cuatro muestras completos; foco visible. |
+| crear-avatar | 2320 | 2333 | Formulario, consentimiento y cuatro muestras completos; foco visible; altura variable por frase efímera del fixture. |
 | crear-voz | 1979 | 1931 | Formulario, consentimiento y dos muestras completos; foco visible. |
 | perfil | 1727 | 1727 | Identidad, preferencias y avisos completos; selector de tema anterior. |
 | admin | 2357 | 2357 | Gastos, revisión e invitaciones completos; jerarquía densa heredada. |
@@ -72,7 +72,7 @@ Se inspeccionaron los cinco PNG `medios-reales-*-390.png` completos. Proceden de
 | medios-reales-detalle-390 | 390 × 1879 | Video vertical protagonista, alineado con el contenido; persona, rótulo y subtítulo visibles. Proporción conservada, sin estiramiento ni recorte introducido por la interfaz. Los controles muestran 0:05 y silencio. |
 | medios-reales-publicados-390 | 390 × 1746 | Miniatura real junto al título; no montañas ni cartela sustitutiva. El formulario sigue relegando el medio a la parte inferior: límite del armazón, no resuelto por servir el archivo. |
 | medios-reales-fabrica-390 | 390 × 900 | La pieza seleccionada muestra el render real, con título y estado fuera de la imagen. Es una captura de viewport; no representa toda la pista. |
-| medios-reales-cola-390 | 320 × 1740 | Captura del elemento `.queue` dentro del viewport de 390 px. Primera pieza con render íntegro; veinte cartelas y último medio pendiente. El chip está separado del texto en las cartelas de esta revisión; M1 aún requiere la recaptura final de sus títulos originales. |
+| medios-reales-cola-390 | 320 × 1740 | Captura del elemento `.queue` dentro del viewport de 390 px. Primera pieza con render íntegro; veinte cartelas y último medio pendiente. El chip está separado del texto en las cartelas de esta revisión; esta evidencia precede al cierre de M1 con sus títulos originales en la recaptura final. |
 
 El póster examinado mide 900 × 1600 y pesa 36.778 bytes. La vista previa mide 360 × 640, dura 5 s, pesa 336.834 bytes y no contiene pista de audio. Son derivados del original 1080 × 1920 documentado en el diagnóstico. La oscuridad y el tinte neutro proceden del material; no se añadieron imágenes o colores de relleno. En las miniaturas pequeñas el detalle fino pierde legibilidad por su tamaño físico, pero se conserva la composición del render. Para darles el protagonismo de «La pared» es necesaria la nueva retícula de Publicados.
 
@@ -82,6 +82,43 @@ La prueba de pausa por cambio de pestaña tiene un límite explícito: Chromium 
 
 No se detectó un nuevo defecto de recorte, alineación o deformación del **render real** en estas cinco capturas. Esta valoración no acredita una publicación remota, las miniaturas oficiales de todas las redes ni la puerta global de diseño.
 
+## Comprobación final de Inicio y Fábrica
+
+Recaptura sobre `9f3a910` (último cambio de producto `53b17df`), posterior a las correcciones `4b862e8` y `5fc8495`. Se esperó a que **ambos manifiestos** fueran posteriores a las 22:40 de Lima: 22:40:13 y 22:40:44. Las cuatro imágenes pertenecen a esa misma ejecución; Inicio y Fábrica de 360 px se guardaron antes de cerrar su manifiesto, a las 22:39:48–49.
+
+Se reinspeccionaron los cuatro originales completos. **M1 queda cerrado:** «¿A qué huele la lluvia?» y «La ciudad antes del ruido» conservan sus dos líneas dentro de la cartela; los chips 04 y 10 ocupan su espacio a la izquierda sin pisar texto. Las cuatro piezas de la cola están separadas y alineadas en ambos anchos. La cartela de la pieza seleccionada usa elipsis limpia; el título completo sigue disponible al lado. No hay texto cortado por el borde inferior ni cambio de altura de las cajas. Inicio conserva su geometría, alineación y salto de línea esperado entre 360 y 390 px; no apareció una regresión visual nueva.
+
+Los manifiestos finales vuelven a registrar 33 entradas por ancho, cero desbordamientos y cero infracciones axe serias/críticas. Conservan el error HTTP 404 de `/inexistente` y 5.013/5.014 registros de desviación de tokens. El cierre de M1 **no aprueba el armazón ni la puerta global**. Las hojas de contacto iniciales se mantienen como evidencia de revisión anterior y no se presentan como imágenes posteriores a la corrección.
+
+| Archivo final | Hora Lima, 21/11/2026 | SHA-256 |
+|---|---|---|
+| matriz-360.json | 22:40:13 | `63597c45fed8973cb7664f71e640e8a2c7528d8501587064fde79760e6df8a21` |
+| matriz-390.json | 22:40:44 | `20363f5804355071950a88e93cccbad90c83ec1ba474e9225bf1613fa46ea40f` |
+| inicio-360.png | 22:39:48 | `341ccc29a4502fbf95e543ba9bdda0a04f091c7846fce1449ba1e2cf5e746ea3` |
+| inicio-390.png | 22:40:19 | `6d22a8927b6097bff983c109cf984b2fb10df56cc6921b06fe6b3910c06f7c3f` |
+| fabrica-360.png | 22:39:49 | `e258581326b76fa944ad5f1b109c77bddcc83f8989ffe8eeb8e748a1bf5d5e2a` |
+| fabrica-390.png | 22:40:20 | `97aa99dc70f5c0d2ad0a61ecdda1825584395d8194f1da1f10c7799c00baed97` |
+
+## Cierre de la inspección de los 66 PNG finales
+
+Después de la comprobación focal anterior se volvieron a abrir **los 66 PNG finales**, en once hojas `pares-final-01` a `pares-final-11`, con seis páginas por hoja (tres pantallas × dos anchos). Se inspeccionó cada página desde la cabecera hasta su último bloque, incluidas Biblia y Ajustes de fábrica. Se contrastaron jerarquía, alineación, ritmo vertical, recortes, cartelas y medios con el inventario inicial. Se abrieron además a tamaño original `videos-390.png` y `publicado-360.png`, junto con los cuatro originales de Inicio/Fábrica ya vistos en esta misma ronda. No se ejecutaron pruebas ni se modificó producto durante la revisión.
+
+| Hoja final | Pantallas, cada una a 360 y 390 | Comprobación de esta tanda |
+|---|---|---|
+| 01 | inicio, fabrica, videos | M1 sigue resuelto; elipsis limpia en filas; títulos exteriores completos y cajas estables. |
+| 02 | detalle-video, aprobacion-guion, aprobacion-final | Cartelas completas; nuevo aviso de archivo no disponible sin atribuirlo a la etapa; guion, acciones y pistas sin colisiones. |
+| 03 | publicado, pedir-video, publicados | Aviso final coherente con publicado sin archivo; formulario y lista completos; miniaturas compactas no cortan su última línea. |
+| 04 | aprendizaje, marcas, canales | Vacíos, lecciones y formularios completos; persiste el orden heredado de filtros antes del contenido. |
+| 05 | canal, radar, rutina | Inspección hasta el final de los formularios largos; sin nuevos recortes ni cambios de alineación. |
+| 06 | redes, referencias, cuentas | Campos, plataformas y acciones finales dentro del contenedor; estados vacíos conservados. |
+| 07 | programados, decisiones, incidencias | Tres registros y dos decisiones completos; separación vertical estable. |
+| 08 | avisos, avatares, voces | Vacíos y muestras completos; las muestras siguen identificadas como demostración. |
+| 09 | crear-avatar, crear-voz, perfil | Foco y consentimiento visibles; las frases efímeras alteran el alto de Crear avatar sin desbordar; muestras y ajustes completos. |
+| 10 | admin, admin-fabrica, entrada | Inspección hasta invitaciones, registro de cambios y pie de acceso; formularios largos conservan alineación. |
+| 11 | entrada-error, no-encontrado, enlace-vencido | Mensajes, retornos y acceso completos; ninguna nueva colisión de texto. |
+
+**Resultado de esta segunda inspección completa:** no se detectaron defectos nuevos de medios, recortes adicionales ni regresiones de geometría. Se mantienen los incumplimientos del armazón descritos arriba. El estado de demostración de las 66 capturas sigue sin acreditar medios reales; para ellos se conserva el anexo del ensayo B2. Esta revisión completa sustituye la limitación anterior de haber reinspeccionado únicamente cuatro vistas finales; los hashes de esas cuatro vistas y ambos manifiestos permanecen iguales.
+
 ## Evidencia automática y límites
 
 `matriz-360.json` y `matriz-390.json` contienen 33 entradas cada uno: **0 desbordamientos horizontales y 0 infracciones axe serias/críticas**. Cada manifiesto conserva un error de consola HTTP 404 al visitar deliberadamente `/inexistente`. Por tanto, la exigencia literal de consola 0 errores no pasa; no se filtró el error para declarar verde la matriz. La puerta de tokens también conserva las desviaciones del armazón.
@@ -90,4 +127,4 @@ Las capturas están tomadas con movimiento reducido. Esta revisión estática no
 
 ## Pendientes de Walter
 
-No se necesita una decisión de Walter para corregir M1. La integración de la misión de armazón y la resolución de sus divergencias con DIRECCION deben coordinarse antes de aprobar la experiencia completa. Esta revisión no autoriza ningún despliegue ni cambio productivo.
+M1 está corregido y verificado; no requiere una decisión de Walter. La integración de la misión de armazón y la resolución de sus divergencias con DIRECCION deben coordinarse antes de aprobar la experiencia completa. Esta revisión no autoriza ningún despliegue ni cambio productivo.
