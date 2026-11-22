@@ -339,9 +339,9 @@ test("render existente en lista, detalle, Publicados y fábrica", async ({
           .marcadorNavegacion,
     ),
   ).toBe("sesion-sin-recarga");
-  const reproductor = page.getByLabel(`Video terminado: ${original.title}`, {
-    exact: true,
-  });
+  const reproductor = page
+    .getByRole("region", { name: "Video terminado", exact: true })
+    .getByLabel(`Video terminado: ${original.title}`, { exact: true });
   await expect(reproductor).toHaveJSProperty(
     "poster",
     new URL(urlAsset(original.id, "poster"), page.url()).href,

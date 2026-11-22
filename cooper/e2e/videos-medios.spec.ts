@@ -363,9 +363,9 @@ for (const ancho of [390, 1440])
     await page.emulateMedia({ reducedMotion: "reduce" });
     await expect(medio).toHaveAttribute("data-reproduciendo", "false");
     await page.goto(`/videos/${datos.video.id}`);
-    const player = page.getByLabel(`Video terminado: ${datos.video.title}`, {
-      exact: true,
-    });
+    const player = page
+      .getByRole("region", { name: "Video terminado", exact: true })
+      .getByLabel(`Video terminado: ${datos.video.title}`, { exact: true });
     await expect(player).toHaveJSProperty(
       "poster",
       new URL(poster, page.url()).href,
