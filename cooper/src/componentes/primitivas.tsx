@@ -120,7 +120,7 @@ export function Medio({
     if (!permitted) halt();
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.65) {
           halt();
           return;
         }

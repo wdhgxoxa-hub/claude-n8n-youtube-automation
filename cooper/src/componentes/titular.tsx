@@ -13,7 +13,7 @@ export function Revelado({
     <span key={`${word}-${i}`}>
       <span
         className="reveal-word"
-        style={{ "--word": inicio + i } as CSSProperties}
+        style={{ "--word": Math.min(7, inicio + i) } as CSSProperties}
       >
         {word}
       </span>

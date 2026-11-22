@@ -1,4 +1,3 @@
-import { EntradaMovimiento } from "@/componentes/entrada-movimiento";
 import { destinoRevision } from "@/lib/revision-whatsapp";
 import { signIn } from "@/auth";
 import { Logo } from "@/marca/Logo";
@@ -32,7 +31,6 @@ export default async function Entrar({
             Todo tu equipo, en movimiento.
           </p>
         </div>
-        <EntradaMovimiento />
         <div className="login-track" aria-hidden="true">
           <span>Idea</span>
           <i />
