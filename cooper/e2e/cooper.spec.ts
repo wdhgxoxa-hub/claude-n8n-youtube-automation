@@ -202,7 +202,7 @@ test("chat conserva tarjetas al recargar, cancela y bloquea confirmaciones ajena
     ).status(),
   ).toBe(409);
 });
-test("boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream", async ({
+test("estado de Cooper sigue las frases y vuelve a reposo al finalizar el stream", async ({
   page,
 }) => {
   await login(page.request);
@@ -250,18 +250,21 @@ test("boca de Cooper sigue las frases y vuelve a reposo al finalizar el stream",
   await expect(page.locator(".conversation [aria-busy=true]")).toContainText(
     "Estoy revisando",
   );
-  await expect(
-    page.getByRole("img", { name: "Cooper hablando", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("img", { name: "Cooper pensando", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator(".chat-pane")).toHaveAttribute(
+    "data-estado",
+    "hablando",
+  );
+  await expect(page.locator(".chat-pane")).toHaveAttribute(
+    "data-estado",
+    "pensando",
+  );
   await expect(page.locator(".conversation [aria-busy=true]")).toContainText(
     "Podemos convertirla",
   );
-  await expect(
-    page.getByRole("img", { name: "Cooper reposo", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator(".chat-pane")).toHaveAttribute(
+    "data-estado",
+    "reposo",
+  );
   await expect(
     page.getByRole("button", { name: "Enviar mensaje" }),
   ).toBeDisabled();
@@ -350,7 +353,9 @@ test("adjuntos y grabación con transcripción editable", async ({ page }) => {
     .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
     .fill("Quiero un video: Idea dictada y revisada");
   await page.getByRole("button", { name: "Enviar mensaje" }).click();
-  const propuesta = page.getByRole("article", { name: "Producir video" });
+  const propuesta = page
+    .getByRole("article", { name: "Producir video" })
+    .filter({ hasText: "Idea dictada y revisada" });
   await expect(propuesta).toContainText("Idea dictada y revisada");
   await propuesta
     .getByRole("button", { name: "Cancelar", exact: true })
@@ -678,25 +683,37 @@ test("elige avatar, voz y presencia al pedir un video desde la biblioteca", asyn
   );
 });
 
-test("bienvenida vacía: las tres acciones quedan antes del compositor", async ({
+test("bienvenida vacía: tres sugerencias contextuales con compositor persistente", async ({
   page,
 }) => {
-  // Luis no ha creado contenido; no usar el administrador con todos los videos.
+  // Luis no ha creado contenido; la hoja permite desplazarse sin perder el compositor.
   await login(page.request, "luis@example.test");
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [390, 768, 1440]) {
     await page.setViewportSize({ width, height: 700 });
     await page.goto("/");
-    await abrirCooper(page);
-    const first = page.getByRole("button", { name: "Crear mi primer canal" });
-    await expect(first).toBeVisible();
-    const actions = await page.locator(".suggestions:visible").boundingBox();
-    const composer = await page.locator(".composer-area:visible").boundingBox();
-    expect(actions!.y + actions!.height).toBeLessThanOrEqual(composer!.y);
-    await first.click();
-    await expect(
-      page.getByRole("textbox", { name: "Mensaje para Cooper" }),
-    ).toHaveValue("Crea un canal: Ciencia cotidiana");
+    const panel = await abrirCooper(page);
+    const compositor = panel.getByRole("textbox", {
+      name: "Mensaje para Cooper",
+      exact: true,
+    });
+    const sugerencias = panel.locator(".cooper-suggestions");
+    await expect(sugerencias.getByRole("button")).toHaveCount(3);
+    for (const [nombre, mensaje] of [
+      ["Crear mi primer canal", "Crea un canal: Ciencia cotidiana"],
+      ["Dar forma a una idea", "Quiero un video: Por qué el cielo es azul"],
+      ["Revisar mis pendientes", "¿Qué tengo pendiente?"],
+    ]) {
+      const accion = sugerencias.getByRole("button", {
+        name: nombre,
+        exact: true,
+      });
+      await accion.scrollIntoViewIfNeeded();
+      await expect(accion).toBeInViewport({ ratio: 1 });
+      await accion.click();
+      await expect(compositor).toHaveValue(mensaje);
+      await expect(compositor).toBeInViewport({ ratio: 1 });
+    }
     await noOverflow(page);
   }
 });

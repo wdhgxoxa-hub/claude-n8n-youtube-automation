@@ -1,7 +1,7 @@
 import { abrirCooper } from "./ayudas-diseno";
 import { test, expect } from "@playwright/test";
 
-test("respuesta completa mantiene la boca y la espera se puede cancelar", async ({
+test("respuesta completa anuncia su estado y la espera se puede cancelar", async ({
   page,
 }) => {
   const session = await page.request.post(
@@ -30,16 +30,15 @@ test("respuesta completa mantiene la boca y la espera se puede cancelar", async 
   await expect(
     page.getByRole("textbox", { name: "Mensaje para Cooper", exact: true }),
   ).toBeEnabled();
-  await expect(
-    page
-      .locator(".chat-heading")
-      .getByRole("img", { name: "Cooper hablando", exact: true }),
-  ).toHaveAttribute("data-cooper-state", "hablando");
-  await expect(
-    page
-      .locator(".chat-heading")
-      .getByRole("img", { name: "Cooper reposo", exact: true }),
-  ).toHaveAttribute("data-cooper-state", "reposo", { timeout: 8000 });
+  await expect(page.locator(".chat-pane")).toHaveAttribute(
+    "data-estado",
+    "hablando",
+  );
+  await expect(page.locator(".chat-pane")).toHaveAttribute(
+    "data-estado",
+    "reposo",
+    { timeout: 8000 },
+  );
   await page.unroute("**/api/chat");
   // Fetch que espera a la cancelación, sin enviar una petición al servidor.
   await page.evaluate(() => {
