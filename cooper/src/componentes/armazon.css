@@ -161,7 +161,7 @@ main#contenido {
   margin: 0 auto;
   padding: var(--espacio-24) var(--espacio-32) var(--espacio-96);
 }
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .studio-shell:not(.cooper-open) main#contenido {
     /* El orbe conserva un carril propio junto a botones y campos al desplazarse. */
     padding-right: var(--espacio-96);
