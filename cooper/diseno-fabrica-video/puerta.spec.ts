@@ -240,11 +240,25 @@ async function navegar(page: Page, url: string) {
     /Margen Real|Economía de bolsillo/,
   );
   await page.evaluate(() => document.fonts.ready);
+  // Los controles nativos de Chromium muestran un arco inicial incluso con preload=none.
+  // Se espera su ciclo de entrada, sin descargar ni reproducir el montaje.
+  if (await page.locator(".real-player video").count())
+    await page.waitForTimeout(1800);
 }
 
 async function captura(page: Page, screen: string, width: number) {
+  // La navegación con el riel conserva foco/hover; la captura documenta su reposo.
+  // Se preserva el foco dentro de los formularios para revisar su estado real.
+  await page.mouse.move(width - 16, 16);
+  await page.evaluate(() => {
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && active.closest(".glass-rail"))
+      active.blur();
+  });
   await page.evaluate(() => scrollTo(0, 0));
-  await page.waitForTimeout(150);
+  await page.waitForTimeout(
+    (await page.locator(".real-player video").count()) ? 3000 : 500,
+  );
   const overflow = await page.evaluate(() =>
     Math.max(0, document.documentElement.scrollWidth - innerWidth),
   );
@@ -284,6 +298,19 @@ async function captura(page: Page, screen: string, width: number) {
     overflow,
     small,
     violations,
+    media: await page.locator("video").evaluateAll((videos) =>
+      videos.map((element) => {
+        const v = element as HTMLVideoElement;
+        return {
+          src: v.getAttribute("src"),
+          paused: v.paused,
+          ready: v.readyState,
+          network: v.networkState,
+          error: v.error?.message ?? null,
+          preload: v.preload,
+        };
+      }),
+    ),
     fixedElements:
       "captura nativa única sin cosido; capas flotantes presentes en viewport y ocultas en página completa",
   };
@@ -340,6 +367,62 @@ for (const width of widths)
     await page
       .getByRole("button", { name: "Cerrar formulario", exact: true })
       .click();
+    await navegar(page, `/videos/${state.videos[0].id}`);
+    const estadoOriginal = state.videos[0].productionState;
+    try {
+      for (const [productionState, screen, label] of [
+        ["pausada", "video-pausado", "En pausa"],
+        ["cancelada", "video-cancelado", "Cancelado"],
+      ] as const) {
+        await page.evaluate(
+          ({ id, productionState }) => {
+            (
+              window as typeof window & { designState: Estado }
+            ).designState.videos.find((video) => video.id === id)!
+              .productionState = productionState;
+          },
+          { id: state.videos[0].id, productionState },
+        );
+        await expect(
+          page.getByRole("region", {
+            name: `Etapas del video. Etapa actual: ${label}`,
+            exact: true,
+          }),
+        ).toBeVisible();
+        if (productionState === "cancelada") {
+          for (const action of ["Aprobar", "Pedir cambios", "Programar"])
+            await expect(
+              page.getByRole("button", { name: action, exact: true }),
+            ).toBeDisabled();
+        }
+        evidence.push(await captura(page, screen, width));
+      }
+    } finally {
+      await page.evaluate(
+        ({ id, productionState }) => {
+          (
+            window as typeof window & { designState: Estado }
+          ).designState.videos.find((video) => video.id === id)!
+            .productionState = productionState;
+        },
+        { id: state.videos[0].id, productionState: estadoOriginal },
+      );
+    }
+    // Este guion no tiene publicaciones ni lecciones vinculadas en el fixture.
+    await navegar(page, `/videos/${state.videos[1].id}`);
+    for (const [tab, screen, title] of [
+      ["Métricas", "video-metricas-vacias", "La historia sigue con tu audiencia."],
+      ["Lecciones", "video-lecciones-vacias", "Todavía estamos escuchando."],
+    ]) {
+      await page.getByRole("tab", { name: tab, exact: true }).click();
+      await expect(
+        page.getByRole("tabpanel", { name: tab, exact: true }).getByRole(
+          "heading",
+          { name: title, exact: true },
+        ),
+      ).toBeVisible();
+      evidence.push(await captura(page, screen, width));
+    }
     // El vacío se prueba sobre el mismo contrato, sin crear ni borrar recursos.
     state.videos = [];
     await page
@@ -393,6 +476,7 @@ for (const width of [390, 1440])
         records;
       const names = () =>
         [...document.querySelectorAll<HTMLElement>("[style]")]
+          .filter((el) => el.checkVisibility())
           .map((el) => el.style.viewTransitionName)
           .filter((n) => n.startsWith("video-"));
       document.startViewTransition = (update) => {
@@ -412,6 +496,66 @@ for (const width of [390, 1440])
     await expect(page.locator("[data-capsula]").first()).toContainText(
       titles[0],
     );
+    const carril = page.getByRole("region", {
+      name: "Estaciones de producción; desplázate para recorrerlas",
+      exact: true,
+    });
+    const mapa = page.getByRole("navigation", {
+      name: "Ir a una estación",
+      exact: true,
+    });
+    if (width >= 768) {
+      const ultima = mapa.getByRole("button", { name: /^12 Publicado,/ });
+      await ultima.focus();
+      await page.keyboard.press("Enter");
+      await expect(carril.locator('[data-estacion="11"]')).toBeInViewport();
+      await mapa.getByRole("button", { name: /^01 Radar,/ }).press("Enter");
+      await expect(carril.locator('[data-estacion="0"]')).toBeInViewport();
+    } else {
+      await expect(mapa).toBeHidden();
+    }
+    await carril.evaluate((element) => {
+      element.scrollLeft = 0;
+      element.scrollTop = 0;
+    });
+    await carril.focus();
+    await expect(carril).toBeFocused();
+    await page.keyboard.press(width < 768 ? "ArrowDown" : "ArrowRight");
+    await expect
+      .poll(() =>
+        carril.evaluate(
+          (element, mobile) =>
+            mobile ? element.scrollTop : element.scrollLeft,
+          width < 768,
+        ),
+      )
+      .toBeGreaterThan(0);
+    const moving = page
+      .locator(`[data-capsula="${state.videos[0].id}"]`)
+      .filter({ visible: true });
+    await expect(moving).toHaveCount(1);
+    await moving.scrollIntoViewIfNeeded();
+    const avanceEn = await page.evaluate((id) => {
+      const video = (
+        window as typeof window & { designState: Estado }
+      ).designState.videos.find((v) => v.id === id)!;
+      video.stage = 8;
+      video.updatedAt = Date.now();
+      return video.updatedAt;
+    }, state.videos[0].id);
+    await expect(moving).toHaveAttribute("data-etapa", "8");
+    const ultimoSuceso = page
+      .getByRole("list", { name: "Últimos movimientos", exact: true })
+      .getByRole("listitem")
+      .first();
+    await expect(ultimoSuceso).toContainText(state.videos[0].title);
+    await expect(ultimoSuceso).toContainText("Actualizado · Control de calidad");
+    await expect(ultimoSuceso.locator("time")).toHaveAttribute(
+      "datetime",
+      new Date(avanceEn).toISOString(),
+    );
+    await expect(ultimoSuceso.locator("time")).toHaveText("Hace un momento");
+    await page.waitForTimeout(900);
     const target = state.videos[2];
     const link = page
       .locator(`a[href="/videos/${target.id}"]`)
@@ -428,9 +572,45 @@ for (const width of [390, 1440])
       page.locator('[aria-label="Video terminado"]').first(),
     ).toBeVisible();
     await page.waitForTimeout(900);
-    for (const name of ["Métricas", "Lecciones", "Guion"]) {
-      await page.getByRole("tab", { name, exact: true }).click();
+    const player = page.locator(".real-player video").filter({ visible: true });
+    await player.focus();
+    await player.press("Space");
+    await expect
+      .poll(() =>
+        player.evaluate((element) => (element as HTMLVideoElement).currentTime),
+      )
+      .toBeGreaterThan(0.1);
+    await player.press("Space");
+    await expect(player).toHaveJSProperty("paused", true);
+    await page.getByRole("tab", { name: "Guion", exact: true }).focus();
+    for (const [key, name] of [
+      ["ArrowRight", "Métricas"],
+      ["ArrowRight", "Lecciones"],
+      ["Home", "Guion"],
+      ["End", "Lecciones"],
+      ["ArrowLeft", "Métricas"],
+      ["ArrowLeft", "Guion"],
+    ]) {
+      await page.keyboard.press(key);
+      const tab = page.getByRole("tab", { name, exact: true });
+      await expect(tab).toBeFocused();
+      await expect(tab).toHaveAttribute("aria-selected", "true");
+      await expect(page.getByRole("tab", { selected: true })).toHaveCount(1);
+      await expect(
+        page.getByRole("tabpanel", { name, exact: true }),
+      ).toBeVisible();
       await page.waitForTimeout(400);
+    }
+    for (const [action, field] of [
+      ["Pedir cambios", "¿Qué cambiamos?"],
+      ["Programar", "Fecha y hora local"],
+    ]) {
+      const opener = page.getByRole("button", { name: action, exact: true });
+      await opener.press("Enter");
+      await expect(page.getByLabel(field, { exact: true })).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(opener).toBeFocused();
+      await expect(opener).toHaveAttribute("aria-expanded", "false");
     }
     await abrirCooper(page);
     await page.waitForTimeout(700);
@@ -441,7 +621,16 @@ for (const width of [390, 1440])
       ["/", 1],
       ["/publicados", 3],
     ] as const) {
-      await page.goto(url);
+      const navigation = width < 768 ? ".mobile-dock" : ".glass-rail";
+      await page.locator(`${navigation} a[href="${url}"]`).last().click();
+      await expect(page).toHaveURL(
+        new RegExp(`${url === "/" ? "/$" : url + "$"}`),
+      );
+      await page.waitForTimeout(700);
+      if (url === "/publicados")
+        await page
+          .getByRole("button", { name: "Actualizar resultados", exact: true })
+          .click();
       const source = state.videos[index];
       const shared = page
         .locator(`a[href="/videos/${source.id}"]`)
@@ -478,12 +667,26 @@ for (const width of [390, 1440])
 test("avance de cápsula, movimiento reducido y traza móvil", async ({
   page,
   context,
-}) => {
+  browser,
+}, testInfo) => {
+  const browserSession = await browser.newBrowserCDPSession();
+  const system = await browserSession.send("SystemInfo.getInfo");
+  const renderer = {
+    devices: system.gpu.devices,
+    features: system.gpu.featureStatus,
+    renderer: system.gpu.auxAttributes?.glRenderer,
+    browser: browser.version(),
+    launch: testInfo.project.use.launchOptions?.args,
+  };
+  await browserSession.detach();
   await page.setViewportSize({ width: 390, height: 900 });
   const { state, errors } = await preparar(page);
   await page.goto("/videos");
   const target = state.videos[0];
-  const capsule = page.locator(`[data-capsula="${target.id}"]`);
+  const capsule = page
+    .locator(`[data-capsula="${target.id}"]`)
+    .filter({ visible: true });
+  await expect(capsule).toHaveCount(1);
   await expect(capsule).toContainText(target.title);
   await capsule.scrollIntoViewIfNeeded();
   await capsule.evaluate((el) => el.setAttribute("data-preservado", "si"));
@@ -498,8 +701,9 @@ test("avance de cápsula, movimiento reducido y traza móvil", async ({
   });
   const measured = await page.evaluate(async (id) => {
     const w = window as typeof window & { designState: Estado };
-    const frames: number[] = [],
-      transforms: string[] = [];
+    const frameTimeline: { at: number; delta: number; transform: string }[] =
+      [];
+    const shifts: unknown[] = [];
     let previous = 0,
       active = true,
       cls = 0;
@@ -508,19 +712,34 @@ test("avance de cápsula, movimiento reducido y traza móvil", async ({
         const shift = e as PerformanceEntry & {
           value: number;
           hadRecentInput: boolean;
+          sources?: {
+            node?: Element;
+            previousRect: DOMRectReadOnly;
+            currentRect: DOMRectReadOnly;
+          }[];
         };
-        if (!shift.hadRecentInput) cls += shift.value;
+        if (!shift.hadRecentInput) {
+          cls += shift.value;
+          shifts.push({
+            value: shift.value,
+            sources: shift.sources?.map((s) => ({
+              node: s.node?.outerHTML.slice(0, 300),
+              previous: s.previousRect.toJSON(),
+              current: s.currentRect.toJSON(),
+            })),
+          });
+        }
       }
     });
     observer.observe({ type: "layout-shift" });
     const tick = (time: number) => {
       if (!active) return;
-      if (previous) frames.push(time - previous);
+      const transform = getComputedStyle(
+        document.querySelector(`[data-capsula="${id}"]`)!,
+      ).transform;
+      if (previous)
+        frameTimeline.push({ at: time, delta: time - previous, transform });
       previous = time;
-      transforms.push(
-        getComputedStyle(document.querySelector(`[data-capsula="${id}"]`)!)
-          .transform,
-      );
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -528,13 +747,39 @@ test("avance de cápsula, movimiento reducido y traza móvil", async ({
     await new Promise((resolve) => setTimeout(resolve, 3500));
     active = false;
     observer.disconnect();
+    // La cadencia de un video en reposo no es la fluidez de Motion.
+    // Incluimos desde el primer transform hasta el frame que termina el layout;
+    // conservamos también toda la muestra, sin ocultar su tramo en reposo.
+    const first = frameTimeline.findIndex(
+      (frame) => frame.transform !== "none",
+    );
+    const finish = frameTimeline.findIndex(
+      (frame, index) => index > first && frame.transform === "none",
+    );
+    const animation =
+      first >= 0 && finish > first
+        ? frameTimeline.slice(first, finish + 1)
+        : [];
+    const frames = animation.map((frame) => frame.delta);
     const sorted = [...frames].sort((a, b) => a - b);
     return {
-      fps: 1000 / (frames.reduce((s, n) => s + n, 0) / frames.length),
+      fps: frames.length
+        ? 1000 / (frames.reduce((s, n) => s + n, 0) / frames.length)
+        : 0,
       p95: sorted[Math.floor(sorted.length * 0.95)],
       max: Math.max(...frames),
+      animationDuration: animation.length
+        ? animation.at(-1)!.at - animation[0].at + animation[0].delta
+        : 0,
+      animationFrames: frames.length,
+      sampleFps:
+        1000 /
+        (frameTimeline.reduce((sum, frame) => sum + frame.delta, 0) /
+          frameTimeline.length),
+      frameTimeline,
       cls,
-      transforms: [...new Set(transforms)],
+      shifts,
+      transforms: [...new Set(frameTimeline.map((frame) => frame.transform))],
     };
   }, target.id);
   const completed = new Promise<void>((resolve) =>
@@ -549,14 +794,32 @@ test("avance de cápsula, movimiento reducido y traza móvil", async ({
   );
   writeFileSync(
     `${out}/fabrica-movimiento.json`,
-    JSON.stringify(measured, null, 2),
+    JSON.stringify(
+      {
+        ...measured,
+        renderer,
+        instrumentation: {
+          cpu: 4,
+          cdpTrace: true,
+          playwrightTrace: false,
+          video: false,
+          screenshotDuringMeasurement: false,
+          frameBudget:
+            "primer transform de layout hasta el primer frame final sin transform; muestra completa conservada",
+        },
+      },
+      null,
+      2,
+    ),
   );
   await expect(capsule).toHaveAttribute("data-etapa", "8");
   await expect(capsule).toHaveAttribute("data-preservado", "si");
   expect(measured.transforms.some((value) => value !== "none")).toBe(true);
+  expect(measured.animationDuration).toBeGreaterThanOrEqual(500);
+  expect(measured.animationFrames).toBeGreaterThan(20);
   expect(measured.fps).toBeGreaterThanOrEqual(57);
   expect(measured.p95).toBeLessThanOrEqual(25);
-  expect(measured.cls).toBeLessThanOrEqual(0.01);
+  expect(measured.cls).toBe(0);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.evaluate((id) => {
     (window as typeof window & { designState: Estado }).designState.videos.find(
