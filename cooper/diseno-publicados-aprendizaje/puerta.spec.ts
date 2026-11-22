@@ -393,6 +393,7 @@ for (const width of [390, 1440])
     await page
       .getByRole("button", { name: "Cerrar Cooper", exact: true })
       .click();
+    await expect(page.locator(".cooper-panel")).toHaveCount(0);
     const orb = page.getByRole("button", { name: "Abrir Cooper", exact: true });
     await expect(orb).toBeVisible();
     await expect(orb).not.toHaveAttribute("data-projecting", "true");
