@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
 import { db } from "@/db";
-import { allowedEmails, events, type User } from "@/db/schema";
+import { allowedEmails, events, users, type User } from "@/db/schema";
 import { loginGoogle } from "@/lib/identidad";
 import { ErrorHttp } from "@/lib/permisos";
 
@@ -34,11 +34,14 @@ function bloquearFabrica() {
   return () => resolve();
 }
 
-async function abrir() {
+async function abrir(query = "", headers?: HeadersInit) {
   const aborter = new AbortController();
   aborters.push(aborter);
   const response = await GET(
-    new Request("http://localhost/api/eventos", { signal: aborter.signal }),
+    new Request(`http://localhost/api/eventos${query}`, {
+      signal: aborter.signal,
+      headers,
+    }),
   );
   const chunks: string[] = [];
   let ended = false;
@@ -61,6 +64,9 @@ beforeEach(() => {
   vi.stubEnv("COOPER_DEMO", "0");
   revoked = false;
   mocks.sincronizar.mockReset().mockResolvedValue(undefined);
+  db().delete(events).run();
+  db().delete(users).run();
+  db().delete(allowedEmails).run();
   const email = `${randomUUID()}@example.test`;
   db().insert(allowedEmails).values({ email, createdAt: Date.now() }).run();
   active = loginGoogle(email, "Conexión de ensayo");
@@ -197,3 +203,66 @@ it("la sonda HEAD revalida permisos sin fábrica ni cupo SSE", async () => {
   expect(response.status).toBe(401);
   expect(await response.text()).not.toContain("event:");
 });
+
+function registrarProgreso(ownerId: string, createdAt: number) {
+  const id = randomUUID();
+  db()
+    .insert(events)
+    .values({
+      id,
+      ownerId,
+      type: "progreso",
+      payload: JSON.stringify({ id }),
+      createdAt,
+    })
+    .run();
+  return id;
+}
+
+it("retoma desde el cursor propio de la URL y conserva Last-Event-ID nativo", async () => {
+  const first = registrarProgreso(active.id, Date.now() - 3000);
+  const second = registrarProgreso(active.id, Date.now() - 2000);
+  const third = registrarProgreso(active.id, Date.now() - 1000);
+  const resumed = await abrir(`?ultimoEvento=${encodeURIComponent(second)}`);
+  await vi.advanceTimersByTimeAsync(1000);
+  const text = resumed.chunks.join("");
+  expect(text).toContain(`id: ${third}\n`);
+  expect(text).not.toContain(`id: ${first}\n`);
+  expect(text).not.toContain(`id: ${second}\n`);
+  expect(text).toContain("event: estado");
+  resumed.aborter.abort();
+  await resumed.drain;
+
+  const native = await abrir(`?ultimoEvento=${first}`, {
+    "last-event-id": third,
+  });
+  expect(native.chunks.join("")).not.toContain("event: progreso");
+  expect(native.chunks.join("")).toContain("event: estado");
+});
+
+it.each(["ajeno", "inexistente", "malformado", "largo"])(
+  "ignora un cursor %s sin ampliar el acceso al historial",
+  async (kind) => {
+    const own = registrarProgreso(active.id, Date.now() - 2000);
+    const foreignEmail = `${randomUUID()}@example.test`;
+    db()
+      .insert(allowedEmails)
+      .values({ email: foreignEmail, createdAt: Date.now() })
+      .run();
+    const foreignUser = loginGoogle(foreignEmail, "Otra persona");
+    const foreign = registrarProgreso(foreignUser.id, Date.now() - 1000);
+    const cursor = {
+      ajeno: foreign,
+      inexistente: randomUUID(),
+      malformado: "cursor-no-valido",
+      largo: "a".repeat(129),
+    }[kind]!;
+    const stream = await abrir(`?ultimoEvento=${encodeURIComponent(cursor)}`);
+    await vi.advanceTimersByTimeAsync(1000);
+    const text = stream.chunks.join("");
+    expect(text).toContain(`id: ${own}\n`);
+    expect(text).not.toContain(foreign);
+    expect(text).not.toContain(foreignUser.email);
+    expect(text).toContain("event: estado");
+  },
+);

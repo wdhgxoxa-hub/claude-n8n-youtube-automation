@@ -12,6 +12,8 @@ export const dynamic = "force-dynamic";
 const LATIDO_MS = 15000;
 const CONCILIACION_MS = 60000;
 const CACHE_PRIVADA = "private, no-cache, no-store, no-transform";
+const UUID_EVENTO =
+  /^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
 
 // EventSource no expone el estado HTTP del error. Esta sonda comprueba también
 // suspensión/lista permitida sin consultar la fábrica ni ocupar un cupo SSE.
@@ -48,16 +50,23 @@ export async function GET(request: Request) {
     const remote =
       process.env.COOPER_DEMO !== "1" && process.env.COOPER_FABRICA === "n8n";
     let cursorTime = 0;
-    const lastEvent = request.headers.get("last-event-id");
-    if (lastEvent) {
+    let cursorId = "";
+    // Un EventSource nuevo no conserva Last-Event-ID. El cliente puede retomar
+    // por URL; la cabecera nativa tiene precedencia si el navegador la aporta.
+    const lastEvent =
+      request.headers.get("last-event-id") ??
+      new URL(request.url).searchParams.get("ultimoEvento");
+    if (lastEvent && lastEvent.length <= 128 && UUID_EVENTO.test(lastEvent)) {
       const receipt = db()
         .select()
         .from(events)
         .where(and(eq(events.id, lastEvent), eq(events.ownerId, user.id)))
         .get();
-      if (receipt) cursorTime = receipt.createdAt;
+      if (receipt) {
+        cursorTime = receipt.createdAt;
+        cursorId = receipt.id;
+      }
     }
-    let cursorId = lastEvent ?? "";
     release = reserveStream(user.id);
     const stream = new ReadableStream({
       start(controller) {
