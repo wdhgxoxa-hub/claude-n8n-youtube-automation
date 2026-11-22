@@ -543,6 +543,7 @@ for (const width of widths)
       await expect(
         page.locator(screen === "publicados" ? ".publication" : ".lesson"),
       ).toHaveCount(screen === "publicados" ? 12 : 3);
+      await capture(page, `${screen}-recuperado`, width, consoleErrors);
       await page.route("**/api/resultados", (route) =>
         route.fulfill({
           json: {
