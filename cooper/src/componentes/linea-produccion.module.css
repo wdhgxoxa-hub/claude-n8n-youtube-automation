@@ -181,6 +181,59 @@
   color: var(--texto-2);
   font-size: var(--texto-12);
 }
+/* Bahía libre: la estación sin videos conserva su sitio en la línea con su
+   número y su oficio, en lugar de un hueco negro. Solo en la pista horizontal. */
+.bahia {
+  grid-column: var(--estacion);
+  grid-row: 2 / span var(--filas);
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(var(--espacio-96) * 2);
+  padding: var(--espacio-16);
+  border: var(--borde-ancho) solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: linear-gradient(
+    to bottom,
+    var(--sup-1),
+    var(--transparente)
+  );
+  pointer-events: none;
+}
+.bahiaEstado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  color: var(--texto-2);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-12);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.bahiaEstado::before {
+  content: "";
+  width: var(--espacio-8);
+  height: var(--espacio-8);
+  border: var(--borde-ancho) solid var(--texto-3);
+  border-radius: var(--radio-pildora);
+}
+.bahiaNumero {
+  margin-top: auto;
+  color: color-mix(in srgb, var(--texto) 14%, var(--transparente));
+  font-family: var(--fuente-display);
+  font-size: var(--texto-72);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  font-variant-numeric: tabular-nums;
+}
+.bahiaOficio {
+  margin-top: var(--espacio-8);
+  color: var(--texto-2);
+  font-size: var(--texto-13);
+  line-height: var(--interlinea-texto);
+  text-wrap: pretty;
+}
 .capsula {
   grid-column: var(--estacion);
   grid-row: var(--fila);
@@ -539,6 +592,9 @@
     scroll-snap-type: none;
   }
   .pieCarril {
+    display: none;
+  }
+  .bahia {
     display: none;
   }
   .pista {

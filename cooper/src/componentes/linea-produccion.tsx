@@ -181,6 +181,22 @@ function sucesosDeVideos(videos: readonly Video[]): Suceso[] {
     .slice(0, 6);
 }
 
+/** Qué ocurre en cada estación: da presencia a la bahía cuando está libre. */
+const OFICIO = [
+  "Aquí nacen las ideas que vale la pena contar.",
+  "La idea se vuelve una historia con principio y final.",
+  "Cada dato se revisa antes de seguir.",
+  "Tu mirada decide si la historia avanza.",
+  "La historia se dibuja plano a plano.",
+  "Cada escena recibe su imagen.",
+  "La historia encuentra su voz y su ritmo.",
+  "Todo se une en un solo corte.",
+  "Se mira cada segundo antes de mostrarlo.",
+  "El último vistazo es tuyo.",
+  "Espera su hora para salir.",
+  "Ya está en el mundo.",
+] as const;
+
 /** Lleva la estación al borde izquierdo, justo después del desvanecido. */
 function izquierdaDe(estacion: HTMLElement) {
   const margen = Number.parseFloat(
@@ -284,8 +300,9 @@ export function LineaProduccion({
     if (!elemento || !piezas.length) return;
     const escritorio = window.matchMedia("(min-width: 768px)");
     const colocar = () => {
+      // Una estación de contexto a la izquierda: la viva nunca queda al borde.
       const estacion = elemento.querySelector<HTMLElement>(
-        `[data-estacion="${primeraEtapa}"]`,
+        `[data-estacion="${Math.max(0, primeraEtapa - 1)}"]`,
       );
       if (estacion)
         elemento.scrollLeft = escritorio.matches ? izquierdaDe(estacion) : 0;
@@ -486,6 +503,22 @@ export function LineaProduccion({
                   </div>
                 </motion.div>
               ))}
+              {estaciones
+                .filter(({ videos }) => !videos.length)
+                .map(({ etapa }) => (
+                  <div
+                    key={`bahia-${etapa}`}
+                    className={styles.bahia}
+                    aria-hidden="true"
+                    style={{ "--estacion": etapa + 1 } as CSSProperties}
+                  >
+                    <span className={styles.bahiaEstado}>Libre</span>
+                    <span className={styles.bahiaNumero}>
+                      {String(etapa + 1).padStart(2, "0")}
+                    </span>
+                    <span className={styles.bahiaOficio}>{OFICIO[etapa]}</span>
+                  </div>
+                ))}
               {piezas.map((video) => {
                 const estacion = estaciones[video.stage];
                 const posicion = estacion.videos.findIndex(
