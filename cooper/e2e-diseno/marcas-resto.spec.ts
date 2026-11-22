@@ -90,6 +90,16 @@ async function capture(
     await document.fonts.ready;
     window.scrollTo(0, 0);
   });
+  // La llegada del render dispara una celebración real. La matriz documenta
+  // la composición estable; el recorrido grabado conserva la transición.
+  const celebration = page.getByRole("button", {
+    name: "Cerrar celebración",
+    exact: true,
+  });
+  if (await celebration.isVisible()) {
+    await celebration.click();
+    await expect(celebration).toBeHidden();
+  }
   const audit = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
@@ -352,7 +362,9 @@ for (const width of widths)
     await expect
       .poll(() =>
         page
+          .getByRole("main")
           .locator(".canal-ultimo .medio-poster")
+          .filter({ visible: true })
           .evaluate((el) => (el as HTMLImageElement).naturalWidth),
       )
       .toBe(900);
@@ -378,7 +390,10 @@ for (const width of [390, 1440])
     const state: Estado = await (await page.request.get("/api/estado")).json();
     const ensayo = await instalarMedioReal(page, state);
     await page.reload();
-    const medio = page.locator(".canal-ultimo .medio");
+    const medio = page
+      .getByRole("main")
+      .locator(".canal-ultimo .medio")
+      .filter({ visible: true });
     await expect(medio).toBeVisible();
     await medio.hover();
     await expect(medio).toHaveAttribute("data-preview", "on");
@@ -401,8 +416,9 @@ for (const width of [390, 1440])
     const panel = await abrirCooper(page);
     await expect(panel).not.toContainText("Chat de demostración");
     if (width < 1024) {
-      const initial = await panel.boundingBox();
-      expect(initial!.height).toBeCloseTo(900 * 0.62, 0);
+      await expect
+        .poll(async () => (await panel.boundingBox())!.height)
+        .toBeCloseTo(900 * 0.62, 0);
       const handle = panel.locator(".cooper-drag");
       let box = (await handle.boundingBox())!;
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);

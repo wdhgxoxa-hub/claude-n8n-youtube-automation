@@ -423,7 +423,7 @@ export async function capturarEstados(
         },
         async () => release(),
       );
-      await expect(page.getByRole("alert")).toContainText(
+      await expect(page.getByRole("main").getByRole("alert")).toContainText(
         "No pudimos consultar la operación",
       );
       await capture("salud-error");
