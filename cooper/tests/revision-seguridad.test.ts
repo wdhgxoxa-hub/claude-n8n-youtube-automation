@@ -272,7 +272,11 @@ it("SSE abre el transporte mientras una conciliación lenta sigue pendiente", as
   const reader = response.body!.getReader();
   try {
     const first = await reader.read();
-    expect(new TextDecoder().decode(first.value)).toBe(": conectado\n\n");
+    // diseno-conexion: el primer byte es un latido SSE, enviado antes de que
+    // termine la conciliación con la fábrica.
+    expect(new TextDecoder().decode(first.value)).toBe(
+      "event: latido\ndata: {}\n\n",
+    );
     expect(response.headers.get("cache-control")).toContain("no-transform");
   } finally {
     abort.abort();
