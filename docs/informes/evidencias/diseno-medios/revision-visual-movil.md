@@ -1,6 +1,6 @@
 # Revisión visual móvil · diseno-medios
 
-Fecha: 21 de noviembre de 2026, Lima. Revisión independiente inicial de las **66 capturas completas: 33 a 360 px y 33 a 390 px**, obtenidas de `.cache/diseno-medios-ci/evidencias-diseno/`. No falta ninguna de esas capturas. Se revisaron once hojas de contacto con los dos anchos emparejados y los originales de Fábrica, detalle y Publicados. Las hojas de consulta están en `.cache/revision-visual-movil/pares-01.png` a `pares-11.png`; no sustituyen los originales.
+Fecha: 21 de noviembre de 2026, Lima. Revisión independiente inicial y final de las **66 capturas completas: 33 a 360 px y 33 a 390 px**, obtenidas de `.cache/diseno-medios-ci/evidencias-diseno/`. No falta ninguna de esas capturas. Se revisaron once hojas de contacto iniciales y once finales, con los dos anchos emparejados y sin recortar las páginas verticalmente, además de originales relevantes. Las hojas de consulta están en `.cache/revision-visual-movil/pares-01.png` a `pares-11.png` y `pares-final-01.png` a `pares-final-11.png`; no sustituyen los originales.
 
 La matriz muestra **datos de demostración sin MP4**. Es evidencia del estado sin medio y de la integración en el armazón existente; no demuestra por sí sola la presentación de los MP4 reales de B2 ni las miniaturas oficiales de YouTube. Las capturas `medios-detalle-*` y `medios-lista-*` del recorrido focal usan un MP4 sintético. La revisión adicional de contenido real figura más abajo, separada de esta matriz de demostración.
 
@@ -24,7 +24,7 @@ No se modificó producto ni CSS durante esta revisión. La aceptación de medios
 
 ## Inventario revisado
 
-Cada fila corresponde a los dos archivos `<nombre>-360.png` y `<nombre>-390.png` de la revisión inicial. Las alturas acreditan la inspección de página completa, incluidas las secciones posteriores al primer viewport. Tras las correcciones se volvieron a inspeccionar Inicio y Fábrica a ambos anchos; el inventario inicial no pretende atribuir una segunda inspección completa a las otras 58 capturas.
+Cada fila corresponde a los dos archivos finales `<nombre>-360.png` y `<nombre>-390.png`, revisados nuevamente en su totalidad después de las correcciones. Las alturas acreditan la inspección de página completa, incluidas las secciones posteriores al primer viewport. El archivo adjunto [revision-visual-movil-final.json](revision-visual-movil-final.json) identifica los 66 originales finales mediante dimensiones, fecha Lima y SHA-256.
 
 | Captura | Alto 360 | Alto 390 | Observación de revisión |
 |---|---:|---:|---|
@@ -52,7 +52,7 @@ Cada fila corresponde a los dos archivos `<nombre>-360.png` y `<nombre>-390.png`
 | avisos | 900 | 900 | Historial vacío legible; no hay recorte. |
 | avatares | 1270 | 1270 | Cuatro muestras de demostración completas, sin confundirlas con videos reales. |
 | voces | 992 | 992 | Dos muestras y vacío de biblioteca completos. |
-| crear-avatar | 2350 | 2302 | Formulario, consentimiento y cuatro muestras completos; foco visible. |
+| crear-avatar | 2320 | 2333 | Formulario, consentimiento y cuatro muestras completos; foco visible; altura variable por frase efímera del fixture. |
 | crear-voz | 1979 | 1931 | Formulario, consentimiento y dos muestras completos; foco visible. |
 | perfil | 1727 | 1727 | Identidad, preferencias y avisos completos; selector de tema anterior. |
 | admin | 2357 | 2357 | Gastos, revisión e invitaciones completos; jerarquía densa heredada. |
@@ -98,6 +98,26 @@ Los manifiestos finales vuelven a registrar 33 entradas por ancho, cero desborda
 | inicio-390.png | 22:40:19 | `6d22a8927b6097bff983c109cf984b2fb10df56cc6921b06fe6b3910c06f7c3f` |
 | fabrica-360.png | 22:39:49 | `e258581326b76fa944ad5f1b109c77bddcc83f8989ffe8eeb8e748a1bf5d5e2a` |
 | fabrica-390.png | 22:40:20 | `97aa99dc70f5c0d2ad0a61ecdda1825584395d8194f1da1f10c7799c00baed97` |
+
+## Cierre de la inspección de los 66 PNG finales
+
+Después de la comprobación focal anterior se volvieron a abrir **los 66 PNG finales**, en once hojas `pares-final-01` a `pares-final-11`, con seis páginas por hoja (tres pantallas × dos anchos). Se inspeccionó cada página desde la cabecera hasta su último bloque, incluidas Biblia y Ajustes de fábrica. Se contrastaron jerarquía, alineación, ritmo vertical, recortes, cartelas y medios con el inventario inicial. Se abrieron además a tamaño original `videos-390.png` y `publicado-360.png`, junto con los cuatro originales de Inicio/Fábrica ya vistos en esta misma ronda. No se ejecutaron pruebas ni se modificó producto durante la revisión.
+
+| Hoja final | Pantallas, cada una a 360 y 390 | Comprobación de esta tanda |
+|---|---|---|
+| 01 | inicio, fabrica, videos | M1 sigue resuelto; elipsis limpia en filas; títulos exteriores completos y cajas estables. |
+| 02 | detalle-video, aprobacion-guion, aprobacion-final | Cartelas completas; nuevo aviso de archivo no disponible sin atribuirlo a la etapa; guion, acciones y pistas sin colisiones. |
+| 03 | publicado, pedir-video, publicados | Aviso final coherente con publicado sin archivo; formulario y lista completos; miniaturas compactas no cortan su última línea. |
+| 04 | aprendizaje, marcas, canales | Vacíos, lecciones y formularios completos; persiste el orden heredado de filtros antes del contenido. |
+| 05 | canal, radar, rutina | Inspección hasta el final de los formularios largos; sin nuevos recortes ni cambios de alineación. |
+| 06 | redes, referencias, cuentas | Campos, plataformas y acciones finales dentro del contenedor; estados vacíos conservados. |
+| 07 | programados, decisiones, incidencias | Tres registros y dos decisiones completos; separación vertical estable. |
+| 08 | avisos, avatares, voces | Vacíos y muestras completos; las muestras siguen identificadas como demostración. |
+| 09 | crear-avatar, crear-voz, perfil | Foco y consentimiento visibles; las frases efímeras alteran el alto de Crear avatar sin desbordar; muestras y ajustes completos. |
+| 10 | admin, admin-fabrica, entrada | Inspección hasta invitaciones, registro de cambios y pie de acceso; formularios largos conservan alineación. |
+| 11 | entrada-error, no-encontrado, enlace-vencido | Mensajes, retornos y acceso completos; ninguna nueva colisión de texto. |
+
+**Resultado de esta segunda inspección completa:** no se detectaron defectos nuevos de medios, recortes adicionales ni regresiones de geometría. Se mantienen los incumplimientos del armazón descritos arriba. El estado de demostración de las 66 capturas sigue sin acreditar medios reales; para ellos se conserva el anexo del ensayo B2. Esta revisión completa sustituye la limitación anterior de haber reinspeccionado únicamente cuatro vistas finales; los hashes de esas cuatro vistas y ambos manifiestos permanecen iguales.
 
 ## Evidencia automática y límites
 
