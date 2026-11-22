@@ -127,7 +127,7 @@ export function CooperFlotante({
         }
         hidden={abierto}
       >
-        <CooperPresencia activo={!abierto} />
+        <CooperPresencia activo={!abierto} cederAPreview />
         {pendiente && (
           <span className="cooper-tally" aria-label="Tienes algo por revisar" />
         )}

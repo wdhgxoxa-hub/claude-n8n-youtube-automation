@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import type { Estado } from "../src/servicios/datos";
 import type { VideoMedios } from "../src/contratos/video-medios";
 import type { Resultados } from "../src/contratos/resultados";
@@ -12,7 +12,22 @@ const preview = `${origen}/medios-preview.mp4`;
 let mp4: Buffer;
 let jpg: Buffer;
 
-test.use({ viewport: { width: 1440, height: 900 }, video: "on", trace: "off" });
+test.use({
+  viewport: { width: 1440, height: 900 },
+  video: "on",
+  trace: "off",
+  launchOptions: {
+    args: [
+      "--use-fake-device-for-media-stream",
+      "--use-fake-ui-for-media-stream",
+      "--enable-gpu",
+      "--use-gl=angle",
+      existsSync("/dev/dri/renderD128")
+        ? "--use-angle=gl-egl"
+        : "--use-angle=swiftshader",
+    ],
+  },
+});
 test.beforeAll(() => {
   mkdirSync(salida, { recursive: true });
   // Derivados del render existente; procedencia y hashes junto a los medios.
@@ -70,6 +85,13 @@ async function preparar(page: Page, retenerMedios = false) {
   page.on("pageerror", (e) => errores.push(e.message));
   page.on("console", (m) => {
     if (["error", "warning"].includes(m.type())) errores.push(m.text());
+  });
+  await page.route("**/*", (route) => {
+    const destino = new URL(route.request().url());
+    if (["127.0.0.1", "localhost"].includes(destino.hostname))
+      return route.continue();
+    errores.push(`Petición externa bloqueada: ${destino.hostname}`);
+    return route.abort("blockedbyclient");
   });
   let vistasPrevias = 0;
   let completos = 0;
@@ -151,6 +173,10 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
   });
   await medio.hover();
   const player = medio.locator("video");
+  const orbe = page.locator(".cooper-orb .cooper-presencia video");
+  await expect
+    .poll(() => orbe.evaluate((el) => (el as HTMLVideoElement).paused))
+    .toBe(true);
   await expect
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).currentTime))
     .toBeGreaterThan(0.1);
@@ -172,7 +198,10 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).paused))
     .toBe(true);
   await expect(medio).toHaveAttribute("data-reproduciendo", "false");
-  expect(await medio.boundingBox()).toEqual(caja);
+  await expect
+    .poll(() => orbe.evaluate((el) => (el as HTMLVideoElement).paused))
+    .toBe(false);
+  await expect.poll(() => medio.boundingBox()).toEqual(caja);
   await medio.hover();
   await expect(medio).toHaveAttribute("data-reproduciendo", "true");
   await page.goto("/perfil");
@@ -196,6 +225,8 @@ test("póster real, espera de hover, vista previa silenciosa y pausa sin descarg
   await expect
     .poll(() => player.evaluate((el) => (el as HTMLVideoElement).paused))
     .toBe(true);
+  // El modo reducido muestra la cara estática; ninguna reproducción oculta.
+  await expect(orbe).toHaveCount(0);
   expect(contexto.peticiones().completos).toBe(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(contexto.errores).toEqual([]);
@@ -218,6 +249,17 @@ test.describe("Medición sin captura de pantalla concurrente", () => {
         viewport: { width: ancho, height: 900 },
       });
       const page = await context.newPage();
+      const browserSession = await browser.newBrowserCDPSession();
+      const { gpu } = await browserSession.send("SystemInfo.getInfo");
+      const renderizador = {
+        dispositivos: gpu.devices,
+        funciones: gpu.featureStatus,
+        // El dispositivo montado no basta: el controlador puede usar software.
+        software: gpu.devices.some((device) =>
+          /llvmpipe|swiftshader/i.test(device.deviceString),
+        ),
+      };
+      await browserSession.detach();
       const datos = await preparar(page, true);
       await page.setViewportSize({ width: ancho, height: 900 });
       await page.goto("/videos");
@@ -325,6 +367,7 @@ test.describe("Medición sin captura de pantalla concurrente", () => {
         JSON.stringify(
           {
             ...estadistica,
+            renderizador,
             cpu: ancho === 390 ? 4 : 1,
             archivoSintetico: false,
             procedencia: "diseno-fabrica-video/medios/procedencia.json",
@@ -342,7 +385,8 @@ test.describe("Medición sin captura de pantalla concurrente", () => {
       expect(estadistica.p95).toBeLessThanOrEqual(25);
       expect(estadistica.maximo).toBeLessThan(100);
       expect(estadistica.cls).toBe(0);
-      expect(await medio.boundingBox()).toEqual(cajaPendiente);
+      await page.mouse.move(0, 0);
+      await expect.poll(() => medio.boundingBox()).toEqual(cajaPendiente);
       await page.screenshot({
         path: `${salida}/medios-lista-${ancho}.png`,
         fullPage: true,

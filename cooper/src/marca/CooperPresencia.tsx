@@ -8,9 +8,11 @@ import {
 export function CooperPresencia({
   size = 56,
   activo = true,
+  cederAPreview = false,
 }: {
   size?: 56 | 112;
   activo?: boolean;
+  cederAPreview?: boolean;
 }) {
   const reduced = useMovimientoReducido();
   const [paused] = usePausaMovimiento();
@@ -20,16 +22,59 @@ export function CooperPresencia({
     const video = player.current;
     if (!video) return;
     const update = () => {
-      if (!activo || reduced || paused || document.hidden) video.pause();
+      // El contenido tiene prioridad: la cara sigue presente mientras su loop
+      // cede la reproducción a una vista previa visible de la producción.
+      const previewActiva =
+        cederAPreview &&
+        [
+          ...document.querySelectorAll<HTMLVideoElement>("video.medio-preview"),
+        ].some(
+          (preview) =>
+            !preview.paused && !preview.ended && preview.checkVisibility(),
+        );
+      if (!activo || reduced || paused || document.hidden || previewActiva)
+        video.pause();
       else void video.play().catch(() => {});
     };
+    const cambioPreview = (event: Event) => {
+      if (
+        event.target instanceof HTMLVideoElement &&
+        event.target.matches(".medio-preview")
+      )
+        update();
+    };
+    // React puede retirar la vista previa antes de que su pausa alcance al
+    // documento. Observar solo retiradas permite reanudar también al navegar.
+    const retiradas = cederAPreview
+      ? new MutationObserver((records) => {
+          if (
+            records.some((record) =>
+              [...record.removedNodes].some(
+                (node) =>
+                  node instanceof Element &&
+                  (node.matches(".medio-preview") ||
+                    node.querySelector(".medio-preview")),
+              ),
+            )
+          )
+            update();
+        })
+      : null;
     update();
     document.addEventListener("visibilitychange", update);
+    if (cederAPreview) {
+      for (const evento of ["play", "pause", "ended"])
+        document.addEventListener(evento, cambioPreview, true);
+      retiradas?.observe(document.body, { childList: true, subtree: true });
+    }
     return () => {
       document.removeEventListener("visibilitychange", update);
+      for (const evento of ["play", "pause", "ended"])
+        document.removeEventListener(evento, cambioPreview, true);
+      retiradas?.disconnect();
       video.pause();
     };
-  }, [activo, reduced, paused]);
+  }, [activo, reduced, paused, cederAPreview]);
   return (
     <span
       className="cooper-presencia"
