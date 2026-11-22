@@ -38,7 +38,7 @@ for (const [i, width] of widths.entries()) {
 }
 const videos = readdirSync(`${root}/recorridos-marcas-resto`, {
   recursive: true,
-}).filter((file) => file.endsWith(".webm"));
+}).filter((file) => file.endsWith("/video.webm"));
 const summary = {
   generated: new Date().toISOString(),
   widths,

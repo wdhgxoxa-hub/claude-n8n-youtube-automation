@@ -6,6 +6,7 @@ import type { Estado } from "../src/servicios/datos";
 import { abrirCooper } from "../e2e/ayudas-diseno";
 import { capturarEstados } from "./estados-resto";
 import { instalarMedioReal } from "./medio-real";
+import { capturarFormulariosOperacion } from "./formularios-operacion";
 
 const directory = "../evidencias-diseno";
 const widths = [360, 390, 768, 1024, 1440, 1920];
@@ -385,6 +386,7 @@ for (const width of widths)
       JSON.stringify(ensayo.evidencia, null, 2),
     );
     await ensayo.cleanup();
+    await capturarFormulariosOperacion(page, shot);
     await capturarEstados(page, shot, messages);
     writeFileSync(
       `${directory}/marcas-resto-manifest-${width}.json`,
