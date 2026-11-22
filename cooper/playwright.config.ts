@@ -38,6 +38,7 @@ export default defineConfig({
       name: "chromium",
       testIgnore: [
         "base-diseno.spec.ts",
+        "inicio-diseno.spec.ts",
         "multiengine.spec.ts",
         "accesibilidad.spec.ts",
         "diseno.spec.ts",

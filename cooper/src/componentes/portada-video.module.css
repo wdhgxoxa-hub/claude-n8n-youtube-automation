@@ -1,10 +1,4 @@
 .medio {
-  --medio-fundido: var(--duracion-estado);
-  --medio-fundido-reducido: var(--duracion-presion);
-  --medio-curva: var(--curva-salida);
-  --medio-radio: var(--radio-tarjeta);
-  --medio-lienzo: var(--sup-1);
-  --medio-texto: var(--texto);
   display: block;
   position: relative;
   isolation: isolate;
@@ -12,7 +6,7 @@
   height: 100%;
   min-width: 0;
   overflow: hidden;
-  background: var(--medio-lienzo);
+  background: var(--sup-1);
 }
 .medio[data-video-medio] > img,
 .medio[data-video-medio] > video {
@@ -26,30 +20,27 @@
 .medio video {
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--medio-fundido) var(--medio-curva);
+  transition: opacity var(--duracion-estado) var(--curva-salida);
 }
 .medio[data-reproduciendo="true"] video {
   opacity: 1;
 }
 .medio[data-quieto="true"] video {
-  transition-duration: var(--medio-fundido-reducido);
+  transition-duration: var(--duracion-presion);
 }
 .cartela {
-  --cartela-espacio: 8px;
-  --cartela-texto: var(--texto);
-  --cartela-lienzo: var(--sup-1);
   display: flex;
   position: relative;
   align-items: flex-end;
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: var(--cartela-espacio);
+  padding: var(--espacio-8);
   overflow: hidden;
-  color: var(--cartela-texto);
-  background: var(--cartela-lienzo);
-  box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, transparent);
+  color: var(--texto);
+  background: var(--sup-1);
+  box-shadow: inset 0 0 0 var(--borde-ancho)
+    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, var(--transparente));
 }
 .cartelaTitulo {
   display: -webkit-box;
@@ -57,14 +48,14 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   font-size: var(--texto-12);
-  line-height: 1.5;
+  line-height: var(--interlinea-texto);
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 .medio[data-contexto="cola"] .cartela {
   /* La insignia de etapa ocupa la esquina inferior izquierda. El título
      conserva dos líneas completas, también en las portadas de 60px. */
-  padding: 8px 8px 8px 32px;
+  padding: var(--espacio-8) var(--espacio-8) var(--espacio-8) var(--espacio-32);
 }
 .medio[data-contexto="cola"] .cartelaTitulo {
   -webkit-line-clamp: 2;
@@ -74,10 +65,10 @@
   place-items: center;
   width: 100%;
   height: 100%;
-  padding: 12px;
-  color: var(--medio-texto);
+  padding: var(--espacio-12);
+  color: var(--texto);
   font-size: var(--texto-12);
-  line-height: 1.5;
+  line-height: var(--interlinea-texto);
   overflow-wrap: anywhere;
 }
 .protagonista {
@@ -85,21 +76,19 @@
   aspect-ratio: var(--medio-proporcion);
   max-height: 70vh;
   border-radius: var(--radio-tarjeta);
-  border: 1px solid
-    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, transparent);
+  border: var(--borde-ancho) solid
+    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, var(--transparente));
 }
 .protagonista .cartela {
-  --cartela-espacio: 24px;
+  padding: var(--espacio-24);
 }
 .protagonista .cartelaTitulo {
   -webkit-line-clamp: 3;
   font-size: var(--titulo-seccion);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: var(--interlinea-display);
+  letter-spacing: var(--tracking-display);
 }
 .reproductor {
-  --medio-radio: var(--radio-tarjeta);
-  --medio-lienzo: var(--sup-1);
   position: relative;
   isolation: isolate;
 }
@@ -108,11 +97,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(
-    ellipse,
-    var(--tinte, var(--transparente)),
-    transparent 70%
-  );
+  background: radial-gradient(ellipse, var(--tinte, var(--transparente)), var(--transparente) 70%);
   opacity: var(--halo-opacidad);
   filter: var(--halo-filtro);
   pointer-events: none;
@@ -123,13 +108,13 @@
   aspect-ratio: var(--medio-proporcion);
   max-height: 70vh;
   object-fit: contain;
-  background: var(--medio-lienzo);
+  background: var(--sup-1);
   border-radius: var(--radio-tarjeta);
-  border: 1px solid
-    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, transparent);
+  border: var(--borde-ancho) solid
+    color-mix(in srgb, var(--tinte, var(--transparente)) 20%, var(--transparente));
 }
 @media (prefers-reduced-motion: reduce) {
   .medio video {
-    transition-duration: var(--medio-fundido-reducido);
+    transition-duration: var(--duracion-presion);
   }
 }

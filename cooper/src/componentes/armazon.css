@@ -538,13 +538,16 @@ main#contenido {
   }
   main#contenido {
     padding: var(--espacio-16) var(--espacio-16)
-      calc(var(--espacio-96) + var(--espacio-64));
+      calc(
+        var(--espacio-96) + var(--cooper-orbe) + var(--espacio-24) +
+          env(safe-area-inset-bottom)
+      );
   }
   .mobile-dock {
     position: fixed;
     z-index: var(--capa-barra);
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(max-content, 1fr));
     inset: auto var(--espacio-8)
       max(var(--espacio-8), env(safe-area-inset-bottom));
     min-height: var(--riel-ancho);
@@ -556,8 +559,9 @@ main#contenido {
     border: var(--borde-ancho) solid var(--linea);
   }
   .mobile-dock a {
-    min-width: 0;
+    min-width: var(--objetivo-tactil);
     min-height: var(--objetivo-tactil);
+    padding-inline: var(--espacio-4);
     position: relative;
     isolation: isolate;
     display: flex;
@@ -570,11 +574,9 @@ main#contenido {
   }
   .mobile-dock a span:not(.nav-indicator) {
     font-size: var(--texto-12);
-    max-width: 100%;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
     text-align: center;
-    letter-spacing: var(--tracking-display);
-    line-height: 1.2;
+    line-height: var(--interlinea-texto);
   }
   .mobile-more {
     display: grid;

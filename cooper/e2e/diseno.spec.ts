@@ -30,7 +30,7 @@ test.beforeEach(async ({ page }) => {
     ).status(),
   ).toBe(200);
 });
-test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", async ({
+test("demostración: siete pantallas, dos tamaños y acceso a producción", async ({
   page,
 }) => {
   test.setTimeout(120000);
@@ -74,33 +74,40 @@ test("demostración: siete pantallas, dos tamaños y fábrica seleccionable", as
       });
     }
     await ready(page);
-    await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
-    await page
-      .getByRole("button", {
-        name: /04 ¿A qué huele la lluvia\? Aprobación de guion/,
-      })
-      .click();
-    await expect(page.locator(".factory-pane li.current")).toContainText(
+    await expect(page.locator(".inicio-hero")).toContainText(
+      "Por qué el cielo cambia de color",
+    );
+    await expect(page.locator(".inicio-etapas")).toHaveCount(3);
+    for (const track of await page.locator(".inicio-etapas").all())
+      await expect(track.locator("span")).toHaveCount(12);
+    const review = page
+      .locator(".inicio-pendiente")
+      .filter({ hasText: "¿A qué huele la lluvia?" });
+    await expect(review).toContainText("Guion");
+    await review.getByRole("link", { name: "Revisar", exact: true }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "¿A qué huele la lluvia?",
+    );
+    await expect(page.locator(".journey li.current")).toContainText(
       "Aprobación de guion",
     );
-    await expect(page.getByRole("progressbar")).toHaveAttribute(
-      "aria-valuenow",
-      "3",
+    await ready(page);
+    const hero = page.locator("main .inicio-hero-enlace");
+    await expect(hero).toHaveAccessibleName(
+      /Por qué el cielo cambia de color.*Ver video/,
     );
-    await page
-      .getByRole("button", {
-        name: /12 Por qué el cielo cambia de color/,
-      })
-      .click();
-    await expect(page.getByRole("progressbar")).toHaveAttribute(
-      "aria-valuenow",
-      "12",
+    await hero.click();
+    await expect(page.locator(".journey li.current")).toContainText(
+      "Publicado",
     );
+    await ready(page);
     await page
-      .getByRole("button", { name: /08 El mar también respira/ })
+      .locator(".inicio-pista")
+      .filter({ hasText: "El mar también respira" })
       .click();
+    await expect(page.locator(".journey li.current")).toContainText("Montaje");
     await page.screenshot({
-      path: `${dir}/fabrica-${width}.png`,
+      path: `${dir}/produccion-${width}.png`,
       fullPage: true,
     });
   }
@@ -134,22 +141,21 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
   }
   expect(
     await page
-      .locator(".stage-node")
+      .locator('.inicio-etapas [data-viva="true"]')
       .first()
       .evaluate((el) => getComputedStyle(el, "::after").animationName),
   ).toBe("none");
-  await page
-    .getByRole("button", {
-      name: /04 ¿A qué huele la lluvia\? Aprobación de guion/,
-    })
-    .focus();
+  const review = page
+    .locator(".inicio-pendiente")
+    .filter({ hasText: "¿A qué huele la lluvia?" })
+    .getByRole("link", { name: "Revisar", exact: true });
+  await review.focus();
   await page.keyboard.press("Enter");
-  await expect(page.locator(".factory-pane li.current")).toContainText(
-    "Aprobación de guion",
-  );
-  await page.locator(".factory-link").click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "¿A qué huele la lluvia?",
+  );
+  await expect(page.locator(".journey li.current")).toContainText(
+    "Aprobación de guion",
   );
 });
 
