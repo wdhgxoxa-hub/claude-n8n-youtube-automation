@@ -2,7 +2,7 @@ import { Esqueleto } from "@/componentes/primitivas";
 import "@/componentes/resto-diseno.css";
 export default function Loading() {
   return (
-    <div className="page carga-diseno" aria-busy="true">
+    <div className="page carga-diseno" data-ruta-cargando aria-busy="true">
       <Esqueleto className="carga-titulo" etiqueta="Preparando tu espacio" />
       <div className="carga-contenido" aria-hidden="true">
         <div className="esqueleto carga-protagonista" />

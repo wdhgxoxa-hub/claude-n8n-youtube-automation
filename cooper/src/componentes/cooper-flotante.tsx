@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
+  LayoutGroup,
   m as motion,
   useMotionValue,
   animate,
@@ -30,6 +31,10 @@ export function CooperFlotante({
   const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
   const dragY = useMotionValue(0);
+  useLayoutEffect(() => {
+    // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
+    panel.current?.removeAttribute("data-projecting");
+  }, [reduced]);
   const video = data.videos.find(
     (v) => path === `/videos/${v.id}` && v.ownerId === data.user.id,
   );
@@ -140,7 +145,7 @@ export function CooperFlotante({
     };
   }, [abierto, cambiar]);
   return (
-    <>
+    <LayoutGroup id="cooper-flotante" inherit={false}>
       <motion.button
         ref={opener}
         className="cooper-orb"
@@ -170,6 +175,7 @@ export function CooperFlotante({
             ref={panel}
             id="cooper-panel"
             className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
+            data-projecting={reduced ? undefined : "true"}
             role="dialog"
             style={{ y: dragY }}
             onFocusCapture={(event) => {
@@ -181,6 +187,12 @@ export function CooperFlotante({
             aria-label="Cooper, tu compañero"
             layoutId={reduced ? undefined : "cooper-origen"}
             transition={reduced ? { duration: 0.12 } : resorte}
+            onLayoutAnimationStart={() =>
+              panel.current?.setAttribute("data-projecting", "true")
+            }
+            onLayoutAnimationComplete={() =>
+              panel.current?.removeAttribute("data-projecting")
+            }
           >
             <div
               className="cooper-drag"
@@ -246,6 +258,6 @@ export function CooperFlotante({
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </LayoutGroup>
   );
 }
