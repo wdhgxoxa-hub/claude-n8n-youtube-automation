@@ -242,6 +242,8 @@
   font-family: var(--fuente-display);
   font-size: var(--texto-28);
   font-weight: 500;
+  /* El h3 conserva la interlínea que el h4 heredaba (la base fija 1,5 a h3). */
+  line-height: inherit;
 }
 .marcas-page .marca-pieza time {
   font-family: var(--fuente-datos);

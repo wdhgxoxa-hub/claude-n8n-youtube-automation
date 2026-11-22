@@ -737,6 +737,7 @@ export function Marcas({
                           Titulo={TituloFicha}
                           p={p}
                           marca={marca}
+                          titulo={TituloFicha}
                           admin={admin}
                           busy={busy}
                           errorOperacion={error}
@@ -790,6 +791,7 @@ export function Marcas({
                           Titulo={TituloFicha}
                           p={p}
                           marca={marca}
+                          titulo={TituloFicha}
                           admin={admin}
                           busy={busy}
                           errorOperacion={error}
@@ -1646,6 +1648,7 @@ function EditorPieza({
 function Pieza({
   p,
   marca,
+  titulo: Titulo,
   admin,
   busy,
   errorOperacion,
@@ -1657,6 +1660,8 @@ function Pieza({
   Titulo: "h3" | "h4";
   p: PiezaMarca;
   marca: MarcaVista;
+  // Un nivel por debajo del título de su sección (h2 → h3; en el archivo, h3 → h4).
+  titulo: "h3" | "h4";
   admin: boolean;
   busy: boolean;
   errorOperacion: string;
