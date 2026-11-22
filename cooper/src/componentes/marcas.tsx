@@ -90,6 +90,7 @@ export function Marcas({
   const [business, setBusiness] = useState<Record<string, boolean>>({});
   const editorOrigin = useRef<HTMLElement | null>(null);
   const newBrandButton = useRef<HTMLButtonElement>(null);
+  const sectionStrip = useRef<HTMLElement>(null);
   const restoreEditorFocus = useRef(false);
   useEffect(() => {
     if (!editor && !busy && restoreEditorFocus.current) {
@@ -121,6 +122,28 @@ export function Marcas({
   }, [marca, definirMarca]);
   const seccionActiva =
     seccion === "tienda" && !marca?.guia.tienda ? "calendario" : seccion;
+  useEffect(() => {
+    const strip = sectionStrip.current;
+    const active = strip?.querySelector<HTMLButtonElement>(
+      'button[aria-current="page"]',
+    );
+    if (!strip || !active) return;
+    function mostrarSeccion() {
+      if (!strip || !active) return;
+      const bounds = strip.getBoundingClientRect();
+      const tab = active.getBoundingClientRect();
+      const left = bounds.left + strip.clientLeft;
+      const right = left + strip.clientWidth;
+      // Desplazar solo la tira: conservar la posición vertical de la página.
+      if (tab.left < left) strip.scrollLeft += tab.left - left;
+      else if (tab.right > right) strip.scrollLeft += tab.right - right;
+    }
+    mostrarSeccion();
+    const observer = new ResizeObserver(mostrarSeccion);
+    observer.observe(strip);
+    observer.observe(active);
+    return () => observer.disconnect();
+  }, [editor, seleccion, seccionActiva]);
   const guiaVisible = marca && (
     <>
       <p>{marca.guia.tono}</p>
@@ -504,7 +527,11 @@ export function Marcas({
                     </div>
                   </HojaMarca>
                 )}
-                <nav className="marca-tabs" aria-label="Secciones de la marca">
+                <nav
+                  ref={sectionStrip}
+                  className="marca-tabs"
+                  aria-label="Secciones de la marca"
+                >
                   {[
                     ...(marca.guia.tienda ? [["tienda", "Tienda"]] : []),
                     ["calendario", "Calendario"],

@@ -219,6 +219,67 @@ test("Marcas: alta, estudio, pieza, revisión, edición y matriz accesible", asy
   expect(errors).toEqual([]);
   expect(issues).toEqual([]);
 });
+test("Marcas: la sección activa queda visible en móvil sin desplazar la página", async ({
+  page,
+}) => {
+  expect(
+    (
+      await page.request.post(`${fixture()}/sesion`, {
+        data: {
+          email: "admin@example.test",
+          secret: process.env.COOPER_E2E_SECRET,
+        },
+      })
+    ).ok(),
+  ).toBe(true);
+  const response = await page.request.post("/api/marcas", {
+    data: { nombre: "Ensayo de secciones visibles", rubro: "general" },
+  });
+  expect(response.ok()).toBe(true);
+  const marca = await response.json();
+  const strip = page.getByRole("navigation", {
+    name: "Secciones de la marca",
+  });
+  async function comprobarSeccion(nombre: string) {
+    const active = strip.getByRole("button", { name: nombre, exact: true });
+    await expect(active).toHaveAttribute("aria-current", "page");
+    await expect(active).toHaveClass(/\bchip-activo\b/);
+    await expect
+      .poll(() =>
+        active.evaluate((tab) => {
+          const row = tab.parentElement!;
+          const bounds = row.getBoundingClientRect();
+          const item = tab.getBoundingClientRect();
+          const left = bounds.left + row.clientLeft;
+          return item.left >= left - 1 && item.right <= left + row.clientWidth + 1;
+        }),
+      )
+      .toBe(true);
+  }
+  for (const width of [360, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const [seccion, nombre] of [
+      ["publicados", "Publicados"],
+      ["aprendizaje", "Aprendizaje"],
+    ]) {
+      await page.goto(`/marcas?marca=${marca.id}&seccion=${seccion}`);
+      await comprobarSeccion(nombre);
+      expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    }
+    await strip.getByRole("button", { name: "Calendario", exact: true }).click();
+    await comprobarSeccion("Calendario");
+    // Dejar recorrido inferior suficiente al cambiar a una sección más corta.
+    await strip.evaluate((row) => {
+      window.scrollBy(0, row.getBoundingClientRect().top - 550);
+    });
+    const scrollY = await page.evaluate(() => window.scrollY);
+    for (const nombre of ["Publicados", "Aprendizaje"]) {
+      await strip.getByRole("button", { name: nombre, exact: true }).click();
+      await comprobarSeccion(nombre);
+      expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
+    }
+  }
+});
 for (const width of [1440, 390])
   test(`Marcas: Sentinel ${width} recorre sus cinco secciones con el guardián activo`, async ({
     page,

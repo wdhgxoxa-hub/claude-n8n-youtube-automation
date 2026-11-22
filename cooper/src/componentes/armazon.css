@@ -161,6 +161,12 @@ main#contenido {
   margin: 0 auto;
   padding: var(--espacio-24) var(--espacio-32) var(--espacio-96);
 }
+@media (min-width: 768px) {
+  .studio-shell:not(.cooper-open) main#contenido {
+    /* El orbe conserva un carril propio junto a botones y campos al desplazarse. */
+    padding-right: var(--espacio-96);
+  }
+}
 .mobile-dock,
 .mobile-more {
   display: none;
@@ -230,6 +236,15 @@ main#contenido {
 .cooper-orb[data-projecting="true"] {
   /* El orbe se proyecta desde el panel: el vidrio vuelve al tamaño estable. */
   backdrop-filter: none;
+}
+.cooper-orb > * {
+  opacity: 1;
+  transition: opacity var(--duracion-presion) var(--curva-salida);
+}
+.cooper-orb[data-projecting="true"] > * {
+  /* La cara aparece a su tamaño nativo después de contraerse la superficie. */
+  opacity: 0;
+  transition: none;
 }
 .cooper-live-logo {
   display: grid;
