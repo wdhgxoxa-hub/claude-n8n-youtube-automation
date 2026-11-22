@@ -128,6 +128,48 @@ test.describe("Conexión discreta y recuperación SSE", () => {
     ).toBe(1);
   });
 
+  test("una apertura lenta y volver a la pestaña no anulan el backoff", async ({
+    page,
+  }) => {
+    const estado = await entrarConexion(page);
+    await page.clock.install();
+    await simularConexion(page, estado);
+    await page.goto("/");
+    await esperarConexion(page);
+    await pausarRelojConexion(page);
+    await page.evaluate(() => {
+      window.__conexionEnsayo.cortar();
+      window.__conexionEnsayo.modo = "colgada";
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    // Volver a la pestaña conserva el reintento pendiente, sin una conexión extra.
+    expect(
+      await page.evaluate(() => window.__conexionEnsayo.registros.length),
+    ).toBe(1);
+    await page.clock.runFor(1_000);
+    await page.clock.runFor(14_000);
+    await page.evaluate((estado) => {
+      window.__conexionEnsayo.emitir("open");
+      window.__conexionEnsayo.emitir("estado", estado);
+    }, estado);
+    await esperarConexion(page);
+    await page.clock.runFor(2_000);
+    const corte = await page.evaluate(() => {
+      window.__conexionEnsayo.cortar();
+      return Date.now();
+    });
+    await page.clock.runFor(1_999);
+    expect(
+      await page.evaluate(() => window.__conexionEnsayo.registros.length),
+    ).toBe(2);
+    await page.clock.runFor(1);
+    expect(
+      await page.evaluate(
+        () => window.__conexionEnsayo.registros.at(-1)!.abierta,
+      ),
+    ).toBe(corte + 2_000);
+  });
+
   test("reconectar conserva el cursor del último progreso recibido", async ({
     page,
   }) => {

@@ -25,7 +25,7 @@ export function conectarEventos<T>({
   let attempts = 0;
   let stopped = false;
   let disconnectedAt: number | undefined;
-  let openedAt = 0;
+  let healthySince: number | undefined;
   let lastActivity = 0;
   let lastEventId = "";
   let state: EstadoConexion = "iniciando";
@@ -96,7 +96,8 @@ export function conectarEventos<T>({
   const healthy = () => {
     if (stopped) return;
     lastActivity = Date.now();
-    if (lastActivity - openedAt >= TIEMPOS_CONEXION.estable) attempts = 0;
+    healthySince ??= lastActivity;
+    if (lastActivity - healthySince >= TIEMPOS_CONEXION.estable) attempts = 0;
     state = "activa";
     disconnectedAt = undefined;
     clearTimeout(warningTimer);
@@ -105,8 +106,9 @@ export function conectarEventos<T>({
     healthTimer = setTimeout(retry, TIEMPOS_CONEXION.silencio);
   };
   const connect = () => {
-    if (stopped || !navigator.onLine) return;
     clearTimeout(retryTimer);
+    retryTimer = undefined;
+    if (stopped || !navigator.onLine) return;
     close();
     const current = new EventSource(
       lastEventId
@@ -114,7 +116,7 @@ export function conectarEventos<T>({
         : "/api/eventos",
     );
     source = current;
-    openedAt = Date.now();
+    healthySince = undefined;
     healthTimer = setTimeout(retry, TIEMPOS_CONEXION.apertura);
     const active = () => !stopped && source === current;
     current.onopen = () => {
@@ -149,6 +151,7 @@ export function conectarEventos<T>({
   const offline = () => {
     if (stopped) return;
     clearTimeout(retryTimer);
+    retryTimer = undefined;
     close();
     interrupted();
   };
@@ -158,7 +161,7 @@ export function conectarEventos<T>({
   const visible = () => {
     if (document.hidden || stopped) return;
     if (!navigator.onLine) offline();
-    else if (!source) connect();
+    else if (!source && !retryTimer) connect();
     else if (
       state === "activa" &&
       Date.now() - lastActivity >= TIEMPOS_CONEXION.silencio
