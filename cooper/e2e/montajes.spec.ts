@@ -34,14 +34,22 @@ test("reutiliza montaje aprobado, reproduce MP4 y exige nueva revisión si cambi
   await expect(
     page.getByRole("heading", { name: "Marca de montajes", exact: true }),
   ).toBeVisible();
+  // El árbol saliente de la transición puede conservar etiquetas ocultas.
+  // Elegir el textbox accesible mantiene la misma acción visible del usuario.
   await page
-    .getByLabel("Nombre de la cuenta", { exact: true })
+    .getByRole("textbox", { name: "Nombre de la cuenta", exact: true })
     .fill("Montajes ficticios");
   await page
-    .getByLabel("Identificador de cuenta o perfil", { exact: true })
+    .getByRole("textbox", {
+      name: "Identificador de cuenta o perfil",
+      exact: true,
+    })
     .fill("7777777777");
   await page
-    .getByLabel("Página vinculada (para Instagram)", { exact: true })
+    .getByRole("textbox", {
+      name: "Página vinculada (para Instagram)",
+      exact: true,
+    })
     .fill("8888888888");
   await page
     .getByRole("button", { name: "Añadir cuenta", exact: true })
