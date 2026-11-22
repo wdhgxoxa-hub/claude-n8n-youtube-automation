@@ -448,17 +448,48 @@ main#contenido {
   main#contenido {
     padding-inline: var(--espacio-24);
   }
-  .cooper-open {
-    padding-right: calc(var(--cooper-panel) + var(--espacio-24));
-  }
-  .cooper-open .home-pending-grid,
-  .cooper-open .management-layout,
-  .cooper-open .profile-layout,
-  .cooper-open .video-detail {
+}
+/* Con hoja lateral, el contenido responde al ancho que realmente conserva. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .cooper-open
+    :is(
+      .home-pending-grid,
+      .management-layout,
+      .detail-layout,
+      .profile-layout,
+      .identity-form,
+      .inline-form,
+      .allow-section,
+      .asset-grid,
+      .operation-columns,
+      .operation-fields,
+      .marcas-layout,
+      .marca-form-grid,
+      .resultados-campos,
+      .publications,
+      .scene-grid,
+      .metrics-strip,
+      .queue-strip
+    ) {
     grid-template-columns: minmax(0, 1fr);
   }
-  .cooper-open .home-title {
+  .cooper-open :is(.home-title, .page-heading, .marca-identidad, .spend-head) {
     flex-wrap: wrap;
+  }
+  .cooper-open .form-panel {
+    position: static;
+  }
+  .cooper-open .profile-form {
+    width: 100%;
+    min-width: 0;
+  }
+  .cooper-open .video-list-row {
+    flex-wrap: wrap;
+    padding-block: var(--espacio-16);
+    gap: var(--espacio-12);
+  }
+  .cooper-open .video-list-row .video-mini {
+    flex-basis: 100%;
   }
 }
 @media (max-width: 767px) {
