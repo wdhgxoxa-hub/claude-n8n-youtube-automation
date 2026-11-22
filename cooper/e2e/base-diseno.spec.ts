@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import type { Estado } from "../src/servicios/datos";
+import type { VideoMedios } from "../src/contratos/video-medios";
 
 const directory = "../evidencias-diseno";
 const widths = [360, 390, 768, 1024, 1440, 1920];
@@ -1414,19 +1415,16 @@ for (const width of [390, 1440]) {
         "png",
         "pipe:1",
       ]);
-      await page.route(
-        "https://cooper-media.example.test/ensayo.mp4",
-        (route) =>
-          route.fulfill({ status: 200, contentType: "video/mp4", body: clip }),
+      // Mismo origen, como los medios reales que sirve Cooper.
+      await page.route("**/__ensayo-base/ensayo.mp4", (route) =>
+        route.fulfill({ status: 200, contentType: "video/mp4", body: clip }),
       );
-      await page.route(
-        "https://cooper-media.example.test/ensayo.png",
-        (route) =>
-          route.fulfill({
-            status: 200,
-            contentType: "image/png",
-            body: poster,
-          }),
+      await page.route("**/__ensayo-base/ensayo.png", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "image/png",
+          body: poster,
+        }),
       );
       const state: Estado = await (
         await page.request.get("/api/estado")
@@ -1435,10 +1433,35 @@ for (const width of [390, 1440]) {
         (video) => video.ownerId === state.user.id && video.stage === 3,
       )!;
       target.title = "Ensayo local de vista previa";
-      target.observabilidad.miniatura =
-        "https://cooper-media.example.test/ensayo.png";
-      target.observabilidad.montaje =
-        "https://cooper-media.example.test/ensayo.mp4";
+      // El Inicio lee el medio de video.medios y de /api/videos/:id/medios
+      // (una sola primitiva); la observabilidad ya no decide el póster.
+      const medioListo: VideoMedios = {
+        version: 1,
+        videoId: target.id,
+        estado: "listo",
+        poster: {
+          url: "/__ensayo-base/ensayo.png",
+          origen: "render",
+          ancho: 480,
+          alto: 270,
+        },
+        preview: {
+          url: "/__ensayo-base/ensayo.mp4",
+          mime: "video/mp4",
+          duracion: 2,
+          bytes: clip.byteLength,
+        },
+        tinte: "#335577",
+        ancho: 480,
+        alto: 270,
+        relacionAspecto: 480 / 270,
+        origenDimensiones: "video",
+        actualizadoEn: Date.now(),
+      };
+      target.medios = medioListo;
+      await page.route(`**/api/videos/${target.id}/medios*`, (route) =>
+        route.fulfill({ json: medioListo }),
+      );
       await page.route("**/api/eventos", (route) =>
         route.fulfill({
           status: 200,
@@ -1511,26 +1534,42 @@ for (const width of [390, 1440]) {
           (element) => (element as HTMLVideoElement).paused,
         ),
       ).toBe(true);
-      const counter = page.locator(".home-overview .cifra").first();
+      // Contador «En producción» del Inicio: mismo filtro que la pantalla.
+      const counter = page.locator(
+        "#inicio-produccion-titulo .inicio-cantidad",
+      );
       const before = await counter.boundingBox();
       const originalCount = state.videos.filter(
-        (video) => video.ownerId === state.user.id && video.stage < 11,
+        (video) =>
+          video.ownerId === state.user.id &&
+          video.stage < 11 &&
+          video.productionState !== "cancelada",
       ).length;
       // El video añadido pertenece únicamente al fixture SSE de esta prueba.
-      await page.route("**/api/videos/ensayo-cifra-adicional/tinte", (route) =>
-        route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify({ color: null }),
-        }),
+      const sinMedio: VideoMedios = {
+        ...medioListo,
+        videoId: "ensayo-cifra-adicional",
+        estado: "sin_medio",
+        poster: null,
+        preview: null,
+        origenDimensiones: "reserva",
+      };
+      await page.route(
+        "**/api/videos/ensayo-cifra-adicional/medios*",
+        (route) => route.fulfill({ json: sinMedio }),
       );
-      state.videos.push({ ...target, id: "ensayo-cifra-adicional", stage: 0 });
+      state.videos.push({
+        ...target,
+        id: "ensayo-cifra-adicional",
+        stage: 0,
+        medios: sinMedio,
+      });
       await page.evaluate(() => {
         window.dispatchEvent(new Event("offline"));
         window.dispatchEvent(new Event("online"));
       });
-      await expect(counter.locator(".sr-only")).toHaveText(
-        String(originalCount + 1),
+      await expect(counter).toHaveText(
+        String(originalCount + 1).padStart(2, "0"),
       );
       await page.waitForTimeout(900);
       const after = await counter.boundingBox();
