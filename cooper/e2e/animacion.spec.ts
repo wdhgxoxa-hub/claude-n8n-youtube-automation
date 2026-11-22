@@ -22,13 +22,10 @@ async function login(page: Page) {
   await expect(page.locator(".pildora-conexion")).toHaveCount(0);
 }
 async function settledFace(page: Page) {
-  return page
-    .locator(".chat-heading svg[data-cooper-state]")
-    .evaluate((el) =>
-      Array.from(el.querySelectorAll("g,path")).map((node) =>
-        node.getAttribute("style"),
-      ),
-    );
+  return page.locator(".cooper-orb .cooper-presencia").evaluate((element) => ({
+    moving: element.querySelectorAll("video").length,
+    poster: element.querySelector("img")?.getAttribute("src"),
+  }));
 }
 test.beforeAll(() => mkdirSync(dir, { recursive: true }));
 test.use({
@@ -53,18 +50,16 @@ test.describe("evidencia de movimiento", () => {
     await page.screenshot({ path: `${dir}/entrada-1440.png` });
     await login(page);
     await expect(page.locator(".factory-pane .journey li")).toHaveCount(12);
+    const face = page.locator(".cooper-orb .cooper-presencia video");
+    await expect(face).toBeVisible();
+    await expect
+      .poll(() =>
+        face.evaluate((video) => (video as HTMLVideoElement).currentTime),
+      )
+      .toBeGreaterThan(0);
     await page
       .getByRole("button", { name: "Abrir Cooper", exact: true })
       .click();
-    const gaze = page.locator(".chat-heading .cooper-gaze");
-    await page.mouse.move(1380, 200);
-    await expect
-      .poll(() => gaze.getAttribute("style"))
-      .toContain("translateX(3px)");
-    await page.mouse.move(10, 100);
-    await expect
-      .poll(() => gaze.getAttribute("style"))
-      .toContain("translateX(-3px)");
     const state: Estado = await (await page.request.get("/api/estado")).json();
     const ownPublished = state.videos.find(
       (video) =>
@@ -91,9 +86,6 @@ test.describe("evidencia de movimiento", () => {
       "12 Por qué el cielo cambia de color Publicado",
     );
     await card.hover({ position: { x: 8, y: 8 } });
-    await expect
-      .poll(() => card.evaluate((el) => getComputedStyle(el).transform))
-      .not.toBe("none");
     await card.click();
     await expect(page.locator(".factory-link")).toHaveAttribute(
       "href",
@@ -160,28 +152,20 @@ test.describe("evidencia de movimiento", () => {
       .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
       .fill("¿Qué tengo pendiente?");
     await page.getByLabel("Enviar mensaje").click();
-    await expect(
-      page
-        .locator(".chat-heading")
-        .getByRole("img", { name: "Cooper pensando" }),
-    ).toBeVisible();
+    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
+      "Preparando tu solicitud…",
+    );
     await expect(page.locator(".thinking")).toBeVisible();
-    await expect(
-      page
-        .locator(".chat-heading")
-        .getByRole("img", { name: "Cooper hablando" }),
-    ).toBeVisible();
+    await expect(page.locator(".conversation")).toContainText("pendiente");
     await expect(page.locator(".response-word").first()).toBeVisible();
     await captura(page, "respuesta-1440");
-    await expect(
-      page.locator(".chat-heading").getByRole("img", { name: "Cooper reposo" }),
-    ).toBeVisible();
+    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
+      "De tu lado, de principio a fin.",
+    );
     await page.getByLabel("Grabar audio").click();
-    await expect(
-      page
-        .locator(".chat-heading")
-        .getByRole("img", { name: "Cooper escuchando" }),
-    ).toBeVisible();
+    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
+      "Te escucho…",
+    );
     await expect(
       page.getByRole("status", { name: "Grabando audio" }),
     ).toBeVisible();
@@ -294,7 +278,7 @@ test("pausa y movimiento reducido detienen efectos activos, incluso al navegar",
   }
   await page.goto("/entrar");
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.locator(".login-track")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await captura(page, "entrada-390");
   expect(
     await page.evaluate(

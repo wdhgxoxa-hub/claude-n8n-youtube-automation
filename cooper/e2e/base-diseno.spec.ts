@@ -1,6 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import type { Estado } from "../src/servicios/datos";
 
 const directory = "../evidencias-diseno";
 const widths = [360, 390, 768, 1024, 1440, 1920];
@@ -19,6 +21,7 @@ type Evidence = {
   overflow: number;
   textBelowMinimum: unknown[];
   console: string[];
+  expectedBrowserDiagnostics: string[];
 };
 
 async function login(page: Page) {
@@ -39,6 +42,7 @@ async function capture(
   screen: string,
   width: number,
   messages: string[],
+  expectedBrowserDiagnostics: string[] = [],
 ): Promise<Evidence> {
   await page.evaluate(async () => {
     await document.fonts.ready;
@@ -95,6 +99,7 @@ async function capture(
     violations,
     ...geometry,
     console: [...messages],
+    expectedBrowserDiagnostics,
   };
   writeFileSync(
     `${directory}/${screen}-${width}.json`,
@@ -227,6 +232,11 @@ for (const width of widths) {
       },
       { name: "entrada", path: "/entrar" },
       { name: "entrada-error", path: "/entrar?error=AccessDenied" },
+      {
+        name: "no-encontrado",
+        path: "/videos/no-existe-en-este-ensayo",
+        expectedStatus: 404,
+      },
       { name: "enlace-invalido", path: "/revisar/whatsapp/enlace-invalido" },
     ];
     const manifest: Evidence[] = [];
@@ -241,7 +251,25 @@ for (const width of widths) {
       await page.goto(screen.path);
       await page.locator("main").waitFor({ state: "visible" });
       if (screen.prepare) await screen.prepare(page);
-      manifest.push(await capture(page, screen.name, width, messages));
+      const expected =
+        screen.expectedStatus === 404
+          ? messages.filter((message) =>
+              /Failed to load resource.*404/.test(message),
+            )
+          : [];
+      if (screen.expectedStatus === 404)
+        await expect(page.getByRole("heading", { level: 1 })).toContainText(
+          "no está disponible",
+        );
+      manifest.push(
+        await capture(
+          page,
+          screen.name,
+          width,
+          messages.filter((message) => !expected.includes(message)),
+          expected,
+        ),
+      );
     }
     writeFileSync(
       `${directory}/manifest-${width}.json`,
@@ -264,6 +292,26 @@ for (const width of [390, 1440]) {
         errors.push(message.text());
     });
     await page.goto("/");
+    await page.evaluate(() => {
+      const original = document.startViewTransition?.bind(document);
+      if (!original) return;
+      const observations: { names: string[] }[] = [];
+      (
+        window as Window & { transitionsObserved?: typeof observations }
+      ).transitionsObserved = observations;
+      document.startViewTransition = (...args: Parameters<typeof original>) => {
+        observations.push({
+          names: [
+            ...document.querySelectorAll<HTMLElement>(
+              "[data-video-transition]",
+            ),
+          ]
+            .map((element) => element.style.viewTransitionName)
+            .filter(Boolean),
+        });
+        return original(...args);
+      };
+    });
     await expect(
       page.getByRole("textbox", { name: "Mensaje para Cooper" }),
     ).toHaveCount(0);
@@ -281,6 +329,34 @@ for (const width of [390, 1440]) {
       page.getByRole("textbox", { name: "Mensaje para Cooper" }),
     ).toBeVisible();
     await page.waitForTimeout(700);
+    const sheet = page.locator(".cooper-panel");
+    if (width < 768) {
+      expect((await sheet.boundingBox())!.height).toBeCloseTo(900 * 0.62, 0);
+      const grip = page.locator(".cooper-drag");
+      const start = (await grip.boundingBox())!;
+      await page.mouse.move(
+        start.x + start.width / 2,
+        start.y + start.height / 2,
+      );
+      await page.mouse.down();
+      await page.mouse.move(start.x + start.width / 2, start.y - 100, {
+        steps: 8,
+      });
+      await page.mouse.up();
+      await expect(sheet).toHaveClass(/is-full/);
+      await capture(page, "cooper-expandido", width, errors);
+      await page
+        .getByRole("button", { name: "Reducir Cooper", exact: true })
+        .click();
+      await expect(sheet).not.toHaveClass(/is-full/);
+    } else {
+      const panelBounds = (await sheet.boundingBox())!;
+      const contentBounds = (await page.locator("main").boundingBox())!;
+      expect(panelBounds.width).toBe(420);
+      expect(contentBounds.x + contentBounds.width).toBeLessThanOrEqual(
+        panelBounds.x,
+      );
+    }
     await page
       .getByRole("button", { name: "Cerrar Cooper", exact: true })
       .click();
@@ -304,6 +380,27 @@ for (const width of [390, 1440]) {
       );
       await page.waitForTimeout(700);
     }
+    const target = page.locator(".video-mini").first();
+    const href = await target.getAttribute("href");
+    await target.click();
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
+    await page.waitForTimeout(800);
+    const transitions = await page.evaluate(
+      () =>
+        (window as Window & { transitionsObserved?: { names: string[] }[] })
+          .transitionsObserved ?? [],
+    );
+    expect(transitions.length).toBeGreaterThanOrEqual(6);
+    expect(
+      transitions.some((transition) =>
+        transition.names.some((name) => name.startsWith("video-")),
+      ),
+    ).toBe(true);
+    writeFileSync(
+      `${directory}/transiciones-${width}.json`,
+      JSON.stringify(transitions, null, 2) + "\n",
+    );
+    await page.goto("/");
     const client = await context.newCDPSession(page);
     await client.send("Emulation.setCPUThrottlingRate", {
       rate: width < 768 ? 4 : 1,
@@ -364,6 +461,268 @@ for (const width of [390, 1440]) {
     expect(metrics.p95).toBeLessThanOrEqual(25);
     expect(metrics.cls).toBe(0);
     expect(metrics.longTasks.filter((duration) => duration >= 100)).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+}
+
+test("Marcas: tres pasos, cinco secciones y edición en seis anchuras", async ({
+  page,
+}) => {
+  const messages: string[] = [];
+  page.on("pageerror", (error) => messages.push(error.message));
+  page.on("console", (message) => {
+    if (["warning", "error"].includes(message.type()))
+      messages.push(message.text());
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
+    await page.goto("/marcas");
+    await page
+      .getByRole("button", { name: "Añadir marca", exact: true })
+      .first()
+      .click();
+    await capture(page, "marca-identidad", width, messages);
+    await page
+      .getByRole("textbox", { name: "Nombre de la marca" })
+      .fill("Estudio de ensayo visual");
+    await page.getByRole("button", { name: "Continuar", exact: true }).click();
+    await capture(page, "marca-guia", width, messages);
+    await page.getByRole("button", { name: "Continuar", exact: true }).click();
+    await capture(page, "marca-especialista", width, messages);
+  }
+  const response = await page.request.post("/api/marcas", {
+    data: { nombre: "Estudio de ensayo visual", rubro: "general" },
+  });
+  expect(response.ok()).toBe(true);
+  const brand = await response.json();
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
+    for (const section of [
+      "calendario",
+      "estudio",
+      "competencia",
+      "publicados",
+      "aprendizaje",
+    ]) {
+      await page.goto(`/marcas?marca=${brand.id}&seccion=${section}`);
+      await capture(page, `marca-${section}`, width, messages);
+    }
+  }
+});
+
+test("cargas y errores recuperables conservan la interfaz en seis anchuras", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const diagnostics: unknown[] = [];
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
+    await page.goto("/radar");
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route(
+      "**/api/operacion",
+      async (route) => {
+        await held;
+        await route.continue();
+      },
+      { times: 1 },
+    );
+    await page.getByRole("button", { name: "Actualizar", exact: true }).click();
+    await expect(
+      page.getByText("Consultando la fábrica…", { exact: true }),
+    ).toBeVisible();
+    try {
+      await capture(page, "operacion-cargando", width, []);
+    } finally {
+      release();
+    }
+    await expect(
+      page.getByRole("button", { name: "Actualizar", exact: true }),
+    ).toBeEnabled();
+    const errors: string[] = [];
+    const listener = (message: import("@playwright/test").ConsoleMessage) => {
+      if (["error", "warning"].includes(message.type()))
+        errors.push(message.text());
+    };
+    page.on("console", listener);
+    await page.route(
+      "**/api/operacion",
+      async (route) => {
+        await route.fulfill({
+          status: 503,
+          contentType: "application/json",
+          body: JSON.stringify({
+            error: "La fábrica no responde. Puedes volver a intentarlo.",
+          }),
+        });
+      },
+      { times: 1 },
+    );
+    await page.getByRole("button", { name: "Actualizar", exact: true }).click();
+    await expect(page.getByRole("alert")).toContainText(
+      "La fábrica no responde",
+    );
+    page.off("console", listener);
+    const expected = errors.filter((message) =>
+      /Failed to load resource.*503/.test(message),
+    );
+    const unexpected = errors.filter((message) => !expected.includes(message));
+    diagnostics.push({
+      width,
+      expectedHttpStatus: 503,
+      injectedFailure: true,
+      expectedBrowserDiagnostics: expected,
+      unexpected,
+    });
+    await capture(
+      page,
+      "operacion-error-recuperable",
+      width,
+      unexpected,
+      expected,
+    );
+    await page.getByRole("button", { name: "Actualizar", exact: true }).click();
+    await expect(page.getByRole("alert")).toHaveCount(0);
+  }
+  writeFileSync(
+    `${directory}/errores-provocados.json`,
+    JSON.stringify(diagnostics, null, 2) + "\n",
+  );
+});
+
+for (const width of [390, 1440]) {
+  test(`medios y contadores: reproducción local real y datos que cambian a ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    // El patrón audiovisual es un fixture explícito, nunca se presenta como una producción real.
+    const clip = execFileSync("ffmpeg", [
+      "-v",
+      "error",
+      "-f",
+      "lavfi",
+      "-i",
+      "testsrc2=s=480x270:r=24",
+      "-t",
+      "2",
+      "-an",
+      "-c:v",
+      "libx264",
+      "-threads",
+      "1",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "frag_keyframe+empty_moov",
+      "-f",
+      "mp4",
+      "pipe:1",
+    ]);
+    const poster = execFileSync("ffmpeg", [
+      "-v",
+      "error",
+      "-f",
+      "lavfi",
+      "-i",
+      "testsrc2=s=480x270:r=24",
+      "-frames:v",
+      "1",
+      "-threads",
+      "1",
+      "-f",
+      "image2pipe",
+      "-vcodec",
+      "png",
+      "pipe:1",
+    ]);
+    await page.route("https://cooper-media.example.test/ensayo.mp4", (route) =>
+      route.fulfill({ status: 200, contentType: "video/mp4", body: clip }),
+    );
+    await page.route("https://cooper-media.example.test/ensayo.png", (route) =>
+      route.fulfill({ status: 200, contentType: "image/png", body: poster }),
+    );
+    const state: Estado = await (await page.request.get("/api/estado")).json();
+    const target = state.videos.find(
+      (video) => video.ownerId === state.user.id && video.stage === 3,
+    )!;
+    target.title = "Ensayo local de vista previa";
+    target.observabilidad.miniatura =
+      "https://cooper-media.example.test/ensayo.png";
+    target.observabilidad.montaje =
+      "https://cooper-media.example.test/ensayo.mp4";
+    await page.route("**/api/eventos", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "text/event-stream",
+        body: `event: estado\ndata: ${JSON.stringify(state)}\n\n`,
+      }),
+    );
+    await page.route("**/api/estado", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(state),
+      }),
+    );
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => {
+      if (["error", "warning"].includes(message.type()))
+        errors.push(message.text());
+    });
+    await page.goto("/");
+    const media = page
+      .locator(`.video-mini[href="/videos/${target.id}"] .medio`)
+      .first();
+    await expect(media).toBeVisible();
+    await expect(media).toHaveAttribute("data-preview", "off");
+    await media.hover();
+    await expect(media).toHaveAttribute("data-preview", "on");
+    const player = media.locator("video");
+    expect(
+      await player.evaluate((element) => (element as HTMLVideoElement).muted),
+    ).toBe(true);
+    await expect
+      .poll(() =>
+        player.evaluate((element) => (element as HTMLVideoElement).currentTime),
+      )
+      .toBeGreaterThan(0.05);
+    await capture(page, "medio-vista-previa-fixture", width, errors);
+    await page.mouse.move(0, 0);
+    await expect(media).toHaveAttribute("data-preview", "off");
+    expect(
+      await player.evaluate((element) => (element as HTMLVideoElement).paused),
+    ).toBe(true);
+    const counter = page.locator(".home-overview .cifra").first();
+    const before = await counter.boundingBox();
+    const originalCount = state.videos.filter(
+      (video) => video.ownerId === state.user.id && video.stage < 11,
+    ).length;
+    state.videos.push({ ...target, id: "ensayo-cifra-adicional", stage: 0 });
+    await page.evaluate(() => {
+      window.dispatchEvent(new Event("offline"));
+      window.dispatchEvent(new Event("online"));
+    });
+    await expect(counter.locator(".sr-only")).toHaveText(
+      String(originalCount + 1),
+    );
+    await page.waitForTimeout(900);
+    const after = await counter.boundingBox();
+    expect(after?.width).toBe(before?.width);
+    await capture(page, "cifra-actualizada", width, errors);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await media.hover();
+    await page.waitForTimeout(400);
+    await expect(media).toHaveAttribute("data-preview", "off");
+    expect(
+      await player.evaluate((element) => (element as HTMLVideoElement).paused),
+    ).toBe(true);
+    await capture(page, "medio-reducido-fixture", width, errors);
     expect(errors).toEqual([]);
   });
 }

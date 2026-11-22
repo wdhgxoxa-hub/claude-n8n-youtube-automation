@@ -117,26 +117,13 @@ test("movimiento opcional, teclado y retícula en seis anchuras", async ({
     "data-motion",
     "paused",
   );
-  // Detener también las animaciones SVG que ya estaban en marcha.
-  const face = page.getByRole("img", { name: "Cooper reposo" }).first();
-  await expect
-    .poll(async () => face.locator("g").first().getAttribute("style"))
-    .not.toContain("scaleY(0.");
-  const before = await face.evaluate((el) =>
-    Array.from(el.querySelectorAll("g,path")).map((n) => [
-      n.getAttribute("style"),
-      n.getAttribute("d"),
-    ]),
-  );
+  // La cara autoalojada conserva su PNG y retira el autoplay al pausar.
+  const face = page.locator(".cooper-orb .cooper-presencia");
+  await expect(face.locator("img")).toBeVisible();
+  await expect(face.locator("video")).toHaveCount(0);
+  const poster = await face.locator("img").getAttribute("src");
   await page.waitForTimeout(250);
-  expect(
-    await face.evaluate((el) =>
-      Array.from(el.querySelectorAll("g,path")).map((n) => [
-        n.getAttribute("style"),
-        n.getAttribute("d"),
-      ]),
-    ),
-  ).toEqual(before);
+  await expect(face.locator("img")).toHaveAttribute("src", poster!);
 
   await ready(page, "/perfil");
   await page.getByRole("button", { name: "Activar movimiento" }).click();
@@ -316,12 +303,10 @@ test("I08 identidad se hidrata en Lima y Cooper no emite errores SVG", async ({
     await page
       .getByRole("textbox", { name: "Mensaje para Cooper", exact: true })
       .press("Enter");
-    await expect(
-      page.getByRole("img", { name: "Cooper hablando" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("img", { name: "Cooper reposo" }),
-    ).toBeVisible();
+    await expect(page.locator(".conversation")).toContainText("pendiente");
+    await expect(page.locator(".chat-heading").getByRole("status")).toHaveText(
+      "De tu lado, de principio a fin.",
+    );
     await ready(page, "/perfil");
     await page.getByRole("button", { name: "Pausar movimiento" }).click();
     await page.waitForTimeout(800);
