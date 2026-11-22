@@ -287,13 +287,6 @@ main#contenido {
   overflow: hidden;
   padding: 0;
 }
-.cooper-dialogo {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-}
 .cooper-panel[data-projecting="true"] {
   /* Conserva el vidrio en reposo sin rasterizar el filtro durante el morfismo. */
   backdrop-filter: none;
@@ -813,10 +806,10 @@ main#contenido .route-choreography > .page {
   margin-left: auto;
   flex-shrink: 0;
 }
-.cooper-dialogo > .cooper-panel-heading {
+.cooper-panel > .cooper-panel-heading {
   flex-shrink: 0;
 }
-.cooper-dialogo > .memory-card {
+.cooper-panel > .memory-card {
   flex: 0 1 auto;
   max-height: 30%;
   overflow-y: auto;
@@ -826,13 +819,13 @@ main#contenido .route-choreography > .page {
   border-radius: 0;
   background: var(--transparente);
 }
-.cooper-dialogo > .memory-card .memory-heading {
+.cooper-panel > .memory-card .memory-heading {
   gap: var(--espacio-8);
 }
-.cooper-dialogo > .memory-card .memory-last {
+.cooper-panel > .memory-card .memory-last {
   flex-basis: 100%;
 }
-.cooper-dialogo > .memory-card .button {
+.cooper-panel > .memory-card .button {
   background: var(--transparente);
   border-color: var(--transparente);
   padding-inline: 0;

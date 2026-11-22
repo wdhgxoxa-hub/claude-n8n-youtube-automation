@@ -1,30 +1,12 @@
 "use client";
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ComponentPropsWithRef,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import {
-  AnimatePresence,
-  LayoutGroup,
-  m as motion,
-  useIsPresent,
-} from "framer-motion";
+import { LayoutGroup, m as motion } from "framer-motion";
 import { X, Expand, Minimize2 } from "lucide-react";
 import { CooperPresencia } from "@/marca/CooperPresencia";
 import { useEspacio } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
 import { ChatCooper as Chat } from "./chat-cooper";
-
-function DialogoCooper(props: ComponentPropsWithRef<"div">) {
-  const presente = useIsPresent();
-  // El diálogo termina al cerrar; solo su superficie conserva la salida animada.
-  // Así ningún control sigue activo mientras Motion devuelve la hoja al orbe.
-  return presente ? <div {...props} /> : null;
-}
 
 export function CooperFlotante({
   abierto,
@@ -41,11 +23,10 @@ export function CooperFlotante({
   const [completo, setCompleto] = useState(false);
   const opener = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const superficie = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
   useLayoutEffect(() => {
     // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
-    superficie.current?.removeAttribute("data-projecting");
+    panel.current?.removeAttribute("data-projecting");
     opener.current?.removeAttribute("data-projecting");
   }, [reduced]);
   const video = data.videos.find(
@@ -152,90 +133,85 @@ export function CooperFlotante({
           <span className="cooper-tally" aria-label="Tienes algo por revisar" />
         )}
       </motion.button>
-      <AnimatePresence initial={false}>
-        {abierto && (
-          <motion.div
-            key="cooper"
-            className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
-            ref={superficie}
-            data-projecting={reduced ? undefined : "true"}
-            layoutId={reduced ? undefined : "cooper-origen"}
-            transition={reduced ? { duration: 0.12 } : resorte}
-            onLayoutAnimationStart={() =>
-              superficie.current?.setAttribute("data-projecting", "true")
-            }
-            onLayoutAnimationComplete={() =>
-              superficie.current?.removeAttribute("data-projecting")
-            }
+      {/* Desmontar el diálogo al cerrar evita retener controles activos.
+          LayoutGroup conserva la proyección del orbe desde su última medida. */}
+      {abierto && (
+        <motion.div
+          key="cooper"
+          ref={panel}
+          id="cooper-panel"
+          className={`cooper-panel hoja-vidrio ${completo ? "is-full" : ""}`}
+          data-projecting={reduced ? undefined : "true"}
+          role="dialog"
+          onFocusCapture={(event) => {
+            // La hoja completa conserva espacio de escritura al abrir el teclado.
+            if (movil && event.target instanceof HTMLTextAreaElement)
+              setCompleto(true);
+          }}
+          aria-modal={movil || undefined}
+          aria-label="Cooper, tu compañero"
+          layoutId={reduced ? undefined : "cooper-origen"}
+          transition={reduced ? { duration: 0.12 } : resorte}
+          onLayoutAnimationStart={() =>
+            panel.current?.setAttribute("data-projecting", "true")
+          }
+          onLayoutAnimationComplete={() =>
+            panel.current?.removeAttribute("data-projecting")
+          }
+        >
+          <div
+            className="cooper-drag"
+            onPointerDown={(e) => {
+              dragStart.current = e.clientY;
+              e.currentTarget.setPointerCapture(e.pointerId);
+            }}
+            onPointerUp={(e) => {
+              const delta = e.clientY - (dragStart.current ?? e.clientY);
+              if (delta < -48) setCompleto(true);
+              if (delta > 64) {
+                if (completo) setCompleto(false);
+                else cambiar(false);
+              }
+              dragStart.current = null;
+            }}
+            aria-hidden="true"
           >
-            <DialogoCooper
-              ref={panel}
-              id="cooper-panel"
-              className="cooper-dialogo"
-              role="dialog"
-              onFocusCapture={(event) => {
-                // La hoja completa conserva espacio de escritura al abrir el teclado.
-                if (movil && event.target instanceof HTMLTextAreaElement)
-                  setCompleto(true);
-              }}
-              aria-modal={movil || undefined}
-              aria-label="Cooper, tu compañero"
-            >
-              <div
-                className="cooper-drag"
-                onPointerDown={(e) => {
-                  dragStart.current = e.clientY;
-                  e.currentTarget.setPointerCapture(e.pointerId);
-                }}
-                onPointerUp={(e) => {
-                  const delta = e.clientY - (dragStart.current ?? e.clientY);
-                  if (delta < -48) setCompleto(true);
-                  if (delta > 64) {
-                    if (completo) setCompleto(false);
-                    else cambiar(false);
-                  }
-                  dragStart.current = null;
-                }}
-                aria-hidden="true"
+            <span />
+          </div>
+          <div className="cooper-panel-heading">
+            <span>
+              <strong>Cooper</strong>
+              <small>{contexto}</small>
+            </span>
+            <div>
+              <button
+                className="icon-button cooper-expand"
+                aria-label={completo ? "Reducir Cooper" : "Ampliar Cooper"}
+                onClick={() => setCompleto(!completo)}
               >
-                <span />
-              </div>
-              <div className="cooper-panel-heading">
-                <span>
-                  <strong>Cooper</strong>
-                  <small>{contexto}</small>
-                </span>
-                <div>
-                  <button
-                    className="icon-button cooper-expand"
-                    aria-label={completo ? "Reducir Cooper" : "Ampliar Cooper"}
-                    onClick={() => setCompleto(!completo)}
-                  >
-                    {completo ? <Minimize2 size={20} /> : <Expand size={20} />}
-                  </button>
-                  <button
-                    className="icon-button"
-                    aria-label="Cerrar Cooper"
-                    onClick={() => cambiar(false)}
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-              </div>
-              <Chat
-                key={video?.id || canal?.id || marca?.id || path}
-                canalId={canal?.id}
-                videoId={video?.id}
-                sugerencias={sugerencias}
-                contextoMarca={marca?.nombre}
-                alAdjuntar={() => {
-                  if (movil) setCompleto(true);
-                }}
-              />
-            </DialogoCooper>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {completo ? <Minimize2 size={20} /> : <Expand size={20} />}
+              </button>
+              <button
+                className="icon-button"
+                aria-label="Cerrar Cooper"
+                onClick={() => cambiar(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </div>
+          <Chat
+            key={video?.id || canal?.id || marca?.id || path}
+            canalId={canal?.id}
+            videoId={video?.id}
+            sugerencias={sugerencias}
+            contextoMarca={marca?.nombre}
+            alAdjuntar={() => {
+              if (movil) setCompleto(true);
+            }}
+          />
+        </motion.div>
+      )}
     </LayoutGroup>
   );
 }
