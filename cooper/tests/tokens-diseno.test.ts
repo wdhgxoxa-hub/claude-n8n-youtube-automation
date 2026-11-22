@@ -19,6 +19,8 @@ const files = (directory: string): string[] =>
 
 function invalidDeclaration(property: string, value: string) {
   if (colors.test(value)) return "color literal fuera de tokens";
+  if (property === "font" && /\d(?:px|rem|em|pt|vw|vh|%)/.test(value))
+    return "atajo tipográfico fuera de tokens";
   if (
     /^(?:color|background|fill|stroke|(?:background|border|outline|text-decoration)(?:-color|Color))$/.test(
       property,
@@ -111,6 +113,29 @@ describe("guardián de Sala de proyección", () => {
           ts.ScriptKind.TSX,
         );
         const visit = (node: ts.Node) => {
+          if (ts.isJsxAttribute(node) && node.initializer) {
+            const property = node.name.getText(parsed);
+            // Estos tres dibujos son contenido ilustrado, no colores de interfaz.
+            const artwork = [
+              "componentes/portada.tsx",
+              "componentes/avatares.tsx",
+              "marca/CooperCara.tsx",
+            ].includes(relative(root, path));
+            if (
+              /^(?:fontSize|borderRadius|color|fill|stroke)$/.test(property) &&
+              !(artwork && /^(?:fill|stroke)$/.test(property))
+            ) {
+              if (ts.isStringLiteral(node.initializer))
+                report(property, node.initializer.text, node.pos);
+              else if (
+                ts.isJsxExpression(node.initializer) &&
+                node.initializer.expression &&
+                (ts.isStringLiteralLike(node.initializer.expression) ||
+                  ts.isNumericLiteral(node.initializer.expression))
+              )
+                report(property, node.initializer.expression.text, node.pos);
+            }
+          }
           if (ts.isPropertyAssignment(node)) {
             const property = node.name
               .getText(parsed)
@@ -138,6 +163,7 @@ describe("guardián de Sala de proyección", () => {
   it("detecta regresiones concretas sin aceptar literales que coincidan con la paleta", () => {
     expect(invalidDeclaration("font-size", "11px")).toBeTruthy();
     expect(invalidDeclaration("fontSize", "11")).toBeTruthy();
+    expect(invalidDeclaration("font", "600 11px Geist")).toBeTruthy();
     expect(invalidDeclaration("border-radius", "10px")).toBeTruthy();
     expect(invalidDeclaration("borderRadius", "50%")).toBeTruthy();
     expect(invalidDeclaration("color", "#FF4D2E")).toBeTruthy();
