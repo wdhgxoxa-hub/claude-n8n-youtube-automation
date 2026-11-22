@@ -67,6 +67,141 @@ type TransitionObservation = {
   finishedAt: number | null;
   error: string | null;
 };
+type CooperProjectionObservation = {
+  clickedAt: number | null;
+  startedAt: number | null;
+  projectionFinishedAt: number | null;
+  fadeStartedAt: number | null;
+  fadeFinishedAt: number | null;
+  fadeTransitions: number;
+  fadeCompleted: number;
+  fadeCanceled: number;
+};
+
+async function observeCooperProjection(page: Page) {
+  await page.evaluate(() => {
+    const observation: CooperProjectionObservation = {
+      clickedAt: null,
+      startedAt: null,
+      projectionFinishedAt: null,
+      fadeStartedAt: null,
+      fadeFinishedAt: null,
+      fadeTransitions: 0,
+      fadeCompleted: 0,
+      fadeCanceled: 0,
+    };
+    const target = window as Window & {
+      cooperDesignProjection?: CooperProjectionObservation;
+      cooperDesignProjectionFinished?: Promise<void>;
+    };
+    target.cooperDesignProjection = observation;
+    let finish: () => void;
+    target.cooperDesignProjectionFinished = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    const pending = new Set<EventTarget>();
+    const click = (event: MouseEvent) => {
+      if (
+        observation.clickedAt === null &&
+        event.target instanceof Element &&
+        event.target.closest(".cooper-orb")
+      ) {
+        observation.clickedAt = performance.now();
+        performance.mark("diseno:cooper:click");
+      }
+    };
+    const observer = new MutationObserver(() => {
+      if (observation.clickedAt === null) return;
+      const panel = document.querySelector(".cooper-panel");
+      if (!panel) return;
+      const projecting = panel.getAttribute("data-projecting") === "true";
+      if (projecting && observation.startedAt === null) {
+        observation.startedAt = performance.now();
+        performance.mark("diseno:cooper:proyeccion-inicio");
+      } else if (
+        !projecting &&
+        observation.startedAt !== null &&
+        observation.projectionFinishedAt === null
+      ) {
+        observation.projectionFinishedAt = performance.now();
+        performance.mark("diseno:cooper:proyeccion-fin");
+      }
+    });
+    const transition = (event: TransitionEvent) => {
+      if (
+        event.propertyName !== "opacity" ||
+        !(event.target instanceof Element) ||
+        !event.target.parentElement?.matches(".cooper-panel") ||
+        observation.projectionFinishedAt === null
+      )
+        return;
+      if (event.type === "transitionrun") {
+        pending.add(event.target);
+        observation.fadeTransitions += 1;
+        if (observation.fadeStartedAt === null) {
+          observation.fadeStartedAt = performance.now();
+          performance.mark("diseno:cooper:fundido-inicio");
+        }
+      } else {
+        pending.delete(event.target);
+        if (event.type === "transitionend") observation.fadeCompleted += 1;
+        else observation.fadeCanceled += 1;
+        if (!pending.size && observation.fadeTransitions) {
+          observation.fadeFinishedAt = performance.now();
+          performance.mark("diseno:cooper:fundido-fin");
+          observer.disconnect();
+          document.removeEventListener("click", click, true);
+          for (const name of [
+            "transitionrun",
+            "transitionend",
+            "transitioncancel",
+          ])
+            document.removeEventListener(
+              name,
+              transition as EventListener,
+              true,
+            );
+          finish();
+        }
+      }
+    };
+    document.addEventListener("click", click, true);
+    for (const name of ["transitionrun", "transitionend", "transitioncancel"])
+      document.addEventListener(name, transition as EventListener, true);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-projecting"],
+    });
+  });
+}
+
+async function finishCooperProjection(page: Page) {
+  await page.evaluate(async () => {
+    const finished = (
+      window as Window & { cooperDesignProjectionFinished?: Promise<void> }
+    ).cooperDesignProjectionFinished;
+    if (!finished) throw new Error("No se observó la proyección de Cooper.");
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        finished,
+        new Promise<never>((_, reject) => {
+          timeout = setTimeout(
+            () =>
+              reject(
+                new Error("El movimiento de Cooper no terminó en 5 segundos."),
+              ),
+            5000,
+          );
+        }),
+      ]);
+    } finally {
+      clearTimeout(timeout);
+    }
+  });
+}
 
 async function finishViewTransition(page: Page) {
   await page.evaluate(async () => {
@@ -80,7 +215,8 @@ async function finishViewTransition(page: Page) {
         finished,
         new Promise<never>((_, reject) => {
           timeout = setTimeout(
-            () => reject(new Error("View Transition no terminó en 5 segundos.")),
+            () =>
+              reject(new Error("View Transition no terminó en 5 segundos.")),
             5000,
           );
         }),
@@ -171,6 +307,49 @@ async function stopMotionSample(page: Page) {
         transition,
       };
     });
+    const projection =
+      sample.phase === "cooper-abrir"
+        ? ((
+            window as Window & {
+              cooperDesignProjection?: CooperProjectionObservation;
+            }
+          ).cooperDesignProjection ?? null)
+        : null;
+    const projectionFrames = sample.frameTimeline
+      .filter(
+        ({ at, delta }) =>
+          projection?.startedAt !== null &&
+          projection?.startedAt !== undefined &&
+          projection?.fadeFinishedAt !== null &&
+          projection?.fadeFinishedAt !== undefined &&
+          at - delta >= projection.startedAt &&
+          at <= projection.fadeFinishedAt,
+      )
+      .map(({ delta }) => delta);
+    const orderedProjectionFrames = [...projectionFrames].sort((a, b) => a - b);
+    const cooperAnimation = projection
+      ? {
+          observation: projection,
+          latencyUntilProjection:
+            projection.clickedAt !== null && projection.startedAt !== null
+              ? projection.startedAt - projection.clickedAt
+              : null,
+          duration:
+            projection.startedAt !== null && projection.fadeFinishedAt !== null
+              ? projection.fadeFinishedAt - projection.startedAt
+              : null,
+          frames: projectionFrames.length,
+          fps: projectionFrames.length
+            ? 1000 /
+              (projectionFrames.reduce((sum, value) => sum + value, 0) /
+                projectionFrames.length)
+            : 0,
+          p95:
+            orderedProjectionFrames[
+              Math.floor(orderedProjectionFrames.length * 0.95)
+            ] ?? Infinity,
+        }
+      : null;
     return {
       phase: sample.phase,
       duration: performance.now() - sample.startedAt,
@@ -185,6 +364,7 @@ async function stopMotionSample(page: Page) {
       frameTimeline: sample.frameTimeline,
       transitions,
       animations,
+      cooperAnimation,
     };
   });
 }
@@ -545,6 +725,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
             errors.push(message.text());
         });
         await page.goto("/");
+        await observeCooperProjection(page);
         await page.evaluate(() => {
           const original = document.startViewTransition?.bind(document);
           if (!original) return;
@@ -631,7 +812,7 @@ for (const mode of ["medicion", "grabacion"] as const) {
         await expect(
           page.getByRole("textbox", { name: "Mensaje para Cooper" }),
         ).toBeVisible();
-        await page.waitForTimeout(700);
+        await finishCooperProjection(page);
         await finishPhase();
         const sheet = page.locator(".cooper-panel");
         if (width < 768) {
@@ -841,6 +1022,9 @@ for (const mode of ["medicion", "grabacion"] as const) {
                 screenshotsDuringMeasurement: false,
                 recordedSeparately: true,
                 viewTransitionFrameBudget: "ready → finished",
+                cooperOpeningFrameBudget:
+                  "montaje data-projecting → último transitionend de opacity",
+                cooperOpeningLatencyBudget: "click real → montaje <100ms",
                 totalInteractionAndPreparationRetained: true,
               },
               cpu: width < 768 ? 4 : 1,
@@ -863,6 +1047,50 @@ for (const mode of ["medicion", "grabacion"] as const) {
           [],
         );
         for (const sample of interactions) {
+          if (sample.phase === "cooper-abrir") {
+            const opening = sample.cooperAnimation;
+            expect.soft(opening, "Cooper: proyección observada").not.toBeNull();
+            if (opening) {
+              for (const [name, time] of Object.entries({
+                click: opening.observation.clickedAt,
+                proyeccion: opening.observation.startedAt,
+                finProyeccion: opening.observation.projectionFinishedAt,
+                fundido: opening.observation.fadeStartedAt,
+                finFundido: opening.observation.fadeFinishedAt,
+              }))
+                expect.soft(time, `Cooper: ${name} observado`).not.toBeNull();
+              expect
+                .soft(
+                  opening.latencyUntilProjection,
+                  "Cooper: latencia de respuesta",
+                )
+                .not.toBeNull();
+              expect
+                .soft(
+                  opening.latencyUntilProjection ?? Infinity,
+                  "Cooper: latencia de respuesta",
+                )
+                .toBeLessThan(100);
+              expect
+                .soft(
+                  opening.observation.fadeTransitions,
+                  "Cooper: fundido incluido",
+                )
+                .toBeGreaterThan(0);
+              expect
+                .soft(
+                  opening.observation.fadeCompleted,
+                  "Cooper: fundido completo",
+                )
+                .toBe(opening.observation.fadeTransitions);
+              expect
+                .soft(
+                  opening.observation.fadeCanceled,
+                  "Cooper: fundido sin interrupción",
+                )
+                .toBe(0);
+            }
+          }
           for (const animation of sample.animations) {
             expect
               .soft(
@@ -883,9 +1111,14 @@ for (const mode of ["medicion", "grabacion"] as const) {
               )
               .not.toBeNull();
           }
-          const frameSamples = sample.animations.length
-            ? sample.animations
-            : [sample];
+          // La espera de Playwright antes del clic no es una animación. El JSON
+          // conserva la fase completa; Cooper incluye proyección y fundido real.
+          const frameSamples =
+            sample.phase === "cooper-abrir" && sample.cooperAnimation
+              ? [sample.cooperAnimation]
+              : sample.animations.length
+                ? sample.animations
+                : [sample];
           for (const frames of frameSamples) {
             expect
               .soft(frames.fps, `${sample.phase}: fluidez real de animación`)
