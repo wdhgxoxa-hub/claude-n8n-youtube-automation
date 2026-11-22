@@ -179,6 +179,33 @@ test.describe("Conexión discreta y recuperación SSE", () => {
     await esperarConexion(page);
   });
 
+  test("un fallo desde el primer intento también avisa y se recupera", async ({
+    page,
+  }) => {
+    const estado = await entrarConexion(page);
+    await page.clock.install();
+    await simularConexion(page, estado, "fallo");
+    await page.goto("/");
+    await expect(page.locator(".workspace")).toHaveAttribute(
+      "data-conexion",
+      "interrumpida",
+    );
+    await pausarRelojConexion(page);
+    await expect(page.getByTestId("estado-conexion")).toHaveCount(0);
+    await page.clock.runFor(5_100);
+    await expect(page.getByTestId("estado-conexion")).toHaveText(
+      "Sin conexión, reintentando",
+    );
+    await page.evaluate(() => {
+      window.__conexionEnsayo.modo = "sana";
+    });
+    await page.clock.runFor(8_000);
+    await esperarConexion(page);
+    expect(
+      await page.evaluate(() => window.__conexionEnsayo.maximasActivas),
+    ).toBe(1);
+  });
+
   test("el watchdog recupera un stream abierto que deja de emitir", async ({
     page,
   }) => {
