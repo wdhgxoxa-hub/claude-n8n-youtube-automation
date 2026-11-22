@@ -264,7 +264,7 @@ export function Publicados({ initial }: { initial: Resultados }) {
                   <Link
                     href={primero.href}
                     className="publication-thumb"
-                    aria-label={`Ver detalle de ${primero.titulo}`}
+                    aria-label={`${primero.tipo === "video" && primero.publicacion.miniatura ? "" : "Miniatura pendiente. "}Ver detalle de ${primero.titulo}`}
                   >
                     <div
                       data-video-transition={
