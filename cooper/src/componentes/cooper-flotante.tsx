@@ -145,6 +145,12 @@ export function CooperFlotante({
             aria-label="Cooper, tu compañero"
             layoutId={reduced ? undefined : "cooper-origen"}
             transition={reduced ? { duration: 0.12 } : resorte}
+            onLayoutAnimationStart={() =>
+              panel.current?.setAttribute("data-projecting", "true")
+            }
+            onLayoutAnimationComplete={() =>
+              panel.current?.removeAttribute("data-projecting")
+            }
           >
             <div
               className="cooper-drag"
