@@ -21,6 +21,7 @@ import type {
 } from "@/contratos/alertas-salud";
 import { ETAPAS } from "@/lib/etapas";
 import { formatoDecimal, formatoMoneda } from "@/lib/cifras";
+import { formatoFechaHoraCorta } from "@/lib/fechas";
 import { api, Heading, Notice } from "./espacio";
 import { Cifra, Esqueleto } from "./primitivas";
 import "./operacion-diseno.css";
@@ -131,11 +132,7 @@ const campos: {
 
 function fecha(value: string | null) {
   if (!value) return "Sin registro";
-  return new Intl.DateTimeFormat("es-PE", {
-    dateStyle: "short",
-    timeStyle: "short",
-    timeZone: "America/Lima",
-  }).format(new Date(value));
+  return formatoFechaHoraCorta(value);
 }
 function numero(value: number | null, suffix = "") {
   return value === null

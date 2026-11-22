@@ -29,6 +29,7 @@ import {
   revisionDoctrinalIglesia,
 } from "@/servicios/marcas/iglesia";
 import { IglesiaEditorial } from "./marcas-iglesia";
+import { formatoDiaHora, formatoFechaHora } from "@/lib/fechas";
 
 import { crearPlantillaTienda } from "@/servicios/marcas/tienda-contenido";
 import { PanelMarcaTienda } from "./marca-tienda";
@@ -250,7 +251,7 @@ export function Marcas({
               </strong>
               <small>
                 {proxima
-                  ? `${new Intl.DateTimeFormat("es-PE", { timeZone: m.zona, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(proxima.programada)} · ${proxima.estado === "programada" ? "Programada" : "Por revisar"}`
+                  ? `${formatoDiaHora(proxima.programada, m.zona)} · ${proxima.estado === "programada" ? "Programada" : "Por revisar"}`
                   : "Todavía sin fecha"}
               </small>
             </span>
@@ -1675,11 +1676,7 @@ function Pieza({
     <article className="marca-pieza" id={`pieza-${p.id}`}>
       <div>
         <time dateTime={new Date(p.programada).toISOString()}>
-          {new Intl.DateTimeFormat("es-PE", {
-            timeZone: marca.zona,
-            dateStyle: "medium",
-            timeStyle: "short",
-          }).format(p.programada)}
+          {formatoFechaHora(p.programada, marca.zona)}
         </time>
         <h4>{p.datos.titulo}</h4>
         <p>
@@ -1712,13 +1709,8 @@ function Pieza({
             <summary>Ver revisión doctrinal registrada</summary>
             <p className="marca-caption">{doctrina.observaciones}</p>
             <p>
-              Registrada el{" "}
-              {new Intl.DateTimeFormat("es-PE", {
-                timeZone: marca.zona,
-                dateStyle: "medium",
-                timeStyle: "short",
-              }).format(doctrina.fecha)}
-              . Una edición exige otra revisión doctrinal.
+              Registrada el {formatoFechaHora(doctrina.fecha, marca.zona)}. Una
+              edición exige otra revisión doctrinal.
             </p>
           </details>
         )}

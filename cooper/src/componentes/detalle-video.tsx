@@ -1,6 +1,7 @@
 "use client";
 
 import { formatoEntero } from "@/lib/cifras";
+import { formatoFechaHora } from "@/lib/fechas";
 import {
   useId,
   useEffect,
@@ -32,14 +33,6 @@ type Video = Estado["videos"][number];
 const PESTANAS = ["Guion", "Métricas", "Lecciones"] as const;
 type Pestana = (typeof PESTANAS)[number];
 
-function fechaLima(value: string | number) {
-  return new Intl.DateTimeFormat("es-PE", {
-    dateStyle: "medium",
-    timeStyle: "short",
-    timeZone: "America/Lima",
-  }).format(new Date(value));
-}
-
 function MetricasVideo({ video }: { video: Video }) {
   const publicaciones = video.observabilidad.publicaciones;
   if (!publicaciones.length)
@@ -70,7 +63,7 @@ function MetricasVideo({ video }: { video: Video }) {
               <div>
                 <span className={styles.kicker}>
                   {ultima
-                    ? `Medido ${fechaLima(ultima.fecha)} · Lima`
+                    ? `Medido ${formatoFechaHora(ultima.fecha)} · Lima`
                     : "Aún sin mediciones"}
                 </span>
                 <h2>{publicacion.red}</h2>
@@ -358,7 +351,7 @@ export function DetalleVideo({ id }: { id: string }) {
             </div>
             {video.scheduledAt && (
               <p className={styles.programado}>
-                Programado para el {fechaLima(video.scheduledAt)} · Lima
+                Programado para el {formatoFechaHora(video.scheduledAt)} · Lima
               </p>
             )}
           </div>
@@ -569,7 +562,7 @@ export function DetalleVideo({ id }: { id: string }) {
                   <summary>Referencias y publicación</summary>
                   <p className={styles.nota}>
                     {video.scheduledAt
-                      ? `Publicación: ${fechaLima(video.scheduledAt)} (Lima)`
+                      ? `Publicación: ${formatoFechaHora(video.scheduledAt)} (Lima)`
                       : "La publicación espera ambas aprobaciones."}
                   </p>
                   <form
@@ -597,7 +590,7 @@ export function DetalleVideo({ id }: { id: string }) {
                 )
               )}
               <p className={styles.nota}>
-                Creado el {fechaLima(video.createdAt)} · Lima
+                Creado el {formatoFechaHora(video.createdAt)} · Lima
               </p>
             </aside>
           </div>
@@ -644,7 +637,7 @@ export function DetalleVideo({ id }: { id: string }) {
                       {leccion.nivel === "patron"
                         ? "Patrón observado"
                         : "Hipótesis por contrastar"}{" "}
-                      · {fechaLima(leccion.fecha)}
+                      · {formatoFechaHora(leccion.fecha)}
                     </span>
                     <h2>{leccion.resumen}</h2>
                     {leccion.causa && (
