@@ -531,6 +531,15 @@ main#contenido {
   }
 }
 @media (max-width: 767px) {
+  /* Zona segura de la barra fija (DIRECCION §3, WCAG 2.4.11): lo que se
+     desplaza para mostrarse (foco, scrollIntoView) termina por encima de la
+     barra de vidrio, nunca debajo. */
+  html {
+    scroll-padding-bottom: calc(
+      var(--riel-ancho) + var(--espacio-16) +
+        max(var(--espacio-8), env(safe-area-inset-bottom))
+    );
+  }
   .studio-shell,
   .studio-shell.cooper-open {
     padding: 0;
@@ -679,6 +688,13 @@ main#contenido {
 /* Por debajo de 390px las cinco etiquetas de 12px no caben junto al orbe:
    la barra ocupa todo el ancho y el orbe se apoya sobre ella (DIRECCION §3). */
 @media (max-width: 389px) {
+  /* El orbe se apoya sobre la barra: la zona segura suma su altura. */
+  html {
+    scroll-padding-bottom: calc(
+      var(--riel-ancho) + var(--cooper-orbe) + var(--espacio-24) +
+        max(var(--espacio-8), env(safe-area-inset-bottom))
+    );
+  }
   main#contenido {
     padding-bottom: calc(
       var(--riel-ancho) + var(--cooper-orbe) + var(--espacio-48) +
