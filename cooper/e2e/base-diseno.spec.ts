@@ -1606,7 +1606,21 @@ for (const width of [390, 1440]) {
         });
       });
       await page.goto("/publicados");
-      const sparkline = page.locator(".cifra-grafica path").first();
+      // La minigráfica del historial vive ahora en el diálogo de cifras de
+      // cada publicación de video (resultados.tsx → metricas-resultados.tsx).
+      await page.getByRole("button", { name: "Filtros", exact: true }).click();
+      await page
+        .getByRole("group", { name: "Tipo de publicación" })
+        .getByRole("button", { name: "Videos", exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: /^Ver cifras de / })
+        .filter({ visible: true })
+        .first()
+        .click();
+      const cifras = page.locator("dialog[open]");
+      await expect(cifras).toBeVisible();
+      const sparkline = cifras.locator(".cifra-grafica path").first();
       await sparkline.scrollIntoViewIfNeeded();
       await expect
         .poll(() =>
