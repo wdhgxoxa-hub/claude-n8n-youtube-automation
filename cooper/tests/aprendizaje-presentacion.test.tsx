@@ -202,6 +202,8 @@ it.each([
   "otra red",
   "otra ventana",
   "medición previa",
+  "publicación previa",
+  "publicación sin fecha",
   "mismo video",
   "otro canal",
 ])("espera un resultado comparable cuando hay %s", (caso) => {
@@ -219,6 +221,8 @@ it.each([
     siguiente.publicacion.historial.forEach((m) => {
       m.fecha = "2026-11-18T12:00:00Z";
     });
+  if (caso === "publicación previa") siguiente.fecha = "2026-11-18T12:00:00Z";
+  if (caso === "publicación sin fecha") siguiente.fecha = null;
   if (caso === "mismo video")
     aprendizaje.leccion.aplicaciones![0].videoId = "anterior";
   if (caso === "otro canal") siguiente.ambitoId = "video:ajeno";

@@ -138,6 +138,7 @@ function EfectoSiguiente({
           (p): p is Extract<PublicacionResultado, { tipo: "video" }> =>
             p.tipo === "video" &&
             p.ambitoId === registro.ambitoId &&
+            Date.parse(p.fecha ?? "") >= Date.parse(l.fecha) &&
             (p.videoId === aplicacion.videoId ||
               p.href === `/videos/${encodeURIComponent(aplicacion.videoId)}`) &&
             p.publicacion.red.toLowerCase() === origen.red.toLowerCase(),
@@ -169,7 +170,8 @@ function EfectoSiguiente({
             className={styles.cifraEfecto}
           />
           <Link className={styles.enlace} href={siguiente.href}>
-            {siguiente.titulo} ↗
+            <span>{siguiente.titulo}</span>
+            <span aria-hidden="true">↗</span>
           </Link>
           <p className={styles.meta}>
             Resultado observado. Todavía no demuestra que el cambio sea la
