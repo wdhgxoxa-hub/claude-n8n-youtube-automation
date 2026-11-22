@@ -55,6 +55,7 @@ export async function tinteVideo(
     datos.miniatura || datos.publicaciones.find((p) => p.miniatura)?.miniatura;
   if (!origen) return null;
   const directorio = resolve(
+    /* turbopackIgnore: true */
     opciones.directorio ??
       `${rutaBase(process.env.COOPER_DATABASE_PATH ?? "./data/cooper.sqlite", process.env.COOPER_DEMO === "1")}.tintes`,
   );
