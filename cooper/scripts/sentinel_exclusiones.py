@@ -26,4 +26,8 @@ SELECTORES = (
     # El input no tiene texto propio: el texto de su label no basta para excluir
     # formFiller. Acotar al control administrativo evita excluir otros switches.
     'section[aria-label="Control del aprendizaje"] input[role="switch"]',
+    # Elegir un tema lo guarda al instante (PATCH /api/perfil). El guardián lo
+    # bloquea y Chromium anota ERR_BLOCKED_BY_CLIENT; e2e/temas.spec.ts ejerce
+    # el selector con sesión autorizada, también con cambios seguidos.
+    '.apariencia-opcion', '.apariencia-opcion input[type="radio"]',
 )

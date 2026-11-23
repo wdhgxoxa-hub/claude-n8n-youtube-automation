@@ -30,6 +30,9 @@ HTML = '''<!doctype html><html lang="es"><meta charset="utf-8"><title>Contrato d
 <label class="checkbox"><input id="medir" type="checkbox" role="switch">Medición y aprendizaje automático</label>
 <a id="ajustes" href="/admin/fabrica">Revisar ajustes de la fábrica</a>
 </section>
+<fieldset class="apariencia"><legend>Apariencia</legend>
+<label class="apariencia-opcion"><input id="tema-sala" type="radio" name="theme" value="sala"><span class="apariencia-nombre">Sala</span></label>
+</fieldset>
 <button id="investigar">Investigar competencia</button>
 <button id="montajes">Actualizar montajes desde fábrica</button>
 <button class="mutante">Añadir cuenta</button>
@@ -50,6 +53,7 @@ window.mutaciones=0; window.filtros=0; window.lecturas=0;
 const escribir=()=>{window.mutaciones++;fetch('/api/operacion',{method:'POST',body:'{}'}).catch(()=>{});};
 document.querySelector('#medir').addEventListener('change',escribir);
 document.querySelector('#investigar').addEventListener('click',escribir);
+document.querySelector('#tema-sala').addEventListener('change',escribir);
 document.querySelector('#montajes').addEventListener('click',()=>{window.mutaciones++;fetch('/api/marcas/montajes',{method:'POST',body:'{}'}).catch(()=>{});});
 document.querySelectorAll('.mutante').forEach(el=>el.addEventListener('click',escribir));
 document.querySelector('#filtro').addEventListener('change',()=>window.filtros++);
@@ -118,7 +122,8 @@ class ExclusionesCooper(unittest.TestCase):
         _, page, findings = self.contexto()
         console = []
         page.on('console', lambda msg: console.append(msg.text) if msg.type == 'error' else None)
-        for selector in ['#medir', 'label.checkbox', '#investigar', '#montajes']:
+        for selector in ['#medir', 'label.checkbox', '#tema-sala', '.apariencia-nombre',
+                         'label.apariencia-opcion', '#investigar', '#montajes']:
             self.assertTrue(page.locator(selector).evaluate('(el)=>window.__sentinelExcluido(el)'))
             page.locator(selector).click()
         for control in page.locator('.mutante').all():
@@ -129,6 +134,9 @@ class ExclusionesCooper(unittest.TestCase):
         self.assertTrue(page.locator('#externo').evaluate('(el)=>window.__sentinelExcluido(el)'))
         page.locator('#medir').focus()
         page.keyboard.press('Space')
+        page.locator('#tema-sala').focus()
+        page.keyboard.press('Space')
+        self.assertFalse(page.locator('#tema-sala').is_checked())
         for selector in ['#filtro', '#red', '#actualizar', 'summary', '#ajustes']:
             self.assertFalse(page.locator(selector).evaluate('(el)=>window.__sentinelExcluido(el)'))
         page.locator('#filtro').click()
