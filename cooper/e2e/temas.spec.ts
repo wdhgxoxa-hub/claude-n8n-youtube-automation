@@ -187,6 +187,55 @@ test("apariencia: si no se puede guardar, vuelve el tema anterior y lo dice", as
   await page.unroute("**/api/perfil");
 });
 
+// Revisión visual (22-11-2026): a 768 px la columna del perfil es estrecha y
+// las tres tarjetas medían ~85 px; la muestra y el lema tocaban el borde.
+test("apariencia: cada tarjeta de tema contiene su muestra y su texto en toda anchura", async ({
+  page,
+}) => {
+  await entrar(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const fuera = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>(".apariencia-opcion")].flatMap(
+        (tarjeta) => {
+          const caja = tarjeta.getBoundingClientRect();
+          const borde = parseFloat(getComputedStyle(tarjeta).borderLeftWidth);
+          return [
+            ...tarjeta.querySelectorAll<HTMLElement>(
+              ".apariencia-muestra, .apariencia-nombre, .apariencia-lema, svg",
+            ),
+          ]
+            .filter((pieza) => {
+              const r = pieza.getBoundingClientRect();
+              return (
+                r.left < caja.left + borde - 0.5 ||
+                r.right > caja.right - borde + 0.5 ||
+                pieza.scrollWidth > pieza.clientWidth + 1
+              );
+            })
+            .map(
+              (pieza) =>
+                `${tarjeta.querySelector("input")!.value}: ${pieza.getAttribute("class")}`,
+            );
+        },
+      ),
+    );
+  for (const ancho of [360, 390, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width: ancho, height: 900 });
+    await page.goto("/perfil");
+    await page.evaluate(() => document.fonts.ready);
+    expect(await fuera(), `${ancho}`).toEqual([]);
+    if (ancho >= 1024) {
+      await page.getByRole("button", { name: "Abrir Cooper" }).click();
+      await expect(
+        page.getByRole("button", { name: "Cerrar Cooper" }),
+      ).toBeVisible();
+      await page.waitForTimeout(300);
+      expect(await fuera(), `${ancho} con Cooper`).toEqual([]);
+    }
+  }
+});
+
 // Sentinel (caos en /perfil, 22-11-2026): un cambio nuevo salta la transición del
 // anterior y su promesa `ready` quedaba rechazada sin atender («Transition was
 // skipped»). Tocar los temas seguidos no debe dejar errores en la página.

@@ -1,6 +1,7 @@
 /* Selector de apariencia (Tu perfil). Cada muestra lleva data-tema, así que se
    dibuja con los tokens reales de su tema: nunca puede desentonar con él. */
 .apariencia {
+  container-type: inline-size;
   min-width: 0;
   margin: 0 0 var(--espacio-24);
   padding: 0;
@@ -167,7 +168,11 @@
   border-radius: var(--radio-pildora);
   background: var(--tally);
 }
-@media (max-width: 767px) {
+/* Se mide el espacio del selector, no la ventana: a 768 px (o con Cooper
+   abierto) la columna del perfil es estrecha y tres tarjetas de ~85 px
+   dejaban la muestra y el lema pegados al borde. Por debajo de unos 150 px
+   por tarjeta, una por fila. */
+@container (max-width: 479px) {
   .apariencia-opciones {
     grid-template-columns: minmax(0, 1fr);
   }
