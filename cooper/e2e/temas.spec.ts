@@ -187,6 +187,36 @@ test("apariencia: si no se puede guardar, vuelve el tema anterior y lo dice", as
   await page.unroute("**/api/perfil");
 });
 
+// Sentinel (caos en /perfil, 22-11-2026): un cambio nuevo salta la transición del
+// anterior y su promesa `ready` quedaba rechazada sin atender («Transition was
+// skipped»). Tocar los temas seguidos no debe dejar errores en la página.
+test("apariencia: cambiar de tema seguido no deja errores sin atender", async ({
+  page,
+}) => {
+  await entrar(page);
+  const errores: string[] = [];
+  page.on("pageerror", (e) => errores.push(e.message));
+  page.on("console", (m) => {
+    if (m.type() === "error") errores.push(m.text());
+  });
+  await page.goto("/perfil");
+  await expect(page.locator("html")).toHaveAttribute("data-tema", "feria");
+  // Con flechas, cada paso cambia el tema mientras el fundido anterior sigue en
+  // curso. (Un toque de ratón durante esos 240 ms lo recibe la capa del fundido.)
+  await radio(page, "Feria").focus();
+  for (const tecla of ["ArrowRight", "ArrowRight", "ArrowLeft", "ArrowRight"])
+    await page.keyboard.press(tecla);
+  await expect(page.locator(".apariencia-estado")).toHaveText(
+    "Listo: ahora usas «Día».",
+  );
+  await quieta(page);
+  await expect(page.locator("html")).toHaveAttribute("data-tema", "dia");
+  await expect(radio(page, "Día")).toBeChecked();
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-tema", "dia");
+  expect(errores).toEqual([]);
+});
+
 for (const tema of TEMAS)
   test(`tema «${tema.nombre}»: sin desbordes, sin avisos y con contraste AA en móvil y escritorio`, async ({
     page,
