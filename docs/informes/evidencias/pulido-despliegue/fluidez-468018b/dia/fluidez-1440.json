@@ -1,0 +1,229 @@
+{
+  "ancho": 1440,
+  "tema": "dia",
+  "cpu": "1×",
+  "renderizador": {
+    "gl": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 26.2.6-arch3.1)",
+    "composicionGpu": "enabled",
+    "navegador": "159.0.8154.6"
+  },
+  "abrirCooperEnInicio": [
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.1771,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.1771,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.1771,
+      "tareasLargasMs": []
+    }
+  ],
+  "cerrarCooperEnInicio": [
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.1771,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.1771,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.1771,
+      "tareasLargasMs": []
+    }
+  ],
+  "cambioDeSeccionConCooperCerrado": [
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0.0004,
+      "clsIncluyendoEntrada": 0.0012,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.4,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.0003,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.4,
+      "cuadrosMayores50ms": 0,
+      "cls": 0.0004,
+      "clsIncluyendoEntrada": 0.0012,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.0003,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0.0004,
+      "clsIncluyendoEntrada": 0.0012,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.0003,
+      "tareasLargasMs": []
+    }
+  ],
+  "cambioDeSeccionConCooperAbierto": [
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0.0004,
+      "clsIncluyendoEntrada": 0.0012,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.0003,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0.0004,
+      "clsIncluyendoEntrada": 0.0012,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.4,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.0003,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 52,
+      "fpsMedio": 58.9,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 33.3,
+      "cuadrosMayores50ms": 0,
+      "cls": 0.0004,
+      "clsIncluyendoEntrada": 0.0012,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0.0003,
+      "tareasLargasMs": []
+    }
+  ],
+  "consola": []
+}

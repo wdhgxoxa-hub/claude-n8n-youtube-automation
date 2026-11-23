@@ -1,0 +1,168 @@
+{
+  "origen": "https://cooper.cooperestudio.com",
+  "fecha": "2026-11-23T12:36:55.908Z",
+  "alcance": "Entrada y control de acceso anónimo; NO recorrido privado autenticado",
+  "pantallas": [
+    {
+      "ruta": "/",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/canales",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/canales/comprobacion-sin-sesion",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/videos",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/videos/comprobacion-sin-sesion",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/avatares",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/publicados",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/aprendizaje",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/marcas",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/perfil",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/admin",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/admin/fabrica",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/radar",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/rutina",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/redes",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/referencias",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/cuentas",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/programados",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/decisiones",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/incidencias",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/avisos",
+      "estado": 307,
+      "destino": "/entrar"
+    },
+    {
+      "ruta": "/revisar/whatsapp/comprobacion-sin-sesion",
+      "estado": 307,
+      "destino": "/entrar"
+    }
+  ],
+  "apis": [
+    {
+      "ruta": "/api/estado",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/eventos",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/memoria",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/marcas",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/operacion",
+      "estado": 401
+    },
+    {
+      "ruta": "/api/admin/fabrica",
+      "estado": 401
+    }
+  ],
+  "cabeceras": {
+    "hsts": "max-age=31536000",
+    "nosniff": "nosniff",
+    "permissions": "camera=(), microphone=(self), geolocation=()"
+  },
+  "tema_sin_sesion": "feria",
+  "tls": "TLSv1.3",
+  "formatos": [
+    {
+      "ancho": 1440,
+      "axe": 0,
+      "desbordamientos": 0,
+      "errores": [],
+      "tema": "feria"
+    },
+    {
+      "ancho": 390,
+      "axe": 0,
+      "desbordamientos": 0,
+      "errores": [],
+      "tema": "feria"
+    }
+  ],
+  "oauth_iniciado": false,
+  "resultado": "PASS"
+}

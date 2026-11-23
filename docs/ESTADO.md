@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-23 05:40 (Lima).
+Última actualización: 2026-11-23 07:40 (Lima).
 
 ## Qué es
 
@@ -9,7 +9,7 @@
 
 ## Hecho
 
-- **23-11-2026, 05:40 Lima — pulido de transiciones y de la conversación con Cooper, implementado y probado en la rama `pulido` (NO integrado, NO desplegado):** cambio de sección por relevo (sin páginas superpuestas), Cooper y riel quietos durante el cambio, hoja que abre con contenido, el perrito en la cabecera con aro de estado, riel que se recoge al elegir destino, respuestas con listas y negritas. Nube, Chromium: lint/tipos/build 0/0, **718/719 unitarias** (solo Sentinel ausente), 237/237 flujos, **E2E 109 pasan / 10 fallan** (9 por entorno y 1 intermitente previa, ya corregida). **No ejecutado:** fluidez con GPU (pendiente obligatorio antes de desplegar), Firefox, WebKit, Sentinel, Lighthouse. [Informe](informes/pulido-movimiento-cooper.md).
+- **23-11-2026, 07:40 Lima — pulido de transiciones y de la conversación con Cooper: probado en la PC, integrado, publicado y desplegado.** Commit `942f3c0c` en https://cooper.cooperestudio.com (imagen `sha256:d9cc437d…`), publicado por avance rápido en `mio/main` y `mio/version-chatgpt`; respaldo sellado y reversa aislada PASS; sin migraciones nuevas y las 33 tablas con sus mismas filas. Cambio de sección por relevo, Cooper y riel quietos durante el cambio, hoja que abre con contenido, el perrito en la cabecera con aro de estado, riel recogido con «Aprendizaje» como píldora tras el icono, respuestas con listas y negritas. Puerta en la PC: lint/tipos/build sin avisos, **719/719 unitarias, 131/131 E2E, 237/237 flujos**; una ronda Sentinel + Playwright en seis anchos **175/175**. Fluidez con GPU real (Feria y Día, 1440 y 390 con CPU 4×): abrir y cerrar Cooper 57,7–60 fps, igual que lo desplegado, así que el fundido se conservó; el cambio de sección a 390 con CPU 4× da 54–57 fps, también igual que antes. Lighthouse móvil Feria: Inicio 0,90, Publicados 1,00, accesibilidad 1,00. Producción sin sesión PASS y 7 servicios sanos. **Hallazgo de la revisión visual:** en el cambio de sección hay 1–2 cuadros con las dos pantallas a ~30–40 % (a 390) o un cuadro vacío (a 1440); no se tocó. **No verificado:** pantallas con sesión en producción, teléfono físico y Safari. [Informe](informes/pulido-movimiento-cooper.md#puerta-y-despliegue-en-la-pc-23-11-2026).
 
 - **23-11-2026, 03:45 Lima — temas Feria, Sala y Día: probados en la PC, integrados, publicados y desplegados.** Commit `1868583b` en https://cooper.cooperestudio.com (imagen `sha256:7ba79b5c…`), publicado por avance rápido en `mio/main` y `mio/version-chatgpt`; respaldo sellado y reversa aislada PASS. Migración `0020_temas`: el único usuario pasó de `oscuro` a `feria`, migraciones 17 → 18, las 33 tablas conservan sus filas. Puerta sobre `1868583b`: lint/tipos/build sin avisos, **715/715 unitarias, 127/127 E2E, 237/237 flujos**; rondas Sentinel + Playwright (Chromium, y Firefox/WebKit en 6 anchos) **171/171 y 171/171**; `pulido` 23/23, `integracion3` 167/167, `movimiento` 10/10, `despliegue-final` 17/17; 60 fps en los tres temas (390 con CPU 4× y 1440). Lighthouse móvil: Publicados 1,00; Inicio 0,90, con una medida de 0,89 en Sala (igual que producción antes: sin margen). Producción sin sesión PASS y tema `feria`. Arreglados: cambio de tema seguido (Sentinel), tarjetas de Apariencia a 768, atajos de Feria con Cooper abierto, Publicados sin esqueleto y «Sin medir todavía» en vez de 0. **Sigue fallando** la prueba «DIRECCION exige … colores» (paleta anterior a los temas). **No verificado:** pantallas con sesión, teléfono físico y Safari. [Informe](informes/temas-apariencia.md#puerta-y-despliegue-en-la-pc-2223-11-2026).
 
@@ -170,7 +170,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 17. Decidir si se aceptan las fuentes enteras o se recortan (solo latín) para ganar margen: Inicio da 0,90 en Lighthouse y una de seis medidas dio 0,89.
 18. Temas: decidir si la prueba «DIRECCION exige … colores» se rehace para los tres temas o se retira; opcional, cargar los reproductores de YouTube/TikTok al tocar; probar los tres temas con su sesión. [Detalle](informes/temas-apariencia.md#pendientes-de-walter-de-esta-parte).
 
-- Pulido de Cooper: autorizar en la PC la puerta completa, la medición de fluidez y el despliegue de la rama `pulido`; entregar las 5 imágenes del perrito si quiere expresiones. [Detalle](informes/pulido-movimiento-cooper.md#pendientes-de-walter).
+- Pulido de Cooper: decidir si se afina el cruce del relevo; ver en producción, con su sesión, el cambio de sección, la hoja y el riel; entregar las 5 imágenes del perrito si quiere expresiones; decidir si la conversación se conserva al cambiar de sección. [Detalle](informes/pulido-movimiento-cooper.md#pendientes-de-walter-de-esta-parte).
 
 ## Ideas conversadas
 

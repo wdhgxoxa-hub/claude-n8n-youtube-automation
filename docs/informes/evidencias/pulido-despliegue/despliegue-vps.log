@@ -1,0 +1,18 @@
+/home/operador/total-integrador-20261121/recuperacion-app-b3/recuperar-app.py: OK
+/home/operador/total-integrador-20261121/recuperacion-app-b3/preflight.py: OK
+/home/operador/total-integrador-20261121/recuperacion-app-b3/codigo.json: OK
+/home/operador/total-integrador-20261121/aplicadores-certificados-b3e608e/bundle/deploy/actualizar-solo-cooper.py: OK
+{"estado": "PREFLIGHT_PASS", "archivos_publicos": 27, "entorno_consumido": false, "estado_operativo_creado": false, "mutaciones": false}
+sha256:d9cc437d9529a804ab98eccccee61880146261ef716fd6f7ac7ef762ff2df4f0
+== preparar 2026-11-23T12:32:36Z
+{"estado": "PREPARADO", "recibo_sha256": "1f1e21e5842c15866e03e27bea5f901e3bbd7b99c8814917196e3754b90e5c29"}
+anterior_id=sha256:7ba79b5c91351b615f2118412dc0bf16b5eb5495a84ab7a8da4d2be30035936b
+== actualizar 2026-11-23T12:32:40Z
+recibo=/var/lib/cooper-operacion/solo-cooper-20261123T123242Z/resultado.json
+{'resultado': 'PASS', 'imagen': 'localhost/cooper:942f3c0c2ba2cb92460f2e472194995c93fa0cff', 'imagen_id_desplegada': 'sha256:d9cc437d9529a804ab98eccccee61880146261ef716fd6f7ac7ef762ff2df4f0', 'reversa_aislada': 'PASS', 'migraciones_antes': 18, 'migraciones_despues': 18, 'tablas_anteriores_conservadas': 30, 'servicios_ajenos_sin_cambios': True, 'caddy_sin_cambios': True, 'respaldo_sha256': '9b24811090765151c6bc3e9fe45d949da0e1cd5884a91a651c485fe4a616e4b3', 'fecha_utc': '2026-11-23T12:35:47Z'}
+== sellar 2026-11-23T12:35:47Z
+{"estado": "SELLADO", "recibo_sha256": "c4f374cb6674d74966a92455550e28cd2ad15be9972ce9645fdb916920e1dc29"}
+1f1e21e5842c15866e03e27bea5f901e3bbd7b99c8814917196e3754b90e5c29  /var/lib/cooper-operacion/despliegue-final-app-942f3c0c2ba2/preparacion.json
+9ffafdf3b5da8b539ee58ccdf2cda51b9cf7426aa47bfc079695639fd08ced19  /var/lib/cooper-operacion/solo-cooper-20261123T123242Z/resultado.json
+c4f374cb6674d74966a92455550e28cd2ad15be9972ce9645fdb916920e1dc29  /var/lib/cooper-operacion/despliegue-final-app-942f3c0c2ba2/sello.json
+FIN_OK 2026-11-23T12:35:53Z

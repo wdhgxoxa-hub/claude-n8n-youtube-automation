@@ -1,0 +1,162 @@
+{
+  "ancho": 390,
+  "tema": "dia",
+  "cpu": "4×",
+  "renderizador": {
+    "gl": "ANGLE (Intel, Mesa Intel(R) Graphics (ARL), OpenGL ES 3.2 Mesa 26.2.6-arch3.1)",
+    "composicionGpu": "enabled",
+    "navegador": "159.0.8154.6"
+  },
+  "abrirCooperEnInicio": [
+    {
+      "ventanaMs": 900,
+      "cuadros": 51,
+      "fpsMedio": 57.7,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 50.1,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": [
+        55
+      ]
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    }
+  ],
+  "cerrarCooperEnInicio": [
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "ventanaMs": 900,
+      "cuadros": 53,
+      "fpsMedio": 60,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 16.8,
+      "cuadrosMayores50ms": 0,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    }
+  ],
+  "cambioDeSeccionConCooperCerrado": [
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 48,
+      "fpsMedio": 54.3,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 100,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 49,
+      "fpsMedio": 55.5,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 83.3,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 50,
+      "fpsMedio": 56.6,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 66.7,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 50,
+      "fpsMedio": 56.6,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 66.7,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/videos",
+      "ventanaMs": 900,
+      "cuadros": 50,
+      "fpsMedio": 56.6,
+      "p95Ms": 16.7,
+      "maxCuadroMs": 66.7,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    },
+    {
+      "destino": "/",
+      "ventanaMs": 900,
+      "cuadros": 50,
+      "fpsMedio": 56.6,
+      "p95Ms": 16.8,
+      "maxCuadroMs": 66.7,
+      "cuadrosMayores50ms": 1,
+      "cls": 0,
+      "clsIncluyendoEntrada": 0,
+      "tareasLargasMs": []
+    }
+  ],
+  "cambioDeSeccionConCooperAbierto": {
+    "aplicable": false,
+    "motivo": "la hoja es modal: la barra inferior queda inert",
+    "barraInerte": true
+  },
+  "consola": []
+}

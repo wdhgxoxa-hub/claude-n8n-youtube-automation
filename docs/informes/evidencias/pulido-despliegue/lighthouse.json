@@ -1,0 +1,189 @@
+{
+  "entorno": "Chromium local; laboratorio, sin métricas de campo",
+  "cache": "HTTP vacía antes de cada navegación; sesión ficticia conservada",
+  "buildId": "-jmUg7E5JgpyAwXf-dpD0",
+  "lighthouse": "13.6.0",
+  "navegador": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/159.0.8154.6 Safari/537.36",
+  "mediciones": [
+    {
+      "path": "/",
+      "theme": "feria",
+      "formFactor": "mobile",
+      "fecha": "2026-11-23T12:25:33.213Z",
+      "scores": {
+        "performance": 0.9,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 3698.44,
+        "total-blocking-time": 17.000000000000227,
+        "cumulative-layout-shift": 0
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "label": "Total",
+          "requestCount": 40,
+          "transferSize": 957279
+        },
+        {
+          "resourceType": "media",
+          "label": "Media",
+          "requestCount": 1,
+          "transferSize": 384286
+        },
+        {
+          "resourceType": "script",
+          "label": "Script",
+          "requestCount": 15,
+          "transferSize": 238222
+        },
+        {
+          "resourceType": "font",
+          "label": "Font",
+          "requestCount": 3,
+          "transferSize": 171738
+        },
+        {
+          "resourceType": "other",
+          "label": "Other",
+          "requestCount": 13,
+          "transferSize": 97406
+        },
+        {
+          "resourceType": "stylesheet",
+          "label": "Stylesheet",
+          "requestCount": 6,
+          "transferSize": 42684
+        },
+        {
+          "resourceType": "document",
+          "label": "Document",
+          "requestCount": 1,
+          "transferSize": 13343
+        },
+        {
+          "resourceType": "image",
+          "label": "Image",
+          "requestCount": 1,
+          "transferSize": 9600
+        },
+        {
+          "resourceType": "third-party",
+          "label": "Third-party",
+          "requestCount": 0,
+          "transferSize": 0
+        }
+      ],
+      "diagnostics": {
+        "unused-javascript": {
+          "value": 90,
+          "savingsBytes": 25658
+        },
+        "unused-css-rules": {
+          "value": 0,
+          "savingsBytes": 18029
+        },
+        "mainthread-work-breakdown": {
+          "value": 826.7559999999993
+        },
+        "bootup-time": {
+          "value": 280.70399999999773
+        }
+      },
+      "warnings": [],
+      "failedAudits": []
+    },
+    {
+      "path": "/publicados",
+      "theme": "feria",
+      "formFactor": "mobile",
+      "fecha": "2026-11-23T12:25:39.119Z",
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1
+      },
+      "metrics": {
+        "largest-contentful-paint": 1205.4106,
+        "total-blocking-time": 23,
+        "cumulative-layout-shift": 0
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "label": "Total",
+          "requestCount": 43,
+          "transferSize": 969389
+        },
+        {
+          "resourceType": "media",
+          "label": "Media",
+          "requestCount": 1,
+          "transferSize": 384286
+        },
+        {
+          "resourceType": "script",
+          "label": "Script",
+          "requestCount": 16,
+          "transferSize": 245291
+        },
+        {
+          "resourceType": "font",
+          "label": "Font",
+          "requestCount": 3,
+          "transferSize": 171738
+        },
+        {
+          "resourceType": "other",
+          "label": "Other",
+          "requestCount": 15,
+          "transferSize": 100527
+        },
+        {
+          "resourceType": "stylesheet",
+          "label": "Stylesheet",
+          "requestCount": 6,
+          "transferSize": 43343
+        },
+        {
+          "resourceType": "document",
+          "label": "Document",
+          "requestCount": 1,
+          "transferSize": 14604
+        },
+        {
+          "resourceType": "image",
+          "label": "Image",
+          "requestCount": 1,
+          "transferSize": 9600
+        },
+        {
+          "resourceType": "third-party",
+          "label": "Third-party",
+          "requestCount": 0,
+          "transferSize": 0
+        }
+      ],
+      "diagnostics": {
+        "unused-javascript": {
+          "value": 0,
+          "savingsBytes": 25125
+        },
+        "unused-css-rules": {
+          "value": 0,
+          "savingsBytes": 18025
+        },
+        "mainthread-work-breakdown": {
+          "value": 754.564000000001
+        },
+        "bootup-time": {
+          "value": 292.60399999999817
+        }
+      },
+      "warnings": [],
+      "failedAudits": []
+    }
+  ]
+}
