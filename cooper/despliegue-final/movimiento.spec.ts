@@ -1125,7 +1125,9 @@ test("3 Vista previa de medios con MP4 real", async ({ browser }, testInfo) => {
       await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       await expect(medio).toHaveAttribute("data-preview", "off");
       await instalar();
-      await page.evaluate(() => window.scrollTo(0, 0));
+      // Con los atajos de Inicio encima, un medio vertical solo asoma un 58 %
+      // arriba del todo: se lleva a la vista como al desplazarse con el dedo.
+      await medio.evaluate((el) => el.scrollIntoView({ block: "center" }));
     }
     await expect(medio).toHaveAttribute("data-preview", "on");
     await expect.poll(async () => (await propiedades()).tiempo).toBeGreaterThan(0.1);
