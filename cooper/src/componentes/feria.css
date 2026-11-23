@@ -28,7 +28,20 @@
 
 /* 2. Ambiente: luz de color suave y fija, sin coste de animación. */
 .workspace {
-  background: var(--fondo-ambiente), var(--lienzo);
+  /* Se redeclara aquí para que la luz tome el --acento de la sección
+     (en :root el var() ya quedó resuelto en coral). */
+  background:
+    radial-gradient(
+      60% 50% at 12% 0%,
+      color-mix(in srgb, var(--acento) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 40% at 100% 8%,
+      color-mix(in srgb, var(--color-aprendizaje) 12%, transparent),
+      transparent 70%
+    ),
+    var(--lienzo);
   background-attachment: fixed;
 }
 
@@ -52,6 +65,10 @@
 .mobile-dock a[aria-current] .nav-indicator {
   background: var(--acento-suave);
   border-color: color-mix(in srgb, var(--acento) 55%, transparent);
+}
+/* La etiqueta ocupa todo el riel: el relleno activo también, para no cortarla. */
+.glass-rail nav a[aria-current] .nav-indicator {
+  inset-inline: calc(var(--espacio-4) * -1);
 }
 .glass-rail nav a[aria-current]::before {
   background: var(--acento);
