@@ -1,0 +1,20 @@
+/home/operador/total-integrador-20261121/recuperacion-app-b3/recuperar-app.py: OK
+/home/operador/total-integrador-20261121/recuperacion-app-b3/preflight.py: OK
+/home/operador/total-integrador-20261121/recuperacion-app-b3/codigo.json: OK
+/home/operador/total-integrador-20261121/aplicadores-certificados-b3e608e/bundle/deploy/actualizar-solo-cooper.py: OK
+{"estado": "PREFLIGHT_PASS", "archivos_publicos": 27, "entorno_consumido": false, "estado_operativo_creado": false, "mutaciones": false}
+sha256:7ba79b5c91351b615f2118412dc0bf16b5eb5495a84ab7a8da4d2be30035936b
+== preparar 2026-11-23T08:40:50Z
+{"estado": "PREPARADO", "recibo_sha256": "5c29b72f8e97c450d17b9aa9de88a6ae496780e6491d556754418296f0a25587"}
+anterior_id=sha256:fa120a2db5cab531d69263cf065b9843a55b6b5665a476b94effc66fdbae36ad
+== actualizar 2026-11-23T08:40:54Z
+recibo=/var/lib/cooper-operacion/solo-cooper-20261123T084056Z/resultado.json
+{'resultado': 'PASS', 'imagen': 'localhost/cooper:1868583b20a6c3552366958ab748d417dd8d37b6', 'imagen_id_desplegada': 'sha256:7ba79b5c91351b615f2118412dc0bf16b5eb5495a84ab7a8da4d2be30035936b', 'reversa_aislada': 'PASS', 'migraciones_antes': 17, 'migraciones_despues': 18, 'tablas_anteriores_conservadas': 30, 'servicios_ajenos_sin_cambios': True, 'caddy_sin_cambios': True, 'respaldo_sha256': '9b24811090765151c6bc3e9fe45d949da0e1cd5884a91a651c485fe4a616e4b3', 'fecha_utc': '2026-11-23T08:43:52Z'}
+== sellar 2026-11-23T08:43:52Z
+{"estado": "SELLADO", "recibo_sha256": "40afbcdfb5b14ed4150aecd35db25a7e678fdc5540805292ca09adb1024c9a1c"}
+5c29b72f8e97c450d17b9aa9de88a6ae496780e6491d556754418296f0a25587  /var/lib/cooper-operacion/despliegue-final-app-1868583b20a6/preparacion.json
+a44bc2eb884b072d2ce4ff53dcf16e76a04998ed45fe113eb45d74ac9b8efea4  /var/lib/cooper-operacion/solo-cooper-20261123T084056Z/resultado.json
+40afbcdfb5b14ed4150aecd35db25a7e678fdc5540805292ca09adb1024c9a1c  /var/lib/cooper-operacion/despliegue-final-app-1868583b20a6/sello.json
+FIN_OK 2026-11-23T08:43:55Z
+rc=0
+2c99f44a13047c360a3066a9ddeabd1e8e4b454714c2934f58b2ea9f7760d6d3  fuente-1868583b20a6c3552366958ab748d417dd8d37b6.tar.gz

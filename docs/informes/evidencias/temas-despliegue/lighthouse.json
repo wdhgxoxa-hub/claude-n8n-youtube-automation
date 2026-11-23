@@ -1,0 +1,95 @@
+{
+ "commit": "5f11a820 (mismo código de app que 1868583b)",
+ "movil": {
+  "serie-1": {
+   "/ dia": {
+    "rendimiento": 0.9,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "3.7 s"
+   },
+   "/ feria": {
+    "rendimiento": 0.9,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "3.7 s"
+   },
+   "/ sala": {
+    "rendimiento": 0.9,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "3.7 s"
+   },
+   "/publicados dia": {
+    "rendimiento": 1,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "1.1 s"
+   },
+   "/publicados feria": {
+    "rendimiento": 1,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "1.1 s"
+   },
+   "/publicados sala": {
+    "rendimiento": 1,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "1.1 s"
+   }
+  },
+  "serie-2": {
+   "/ dia": {
+    "rendimiento": 0.9,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "3.7 s"
+   },
+   "/ feria": {
+    "rendimiento": 0.9,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "3.7 s"
+   },
+   "/ sala": {
+    "rendimiento": 0.89,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "3.8 s"
+   },
+   "/publicados dia": {
+    "rendimiento": 1,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "1.1 s"
+   },
+   "/publicados feria": {
+    "rendimiento": 1,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "1.1 s"
+   },
+   "/publicados sala": {
+    "rendimiento": 1,
+    "accesibilidad": 1,
+    "buenas_practicas": 1,
+    "lcp": "1.1 s"
+   }
+  }
+ },
+ "produccion_5471160": {
+  "_-claro-mobile.html": {
+   "rendimiento": 0.9,
+   "accesibilidad": 1,
+   "buenas_practicas": 1,
+   "lcp": "3.7 s"
+  },
+  "_-oscuro-mobile.html": {
+   "rendimiento": 0.9,
+   "accesibilidad": 1,
+   "buenas_practicas": 1,
+   "lcp": "3.7 s"
+  }
+ }
+}
