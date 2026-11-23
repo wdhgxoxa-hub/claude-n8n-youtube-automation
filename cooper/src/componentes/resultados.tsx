@@ -348,6 +348,14 @@ function principal(grupo: Grupo) {
     (a, b) => ultimaCifra(b).momento - ultimaCifra(a).momento,
   )[0];
 }
+const SIN_MEDIR = "Sin medir todavía";
+// Una suma parcial se declara: «0» con una sola pieza medida no es «0 en total».
+const medidas = (valores: (number | null)[]) => {
+  const n = valores.filter((v) => v !== null).length;
+  return n > 0 && n < valores.length
+    ? `${n} de ${valores.length} medidas`
+    : undefined;
+};
 const sumaMedida = (valores: (number | null)[]) =>
   valores.some((v) => v !== null)
     ? valores.reduce<number>((suma, valor) => suma + (valor ?? 0), 0)
@@ -456,16 +464,25 @@ function PublicacionPared({
           onClick={abrir}
         >
           <span className="sr-only">Ver cifras de {p.titulo}: </span>
-          <span>
-            <Eye size={16} aria-hidden="true" />
-            <strong>{numero(cifras.vistas)}</strong>
-            <span className="sr-only"> vistas</span>
-          </span>
-          <span className={styles.megusta}>
-            <Heart size={16} aria-hidden="true" />
-            <strong>{numero(cifras.likes)}</strong>
-            <span className="sr-only"> me gusta</span>
-          </span>
+          {cifras.vistas === null && cifras.likes === null ? (
+            <span>
+              <Eye size={16} aria-hidden="true" />
+              <strong>{SIN_MEDIR}</strong>
+            </span>
+          ) : (
+            <>
+              <span>
+                <Eye size={16} aria-hidden="true" />
+                <strong>{numero(cifras.vistas)}</strong>
+                <span className="sr-only"> vistas</span>
+              </span>
+              <span className={styles.megusta}>
+                <Heart size={16} aria-hidden="true" />
+                <strong>{numero(cifras.likes)}</strong>
+                <span className="sr-only"> me gusta</span>
+              </span>
+            </>
+          )}
           <ArrowUpRight
             className={styles.flecha}
             size={16}
@@ -548,8 +565,15 @@ export function Publicados({ initial }: { initial: Resultados }) {
           heroe
           etiqueta="Vistas"
           valor={sumaMedida(cifras.map((m) => m.vistas))}
+          sinDato={SIN_MEDIR}
+          variacion={medidas(cifras.map((m) => m.vistas))}
         />
-        <Cifra heroe etiqueta="Me gusta de videos" valor={likes} />
+        <Cifra
+          heroe
+          etiqueta="Me gusta de videos"
+          valor={likes}
+          sinDato={SIN_MEDIR}
+        />
         <Cifra heroe etiqueta="Publicaciones" valor={publicaciones.length} />
       </section>
       <p className={styles.aclaracion}>

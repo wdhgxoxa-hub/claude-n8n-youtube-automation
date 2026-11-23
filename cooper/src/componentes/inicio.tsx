@@ -263,6 +263,8 @@ function Heroe({
   const video = videos.find((v) => v.id === seleccionado) ?? videos[0];
   const publicacion = publicacionPrincipal(video);
   const medicion = ultimaMedicion(publicacion);
+  // Publicado y sin lectura: decirlo, no dejar un «Sin dato» que parece fallo.
+  const sinMedir = publicacion && !medicion ? "Sin medir todavía" : undefined;
   // El halo es una capa persistente: al cambiar de video solo cambia su tinte (640ms).
   const medios = useVideoMedios({
     videoId: video.id,
@@ -317,15 +319,18 @@ function Heroe({
                 compacta
                 etiqueta="Vistas"
                 valor={medicion?.vistas ?? null}
+                sinDato={sinMedir}
               />
               <Cifra
                 compacta
                 etiqueta="Me gusta"
                 valor={medicion?.meGusta ?? null}
+                sinDato={sinMedir}
               />
               <Cifra
                 etiqueta="Comentarios"
                 valor={medicion?.comentarios ?? null}
+                sinDato={sinMedir}
               />
             </div>
           </div>

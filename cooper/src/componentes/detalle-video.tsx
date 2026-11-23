@@ -53,6 +53,7 @@ function MetricasVideo({ video }: { video: Video }) {
           (a, b) => Date.parse(a.fecha) - Date.parse(b.fecha),
         );
         const ultima = historial.at(-1);
+        const sinMedir = ultima ? undefined : "Sin medir todavía";
         return (
           <section
             className={styles.publicacion}
@@ -83,18 +84,25 @@ function MetricasVideo({ video }: { video: Video }) {
               <Cifra
                 etiqueta="Vistas"
                 valor={ultima?.vistas ?? null}
+                sinDato={sinMedir}
                 serie={historial.flatMap((m) =>
                   m.vistas === null ? [] : [m.vistas],
                 )}
               />
-              <Cifra etiqueta="Me gusta" valor={ultima?.meGusta ?? null} />
+              <Cifra
+                etiqueta="Me gusta"
+                valor={ultima?.meGusta ?? null}
+                sinDato={sinMedir}
+              />
               <Cifra
                 etiqueta="Comentarios"
                 valor={ultima?.comentarios ?? null}
+                sinDato={sinMedir}
               />
               <Cifra
                 etiqueta="Retención media (%)"
                 valor={ultima?.retencion ?? null}
+                sinDato={sinMedir}
               />
             </div>
             {ultima?.seguidoresGanados != null && (

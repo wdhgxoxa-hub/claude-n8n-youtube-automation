@@ -339,6 +339,7 @@ export function Cifra({
   compacta = false,
   decimales,
   className,
+  sinDato = "Sin dato",
 }: {
   valor: number | null;
   etiqueta: string;
@@ -348,6 +349,8 @@ export function Cifra({
   compacta?: boolean;
   decimales?: number;
   className?: string;
+  /** Texto bajo «—» cuando no hay valor (p. ej. «Sin medir todavía»). */
+  sinDato?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
   const visible = useInView(ref, { once: true, amount: 0.5 });
@@ -384,7 +387,7 @@ export function Cifra({
           (compacta ? formatoCompacto : formatoEntero)(valor)
         )}
       </div>
-      {valor === null && <span className="cifra-detalle">Sin dato</span>}
+      {valor === null && <span className="cifra-detalle">{sinDato}</span>}
       {variacion && <span className="cifra-detalle">{variacion}</span>}
       {points.length > 1 && (
         <>
