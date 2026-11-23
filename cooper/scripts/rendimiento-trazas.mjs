@@ -15,6 +15,10 @@ const options = Object.fromEntries(
 );
 const phase = options.fase || "diagnostico";
 if (!/^[a-z0-9-]+$/.test(phase)) throw new Error("Fase no válida.");
+// --tema=feria|sala|dia: el vidrio esmerilado de «dia» tiene su propio coste.
+const tema = options.tema || "feria";
+if (!["feria", "sala", "dia"].includes(tema))
+  throw new Error("Tema no válido.");
 const duration = Number(options.duracion || 2500);
 if (!Number.isFinite(duration) || duration < 2000)
   throw new Error("La ventana de movimiento requiere al menos 2000 ms.");
@@ -356,7 +360,7 @@ try {
   });
   if (!brand.ok()) throw new Error("No se pudo preparar la marca ficticia.");
   const profile = await setup.request.patch("/api/perfil", {
-    data: { ...state.user, theme: "feria", home: "chat" },
+    data: { ...state.user, theme: tema, home: "chat" },
   });
   if (!profile.ok()) throw new Error("No se pudo fijar el tema de ensayo.");
   const paths = options.rutas
@@ -511,7 +515,7 @@ try {
       const result = {
         path,
         profile,
-        tema: "oscuro",
+        tema,
         cpu: mobile ? 4 : 1,
         viewport: { width: mobile ? 390 : 1440, height: 900 },
         fecha: new Date().toISOString(),
@@ -549,7 +553,7 @@ try {
             },
             entorno:
               "Laboratorio Chromium local; build de producción, fixtures simuladas aisladas, CPU móvil 4×, sin limitación de red. No son Core Web Vitals de campo.",
-            metodologia: `Contexto frío por ruta, oscuro, movimiento habilitado. rAF de ${duration} ms tras 900 ms de estabilización y otra ventana durante interacciones; mide cadencia del navegador, no fotogramas presentados en un teléfono físico. LCP desde navegación, CLS por ventanas de sesión; Event Timing con clic/teclado. CDP conserva eventos/tiempos sin args de recursos/scripts ni screenshots. Abrir *.trace.json en DevTools Performance o Perfetto.`,
+            metodologia: `Contexto frío por ruta, tema ${tema}, movimiento habilitado. rAF de ${duration} ms tras 900 ms de estabilización y otra ventana durante interacciones; mide cadencia del navegador, no fotogramas presentados en un teléfono físico. LCP desde navegación, CLS por ventanas de sesión; Event Timing con clic/teclado. CDP conserva eventos/tiempos sin args de recursos/scripts ni screenshots. Abrir *.trace.json en DevTools Performance o Perfetto.`,
             fuentes: [
               "https://web.dev/articles/inp",
               "https://web.dev/articles/lcp",
