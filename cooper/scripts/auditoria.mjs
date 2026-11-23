@@ -19,6 +19,13 @@ const selectedDevice = process.argv
   ?.slice(14);
 if (selectedDevice && !["mobile", "desktop"].includes(selectedDevice))
   throw new Error("Dispositivo no válido.");
+// --temas=feria,sala,dia mide esos temas en cualquier modo; no cambia umbrales.
+const selectedThemes = process.argv
+  .find((arg) => arg.startsWith("--temas="))
+  ?.slice(8)
+  .split(",");
+if (selectedThemes?.some((t) => !["feria", "sala", "dia"].includes(t)))
+  throw new Error("Tema no válido.");
 const outputDir =
   process.env.COOPER_AUDITORIA_SALIDA ??
   (marcasAudit
@@ -114,9 +121,8 @@ try {
   mkdirSync(outputDir, { recursive: true });
   // La matriz de rendimiento compara las mismas 23 rutas y ambos dispositivos.
   // --movimiento conserva además la matriz de dos temas de la auditoría visual.
-  for (const theme of performanceAudit
-    ? ["feria"]
-    : ["feria", "sala", "dia"]) {
+  for (const theme of selectedThemes ??
+    (performanceAudit ? ["feria"] : ["feria", "sala", "dia"])) {
     const profile = await context.request.patch("/api/perfil", {
       data: {
         name: "Ensayo Lighthouse",
