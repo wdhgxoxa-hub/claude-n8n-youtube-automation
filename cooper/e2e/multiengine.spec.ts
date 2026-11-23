@@ -32,7 +32,7 @@ async function entrar(page: Page) {
         data: {
           name: state.user.name,
           image: state.user.image,
-          theme: "oscuro",
+          theme: "feria",
           home: "chat",
           whatsapp: "",
         },

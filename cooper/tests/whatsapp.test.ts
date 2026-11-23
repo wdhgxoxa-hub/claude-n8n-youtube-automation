@@ -347,7 +347,7 @@ describe("Número, consentimiento y aislamiento", () => {
     const response = await route("PATCH", "perfil", {
       name: "Ana",
       image: "",
-      theme: "oscuro",
+      theme: "feria",
       home: "chat",
       whatsapp: "+51944444444",
     });

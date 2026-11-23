@@ -1,0 +1,225 @@
+/* Selector de apariencia (Tu perfil). Cada muestra lleva data-tema, así que se
+   dibuja con los tokens reales de su tema: nunca puede desentonar con él. */
+.apariencia {
+  min-width: 0;
+  margin: 0 0 var(--espacio-24);
+  padding: 0;
+  border: 0;
+}
+.apariencia legend {
+  padding: 0;
+  font-size: var(--texto-17);
+  font-weight: 500;
+  margin-bottom: var(--espacio-8);
+}
+.apariencia-opciones {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--espacio-16);
+  margin-top: var(--espacio-16);
+}
+.apariencia-opcion {
+  position: relative;
+  display: grid;
+  gap: var(--espacio-4);
+  padding: var(--espacio-12);
+  border: var(--foco-ancho) solid var(--linea);
+  border-radius: var(--radio-panel);
+  background: var(--sup-1);
+  cursor: pointer;
+  transition:
+    transform var(--duracion-estado) var(--curva-rebote),
+    border-color var(--duracion-estado) var(--curva-salida),
+    box-shadow var(--duracion-estado) var(--curva-salida);
+}
+.apariencia-opcion:hover {
+  transform: translateY(var(--elevacion-tarjeta));
+  border-color: var(--linea-fuerte);
+}
+.apariencia-opcion[data-activa="true"] {
+  border-color: var(--tally);
+  box-shadow: var(--sombra-flotante);
+}
+/* El radio real cubre la tarjeta: se toca en cualquier punto y conserva teclado. */
+.apariencia-opcion input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.apariencia-opcion:has(input:focus-visible) {
+  outline: var(--foco-ancho) solid var(--tally);
+  outline-offset: var(--foco-offset);
+}
+.apariencia-nombre {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+  margin-top: var(--espacio-8);
+  font-family: var(--fuente-display);
+  font-size: var(--texto-17);
+  font-weight: 600;
+  color: var(--texto);
+}
+.apariencia-nombre svg {
+  color: var(--tally);
+}
+.apariencia-lema {
+  font-size: var(--texto-13);
+  color: var(--texto-2);
+}
+.apariencia-estado {
+  min-height: var(--espacio-24);
+  margin-top: var(--espacio-12);
+  font-size: var(--texto-13);
+  color: var(--texto-2);
+}
+
+/* Miniatura: riel con los colores de sección, título y una tarjeta con su botón. */
+.apariencia-muestra {
+  display: grid;
+  grid-template-columns: var(--espacio-16) minmax(0, 1fr);
+  gap: var(--espacio-8);
+  aspect-ratio: 16 / 10;
+  padding: var(--espacio-8);
+  border: var(--borde-ancho) solid var(--linea-fuerte);
+  border-radius: var(--radio-tarjeta);
+  background: var(--lienzo);
+  overflow: hidden;
+}
+.apariencia-riel {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: var(--espacio-4);
+  padding-block: var(--espacio-8);
+  border: var(--borde-ancho) solid var(--linea);
+  border-radius: var(--radio-control);
+  background: var(--sup-2);
+}
+.apariencia-riel i {
+  width: var(--espacio-8);
+  height: var(--espacio-8);
+  border-radius: var(--radio-pildora);
+  background: var(--texto-3);
+}
+.apariencia-riel i[data-punto="inicio"] {
+  background: color-mix(
+    in srgb,
+    var(--color-inicio) var(--acento-en-nav-marca),
+    var(--texto-3)
+  );
+}
+.apariencia-riel i[data-punto="fabrica"] {
+  background: color-mix(
+    in srgb,
+    var(--color-fabrica) var(--acento-en-icono),
+    var(--texto-3)
+  );
+}
+.apariencia-riel i[data-punto="publicados"] {
+  background: color-mix(
+    in srgb,
+    var(--color-publicados) var(--acento-en-icono),
+    var(--texto-3)
+  );
+}
+.apariencia-riel i[data-punto="aprendizaje"] {
+  background: color-mix(
+    in srgb,
+    var(--color-aprendizaje) var(--acento-en-icono),
+    var(--texto-3)
+  );
+}
+.apariencia-lienzo {
+  display: grid;
+  align-content: start;
+  gap: var(--espacio-8);
+  min-width: 0;
+}
+.apariencia-lienzo b {
+  width: 62%;
+  height: var(--espacio-8);
+  margin-top: var(--espacio-4);
+  border-radius: var(--radio-pildora);
+  background: var(--texto);
+}
+.apariencia-tarjeta {
+  display: grid;
+  gap: var(--espacio-8);
+  padding: var(--espacio-8);
+  border: var(--borde-ancho) solid var(--linea);
+  border-radius: var(--radio-control);
+  background: var(--sup-1);
+}
+.apariencia-tarjeta em {
+  width: 80%;
+  height: var(--espacio-4);
+  border-radius: var(--radio-pildora);
+  background: var(--texto-2);
+}
+.apariencia-tarjeta u {
+  width: 44%;
+  height: var(--espacio-12);
+  border-radius: var(--radio-pildora);
+  background: var(--tally);
+}
+@media (max-width: 767px) {
+  .apariencia-opciones {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .apariencia-opcion {
+    grid-template-columns: 40% minmax(0, 1fr);
+    column-gap: var(--espacio-16);
+    align-items: center;
+  }
+  .apariencia-muestra {
+    grid-row: span 2;
+  }
+  .apariencia-nombre {
+    margin-top: 0;
+    align-self: end;
+  }
+  .apariencia-lema {
+    align-self: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .apariencia-opcion {
+    transition-duration: var(--duracion-presion);
+  }
+  .apariencia-opcion:hover {
+    transform: none;
+  }
+}
+
+/* Cambio de tema: fundido breve de toda la página (un cuarto de segundo),
+   en lugar del desplazamiento de cambio de ruta. */
+html[data-cambio-tema]::view-transition-group(*) {
+  animation-duration: var(--duracion-estado);
+}
+html[data-cambio-tema]::view-transition-old(root),
+html[data-cambio-tema]::view-transition-new(root),
+html[data-cambio-tema]::view-transition-old(riel),
+html[data-cambio-tema]::view-transition-new(riel),
+html[data-cambio-tema]::view-transition-old(barra-movil),
+html[data-cambio-tema]::view-transition-new(barra-movil) {
+  display: block;
+  animation: cambio-tema var(--duracion-estado) var(--curva-entrada-salida) both;
+}
+html[data-cambio-tema]::view-transition-old(root),
+html[data-cambio-tema]::view-transition-old(riel),
+html[data-cambio-tema]::view-transition-old(barra-movil) {
+  animation-direction: reverse;
+}
+@keyframes cambio-tema {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

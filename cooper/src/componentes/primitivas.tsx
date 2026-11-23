@@ -154,15 +154,13 @@ export function Medio({
     : (!tipografico && medio?.poster?.url) ||
       (posterInicial !== tipografico ? posterInicial : undefined);
   const posterFallido = Boolean(poster) && falloPoster === poster;
-  // Hay un medio real que aún no se puede mostrar: se reserva su caja sin
-  // sustituirlo por la carátula de las piezas que no tienen medio.
-  const enEspera =
+  // El medio real viene en camino: se reserva su caja con un brillo de espera y
+  // sin carátula, porque varias pantallas se componen distinto con carátula y
+  // cambiarla por el póster al llegar movería el contenido (CLS).
+  const enCamino =
     !sinMedio &&
-    (posterFallido ||
-      (!poster &&
-        (medio
-          ? medio.estado === "pendiente" || medio.estado === "no_disponible"
-          : Boolean(medioId))));
+    !poster &&
+    (medio ? medio.estado === "pendiente" : Boolean(medioId));
   const preview = vistaPrevia
     ? (medio?.preview?.url ?? previewInicial)
     : undefined;
@@ -301,16 +299,12 @@ export function Medio({
           unoptimized
           onError={() => setFalloPoster(poster)}
         />
+      ) : enCamino ? (
+        <span className="medio-espera" aria-hidden="true" />
       ) : (
-        // Sin póster utilizable (sin medio, pendiente, no disponible o carga
-        // fallida) siempre hay carátula: nunca una caja vacía. Mientras el
-        // medio real sigue en camino, la carátula lleva un brillo de espera.
-        <>
-          <Cartel titulo={titulo ?? alt} canal={canal} detalle={detalle} />
-          {enEspera && medio?.estado !== "no_disponible" && !posterFallido && (
-            <span className="medio-espera" aria-hidden="true" />
-          )}
-        </>
+        // Estado definitivo sin póster (sin medio, no disponible o carga
+        // fallida): carátula tipográfica, nunca una caja vacía.
+        <Cartel titulo={titulo ?? alt} canal={canal} detalle={detalle} />
       )}
       {preview && (
         <video

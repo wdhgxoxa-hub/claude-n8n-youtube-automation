@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "@/componentes/estado-espacio.css";
+import { temaDeLaSesion } from "@/lib/sesion";
+import { TEMAS_INFO } from "@/lib/temas";
 const clash = localFont({
   src: "../../public/fonts/ClashDisplay-Variable.woff2",
   variable: "--font-clash",
@@ -33,15 +35,18 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 export const dynamic = "force-dynamic";
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // El tema se pinta en el servidor: sin parpadeo y sin script en línea.
+  const tema = await temaDeLaSesion();
   return (
     <html
       lang="es"
-      data-theme="oscuro"
+      data-tema={tema}
+      data-theme={TEMAS_INFO[tema].esquema}
       className={`${clash.variable} ${geist.variable} ${geistMono.variable}`}
     >
       <body>{children}</body>

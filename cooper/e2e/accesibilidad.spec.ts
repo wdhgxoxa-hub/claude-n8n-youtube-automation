@@ -1,4 +1,9 @@
-import { abrirCooper, cerrarCooper, abrirMasDestinos } from "./ayudas-diseno";
+import {
+  abrirCooper,
+  cerrarCooper,
+  abrirMasDestinos,
+  recorridoAsentado,
+} from "./ayudas-diseno";
 import { test, expect, type Page, type TestInfo } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -54,7 +59,7 @@ async function preparar(page: Page, tema: Tema, ancho: number) {
           image: inicial.user.image,
           whatsapp: inicial.user.whatsapp,
           home: "chat",
-          theme: tema,
+          theme: "feria",
         },
       })
     ).ok(),
@@ -83,6 +88,7 @@ async function abrir(page: Page, ruta: string, tema: Tema) {
   }
   await expect(page.locator("html")).toHaveAttribute("data-theme", tema);
   await page.evaluate(() => document.fonts.ready);
+  await recorridoAsentado(page);
 }
 
 function auditor(

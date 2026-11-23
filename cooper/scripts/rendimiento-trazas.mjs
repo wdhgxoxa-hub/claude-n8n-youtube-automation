@@ -356,7 +356,7 @@ try {
   });
   if (!brand.ok()) throw new Error("No se pudo preparar la marca ficticia.");
   const profile = await setup.request.patch("/api/perfil", {
-    data: { ...state.user, theme: "oscuro", home: "chat" },
+    data: { ...state.user, theme: "feria", home: "chat" },
   });
   if (!profile.ok()) throw new Error("No se pudo fijar el tema de ensayo.");
   const paths = options.rutas

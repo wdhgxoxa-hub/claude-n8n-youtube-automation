@@ -1,6 +1,11 @@
-/* Sala de proyección · paleta «Feria» (alegre, de alto contraste). Única fuente del sistema visual.
-   Base tinta azul profunda (no negro), texto claro AA/AAA y cinco colores vivos, uno por sección. */
-:root {
+/* Sala de proyección · única fuente del sistema visual.
+   Tres temas, elegidos por persona en «Tu perfil › Apariencia» (html[data-tema]):
+   · feria — alegre: base tinta azul y un color vivo por sección (por defecto).
+   · sala  — sobria: negro de sala de cine y un solo acento.
+   · dia   — clara: papel y vidrio esmerilado, un solo acento azul.
+   Los temas solo cambian color y material; medidas, tipografía y ritmo son comunes. */
+:root,
+[data-tema="feria"] {
   color-scheme: dark;
   --lienzo: #0b0b1e;
   --sup-1: #121230;
@@ -34,28 +39,38 @@
   --color-marcas: #5cc8ff;
   --color-mas: #ff8fc7;
   --acento: var(--color-inicio);
-  --acento-suave: color-mix(in srgb, var(--acento) 18%, transparent);
   --sobre-acento: #0b0b1e;
-  --fondo-ambiente:
-    radial-gradient(
-      60% 50% at 12% 0%,
-      color-mix(in srgb, var(--acento) 16%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      45% 40% at 100% 8%,
-      color-mix(in srgb, var(--color-aprendizaje) 12%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      50% 45% at 80% 100%,
-      color-mix(in srgb, var(--color-marcas) 9%, transparent),
-      transparent 70%
-    );
+  /* Carácter del tema: cuánto del color de la sección entra en cada pieza.
+     Son porcentajes (no colores derivados) porque --acento cambia por sección
+     y un var() declarado en :root quedaría resuelto con el acento de :root. */
+  --acento-en-icono: 100%;
+  --acento-en-cifra: 100%;
+  --acento-en-nav-fondo: 18%;
+  --acento-en-nav-borde: 55%;
+  --acento-en-nav-marca: 100%;
+  --nav-fondo-base: var(--transparente);
+  --acento-en-atajo: 22%;
+  --acento-en-atajo-borde: 45%;
+  --acento-en-atajo-icono: 100%;
+  --atajo-tinta-sobre: 100%;
+  --atajo-tinta-acento: 0%;
+  --ambiente-acento: 16%;
+  --ambiente-apoyo: 12%;
+  --tinte-propio: 45%;
+  --sombra-flotante: 0 16px 48px rgba(4, 4, 24, 0.5);
   --curva-rebote: cubic-bezier(0.34, 1.56, 0.64, 1);
   --halo-filtro: blur(120px);
   --halo-opacidad: 0.34;
-
+  /* Cine: los medios (carátulas, reproductor) son siempre una sala a oscuras,
+     también en el tema claro. */
+  --cine-lienzo: #0b0b1e;
+  --cine-sup: #1a1a40;
+  --cine-linea: rgba(201, 201, 255, 0.26);
+  --cine-texto: #ffffff;
+  --cine-texto-2: #cfcfea;
+  --cine-vidrio: rgba(22, 22, 58, 0.78);
+}
+:root {
   --fuente-display: var(--font-clash), sans-serif;
   --fuente-texto: var(--font-geist), sans-serif;
   --fuente-datos: var(--font-geist-mono), monospace;
@@ -129,6 +144,139 @@
   --capa-cooper: 40;
   --capa-hoja: 50;
   --capa-aviso: 60;
+}
+/* Tema «Sala»: la sala de proyección original. Negro, gris y un solo acento. */
+[data-tema="sala"] {
+  --lienzo: #000000;
+  --sup-1: #0a0a0c;
+  --sup-2: #111114;
+  --sup-3: #18181c;
+  --linea: rgba(255, 255, 255, 0.08);
+  --linea-fuerte: rgba(255, 255, 255, 0.14);
+  --texto: #f5f5f7;
+  --texto-2: #a1a1aa;
+  --texto-3: #8b8b94;
+  --tally: #ff4d2e;
+  --tally-suave: rgba(255, 77, 46, 0.14);
+  --sobre-tally: #0a0a0c;
+  --sube: #3ddc97;
+  --baja: #ff6b6b;
+  --aviso: #ffc53d;
+  --info: #7cc4ff;
+  --velo: rgba(0, 0, 0, 0.6);
+  --vidrio-fondo: rgba(17, 17, 20, 0.72);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --vidrio-sombra: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --color-inicio: var(--tally);
+  --color-fabrica: var(--tally);
+  --color-publicados: var(--tally);
+  --color-aprendizaje: var(--tally);
+  --color-marcas: var(--tally);
+  --color-mas: var(--tally);
+  --sobre-acento: #0a0a0c;
+  --acento-en-icono: 0%;
+  --acento-en-cifra: 0%;
+  --acento-en-nav-fondo: 0%;
+  --acento-en-nav-borde: 0%;
+  --acento-en-nav-marca: 0%;
+  --nav-fondo-base: var(--sup-3);
+  --acento-en-atajo: 0%;
+  --acento-en-atajo-borde: 0%;
+  --acento-en-atajo-icono: 0%;
+  --atajo-tinta-sobre: 0%;
+  --atajo-tinta-acento: 0%;
+  --ambiente-acento: 0%;
+  --ambiente-apoyo: 0%;
+  --tinte-propio: 100%;
+  --sombra-flotante: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --halo-opacidad: 0.22;
+  --cine-lienzo: #000000;
+  --cine-sup: #111114;
+  --cine-linea: rgba(255, 255, 255, 0.14);
+  --cine-texto: #f5f5f7;
+  --cine-texto-2: #a1a1aa;
+  --cine-vidrio: rgba(17, 17, 20, 0.72);
+}
+
+/* Tema «Día»: papel claro, mucho aire y vidrio esmerilado en lo que flota.
+   Un solo acento azul; el color fuerte lo ponen los videos. */
+[data-tema="dia"] {
+  color-scheme: light;
+  --lienzo: #f5f5f7;
+  --sup-1: #ffffff;
+  --sup-2: #f0f0f4;
+  --sup-3: #e6e6ec;
+  --linea: rgba(0, 0, 20, 0.1);
+  --linea-fuerte: rgba(0, 0, 20, 0.2);
+  --texto: #1d1d1f;
+  --texto-2: #424245;
+  --texto-3: #5f5f66;
+  --tally: #0060c8;
+  --tally-suave: rgba(0, 96, 200, 0.1);
+  --sobre-tally: #ffffff;
+  --sube: #007548;
+  --baja: #c0271f;
+  --aviso: #8a5300;
+  --info: #0060c8;
+  --velo: rgba(20, 20, 30, 0.36);
+  --vidrio-fondo: rgba(255, 255, 255, 0.72);
+  --vidrio-filtro: blur(28px) saturate(180%);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --vidrio-sombra: 0 24px 64px rgba(20, 20, 40, 0.16);
+  --color-inicio: var(--tally);
+  --color-fabrica: var(--tally);
+  --color-publicados: var(--tally);
+  --color-aprendizaje: var(--tally);
+  --color-marcas: var(--tally);
+  --color-mas: var(--tally);
+  --sobre-acento: #ffffff;
+  --acento-en-icono: 0%;
+  --acento-en-cifra: 0%;
+  --acento-en-nav-fondo: 10%;
+  --acento-en-nav-borde: 0%;
+  --acento-en-nav-marca: 100%;
+  --acento-en-atajo: 0%;
+  --acento-en-atajo-borde: 0%;
+  --acento-en-atajo-icono: 12%;
+  --atajo-tinta-sobre: 0%;
+  --atajo-tinta-acento: 100%;
+  --ambiente-acento: 0%;
+  --ambiente-apoyo: 0%;
+  --tinte-propio: 100%;
+  --sombra-flotante: 0 12px 32px rgba(20, 20, 40, 0.12);
+  --halo-opacidad: 0.16;
+  --grano-opacidad: 0.05;
+  --cine-lienzo: #101014;
+  --cine-sup: #1c1c22;
+  --cine-linea: rgba(255, 255, 255, 0.18);
+  --cine-texto: #ffffff;
+  --cine-texto-2: #d0d0d6;
+  --cine-vidrio: rgba(28, 28, 34, 0.72);
+}
+/* Cine en el tema claro: dentro de un medio (carátula, reproductor, póster)
+   vuelven los tokens oscuros, para que el texto sobre imagen siga siendo legible. */
+[data-tema="dia"] :is(.medio, .cartel, [data-cine]) {
+  color-scheme: dark;
+  --lienzo: var(--cine-lienzo);
+  --sup-1: var(--cine-sup);
+  --sup-2: var(--cine-sup);
+  --sup-3: var(--cine-sup);
+  --linea: var(--cine-linea);
+  --linea-fuerte: var(--cine-linea);
+  --texto: var(--cine-texto);
+  --texto-2: var(--cine-texto-2);
+  --texto-3: var(--cine-texto-2);
+  --tally: #6cb2ff;
+  --tally-suave: rgba(108, 178, 255, 0.18);
+  --sobre-tally: #101014;
+  --sube: #3ddc97;
+  --baja: #ff8a80;
+  --aviso: #ffc53d;
+  --info: #6cb2ff;
+  --velo: rgba(0, 0, 0, 0.6);
+  --vidrio-fondo: var(--cine-vidrio);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: var(--texto);
 }
 @media (min-width: 768px) {
   :root {

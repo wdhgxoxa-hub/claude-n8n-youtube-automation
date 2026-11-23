@@ -447,8 +447,14 @@ function PublicacionPared({
             />
           </div>
         </Link>
-        <span className={styles.red}>{red}</span>
-        <button className={styles.cifrasSobreMedio} onClick={abrir}>
+        <span className={styles.red} data-cine="">
+          {red}
+        </span>
+        <button
+          className={styles.cifrasSobreMedio}
+          data-cine=""
+          onClick={abrir}
+        >
           <span className="sr-only">Ver cifras de {p.titulo}: </span>
           <span>
             <Eye size={16} aria-hidden="true" />

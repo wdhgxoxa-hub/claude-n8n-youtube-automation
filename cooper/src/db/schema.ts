@@ -1,4 +1,5 @@
 import type { EstadoMedio } from "@/servicios/medios";
+import { TEMAS, TEMA_INICIAL } from "@/lib/temas";
 import {
   sqliteTable,
   text,
@@ -15,9 +16,11 @@ export const users = sqliteTable("users", {
     .notNull()
     .default("usuario"),
   active: integer("active", { mode: "boolean" }).notNull().default(true),
-  theme: text("theme", { enum: ["oscuro", "claro", "sistema"] })
+  // El DEFAULT de SQL sigue siendo el histórico ('oscuro'); toda alta pasa por
+  // Drizzle, que escribe el tema inicial, y la lectura se normaliza con temaValido.
+  theme: text("theme", { enum: TEMAS })
     .notNull()
-    .default("oscuro"),
+    .$defaultFn(() => TEMA_INICIAL),
   home: text("home", { enum: ["chat", "fabrica"] })
     .notNull()
     .default("chat"),

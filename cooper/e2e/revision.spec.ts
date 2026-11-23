@@ -209,7 +209,7 @@ test("entrada, no encontrado y formularios accesibles en el tema oscuro y cuatro
           data: {
             name: "Ensayo visual",
             image: "",
-            theme,
+            theme: "feria",
             home: "chat",
             whatsapp: "",
           },

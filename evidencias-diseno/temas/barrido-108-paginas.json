@@ -1,0 +1,1082 @@
+[
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 78
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/videos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 110
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/publicados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 68
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/aprendizaje",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 86
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/marcas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 11
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/perfil",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 13
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/programados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 39
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/avisos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 18
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/canales",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 12
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/cuentas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 16
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/decisiones",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 25
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/incidencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 17
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/radar",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 38
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/redes",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 28
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/referencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 22
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/rutina",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 23
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/avatares",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 15
+ },
+ {
+  "tema": "feria",
+  "w": 1440,
+  "u": "/admin",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 46
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 77
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/videos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 93
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/publicados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 58
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/aprendizaje",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 83
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/marcas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 10
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/perfil",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 12
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/programados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 38
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/avisos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 17
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/canales",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 5
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/cuentas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 15
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/decisiones",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 24
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/incidencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 16
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/radar",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 37
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/redes",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 27
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/referencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 21
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/rutina",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 22
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/avatares",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 14
+ },
+ {
+  "tema": "feria",
+  "w": 390,
+  "u": "/admin",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 42
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 78
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/videos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 110
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/publicados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 68
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/aprendizaje",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 86
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/marcas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 11
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/perfil",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 13
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/programados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 39
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/avisos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 18
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/canales",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 12
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/cuentas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 16
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/decisiones",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 25
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/incidencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 17
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/radar",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 38
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/redes",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 28
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/referencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 22
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/rutina",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 23
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/avatares",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 15
+ },
+ {
+  "tema": "sala",
+  "w": 1440,
+  "u": "/admin",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 46
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 77
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/videos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 93
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/publicados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 58
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/aprendizaje",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 83
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/marcas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 10
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/perfil",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 12
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/programados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 38
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/avisos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 17
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/canales",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 5
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/cuentas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 15
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/decisiones",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 24
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/incidencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 16
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/radar",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 37
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/redes",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 27
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/referencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 21
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/rutina",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 22
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/avatares",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 14
+ },
+ {
+  "tema": "sala",
+  "w": 390,
+  "u": "/admin",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 42
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 78
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/videos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 110
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/publicados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 68
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/aprendizaje",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 86
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/marcas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 11
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/perfil",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 13
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/programados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 39
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/avisos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 18
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/canales",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 12
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/cuentas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 16
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/decisiones",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 25
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/incidencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 17
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/radar",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 38
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/redes",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 28
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/referencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 22
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/rutina",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 23
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/avatares",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 15
+ },
+ {
+  "tema": "dia",
+  "w": 1440,
+  "u": "/admin",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 46
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 77
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/videos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 93
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/publicados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 58
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/aprendizaje",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 83
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/marcas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 10
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/perfil",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 12
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/programados",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 38
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/avisos",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 17
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/canales",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 5
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/cuentas",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 15
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/decisiones",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 24
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/incidencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 16
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/radar",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 37
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/redes",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 27
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/referencias",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 21
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/rutina",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 22
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/avatares",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 14
+ },
+ {
+  "tema": "dia",
+  "w": 390,
+  "u": "/admin",
+  "status": 200,
+  "ov": false,
+  "axe": [],
+  "contraste": [],
+  "incompletos": 42
+ }
+]

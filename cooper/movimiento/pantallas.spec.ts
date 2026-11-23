@@ -84,12 +84,10 @@ async function cambiarMovimiento(
     );
 }
 for (const width of [1440, 390])
-  // El tema claro se retiró (docs/diseno/DIRECCION.md:7, «tema oscuro, único
-  // tema de esta versión»; src/app/layout.tsx fija data-theme="oscuro"), pero
-  // la API y la base aún aceptan «claro» guardado de antes. La variante
-  // «claro» comprueba ahora que un perfil heredado con «claro» ve la misma
-  // sala oscura, sin errores y con los mismos umbrales.
-  for (const theme of ["oscuro", "claro"])
+  // Los dos temas oscuros del selector de apariencia (lib/temas.ts): ambos
+  // pintan data-theme="oscuro" y deben cumplir los mismos umbrales. El tema
+  // claro («dia») se ensaya en e2e/temas.spec.ts.
+  for (const theme of ["feria", "sala"])
     test(`${width} ${theme}: pantallas, scroll, pausa, vídeo y CPU ${width === 390 ? 4 : 1}x`, async ({
       browser,
       page,

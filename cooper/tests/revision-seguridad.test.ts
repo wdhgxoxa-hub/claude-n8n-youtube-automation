@@ -232,7 +232,7 @@ it("protege perfil, evidencia y administración frente a referencias ajenas", as
   const profile = await route("PATCH", "perfil", {
     name: "Ana",
     image: `/api/archivos/${foreign}`,
-    theme: "oscuro",
+    theme: "feria",
     home: "chat",
     whatsapp: "",
   });

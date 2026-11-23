@@ -37,7 +37,8 @@ test.beforeEach(async ({ page }) => {
   mkdirSync(dir, { recursive: true });
   await sesion(page);
 });
-for (const theme of ["oscuro", "claro"])
+// Dos temas oscuros del selector de apariencia (lib/temas.ts).
+for (const theme of ["feria", "sala"])
   for (const width of [360, 390, 768, 1024, 1440, 1920]) {
     test(`${width}px ${theme}: pantallas, teclado, axe, consola y fluidez`, async ({
       page,
@@ -210,7 +211,7 @@ test("Sistema Sentinel: recorridos, caos y estabilidad sobre sesión local", asy
     (
       await page.request.patch("/api/perfil", {
         headers: { Origin: baseURL! },
-        data: { ...perfil.user, theme: "oscuro" },
+        data: { ...perfil.user, theme: "feria" },
       })
     ).ok(),
   ).toBe(true);

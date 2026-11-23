@@ -4,6 +4,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import type { Estado } from "../src/servicios/datos";
 import { terminadosInicio } from "../src/componentes/inicio-datos";
 import { ETAPAS } from "../src/lib/etapas";
+import { recorridoAsentado } from "./ayudas-diseno";
 const dir = ".cache/capturas-diseno";
 test.use({ timezoneId: "America/Lima" });
 async function ready(page: Page, path = "/") {
@@ -13,6 +14,7 @@ async function ready(page: Page, path = "/") {
     "activa",
   );
   await expect(page.locator(".pildora-conexion")).toHaveCount(0);
+  await recorridoAsentado(page);
 }
 async function overflow(page: Page) {
   expect(
@@ -202,7 +204,7 @@ test("capturas finales: todas las pantallas y formularios demo en el tema del es
           data: {
             name: "Walter",
             image: "",
-            theme,
+            theme: "feria",
             home: "chat",
             whatsapp: "",
           },

@@ -1,4 +1,5 @@
 "use client";
+import { TEMAS_INFO, temaValido } from "@/lib/temas";
 import {
   createContext,
   useContext,
@@ -222,6 +223,15 @@ export function Espacio({
   const refresh = useCallback(async () => {
     receive(await api<Estado>("estado", undefined, "GET"));
   }, [receive]);
+  // El tema es de la persona, no del dispositivo: si lo cambia en otra pestaña
+  // o equipo, el estado en vivo lo trae y esta pantalla lo adopta.
+  const temaGuardado = temaValido(data.user.theme);
+  useEffect(() => {
+    const raiz = document.documentElement;
+    if (raiz.dataset.tema === temaGuardado) return;
+    raiz.dataset.tema = temaGuardado;
+    raiz.dataset.theme = TEMAS_INFO[temaGuardado].esquema;
+  }, [temaGuardado]);
   useEffect(
     () =>
       conectarEventos<Estado>({

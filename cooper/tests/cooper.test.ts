@@ -387,7 +387,7 @@ describe("Archivos, identidad y entradas", () => {
       (
         await route("PATCH", "perfil", {
           name: "Ana",
-          theme: "claro",
+          theme: "dia",
           home: "chat",
           image: "",
           whatsapp: "98765",
@@ -439,13 +439,33 @@ describe("Administración y validación reforzada", () => {
       ).status,
     ).toBe(404);
   });
+  it("guarda cada tema de apariencia por persona y rechaza los que no existen", async () => {
+    active = ana;
+    const perfil = (theme: string) =>
+      route("PATCH", "perfil", {
+        name: "Ana",
+        theme,
+        home: "chat",
+        image: "",
+        whatsapp: "",
+      });
+    const guardado = () =>
+      db().select().from(users).where(eq(users.id, ana.id)).get()?.theme;
+    for (const tema of ["sala", "dia", "feria"]) {
+      expect((await perfil(tema)).status).toBe(200);
+      expect(guardado()).toBe(tema);
+    }
+    for (const invalido of ["oscuro", "claro", "sistema", "", "neon"])
+      expect((await perfil(invalido)).status).toBe(400);
+    expect(guardado()).toBe("feria");
+  });
   it("no eleva el rol mediante el perfil", async () => {
     active = ana;
     expect(
       (
         await route("PATCH", "perfil", {
           name: "Ana",
-          theme: "oscuro",
+          theme: "feria",
           home: "chat",
           image: "",
           whatsapp: "",

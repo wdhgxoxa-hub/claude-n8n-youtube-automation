@@ -49,6 +49,7 @@ import {
 } from "@/servicios/mensajeria/cuentas";
 import { historial, resumenCola } from "@/servicios/mensajeria/cola";
 import { leerRecuerdos, borrarRecuerdos } from "@/servicios/chat/memoria";
+import { TEMAS } from "@/lib/temas";
 import { leerOperacion, leerAjustes, controlar } from "@/servicios/operacion";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -377,7 +378,7 @@ async function handle(request: Request, context: Context) {
                   /^\/api\/archivos\/[\w-]+$/.test(v) ||
                   /^https:\/\/lh3\.googleusercontent\.com\//.test(v),
               ),
-            theme: z.enum(["oscuro", "claro", "sistema"]),
+            theme: z.enum(TEMAS),
             home: z.enum(["chat", "fabrica"]),
             whatsapp: z
               .string()

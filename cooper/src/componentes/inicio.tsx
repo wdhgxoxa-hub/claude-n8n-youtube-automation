@@ -88,7 +88,7 @@ function MedioInicio({
         prioridad={heroe}
       />
       {heroe && (
-        <span className="inicio-reproducir">
+        <span className="inicio-reproducir" data-cine="">
           <span className="sr-only">{video.title}: </span>
           <Play size={20} fill="currentColor" aria-hidden="true" />
           Ver video

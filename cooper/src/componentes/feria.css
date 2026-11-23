@@ -1,5 +1,6 @@
-/* Capa «Feria»: color por sección, ambiente y microinteracciones alegres.
-   Solo usa tokens de tokens.css. Se carga después del armazón. */
+/* Capa de carácter: color por sección, ambiente y microinteracciones.
+   Cuánto color entra lo decide cada tema en tokens.css (feria, sala, dia);
+   aquí solo se usan tokens. Se carga después del armazón. */
 
 /* 1. Cada sección toma su color: orienta sin leer. */
 .workspace[data-seccion="inicio"],
@@ -33,12 +34,16 @@
   background:
     radial-gradient(
       60% 50% at 12% 0%,
-      color-mix(in srgb, var(--acento) 16%, transparent),
+      color-mix(in srgb, var(--acento) var(--ambiente-acento), transparent),
       transparent 70%
     ),
     radial-gradient(
       45% 40% at 100% 8%,
-      color-mix(in srgb, var(--color-aprendizaje) 12%, transparent),
+      color-mix(
+        in srgb,
+        var(--color-aprendizaje) var(--ambiente-apoyo),
+        transparent
+      ),
       transparent 70%
     ),
     var(--lienzo);
@@ -48,7 +53,7 @@
 /* 3. Navegación con color: icono del color de su sección, destino activo relleno. */
 .glass-rail nav a svg,
 .mobile-dock a svg {
-  color: var(--acento);
+  color: color-mix(in srgb, var(--acento) var(--acento-en-icono), currentColor);
   transition:
     transform var(--duracion-estado) var(--curva-rebote),
     color var(--duracion-estado) var(--curva-salida);
@@ -63,15 +68,27 @@
 }
 .glass-rail nav a[aria-current] .nav-indicator,
 .mobile-dock a[aria-current] .nav-indicator {
-  background: var(--acento-suave);
-  border-color: color-mix(in srgb, var(--acento) 55%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--acento) var(--acento-en-nav-fondo),
+    var(--nav-fondo-base)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--acento) var(--acento-en-nav-borde),
+    var(--linea)
+  );
 }
 /* La etiqueta ocupa todo el riel: el relleno activo también, para no cortarla. */
 .glass-rail nav a[aria-current] .nav-indicator {
   inset-inline: calc(var(--espacio-4) * -1);
 }
 .glass-rail nav a[aria-current]::before {
-  background: var(--acento);
+  background: color-mix(
+    in srgb,
+    var(--acento) var(--acento-en-nav-marca),
+    var(--texto-2)
+  );
   width: var(--espacio-4);
   height: var(--espacio-24);
   border-radius: var(--radio-pildora);
@@ -128,12 +145,16 @@
   padding: var(--espacio-16) var(--espacio-24);
   border-radius: var(--radio-panel);
   border: var(--borde-ancho) solid
-    color-mix(in srgb, var(--acento) 45%, transparent);
+    color-mix(
+      in srgb,
+      var(--acento) var(--acento-en-atajo-borde),
+      var(--linea-fuerte)
+    );
   background:
     linear-gradient(
       135deg,
-      color-mix(in srgb, var(--acento) 22%, transparent),
-      color-mix(in srgb, var(--acento) 6%, transparent)
+      color-mix(in srgb, var(--acento) var(--acento-en-atajo), transparent),
+      transparent
     ),
     var(--sup-1);
   color: var(--texto);
@@ -160,8 +181,16 @@
   width: var(--espacio-64);
   height: var(--espacio-64);
   border-radius: var(--radio-tarjeta);
-  background: var(--acento);
-  color: var(--sobre-acento);
+  background: color-mix(
+    in srgb,
+    var(--acento) var(--acento-en-atajo-icono),
+    var(--sup-3)
+  );
+  color: color-mix(
+    in srgb,
+    var(--sobre-acento) var(--atajo-tinta-sobre),
+    color-mix(in srgb, var(--acento) var(--atajo-tinta-acento), var(--texto))
+  );
   transition: transform var(--duracion-estado) var(--curva-rebote);
 }
 .inicio-atajo:hover .inicio-atajo-icono {
@@ -231,12 +260,16 @@
 /* 9. Carátulas con color de verdad: el tinte del servidor llega apagado
    (saturación ≤45 %); se aviva mezclándolo con el color de la sección. */
 .cartel {
-  --tinte-vivo: color-mix(in oklch, var(--tinte) 45%, var(--acento));
+  --tinte-vivo: color-mix(
+    in oklch,
+    var(--tinte) var(--tinte-propio),
+    var(--acento)
+  );
 }
 
 /* 10. Cifras protagonistas en el color de la sección. */
 .cifra-heroe .cifra-valor {
-  color: var(--acento);
+  color: color-mix(in srgb, var(--acento) var(--acento-en-cifra), var(--texto));
 }
 
 /* 11. Ritmo: los atajos pertenecen al título, no flotan lejos del contenido. */

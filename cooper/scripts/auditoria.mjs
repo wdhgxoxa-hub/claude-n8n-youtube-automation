@@ -114,7 +114,9 @@ try {
   mkdirSync(outputDir, { recursive: true });
   // La matriz de rendimiento compara las mismas 23 rutas y ambos dispositivos.
   // --movimiento conserva además la matriz de dos temas de la auditoría visual.
-  for (const theme of performanceAudit ? ["oscuro"] : ["oscuro", "claro"]) {
+  for (const theme of performanceAudit
+    ? ["feria"]
+    : ["feria", "sala", "dia"]) {
     const profile = await context.request.patch("/api/perfil", {
       data: {
         name: "Ensayo Lighthouse",
@@ -224,7 +226,7 @@ try {
         writeFileSync(`${outputDir}/${name}.html`, result.report);
         const summary = {
           path,
-          theme: path === "/entrar" ? "oscuro (entrada pública)" : theme,
+          theme: path === "/entrar" ? "feria (entrada pública)" : theme,
           formFactor,
           fecha: result.lhr.fetchTime,
           scores: Object.fromEntries(

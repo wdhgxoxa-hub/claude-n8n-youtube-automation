@@ -98,19 +98,22 @@
   height: 100%;
   object-fit: contain;
 }
-/* Medio real en preparación o no disponible: caja reservada, sin carátula. */
-/* Brillo de espera sobre la carátula mientras llega el medio real. */
+/* Medio real en camino: caja reservada con un brillo de espera, sin carátula. */
 .medio-espera {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    100deg,
-    var(--transparente) 30%,
-    var(--linea-fuerte) 50%,
-    var(--transparente) 70%
-  );
-  background-size: 220% 100%;
+  background:
+    linear-gradient(
+      100deg,
+      var(--transparente) 30%,
+      var(--linea) 50%,
+      var(--transparente) 70%
+    ),
+    var(--sup-2);
+  background-size:
+    220% 100%,
+    auto;
   animation: medio-espera 1.8s var(--curva-entrada-salida) infinite;
 }
 @keyframes medio-espera {
@@ -124,7 +127,7 @@
 @media (prefers-reduced-motion: reduce) {
   .medio-espera {
     animation: none;
-    opacity: 0;
+    background: var(--sup-2);
   }
 }
 /* Medio protagonista del detalle sin archivo: conserva la proporción de la visita. */

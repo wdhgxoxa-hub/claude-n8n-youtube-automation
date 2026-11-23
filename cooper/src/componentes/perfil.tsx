@@ -6,6 +6,7 @@ import { api, useEspacio, Heading, Notice } from "./espacio";
 import { subir } from "./grabador";
 import { usePausaMovimiento } from "./movimiento";
 import { PreferenciasWhatsApp } from "./whatsapp";
+import { Apariencia } from "./apariencia";
 import "./resto-diseno.css";
 export function Perfil() {
   const id = useId();
@@ -112,7 +113,7 @@ export function Perfil() {
             </label>
             <div className="form-divider" />
             <h2>Tu espacio</h2>
-            <input type="hidden" name="theme" value="oscuro" />
+            <Apariencia />
             <input type="hidden" name="home" value="fabrica" />
             <div className="perfil-movimiento">
               <div>

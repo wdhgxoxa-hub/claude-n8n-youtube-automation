@@ -99,7 +99,7 @@ for (const width of widths)
     await login(page);
     const state: Estado = await (await page.request.get("/api/estado")).json();
     await page.request.patch("/api/perfil", {
-      data: { ...state.user, theme: "oscuro" },
+      data: { ...state.user, theme: "feria" },
     });
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: "reduce" });

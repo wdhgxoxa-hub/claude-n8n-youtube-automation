@@ -17,6 +17,19 @@ Espaciado base 4: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96. Radios: 8 (c
 Retícula: escritorio 12 col, contenedor máx 1440, gutter 24, margen 32 (≥1024) ; tablet 8 col margen 24; móvil 4 col, gutter 16, margen 16. Alturas de fila y medios alineados a múltiplos de 8.
 Profundidad: 3 niveles. Vidrio (solo capas flotantes: barra, hojas, Cooper, menús): fondo rgba(17,17,20,.72), backdrop-filter blur(24px) saturate(160%), borde --linea, brillo interior superior 1px rgba(255,255,255,.06), sombra 0 24px 64px rgba(0,0,0,.6). Tarjetas: sin sombra, elevan con translateY(-2px)+borde fuerte al hover.
 
+### 1.1 Temas de apariencia (v2, 22-11-2026)
+La línea «tema oscuro, único tema de esta versión» de arriba queda sustituida: hay **tres temas**, elegidos por persona en «Tu perfil › Apariencia» y guardados en su perfil (`users.theme`), no en el dispositivo. Los valores exactos viven solo en `cooper/src/app/tokens.css`; la paleta de esta sección §1 es la del tema «Sala».
+- **Feria** (por defecto) — alegre: base tinta azul `#0B0B1E`, texto blanco y un color por sección (Inicio coral, Fábrica amarillo, Publicados menta, Aprendizaje lila, Marcas cielo, Más rosa) en iconos, cifras héroe, foco y luz de ambiente.
+- **Sala** — sobria: la sala de proyección original (negro, grises, un solo acento Tally). Único cambio: `--texto-3` sube de `#71717A` a `#8B8B94` para cumplir AA también sobre `--sup-3`.
+- **Día** — clara: papel `#F5F5F7`, superficies blancas, texto `#1D1D1F`, un solo acento azul `#0060C8` y vidrio esmerilado claro en lo que flota (riel, barra, hojas, Cooper, menús).
+Reglas:
+- Un tema solo cambia **color y material**. Retícula, tipografía, espaciado, radios, movimiento y textos son comunes; ninguna hoja CSS se bifurca por tema (lo vigila `tests/tokens-diseno.test.ts`).
+- El carácter de cada tema se expresa con porcentajes (`--acento-en-icono`, `--acento-en-cifra`, `--acento-en-atajo`, `--ambiente-acento`…), no con colores derivados: `--acento` cambia por sección y un `var()` declarado en `:root` quedaría resuelto con el acento de `:root`.
+- **Cine:** los medios (`.medio`, `.cartel` y lo marcado con `data-cine`) son siempre una sala a oscuras, también en «Día»; dentro de ellos vuelven los tokens oscuros para que el texto sobre imagen se lea.
+- Contraste: todo texto y todo acento usado como texto cumple AA (4,5:1) sobre las cuatro superficies de su tema; lo comprueba el guardián sobre los tokens y `e2e/temas.spec.ts` sobre las pantallas.
+- El servidor pinta el tema en `<html data-tema>` (sin parpadeo ni script en línea); `data-theme` conserva el esquema (`oscuro`/`claro`). Sin sesión se usa «Feria».
+- Añadir un tema = un bloque `[data-tema="…"]` en `tokens.css`, su entrada en `src/lib/temas.ts` y su paleta en el guardián. Tope acordado: tres.
+
 ## 2. Partitura de movimiento (Motion para React o WAAPI; una sola librería)
 Duraciones: 120 (presión) · 240 (hover/estado) · 420 (entrada) · 640 (ruta / elemento compartido). Curvas: salida cubic-bezier(.16,1,.3,1); entrada-salida cubic-bezier(.65,0,.35,1); hojas con muelle (stiffness 380, damping 34).
 - Rutas: View Transitions API. Elemento compartido: la miniatura de un video se convierte en el reproductor del detalle (view-transition-name por id). El resto hace fundido + desplazamiento 12px, 420ms. Fallback sin API: fundido 240ms.

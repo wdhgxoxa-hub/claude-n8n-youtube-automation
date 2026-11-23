@@ -24,7 +24,7 @@ for (const width of [1440, 390]) {
     expect(
       (
         await page.request.patch("/api/perfil", {
-          data: { ...state.user, theme: "oscuro" },
+          data: { ...state.user, theme: "feria" },
         })
       ).ok(),
     ).toBe(true);

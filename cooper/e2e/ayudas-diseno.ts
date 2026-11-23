@@ -40,3 +40,16 @@ export async function abrirMasDestinos(page: Page) {
   await expect(menu).toBeVisible();
   return menu;
 }
+
+/**
+ * El recorrido de etapas entra desde opacidad 0,45 (fabrica-vista.tsx). Una
+ * auditoría de contraste tomada a mitad de esa entrada mide un color que nadie
+ * llega a leer: se espera a que termine antes de medir.
+ */
+export async function recorridoAsentado(page: Page) {
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll(".journey li")].every(
+      (etapa) => getComputedStyle(etapa).opacity === "1",
+    ),
+  );
+}

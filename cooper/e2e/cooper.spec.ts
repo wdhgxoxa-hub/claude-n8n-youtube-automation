@@ -608,7 +608,7 @@ test("auditoría AA de todas las pantallas, anchuras y el tema oscuro", async ({
       data: {
         name: state.user.name,
         image: state.user.image,
-        theme,
+        theme: "feria",
         home: "chat",
         whatsapp: "",
       },

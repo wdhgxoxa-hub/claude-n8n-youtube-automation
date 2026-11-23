@@ -1,6 +1,6 @@
 # ESTADO — Fábrica de videos + Cooper
 
-Última actualización: 2026-11-22 18:50 (Lima).
+Última actualización: 2026-11-22 22:10 (Lima).
 
 ## Qué es
 
@@ -8,6 +8,8 @@
 - Claude dirige y revisa; Codex realiza misiones en ramas/worktrees propios, con informes en `docs/informes/`.
 
 ## Hecho
+
+- **22-11-2026, 22:10 Lima — temas de apariencia implementados y probados en la rama `alegria` (NO integrado, NO desplegado):** tres temas por persona —«Feria» (alegre, por defecto), «Sala» (la anterior, sobria) y «Día» (clara, vidrio esmerilado)— elegibles en «Tu perfil › Apariencia», guardados en el perfil y pintados por el servidor; migración `0020_temas`. Probado en la nube con Chromium: lint/tipos/build 0/0, **711/712 unitarias** (solo Sentinel ausente), **237/237 flujos**, **E2E 104 pasan / 21 fallan por entorno** (12 sin Firefox/WebKit, 6 sin Sentinel, 3 por grabación de video), barrido de 108 páginas (3 temas × 18 rutas × 2 anchos) con axe 0, contraste AA y sin desbordes. **No ejecutado:** Firefox, WebKit, Sentinel, Lighthouse, datos reales. [Informe](informes/temas-apariencia.md).
 
 - **22-11-2026, Lima — despliegue-final: rediseño «Sala de proyección» implementado, probado, integrado, publicado y desplegado.** Commit `bc0693b4` en https://cooper.cooperestudio.com (imagen `sha256:fa120a2d…`), con respaldo sellado y reversa aislada PASS; Caddy con el parche SSE de diseno-conexion; delta n8n de diseno-medios PASS (una sola pila, 0 entradas reabiertas, 0 disparadores nuevos, sin publicación). Puerta: lint/tipos/build 0 avisos, **708/708 unitarias, 120/120 E2E, 237/237 flujos**; rondas Sentinel + Playwright (Chromium, Firefox y WebKit en 6 anchos) **164/164 y 164/164**; movimiento real 17/17 a 60 fps; Lighthouse móvil Inicio 0,90 y Publicados 1,00, accesibilidad 1,00. Producción sin sesión PASS (22 pantallas protegidas, 6 API en 401, axe 0, Sentinel 0 hallazgos). **No verificado:** pantallas con sesión y medios reales (se generan en la primera visita con sesión). [Informe](informes/despliegue-final.md).
 
@@ -162,6 +164,7 @@ Los registros que siguen conservan los cortes históricos de cada frente. Los pe
 15. Medios reales: abrir una vez Inicio y Publicados con su sesión para que se generen pósteres y vistas previas; después Claude repite el recuento. Hoy: 0 medios generados; 3 de 5 videos quedarán con carátula tipográfica porque nunca se montaron. [Detalle](informes/despliegue-final.md#medios-reales).
 16. Decidir si el tour «Conocer el estudio» (hoy sin uso) se retira del código o vuelve al Inicio.
 17. Decidir si se aceptan las fuentes enteras (Inicio en 0,90 justo en Lighthouse) o se recortan para ganar margen.
+18. Temas de apariencia: ver las capturas de `evidencias-diseno/temas/`, aprobar los tres temas y «Feria» como tema por defecto, y autorizar en la PC la puerta completa (Firefox, WebKit, Sentinel, Lighthouse) y el despliegue de la rama `alegria`. [Detalle](informes/temas-apariencia.md#pendientes-de-walter).
 
 ## Ideas conversadas
 

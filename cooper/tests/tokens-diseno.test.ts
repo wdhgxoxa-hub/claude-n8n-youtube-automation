@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import ts from "typescript";
+import { TEMAS, TEMAS_INFO, TEMA_INICIAL, temaValido } from "@/lib/temas";
 
 const root = join(process.cwd(), "src");
 const source = join(root, "app/tokens.css");
@@ -51,24 +52,105 @@ function invalidDeclaration(property: string, value: string) {
   return null;
 }
 
+const SECCIONES = [
+  "inicio",
+  "fabrica",
+  "publicados",
+  "aprendizaje",
+  "marcas",
+  "mas",
+];
+const PALETAS: Record<string, Record<string, string>> = {
+  feria: {
+    lienzo: "#0B0B1E",
+    "sup-1": "#121230",
+    "sup-2": "#1A1A40",
+    "sup-3": "#24244F",
+    texto: "#FFFFFF",
+    "texto-2": "#CFCFEA",
+    "texto-3": "#A3A3CC",
+    tally: "#FF6A45",
+    sube: "#2EE6A6",
+    baja: "#FF7A8A",
+    aviso: "#FFD23F",
+    info: "#5CC8FF",
+  },
+  sala: {
+    lienzo: "#000000",
+    "sup-1": "#0A0A0C",
+    "sup-2": "#111114",
+    "sup-3": "#18181C",
+    texto: "#F5F5F7",
+    "texto-2": "#A1A1AA",
+    "texto-3": "#8B8B94",
+    tally: "#FF4D2E",
+    sube: "#3DDC97",
+    baja: "#FF6B6B",
+    aviso: "#FFC53D",
+    info: "#7CC4FF",
+  },
+  dia: {
+    lienzo: "#F5F5F7",
+    "sup-1": "#FFFFFF",
+    "sup-2": "#F0F0F4",
+    "sup-3": "#E6E6EC",
+    texto: "#1D1D1F",
+    "texto-2": "#424245",
+    "texto-3": "#5F5F66",
+    tally: "#0060C8",
+    sube: "#007548",
+    baja: "#C0271F",
+    aviso: "#8A5300",
+    info: "#0060C8",
+  },
+};
+/** Tokens efectivos de un tema: los de «feria» (base) más los que el tema cambia. */
+function tokensDe(css: string, tema: string) {
+  const leer = (selector: RegExp) => {
+    const cuerpo = css.match(selector)?.[1] ?? "";
+    return Object.fromEntries(
+      [...cuerpo.matchAll(/(--[\w-]+|color-scheme)\s*:\s*([^;]+);/g)].map(
+        (m) => [m[1].replace(/^--/, ""), m[2].trim()],
+      ),
+    );
+  };
+  const base = leer(/:root,\s*\[data-tema="feria"\]\s*\{([^}]+)\}/);
+  return tema === "feria"
+    ? base
+    : {
+        ...base,
+        ...leer(new RegExp(`\\n\\[data-tema="${tema}"\\]\\s*\\{([^}]+)\\}`)),
+      };
+}
+/** Sigue un var(--otro) hasta el color literal. */
+function resolver(tokens: Record<string, string>, nombre: string): string {
+  const valor = tokens[nombre];
+  const referencia = valor?.match(/^var\(--([\w-]+)\)$/)?.[1];
+  return referencia ? resolver(tokens, referencia) : valor;
+}
+function luminancia(hex: string) {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contraste(a: string, b: string) {
+  expect(a, "color literal").toMatch(/^#[\da-f]{6}$/i);
+  expect(b, "color literal").toMatch(/^#[\da-f]{6}$/i);
+  const [claro, oscuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (oscuro + 0.05);
+}
+
 describe("guardián de Sala de proyección", () => {
-  it("conserva los colores obligatorios y una única fuente de tokens", () => {
+  it("conserva las tres paletas y una única fuente de tokens", () => {
     const css = clean(readFileSync(source, "utf8"));
-    for (const [token, value] of Object.entries({
-      lienzo: "#0B0B1E",
-      "sup-1": "#121230",
-      "sup-2": "#1A1A40",
-      "sup-3": "#24244F",
-      texto: "#FFFFFF",
-      "texto-2": "#CFCFEA",
-      "texto-3": "#A3A3CC",
-      tally: "#FF6A45",
-      sube: "#2EE6A6",
-      baja: "#FF7A8A",
-      aviso: "#FFD23F",
-      info: "#5CC8FF",
-    }))
-      expect(css).toMatch(new RegExp(`--${token}:\\s*${value}\\s*;`, "i"));
+    for (const [tema, paleta] of Object.entries(PALETAS))
+      for (const [token, value] of Object.entries(paleta))
+        expect(
+          tokensDe(css, tema)[token]?.toUpperCase(),
+          `${tema} --${token}`,
+        ).toBe(value);
     const radii = [...css.matchAll(/--radio-[\w-]+:\s*([\d.]+)px/g)].map((m) =>
       Number(m[1]),
     );
@@ -82,7 +164,72 @@ describe("guardián de Sala de proyección", () => {
     expect(
       sizes.every((n) => [12, 13, 15, 17, 20, 28, 40, 48, 56, 72].includes(n)),
     ).toBe(true);
-    expect(css).not.toMatch(/data-theme.*claro|color-scheme:\s*light/);
+    // Solo «Día» es claro, y solo él (y su vuelta a oscuro en los medios) lo declara.
+    expect(css.match(/color-scheme:\s*light/g)).toHaveLength(1);
+    expect(tokensDe(css, "dia")["color-scheme"]).toBe("light");
+  });
+
+  it("cada tema cumple contraste AA en texto y en sus acentos", () => {
+    const css = clean(readFileSync(source, "utf8"));
+    for (const tema of ["feria", "sala", "dia"]) {
+      const t = tokensDe(css, tema);
+      const fondos = ["lienzo", "sup-1", "sup-2", "sup-3"].map((k) => t[k]);
+      // Texto corriente y de apoyo: AA (4,5:1) sobre toda superficie.
+      for (const texto of ["texto", "texto-2", "texto-3"])
+        for (const fondo of fondos)
+          expect(
+            contraste(t[texto], fondo),
+            `${tema}: --${texto} sobre ${fondo}`,
+          ).toBeGreaterThanOrEqual(4.5);
+      // Acentos y estados usados como texto o icono: AA sobre toda superficie.
+      for (const color of [
+        "tally",
+        "sube",
+        "baja",
+        "aviso",
+        "info",
+        ...SECCIONES.map((s) => `color-${s}`),
+      ])
+        for (const fondo of fondos)
+          expect(
+            contraste(resolver(t, color), fondo),
+            `${tema}: --${color} sobre ${fondo}`,
+          ).toBeGreaterThanOrEqual(4.5);
+      // Tinta sobre rellenos de color (botón principal, iconos de atajo).
+      expect(
+        contraste(resolver(t, "sobre-tally"), t.tally),
+        `${tema}: tinta sobre --tally`,
+      ).toBeGreaterThanOrEqual(4.5);
+      for (const s of SECCIONES)
+        expect(
+          contraste(t["sobre-acento"], resolver(t, `color-${s}`)),
+          `${tema}: tinta sobre --color-${s}`,
+        ).toBeGreaterThanOrEqual(4.5);
+      // Cine: el texto sobre medios se lee en cualquier tema.
+      for (const texto of ["cine-texto", "cine-texto-2"])
+        for (const fondo of ["cine-lienzo", "cine-sup"])
+          expect(
+            contraste(t[texto], t[fondo]),
+            `${tema}: --${texto} sobre --${fondo}`,
+          ).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it("los temas del código, de la base y del CSS son los mismos", () => {
+    const css = clean(readFileSync(source, "utf8"));
+    const enCss = [...css.matchAll(/\[data-tema="(\w+)"\]\s*\{/g)].map(
+      (m) => m[1],
+    );
+    expect(new Set(enCss)).toEqual(new Set(TEMAS));
+    expect(Object.keys(TEMAS_INFO).sort()).toEqual([...TEMAS].sort());
+    expect(TEMAS).toContain(TEMA_INICIAL);
+    expect(temaValido("oscuro")).toBe(TEMA_INICIAL);
+    expect(temaValido(undefined)).toBe(TEMA_INICIAL);
+    expect(temaValido("dia")).toBe("dia");
+    for (const tema of TEMAS)
+      expect(tokensDe(css, tema)["color-scheme"] ?? "dark").toBe(
+        TEMAS_INFO[tema].esquema === "claro" ? "light" : "dark",
+      );
   });
 
   it("impide colores, tamaños y radios sueltos en CSS y estilos React", () => {
@@ -103,7 +250,8 @@ describe("guardián de Sala de proyección", () => {
         )) {
           report(match[1], match[2], match.index);
         }
-        expect(content, path).not.toMatch(/data-theme.*claro/);
+        // Los temas solo se declaran en tokens.css: ninguna hoja se bifurca por tema.
+        expect(content, path).not.toMatch(/data-theme|data-tema="/);
       } else {
         const parsed = ts.createSourceFile(
           path,
