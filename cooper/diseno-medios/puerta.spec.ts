@@ -106,7 +106,14 @@ for (const width of widths)
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     page.on("console", (m) => {
-      if (["warning", "error"].includes(m.type())) errors.push(m.text());
+      if (!["warning", "error"].includes(m.type())) return;
+      // «/inexistente» se visita para capturar la pantalla de no encontrado: su
+      // documento responde 404 a propósito y Chromium lo anota en consola. Solo
+      // se aparta ese aviso exacto; cualquier otro recurso con 404 sigue fallando.
+      const pagina404 =
+        new URL(m.location().url || "about:blank").pathname ===
+          "/inexistente" && m.text().includes("status of 404");
+      if (!pagina404) errors.push(m.text());
     });
     const paths = [
       ["inicio", "/"],
@@ -150,8 +157,8 @@ for (const width of widths)
       await expect(
         page.getByText("Consultando la fábrica…", { exact: true }),
       ).toHaveCount(0);
-      if (name === "fabrica" && width < 768)
-        await page.getByRole("tab", { name: /Fábrica/ }).click();
+      // Inicio ya no esconde la Fábrica tras una pestaña en móvil: la pantalla
+      // se captura tal cual, con las mismas comprobaciones.
       if (name === "voces" || name === "crear-voz")
         await page.getByRole("button", { name: "Voces", exact: true }).click();
       if (name === "crear-avatar" || name === "crear-voz")

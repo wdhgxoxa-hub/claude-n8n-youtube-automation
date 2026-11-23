@@ -87,7 +87,12 @@ for (const theme of ["feria", "sala"])
       for (const [i, path] of (await rutas(page)).entries()) {
         const start = Date.now();
         await page.goto(path);
-        await expect(page.locator(".connection")).toHaveText("En vivo");
+        // El indicador «En vivo» se retiró del armazón; la conexión en vivo se
+        // sigue exigiendo, ahora por su estado en el espacio de trabajo.
+        await expect(page.locator(".workspace")).toHaveAttribute(
+          "data-conexion",
+          "activa",
+        );
         await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         const respuestaMs = Date.now() - start;
         expect(
@@ -168,6 +173,10 @@ for (const theme of ["feria", "sala"])
             await summary.click();
           }
         if (path === "/canales") {
+          // El interruptor vive ahora dentro del desplegable «Noticias» del canal.
+          const noticias = page.locator("details.canal-noticias").first();
+          await noticias.locator("summary").click();
+          await expect(noticias).toHaveAttribute("open", "");
           const modo = page
             .getByRole("button", { name: /Modo noticia:/ })
             .first();
@@ -179,6 +188,7 @@ for (const theme of ["feria", "sala"])
           );
           await modo.click();
           await expect(modo).toHaveAttribute("aria-pressed", before!);
+          await noticias.locator("summary").click();
         }
         await page.getByRole("heading", { level: 1 }).click();
         await page.waitForTimeout(800); // Terminar las transiciones provocadas por los filtros.
@@ -187,7 +197,10 @@ for (const theme of ["feria", "sala"])
           fullPage: true,
         });
         if (width < 768) {
-          await page.getByRole("button", { name: "Abrir navegación" }).click();
+          await page
+            .getByRole("button", { name: "Más destinos" })
+            .first()
+            .click();
           await expect(
             page.getByRole("link", { name: "Aprendizaje", exact: true }),
           ).toBeVisible();
