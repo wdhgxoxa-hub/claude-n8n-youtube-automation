@@ -343,7 +343,11 @@ try {
   }
   if (!ready) throw new Error("El servidor aislado no arrancó.");
   browser = await chromium.launch();
-  const setup = await browser.newContext({ baseURL: base });
+  // La API exige el mismo control CSRF que el navegador (Referer propio).
+  const setup = await browser.newContext({
+    baseURL: base,
+    extraHTTPHeaders: { Referer: base },
+  });
   const auth = await setup.request.post(
     `http://127.0.0.1:${fixturePort}/sesion`,
     {
