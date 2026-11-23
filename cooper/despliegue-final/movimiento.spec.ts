@@ -33,7 +33,14 @@ import { abrirCooper, abrirMasDestinos, cerrarCooper } from "../e2e/ayudas-disen
  * grabación de pantalla resta fotogramas y falsearía la cifra.
  */
 
-const salida = resolve("../evidencias-diseno/despliegue-final");
+// COOPER_MOVIMIENTO_SALIDA_DIR evita pisar la evidencia ya guardada en git;
+// COOPER_MOVIMIENTO_TEMA (feria|sala|dia) mide un tema concreto.
+const salida = resolve(
+  process.env.COOPER_MOVIMIENTO_SALIDA_DIR ?? "../evidencias-diseno/despliegue-final",
+);
+const temaMovimiento = process.env.COOPER_MOVIMIENTO_TEMA;
+if (temaMovimiento && !["feria", "sala", "dia"].includes(temaMovimiento))
+  throw new Error("COOPER_MOVIMIENTO_TEMA no válido.");
 const crudos = resolve(salida, "videos-crudos");
 const carpetaMedios = resolve("diseno-fabrica-video/medios");
 const prefijoMedios = "/__despliegue-medios";
@@ -185,6 +192,19 @@ async function abrir(
     },
   });
   expect(sesion.ok()).toBe(true);
+  if (temaMovimiento) {
+    const { user } = await (await context.request.get("/api/estado")).json();
+    const perfil = await context.request.patch("/api/perfil", {
+      data: {
+        name: user.name,
+        image: user.image,
+        theme: temaMovimiento,
+        home: user.home,
+        whatsapp: user.whatsapp ?? "",
+      },
+    });
+    expect(perfil.ok()).toBe(true);
+  }
   return {
     context,
     page,
