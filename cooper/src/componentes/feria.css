@@ -208,7 +208,10 @@
   color: var(--texto-2);
   align-self: start;
 }
-@media (max-width: 767px) {
+/* Se mide contra el ancho de Inicio (contenedor `.inicio-estudio`), no contra la
+   ventana: con Cooper abierto a 768 px el contenido se estrecha y tres columnas
+   no caben (cada atajo pide al menos icono + márgenes + la palabra más larga). */
+@container (max-width: 719px) {
   .inicio-atajos {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--espacio-12);
