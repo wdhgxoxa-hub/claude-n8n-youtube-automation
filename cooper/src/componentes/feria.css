@@ -79,11 +79,38 @@
     var(--linea)
   );
 }
-/* La etiqueta ocupa todo el riel: el relleno activo también, para no cortarla. */
-.glass-rail nav a[aria-current] .nav-indicator {
-  inset-inline: calc(var(--espacio-4) * -1);
+/* Riel recogido: el relleno activo es una píldora detrás del icono y la
+   etiqueta queda libre debajo. Así ninguna palabra larga («Aprendizaje») toca
+   ni rebasa una caja. Desplegado, vuelve a cubrir la fila entera. */
+.glass-rail nav a .nav-indicator {
+  inset: var(--espacio-4) var(--espacio-8) auto;
+  height: var(--espacio-32);
+  border-radius: var(--radio-pildora);
+}
+.glass-rail nav a {
+  justify-content: flex-start;
+  /* Centra el icono (20px) en la píldora de 32px que empieza a 4px. */
+  padding-top: calc(var(--espacio-8) + var(--espacio-4) / 2);
+  gap: var(--espacio-8);
 }
 .glass-rail nav a[aria-current]::before {
+  display: none;
+}
+.glass-rail:not([data-recogido]):hover nav a,
+.glass-rail:has(:focus-visible) nav a {
+  justify-content: flex-start;
+  padding-top: 0;
+  gap: var(--espacio-16);
+}
+.glass-rail:not([data-recogido]):hover nav a .nav-indicator,
+.glass-rail:has(:focus-visible) nav a .nav-indicator {
+  inset: 0;
+  height: auto;
+  border-radius: var(--radio-control);
+}
+.glass-rail:not([data-recogido]):hover nav a[aria-current]::before,
+.glass-rail:has(:focus-visible) nav a[aria-current]::before {
+  display: block;
   background: color-mix(
     in srgb,
     var(--acento) var(--acento-en-nav-marca),

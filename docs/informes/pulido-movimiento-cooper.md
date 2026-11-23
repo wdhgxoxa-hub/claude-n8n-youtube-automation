@@ -17,6 +17,7 @@ Auditoría en vivo de Claude en producción (tema «Día», sesión de Walter) t
 | 6 | Tras elegir un destino, el riel seguía desplegado tapando el título de la pantalla nueva. | Se recoge al elegir y vuelve a desplegarse cuando el cursor sale y entra. Con teclado se despliega con el foco visible. |
 | 7 | Las respuestas eran texto plano con guiones. | Párrafos, listas y **negritas** reales (`src/lib/formato-mensaje.ts`). No interpreta HTML ni enlaces: lo demás queda como texto. |
 | 8 | Lo ya leído se cortaba en seco bajo la cabecera. | Se desvanece. El indicador «pensando» lleva la cara de Cooper. |
+| 9 | En el riel recogido, «Aprendizaje» tocaba los bordes de su caja activa y pisaba la marca lateral (captura de Walter, 23-11 05:54). Lo había visto el día anterior y lo dejé pasar. | El relleno activo es una píldora detrás del icono y la etiqueta queda libre debajo, con 4 px de aire a cada lado del riel. Desplegado, vuelve a cubrir la fila. Medido en los tres temas. |
 
 ## Evidencia (nube, Chromium, sin GPU)
 | Comprobación | Resultado |
