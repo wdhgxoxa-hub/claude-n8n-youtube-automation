@@ -13,6 +13,9 @@ import { useEspacio } from "./espacio";
 import { resorte, useMovimientoReducido } from "./movimiento";
 import { ChatCooper as Chat } from "./chat-cooper";
 
+/** Momento en que la hoja, aún asentándose, ya puede mostrar su contenido. */
+const REVELADO_MS = 220;
+
 export function CooperFlotante({
   abierto,
   cambiar,
@@ -29,6 +32,8 @@ export function CooperFlotante({
   const opener = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const dragStart = useRef<number | null>(null);
+  const revelado = useRef(0);
+  useEffect(() => () => window.clearTimeout(revelado.current), []);
   const dragY = useMotionValue(0);
   useLayoutEffect(() => {
     // Cambiar la preferencia con la hoja abierta no inicia otra proyección.
@@ -187,12 +192,20 @@ export function CooperFlotante({
           aria-label="Cooper, tu compañero"
           layoutId={reduced ? undefined : "cooper-origen"}
           transition={reduced ? { duration: 0.12 } : resorte}
-          onLayoutAnimationStart={() =>
-            panel.current?.setAttribute("data-projecting", "true")
-          }
-          onLayoutAnimationComplete={() =>
-            panel.current?.removeAttribute("data-projecting")
-          }
+          onLayoutAnimationStart={() => {
+            panel.current?.setAttribute("data-projecting", "true");
+            // El resorte tarda en asentar su último 4 %; el contenido entra
+            // antes, cuando la hoja ya tiene su forma, para no dejarla vacía.
+            window.clearTimeout(revelado.current);
+            revelado.current = window.setTimeout(
+              () => panel.current?.removeAttribute("data-projecting"),
+              REVELADO_MS,
+            );
+          }}
+          onLayoutAnimationComplete={() => {
+            window.clearTimeout(revelado.current);
+            panel.current?.removeAttribute("data-projecting");
+          }}
         >
           <div
             className="cooper-drag"
@@ -224,9 +237,15 @@ export function CooperFlotante({
             <span />
           </div>
           <div className="cooper-panel-heading">
-            <span>
-              <strong>Cooper</strong>
-              <small>{contexto}</small>
+            <span className="cooper-cabecera">
+              {/* El compañero sube a la cabecera: sigue presente mientras se conversa. */}
+              <span className="cooper-cabecera-cara">
+                <CooperPresencia size={40} />
+              </span>
+              <span>
+                <strong>Cooper</strong>
+                <small>{contexto}</small>
+              </span>
             </span>
             <div>
               <button

@@ -147,7 +147,9 @@ export function Espacio({
     [conexion, setConexion] = useState<EstadoConexion>("iniciando"),
     [avisoConexion, setAvisoConexion] = useState(false),
     [menu, setMenu] = useState(false),
-    [cooper, setCooper] = useState(false);
+    [cooper, setCooper] = useState(false),
+    // Solo tras abrir o cerrar a mano: en la primera pintura nada se anima.
+    [cooperMovido, setCooperMovido] = useState(false);
   const connected = conexion === "activa";
   const [marcaContexto, definirMarca] = useState<{
     id: string;
@@ -220,6 +222,12 @@ export function Espacio({
   const sidebar = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLElement>(null);
   const previousPath = useRef(path);
+  // Identidad estable: CooperFlotante devuelve el foco cuando esta función
+  // cambia, y una nueva en cada pintura se lo quitaba a quien escribía.
+  const cambiarCooper = useCallback((abierto: boolean) => {
+    setCooperMovido(true);
+    setCooper(abierto);
+  }, []);
   const refresh = useCallback(async () => {
     receive(await api<Estado>("estado", undefined, "GET"));
   }, [receive]);
@@ -310,6 +318,7 @@ export function Espacio({
               <Transiciones />
               <div
                 className={`studio-shell ${cooper ? "cooper-open" : ""}`}
+                data-cooper-movido={cooperMovido || undefined}
                 inert={menu || (cooper && movil)}
               >
                 <a className="skip" href="#contenido">
@@ -317,6 +326,20 @@ export function Espacio({
                 </a>
                 <aside
                   className="glass-rail"
+                  onClick={(event) => {
+                    if (!(event.target as Element).closest("a[href]")) return;
+                    // Se recoge hasta que el cursor se mueva fuera de él. No
+                    // sirve mouseleave: el relevo de pantalla lo dispara con
+                    // el cursor todavía encima.
+                    const riel = event.currentTarget;
+                    riel.dataset.recogido = "";
+                    const soltar = (movimiento: PointerEvent) => {
+                      if (riel.contains(movimiento.target as Node)) return;
+                      delete riel.dataset.recogido;
+                      document.removeEventListener("pointermove", soltar);
+                    };
+                    document.addEventListener("pointermove", soltar);
+                  }}
                   aria-label="Navegación del estudio"
                 >
                   <Link
@@ -460,7 +483,7 @@ export function Espacio({
               <PildoraConexion aviso={avisoConexion} />
               <CooperFlotante
                 abierto={cooper}
-                cambiar={setCooper}
+                cambiar={cambiarCooper}
                 movil={movil}
               />
               {menu && (

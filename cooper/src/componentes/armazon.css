@@ -15,6 +15,31 @@
 .cooper-open {
   padding-right: calc(var(--cooper-panel) + var(--espacio-24));
 }
+/* La página le hace sitio a Cooper. Animar el ancho recalcula toda la pantalla
+   en cada cuadro (medido: de ~48 a ~12 cuadros en 0,9 s); en su lugar el
+   contenido se recoloca de una vez y reaparece con un fundido que solo usa
+   opacidad. Dos nombres de animación para que se repita al abrir y al cerrar. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .studio-shell[data-cooper-movido].cooper-open main#contenido {
+    animation: ceder-sitio var(--duracion-estado) var(--curva-salida) both;
+  }
+  .studio-shell[data-cooper-movido]:not(.cooper-open) main#contenido {
+    animation: recobrar-sitio var(--duracion-estado) var(--curva-salida) both;
+  }
+  [data-motion="paused"] .studio-shell main#contenido {
+    animation: none;
+  }
+}
+@keyframes ceder-sitio {
+  from {
+    opacity: 0.3;
+  }
+}
+@keyframes recobrar-sitio {
+  from {
+    opacity: 0.3;
+  }
+}
 .glass-rail {
   position: fixed;
   z-index: var(--capa-barra);
@@ -30,8 +55,11 @@
   box-shadow: var(--vidrio-sombra);
   overflow: hidden;
 }
-.glass-rail:hover,
-.glass-rail:focus-within {
+/* Se despliega al acercar el cursor o al recorrerlo con teclado. Tras elegir
+   un destino se recoge (data-recogido) hasta que el cursor sale: no tapa la
+   pantalla a la que acabas de ir. */
+.glass-rail:not([data-recogido]):hover,
+.glass-rail:has(:focus-visible) {
   width: var(--riel-expandido);
 }
 .rail-brand {
@@ -48,8 +76,8 @@
   font-size: var(--texto-28);
   opacity: 0;
 }
-.glass-rail:hover .rail-brand span,
-.glass-rail:focus-within .rail-brand span {
+.glass-rail:not([data-recogido]):hover .rail-brand span,
+.glass-rail:has(:focus-visible) .rail-brand span {
   opacity: 1;
 }
 .glass-rail nav {
@@ -103,17 +131,17 @@
   width: var(--foco-ancho);
   background: var(--texto-2);
 }
-.glass-rail:hover nav a,
-.glass-rail:focus-within nav a,
-.glass-rail:hover .rail-more,
-.glass-rail:focus-within .rail-more {
+.glass-rail:not([data-recogido]):hover nav a,
+.glass-rail:has(:focus-visible) nav a,
+.glass-rail:not([data-recogido]):hover .rail-more,
+.glass-rail:has(:focus-visible) .rail-more {
   flex-direction: row;
   justify-content: flex-start;
   padding-left: var(--espacio-16);
   gap: var(--espacio-16);
 }
-.glass-rail:hover nav a span:not(.nav-indicator),
-.glass-rail:focus-within nav a span:not(.nav-indicator) {
+.glass-rail:not([data-recogido]):hover nav a span:not(.nav-indicator),
+.glass-rail:has(:focus-visible) nav a span:not(.nav-indicator) {
   width: auto;
   max-width: none;
   text-align: left;
@@ -309,12 +337,67 @@ main#contenido {
 }
 .cooper-panel > * {
   opacity: 1;
-  transition: opacity var(--duracion-presion) var(--curva-salida);
+  transition:
+    opacity var(--duracion-estado) var(--curva-salida),
+    transform var(--duracion-estado) var(--curva-salida);
+}
+/* Entrada en dos tiempos: primero la cabecera, luego la conversación. */
+.cooper-panel > .chat-pane {
+  transition-delay: calc(var(--duracion-presion) / 2);
 }
 .cooper-panel[data-projecting="true"] > * {
   /* El contenido sigue montado y accesible mientras se transforma la superficie. */
   opacity: 0;
+  transform: translateY(var(--espacio-8));
   transition: none;
+}
+.cooper-cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  min-width: 0;
+}
+.cooper-cabecera > span:last-child {
+  min-width: 0;
+}
+.cooper-cabecera-cara {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: var(--radio-pildora);
+  outline: var(--foco-ancho) solid var(--transparente);
+  outline-offset: var(--espacio-4);
+  transition: outline-color var(--duracion-estado) var(--curva-salida);
+}
+/* El compañero llega desde su esquina cuando la hoja termina de abrirse. */
+.cooper-panel:not([data-projecting="true"]) .cooper-cabecera-cara {
+  animation: cooper-aterriza var(--duracion-entrada) var(--curva-rebote) both;
+}
+@keyframes cooper-aterriza {
+  from {
+    opacity: 0;
+    transform: translate(var(--espacio-24), var(--espacio-24)) scale(0.5)
+      rotate(-12deg);
+  }
+}
+/* Su aro dice en qué está: te escucha, piensa o responde. */
+.cooper-panel:has(.chat-pane[data-estado="escuchando"]) .cooper-cabecera-cara {
+  outline-color: var(--tally);
+}
+.cooper-panel:has(
+    .chat-pane:is([data-estado="pensando"], [data-estado="hablando"])
+  )
+  .cooper-cabecera-cara {
+  outline-color: var(--acento);
+  animation: cooper-atento var(--duracion-cifra) var(--curva-entrada-salida)
+    infinite alternate;
+}
+@keyframes cooper-atento {
+  to {
+    outline-offset: var(--espacio-8);
+    outline-color: var(--transparente);
+  }
 }
 .cooper-panel-heading {
   padding: var(--espacio-16);
@@ -467,11 +550,15 @@ main#contenido {
   border: var(--borde-ancho) solid var(--linea);
   min-width: 0;
 }
+/* Relevo, no fundido: la pantalla que sale se va en un instante y la nueva
+   entra cuando la otra ya casi no se ve. Dos páginas legibles nunca se pisan
+   y tampoco queda un cuadro en blanco entre ambas. */
 ::view-transition-old(root) {
-  animation: route-out var(--duracion-entrada) var(--curva-salida) both;
+  animation: route-out var(--duracion-presion) var(--curva-entrada-salida) both;
 }
 ::view-transition-new(root) {
-  animation: route-in var(--duracion-entrada) var(--curva-salida) both;
+  animation: route-in var(--duracion-entrada) var(--curva-salida)
+    calc(var(--duracion-presion) / 2) both;
 }
 ::view-transition-group(*) {
   animation-duration: var(--duracion-ruta);
@@ -485,14 +572,28 @@ main#contenido {
 .mobile-dock {
   view-transition-name: barra-movil;
 }
+/* Cooper acompaña el cambio de sección sin parpadear: ni su hoja ni su orbe
+   entran en el relevo de la página. */
+.cooper-panel {
+  view-transition-name: cooper-hoja;
+}
+.cooper-orb {
+  view-transition-name: cooper-orbe;
+}
 ::view-transition-group(riel),
 ::view-transition-group(barra-movil),
+::view-transition-group(cooper-hoja),
+::view-transition-group(cooper-orbe),
 ::view-transition-new(riel),
-::view-transition-new(barra-movil) {
+::view-transition-new(barra-movil),
+::view-transition-new(cooper-hoja),
+::view-transition-new(cooper-orbe) {
   animation: none;
 }
 ::view-transition-old(riel),
-::view-transition-old(barra-movil) {
+::view-transition-old(barra-movil),
+::view-transition-old(cooper-hoja),
+::view-transition-old(cooper-orbe) {
   display: none;
 }
 /* Ruta pedida y aún en camino: la pantalla sigue viva y el enlace lo dice. */
@@ -756,6 +857,19 @@ a[data-navegando] {
   .cooper-live-logo::before {
     animation: none;
   }
+  .cooper-panel .cooper-cabecera-cara {
+    animation: none;
+  }
+  .cooper-panel > * {
+    transition-duration: var(--duracion-presion);
+    transition-delay: 0s;
+  }
+  .cooper-panel[data-projecting="true"] > * {
+    transform: none;
+  }
+}
+[data-motion="paused"] .cooper-panel .cooper-cabecera-cara {
+  animation: none;
 }
 [data-motion="paused"] .cooper-live-logo::before {
   animation: none;
@@ -834,8 +948,8 @@ main#contenido .route-choreography > .page > .page-heading:first-child {
   padding-top: 0;
   margin-top: 0;
 }
-.glass-rail:hover nav a span:not(.nav-indicator),
-.glass-rail:focus-within nav a span:not(.nav-indicator) {
+.glass-rail:not([data-recogido]):hover nav a span:not(.nav-indicator),
+.glass-rail:has(:focus-visible) nav a span:not(.nav-indicator) {
   width: auto;
   max-width: none;
   text-align: left;

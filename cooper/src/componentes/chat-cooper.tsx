@@ -2,7 +2,14 @@
 import { AnimatePresence, m as motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useId, useState, useEffect, type FormEvent } from "react";
+import {
+  Fragment,
+  useRef,
+  useId,
+  useState,
+  useEffect,
+  type FormEvent,
+} from "react";
 import { ArrowUp, Paperclip, X, AudioLines } from "lucide-react";
 import { partituraTexto, type EstadoCooper } from "@/marca/CooperCara";
 import { useEspacio, api, Notice } from "./espacio";
@@ -14,6 +21,7 @@ import { Grabador, subir } from "./grabador";
 import { leerSSE } from "@/lib/stream";
 import type { EventoChat, TarjetaChat } from "@/servicios/chat/tipos";
 import { MemoriaChat } from "./memoria";
+import { bloquesMensaje, type Tramo } from "@/lib/formato-mensaje";
 export function ChatCooper({
   canalId = "",
   videoId = "",
@@ -340,7 +348,11 @@ export function ChatCooper({
                 <span className="message-author">
                   {m.role === "assistant" ? "Cooper" : data.user.name}
                 </span>
-                <p>{m.content}</p>
+                {m.role === "assistant" ? (
+                  <TextoCooper contenido={m.content} />
+                ) : (
+                  <p>{m.content}</p>
+                )}
                 {(JSON.parse(m.attachmentIds) as string[]).map((id, i) => (
                   <span key={id}>
                     <a
@@ -444,6 +456,8 @@ export function ChatCooper({
               {waiting
                 ? "Sigo preparando tu respuesta. Puedes cancelar la espera."
                 : "Cooper está pensando"}
+              {/* Al final del DOM (los puntos se animan por orden) y primero a la vista. */}
+              <i className="thinking-cara" aria-hidden="true" />
             </div>
           )}
           <div ref={end} />
@@ -685,9 +699,7 @@ export function ChatCooper({
               : data.chat.simulado
                 ? "Modo básico temporal. "
                 : ""}
-            {uploading
-              ? "Guardando archivo…"
-              : "Cooper propone. Tú decides."}
+            {uploading ? "Guardando archivo…" : "Cooper propone. Tú decides."}
           </p>
           <p className="sr-only" id={messageHelpId}>
             Pulsa Entrar para enviar o Mayús y Entrar para escribir otra línea.
@@ -695,5 +707,38 @@ export function ChatCooper({
         </div>
       </section>
     </>
+  );
+}
+
+/** Respuesta de Cooper con párrafos, listas y negritas (ver lib/formato-mensaje). */
+function TextoCooper({ contenido }: { contenido: string }) {
+  const linea = (partes: Tramo[]) =>
+    partes.map((parte, i) =>
+      parte.fuerte ? <strong key={i}>{parte.texto}</strong> : parte.texto,
+    );
+  return (
+    <div className="message-texto">
+      {bloquesMensaje(contenido).map((bloque, i) => {
+        if (bloque.tipo === "parrafo")
+          return (
+            <p key={i}>
+              {bloque.lineas.map((partes, j) => (
+                <Fragment key={j}>
+                  {j > 0 && <br />}
+                  {linea(partes)}
+                </Fragment>
+              ))}
+            </p>
+          );
+        const Lista = bloque.ordenada ? "ol" : "ul";
+        return (
+          <Lista key={i}>
+            {bloque.items.map((partes, j) => (
+              <li key={j}>{linea(partes)}</li>
+            ))}
+          </Lista>
+        );
+      })}
+    </div>
   );
 }

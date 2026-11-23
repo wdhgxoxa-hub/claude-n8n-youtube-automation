@@ -90,9 +90,73 @@
   margin-left: var(--espacio-24);
   background: var(--sup-3);
 }
-.cooper-panel .message p {
+.cooper-panel .message p,
+.cooper-panel .message li {
   font-size: var(--texto-15);
   line-height: var(--interlinea-texto);
+}
+/* Respuesta con forma: párrafos con aire y listas de verdad. */
+.message-texto {
+  display: grid;
+  gap: var(--espacio-12);
+}
+.message-texto :is(p, ul, ol) {
+  margin: 0;
+}
+.message-texto :is(ul, ol) {
+  display: grid;
+  gap: var(--espacio-8);
+  padding-left: var(--espacio-24);
+}
+/* El reinicio global quita las viñetas: aquí vuelven, porque son el contenido. */
+.message-texto ul {
+  list-style: disc;
+}
+.message-texto ol {
+  list-style: decimal;
+}
+.message-texto li::marker {
+  color: var(--acento);
+  font-weight: 600;
+}
+.message-texto strong {
+  font-weight: 600;
+  color: var(--texto);
+}
+/* Lo ya leído se desvanece bajo la cabecera en lugar de cortarse en seco. */
+.cooper-panel .chat-pane:not([data-vacio="true"]) .conversation {
+  mask-image: linear-gradient(
+    to bottom,
+    var(--transparente),
+    var(--lienzo) var(--espacio-24)
+  );
+}
+.cooper-panel .thinking {
+  display: flex;
+  align-items: center;
+}
+.thinking-cara {
+  order: -1;
+  width: var(--espacio-24);
+  height: var(--espacio-24);
+  margin-right: var(--espacio-8);
+  border-radius: var(--radio-pildora);
+  background: url("/cooper-cara/cooper.webp") center / contain no-repeat;
+  animation: cooper-piensa var(--duracion-cifra) var(--curva-entrada-salida)
+    infinite alternate;
+}
+@keyframes cooper-piensa {
+  to {
+    transform: translateY(calc(-1 * var(--espacio-4))) rotate(6deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .thinking-cara {
+    animation: none;
+  }
+}
+[data-motion="paused"] .thinking-cara {
+  animation: none;
 }
 .cooper-panel .message-author {
   font-size: var(--texto-12);

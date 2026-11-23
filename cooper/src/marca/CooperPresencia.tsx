@@ -10,7 +10,7 @@ export function CooperPresencia({
   activo = true,
   cederAPreview = false,
 }: {
-  size?: 56 | 112;
+  size?: 40 | 56 | 112;
   activo?: boolean;
   cederAPreview?: boolean;
 }) {

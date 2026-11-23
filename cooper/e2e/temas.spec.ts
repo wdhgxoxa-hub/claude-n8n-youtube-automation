@@ -224,7 +224,10 @@ test("apariencia: cada tarjeta de tema contiene su muestra y su texto en toda an
     await page.setViewportSize({ width: ancho, height: 900 });
     await page.goto("/perfil");
     await page.evaluate(() => document.fonts.ready);
-    expect(await fuera(), `${ancho}`).toEqual([]);
+    // Se sondea: justo tras cargar, la medida puede caer en un cuadro a medio
+    // componer (falla ~1 de cada 5 también en la versión desplegada). Un
+    // desborde real persiste y sigue fallando.
+    await expect.poll(fuera, { message: `${ancho}` }).toEqual([]);
     if (ancho >= 1024) {
       await page.getByRole("button", { name: "Abrir Cooper" }).click();
       await expect(
