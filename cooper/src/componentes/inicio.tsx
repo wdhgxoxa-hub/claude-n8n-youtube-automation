@@ -7,10 +7,12 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
+  ChartNoAxesCombined,
   Check,
   ChevronLeft,
   ChevronRight,
   Clapperboard,
+  Eye,
   Play,
 } from "lucide-react";
 import { useEspacio, Empty } from "./espacio";
@@ -357,6 +359,45 @@ export function Inicio({ ahora }: { ahora: number }) {
           De la primera idea al momento de compartirla.
         </p>
       </header>
+      <nav className="inicio-atajos" aria-label="Qué quieres hacer">
+        <Link className="inicio-atajo" href="/videos" data-seccion="fabrica">
+          <span className="inicio-atajo-icono" aria-hidden="true">
+            <Clapperboard size={28} />
+          </span>
+          <strong>Pedir un video</strong>
+          <span>Cuenta tu idea y la fábrica la arma.</span>
+        </Link>
+        <a
+          className="inicio-atajo"
+          href={pendientes.length ? "#inicio-pendientes-titulo" : "/videos"}
+          data-seccion="inicio"
+        >
+          <span className="inicio-atajo-icono" aria-hidden="true">
+            <Eye size={28} />
+          </span>
+          <strong>
+            {pendientes.length
+              ? `Revisar ${pendientes.length} ${pendientes.length === 1 ? "pendiente" : "pendientes"}`
+              : "Nada por revisar"}
+          </strong>
+          <span>
+            {pendientes.length
+              ? "Tu visto bueno hace avanzar el video."
+              : "Mira cómo van tus videos."}
+          </span>
+        </a>
+        <Link
+          className="inicio-atajo"
+          href="/publicados"
+          data-seccion="publicados"
+        >
+          <span className="inicio-atajo-icono" aria-hidden="true">
+            <ChartNoAxesCombined size={28} />
+          </span>
+          <strong>Ver resultados</strong>
+          <span>Vistas y me gusta de lo publicado.</span>
+        </Link>
+      </nav>
       {propios.length ? (
         <>
           {terminados.length ? (

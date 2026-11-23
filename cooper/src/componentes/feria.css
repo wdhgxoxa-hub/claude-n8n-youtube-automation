@@ -1,0 +1,228 @@
+/* Capa «Feria»: color por sección, ambiente y microinteracciones alegres.
+   Solo usa tokens de tokens.css. Se carga después del armazón. */
+
+/* 1. Cada sección toma su color: orienta sin leer. */
+.workspace[data-seccion="inicio"],
+[data-seccion="inicio"] {
+  --acento: var(--color-inicio);
+}
+.workspace[data-seccion="fabrica"],
+[data-seccion="fabrica"] {
+  --acento: var(--color-fabrica);
+}
+.workspace[data-seccion="publicados"],
+[data-seccion="publicados"] {
+  --acento: var(--color-publicados);
+}
+.workspace[data-seccion="aprendizaje"],
+[data-seccion="aprendizaje"] {
+  --acento: var(--color-aprendizaje);
+}
+.workspace[data-seccion="marcas"],
+[data-seccion="marcas"] {
+  --acento: var(--color-marcas);
+}
+.workspace[data-seccion="mas"] {
+  --acento: var(--color-mas);
+}
+
+/* 2. Ambiente: luz de color suave y fija, sin coste de animación. */
+.workspace {
+  background: var(--fondo-ambiente), var(--lienzo);
+  background-attachment: fixed;
+}
+
+/* 3. Navegación con color: icono del color de su sección, destino activo relleno. */
+.glass-rail nav a svg,
+.mobile-dock a svg {
+  color: var(--acento);
+  transition:
+    transform var(--duracion-estado) var(--curva-rebote),
+    color var(--duracion-estado) var(--curva-salida);
+}
+.glass-rail nav a:hover svg,
+.mobile-dock a:hover svg {
+  transform: translateY(calc(var(--espacio-4) * -0.5)) scale(1.12);
+}
+.glass-rail nav a[aria-current],
+.mobile-dock a[aria-current] {
+  color: var(--texto);
+}
+.glass-rail nav a[aria-current] .nav-indicator,
+.mobile-dock a[aria-current] .nav-indicator {
+  background: var(--acento-suave);
+  border-color: color-mix(in srgb, var(--acento) 55%, transparent);
+}
+.glass-rail nav a[aria-current]::before {
+  background: var(--acento);
+  width: var(--espacio-4);
+  height: var(--espacio-24);
+  border-radius: var(--radio-pildora);
+}
+
+/* 4. Títulos: el punto final lleva el color de la sección y late una vez al entrar. */
+.title-stop {
+  color: var(--acento);
+  display: inline-block;
+  animation: feria-punto var(--duracion-ruta) var(--curva-rebote) both;
+}
+@keyframes feria-punto {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.workspace .page > header h1,
+.workspace .page h1 {
+  text-wrap: balance;
+}
+
+/* 5. Botones: respuesta elástica y brillo del color al pasar. */
+.boton {
+  transition:
+    transform var(--duracion-estado) var(--curva-rebote),
+    box-shadow var(--duracion-estado) var(--curva-salida),
+    background-color var(--duracion-estado) var(--curva-salida),
+    border-color var(--duracion-estado) var(--curva-salida);
+}
+.boton-primario:hover:not(:disabled) {
+  transform: translateY(var(--elevacion-tarjeta));
+  box-shadow: 0 var(--espacio-12) var(--espacio-32)
+    color-mix(in srgb, var(--tally) 38%, transparent);
+}
+
+/* 6. Atajos de Inicio: tres acciones grandes y claras para cualquiera. */
+.inicio-atajos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gutter);
+  margin-block: var(--espacio-32) var(--espacio-48);
+}
+.inicio-atajo {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--espacio-16);
+  row-gap: var(--espacio-4);
+  min-height: var(--espacio-96);
+  padding: var(--espacio-16) var(--espacio-24);
+  border-radius: var(--radio-panel);
+  border: var(--borde-ancho) solid
+    color-mix(in srgb, var(--acento) 45%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--acento) 22%, transparent),
+      color-mix(in srgb, var(--acento) 6%, transparent)
+    ),
+    var(--sup-1);
+  color: var(--texto);
+  text-decoration: none;
+  transition:
+    transform var(--duracion-estado) var(--curva-rebote),
+    border-color var(--duracion-estado) var(--curva-salida),
+    box-shadow var(--duracion-estado) var(--curva-salida);
+}
+.inicio-atajo:hover,
+.inicio-atajo:focus-visible {
+  transform: translateY(calc(var(--espacio-4) * -1));
+  border-color: var(--acento);
+  box-shadow: 0 var(--espacio-16) var(--espacio-48)
+    color-mix(in srgb, var(--acento) 26%, transparent);
+}
+.inicio-atajo:active {
+  transform: scale(var(--presion-escala));
+}
+.inicio-atajo-icono {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: var(--espacio-64);
+  height: var(--espacio-64);
+  border-radius: var(--radio-tarjeta);
+  background: var(--acento);
+  color: var(--sobre-acento);
+  transition: transform var(--duracion-estado) var(--curva-rebote);
+}
+.inicio-atajo:hover .inicio-atajo-icono {
+  transform: rotate(-6deg) scale(1.06);
+}
+.inicio-atajo strong {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-20);
+  font-weight: 600;
+  line-height: var(--interlinea-display);
+  align-self: end;
+}
+.inicio-atajo span:not(.inicio-atajo-icono) {
+  font-size: var(--texto-15);
+  color: var(--texto-2);
+  align-self: start;
+}
+@media (max-width: 767px) {
+  .inicio-atajos {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--espacio-12);
+    margin-block: var(--espacio-24) var(--espacio-32);
+  }
+  .inicio-atajo {
+    min-height: var(--espacio-64);
+    padding: var(--espacio-12) var(--espacio-16);
+  }
+  .inicio-atajo-icono {
+    width: var(--objetivo-tactil);
+    height: var(--objetivo-tactil);
+  }
+}
+
+/* 7. Tarjetas y superficies: borde con un punto de color al pasar. */
+.tarjeta:hover {
+  border-color: color-mix(in srgb, var(--acento) 45%, var(--linea-fuerte));
+}
+
+/* 8. Foco visible del color de la sección: se ve siempre. */
+.workspace :focus-visible {
+  outline-color: var(--acento);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-stop {
+    animation: none;
+  }
+  .glass-rail nav a svg,
+  .mobile-dock a svg,
+  .boton,
+  .inicio-atajo,
+  .inicio-atajo-icono {
+    transition-duration: var(--duracion-presion);
+  }
+  .glass-rail nav a:hover svg,
+  .mobile-dock a:hover svg,
+  .inicio-atajo:hover,
+  .inicio-atajo:hover .inicio-atajo-icono,
+  .boton-primario:hover:not(:disabled) {
+    transform: none;
+  }
+}
+.workspace[data-motion="paused"] .title-stop {
+  animation: none;
+}
+
+/* 9. Carátulas con color de verdad: el tinte del servidor llega apagado
+   (saturación ≤45 %); se aviva mezclándolo con el color de la sección. */
+.cartel {
+  --tinte-vivo: color-mix(in oklch, var(--tinte) 45%, var(--acento));
+}
+
+/* 10. Cifras protagonistas en el color de la sección. */
+.cifra-heroe .cifra-valor {
+  color: var(--acento);
+}
+
+/* 11. Ritmo: los atajos pertenecen al título, no flotan lejos del contenido. */
+.inicio-estudio .inicio-atajos + * {
+  margin-top: 0;
+}

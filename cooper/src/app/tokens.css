@@ -1,32 +1,60 @@
-/* Sala de proyección · DIRECCION.md §1. Única fuente del sistema visual. */
+/* Sala de proyección · paleta «Feria» (alegre, de alto contraste). Única fuente del sistema visual.
+   Base tinta azul profunda (no negro), texto claro AA/AAA y cinco colores vivos, uno por sección. */
 :root {
   color-scheme: dark;
-  --lienzo: #000000;
-  --sup-1: #0a0a0c;
-  --sup-2: #111114;
-  --sup-3: #18181c;
-  --linea: rgba(255, 255, 255, 0.08);
-  --linea-fuerte: rgba(255, 255, 255, 0.14);
-  --texto: #f5f5f7;
-  --texto-2: #a1a1aa;
-  --texto-3: #71717a;
-  --tally: #ff4d2e;
-  --tally-suave: rgba(255, 77, 46, 0.14);
-  --sobre-tally: var(--sup-1);
-  --sube: #3ddc97;
-  --baja: #ff6b6b;
-  --aviso: #ffc53d;
-  --info: #7cc4ff;
+  --lienzo: #0b0b1e;
+  --sup-1: #121230;
+  --sup-2: #1a1a40;
+  --sup-3: #24244f;
+  --linea: rgba(201, 201, 255, 0.14);
+  --linea-fuerte: rgba(201, 201, 255, 0.26);
+  --texto: #ffffff;
+  --texto-2: #cfcfea;
+  --texto-3: #a3a3cc;
+  --tally: #ff6a45;
+  --tally-suave: rgba(255, 106, 69, 0.18);
+  --sobre-tally: #1a0b06;
+  --sube: #2ee6a6;
+  --baja: #ff7a8a;
+  --aviso: #ffd23f;
+  --info: #5cc8ff;
   --tinte: var(--info);
   --tinte-marca: var(--info);
   --transparente: transparent;
-  --velo: rgba(0, 0, 0, 0.6);
-  --vidrio-fondo: rgba(17, 17, 20, 0.72);
+  --velo: rgba(5, 5, 20, 0.7);
+  --vidrio-fondo: rgba(22, 22, 58, 0.78);
   --vidrio-filtro: blur(24px) saturate(160%);
-  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --vidrio-sombra: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --vidrio-sombra: 0 24px 64px rgba(4, 4, 24, 0.6);
+  /* Colores de sección: cada destino tiene el suyo para orientarse de un vistazo. */
+  --color-inicio: #ff6a45;
+  --color-fabrica: #ffd23f;
+  --color-publicados: #2ee6a6;
+  --color-aprendizaje: #b79cff;
+  --color-marcas: #5cc8ff;
+  --color-mas: #ff8fc7;
+  --acento: var(--color-inicio);
+  --acento-suave: color-mix(in srgb, var(--acento) 18%, transparent);
+  --sobre-acento: #0b0b1e;
+  --fondo-ambiente:
+    radial-gradient(
+      60% 50% at 12% 0%,
+      color-mix(in srgb, var(--acento) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 40% at 100% 8%,
+      color-mix(in srgb, var(--color-aprendizaje) 12%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 80% 100%,
+      color-mix(in srgb, var(--color-marcas) 9%, transparent),
+      transparent 70%
+    );
+  --curva-rebote: cubic-bezier(0.34, 1.56, 0.64, 1);
   --halo-filtro: blur(120px);
-  --halo-opacidad: 0.22;
+  --halo-opacidad: 0.34;
 
   --fuente-display: var(--font-clash), sans-serif;
   --fuente-texto: var(--font-geist), sans-serif;

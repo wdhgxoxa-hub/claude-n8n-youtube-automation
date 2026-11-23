@@ -55,18 +55,18 @@ describe("guardián de Sala de proyección", () => {
   it("conserva los colores obligatorios y una única fuente de tokens", () => {
     const css = clean(readFileSync(source, "utf8"));
     for (const [token, value] of Object.entries({
-      lienzo: "#000000",
-      "sup-1": "#0A0A0C",
-      "sup-2": "#111114",
-      "sup-3": "#18181C",
-      texto: "#F5F5F7",
-      "texto-2": "#A1A1AA",
-      "texto-3": "#71717A",
-      tally: "#FF4D2E",
-      sube: "#3DDC97",
-      baja: "#FF6B6B",
-      aviso: "#FFC53D",
-      info: "#7CC4FF",
+      lienzo: "#0B0B1E",
+      "sup-1": "#121230",
+      "sup-2": "#1A1A40",
+      "sup-3": "#24244F",
+      texto: "#FFFFFF",
+      "texto-2": "#CFCFEA",
+      "texto-3": "#A3A3CC",
+      tally: "#FF6A45",
+      sube: "#2EE6A6",
+      baja: "#FF7A8A",
+      aviso: "#FFD23F",
+      info: "#5CC8FF",
     }))
       expect(css).toMatch(new RegExp(`--${token}:\\s*${value}\\s*;`, "i"));
     const radii = [...css.matchAll(/--radio-[\w-]+:\s*([\d.]+)px/g)].map((m) =>

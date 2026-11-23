@@ -8,6 +8,7 @@ import { signOut } from "@/auth";
 // en Inicio, que no tiene esqueleto propio. Si solo la importara el esqueleto,
 // Inicio la precargaría para los enlaces sin usarla (aviso de consola).
 import "@/componentes/resto-diseno.css";
+import "@/componentes/feria.css";
 export const dynamic = "force-dynamic";
 export default async function Layout({
   children,

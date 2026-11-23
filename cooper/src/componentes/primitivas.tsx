@@ -301,10 +301,16 @@ export function Medio({
           unoptimized
           onError={() => setFalloPoster(poster)}
         />
-      ) : enEspera ? (
-        <span className="medio-espera" aria-hidden="true" />
       ) : (
-        <Cartel titulo={titulo ?? alt} canal={canal} detalle={detalle} />
+        // Sin póster utilizable (sin medio, pendiente, no disponible o carga
+        // fallida) siempre hay carátula: nunca una caja vacía. Mientras el
+        // medio real sigue en camino, la carátula lleva un brillo de espera.
+        <>
+          <Cartel titulo={titulo ?? alt} canal={canal} detalle={detalle} />
+          {enEspera && medio?.estado !== "no_disponible" && !posterFallido && (
+            <span className="medio-espera" aria-hidden="true" />
+          )}
+        </>
       )}
       {preview && (
         <video

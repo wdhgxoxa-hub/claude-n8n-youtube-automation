@@ -102,11 +102,21 @@ export function useEspacio() {
 const cargarMovimiento = () =>
   import("./movimiento-funciones").then((module) => module.default);
 const nav = [
-  { path: "/", label: "Inicio", icon: House },
-  { path: "/videos", label: "Fábrica", icon: Clapperboard },
-  { path: "/publicados", label: "Publicados", icon: ChartNoAxesCombined },
-  { path: "/aprendizaje", label: "Aprendizaje", icon: BookOpen },
-  { path: "/marcas", label: "Marcas", icon: Palette },
+  { path: "/", label: "Inicio", icon: House, seccion: "inicio" },
+  { path: "/videos", label: "Fábrica", icon: Clapperboard, seccion: "fabrica" },
+  {
+    path: "/publicados",
+    label: "Publicados",
+    icon: ChartNoAxesCombined,
+    seccion: "publicados",
+  },
+  {
+    path: "/aprendizaje",
+    label: "Aprendizaje",
+    icon: BookOpen,
+    seccion: "aprendizaje",
+  },
+  { path: "/marcas", label: "Marcas", icon: Palette, seccion: "marcas" },
 ];
 const extras = [
   { path: "/canales", label: "Canales", icon: Radio },
@@ -279,6 +289,11 @@ export function Espacio({
           <LayoutGroup id="estudio">
             <div
               className="workspace"
+              data-seccion={
+                nav.find(({ path: href }) =>
+                  href === "/" ? path === "/" : path.startsWith(href),
+                )?.seccion ?? "mas"
+              }
               data-conexion={conexion}
               data-motion={isPaused || hidden || reduced ? "paused" : "playing"}
             >
@@ -303,10 +318,11 @@ export function Espacio({
                     <span>cooper.</span>
                   </Link>
                   <nav aria-label="Principal">
-                    {nav.map(({ path: href, label, icon: Icon }) => (
+                    {nav.map(({ path: href, label, icon: Icon, seccion }) => (
                       <Link
                         key={href}
                         href={href}
+                        data-seccion={seccion}
                         aria-current={
                           (href === "/" ? path === "/" : path.startsWith(href))
                             ? "page"
@@ -362,34 +378,36 @@ export function Espacio({
                       ].find((n) => n.path === path)?.label ?? "Estudio Cooper"}
                     </span>
                     <div className="topbar-acciones">
-                    <button
-                      className="topbar-mas icon-button"
-                      aria-label="Más destinos"
-                      aria-expanded={menu}
-                      onClick={(event) => {
-                        menuButton.current = event.currentTarget;
-                        setMenu(true);
-                      }}
-                    >
-                      <Ellipsis size={20} />
-                    </button>
-                    <Link
-                      href="/perfil"
-                      className="header-avatar"
-                      aria-label="Mi perfil"
-                    >
-                      {data.user.image ? (
-                        <Image
-                          unoptimized
-                          src={data.user.image}
-                          width={40}
-                          height={40}
-                          alt=""
-                        />
-                      ) : (
-                        <span>{data.user.name.slice(0, 1).toUpperCase()}</span>
-                      )}
-                    </Link>
+                      <button
+                        className="topbar-mas icon-button"
+                        aria-label="Más destinos"
+                        aria-expanded={menu}
+                        onClick={(event) => {
+                          menuButton.current = event.currentTarget;
+                          setMenu(true);
+                        }}
+                      >
+                        <Ellipsis size={20} />
+                      </button>
+                      <Link
+                        href="/perfil"
+                        className="header-avatar"
+                        aria-label="Mi perfil"
+                      >
+                        {data.user.image ? (
+                          <Image
+                            unoptimized
+                            src={data.user.image}
+                            width={40}
+                            height={40}
+                            alt=""
+                          />
+                        ) : (
+                          <span>
+                            {data.user.name.slice(0, 1).toUpperCase()}
+                          </span>
+                        )}
+                      </Link>
                     </div>
                   </header>
                   <main ref={content} id="contenido" tabIndex={-1}>
@@ -407,10 +425,11 @@ export function Espacio({
                   </main>
                 </div>
                 <nav className="mobile-dock" aria-label="Principal móvil">
-                  {nav.map(({ path: href, label, icon: Icon }) => (
+                  {nav.map(({ path: href, label, icon: Icon, seccion }) => (
                     <Link
                       key={href}
                       href={href}
+                      data-seccion={seccion}
                       aria-current={
                         (href === "/" ? path === "/" : path.startsWith(href))
                           ? "page"

@@ -16,18 +16,43 @@
     /* Fuente de luz: el tinte entra por arriba a la derecha, como un foco. */
     radial-gradient(
       120% 95% at 92% -8%,
-      color-mix(in srgb, var(--tinte) 66%, var(--transparente)) 0%,
-      color-mix(in srgb, var(--tinte) 30%, var(--transparente)) 34%,
-      color-mix(in srgb, var(--tinte) 8%, var(--transparente)) 58%,
+      color-mix(
+          in srgb,
+          var(--tinte-vivo, var(--tinte)) 66%,
+          var(--transparente)
+        )
+        0%,
+      color-mix(
+          in srgb,
+          var(--tinte-vivo, var(--tinte)) 30%,
+          var(--transparente)
+        )
+        34%,
+      color-mix(
+          in srgb,
+          var(--tinte-vivo, var(--tinte)) 8%,
+          var(--transparente)
+        )
+        58%,
       var(--transparente) 76%
     ),
     /* Haces cónicos muy tenues desde el mismo foco: profundidad sin ruido. */
     conic-gradient(
         from 200deg at 92% -8%,
         var(--transparente) 0deg,
-        color-mix(in srgb, var(--tinte) 16%, var(--transparente)) 18deg,
+        color-mix(
+            in srgb,
+            var(--tinte-vivo, var(--tinte)) 16%,
+            var(--transparente)
+          )
+          18deg,
         var(--transparente) 40deg,
-        color-mix(in srgb, var(--tinte) 10%, var(--transparente)) 64deg,
+        color-mix(
+            in srgb,
+            var(--tinte-vivo, var(--tinte)) 10%,
+            var(--transparente)
+          )
+          64deg,
         var(--transparente) 92deg
       ),
     /* Viñeta: la esquina del título cae a negro para el contraste AA. */
@@ -39,7 +64,7 @@
       ),
     var(--lienzo);
   box-shadow: inset 0 0 0 var(--borde-ancho)
-    color-mix(in srgb, var(--tinte) 20%, var(--transparente));
+    color-mix(in srgb, var(--tinte-vivo, var(--tinte)) 20%, var(--transparente));
 }
 /* Grano de película: ruido estático, sin animación ni coste de pintura. */
 .cartel::after {
@@ -72,7 +97,7 @@
   min-width: 0;
   padding-bottom: var(--espacio-8);
   border-bottom: var(--borde-ancho) solid
-    color-mix(in srgb, var(--tinte) 34%, var(--linea-fuerte));
+    color-mix(in srgb, var(--tinte-vivo, var(--tinte)) 34%, var(--linea-fuerte));
   font-family: var(--fuente-datos);
   font-size: var(--texto-12);
   font-variant-numeric: tabular-nums;
@@ -98,7 +123,7 @@
   width: var(--espacio-8);
   height: var(--espacio-8);
   border-radius: var(--radio-pildora);
-  background: var(--tinte);
+  background: var(--tinte-vivo, var(--tinte));
 }
 .cartel-titulo {
   display: -webkit-box;
